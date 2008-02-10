@@ -1,0 +1,58 @@
+/*
+ Copyright (C) 2007 Richard Gomes
+
+ This file is part of JQuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://jquantlib.org/
+
+ JQuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <jquantlib-dev@lists.sf.net>. The license is also available online at
+ <http://jquantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ 
+ JQuantLib is based on QuantLib. http://quantlib.org/
+ When applicable, the originating copyright notice follows below.
+ */
+
+package org.jquantlib.quotes;
+
+import org.jscience.mathematics.number.Real;
+
+// FIXME: understand how this class is used
+public class SimpleQuote extends Quote {
+
+	private double value;
+	
+
+	public SimpleQuote(final SimpleQuote o) {
+		this.value = o.value;
+	}
+	
+	public SimpleQuote(final Real f) {
+		this.value = f.doubleValue();
+	}
+
+	public SimpleQuote(final double d) {
+		this.value = d;
+	}
+
+	@Override
+	public final double getValue() {
+		if (value==Double.NaN) throw new ArithmeticException("invalid simple quote: no value available");
+		return value;
+	}
+	
+	public void setValue(final Real value) {
+		double diff = this.value - value.doubleValue(); 
+		if (diff != 0.0) { // FIXME: potentially an error. Should be diff < 0.00000001 or something
+			this.value = value.doubleValue();
+			notifyObservers();
+		}
+		// return diff; // XXX This is not the standard way setters are defined in Java
+	}
+
+}
