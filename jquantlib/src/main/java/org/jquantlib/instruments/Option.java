@@ -21,8 +21,6 @@
 package org.jquantlib.instruments;
 
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.lang.stl.StlVector;
-import org.jquantlib.number.Time;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.PricingEngineArguments;
 
@@ -62,7 +60,7 @@ public class Option extends Instrument {
 	// TODO how to handle strike-less option (asian average strike, forward, etc.)?
 	// FIXME: code review
 	private class OptionArguments implements PricingEngineArguments {
-		public StlVector<Time> stoppingTimes; // FIXME: it should be moved elsewhere
+		public /*@Time*/ double[] stoppingTimes; // FIXME: it should be moved elsewhere
 		public Payoff payoff;
 		public Exercise exercise;
 

@@ -38,15 +38,12 @@
 package org.jquantlib.termstructures.volatilities;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.Time;
-import org.jquantlib.number.Volatility;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
 /**
  * For details about this implementation refer to "Stochastic Volatility and
@@ -78,7 +75,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		this.underlying_.addObserver(this);
 	}
 
-	public LocalVolSurface(final BlackVolTermStructure blackTS, final YieldTermStructure riskFreeTS, final YieldTermStructure dividendTS, final Real underlying) {
+	public LocalVolSurface(final BlackVolTermStructure blackTS, final YieldTermStructure riskFreeTS, final YieldTermStructure dividendTS, final /*@Price*/ double underlying) {
 		super(blackTS.getDayCounter());
 		this.blackTS_ = blackTS;
 		this.riskFreeTS_ = riskFreeTS;
@@ -101,11 +98,11 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		return blackTS_.getMaxDate();
 	}
 
-	public final Real getMinStrike() {
+	public final /*@Price*/ double getMinStrike() {
 		return blackTS_.getMinStrike();
 	}
 
-	public final Real getMaxStrike() {
+	public final /*@Price*/ double getMaxStrike() {
 		return blackTS_.getMaxStrike();
 	}
 
@@ -118,38 +115,42 @@ public class LocalVolSurface extends LocalVolTermStructure {
 	// LocalVolTermStructure::accept(v);
 	// }
 
-	protected final Volatility localVolImpl(final Time time, final Real underlyingLevel) {
+	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double time, final /*@Price*/ double underlyingLevel) {
 
-		double forwardValue = underlying_.getValue() * (dividendTS_.getDiscount(time, true).doubleValue() / riskFreeTS_.getDiscount(time, true).doubleValue());
+		double forwardValue = underlying_.getValue() * ( dividendTS_.getDiscount(time, true) / riskFreeTS_.getDiscount(time, true) );
 
 		// strike derivatives
-		double strike, y, dy, strikep, strikem;
+		/*@Price*/ double strike;
+		/*@Price*/ double strikem;
+		/*@Price*/ double strikep;
+		double y, dy;
 		double w, wp, wm, dwdy, d2wdy2;
-		strike = underlyingLevel.doubleValue();
+		strike = underlyingLevel;
 		y = Math.log(strike / forwardValue);
 		dy = ((y != 0.0) ? y * 0.000001 : 0.000001);
 		strikep = strike * Math.exp(dy);
 		strikem = strike / Math.exp(dy);
-		w = blackTS_.blackVariance(time, new Real(strike), true).doubleValue();
-		wp = blackTS_.blackVariance(time, new Real(strikep), true).doubleValue();
-		wm = blackTS_.blackVariance(time, new Real(strikem), true).doubleValue();
+		w = blackTS_.blackVariance(time,  strike, true);
+		wp = blackTS_.blackVariance(time, strikep, true);
+		wm = blackTS_.blackVariance(time, strikem, true);
 		dwdy = (wp - wm) / (2.0 * dy);
 		d2wdy2 = (wp - 2.0 * w + wm) / (dy * dy);
 
 		// time derivative
-		double t = time.doubleValue();
-		double dt, wpt, wmt, dwdt;
+		/*@Time*/ double t = time;
+		/*@Time*/ double dt;
+		double wpt, wmt, dwdt;
 		if (t == 0.0) {
 			dt = 0.0001;
-			wpt = blackTS_.blackVariance(new Time(t + dt), new Real(strike), true).doubleValue();
+			wpt = blackTS_.blackVariance(/*@Time*/ (t + dt), strike, true);
 			if (wpt < w)
 				throw new ArithmeticException("decreasing variance at strike " + strike + " between time " + t + " and time " + t + dt);
 
 			dwdt = (wpt - w) / dt;
 		} else {
 			dt = Math.min(0.0001, t / 2.0);
-			wpt = blackTS_.blackVariance(new Time(t + dt), new Real(strike), true).doubleValue();
-			wmt = blackTS_.blackVariance(new Time(t - dt), new Real(strike), true).doubleValue();
+			wpt = blackTS_.blackVariance(/*@Time*/ (t + dt), strike, true);
+			wmt = blackTS_.blackVariance(/*@Time*/ (t - dt), strike, true);
 			if (wpt < w)
 				throw new ArithmeticException("decreasing variance at strike " + strike + " between time " + t + " and time " + t + dt);
 			if (w < wmt)
@@ -158,7 +159,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		}
 
 		if (dwdy == 0.0 && d2wdy2 == 0.0) { // avoid /w where w might be 0.0
-			return new Volatility(Math.sqrt(dwdt));
+			return Math.sqrt(dwdt);
 		} else {
 			double den1 = 1.0 - y / w * dwdy;
 			double den2 = 0.25 * (-0.25 - 1.0 / w + y * y / w / w) * dwdy * dwdy;
@@ -167,7 +168,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
 			double result = dwdt / den;
 			if (result < 0.0)
 				throw new ArithmeticException("negative local vol^2 at strike " + strike + " and time " + t + "; the black vol surface is not smooth enough");
-			return new Volatility(Math.sqrt(result));
+			return Math.sqrt(result);
 
 			// commented out at original source QuantLib
 			// return std::sqrt(dwdt / (1.0 - y/w*dwdy +

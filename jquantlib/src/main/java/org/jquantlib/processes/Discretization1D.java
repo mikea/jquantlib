@@ -20,8 +20,6 @@
 
 package org.jquantlib.processes;
 
-import org.jquantlib.number.Time;
-import org.jscience.mathematics.number.Real;
 
 /**
  *  Discretization of a stochastic process over a given time interval
@@ -33,13 +31,13 @@ public interface Discretization1D {
     /**
      * Returns the drift part of the equation, i.e. {@latex$ \mu(t, x_t) }
      */ 
-	public abstract Real driftDiscretization(/*final StochasticProcess1D sp, */final Time t0, final Real x0, final Time dt); // XXX
+	public abstract /*@Drift*/ double driftDiscretization(/*final StochasticProcess1D sp, */final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt); // XXX
 	
     /**
      * Returns the diffusion part of the equation, i.e.
      {@latex$ \sigma(t, x_t) }
      */
-	public abstract Real diffusionDiscretization(/*final StochasticProcess1D sp, */final Time t0, final Real x0, final Time dt); // XXX
+	public abstract /*@Diffusion*/ double diffusionDiscretization(/*final StochasticProcess1D sp, */final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt); // XXX
 	
     /**
      * Returns the variance
@@ -50,6 +48,6 @@ public interface Discretization1D {
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-	public abstract Real varianceDiscretization(/*final StochasticProcess1D sp, */final Time t0, final Real x0, final Time dt); // XXX
+	public abstract /*@Variance*/ double varianceDiscretization(/*final StochasticProcess1D sp, */final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt); // XXX
 
 }

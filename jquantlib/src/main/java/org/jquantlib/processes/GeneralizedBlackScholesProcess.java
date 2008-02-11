@@ -39,7 +39,6 @@
 
 package org.jquantlib.processes;
 
-import org.jquantlib.number.Time;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.Compounding;
@@ -83,21 +82,21 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
             
     @Override
-	public Real diffusion(final Time t, final Real x) {
-    	double vol = localVolatility().localVol(t, x, true).doubleValue();
-    	return new Real( vol );
+	public Real diffusion(final /*@Time*/ double t, final Real x) {
+    	/*@Volatility*/ double vol = localVolatility().localVol(t, x, true);
+    	return vol;
     }
 
 
 	@Override
-	public Real drift(final Time t, final Real x) {
+	public Real drift(final /*@Time*/ double t, final Real x) {
 		double sigma = diffusion(t,x).doubleValue();
         // we could be more anticipatory if we know the right dt
         // for which the drift will be used
-        Time t1 = new Time(t.doubleValue() + 0.0001);
-        double r = riskFreeRate_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency, true).getRate().doubleValue();
+        /*@Time*/ double t1 = t + 0.0001;
+        /*@Rate*/ double r = riskFreeRate_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency, true).getRate();
         double d = dividendYield_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency,true).getRate().doubleValue();
-        return new Real( r-d-0.5*sigma*sigma );
+        return r-d-0.5*sigma*sigma;
     }
 
 	@Override
@@ -114,32 +113,32 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 //		return 0;
 //	}
 //
-//	public Real diffusionDiscretization(Time t0, Real x0, Time dt) {
+//	public Real diffusionDiscretization(/*@Time*/ double t0, Real x0, /*@Time*/ double dt) {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
 //
-//	public Real driftDiscretization(Time t0, Real x0, Time dt) {
+//	public Real driftDiscretization(/*@Time*/ double t0, Real x0, /*@Time*/ double dt) {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
 //
-//	public Real varianceDiscretization(Time t0, Real x0, Time dt) {
+//	public Real varianceDiscretization(/*@Time*/ double t0, Real x0, /*@Time*/ double dt) {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
 //
-//	public Matrix covarianceDiscretization(Time t0, Vector x0, Time dt) {
+//	public Matrix covarianceDiscretization(/*@Time*/ double t0, Vector x0, /*@Time*/ double dt) {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
 //
-//	public Matrix diffusionDiscretization(Time t0, Vector x0, Time dt) {
+//	public Matrix diffusionDiscretization(/*@Time*/ double t0, Vector x0, /*@Time*/ double dt) {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
 //
-//	public Vector driftDiscretization(Time t0, Vector x0, Time dt) {
+//	public Vector driftDiscretization(/*@Time*/ double t0, Vector x0, /*@Time*/ double dt) {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
@@ -157,10 +156,10 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     public final Real apply(final Real x0, final Real dx) {
     	// result = x0 * e^dx
     	double result = x0.doubleValue() * Math.exp(dx.doubleValue());
-    	return new Real( result );
+    	return result;
     }
 
-    public final Time time(final Date d) {
+    public final /*@Time*/ double time(final Date d) {
         return riskFreeRate_.getDayCounter().getYearFraction(riskFreeRate_.getReferenceDate(), d);
     }
 
@@ -193,7 +192,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         		BlackConstantVol constVol = (BlackConstantVol)blackVolatility();
         		localVolatility_ = new LocalConstantVol(
         				constVol.getReferenceDate(), 
-        				constVol.blackVol(new Time(0.0), new Real(x0_.getValue())),
+        				constVol.blackVol(/*@Time*/ 0.0, new Real(x0_.getValue())),
         				constVol.getDayCounter());
                 updated_ = true;
         		return localVolatility_;

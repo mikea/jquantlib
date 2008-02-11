@@ -20,13 +20,11 @@
 
 package org.jquantlib.math.interpolation;
 
-import org.jscience.mathematics.number.Real;
-import org.jscience.mathematics.vector.Vector;
 
 
 // TODO:: refactor to "InterpolationFactory"
-public interface Interpolator<T extends Real> {
+public interface Interpolator {
 
-	public Interpolation<T> interpolate(final Vector<Real> x, final Vector<Real> y);
+	public Interpolation interpolate(final double[] x, final double[] y);
 
 }

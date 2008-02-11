@@ -38,7 +38,7 @@ public class Settings {
 	private Date evaluationDate;
 	
 	private Settings() {
-		this.extraSafetyChecks = false;
+		this.extraSafetyChecks = true;
 		this.enforcesTodaysHistoricFixings = false;
 		this.evaluationDate = Date.getTodaysDate();
 	}

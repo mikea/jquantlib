@@ -24,7 +24,6 @@ import junit.framework.TestCase;
 
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.Rate;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.junit.After;
@@ -68,7 +67,7 @@ public class InterestRates extends TestCase {
 
 	@Test public void testLeap() {
 		DayCounter dc = new Actual365Fixed();
-		InterestRate ir = new InterestRate(new Rate(1), dc, Compounding.Simple);
+		InterestRate ir = new InterestRate(/*@Rate*/ 1.0, dc, Compounding.Simple);
 		assertEquals(Compounding.Simple, ir.getCompounding());
 	}
 }

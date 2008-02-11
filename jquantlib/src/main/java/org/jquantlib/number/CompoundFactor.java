@@ -18,15 +18,16 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.math.interpolation;
+package org.jquantlib.number;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-//FIXME: comments
-// TODO: refactor to "LinearInterpolationFactory"
-public class Linear implements Interpolator {
-
-	public Interpolation interpolate(double[] x, double[] y) {
-		return new LinearInterpolation(x, y);
-	}
-
+@Typecast
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER })
+public @interface CompoundFactor {
+	// No methods - Tagging annotation
 }

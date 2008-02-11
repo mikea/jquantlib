@@ -40,12 +40,9 @@ package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.Time;
-import org.jquantlib.number.Volatility;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.tmp.DefaultCalendar;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
 // Black variance term structure
 
@@ -54,7 +51,8 @@ import org.jscience.mathematics.number.Real;
  *  <tt>blackVarianceImpl(Time, Real, bool)</tt> method in derived
  *  classes.
  *
- *  Volatility are assumed to be expressed on an annual basis.
+ *  <p>
+ *  Volatility is assumed to be expressed on an annual basis.
  */
 public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
 
@@ -107,16 +105,16 @@ public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
         /*! Returns the volatility for the given strike and date calculating it
             from the variance.
         */
-        protected final Volatility blackVolImpl(final Time maturity, final Real strike) {
-			double nonZeroMaturity;
-			double m = maturity.doubleValue();
+        protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+        	/*@Time*/ double nonZeroMaturity;
+        	/*@Time*/ double m = maturity;
 			if (m==0.0) {
 				nonZeroMaturity = 0.00001;
 			} else {
 				nonZeroMaturity = m;
 			}
-			double var = blackVarianceImpl(new Time(nonZeroMaturity), strike).doubleValue();
-			return new Volatility( Math.sqrt(var/nonZeroMaturity) );
+			/*@Variance*/ double var = blackVarianceImpl(/*Time*/ nonZeroMaturity, strike);
+			return Math.sqrt(var/nonZeroMaturity);
         }
 
 //        inline void BlackVarianceTermStructure::accept(AcyclicVisitor& v) {

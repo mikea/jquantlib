@@ -40,11 +40,9 @@ package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.Time;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.tmp.DefaultCalendar;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
 /**
  * This abstract class acts as an adapter to BlackVolTermStructure allowing the
@@ -53,7 +51,7 @@ import org.jscience.mathematics.number.Real;
  * classes.
  * 
  * <p>
- * Volatility are assumed to be expressed on an annual basis.
+ * Volatility is assumed to be expressed on an annual basis.
  */
 // FIXME: ElementVisitor
 abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure {
@@ -114,11 +112,10 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 	 * the volatility.
 	 */
 	@Override
-	protected final Real blackVarianceImpl(final Time maturity, final Real strike) {
-		double vol = blackVolImpl(maturity, strike).doubleValue();
-		double m = maturity.doubleValue();
-		// variance = vol*vol*maturity
-		return new Real( vol*vol*m );
+	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+		/*@Volatility*/ double vol = blackVolImpl(maturity, strike);
+		/*@Variance*/ double variance = vol*vol*maturity;
+		return variance;
 	}
 
 // XXX	

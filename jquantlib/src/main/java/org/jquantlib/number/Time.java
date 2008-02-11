@@ -20,23 +20,14 @@
 
 package org.jquantlib.number;
 
-import org.jscience.mathematics.number.Real;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-
-public final class Time extends Real {
-    
-    public Time() {
-    	super();
-    }
-
-    public Time(final long value) {
-    	super(value);
-    }
-    
-    public Time(final double value) {
-    	super(value);
-    }
-
-    // No methods - Tagging class.
-    
+@Typecast
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER })
+public @interface Time {
+	// No methods - Tagging annotation
 }

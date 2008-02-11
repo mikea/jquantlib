@@ -1,6 +1,8 @@
 This README is always under construction.
 
 
+The main source of information is our wiki at http://wiki.jquantlib.org/
+
 Once JQuantLib is written in Java and depends on open source tools, most of
 them also written in Java, these instructions can be applied to any operating
 system.
@@ -25,7 +27,7 @@ Some examples are specific to Debian and derivatives, like Ubuntu and Kubuntu.
     
         cd
         mkdir workspace
-        svn ckeckout http://jquant.svn.sourceforge.net/svnroot/jquant
+        svn co http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib
 
     Note: I suppose that you would like to use Eclipse for development. That's
           why we are checking out under the directory "workspace".
@@ -61,7 +63,7 @@ its build process.
           
        
 Open JQuantLib project under Eclipse. Once you have the Maven2 eclipse plugin
-properly installed it will automagically download all the requred dependencies
+properly installed it will automagically download all the required dependencies
 for you. Be patient, Maven2 will download all necessary dependencies for its 
 own use and for the use of JQuantLib.
 
@@ -83,11 +85,11 @@ You can compile JQuantLib and generate a .JAR file simply typing the command
 below, suposing JQuantLib was checked out into ~/workspace/jquantlib :
 
     cd ~/workspace/jquantlib
-    mvn clean compile package -Ddebug
+    mvn clean package -Drevision=unchecked
 
-The define "debug" tells Maven2 to ignore possible differences between your
-local working copy and the SVN repository. This is, in general, what you
-need to do when you are developing.
+The define "revision=unchecked" tells Maven2 to ignore possible differences
+between your local working copy and the SVN repository. This is, in general, 
+what you need to do when you are developing.
 
 
 
@@ -102,44 +104,3 @@ applications.
 
 The main source of information is our wiki at http://wiki.jquantlib.org/
 
-====================================================
-The contents below must be moved to the Wiki
-====================================================
-
-
-===Sanity check on floating point numbers===
-
-In order to correctly test floating numbers for equality, JQuantLib has the following classes which adds functionality to JDK's counterparts:
-* interface org.jquantlib.lang.Comparable
-* class org.jquantlib.lang.Number
-* class org.jquantlib.util.Date
-
-For more information on this subject, please see:
-* http://www.concentric.net/~Ttwang/tech/javafloat.htm
-* http://www.ibm.com/developerworks/java/library/j-jtp0114/index.html
-* http://www.physics.ohio-state.edu/~dws/grouplinks/floating_point_math.pdf
-* http://www.cs.berkeley.edu/~wkahan/JAVAhurt.pdf
-* http://www.cs.princeton.edu/introcs/91float/index.html
-
-In order to perform this sanity check, execute the following commands.
-You should not see any occurrence of any of these import lines listed below, i.e: the source code should never implicitly use these classes.
-All uses of these classes are being done explicitly by the wrapper classes.
-<pre>
-cd jquantlib/src
-find . -name '*.java' -exec grep -H -i 'import java.lang.Number' {} \;
-find . -name '*.java' -exec grep -H -i 'import java.lang.Double' {} \;
-find . -name '*.java' -exec grep -H -i 'import java.util.Date' {} \;
-</pre>
-
-===Sanity check on the Observable class===
-
-Java conveniently defines the Observable class.
-Unfortunately, for the purposes and complexity of the object model in use by JQuantLib, we'd better have Observable as an interface, instead of a class.
-
-In order to perform this sanity check, execute the following commands.
-You should not see any occurrence of any of these import lines listed below, i.e: the source code should never implicitly use these classes.
-All uses of these classes are being done explicitly by the wrapper classes.
-<pre>
-cd jquantlib/src
-find . -name '*.java' -exec grep -H -i 'import java.util.Observable' {} \;
-</pre>

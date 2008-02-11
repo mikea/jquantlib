@@ -46,7 +46,7 @@ import org.jquantlib.pricingengines.PricingEngineArguments;
 import org.jquantlib.pricingengines.PricingEngineResults;
 import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Observer;
-import org.jscience.mathematics.number.Real;
+
 
 //FIXME: TO BE DONE
 
@@ -65,12 +65,12 @@ public abstract class Instrument extends LazyObject implements Observer {
 	/**
 	 * Represents the net present value of the instrument.
 	 */
-	private Real NPV_;
+	private /*@Price*/ double NPV_;
 	
 	/**
 	 * Represents the error estimate on the NPV when available.
 	 */
-	private Real errorEstimate_;
+	private /*@Price*/ double errorEstimate_;
 	
 	/**
 	 * Represents all additional result returned by the pricing engine.
@@ -81,22 +81,22 @@ public abstract class Instrument extends LazyObject implements Observer {
 
     public Instrument() {
     	super();
-    	this.NPV_ = null;
-    	this.errorEstimate_ = null;
+    	this.NPV_ = Double.NaN;
+    	this.errorEstimate_ = 0.0;
     }
 
     
 
 	
-	public final Real getNPV() {
+	public final /*@Price*/ double getNPV() {
 		calculate();
-		if (this.NPV_==null) throw new ArithmeticException("NPV not provided"); // FIXME: find something better
+		if (this.NPV_==Double.NaN) throw new ArithmeticException("NPV not provided"); // FIXME: find something better
 		return NPV_;
 	}
 
-	public final Real getErrorEstimate() {
+	public final /*@Price*/ double getErrorEstimate() {
 		calculate();
-		if (this.errorEstimate_==null) throw new ArithmeticException("error estimate not provided"); // FIXME: find something better
+		if (this.errorEstimate_==Double.NaN) throw new ArithmeticException("error estimate not provided"); // FIXME: find something better
 		return errorEstimate_;
 	}
 
@@ -170,8 +170,8 @@ public abstract class Instrument extends LazyObject implements Observer {
      * state when the expiration condition is met.
      */
     protected final void setupExpired() {
-        NPV_ = new Real(0.0);
-        errorEstimate_ = new Real(0.0);
+        NPV_ = 0.0;
+        errorEstimate_ = 0.0;
         additionalResults_.clear();
     }
 
@@ -219,21 +219,21 @@ public abstract class Instrument extends LazyObject implements Observer {
      */
    // FIXME: code review
     private class InstrumentResults implements PricingEngineResults {
-        private Real value;
-        private Real errorEstimate;
+        private double value;
+        private double errorEstimate;
         private Map<String, Object> additionalResults;
 
         public void reset() {
-    		value = null;
-    		errorEstimate = null;
+    		value = Double.NaN;
+    		errorEstimate = Double.NaN;
     		additionalResults.clear();
     	}
 
-        public final Real getValue() {
+        public final double getValue() {
         	return value;
         }
         
-        public final Real getErrorEstimate() {
+        public final double getErrorEstimate() {
         	return errorEstimate;
         }
         
@@ -242,20 +242,20 @@ public abstract class Instrument extends LazyObject implements Observer {
 
         }
         
-        public void setValue(final Real value) {
+        public void setValue(final double value) {
         	this.value = value;
         }
         
-        public void setErrorEstimate(final Real errorEstimate) {
+        public void setErrorEstimate(final double errorEstimate) {
         	this.errorEstimate = errorEstimate;
         }
         
-        public void setAdditionalResults(final Map<String,Object> additionalResults) {
+        public void setAdditionalResults(final Map<String, Object> additionalResults) {
         	this.additionalResults = copy(additionalResults);
         }
         
         private Map<String,Object> copy(Map<String,Object> src) {
-        	Map<String,Object> dest;
+        	Map<String, Object> dest;
         	if (src==null) {
         		dest = null;
         	} else {

@@ -42,7 +42,6 @@ import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.DefaultExtrapolator;
 import org.jquantlib.math.interpolation.Extrapolator;
-import org.jquantlib.number.Time;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
@@ -222,7 +221,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	 * @param date
 	 * @return the fraction of the year as a double
 	 */
-	protected final Time getTimeFromReference(final Date date) {
+	protected final /*@Time*/ double getTimeFromReference(final Date date) {
 		return dayCounter.getYearFraction(getReferenceDate(), date);
 	}
 
@@ -236,10 +235,10 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	/**
 	 * This method performs date-range check
 	 */ 
-	protected final void checkRange(final Time time, boolean extrapolate) {
-		double t = time.doubleValue();
+	protected final void checkRange(final /*@Time*/ double time, boolean extrapolate) {
+		/*@Time*/ double t = time;
 		if (t<0.0) throw new IllegalArgumentException("negative double given");
-		if (! (extrapolate || allowsExtrapolation() || (t<=getMaxTime().doubleValue())) ) 
+		if (! (extrapolate || allowsExtrapolation() || (t<=getMaxTime())) ) 
 			throw new IllegalArgumentException("double ("+time+") is past max curve double ("+getMaxTime()+")");
 	}
 	
@@ -253,7 +252,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	/**
 	 * @return the latest double for which the curve can return values
 	 */
-	public final Time getMaxTime(){
+	public final /*@Time*/ double getMaxTime(){
 		return getTimeFromReference(getMaxDate());
 	}
 

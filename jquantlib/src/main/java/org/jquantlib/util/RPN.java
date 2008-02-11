@@ -20,9 +20,10 @@
 
 package org.jquantlib.util;
 
-import java.util.Stack;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
+import it.unimi.dsi.fastutil.doubles.DoubleStack;
 
-import org.jscience.mathematics.number.Real;
 
 /**
  * This class implements a simple RPN calculator.
@@ -33,10 +34,10 @@ import org.jscience.mathematics.number.Real;
  */
 public class RPN {
 
-	private Stack<Real> stack;
+	private DoubleStack stack;
 	
 	public RPN() {
-		this.stack = new Stack<Real>();
+		this.stack = new DoubleArrayList();
 	}
 	
 	/**
@@ -47,25 +48,23 @@ public class RPN {
 	 *  
 	 * @return a {@link Real} which represents the result of the calculation
 	 */
-	public Real expr(Object...objs) {
-		if (objs==null) return Real.ZERO;
-		stack.clear();
+	public double expr(Object...objs) {
+		if (objs==null) return 0.0;
+		((DoubleList)stack).clear();
 		for (int i=0; i<objs.length; i++) {
             final Object obj = objs[i];
-            if (obj instanceof Real) {
-            	stack.push( (Real) obj );
-            } else if (obj instanceof Double) {
-            	stack.push( Real.valueOf( (Double) obj ));
+            if (obj instanceof Double) {
+            	stack.push( (Double)obj );
             } else if (obj instanceof Character) { 
-                final Real a = (Real) stack.pop();
-                final Real b = (Real) stack.pop();
-                final Real r;
+                final double a = stack.pop();
+                final double b = stack.pop();
+                final double r;
                 char c = ((Character)obj).charValue(); 
             	switch (c) {
-	                case '+': r = a.plus( b ); break;
-	                case '-': r = a.minus( b ); break;
-	                case '*': r = a.times( b ); break;
-	                case '/': r = a.divide( b ); break;
+	                case '+': r = a + b; break;
+	                case '-': r = a - b; break;
+	                case '*': r = a * b; break;
+	                case '/': r = a / b; break;
 	                default : throw new IllegalArgumentException(obj.toString());
             	}
                 stack.push(r);
@@ -73,7 +72,7 @@ public class RPN {
             	throw new ClassCastException(obj.toString());
             }
 		}
-		return (Real) stack.pop();
+		return stack.pop();
 	}
 
 }

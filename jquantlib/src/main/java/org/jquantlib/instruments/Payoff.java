@@ -38,7 +38,6 @@
 
 package org.jquantlib.instruments;
 
-import org.jscience.mathematics.number.Real;
 
 
 
@@ -67,7 +66,7 @@ public abstract class Payoff {
 //    virtual void accept(AcyclicVisitor&);
 //    //@}
 
-	protected abstract Real valueOf(Real price);
+	protected abstract /*@Price*/ double valueOf(/*@Price*/ double price);
 	
 // FIXME ElementVisitor
 //	protected void accept(final ElementVisitor<Payoff> v) {

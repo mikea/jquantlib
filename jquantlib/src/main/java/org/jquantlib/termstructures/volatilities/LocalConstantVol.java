@@ -38,15 +38,12 @@
 package org.jquantlib.termstructures.volatilities;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.Time;
-import org.jquantlib.number.Volatility;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.tmp.DefaultCalendar;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
 // Local constant volatility, no time dependence, no asset dependence
 
@@ -61,9 +58,9 @@ public class LocalConstantVol extends LocalVolTermStructure {
 	private Quote volatility_;
 	private DayCounter dayCounter_;
 
-	public LocalConstantVol(final Date referenceDate, final Volatility volatility, final DayCounter dayCounter) {
+	public LocalConstantVol(final Date referenceDate, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
 		super(referenceDate);
-		this.volatility_ = new SimpleQuote(volatility.doubleValue());
+		this.volatility_ = new SimpleQuote(volatility);
 		this.dayCounter_ = dayCounter;
 	}
 
@@ -74,9 +71,9 @@ public class LocalConstantVol extends LocalVolTermStructure {
 		this.volatility_.addObserver(this);
 	}
 
-	public LocalConstantVol(int settlementDays, final Calendar cal, final Volatility volatility, final DayCounter dayCounter) {
+	public LocalConstantVol(int settlementDays, final Calendar cal, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
 		super(settlementDays, new DefaultCalendar());
-		this.volatility_ = new SimpleQuote(volatility.doubleValue());
+		this.volatility_ = new SimpleQuote(volatility);
 		this.dayCounter_ = dayCounter;
 	}
 
@@ -96,18 +93,18 @@ public class LocalConstantVol extends LocalVolTermStructure {
 	}
 
 	@Override
-	public final Real getMinStrike() {
-		return new Real(Double.NEGATIVE_INFINITY);
+	public final /*@Price*/ double getMinStrike() {
+		return Double.NEGATIVE_INFINITY;
 	}
 
 	@Override
-	public final Real getMaxStrike() {
-		return new Real(Double.POSITIVE_INFINITY);
+	public final /*@Price*/ double getMaxStrike() {
+		return Double.POSITIVE_INFINITY;
 	}
 
 	@Override
-	protected final Volatility localVolImpl(final Time maturity, final Real strike) {
-		return new Volatility(this.volatility_.getValue());
+	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+		return this.volatility_.getValue();
 	}
 
 	// inline void LocalConstantVol::accept(AcyclicVisitor& v) {

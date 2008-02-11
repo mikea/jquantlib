@@ -40,12 +40,9 @@ package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.Time;
-import org.jquantlib.number.Volatility;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.tmp.DefaultCalendar;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
 // FIXME: format comments, etc
 public abstract class LocalVolTermStructure extends TermStructure {
@@ -97,13 +94,13 @@ public abstract class LocalVolTermStructure extends TermStructure {
         
         //! \name Local Volatility
         
-        public final Volatility localVol(final Date d, final Real underlyingLevel, boolean extrapolate) {
-			Time t = getTimeFromReference(d);
+        public final /*@Volatility*/ double localVol(final Date d, final /*@Price*/ double underlyingLevel, boolean extrapolate) {
+			/*@Time*/ double t = getTimeFromReference(d);
 			checkRange(t, underlyingLevel, extrapolate);
 			return localVolImpl(t, underlyingLevel);
 		}
 
-        public final Volatility localVol(final Time t, final Real underlyingLevel, boolean extrapolate) {
+        public final /*@Volatility*/ double localVol(final /*@Time*/ double t, final /*@Price*/ double underlyingLevel, boolean extrapolate) {
 			checkRange(t, underlyingLevel, extrapolate);
 			return localVolImpl(t, underlyingLevel);
 		}
@@ -112,12 +109,12 @@ public abstract class LocalVolTermStructure extends TermStructure {
         /**
          * @return the minimum strike for which the term structure can return vols
          */
-        public abstract Real getMinStrike();
+        public abstract /*@Price*/ double getMinStrike();
         
         /**
          * @return the maximum strike for which the term structure can return vols
          */ 
-        public abstract Real getMaxStrike();
+        public abstract /*@Price*/ double getMaxStrike();
 
 
 
@@ -131,17 +128,16 @@ public abstract class LocalVolTermStructure extends TermStructure {
             assume that extrapolation is required.
         */
         //! local vol calculation
-        protected abstract Volatility localVolImpl(final Time t, final Real strike);
+        protected abstract /*@Volatility*/ double localVolImpl(final /*@Time*/ double t, final /*@Price*/ double strike);
 
         
 
-        private final void checkRange(final Time t, final Real k, boolean extrapolate) {
+        private final void checkRange(final /*@Time*/ double t, final /*@Price*/ double strike, boolean extrapolate) {
         	super.checkRange(t, extrapolate);
-        	double ktmp = k.doubleValue();
-        	double minStrike = getMinStrike().doubleValue();
-        	double maxStrike = getMaxStrike().doubleValue();
-        	if (! (extrapolate || allowsExtrapolation() || (ktmp >=  minStrike && ktmp <= maxStrike)) ) {
-        		throw new ArithmeticException("strike ("+ktmp+") is outside the curve domain ["+minStrike+","+maxStrike+"]");
+        	/*@Price*/ double minStrike = getMinStrike();
+        	/*@Price*/ double maxStrike = getMaxStrike();
+        	if (! (extrapolate || allowsExtrapolation() || (strike >=  minStrike && strike <= maxStrike)) ) {
+        		throw new ArithmeticException("strike (" + strike + ") is outside the curve domain [" + minStrike + "," + maxStrike + "]");
         	}
         }
 

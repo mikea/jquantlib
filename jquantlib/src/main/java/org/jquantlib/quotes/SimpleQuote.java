@@ -20,7 +20,6 @@
 
 package org.jquantlib.quotes;
 
-import org.jscience.mathematics.number.Real;
 
 // FIXME: understand how this class is used
 public class SimpleQuote extends Quote {
@@ -32,10 +31,6 @@ public class SimpleQuote extends Quote {
 		this.value = o.value;
 	}
 	
-	public SimpleQuote(final Real f) {
-		this.value = f.doubleValue();
-	}
-
 	public SimpleQuote(final double d) {
 		this.value = d;
 	}
@@ -46,13 +41,12 @@ public class SimpleQuote extends Quote {
 		return value;
 	}
 	
-	public void setValue(final Real value) {
-		double diff = this.value - value.doubleValue(); 
-		if (diff != 0.0) { // FIXME: potentially an error. Should be diff < 0.00000001 or something
-			this.value = value.doubleValue();
+	public void setValue(final double value) {
+		double diff = this.value - value; 
+		if (diff != 0.0) {
+			this.value = value;
 			notifyObservers();
 		}
-		// return diff; // XXX This is not the standard way setters are defined in Java
 	}
 
 }

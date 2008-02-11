@@ -39,15 +39,11 @@ package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.DiscountFactor;
-import org.jquantlib.number.Rate;
-import org.jquantlib.number.Time;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
 /**
  * This abstract class defines the interface of concrete rate structures which
@@ -64,7 +60,7 @@ import org.jscience.mathematics.number.Real;
 // TEST: observability against evaluation date changes is checked.
 public abstract class YieldTermStructure extends TermStructure {
 
-	protected abstract DiscountFactor discountImpl(final Time t);
+	protected abstract /*DiscountFactor*/ double discountImpl(final /*@Time*/ double t);
 	
 	
 	/**
@@ -127,11 +123,11 @@ public abstract class YieldTermStructure extends TermStructure {
 
 	protected final InterestRate getZeroRate(final Date d, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
 		if (d == getReferenceDate()) {
-			Time t = new Time(0.0001);
-			Real compound = new Real( 1/getDiscount(t, extrapolate).doubleValue() ); // 1/discount(t,extrapolate)
+			/*@Time*/ double t = 0.0001;
+			/*@CompoundFactor*/ double compound = 1/getDiscount(t, extrapolate); // 1/discount(t,extrapolate)
 			return InterestRate.getImpliedRate(compound, t, dayCounter, comp, freq);
 		} else {
-			Real compound = new Real( 1/getDiscount(d, extrapolate).doubleValue() ); // 1/discount(d,extrapolate)
+			/*@CompoundFactor*/ double compound = 1/getDiscount(d, extrapolate); // 1/discount(d,extrapolate)
 			return InterestRate.getImpliedRate(compound, getReferenceDate(), d, dayCounter, comp, freq);
 		}
 	}
@@ -141,12 +137,12 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * term structure. The same rule should be used for calculating the passed
 	 * double t.
 	 */
-	protected InterestRate getZeroRate(final Time time, final Compounding comp, final Frequency freq, boolean extrapolate) {
-		double t = time.doubleValue();
+	protected InterestRate getZeroRate(final /*@Time*/ double  time, final Compounding comp, final Frequency freq, boolean extrapolate) {
+		/*@Time*/ double t = time;
 		if (t==0.0) {
 			t = 0.0001;
 		}
-		Real compound = new Real( 1/getDiscount(new Time(t), extrapolate).doubleValue() ); // 1/discount(t,extrapolate)
+		/*@CompoundFactor*/ double compound = 1/getDiscount(t, extrapolate); // 1/discount(t,extrapolate)
 		return InterestRate.getImpliedRate(compound, time, this.getDayCounter(), comp, freq);
 	}
 
@@ -172,17 +168,17 @@ public abstract class YieldTermStructure extends TermStructure {
 
 	protected InterestRate getForwardRate(final Date d1, final Date d2, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
 		if (d1.eq(d2)) {
-			double t1 = getTimeFromReference(d1).doubleValue();
-			double t2 = t1+0.0001;
-			double delta = t2-t1;
-			double factor1 = getDiscount(new Time(t1), extrapolate).doubleValue();
-			double factor2 = getDiscount(new Time(t2), extrapolate).doubleValue();
-			Real compound = new Real( factor1 / factor2 );
-			return InterestRate.getImpliedRate(compound, new Time(delta), dayCounter, comp, freq);
+			/*@Time*/ double  t1 = getTimeFromReference(d1);
+			/*@Time*/ double  t2 = t1+0.0001;
+			/*@Time*/ double  delta = t2-t1;
+			/*@DiscountFactor*/ double factor1 = getDiscount(t1, extrapolate);
+			/*@DiscountFactor*/ double factor2 = getDiscount(t2, extrapolate);
+			/*@CompoundFactor*/ double compound = factor1 / factor2;
+			return InterestRate.getImpliedRate(compound, delta, dayCounter, comp, freq);
 		} else if (d1.lt(d2)) {
-			double discount1 = getDiscount(d1, extrapolate).doubleValue();
-			double discount2 = getDiscount(d2, extrapolate).doubleValue();
-			Real compound = new Real( discount1 / discount2 );
+			/*@DiscountFactor*/ double discount1 = getDiscount(d1, extrapolate);
+			/*@DiscountFactor*/ double discount2 = getDiscount(d2, extrapolate);
+			/*@CompoundFactor*/ double compound = discount1 / discount2;
 			return InterestRate.getImpliedRate(compound, d1, d2, dayCounter, comp, freq);
 		} else {
 			throw new IllegalArgumentException(d1 + " later than " + d2);
@@ -205,7 +201,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * @see YieldTermStructure#forwardRate(Date, Date, DayCounter,
 	 *      org.jquantlib.termstructures.InterestRate.Compounding, Frequency)
 	 */
-	public InterestRate getForwardRate(final Time t1, final Time t2, final Compounding comp) {
+	public InterestRate getForwardRate(final /*@Time*/ double  t1, final /*@Time*/ double  t2, final Compounding comp) {
 		return getForwardRate(t1, t2, comp, Frequency.Annual);
 	}
 
@@ -213,7 +209,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * @see YieldTermStructure#forwardRate(Date, Date, DayCounter,
 	 *      org.jquantlib.termstructures.InterestRate.Compounding, Frequency)
 	 */
-	public InterestRate getForwardRate(final Time t1, final Time t2, final Compounding comp, final Frequency freq) {
+	public InterestRate getForwardRate(final /*@Time*/ double  t1, final /*@Time*/ double t2, final Compounding comp, final Frequency freq) {
 		return getForwardRate(t1, t2, comp, freq, false);
 	}
 
@@ -223,16 +219,16 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * passed times t1 and t2.
 	 */
 	// FIXME; this method is clearly buggy
-	public InterestRate getForwardRate(final Time time1, final Time time2, final Compounding comp, final Frequency freq, boolean extrapolate) {
-		double t1 = time1.doubleValue();
-		double t2 = time2.doubleValue();
+	public InterestRate getForwardRate(final /*@Time*/ double  time1, final /*@Time*/ double  time2, final Compounding comp, final Frequency freq, boolean extrapolate) {
+		/*@Time*/ double t1 = time1;
+		/*@Time*/ double t2 = time2;
 		if (t2==t1) t2 = t1+0.0001;
 		if (t1<=t2) throw new IllegalArgumentException("t1 (" + t1 + ") < t2 (" + t2 + ")");
-		double discount1 = getDiscount(new Time(t1), extrapolate).doubleValue();
-		double discount2 = getDiscount(new Time(t2), extrapolate).doubleValue();
-		Real compound = new Real( discount1 / discount2 );
-		double delta = t2-t1;
-		return InterestRate.getImpliedRate(compound, new Time(delta), this.getDayCounter(), comp, freq);
+		/*@DiscountFactor*/ double discount1 = getDiscount(t1, extrapolate);
+		/*@DiscountFactor*/ double discount2 = getDiscount(t2, extrapolate);
+		/*@CompoundFactor*/ double compound = discount1 / discount2;
+		/*@Time*/ double delta = t2-t1;
+		return InterestRate.getImpliedRate(compound, delta, this.getDayCounter(), comp, freq);
 	}
 
 	/**
@@ -251,7 +247,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * conventions, pass it the term structure and call the swap's fairRate()
 	 * method.
 	 */
-	protected Rate getParRate(int tenor, final Date startDate, final Frequency freq, boolean extrapolate) {
+	protected /*@Rate*/ double getParRate(int tenor, final Date startDate, final Frequency freq, boolean extrapolate) {
 		Date[] dates = new Date[tenor + 1];
 		dates[0] = startDate;
 		for (int i = 1; i <= tenor; i++)
@@ -267,8 +263,8 @@ public abstract class YieldTermStructure extends TermStructure {
 	 *         following dates must equal the payment dates.
 	 * @see YieldTermStructure#parRate(int, Date, Frequency, boolean)
 	 */
-	protected Rate getParRate(final Date[] dates, final Frequency freq, boolean extrapolate) {
-		Time[] times = new Time[dates.length];
+	protected /*@Rate*/ double getParRate(final Date[] dates, final Frequency freq, boolean extrapolate) {
+		/*@Time*/ double [] times = new /*@Time*/ double [dates.length];
 		for (int i = 0; i < dates.length; i++)
 			times[i] = getTimeFromReference(dates[i]);
 		return getParRate(times, freq, extrapolate);
@@ -279,19 +275,19 @@ public abstract class YieldTermStructure extends TermStructure {
 	 *         following times must equal the payment times.
 	 * @see YieldTermStructure#parRate(int, Date, Frequency, boolean)
 	 */
-	protected Rate getParRate(final Time[] times, final Frequency frequency, boolean extrapolate) {
+	protected /*@Rate*/ double getParRate(final /*@Time*/ double[] times, final Frequency frequency, boolean extrapolate) {
 		if (times.length < 2)
 			throw new IllegalArgumentException("at least two times are required");
-		Time last = times[times.length - 1];
+		/*@Time*/ double last = times[times.length - 1];
 		checkRange(last, extrapolate);
-		double sum = 0.0;
+		/*@DiscountFactor*/ double sum = 0.0;
 		for (int i = 1; i < times.length; i++) {
-			sum += discountImpl(times[i]).doubleValue();
+			sum += discountImpl(times[i]);
 		}
-		double result = discountImpl(times[0]).doubleValue() - discountImpl(last).doubleValue();
+		/*@Rate*/ double result = discountImpl(times[0]) - discountImpl(last);
 		int freq = frequency.toInteger();
 		result *= freq/sum;
-		return new Rate(result);
+		return result;
 	}
 
 	/**
@@ -302,11 +298,11 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * former case, the double is calculated as a fraction of year from the
 	 * reference date.
 	 */
-	public DiscountFactor getDiscount(final Date d) {
+	public /*@DiscountFactor*/ double getDiscount(final Date d) {
 		return getDiscount(d, false);
 	}
 
-	public DiscountFactor getDiscount(final Date d, boolean extrapolate) {
+	public /*@DiscountFactor*/ double getDiscount(final Date d, boolean extrapolate) {
 		checkRange(d, extrapolate);
 		return discountImpl(getTimeFromReference(d));
 	}
@@ -315,11 +311,11 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * The same day-counting rule used by the term structure should be used for
 	 * calculating the passed double t.
 	 */
-	public DiscountFactor getDiscount(final Time t) {
+	public /*@DiscountFactor*/ double getDiscount(final /*@Time*/ double t) {
 		return getDiscount(t, false);
 	}
 
-	public DiscountFactor getDiscount(final Time t, boolean extrapolate) {
+	public /*@DiscountFactor*/ double getDiscount(final /*@Time*/ double t, boolean extrapolate) {
 		checkRange(t, extrapolate);
 		return discountImpl(t);
 	}

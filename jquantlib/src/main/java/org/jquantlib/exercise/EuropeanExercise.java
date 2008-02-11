@@ -32,7 +32,7 @@ public class EuropeanExercise extends Exercise {
 	public EuropeanExercise(final Date date) {
 		super(Exercise.Type.European);
 		if (date==null) throw new NullPointerException();
-		add(date);
+		add(date.getValue());
 	}
 
 }

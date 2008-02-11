@@ -20,22 +20,21 @@
 
 package org.jquantlib.instruments;
 
-import org.jscience.mathematics.number.Real;
 
 
 /**
  * Plain-vanilla payoff
  */
 public class PlainVanillaPayoff extends StrikedTypePayoff {
-	public PlainVanillaPayoff(final Option.Type type, final Real strike) {
+	public PlainVanillaPayoff(final Option.Type type, final /*@Price*/ double strike) {
 		super(type, strike);
 	}
 	
-    public final Real valueOf(final Real price) {
+    public final /*@Price*/ double valueOf(final /*@Price*/ double price) {
     	if (type_==Option.Type.Call) {
-    		return new Real( Math.max(price.doubleValue() - strike.doubleValue(), 0.0) );
+    		return Math.max(price - strike, 0.0);
     	} else if (type_==Option.Type.Put) {
-    		return new Real( Math.max(strike.doubleValue() - price.doubleValue(), 0.0) );
+    		return Math.max(strike - price, 0.0);
     	} else {
     		throw new IllegalArgumentException("unknown/illegal option type");
     	}

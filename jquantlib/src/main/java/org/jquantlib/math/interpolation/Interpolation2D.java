@@ -38,96 +38,106 @@
 
 package org.jquantlib.math.interpolation;
 
-import org.jscience.mathematics.number.Real;
-import org.jscience.mathematics.vector.Matrix;
-import org.jscience.mathematics.vector.Vector;
+import jal.doubles.Sorting;
 
-public abstract class Interpolation2D<T extends Real> implements Extrapolator {
+import org.jquantlib.math.Closeness;
 
 
-	protected abstract T xMin();
-	protected abstract T xMax();
-	protected abstract T getValue(final T x, final T y);
-	protected abstract T primitive(final T x, final T y);
-	protected abstract T derivative(final T x, final T y);
-	protected abstract T secondDerivative(final T x, final T y);
+public abstract class Interpolation2D implements Extrapolator {
 
-	
-	protected Vector<T> vx;
-	protected Vector<T> vy; // FIXME: code review
-	protected Matrix mz; // FIXME: Define our own Matrix class, probably a delegate to http://ressim.berlios.de/doc/no/uib/cipr/matrix/Matrix.html
+
+	protected double[] vx;
+	protected double[] vy;
+	protected double[][] mz;
 	
 
-	protected Interpolation2D(final Vector<T> x, final Vector<T> y, final Matrix z) {
-		this.vx = x;
-		this.vy = y;
-		if (this.vx.getDimension() < 2 || this.vy.size() < 2)
+	protected Interpolation2D(final double[] x, final double[] y, final double[][] z) {
+		vx = x;
+		vy = y;
+		if (vx.length < 2 || vy.length < 2)
 			throw new IllegalArgumentException("not enough points to interpolate");
-		for (int i = 0; i < this.vx.getDimension()-1; i++) {
-			if ( this.vx.get(i).isGT(this.vx.get(i + 1)) )
+		for (int i = 0; i < vx.length-1; i++) {
+			if ( vx[i] > vx[i+1] )
 				throw new IllegalArgumentException("unsorted values on array X");
-			if ( this.vy.get(i).isGT(this.vy.get(i + 1)) )
+			if ( vy[i] > vy[i+1] )
 				throw new IllegalArgumentException("unsorted values on array Y");
 		}
 	}
 	
-    public final T getValue(final T x, final T y, boolean allowExtrapolation) {
-        checkRange(x,y,allowExtrapolation);
-        return getValue(x,y);
-    }
-    
-    public final T xMin() {
-        return impl_->xMin();
-    }
-    
-    public final  T xMax() {
-        return impl_->xMax();
-    }
-    
-    public final  std::vector<Real> xValues() {
-        return impl_->xValues();
-    }
-    
-    public final  Size locateX(Real x) {
-        return impl_->locateX(x);
-    }
-    
-    public final  Real yMin() {
-        return impl_->yMin();
-    }
-    
-    public final  T yMax() {
-        return impl_->yMax();
-    }
-    
-    public final  std::vector<Real> yValues() {
-        return impl_->yValues();
-    }
-    
-    public final  Size locateY(Real y) {
-        return impl_->locateY(y);
-    }
-    
-    public final Matrix zData() {
-        return impl_->zData();
-    }
-    
-	protected final boolean isInRange(final MutableDouble x, final MutableDouble y) {
+	/**
+	 * This method does not have anything to do with Observer.update()
+	 */
+	public abstract void update();
 
-		T x1 = xMin();
-		T x2 = xMax();
-		if (! (x.isGT(x1) && x.isLE(x2)) ) return false;
+	protected abstract double getValue(final double x, final double y);
 
-		T y1 = yMin();
-		T y2 = yMax();
-		return (y.isGT(y1) && y.isLE(y2));
+	protected abstract double primitive(final double x, final double y);
+	protected abstract double derivative(final double x, final double y);
+	protected abstract double secondDerivative(final double x, final double y);
+
+	
+	
+	public final double getValue(final double x, final double y, boolean allowExtrapolation) {
+        checkRange(x, y, allowExtrapolation);
+        return getValue(x, y);
+    }
+    
+	public double xMin() {
+		return vx[0]; // get first element
+	}
+
+	public double xMax() {
+		return vx[vx.length-1]; // get last element
+	}
+
+	public double yMin() {
+		return  vy[0]; // get first element
+	}
+
+	public double yMax() {
+		return vy[vy.length-1]; // get last element
+	}
+
+	public final double[] xValues() {
+        return vx;
+    }
+	
+	public final double[] yValues() {
+        return vy;
     }
 
-    public void update() {
-        impl_->calculate();
+	public final double[][] zData() {
+        return mz;
+    }
+
+    protected int locateX(double x) /* @ReadOnly */ {
+        if (x < vx[0])
+            return 0;
+        else if (x > vx[vx.length-1])
+            return vx.length-2;
+        else
+            return Sorting.upper_bound(vx, 0, vx.length-1, x)-1;
     }
     
-  protected final void checkRange(final MutableDouble x, final MutableDouble y, boolean extrapolate) {
+    protected int locateY(double y) /* @ReadOnly */ {
+        if (y < vy[0])
+            return 0;
+        else if (y > vy[vy.length-1])
+            return vy.length-2;
+        else
+            return Sorting.upper_bound(vy, 0, vy.length-1, y)-1;
+    }
+    
+	protected final boolean isInRange(final double x, final double y) {
+		double x1 = xMin(), x2 = xMax();
+        boolean xIsInrange = (x >= x1 && x <= x2) || Closeness.close(x,x1) || Closeness.close(x,x2);
+        if (!xIsInrange) return false;
+
+        double y1 = yMin(), y2 = yMax();
+        return (y >= y1 && y <= y2) || Closeness.close(y,y1) || Closeness.close(y,y2);
+    }
+
+	protected final void checkRange(final double x, final double y, boolean extrapolate) {
 		if (!(extrapolate || allowsExtrapolation() || isInRange(x, y))) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("interpolation range is [");
@@ -139,9 +149,15 @@ public abstract class Interpolation2D<T extends Real> implements Extrapolator {
 			sb.append(") not allowed");
 			throw new IllegalArgumentException(sb.toString());
 		}
-    }
+	}
+
+    
+    
     
 
+  
+  
+  
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
 	 * 

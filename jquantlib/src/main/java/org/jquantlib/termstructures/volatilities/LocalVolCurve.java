@@ -38,11 +38,8 @@
 package org.jquantlib.termstructures.volatilities;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.Time;
-import org.jquantlib.number.Volatility;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
 // Local volatility curve derived from a Black curve
 
@@ -69,13 +66,13 @@ public class LocalVolCurve extends LocalVolTermStructure {
 	}
 
 	@Override
-	public final Real getMinStrike() {
-		return new Real(Double.NEGATIVE_INFINITY);
+	public final /*@Price*/ double getMinStrike() {
+		return Double.NEGATIVE_INFINITY;
 	}
 
 	@Override
-	public final Real getMaxStrike() {
-		return new Real(Double.POSITIVE_INFINITY);
+	public final /*@Price*/ double getMaxStrike() {
+		return Double.POSITIVE_INFINITY;
 	}
 
 	// FIXME: Visitor
@@ -100,13 +97,13 @@ public class LocalVolCurve extends LocalVolTermStructure {
 	 {@latex[ \sigma_L(t) = \sqrt{\frac{\mathrm{d}}{\mathrm{d}t}\sigma_B^2(t)t} }
 	 * can be deduced which is here implemented.
 	 */
-	protected final Volatility localVolImpl(final Time maturity, final Real strike) {
-		double m = maturity.doubleValue();
-		double dt = 1.0 / 365.0;
-		double var1 = blackVarianceCurve_.blackVariance(maturity, strike, true).doubleValue();
-		double var2 = blackVarianceCurve_.blackVariance(new Time(m + dt), strike, true).doubleValue();
+	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+		/*@Time*/ double m = maturity;
+		/*@Time*/ double dt = 1.0 / 365.0;
+		/*@Variance*/ double var1 = blackVarianceCurve_.blackVariance(/*@Time*/ maturity, strike, true);
+		/*@Variance*/ double var2 = blackVarianceCurve_.blackVariance(/*@Time*/ m + dt, strike, true);
 		double derivative = (var2 - var1) / dt;
-		return new Volatility(Math.sqrt(derivative));
+		return Math.sqrt(derivative);
 	}
 
 }

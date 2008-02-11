@@ -49,7 +49,6 @@ import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
-import org.jscience.mathematics.number.Real;
 
 /**
  * Date and time related classes, typedefs and enumerations
@@ -72,8 +71,14 @@ import org.jscience.mathematics.number.Real;
  * @author Richard Gomes
  */
 // FIXME: potential performance issue
-public class Date extends Real implements Observable { 
+public class Date implements Observable { 
     
+	private /*@NonNegative*/ int value;
+	
+	public int getValue() /*@ReadOnly*/ {
+		return value;
+	}
+	
 	static private final int MinimumSerialNumber = 367;      // Jan 1st, 1901
     static private final int MaximumSerialNumber = 73050;    // Dec 31st, 2099
 	static private final Date maximumSerialNumber = new Date(MaximumSerialNumber);
@@ -203,12 +208,11 @@ public class Date extends Real implements Observable {
      * Creates a null Date
      */
     public Date() {
-    	super();
+    	this.value = 0;
     }
 
     private Date(int value) {
-    	super();
-    	super.plus(Real.valueOf(value));
+    	this.value = value;
     }
 
     /**
@@ -280,7 +284,6 @@ public class Date extends Real implements Observable {
      * @return the year
      */
     public final int getYear() {
-    	int value = intValue();
         int y = (value / 365)+1900;
         // yearOffset(y) is December 31st of the preceding year
         if (value <= getYearOffset(y))
@@ -294,7 +297,7 @@ public class Date extends Real implements Observable {
      * @return <code>this</code> Date incremented
      */
     public Date inc() {
-    	super.plus(Real.ONE);
+    	value++;
         notifyObservers();
         return this;
     }
@@ -305,7 +308,7 @@ public class Date extends Real implements Observable {
      * @return <code>this</code> Date decremented
      */
     public Date dec() {
-    	super.minus(Real.ONE);
+    	value--;
         notifyObservers();
         return this;
     }
@@ -317,7 +320,7 @@ public class Date extends Real implements Observable {
      * @return <code>this</code> Date incremented by a given number of days
      */
     public Date inc(final int days) {
-    	super.plus(Real.valueOf(days));
+    	value += days;
         notifyObservers();
         return this;
     }
@@ -329,7 +332,7 @@ public class Date extends Real implements Observable {
      * @return <code>this</code> Date decremented by a given number of days
      */
     public Date dec(final int days) {
-    	super.minus(Real.valueOf(days));
+    	value -= days;
         notifyObservers();
         return this;
     }
@@ -340,7 +343,7 @@ public class Date extends Real implements Observable {
      * @return <code>this</code> Date incremented by a given Period
      */
     public Date inc(final Period p) {
-        super.plus( Real.valueOf(getAdvancedDate(this, p.getLength(), p.getUnits()).intValue()) );
+        value += getAdvancedDate(this, p.getLength(), p.getUnits()).value;
         notifyObservers();
         return this;
     }
@@ -351,7 +354,7 @@ public class Date extends Real implements Observable {
      * @return <code>this</code> Date decremented by a given Period
      */
     public Date dec(final Period p) {
-        super.minus( Real.valueOf(getAdvancedDate(this, -p.getLength(), p.getUnits()).intValue()) );
+        value -= getAdvancedDate(this, -p.getLength(), p.getUnits()).value;
         notifyObservers();
         return this;
     }
@@ -485,7 +488,7 @@ public class Date extends Real implements Observable {
      * @return the week day of this Date as a <code>enum</code>
      */
     public final Weekday getWeekday() {
-        int w = (int) (super.intValue() % 7);
+        int w = value % 7;
         return Weekday.valueOf(w == 0 ? 7 : w);
     }
 
@@ -502,7 +505,7 @@ public class Date extends Real implements Observable {
      * @return the day of year
      */
     public final int getDayOfYear() {
-        return super.intValue() - getYearOffset(getYear());
+        return value - getYearOffset(getYear());
     }
 
 //    /**
@@ -520,7 +523,7 @@ public class Date extends Real implements Observable {
      * @return a new Date object by subtracting a another Date
      */
     public final int subtract(final Date date) {
-    	return super.intValue() - date.intValue();
+    	return value - date.value;
     }
     
     /**
@@ -529,7 +532,7 @@ public class Date extends Real implements Observable {
      * @return a new Date object by adding a given number of days
      */
     public final Date add(int days) {
-        return new Date( super.intValue() + days );
+        return new Date(value + days);
     }
 
     /**
@@ -538,7 +541,7 @@ public class Date extends Real implements Observable {
      * @return a new Date object by subtracting a given number of days
      */
     public final Date subtract(int days) {
-        return new Date( super.intValue() - days );
+        return new Date(value - days);
     }
 
     /**
@@ -583,7 +586,7 @@ public class Date extends Real implements Observable {
      * @return f <code>this</code> Date is equal to a given Date
      */
     public boolean eq(final Date date) {
-        return ( super.intValue() == date.intValue() );
+        return value == date.value;
     }
 
     /**
@@ -593,7 +596,7 @@ public class Date extends Real implements Observable {
      * @return f <code>this</code> Date is not equal to a given Date
      */
     public boolean neq(final Date date) {
-        return ( super.intValue() != date.intValue() );
+        return value != date.value;
     }
 
     /**
@@ -603,7 +606,7 @@ public class Date extends Real implements Observable {
      * @return f <code>this</code> Date is less than to a given Date
      */
     public boolean lt(final Date date) {
-        return ( super.intValue() < date.intValue() );
+        return value < date.value;
     }
 
     /**
@@ -613,7 +616,7 @@ public class Date extends Real implements Observable {
      * @return f <code>this</code> Date is less than or equal to a given Date
      */
     public boolean le(final Date date) {
-        return ( super.intValue() <= date.intValue() );
+        return value <= date.value;
     }
 
     /**
@@ -623,7 +626,7 @@ public class Date extends Real implements Observable {
      * @return f <code>this</code> Date is greater than to a given Date
      */
     public boolean gt(final Date date) {
-        return ( super.intValue() > date.intValue() );
+        return value > date.value;
     }
 
     /**
@@ -633,7 +636,7 @@ public class Date extends Real implements Observable {
      * @return f <code>this</code> Date is greater than or equal to a given Date
      */
     public boolean ge(final Date date) {
-        return ( super.intValue() >= date.intValue() );
+        return value >= date.value;
     }
 
 

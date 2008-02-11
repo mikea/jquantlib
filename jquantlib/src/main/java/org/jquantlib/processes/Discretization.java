@@ -20,10 +20,7 @@
 
 package org.jquantlib.processes;
 
-import org.jquantlib.number.Time;
-import org.jscience.mathematics.number.Real;
-import org.jscience.mathematics.vector.Matrix;
-import org.jscience.mathematics.vector.Vector;
+
 
 /**
  *  Discretization of a stochastic process over a given time interval
@@ -36,13 +33,13 @@ public interface Discretization {
      * Returns the drift part of the equation, i.e.,
      {@latex$ \mu(t, \mathrm{x}_t) }
      */
-	public abstract Vector<Real> driftDiscretization(/*final StochasticProcess sp, */final Time t0, final Vector<Real> x0, final Time dt); // XXX
+	public abstract /*@Drift*/ double[] driftDiscretization(/*final StochasticProcess sp, */final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt); // XXX
 
     /**
      * Returns the diffusion part of the equation, i.e.
      {@latex$ \sigma(t, \mathrm{x}_t) }
      */
-	public abstract Matrix<Real> diffusionDiscretization(/*final StochasticProcess sp, */final Time t0, final Vector<Real> x0, final Time dt); // XXX
+	public abstract /*@Diffusion*/ double[][] diffusionDiscretization(/*final StochasticProcess sp, */final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt); // XXX
 	
     /**
      * Returns the covariance
@@ -53,6 +50,6 @@ public interface Discretization {
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-	public abstract Matrix<Real> covarianceDiscretization(/*final StochasticProcess sp, */final Time t0, final Vector<Real> x0, final Time dt); // XXX
+	public abstract /*@Covariance*/ double[][] covarianceDiscretization(/*final StochasticProcess sp, */final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt); // XXX
 	
 }

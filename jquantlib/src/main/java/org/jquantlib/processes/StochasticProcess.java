@@ -39,21 +39,19 @@
 
 package org.jquantlib.processes;
 
-import org.jquantlib.number.Time;
+import java.util.Vector;
+
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
-import org.jscience.mathematics.number.Real;
-import org.jscience.mathematics.vector.Matrix;
-import org.jscience.mathematics.vector.Vector;
 
 /**
  * Multi-dimensional stochastic process class.
  * 
  * <p>{@latex[
- *       d\mathrm{x}_t = \mu(t, x_t)\mathrm{d}t
- *                     + \sigma(t, \mathrm{x}_t) \cdot d\mathrm{W}_t.
+ *       d\mathrm{x}_t =
+ *         \mu(t, x_t)\mathrm{d}t + \sigma(t, \mathrm{x}_t) \cdot d\mathrm{W}_t.
  *    }
  */ 
 public abstract class StochasticProcess implements Observable, Discretization, Observer {
@@ -77,19 +75,19 @@ public abstract class StochasticProcess implements Observable, Discretization, O
     /**
      * Returns the initial values of the state variables
      */
-    public abstract Vector<Real> initialValues();
+    public abstract double[] initialValues(); // FIXME: add typecast
         
     /**
      * Returns the drift part of the equation, i.e.,
      * {@latex$ \mu(t, \mathrm{x}_t) }
      */
-    public abstract Vector<Real> drift(final Time t, final Vector<Real> x);
+    public abstract /*@Drift*/ double[] drift(final /*@Time*/ double t, final double[] x);
         
     /**
      * Returns the diffusion part of the equation, i.e.
      * {@latex$ \sigma(t, \mathrm{x}_t) }
      */
-    public abstract Matrix<Real> diffusion(final Time t, final Vector<Real> x);
+    public abstract /*@Diffusion*/ double[][] diffusion(final /*@Time*/ double t, final double[] x);
         
     /**
      * Returns the expectation
@@ -100,7 +98,7 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public Vector<Real> expectation(final Time t0, final Vector<Real> x0, final Time dt) {
+    public /*@Expectation*/ double[] expectation(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt) {
     	return apply(x0, driftDiscretization(/*this, */t0, x0, dt)); //XXX
     }
     
@@ -113,7 +111,7 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public Matrix<Real> stdDeviation(final Time t0, final Vector<Real> x0, final Time dt) {
+    public /*@StdDev*/ double[][] stdDeviation(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt) {
     	return diffusionDiscretization(/*this, */t0, x0, dt); // XXX
     }
     
@@ -126,7 +124,7 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public Matrix<Real> covariance(final Time t0, final Vector<Real> x0, final Time dt) {
+    public /*@Covariance*/ double[][] covariance(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt) {
     	return covarianceDiscretization(/*this, */t0, x0, dt); // XXX
     }
     
@@ -140,17 +138,17 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      * where {@latex$ E } is the expectation and {@latex$ S } the
      * standard deviation.
      */
-    public Vector<Real> evolve(final Time t0, final Vector<Real> x0, final Time dt, final Vector<Real> dw) {
+    public /*@Price*/ double[] evolve(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt, final double[] dw) {
     	// y = M * dw
-    	Vector<Real> y = stdDeviation(t0,x0,dt).times(dw);
-    	return apply(expectation(t0,x0,dt), y);
+    	Vector<Real> y = stdDeviation(t0, x0, dt).times(dw);
+    	return apply(expectation(t0, x0, dt), y);
     }
     
     /**
      * Applies a change to the asset value. By default, it
      * returns {@latex$ \mathrm{x} + \Delta \mathrm{x} }.
      */
-    public Vector<Real> apply(final Vector<Real> x0, final Vector<Real> dx) {
+    public /*@Price*/ double[] apply(final double[] x0, final double[] dx) {
     	return x0.plus(dx);
     }
 
@@ -162,7 +160,7 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      * functionality, a default implementation is given
      * which raises an exception.
      */
-    public final Time getTime(final Date date) {
+    public final /*@Time*/ double getTime(final Date date) {
     	throw new UnsupportedOperationException("date/time conversion not supported");
     }
     

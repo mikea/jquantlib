@@ -21,11 +21,8 @@
 package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.Time;
-import org.jquantlib.number.Volatility;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
 /**
  * Black-volatility term structure
@@ -47,16 +44,16 @@ public abstract class BlackVolTermStructure extends TermStructure {
 	/**
 	 * The minimum strike for which the term structure can return vols
 	 */
-	public abstract Real getMinStrike();
+	public abstract /*@Price*/ double getMinStrike();
 
 	/**
 	 * The maximum strike for which the term structure can return vols
 	 */
-	public abstract Real getMaxStrike();
+	public abstract /*@Price*/ double getMaxStrike();
 
-	protected abstract Volatility blackVolImpl(final Time maturity, final Real strike);
+	protected abstract /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike);
 
-	protected abstract Real blackVarianceImpl(final Time maturity, final Real strike);
+	protected abstract /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike);
 
 	
 	
@@ -77,15 +74,15 @@ public abstract class BlackVolTermStructure extends TermStructure {
 	/**
 	 * Present (a.k.a spot) volatility
 	 */
-	public final Volatility blackVol(final Date maturity, final Real strike) {
+	public final /*@Volatility*/ double blackVol(final Date maturity, final /*@Price*/ double strike) {
 		return blackVol(maturity, strike, false);
 	}
 
 	/**
 	 * Present (a.k.a spot) volatility
 	 */
-	public final Volatility blackVol(final Date maturity, final Real strike, boolean extrapolate) {
-		Time t = super.getTimeFromReference(maturity);
+	public final /*@Volatility*/ double blackVol(final Date maturity, final /*@Price*/ double strike, boolean extrapolate) {
+		/*@Time*/ double t = super.getTimeFromReference(maturity);
 		checkRange(t, strike, extrapolate);
 		return blackVolImpl(t, strike);
 	}
@@ -93,14 +90,14 @@ public abstract class BlackVolTermStructure extends TermStructure {
 	/**
 	 * Present (a.k.a spot) volatility
 	 */
-	public final Volatility blackVol(final Time maturity, final Real strike) {
+	public final /*@Volatility*/ double blackVol(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
 		return blackVol(maturity, strike, false);
 	}
 
 	/**
 	 * Present (a.k.a spot) volatility
 	 */
-	public final Volatility blackVol(final Time maturity, final Real strike, boolean extrapolate) {
+	public final /*@Volatility*/ double blackVol(final /*@Time*/ double maturity, final /*@Price*/ double strike, boolean extrapolate) {
 		checkRange(maturity, strike, extrapolate);
 		return blackVolImpl(maturity, strike);
 	}
@@ -108,15 +105,15 @@ public abstract class BlackVolTermStructure extends TermStructure {
 	/**
 	 * Present (a.k.a spot) variance
 	 */
-	public final Real blackVariance(final Date maturity, final Real strike) {
+	public final /*@Variance*/ double blackVariance(final Date maturity, final /*@Price*/ double strike) {
 		return blackVariance(maturity, strike, false);
 	}
 
 	/**
 	 * Present (a.k.a spot) variance
 	 */
-	public final Real blackVariance(final Date maturity, final Real strike, boolean extrapolate) {
-		Time t = super.getTimeFromReference(maturity);
+	public final /*@Variance*/ double blackVariance(final Date maturity, final /*@Price*/ double strike, boolean extrapolate) {
+		/*@Time*/ double t = super.getTimeFromReference(maturity);
 		checkRange(t, strike, extrapolate);
 		return blackVarianceImpl(t, strike);
 	}
@@ -124,14 +121,14 @@ public abstract class BlackVolTermStructure extends TermStructure {
 	/**
 	 * Present (a.k.a spot) variance
 	 */
-	public final Real blackVariance(final Time maturity, final Real strike) {
+	public final /*@Variance*/ double blackVariance(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
 		return blackVariance(maturity, strike, false);
 	}
 
 	/**
 	 * Present (a.k.a spot) variance
 	 */
-	public final Real blackVariance(final Time maturity, final Real strike, boolean extrapolate) {
+	public final /*@Variance*/ double blackVariance(final /*@Time*/ double maturity, final /*@Price*/ double strike, boolean extrapolate) {
 		checkRange(maturity, strike, extrapolate);
 		return blackVarianceImpl(maturity, strike);
 	}
@@ -145,11 +142,10 @@ public abstract class BlackVolTermStructure extends TermStructure {
 //		}
 //	}
 
-	private final void checkRange(final Time time, final Real strike, boolean extrapolate) {
+	private final void checkRange(final /*@Time*/ double time, final /*@Price*/ double strike, boolean extrapolate) {
 		super.checkRange(time, extrapolate);
-		double k = strike.doubleValue();
-		if (!(extrapolate || allowsExtrapolation() || (k >= getMinStrike().doubleValue() && k <= getMaxStrike().doubleValue())))
-			throw new ArithmeticException("strike (" + k + ") is outside the curve domain [" + getMinStrike() + "," + getMaxStrike() + "]");
+		if (! (extrapolate || allowsExtrapolation() || (strike >= getMinStrike()) && (strike <= getMaxStrike()) ) )
+			throw new ArithmeticException("strike (" + strike + ") is outside the curve domain [" + getMinStrike() + "," + getMaxStrike() + "]");
 	}
 
 	/**
@@ -161,11 +157,11 @@ public abstract class BlackVolTermStructure extends TermStructure {
 	 * @param extrapolate
 	 * @return
 	 */
-	public final Volatility blackForwardVol(final Date date1, final Date date2, final Real strike, boolean extrapolate) {
+	public final /*@Volatility*/ double blackForwardVol(final Date date1, final Date date2, final /*@Price*/ double strike, boolean extrapolate) {
 		if (date1.gt(date2))
 			throw new IllegalArgumentException(date1 + " later than " + date2);
-		Time time1 = getTimeFromReference(date1);
-		Time time2 = getTimeFromReference(date2);
+		/*@Time*/ double time1 = getTimeFromReference(date1);
+		/*@Time*/ double time2 = getTimeFromReference(date2);
 		return blackForwardVol(time1, time2, strike, extrapolate);
 	}
 
@@ -178,29 +174,29 @@ public abstract class BlackVolTermStructure extends TermStructure {
 	 * @param extrapolate
 	 * @return
 	 */
-	public final Volatility blackForwardVol(final Time time1, final Time time2, final Real strike, boolean extrapolate) {
-		double t1 = time1.doubleValue();
-		double t2 = time2.doubleValue();
+	public final /*@Volatility*/ double blackForwardVol(final /*@Time*/ double time1, final /*@Time*/ double time2, final /*@Price*/ double strike, boolean extrapolate) {
+		/*@Time*/ double t1 = time1;
+		/*@Time*/ double t2 = time2;
 		if (t1>t2) throw new IllegalArgumentException(time1 + " later than " + time2);
 		checkRange(time2, strike, extrapolate);
 		
 		if (t1==t2) {
 			if (t1==0.0) {
-				double epsilon = 1.0e-5;
-				double var = blackVarianceImpl(new Time(epsilon), strike).doubleValue();
-				return new Volatility(Math.sqrt(var/epsilon));
+				/*@Time*/ double epsilon = 1.0e-5;
+				/*@Variance*/ double var = blackVarianceImpl(epsilon, strike);
+				return Math.sqrt(var/epsilon);
 			} else {
 				double epsilon = Math.min(1.0e-5, t1);
-				double var1 = blackVarianceImpl(new Time(t1-epsilon), strike).doubleValue();
-				double var2 = blackVarianceImpl(new Time(t1+epsilon), strike).doubleValue();
+				/*@Variance*/ double var1 = blackVarianceImpl(t1-epsilon, strike);
+				/*@Variance*/ double var2 = blackVarianceImpl(t1+epsilon, strike);
 				if (var2<var1) throw new ArithmeticException("variances must be non-decreasing");
-				return new Volatility( Math.sqrt((var2-var1) / (2*epsilon)) );
+				return  Math.sqrt((var2-var1) / (2*epsilon));
 			}
 		} else {
-			double var1 = blackVarianceImpl(time1, strike).doubleValue();
-			double var2 = blackVarianceImpl(time2, strike).doubleValue();
+			/*@Variance*/ double var1 = blackVarianceImpl(time1, strike);
+			/*@Variance*/ double var2 = blackVarianceImpl(time2, strike);
 			if (var2<var1) throw new ArithmeticException("variances must be non-decreasing");
-			return new Volatility( Math.sqrt((var2-var1)/(t2-t1)) );
+			return  Math.sqrt((var2-var1)/(t2-t1));
 		}
 	}
 
@@ -213,11 +209,11 @@ public abstract class BlackVolTermStructure extends TermStructure {
 	 * @param extrapolate
 	 * @return
 	 */
-	public final Real blackForwardVariance(final Date date1, final Date date2, final Real strike, boolean extrapolate) {
+	public final /*@Variance*/ double blackForwardVariance(final Date date1, final Date date2, final /*@Price*/ double strike, boolean extrapolate) {
 		if (date1.gt(date2))
 			throw new IllegalArgumentException(date1 + " later than " + date2);
-		Time time1 = getTimeFromReference(date1);
-		Time time2 = getTimeFromReference(date2);
+		/*@Time*/ double time1 = getTimeFromReference(date1);
+		/*@Time*/ double time2 = getTimeFromReference(date2);
 		return blackForwardVariance(time1, time2, strike, extrapolate);
 	}
 
@@ -230,16 +226,16 @@ public abstract class BlackVolTermStructure extends TermStructure {
 	 * @param extrapolate
 	 * @return
 	 */
-	public final Real blackForwardVariance(final Time time1, final Time time2, final Real strike, boolean extrapolate) {
-		double t1 = time1.doubleValue();
-		double t2 = time2.doubleValue();
+	public final /*@Variance*/ double blackForwardVariance(final /*@Time*/ double time1, final /*@Time*/ double time2, final /*@Price*/ double strike, boolean extrapolate) {
+		/*@Time*/ double t1 = time1;
+		/*@Time*/ double t2 = time2;
 		if (t1>t2) throw new IllegalArgumentException(time1 + " later than " + time2);
 		checkRange(time2, strike, extrapolate);
 
-		double v1 = blackVarianceImpl(time1, strike).doubleValue();
-		double v2 = blackVarianceImpl(time2, strike).doubleValue();
+		/*@Variance*/ double v1 = blackVarianceImpl(time1, strike);
+		/*@Variance*/ double v2 = blackVarianceImpl(time2, strike);
 		if (v2<v1) throw new ArithmeticException("variances must be non-decreasing");
-		return new Real( v2-v1 );
+		return v2-v1;
 	}
 
 }

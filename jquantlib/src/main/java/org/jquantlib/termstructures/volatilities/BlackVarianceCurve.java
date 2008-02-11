@@ -38,20 +38,12 @@
 
 package org.jquantlib.termstructures.volatilities;
 
-import java.util.List;
-
-import javolution.util.FastTable;
-
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.math.interpolation.Linear;
-import org.jquantlib.number.Time;
-import org.jquantlib.number.Volatility;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
-import org.jscience.mathematics.vector.Vector;
 
 // Black volatility curve modelled as variance curve
 
@@ -70,52 +62,54 @@ import org.jscience.mathematics.vector.Vector;
  */
 public class BlackVarianceCurve extends BlackVarianceTermStructure {
 
-	private DayCounter dayCounter_;
-	private Date maxDate_;
-	private FastTable<Real> times_;
-	private FastTable<Real> variances_; // FIXME: create the "Variance" named type
-	private Interpolation<Real> varianceCurve_;
-	private Interpolator<Real> factory;
+	private DayCounter dayCounter;
+	private Date maxDate;
+	private Date[] dates;
+	private /*@Time*/ double[] times;
+	private /*@Variance*/ double[] varianceCurve;
+	private Interpolation variances;
+	private Interpolator factory;
 
-	public BlackVarianceCurve(final Date referenceDate, final List<Date> dates, final List<Volatility> blackVolCurve, final DayCounter dayCounter) {
+	public BlackVarianceCurve(final Date referenceDate, final Date[] dates, /*@Volatility*/ double[] blackVolCurve, final DayCounter dayCounter) {
 		this(referenceDate, dates, blackVolCurve, dayCounter, true);
 	}
 
 	public BlackVarianceCurve(
     			final Date referenceDate,
-    			final List<Date> dates,
-    			final List<Volatility> blackVolCurve,
+    			final Date[] dates,
+    			final /*@Volatility*/ double[] blackVolCurve,
     			final DayCounter dayCounter,
                 boolean forceMonotoneVariance) {
     	super(referenceDate);
-    	if (! (dates.size()==blackVolCurve.size()) ) throw new IllegalArgumentException("mismatch between date vector and black vol vector");
-    	this.dayCounter_ = dayCounter;
-    	maxDate_ = dates.getLast();
+    	if (! (dates.length==blackVolCurve.length) ) throw new IllegalArgumentException("mismatch between date vector and black vol vector");
+    	this.dayCounter = dayCounter;
+    	this.dates = new FastTable<Date>(dates);
+    	maxDate = this.dates.getLast();
 
     	// cannot have dates[0]==referenceDate, since the
     	// value of the vol at dates[0] would be lost
     	// (variance at referenceDate must be zero)
     	if (dates.get(0).le(referenceDate)) throw new IllegalArgumentException("cannot have dates[0] <= referenceDate");
 
-    	this.variances_ = new FastTable<Real>();
+    	this.varianceCurve = new FastTable<Real>();
     	double lastVariance = 0.0;
-    	this.variances_.add(Real.valueOf(lastVariance));
+    	this.varianceCurve.add(Real.valueOf(lastVariance));
     	
-    	this.times_ = new FastTable<Real>();
-    	double lastTime = 0.0;
-    	this.times_.add(Real.valueOf(lastTime));
+    	this.times = new FastTable</*@Time*/ Double>();
+    	/*@Time*/ double lastTime = 0.0;
+    	this.times.add(lastTime);
     	
     	for (int i=0; i<blackVolCurve.size(); i++) {
-    		double currTime = getTimeFromReference(dates.get(i)).doubleValue();
+    		/*@Time*/ double currTime = getTimeFromReference(dates.get(i));
     		if (currTime<=lastTime) throw new IllegalArgumentException("dates must be sorted unique");
-    		this.times_.add(Real.valueOf(currTime));
+    		this.times.add(currTime);
     		lastTime = currTime;
     		
-    		double volCurve = blackVolCurve.get(i).doubleValue();
+    		double volCurve = blackVolCurve.get(i);
     		// var[i] = t[i] * (volCurve[i-1])^2;
     		double currVariance = currTime * Math.pow(volCurve,2);
     		if (currVariance<=lastVariance) throw new IllegalArgumentException("variance must be non-decreasing");
-    		this.variances_.add(Real.valueOf(currVariance));
+    		this.varianceCurve.add(Real.valueOf(currVariance));
     		lastVariance = currVariance;
     	}
 
@@ -123,37 +117,37 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     }
 
 	public final DayCounter dayCounter() {
-		return dayCounter_;
+		return dayCounter;
 	}
 
 	public final Date getMaxDate() {
-		return maxDate_;
+		return maxDate;
 	}
 
-	public final Real getMinStrike() {
-		return new Real(Double.NEGATIVE_INFINITY);
+	public final /*@Price*/ double getMinStrike() {
+		return Double.NEGATIVE_INFINITY;
 	}
 
-	public final Real getMaxStrike() {
-		return new Real(Double.POSITIVE_INFINITY);
+	public final /*@Price*/ double getMaxStrike() {
+		return Double.POSITIVE_INFINITY;
 	}
 
 	public void setInterpolation() {
 		this.setInterpolation(factory);
 	}
 
-	public void setInterpolation(final Interpolator<Real> factory) {
-		varianceCurve_ = factory.interpolate(times_, variances_);
-		varianceCurve_.update();
+	public void setInterpolation(final Interpolator factory) {
+		varianceCurve = factory.interpolate(times, variances);
+		variances.update();
 		notifyObservers();
 	}
 
-	protected final Real blackVarianceImpl(final Time t, Real maturity) {
-		if (t.doubleValue() <= times_.back().doubleValue()) {
-			return varianceCurve_.getValue(t, true);
+	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, Real maturity) {
+		if (t <= times.getLast()) {
+			return variances.getValue(t, true);
 		} else {
 			// extrapolate with flat vol
-			return new Real( varianceCurve_.getValue(times_.back(), true).doubleValue() * t.doubleValue() / times_.back().doubleValue() );
+			return variances.getValue(times.getLast(), true) * t / times.getLast();
 		}
 	}
 

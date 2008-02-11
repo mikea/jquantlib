@@ -22,17 +22,15 @@ package org.jquantlib.pricingengines;
 
 import java.util.Map;
 
-import org.jscience.mathematics.number.Real;
-
 //TODO: analyze if this interface should be a class instead
 public interface PricingEngineResults {
     public void reset();
     
-    public Real getValue();
-    public Real getErrorEstimate();
-    public Map<String,Object> getAdditionalResults();
+    public double getValue();
+    public double getErrorEstimate();
+    public Map<String, Object> getAdditionalResults();
     
-    public void setValue(final Real value);
-    public void setErrorEstimate(final Real errorEstimate);
-    public void setAdditionalResults(final Map<String,Object> additionalResults);
+    public void setValue(final double value);
+    public void setErrorEstimate(final double errorEstimate);
+    public void setAdditionalResults(final Map<String, Object> additionalResults);
 }

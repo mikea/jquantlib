@@ -20,7 +20,6 @@
 
 package org.jquantlib.instruments;
 
-import org.jscience.mathematics.number.Real;
 
 
 /**
@@ -28,14 +27,14 @@ import org.jscience.mathematics.number.Real;
  */
 public abstract class StrikedTypePayoff extends TypePayoff {
 	
-	protected Real strike;
+	protected /*@Price*/ double strike;
 
-	public StrikedTypePayoff(final Option.Type type, final Real strike) {
+	public StrikedTypePayoff(final Option.Type type, final /*@Price*/ double strike) {
 		super(type);
 		this.strike = strike;
 	}
 
-	public final Real getStrike() {
+	public final /*@Price*/ double getStrike() {
 		return strike;
 	}
 

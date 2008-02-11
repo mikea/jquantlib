@@ -38,7 +38,6 @@
 
 package org.jquantlib.daycounters;
 
-import org.jquantlib.number.Time;
 import org.jquantlib.util.Date;
 
 /**
@@ -60,15 +59,15 @@ public class Actual365Fixed extends DayCounterImpl {
 	/**
 	 * @see DayCounter#getYearFraction(Date, Date)
 	 */
-	public Time getYearFraction(final Date dateStart, final Date dateEnd) {
-		return new Time(getDayCount(dateStart, dateEnd)/365.0);
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd) {
+		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
 	}
 	
 	/**
 	 * @see DayCounter#getYearFraction(Date, Date, Date, Date)
 	 */
-	public Time getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) {
-		return new Time(getDayCount(dateStart, dateEnd)/365.0);
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) {
+		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
 	}
 	
 }

@@ -20,24 +20,19 @@
 
 package org.jquantlib.number;
 
-import org.jscience.mathematics.number.Real;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-
-
-public final class Rate extends Real {
-    
-    public Rate() {
-    	super();
-    }
-
-    public Rate(final long value) {
-    	super(value);
-    }
-    
-    public Rate(final double value) {
-    	super(value);
-    }
-
-	// No methods - Tagging class.
-    
+/**
+ * This annotation is intended to tag numeric fields
+ * 
+ * @author Richard Gomes
+ */
+@Typecast
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER })
+public @interface Rate {
+	// No methods - Tagging annotation
 }

@@ -20,10 +20,7 @@
 
 package org.jquantlib.exercise;
 
-import java.util.Arrays;
 import java.util.List;
-
-import javolution.util.FastTable;
 
 import org.jquantlib.util.Date;
 
@@ -56,20 +53,10 @@ public class BermudanExercise extends EarlyExercise {
 	 * @see EuropeanExercise
 	 * @see BermudanExercise#BermudanExercise(List, boolean)
 	 */
-	public BermudanExercise(final Date[] dates) {
+	public BermudanExercise(final int[] dates) {
 		this(dates, false);
 	}
 
-	/**
-	 * This is a convenience constructor equivalent to {@link BermudanExercise#BermudanExercise(Date[])}
-	 * @param dates is a list of exercise dates. If the list contains only one date, a BermundanExercise behaves like an EuropeanExercise.
-	 */
-	public BermudanExercise(final FastTable<Date> dates) {
-		this(dates.toArray(new Date[0]), false);
-	}
-	
-	
-	
 	
 	/**
 	 * Constructs a BermudanExercise with a list of exercise dates and the default payoff
@@ -83,21 +70,51 @@ public class BermudanExercise extends EarlyExercise {
 	 * 
 	 * @see EuropeanExercise
 	 */
-	public BermudanExercise(final FastTable<Date> dates, boolean payoffAtExpiry) {
+	public BermudanExercise(final int[] dates, boolean payoffAtExpiry) {
 		super(Exercise.Type.Bermudan, payoffAtExpiry);
 		if (dates==null) throw new NullPointerException();
-		if (dates.size()==0) throw new IllegalArgumentException("exercise dates is empty");
-		if (dates.size()==1) {
+		if (dates.length==0) throw new IllegalArgumentException("exercise dates is empty");
+		if (dates.length==1) {
 			super.setType(Exercise.Type.European);
 			super.setPayoffAtExpiry(false);
 		}
-		addAll(0, dates);
+		for (int i=0; i<dates.length; i++) {
+			add(dates[i]);
+		}
 	}
+	
 
 	/**
-	 * This is a convenience constructor equivalent to {@link BermudanExercise#BermudanExercise(Date[], boolean)}
+	 * Constructs a BermudanExercise with a list of exercise dates and the default payoff
+	 * 
+	 * <p><b>Note:</b> In the very special case when the list of dates contains only one date, the BermudanExercise behaves
+	 * like an EuropeanExercise.
+	 * 
+	 * <p><b>Note:</b>When there's a single expiry date, this constructor assumes that <i>there will be no payoff at expiry date</i>.
+	 * If this is not the desired behavior, use {@link BermudanExercise#BermudanExercise(List, boolean)} instead.
+	 * 
 	 * @param dates is a list of exercise dates. If the list contains only one date, a BermundanExercise behaves like an EuropeanExercise.
-	 * @param payoffAtExpiry
+	 * @throws IllegalArgumentException if the list is null or empty
+	 * 
+	 * @see EuropeanExercise
+	 * @see BermudanExercise#BermudanExercise(List, boolean)
+	 */
+	public BermudanExercise(final Date[] dates) {
+		this(dates, false);
+	}
+
+	
+	/**
+	 * Constructs a BermudanExercise with a list of exercise dates and the default payoff
+	 * 
+	 * <p><b>Note:</b> In the very special case when the list of dates contains only one date, the BermudanExercise behaves
+	 * like an EuropeanExercise.
+	 * 
+	 * @param dates is a list of exercise dates. If the list contains only one date, a BermundanExercise behaves like an EuropeanExercise.
+	 * @param payoffAtExpiry is <code>true</code> if payoffs are expected to happen on exercise dates
+	 * @throws IllegalArgumentException if the list is null or empty
+	 * 
+	 * @see EuropeanExercise
 	 */
 	public BermudanExercise(final Date[] dates, boolean payoffAtExpiry) {
 		super(Exercise.Type.Bermudan, payoffAtExpiry);
@@ -107,7 +124,9 @@ public class BermudanExercise extends EarlyExercise {
 			super.setType(Exercise.Type.European);
 			super.setPayoffAtExpiry(false);
 		}
-		addAll(0, new FastTable(Arrays.asList(dates)));
+		for (int i=0; i<dates.length; i++) {
+			add(dates[i].getValue());
+		}
 	}
-
+	
 }

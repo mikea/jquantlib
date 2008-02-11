@@ -39,10 +39,8 @@
 
 package org.jquantlib.exercise;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
-import javolution.util.FastTable;
-
-import org.jquantlib.util.Date;
 
 
 /**
@@ -50,7 +48,7 @@ import org.jquantlib.util.Date;
  * 
  * @author Richard Gomes
  */
-public abstract class Exercise extends FastTable<Date> {
+public abstract class Exercise extends IntArrayList {
 
 	/**
 	 * Defines the exercise type. It can be American, Bermudan or European

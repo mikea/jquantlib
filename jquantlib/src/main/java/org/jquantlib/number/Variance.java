@@ -20,17 +20,14 @@
 
 package org.jquantlib.number;
 
-import java.util.Comparator;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.jscience.mathematics.number.Real;
-
-public class RealComparator<T extends Real> implements Comparator<T> {
-	
-	 public int compare(T o1, T o2) {
-		 return o1.compareTo(o2);
-	 }
-    
-	 public boolean equals(Object obj) {
-		 return obj.equals(this);
-	 }
+@Typecast
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER })
+public @interface Variance {
+	// No methods - Tagging annotation
 }

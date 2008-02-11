@@ -85,9 +85,11 @@ import org.jquantlib.exercise.BermudanExercise;
 import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Option;
-import org.jquantlib.lang.stl.StlVector;
+import org.jquantlib.instruments.Payoff;
+import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.number.Rate;
-import org.jquantlib.number.Volatility;
+import org.jquantlib.processes.BlackScholesMertonProcess;
+import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
@@ -162,12 +164,12 @@ public class EquityOptions {
 
     System.out.println("Calculating options...");
     
-    long beginTime = System.currentTimeMillis();
+    long begin/*@Time*/ double = System.currentTimeMillis();
     
     Option.Type type = Option.Type.Put;
     double strike = 40.0;
     double underlying = 36.0;
-    double riskFreeRate = 0.06;
+    /*@Rate*/ double riskFreeRate = 0.06;
     double volatility = 0.2;
     double dividendYield = 0.00;
 
@@ -190,10 +192,11 @@ public class EquityOptions {
     // Define exercise for European Options
     Exercise europeanExercise = new EuropeanExercise(maturity);
     // Define exercise for Bermudan Options
-    StlVector<Date> exerciseDates = new StlVector<Date>();
-    for (int i = 1; i <= 4; i++) {
+    int bermudanForwards = 4;
+    Date[] exerciseDates = new Date[bermudanForwards];
+    for (int i = 1; i <= bermudanForwards; i++) {
         Date forward = settlementDate.add(new Period(3 * i, TimeUnit.Months));
-        exerciseDates.push_back(forward);
+        exerciseDates[i] = forward;
     }
     Exercise bermudanExercise = new BermudanExercise(exerciseDates);
     // Define exercise for American Options
@@ -203,34 +206,34 @@ public class EquityOptions {
     Quote underlyingH = new SimpleQuote(underlying);
     YieldTermStructure flatDividendTS = new FlatForward(settlementDate, new Rate(dividendYield), dayCounter);
     YieldTermStructure flatTermStructure = new FlatForward(settlementDate, new Rate(riskFreeRate), dayCounter);
-    BlackVolTermStructure flatVolTS = new BlackConstantVol(settlementDate, new Volatility(volatility), dayCounter);
+    BlackVolTermStructure flatVolTS = new BlackConstantVol(settlementDate, volatility), dayCounter);
 
-//    Payoff payoff = new PlainVanillaPayoff(type, Real.valueOf(strike));
-//    StochasticProcess stochasticProcess = new BlackScholesMertonProcess(
-//                                        new QuoteHandle(underlyingH),
-//                                        new YieldTermStructureHandle(flatDividendTS), 
-//                                        new YieldTermStructureHandle(flatTermStructure),
-//                                        new BlackVolTermStructureHandle(flatVolTS));
-//
-//    // options
-//    VanillaOption europeanOption = new VanillaOption(stochasticProcess, payoff, europeanExercise);
-//    VanillaOption bermudanOption = new VanillaOption(stochasticProcess, payoff, bermudanExercise);
-//    VanillaOption americanOption = new VanillaOption(stochasticProcess, payoff, americanExercise);
-//
-//    // define line formatting
-//    //              "         0         1         2         3         4         5         6         7         8"
-//    //              "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
-//    //              "Method                                       European      Bermudan      American      ";
-//    //              "12345678901234567890123456789012345678901234 123.567890123 123.567890123 123.567890123";
-//    String fmt = "%34s %13.9f %13.9f %13.9f\n";
-//    
-//    // Analytic formulas:
-//
-//        // Black-Scholes for European
-//        String method = "Black-Scholes";
-//        europeanOption.setPricingEngine(new AnalyticEuropeanEngine());
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), Real.NaN, Real.NaN } );
-//
+    Payoff payoff = new PlainVanillaPayoff(type, Real.valueOf(strike));
+    StochasticProcess stochasticProcess = new BlackScholesMertonProcess(
+                                        new QuoteHandle(underlyingH),
+                                        new YieldTermStructureHandle(flatDividendTS), 
+                                        new YieldTermStructureHandle(flatTermStructure),
+                                        new BlackVolTermStructureHandle(flatVolTS));
+
+    // options
+    VanillaOption europeanOption = new VanillaOption(stochasticProcess, payoff, europeanExercise);
+    VanillaOption bermudanOption = new VanillaOption(stochasticProcess, payoff, bermudanExercise);
+    VanillaOption americanOption = new VanillaOption(stochasticProcess, payoff, americanExercise);
+
+    // define line formatting
+    //              "         0         1         2         3         4         5         6         7         8"
+    //              "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
+    //              "Method                                       European      Bermudan      American      ";
+    //              "12345678901234567890123456789012345678901234 123.567890123 123.567890123 123.567890123";
+    String fmt = "%34s %13.9f %13.9f %13.9f\n";
+    
+    // Analytic formulas:
+
+    // Black-Scholes for European
+    String method = "Black-Scholes";
+    europeanOption.setPricingEngine(new AnalyticEuropeanEngine());
+    System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), Real.NaN, Real.NaN } );
+
 //        // Barone-Adesi and Whaley approximation for American
 //        method = "Barone-Adesi/Whaley";
 //        americanOption.setPricingEngine(new BaroneAdesiWhaleyEngine());

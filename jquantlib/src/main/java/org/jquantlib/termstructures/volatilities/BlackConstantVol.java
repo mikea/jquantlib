@@ -39,14 +39,11 @@ package org.jquantlib.termstructures.volatilities;
 
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.number.Time;
-import org.jquantlib.number.Volatility;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolatilityTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
 /**
  * Constant Black volatility, no time-strike dependence
@@ -62,13 +59,13 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     private DayCounter dayCounter;
     
     @Override
-    protected final Volatility blackVolImpl(final Time maturity, final Real strike) {
-        return new Volatility(volatility.getValue());
+    protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+        return volatility.getValue();
     }
     
-    public BlackConstantVol(final Date referenceDate, final Volatility volatility, final DayCounter dayCounter) {
+    public BlackConstantVol(final Date referenceDate, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
     	super(referenceDate);
-    	this.volatility = new SimpleQuote(volatility.doubleValue());
+    	this.volatility = new SimpleQuote(volatility);
     	this.dayCounter = dayCounter;
     }
     
@@ -79,9 +76,9 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     	volatility.addObserver(this);
     }
     
-    public BlackConstantVol(int settlementDays, final Calendar calendar, final Volatility volatility, final DayCounter dayCounter) {
+    public BlackConstantVol(int settlementDays, final Calendar calendar, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
     	super(settlementDays, calendar);
-    	this.volatility = new SimpleQuote(volatility.doubleValue());
+    	this.volatility = new SimpleQuote(volatility);
     	this.dayCounter = dayCounter;
     }
     
@@ -103,13 +100,13 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     }
     
     @Override
-    public final Real getMinStrike() {
-    	return new Real(Double.NEGATIVE_INFINITY);
+    public final /*@Price*/ double getMinStrike() {
+    	return Double.NEGATIVE_INFINITY;
 	}
     
 	@Override
-    public final Real getMaxStrike() {
-    	return new Real(Double.POSITIVE_INFINITY);
+    public final /*@Price*/ double getMaxStrike() {
+    	return Double.POSITIVE_INFINITY;
 	}
 
 // XXX	

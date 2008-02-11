@@ -38,7 +38,6 @@
 
 package org.jquantlib.daycounters;
 
-import org.jquantlib.number.Time;
 import org.jquantlib.util.Date;
 
 
@@ -73,7 +72,7 @@ public interface DayCounter {
 	 * @return the period between two dates as a fraction of year.
 	 */
 	// FIXME: verify if necessary ::: document better
-	public Time getYearFraction(final Date dateStart, final Date dateEnd);
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd);
 	
 	/**
 	 * Returns the period between two dates as a fraction of year, considering referencing
@@ -87,6 +86,6 @@ public interface DayCounter {
 	 * dates for both.
 	 */
 	// FIXME: verify if necessary ::: document better
-	public Time getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd);
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd);
 
 }

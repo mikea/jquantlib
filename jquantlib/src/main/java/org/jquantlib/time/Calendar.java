@@ -39,9 +39,8 @@
 
 package org.jquantlib.time;
 
-import java.util.List;
-
-import javolution.util.FastTable;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 
 import org.jquantlib.util.Date;
 
@@ -62,16 +61,16 @@ import org.jquantlib.util.Date;
 // TODO test: the methods for adding and removing holidays are tested by inspecting the calendar before and after their invocation.
 public abstract class Calendar {
 
-	protected List<Date> addedHolidays;
-	protected List<Date> removedHolidays;
+	protected IntList addedHolidays;
+	protected IntList removedHolidays;
 
 	protected abstract boolean isCustomBusinessDay(final Date date);
 	protected abstract boolean isCustomWeekend(final Weekday weekday);
 
 
 	public Calendar() {
-		this.addedHolidays   = new FastTable<Date>();
-		this.removedHolidays = new FastTable<Date>();
+		this.addedHolidays   = new IntArrayList();
+		this.removedHolidays = new IntArrayList();
 	}
 
     /**
@@ -134,7 +133,7 @@ public abstract class Calendar {
         // if it's already a holiday, leave the calendar alone.
         // Otherwise, add it.
         if (isBusinessDay(d))
-            addedHolidays.add(d);
+            addedHolidays.add(d.getValue());
     }
 
     void removeHoliday(final Date d) {
@@ -143,7 +142,7 @@ public abstract class Calendar {
         // if it's already a business day, leave the calendar alone.
         // Otherwise, add it.
         if (isBusinessDay(d))
-            removedHolidays.add(d);
+            removedHolidays.add(d.getValue());
     }
 
     /**
