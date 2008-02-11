@@ -87,7 +87,6 @@ import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
-import org.jquantlib.number.Rate;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Quote;
@@ -164,7 +163,7 @@ public class EquityOptions {
 
     System.out.println("Calculating options...");
     
-    long begin/*@Time*/ double = System.currentTimeMillis();
+    long beginTime = System.currentTimeMillis();
     
     Option.Type type = Option.Type.Put;
     double strike = 40.0;
@@ -204,11 +203,11 @@ public class EquityOptions {
 
     // bootstrap the yield/dividend/volatility curves
     Quote underlyingH = new SimpleQuote(underlying);
-    YieldTermStructure flatDividendTS = new FlatForward(settlementDate, new Rate(dividendYield), dayCounter);
-    YieldTermStructure flatTermStructure = new FlatForward(settlementDate, new Rate(riskFreeRate), dayCounter);
-    BlackVolTermStructure flatVolTS = new BlackConstantVol(settlementDate, volatility), dayCounter);
+    YieldTermStructure flatDividendTS = new FlatForward(settlementDate, dividendYield, dayCounter);
+    YieldTermStructure flatTermStructure = new FlatForward(settlementDate, riskFreeRate, dayCounter);
+    BlackVolTermStructure flatVolTS = new BlackConstantVol(settlementDate, volatility, dayCounter);
 
-    Payoff payoff = new PlainVanillaPayoff(type, Real.valueOf(strike));
+    Payoff payoff = new PlainVanillaPayoff(type, strike);
     StochasticProcess stochasticProcess = new BlackScholesMertonProcess(
                                         new QuoteHandle(underlyingH),
                                         new YieldTermStructureHandle(flatDividendTS), 
@@ -232,22 +231,22 @@ public class EquityOptions {
     // Black-Scholes for European
     String method = "Black-Scholes";
     europeanOption.setPricingEngine(new AnalyticEuropeanEngine());
-    System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), Real.NaN, Real.NaN } );
+    System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), Double.NaN, Double.NaN } );
 
 //        // Barone-Adesi and Whaley approximation for American
 //        method = "Barone-Adesi/Whaley";
 //        americanOption.setPricingEngine(new BaroneAdesiWhaleyEngine());
-//        System.out.printf(fmt, new Object[] { method, Real.NaN, Real.NaN, americanOption.NPV() } );
+//        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
 //
 //        // Bjerksund and Stensland approximation for American
 //        method = "Bjerksund/Stensland";
 //        americanOption.setPricingEngine(new BjerksundStenslandEngine());
-//        System.out.printf(fmt, new Object[] { method, Real.NaN, Real.NaN, americanOption.NPV() } );
+//        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
 //
 //        // Integral
 //        method = "Integral";
 //        europeanOption.setPricingEngine(new IntegralEngine());
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(),inline Real.NaN, Real.NaN } );
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(),inline Double.NaN, Double.NaN } );
 //
 //        // Finite differences
 //        int timeSteps = 801;
@@ -313,7 +312,7 @@ public class EquityOptions {
 //                "PseudoRandom", timeSteps, 252,
 //                false, false, false,
 //                nSamples, 0.02, maxSamples, mcSeed));
-//        System.out.printf(fmt, method, europeanOption.NPV(), Real.NaN, Real.NaN);
+//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
 //
 //        method = "MC (Sobol)";
 //        europeanOption.setPricingEngine(
@@ -321,7 +320,7 @@ public class EquityOptions {
 //                "LowDiscrepancy", timeSteps, 252,
 //                false, false, false,
 //                nSamples, 0.02, maxSamples, mcSeed));
-//        System.out.printf(fmt, method, europeanOption.NPV(), Real.NaN, Real.NaN);
+//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
 //
 //
 //        method = "MC (Longstaff Schwartz)";
@@ -335,7 +334,7 @@ public class EquityOptions {
 //            .withCalibrationSamples(4096)
 //            .withTolerance(0.02)
 // .           withSeed(mcSeed);
-//        System.out.printf(fmt, method, europeanOption.NPV(), Real.NaN, Real.NaN);
+//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
 
         
     

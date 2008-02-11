@@ -4,7 +4,7 @@
   <artifactId>jquantlib</artifactId>
   <name>JQuantLib</name>
   <version>0.0.2-SNAPSHOT</version>
-  <description>JQuantLib aims to provide a free, open-source and comprehensive framework for quantitative finance, written in Java.</description>
+  <description>JQuantLib aims to provide a free, open-source and comprehensive framework for quantitative finance, written in Java. See also: http://www.jquantlib.org/</description>
   <url>${maven.deploy.site.url}</url>
   
   <issueManagement>
@@ -33,7 +33,7 @@
     <developer>
       <id>fgomes</id>
       <name>Richard Gomes</name>
-      <email>*rgomes1997*at*yahoo.co.uk*</email>
+      <email>rgomes1997@yahoo.co.uk</email>
       <url>http://www.linkedin.com/in/rgomes</url>
       <organization>jquantlib.org</organization>
       <organizationUrl>http://www.jquantlib.org/</organizationUrl>
@@ -347,7 +347,8 @@
   
   <reporting>
     <plugins>
-      <plugin>
+    
+      <!--plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <taglets>
@@ -377,10 +378,12 @@
             </taglet>
           </taglets>
         </configuration>
-      </plugin>
+      </plugin-->
+      
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
       </plugin>
+      
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>taglist-maven-plugin</artifactId>
@@ -395,6 +398,7 @@
           </tags>
         </configuration>
       </plugin>
+      
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
         <configuration>
@@ -447,12 +451,9 @@
     <profile.manifest.app.mode>debug</profile.manifest.app.mode>
     <profile.manifest.app.url>${project.url}</profile.manifest.app.url>
   
-    <project.scm.root>jquant.svn.sourceforge.net/svnroot/jquant</project.scm.root>
-    <project.scm.version>trunk</project.scm.version>
-
-    <maven.scm.url>http://${project.scm.root}/${project.scm.version}/${project.artifactId}</maven.scm.url>
-    <maven.scm.connection>scm:svn:https://${project.scm.root}/${project.scm.version}/${project.artifactId}</maven.scm.connection>
-    <maven.scm.developerConnection>scm:svn:https://${project.scm.root}/${project.scm.version}/${project.artifactId}</maven.scm.developerConnection>
+    <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.url>
+    <maven.scm.connection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.connection>
+    <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.developerConnection>
 
     <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
     <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
