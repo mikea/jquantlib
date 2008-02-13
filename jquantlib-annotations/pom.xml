@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>jquantlib-annotations</groupId>
+  <artifactId>jquantlib-annotations</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <description></description>
+  
+  <repositories>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>inhouse</id>
+      <name>Inhouse Release Repository</name>
+      <url>${maven.deploy.repository.url}/inhouse</url>
+    </repository>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>inhouse_snapshot</id>
+      <name>Inhouse Snapshot Repository</name>
+      <url>${maven.deploy.repository.url}/inhouse_snapshot</url>
+    </repository>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>external_free</id>
+      <name>External Free Repository</name>
+      <url>${maven.deploy.repository.url}/external_free</url>
+    </repository>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>external_non_free</id>
+      <name>External Non-Free Repository</name>
+      <url>${maven.deploy.repository.url}/external_non_free</url>
+    </repository>
+    <repository>
+      <releases />
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Maven2 repository</name>
+      <url>http://repo1.maven.org/maven2</url>
+    </repository>
+    <repository>
+      <releases />
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>ibiblio</id>
+      <name>Ibiblio Maven2 repository</name>
+      <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.sun.java</groupId>
+      <artifactId>resources</artifactId>
+      <version>1.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.java</groupId>
+      <artifactId>rt</artifactId>
+      <version>1.7.0</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.mit.csail.checkers</groupId>
+      <artifactId>checkers</artifactId>
+      <version>0.1.0</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${maven.compile.source}</source>
+          <target>${maven.compile.target}</target>
+          <compilerArguments>
+            <bootclasspath>${settings.localRepository}/com/sun/rt/${maven.compile.runtime}/rt-${maven.compile.runtime}.jar</bootclasspath>
+          </compilerArguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <properties>
+    <maven.compile.source>1.6</maven.compile.source>
+    <maven.compile.target>1.6</maven.compile.target>
+    <maven.compile.runtime>1.7.0_ea</maven.compile.runtime>
+  </properties>  
+  
+</project>

@@ -1,0 +1,122 @@
+<?xml version='1.0'?>
+<project name="jquantlib-annotations" default="package" basedir=".">
+
+  <property environment="env"/> 
+  <property file="build.properties"/>
+
+  <property name="version" value="0.0.1-SNAPSHOT"/>
+  <property name="buildno" value="(null)"/>
+  	
+  <property name="src"    value="src/main/java"/>
+  <property name="build"  value="build"/>
+  <property name="target" value="target"/>
+  <property name="docs"   value="docs"/>
+
+  <property name="jarname" value="${ant.project.name}-${version}.jar"/>
+  <property name="mainclass" value="Main"/>
+  
+  <echo message="${ant.project.name}"/>
+
+
+  <target name="mkdir">
+    <mkdir dir="${build}" />
+    <mkdir dir="${target}" />
+    <mkdir dir="${docs}" />
+  </target>
+
+	
+  <target name="test-compiler" description="Test compiler version">
+    <java fork="true"
+	  outputproperty="compiler.version"
+	  classpath="${compiler.lib}"
+	  classname="com.sun.tools.javac.Main">
+	  <arg line="-version"/>
+	</java>
+    <condition property="compiler.exists">
+	  <equals
+	    arg1="${compiler.version}"
+	    arg2="javac 1.7.0-jsr308-${jsr308.build.version}"/>
+	  </condition>
+	<available file="${annotation-utils.lib}" property="utils.exists"/>
+  </target>
+
+	
+  <target name="check" depends="test-compiler">
+	<fail unless="compiler.exists" message="
+	Needed version ${jsr308.build.version} of the JSR 308 compiler,
+	but found version ${compiler.version} on your classpath.
+	${line.separator}${line.separator}
+	Check that the 'compiler.lib' property in 'build.properties' points to version
+	${jsr308.build.version} of the 'javac.jar' library."
+	/>
+  </target>
+	
+	
+  <target name="compile" depends="mkdir,check">
+  	<pathconvert pathsep=" " property="src.files">
+  	  <path>
+  	    <fileset dir="${src}">
+  	      <include name="**/*.java"/>
+  	    </fileset>
+  	  </path>
+  	</pathconvert>
+
+  	<echo message="${compiler.lib}" />
+  	
+  	<java fork="true" failonerror="true"
+  	   classpath="${compiler.lib}"
+  	   classname="com.sun.tools.javac.Main">
+  	   <jvmarg line="-Xbootclasspath/p:${compiler.lib}"/>
+  	     <arg value="-g"/>
+  	     <arg line="-sourcepath ${src}"/>
+  	     <arg line="-d ${build}"/>
+  	     <arg line="${src.files}"/>
+  	     <arg line="-version"/>
+  	   </java>
+  </target>
+
+	
+  <target name="package" depends="compile">
+    <jar jarfile="${target}/${jarname}" basedir="${build}/">
+    	  <manifest>
+    	    <attribute name="Built-By" value="${user.name}"/>
+    	  	<attribute name="Main-Class" value="${mainclass}"/>
+    	  </manifest>
+    </jar>
+  </target>
+
+	
+  <target name="docs" depends="compile">
+    <javadoc packagenames="*"
+           sourcepath="${src}"
+           defaultexcludes="yes"
+           destdir="${docs}"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="${ant.project.name} API Documentation v${version}-${buildno}">
+    </javadoc>
+  </target>
+
+	
+  <target name="run" depends="package">
+  	
+    <echo message="${compiler.lib}" />
+
+  	<java fork="true" failonerror="true"
+  	  classpath="${compiler.lib}:${build}"
+  	  classname="${mainclass}">
+  	  <jvmarg line="-Xbootclasspath/p:${compiler.lib}"/>
+  	  <jvmarg line="-ea"/>
+  	  <!-- arg line=""/ -->
+  	</java>
+  </target>
+
+	
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${target}"/>
+    <delete dir="${docs}"/>
+  </target>
+	
+</project>
