@@ -59,6 +59,7 @@ import org.jquantlib.util.Date;
  * @category datetime
  */
 // TODO test: the methods for adding and removing holidays are tested by inspecting the calendar before and after their invocation.
+// FIXME: This class should be called AbastractCalendar whilst DefaultCalendar should be called Calendar
 public abstract class Calendar {
 
 	protected IntList addedHolidays;

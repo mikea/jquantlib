@@ -20,19 +20,30 @@
 url=http://www.jquantlib.org/maven2/repos
 
 
-list_artifacts() {
+enumerate_artifacts() {
 cat << EOD
-external_free jal jal 20031117 (none) jar                      ${HOME}/artifacts/jal-20031117.jar
-external_free gr.spinellis UmlGraph 4.9.0 (none) jar           ${HOME}/artifacts/UmlGraph-4.9.0.jar
-external_free net.sf.latextaglet latextaglet 0.1.0 (none) jar  ${HOME}/artifacts/latextaglet-0.1.0.jar
+#external_free jal jal 20031117 (none) jar                      ${HOME}/artifacts/jal-20031117.jar
+#external_free gr.spinellis UmlGraph 4.9.0 (none) jar           ${HOME}/artifacts/UmlGraph-4.9.0.jar
+#external_free net.sf.latextaglet latextaglet 0.1.0 (none) jar  ${HOME}/artifacts/latextaglet-0.1.0.jar
+#external_free org.jscience jscience 4.3.1 (none) jar           ${HOME}/artifacts/jscience-4.3.1.jar
+#external_free edu.mit.csail.checkers checkers 0.1.0 (none) jar ${HOME}/artifacts/checkers-0.1.0.jar
+#external_free com.sun.java rt 1.7.0 (none) jar                 ${HOME}/artifacts/rt-1.7.0_ea.jar 
+external_free com.sun.java resources 1.7.0 (none) jar           ${HOME}/artifacts/resources-1.7.0_ea.jar 
 EOD
 }
 
-#external_free org.jscience jscience 4.3.1 (none) jar           ${HOME}/artifacts/jscience-4.3.1.jar
+list_artifacts() {
+  enumerate_artifacts | egrep -v -r '^#'
+}
 
 
 validate_arguments() {
   list_artifacts | while read repos group artifact version classifier format file ;do
+    if [ -z "${repos}" -o -z "${group}" -o -z "${artifact}" -o -z "${version}" -o -z "${classifier}" -o -z "${format}" -o -z "${file}" ] ;then
+      echo Invalid arguments
+      exit 1
+    fi
+
     if [ ! -f "${file}" ] ; then
       echo File not found: ${file}
       exit 1
@@ -68,5 +79,5 @@ install_artifacts() {
 ###
 
 validate_arguments
-#list_dependencies
+list_dependencies
 install_artifacts

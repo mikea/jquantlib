@@ -244,12 +244,12 @@ public class Date implements Observable {
      * @return
      */
     static private int fromDMY(int d, int m, int y) {
-    	if ( !(y > 1900 && y < 2100) ) throw new IllegalArgumentException("year "+y+" out of bound. It must be in [1901,2099]");
+    	if (! (y > 1900 && y < 2100) ) throw new IllegalArgumentException("year "+y+" out of bound. It must be in [1901,2099]");
         if (! (m > 0 && m < 13) ) throw new IllegalArgumentException("month "+m+" outside January-December range [1,12]");
 
         boolean leap = isLeap(y);
         int len = getMonthLength(m,leap), offset = getMonthOffset(m,leap);
-        if ( !(d <= len && d > 0) ) throw new ArithmeticException("day outside month ("+m+") day-range [1,"+len+"]");
+        if (! (d > 0 && d <= len) ) throw new ArithmeticException("day outside month ("+m+") day-range [1,"+len+"]");
         int result = d + offset + getYearOffset(y);
         return result;
     }
@@ -264,7 +264,7 @@ public class Date implements Observable {
         int d = getDayOfYear(); // dayOfYear is 1 based
         Integer m = d/30 + 1;
         boolean leap = isLeap(getYear());
-        while (d <= getMonthOffset(m,leap))
+        while (d <= getMonthOffset(m, leap))
             --m;
         while (d > getMonthOffset(m+1, leap))
             ++m;

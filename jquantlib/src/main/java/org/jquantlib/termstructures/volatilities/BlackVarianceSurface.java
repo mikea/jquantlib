@@ -38,18 +38,11 @@
 
 package org.jquantlib.termstructures.volatilities;
 
-import java.util.List;
-
-import javolution.util.FastTable;
-
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.Interpolation2D;
+import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
-import org.jscience.mathematics.vector.DenseMatrix;
-import org.jscience.mathematics.vector.DenseVector;
-import org.jscience.mathematics.vector.Matrix;
 
 /*! This class calculates time/strike dependent Black volatilities
 using as input a matrix of Black volatilities observed in the
@@ -69,64 +62,60 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
       private DayCounter dayCounter_;
       private Date maxDate_;
-      private FastTable<Date> dates_;
-      private FastTable<Real> times_;
-      private FastTable<Real> strikes_;
-      private Matrix<Real> variances_;
+      private Date[] dates_;
+      private /*@Time*/ double[] times_;
+      private /*@Price*/ double[] strikes_;
+      private /*@Variance*/ double[][] variances_;
       private Interpolation2D varianceSurface_;
       private Extrapolation lowerExtrapolation_;
       private Extrapolation upperExtrapolation_;
+  	  private Interpolator2D factory;
 
       public BlackVarianceSurface(final Date referenceDate,
-              final List<Date> dates,
-              final List<Real> strikes, // FIXME: create new named type?
-              final Matrix<Real> blackVolMatrix,
+              final Date[] dates,
+              final /*@Price*/ double[] strikes, // FIXME: create new named type?
+              final /*@Volatility*/ double[][] blackVolMatrix,
               final DayCounter dayCounter) {
     	  this(referenceDate, dates, strikes, blackVolMatrix, dayCounter, Extrapolation.InterpolatorDefaultExtrapolation, Extrapolation.InterpolatorDefaultExtrapolation);
       }
       
       
         public BlackVarianceSurface(final Date referenceDate,
-                             final List<Date> dates,
-                             final List<Real> strikes,  // FIXME: create new named type?
-                             final Matrix<Real> blackVolMatrix,
+                             final Date[] dates,
+                             final /*@Price*/ double[] strikes,  // FIXME: create new named type?
+                             final /*@Volatility*/ double[][] blackVolMatrix,
                              final DayCounter dayCounter,
                              final Extrapolation lowerExtrapolation,
                              final Extrapolation upperExtrapolation) {
             super(referenceDate);
+
             this.dayCounter_ = dayCounter;
-            this.dates_ = new FastTable<Date>(dates);
-            this.strikes_ = new FastTable<Real>(strikes);
-            this.maxDate_ = this.dates_.getLast();
+            Date maxDate_ = dates[dates.length];
+            this.strikes_ = strikes;
             this.lowerExtrapolation_ = lowerExtrapolation;
             this.upperExtrapolation_ = upperExtrapolation;
 
-              if (dates.size()!=blackVolMatrix.numColumns()) throw new IllegalArgumentException("mismatch between date vector and vol matrix colums");
-              if (strikes_.size()!=blackVolMatrix.numRows()) throw new IllegalArgumentException("mismatch between money-strike vector and vol matrix rows");
-              if (this.dates_.getFirst().le(referenceDate)) throw new IllegalArgumentException("cannot have dates[0] <= referenceDate");
+            if ( (dates.length!=blackVolMatrix[0].length) ) throw new IllegalArgumentException("mismatch between date vector and vol matrix colums");
+            if ( (strikes_.length!=blackVolMatrix.length) ) throw new IllegalArgumentException("mismatch between money-strike vector and vol matrix rows");
+            if ( (dates[0].le(referenceDate)) ) throw new IllegalArgumentException("cannot have dates[0] <= referenceDate");
 
-              DenseVector times_ = new DenseVector(dates.size()+1);
-              times_.set(0, 0.0);
-
-              variances_ = new DenseMatrix(strikes_.size(), dates.size()+1);
-              for (int i=0; i<blackVolMatrix.numRows(); i++) {
-                  variances_.set(i, 0, 0.0);
-              }
-
-              for (int j=1; j<=blackVolMatrix.numColumns(); j++) {
-            	  double time = getTimeFromReference(dates.get(j-1)).doubleValue();
-                  times_.set(j, time);
-                  if (times_.get(j) <= times_.get(j-1)) throw new IllegalArgumentException("dates must be sorted unique!");
-                  for (int i=0; i<blackVolMatrix.numRows(); i++) {
-                	  double vol = blackVolMatrix.get(i, j-1);
-                	  double var = time * vol * vol;
-                      variances_.set(i, j, var);
-                      if (variances_.get(i, j) < variances_.get(i, j-1)) throw new IllegalArgumentException("variance must be non-decreasing");
-                  }
-              }
-              // default: bilinear interpolation
-              setInterpolation(Bilinear);
-          }
+            this.times_ = new /*@Time*/ double[dates.length+1];
+            this.times_[0] = 0.0;
+            this.variances_ = new /*@Variance*/ double[strikes_.length][dates.length+1];
+            for (int i=0; i<blackVolMatrix.length; i++) {
+                variances_[i][0] = 0.0;
+            }
+            for (int j=1; j<=blackVolMatrix[0].length; j++) {
+                times_[j] = getTimeFromReference(dates[j-1]);
+                if (! (times_[j]>times_[j-1]) ) throw new IllegalArgumentException("dates must be sorted unique!");
+                for (int i=0; i<blackVolMatrix.length; i++) {
+                    variances_[i][j] = times_[j] * blackVolMatrix[i][j-1] * blackVolMatrix[i][j-1];
+                    if (! (variances_[i][j]>=variances_[i][j-1]) ) throw new IllegalArgumentException("variance must be non-decreasing");
+                }
+            }
+            // default: bilinear interpolation
+        	factory = new Bilinear();
+        }
         
         
         public final DayCounter dayCounter() { return dayCounter_; }
@@ -135,23 +124,19 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
             return maxDate_;
         }
         
-        public final Real minStrike() {
-            return strikes_.getFirst();
+        public final /*@Price*/ double minStrike() {
+            return strikes_[0];
         }
         
-        public final Real maxStrike() {
-            return strikes_.getLast();
+        public final /*@Price*/ double maxStrike() {
+            return strikes_[strikes_.length-1];
         }
 
-        public void setInterpolation() {
-        	setInterpolator(new Interpolator());
-        }
-        
         public void setInterpolation(final Interpolator i) {
-            varianceSurface_ =
-                i.interpolate(times_[0], times_[times_.length-1],
-                              strikes_[0], strikes_[strikes_.length-1],
-                              variances_);
+            varianceSurface_ = factory.interpolate(
+            		times_[0], times_[times_.length-1],
+                    strikes_[0], strikes_[strikes_.length-1],
+                    variances_);
             notifyObservers();
         }
 
@@ -166,23 +151,22 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 //}
 
 
-        protected final Real blackVarianceImpl(final /*@Time*/ double t, final Real strike) {
+        protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, final /*@Price*/ double strike) {
 
-            if (t.isEQ(Real.ZERO)) return Real.ZERO;
- 
+            if (t==0.0) return 0.0;
+
             // enforce constant extrapolation when required
-            if (strike.isLT(strikes_.getFirst()) && lowerExtrapolation_ == Extrapolation.ConstantExtrapolation) {
-                strike = strikes_.getFirst();
-            }
-            if (strike.isGT(strikes_.getLast()) && upperExtrapolation_ == Extrapolation.ConstantExtrapolation) {
-                strike = strikes_.getLast();
-            }
+            if (strike < strikes_[0] && lowerExtrapolation_ == ConstantExtrapolation)
+                strike = strikes_[0];
+            if (strike > strikes_[strikes_.length-1] && upperExtrapolation_ == ConstantExtrapolation)
+                strike = strikes_[strikes_.length-1];
 
-            if (t.isLE(times_.getLast())) {
-                return varianceSurface_(t, strike, true);
-            } else {
-                // t>times_.back() || extrapolate
-                return varianceSurface_(times_.getLast(), strike, true) * t.getValue() / times_.getLast();
+            if (t<=times_[times_.length-1])
+                return varianceSurface_.getValue(t, strike, true);
+            else { 
+            	// t>times_.back() || extrapolate
+            	/*@Time*/ double lastTime = times_[times_.length-1];
+                return varianceSurface_.getValue(lastTime, strike, true) * t/lastTime;
             }
         }
 	

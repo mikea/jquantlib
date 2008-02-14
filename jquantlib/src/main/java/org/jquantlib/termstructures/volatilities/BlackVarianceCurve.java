@@ -66,8 +66,8 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 	private Date maxDate;
 	private Date[] dates;
 	private /*@Time*/ double[] times;
-	private /*@Variance*/ double[] varianceCurve;
-	private Interpolation variances;
+	private /*@Variance*/ double[] variances;
+	private Interpolation varianceCurve;
 	private Interpolator factory;
 
 	public BlackVarianceCurve(final Date referenceDate, final Date[] dates, /*@Volatility*/ double[] blackVolCurve, final DayCounter dayCounter) {
@@ -81,38 +81,27 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     			final DayCounter dayCounter,
                 boolean forceMonotoneVariance) {
     	super(referenceDate);
-    	if (! (dates.length==blackVolCurve.length) ) throw new IllegalArgumentException("mismatch between date vector and black vol vector");
     	this.dayCounter = dayCounter;
-    	this.dates = new FastTable<Date>(dates);
-    	maxDate = this.dates.getLast();
+    	this.dates = new Date[dates.length];
+    	if (! (dates.length==blackVolCurve.length) ) throw new IllegalArgumentException("mismatch between date vector and black vol vector");
 
     	// cannot have dates[0]==referenceDate, since the
     	// value of the vol at dates[0] would be lost
     	// (variance at referenceDate must be zero)
-    	if (dates.get(0).le(referenceDate)) throw new IllegalArgumentException("cannot have dates[0] <= referenceDate");
+    	if (dates[0].le(referenceDate)) throw new IllegalArgumentException("cannot have dates[0] <= referenceDate");
 
-    	this.varianceCurve = new FastTable<Real>();
-    	double lastVariance = 0.0;
-    	this.varianceCurve.add(Real.valueOf(lastVariance));
-    	
-    	this.times = new FastTable</*@Time*/ Double>();
-    	/*@Time*/ double lastTime = 0.0;
-    	this.times.add(lastTime);
-    	
-    	for (int i=0; i<blackVolCurve.size(); i++) {
-    		/*@Time*/ double currTime = getTimeFromReference(dates.get(i));
-    		if (currTime<=lastTime) throw new IllegalArgumentException("dates must be sorted unique");
-    		this.times.add(currTime);
-    		lastTime = currTime;
-    		
-    		double volCurve = blackVolCurve.get(i);
-    		// var[i] = t[i] * (volCurve[i-1])^2;
-    		double currVariance = currTime * Math.pow(volCurve,2);
-    		if (currVariance<=lastVariance) throw new IllegalArgumentException("variance must be non-decreasing");
-    		this.varianceCurve.add(Real.valueOf(currVariance));
-    		lastVariance = currVariance;
-    	}
+        variances = new /*@Variance*/ double[dates.length+1];
+        times = new /*@Time*/ double [dates.length+1];
+        variances[0] = 0.0;
+        times[0] = 0.0;
+        for (int j=1; j<=blackVolCurve.length; j++) {
+            times[j] = getTimeFromReference(dates[j-1]);
+            if (! (times[j]>times[j-1]) ) throw new IllegalArgumentException("dates must be sorted unique");
+            variances[j] = times[j] * blackVolCurve[j-1]*blackVolCurve[j-1];
+            if (! (variances[j]>=variances[j-1] || !forceMonotoneVariance) ) throw new IllegalArgumentException("variance must be non-decreasing");
+        }
 
+        // default: linear interpolation
     	factory = new Linear();
     }
 
@@ -138,16 +127,17 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 
 	public void setInterpolation(final Interpolator factory) {
 		varianceCurve = factory.interpolate(times, variances);
-		variances.update();
+		varianceCurve.update();
 		notifyObservers();
 	}
 
-	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, Real maturity) {
-		if (t <= times.getLast()) {
-			return variances.getValue(t, true);
+	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, /*@Price*/ double maturity) {
+		if (t <= times[times.length]) {
+			return varianceCurve.getValue(t, true);
 		} else {
 			// extrapolate with flat vol
-			return variances.getValue(times.getLast(), true) * t / times.getLast();
+			/*@Time*/ double lastTime = times[times.length];
+			return varianceCurve.getValue(lastTime, true) * t / lastTime;
 		}
 	}
 
