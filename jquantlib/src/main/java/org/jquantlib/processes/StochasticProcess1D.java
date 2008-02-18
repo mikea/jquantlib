@@ -39,7 +39,6 @@
 
 package org.jquantlib.processes;
 
-import java.util.Vector;
 
 public abstract class StochasticProcess1D extends StochasticProcess implements Discretization1D {
 	
@@ -50,20 +49,20 @@ public abstract class StochasticProcess1D extends StochasticProcess implements D
     /**
      * Returns the initial value of the state variable
      */ 
-    public abstract double x0(); //FIXME: apply typecast?
+    public abstract /*@Price*/ double x0();
 
     /**
      * 
      * Returns the drift part of the equation 
      * {@latex$ \mu(t, x_t) }
      */
-    public abstract /*@Drift*/ double drift(final /*@Time*/ double t, final Real x);
+    public abstract /*@Drift*/ double drift(final /*@Time*/ double t, final /*@Price*/ double x);
     
     /**
      * Returns the diffusion part of the equation, i.e.
      * {@latex$ \sigma(t, x_t) }
      */
-    public abstract /*@Diffusion*/ double diffusion(final /*@Time*/ double t, final Real x);
+    public abstract /*@Diffusion*/ double diffusion(final /*@Time*/ double t, final /*@Price*/ double x);
     
     /**
      * Returns the expectation
@@ -73,7 +72,7 @@ public abstract class StochasticProcess1D extends StochasticProcess implements D
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public final /*@Expectation*/ double expectation(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt) {
+    public final /*@Expectation*/ double expectation(final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt) {
         return apply(x0, driftDiscretization(/**this, */ t0, x0, dt)); // XXX
     }
     
@@ -110,15 +109,15 @@ public abstract class StochasticProcess1D extends StochasticProcess implements D
      * where {@latex$ E } is the expectation and {@latex$ S } the
      * standard deviation.
      */
-    public final /*@Price*/ double evolve(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt, final double dw) {
-    	return apply(expectation(t0,x0,dt), stdDeviation(t0,x0,dt).times(dw));
+    public final /*@Price*/ double evolve(final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt, final double dw) {
+    	return apply(expectation(t0,x0,dt), stdDeviation(t0,x0,dt) * dw);
     }
 
     /**
      * Applies a change to the asset value. By default, it
      * returns {@latex$ x + \Delta x }.
      */
-    public /*@Price*/ double apply(final double x0, final double dx) {
+    public /*@Price*/ double apply(final /*@Price*/ double x0, final /*@Price*/ double dx) {
         return x0 + dx;
     }
 
@@ -132,48 +131,48 @@ public abstract class StochasticProcess1D extends StochasticProcess implements D
         return 1;
     }
 
-    public final Vector<Real> initialValues() {
-        return new DenseVector(new double[] { x0().doubleValue() } );
+    public final /*@Price*/ double[] initialValues() {
+        return new double[] { x0() };
     }
 
-    public final Vector<Real> drift(final /*@Time*/ double t, final Vector<Real> x) {
-    	if (x.size()!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new DenseVector( new double[] { drift(t, x.get(0)).doubleValue() } );
+    public final /*@Price*/ double[] drift(final /*@Time*/ double t, /*@Price*/ double[] x) {
+    	if (x.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    	return new double[] { drift(t, x[0]) };
     }
 
-    public final Matrix diffusion(final /*@Time*/ double t, final Vector<Real> x) {
-    	if (x.size()!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	Vector<Real> v = new DenseVector( new double[] { diffusion(t, x.get(0)).doubleValue() } );
-        return new DenseMatrix(v);
+    public final /*@Diffusion*/ double[][] diffusion(final /*@Time*/ double t, /*@Price*/ double[] x) {
+    	if (x.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    	double v = diffusion(t, x[0]);
+    	return new double[][] { { v } };
     }
 
-    public final Vector<Real> expectation(final /*@Time*/ double t0, final Vector<Real> x0, final /*@Time*/ double dt) {
-    	if (x0.size()!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new DenseVector( new double[] { expectation(t0, x0.get(0), dt).doubleValue() } );
+    public final /*@Expectation*/ double[] expectation(final /*@Time*/ double t0, final /*@Price*/ double[] x0, final /*@Time*/ double dt) {
+    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    	return new double[] { expectation(t0, x0[0], dt) };
     }
     
-    public final Matrix stdDeviation(final /*@Time*/ double t0, final Vector<Real> x0, final /*@Time*/ double dt) {
-    	if (x0.size()!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	Vector<Real> v = new DenseVector( new double[] { stdDeviation(t0, x0.get(0), dt).doubleValue() } );
-        return new DenseMatrix(v);
+    public final /*@StdDev*/ double[][] stdDeviation(final /*@Time*/ double t0, final /*@Price*/ double[] x0, final /*@Time*/ double dt) {
+    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    	double v = stdDeviation(t0, x0[0], dt);
+    	return new double[][] { { v } };
     }
 
-    public final Matrix covariance(final /*@Time*/ double t0, final Vector<Real> x0, final /*@Time*/ double dt) {
-    	if (x0.size()!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	Vector<Real> v = new DenseVector( new double[] { varianceDiscretization(t0, x0.get(0), dt).doubleValue() } );
-        return new DenseMatrix(v);
+    public final /*@Covariance*/ double[][] covariance(final /*@Time*/ double t0, final /*@Price*/ double[] x0, final /*@Time*/ double dt) {
+    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    	double v = varianceDiscretization(t0, x0[0], dt);
+    	return new double[][] { { v } };
     }
 
-    public final Vector<Real> evolve(final /*@Time*/ double t0, final Vector<Real> x0, final /*@Time*/ double dt, final Vector<Real> dw) {
-    	if (x0.size()!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	if (dw.size()!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new DenseVector( new double[] { evolve(t0, x0.get(0), dt, dw.get(0)).doubleValue() } );
+    public final double[] evolve(final /*@Time*/ double t0, final /*@Price*/ double[] x0, final /*@Time*/ double dt, final double[] dw) {
+    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    	if (dw.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    	return new double[] { evolve(t0, x0[0], dt, dw[0]) };
     }
 
-    public final Vector<Real> apply(final Vector<Real> x0, final Vector<Real> dx) {
-    	if (x0.size()!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	if (dx.size()!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new DenseVector( new double[] { apply(x0.get(0), dx.get(0)).doubleValue() } );
+    public final /*@Price*/ double[] apply(final /*@Price*/ double[] x0, final double[] dx) {
+    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    	if (dx.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    	return new double[] { apply(x0[0], dx[0]) };
     }
 
 }

@@ -41,7 +41,7 @@ package org.jquantlib.termstructures.volatilities;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.Linear;
+import org.jquantlib.math.interpolation.LinearInterpolation.Linear;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.util.Date;
 

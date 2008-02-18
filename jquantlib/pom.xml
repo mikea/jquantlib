@@ -313,14 +313,14 @@
   </pluginRepositories>
   <dependencies>
     <dependency>
-      <groupId>jal</groupId>
-      <artifactId>jal</artifactId>
-      <version>20031117</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.4</version>
     </dependency>
     <dependency>
-      <groupId>fastutil</groupId>
-      <artifactId>fastutil</artifactId>
-      <version>5.0.9</version>
+      <groupId>colt</groupId>
+      <artifactId>colt</artifactId>
+      <version>1.2.0</version>
     </dependency>
     <dependency>
       <groupId>org.jquantlib</groupId>
@@ -395,8 +395,8 @@
   <properties>
     <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.developerConnection>
     <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
-    <maven.compile.source>1.5</maven.compile.source>
     <maven.scm.connection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.connection>
+    <maven.compile.source>1.5</maven.compile.source>
     <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
     <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.url>
     <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>

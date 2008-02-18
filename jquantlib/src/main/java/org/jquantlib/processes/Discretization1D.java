@@ -31,13 +31,13 @@ public interface Discretization1D {
     /**
      * Returns the drift part of the equation, i.e. {@latex$ \mu(t, x_t) }
      */ 
-	public abstract /*@Drift*/ double driftDiscretization(/*final StochasticProcess1D sp, */final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt); // XXX
+	public abstract /*@Drift*/ double driftDiscretization(/*final StochasticProcess1D sp, */final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt); // XXX
 	
     /**
      * Returns the diffusion part of the equation, i.e.
      {@latex$ \sigma(t, x_t) }
      */
-	public abstract /*@Diffusion*/ double diffusionDiscretization(/*final StochasticProcess1D sp, */final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt); // XXX
+	public abstract /*@Diffusion*/ double diffusionDiscretization(/*final StochasticProcess1D sp, */final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt); // XXX
 	
     /**
      * Returns the variance
@@ -48,6 +48,6 @@ public interface Discretization1D {
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-	public abstract /*@Variance*/ double varianceDiscretization(/*final StochasticProcess1D sp, */final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt); // XXX
+	public abstract /*@Variance*/ double varianceDiscretization(/*final StochasticProcess1D sp, */final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt); // XXX
 
 }

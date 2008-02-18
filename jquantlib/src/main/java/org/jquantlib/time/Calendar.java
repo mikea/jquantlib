@@ -39,10 +39,10 @@
 
 package org.jquantlib.time;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-
 import org.jquantlib.util.Date;
+
+import cern.colt.list.IntArrayList;
+
 
 /**
  *  This class provides methods for determining whether a date is a
@@ -62,8 +62,8 @@ import org.jquantlib.util.Date;
 // FIXME: This class should be called AbastractCalendar whilst DefaultCalendar should be called Calendar
 public abstract class Calendar {
 
-	protected IntList addedHolidays;
-	protected IntList removedHolidays;
+	protected IntArrayList addedHolidays;
+	protected IntArrayList removedHolidays;
 
 	protected abstract boolean isCustomBusinessDay(final Date date);
 	protected abstract boolean isCustomWeekend(final Weekday weekday);
@@ -78,9 +78,9 @@ public abstract class Calendar {
      * Returns <code>true</code> if the date is a business day for the given market.
      */
     protected final boolean isBusinessDay(final Date d) {
-        if (addedHolidays.contains(d))
+        if (addedHolidays.contains(d.getValue()))
             return false;
-        if (removedHolidays.contains(d))
+        if (removedHolidays.contains(d.getValue()))
             return true;
         return this.isCustomBusinessDay(d);
     }
@@ -130,7 +130,7 @@ public abstract class Calendar {
     
 	void addHoliday(final Date d) {
         // if date was a genuine holiday previously removed, revert the change
-        removedHolidays.remove(d);
+        removedHolidays.remove(d.getValue());
         // if it's already a holiday, leave the calendar alone.
         // Otherwise, add it.
         if (isBusinessDay(d))
@@ -139,7 +139,7 @@ public abstract class Calendar {
 
     void removeHoliday(final Date d) {
         // if d was an artificially-added holiday, revert the change
-        addedHolidays.remove(d);
+        addedHolidays.remove(d.getValue());
         // if it's already a business day, leave the calendar alone.
         // Otherwise, add it.
         if (isBusinessDay(d))

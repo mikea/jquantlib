@@ -38,9 +38,9 @@
 
 package org.jquantlib.math.interpolation;
 
-import jal.doubles.Sorting;
-
 import org.jquantlib.math.Closeness;
+
+import cern.colt.Sorting;
 
 
 public abstract class Interpolation2D implements Extrapolator {
@@ -67,14 +67,8 @@ public abstract class Interpolation2D implements Extrapolator {
 	/**
 	 * This method does not have anything to do with Observer.update()
 	 */
-	public abstract void update();
-
-	protected abstract double getValue(final double x, final double y);
-
-	protected abstract double primitive(final double x, final double y);
-	protected abstract double derivative(final double x, final double y);
-	protected abstract double secondDerivative(final double x, final double y);
-
+	public abstract void calculate();
+	public abstract double getValue(final double x, final double y);
 	
 	
 	public final double getValue(final double x, final double y, boolean allowExtrapolation) {
@@ -82,6 +76,10 @@ public abstract class Interpolation2D implements Extrapolator {
         return getValue(x, y);
     }
     
+	public void update() {
+		calculate();
+	}
+	
 	public double xMin() {
 		return vx[0]; // get first element
 	}
@@ -116,7 +114,7 @@ public abstract class Interpolation2D implements Extrapolator {
         else if (x > vx[vx.length-1])
             return vx.length-2;
         else
-            return Sorting.upper_bound(vx, 0, vx.length-1, x)-1;
+            return Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
     }
     
     protected int locateY(double y) /* @ReadOnly */ {
@@ -125,7 +123,7 @@ public abstract class Interpolation2D implements Extrapolator {
         else if (y > vy[vy.length-1])
             return vy.length-2;
         else
-            return Sorting.upper_bound(vy, 0, vy.length-1, y)-1;
+            return Sorting.binarySearchFromTo(vy, y, 0, vy.length-1)-1;
     }
     
 	protected final boolean isInRange(final double x, final double y) {

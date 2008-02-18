@@ -21,12 +21,10 @@
 package org.jquantlib.math.interpolation;
 
 
-//FIXME: comments
-// TODO: refactor to "LinearInterpolationFactory"
-public class Linear implements Interpolator {
 
-	public Interpolation interpolate(double[] x, double[] y) {
-		return new LinearInterpolation(x, y);
-	}
+// TODO:: refactor to "Interpolation2DFactory"
+public interface Interpolator2D {
+
+	public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z);
 
 }

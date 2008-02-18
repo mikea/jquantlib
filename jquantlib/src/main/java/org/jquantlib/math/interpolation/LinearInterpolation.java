@@ -77,4 +77,18 @@ public class LinearInterpolation extends Interpolation {
         return 0.0;
 	}
 
+	/**
+	 * This static class is a factory to LinearInterpolation
+	 * 
+	 * @author Richard Gomes
+	 */
+	//FIXME: should be LinearInterpolationFactory
+	static public class Linear implements Interpolator {
+
+		public Interpolation interpolate(double[] x, double[] y) {
+			return new LinearInterpolation(x, y);
+		}
+
+	}
+
 }

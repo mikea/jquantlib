@@ -51,8 +51,15 @@ import org.jquantlib.termstructures.volatilities.LocalVolCurve;
 import org.jquantlib.termstructures.volatilities.LocalVolSurface;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
-import org.jscience.mathematics.number.Real;
 
+/**
+ * Generalized Black-Scholes stochastic process
+ * 
+ * <p>This class describes the stochastic process governed by
+ * <p>{@latex[
+ * dS(t, S) = (r(t) - q(t) - \frac{\sigma(t, S)^2}{2}) dt + \sigma dW_t.
+ * }
+ */
 public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
     private Quote x0_;
@@ -82,26 +89,26 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
             
     @Override
-	public Real diffusion(final /*@Time*/ double t, final Real x) {
+	public /*@Diffusion*/ double diffusion(final /*@Time*/ double t, final /*@Price*/ double x) {
     	/*@Volatility*/ double vol = localVolatility().localVol(t, x, true);
     	return vol;
     }
 
 
 	@Override
-	public Real drift(final /*@Time*/ double t, final Real x) {
-		double sigma = diffusion(t,x).doubleValue();
+	public /*@Drift*/ double drift(final /*@Time*/ double t, final /*@Price*/ double x) {
+		/*@Diffusion*/ double sigma = diffusion(t,x);
         // we could be more anticipatory if we know the right dt
         // for which the drift will be used
         /*@Time*/ double t1 = t + 0.0001;
         /*@Rate*/ double r = riskFreeRate_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency, true).getRate();
-        double d = dividendYield_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency,true).getRate().doubleValue();
+        double d = dividendYield_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency,true).getRate();
         return r-d-0.5*sigma*sigma;
     }
 
 	@Override
-	public Real x0() {
-		return new Real( x0_.getValue() );
+	public /*@Price*/ double x0() {
+		return x0_.getValue();
 	}
 
 
@@ -153,9 +160,9 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 	
 
 
-    public final Real apply(final Real x0, final Real dx) {
+    public final /*@Price*/ double apply(final /*@Price*/ double x0, final /*@Time*/ double dx) {
     	// result = x0 * e^dx
-    	double result = x0.doubleValue() * Math.exp(dx.doubleValue());
+    	double result = x0 * Math.exp(dx);
     	return result;
     }
 
@@ -192,7 +199,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         		BlackConstantVol constVol = (BlackConstantVol)blackVolatility();
         		localVolatility_ = new LocalConstantVol(
         				constVol.getReferenceDate(), 
-        				constVol.blackVol(/*@Time*/ 0.0, new Real(x0_.getValue())),
+        				constVol.blackVol(/*@Time*/ 0.0, /*@Price*/ x0_.getValue()),
         				constVol.getDayCounter());
                 updated_ = true;
         		return localVolatility_;

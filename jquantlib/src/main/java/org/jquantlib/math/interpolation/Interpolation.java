@@ -39,10 +39,12 @@
 
 package org.jquantlib.math.interpolation;
 
-import jal.doubles.Sorting;
-
 import org.jquantlib.Settings;
 import org.jquantlib.math.Closeness;
+
+import cern.colt.Sorting;
+
+
 
 /**
  * 
@@ -134,7 +136,7 @@ public abstract class Interpolation implements Extrapolator {
         else if (x > vx[vx.length-1])
             return vx.length-2;
         else
-            return Sorting.upper_bound(vx, 0, vx.length-1, x)-1;
+            return Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
     }	
 	
 

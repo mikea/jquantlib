@@ -39,20 +39,22 @@
 
 package org.jquantlib.processes;
 
-import java.util.Vector;
-
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
+import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import cern.jet.math.Functions;
+
 /**
  * Multi-dimensional stochastic process class.
  * 
  * <p>{@latex[
- *       d\mathrm{x}_t =
- *         \mu(t, x_t)\mathrm{d}t + \sigma(t, \mathrm{x}_t) \cdot d\mathrm{W}_t.
- *    }
+ * d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t.
+ * }
  */ 
 public abstract class StochasticProcess implements Observable, Discretization, Observer {
 
@@ -140,8 +142,9 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      */
     public /*@Price*/ double[] evolve(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt, final double[] dw) {
     	// y = M * dw
-    	Vector<Real> y = stdDeviation(t0, x0, dt).times(dw);
-    	return apply(expectation(t0, x0, dt), y);
+    	DenseDoubleMatrix2D m = new DenseDoubleMatrix2D(stdDeviation(t0, x0, dt));
+    	DoubleMatrix1D y = m.zMult(new DenseDoubleMatrix1D(dw), null);
+    	return apply(expectation(t0, x0, dt), y.toArray());
     }
     
     /**
@@ -149,7 +152,9 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      * returns {@latex$ \mathrm{x} + \Delta \mathrm{x} }.
      */
     public /*@Price*/ double[] apply(final double[] x0, final double[] dx) {
-    	return x0.plus(dx);
+    	DoubleMatrix1D mx0 = new DenseDoubleMatrix1D(x0);
+    	DoubleMatrix1D mdx = new DenseDoubleMatrix1D(dx);
+    	return mx0.assign(mdx, Functions.plus).toArray();
     }
 
     /**

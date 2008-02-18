@@ -39,7 +39,8 @@
 
 package org.jquantlib.exercise;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
+import cern.colt.list.IntArrayList;
+
 
 
 
