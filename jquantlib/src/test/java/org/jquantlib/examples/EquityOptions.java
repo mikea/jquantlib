@@ -208,11 +208,7 @@ public class EquityOptions {
     BlackVolTermStructure flatVolTS = new BlackConstantVol(settlementDate, volatility, dayCounter);
 
     Payoff payoff = new PlainVanillaPayoff(type, strike);
-    StochasticProcess stochasticProcess = new BlackScholesMertonProcess(
-                                        underlyingH,
-                                        new YieldTermStructure(flatDividendTS), 
-                                        new YieldTermStructure(flatTermStructure),
-                                        new BlackVolTermStructure(flatVolTS));
+    StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
 
     // options
     VanillaOption europeanOption = new VanillaOption(stochasticProcess, payoff, europeanExercise);

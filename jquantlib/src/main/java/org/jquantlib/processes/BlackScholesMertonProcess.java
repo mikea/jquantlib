@@ -39,7 +39,7 @@ public class BlackScholesMertonProcess extends GeneralizedBlackScholesProcess {
             final Quote x0,
             final YieldTermStructure dividendTS,
             final YieldTermStructure riskFreeTS,
-            final BlackVolTermStructure blackVolTS)
+            final BlackVolTermStructure blackVolTS) {
     	this(x0, dividendTS, riskFreeTS, blackVolTS, new EulerDiscretization());
     }
 
