@@ -70,12 +70,17 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     private boolean updated_;
 
     
+	/**
+	 * 
+	 * @param d is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
+	 */
     public GeneralizedBlackScholesProcess(
 	            final Quote x0,
 	            final YieldTermStructure dividendTS,
 	            final YieldTermStructure riskFreeTS,
-	            final BlackVolTermStructure blackVolTS) {
-    	super();
+	            final BlackVolTermStructure blackVolTS,
+	            final Object d) {
+    	super(d);
     	x0_ = x0;
     	riskFreeRate_ = riskFreeTS;
     	dividendYield_ = dividendTS;
@@ -88,12 +93,10 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     }
 
             
-    @Override
-	public /*@Diffusion*/ double diffusion(final /*@Time*/ double t, final /*@Price*/ double x) {
-    	/*@Volatility*/ double vol = localVolatility().localVol(t, x, true);
-    	return vol;
-    }
-
+	@Override
+	public /*@Price*/ double x0() {
+		return x0_.getValue();
+	}
 
 	@Override
 	public /*@Drift*/ double drift(final /*@Time*/ double t, final /*@Price*/ double x) {
@@ -107,58 +110,10 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     }
 
 	@Override
-	public /*@Price*/ double x0() {
-		return x0_.getValue();
-	}
-
-
-// FIXME: code review
-
-//	@Override
-//	public double size() {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	public Real diffusionDiscretization(/*@Time*/ double t0, Real x0, /*@Time*/ double dt) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public Real driftDiscretization(/*@Time*/ double t0, Real x0, /*@Time*/ double dt) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public Real varianceDiscretization(/*@Time*/ double t0, Real x0, /*@Time*/ double dt) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public Matrix covarianceDiscretization(/*@Time*/ double t0, Vector x0, /*@Time*/ double dt) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public Matrix diffusionDiscretization(/*@Time*/ double t0, Vector x0, /*@Time*/ double dt) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public Vector driftDiscretization(/*@Time*/ double t0, Vector x0, /*@Time*/ double dt) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public void update(Observable o, Object arg) {
-//		// TODO Auto-generated method stub
-//
-//	}
-
-
-// =================================================
-	
-
+	public /*@Diffusion*/ double diffusion(final /*@Time*/ double t, final /*@Price*/ double x) {
+    	/*@Volatility*/ double vol = localVolatility().localVol(t, x, true);
+    	return vol;
+    }
 
     public final /*@Price*/ double apply(final /*@Price*/ double x0, final /*@Time*/ double dx) {
     	// result = x0 * e^dx
@@ -228,15 +183,5 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
             return localVolatility_;
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 }

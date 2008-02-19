@@ -56,22 +56,32 @@ import cern.jet.math.Functions;
  * d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t.
  * }
  */ 
-public abstract class StochasticProcess implements Observable, Discretization, Observer {
+public abstract class StochasticProcess implements Observable, Observer {
 
-    protected StochasticProcess() {
+	private Discretization discretization;
+	
+	/**
+	 * 
+	 * @param d is an Object that <b>must</b> implement {@link Discretization}.
+	 */
+    protected StochasticProcess(final Object d) {
     	super();
+    	if (d==null) throw new NullPointerException();
+    	if (! Discretization.class.isAssignableFrom(d.getClass())) throw new ClassCastException(d.getClass().getName()+" must implement Discretization");
+    	this.discretization = (Discretization)d;
     }
+    
 
     /**
      * Returns the number of dimensions of the stochastic process
      */
-    public abstract double size();
+    public abstract int getSize();
     
     /**
      * Returns the number of independent factors of the process
      */
-    public double factors() {
-    	return size();
+    public int factors() {
+    	return getSize();
     }
         
     /**
@@ -101,7 +111,7 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      * particular discretization.
      */
     public /*@Expectation*/ double[] expectation(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt) {
-    	return apply(x0, driftDiscretization(/*this, */t0, x0, dt)); //XXX
+    	return apply(x0, discretization.driftDiscretization(/*this, */t0, x0, dt)); //XXX
     }
     
     /**
@@ -114,7 +124,7 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      * particular discretization.
      */
     public /*@StdDev*/ double[][] stdDeviation(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt) {
-    	return diffusionDiscretization(/*this, */t0, x0, dt); // XXX
+    	return discretization.diffusionDiscretization(/*this, */t0, x0, dt); // XXX
     }
     
     /**
@@ -127,7 +137,7 @@ public abstract class StochasticProcess implements Observable, Discretization, O
      * particular discretization.
      */
     public /*@Covariance*/ double[][] covariance(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt) {
-    	return covarianceDiscretization(/*this, */t0, x0, dt); // XXX
+    	return discretization.covarianceDiscretization(/*this, */t0, x0, dt); // XXX
     }
     
     /**
@@ -170,7 +180,7 @@ public abstract class StochasticProcess implements Observable, Discretization, O
     }
     
 
-    void update() {
+    public void update() {
     	notifyObservers();
     }
 
