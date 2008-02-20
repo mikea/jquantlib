@@ -33,13 +33,13 @@ public interface Discretization {
      * Returns the drift part of the equation, i.e.,
      {@latex$ \mu(t, \mathrm{x}_t) }
      */
-	public abstract /*@Drift*/ double[] driftDiscretization(/*final StochasticProcess sp, */final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt); // XXX
+	public abstract /*@Drift*/ double[] driftDiscretization(final StochasticProcess sp, final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt); // XXX
 
     /**
      * Returns the diffusion part of the equation, i.e.
      {@latex$ \sigma(t, \mathrm{x}_t) }
      */
-	public abstract /*@Diffusion*/ double[][] diffusionDiscretization(/*final StochasticProcess sp, */final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt); // XXX
+	public abstract /*@Diffusion*/ double[][] diffusionDiscretization(final StochasticProcess sp, final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt); // XXX
 	
     /**
      * Returns the covariance
@@ -50,6 +50,6 @@ public interface Discretization {
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-	public abstract /*@Covariance*/ double[][] covarianceDiscretization(/*final StochasticProcess sp, */final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt); // XXX
+	public abstract /*@Covariance*/ double[][] covarianceDiscretization(final StochasticProcess sp, final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt); // XXX
 	
 }

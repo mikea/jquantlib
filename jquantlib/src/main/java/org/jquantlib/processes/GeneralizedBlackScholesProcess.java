@@ -51,6 +51,7 @@ import org.jquantlib.termstructures.volatilities.LocalVolCurve;
 import org.jquantlib.termstructures.volatilities.LocalVolSurface;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Observable;
 
 /**
  * Generalized Black-Scholes stochastic process
@@ -60,7 +61,7 @@ import org.jquantlib.util.Date;
  * dS(t, S) = (r(t) - q(t) - \frac{\sigma(t, S)^2}{2}) dt + \sigma dW_t.
  * }
  */
-public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
+public class GeneralizedBlackScholesProcess<T extends Object & Discretization & Discretization1D> extends StochasticProcess1D<T> {
 
     private Quote x0_;
     private YieldTermStructure riskFreeRate_;
@@ -71,16 +72,15 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
     
 	/**
-	 * 
-	 * @param d is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
+	 * @param discretization is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
 	 */
     public GeneralizedBlackScholesProcess(
 	            final Quote x0,
 	            final YieldTermStructure dividendTS,
 	            final YieldTermStructure riskFreeTS,
 	            final BlackVolTermStructure blackVolTS,
-	            final Object d) {
-    	super(d);
+	            final T discretization) {
+    	super(discretization);
     	x0_ = x0;
     	riskFreeRate_ = riskFreeTS;
     	dividendYield_ = dividendTS;
@@ -92,7 +92,6 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     	blackVolatility_.addObserver(this);
     }
 
-            
 	@Override
 	public /*@Price*/ double x0() {
 		return x0_.getValue();
@@ -125,9 +124,10 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         return riskFreeRate_.getDayCounter().getYearFraction(riskFreeRate_.getReferenceDate(), d);
     }
 
-    public final void update() {
+    // FIXME: code review
+    public final void update(Observable o, Object arg) {
         updated_ = false;
-        super.update();
+        super.update(o, arg);
     }
 
     public final Quote stateVariable() {

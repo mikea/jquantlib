@@ -40,18 +40,16 @@
 package org.jquantlib.processes;
 
 
-public abstract class StochasticProcess1D extends StochasticProcess {
+public abstract class StochasticProcess1D<T extends Object & Discretization & Discretization1D> extends StochasticProcess<T> {
 	
     protected Discretization1D discretization1D; 
 	
 	/**
-	 * 
-	 * @param d is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
+	 * @param discretization is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
 	 */
-    protected StochasticProcess1D(final Object d) {
-    	super(d);
-    	if (! Discretization1D.class.isAssignableFrom(d.getClass())) throw new ClassCastException(d.getClass().getName()+" must implement Discretization1D");
-    	this.discretization1D = (Discretization1D)d;
+    protected StochasticProcess1D(final T discretization) {
+    	super(discretization);
+    	this.discretization1D = discretization;
     }
 
     /**
@@ -81,7 +79,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * particular discretization.
      */
     public final /*@Expectation*/ double expectation(final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt) {
-        return apply(x0, discretization1D.driftDiscretization(/**this, */ t0, x0, dt)); // XXX
+        return apply(x0, discretization1D.driftDiscretization(this, t0, x0, dt)); // XXX
     }
     
     /**
@@ -93,7 +91,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * particular discretization.
      */
     public final /*@StdDev*/ double stdDeviation(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt) {
-        return discretization1D.diffusionDiscretization(/**this, */ t0, x0, dt); // XXX
+        return discretization1D.diffusionDiscretization(this, t0, x0, dt); // XXX
     }
     
     /**
@@ -105,7 +103,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * particular discretization.
      */
     public final /*@Variance*/ double variance(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt) {
-        return discretization1D.varianceDiscretization(/**this, */ t0, x0, dt); // XXX
+        return discretization1D.varianceDiscretization(this, t0, x0, dt); // XXX
     }
     
     /**
@@ -167,7 +165,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
 
     public final /*@Covariance*/ double[][] covariance(final /*@Time*/ double t0, final /*@Price*/ double[] x0, final /*@Time*/ double dt) {
     	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	double v = discretization1D.varianceDiscretization(t0, x0[0], dt);
+    	double v = discretization1D.varianceDiscretization(this, t0, x0[0], dt);
     	return new double[][] { { v } };
     }
 
