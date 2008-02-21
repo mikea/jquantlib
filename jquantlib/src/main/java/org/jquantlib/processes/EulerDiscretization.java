@@ -21,25 +21,23 @@
 package org.jquantlib.processes;
 
 import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
+import cern.jet.math.Mult;
 
 public class EulerDiscretization implements Discretization, Discretization1D {
 
-    /**
+	//
+	// Implements interface Discretization
+	//
+	
+	/**
      *  Returns an approximation of the drift defined as
      *  <p>{@latex[ \mu(t_0, \mathbf{x}_0) \Delta t }
      */  
 	public /*@Drift*/ double[] driftDiscretization(final StochasticProcess sp, /*@Time*/ double t0, /*@Price*/ double[] x0, /*@Time*/ double dt) {
-		return sp.drift(t0, x0)*dt;
-	}
-
-    /**
-     * Returns an approximation of the drift defined as
-     * <p>{@latex[ \mu(t_0, x_0) \Delta t }
-     */
-	public /*@Drift*/ double driftDiscretization(final StochasticProcess1D sp, /*@Time*/ double t0, /*@Price*/ double x0, /*@Time*/ double dt) {
-		return sp.drift(t0, x0)*dt;
+		return new DenseDoubleMatrix1D(sp.drift(t0, x0)).assign(Mult.mult(dt)).toArray();
 	}
 
     /**
@@ -47,7 +45,30 @@ public class EulerDiscretization implements Discretization, Discretization1D {
      * <p>{@latex[ \sigma(t_0, \mathbf{x}_0) \sqrt{\Delta t} }
      */
 	public /*@Diffusion*/ double[][] diffusionDiscretization(final StochasticProcess sp, /*@Time*/ double t0, /*@Price*/ double[] x0, /*@Time*/ double dt) {
-		return sp.diffusion(t0, x0) * Math.sqrt(dt);
+		return new DenseDoubleMatrix2D(sp.diffusion(t0, x0)).assign(Mult.mult(Math.sqrt(dt))).toArray();
+	}
+
+    /**
+     * Returns an approximation of the covariance defined as
+     * <p>{@latex[ \sigma(t_0, \mathbf{x}_0)^2 \Delta t }
+     */
+	public /*@Covariance*/ double[][] covarianceDiscretization(final StochasticProcess sp, /*@Time*/ double t0, /*@Price*/ double[] x0, /*@Time*/ double dt) {
+
+    	DoubleMatrix2D sigma = new DenseDoubleMatrix2D(sp.diffusion(t0, x0));
+    	DoubleMatrix2D sigmaT = new Algebra().transpose(sigma);
+    	return sigma.zMult(sigmaT, null, dt, 0.0, false, false).toArray();
+	}
+
+	//
+	// Implements interface Discretization1D
+	//
+	
+	/**
+     * Returns an approximation of the drift defined as
+     * <p>{@latex[ \mu(t_0, x_0) \Delta t }
+     */
+	public /*@Drift*/ double driftDiscretization(final StochasticProcess1D sp, /*@Time*/ double t0, /*@Price*/ double x0, /*@Time*/ double dt) {
+		return sp.drift(t0, x0)*dt;
 	}
 
     /**
@@ -59,22 +80,11 @@ public class EulerDiscretization implements Discretization, Discretization1D {
 	}
 
     /**
-     * Returns an approximation of the covariance defined as
-     * <p>{@latex[ \sigma(t_0, \mathbf{x}_0)^2 \Delta t }
-     */
-	public /*@Covariance*/ double[][] covarianceDiscretization(final StochasticProcess sp, /*@Time*/ double t0, /*@Price*/ double[] x0, /*@Time*/ double dt) {
-
-    	DoubleMatrix2D sigma = new DenseDoubleMatrix2D(sp.diffusion(t0, x0));
-    	DoubleMatrix2D sigmaT = new Algebra().transpose(sigma);
-    	return sigma.zMult(sigmaT, null) * dt;
-	}
-
-    /**
      * Returns an approximation of the variance defined as
      * <p>{@latex[ \sigma(t_0, x_0)^2 \Delta t }
      */
 	public /*@Variance*/ double varianceDiscretization(final StochasticProcess1D sp, /*@Time*/ double t0, /*@Price*/ double x0, /*@Time*/ double dt) {
-        Real sigma = sp.diffusion(t0, x0);
+        /*@Diffusion*/ double sigma = sp.diffusion(t0, x0);
         return sigma*sigma*dt;
 	}
 
