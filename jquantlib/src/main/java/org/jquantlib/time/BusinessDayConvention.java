@@ -45,8 +45,6 @@ package org.jquantlib.time;
  * <p>These conventions specify the algorithm used to adjust a date in case
  * it is not a valid business day.
  *   
- * @category datetime
- *   
  * @author Richard Gomes
  */
 public enum BusinessDayConvention {

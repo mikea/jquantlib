@@ -39,10 +39,8 @@
 package org.jquantlib.instruments;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.PricingEngineArguments;
 import org.jquantlib.pricingengines.PricingEngineResults;
 import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Observer;
@@ -52,7 +50,6 @@ import org.jquantlib.util.Observer;
 
 public abstract class Instrument extends LazyObject implements Observer {
 
-
 	/**
 	 * The value of this attribute and any other that derived
 	 * classes might declare must be set during calculation.
@@ -60,7 +57,7 @@ public abstract class Instrument extends LazyObject implements Observer {
 	 * @todo verify how these variables are used
 	 */
 	// FIXME: verify how these variables are used
-	private PricingEngine engine_;
+	protected PricingEngine engine_;
 	
 	/**
 	 * Represents the net present value of the instrument.
@@ -85,18 +82,15 @@ public abstract class Instrument extends LazyObject implements Observer {
     	this.errorEstimate_ = 0.0;
     }
 
-    
-
-	
-	public final /*@Price*/ double getNPV() {
+	public final /*@Price*/ double getNPV() /* @ReadOnly */ {
 		calculate();
-		if (this.NPV_==Double.NaN) throw new ArithmeticException("NPV not provided"); // FIXME: find something better
+		if (this.NPV_==Double.NaN) throw new ArithmeticException("NPV not provided");
 		return NPV_;
 	}
 
-	public final /*@Price*/ double getErrorEstimate() {
+	public final /*@Price*/ double getErrorEstimate() /* @ReadOnly */ {
 		calculate();
-		if (this.errorEstimate_==Double.NaN) throw new ArithmeticException("error estimate not provided"); // FIXME: find something better
+		if (this.errorEstimate_==Double.NaN) throw new ArithmeticException("error estimate not provided");
 		return errorEstimate_;
 	}
 
@@ -105,13 +99,33 @@ public abstract class Instrument extends LazyObject implements Observer {
 	 */
 	public abstract boolean isExpired();
 	
-	
+    /**
+     * When a derived argument structure is defined for an
+     * instrument, this method should be overridden to fill
+     * it. This is mandatory in case a pricing engine is used.
+     *  
+     * @param arguments
+     */
+    public abstract void setupArguments(final PricingEngine.PricingEngineArguments arguments);
 
+    /**
+     * When a derived result structure is defined for an
+     * instrument, this method should be overridden to read from  
+     * it. This is mandatory in case a pricing engine is used.
+     */
+    // FIXME: private void fetchResults(final Results results) ...
+    // FIXME: should be abstract
+    protected void fetchResults(final PricingEngine.PricingEngineResults results) /* @ReadOnly */ {
+    	if (results == null) throw new NullPointerException("no results returned from pricing engine");
+    	NPV_ = results.value;
+    	errorEstimate_ = results.errorEstimate;
+    	additionalResults_ = results.additionalResults;
+    }
 
     /**
      * Set the pricing engine to be used.
      * 
-     * <p><b>Note:</b> calling this method will have no effects in 
+     * @note calling this method will have no effects in 
      * case the <b>performCalculation</b> method
      * was overridden in a derived class.
      *  
@@ -125,32 +139,9 @@ public abstract class Instrument extends LazyObject implements Observer {
     	if (this.engine_!=null) {
     		this.engine_.addObserver(this);
     	}
-    	update();
+    	update(this, null);
     }
 
-    /**
-     * When a derived argument structure is defined for an
-     * instrument, this method should be overridden to fill
-     * it. This is mandatory in case a pricing engine is used.
-     *  
-     * @param arguments
-     * @todo code review
-     */
-    // FIXME: code review
-    public abstract void setupArguments(final PricingEngineArguments arguments);
-
-    /**
-     * When a derived result structure is defined for an
-     * instrument, this method should be overridden to read from
-     * it. This is mandatory in case a pricing engine is used.
-     *   
-     * @param results
-     * @todo code review
-     */
-    // FIXME: code review
-    public abstract void fetchResults(final PricingEngineResults results);
-    
-    
     
 	protected void calculate() {
 		if (isExpired()) {
@@ -169,7 +160,7 @@ public abstract class Instrument extends LazyObject implements Observer {
      * This method must leave the instrument in a consistent
      * state when the expiration condition is met.
      */
-    protected final void setupExpired() {
+    protected void setupExpired() {
         NPV_ = 0.0;
         errorEstimate_ = 0.0;
         additionalResults_.clear();
@@ -191,15 +182,6 @@ public abstract class Instrument extends LazyObject implements Observer {
         fetchResults(engine_.getResults());
     }
         
-//    template <class T>
-//    inline T Instrument::result(const std::string& tag) const {
-//        calculate();
-//        std::map<std::string,boost::any>::const_iterator value =
-//            additionalResults_.find(tag);
-//        QL_REQUIRE(value != additionalResults_.end(),
-//                   tag << " not provided");
-//        return boost::any_cast<T>(value->second);
-//    }
     
     // FIXME: verify how this method is used
     protected final Object getResult(final String tag) {
@@ -213,58 +195,15 @@ public abstract class Instrument extends LazyObject implements Observer {
         return additionalResults_;
     }
 
-	
-    /**
-     * @todo code review
-     */
-   // FIXME: code review
-    private class InstrumentResults implements PricingEngineResults {
-        private double value;
-        private double errorEstimate;
-        private Map<String, Object> additionalResults;
-
+    
+    protected class Results extends PricingEngineResults {
+        protected double value;
+        protected double errorEstimate;
+        protected Map<String,Object> additionalResults;
         public void reset() {
-    		value = Double.NaN;
-    		errorEstimate = Double.NaN;
-    		additionalResults.clear();
-    	}
+              value = errorEstimate = Double.NaN;
+              additionalResults.clear();
+          }
+      }
 
-        public final double getValue() {
-        	return value;
-        }
-        
-        public final double getErrorEstimate() {
-        	return errorEstimate;
-        }
-        
-        public Map<String,Object> getAdditionalResults() {
-        	return copy(this.additionalResults);
-
-        }
-        
-        public void setValue(final double value) {
-        	this.value = value;
-        }
-        
-        public void setErrorEstimate(final double errorEstimate) {
-        	this.errorEstimate = errorEstimate;
-        }
-        
-        public void setAdditionalResults(final Map<String, Object> additionalResults) {
-        	this.additionalResults = copy(additionalResults);
-        }
-        
-        private Map<String,Object> copy(Map<String,Object> src) {
-        	Map<String, Object> dest;
-        	if (src==null) {
-        		dest = null;
-        	} else {
-        		dest = new TreeMap<String,Object>();
-        		dest.putAll(src);
-        	}
-        	return dest;
-        }
-        
-    }
-	
 }

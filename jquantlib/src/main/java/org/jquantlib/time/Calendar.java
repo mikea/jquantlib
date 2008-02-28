@@ -55,8 +55,6 @@ import cern.colt.list.IntArrayList;
  * <p>A calendar should be defined for specific exchange holiday schedule
  * or for general country holiday schedule. Legacy city holiday schedule
  * calendars will be moved to the exchange/country convention.
- *
- * @category datetime
  */
 // TODO test: the methods for adding and removing holidays are tested by inspecting the calendar before and after their invocation.
 // FIXME: This class should be called AbastractCalendar whilst DefaultCalendar should be called Calendar

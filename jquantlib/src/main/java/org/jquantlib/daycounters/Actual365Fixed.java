@@ -44,13 +44,11 @@ import org.jquantlib.util.Date;
  * "Actual/365 (Fixed)" day count convention, also know as
  * "Act/365 (Fixed)", "A/365 (Fixed)", or "A/365F".
  * 
- * <p><b>Note:</b> According to ISDA, "Actual/365" (without "Fixed") is
+ * @note According to ISDA, "Actual/365" (without "Fixed") is
  * an alias for "Actual/Actual (ISDA)"DayCounter (see
  * ActualActual.)  If Actual/365 is not explicitly
  * specified as fixed in an instrument specification,
  * you might want to double-check its meaning.
- * 
- * @category daycounters
  * 
  * @author Richard Gomes
  */

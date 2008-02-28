@@ -49,8 +49,6 @@ import org.jquantlib.util.Date;
  * <p>The Bridge pattern is used to provide the base behavior of the
  * day counter.
  *
- * @category daycounters
- *   
  * @author Richard Gomes
  */
 public interface DayCounter {

@@ -51,9 +51,6 @@ import org.jquantlib.util.Date;
  * 
  * <p>
  * Rates are assumed to be annual continuous compounding.
- * 
- * @category yieldtermstructures
- * 
  */
 // TODO: add derived class ParSwapTermStructure similar to
 // ZeroYieldTermStructure, DiscountStructure, ForwardRateStructure

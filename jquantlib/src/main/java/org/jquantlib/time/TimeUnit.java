@@ -44,8 +44,6 @@ package org.jquantlib.time;
 /**
  * Time units
  * 
- * @category datetime
- *   
  * @author Richard Gomes
  */
 public enum TimeUnit {
@@ -56,8 +54,6 @@ public enum TimeUnit {
      * Returns the name of time unit in long format (e.g. "week")
      *
      * @return the name of time unit in long format (e.g. "week")
-     * 
-     * @category manips
      */ 
 	public String getLongFormat() {
 		return new LongFormat(this).toString();
@@ -67,19 +63,15 @@ public enum TimeUnit {
      * Returns the name of time unit in short format (e.g. "w")
      *
      * @return the name of time unit in short format (e.g. "w")
-     * 
-     * @category manips
      */ 
 	public String getShortFormat() {
 		return new ShortFormat(this).toString();
 	}
 
     /**
-     * output time units in long format (e.g. "week")
+     * Output time units in long format (e.g. "week")
      * 
-     * <p><b>Note</b>: message in singular form
-     * 
-     * @category manips
+     * @note message in singular form
      */ 
 	private class LongFormat {
 		private TimeUnit units;
@@ -97,9 +89,7 @@ public enum TimeUnit {
 	}
 
     /**
-     * output time units in short format (e.g. "w")
-     * 
-     * @category manips
+     * Output time units in short format (e.g. "w")
      */ 
 	private class ShortFormat {
 		private TimeUnit units;

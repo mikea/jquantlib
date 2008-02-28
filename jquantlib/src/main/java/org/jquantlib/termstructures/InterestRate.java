@@ -60,7 +60,7 @@ public class InterestRate {
     /**
      * Compound factor implied by the rate compounded at time t.
      * 
-     * <p><b>Note:</b> Time must be measured using InterestRate's own day counter.
+     * @note Time must be measured using InterestRate's own day counter.
      * 
      * @return the compound (a.k.a capitalization) factor
      *         implied by the rate compounded at time t.
@@ -111,7 +111,7 @@ public class InterestRate {
     /**
      * Discount factor implied by the rate compounded at time t.
      * 
-     * <p><b>Note:</b>Time double must be measured using InterestRate's own day counter.
+     * @note Time double must be measured using InterestRate's own day counter.
      */
     public final /*@DiscountFactor*/ double getDiscountFactor(final /*@Time*/ double t) {
     	/*@DiscountFactor*/ double factor = compoundFactor(t);
@@ -188,7 +188,7 @@ public class InterestRate {
      * Implied interest rate for a given compound factor at a given time.
      * The resulting InterestRate has the day-counter provided as input.
      * 
-     * <p><b>Note:</b> Time must be measured using the day-counter provided as input. 
+     * @note Time must be measured using the day-counter provided as input. 
      */
     static public InterestRate getImpliedRate(
     			final /*@CompoundFactor*/ double c, 

@@ -39,7 +39,11 @@
 
 package org.jquantlib.exercise;
 
-import cern.colt.list.IntArrayList;
+import org.jquantlib.util.Date;
+
+import cern.colt.list.ObjectArrayList;
+
+
 
 
 
@@ -49,19 +53,20 @@ import cern.colt.list.IntArrayList;
  * 
  * @author Richard Gomes
  */
-public abstract class Exercise extends IntArrayList {
+public abstract class Exercise {
 
 	/**
 	 * Defines the exercise type. It can be American, Bermudan or European
 	 * 
 	 * @author Richard Gomes
 	 */
-	enum Type {
+	public enum Type {
 		American, Bermudan, European;
 	}
 
 	private Exercise.Type type;
-
+	private ObjectArrayList dates;
+	
 	/**
 	 * Constructs an exercise and defines the exercise type
 	 * 
@@ -71,6 +76,7 @@ public abstract class Exercise extends IntArrayList {
 	 */
 	protected Exercise(Exercise.Type type) {
 		this.type = type;
+		this.dates = new ObjectArrayList(5); // some reasonable prime number
 	}
 
 	/**
@@ -97,4 +103,20 @@ public abstract class Exercise extends IntArrayList {
 		this.type = type;
 	}
 
+	public int size() {
+		return dates.size();
+	}
+	
+    public void addDate(final Date date) {
+    	dates.add(date);
+    }
+	
+	public Date getDate(final int index) /* @ReadOnly */ {
+		return (Date)dates.get(index);
+	}
+	
+	public Date getLastDate() /* @ReadOnly */ {
+		return getDate(dates.size()-1);
+	}
+	
 }

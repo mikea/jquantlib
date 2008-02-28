@@ -18,21 +18,10 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.exercise;
+package org.jquantlib.instruments;
 
-import org.jquantlib.util.Date;
+public class OneAssetStrikedOption extends OneAssetOption {
 
-/**
- * A European option can only be exercised at one (expiry) date.
- * 
- * @author Richard Gomes
- */
-public class EuropeanExercise extends Exercise {
-
-	public EuropeanExercise(final Date date) {
-		super(Exercise.Type.European);
-		if (date==null) throw new NullPointerException();
-		super.addDate(date);
-	}
-
+	// FIXME: TO BE DONE
+	
 }

@@ -58,13 +58,11 @@ import org.jquantlib.time.Weekday;
  * which implement a limited date algebra (increasing and decreasing dates, and
  * calculating their difference).
  * 
- * <p><b>Note:</b>This class extends Observable and is potentially harmful to
+ * @note This class extends Observable and is potentially harmful to
  * performance due to the large number of Date objects that can be observable
  * at the same time on some families of applications. A simple solution for this
  * problem could be the implementation of an interface which enables this object
  * to turn on and turn off the notification of its observers.
- * 
- * @category datetime
  * 
  * @see Observable
  * 
@@ -742,9 +740,7 @@ public class Date implements Observable {
 
     
 	/**
-     * output dates in short format (mm/dd/yyyy)
-     * 
-     * @category manips
+     * Output dates in short format (mm/dd/yyyy)
      */ 
     private class LongFormat {
 		private Date date;
@@ -766,9 +762,7 @@ public class Date implements Observable {
 	}
 
     /**
-     * output dates in long format (Month ddth, yyyy)
-     * 
-     * @category manips
+     * Output dates in long format (Month ddth, yyyy)
      */ 
 	private class ShortFormat {
 		private Date date;
@@ -790,9 +784,7 @@ public class Date implements Observable {
 	}
 
     /**
-     * output dates in ISO format (yyyy-mm-dd)
-     * 
-     * @category manips
+     * Output dates in ISO format (yyyy-mm-dd)
      */
 	private class ISOFormat {
 		private Date date;
@@ -816,8 +808,6 @@ public class Date implements Observable {
 
 	/**
      * Month names
-     * 
-     * @category datetime
      */
     public enum Month {
     	January   (1),

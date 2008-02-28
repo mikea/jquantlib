@@ -59,12 +59,12 @@ public abstract class LazyObject implements Observable, Observer {
 		this.frozen_ = false;
 	}
 
-	public void update() {
+	public void update(Observable o, Object arg) {
 		// observers don't expect notifications from frozen objects
 		// LazyObject forwards notifications only once until it has been
 		// recalculated
 		if (!frozen_ && calculated_)
-			notifyObservers();
+			notifyObservers(arg);
 		calculated_ = false;
 	}
 
@@ -72,7 +72,7 @@ public abstract class LazyObject implements Observable, Observer {
 	 * This method force the recalculation of any results which would otherwise
 	 * be cached.
 	 * 
-	 * <b>Note:</b> Explicit invocation of this method is <b>not</b> necessary
+	 * @note Explicit invocation of this method is <b>not</b> necessary
 	 * if the object registered itself as observer with the structures on which
 	 * such results depend. It is strongly advised to follow this policy when
 	 * possible.
@@ -111,8 +111,7 @@ public abstract class LazyObject implements Observable, Observer {
 	 * This method performs all needed calculations by calling the <i><b>performCalculations</b></i>
 	 * method.
 	 * 
-	 * <p>
-	 * <b>Note:</b> Objects cache the results of the previous calculation. Such
+	 * @note Objects cache the results of the previous calculation. Such
 	 * results will be returned upon later invocations of <i><b>calculate</b></i>.
 	 * When the results depend on arguments which could change between
 	 * invocations, the lazy object must register itself as observer of such

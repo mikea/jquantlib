@@ -168,7 +168,7 @@ public abstract class StochasticProcess<T extends Object & Discretization> imple
      * Returns the time value corresponding to the given date
      * in the reference system of the stochastic process.
      * 
-     * <p><b>Note:</b> As a number of processes might not need this 
+     * @note As a number of processes might not need this 
      * functionality, a default implementation is given
      * which raises an exception.
      */

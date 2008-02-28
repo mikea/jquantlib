@@ -45,8 +45,6 @@ package org.jquantlib.time;
  * Day's serial number MOD 7
  * 
  * <p>WEEKDAY Excel function is the same except for Sunday = 7.
- * 
- * @category datetime
  */
 public enum Weekday {
 	Sunday(1), Monday(2), Tuesday(3), Wednesday(4), Thursday(5), Friday(6), Saturday(7), Sun(1), Mon(2), Tue(3), Wed(4), Thu(5), Fri(6), Sat(7);
@@ -124,8 +122,6 @@ public enum Weekday {
      *
      * @see Weekday#toString
      * @return the name of weekdays in long format
-     * 
-     * @category manips
      */ 
 	public String getLongFormat() {
 		return this.toString();
@@ -135,8 +131,6 @@ public enum Weekday {
      * Returns the name of weekdays in short format (3 letters)
      *
      * @return the name of weekdays in short format (3 letters)
-     * 
-     * @category manips
      */ 
 	public String getShortFormat() {
 		return new ShortFormat(this).toString();
@@ -146,8 +140,6 @@ public enum Weekday {
      * Returns the name of weekdays in shortest format. (2 letters)
      *
      * @return the name of weekdays in shortest format (2 letters)
-     * 
-     * @category manips
      */ 
 	public String getShortestFormat() {
 		return new ShortestFormat(this).toString();
@@ -155,8 +147,6 @@ public enum Weekday {
 
     /**
      * Returns the name of weekdays in short format (3 letters)
-     * 
-     * @category manips
      */ 
 	private class ShortFormat {
 		private Weekday weekday;
@@ -175,8 +165,6 @@ public enum Weekday {
 
     /**
      * Returns the name of weekdays in shortest format (2 letters)
-     * 
-     * @category manips
      */ 
 	private class ShortestFormat {
 		private Weekday weekday;

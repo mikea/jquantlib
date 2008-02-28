@@ -45,8 +45,6 @@ import java.util.Locale;
 
 /**
  * Time period described by a number of a given time unit
- * 
- * @category datetime
  */
 // TODO: document methods
 public class Period {
@@ -276,8 +274,6 @@ public class Period {
      * Returns the name of period in long format
      *
      * @return the name of period in long format
-     * 
-     * @category manips
      */ 
 	public String getLongFormat() {
 		return new LongFormat(this).toString();
@@ -287,8 +283,6 @@ public class Period {
      * Returns the name of period in short format (3 letters)
      *
      * @return the name of period in short format (3 letters)
-     * 
-     * @category manips
      */ 
 	public String getShortFormat() {
 		return new ShortFormat(this).toString();
@@ -297,9 +291,7 @@ public class Period {
 
 	
     /**
-     * output periods in long format (e.g. "2 weeks")
-     * 
-     * @category manips
+     * Output periods in long format (e.g. "2 weeks")
      */ 
 	private class LongFormat {
 		private Period period;
@@ -323,9 +315,7 @@ public class Period {
 	}
 
     /**
-     * output periods in short format (e.g. "2w")
-     * 
-     * @category manips
+     * Output periods in short format (e.g. "2w")
      */ 
 	private class ShortFormat {
 		private Period period;

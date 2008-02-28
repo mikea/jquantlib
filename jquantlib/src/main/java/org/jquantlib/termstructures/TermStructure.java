@@ -259,7 +259,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	/**
 	 * Returns the Date at which discount = 1.0 and/or variance = 0.0
 	 * 
-	 * <p><b>Note:</b>Term structures initialized by means of this
+	 * @note Term structures initialized by means of this
 	 * constructor must manage their own reference date 
 	 * by overriding the referenceDate() method.
 	 *  

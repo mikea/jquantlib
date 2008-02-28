@@ -42,8 +42,6 @@ package org.jquantlib.time;
 
 /**
  * Frequency of events
- * 
- * @category datetime
  */
 // TODO: document methods
 public enum Frequency {

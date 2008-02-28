@@ -23,54 +23,84 @@ package org.jquantlib.instruments;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.PricingEngineArguments;
+import org.jquantlib.pricingengines.PricingEngineResults;
 
-// FIXME: TO BE DONE
-public class Option extends Instrument {
+public abstract class Option extends Instrument {
 
 	protected Payoff payoff_;
 	protected Exercise exercise_;
-//	protected OptionArguments arguments;
+
+	// protected OptionArguments arguments;
 
 	public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
 		this.payoff_ = payoff;
 		this.exercise_ = exercise;
-		if (engine!=null) super.setPricingEngine(engine);
+		if (engine != null)
+			super.setPricingEngine(engine);
 	}
 
+	
 	public enum Type {
-    	Put  (-1),
-        Call (1);
-    	
-    	private int value;
-    	
-    	private Type(final int type) {
-    		this.value = type;
-    	}
-    	
-    	public int toInteger() {
-    		return value;
-    	}
-    }
+		Put(-1), Call(1);
+
+		private int value;
+
+		private Type(final int type) {
+			this.value = type;
+		}
+
+		public int toInteger() {
+			return value;
+		}
+	}
+
 	
 	/**
-	 * Basic Option arguments
+	 * @todo remove std::vector<Time> stoppingTimes
+	 * @todo how to handle strike-less option (asian average strike, forward,
+	 *       etc.)?
 	 * 
-	 * @todo code review
+	 * @author Richard Gomes
 	 */
-	// TODO how to handle strike-less option (asian average strike, forward, etc.)?
-	// FIXME: code review
-	private class OptionArguments implements PricingEngineArguments {
-		public /*@Time*/ double[] stoppingTimes; // FIXME: it should be moved elsewhere
-		public Payoff payoff;
-		public Exercise exercise;
+	protected class Arguments extends PricingEngineArguments {
+		protected Payoff payoff;
+		protected Exercise exercise;
+		protected /* @Time */ double[] stoppingTimes; // FIXME: it should be moved
+													// elsewhere
 
-//		public List<Real>getArguments() {}
-            
-		public final void validate() {
-			if (payoff_==null) throw new IllegalArgumentException("no payoff given");
+		public void validate() {
+			if (payoff_ == null)
+				throw new IllegalArgumentException("no payoff given");
 		}
-            
 	}
 
-          
+	
+	protected class Greeks extends PricingEngineResults {
+		
+		public void reset() {
+			delta = gamma = theta = vega = rho = dividendRho = Double.NaN;
+		}
+
+		protected double delta;
+		protected double gamma;
+		protected double theta;
+		protected double vega;
+		protected double rho;
+		protected double dividendRho;
+	}
+	
+
+	protected class MoreGreeks extends PricingEngineResults {
+		
+		public void reset() {
+			itmCashProbability = deltaForward = elasticity = thetaPerDay = strikeSensitivity = Double.NaN;
+		}
+
+		protected double itmCashProbability;
+		protected double deltaForward;
+		protected double elasticity;
+		protected double thetaPerDay;
+		protected double strikeSensitivity;
+	}
+
 }
