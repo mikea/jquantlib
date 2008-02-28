@@ -24,6 +24,7 @@ import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.pricingengines.PricingEngineArguments;
 import org.jquantlib.pricingengines.PricingEngineResults;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.processes.StochasticProcess;
@@ -157,7 +158,7 @@ public class OneAssetOption extends Option {
             itmCashProbability_ = 0.0;
         }
 
-        public void setupArguments(final PricingEngine.PricingEngineArguments args) /* @ReadOnly */ {
+        public void setupArguments(final PricingEngineArguments args) /* @ReadOnly */ {
             Arguments arguments = args;
             if (arguments==null) throw new NullPointerException("wrong argument type");
 

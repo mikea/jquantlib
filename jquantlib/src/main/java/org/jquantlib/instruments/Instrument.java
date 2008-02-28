@@ -41,6 +41,7 @@ package org.jquantlib.instruments;
 import java.util.Map;
 
 import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.pricingengines.PricingEngineArguments;
 import org.jquantlib.pricingengines.PricingEngineResults;
 import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Observer;
@@ -106,7 +107,7 @@ public abstract class Instrument extends LazyObject implements Observer {
      *  
      * @param arguments
      */
-    public abstract void setupArguments(final PricingEngine.PricingEngineArguments arguments);
+    public abstract void setupArguments(final PricingEngineArguments arguments);
 
     /**
      * When a derived result structure is defined for an
@@ -115,7 +116,7 @@ public abstract class Instrument extends LazyObject implements Observer {
      */
     // FIXME: private void fetchResults(final Results results) ...
     // FIXME: should be abstract
-    protected void fetchResults(final PricingEngine.PricingEngineResults results) /* @ReadOnly */ {
+    protected void fetchResults(final PricingEngineResults results) /* @ReadOnly */ {
     	if (results == null) throw new NullPointerException("no results returned from pricing engine");
     	NPV_ = results.value;
     	errorEstimate_ = results.errorEstimate;
