@@ -260,9 +260,9 @@ public class OneAssetOption extends Option {
         	// technique (which is possible, but requires some thought,
 			// hence
         	// its postponement.)
+        	
         	GeneralizedBlackScholesProcess originalProcess = (GeneralizedBlackScholesProcess)arguments_.stochasticProcess;
-        	// FIXME: if (originalProcess==null)
-        	throw new NullPointerException("Black-Scholes process required");
+        	if (originalProcess==null) throw new NullPointerException("Black-Scholes process required");
 
         	Quote stateVariable = originalProcess.stateVariable();
         	YieldTermStructure dividendYield = originalProcess.dividendYield();
@@ -281,7 +281,7 @@ public class OneAssetOption extends Option {
 
 		private double get(/* @Volatility */ double x) /* @ReadOnly */ {
 			vol_.setValue(x);
-			innerEngine.calculate();
+			this.engine_.calculate();
 			return results_.value - targetValue_;
 		}
 
@@ -303,7 +303,7 @@ public class OneAssetOption extends Option {
      * 
      * @author Richard Gomes
 	 */ 
-    private class Arguments extends Option.Arguments {
+    protected class Arguments extends Option.Arguments {
     	
       /**
        * @note This field is exposed.
@@ -329,9 +329,9 @@ public class OneAssetOption extends Option {
     /**
 	 * Results from single-asset option calculation
 	 */
-    private class Results extends Instrument.InstrumentResults {
-    	private Greeks delegateGreeks = new Greeks();
-    	private MoreGreeks delegateMoreGreeks = new MoreGreeks();
+    protected class Results extends Instrument.InstrumentResults {
+    	protected Greeks delegateGreeks = new Greeks();
+    	protected MoreGreeks delegateMoreGreeks = new MoreGreeks();
     	
     	public void reset() {
             super.reset();
@@ -346,12 +346,9 @@ public class OneAssetOption extends Option {
     // Inner class Engine
     //
     
-    private PricingEngine innerEngine = new OneAssetOptionEngine();
-
-    
-    protected class OneAssetOptionEngine extends GenericEngine<Arguments, Results> {
+    protected abstract class OneAssetOptionEngine extends GenericEngine<Arguments, Results> {
     	
-    	private OneAssetOptionEngine() {
+    	protected OneAssetOptionEngine() {
     		super(innerArguments, innerResults);
     	}
 

@@ -45,9 +45,7 @@ import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Observer;
 
-
-//FIXME: to be reviewed
-
+//FIXME: add comments
 public abstract class Instrument extends LazyObject implements Observer {
 
 	/**

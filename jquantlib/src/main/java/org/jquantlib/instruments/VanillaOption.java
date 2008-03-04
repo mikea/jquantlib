@@ -20,6 +20,32 @@
 
 package org.jquantlib.instruments;
 
-public class VanillaOption extends OneAssetStrikedOption{
+import org.jquantlib.exercise.Exercise;
+import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.processes.StochasticProcess;
+
+public class VanillaOption extends OneAssetStrikedOption {
+
+    public VanillaOption(
+            final StochasticProcess process,
+            final StrikedTypePayoff payoff,
+            final Exercise exercise,
+            final PricingEngine engine) {
+    	super(process, payoff, exercise, engine);
+    }
+
+    public VanillaOption(
+            final StochasticProcess process,
+            final StrikedTypePayoff payoff,
+            final Exercise exercise) {
+    	this(process, payoff, exercise, new VanillaOptionEngine());
+    }
+
+    /**
+     * Vanilla option engine base class
+     */ 
+    public abstract class VanillaOptionEngine extends OneAssetStrikedOption.OneAssetStrikedOptionEngine {
+    	
+    }
 
 }

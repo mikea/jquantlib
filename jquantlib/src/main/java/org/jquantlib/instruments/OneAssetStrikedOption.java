@@ -20,8 +20,71 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.exercise.Exercise;
+import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.processes.StochasticProcess;
+
 public class OneAssetStrikedOption extends OneAssetOption {
 
-	// FIXME: TO BE DONE
+    // results
+    protected /* @Price */ double strikeSensitivity_;
+
+    public OneAssetStrikedOption(
+            final StochasticProcess process,
+            final StrikedTypePayoff payoff,
+            final Exercise exercise) {
+    	this(process, payoff, exercise, new PricingEngine());
+    }
+
+    public OneAssetStrikedOption(
+            final StochasticProcess process,
+            final StrikedTypePayoff payoff,
+            final Exercise exercise,
+            final PricingEngine engine) {
+    	super(process, payoff, exercise, engine);
+    }
+    
+    
+    /* @Price */ double getStrikeSensitivity() /* @ReadOnly */ {
+        calculate();
+        if (strikeSensitivity_ == Double.NaN) throw new ArithmeticException("strike sensitivity not provided");
+        return strikeSensitivity_;
+    }
+        
+        
+    public void setupArguments(final PricingEngine.Arguments args) /* @ReadOnly */ {
+		super.setupArguments(args);
+        Arguments moreArgs = (OneAssetOption.Arguments)args;
+        moreArgs.payoff = payoff_;
+	}
+
+	protected void setupExpired() /* @ReadOnly */ {
+		super.setupExpired();
+		strikeSensitivity_ = 0.0;
+	}
+	
+	/**
+     * @note This method accesses directly fields from base class {@link OneAssetOption.Results}.
+     * These fields are exposed by {@link Instrument.InstrumentResults} which is the base class of {@link OneAssetOption.Results}.
+     * This programming style is not recommended and we should use getters/setters instead.
+     * At the moment, we keep the original implementation.
+     * 
+     * @author Richard Gomes
+	 */
+	public void fetchResults(final PricingEngine.Results results) /* @ReadOnly */ {
+		super.fetchResults(results);
+        final MoreGreeks moreGreeks = ((OneAssetOption.Results)results).delegateMoreGreeks;
+		strikeSensitivity_ = moreGreeks.strikeSensitivity;
+	}
+        
+        
+	//
+	// Inner class OneAssetStrikedOption.Engine
+	//
+	
+	protected abstract class OneAssetStrikedOptionEngine extends OneAssetOption.OneAssetOptionEngine {
+		
+	}
+        
 	
 }
