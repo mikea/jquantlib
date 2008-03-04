@@ -311,6 +311,7 @@
       <url>http://people.apache.org/repo/m2-snapshot-repository</url>
     </pluginRepository>
   </pluginRepositories>
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -469,6 +470,7 @@
       <url>dav:${maven.deploy.site.url}/${project.artifactId}</url>
     </site>
   </distributionManagement>
+  
   <properties>
     <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.developerConnection>
     <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>

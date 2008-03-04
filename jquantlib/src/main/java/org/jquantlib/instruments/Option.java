@@ -22,15 +22,13 @@ package org.jquantlib.instruments;
 
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.PricingEngineArguments;
-import org.jquantlib.pricingengines.PricingEngineResults;
+
+import cern.colt.list.DoubleArrayList;
 
 public abstract class Option extends Instrument {
 
 	protected Payoff payoff_;
 	protected Exercise exercise_;
-
-	// protected OptionArguments arguments;
 
 	public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
 		this.payoff_ = payoff;
@@ -55,19 +53,23 @@ public abstract class Option extends Instrument {
 	}
 
 	
+	// protected OptionArguments arguments;
+
 	/**
 	 * @todo remove std::vector<Time> stoppingTimes
-	 * @todo how to handle strike-less option (asian average strike, forward,
-	 *       etc.)?
-	 * 
+	 * @todo how to handle strike-less option (asian average strike, forward, etc.)?
+	 *
+     * @note This inner class exposes fields instead of offering getters/setters.
+     * This procedure is not recommended and we should use getters/setters instead.
+     * At the moment, we keep the original implementation.
+     * 
 	 * @author Richard Gomes
 	 */
-	protected class Arguments extends PricingEngineArguments {
+	protected class Arguments implements PricingEngine.Arguments {
 		protected Payoff payoff;
 		protected Exercise exercise;
-		protected /* @Time */ double[] stoppingTimes; // FIXME: it should be moved
-													// elsewhere
-
+		protected /*@Time*/ DoubleArrayList stoppingTimes;
+		
 		public void validate() {
 			if (payoff_ == null)
 				throw new IllegalArgumentException("no payoff given");
@@ -75,7 +77,14 @@ public abstract class Option extends Instrument {
 	}
 
 	
-	protected class Greeks extends PricingEngineResults {
+	/**
+     * @note This inner class exposes fields instead of offering getters/setters.
+     * This procedure is not recommended and we should use getters/setters instead.
+     * At the moment, we keep the original implementation.
+     * 
+     * @author Richard Gomes
+	 */
+	protected class Greeks implements PricingEngine.Results {
 		
 		public void reset() {
 			delta = gamma = theta = vega = rho = dividendRho = Double.NaN;
@@ -90,7 +99,14 @@ public abstract class Option extends Instrument {
 	}
 	
 
-	protected class MoreGreeks extends PricingEngineResults {
+	/**
+     * @note This inner class exposes fields instead of offering getters/setters.
+     * This procedure is not recommended and we should use getters/setters instead.
+     * At the moment, we keep the original implementation.
+     * 
+     * @author Richard Gomes
+	 */
+	protected class MoreGreeks implements PricingEngine.Results {
 		
 		public void reset() {
 			itmCashProbability = deltaForward = elasticity = thetaPerDay = strikeSensitivity = Double.NaN;

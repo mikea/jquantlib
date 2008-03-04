@@ -39,27 +39,17 @@
 package org.jquantlib.instruments;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.PricingEngineArguments;
-import org.jquantlib.pricingengines.PricingEngineResults;
 import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Observer;
 
 
-//FIXME: TO BE DONE
+//FIXME: to be reviewed
 
 public abstract class Instrument extends LazyObject implements Observer {
 
-	/**
-	 * The value of this attribute and any other that derived
-	 * classes might declare must be set during calculation.
-	 * 
-	 * @todo verify how these variables are used
-	 */
-	// FIXME: verify how these variables are used
-	protected PricingEngine engine_;
-	
 	/**
 	 * Represents the net present value of the instrument.
 	 */
@@ -74,6 +64,14 @@ public abstract class Instrument extends LazyObject implements Observer {
 	 * Represents all additional result returned by the pricing engine.
 	 */
 	private Map<String, Object> additionalResults_;
+	
+	/**
+	 * The value of this attribute and any other that derived
+	 * classes might declare must be set during calculation.
+	 * 
+	 * @todo verify how these variables are used
+	 */
+	protected PricingEngine engine_;
 	
 	
 
@@ -95,6 +93,12 @@ public abstract class Instrument extends LazyObject implements Observer {
 		return errorEstimate_;
 	}
 
+	
+	
+	//
+	// abstract methods
+	//
+	
 	/**
 	 * @return <code>true</code> whether the instrument is still tradeable.
 	 */
@@ -107,56 +111,34 @@ public abstract class Instrument extends LazyObject implements Observer {
      *  
      * @param arguments
      */
-    public abstract void setupArguments(final PricingEngineArguments arguments);
+    public abstract void setupArguments(final PricingEngine.Arguments arguments);
 
+    
+
+    //
+	// methods overridden by extended classes
+	//
+	
     /**
      * When a derived result structure is defined for an
      * instrument, this method should be overridden to read from  
      * it. This is mandatory in case a pricing engine is used.
-     */
-    // FIXME: private void fetchResults(final Results results) ...
-    // FIXME: should be abstract
-    protected void fetchResults(final PricingEngineResults results) /* @ReadOnly */ {
-    	if (results == null) throw new NullPointerException("no results returned from pricing engine");
-    	NPV_ = results.value;
-    	errorEstimate_ = results.errorEstimate;
-    	additionalResults_ = results.additionalResults;
-    }
-
-    /**
-     * Set the pricing engine to be used.
      * 
-     * @note calling this method will have no effects in 
-     * case the <b>performCalculation</b> method
-     * was overridden in a derived class.
-     *  
-     * @param engine
+     * @param results
      */
-    protected void setPricingEngine(final PricingEngine engine) {
-    	if (this.engine_!=null) {
-    		this.engine_.deleteObserver(this);
+    protected void fetchResults(final PricingEngine.Results results) /* @ReadOnly */ {
+    	if (results == null) throw new NullPointerException("no results returned from pricing engine");
+    	if (results instanceof InstrumentResults) {
+    		InstrumentResults r = (InstrumentResults)results;
+        	NPV_ = r.value;
+        	errorEstimate_ = r.errorEstimate;
+        	additionalResults_ = r.additionalResults;
+    	} else {
+    		throw new ClassCastException(); // FIXME:message
     	}
-    	this.engine_ = engine;
-    	if (this.engine_!=null) {
-    		this.engine_.addObserver(this);
-    	}
-    	update(this, null);
     }
 
     
-	protected void calculate() {
-		if (isExpired()) {
-			setupExpired();
-			calculated_ = true;
-		} else {
-			super.calculate();
-		}
-	}
-    
-	
-	
-	
-	
     /**
      * This method must leave the instrument in a consistent
      * state when the expiration condition is met.
@@ -166,6 +148,7 @@ public abstract class Instrument extends LazyObject implements Observer {
         errorEstimate_ = 0.0;
         additionalResults_.clear();
     }
+    
 
     /**
      * In case a pricing engine is <b>not</b> used, this
@@ -182,29 +165,78 @@ public abstract class Instrument extends LazyObject implements Observer {
         engine_.calculate();
         fetchResults(engine_.getResults());
     }
-        
+
     
-    // FIXME: verify how this method is used
-    protected final Object getResult(final String tag) {
+
+    //
+    // protected final methods
+    //
+    
+    /**
+     * Set the pricing engine to be used.
+     * 
+     * @note calling this method will have no effects in 
+     * case the <b>performCalculation</b> method
+     * was overridden in a derived class.
+     *  
+     * @param engine
+     */
+    protected final void setPricingEngine(final PricingEngine engine) {
+    	if (this.engine_!=null) {
+    		this.engine_.deleteObserver(this);
+    	}
+    	this.engine_ = engine;
+    	if (this.engine_!=null) {
+    		this.engine_.addObserver(this);
+    	}
+    	update(this, null);
+    }
+
+    
+	protected final void calculate() {
+		if (isExpired()) {
+			setupExpired();
+			calculated_ = true;
+		} else {
+			super.calculate();
+		}
+	}
+    
+
+	// FIXME: CODE REVIEW
+	protected final Object getResult(final String tag) {
     	calculate();
     	Object value = additionalResults_.get(tag);
     	if (value==null) throw new IllegalArgumentException(tag+" not provided");
-        return value;
+        return value; // return boost::any_cast<T>(value->second);
     }
 
-    public final Map<String, Object> getAdditionalResults() {
+	
+
+	//
+	// Inner class Instrument.Results
+	//
+	
+	public final Map<String, Object> getAdditionalResults() {
         return additionalResults_;
     }
 
     
-    protected class Results extends PricingEngineResults {
+    protected class InstrumentResults implements PricingEngine.Results {
         protected double value;
         protected double errorEstimate;
-        protected Map<String,Object> additionalResults;
+        protected Map<String, Object> additionalResults;
+        
+        protected InstrumentResults() {
+        	additionalResults = new TreeMap<String, Object>(); // FIXME: use some FastUtil class ?
+        	reset();
+        }
+        
         public void reset() {
               value = errorEstimate = Double.NaN;
               additionalResults.clear();
-          }
-      }
+        }
+    }
+
 
 }

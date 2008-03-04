@@ -39,37 +39,22 @@
 
 package org.jquantlib.pricingengines;
 
-import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
-import org.jquantlib.util.Observer;
 
-public abstract class PricingEngine implements Observable {
+public interface PricingEngine extends Observable {
 	
-	public abstract PricingEngineArguments getArguments();
-	public abstract PricingEngineResults getResults();
+	public abstract PricingEngine.Arguments getArguments();
+	public abstract PricingEngine.Results getResults();
+	
+	public abstract void reset();
+	public abstract void calculate();
+	
+	public interface Arguments {
+	    public abstract void validate();
+	}
 
-    /**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
-	 * @see Observable
-	 * @see DefaultObservable
-	 */
-    private Observable delegatedObservable = new DefaultObservable();
-
-	public void addObserver(Observer observer) {
-		delegatedObservable.addObserver(observer);
-	}
-	
-	public void deleteObserver(Observer observer) {
-		delegatedObservable.deleteObserver(observer);
-	}
-	
-	public void notifyObservers() {
-		delegatedObservable.notifyObservers();
-	}
-	
-	public void notifyObservers(Object arg) {
-		delegatedObservable.notifyObservers(arg);
+	public interface Results {
+	    public abstract void reset();
 	}
 
 }
