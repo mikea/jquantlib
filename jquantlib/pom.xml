@@ -323,11 +323,13 @@
       <artifactId>colt</artifactId>
       <version>1.2.0</version>
     </dependency>
-    <dependency>
+
+    <!-- dependency>
       <groupId>org.jquantlib</groupId>
       <artifactId>annotations</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+    </dependency -->
+    
   </dependencies>
   
   <reporting>
