@@ -51,6 +51,7 @@ public class WeakReferenceObservable extends DefaultObservable {
     }
     
     @Override
+    //FIX ME: avoid overhead of creating Unmodifiable collection. 
     public void notifyObservers(Object arg) {
         for (Observer wObserver : getObservers()) {
             WeakReferenceObserver wReference = (WeakReferenceObserver) wObserver;
