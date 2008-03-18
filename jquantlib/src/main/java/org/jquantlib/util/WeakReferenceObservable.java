@@ -45,24 +45,15 @@ public class WeakReferenceObservable extends DefaultObservable {
             WeakReferenceObserver wReference = (WeakReferenceObserver) wObserver;
             Observer o = wReference.get();
             if (o == null || o.equals(observer)) {
-                super.deleteObserver(wReference);
+                deleteWeakReference(wReference);
             }
         }
     }
     
-    @Override
-    //FIX ME: avoid overhead of creating Unmodifiable collection. 
-    public void notifyObservers(Object arg) {
-        for (Observer wObserver : getObservers()) {
-            WeakReferenceObserver wReference = (WeakReferenceObserver) wObserver;
-            Observer o = wReference.get();
-            if (o == null) {
-                super.deleteObserver(wReference);
-            }else{
-                wrappedNotify(o, this, arg);  
-            }
-        }
+    private void deleteWeakReference(WeakReferenceObserver observer){
+        super.deleteObserver(observer);
     }
+    
 
     class WeakReferenceObserver extends WeakReference<Observer> implements
             Observer {
@@ -73,7 +64,9 @@ public class WeakReferenceObservable extends DefaultObservable {
         public void update(Observable o, Object arg) {
             Observer referent = get();
             if (referent != null)
-                referent.update(o, arg);           
+                referent.update(o, arg);  
+            else //delete the weak reference from the list if underlying gc'ed
+                deleteWeakReference(this);
         }
     }
 }
