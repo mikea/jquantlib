@@ -61,7 +61,7 @@ public abstract class Quote implements Observable {
 	 * @see Observable
 	 * @see DefaultObservable
 	 */
-    private Observable delegatedObservable = new DefaultObservable();
+    private Observable delegatedObservable = new DefaultObservable(this);
 
 
 	public void addObserver(Observer observer) {

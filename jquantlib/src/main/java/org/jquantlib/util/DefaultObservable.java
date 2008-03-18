@@ -20,7 +20,7 @@
 
 package org.jquantlib.util;
 
-import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -32,8 +32,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * transaction.
  * 
  * <p>
- * This class is based on the work done by Martin Fischer, with only minor changes.
- * See references below.
+ * This class is based on the work done by Martin Fischer, with only minor
+ * changes. See references below.
  * 
  * @see <a
  *      href="http://www.jroller.com/martin_fischer/entry/a_generic_java_observer_pattern">Martin
@@ -44,62 +44,74 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 
  * @author Martin Fischer (original author)
  * @author Richard Gomes
+ * @author Srinivas Hasti
  */
 public class DefaultObservable implements Observable {
 
-	private final List<WeakReference<Observer>> observers = new CopyOnWriteArrayList<WeakReference<Observer>>();
+    private final List<Observer> observers = new CopyOnWriteArrayList<Observer>();
+    private final Observable observable;
+    
+    public DefaultObservable(Observable observable){
+        if(observable == null)
+            throw new NullPointerException("observable is null");
+        this.observable = observable;       
+    }
+    
+    public void addObserver(final Observer observer) {
+        if (observer == null)
+            throw new NullPointerException("observer is null");
+        observers.add(observer);
+    }
+        
+    /**
+     * Deletes an observer from the list of observers. 
+     * Passing <CODE>null</CODE> will have no effect.
+     * 
+     * @param   o   the observer to be deleted.
+     */
+    public void deleteObserver(final Observer observer) {
+        observers.remove(observer);
+    }
 
-	public void addObserver(final Observer observer) {
-		if (observer == null)
-			throw new NullPointerException("observer is null");
-		observers.add(new WeakReference<Observer>(observer));
-	}
+    public void notifyObservers() {
+        notifyObservers(null);
+    }
 
-	public void deleteObserver(final Observer observer) {
-		if (observer == null)
-			throw new NullPointerException("observer is null");
-		for (WeakReference<Observer> weakRef : observers) {
-			Observer weakListener = weakRef.get();
-			if ((weakListener == null) || (weakListener == observer))
-				observers.remove(weakRef);
-		}
-	}
+    public void notifyObservers(Object arg) {
+        for (Observer observ : observers) {
+            wrappedNotify(observ, observable, arg);
+        }
+    }
 
-	public void notifyObservers() {
-		notifyObservers(null);
-	}
-
-	public void notifyObservers(Object arg) {
-		for (WeakReference<Observer> weakRef : observers) {
-			Observer weakListener = weakRef.get();
-			if (weakListener == null) {
-				observers.remove(weakRef);
-			} else {
-				wrappedNotify(weakListener, this, arg);
-			}
-		}
-	}
-	
-	
-	/**
-	 * This method is intended to encapsulate the notification semantics, in order to let
-	 * extended classes to implement their own version. Possible implementations are: 
-	 * (a) remote notification;
-	 * (b) notification via SwingUtilities.invokeLater. 
-	 * 
-	 * <p>
-	 * The default notification simply does
-	 * <pre>
-	 *   observer.update(observable, arg);
-	 * </pre>
-	 * 
-	 * @param observer
-	 * @param observable
-	 * @param arg
-	 */
-	protected void wrappedNotify(Observer observer, Observable observable, Object arg) {
-		observer.update(observable, arg);
-	}
-	
-
+    /**
+     * This method is intended to encapsulate the notification semantics, in
+     * order to let extended classes to implement their own version. Possible
+     * implementations are: (a) remote notification; (b) notification via
+     * SwingUtilities.invokeLater.
+     * 
+     * <p>
+     * The default notification simply does
+     * 
+     * <pre>
+     * observer.update(observable, arg);
+     * </pre>
+     * 
+     * @param observer
+     * @param observable
+     * @param arg
+     */
+    protected void wrappedNotify(Observer observer, Observable observable,
+            Object arg) {
+        observer.update(observable, arg);
+    }
+    
+    /**
+     * Returns list of observers registered with the Observable. List returned is
+     * unmodifiable list. 
+     * 
+     * @return list of observers
+     */
+    protected List<Observer> getObservers(){
+        return Collections.unmodifiableList(this.observers);
+    }
 }

@@ -135,7 +135,7 @@ public abstract class LazyObject implements Observable, Observer {
 	 * @see Observable
 	 * @see DefaultObservable
 	 */
-    private Observable delegatedObservable = new DefaultObservable();
+    private Observable delegatedObservable = new DefaultObservable(this);
 
 	public void addObserver(Observer observer) {
 		delegatedObservable.addObserver(observer);

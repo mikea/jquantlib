@@ -311,7 +311,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	 * @see Observable
 	 * @see DefaultObservable
 	 */
-    private Observable delegatedObservable = new DefaultObservable();
+    private Observable delegatedObservable = new DefaultObservable(this);
 
 	public void addObserver(Observer observer) {
 		delegatedObservable.addObserver(observer);

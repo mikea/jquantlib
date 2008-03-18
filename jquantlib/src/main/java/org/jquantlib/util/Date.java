@@ -999,7 +999,7 @@ public class Date implements Observable {
 	 * 
 	 * @see Extrapolator
 	 */
-    private Observable delegatedObservable = new DefaultObservable();
+    private Observable delegatedObservable = new DefaultObservable(this);
 
 	public void addObserver(Observer observer) {
 		delegatedObservable.addObserver(observer);
@@ -1016,5 +1016,4 @@ public class Date implements Observable {
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
-
 }
