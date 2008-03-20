@@ -21,14 +21,15 @@
 package org.jquantlib.pricingengines;
 
 import org.jquantlib.instruments.Instrument;
-import org.jquantlib.instruments.OneAssetOption;
 import org.jquantlib.instruments.Option;
-import org.jquantlib.instruments.Option.Greeks;
-import org.jquantlib.instruments.Option.MoreGreeks;
+import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
+import org.jquantlib.pricingengines.results.Greeks;
+import org.jquantlib.pricingengines.results.MoreGreeks;
+import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 import org.jquantlib.processes.StochasticProcess;
 
 protected abstract class OneAssetOptionEngine
-							< Arguments extends OneAssetOption.Arguments, Results extends OneAssetOption.Results > 
+							< Arguments extends OneAssetOptionArguments, Results extends OneAssetOptionResults > 
 							extends GenericEngine<Arguments, Results> {
 	
 	protected OneAssetOptionEngine() {

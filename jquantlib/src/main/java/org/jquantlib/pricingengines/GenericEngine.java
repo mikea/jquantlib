@@ -20,26 +20,57 @@
 
 package org.jquantlib.pricingengines;
 
-/**
- * Template base class for option pricing engines
- */
-public abstract class GenericEngine
-						<T extends PricingEngineArguments, R extends PricingEngineResults>
-				extends PricingEngine {
-	
-	protected T arguments_;
-	protected R results_;
-	    
-	public final T getArguments() {
-		return arguments_;
+import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.pricingengines.results.Results;
+import org.jquantlib.util.DefaultObservable;
+import org.jquantlib.util.Observable;
+import org.jquantlib.util.Observer;
+
+public abstract class GenericEngine<A extends Arguments, R extends Results> implements PricingEngine {
+
+	private A arguments;
+	private R results;
+
+	public GenericEngine(final A arguments, final R results) {
+		this.arguments = arguments;
+		this.results = results;
 	}
-  
+
+	public final A getArguments() {
+		return arguments;
+	}
+
 	public final R getResults() {
-		return results_;
+		return results;
+	}
+
+	public void reset() {
+		results.reset();
+	}
+
+
+	/**
+	 * Implements multiple inheritance via delegate pattern to an inner class
+	 * 
+	 * @see Observable
+	 * @see DefaultObservable
+	 */
+    private DefaultObservable delegatedObservable = new DefaultObservable(this);
+
+	public void addObserver(Observer observer) {
+		delegatedObservable.addObserver(observer);
 	}
 	
-    public void reset() {
-    	results_.reset();
-    }
-    
+	public void deleteObserver(Observer observer) {
+		delegatedObservable.deleteObserver(observer);
+	}
+	
+	public void notifyObservers() {
+		delegatedObservable.notifyObservers();
+	}
+	
+	public void notifyObservers(Object arg) {
+		delegatedObservable.notifyObservers(arg);
+	}
+
 }
