@@ -41,11 +41,4 @@ public class VanillaOption extends OneAssetStrikedOption {
     	this(process, payoff, exercise, new VanillaOptionEngine());
     }
 
-    /**
-     * Vanilla option engine base class
-     */ 
-    public abstract class VanillaOptionEngine extends OneAssetStrikedOption.OneAssetStrikedOptionEngine {
-    	
-    }
-
 }

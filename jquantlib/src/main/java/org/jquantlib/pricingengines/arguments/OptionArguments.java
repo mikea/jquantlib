@@ -18,41 +18,34 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.instruments;
+package org.jquantlib.pricingengines.arguments;
 
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.instruments.Payoff;
 
-public abstract class Option extends NewInstrument {
+import cern.colt.list.DoubleArrayList;
 
-	protected Payoff payoff_;
-	protected Exercise exercise_;
-
-	public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
-		super(engine);
-		this.payoff_ = payoff;
-		this.exercise_ = exercise;
-	}
-
-	
+// FIXME: add comments
+public class OptionArguments extends ArgumentsDecorator<Arguments> {
 	
 	//
-	// Public inner classes
+	// Public fields as this class works pretty much as 
+	// a Data Transfer Object
 	//
+
+	// FIXME: assign JSR-308 annotations
+	public Payoff payoff;
+	public Exercise exercise;
+	public /*@Time*/ DoubleArrayList stoppingTimes;
 	
-	public enum Type {
-		Put(-1), Call(1);
-
-		private int value;
-
-		private Type(final int type) {
-			this.value = type;
-		}
-
-		public int toInteger() {
-			return value;
-		}
+	public OptionArguments() {
+		super(null);
 	}
-
-
+	
+	@Override
+	public void validate() /*@ReadOnly*/ {
+		super.validate();
+		if (payoff == null) throw new IllegalArgumentException("No payoff given");
+	}
+	
 }

@@ -22,8 +22,14 @@ package org.jquantlib.instruments;
 
 import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
+import org.jquantlib.pricingengines.arguments.OptionArguments;
+import org.jquantlib.pricingengines.results.Greeks;
+import org.jquantlib.pricingengines.results.MoreGreeks;
+import org.jquantlib.pricingengines.results.OneAssetOptionResults;
+import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Quote;
@@ -55,6 +61,7 @@ public class OneAssetOption extends Option {
     private double targetValue_;
     private SimpleQuote vol_;
 
+    // FIXME: move from 
     
     
     public OneAssetOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
@@ -128,6 +135,18 @@ public class OneAssetOption extends Option {
     }
 
     
+    
+    
+//    ======================================================
+//
+//    H E R E  !!!!!
+//    
+//    Verify how impliedVolatility is used !!!!!!
+//
+//    ======================================================
+    
+    
+    
     /**
      * @Note Currently, this method returns the Black-Scholes implied volatility. 
      * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
@@ -147,7 +166,7 @@ public class OneAssetOption extends Option {
         if (isExpired()) throw new IllegalArgumentException("option expired");
 
         /* @Volatility */ double guess = (minVol+maxVol)/2.0;
-        ImpliedVolHelper f = new ImpliedVolHelper(engine_,targetValue);
+        ImpliedVolHelper f = new ImpliedVolHelper(engine_, targetValue);
         Brent solver = new Brent();
         solver.setMaxEvaluations(maxEvaluations);
         /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
@@ -169,40 +188,46 @@ public class OneAssetOption extends Option {
      * 
      * @author Richard Gomes
      */
-    public void setupArguments(final PricingEngine.Arguments args) /* @ReadOnly */ {
-    	if (! OneAssetOption.Arguments.class.isAssignableFrom(args.getClass())) throw new ClassCastException("wrong argument type");
+    public void setupArguments(final Arguments arguments) /* @ReadOnly */ {
     	
-        int n = exercise_.size();
+    	// FIXME: code review
+    	// super.setupArguments(args);
 
-        Arguments arguments = (OneAssetOption.Arguments)args;
-        arguments.stochasticProcess = stochasticProcess_;
-        arguments.exercise = exercise_;
-        arguments.stoppingTimes = new DoubleArrayList(n);
+    	if (! OneAssetOptionArguments.class.isAssignableFrom(arguments.getClass())) throw new ClassCastException(arguments.toString());
+    	
+        OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments)arguments;
+        OptionArguments optionArguments = oneAssetArguments.getOptionArguments();
+
+        // set up stochastic process
+        oneAssetArguments.stochasticProcess = stochasticProcess_;
+        // setup exercise dates
+        optionArguments.exercise = exercise_;
+        // set up stopping times
+        int n = exercise_.size();
+        DoubleArrayList arr = new DoubleArrayList(n);
         for (int i=0; i<n; ++i) {
-            arguments.stoppingTimes.add(/*@Time*/ stochasticProcess_.getTime(exercise_.getDate(i)));
+        	arr.add(/*@Time*/ stochasticProcess_.getTime(exercise_.getDate(i)));
         }
+        optionArguments.stoppingTimes = arr;
     }
 
     /**
      * When a derived result structure is defined for an instrument, this method should be 
      * overridden to read from it. This is mandatory in case a pricing engine is used.
      */
-    public void fetchResults(final PricingEngine.Results results) /* @ReadOnly */ {
+    public void fetchResults(final Results results) /* @ReadOnly */ {
     	
-    	if (! OneAssetOption.Results.class.isAssignableFrom(results.getClass())) throw new ClassCastException("wrong argument type");
-
-    	super.fetchResults(results);
-    	
-        final Greeks greeks = ((OneAssetOption.Results)results).delegateGreeks;
-        if (greeks ==null) throw new NullPointerException("no greeks returned from pricing engine");
+    	// bind a Results interface to specific Classes
+    	final MoreGreeks moreGreeks = (MoreGreeks) results.findClass(MoreGreeks.class);
+    	final Greeks     greeks     = (Greeks) moreGreeks.findClass(Greeks.class);
         
-        /*
-		 * no check on null values - just copy. this allows: a) to decide in
-		 * derived options what to do when null results are returned (throw?
-		 * numerical calculation?) b) to implement slim engines which only
-		 * calculate the value---of course care must be taken not to call
-		 * the greeks methods when using these.
-		 */
+        //
+		// No check on Double.NaN values - just copy. this allows:
+		// a) To decide in derived options what to do when null results are returned
+		//    (throw numerical calculation?)
+		// b) To implement slim engines which only calculate the value.
+		//    Of course care must be taken not to call the greeks methods when using these.
+		//
         delta_          = greeks.delta;
         gamma_          = greeks.gamma;
         theta_          = greeks.theta;
@@ -210,16 +235,13 @@ public class OneAssetOption extends Option {
         rho_            = greeks.rho;
         dividendRho_    = greeks.dividendRho;
 
-        final MoreGreeks moreGreeks = ((OneAssetOption.Results)results).delegateMoreGreeks;
-        if (moreGreeks ==null) throw new NullPointerException("no more greeks returned from pricing engine");
-        
-        /*
-		 * no check on null values - just copy. this allows: a) to decide in
-		 * derived options what to do when null results are returned (throw?
-		 * numerical calculation?) b) to implement slim engines which only
-		 * calculate the value---of course care must be taken not to call
-		 * the greeks methods when using these.
-		 */
+        //
+		// No check on Double.NaN values - just copy. this allows:
+		// a) To decide in derived options what to do when null results are returned
+		//    (throw numerical calculation?)
+		// b) To implement slim engines which only calculate the value.
+		//    Of course care must be taken not to call the greeks methods when using these.
+		//
         deltaForward_       = moreGreeks.deltaForward;
         elasticity_         = moreGreeks.elasticity;
         thetaPerDay_        = moreGreeks.thetaPerDay;
@@ -236,21 +258,22 @@ public class OneAssetOption extends Option {
      * Helper class for implied volatility calculation
      */
     private class ImpliedVolHelper {
-        private PricingEngine engine_;
+        private PricingEngine impliedEngine;
+        private final OneAssetOptionResults impliedResults;
         private double targetValue_;
         private SimpleQuote vol_;
-        private final Instrument.InstrumentResults results_;
         
         
         public ImpliedVolHelper(final PricingEngine engine, double targetValue) {
-        	this.engine_ = engine;
+        	this.impliedEngine = engine;
         	this.targetValue_ = targetValue;
 
-        	if (! Arguments.class.isAssignableFrom(engine_.getArguments().getClass())) throw new ClassCastException("pricing engine does not supply needed arguments");
-        	Arguments arguments_ = (Arguments)engine_.getArguments();
-        	
-        	// make a new stochastic process in order not to modify the
-			// given one.
+            // obtain arguments from pricing engine
+            Arguments tmpArgs = impliedEngine.getArguments();
+            if (! OneAssetOptionArguments.class.isAssignableFrom(tmpArgs.getClass())) throw new ClassCastException(tmpArgs.getClass().getName());
+            OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments)tmpArgs;
+            
+        	// Make a new stochastic process in order not to modify the given one.
         	// stateVariable, dividendTS and riskFreeTS can be copied since
         	// they won't be modified.
         	// Here the requirement for a Black-Scholes process is
@@ -259,99 +282,50 @@ public class OneAssetOption extends Option {
 			// reflection
         	// technique (which is possible, but requires some thought,
 			// hence
-        	// its postponement.)
+        	// its postponement.
         	
-        	GeneralizedBlackScholesProcess originalProcess = (GeneralizedBlackScholesProcess)arguments_.stochasticProcess;
+        	// obtain original process from arguments
+            GeneralizedBlackScholesProcess originalProcess = (GeneralizedBlackScholesProcess)oneAssetArguments.stochasticProcess;
         	if (originalProcess==null) throw new NullPointerException("Black-Scholes process required");
 
+        	// initialize arguments for calculation of implied volatility
+        	vol_ = new SimpleQuote(0.0);
         	Quote stateVariable = originalProcess.stateVariable();
         	YieldTermStructure dividendYield = originalProcess.dividendYield();
         	YieldTermStructure riskFreeRate = originalProcess.riskFreeRate();
+        	BlackVolTermStructure blackVol = originalProcess.blackVolatility();
 
-        	final BlackVolTermStructure blackVol = originalProcess.blackVolatility();
-        	vol_ = new SimpleQuote(0.0);
+        	// calculate implied volatility
         	BlackVolTermStructure volatility = new BlackConstantVol(blackVol.getReferenceDate(), vol_, blackVol.getDayCounter());
         
+        	
+        	/*
+    		public GeneralizedBlackScholesProcess(
+	            final Quote x0,
+	            final YieldTermStructure dividendTS,
+	            final YieldTermStructure riskFreeTS,
+	            final BlackVolTermStructure blackVolTS,
+	            final T discretization) {
+        	 */
+        	
+        	// build a new stochastic process
         	StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
-        	arguments_.stochasticProcess = process;
 
-        	if (! Results.class.isAssignableFrom(engine_.getResults().getClass())) throw new ClassCastException("pricing engine does not supply needed results");
-        	results_ = (Results)engine_.getResults();
+        	// set up a new stochastic process back to the engine's arguments
+        	oneAssetArguments.stochasticProcess = process;
+
+        	// obtain results from pricing engine and keep for further use
+        	if (! OneAssetOptionResults.class.isAssignableFrom(impliedEngine.getResults().getClass())) throw new ClassCastException(impliedEngine.getClass().getName());
+        	impliedResults = (OneAssetOptionResults)impliedEngine.getResults();
         }
 
 		private double get(/* @Volatility */ double x) /* @ReadOnly */ {
 			vol_.setValue(x);
-			this.engine_.calculate();
-			return results_.value - targetValue_;
+			this.impliedEngine.calculate();
+			return impliedResults.value - targetValue_;
 		}
 
     }
     
     
-    //
-    // Inner class Arguments
-    //
-    
-    private Arguments innerArguments = new Arguments();
-    
-    /**
-	 * Arguments for single-asset option calculation
-	 * 
-	 * @note This inner class must be kept <b>private</b> as its fields and ancertor's fields are exposed.
-     * This programming style is not recommended and we should use getters/setters instead.
-     * At the moment, we keep the original implementation.
-     * 
-     * @author Richard Gomes
-	 */ 
-    protected class Arguments extends Option.Arguments {
-    	
-      /**
-       * @note This field is exposed.
-       * 
-       * @author Richard Gomes
-       */
-      public StochasticProcess stochasticProcess;
-
-      public void validate() /*@ReadOnly*/ {
-          super.validate();
-          // we assume the underlying value to be the first state variable
-          if (stochasticProcess.initialValues()[0] <= 0.0) throw new IllegalArgumentException("negative or zero underlying given");
-      }
-    }
-
-
-    //
-    // Inner class Results
-    //
-    
-    private Results innerResults = new Results();
-    
-    /**
-	 * Results from single-asset option calculation
-	 */
-    protected class Results extends Instrument.InstrumentResults {
-    	protected Greeks delegateGreeks = new Greeks();
-    	protected MoreGreeks delegateMoreGreeks = new MoreGreeks();
-    	
-    	public void reset() {
-            super.reset();
-            delegateGreeks.reset();
-            delegateMoreGreeks.reset();
-        }
-    }
-    
-    
-
-    //
-    // Inner class Engine
-    //
-    
-    protected abstract class OneAssetOptionEngine extends GenericEngine<Arguments, Results> {
-    	
-    	protected OneAssetOptionEngine() {
-    		super(innerArguments, innerResults);
-    	}
-
-    }
-        
 }

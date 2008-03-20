@@ -18,41 +18,34 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.instruments;
+package org.jquantlib.pricingengines.results;
 
-import org.jquantlib.exercise.Exercise;
-import org.jquantlib.pricingengines.PricingEngine;
 
-public abstract class Option extends NewInstrument {
+// FIXME: add comments
+public class Greeks extends ResultsDecorator<DefaultResults> {
 
-	protected Payoff payoff_;
-	protected Exercise exercise_;
+	//
+	// Public fields as this class works pretty much as 
+	// a Data Transfer Object
+	//
 
-	public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
-		super(engine);
-		this.payoff_ = payoff;
-		this.exercise_ = exercise;
+	// FIXME: assign JSR-308 annotations
+	public double delta;
+	public double gamma;
+	public double theta;
+	public double vega;
+	public double rho;
+	public double dividendRho;
+
+	public Greeks() {
+		super(new DefaultResults());
 	}
 
-	
-	
-	//
-	// Public inner classes
-	//
-	
-	public enum Type {
-		Put(-1), Call(1);
-
-		private int value;
-
-		private Type(final int type) {
-			this.value = type;
-		}
-
-		public int toInteger() {
-			return value;
-		}
+	@Override
+	public void reset() {
+		super.reset();
+		// FIXME: verify Double.NaN
+		delta = gamma = theta = vega = rho = dividendRho = Double.NaN;
 	}
-
 
 }

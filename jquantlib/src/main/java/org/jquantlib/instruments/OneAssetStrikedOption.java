@@ -77,14 +77,4 @@ public class OneAssetStrikedOption extends OneAssetOption {
 		strikeSensitivity_ = moreGreeks.strikeSensitivity;
 	}
         
-        
-	//
-	// Inner class OneAssetStrikedOption.Engine
-	//
-	
-	protected abstract class OneAssetStrikedOptionEngine extends OneAssetOption.OneAssetOptionEngine {
-		
-	}
-        
-	
 }

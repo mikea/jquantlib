@@ -19,9 +19,7 @@
  */
 
 /*
- Copyright (C) 2002, 2003 Ferdinando Ametrano
- Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
- Copyright (C) 2007 StatPro Italia srl
+ Copyright (C) 2004 StatPro Italia srl
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -37,20 +35,19 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 
-package org.jquantlib.pricingengines;
+package org.jquantlib.instruments;
 
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.results.Results;
-import org.jquantlib.util.Observable;
+import org.jquantlib.exercise.Exercise;
+import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
+import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.processes.StochasticProcess;
 
+public class EuropeanOption extends VanillaOption {
 
-// FIXME: add comments
-public interface PricingEngine extends Observable {
-	
-	public Arguments getArguments();
-	public Results getResults();
-	
-	public void reset();
-	public void calculate();
-	
+	public EuropeanOption(final StochasticProcess process, final StrikedTypePayoff payoff, final Exercise exercise, final PricingEngine engine) {
+		super(process, payoff, exercise, engine);
+		if (engine!=null)
+			setPricingEngine(new AnalyticEuropeanEngine());
+	}
+
 }

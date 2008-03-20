@@ -18,41 +18,20 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.instruments;
+package org.jquantlib.pricingengines.results;
 
-import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
 
-public abstract class Option extends NewInstrument {
-
-	protected Payoff payoff_;
-	protected Exercise exercise_;
-
-	public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
-		super(engine);
-		this.payoff_ = payoff;
-		this.exercise_ = exercise;
-	}
-
-	
-	
-	//
-	// Public inner classes
-	//
-	
-	public enum Type {
-		Put(-1), Call(1);
-
-		private int value;
-
-		private Type(final int type) {
-			this.value = type;
-		}
-
-		public int toInteger() {
-			return value;
-		}
-	}
-
-
+/**
+ * Results are used by new-style instruments in order to
+ * obtain outputs from {@link PricingEngine}s
+ * 
+ * @see PricingEngine
+ * @see ResultsDecorator
+ * 
+ * @author Richard Gomes
+ */
+public interface Results {
+    public void reset();
+	public Object findClass(final Class klass);
 }
