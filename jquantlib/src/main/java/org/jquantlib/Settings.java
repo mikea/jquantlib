@@ -24,12 +24,13 @@ import org.jquantlib.util.Date;
 
 public class Settings {
 	
-	static private Settings singleton = null;
+	static private Settings singleton = new Settings();
 	
 	static public Settings getInstance() {
-		if (singleton==null) {
-			singleton = new Settings();
-		}
+	    //@see http://www.ibm.com/developerworks/java/library/j-dcl.html
+		//if (singleton==null) {
+		//	singleton = new Settings();
+		//}
 		return singleton; 
 	}
 

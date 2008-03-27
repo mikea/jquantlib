@@ -41,6 +41,7 @@ public class WeakReferenceObservable extends DefaultObservable {
 
     @Override
     public void deleteObserver(Observer observer) {
+        //Also deletes weak references whose referents got gc'ed
         for (Observer wObserver : getObservers()) {
             WeakReferenceObserver wReference = (WeakReferenceObserver) wObserver;
             Observer o = wReference.get();

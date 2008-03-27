@@ -71,6 +71,8 @@ import org.jquantlib.time.Weekday;
 // FIXME: potential performance issue
 public class Date implements Observable { 
     
+    public static final Date NULL_DATE = new Date();
+        
 	private /*@NonNegative*/ int value;
 	
 	public int getValue() /*@ReadOnly*/ {
@@ -196,6 +198,9 @@ public class Date implements Observable {
         false
     };
 
+    private static StringFormatter SHORT_FORMAT = new ShortFormat();
+    private static StringFormatter LONG_FORMAT = new LongFormat();
+    private static StringFormatter ISO_FORMAT = new ISOFormat();
     
     //
     // ==============================================================================================================
@@ -638,15 +643,15 @@ public class Date implements Observable {
     }
 
 
-//	/**
-//	 * Returns the String representing this Date in a long format. This is the same format as returned by getLongFormat method
-//	 * 
-//	 * @return the String representing this Date in a long format
-//	 * @see Date#getLongFormat
-//	 */
-//	public String toString() {
-//		return new LongFormat(this).toString();
-//	}
+	/**
+	 * Returns the String representing this Date in a long format. This is the same format as returned by getLongFormat method
+	 * 
+	 * @return the String representing this Date in a long format
+	 * @see Date#getLongFormat
+	 */
+	public String toString() {
+		return getLongFormat();
+	}
 	
 	/**
 	 * Returns the String representing this Date in a long format. This is the same format as returned by toString method
@@ -655,7 +660,7 @@ public class Date implements Observable {
 	 * @see Date#toString
 	 */
 	public String getLongFormat() {
-		return toString();
+		return LONG_FORMAT.toString(this);
 	}
 	
 	/**
@@ -664,7 +669,7 @@ public class Date implements Observable {
 	 * @return the String representing this Date in a short format
 	 */
 	public String getShortFormat() {
-		return new ShortFormat(this).toString();
+		return SHORT_FORMAT.toString(this);
 	}
 	
 	/**
@@ -673,7 +678,7 @@ public class Date implements Observable {
 	 * @return the String representing this Date in ISO format
 	 */
 	public String getISOFormat() {
-		return new ISOFormat(this).toString();
+		return ISO_FORMAT.toString(this);
 	}
 	
     private void checkSerialNumber(int value) {
@@ -738,19 +743,16 @@ public class Date implements Observable {
 //	}
 
 
-    
-	/**
-     * Output dates in short format (mm/dd/yyyy)
+    interface StringFormatter{
+        String toString(Date date);
+    }
+	
+    /**
+     * Output dates in long format (Month ddth, yyyy)
      */ 
-    private class LongFormat {
-		private Date date;
-
-		public LongFormat(Date date) {
-			this.date = date;
-		}
-
-		public String toString() {
-			if (date.equals(new Date())) {
+    private static class LongFormat implements StringFormatter{	
+        public String toString(Date date) {
+			if (NULL_DATE.equals(date)) {
 				return "null date";
 			} else {
 				StringBuilder sb = new StringBuilder();
@@ -762,17 +764,11 @@ public class Date implements Observable {
 	}
 
     /**
-     * Output dates in long format (Month ddth, yyyy)
+     * Output dates in short format (mm/dd/yyyy)
      */ 
-	private class ShortFormat {
-		private Date date;
-
-		public ShortFormat(Date date) {
-			this.date = date;
-		}
-
-		public String toString() {
-			if (date.equals(new Date())) {
+	 private static class ShortFormat implements StringFormatter{
+	    public String toString(Date date) {
+		    if (NULL_DATE.equals(date)) {
 				return "null date";
 			} else {
 				StringBuilder sb = new StringBuilder();
@@ -786,15 +782,9 @@ public class Date implements Observable {
     /**
      * Output dates in ISO format (yyyy-mm-dd)
      */
-	private class ISOFormat {
-		private Date date;
-
-		public ISOFormat(Date date) {
-			this.date = date;
-		}
-
-		public String toString() {
-			if (date.equals(new Date())) {
+	private static class ISOFormat implements StringFormatter{		
+		public String toString(Date date) {
+			if (NULL_DATE.equals(date)) {
 				return "null date";
 			} else {
 				StringBuilder sb = new StringBuilder();
