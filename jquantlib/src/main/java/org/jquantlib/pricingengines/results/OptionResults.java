@@ -22,10 +22,10 @@ package org.jquantlib.pricingengines.results;
 
 
 // FIXME: add comments
-public class OptionResults extends ResultsDecorator<MoreGreeks> {
+public class OptionResults extends MoreGreeks {
 
 	public OptionResults() {
-		super(new MoreGreeks());
+		super();
 	}
 
 	@Override

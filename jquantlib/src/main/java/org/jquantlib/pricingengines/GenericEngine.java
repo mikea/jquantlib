@@ -28,8 +28,8 @@ import org.jquantlib.util.Observer;
 
 public abstract class GenericEngine<A extends Arguments, R extends Results> implements PricingEngine {
 
-	private A arguments;
-	private R results;
+	protected A arguments;
+	protected R results;
 
 	public GenericEngine(final A arguments, final R results) {
 		this.arguments = arguments;

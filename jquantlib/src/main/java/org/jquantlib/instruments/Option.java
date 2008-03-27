@@ -20,21 +20,26 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
 
 public abstract class Option extends NewInstrument {
 
-	protected Payoff payoff_;
-	protected Exercise exercise_;
+	protected Payoff payoff;
+	protected Exercise exercise;
 
 	public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
 		super(engine);
-		this.payoff_ = payoff;
-		this.exercise_ = exercise;
+		this.payoff = payoff;
+		this.exercise = exercise;
 	}
 
 	
+    public boolean isExpired() /* @ReadOnly */ {
+        return exercise.getLastDate().le( Settings.getInstance().getEvaluationDate() );
+    }
+
 	
 	//
 	// Public inner classes

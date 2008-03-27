@@ -24,6 +24,10 @@ package org.jquantlib.pricingengines;
 /**
  * Vanilla option engine base class
  */ 
-public class VanillaOptionEngine extends OneAssetStrikedOptionEngine {
+public abstract class VanillaOptionEngine extends OneAssetStrikedOptionEngine {
+	
+	protected VanillaOptionEngine() {
+		super();
+	}
 	
 }

@@ -21,6 +21,10 @@
 package org.jquantlib.pricingengines;
 
 
-protected abstract class OneAssetStrikedOptionEngine extends OneAssetOptionEngine {
+public abstract class OneAssetStrikedOptionEngine extends OneAssetOptionEngine {
+	
+	protected OneAssetStrikedOptionEngine() {
+		super();
+	}
 	
 }

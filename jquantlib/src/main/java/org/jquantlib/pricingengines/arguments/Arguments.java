@@ -31,6 +31,6 @@ import org.jquantlib.pricingengines.PricingEngine;
  * 
  * @author Richard Gomes
  */
-public interface Arguments {
-    public void validate() /*@ReadOnly*/;
+public abstract class Arguments {
+    public abstract void validate() /*@ReadOnly*/;
 }

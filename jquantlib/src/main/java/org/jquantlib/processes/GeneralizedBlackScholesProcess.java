@@ -61,7 +61,7 @@ import org.jquantlib.util.Observable;
  * dS(t, S) = (r(t) - q(t) - \frac{\sigma(t, S)^2}{2}) dt + \sigma dW_t.
  * }
  */
-public class GeneralizedBlackScholesProcess<T extends Object & Discretization & Discretization1D> extends StochasticProcess1D<T> {
+public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
     private Quote x0_;
     private YieldTermStructure riskFreeRate_;
@@ -78,8 +78,20 @@ public class GeneralizedBlackScholesProcess<T extends Object & Discretization & 
 	            final Quote x0,
 	            final YieldTermStructure dividendTS,
 	            final YieldTermStructure riskFreeTS,
+	            final BlackVolTermStructure blackVolTS) {
+    	this(x0, dividendTS, riskFreeTS, blackVolTS, new EulerDiscretization());
+    }
+    
+    
+	/**
+	 * @param discretization is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
+	 */
+    public GeneralizedBlackScholesProcess(
+	            final Quote x0,
+	            final YieldTermStructure dividendTS,
+	            final YieldTermStructure riskFreeTS,
 	            final BlackVolTermStructure blackVolTS,
-	            final T discretization) {
+	            final LinearDiscretization discretization) {
     	super(discretization);
     	x0_ = x0;
     	riskFreeRate_ = riskFreeTS;

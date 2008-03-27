@@ -20,18 +20,23 @@
 
 package org.jquantlib.pricingengines.results;
 
-import org.jquantlib.pricingengines.PricingEngine;
 
-/**
- * Results are used by new-style instruments in order to
- * obtain outputs from {@link PricingEngine}s
- * 
- * @see PricingEngine
- * @see ResultsDecorator
- * 
- * @author Richard Gomes
- */
-public interface Results {
-    public void reset();
-	public Object findClass(final Class klass);
+// FIXME: add comments
+public class Results {
+
+	//
+	// Public fields as this class works pretty much as 
+	// a Data Transfer Object
+	//
+
+	// FIXME: assign JSR-308 annotations
+	public /*@Price*/ double value;
+	public double errorEstimate;
+
+
+	public void reset() {
+		// FIXME: verify Double.NaN
+		value = errorEstimate = Double.NaN;
+	}
+
 }

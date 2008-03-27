@@ -86,7 +86,7 @@ public abstract class Exercise {
 	 * 
 	 * @see Exercise.Type
 	 */
-	protected Exercise.Type getType() {
+	public Exercise.Type getType() {
 		return type;
 	}
 	

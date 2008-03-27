@@ -22,7 +22,6 @@ package org.jquantlib.instruments;
 
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.results.DefaultResults;
 import org.jquantlib.pricingengines.results.Results;
 
 /**
@@ -48,14 +47,14 @@ public abstract class NewInstrument extends Instrument {
 	 * The value of this attribute and any other that derived
 	 * classes might declare must be set during calculation.
 	 */
-	private PricingEngine engine_;
+	protected PricingEngine engine;
 
 	
 
 	// FIXME: we must do the best efforts to remove this constructor
 	protected NewInstrument() {
 		super();
-		this.engine_ = null;
+		this.engine = null;
 	}
 
 	
@@ -80,9 +79,9 @@ public abstract class NewInstrument extends Instrument {
 	// This code should be moved to the constructor
 	protected final void setPricingEngine(final PricingEngine engine) {
     	if (engine==null) throw new NullPointerException(SHOULD_DEFINE_PRICING_ENGINE);
-   		this.engine_.deleteObserver(this);
-    	this.engine_ = engine;
-   		this.engine_.addObserver(this);
+   		this.engine.deleteObserver(this);
+    	this.engine = engine;
+   		this.engine.addObserver(this);
     	update(this, null);
     }
 
@@ -96,12 +95,12 @@ public abstract class NewInstrument extends Instrument {
      * results.
      */
     protected final void performCalculations() {
-    	if (engine_==null) throw new NullPointerException(SHOULD_DEFINE_PRICING_ENGINE);
-        engine_.reset();
-        setupArguments(engine_.getArguments());
-        engine_.getArguments().validate();
-        engine_.calculate();
-        fetchResults(engine_.getResults());
+    	if (engine==null) throw new NullPointerException(SHOULD_DEFINE_PRICING_ENGINE);
+        engine.reset();
+        setupArguments(engine.getArguments());
+        engine.getArguments().validate();
+        engine.calculate();
+        fetchResults(engine.getResults());
     }
 
     
@@ -125,9 +124,8 @@ public abstract class NewInstrument extends Instrument {
      * @param results
      */
     protected void fetchResults(final Results results) /* @ReadOnly */ {
-    	DefaultResults r = (DefaultResults) results.findClass(DefaultResults.class);
-        NPV_ = r.value;
-        errorEstimate_ = r.errorEstimate;
+    	super.NPV = results.value;
+    	super.errorEstimate = results.errorEstimate;
     }
 
 

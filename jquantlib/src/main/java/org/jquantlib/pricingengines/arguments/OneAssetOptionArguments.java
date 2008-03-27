@@ -32,7 +32,7 @@ import org.jquantlib.processes.StochasticProcess;
  * 
  * @author Richard Gomes
  */
-public class OneAssetOptionArguments extends ArgumentsDecorator<OptionArguments> {
+public class OneAssetOptionArguments extends OptionArguments {
 
 	//
 	// Public fields as this class works pretty much as 
@@ -43,7 +43,7 @@ public class OneAssetOptionArguments extends ArgumentsDecorator<OptionArguments>
 	public StochasticProcess stochasticProcess; // FIXME: should use Generics
 
 	public OneAssetOptionArguments() {
-		super(new OptionArguments());
+		super();
 	}
 	
 	@Override
@@ -53,12 +53,5 @@ public class OneAssetOptionArguments extends ArgumentsDecorator<OptionArguments>
 		if (stochasticProcess.initialValues()[0] <= 0.0)
 			throw new IllegalArgumentException("Negative or zero underlying given");
 	}
-	
-	public OptionArguments getOptionArguments() /* @ReadOnly */ {
-		OptionArguments arguments = getDelegate();
-		if (arguments ==null) throw new NullPointerException("OptionArguments is null");
-		return arguments; 
-	}
-	
 	
 }

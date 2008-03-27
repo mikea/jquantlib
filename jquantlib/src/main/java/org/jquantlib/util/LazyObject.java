@@ -45,8 +45,8 @@ package org.jquantlib.util;
  */
 public abstract class LazyObject implements Observable, Observer {
 
-	protected boolean calculated_;
-	protected boolean frozen_;
+	protected boolean calculated;
+	protected boolean frozen;
 
 	/**
 	 * This method must implement any calculations which must be (re)done in
@@ -55,17 +55,17 @@ public abstract class LazyObject implements Observable, Observer {
 	protected abstract void performCalculations() throws ArithmeticException;
 
 	public LazyObject() {
-		this.calculated_ = false;
-		this.frozen_ = false;
+		this.calculated = false;
+		this.frozen = false;
 	}
 
 	public void update(Observable o, Object arg) {
 		// observers don't expect notifications from frozen objects
 		// LazyObject forwards notifications only once until it has been
 		// recalculated
-		if (!frozen_ && calculated_)
+		if (!frozen && calculated)
 			notifyObservers(arg);
-		calculated_ = false;
+		calculated = false;
 	}
 
 	/**
@@ -78,12 +78,12 @@ public abstract class LazyObject implements Observable, Observer {
 	 * possible.
 	 */
 	public final void recalculate() {
-		boolean wasFrozen = frozen_;
-		calculated_ = frozen_ = false;
+		boolean wasFrozen = frozen;
+		calculated = frozen = false;
 		try {
 			calculate();
 		} finally {
-			frozen_ = wasFrozen;
+			frozen = wasFrozen;
 			notifyObservers();
 		}
 	}
@@ -94,7 +94,7 @@ public abstract class LazyObject implements Observable, Observer {
 	 * should change.
 	 */
 	public void freeze() {
-		frozen_ = true;
+		frozen = true;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public abstract class LazyObject implements Observable, Observer {
 	 * thus re-enabling recalculations.
 	 */
 	public void unfreeze() {
-		frozen_ = false;
+		frozen = false;
 		// send notification, just in case we lost any
 		notifyObservers();
 	}
@@ -118,13 +118,13 @@ public abstract class LazyObject implements Observable, Observer {
 	 * objects for the calculations to be performed again when they change.
 	 */
 	protected void calculate() {
-		if (!calculated_ && !frozen_) {
+		if (!calculated && !frozen) {
 			// prevent infinite recursion in case of bootstrapping
-			calculated_ = true; 
+			calculated = true; 
 			try {
 				performCalculations();
 			} finally {
-				calculated_ = false;
+				calculated = false;
 			}
 		}
 	}

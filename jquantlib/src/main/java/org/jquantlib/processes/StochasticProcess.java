@@ -56,14 +56,14 @@ import cern.jet.math.Functions;
  * d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t.
  * }
  */ 
-public abstract class StochasticProcess<T extends Object & Discretization> implements Observable, Observer {
+public abstract class StochasticProcess implements Observable, Observer {
 
 	private Discretization discretization;
 	
 	/**
 	 * @param discretization is an Object that <b>must</b> implement {@link Discretization}.
 	 */
-    protected StochasticProcess(final T discretization) {
+    protected StochasticProcess(final LinearDiscretization discretization) {
     	super();
     	if (discretization==null) throw new NullPointerException(); // FIXME: message
     	this.discretization = discretization;

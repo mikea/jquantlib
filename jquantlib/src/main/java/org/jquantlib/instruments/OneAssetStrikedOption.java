@@ -22,19 +22,24 @@ package org.jquantlib.instruments;
 
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
+import org.jquantlib.pricingengines.results.MoreGreeks;
+import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.processes.StochasticProcess;
 
 public class OneAssetStrikedOption extends OneAssetOption {
 
     // results
-    protected /* @Price */ double strikeSensitivity_;
+    private /* @Price */ double strikeSensitivity;
 
-    public OneAssetStrikedOption(
-            final StochasticProcess process,
-            final StrikedTypePayoff payoff,
-            final Exercise exercise) {
-    	this(process, payoff, exercise, new PricingEngine());
-    }
+// FIXME: code review
+//    public OneAssetStrikedOption(
+//            final StochasticProcess process,
+//            final StrikedTypePayoff payoff,
+//            final Exercise exercise) {
+//    	this(process, payoff, exercise, new PricingEngine());
+//    }
 
     public OneAssetStrikedOption(
             final StochasticProcess process,
@@ -47,20 +52,20 @@ public class OneAssetStrikedOption extends OneAssetOption {
     
     /* @Price */ double getStrikeSensitivity() /* @ReadOnly */ {
         calculate();
-        if (strikeSensitivity_ == Double.NaN) throw new ArithmeticException("strike sensitivity not provided");
-        return strikeSensitivity_;
+        if (strikeSensitivity == Double.NaN) throw new ArithmeticException("strike sensitivity not provided");
+        return strikeSensitivity;
     }
         
         
-    public void setupArguments(final PricingEngine.Arguments args) /* @ReadOnly */ {
+    public void setupArguments(final Arguments args) /* @ReadOnly */ {
 		super.setupArguments(args);
-        Arguments moreArgs = (OneAssetOption.Arguments)args;
-        moreArgs.payoff = payoff_;
+		OneAssetOptionArguments moreArgs = (OneAssetOptionArguments)args;
+        moreArgs.payoff = payoff;
 	}
 
 	protected void setupExpired() /* @ReadOnly */ {
 		super.setupExpired();
-		strikeSensitivity_ = 0.0;
+		strikeSensitivity = 0.0;
 	}
 	
 	/**
@@ -71,10 +76,10 @@ public class OneAssetStrikedOption extends OneAssetOption {
      * 
      * @author Richard Gomes
 	 */
-	public void fetchResults(final PricingEngine.Results results) /* @ReadOnly */ {
+	public void fetchResults(final Results results) /* @ReadOnly */ {
 		super.fetchResults(results);
-        final MoreGreeks moreGreeks = ((OneAssetOption.Results)results).delegateMoreGreeks;
-		strikeSensitivity_ = moreGreeks.strikeSensitivity;
+        final MoreGreeks moreGreeks = (MoreGreeks) results;
+		strikeSensitivity = moreGreeks.strikeSensitivity;
 	}
         
 }

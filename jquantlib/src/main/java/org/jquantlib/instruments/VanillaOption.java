@@ -34,11 +34,13 @@ public class VanillaOption extends OneAssetStrikedOption {
     	super(process, payoff, exercise, engine);
     }
 
-    public VanillaOption(
-            final StochasticProcess process,
-            final StrikedTypePayoff payoff,
-            final Exercise exercise) {
-    	this(process, payoff, exercise, new VanillaOptionEngine());
-    }
+    
+// FIXME: code review    
+//    public VanillaOption(
+//            final StochasticProcess process,
+//            final StrikedTypePayoff payoff,
+//            final Exercise exercise) {
+//    	this(process, payoff, exercise, new VanillaOptionEngine());
+//    }
 
 }

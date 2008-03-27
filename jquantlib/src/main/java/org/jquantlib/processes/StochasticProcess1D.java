@@ -40,14 +40,14 @@
 package org.jquantlib.processes;
 
 
-public abstract class StochasticProcess1D<T extends Object & Discretization & Discretization1D> extends StochasticProcess<T> {
+public abstract class StochasticProcess1D extends StochasticProcess {
 	
     protected Discretization1D discretization1D; 
 	
 	/**
 	 * @param discretization is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
 	 */
-    protected StochasticProcess1D(final T discretization) {
+    protected StochasticProcess1D(final LinearDiscretization discretization) {
     	super(discretization);
     	this.discretization1D = discretization;
     }

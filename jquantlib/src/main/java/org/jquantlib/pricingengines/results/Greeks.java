@@ -22,7 +22,7 @@ package org.jquantlib.pricingengines.results;
 
 
 // FIXME: add comments
-public class Greeks extends ResultsDecorator<DefaultResults> {
+public class Greeks extends Results {
 
 	//
 	// Public fields as this class works pretty much as 
@@ -38,7 +38,7 @@ public class Greeks extends ResultsDecorator<DefaultResults> {
 	public double dividendRho;
 
 	public Greeks() {
-		super(new DefaultResults());
+		super();
 	}
 
 	@Override

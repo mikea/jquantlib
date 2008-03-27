@@ -26,7 +26,7 @@ import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import cern.jet.math.Mult;
 
-public class EulerDiscretization implements Discretization, Discretization1D {
+public class EulerDiscretization implements LinearDiscretization {
 
 	//
 	// Implements interface Discretization

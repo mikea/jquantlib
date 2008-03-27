@@ -18,30 +18,13 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.pricingengines.arguments;
+package org.jquantlib.processes;
 
-// FIXME: add comments
-public abstract class ArgumentsDecorator<T extends Arguments> implements Arguments {
-
-	private T delegate;
-	
-	protected ArgumentsDecorator(final T arguments) {
-		delegate = arguments;
-	}
-	
-	public void validate() /*@ReadOnly*/ {
-		if (delegate != null) {
-			delegate.validate();
-		}
-	}
-
-	//
-	// protected methods
-	//
-	
-	protected T getDelegate() {
-		if (delegate == null) return null;
-		return (T) delegate;
-	}
+/**
+ * This interface extends Discretization and Discretization1D interfaces
+ * 
+ * @author Richard Gomes
+ */
+public interface LinearDiscretization extends Discretization, Discretization1D {
 
 }

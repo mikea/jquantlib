@@ -22,7 +22,7 @@ package org.jquantlib.pricingengines.results;
 
 
 // FIXME: add comments
-public class MoreGreeks extends ResultsDecorator<Greeks> {
+public class MoreGreeks extends Greeks {
 
 	//
 	// Public fields as this class works pretty much as 
@@ -37,7 +37,7 @@ public class MoreGreeks extends ResultsDecorator<Greeks> {
 	public double strikeSensitivity;
 
 	public MoreGreeks() {
-		super(new Greeks());
+		super();
 	}
 
 	@Override

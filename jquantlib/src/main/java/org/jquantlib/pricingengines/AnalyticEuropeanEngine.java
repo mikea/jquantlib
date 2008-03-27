@@ -47,7 +47,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 /**
  * Pricing engine for European vanilla options using analytical formulae
  * 
- * @test - the correctness of the returned value is tested by reproducing
+ * @note TEST ::: the correctness of the returned value is tested by reproducing
  *       results available in literature. - the correctness of the returned
  *       greeks is tested by reproducing results available in literature. - the
  *       correctness of the returned greeks is tested by reproducing numerical
@@ -67,50 +67,48 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 
 	public void calculate() /* @ReadOnly */ {
-        if (arguments_.exercise.getType() != Exercise.Type.European) throw new IllegalArgumentException("not an European option");
+        if (arguments.exercise.getType() != Exercise.Type.European) throw new IllegalArgumentException("not an European option");
 
-        StrikedTypePayoff payoff = (StrikedTypePayoff) arguments_.payoff;
+        StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
         if (payoff == null) throw new NullPointerException("non-striked payoff given");
 
-        GeneralizedBlackScholesProcess process =  (GeneralizedBlackScholesProcess) arguments_.stochasticProcess);
+        GeneralizedBlackScholesProcess process =  (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
         if (process == null) throw new NullPointerException("Black-Scholes process required");
 
-        /* @Variance */ double variance = process.blackVolatility().getBlackVariance(
-        			arguments_.exercise.getLastDate(),
-        			payoff.getStrike());
+        /* @Variance */ double variance = process.blackVolatility().blackVariance(arguments.exercise.getLastDate(), payoff.getStrike());
         
-        /* @DiscountFactor */ double dividendDiscount = process.dividendYield().getDiscount(arguments_.exercise.getLastDate());
-        /* @DiscountFactor */ double riskFreeDiscount = process.riskFreeRate().getDiscount(arguments_.exercise.getLastDate());
+        /* @DiscountFactor */ double dividendDiscount = process.dividendYield().getDiscount(arguments.exercise.getLastDate());
+        /* @DiscountFactor */ double riskFreeDiscount = process.riskFreeRate().getDiscount(arguments.exercise.getLastDate());
         /* @Price */ double spot = process.stateVariable().getValue();
         /* @Price */ double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
-        BlackCalculator black(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
+        BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-        results_.value = black.value();
-		results_.delta = black.delta(spot);
-		results_.deltaForward = black.deltaForward();
-		results_.elasticity = black.elasticity(spot);
-		results_.gamma = black.gamma(spot);
+        results.value = black.value();
+		results.delta = black.delta(spot);
+		results.deltaForward = black.deltaForward();
+		results.elasticity = black.elasticity(spot);
+		results.gamma = black.gamma(spot);
 
 		DayCounter rfdc  = process.riskFreeRate().getDayCounter();
 		DayCounter divdc = process.dividendYield().getDayCounter();
-		DayCounter voldc = process.blackVolatility().getDayCounter()();
-		/* @Time */ double t = rfdc.yearFraction(process.riskFreeRate().getReferenceDate(), arguments_.exercise.getLastDate());
-		results_.rho = black.rho(t);
+		DayCounter voldc = process.blackVolatility().getDayCounter();
+		/* @Time */ double t = rfdc.getYearFraction(process.riskFreeRate().getReferenceDate(), arguments.exercise.getLastDate());
+		results.rho = black.rho(t);
 		
-		t = divdc.yearFraction(process.dividendYield().getReferenceDate(), arguments_.exercise.getLastDate());
-		results_.dividendRho = black.dividendRho(t);
+		t = divdc.getYearFraction(process.dividendYield().getReferenceDate(), arguments.exercise.getLastDate());
+		results.dividendRho = black.dividendRho(t);
 		
-		t = voldc.yearFraction(process.blackVolatility().getReferenceDate(), arguments_.exercise.getLastDate());
-		results_.vega = black.vega(t);
+		t = voldc.getYearFraction(process.blackVolatility().getReferenceDate(), arguments.exercise.getLastDate());
+		results.vega = black.vega(t);
 		try {
-		 results_.theta = black.theta(spot, t);
-		 results_.thetaPerDay = black.thetaPerDay(spot, t);
+		 results.theta = black.theta(spot, t);
+		 results.thetaPerDay = black.thetaPerDay(spot, t);
 		} catch (Exception e) {
-		 results_.theta = Double.NaN;
-		 results_.thetaPerDay = Double.NaN;
+		 results.theta = Double.NaN;
+		 results.thetaPerDay = Double.NaN;
 		}
 		
-		results_.strikeSensitivity  = black.strikeSensitivity();
-		results_.itmCashProbability = black.itmCashProbability();
+		results.strikeSensitivity  = black.strikeSensitivity();
+		results.itmCashProbability = black.itmCashProbability();
 	}
 }

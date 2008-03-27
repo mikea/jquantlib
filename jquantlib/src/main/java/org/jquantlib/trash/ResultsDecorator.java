@@ -18,9 +18,12 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.pricingengines.results;
+package org.jquantlib.trash;
+
+import org.jquantlib.pricingengines.results.Results;
 
 // FIXME: add comments
+@Deprecated
 public abstract class ResultsDecorator<T extends Results> implements Results {
 
 	private T delegate;

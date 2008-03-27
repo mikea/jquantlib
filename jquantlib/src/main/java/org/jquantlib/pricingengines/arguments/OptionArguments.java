@@ -26,7 +26,7 @@ import org.jquantlib.instruments.Payoff;
 import cern.colt.list.DoubleArrayList;
 
 // FIXME: add comments
-public class OptionArguments extends ArgumentsDecorator<Arguments> {
+public class OptionArguments extends Arguments {
 	
 	//
 	// Public fields as this class works pretty much as 
@@ -39,12 +39,11 @@ public class OptionArguments extends ArgumentsDecorator<Arguments> {
 	public /*@Time*/ DoubleArrayList stoppingTimes;
 	
 	public OptionArguments() {
-		super(null);
+		super();
 	}
 	
 	@Override
 	public void validate() /*@ReadOnly*/ {
-		super.validate();
 		if (payoff == null) throw new IllegalArgumentException("No payoff given");
 	}
 	

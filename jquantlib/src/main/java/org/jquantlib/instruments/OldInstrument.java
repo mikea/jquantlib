@@ -25,7 +25,7 @@ import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.results.Results;
 
 /**
- * Defines a new syle instrument, which makes use of a pricing engine.
+ * Defines an old-style instrument, which <i>does not</i> make use of a pricing engine.
  * 
  * @see http://quantlib.org/reference/group__instruments.html
  * 

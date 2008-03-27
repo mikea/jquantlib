@@ -20,7 +20,6 @@
 
 package org.jquantlib.instruments;
 
-import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
@@ -43,109 +42,94 @@ import cern.colt.list.DoubleArrayList;
 public class OneAssetOption extends Option {
 
     // results
-    protected double delta_;
-    protected double deltaForward_;
-    protected double elasticity_;
-    protected double gamma_;
-    protected double theta_;
-    protected double thetaPerDay_;
-    protected double vega_;
-    protected double rho_;
-    protected double dividendRho_;
-    protected double itmCashProbability_;
+    private double delta;
+    private double deltaForward;
+    private double elasticity;
+    private double gamma;
+    private double theta;
+    private double thetaPerDay;
+    private double vega;
+    private double rho;
+    private double dividendRho;
+    private double itmCashProbability;
     
     // arguments
-    protected StochasticProcess stochasticProcess_;
-
-
-    private double targetValue_;
-    private SimpleQuote vol_;
-
-    // FIXME: move from 
+    private StochasticProcess stochasticProcess;
     
+    
+    // FIXME: code review
+    // Verify where this variable is initialized and where impliedVolatility(double) is called.
+    // I suppose impliedVolatility(double) should be called by the constructor in order to determine the
+    // implied volatility, which is based on the current supply/demand measured from the market.
+    private double targetValue;
+
     
     public OneAssetOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
     	super(payoff, exercise, engine);
-        this.stochasticProcess_ = process;
-        this.stochasticProcess_.addObserver(this);
-    }
-
-    public boolean isExpired() /* @ReadOnly */ {
-        return exercise_.getLastDate().le( Settings.getInstance().getEvaluationDate() );
+        this.stochasticProcess = process;
+        this.stochasticProcess.addObserver(this);
     }
 
     public double delta() /* @ReadOnly */ {
         calculate();
-        if (delta_ == Double.NaN) throw new IllegalArgumentException("delta not provided");
-        return delta_;
+        if (delta == Double.NaN) throw new IllegalArgumentException("delta not provided");
+        return delta;
     }
 
     public double deltaForward() /* @ReadOnly */ {
         calculate();
-        if (deltaForward_ == Double.NaN) throw new IllegalArgumentException("forward delta not provided");
-        return deltaForward_;
+        if (deltaForward == Double.NaN) throw new IllegalArgumentException("forward delta not provided");
+        return deltaForward;
     }
 
     public double elasticity() /* @ReadOnly */ {
         calculate();
-        if (elasticity_ == Double.NaN) throw new IllegalArgumentException("elasticity not provided");
-        return elasticity_;
+        if (elasticity == Double.NaN) throw new IllegalArgumentException("elasticity not provided");
+        return elasticity;
     }
 
     public double gamma() /* @ReadOnly */ {
         calculate();
-        if (gamma_ == Double.NaN) throw new IllegalArgumentException("gamma not provided");
-        return gamma_;
+        if (gamma == Double.NaN) throw new IllegalArgumentException("gamma not provided");
+        return gamma;
     }
 
     public double theta() /* @ReadOnly */ {
         calculate();
-        if (theta_ == Double.NaN) throw new IllegalArgumentException("theta not provided");
-        return theta_;
+        if (theta == Double.NaN) throw new IllegalArgumentException("theta not provided");
+        return theta;
     }
 
     public double thetaPerDay() /* @ReadOnly */ {
         calculate();
-        if (thetaPerDay_ == Double.NaN) throw new IllegalArgumentException("theta per-day not provided");
-        return thetaPerDay_;
+        if (thetaPerDay == Double.NaN) throw new IllegalArgumentException("theta per-day not provided");
+        return thetaPerDay;
     }
 
     public double vega() /* @ReadOnly */ {
         calculate();
-        if (vega_ == Double.NaN) throw new IllegalArgumentException("vega not provided");
-        return vega_;
+        if (vega == Double.NaN) throw new IllegalArgumentException("vega not provided");
+        return vega;
     }
 
     public double rho() /* @ReadOnly */ {
         calculate();
-        if (rho_ == Double.NaN) throw new IllegalArgumentException("rho not provided");
-        return rho_;
+        if (rho == Double.NaN) throw new IllegalArgumentException("rho not provided");
+        return rho;
     }
 
     public double dividendRho() /* @ReadOnly */ {
         calculate();
-        if (dividendRho_ == Double.NaN) throw new IllegalArgumentException("dividend rho not provided");
-        return dividendRho_;
+        if (dividendRho == Double.NaN) throw new IllegalArgumentException("dividend rho not provided");
+        return dividendRho;
     }
 
     public double itmCashProbability() /* @ReadOnly */ {
         calculate();
-        if (itmCashProbability_ == Double.NaN) throw new IllegalArgumentException("in-the-money cash probability not provided");
-        return itmCashProbability_;
+        if (itmCashProbability == Double.NaN) throw new IllegalArgumentException("in-the-money cash probability not provided");
+        return itmCashProbability;
     }
 
-    
-    
-    
-//    ======================================================
-//
-//    H E R E  !!!!!
-//    
-//    Verify how impliedVolatility is used !!!!!!
-//
-//    ======================================================
-    
-    
     
     /**
      * @Note Currently, this method returns the Black-Scholes implied volatility. 
@@ -157,56 +141,61 @@ public class OneAssetOption extends Option {
      * a target value lower than the intrinsic value in the case of American options.
      */
     private /* @Volatility */ double impliedVolatility(
-    			double targetValue, 
-    			double accuracy, 
-    			int maxEvaluations, 
-                /* @Volatility */ double minVol, 
-                /* @Volatility */ double maxVol) /* @ReadOnly */ {
+    							/*@Price*/ double targetValue, double accuracy, int maxEvaluations, 
+    							/* @Volatility */ double minVol, /* @Volatility */ double maxVol) /* @ReadOnly */ {
         calculate();
         if (isExpired()) throw new IllegalArgumentException("option expired");
 
         /* @Volatility */ double guess = (minVol+maxVol)/2.0;
-        ImpliedVolHelper f = new ImpliedVolHelper(engine_, targetValue);
+        ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(engine, targetValue);
         Brent solver = new Brent();
         solver.setMaxEvaluations(maxEvaluations);
         /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
         return result;
     }
 
+    /**
+     * @Note Currently, this method returns the Black-Scholes implied volatility. 
+     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
+     *  
+     * @Note Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
+     * In these cases the calculation can fail and the result (if any) is almost meaningless.
+     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
+     * a target value lower than the intrinsic value in the case of American options.
+     */
+    private /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue) /* @ReadOnly */ {
+    	return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
+ 
+    }
+    
+    
+    
+    
+    
     protected void setupExpired() /* @ReadOnly */ {
         super.setupExpired();
-        delta_ = deltaForward_ = elasticity_ = gamma_ = theta_ =
-        thetaPerDay_ = vega_ = rho_ = dividendRho_ =
-        itmCashProbability_ = 0.0;
+        delta = deltaForward = elasticity = gamma = theta =
+        thetaPerDay = vega = rho = dividendRho =
+        itmCashProbability = 0.0;
     }
 
-    /**
-     * @note This method accesses directly fields from {@link Arguments}.
-     * These fields are exposed by {@link Option.Arguments} which is the base class of {@link Arguments}.
-     * This programming style is not recommended and we should use getters/setters instead.
-     * At the moment, we keep the original implementation.
-     * 
-     * @author Richard Gomes
-     */
+    @Override
     public void setupArguments(final Arguments arguments) /* @ReadOnly */ {
     	
-    	// FIXME: code review
-    	// super.setupArguments(args);
-
     	if (! OneAssetOptionArguments.class.isAssignableFrom(arguments.getClass())) throw new ClassCastException(arguments.toString());
     	
-        OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments)arguments;
-        OptionArguments optionArguments = oneAssetArguments.getOptionArguments();
+        OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments) arguments;
+        OptionArguments         optionArguments   = (OptionArguments) arguments;
 
         // set up stochastic process
-        oneAssetArguments.stochasticProcess = stochasticProcess_;
+        oneAssetArguments.stochasticProcess = stochasticProcess;
         // setup exercise dates
-        optionArguments.exercise = exercise_;
+        optionArguments.exercise = exercise;
         // set up stopping times
-        int n = exercise_.size();
+        int n = exercise.size();
         DoubleArrayList arr = new DoubleArrayList(n);
         for (int i=0; i<n; ++i) {
-        	arr.add(/*@Time*/ stochasticProcess_.getTime(exercise_.getDate(i)));
+        	arr.add(/*@Time*/ stochasticProcess.getTime(exercise.getDate(i)));
         }
         optionArguments.stoppingTimes = arr;
     }
@@ -217,9 +206,11 @@ public class OneAssetOption extends Option {
      */
     public void fetchResults(final Results results) /* @ReadOnly */ {
     	
+    	if (! MoreGreeks.class.isAssignableFrom(results.getClass())) throw new ClassCastException(results.toString());
+    	
     	// bind a Results interface to specific Classes
-    	final MoreGreeks moreGreeks = (MoreGreeks) results.findClass(MoreGreeks.class);
-    	final Greeks     greeks     = (Greeks) moreGreeks.findClass(Greeks.class);
+    	final MoreGreeks moreGreeks = (MoreGreeks) results;
+    	final Greeks     greeks     = (Greeks) results;
         
         //
 		// No check on Double.NaN values - just copy. this allows:
@@ -228,12 +219,12 @@ public class OneAssetOption extends Option {
 		// b) To implement slim engines which only calculate the value.
 		//    Of course care must be taken not to call the greeks methods when using these.
 		//
-        delta_          = greeks.delta;
-        gamma_          = greeks.gamma;
-        theta_          = greeks.theta;
-        vega_           = greeks.vega;
-        rho_            = greeks.rho;
-        dividendRho_    = greeks.dividendRho;
+        delta          = greeks.delta;
+        gamma          = greeks.gamma;
+        theta          = greeks.theta;
+        vega           = greeks.vega;
+        rho            = greeks.rho;
+        dividendRho    = greeks.dividendRho;
 
         //
 		// No check on Double.NaN values - just copy. this allows:
@@ -242,10 +233,10 @@ public class OneAssetOption extends Option {
 		// b) To implement slim engines which only calculate the value.
 		//    Of course care must be taken not to call the greeks methods when using these.
 		//
-        deltaForward_       = moreGreeks.deltaForward;
-        elasticity_         = moreGreeks.elasticity;
-        thetaPerDay_        = moreGreeks.thetaPerDay;
-        itmCashProbability_ = moreGreeks.itmCashProbability;
+        deltaForward       = moreGreeks.deltaForward;
+        elasticity         = moreGreeks.elasticity;
+        thetaPerDay        = moreGreeks.thetaPerDay;
+        itmCashProbability = moreGreeks.itmCashProbability;
     }
 
     
@@ -257,14 +248,15 @@ public class OneAssetOption extends Option {
     /**
      * Helper class for implied volatility calculation
      */
-    private class ImpliedVolHelper {
+    private class ImpliedVolatilityHelper {
+    	
         private PricingEngine impliedEngine;
         private final OneAssetOptionResults impliedResults;
         private double targetValue_;
         private SimpleQuote vol_;
         
         
-        public ImpliedVolHelper(final PricingEngine engine, double targetValue) {
+        public ImpliedVolatilityHelper(final PricingEngine engine, double targetValue) {
         	this.impliedEngine = engine;
         	this.targetValue_ = targetValue;
 
@@ -276,13 +268,10 @@ public class OneAssetOption extends Option {
         	// Make a new stochastic process in order not to modify the given one.
         	// stateVariable, dividendTS and riskFreeTS can be copied since
         	// they won't be modified.
-        	// Here the requirement for a Black-Scholes process is
-			// hard-coded.
-        	// Making it work for a generic process would need some
-			// reflection
-        	// technique (which is possible, but requires some thought,
-			// hence
-        	// its postponement.
+        	// Here the requirement for a Black-Scholes process is hard-coded.
+        	// Making it work for a generic process would need some reflection
+        	// technique (which is possible, but requires some thought),
+			// hence its postponement.
         	
         	// obtain original process from arguments
             GeneralizedBlackScholesProcess originalProcess = (GeneralizedBlackScholesProcess)oneAssetArguments.stochasticProcess;
@@ -298,16 +287,6 @@ public class OneAssetOption extends Option {
         	// calculate implied volatility
         	BlackVolTermStructure volatility = new BlackConstantVol(blackVol.getReferenceDate(), vol_, blackVol.getDayCounter());
         
-        	
-        	/*
-    		public GeneralizedBlackScholesProcess(
-	            final Quote x0,
-	            final YieldTermStructure dividendTS,
-	            final YieldTermStructure riskFreeTS,
-	            final BlackVolTermStructure blackVolTS,
-	            final T discretization) {
-        	 */
-        	
         	// build a new stochastic process
         	StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
 

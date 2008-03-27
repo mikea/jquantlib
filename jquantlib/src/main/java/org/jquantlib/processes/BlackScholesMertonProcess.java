@@ -48,7 +48,7 @@ public class BlackScholesMertonProcess extends GeneralizedBlackScholesProcess {
             final YieldTermStructure dividendTS,
             final YieldTermStructure riskFreeTS,
             final BlackVolTermStructure blackVolTS,
-            final Discretization discretization) {
+            final LinearDiscretization discretization) {
     	super(x0, dividendTS, riskFreeTS, blackVolTS, discretization);
     }
 

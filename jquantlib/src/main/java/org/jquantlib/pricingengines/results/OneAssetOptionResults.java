@@ -22,10 +22,10 @@ package org.jquantlib.pricingengines.results;
 
 
 // FIXME: add comments
-public class OneAssetOptionResults extends ResultsDecorator<OptionResults> {
+public class OneAssetOptionResults extends OptionResults {
 
 	public OneAssetOptionResults() {
-		super(new OptionResults());
+		super();
 	}
 
 	@Override

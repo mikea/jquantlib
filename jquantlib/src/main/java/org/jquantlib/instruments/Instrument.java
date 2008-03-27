@@ -61,12 +61,12 @@ import org.jquantlib.util.LazyObject;
     	/**
     	 * Represents the net present value of the instrument.
     	 */
-    	protected /*@Price*/ double NPV_;
+    	protected /*@Price*/ double NPV;
     	
     	/**
     	 * Represents the error estimate on the NPV when available.
     	 */
-    	protected /*@Price*/ double errorEstimate_;
+    	protected /*@Price*/ double errorEstimate;
     	
 
     	
@@ -77,8 +77,8 @@ import org.jquantlib.util.LazyObject;
     	// FIXME: NaN .vs. null ??
         protected Instrument() {
         	super();
-        	this.NPV_ = Double.NaN;
-        	this.errorEstimate_ = 0.0;
+        	this.NPV = Double.NaN;
+        	this.errorEstimate = 0.0;
         }
         
         
@@ -90,15 +90,15 @@ import org.jquantlib.util.LazyObject;
     	// FIXME: NaN .vs. null ??
     	public final /*@Price*/ double getNPV() /*@ReadOnly*/ {
     		calculate();
-    		if (this.NPV_==Double.NaN) throw new ArithmeticException("NPV not provided");
-    		return NPV_;
+    		if (this.NPV==Double.NaN) throw new ArithmeticException("NPV not provided");
+    		return NPV;
     	}
 
     	// FIXME: NaN .vs. null ??
     	public final /*@Price*/ double getErrorEstimate() /*@ReadOnly*/ {
     		calculate();
-    		if (this.errorEstimate_==Double.NaN) throw new ArithmeticException("error estimate not provided");
-    		return errorEstimate_;
+    		if (this.errorEstimate==Double.NaN) throw new ArithmeticException("error estimate not provided");
+    		return errorEstimate;
     	}
 
     	
@@ -107,26 +107,12 @@ import org.jquantlib.util.LazyObject;
     	// abstract methods
     	//
     	
-    	/**
+
+
+		/**
     	 * @return <code>true</code> whether the instrument is still tradeable.
     	 */
     	public abstract boolean isExpired();
-
-
-    	
-    	//
-    	// overriden methods from LazyObject
-    	//
-    	
-    	@Override
-    	protected void calculate() /*@ReadOnly*/ {
-    		if (isExpired()) {
-    			setupExpired();
-    			calculated_ = true;
-    		} else {
-    			super.calculate();
-    		}
-    	}
 
 
     	
@@ -141,8 +127,24 @@ import org.jquantlib.util.LazyObject;
          * @see NewInstrument.setupExpired()
          */
         protected void setupExpired() /*@ReadOnly*/ {
-            NPV_ = 0.0;
-            errorEstimate_ = 0.0;
+            NPV = 0.0;
+            errorEstimate = 0.0;
         }
+
+        
+        
+    	//
+    	// overriden methods from LazyObject
+    	//
+    	
+    	@Override
+    	protected void calculate() /*@ReadOnly*/ {
+    		if (isExpired()) {
+    			setupExpired();
+    			calculated = true;
+    		} else {
+    			super.calculate();
+    		}
+    	}
 
 }

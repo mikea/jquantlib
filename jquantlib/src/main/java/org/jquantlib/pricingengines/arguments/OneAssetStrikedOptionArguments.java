@@ -21,10 +21,10 @@
 package org.jquantlib.pricingengines.arguments;
 
 
-public class OneAssetStrikedOptionArguments extends ArgumentsDecorator<OneAssetOptionArguments> {
+public class OneAssetStrikedOptionArguments extends OneAssetOptionArguments {
 
 	public OneAssetStrikedOptionArguments() {
-		super(new OneAssetOptionArguments());
+		super();
 	}
 	
 	@Override
