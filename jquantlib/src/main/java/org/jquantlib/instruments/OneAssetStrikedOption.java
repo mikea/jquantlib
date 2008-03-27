@@ -36,14 +36,14 @@ public class OneAssetStrikedOption extends OneAssetOption {
 // FIXME: code review
 //    public OneAssetStrikedOption(
 //            final StochasticProcess process,
-//            final StrikedTypePayoff payoff,
+//            final Payoff payoff,
 //            final Exercise exercise) {
 //    	this(process, payoff, exercise, new PricingEngine());
 //    }
 
     public OneAssetStrikedOption(
             final StochasticProcess process,
-            final StrikedTypePayoff payoff,
+            final Payoff payoff,
             final Exercise exercise,
             final PricingEngine engine) {
     	super(process, payoff, exercise, engine);

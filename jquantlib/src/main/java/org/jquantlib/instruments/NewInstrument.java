@@ -76,8 +76,8 @@ public abstract class NewInstrument extends Instrument {
      * @param engine
      */
 	// FIXME: do the best efforts to remove this method.
-	// This code should be moved to the constructor
-	protected final void setPricingEngine(final PricingEngine engine) {
+	// This code should be moved to the constructor. Does it make sense?
+	public final void setPricingEngine(final PricingEngine engine) {
     	if (engine==null) throw new NullPointerException(SHOULD_DEFINE_PRICING_ENGINE);
    		this.engine.deleteObserver(this);
     	this.engine = engine;

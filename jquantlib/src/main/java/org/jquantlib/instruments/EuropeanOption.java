@@ -44,7 +44,11 @@ import org.jquantlib.processes.StochasticProcess;
 
 public class EuropeanOption extends VanillaOption {
 
-	public EuropeanOption(final StochasticProcess process, final StrikedTypePayoff payoff, final Exercise exercise, final PricingEngine engine) {
+	public EuropeanOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise) {
+		this(process, payoff, exercise, null);
+	}
+
+	public EuropeanOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
 		super(process, payoff, exercise, engine);
 		if (engine!=null)
 			setPricingEngine(new AnalyticEuropeanEngine());

@@ -84,6 +84,7 @@ import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.BermudanExercise;
 import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.instruments.EuropeanOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
@@ -229,7 +230,7 @@ public class EquityOptions {
     // Black-Scholes for European
     String method = "Black-Scholes";
     europeanOption.setPricingEngine(new AnalyticEuropeanEngine());
-    System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), Double.NaN, Double.NaN } );
+    System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, Double.NaN } );
 
 //        // Barone-Adesi and Whaley approximation for American
 //        method = "Barone-Adesi/Whaley";

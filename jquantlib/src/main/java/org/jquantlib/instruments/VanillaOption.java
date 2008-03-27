@@ -28,7 +28,7 @@ public class VanillaOption extends OneAssetStrikedOption {
 
     public VanillaOption(
             final StochasticProcess process,
-            final StrikedTypePayoff payoff,
+            final Payoff payoff,
             final Exercise exercise,
             final PricingEngine engine) {
     	super(process, payoff, exercise, engine);
