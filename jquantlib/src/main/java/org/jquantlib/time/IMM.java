@@ -46,10 +46,16 @@ import org.jquantlib.util.Date;
 /**
  * Main cycle of the International %Money Market (a.k.a. %IMM) months
  * 
+ * @see http://en.wikipedia.org/wiki/International_Monetary_Market
+ * @see http://www.referenceforbusiness.com/encyclopedia/Int-Jun/International-Monetary-Market-IMM.html
+ * 
  * @author Richard Gomes
+ * @author Srinivas Hasti
  */
 public class IMM {
 
+    private static final Date ZERO_DATE = new Date();
+    
     static boolean isIMMdate(final Date date) {
     	return isIMMdate(date, true);
     }
@@ -105,7 +111,7 @@ public class IMM {
     }
 
     static Date date(final String immCode) {
-    	return date(immCode, new Date());
+    	return date(immCode, ZERO_DATE);
     }
     
 	/**
@@ -119,7 +125,7 @@ public class IMM {
         if (! (isIMMcode(immCode, false)) ) throw new IllegalArgumentException(immCode+" is not a valid IMM code");
 
         Date referenceDate;
-        if (new Date().equals(refDate)) {
+        if (ZERO_DATE.equals(refDate)) {
         	referenceDate = Settings.getInstance().getEvaluationDate();
         } else {
         	referenceDate = refDate;
@@ -143,7 +149,7 @@ public class IMM {
 
     
     static Date nextDate() {
-    	return nextDate(new Date(), true);
+    	return nextDate(ZERO_DATE, true);
     }
 
     static Date nextDate(final Date date) {
@@ -161,7 +167,7 @@ public class IMM {
      */
     static Date nextDate(final Date date, boolean mainCycle) {
         Date refDate;
-        if (new Date().equals(date)) {
+        if (ZERO_DATE.equals(date)) {
         	refDate = Settings.getInstance().getEvaluationDate();
         } else {
         	refDate = date;        
@@ -192,11 +198,11 @@ public class IMM {
     
     
     static Date nextDate(final String immCode) {
-    	return nextDate(immCode, true, new Date());
+    	return nextDate(immCode, true, ZERO_DATE);
     }
     
     static Date nextDate(final String immCode, boolean mainCycle) {
-    	return nextDate(immCode, mainCycle, new Date());
+    	return nextDate(immCode, mainCycle, ZERO_DATE);
     }
 
     
@@ -220,7 +226,7 @@ public class IMM {
 
     
     static String nextCode() {
-    	return nextCode(new Date());
+    	return nextCode(ZERO_DATE);
     }
 
     static String nextCode(final Date d) {
@@ -248,7 +254,7 @@ public class IMM {
     }
 
     static String nextCode(final String immCode, boolean mainCycle) {
-    	return nextCode(immCode, mainCycle, new Date());
+    	return nextCode(immCode, mainCycle, ZERO_DATE);
     }
 
     
