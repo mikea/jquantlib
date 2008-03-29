@@ -21,18 +21,22 @@
 package org.jquantlib.instruments;
 
 /**
- * Intermediate class for put/call payoffs
+ * Binary asset-or-nothing payoff
  */
-public abstract class TypePayoff extends Payoff {
+public class AssetOrNothingPayoff extends StrikedTypePayoff {
 
-	protected Option.Type type;
-
-	public TypePayoff(final Option.Type type) {
-		this.type = type;
+	public AssetOrNothingPayoff(final Option.Type type, final/* @Price */double strike) {
+		super(type, strike);
 	}
 
-	public final Option.Type getOptionType() {
-		return this.type;
+	public final/* @Price */double valueOf(final/* @Price */double price) {
+		if (type == Option.Type.Call) {
+			return (price - strike > 0.0 ? price : 0.0);
+		} else if (type == Option.Type.Put) {
+			return (strike - price > 0.0 ? price : 0.0);
+		} else {
+			throw new IllegalArgumentException("unknown/illegal option type");
+		}
 	}
 
 }

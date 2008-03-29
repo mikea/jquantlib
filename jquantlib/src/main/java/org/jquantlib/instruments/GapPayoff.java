@@ -20,19 +20,32 @@
 
 package org.jquantlib.instruments;
 
+
+
+
 /**
- * Intermediate class for put/call payoffs
+ * Binary cash-or-nothing payoff
  */
-public abstract class TypePayoff extends Payoff {
-
-	protected Option.Type type;
-
-	public TypePayoff(final Option.Type type) {
-		this.type = type;
+public class GapPayoff extends StrikedTypePayoff {
+	
+	protected /*@Price*/ double secondStrike;
+	
+	public GapPayoff(final Option.Type type, final /*@Price*/ double strike) {
+		super(type, strike);
+	}
+	
+	public /*@Price*/ double getSecondStrike() /* @ReadOnly */ {
+		return secondStrike;
 	}
 
-	public final Option.Type getOptionType() {
-		return this.type;
-	}
+	public final /*@Price*/ double valueOf(final /*@Price*/ double price) {
+    	if (type==Option.Type.Call) {
+    		return (price-strike >= 0.0 ? price-secondStrike : 0.0);
+    	} else if (type==Option.Type.Put) {
+    		return (strike-price >= 0.0 ? secondStrike-price : 0.0);
+    	} else {
+    		throw new IllegalArgumentException(UNKNOWN_OPTION_TYPE);
+    	}
+    }
 
 }

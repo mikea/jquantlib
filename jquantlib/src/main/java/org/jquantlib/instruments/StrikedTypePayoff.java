@@ -20,8 +20,6 @@
 
 package org.jquantlib.instruments;
 
-
-
 /**
  * Intermediate class for payoffs based on a fixed strike
  */

@@ -34,47 +34,38 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.instruments;
 
-
-
-
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 /**
  * Abstract base class for option payoffs
  */
-public abstract class Payoff {
-// FIXME Generics
-//public class Payoff : std::unary_function<Real,Real> {
-//  public:
-//    virtual ~Payoff() {}
-//    //! \name Payoff interface
-//    //@{
-//    /*! \warning This method is used for output and comparison between
-//            payoffs. It is <b>not</b> meant to be used for writing
-//            switch-on-type code.
-//    */
-//    virtual std::string name() const = 0;
-//    virtual std::string description() const = 0;
-//    virtual Real operator()(Real price) const = 0;
-	
-//    //@}
-//    //! \name Visitability
-//    //@{
-//    virtual void accept(AcyclicVisitor&);
-//    //@}
+public abstract class Payoff implements Visitable<Payoff> {
 
-	protected abstract /*@Price*/ double valueOf(/*@Price*/ double price);
+	private static final String NULL_VISITOR = "null payoff visitor";
+	protected static final String UNKNOWN_OPTION_TYPE = "unknown option type";
+
+	// FIXME code review
+
+	// This method is not needed as this.getClass().getName() can be used
+	// virtual std::string name() const = 0;
 	
-// FIXME ElementVisitor
-//	protected void accept(final ElementVisitor<Payoff> v) {
-//		if (v != null) {
-//			v.visit(this);
-//		} else {
-//			throw new IllegalArgumentException("not a payoff visitor");
-//		}
-//	}
+	// This method is not needed as this.toString(0 can be used
+	// virtual std::string description() const = 0;
+	
+
+	protected abstract/* @Price */double valueOf(/* @Price */double price);
+
+	public final void accept(final Visitor<Payoff> v) {
+		if (v != null) {
+			v.visit(this);
+		} else {
+			throw new NullPointerException(NULL_VISITOR);
+		}
+	}
 
 }

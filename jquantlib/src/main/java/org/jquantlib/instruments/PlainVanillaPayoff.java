@@ -20,8 +20,6 @@
 
 package org.jquantlib.instruments;
 
-
-
 /**
  * Plain-vanilla payoff
  */
@@ -30,25 +28,14 @@ public class PlainVanillaPayoff extends StrikedTypePayoff {
 		super(type, strike);
 	}
 	
-    public final /*@Price*/ double valueOf(final /*@Price*/ double price) {
-    	if (type_==Option.Type.Call) {
+    public final/*@Price*/double valueOf(final /*@Price*/ double price) {
+    	if (type==Option.Type.Call) {
     		return Math.max(price - strike, 0.0);
-    	} else if (type_==Option.Type.Put) {
+    	} else if (type==Option.Type.Put) {
     		return Math.max(strike - price, 0.0);
     	} else {
-    		throw new IllegalArgumentException("unknown/illegal option type");
+    		throw new IllegalArgumentException(UNKNOWN_OPTION_TYPE);
     	}
     }
-
-	
-// FIXME ElementVisitor    
-//    @Override
-//	protected void accept(final ElementVisitor<Payoff> v) {
-//		if (v != null) {
-//			v.visit(this);
-//		} else {
-//			super.accept(v);
-//		}
-//	}
 
 }
