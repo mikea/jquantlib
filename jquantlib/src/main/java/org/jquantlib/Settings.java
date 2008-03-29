@@ -22,15 +22,27 @@ package org.jquantlib;
 
 import org.jquantlib.util.Date;
 
+// FIXME comment this class
 public class Settings {
 	
-	static private Settings singleton = new Settings();
+	static private String lock = "lock";
+	static private Settings singleton = null;
 	
+	/**
+	 * Returns a singleton of this class
+	 * 
+	 * @return a singleton of this class
+	 * @see http://www.ibm.com/developerworks/java/library/j-dcl.html
+	 */
 	static public Settings getInstance() {
-	    //@see http://www.ibm.com/developerworks/java/library/j-dcl.html
-		//if (singleton==null) {
-		//	singleton = new Settings();
-		//}
+		if (singleton==null) {
+			synchronized (lock) {
+				if (singleton==null) {
+					singleton = new Settings();					
+				}
+			}
+			
+		}
 		return singleton; 
 	}
 
