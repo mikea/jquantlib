@@ -24,29 +24,30 @@ package org.jquantlib.math;
  *  Follows somewhat the advice of Knuth on checking for floating-point
  * equality. The closeness relationship is:
  * <p>{@latex[
-   \mathrm{close}(x,y,n) \equiv |x-y| \leq \varepsilon |x|
-                         \wedge |x-y| \leq \varepsilon |y|
-   } 
+ * \mathrm{close}(x,y,n) \equiv |x-y| \leq \varepsilon |x|
+ *                       \wedge |x-y| \leq \varepsilon |y|
+ * } 
  * <p>where {@latex$ \varepsilon} is {@latex$ n} times the machine accuracy;
  * <p>{@latex$ n} equals 42 if not given.
  */
+//FIXME: code review
 final public class Closeness {
-	static public final double epsilon = 1E-128;
+	static public final double epsilon = 1E-128 /* @ReadOnly */;
 	
-	static public final boolean close(double x, double y) {
+	static public final boolean close(double x, double y) /* @ReadOnly */ {
 	    return close(x,y,42);
 	}
 	
-	static public final boolean close(double x, double y, /*@Positive*/ int n) {
+	static public final boolean close(double x, double y, /*@Positive*/ int n) /* @ReadOnly */ {
 	    double tolerance = n * epsilon;
 	    return (x>=y-tolerance && x<=y+tolerance);
 	}
 	
-	static public final boolean close_enough(double x, double y) {
+	static public final boolean close_enough(double x, double y) /* @ReadOnly */ {
 	    return close_enough(x,y,42);
 	}
 	
-	static public final boolean close_enough(double x, double y, /*@Positive*/ int n) {
+	static public final boolean close_enough(double x, double y, /*@Positive*/ int n) /* @ReadOnly */ {
 	    double tolerance = n * epsilon;
 	    return (x>=y-tolerance || x<=y+tolerance);
 	}

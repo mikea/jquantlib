@@ -342,11 +342,11 @@
               <reportSet>
                   <id>uml</id>
                   <configuration>
-                      <doclet>gr.spinellis.umlgraph.doclet.UmlGraph</doclet>
+                      <doclet>org.umlgraph.doclet.UmlGraph</doclet>
                       <docletArtifact>
-			              <groupId>gr.spinellis</groupId>
-			              <artifactId>UmlGraph</artifactId>
-                          <version>4.9.0</version>
+                          <groupId>gr.spinellis</groupId>
+                          <artifactId>UmlGraph</artifactId>
+                          <version>5.0</version>
                       </docletArtifact>
 			          <additionalparam>
 			              -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify

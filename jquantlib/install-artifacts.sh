@@ -26,9 +26,10 @@ cat << EOD
 #external_free com.sun.java resources 1.7.0 (none) jar          ${HOME}/artifacts/resources-1.7.0_ea.jar 
 #external_free edu.mit.csail.checkers checkers 0.1.0 (none) jar ${HOME}/artifacts/checkers-0.1.0.jar
 #external_free gr.spinellis UmlGraph 4.9.0 (none) jar           ${HOME}/artifacts/UmlGraph-4.9.0.jar
+external_free gr.spinellis UmlGraph 5.0 (none) jar           ${HOME}/artifacts/UmlGraph-5.0.jar
 #external_free net.sf.latextaglet latextaglet 0.1.0 (none) jar  ${HOME}/artifacts/latextaglet-0.1.0.jar
 #external_non_free javax.transaction jta 1.0.1B (none) jar	${HOME}/artifacts/jta-1_0_1B.jar
-external_non_free com.oracle.toplink toplink 10.1.3 (none) jar	${HOME}/artifacts/toplink-essentials.jar
+#external_non_free com.oracle.toplink toplink 10.1.3 (none) jar	${HOME}/artifacts/toplink-essentials.jar
 EOD
 }
 
