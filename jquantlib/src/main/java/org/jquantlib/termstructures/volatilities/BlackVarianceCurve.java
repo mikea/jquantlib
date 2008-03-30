@@ -57,9 +57,8 @@ import org.jquantlib.util.Date;
  * 
  * For strike dependence, see BlackVarianceSurface.
  * 
- * @todo check time extrapolation
- * 
  */
+// TODO check time extrapolation
 public class BlackVarianceCurve extends BlackVarianceTermStructure {
 
 	private DayCounter dayCounter;

@@ -53,9 +53,8 @@ import org.jquantlib.util.Date;
  * @see <a
  *      href="http://www.math.nyu.edu/fellows_fin_math/gatheral/Lecture1_Fall02.pdf">This
  *      article</a>
- * 
- * @todo this class is untested, probably unreliable.
  */
+// TODO: this class is untested, probably unreliable.
 public class LocalVolSurface extends LocalVolTermStructure {
 
 	private BlackVolTermStructure blackTS_;

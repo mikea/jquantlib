@@ -27,11 +27,9 @@ import org.jquantlib.util.Date;
 /**
  * A Bermudan option can only be exercised at a set of fixed dates.
  *
- * @todo it would be nice to have a way for making a Bermudan with
- * one exercise date equivalent to an European
- * 
  * @author Richard Gomes
  */
+// TODO: it would be nice to have a way for making a Bermudan with one exercise date equivalent to an European
 public class BermudanExercise extends EarlyExercise {
 
 // XXX	
