@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jquantlib</groupId>
   <artifactId>jquantlib</artifactId>
@@ -6,6 +7,11 @@
   <version>0.0.2-SNAPSHOT</version>
   <description>JQuantLib aims to provide a free, open-source and comprehensive framework for quantitative finance, written in Java. See also: http://www.jquantlib.org/</description>
   <url>${maven.deploy.site.url}</url>
+  
+  <prerequisites> 
+	  <maven>2.0.8</maven> 
+  </prerequisites>
+  
   <issueManagement>
     <system>SourceForge</system>
     <url>http://sourceforge.net/tracker/?group_id=205911</url>
@@ -45,16 +51,16 @@
   <contributors>
     <contributor>
       <name>Joerg Brunsmann</name>
-      <email></email>
-      <url></url>
-      <organization></organization>
-      <organizationUrl></organizationUrl>
+      <email/>
+      <url/>
+      <organization/>
+      <organizationUrl/>
       <roles>
         <role>tester</role>
       </roles>
       <timezone>+3</timezone>
       <properties>
-        <gtalk></gtalk>
+        <gtalk/>
       </properties>
     </contributor>
   </contributors>
@@ -209,6 +215,7 @@
       </plugin>
     </plugins>
   </build>
+  
   <profiles>
     <profile>
       <id>[mode=debug]</id>
@@ -278,43 +285,43 @@
   </profiles>
   <repositories>
     <repository>
-      <releases />
-      <snapshots />
+      <releases/>
+      <snapshots/>
       <id>inhouse</id>
       <name>Inhouse Release Repository</name>
       <url>${maven.deploy.repository.url}/inhouse</url>
     </repository>
     <repository>
-      <releases />
-      <snapshots />
+      <releases/>
+      <snapshots/>
       <id>inhouse_snapshot</id>
       <name>Inhouse Snapshot Repository</name>
       <url>${maven.deploy.repository.url}/inhouse_snapshot</url>
     </repository>
     <repository>
-      <releases />
-      <snapshots />
+      <releases/>
+      <snapshots/>
       <id>external_free</id>
       <name>External Free Repository</name>
       <url>${maven.deploy.repository.url}/external_free</url>
     </repository>
     <repository>
-      <releases />
-      <snapshots />
+      <releases/>
+      <snapshots/>
       <id>external_non_free</id>
       <name>External Non-Free Repository</name>
       <url>${maven.deploy.repository.url}/external_non_free</url>
     </repository>
     <repository>
-      <releases />
-      <snapshots />
+      <releases/>
+      <snapshots/>
       <id>central</id>
       <name>Central Maven2 repository</name>
       <url>http://repo1.maven.org/maven2</url>
     </repository>
     <repository>
-      <releases />
-      <snapshots />
+      <releases/>
+      <snapshots/>
       <id>ibiblio</id>
       <name>Ibiblio Maven2 repository</name>
       <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
@@ -330,7 +337,7 @@
       <releases>
         <enabled>false</enabled>
       </releases>
-      <snapshots />
+      <snapshots/>
       <id>apache.org</id>
       <name>Maven Plugin Snapshots</name>
       <url>http://people.apache.org/repo/m2-snapshot-repository</url>
@@ -380,19 +387,38 @@
                     </docletArtifact>
                     -->
 
-                    <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
-                    <docletArtifact>
-                        <groupId>gr.spinellis</groupId>
-                        <artifactId>UmlGraph</artifactId>
-                        <version>4.9.0</version>
-                    </docletArtifact>
-
-                    <verbose>true</verbose>
+                    <show>private</show>
+                    <use>true</use>
+                    <splitindex>true</splitindex>
+                    <stylesheet>maven</stylesheet>
                     <encoding>UTF-8</encoding>
                     <docencoding>UTF-8</docencoding>
                     <charset>UTF-8</charset>
-                    <use>true</use>
-                    <splitindex>true</splitindex>
+                    <verbose>true</verbose>
+                    
+                    <windowtitle>JQuantLib v${project.version} API Javadocs</windowtitle>
+                    
+                    <header>
+                        
+	                        &lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font>
+                        
+                    </header>
+                    
+                    <bottom><![CDATA[
+                        
+	                        <font size="-1">
+						    <a href="http://sourceforge.net/tracker/?group_id=205911">
+						    Submit a bug or feature</a>
+						    <br/><br/>
+						    JQuantLib is free software: you can redistribute it and/or modify it
+						    under the terms of the QuantLib license.  You should have received a
+						    copy of the license along with this program; if not, please email
+						    mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
+						    <a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
+						    </font>
+					    
+					]]></bottom>
+
 		            <links>
 			            <link>http://java.sun.com/j2se/${java.src.version}/docs/api/</link>
 			            <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
@@ -400,18 +426,12 @@
                         <link>http://junit.sourceforge.net/javadoc/</link>
 		            </links>
 
-		            <bottom>
-		              <![CDATA[
-							<font size="-1">
-							<a href="http://sourceforge.net/tracker/?group_id=205911">
-							Submit a bug or feature</a><br><br>
-							JQuantLib is free software: you can redistribute it and/or modify it
-							under the terms of the QuantLib license.  You should have received a
-							copy of the license along with this program; if not, please email
-							mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
-							<a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
-							</font>]]>
-		            </bottom>
+                    <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
+                    <docletArtifact>
+                        <groupId>gr.spinellis</groupId>
+                        <artifactId>UmlGraph</artifactId>
+                        <version>4.9.0</version>
+                    </docletArtifact>
 
                     <additionalparam>
                         -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
@@ -425,11 +445,26 @@
                 </configuration>
             </plugin>   
 
-
 		    <plugin>
 		      <artifactId>maven-jxr-plugin</artifactId>
 		    </plugin>
 		
+            <!-- plugin> 
+				<groupId>org.codehaus.mojo</groupId> 
+				<artifactId>findbugs-maven-plugin</artifactId> 
+				<version>1.1.1</version> 
+			</plugin -->		
+
+			<!-- plugin> 
+				<artifactId>maven-surefire-report-plugin</artifactId> 
+				<version>2.3</version> 
+			</plugin --> 
+			
+			<plugin> 
+				<artifactId>maven-checkstyle-plugin</artifactId> 
+				<version>2.1</version> 
+			</plugin>
+
 		    <plugin>
 		      <groupId>org.codehaus.mojo</groupId>
 		      <artifactId>taglist-maven-plugin</artifactId>

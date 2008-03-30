@@ -49,25 +49,25 @@ public class OneAssetStrikedOption extends OneAssetOption {
     	super(process, payoff, exercise, engine);
     }
     
-    
-    /* @Price */ double getStrikeSensitivity() /* @ReadOnly */ {
+    public /* @Price */ double getStrikeSensitivity() /* @ReadOnly */ {
         calculate();
         if (strikeSensitivity == Double.NaN) throw new ArithmeticException("strike sensitivity not provided");
         return strikeSensitivity;
     }
         
-        
+    @Override
+	protected void setupExpired() /* @ReadOnly */ {
+		super.setupExpired();
+		strikeSensitivity = 0.0;
+	}
+	
+    @Override    
     public void setupArguments(final Arguments args) /* @ReadOnly */ {
 		super.setupArguments(args);
 		OneAssetOptionArguments moreArgs = (OneAssetOptionArguments)args;
         moreArgs.payoff = payoff;
 	}
 
-	protected void setupExpired() /* @ReadOnly */ {
-		super.setupExpired();
-		strikeSensitivity = 0.0;
-	}
-	
 	/**
      * @note This method accesses directly fields from base class {@link OneAssetOption.Results}.
      * These fields are exposed by {@link Instrument.InstrumentResults} which is the base class of {@link OneAssetOption.Results}.
@@ -76,6 +76,7 @@ public class OneAssetStrikedOption extends OneAssetOption {
      * 
      * @author Richard Gomes
 	 */
+    @Override    
 	public void fetchResults(final Results results) /* @ReadOnly */ {
 		super.fetchResults(results);
         final MoreGreeks moreGreeks = (MoreGreeks) results;

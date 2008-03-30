@@ -155,10 +155,10 @@ public class OneAssetOption extends Option {
     }
 
     /**
-     * @Note Currently, this method returns the Black-Scholes implied volatility. 
+     * Currently, this method returns the Black-Scholes implied volatility. 
      * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
      *  
-     * @Note Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
+     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
      * In these cases the calculation can fail and the result (if any) is almost meaningless.
      * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
      * a target value lower than the intrinsic value in the case of American options.
