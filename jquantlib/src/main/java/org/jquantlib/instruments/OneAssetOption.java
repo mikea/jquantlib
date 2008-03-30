@@ -21,6 +21,8 @@
 package org.jquantlib.instruments;
 
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.math.AbstractSolver1D;
+import org.jquantlib.math.BrentSolver1D;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
@@ -148,9 +150,9 @@ public class OneAssetOption extends Option {
 
         /* @Volatility */ double guess = (minVol+maxVol)/2.0;
         ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(engine, targetValue);
-        Brent solver = new Brent();
+        AbstractSolver1D solver = new BrentSolver1D(); // FIXME: (integration review)
         solver.setMaxEvaluations(maxEvaluations);
-        /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
+        /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol); // FIXME: (integration review)
         return result;
     }
 

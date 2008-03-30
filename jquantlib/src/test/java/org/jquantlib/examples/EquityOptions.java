@@ -215,8 +215,8 @@ public class EquityOptions {
 
     // options
     VanillaOption europeanOption = new EuropeanOption(stochasticProcess, payoff, europeanExercise);
-    VanillaOption bermudanOption = new BermudanOption(stochasticProcess, payoff, bermudanExercise);
-    VanillaOption americanOption = new AmericanOption(stochasticProcess, payoff, americanExercise);
+    // VanillaOption bermudanOption = new BermudanOption(stochasticProcess, payoff, bermudanExercise);
+    // VanillaOption americanOption = new AmericanOption(stochasticProcess, payoff, americanExercise);
 
     // define line formatting
     //              "         0         1         2         3         4         5         6         7         8"

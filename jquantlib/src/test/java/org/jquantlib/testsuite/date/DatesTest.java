@@ -19,12 +19,13 @@
  */
 package org.jquantlib.testsuite.date;
 
+import static org.junit.Assert.assertFalse;
+
 import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Test various Dates
