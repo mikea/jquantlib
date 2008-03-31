@@ -211,10 +211,10 @@ public class Date implements Observable {
      * Creates a null Date
      */
     public Date() {
-    	this.value = 0;
+    	this(0);
     }
 
-    private Date(int value) {
+    public Date(int value) {
     	this.value = value;
     }
 
