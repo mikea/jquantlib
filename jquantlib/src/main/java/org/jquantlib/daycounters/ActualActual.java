@@ -31,7 +31,7 @@ import org.jquantlib.util.Date;
  */
 // TODO: Is this the best way if implementing ?
 // We could do it with a singletons to avoid multiple object creations
-// TODO: finish and test
+// TODO: finish,clean and test
 public class ActualActual extends DayCounterImpl {
     
     public static enum Convention {
