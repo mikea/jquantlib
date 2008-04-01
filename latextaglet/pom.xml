@@ -100,9 +100,11 @@
         <configuration>
           <source>${maven.compile.source}</source>
           <target>${maven.compile.target}</target>
+		  <!-- 
           <compilerArguments>
             <bootclasspath>${settings.localRepository}/com/sun/rt/${maven.compile.runtime}/rt-${maven.compile.runtime}.jar</bootclasspath>
           </compilerArguments>
+          -->
         </configuration>
       </plugin>
       <plugin>
@@ -116,6 +118,7 @@
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               <addExtensions>true</addExtensions>
             </manifest>
+            <!-- 
             <manifestEntries>
               <Build-Jdk>${maven.compile.runtime}</Build-Jdk>
               <Implementation-Build>${buildNumber}</Implementation-Build>
@@ -123,6 +126,7 @@
               <App-Mode>${profile.manifest.app.mode}</App-Mode>
               <App-URL>${profile.manifest.app.url}</App-URL>
             </manifestEntries>
+            -->
           </archive>
         </configuration>
       </plugin>
@@ -139,13 +143,15 @@
             <manifest>
               <mainClass>${maven.jar.manifest.mainClass}</mainClass>
             </manifest>
-            <manifestEntries-->
+            <!-- 
+            <manifestEntries>
               <Build-Jdk>${maven.compile.runtime}</Build-Jdk>
               <Implementation-Build>${buildNumber}</Implementation-Build>
               <App-Realm>${profile.manifest.app.realm}</App-Realm>
               <App-Mode>${profile.manifest.app.mode}</App-Mode>
               <App-URL>${profile.manifest.app.url}</App-URL>
-            </manifestEntries-->
+            </manifestEntries>
+            -->
           </archive>
         </configuration>
       </plugin>
@@ -159,7 +165,9 @@
             <echo>project.version=${project.version}</echo>
             <echo>maven.compile.source=${maven.compile.source}</echo>
             <echo>maven.compile.target=${maven.compile.target}</echo>
+            <!-- 
             <echo>maven.compile.runtime=${maven.compile.runtime}</echo>
+            -->
             <echo>maven.jar.manifest.mainClass=${maven.jar.manifest.mainClass}</echo>
             <echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo>
             <echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>
@@ -169,63 +177,19 @@
       </plugin>
     </plugins>
   </build>
+
   <profiles>
     <profile>
-      <id>[jre=1.6]</id>
+      <id>[mode=debug]</id>
       <activation>
         <activeByDefault>true</activeByDefault>
         <property>
-          <name>jre</name>
-          <value>1.6</value>
+          <name>mode</name>
+          <value>debug</value>
         </property>
       </activation>
       <properties>
-        <maven.compile.runtime>1.6.0_2</maven.compile.runtime>
-        <maven.compile.source>1.5</maven.compile.source>
-        <maven.compile.target>1.5</maven.compile.target>
-      </properties>
-    </profile>
-    <profile>
-      <id>[access=external]</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>access</name>
-          <value>external</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant</maven.scm.developerConnection>
-        <maven.scm.connection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant</maven.scm.connection>
-        <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant</maven.scm.url>
-        <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites</maven.deploy.site.url>
-        <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
-        <maven.scm.root.project>jquant</maven.scm.root.project>
-      </properties>
-    </profile>
-    <profile>
-      <id>[revision=checked]</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>revision</name>
-          <value>checked</value>
-        </property>
-      </activation>
-      <properties>
-        <maven.buildNumber.doCheck>true</maven.buildNumber.doCheck>
-        <maven.buildNumber.doUpdate>true</maven.buildNumber.doUpdate>
-      </properties>
-    </profile>
-    <profile>
-      <id>[revision=unchecked]</id>
-      <activation>
-        <property>
-          <name>revision</name>
-          <value>unchecked</value>
-        </property>
-      </activation>
-      <properties>
+        <profile.manifest.app.mode>debug</profile.manifest.app.mode>
         <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
         <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
       </properties>
@@ -281,6 +245,7 @@
       </properties>
     </profile>
   </profiles>
+
   <repositories>
     <repository>
       <releases />
@@ -377,87 +342,105 @@
       <version>4.2.12</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
-      <groupId>com.sun</groupId>
-      <artifactId>tools</artifactId>
-      <version>1.6.0_02</version>
+          <groupId>com.sun</groupId>
+          <artifactId>tools</artifactId>
+          <version>1.4.2</version>
+          <scope>system</scope>
+          <systemPath>${java.home}/../lib/tools.jar</systemPath>
     </dependency>
+
+	<!--
+	***** STILL TESTING *****
+	
+	Note: This is a 'self-dependency'
+	This dependency can be resolved without problems
+	once the first version of *this* artifact is deployed.
+
+    <dependency>
+		<groupId>net.sf.latextaglet</groupId>
+		<artifactId>latextaglet</artifactId>
+		<version>0.1.0</version>
+    </dependency>
+	-->
+       
   </dependencies>
   <reporting>
     <plugins>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <!-- LaTeX taglet -->
-          <!--
-          <taglet>net.sf.latextaglet.LaTeXBlockEquationTaglet</taglet>
-          <taglet>net.sf.latextaglet.LaTeXEquationTaglet</taglet>
-          <taglet>net.sf.latextaglet.LaTeXInlineTaglet</taglet>
-          <tagletpath>/opt/JavaIDE/lib/latextaglet-0.1.0.jar</tagletpath>
-          -->
-          <taglets>  
-            <taglet>
-              <tagletClass>net.sf.latextaglet.LaTeXBlockEquationTaglet</tagletClass>
-              <tagletArtifact>
-                <groupId>net.sf.latextaglet</groupId>
-                <artifactId>latextaglet</artifactId>
-                <version>0.1.0</version>
-              </tagletArtifact>
-            </taglet>
-            <taglet>
-              <tagletClass>net.sf.latextaglet.LaTeXEquationTaglet</tagletClass>
-              <tagletArtifact>
-                <groupId>net.sf.latextaglet</groupId>
-                <artifactId>latextaglet</artifactId>
-                <version>0.1.0</version>
-              </tagletArtifact>
-            </taglet>
-            <taglet>
-              <tagletClass>net.sf.latextaglet.LaTeXInlineTaglet</tagletClass>
-              <tagletArtifact>
-                <groupId>net.sf.latextaglet</groupId>
-                <artifactId>latextaglet</artifactId>
-                <version>0.1.0</version>
-              </tagletArtifact>
-            </taglet>
-          </taglets>
-            
-          <!--
-          * 
-          * NOTE: LaTeXTaglet and UmlGraph dont like to work together.
-          * For this reason, UmlGraph was disabled here.
-          * In order to generate documentation, install LaTeXTaglet and it's
-          * dependencies into your Linux box and type:
-          *     gendocs latextaglet
-          *
-          * In order to publish into our website, type:
-          *     deploydocs latextaglet
-          *
-          * Notice that the deployment is a local procedure. It's not done over 
-          * the web.
-          *
-           -->
-          
-          <!-- UmlGraph doclet -->
-          <!-- 
-          <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
-          <docletPath>/opt/JavaIDE/lib/UmlGraph-4.9.jar</docletPath>
-          -->
-          <!-- 
-          <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
-          <docletArtifact>
-            <groupId>gr.spinellis</groupId>
-            <artifactId>UmlGraph</artifactId>
-            <version>4.9.0</version>
-          </docletArtifact>
-          <additionalparam>
-                -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
-                -postfixpackage -nodefontsize 9
-                -nodefontpackagesize 7
-          </additionalparam>
-          -->
-        </configuration>
-      </plugin>
+    
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+
+                    <show>private</show>
+                    <use>true</use>
+                    <splitindex>true</splitindex>
+                    <stylesheet>maven</stylesheet>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                    <charset>UTF-8</charset>
+                    <verbose>true</verbose>
+                    
+                    <windowtitle>LaTeXtaglet v${project.version} API Javadocs</windowtitle>
+                    
+                    <header>
+                        
+	                        &lt;b>LaTeXtaglet &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font>
+                        
+                    </header>
+                    
+                    <bottom><![CDATA[
+                        
+	                        <font size="-1">
+						    <a href="http://sourceforge.net/tracker/?group_id=205911">
+						    Submit a bug or feature</a>
+						    <br/><br/>
+						    LaTeXtaglet is free software: you can redistribute it and/or modify it
+						    under the terms of the QuantLib license.  You should have received a
+						    copy of the license along with this program; if not, please email
+						    mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
+						    <a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
+						    </font>
+					    
+					]]></bottom>
+
+		            <links>
+			            <link>http://java.sun.com/j2se/${java.src.version}/docs/api/</link>
+			            <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+			            <link>http://logging.apache.org/log4j/docs/api/</link>
+                        <link>http://junit.sourceforge.net/javadoc/</link>
+		            </links>
+
+                    <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
+                    <docletArtifact>
+                        <groupId>gr.spinellis</groupId>
+                        <artifactId>UmlGraph</artifactId>
+                        <version>4.9.0</version>
+                    </docletArtifact>
+
+                    <!-- UMLGraph-5.0 not working at the moment 
+                    <doclet>org.umlgraph.doclet.UmlGraph</doclet>
+                    <docletArtifact>
+                        <groupId>gr.spinellis</groupId>
+                        <artifactId>UmlGraph</artifactId>
+                        <version>5.0</version>
+                    </docletArtifact>
+                    -->
+
+                    <additionalparam>
+                        -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
+                        -postfixpackage -nodefontsize 9
+                        -nodefontpackagesize 7
+                        -tagletpath ${HOME}/.m2/repository/net/sf/latextaglet/latextaglet/0.1.0/latextaglet-0.1.0.jar
+                        -taglet net.sf.latextaglet.LaTeXBlockEquationTaglet
+                        -taglet net.sf.latextaglet.LaTeXEquationTaglet
+                        -taglet net.sf.latextaglet.LaTeXInlineTaglet
+                    </additionalparam>
+                </configuration>
+            </plugin>   
+
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
       </plugin>
@@ -520,28 +503,27 @@
       <url>dav:${maven.deploy.site.url}/${project.artifactId}</url>
     </site>
   </distributionManagement>
-  <properties>
-    <maven.javadoc.debug>yes</maven.javadoc.debug>
-    <!-- maven.javadoc.taglets>net.sf.latextaglet.LaTeXInlineTaglet,net.sf.latextaglet.LaTeXEquationTaglet,net.sf.latextaglet.LaTeXInlineTaglet</maven.javadoc.taglets>
-    <maven.javadoc.tagletpath>/opt/JavaIDE/lib/latextaglet-0.1.0.jar</maven.javadoc.tagletpath-->
 
-    <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant</maven.scm.developerConnection>
-    <maven.scm.connection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant</maven.scm.connection>
-    <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant</maven.scm.url>
-    <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
-    <maven.compile.source>1.5</maven.compile.source>
-    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
-    <maven.buildNumber.doCheck>true</maven.buildNumber.doCheck>
+  <properties>
     <profile.manifest.app.realm>default</profile.manifest.app.realm>
-    <maven.jar.index>false</maven.jar.index>
-    <maven.buildNumber.doUpdate>true</maven.buildNumber.doUpdate>
-    <maven.compile.runtime>1.6.0_02</maven.compile.runtime>
-    <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites</maven.deploy.site.url>
-    <maven.scm.root.project>latextaglet</maven.scm.root.project>
     <profile.manifest.app.url>${project.url}</profile.manifest.app.url>
-    <maven.compile.target>1.5</maven.compile.target>
-    <profile.manifest.app.mode>dev</profile.manifest.app.mode>
+    <profile.manifest.app.mode>debug</profile.manifest.app.mode>
+    <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.developerConnection>
+    <maven.scm.connection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.connection>
+    <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.url>
+    <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
+    <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
+    <maven.compile.source>1.6</maven.compile.source>
+    <maven.compile.target>1.6</maven.compile.target>
+    <!--
+    <maven.compile.runtime>1.6.0_03</maven.compile.runtime>
+    -->
+    <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
+    <maven.jar.index>false</maven.jar.index>
+    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
+    <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites</maven.deploy.site.url>
   </properties>
+  
 </project>
 
 
