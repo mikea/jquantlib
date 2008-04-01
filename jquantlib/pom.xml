@@ -9,7 +9,7 @@
   <url>${maven.deploy.site.url}</url>
   
   <prerequisites> 
-	  <maven>2.0.8</maven> 
+	  <maven>2.0.8</maven>
   </prerequisites>
   
   <issueManagement>
@@ -146,9 +146,11 @@
         <configuration>
           <source>${maven.compile.source}</source>
           <target>${maven.compile.target}</target>
+		  <!--
           <compilerArguments>
             <bootclasspath>${settings.localRepository}/com/sun/rt/${maven.compile.runtime}/rt-${maven.compile.runtime}.jar</bootclasspath>
           </compilerArguments>
+          -->
         </configuration>
       </plugin>
       <plugin>
@@ -162,6 +164,7 @@
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               <addExtensions>true</addExtensions>
             </manifest>
+            <!--
             <manifestEntries>
               <Build-Jdk>${maven.compile.runtime}</Build-Jdk>
               <Implementation-Build>${buildNumber}</Implementation-Build>
@@ -169,6 +172,7 @@
               <App-Mode>${profile.manifest.app.mode}</App-Mode>
               <App-URL>${profile.manifest.app.url}</App-URL>
             </manifestEntries>
+            -->
           </archive>
         </configuration>
       </plugin>
@@ -185,13 +189,15 @@
             <manifest>
               <mainClass>${maven.jar.manifest.mainClass}</mainClass>
             </manifest>
-            <manifestEntries-->
+            <!--
+            <manifestEntries>
               <Build-Jdk>${maven.compile.runtime}</Build-Jdk>
               <Implementation-Build>${buildNumber}</Implementation-Build>
               <App-Realm>${profile.manifest.app.realm}</App-Realm>
               <App-Mode>${profile.manifest.app.mode}</App-Mode>
               <App-URL>${profile.manifest.app.url}</App-URL>
-            </manifestEntries-->
+            </manifestEntries>
+            -->
           </archive>
         </configuration>
       </plugin>
@@ -205,7 +211,9 @@
             <echo>project.version=${project.version}</echo>
             <echo>maven.compile.source=${maven.compile.source}</echo>
             <echo>maven.compile.target=${maven.compile.target}</echo>
+            <!-- 
             <echo>maven.compile.runtime=${maven.compile.runtime}</echo>
+            -->
             <echo>maven.jar.manifest.mainClass=${maven.jar.manifest.mainClass}</echo>
             <echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo>
             <echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>
@@ -378,15 +386,6 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
 
-                    <!--
-                    <doclet>org.umlgraph.doclet.UmlGraph</doclet>
-                    <docletArtifact>
-                        <groupId>gr.spinellis</groupId>
-                        <artifactId>UmlGraph</artifactId>
-                        <version>5.0</version>
-                    </docletArtifact>
-                    -->
-
                     <show>private</show>
                     <use>true</use>
                     <splitindex>true</splitindex>
@@ -432,6 +431,15 @@
                         <artifactId>UmlGraph</artifactId>
                         <version>4.9.0</version>
                     </docletArtifact>
+
+                    <!-- UMLGraph-5.0 not working at the moment 
+                    <doclet>org.umlgraph.doclet.UmlGraph</doclet>
+                    <docletArtifact>
+                        <groupId>gr.spinellis</groupId>
+                        <artifactId>UmlGraph</artifactId>
+                        <version>5.0</version>
+                    </docletArtifact>
+                    -->
 
                     <additionalparam>
                         -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
@@ -537,7 +545,8 @@
     <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.developerConnection>
     <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
     <maven.scm.connection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.connection>
-    <maven.compile.source>1.5</maven.compile.source>
+    <maven.compile.source>1.6</maven.compile.source>
+    <maven.compile.target>1.6</maven.compile.target>
     <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
     <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib</maven.scm.url>
     <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
@@ -545,9 +554,10 @@
     <maven.jar.index>false</maven.jar.index>
     <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
     <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites</maven.deploy.site.url>
+    <!--
     <maven.compile.runtime>1.6.0_03</maven.compile.runtime>
+    -->
     <profile.manifest.app.url>${project.url}</profile.manifest.app.url>
-    <maven.compile.target>1.5</maven.compile.target>
     <profile.manifest.app.mode>debug</profile.manifest.app.mode>
   </properties>
 </project>
