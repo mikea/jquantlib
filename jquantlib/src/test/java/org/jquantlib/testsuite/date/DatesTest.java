@@ -95,7 +95,7 @@ public class DatesTest {
     }
 
     @Test
-    public void testConsistency() {
+    public void consistencyCheck() {
 
         System.out.println("Testing dates...");
 
