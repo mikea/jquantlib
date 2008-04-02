@@ -7,6 +7,11 @@
   <version>0.1.0</version>
   <description>LaTeXTaglet is a taglet which adds equations to your JavaDocs.</description>
   <url>${maven.deploy.site.url}/${project.artifactId}</url>
+  
+  <prerequisites> 
+      <maven>2.0.8</maven>
+  </prerequisites>
+  
   <issueManagement>
     <system>SourceForge</system>
     <url>http://sourceforge.net/tracker/?group_id=205911</url>
