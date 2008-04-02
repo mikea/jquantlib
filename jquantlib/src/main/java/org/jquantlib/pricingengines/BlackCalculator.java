@@ -103,10 +103,10 @@ public class BlackCalculator /* <T extends Payoff> */ {
 				D1 = Math.log(forward / strike) / stdDev + 0.5 * stdDev;
 				D2 = D1 - stdDev;
 				CumulativeNormalDistribution f = new CumulativeNormalDistribution();
-				cum_d1 = f.evalaute(D1); // FIXME: (integration review)
-				cum_d2 = f.evalaute(D2); // FIXME: (integration review)
-				n_d1 = f.derivative(D1); // FIXME: (integration review)
-				n_d2 = f.derivative(D2); // FIXME: (integration review)
+				cum_d1 = f.evaluate(D1);
+				cum_d2 = f.evaluate(D2);
+				n_d1 = f.derivative(D1);
+				n_d2 = f.derivative(D2);
 			}
 		} else {
 			if (forward > strike) {

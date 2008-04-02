@@ -39,10 +39,10 @@ public class TestCumulativeNormalDistribution extends TestCase {
 		for(int i=0;i<testvalues.length;i++){
 			double z = testvalues[i][0];
 			double expected = testvalues[i][1];
-			double computed = cnd.evalaute(z);
+			double computed = cnd.evaluate(z);
 			double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
 			assertEquals(expected, computed,tolerance);
-			assertEquals(1.0, computed+ cnd.evalaute(-z),tolerance);
+			assertEquals(1.0, computed+ cnd.evaluate(-z),tolerance);
 			
 		}
 	}
@@ -51,13 +51,13 @@ public class TestCumulativeNormalDistribution extends TestCase {
 		double z = -40;
 		CumulativeNormalDistribution cnd = new CumulativeNormalDistribution();
 		
-		assertEquals(0, cnd.evalaute(z),1.0e-15);
+		assertEquals(0, cnd.evaluate(z),1.0e-15);
 		z = -10;
-		assertEquals(0, cnd.evalaute(z),1.0e-15);
+		assertEquals(0, cnd.evaluate(z),1.0e-15);
 		z = 10;
-		assertEquals(1.0, cnd.evalaute(z),1.0e-15);
+		assertEquals(1.0, cnd.evaluate(z),1.0e-15);
 		z = 40;
-		assertEquals(1.0, cnd.evalaute(z),1.0e-15);
+		assertEquals(1.0, cnd.evaluate(z),1.0e-15);
 		
 	}
 	

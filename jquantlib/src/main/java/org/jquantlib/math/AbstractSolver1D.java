@@ -18,7 +18,7 @@ abstract public class AbstractSolver1D {
 		upperBoundEnforced_ = upperBoundenforeced;
 	}
 
-	abstract protected double solveImpl(UnaryFunctionDouble f, double accuracy);
+	abstract protected double solveImpl(final UnaryFunctionDouble f, double accuracy);
 
 	/** This method returns the zero of the function <code>f</code>,
 	 * determined with the given accuracy <code>epsilon</code>;
@@ -32,7 +32,7 @@ abstract public class AbstractSolver1D {
 	 *  scan the range of the possible bracketing values.
 	 *  */
 
-	public double solve(UnaryFunctionDouble f, double accuracy, double guess,
+	public double solve(final UnaryFunctionDouble f, double accuracy, double guess,
 			double step) {
 
 		if (!(accuracy > 0.0)) {
@@ -53,13 +53,13 @@ abstract public class AbstractSolver1D {
 		if (fxMax_ == 0.0)
 			return root_;
 		else if (fxMax_ > 0.0) {
-			xMin_ = enforceBounds_(root_ - step);
+			xMin_ = enforceBounds(root_ - step);
 			fxMin_ = f.evaluate(xMin_);
 			xMax_ = root_;
 		} else {
 			xMin_ = root_;
 			fxMin_ = fxMax_;
-			xMax_ = enforceBounds_(root_ + step);
+			xMax_ = enforceBounds(root_ + step);
 			fxMax_ = f.evaluate(xMax_);
 		}
 
@@ -74,18 +74,18 @@ abstract public class AbstractSolver1D {
 				return solveImpl(f, accuracy);
 			}
 			if (Math.abs(fxMin_) < Math.abs(fxMax_)) {
-				xMin_ = enforceBounds_(xMin_ + growthFactor * (xMin_ - xMax_));
+				xMin_ = enforceBounds(xMin_ + growthFactor * (xMin_ - xMax_));
 				fxMin_ = f.evaluate(xMin_);
 			} else if (Math.abs(fxMin_) > Math.abs(fxMax_)) {
-				xMax_ = enforceBounds_(xMax_ + growthFactor * (xMax_ - xMin_));
+				xMax_ = enforceBounds(xMax_ + growthFactor * (xMax_ - xMin_));
 				fxMax_ = f.evaluate(xMax_);
 			} else if (flipflop == -1) {
-				xMin_ = enforceBounds_(xMin_ + growthFactor * (xMin_ - xMax_));
+				xMin_ = enforceBounds(xMin_ + growthFactor * (xMin_ - xMax_));
 				fxMin_ = f.evaluate(xMin_);
 				evaluationNumber_++;
 				flipflop = 1;
 			} else if (flipflop == 1) {
-				xMax_ = enforceBounds_(xMax_ + growthFactor * (xMax_ - xMin_));
+				xMax_ = enforceBounds(xMax_ + growthFactor * (xMax_ - xMin_));
 				fxMax_ = f.evaluate(xMax_);
 				flipflop = -1;
 			}
@@ -115,7 +115,7 @@ abstract public class AbstractSolver1D {
 	//    f(x_\mathrm{max}) \leq 0 \leq f(x_\mathrm{min}) \f$ must
 	//    be true).
 	//*/
-	public double solve(UnaryFunctionDouble f, double accuracy, double guess,
+	public double solve(final UnaryFunctionDouble f, double accuracy, double guess,
 			double xMin, double xMax) {
 
 		if (!(accuracy > 0.0)) {
@@ -196,7 +196,7 @@ abstract public class AbstractSolver1D {
 		return evaluationNumber_;
 	}
 
-	private double enforceBounds_(double x) {
+	private double enforceBounds(double x) {
 		if (lowerBoundEnforced_ && x < lowerBound_)
 			return lowerBound_;
 		if (upperBoundEnforced_ && x > upperBound_)

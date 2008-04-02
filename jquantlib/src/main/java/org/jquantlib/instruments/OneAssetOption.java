@@ -23,6 +23,7 @@ package org.jquantlib.instruments;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.BrentSolver1D;
+import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
@@ -152,7 +153,7 @@ public class OneAssetOption extends Option {
         ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(engine, targetValue);
         AbstractSolver1D solver = new BrentSolver1D(); // FIXME: (integration review)
         solver.setMaxEvaluations(maxEvaluations);
-        /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol); // FIXME: (integration review)
+        /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
         return result;
     }
 
@@ -250,7 +251,7 @@ public class OneAssetOption extends Option {
     /**
      * Helper class for implied volatility calculation
      */
-    private class ImpliedVolatilityHelper {
+    private class ImpliedVolatilityHelper implements UnaryFunctionDouble {
     	
         private PricingEngine impliedEngine;
         private final OneAssetOptionResults impliedResults;
@@ -258,7 +259,7 @@ public class OneAssetOption extends Option {
         private SimpleQuote vol_;
         
         
-        public ImpliedVolatilityHelper(final PricingEngine engine, double targetValue) {
+        public ImpliedVolatilityHelper(final PricingEngine engine, double targetValue)  {
         	this.impliedEngine = engine;
         	this.targetValue_ = targetValue;
 
@@ -300,7 +301,7 @@ public class OneAssetOption extends Option {
         	impliedResults = (OneAssetOptionResults)impliedEngine.getResults();
         }
 
-		private double get(/* @Volatility */ double x) /* @ReadOnly */ {
+		public double evaluate(/* @Volatility */ double x) /* @ReadOnly */ {
 			vol_.setValue(x);
 			this.impliedEngine.calculate();
 			return impliedResults.value - targetValue_;

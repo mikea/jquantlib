@@ -82,7 +82,7 @@ public class BivariateNormalDistribution {
 				BVN = gaussLegendreQuad.evaluate(f);
 				BVN *= asr * (0.25 / Math.PI);
 			}
-			BVN += cumnorm_.evalaute(-h) * cumnorm_.evalaute(-k);
+			BVN += cumnorm_.evaluate(-h) * cumnorm_.evaluate(-k);
 		} else {
 			if (correlation_ < 0) {
 				k *= -1;
@@ -104,7 +104,7 @@ public class BivariateNormalDistribution {
 				if (-hk < 100) {
 					double B = Math.sqrt(bs);
 					BVN -= Math.exp(-hk / 2) * Constants.M_SQRT2PI
-							* cumnorm_.evalaute(-B / a) * B
+							* cumnorm_.evaluate(-B / a) * B
 							* (1 - c * bs * (1 - d * bs / 5) / 3);
 				}
 				a /= 2;
@@ -114,11 +114,11 @@ public class BivariateNormalDistribution {
 			}
 
 			if (correlation_ > 0) {
-				BVN += cumnorm_.evalaute(-Math.max(h, k));
+				BVN += cumnorm_.evaluate(-Math.max(h, k));
 			} else {
 				BVN *= -1;
 				if (k > h) {
-					BVN += cumnorm_.evalaute(k) - cumnorm_.evalaute(h);
+					BVN += cumnorm_.evaluate(k) - cumnorm_.evaluate(h);
 				}
 			}
 		}
