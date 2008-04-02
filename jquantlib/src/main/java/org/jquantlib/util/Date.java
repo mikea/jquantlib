@@ -953,29 +953,29 @@ public class Date implements Observable {
 		public String toString() {
 			switch (enumValue) {
 			case 1:
-				return January.toString();
+				return "January";
 			case 2:
-				return February.toString();
+				return "February";
 			case 3:
-				return March.toString();
+				return "March";
 			case 4:
-				return April.toString();
+				return "April";
 			case 5:
-				return May.toString();
+				return "May";
 			case 6:
-				return June.toString();
+				return "June";
 			case 7:
-				return July.toString();
+				return "July";
 			case 8:
-				return August.toString();
+				return "August";
 			case 9:
-				return September.toString();
+				return "September";
 			case 10:
-				return October.toString();
+				return "October";
 			case 11:
-				return November.toString();
+				return "November";
 			case 12:
-				return December.toString();
+				return "December";
 			default:
 				throw new IllegalArgumentException();
 			}
