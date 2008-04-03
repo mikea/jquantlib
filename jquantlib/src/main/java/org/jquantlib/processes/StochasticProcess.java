@@ -177,11 +177,19 @@ public abstract class StochasticProcess implements Observable, Observer {
     }
     
     
-    // FIXME: code review
+	//
+	// implements Observer interface
+	//
+	
     public void update(Observable o, Object arg) {
     	notifyObservers();
     }
 
+    
+	//
+	// implements Observable interface
+	//
+	
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
 	 * 

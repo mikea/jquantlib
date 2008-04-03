@@ -984,6 +984,10 @@ public class Date implements Observable {
     }
     
 
+	//
+	// implements Observable interface
+	//
+	
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
 	 * 

@@ -48,6 +48,8 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 
 
@@ -77,7 +79,7 @@ import org.jquantlib.util.Observer;
  * @author Richard Gomes
  */
 // FIXME: document this class
-public abstract class TermStructure implements Observable, Observer, Extrapolator {
+public abstract class TermStructure implements Observable, Observer, Extrapolator, Visitable<TermStructure> {
 
 	private Date referenceDate;
 	private int settlementDays;
@@ -87,6 +89,15 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	private boolean updated;
 	private int nCase;
 
+	/**
+	 * This private field is automatically initialized by constructor which
+	 * picks up it's value from {@link Settings} singleton. This procedure
+	 * caches values from the singleton, intending to avoid contention in
+	 * heavily multi-threaded environments.
+	 */
+	private Date today = null;
+
+	
 	/**
 	 * <p>This constructor requires an override of method {@link TermStructure#getReferenceDate()} in 
 	 * derived classes so that it fetches and return the appropriate reference date.
@@ -112,6 +123,8 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 		this.moving = false;
 		this.updated = true;
 		this.nCase = 3;
+		today = Settings.getInstance().getEvaluationDate();
+		today.addObserver(this);
 	}
 
 	/**
@@ -149,6 +162,8 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 		this.moving = false;
 		this.updated = true;
 		this.nCase = 1;
+		today = Settings.getInstance().getEvaluationDate();
+		today.addObserver(this);
 	}
 	
 	/**
@@ -185,22 +200,10 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 		this.moving = true;
 		this.updated = false;
 		this.nCase = 2;
-		Settings.getInstance().getEvaluationDate().addObserver(this);
+		today = Settings.getInstance().getEvaluationDate();
+		today.addObserver(this);
 	}
 	
-
-	
-	//
-	// Implements Observer interface
-	//
-	// FIXME:: code review on Observer/Observable
-	public void update(Observable o, Object arg) {
-		if (moving) {
-			updated = false;
-			notifyObservers();
-		}
-	}
-
 	/**
 	 * @return the latest date for which the curve can return values
 	 */
@@ -271,7 +274,6 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 			return referenceDate;
 		case 2:
 			if (!updated) {
-				Date today = Settings.getInstance().getEvaluationDate();
 				referenceDate = calendar.advance(today, settlementDays, TimeUnit.Days);
 				updated = true;
 			}
@@ -304,6 +306,24 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	}
 
 	
+
+	
+	//
+	// Implements Observer interface
+	//
+	
+	public void update(Observable o, Object arg) {
+		if (moving) {
+			updated = false;
+			today = Settings.getInstance().getEvaluationDate();
+			notifyObservers();
+		}
+	}
+
+	
+	//
+	// implements Observable interface
+	//
 	
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
@@ -327,6 +347,22 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
+	}
+
+	
+	
+	//
+	// implements Visitable interface
+	//
+	
+	private static final String NULL_VISITOR = "null term structure visitor";
+
+	public final void accept(final Visitor<TermStructure> v) {
+		if (v != null) {
+			v.visit(this);
+		} else {
+			throw new NullPointerException(NULL_VISITOR);
+		}
 	}
 
 }

@@ -49,6 +49,10 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 	}
 
 
+	//
+	// implements Observable interface
+	//
+	
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
 	 * 

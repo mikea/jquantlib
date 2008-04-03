@@ -46,7 +46,6 @@ import org.jquantlib.util.Visitor;
  */
 public abstract class Payoff implements Visitable<Payoff> {
 
-	private static final String NULL_VISITOR = "null payoff visitor";
 	protected static final String UNKNOWN_OPTION_TYPE = "unknown option type";
 
 	// FIXME code review
@@ -59,6 +58,13 @@ public abstract class Payoff implements Visitable<Payoff> {
 	
 
 	protected abstract/* @Price */double valueOf(/* @Price */double price);
+
+
+	//
+	// implements Visitable pattern
+	//
+	
+	private static final String NULL_VISITOR = "null payoff visitor";
 
 	public final void accept(final Visitor<Payoff> v) {
 		if (v != null) {

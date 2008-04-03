@@ -211,29 +211,38 @@ public class FlatForward extends YieldTermStructure {
     }
 
 
+
+
+// FIXME: code review
+
+
     //
     // Implements Observer interface
     //
     
-    private Observer delegate = new DefaultObserverImpl();
+//    private Observer delegate = new DefaultObserverImpl();
     
     /**
      * This method implements {@link Observer#update(Observable, Object)}
      * 
      * @see Observer#update(Observable, Object)
      */
-    public void update(Observable o, Object arg) {
-        updateRate();
-        delegate.update(o, arg);
-    }
+//    public void update(Observable o, Object arg) {
+//        updateRate();
+//        delegate.update(o, arg);
+//    }
 
+    
+    //
     // delegated private inner class
-    private class DefaultObserverImpl implements Observer {
-    	
-        public void update(Observable o, Object arg) {
-        System.out.println("blah!");
-        }
-        
-    }
+    //
+    
+//    private class DefaultObserverImpl implements Observer {
+//    	
+//        public void update(Observable o, Object arg) {
+//        System.out.println("blah!");
+//        }
+//        
+//    }
 
 }

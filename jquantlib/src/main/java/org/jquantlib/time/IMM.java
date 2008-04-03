@@ -40,6 +40,7 @@
 
 package org.jquantlib.time;
 
+import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.util.Date;
 
@@ -118,6 +119,7 @@ public class IMM {
 	 * @param refDate
 	 * @return
 	 */
+    // FIXME: this method is potentially harmful in heavily multi-threaded environments
     public static Date date(final String immCode, final Date refDate) {
         if (! (isIMMcode(immCode, false)) ) throw new IllegalArgumentException(immCode+" is not a valid IMM code");
 
@@ -162,6 +164,7 @@ public class IMM {
      *   International Money Market section of the Chicago Mercantile
      *   Exchange.
      */
+    // FIXME: this method is potentially harmful in heavily multi-threaded environments
     public static Date nextDate(final Date date, boolean mainCycle) {
         Date refDate;
         if (Date.NULL_DATE.equals(date)) {
@@ -278,6 +281,7 @@ public class IMM {
      * @param date
      * @return
      */
+    // FIXME: this method is potentially harmful in heavily multi-threaded environments
     public static String code(final Date date) {
         if (! (isIMMdate(date, false)) ) throw new IllegalArgumentException(date+" is not an IMM date");
 
@@ -286,7 +290,7 @@ public class IMM {
         StringBuilder sb = new StringBuilder();
         sb.append(code).append(y);
         
-        if (Settings.getInstance().isExtraSafetyChecks()) {
+        if (Configuration.getInstance().isExtraSafetyChecks()) {
         	if (! isIMMcode(sb.toString()) ) throw new IllegalArgumentException("the result "+sb.toString()+" is an invalid IMM code");
         }
         return sb.toString();

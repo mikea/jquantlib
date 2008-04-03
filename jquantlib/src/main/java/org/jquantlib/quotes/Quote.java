@@ -55,6 +55,10 @@ public abstract class Quote implements Observable {
 	public abstract double getValue();
 	
 
+	//
+	// implements Observable interface
+	//
+	
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
 	 * 

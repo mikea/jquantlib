@@ -59,15 +59,6 @@ public abstract class LazyObject implements Observable, Observer {
 		this.frozen = false;
 	}
 
-	public void update(Observable o, Object arg) {
-		// observers don't expect notifications from frozen objects
-		// LazyObject forwards notifications only once until it has been
-		// recalculated
-		if (!frozen && calculated)
-			notifyObservers(arg);
-		calculated = false;
-	}
-
 	/**
 	 * This method force the recalculation of any results which would otherwise
 	 * be cached.
@@ -129,6 +120,25 @@ public abstract class LazyObject implements Observable, Observer {
 		}
 	}
 
+	
+	//
+	// implements Observer interface
+	//
+	
+	public void update(Observable o, Object arg) {
+		// observers don't expect notifications from frozen objects
+		// LazyObject forwards notifications only once until it has been
+		// recalculated
+		if (!frozen && calculated)
+			notifyObservers(arg);
+		calculated = false;
+	}
+
+
+	//
+	// implements Observable interface
+	//
+	
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
 	 * 

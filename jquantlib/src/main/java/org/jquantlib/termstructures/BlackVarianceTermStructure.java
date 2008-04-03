@@ -54,6 +54,7 @@ import org.jquantlib.util.Date;
  *  <p>
  *  Volatility is assumed to be expressed on an annual basis.
  */
+// FIXME: code review
 public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
 
         /*! \name Constructors
@@ -69,61 +70,52 @@ public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
 		this(new Actual365Fixed());
 	}
 	
-        public BlackVarianceTermStructure(final DayCounter dc) {
-        	super(dc);
-        }
+    public BlackVarianceTermStructure(final DayCounter dc) {
+    	super(dc);
+    }
 
-        //! initialize with a fixed reference date
-        public BlackVarianceTermStructure(final Date referenceDate) {
-        	this(referenceDate, new DefaultCalendar());
-        }
+    //! initialize with a fixed reference date
+    public BlackVarianceTermStructure(final Date referenceDate) {
+    	this(referenceDate, new DefaultCalendar());
+    }
 
-        public BlackVarianceTermStructure(final Date referenceDate, final Calendar cal) {
-        	this(referenceDate, cal, new Actual365Fixed());
-        }
+    public BlackVarianceTermStructure(final Date referenceDate, final Calendar cal) {
+    	this(referenceDate, cal, new Actual365Fixed());
+    }
 
-        public BlackVarianceTermStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
-        	super(referenceDate, cal, dc);
-        }
+    public BlackVarianceTermStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
+    	super(referenceDate, cal, dc);
+    }
 
 
-        
-        
-        
-        
-        
-        //! calculate the reference date based on the global evaluation date
-        public BlackVarianceTermStructure(int settlementDays, final Calendar cal) {
-        	super(settlementDays, cal, new Actual365Fixed());
-        }
+    
+    
+    
+    
+    
+    //! calculate the reference date based on the global evaluation date
+    public BlackVarianceTermStructure(int settlementDays, final Calendar cal) {
+    	super(settlementDays, cal, new Actual365Fixed());
+    }
 
-        public BlackVarianceTermStructure(int settlementDays, final Calendar cal, final DayCounter dc) {
-        	super(settlementDays, cal, dc);
-        }
+    public BlackVarianceTermStructure(int settlementDays, final Calendar cal, final DayCounter dc) {
+    	super(settlementDays, cal, dc);
+    }
 
-        
-        /*! Returns the volatility for the given strike and date calculating it
-            from the variance.
-        */
-        protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-        	/*@Time*/ double nonZeroMaturity;
-        	/*@Time*/ double m = maturity;
-			if (m==0.0) {
-				nonZeroMaturity = 0.00001;
-			} else {
-				nonZeroMaturity = m;
-			}
-			/*@Variance*/ double var = blackVarianceImpl(/*Time*/ nonZeroMaturity, strike);
-			return Math.sqrt(var/nonZeroMaturity);
-        }
-
-//        inline void BlackVarianceTermStructure::accept(AcyclicVisitor& v) {
-//            Visitor<BlackVarianceTermStructure>* v1 =
-//                dynamic_cast<Visitor<BlackVarianceTermStructure>*>(&v);
-//            if (v1 != 0)
-//                v1->visit(*this);
-//            else
-//                BlackVolTermStructure::accept(v);
-//        }
+    
+    /*! Returns the volatility for the given strike and date calculating it
+        from the variance.
+    */
+    protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+    	/*@Time*/ double nonZeroMaturity;
+    	/*@Time*/ double m = maturity;
+		if (m==0.0) {
+			nonZeroMaturity = 0.00001;
+		} else {
+			nonZeroMaturity = m;
+		}
+		/*@Variance*/ double var = blackVarianceImpl(/*Time*/ nonZeroMaturity, strike);
+		return Math.sqrt(var/nonZeroMaturity);
+    }
 
 }

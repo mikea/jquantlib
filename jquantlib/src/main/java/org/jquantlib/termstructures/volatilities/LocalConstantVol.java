@@ -107,13 +107,4 @@ public class LocalConstantVol extends LocalVolTermStructure {
 		return this.volatility_.getValue();
 	}
 
-	// inline void LocalConstantVol::accept(AcyclicVisitor& v) {
-	// Visitor<LocalConstantVol>* v1 =
-	// dynamic_cast<Visitor<LocalConstantVol>*>(&v);
-	// if (v1 != 0)
-	// v1->visit(*this);
-	// else
-	// LocalVolTermStructure::accept(v);
-	// }
-
 }

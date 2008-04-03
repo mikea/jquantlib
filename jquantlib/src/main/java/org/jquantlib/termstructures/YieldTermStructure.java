@@ -54,7 +54,7 @@ import org.jquantlib.util.Date;
  */
 // TODO: add derived class ParSwapTermStructure similar to
 // ZeroYieldTermStructure, DiscountStructure, ForwardRateStructure
-// TEST: observability against evaluation date changes is checked.
+// TODO: observability against evaluation date changes is checked.
 public abstract class YieldTermStructure extends TermStructure {
 
 	protected abstract /*DiscountFactor*/ double discountImpl(final /*@Time*/ double t);

@@ -39,7 +39,7 @@
 
 package org.jquantlib.math.interpolation;
 
-import org.jquantlib.Settings;
+import org.jquantlib.Configuration;
 import org.jquantlib.math.Closeness;
 
 import cern.colt.Sorting;
@@ -55,13 +55,14 @@ public abstract class Interpolation implements Extrapolator {
 
 	protected double[] vx;
 	protected double[] vy;
+	private boolean extraSafetyChecks = Configuration.getInstance().isExtraSafetyChecks();
 
 	protected Interpolation(final double[] x, final double[] y) {
 		vx = x;
 		vy = y;
 		if (vx.length < 2)
 			throw new IllegalArgumentException("not enough points to interpolate");
-		if (Settings.getInstance().isExtraSafetyChecks()) {
+		if (extraSafetyChecks) {
 			double x1 = vx[0];
 			double x2;
 			for (int i = 1; i < vx.length; i++) {

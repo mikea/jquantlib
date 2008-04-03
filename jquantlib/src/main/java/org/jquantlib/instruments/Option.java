@@ -23,21 +23,31 @@ package org.jquantlib.instruments;
 import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.util.Date;
 
 public abstract class Option extends NewInstrument {
 
 	protected Payoff payoff;
 	protected Exercise exercise;
+	
+	/**
+	 * This private field is automatically initialized by constructor which
+	 * picks up it's value from {@link Settings} singleton. This procedure
+	 * caches values from the singleton, intending to avoid contention in
+	 * heavily multi-threaded environments.
+	 */
+	private Date evaluationDate = null;
 
 	public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
 		super(engine);
 		this.payoff = payoff;
 		this.exercise = exercise;
+		this.evaluationDate = Settings.getInstance().getEvaluationDate();
 	}
 
 	
     public boolean isExpired() /* @ReadOnly */ {
-        return exercise.getLastDate().le( Settings.getInstance().getEvaluationDate() );
+        return exercise.getLastDate().le( evaluationDate );
     }
 
 	

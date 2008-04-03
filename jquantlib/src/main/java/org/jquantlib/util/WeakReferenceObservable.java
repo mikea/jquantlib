@@ -26,6 +26,9 @@ import java.lang.ref.WeakReference;
  * Implementation of Observable that holds references to Observers as
  * WeakReferences.
  * 
+ * @see Observable
+ * @see Observer
+ * 
  * @author Srinivas Hasti
  */
 public class WeakReferenceObservable extends DefaultObservable {
@@ -56,8 +59,12 @@ public class WeakReferenceObservable extends DefaultObservable {
     }
     
 
-    class WeakReferenceObserver extends WeakReference<Observer> implements
-            Observer {
+    //
+    // inner classes
+    //
+    
+    private class WeakReferenceObserver extends WeakReference<Observer> implements Observer {
+    	
         public WeakReferenceObserver(Observer referent) {
             super(referent);
         }
@@ -70,4 +77,5 @@ public class WeakReferenceObservable extends DefaultObservable {
                 deleteWeakReference(this);
         }
     }
+
 }

@@ -36,7 +36,7 @@ import org.jquantlib.util.Date;
  * 
  * @author Richard Gomes
  */
-// FIXME: pending review
+// FIXME: code review
 public abstract class BlackVolTermStructure extends TermStructure {
 
 	static private final double dT = 1.0/365.0;
@@ -133,15 +133,7 @@ public abstract class BlackVolTermStructure extends TermStructure {
 		return blackVarianceImpl(maturity, strike);
 	}
 
-// XXX	
-//	protected void accept(final ElementVisitor<BlackVolTermStructure> v) {
-//		if (v != null) {
-//			v.visit(this);
-//		} else {
-//			throw new IllegalArgumentException("not a Black-volatility term structure visitor");
-//		}
-//	}
-
+	
 	private final void checkRange(final /*@Time*/ double time, final /*@Price*/ double strike, boolean extrapolate) {
 		super.checkRange(time, extrapolate);
 		if (! (extrapolate || allowsExtrapolation() || (strike >= getMinStrike()) && (strike <= getMaxStrike()) ) )

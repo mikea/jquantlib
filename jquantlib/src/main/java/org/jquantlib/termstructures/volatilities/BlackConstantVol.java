@@ -52,7 +52,6 @@ import org.jquantlib.util.Date;
  * interface for a constant Black volatility (no time/strike
  * dependence).
  */
-//FIXME: ElementVisitor
 public class BlackConstantVol extends BlackVolatilityTermStructure {
 
     private Quote volatility;
@@ -108,15 +107,5 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     public final /*@Price*/ double getMaxStrike() {
     	return Double.POSITIVE_INFINITY;
 	}
-
-// XXX	
-//	@Override
-//	protected void accept(final ElementVisitor<BlackVolTermStructure> v) {
-//		if (v != null) {
-//			v.visit(this);
-//		} else {
-//			super.accept(v);
-//		}
-//    }
 
 }

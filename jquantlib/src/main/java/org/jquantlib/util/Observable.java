@@ -44,6 +44,7 @@ package org.jquantlib.util;
  * @author Richard Gomes
  */
 public interface Observable {
+	
 	/**
 	 * Attaches a observer to the Observable. After attachment the observer gets
 	 * informed about changes in the Observable.
@@ -52,6 +53,7 @@ public interface Observable {
 	 *            The observer to attach to the observable
 	 */
 	public void addObserver(final Observer observer);
+	
 
 	/**
 	 * Detaches a previously attached observer to the observable. After
