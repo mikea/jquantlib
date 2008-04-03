@@ -40,6 +40,7 @@
 package org.jquantlib.math.interpolation;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.Settings;
 import org.jquantlib.math.Closeness;
 
 import cern.colt.Sorting;
@@ -55,6 +56,14 @@ public abstract class Interpolation implements Extrapolator {
 
 	protected double[] vx;
 	protected double[] vy;
+	
+	
+	/**
+	 * This private field is automatically initialized by constructor which
+	 * picks up it's value from {@link Settings} singleton. This procedure
+	 * caches values from the singleton, intending to avoid contention in
+	 * heavily multi-threaded environments.
+	 */
 	private boolean extraSafetyChecks = Configuration.getInstance().isExtraSafetyChecks();
 
 	protected Interpolation(final double[] x, final double[] y) {

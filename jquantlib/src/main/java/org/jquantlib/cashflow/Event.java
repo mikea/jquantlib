@@ -18,7 +18,7 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package cashflow;
+package org.jquantlib.cashflow;
 
 import java.util.Date;
 
