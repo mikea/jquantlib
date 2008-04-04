@@ -32,23 +32,21 @@ package org.jquantlib.math;
  */
 //FIXME: code review
 final public class Closeness {
-	static public final double epsilon = 1E-128 /* @ReadOnly */;
-	
-	static public final boolean close(double x, double y) /* @ReadOnly */ {
-	    return close(x,y,42);
+	static public final boolean isClose(double x, double y) /* @ReadOnly */ {
+	    return isClose(x,y,42);
 	}
 	
-	static public final boolean close(double x, double y, /*@Positive*/ int n) /* @ReadOnly */ {
-	    double tolerance = n * epsilon;
+	static public final boolean isClose(double x, double y, /*@Positive*/ int n) /* @ReadOnly */ {
+	    double tolerance = n * Constants.QL_EPSILON;
 	    return (x>=y-tolerance && x<=y+tolerance);
 	}
 	
-	static public final boolean close_enough(double x, double y) /* @ReadOnly */ {
-	    return close_enough(x,y,42);
+	static public final boolean isCloseEnough(double x, double y) /* @ReadOnly */ {
+	    return isCloseEnough(x,y,42);
 	}
 	
-	static public final boolean close_enough(double x, double y, /*@Positive*/ int n) /* @ReadOnly */ {
-	    double tolerance = n * epsilon;
+	static public final boolean isCloseEnough(double x, double y, /*@Positive*/ int n) /* @ReadOnly */ {
+	    double tolerance = n * Constants.QL_EPSILON;
 	    return (x>=y-tolerance || x<=y+tolerance);
 	}
 }

@@ -1,5 +1,7 @@
 package org.jquantlib.termstructures.volatilities;
 
+import static org.jquantlib.math.Closeness.isClose;
+
 import org.jquantlib.math.Constants;
 import org.jquantlib.number.Rate;
 import org.jquantlib.number.Time;
@@ -162,15 +164,5 @@ public class Sabr {
                         alpha, beta, nu, rho);
     }
     
-    private boolean isClose(double x, double y){
-    	//FIXME why is Closeness.isClose tolerance not using macheps typically around 2.2e-16?
-    	int n = 42;
-    	double diff = Math.abs(x-y);
-    	double tolerance = n*Constants.QL_EPSILON;
-          
-          
-    	return diff <= tolerance*Math.abs(x) &&
-                 diff <= tolerance*Math.abs(y);
-    }
 }
 

@@ -48,8 +48,6 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.tmp.DefaultCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Observable;
-import org.jquantlib.util.Observer;
 
 public class FlatForward extends YieldTermStructure {
 

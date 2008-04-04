@@ -45,7 +45,7 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
-import org.jquantlib.math.Closeness;
+import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.util.Visitor;
 
@@ -93,7 +93,7 @@ public class BlackCalculator /* <T extends Payoff> */ {
 		if (discount <= 0.0)
 			throw new IllegalArgumentException("positive discount required: " + discount + " not allowed");
 
-		if (stdDev >= Closeness.epsilon) {
+		if (stdDev >= Constants.QL_EPSILON) {
 			if (strike == 0.0) {
 				n_d1 = 0.0;
 				n_d2 = 0.0;
@@ -194,9 +194,9 @@ public class BlackCalculator /* <T extends Payoff> */ {
 	public double elasticity(final double spot) /* @ReadOnly */{
 		double val = value();
 		double del = delta(spot);
-		if (val > Closeness.epsilon)
+		if (val > Constants.QL_EPSILON)
 			return del / val * spot;
-		else if (Math.abs(del) < Closeness.epsilon)
+		else if (Math.abs(del) < Constants.QL_EPSILON)
 			return 0.0;
 		else if (del > 0.0)
 			return Double.MAX_VALUE;
@@ -211,9 +211,9 @@ public class BlackCalculator /* <T extends Payoff> */ {
 	public double elasticityForward() /* @ReadOnly */{
 		double val = value();
 		double del = deltaForward();
-		if (val > Closeness.epsilon)
+		if (val > Constants.QL_EPSILON)
 			return del / val * forward;
-		else if (Math.abs(del) < Closeness.epsilon)
+		else if (Math.abs(del) < Constants.QL_EPSILON)
 			return 0.0;
 		else if (del > 0.0)
 			return Double.MAX_VALUE;

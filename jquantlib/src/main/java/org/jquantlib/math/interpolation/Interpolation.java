@@ -39,9 +39,10 @@
 
 package org.jquantlib.math.interpolation;
 
+import static org.jquantlib.math.Closeness.isClose;
+
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
-import org.jquantlib.math.Closeness;
 
 import cern.colt.Sorting;
 
@@ -124,7 +125,7 @@ public abstract class Interpolation implements Extrapolator {
 
 	protected final boolean isInRange(final double x) {
         double x1 = xMin(), x2 = xMax();
-        return (x >= x1 && x <= x2) || Closeness.close(x,x1) || Closeness.close(x,x2);
+        return (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
     }
 
 	protected final void checkRange(final double x, boolean extrapolate) {
