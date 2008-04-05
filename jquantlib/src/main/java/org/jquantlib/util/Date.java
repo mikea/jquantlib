@@ -1010,4 +1010,50 @@ public class Date implements Observable {
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
+
+
+	//
+	// inner classes
+	//
+	
+	/**
+	 * @return an accessor object which provides controlled update access to this object.
+	 * 
+	 * @see Updatable
+	 */
+	public Updatable<Date> getUpdatable() {
+		return new UpdatableDate(this);
+	}
+	
+	
+	/**
+	 * This inner class provides controlled update access to a Date object.
+	 * 
+	 * @see Date
+	 * 
+	 * @author Richard Gomes
+	 */
+	private class UpdatableDate implements Updatable<Date> {
+		
+		private Date target = null;
+		
+		public UpdatableDate(Date date) {
+			this.target = date;
+		}
+		
+		public void update(Date source) {
+			if (source==null) throw new NullPointerException();
+			
+			if (this.target==NULL_DATE) {
+				throw new IllegalStateException("not updatable");
+			}
+			target.value = source.value;
+		}
+		
+	}
+	
+	
+	
+
+
 }

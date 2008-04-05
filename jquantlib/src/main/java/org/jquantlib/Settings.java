@@ -35,15 +35,28 @@ import org.jquantlib.util.Date;
  * @note In heavily multi-threaded environments threads must cache settings from
  *       this singleton.
  */
-// CODE REVIEW DONE by Richard Gomes
+// REVIEWED by Richard Gomes
 public class Settings {
 
-	/**
-	 * Default value for <i>TodaysPayments</i> property
-	 */
 	private static boolean defaultTodaysPayments = false;
 
+	/**
+	 * This field determines whether payments expected to happen at
+	 * the <i>current evaluation date</i> are considered.
+	 * 
+	 * @see #evaluationDate
+	 */
 	private boolean todaysPayments;
+
+	/**
+	 * This field keeps the current evaluation date.
+	 * 
+	 * <p>
+	 * Notice that the current evaluation date <b>is not necessarily</b> the
+	 * current date or today's date in other words. In the specific situation
+	 * when the evaluation date is never defined explicitly, then today's date
+	 * is assume by default.
+	 */
 	private Date evaluationDate;
 
 	static private String lock = "lock";
@@ -97,36 +110,44 @@ public class Settings {
 		}
 	}
 
+	/**
+	 * @return the value of field todaysPayments
+	 * 
+	 * @see #todaysPayments
+	 */
 	public boolean isTodaysPayments() {
 		return todaysPayments;
 	}
 
+	/**
+	 * @return the value of field evaluationDate
+	 * 
+	 * @see #evaluationDate
+	 */
 	public Date getEvaluationDate() {
 		return evaluationDate;
 	}
 
+	/**
+	 * Changes the value of field todaysPayments
+	 * 
+	 * @see #todaysPayments
+	 */
 	public void setTodaysPayments(final boolean todaysPayments) {
 		this.todaysPayments = todaysPayments;
 	}
 
+	/**
+	 * Changes the value of field evaluationDate.
+	 * 
+	 * <p>
+	 * Notice that a successful change of evaluationDate notifies
+	 * all its listeners.
+	 * 
+	 * @see #evaluationDate
+	 */
 	public void setEvaluationDate(final Date evaluationDate) {
-		if (evaluationDate==null) throw new NullPointerException();
-		
-// Srinivas: Could you please suggest an implementation for this?		
-//		// obtain Observers and remove from current Observable Date
-//		Observer[] observers = this.evaluationDate.getObservers();
-//		this.evaluationDate.deleteObservers();
-
-		
-		// assigns a new value and assign previous Observers
-		this.evaluationDate = evaluationDate;
-		
-		
-// Srinivas: Could you please suggest an implementation for this?		
-//		this.evaluationDate.addObservers(observers);
-		
-		
-		// notify Observers, if any, about date change
+		this.evaluationDate.getUpdatable().update(evaluationDate);
 		this.evaluationDate.notifyObservers();
 	}
 
