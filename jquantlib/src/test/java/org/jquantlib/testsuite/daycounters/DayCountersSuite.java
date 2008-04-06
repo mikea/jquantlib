@@ -36,10 +36,13 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.daycounters;
+package org.jquantlib.testsuite.daycounters;
 
 import static org.junit.Assert.assertFalse;
 
+import org.jquantlib.daycounters.ActualActual;
+import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.daycounters.SimpleDayCounter;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
