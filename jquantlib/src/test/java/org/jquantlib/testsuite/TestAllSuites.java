@@ -9,8 +9,10 @@ import org.jquantlib.testsuite.math.integrals.TestIntegralsSuite;
 import org.jquantlib.testsuite.termstructures.volatilities.TestVolatilitiesSuite;
 
 /**
+ * @deprecated
  * @author <Richard Gomes>
  */
+// TODO: remove or 'upgrade' this class once we are using JUnit4
 public class TestAllSuites {
 
 	 public static Test suite() { 

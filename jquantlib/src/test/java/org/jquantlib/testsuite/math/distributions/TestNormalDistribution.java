@@ -3,11 +3,14 @@ package org.jquantlib.testsuite.math.distributions;
 import junit.framework.TestCase;
 
 import org.jquantlib.math.distributions.NormalDistribution;
+import org.junit.Test;
 
 /**
  * @author <Richard Gomes>
  */
 public class TestNormalDistribution extends TestCase {
+	
+	@Test
 	public void testKnownGoodValuesFromAbramStegun() {
 		
 		double[][] testvalues = {	{0.0, 0.398942280401433},

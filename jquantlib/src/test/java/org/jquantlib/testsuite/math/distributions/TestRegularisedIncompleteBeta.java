@@ -3,12 +3,14 @@ package org.jquantlib.testsuite.math.distributions;
 import junit.framework.TestCase;
 
 import org.jquantlib.math.RegularisedIncompleteBeta;
+import org.junit.Test;
 
 /**
  * @author <Richard Gomes>
  */
 public class TestRegularisedIncompleteBeta extends TestCase{
 
+	@Test
 	public void testRegIncompleteBetaHartleyFitchExamples() {
 		
 		

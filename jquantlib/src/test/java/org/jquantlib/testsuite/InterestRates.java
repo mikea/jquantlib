@@ -33,8 +33,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
+ * @deprecated
  * @author Joerg Brunsmann
  */
+// TODO: remove or 'upgrade' this class once we are using JUnit4
 public class InterestRates extends TestCase {
 
 	/**

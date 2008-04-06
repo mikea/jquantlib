@@ -24,6 +24,11 @@ import org.junit.runners.Suite;
 
 
 
+/**
+ * @deprecated
+ * @author Joerg Brunsmann
+ */
+// TODO: remove or 'upgrade' this class once we are using JUnit4
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         Dates.class,

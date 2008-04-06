@@ -38,15 +38,24 @@ public class Configuration {
 	
 	/**
 	 * Default value for <i>ExtraSafetyChecks</i> property
+	 * 
+	 * @see #extraSafetyChecks
 	 */
 	private static boolean defaultExtraSafefyChecks = true;
 	
 	/**
 	 * Default value for <i>EnforcesTodayHistoricFixings</i> property
+	 * 
+	 * @see #enforcesTodaysHistoricFixings
 	 */
 	private static boolean defaultEnforcesTodaysHistoricFixings = false;
 	
+	
+	// EXPLAIN its meaning
 	private boolean extraSafetyChecks;
+	
+	
+	// EXPLAIN its meaning
 	private boolean enforcesTodaysHistoricFixings;
 	
 	static private String lock = "lock";

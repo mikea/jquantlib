@@ -32,51 +32,57 @@ import org.jquantlib.util.Date;
 // TODO: Is this the best way if implementing ?
 // We could do it with a singletons to avoid multiple object creations
 // TODO: finish,clean and test
-public class ActualActual extends DayCounterImpl {
+public class ActualActual extends AbstractDayCounter {
     
     public static enum Convention {
         ISMA, Bond, ISDA, Historical, Actual365, AFB, Euro
     };
 
-    private DayCounter reference;
+    private DayCounter delegate;
 
     public ActualActual(Convention convention) {
         switch (convention) {
         case ISMA:
         case Bond:
-            reference = new ISMA();
+            delegate = new ISMA();
             break;
         case ISDA:
         case Historical:
         case Actual365:
-            reference = new ISDA();
+            delegate = new ISDA();
             break;
         case AFB:
         case Euro:
-            reference = new AFB();
+            delegate = new AFB();
             break;
         default:
             throw new IllegalArgumentException("unknown act/act convention");
         }
     }
 
+	public String getName() /* @ReadOnly */{
+		return delegate.getName();
+	}
+
     public double getYearFraction(Date dateStart, Date dateEnd) {
-        return reference.getYearFraction(dateStart, dateEnd);
+        return delegate.getYearFraction(dateStart, dateEnd);
     }
 
-    public double getYearFraction(Date dateStart, Date dateEnd,
-            Date refPeriodStart, Date refPeriodEnd) {
-        return reference.getYearFraction(dateStart, dateEnd, refPeriodStart,
-                refPeriodEnd);
+    public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) {
+        return delegate.getYearFraction(dateStart, dateEnd, refPeriodStart, refPeriodEnd);
     }
 
-    private class ISMA extends DayCounterImpl {
+    private class ISMA extends AbstractDayCounter {
 
-        public double getYearFraction(Date dateStart, Date dateEnd) {
-            return 0;
+		public final String getName() /* @ReadOnly */{
+			return "Actual/Actual (ISMA)";
+		}
+
+        public double getYearFraction(final Date dateStart, final Date dateEnd) {
+            return 0; // FIXME: code review
         }
 
-        public double getYearFraction(Date d1, Date d2, Date d3, Date d4) {
+        public double getYearFraction(final Date d1, final Date d2, final Date d3, final Date d4) {
 
             if (d1.eq(d2))
                 return 0.0;
@@ -94,9 +100,7 @@ public class ActualActual extends DayCounterImpl {
                 throw new IllegalArgumentException("Invalid reference period");
 
             // estimate roughly the length in months of a period
-            int months = (int) Math.round(12
-                    * (refPeriodEnd.getValue() - refPeriodStart.getValue())
-                    / (double) 365);
+            int months = (int) Math.round(12 * (refPeriodEnd.getValue() - refPeriodStart.getValue()) / (double) 365);
 
             // for short periods...
             if (months == 0) {
@@ -176,33 +180,39 @@ public class ActualActual extends DayCounterImpl {
     }
 
     // TODO: complete impl
-    private class ISDA extends DayCounterImpl {
+    private class ISDA extends AbstractDayCounter {
 
-        public double getYearFraction(Date dateStart, Date dateEnd) {
+		public final String getName() /* @ReadOnly */{
+			return "Actual/Actual (ISDA)";
+		}
+
+        public double getYearFraction(final Date dateStart, final Date dateEnd) {
             // TODO Auto-generated method stub
-            return 0;
+        	throw new UnsupportedOperationException("not implemented yet");
         }
 
-        public double getYearFraction(Date dateStart, Date dateEnd,
-                Date refPeriodStart, Date refPeriodEnd) {
+        public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) {
             // TODO Auto-generated method stub
-            return 0;
+        	throw new UnsupportedOperationException("not implemented yet");
         }
 
     }
 
     // TODO: complete impl
-    private class AFB extends DayCounterImpl {
+    private class AFB extends AbstractDayCounter {
 
-        public double getYearFraction(Date dateStart, Date dateEnd) {
+		public final String getName() /* @ReadOnly */{
+			return "Actual/Actual (AFB)";
+		}
+
+        public double getYearFraction(final Date dateStart, final Date dateEnd) {
             // TODO Auto-generated method stub
-            return 0;
+        	throw new UnsupportedOperationException("not implemented yet");
         }
 
-        public double getYearFraction(Date dateStart, Date dateEnd,
-                Date refPeriodStart, Date refPeriodEnd) {
+        public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) {
             // TODO Auto-generated method stub
-            return 0;
+        	throw new UnsupportedOperationException("not implemented yet");
         }
 
     }

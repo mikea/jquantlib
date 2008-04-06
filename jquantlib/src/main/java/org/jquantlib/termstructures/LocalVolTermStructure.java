@@ -41,7 +41,7 @@ package org.jquantlib.termstructures;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.tmp.DefaultCalendar;
+import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 
 // FIXME: format comments, etc
@@ -64,7 +64,7 @@ public abstract class LocalVolTermStructure extends TermStructure {
         //! initialize with a fixed reference date
         
 		public LocalVolTermStructure(final Date referenceDate) {
-        	this(referenceDate, new DefaultCalendar());
+        	this(referenceDate, new NullCalendar());
         }
         
         public LocalVolTermStructure(final Date referenceDate, final Calendar cal) {
@@ -80,7 +80,7 @@ public abstract class LocalVolTermStructure extends TermStructure {
         //! calculate the reference date based on the global evaluation date
 
         public LocalVolTermStructure(int settlementDays) {
-        	this(settlementDays, new DefaultCalendar());
+        	this(settlementDays, new NullCalendar());
         }
         
         public LocalVolTermStructure(int settlementDays, final Calendar cal) {

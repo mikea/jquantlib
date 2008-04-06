@@ -40,14 +40,23 @@
 
 package org.jquantlib.instruments;
 
+import static org.junit.Assert.assertFalse;
+
+import org.jquantlib.daycounters.Actual360;
+import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Quote;
+import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.util.Date;
+import org.jquantlib.util.Utilities;
+import org.junit.Test;
 
 
 /**
@@ -78,15 +87,35 @@ public class EuropeanOptionSuite {
 	
 	
 	private class EuropeanOptionData {
-	    Option.Type type;
-	    /*@Price*/ double strike;
-	    double s;        // spot // FIXME: any specific @annotation?
-	    /*@Rate*/ double  q;        // dividend
-	    /*@Rate*/ double  r;        // risk-free rate
-	    /*@Time*/ double  t;        // time to maturity
-	    /*@Volatility*/ double v;  // volatility
-	    /*@Price*/ double result;   // expected result
-	    double tol;      // tolerance // FIXME: any specific @annotation?
+	    private Option.Type type;            // option type
+	    private /*@Price*/ double strike;    // option strike price
+	    private double s;                    // spot // FIXME: any specific @annotation?
+	    private /*@Price*/ double  q;        // dividend
+	    private /*@Rate*/ double  r;         // risk-free rate
+	    private /*@Time*/ double  t;         // time to maturity
+	    private /*@Volatility*/ double v;    // volatility
+	    private /*@Price*/ double result;    // expected result
+	    private double tol;                  // tolerance // FIXME: any specific @annotation?
+	    
+	    public EuropeanOptionData(
+	    			Option.Type type, 
+	    			/*@Price*/ double strike, 
+	    			double s, /*@Price*/ double  q,
+	    		    /*@Rate*/ double  r,
+	    		    /*@Time*/ double  t,
+	    		    /*@Volatility*/ double v,
+	    		    /*@Price*/ double result,
+	    		    double tol) {
+	    	this.type = type;
+	    	this.strike = strike;
+	    	this.s = s;
+	    	this.q = q;
+	    	this.r = r;
+	    	this.t = t;
+	    	this.v = v;
+	    	this.result = result;
+	    	this.tol = tol;
+	    }
 	}
 
 	private enum EngineType { 
@@ -201,120 +230,125 @@ public class EuropeanOptionSuite {
 //	        QL_FAIL("unknown engine type");
 //	    }
 //	}
-//
-//	Integer timeToDays(Time t) {
-//	    return Integer(t*360+0.5);
-//	}
-//
+
+	private int timeToDays(/*@Time*/ double t) {
+	    return (int) (t*360+0.5);
+	}
+
 //	void teardown() {
 //	    Settings::instance().evaluationDate() = Date();
 //	}
 //
 //	QL_END_TEST_LOCALS(EuropeanOptionTest)
 //
-//
-//	void EuropeanOptionTest::testValues() {
-//
-//	    BOOST_MESSAGE("Testing European option values...");
-//
-//	    /* The data below are from
-//	       "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
-//	    */
-//	    EuropeanOptionData values[] = {
-//	      // pag 2-8
-//	      //        type, strike,   spot,    q,    r,    t,  vol,   value,    tol
-//	      { Option::Call,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 1.0e-4},
-//	      { Option::Put,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 1.0e-4},
-//	      { Option::Put,   19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4},
-//	      { Option::Call,  19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4},
-//	      { Option::Call,   1.60,   1.56, 0.08, 0.06, 0.50, 0.12,  0.0291, 1.0e-4},
-//	      { Option::Put,   70.00,  75.00, 0.05, 0.10, 0.50, 0.35,  4.0870, 1.0e-4},
-//	      // pag 24
-//	      { Option::Call, 100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  0.0205, 1.0e-4},
-//	      { Option::Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4},
-//	      { Option::Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  9.9413, 1.0e-4},
-//	      { Option::Call, 100.00,  90.00, 0.10, 0.10, 0.10, 0.25,  0.3150, 1.0e-4},
-//	      { Option::Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4},
-//	      { Option::Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3556, 1.0e-4},
-//	      { Option::Call, 100.00,  90.00, 0.10, 0.10, 0.10, 0.35,  0.9474, 1.0e-4},
-//	      { Option::Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4},
-//	      { Option::Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1381, 1.0e-4},
-//	      { Option::Call, 100.00,  90.00, 0.10, 0.10, 0.50, 0.15,  0.8069, 1.0e-4},
-//	      { Option::Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4},
-//	      { Option::Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.5769, 1.0e-4},
-//	      { Option::Call, 100.00,  90.00, 0.10, 0.10, 0.50, 0.25,  2.7026, 1.0e-4},
-//	      { Option::Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4},
-//	      { Option::Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 12.7857, 1.0e-4},
-//	      { Option::Call, 100.00,  90.00, 0.10, 0.10, 0.50, 0.35,  4.9329, 1.0e-4},
-//	      { Option::Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4},
-//	      { Option::Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.3086, 1.0e-4},
-//	      { Option::Put,  100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  9.9210, 1.0e-4},
-//	      { Option::Put,  100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4},
-//	      { Option::Put,  100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  0.0408, 1.0e-4},
-//	      { Option::Put,  100.00,  90.00, 0.10, 0.10, 0.10, 0.25, 10.2155, 1.0e-4},
-//	      { Option::Put,  100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4},
-//	      { Option::Put,  100.00, 110.00, 0.10, 0.10, 0.10, 0.25,  0.4551, 1.0e-4},
-//	      { Option::Put,  100.00,  90.00, 0.10, 0.10, 0.10, 0.35, 10.8479, 1.0e-4},
-//	      { Option::Put,  100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4},
-//	      { Option::Put,  100.00, 110.00, 0.10, 0.10, 0.10, 0.35,  1.2376, 1.0e-4},
-//	      { Option::Put,  100.00,  90.00, 0.10, 0.10, 0.50, 0.15, 10.3192, 1.0e-4},
-//	      { Option::Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4},
-//	      { Option::Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.15,  1.0646, 1.0e-4},
-//	      { Option::Put,  100.00,  90.00, 0.10, 0.10, 0.50, 0.25, 12.2149, 1.0e-4},
-//	      { Option::Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4},
-//	      { Option::Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.25,  3.2734, 1.0e-4},
-//	      { Option::Put,  100.00,  90.00, 0.10, 0.10, 0.50, 0.35, 14.4452, 1.0e-4},
-//	      { Option::Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4},
-//	      { Option::Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.35,  5.7963, 1.0e-4},
-//	      // pag 27
-//	      { Option::Call,  40.00,  42.00, 0.08, 0.04, 0.75, 0.35,  5.0975, 1.0e-4}
-//	    };
-//
-//	    DayCounter dc = Actual360();
-//	    Date today = Date::todaysDate();
-//
-//	    boost::shared_ptr<SimpleQuote> spot(new SimpleQuote(0.0));
-//	    boost::shared_ptr<SimpleQuote> qRate(new SimpleQuote(0.0));
-//	    boost::shared_ptr<YieldTermStructure> qTS = flatRate(today, qRate, dc);
-//	    boost::shared_ptr<SimpleQuote> rRate(new SimpleQuote(0.0));
-//	    boost::shared_ptr<YieldTermStructure> rTS = flatRate(today, rRate, dc);
-//	    boost::shared_ptr<SimpleQuote> vol(new SimpleQuote(0.0));
-//	    boost::shared_ptr<BlackVolTermStructure> volTS = flatVol(today, vol, dc);
-//	    boost::shared_ptr<PricingEngine> engine(new AnalyticEuropeanEngine);
-//
-//	    for (Size i=0; i<LENGTH(values); i++) {
-//
-//	        boost::shared_ptr<StrikedTypePayoff> payoff(new
-//	            PlainVanillaPayoff(values[i].type, values[i].strike));
-//	        Date exDate = today + timeToDays(values[i].t);
-//	        boost::shared_ptr<Exercise> exercise(new EuropeanExercise(exDate));
-//
-//	        spot ->setValue(values[i].s);
-//	        qRate->setValue(values[i].q);
-//	        rRate->setValue(values[i].r);
-//	        vol  ->setValue(values[i].v);
-//
-//	        boost::shared_ptr<StochasticProcess> stochProcess(new
-//	            BlackScholesMertonProcess(Handle<Quote>(spot),
-//	                                      Handle<YieldTermStructure>(qTS),
-//	                                      Handle<YieldTermStructure>(rTS),
-//	                                      Handle<BlackVolTermStructure>(volTS)));
-//
-//	        EuropeanOption option(stochProcess, payoff, exercise, engine);
-//
-//	        Real calculated = option.NPV();
-//	        Real error = std::fabs(calculated-values[i].result);
-//	        Real tolerance = values[i].tol;
-//	        if (error>tolerance) {
-//	            REPORT_FAILURE("value", payoff, exercise, values[i].s,
-//	                           values[i].q, values[i].r, today,
-//	                           values[i].v, values[i].result, calculated,
-//	                           error, tolerance);
-//	        }
-//	    }
-//
-//	}
-//
+
+	@Test
+	public void testValues() {
+
+	    System.out.println("Testing European option values...");
+
+	    /* The data below are from
+	       "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
+	    */
+	    EuropeanOptionData values[] = {
+	      // pag 2-8
+	      //                              type,     strike,   spot,    q,    r,    t,  vol,   value,    tol
+	      new EuropeanOptionData( Option.Type.Call,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,   19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call,  19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call,   1.60,   1.56, 0.08, 0.06, 0.50, 0.12,  0.0291, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,   70.00,  75.00, 0.05, 0.10, 0.50, 0.35,  4.0870, 1.0e-4),
+	      // pag 24
+	      new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  0.0205, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  9.9413, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.10, 0.25,  0.3150, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3556, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.10, 0.35,  0.9474, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1381, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.50, 0.15,  0.8069, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.5769, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.50, 0.25,  2.7026, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 12.7857, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.50, 0.35,  4.9329, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.3086, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  9.9210, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  0.0408, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.10, 0.25, 10.2155, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.10, 0.25,  0.4551, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.10, 0.35, 10.8479, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.10, 0.35,  1.2376, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.50, 0.15, 10.3192, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.15,  1.0646, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.50, 0.25, 12.2149, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.25,  3.2734, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.50, 0.35, 14.4452, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
+	      new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.35,  5.7963, 1.0e-4),
+	      // pag 27
+	      new EuropeanOptionData( Option.Type.Call,  40.00,  42.00, 0.08, 0.04, 0.75, 0.35,  5.0975, 1.0e-4)
+	    };
+
+	    DayCounter dc = new Actual360();
+	    Date today = Date.getTodaysDate();
+
+	    SimpleQuote spot = new SimpleQuote(0.0);
+	    SimpleQuote qRate = new SimpleQuote(0.0);
+	    YieldTermStructure qTS = Utilities.flatRate(today, qRate, dc);
+	    SimpleQuote rRate = new SimpleQuote(0.0);
+	    YieldTermStructure rTS = Utilities.flatRate(today, rRate, dc);
+	    SimpleQuote vol = new SimpleQuote(0.0);
+	    BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
+	    PricingEngine engine = new AnalyticEuropeanEngine();
+
+	    for (int i=0; i<values.length-1; i++) {
+
+	    	StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+	        Date exDate = today.add( timeToDays(values[i].t) );
+	        Exercise exercise = new EuropeanExercise(exDate);
+
+	        spot. setValue(values[i].s);
+	        qRate.setValue(values[i].q);
+	        rRate.setValue(values[i].r);
+	        vol.  setValue(values[i].v);
+
+	        StochasticProcess stochProcess = new BlackScholesMertonProcess(spot, qTS, rTS, volTS);
+
+	        EuropeanOption option = new EuropeanOption(stochProcess, payoff, exercise, engine);
+
+	        double calculated = option.getNPV();
+	        double error = Math.abs(calculated-values[i].result);
+	        double tolerance = values[i].tol;
+	        
+            StringBuilder sb = new StringBuilder();
+            sb.append("error ").append(error).append(" .gt. tolerance ").append(tolerance).append('\n');
+            sb.append("  calculated ").append(calculated).append('\n');
+            sb.append("    type ").append(values[i].type).append('\n');
+            sb.append("    strike ").append(values[i].strike).append('\n');
+            sb.append("    s ").append(values[i].s).append('\n');
+            sb.append("    q ").append(values[i].q).append('\n');
+            sb.append("    r ").append(values[i].r).append('\n');
+            sb.append("    t ").append(values[i].t).append('\n');
+            sb.append("    v ").append(values[i].v).append('\n');
+            sb.append("    result ").append(values[i].result).append('\n');
+            sb.append("    tol ").append(values[i].tol); // .append('\n');
+            
+        	assertFalse(sb.toString(), error<=tolerance);
+	    }
+
+	}
+
 //
 //
 //	void EuropeanOptionTest::testGreekValues() {
@@ -328,24 +362,24 @@ public class EuropeanOptionSuite {
 //	    EuropeanOptionData values[] = {
 //	      //        type, strike,   spot,    q,    r,        t,  vol,  value
 //	      // delta
-//	      { Option::Call, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36,  0.5946, 0 },
-//	      { Option::Put,  100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -0.3566, 0 },
+//	      { Option.Type.Call, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36,  0.5946, 0 },
+//	      { Option.Type.Put,  100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -0.3566, 0 },
 //	      // elasticity
-//	      { Option::Put,  100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -4.8775, 0 },
+//	      { Option.Type.Put,  100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -4.8775, 0 },
 //	      // gamma
-//	      { Option::Call,  60.00,  55.00, 0.00, 0.10, 0.750000, 0.30,  0.0278, 0 },
-//	      { Option::Put,   60.00,  55.00, 0.00, 0.10, 0.750000, 0.30,  0.0278, 0 },
+//	      { Option.Type.Call,  60.00,  55.00, 0.00, 0.10, 0.750000, 0.30,  0.0278, 0 },
+//	      { Option.Type.Put,   60.00,  55.00, 0.00, 0.10, 0.750000, 0.30,  0.0278, 0 },
 //	      // vega
-//	      { Option::Call,  60.00,  55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0 },
-//	      { Option::Put,   60.00,  55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0 },
+//	      { Option.Type.Call,  60.00,  55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0 },
+//	      { Option.Type.Put,   60.00,  55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0 },
 //	      // theta
-//	      { Option::Put,  405.00, 430.00, 0.05, 0.07, 1.0/12.0, 0.20,-31.1924, 0 },
+//	      { Option.Type.Put,  405.00, 430.00, 0.05, 0.07, 1.0/12.0, 0.20,-31.1924, 0 },
 //	      // theta per day
-//	      { Option::Put,  405.00, 430.00, 0.05, 0.07, 1.0/12.0, 0.20, -0.0855, 0 },
+//	      { Option.Type.Put,  405.00, 430.00, 0.05, 0.07, 1.0/12.0, 0.20, -0.0855, 0 },
 //	      // rho
-//	      { Option::Call,  75.00,  72.00, 0.00, 0.09, 1.000000, 0.19, 38.7325, 0 },
+//	      { Option.Type.Call,  75.00,  72.00, 0.00, 0.09, 1.000000, 0.19, 38.7325, 0 },
 //	      // dividendRho
-//	      { Option::Put,  490.00, 500.00, 0.05, 0.08, 0.250000, 0.15, 42.2254, 0 }
+//	      { Option.Type.Put,  490.00, 500.00, 0.05, 0.08, 0.250000, 0.15, 42.2254, 0 }
 //	    };
 //
 //	    DayCounter dc = Actual360();
@@ -611,7 +645,7 @@ public class EuropeanOptionSuite {
 //	    tolerance["divRho"] = 1.0e-5;
 //	    tolerance["vega"]   = 1.0e-5;
 //
-//	    Option::Type types[] = { Option::Call, Option::Put };
+//	    Option.Type.Type types[] = { Option.Type.Call, Option.Type.Put };
 //	    Real strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
 //	    Real underlyings[] = { 100.0 };
 //	    Rate qRates[] = { 0.04, 0.05, 0.06 };
@@ -766,7 +800,7 @@ public class EuropeanOptionSuite {
 //	    Real tolerance = 1.0e-6;
 //
 //	    // test options
-//	    Option::Type types[] = { Option::Call, Option::Put };
+//	    Option.Type.Type types[] = { Option.Type.Call, Option.Type.Put };
 //	    Real strikes[] = { 90.0, 99.5, 100.0, 100.5, 110.0 };
 //	    Integer lengths[] = { 36, 180, 360, 1080 };
 //
@@ -905,7 +939,7 @@ public class EuropeanOptionSuite {
 //	    Date exerciseDate = today + 1*Years;
 //	    boost::shared_ptr<Exercise> exercise(new EuropeanExercise(exerciseDate));
 //	    boost::shared_ptr<StrikedTypePayoff> payoff(
-//	                                 new PlainVanillaPayoff(Option::Call, 100.0));
+//	                                 new PlainVanillaPayoff(Option.Type.Call, 100.0));
 //
 //	    boost::shared_ptr<StochasticProcess> process(
 //	                  new BlackScholesMertonProcess(underlying, qTS, rTS, volTS));
@@ -965,7 +999,7 @@ public class EuropeanOptionSuite {
 //	    std::map<std::string,Real> calculated, expected;
 //
 //	    // test options
-//	    Option::Type types[] = { Option::Call, Option::Put };
+//	    Option.Type.Type types[] = { Option.Type.Call, Option.Type.Put };
 //	    Real strikes[] = { 75.0, 100.0, 125.0 };
 //	    Integer lengths[] = { 1 };
 //
@@ -1241,8 +1275,8 @@ public class EuropeanOptionSuite {
 //	    EuropeanOptionData values[] = {
 //	      // pag 2-8
 //	      //        type, strike,   spot,    q,    r,    t,  vol,   value
-//	      { Option::Call,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 0.0},
-//	      { Option::Put,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 0.0},
+//	      { Option.Type.Call,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 0.0},
+//	      { Option.Type.Put,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 0.0},
 //	    };
 //
 //	    DayCounter dc = Actual360();

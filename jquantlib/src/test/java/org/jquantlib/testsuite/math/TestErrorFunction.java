@@ -3,12 +3,14 @@ package org.jquantlib.testsuite.math;
 import junit.framework.TestCase;
 
 import org.jquantlib.math.ErrorFunction;
+import org.junit.Test;
 
 /**
  * @author <Richard Gomes>
  */
 public class TestErrorFunction extends TestCase{
 
+	@Test
 	public void testRegressionExtremeValuesForCoverage(){
 		
 		double[][] testvalues = { 	{-2*Double.MIN_NORMAL, 0.0},
@@ -29,6 +31,7 @@ public class TestErrorFunction extends TestCase{
 
 	}
 	
+	@Test
 	public void testKnownValuesAbramStegun(){
 		double[][] testvalues = { 	{0.0, 0.0},
 									{0.5, 0.5204998778},

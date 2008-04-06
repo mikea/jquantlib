@@ -3,12 +3,14 @@ package org.jquantlib.testsuite.math.integrals;
 import junit.framework.TestCase;
 
 import org.jquantlib.math.distributions.GammaFunction;
+import org.junit.Test;
 
 /**
  * @author <Richard Gomes>
  */
 public class TestGammaFunction extends TestCase{
 
+	@Test
 	public void testKnownValuesAbramStegun() {
 		double[][] values =	{	{1.075, -0.0388257395},
 								{1.225, -0.0922078291},

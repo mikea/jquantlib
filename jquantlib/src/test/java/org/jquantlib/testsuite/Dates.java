@@ -27,8 +27,10 @@ import org.junit.BeforeClass;
 
 
 /**
+ * @deprecated
  * @author Joerg Brunsmann
  */
+// TODO: remove or 'upgrade' this class once we are using JUnit4
 public class Dates {
 
 	/**

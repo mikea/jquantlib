@@ -3,6 +3,7 @@ package org.jquantlib.testsuite.termstructures.volatilities;
 import junit.framework.TestCase;
 
 import org.jquantlib.termstructures.volatilities.Sabr;
+import org.junit.Test;
 
 
 /**
@@ -10,8 +11,7 @@ import org.jquantlib.termstructures.volatilities.Sabr;
  */
 public class TestSabr extends TestCase {
 
-
-	
+	@Test
 	public void testAgainstKnownValues() {
 		
 		double strike = 0.0398;

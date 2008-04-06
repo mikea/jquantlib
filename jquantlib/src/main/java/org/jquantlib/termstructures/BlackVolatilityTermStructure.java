@@ -41,7 +41,7 @@ package org.jquantlib.termstructures;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.tmp.DefaultCalendar;
+import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 
 /**
@@ -76,7 +76,7 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 	 * Initialize with a fixed reference date
 	 */
 	public BlackVolatilityTermStructure(final Date referenceDate) {
-		this(referenceDate, new DefaultCalendar());
+		this(referenceDate, new NullCalendar());
 	}
 
 	/**

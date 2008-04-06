@@ -19,8 +19,8 @@
  */
 
 /*
- Copyright (C) 2004 Ferdinando Ametrano
  Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2003, 2004, 2005, 2006, 2007 StatPro Italia srl
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -40,39 +40,13 @@ package org.jquantlib.daycounters;
 
 import org.jquantlib.util.Date;
 
-/**
- * "Actual/365 (Fixed)" day count convention, also know as
- * "Act/365 (Fixed)", "A/365 (Fixed)", or "A/365F".
- * 
- * @note According to ISDA, "Actual/365" (without "Fixed") is
- * an alias for "Actual/Actual (ISDA)"DayCounter (see
- * ActualActual.)  If Actual/365 is not explicitly
- * specified as fixed in an instrument specification,
- * you might want to double-check its meaning.
- * 
- * @author Richard Gomes
- */
-public class Actual365Fixed extends AbstractDayCounter {
+public abstract class AbstractDayCounter implements DayCounter {
 
-	/**
-	 * @see DayCounter#getName()
+    /**
+     * @see DayCounter#getDayCount(Date, Date)
 	 */
-	public final String getName() /* @ReadOnly */ {
-		return "Actual/365 (fixed)";
+	public int getDayCount(final Date dateStart, final Date dateEnd) {
+		return dateEnd.subtract(dateStart);
 	}
-	
-	/**
-	 * @see DayCounter#getYearFraction(Date, Date)
-	 */
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
-		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
-	}
-	
-	/**
-	 * @see DayCounter#getYearFraction(Date, Date, Date, Date)
-	 */
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */ {
-		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
-	}
-	
+    
 }

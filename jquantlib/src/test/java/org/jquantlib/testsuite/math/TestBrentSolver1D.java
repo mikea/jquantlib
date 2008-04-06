@@ -4,13 +4,15 @@ import junit.framework.TestCase;
 
 import org.jquantlib.math.BrentSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
+import org.junit.Test;
 
 /**
  * @author <Richard Gomes>
  */
 public class TestBrentSolver1D extends TestCase{
 
-	public void testInvertSquare(){
+	@Test
+	public void testInvertSquare() {
 		
 		UnaryFunctionDouble square = new UnaryFunctionDouble() {
 

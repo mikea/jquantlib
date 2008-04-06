@@ -3,12 +3,14 @@ package org.jquantlib.testsuite.math.distributions;
 import junit.framework.TestCase;
 
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
+import org.junit.Test;
 
 /**
  * @author <Richard Gomes>
  */
 public class TestCumulativeNormalDistribution extends TestCase {
 
+	@Test
 	public void testKnownGoodValuesFromAbramStegun() {
 		
 		double[][] testvalues = {	{0.0, 0.5},
@@ -47,6 +49,7 @@ public class TestCumulativeNormalDistribution extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testExtremes(){
 		double z = -40;
 		CumulativeNormalDistribution cnd = new CumulativeNormalDistribution();

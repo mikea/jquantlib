@@ -35,7 +35,7 @@ import org.jquantlib.util.Date;
  * @note In heavily multi-threaded environments threads must cache settings from
  *       this singleton.
  */
-// REVIEWED by Richard Gomes
+//CODE REVIEW DONE by Richard Gomes
 public class Settings {
 
 	private static boolean defaultTodaysPayments = false;

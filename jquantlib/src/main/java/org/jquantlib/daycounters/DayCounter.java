@@ -46,21 +46,24 @@ import org.jquantlib.util.Date;
  * period according to given market convention, both as a number
  * of days and as a year fraction.
  *
- * <p>The Bridge pattern is used to provide the base behavior of the
- * day counter.
- *
  * @author Richard Gomes
  */
 public interface DayCounter {
 
     /**
+     * @return the name of this DayCounter
+     */
+	public String getName() /* @ReadOnly */;
+    
+	
+	/**
      * Returns the number of days between two dates
 	 * 
 	 * @param dateStart is the starting Date
 	 * @param dateEnd is the ending Date
 	 * @return the number of days between two dates.
 	 */
-	public int getDayCount(final Date dateStart, final Date dateEnd);
+	public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */;
     
     /**
      * Returns the period between two dates as a fraction of year
@@ -70,7 +73,7 @@ public interface DayCounter {
 	 * @return the period between two dates as a fraction of year.
 	 */
 	// FIXME: verify if necessary ::: document better
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd);
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */;
 	
 	/**
 	 * Returns the period between two dates as a fraction of year, considering referencing
@@ -84,6 +87,6 @@ public interface DayCounter {
 	 * dates for both.
 	 */
 	// FIXME: verify if necessary ::: document better
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd);
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */;
 
 }

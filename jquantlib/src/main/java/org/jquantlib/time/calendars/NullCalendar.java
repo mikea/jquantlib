@@ -18,24 +18,29 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.tmp;
+/**
+ * Calendar for reproducing theoretical calculations
+ * 
+ * @author Richard Gomes
+ */
+package org.jquantlib.time.calendars;
 
-import org.jquantlib.time.Calendar;
+import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 
-public class DefaultCalendar extends Calendar {
+public class NullCalendar extends AbstractCalendar {
 
-	@Override
-	protected boolean isCustomBusinessDay(Date date) {
-		// TODO Auto-generated method stub
+	public String getName() /* @ReadOnly */{
+		return "Null";
+	}
+
+	public boolean isWeekend(final Weekday weekday) /* @ReadOnly */{
 		return false;
 	}
 
-	@Override
-	protected boolean isCustomWeekend(Weekday weekday) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isBusinessDay(final Date date) /* @ReadOnly */{
+		return true;
 	}
 
 }

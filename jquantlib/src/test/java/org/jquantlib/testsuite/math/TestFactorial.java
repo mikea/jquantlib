@@ -3,12 +3,14 @@ package org.jquantlib.testsuite.math;
 import junit.framework.TestCase;
 
 import org.jquantlib.math.Factorial;
+import org.junit.Test;
 
 /**
  * @author <Richard Gomes>
  */
 public class TestFactorial extends TestCase{
 
+	@Test
 	public void testCompareToDirect() {
 		
 		Factorial factorial = new Factorial();
@@ -28,6 +30,7 @@ public class TestFactorial extends TestCase{
 
 	}
 	
+	@Test
 	private double factorial(int n){
 		double x = 1.0;
 		for(int i=2;i<=n;i++){

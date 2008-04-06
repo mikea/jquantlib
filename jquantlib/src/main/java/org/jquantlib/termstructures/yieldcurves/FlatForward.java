@@ -46,7 +46,7 @@ import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.tmp.DefaultCalendar;
+import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 
 public class FlatForward extends YieldTermStructure {
@@ -65,7 +65,7 @@ public class FlatForward extends YieldTermStructure {
             final DayCounter dayCounter,
             final Compounding compounding,
             final Frequency frequency) {
-		super(referenceDate, new DefaultCalendar(), dayCounter);
+		super(referenceDate, new NullCalendar(), dayCounter);
 		this.forward = forward;
 		this.compounding = compounding;
 		this.frequency = frequency;
@@ -96,7 +96,7 @@ public class FlatForward extends YieldTermStructure {
 			final DayCounter dayCounter,
 			final Compounding compounding,
 			final Frequency frequency) {
-		super(referenceDate, new DefaultCalendar(), dayCounter);
+		super(referenceDate, new NullCalendar(), dayCounter);
 		this.forward = new SimpleQuote(forward);
 		this.compounding = compounding;
 		this.frequency = frequency;

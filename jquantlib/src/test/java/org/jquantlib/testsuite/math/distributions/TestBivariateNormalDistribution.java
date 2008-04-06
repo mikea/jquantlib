@@ -3,12 +3,14 @@ package org.jquantlib.testsuite.math.distributions;
 import junit.framework.TestCase;
 
 import org.jquantlib.math.distributions.BivariateNormalDistribution;
+import org.junit.Test;
 
 /**
  * @author <Richard Gomes>
  */
 public class TestBivariateNormalDistribution extends TestCase {
 
+	@Test
 	public void testBivariateAtZero() {
 
 	    /*
@@ -40,6 +42,7 @@ public class TestBivariateNormalDistribution extends TestCase {
 	}
 
 	
+	@Test
 	public void testHaugValues() {
 
 	    double[][] values = {

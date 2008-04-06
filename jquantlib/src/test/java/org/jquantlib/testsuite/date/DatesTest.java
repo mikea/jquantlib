@@ -37,7 +37,7 @@ import org.junit.Test;
  */
 public class DatesTest {
 
-    static final String IMMcodes[] = { "F0", "G0", "H0", "J0", "K0", "M0",
+    static private final String IMMcodes[] = { "F0", "G0", "H0", "J0", "K0", "M0",
             "N0", "Q0", "U0", "V0", "X0", "Z0", "F1", "G1", "H1", "J1", "K1",
             "M1", "N1", "Q1", "U1", "V1", "X1", "Z1", "F2", "G2", "H2", "J2",
             "K2", "M2", "N2", "Q2", "U2", "V2", "X2", "Z2", "F3", "G3", "H3",
@@ -63,31 +63,23 @@ public class DatesTest {
             imm = IMM.nextDate(counter, false);
 
             // check that imm is greater than counter
-            assertFalse(imm + " is not greater than " + counter, imm
-                    .le(counter));
+            assertFalse(imm + " is not greater than " + counter, imm.le(counter));
 
             // check that imm is an IMM date
-            assertFalse(
-                    imm + " is not an IMM date (calculated from " + counter,
-                    !IMM.isIMMdate(imm, false));
+            assertFalse(imm + " is not an IMM date (calculated from " + counter, !IMM.isIMMdate(imm, false));
 
             // check that imm is <= to the next IMM date in the main cycle
-            assertFalse(
-                    imm
-                            + " is not less than or equal to the next future in the main cycle "
-                            + IMM.nextDate(counter, true), imm.gt(IMM.nextDate(
-                            counter, true)));
+            assertFalse(imm + " is not less than or equal to the next future in the main cycle "
+                            + IMM.nextDate(counter, true), imm.gt(IMM.nextDate(counter, true)));
 
             // check that for every date IMMdate is the inverse of IMMcode
-            assertFalse(IMM.code(imm) + "at calendar day " + counter
-                    + " is not the IMM code matching " + imm, !IMM.date(
-                    IMM.code(imm), counter).eq(imm));
+            assertFalse(IMM.code(imm) + "at calendar day " + counter + " is not the IMM code matching " + imm,
+            		!IMM.date(IMM.code(imm), counter).eq(imm));
 
             // check that for every date the 120 IMM codes refer to future dates
             for (int i = 0; i < 40; ++i) {
-                assertFalse(IMM.date(IMMcodes[i], counter) + "is wrong for "
-                        + IMMcodes[i] + " at reference date " + counter, IMM
-                        .date(IMMcodes[i], counter).le(counter));
+                assertFalse(IMM.date(IMMcodes[i], counter) + "is wrong for " + IMMcodes[i] + " at reference date " + counter, 
+                                     IMM.date(IMMcodes[i], counter).le(counter));
             }
 
             counter.inc();

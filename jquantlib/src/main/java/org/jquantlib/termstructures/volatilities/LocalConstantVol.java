@@ -42,7 +42,7 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.tmp.DefaultCalendar;
+import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 
 // Local constant volatility, no time dependence, no asset dependence
@@ -72,13 +72,13 @@ public class LocalConstantVol extends LocalVolTermStructure {
 	}
 
 	public LocalConstantVol(int settlementDays, final Calendar cal, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
-		super(settlementDays, new DefaultCalendar());
+		super(settlementDays, new NullCalendar());
 		this.volatility_ = new SimpleQuote(volatility);
 		this.dayCounter_ = dayCounter;
 	}
 
 	public LocalConstantVol(int settlementDays, final Calendar cal, final Quote volatility, final DayCounter dayCounter) {
-		super(settlementDays, new DefaultCalendar());
+		super(settlementDays, new NullCalendar());
 		this.volatility_ = new SimpleQuote(volatility.getValue());
 		this.dayCounter_ = dayCounter;
 		this.volatility_.addObserver(this);
