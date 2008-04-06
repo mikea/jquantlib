@@ -69,7 +69,7 @@ import org.junit.Test;
  * 
  * @author Richard Gomes
  */
-public class EuropeanOptionSuite {
+public class EuropeanOptionTest {
 
 
 //	#define REPORT_FAILURE(greekName, payoff, exercise, s, q, r, today, \

@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestBivariateNormalDistribution extends TestCase {
+public class BivariateNormalDistributionTest extends TestCase {
 
 	@Test
 	public void testBivariateAtZero() {

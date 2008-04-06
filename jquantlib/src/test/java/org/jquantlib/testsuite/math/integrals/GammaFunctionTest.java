@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestGammaFunction extends TestCase{
+public class GammaFunctionTest extends TestCase{
 
 	@Test
 	public void testKnownValuesAbramStegun() {

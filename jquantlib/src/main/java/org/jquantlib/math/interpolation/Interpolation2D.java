@@ -39,7 +39,6 @@
 package org.jquantlib.math.interpolation;
 
 import static org.jquantlib.math.Closeness.isClose;
-
 import cern.colt.Sorting;
 
 

@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestRegularisedIncompleteBeta extends TestCase{
+public class RegularisedIncompleteBetaTest extends TestCase{
 
 	@Test
 	public void testRegIncompleteBetaHartleyFitchExamples() {

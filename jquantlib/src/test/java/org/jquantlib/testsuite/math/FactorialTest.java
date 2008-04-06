@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestFactorial extends TestCase{
+public class FactorialTest extends TestCase{
 
 	@Test
 	public void testCompareToDirect() {

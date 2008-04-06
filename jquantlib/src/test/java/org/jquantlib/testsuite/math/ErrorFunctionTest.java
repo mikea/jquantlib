@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestErrorFunction extends TestCase{
+public class ErrorFunctionTest extends TestCase{
 
 	@Test
 	public void testRegressionExtremeValuesForCoverage(){

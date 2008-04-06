@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestTabulatedGaussLegendre extends TestCase {
+public class TabulatedGaussLegendreTest extends TestCase {
 
 	@Test
 	public void testPolynomials() {

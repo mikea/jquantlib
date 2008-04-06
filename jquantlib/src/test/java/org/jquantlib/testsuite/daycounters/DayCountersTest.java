@@ -53,7 +53,7 @@ import org.junit.Test;
  * 
  * @author Richard Gomes
  */
-public class DayCountersSuite {
+public class DayCountersTest {
 
 	private class SingleCase {
 	    private ActualActual.Convention convention;

@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestNormalDistribution extends TestCase {
+public class NormalDistributionTest extends TestCase {
 	
 	@Test
 	public void testKnownGoodValuesFromAbramStegun() {

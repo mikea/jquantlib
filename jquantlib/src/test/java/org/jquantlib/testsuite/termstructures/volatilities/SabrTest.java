@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestSabr extends TestCase {
+public class SabrTest extends TestCase {
 
 	@Test
 	public void testAgainstKnownValues() {

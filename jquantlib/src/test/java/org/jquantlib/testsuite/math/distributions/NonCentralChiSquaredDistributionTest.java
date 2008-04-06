@@ -7,7 +7,7 @@ import org.jquantlib.math.distributions.NonCentralChiSquaredDistribution;
 /**
  * @author <Richard Gomes>
  */
-public class TestNonCentralChiSquaredDistribution extends TestCase{
+public class NonCentralChiSquaredDistributionTest extends TestCase{
 
 	public void testPenevRayKovELV() {
 		

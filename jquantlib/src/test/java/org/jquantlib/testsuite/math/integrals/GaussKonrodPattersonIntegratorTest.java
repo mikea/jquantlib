@@ -10,7 +10,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestGaussKonrodPattersonIntegrator extends TestCase {
+public class GaussKonrodPattersonIntegratorTest extends TestCase {
 
 	
 	@Test

@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TestBrentSolver1D extends TestCase{
+public class BrentSolver1dTest extends TestCase{
 
 	@Test
 	public void testInvertSquare() {
