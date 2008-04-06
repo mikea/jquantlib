@@ -357,7 +357,7 @@ public class Date implements Observable {
      * @return <code>this</code> Date decremented by a given Period
      */
     public Date dec(final Period p) {
-        value -= getAdvancedDate(this, -p.getLength(), p.getUnits()).value;
+        value = getAdvancedDate(this, -p.getLength(), p.getUnits()).value;
         notifyObservers();
         return this;
     }
