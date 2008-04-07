@@ -921,30 +921,18 @@ public class Date implements Observable {
 		 */
 		static public Month valueOf(char immCode) {
 			switch (immCode) {
-			case 'F':
-				return Month.Jan;
-			case 'G':
-				return Month.Feb;
-			case 'H':
-				return Month.Mar;
-			case 'J':
-				return Month.Apr;
-			case 'K':
-				return Month.May;
-			case 'M':
-				return Month.Jun;
-			case 'N':
-				return Month.Jul;
-			case 'Q':
-				return Month.Aug;
-			case 'U':
-				return Month.Sep;
-			case 'V':
-				return Month.Oct;
-			case 'X':
-				return Month.Nov;
-			case 'Z':
-				return Month.Dec;
+			case 'F': return Month.Jan;
+			case 'G': return Month.Feb;
+			case 'H': return Month.Mar;
+			case 'J': return Month.Apr;
+			case 'K': return Month.May;
+			case 'M': return Month.Jun;
+			case 'N': return Month.Jul;
+			case 'Q': return Month.Aug;
+			case 'U': return Month.Sep;
+			case 'V': return Month.Oct;
+			case 'X': return Month.Nov;
+			case 'Z': return Month.Dec;
 			default:
 				throw new IllegalArgumentException();
 			}

@@ -132,7 +132,8 @@ public class IMM {
 
         char code = immCode.charAt(0);
         Date.Month m = Date.Month.valueOf(code);
-        int y = referenceDate.getYear() % 10;
+        
+        int y = immCode.charAt(1) - '0';
 
         /* year<1900 are not valid QuantLib years: to avoid a run-time
            exception few lines below we need to add 10 years right away */
