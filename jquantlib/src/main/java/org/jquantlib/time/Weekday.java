@@ -100,19 +100,19 @@ public enum Weekday {
 	public String toString() {
 		switch (enumValue) {
 		case 1:
-			return Sunday.toString();
+			return "Sunday";
 		case 2:
-			return Monday.toString();
+			return "Monday";
 		case 3:
-			return Tuesday.toString();
+			return "Tuesday";
 		case 4:
-			return Wednesday.toString();
+			return "Wednesday";
 		case 5:
-			return Thursday.toString();
+			return "Thursday";
 		case 6:
-			return Friday.toString();
+			return "Friday";
 		case 7:
-			return Saturday.toString();
+			return "Saturday";
 		}
 		throw new IllegalArgumentException();
 	}

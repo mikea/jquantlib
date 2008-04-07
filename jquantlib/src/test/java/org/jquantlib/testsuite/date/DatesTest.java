@@ -24,9 +24,9 @@ import static org.junit.Assert.assertFalse;
 import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateParser;
-import org.jquantlib.util.Date.Month;
 import org.junit.Test;
 
 /**
@@ -57,31 +57,58 @@ public class DatesTest {
         // 10 years of futures must not exceed Date::maxDate
         Period period = new Period(10, TimeUnit.Years);
         Date last = Date.getMaxDate().dec(period);
-        Date imm;
 
         while (counter.le(last)) {
-            imm = IMM.nextDate(counter, false);
+
+            Date imm = IMM.nextDate(counter, false);
 
             // check that imm is greater than counter
-            assertFalse(imm + " is not greater than " + counter, imm.le(counter));
+            assertFalse("\n  "
+                       + imm.getWeekday() + " " + imm
+                       + " is not greater than "
+                       + counter.getWeekday() + " " + counter,
+                       		(imm.le(counter)) );
 
             // check that imm is an IMM date
-            assertFalse(imm + " is not an IMM date (calculated from " + counter, !IMM.isIMMdate(imm, false));
+            assertFalse("\n  "
+                       + imm.getWeekday() + " " + imm
+                       + " is not an IMM date (calculated from "
+                       + counter.getWeekday() + " " + counter + ")",
+                       		!IMM.isIMMdate(imm, false) );
 
             // check that imm is <= to the next IMM date in the main cycle
-            assertFalse(imm + " is not less than or equal to the next future in the main cycle "
-                            + IMM.nextDate(counter, true), imm.gt(IMM.nextDate(counter, true)));
+            assertFalse("\n  "
+                       + imm.getWeekday() + " " + imm
+                       + " is not less than or equal to the next future in the main cycle "
+                       + IMM.nextDate(counter, true),
+                           	imm.gt(IMM.nextDate(counter, true)) );
+
+            //
+            // COMMENTED AT SOURCE QuantLib 0.8.1
+            //
+            //// check that if counter is an IMM date, then imm==counter
+            //if (IMM::isIMMdate(counter, false) && (imm!=counter))
+            //    assertFalse("\n  "
+            //               + counter.weekday() + " " + counter
+            //               + " is already an IMM date, while nextIMM() returns "
+            //               + imm.weekday() + " " + imm);
 
             // check that for every date IMMdate is the inverse of IMMcode
-            assertFalse(IMM.code(imm) + "at calendar day " + counter + " is not the IMM code matching " + imm,
-            		!IMM.date(IMM.code(imm), counter).eq(imm));
+            assertFalse("\n  "
+                       + IMM.code(imm)
+                       + " at calendar day " + counter
+                       + " is not the IMM code matching " + imm,
+                           IMM.date(IMM.code(imm), counter).neq(imm) );
 
             // check that for every date the 120 IMM codes refer to future dates
-            for (int i = 0; i < 40; ++i) {
-                assertFalse(IMM.date(IMMcodes[i], counter) + "is wrong for " + IMMcodes[i] + " at reference date " + counter, 
-                                     IMM.date(IMMcodes[i], counter).le(counter));
+            for (int i=0; i<40; ++i) {
+                assertFalse("\n  "
+                       + IMM.date(IMMcodes[i], counter)
+                       + " is wrong for " + IMMcodes[i]
+                       + " at reference date " + counter,
+                           IMM.date(IMMcodes[i], counter).lt(counter) );
             }
-
+      	
             counter.inc();
         }
     }
@@ -91,13 +118,14 @@ public class DatesTest {
 
         System.out.println("Testing dates...");
 
-        int minDate = Date.getMinDate().getValue() - 1;
+        int minDate = Date.getMinDate().getValue() + 1;
         int maxDate = Date.getMaxDate().getValue();
 
-        int dyold = new Date(minDate - 1).getDayOfYear(), dold = new Date(
-                minDate - 1).getDayOfMonth(), mold = new Date(minDate - 1)
-                .getMonth(), yold = new Date(minDate - 1).getYear(), wdold = new Date(
-                minDate - 1).getWeekday().toInteger();
+        int dyold = new Date(minDate - 1).getDayOfYear();
+        int dold = new Date(minDate - 1).getDayOfMonth();
+        int mold = new Date(minDate - 1).getMonth();
+        int yold = new Date(minDate - 1).getYear();
+        Weekday wdold = new Date(minDate - 1).getWeekday();
 
         for (int i = minDate; i <= maxDate; i++) {
             Date t = new Date(i);
@@ -105,70 +133,89 @@ public class DatesTest {
             int serial = t.getValue();
 
             // check serial number consistency
-            assertFalse("inconsistent serial number: \n"
-                    + "    original:               \n" + "    date:          "
-                    + t + "    serial number: " + serial, (serial != i));
+            assertFalse("inconsistent serial number:\n"
+                    + "    original:      " + i + "\n"
+                    + "    date:          " + t + "\n"
+                    + "    serial number: " + serial, (serial != i) );
 
-            Integer dy = t.getDayOfYear(), d = t.getDayOfMonth(), m = t
-                    .getMonth(), y = t.getYear(), wd = t.getWeekday()
-                    .toInteger();
+            int dy = t.getDayOfYear();
+            int d  = t.getDayOfMonth();
+            int m  = t.getMonth();
+            int y  = t.getYear();
+            Weekday wd = t.getWeekday();
 
             // check if skipping any date
-            assertFalse(
-                    "wrong day of year increment: \n" + "    date: " + t + "\n"
-                            + "    day of year: " + dy + "\n"
-                            + "    Previous:    " + dyold,
-                    !((dy == dyold + 1)
-                            || (dy == 1 && dyold == 365 && !Date.isLeap(yold)) || (dy == 1
-                            && dyold == 366 && Date.isLeap(yold))));
+	    	assertFalse("wrong day of year increment: \n"
+	                   + "    date: " + t + "\n"
+	                   + "    day of year: " + dy + "\n"
+	                   + "    previous:    " + dyold, 
+	                   			!((dy == dyold+1) ||
+	                	          (dy == 1 && dyold == 365 && !Date.isLeap(yold)) ||
+	                	          (dy == 1 && dyold == 366 && Date.isLeap(yold))) );
+	    	
+	    	dyold = dy;
 
-            dyold = dy;
+	    	assertFalse("wrong day,month,year increment: \n"
+	                   + "    date: " + t + "\n"
+	                   + "    day,month,year: "
+	                   + d + "," + m + "," + y + "\n"
+	                   + "    previous:       "
+	                   + dold+ "," + mold + "," + yold,
+	                   			!((d == dold+1 && m == mold   && y == yold) ||
+	                	          (d == 1      && m == mold+1 && y == yold) ||
+	                	          (d == 1      && m == 1      && y == yold+1)) );
+    
+	        dold = d; mold = m; yold = y;
 
-            assertFalse("wrong day,month,year increment: \n" + "    date: " + t
-                    + "\n" + "    day,month,year: " + d + "," + m + "," + y
-                    + "\n" + "    previous:       " + dold + "," + mold + ","
-                    + yold, !((d == dold + 1 && m == mold && y == yold)
-                    || (d == 1 && m == mold + 1 && y == yold) || (d == 1
-                    && m == 1 && y == yold + 1)));
+	        // check month definition
+	    	assertFalse("invalid month: \n"
+	                   + "    date:  " + t + "\n"
+	                   + "    month: " + m,
+	                   			(m < 1 || m > 12) );
 
-            dold = d;
-            mold = m;
-            yold = y;
+	    	// check day definition
+	    	assertFalse("invalid day of month: \n"
+	                   + "    date:  " + t + "\n"
+	                   + "    day: " + d,
+	                   		(d < 1) );
 
-            // check month definition
-            assertFalse("invalid month: \n" + "    date:  " + t + "\n"
-                    + "    month: " + m, m < 1 || m > 12);
-
-            // check day definition
-            assertFalse("invalid day of month: \n" + "    date:  " + t + "\n"
-                    + "    day: " + d, d < 1);
-
-            assertFalse("invalid day of month: \n" + "    date:  " + t + "\n"
-                    + "    day: " + d, !((m == 1 && d <= 31)
-                    || (m == 2 && d <= 28)
-                    || (m == 2 && d == 29 && Date.isLeap(y))
-                    || (m == 3 && d <= 31) || (m == 4 && d <= 30)
-                    || (m == 5 && d <= 31) || (m == 6 && d <= 30)
-                    || (m == 7 && d <= 31) || (m == 8 && d <= 31)
-                    || (m == 9 && d <= 30) || (m == 10 && d <= 31)
-                    || (m == 11 && d <= 30) || (m == 12 && d <= 31)));
-
-            // check weekday definition
-            assertFalse("invalid weekday: \n" + "    date:  " + t + "\n"
-                    + "    weekday:  " + wd + "\n" + "    previous: " + wdold,
-                    !(((wd) == (wdold + 1)) || ((wd) == 1 && (wdold) == 7)));
-
+    
+	    	assertFalse("invalid day of month: \n"
+	                   + "    date:  " + t + "\n"
+	                   + "    day: " + d,
+						  !((m == 1  && d <= 31) ||
+						            (m == 2  && d <= 28) ||
+						            (m == 2  && d == 29 && Date.isLeap(y)) ||
+						            (m == 3  && d <= 31) ||
+						            (m == 4  && d <= 30) ||
+						            (m == 5  && d <= 31) ||
+						            (m == 6  && d <= 30) ||
+						            (m == 7  && d <= 31) ||
+						            (m == 8  && d <= 31) ||
+						            (m == 9  && d <= 30) ||
+						            (m == 10 && d <= 31) ||
+						            (m == 11 && d <= 30) ||
+						            (m == 12 && d <= 31)) );
+                   
+		    // check weekday definition
+	    	assertFalse("invalid weekday: \n"
+	                   + "    date:  " + t + "\n"
+	                   + "    weekday:  " + wd + "\n"
+	                   + "    previous: " + wdold,
+	                   		!((wd.toInteger() == wdold.toInteger()+1) ||
+	                	      (wd.toInteger() == 1 && wdold.toInteger() == 7)) );
             wdold = wd;
 
-            // create the same date with a different constructor
-            Date s = new Date(d, Month.valueOf(m), y);
-
-            // check serial number consistency
-            serial = s.getValue();
-            assertFalse("inconsistent serial number:\n" + "    date:          "
-                    + t + "\n" + "    serial number: " + i + "\n"
-                    + "    cloned date:   " + s + "\n" + "    serial number: "
-                    + serial, serial != i);
+		    // create the same date with a different constructor
+		    Date s = new Date(d,m,y);
+		    // check serial number consistency
+		    serial = s.getValue();
+	    	assertFalse("inconsistent serial number:\n"
+	                   + "    date:          " + t + "\n"
+	                   + "    serial number: " + i + "\n"
+	                   + "    cloned date:   " +  s + "\n"
+	                   + "    serial number: " + serial,
+	                   			(serial != i) );
         }
 
     }
@@ -178,11 +225,14 @@ public class DatesTest {
         System.out.println("Testing ISO dates...");
         String input_date = "2006-01-15";
         Date d = DateParser.parseISO(input_date);
-        assertFalse("Iso date failed\n" + " input date:    \n"
-                + " day of month:  " + d.getDayOfMonth() + "\n"
-                + " month:         " + d.getMonth() + "\n" + " year:         "
-                + d.getYear(), d.getDayOfMonth() != 15
-                || Date.Month.valueOf(d.getMonth()) != Date.Month.January
-                || d.getYear() != 2006);
+    	assertFalse("Iso date failed\n"
+                       + " input date:    " + input_date + "\n"
+                       + " day of month:  " + d.getDayOfMonth() + "\n"
+                       + " month:         " + d.getMonth() + "\n"
+                       + " year:          " + d.getYear(),
+	                           (d.getDayOfMonth() != 15) ||
+	                           (d.getMonth() != Date.Month.January.toInteger()) ||
+	                           (d.getYear() != 2006) );
     }
+
 }

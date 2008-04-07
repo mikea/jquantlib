@@ -37,14 +37,14 @@ public class DateParser {
      * @return Date
      */
     public static Date parseISO(String str) {
-        if (str.length() == 10 && str.charAt(4) == '-' && str.charAt(7) == '-')
-            throw new IllegalArgumentException("Invalid format " + str);
-
-        int year = Integer.parseInt(str.substring(0, 4));
-        int month = Integer.parseInt(str.substring(5, 2));
-        int day = Integer.parseInt(str.substring(8, 2));
-
-        return new Date(day, Date.Month.valueOf(month), year);
+        if (str.length() == 10 && str.charAt(4) == '-' && str.charAt(7) == '-') {
+            int year = Integer.parseInt(str.substring(0, 4));
+            int month = Integer.parseInt(str.substring(5, 7));
+            int day = Integer.parseInt(str.substring(8, 10));
+            return new Date(day, month, year);
+        } else {
+        	throw new IllegalArgumentException("Invalid format " + str);	
+        }
     }
 
     /**

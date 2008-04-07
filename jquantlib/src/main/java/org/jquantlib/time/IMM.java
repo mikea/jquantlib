@@ -291,7 +291,7 @@ public class IMM {
         sb.append(code).append(y);
         
         if (Configuration.getInstance().isExtraSafetyChecks()) {
-        	if (! isIMMcode(sb.toString()) ) throw new IllegalArgumentException("the result "+sb.toString()+" is an invalid IMM code");
+        	if (! isIMMcode(sb.toString(), false) ) throw new IllegalArgumentException("the result "+sb.toString()+" is an invalid IMM code");
         }
         return sb.toString();
     }
