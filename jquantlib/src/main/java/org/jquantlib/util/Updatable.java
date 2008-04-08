@@ -21,7 +21,7 @@
 package org.jquantlib.util;
 
 /**
- * This interface enable classes provide update access to clients
+ * This interface enables classes to provide update access to clients
  * under controlled conditions.
  *  
  * @author Richard Gomes

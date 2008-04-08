@@ -191,7 +191,7 @@ public class DayCountersTest {
         	sb.append("    calculated: ").append(calculated).append('\n');
         	sb.append("    expected:   ").append(testCases[i].result);
 
-        	assertFalse(sb.toString(), Math.abs(calculated-testCases[i].result) <= 1.0e-10);
+        	assertFalse(sb.toString(), Math.abs(calculated-testCases[i].result) > 1.0e-10);
 	    }
 	}
 

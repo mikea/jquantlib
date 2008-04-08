@@ -73,7 +73,7 @@ public class SimpleDayCounter extends AbstractDayCounter {
 	
 	public/* @Time */double getYearFraction(
 			final Date dateStart, final Date dateEnd) /* @ReadOnly */{
-		throw new UnsupportedOperationException();
+		return this.getYearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
 	}
 
 }

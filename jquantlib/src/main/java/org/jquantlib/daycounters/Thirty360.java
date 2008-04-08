@@ -53,7 +53,7 @@ public class Thirty360 extends AbstractDayCounter {
 	private int mm1, mm2;
 	private int yy1, yy2;
 
-	private Thirty360 delegate = null;
+	private Thirty360Abstraction delegate = null;
 
 	public Thirty360() {
 		this(Thirty360.Convention.BondBasis);
@@ -90,7 +90,7 @@ public class Thirty360 extends AbstractDayCounter {
 		this.yy1 = d1.getYear();
 		this.yy2 = d2.getYear();
 
-		((DayCounterBridge) delegate).adjust();
+		((Thirty360Abstraction) delegate).adjust();
 
 		return 360 * (yy2 - yy1) + 30 * (mm2 - mm1 - 1) + Math.max(0, 30 - dd1) + Math.min(30, dd2);
 	}
@@ -110,11 +110,27 @@ public class Thirty360 extends AbstractDayCounter {
 	// inner classes
 	//
 
-	private interface DayCounterBridge {
+	
+	/**
+	 * Abstraction of Thirty360 class according to the Bridge Pattern
+	 * 
+	 * @see http://en.wikipedia.org/wiki/Bridge_pattern
+	 * 
+	 * @author Richard Gomes
+	 */
+	private interface Thirty360Abstraction {
+		public String getName();
 		public void adjust();
 	}
 
-	private class US extends Thirty360 implements DayCounterBridge {
+	/**
+	 * Implementation of Thirty360 class abstraction according to US convention
+	 * 
+	 * @see http://en.wikipedia.org/wiki/Bridge_pattern
+	 * 
+	 * @author Richard Gomes
+	 */
+	private class US implements Thirty360Abstraction {
 
 		public final String getName() /* @ReadOnly */{
 			return "30/360 (Bond Basis)";
@@ -128,7 +144,14 @@ public class Thirty360 extends AbstractDayCounter {
 		}
 	}
 
-	private class EU extends Thirty360 implements DayCounterBridge {
+	/**
+	 * Implementation of Thirty360 class abstraction according to European convention
+	 * 
+	 * @see http://en.wikipedia.org/wiki/Bridge_pattern
+	 * 
+	 * @author Richard Gomes
+	 */
+	private class EU implements Thirty360Abstraction {
 		public final String getName() /* @ReadOnly */{
 			return "30E/360 (Eurobond Basis)";
 		}
@@ -137,7 +160,14 @@ public class Thirty360 extends AbstractDayCounter {
 		}
 	}
 
-	private class IT extends Thirty360 implements DayCounterBridge {
+	/**
+	 * Implementation of Thirty360 class abstraction according to Italian convention
+	 * 
+	 * @see http://en.wikipedia.org/wiki/Bridge_pattern
+	 * 
+	 * @author Richard Gomes
+	 */
+	private class IT implements Thirty360Abstraction {
 
 		public final String getName() /* @ReadOnly */{
 			return "30/360 (Italian)";
