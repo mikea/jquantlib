@@ -575,7 +575,7 @@
     <profile.manifest.app.url>${project.url}</profile.manifest.app.url>
     <profile.manifest.app.mode>debug</profile.manifest.app.mode>
     <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.developerConnection>
-    <maven.scm.connection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.connection>
+    <maven.scm.connection>scm:svn:http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.connection>
     <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.url>
     <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
     <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
