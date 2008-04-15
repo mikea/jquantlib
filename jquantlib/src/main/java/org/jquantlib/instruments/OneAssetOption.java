@@ -75,61 +75,61 @@ public class OneAssetOption extends Option {
 
     public double delta() /* @ReadOnly */ {
         calculate();
-        if (delta == Double.NaN) throw new IllegalArgumentException("delta not provided");
+        if (Double.isNaN(delta)) throw new IllegalArgumentException("delta not provided");
         return delta;
     }
 
     public double deltaForward() /* @ReadOnly */ {
         calculate();
-        if (deltaForward == Double.NaN) throw new IllegalArgumentException("forward delta not provided");
+        if (Double.isNaN(deltaForward)) throw new IllegalArgumentException("forward delta not provided");
         return deltaForward;
     }
 
     public double elasticity() /* @ReadOnly */ {
         calculate();
-        if (elasticity == Double.NaN) throw new IllegalArgumentException("elasticity not provided");
+        if (Double.isNaN(elasticity)) throw new IllegalArgumentException("elasticity not provided");
         return elasticity;
     }
 
     public double gamma() /* @ReadOnly */ {
         calculate();
-        if (gamma == Double.NaN) throw new IllegalArgumentException("gamma not provided");
+        if (Double.isNaN(gamma)) throw new IllegalArgumentException("gamma not provided");
         return gamma;
     }
 
     public double theta() /* @ReadOnly */ {
         calculate();
-        if (theta == Double.NaN) throw new IllegalArgumentException("theta not provided");
+        if (Double.isNaN(theta)) throw new IllegalArgumentException("theta not provided");
         return theta;
     }
 
     public double thetaPerDay() /* @ReadOnly */ {
         calculate();
-        if (thetaPerDay == Double.NaN) throw new IllegalArgumentException("theta per-day not provided");
+        if (Double.isNaN(thetaPerDay)) throw new IllegalArgumentException("theta per-day not provided");
         return thetaPerDay;
     }
 
     public double vega() /* @ReadOnly */ {
         calculate();
-        if (vega == Double.NaN) throw new IllegalArgumentException("vega not provided");
+        if (Double.isNaN(vega)) throw new IllegalArgumentException("vega not provided");
         return vega;
     }
 
     public double rho() /* @ReadOnly */ {
         calculate();
-        if (rho == Double.NaN) throw new IllegalArgumentException("rho not provided");
+        if (Double.isNaN(rho)) throw new IllegalArgumentException("rho not provided");
         return rho;
     }
 
     public double dividendRho() /* @ReadOnly */ {
         calculate();
-        if (dividendRho == Double.NaN) throw new IllegalArgumentException("dividend rho not provided");
+        if (Double.isNaN(dividendRho)) throw new IllegalArgumentException("dividend rho not provided");
         return dividendRho;
     }
 
     public double itmCashProbability() /* @ReadOnly */ {
         calculate();
-        if (itmCashProbability == Double.NaN) throw new IllegalArgumentException("in-the-money cash probability not provided");
+        if (Double.isNaN(itmCashProbability)) throw new IllegalArgumentException("in-the-money cash probability not provided");
         return itmCashProbability;
     }
 

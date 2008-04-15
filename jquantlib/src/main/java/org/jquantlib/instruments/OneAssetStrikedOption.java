@@ -51,7 +51,7 @@ public class OneAssetStrikedOption extends OneAssetOption {
     
     public /* @Price */ double getStrikeSensitivity() /* @ReadOnly */ {
         calculate();
-        if (strikeSensitivity == Double.NaN) throw new ArithmeticException("strike sensitivity not provided");
+        if (Double.isNaN(strikeSensitivity)) throw new ArithmeticException("strike sensitivity not provided");
         return strikeSensitivity;
     }
         

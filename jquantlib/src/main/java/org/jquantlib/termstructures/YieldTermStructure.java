@@ -182,9 +182,10 @@ public abstract class YieldTermStructure extends TermStructure {
 		}
 	}
 
-	protected InterestRate getForwardRate(final Date d, final Period p, final DayCounter resultDayCounter, Compounding comp) {
-		return getForwardRate(d, p, resultDayCounter, comp);
-	}
+// XXX
+//	protected InterestRate getForwardRate(final Date d, final Period p, final DayCounter resultDayCounter, Compounding comp) {
+//		return getForwardRate(d, p, resultDayCounter, comp);
+//	}
 
 	protected InterestRate getForwardRate(final Date d, final Period p, final DayCounter resultDayCounter, Compounding comp, Frequency freq) {
 		return getForwardRate(d, p, resultDayCounter, comp, freq, false);

@@ -81,7 +81,7 @@ public class InterestRate {
         	// e^(r*t)
         	return Math.exp( (r*t) );
         } else if (compound==Compounding.SimpleThenCompounded) {
-            if (t<(1/freq))
+            if (t < (1 / (double)freq) )
             	// 1+r*t
             	return 1.0+r*t;
             else

@@ -240,7 +240,7 @@ public class EuropeanOptionTest {
 	}
 
 
-	// TODO: @Test
+	// TODO: Test
 	public void testValues() {
 
 	    System.out.println("Testing European option values...");
@@ -248,7 +248,7 @@ public class EuropeanOptionTest {
 	    /* The data below are from
 	       "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
 	    */
-	    EuropeanOptionData values[] = {
+	    EuropeanOptionData values[] = new EuropeanOptionData[] {
 	      // pag 2-8
 	      //                              type,     strike,   spot,    q,    r,    t,  vol,   value,    tol
 	      new EuropeanOptionData( Option.Type.Call,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 1.0e-4),

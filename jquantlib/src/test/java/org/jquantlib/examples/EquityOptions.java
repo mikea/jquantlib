@@ -80,8 +80,6 @@ package org.jquantlib.examples;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.exercise.AmericanExercise;
-import org.jquantlib.exercise.BermudanExercise;
 import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.EuropeanOption;
@@ -98,8 +96,6 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
-import org.jquantlib.time.Period;
-import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
 
 //import org.quantlib.Actual365Fixed;
@@ -193,16 +189,18 @@ public class EquityOptions {
     
     // Define exercise for European Options
     Exercise europeanExercise = new EuropeanExercise(maturity);
-    // Define exercise for Bermudan Options
-    int bermudanForwards = 4;
-    Date[] exerciseDates = new Date[bermudanForwards];
-    for (int i = 1; i <= bermudanForwards; i++) {
-        Date forward = settlementDate.add(new Period(3 * i, TimeUnit.Months));
-        exerciseDates[i] = forward;
-    }
-    Exercise bermudanExercise = new BermudanExercise(exerciseDates);
-    // Define exercise for American Options
-    Exercise americanExercise = new AmericanExercise(settlementDate, maturity);
+    
+//    // Define exercise for Bermudan Options
+//    int bermudanForwards = 4;
+//    Date[] exerciseDates = new Date[bermudanForwards];
+//    for (int i = 1; i <= bermudanForwards; i++) {
+//        Date forward = settlementDate.add(new Period(3 * i, TimeUnit.Months));
+//        exerciseDates[i] = forward;
+//    }
+//    Exercise bermudanExercise = new BermudanExercise(exerciseDates);
+    
+//    // Define exercise for American Options
+//    Exercise americanExercise = new AmericanExercise(settlementDate, maturity);
 
     // bootstrap the yield/dividend/volatility curves
     Quote underlyingH = new SimpleQuote(underlying);

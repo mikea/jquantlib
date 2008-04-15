@@ -66,8 +66,9 @@ public class Configuration {
 	 * Returns a singleton of this class
 	 * 
 	 * @return a singleton of this class
-	 * @see http://www.ibm.com/developerworks/java/library/j-dcl.html
+	 * @see http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html.
 	 */
+	// FIXME: implement properly according to the article
 	static public Configuration getInstance() {
 		if (singleton==null) {
 			synchronized (lock) {

@@ -90,14 +90,14 @@ import org.jquantlib.util.LazyObject;
     	// FIXME: NaN .vs. null ??
     	public final /*@Price*/ double getNPV() /*@ReadOnly*/ {
     		calculate();
-    		if (this.NPV==Double.NaN) throw new ArithmeticException("NPV not provided");
+    		if (Double.isNaN(this.NPV)) throw new ArithmeticException("NPV not provided");
     		return NPV;
     	}
 
     	// FIXME: NaN .vs. null ??
     	public final /*@Price*/ double getErrorEstimate() /*@ReadOnly*/ {
     		calculate();
-    		if (this.errorEstimate==Double.NaN) throw new ArithmeticException("error estimate not provided");
+    		if (Double.isNaN(this.errorEstimate)) throw new ArithmeticException("error estimate not provided");
     		return errorEstimate;
     	}
 

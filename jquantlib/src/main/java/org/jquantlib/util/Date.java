@@ -708,7 +708,7 @@ public class Date implements Observable {
 	
     private void checkSerialNumber(int value) {
         if (! (value >= MinimumSerialNumber && value <= MaximumSerialNumber) )
-        	new IllegalArgumentException(
+        	throw new IllegalArgumentException(
                     "Date's serial number ("+value+") outside allowed range ["
                     +MinimumSerialNumber+"-"+MaximumSerialNumber+"], i.e. ["
                     +getMinDate()+"-"+getMaxDate()+"]" );

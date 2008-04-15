@@ -115,7 +115,7 @@ public class DayCountersTest {
 
 	    System.out.println("Testing actual/actual day counters...");
 
-	    SingleCase testCases[] = {
+	    SingleCase testCases[] = new SingleCase[] {
 	        // first example
 	        new SingleCase(ActualActual.Convention.ISDA,
 	                   new Date(1,Date.Month.November,2003), new Date(1,Date.Month.May,2004), 
@@ -226,7 +226,7 @@ public class DayCountersTest {
 
 	    System.out.println("Testing simple day counter...");
 
-	    Period p[] = { new Period(3, TimeUnit.Months), new Period(6, TimeUnit.Months), new Period(1, TimeUnit.Years) };
+	    Period p[] = new Period[] { new Period(3, TimeUnit.Months), new Period(6, TimeUnit.Months), new Period(1, TimeUnit.Years) };
 	    /*@Time*/ double expected[] = { 0.25, 0.5, 1.0 };
 	    
 	    // 4 years should be enough
@@ -255,8 +255,8 @@ public class DayCountersTest {
 
 	    System.out.println("Testing 1/1 day counter...");
 
-	    Period p[] = { new Period(3, TimeUnit.Months), new Period(6, TimeUnit.Months), new Period(1, TimeUnit.Years) };
-	    /*@Time*/ double expected[] = { 1.0, 1.0, 1.0 };
+	    Period p[] = new Period[]{ new Period(3, TimeUnit.Months), new Period(6, TimeUnit.Months), new Period(1, TimeUnit.Years) };
+	    /*@Time*/ double expected[] = new double[] { 1.0, 1.0, 1.0 };
 
 	    // 1 years should be enough
 	    Date first = new Date(1,Date.Month.January,2004);
@@ -280,7 +280,7 @@ public class DayCountersTest {
 	}
 
 	
-// TODO:	@Test
+// TODO: Test
 //	public void testBusiness252() {
 //
 //	    System.out.println("Testing business/252 day counter...");

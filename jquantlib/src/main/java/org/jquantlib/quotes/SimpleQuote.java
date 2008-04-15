@@ -37,7 +37,7 @@ public class SimpleQuote extends Quote {
 
 	@Override
 	public final double getValue() {
-		if (value==Double.NaN) throw new ArithmeticException("invalid simple quote: no value available");
+		if (Double.isNaN(value)) throw new ArithmeticException("invalid simple quote: no value available");
 		return value;
 	}
 	
