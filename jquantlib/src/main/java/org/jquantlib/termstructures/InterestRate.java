@@ -120,11 +120,11 @@ public class InterestRate {
 
     
     public final /*@DiscountFactor*/ double getDiscountFactor(final Date d1, final Date d2) {
-    	return getDiscountFactor(d1, d2, new Date());
+    	return getDiscountFactor(d1, d2, Date.NULL_DATE);
     }
 
     public final /*@DiscountFactor*/ double getDiscountFactor(final Date d1, final Date d2, final Date refStart) {
-    	return getDiscountFactor(d1, d2, refStart, new Date());
+    	return getDiscountFactor(d1, d2, refStart, Date.NULL_DATE);
     }
 
     /**

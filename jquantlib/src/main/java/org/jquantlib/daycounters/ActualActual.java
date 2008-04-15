@@ -119,7 +119,7 @@ public class ActualActual extends AbstractDayCounter {
 
             /*@Time*/ double period = months/12.0;
 
-            if (d2.ge(refPeriodEnd)) {
+            if (d2.le(refPeriodEnd)) {
                 // here refPeriodEnd is a future (notional?) payment date
                 if (d1.ge(refPeriodStart)) {
                     // here refPeriodStart is the last (maybe notional)
@@ -146,7 +146,7 @@ public class ActualActual extends AbstractDayCounter {
                         return getYearFraction(d1,d2,previousRef,refPeriodStart);
                 }
             } else {
-                // here refPeriodEnd is the last (notional?) payment date
+                // here refPeriodEnd is the last notional payment date
                 // d1 < refPeriodEnd < d2 AND refPeriodStart < refPeriodEnd
                 if (refPeriodStart.gt(d1)) {
                 	throw new IllegalArgumentException("invalid dates: d1 < refPeriodStart < refPeriodEnd < d2");
@@ -165,7 +165,7 @@ public class ActualActual extends AbstractDayCounter {
                 do {
                     newRefStart = refPeriodEnd.add(new Period(months*i, TimeUnit.Months));
                     newRefEnd = refPeriodEnd.add(new Period(months*(i+1), TimeUnit.Months));
-                    if (d2.le(newRefEnd)) {
+                    if (d2.lt(newRefEnd)) {
                         break;
                     } else {
                         sum += period;

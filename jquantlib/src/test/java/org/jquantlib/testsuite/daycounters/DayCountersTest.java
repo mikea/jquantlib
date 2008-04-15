@@ -68,7 +68,7 @@ public class DayCountersTest {
     			final Date start,
     			final Date end,
                 final /*@Time*/ double result) {
-	    	this(convention, start, end, new Date(), new Date(), result);
+	    	this(convention, start, end, Date.NULL_DATE, Date.NULL_DATE, result);
 	    }
 
 	    public SingleCase(
@@ -84,6 +84,28 @@ public class DayCountersTest {
 	    	this.refStart = refStart;
 	    	this.refEnd = refEnd;
 	    	this.result = result;
+	    }
+	    
+	    private String dumpDate(final Date date) {
+	    	if (date == null) {
+	    		return "null";
+	    	} else {
+	    		return date.getISOFormat();
+	    	}
+	    }
+	    
+	    
+	    @Override
+	    public String toString() {
+	    	StringBuilder sb = new StringBuilder();
+	    	sb.append("[ ");
+	    	sb.append(convention).append(", ");
+	    	sb.append(dumpDate(start)).append(", ");
+	    	sb.append(dumpDate(end)).append(", ");
+	    	sb.append(dumpDate(refStart)).append(", ");
+	    	sb.append(dumpDate(refEnd));
+	    	sb.append(" ]");
+	    	return sb.toString();
 	    }
 	}
 	
@@ -180,6 +202,9 @@ public class DayCountersTest {
 	        Date d2 = testCases[i].end;
 	        Date rd1 = testCases[i].refStart;
 	        Date rd2 = testCases[i].refEnd;
+	        
+	        System.out.println(testCases[i].toString());
+	        
 	        /*@Time*/ double  calculated = dayCounter.getYearFraction(d1,d2,rd1,rd2);
 
         	StringBuilder sb = new StringBuilder();
@@ -220,7 +245,7 @@ public class DayCountersTest {
 	        	sb.append("    calculated: ").append(calculated).append('\n');
 	        	sb.append("    expected:   ").append(expected[i]);
 	            
-	        	assertFalse(sb.toString(), Math.abs(calculated-expected[i]) <= 1.0e-12);
+	        	assertFalse(sb.toString(), Math.abs(calculated-expected[i]) > 1.0e-12);
 	        }
 	    }
 	}
@@ -254,9 +279,8 @@ public class DayCountersTest {
 	    }
 	}
 
-// FIXME: remove comments	
-//	
-//	@Test
+	
+// TODO:	@Test
 //	public void testBusiness252() {
 //
 //	    System.out.println("Testing business/252 day counter...");
@@ -305,5 +329,5 @@ public class DayCountersTest {
 //        	assertFalse(sb.toString(), Math.abs(calculated-expected[i]) <= 1.0e-12);
 //	    }
 //	}
-//
+
 }

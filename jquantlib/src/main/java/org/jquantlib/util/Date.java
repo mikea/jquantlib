@@ -208,13 +208,38 @@ public class Date implements Observable {
 
     
 	/**
-     * Creates a null Date
+     * This constructor is intended to be used by Date class itself.
+     * 
+     * <p>
+     * This method was made private in order to avoid accidental 
+     * comparison of Date references, for instance:
+     * <code>
+     *    Date d1 = new Date();
+     *    Date d2 = new Date();
+     *    boolean test1 = (d1.equals(d2)); // true
+     *    boolean test2 = (d1 == d2);      // false!
+     * </code>
      */
-    public Date() {
+    private Date() {
     	this(0);
     }
 
-    public Date(int value) {
+    /**
+     * This constructor is intended to be used by Date class itself.
+     * 
+     * <p>
+     * This method was made private in order to avoid accidental 
+     * comparison of Date references, for instance:
+     * <code>
+     *    Date d1 = new Date(1234);
+     *    Date d2 = new Date(1234);
+     *    boolean test1 = (d1.equals(d2)); // true
+     *    boolean test2 = (d1 == d2);      // false!
+     * </code>
+     *
+     * @param value is a serial which corresponds to a Date
+     */
+    private Date(int value) {
     	this.value = value;
     }
 

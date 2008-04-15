@@ -61,7 +61,6 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Utilities;
-import org.junit.Test;
 
 
 /**
@@ -240,14 +239,8 @@ public class EuropeanOptionTest {
 	    return (int) (t*360+0.5);
 	}
 
-//	void teardown() {
-//	    Settings::instance().evaluationDate() = Date();
-//	}
-//
-//	QL_END_TEST_LOCALS(EuropeanOptionTest)
-//
 
-	@Test
+	// TODO: @Test
 	public void testValues() {
 
 	    System.out.println("Testing European option values...");

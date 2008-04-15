@@ -118,18 +118,17 @@ public class DatesTest {
 
         System.out.println("Testing dates...");
 
-        int minDate = Date.getMinDate().getValue() + 1;
-        int maxDate = Date.getMaxDate().getValue();
+        int dyold     = Date.getMinDate().getDayOfYear();
+        int dold      = Date.getMinDate().getDayOfMonth();
+        int mold      = Date.getMinDate().getMonth();
+        int yold      = Date.getMinDate().getYear();
+        Weekday wdold = Date.getMinDate().getWeekday();
+        
+        Date minDate = Date.getMinDate().add(1);
+        Date maxDate = Date.getMaxDate();
 
-        int dyold = new Date(minDate - 1).getDayOfYear();
-        int dold = new Date(minDate - 1).getDayOfMonth();
-        int mold = new Date(minDate - 1).getMonth();
-        int yold = new Date(minDate - 1).getYear();
-        Weekday wdold = new Date(minDate - 1).getWeekday();
-
-        for (int i = minDate; i <= maxDate; i++) {
-            Date t = new Date(i);
-
+        int i = minDate.getValue();
+        for (Date t = minDate; t.le(maxDate); t.add(1), i++) {
             int serial = t.getValue();
 
             // check serial number consistency
