@@ -81,33 +81,51 @@ import org.jquantlib.util.Date.Month;
 
 public class UnitedStates implements Calendar {
 	public static enum Market {
-		SETTLEMENT,      // !< generic settlement calendar
-		NYSE,           // !< New York stock exchange calendar
+		SETTLEMENT, // !< generic settlement calendar
+		NYSE, // !< New York stock exchange calendar
 		GOVERNMENTBOND, // !< government-bond calendar
-		NERC            // !< off-peak days for NERC
+		NERC
+		// !< off-peak days for NERC
 	};
 
-	private final static Calendar SETTLEMENT_CALENDAR = new SettlementCalendar();
-	private final static Calendar NYSE_CALENDAR = new NyseCalendar();
-	private final static Calendar GOVBOND_CALENDAR = new GovernmentBondCalendar();
-	private final static Calendar NERC_CALENDAR = new NercCalendar();
+	private final static Calendar SETTLEMENT_CALENDAR = new UnitedStates(
+			Market.SETTLEMENT);
+	private final static Calendar NYSE_CALENDAR = new UnitedStates(Market.NYSE);
+	private final static Calendar GOVBOND_CALENDAR = new UnitedStates(
+			Market.GOVERNMENTBOND);
+	private final static Calendar NERC_CALENDAR = new UnitedStates(Market.NERC);
 
-	private Calendar marketCalendar;
+	private Calendar delegate;
 
-	public UnitedStates(Market market) {
+	private UnitedStates(Market market) {
 		switch (market) {
 		case SETTLEMENT:
-			marketCalendar = SETTLEMENT_CALENDAR;
+			delegate = new SettlementCalendar();
 			break;
 		case NYSE:
-			marketCalendar = NYSE_CALENDAR;
+			delegate = new NyseCalendar();
 			break;
 		case GOVERNMENTBOND:
-			marketCalendar = GOVBOND_CALENDAR;
+			delegate = new GovernmentBondCalendar();
 			break;
 		case NERC:
-			marketCalendar = NERC_CALENDAR;
+			delegate = new NercCalendar();
 			break;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+	}
+
+	public static Calendar getCalendar(Market market) {
+		switch (market) {
+		case SETTLEMENT:
+			return SETTLEMENT_CALENDAR;
+		case NYSE:
+			return NYSE_CALENDAR;
+		case GOVERNMENTBOND:
+			return GOVBOND_CALENDAR;
+		case NERC:
+			return NERC_CALENDAR;
 		default:
 			throw new IllegalArgumentException("unknown market");
 		}
@@ -115,56 +133,56 @@ public class UnitedStates implements Calendar {
 
 	@Override
 	public Date advance(Date d, int n, TimeUnit unit) {
-		return marketCalendar.advance(d, n, unit);
+		return delegate.advance(d, n, unit);
 	}
 
 	@Override
 	public Date advance(Date d, int n, TimeUnit unit,
 			BusinessDayConvention convention, boolean endOfMonth) {
-		return marketCalendar.advance(d, n, unit, convention, endOfMonth);
+		return delegate.advance(d, n, unit, convention, endOfMonth);
 	}
 
 	@Override
 	public Date advance(Date date, Period period,
 			BusinessDayConvention convention, boolean endOfMonth) {
-		return marketCalendar.advance(date, period, convention, endOfMonth);
+		return delegate.advance(date, period, convention, endOfMonth);
 	}
 
 	@Override
 	public long businessDaysBetween(Date from, Date to, boolean includeFirst,
 			boolean includeLast) {
-		return marketCalendar.businessDaysBetween(from, to, includeFirst,
+		return delegate.businessDaysBetween(from, to, includeFirst,
 				includeLast);
 	}
 
 	@Override
 	public Date getEndOfMonth(Date d) {
-		return marketCalendar.getEndOfMonth(d);
+		return delegate.getEndOfMonth(d);
 	}
 
 	@Override
 	public String getName() {
-		return marketCalendar.getName();
+		return delegate.getName();
 	}
 
 	@Override
 	public boolean isBusinessDay(Date d) {
-		return marketCalendar.isBusinessDay(d);
+		return delegate.isBusinessDay(d);
 	}
 
 	@Override
 	public boolean isEndOfMonth(Date d) {
-		return marketCalendar.isEndOfMonth(d);
+		return delegate.isEndOfMonth(d);
 	}
 
 	@Override
 	public boolean isHoliday(Date d) {
-		return marketCalendar.isHoliday(d);
+		return delegate.isHoliday(d);
 	}
 
 	@Override
 	public boolean isWeekend(Weekday w) {
-		return marketCalendar.isWeekend(w);
+		return delegate.isWeekend(w);
 	}
 
 	private static class SettlementCalendar extends WesternCalendar {
