@@ -80,8 +80,7 @@ public class Canada extends DelegateCalendar {
 
     public enum Market {
         SETTLEMENT, // !< generic settlement calendar
-        TSX
-        // !< Toronto stock exchange calendar
+        TSX         // !< Toronto stock exchange calendar
     };
 
     private final static Canada SETTLEMENT_CALENDAR = new Canada(Market.SETTLEMENT);
