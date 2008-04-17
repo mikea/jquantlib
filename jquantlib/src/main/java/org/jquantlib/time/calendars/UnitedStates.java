@@ -88,12 +88,12 @@ public class UnitedStates implements Calendar {
 		// !< off-peak days for NERC
 	};
 
-	private final static Calendar SETTLEMENT_CALENDAR = new UnitedStates(
+	private final static UnitedStates SETTLEMENT_CALENDAR = new UnitedStates(
 			Market.SETTLEMENT);
-	private final static Calendar NYSE_CALENDAR = new UnitedStates(Market.NYSE);
-	private final static Calendar GOVBOND_CALENDAR = new UnitedStates(
+	private final static UnitedStates NYSE_CALENDAR = new UnitedStates(Market.NYSE);
+	private final static UnitedStates GOVBOND_CALENDAR = new UnitedStates(
 			Market.GOVERNMENTBOND);
-	private final static Calendar NERC_CALENDAR = new UnitedStates(Market.NERC);
+	private final static UnitedStates NERC_CALENDAR = new UnitedStates(Market.NERC);
 
 	private Calendar delegate;
 
@@ -116,7 +116,7 @@ public class UnitedStates implements Calendar {
 		}
 	}
 
-	public static Calendar getCalendar(Market market) {
+	public static UnitedStates getCalendar(Market market) {
 		switch (market) {
 		case SETTLEMENT:
 			return SETTLEMENT_CALENDAR;
