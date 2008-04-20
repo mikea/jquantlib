@@ -113,12 +113,11 @@ public class Canada extends DelegateCalendar {
     }
 
     private class SettlementCalendar extends WesternCalendar {
-        @Override
-        public String getName() {
+
+    	public String getName() {
             return "Canada";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -156,12 +155,11 @@ public class Canada extends DelegateCalendar {
     }
 
     private class TsxCalendar extends WesternCalendar {
-        @Override
-        public String getName() {
+
+    	public String getName() {
             return "TSX";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();

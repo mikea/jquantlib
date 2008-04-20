@@ -70,7 +70,7 @@ public class BlackCalculator /* <T extends Payoff> */ {
 	protected/* @StdDev */double stdDev;
 	protected/* @DiscountFactor */double discount;
 	protected/* @Variance */double variance;
-	protected double D1, D2, alpha, beta, DalphaDd1, DbetaDd2;
+	protected double D1, D2, alpha, beta, dAlpha_dD1, dBeta_dD2;
 	protected double n_d1, cum_d1, n_d2, cum_d2;
 	protected double X, DXDs, DXDstrike;
 
@@ -133,14 +133,14 @@ public class BlackCalculator /* <T extends Payoff> */ {
 		Option.Type optionType = payoff.getOptionType();
 		if (optionType == Option.Type.Call) {
 			alpha = cum_d1;// N(d1)
-			DalphaDd1 = n_d1;// n(d1)
+			dAlpha_dD1 = n_d1;// n(d1)
 			beta = -cum_d2;// -N(d2)
-			DbetaDd2 = -n_d2;// -n(d2)
+			dBeta_dD2 = -n_d2;// -n(d2)
 		} else if (optionType == Option.Type.Put) {
 			alpha = -1.0 + cum_d1;// -N(-d1)
-			DalphaDd1 = n_d1;// n( d1)
+			dAlpha_dD1 = n_d1;// n( d1)
 			beta = 1.0 - cum_d2;// N(-d2)
-			DbetaDd2 = -n_d2;// -n( d2)
+			dBeta_dD2 = -n_d2;// -n( d2)
 		} else {
 			throw new IllegalArgumentException("invalid option type");
 		}
@@ -167,8 +167,8 @@ public class BlackCalculator /* <T extends Payoff> */ {
 		double DforwardDs = forward / spot;
 
 		double temp = stdDev * spot;
-		double DalphaDs = DalphaDd1 / temp;
-		double DbetaDs = DbetaDd2 / temp;
+		double DalphaDs = dAlpha_dD1 / temp;
+		double DbetaDs = dBeta_dD2 / temp;
 		double temp2 = DalphaDs * forward + alpha * DforwardDs + DbetaDs * X + beta * DXDs;
 
 		return discount * temp2;
@@ -180,8 +180,8 @@ public class BlackCalculator /* <T extends Payoff> */ {
 	public/* @Price */double deltaForward() /* @ReadOnly */{
 
 		double temp = stdDev * forward;
-		double DalphaDforward = DalphaDd1 / temp;
-		double DbetaDforward = DbetaDd2 / temp;
+		double DalphaDforward = dAlpha_dD1 / temp;
+		double DbetaDforward = dBeta_dD2 / temp;
 		double temp2 = DalphaDforward * forward + alpha + DbetaDforward * X;
 		// DXDforward = 0.0; // commented in the source QuantLib
 
@@ -233,8 +233,8 @@ public class BlackCalculator /* <T extends Payoff> */ {
 		double DforwardDs = forward / spot;
 
 		double temp = stdDev * spot;
-		double DalphaDs = DalphaDd1 / temp;
-		double DbetaDs = DbetaDd2 / temp;
+		double DalphaDs = dAlpha_dD1 / temp;
+		double DbetaDs = dBeta_dD2 / temp;
 
 		double D2alphaDs2 = -DalphaDs / spot * (1 + D1 / stdDev);
 		double D2betaDs2 = -DbetaDs / spot * (1 + D2 / stdDev);
@@ -251,8 +251,8 @@ public class BlackCalculator /* <T extends Payoff> */ {
 	public double gammaForward() /* @ReadOnly */{
 
 		double temp = stdDev * forward;
-		double DalphaDforward = DalphaDd1 / temp;
-		double DbetaDforward = DbetaDd2 / temp;
+		double DalphaDforward = dAlpha_dD1 / temp;
+		double DbetaDforward = dBeta_dD2 / temp;
 
 		double D2alphaDforward2 = -DalphaDforward / forward * (1 + D1 / stdDev);
 		double D2betaDforward2 = -DbetaDforward / forward * (1 + D2 / stdDev);
@@ -304,8 +304,8 @@ public class BlackCalculator /* <T extends Payoff> */ {
 
 		double temp = Math.log(strike / forward) / variance;
 		// actually DalphaDsigma / SQRT(T)
-		double DalphaDsigma = DalphaDd1 * (temp + 0.5);
-		double DbetaDsigma = DbetaDd2 * (temp - 0.5);
+		double DalphaDsigma = dAlpha_dD1 * (temp + 0.5);
+		double DbetaDsigma = dBeta_dD2 * (temp - 0.5);
 
 		double temp2 = DalphaDsigma * forward + DbetaDsigma * X;
 
@@ -321,8 +321,8 @@ public class BlackCalculator /* <T extends Payoff> */ {
 			throw new IllegalArgumentException("negative maturity not allowed");
 
 		// actually DalphaDr / T
-		double DalphaDr = DalphaDd1 / stdDev;
-		double DbetaDr = DbetaDd2 / stdDev;
+		double DalphaDr = dAlpha_dD1 / stdDev;
+		double DbetaDr = dBeta_dD2 / stdDev;
 		double temp = DalphaDr * forward + alpha * forward + DbetaDr * X;
 
 		return maturity * (discount * temp - value());
@@ -336,8 +336,8 @@ public class BlackCalculator /* <T extends Payoff> */ {
 			throw new IllegalArgumentException("negative maturity not allowed");
 
 		// actually DalphaDq / T
-		double DalphaDq = -DalphaDd1 / stdDev;
-		double DbetaDq = -DbetaDd2 / stdDev;
+		double DalphaDq = -dAlpha_dD1 / stdDev;
+		double DbetaDq = -dBeta_dD2 / stdDev;
 
 		double temp = DalphaDq * forward - alpha * forward + DbetaDq * X;
 
@@ -372,8 +372,8 @@ public class BlackCalculator /* <T extends Payoff> */ {
 	public double strikeSensitivity() /* @ReadOnly */{
 
 		double temp = stdDev * strike;
-		double DalphaDstrike = -DalphaDd1 / temp;
-		double DbetaDstrike = -DbetaDd2 / temp;
+		double DalphaDstrike = -dAlpha_dD1 / temp;
+		double DbetaDstrike = -dBeta_dD2 / temp;
 
 		double temp2 = DalphaDstrike * forward + DbetaDstrike * X + beta * DXDstrike;
 
@@ -430,30 +430,30 @@ public class BlackCalculator /* <T extends Payoff> */ {
 		}
 
 		private void visit(final CashOrNothingPayoff payoff) {
-			black.alpha = black.DalphaDd1 = 0.0;
+			black.alpha = black.dAlpha_dD1 = 0.0;
 			black.X = payoff.getCashPayoff();
 			black.DXDstrike = 0.0;
 			Option.Type optionType = payoff.getOptionType();
 			if (optionType == Option.Type.Call) {
 				black.beta = black.cum_d2;
-				black.DbetaDd2 = black.n_d2;
+				black.dBeta_dD2 = black.n_d2;
 			} else if (optionType == Option.Type.Put) {
 				black.beta = 1.0 - black.cum_d2;
-				black.DbetaDd2 = -black.n_d2;
+				black.dBeta_dD2 = -black.n_d2;
 			} else {
 				throw new IllegalArgumentException(INVALID_OPTION_TYPE);
 			}
 		}
 
 		private void visit(final AssetOrNothingPayoff payoff) {
-			black.beta = black.DbetaDd2 = 0.0;
+			black.beta = black.dBeta_dD2 = 0.0;
 			Option.Type optionType = payoff.getOptionType();
 			if (optionType == Option.Type.Call) {
 				black.alpha = black.cum_d1;
-				black.DalphaDd1 = black.n_d1;
+				black.dAlpha_dD1 = black.n_d1;
 			} else if (optionType == Option.Type.Put) {
 				black.alpha = 1.0 - black.cum_d1;
-				black.DalphaDd1 = -black.n_d1;
+				black.dAlpha_dD1 = -black.n_d1;
 			} else {
 				throw new IllegalArgumentException(INVALID_OPTION_TYPE);
 			}

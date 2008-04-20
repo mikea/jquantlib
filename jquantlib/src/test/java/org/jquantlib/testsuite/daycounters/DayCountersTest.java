@@ -45,6 +45,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.SimpleDayCounter;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.util.Date;
 import org.junit.Test;
 
@@ -313,7 +314,7 @@ public class DayCountersTest {
 //	        0.2023809523810
 //	        };
 //
-//	    DayCounter dayCounter = Business252(Brazil());
+//	    DayCounter dayCounter = Business252(Brazil.getCalendar(Brazil.Market.SETTLEMENT));
 //
 //	    for (int i=1; i<testDates.length-1; i++) {
 //	    	Date start = testDates[i-1];

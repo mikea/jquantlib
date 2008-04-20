@@ -5,16 +5,17 @@ package org.jquantlib.math;
  * 
  * @author <Richard Gomes>
  */
-public interface UnaryFunctionDouble {
+public interface BinaryFunctionDouble {
 
 	/**
-	 * Computes the value of the function; f(x)
+	 * Computes the value of the function; f(x, y)
 	 * 
 	 * @param x
-	 * @return f(x)
+	 * @param y
+	 * @return f(x, y)
 	 */
 	//FIXME Generics on argument return?
-	public double evaluate(double x);
+	public double evaluate(double x, double y);
 	
 	//boolean isFailed() TODO error handling
 }

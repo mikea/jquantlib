@@ -63,10 +63,9 @@ public abstract class Interpolation2D implements Extrapolator {
 		}
 	}
 	
-	/**
-	 * This method does not have anything to do with Observer.update()
-	 */
-	public abstract void calculate();
+	// TODO: change this method name in order to avoid confusion with other interfaces 
+	public abstract void update();
+	
 	public abstract double getValue(final double x, final double y);
 	
 	
@@ -75,9 +74,6 @@ public abstract class Interpolation2D implements Extrapolator {
         return getValue(x, y);
     }
     
-	public void update() {
-		calculate();
-	}
 	
 	public double xMin() {
 		return vx[0]; // get first element

@@ -136,6 +136,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
 	public void setInterpolation(final Interpolator i) {
 		varianceSurface_ = factory.interpolate(times, strikes, variances);
+		varianceSurface_.update();
 		notifyObservers();
 	}
 
@@ -153,7 +154,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 		if (t <= times[times.length - 1])
 			return varianceSurface_.getValue(t, strike, true);
 		else {
-// FIXME: verify againt QuantLib
+// FIXME: verify against QuantLib
 			// t>times_.back() || extrapolate
 			/* @Time */double lastTime = times[times.length - 1];
 			return varianceSurface_.getValue(lastTime, strike, true) * t / lastTime;

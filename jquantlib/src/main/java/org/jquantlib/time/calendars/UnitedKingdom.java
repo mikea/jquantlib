@@ -115,12 +115,11 @@ public class UnitedKingdom extends DelegateCalendar {
     }
 
     private class SettlementCalendar extends WesternCalendar {
-        @Override
+
         public String getName() {
             return "UK settlement";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -157,12 +156,11 @@ public class UnitedKingdom extends DelegateCalendar {
     }
 
     private class ExchangeCalendar extends WesternCalendar {
-        @Override
-        public String getName() {
+
+    	public String getName() {
             return "London stock exchange";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -200,12 +198,10 @@ public class UnitedKingdom extends DelegateCalendar {
 
     private  class MetalsCalendar extends WesternCalendar {
 
-        @Override
         public String getName() {
             return "London metals exchange";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();

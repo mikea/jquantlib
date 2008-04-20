@@ -41,7 +41,7 @@ package org.jquantlib.termstructures.volatilities;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.LinearInterpolation.Linear;
+import org.jquantlib.math.interpolation.LinearInterpolation;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.util.Date;
 
@@ -101,7 +101,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
         }
 
         // default: linear interpolation
-    	factory = new Linear();
+    	factory = LinearInterpolation.getFactory();
     }
 
 	public final DayCounter dayCounter() {
@@ -126,17 +126,18 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 
 	public void setInterpolation(final Interpolator factory) {
 		varianceCurve = factory.interpolate(times, variances);
+		varianceCurve.enableExtrapolation();
 		varianceCurve.update();
 		notifyObservers();
 	}
 
 	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, /*@Price*/ double maturity) {
 		if (t <= times[times.length]) {
-			return varianceCurve.getValue(t, true);
+			return varianceCurve.evaluate(t);
 		} else {
 			// extrapolate with flat vol
 			/*@Time*/ double lastTime = times[times.length];
-			return varianceCurve.getValue(lastTime, true) * t / lastTime;
+			return varianceCurve.evaluate(lastTime) * t / lastTime;
 		}
 	}
 

@@ -22,27 +22,23 @@ package org.jquantlib.math.interpolation;
 
 
 // FIXME: comments
-public class LinearInterpolation extends Interpolation {
+public class LinearInterpolation extends AbstractInterpolation {
 
     private double[] vp;
     private double[] vs;
 
-    public LinearInterpolation(final double[] x, final double[] y) {
+    /**
+     * Private constructor.
+     * 
+     * @param x
+     * @param y
+     */
+    private LinearInterpolation(final double[] x, final double[] y) {
     	super(x, y);
     	vp = new double[x.length];
     	vs = new double[x.length];
     }
     
-	@Override
-    public void update() {
-        vp[0] = 0.0;
-        for (int i=1; i < vx.length; i++) {
-        	double dx = vx[i] - vx[i-1];
-        	vs[i-1] = (vy[i] - vy[i-1]) / dx;
-            vp[i] = vp[i-1] + dx*(vy[i-1] +0.5*dx*vs[i-1]);
-        }
-    }
-
 	@Override
 	public double xMin() {
 		return  vx[0]; // get first element
@@ -54,36 +50,62 @@ public class LinearInterpolation extends Interpolation {
 	}
 
 	@Override
-	protected double getValue(final double x) {
-        int i = locate(x);
-        return vy[i] + (x - vx[i])*vs[i];
-	}
-
-	@Override
-	protected double primitive(final double x) {
+	protected double primitiveImpl(final double x) {
         int i = locate(x);
         double dx = x - vx[i];
         return vp[i-1] + dx*(vy[i-1] + 0.5*dx*vs[i-1]);
 	}
 
 	@Override
-	protected double derivative(final double x) {
+	protected double derivativeImpl(final double x) {
         int i = locate(x);
         return vs[i];
 	}
 
 	@Override
-	protected double secondDerivative(final double x) {
+	protected double secondDerivativeImpl(final double x) {
         return 0.0;
 	}
 
-	/**
-	 * This static class is a factory to LinearInterpolation
+	
+    //
+    // implements Interpolation
+    //
+    
+    public void update() {
+        vp[0] = 0.0;
+        for (int i=1; i < vx.length; i++) {
+        	double dx = vx[i] - vx[i-1];
+        	vs[i-1] = (vy[i] - vy[i-1]) / dx;
+            vp[i] = vp[i-1] + dx*(vy[i-1] +0.5*dx*vs[i-1]);
+        }
+    }
+
+
+    //
+    // implements UnaryFunctionDouble
+    //
+    
+    protected double evaluateImpl(final double x) {
+        int i = locate(x);
+        return vy[i] + (x - vx[i])*vs[i];
+	}
+
+    
+    //
+    // inner classes
+    //
+    
+    static public Interpolator getFactory() {
+    	return new Factory();
+    }
+    
+    /**
+	 * This static class is a factory for LinearInterpolation instances.
 	 * 
 	 * @author Richard Gomes
 	 */
-	//FIXME: should be LinearInterpolationFactory
-	static public class Linear implements Interpolator {
+	static private class Factory implements Interpolator {
 
 		public Interpolation interpolate(double[] x, double[] y) {
 			return new LinearInterpolation(x, y);

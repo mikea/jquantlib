@@ -67,7 +67,6 @@ public class JointCalendar extends AbstractCalendar {
      * 
      * @see org.jquantlib.time.Calendar#getName()
      */
-    @Override
     public String getName() {
         StringBuilder builder = new StringBuilder();
         switch (joinRule) {
@@ -92,7 +91,6 @@ public class JointCalendar extends AbstractCalendar {
      * 
      * @see org.jquantlib.time.Calendar#isBusinessDay(org.jquantlib.util.Date)
      */
-    @Override
     public boolean isBusinessDay(Date d) {
         switch (joinRule) {
             case JOIN_HOLIDAYS:
@@ -119,7 +117,6 @@ public class JointCalendar extends AbstractCalendar {
      * 
      * @see org.jquantlib.time.Calendar#isWeekend(org.jquantlib.time.Weekday)
      */
-    @Override
     public boolean isWeekend(Weekday w) {
         switch (joinRule) {
             case JOIN_HOLIDAYS:

@@ -75,16 +75,6 @@ public class LocalVolCurve extends LocalVolTermStructure {
 		return Double.POSITIVE_INFINITY;
 	}
 
-	// FIXME: Visitor
-	// inline void LocalVolCurve::accept(AcyclicVisitor& v) {
-	// Visitor<LocalVolCurve>* v1 =
-	// dynamic_cast<Visitor<LocalVolCurve>*>(&v);
-	// if (v1 != 0)
-	// v1->visit(*this);
-	// else
-	// LocalVolTermStructure::accept(v);
-	// }
-
 	/**
 	 * The relation
 	 {@latex[ \int_0^T \sigma_L^2(t)dt = \sigma_B^2 T }
@@ -105,5 +95,15 @@ public class LocalVolCurve extends LocalVolTermStructure {
 		double derivative = (var2 - var1) / dt;
 		return Math.sqrt(derivative);
 	}
+
+	// FIXME: Visitor
+	// inline void LocalVolCurve::accept(AcyclicVisitor& v) {
+	// Visitor<LocalVolCurve>* v1 =
+	// dynamic_cast<Visitor<LocalVolCurve>*>(&v);
+	// if (v1 != 0)
+	// v1->visit(*this);
+	// else
+	// LocalVolTermStructure::accept(v);
+	// }
 
 }

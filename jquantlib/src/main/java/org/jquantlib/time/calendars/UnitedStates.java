@@ -158,12 +158,10 @@ public class UnitedStates extends DelegateCalendar {
 
     private final class SettlementCalendar extends WesternCalendar {
 
-        @Override
         public String getName() {
             return "US settlement";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth();
@@ -200,12 +198,11 @@ public class UnitedStates extends DelegateCalendar {
     }
 
     private final class NyseCalendar extends WesternCalendar {
-        @Override
-        public String getName() {
+
+    	public String getName() {
             return "New York stock exchange";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -277,12 +274,10 @@ public class UnitedStates extends DelegateCalendar {
 
     private  final class GovernmentBondCalendar extends WesternCalendar {
 
-        @Override
         public String getName() {
             return "US government bond market";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -322,12 +317,10 @@ public class UnitedStates extends DelegateCalendar {
 
     private final class NercCalendar extends WesternCalendar {
 
-        @Override
         public String getName() {
             return "North American Energy Reliability Council";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth();

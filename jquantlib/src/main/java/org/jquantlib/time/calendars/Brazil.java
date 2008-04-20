@@ -114,12 +114,11 @@ public class Brazil extends DelegateCalendar {
     }
 
     private final class SettlementCalendar extends WesternCalendar {
-        @Override
+
         public String getName() {
             return "Brazil";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth();
@@ -157,12 +156,10 @@ public class Brazil extends DelegateCalendar {
     }
 
     private final class ExchangeCalendar extends WesternCalendar {
-        @Override
         public String getName() {
             return "BOVESPA";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth();

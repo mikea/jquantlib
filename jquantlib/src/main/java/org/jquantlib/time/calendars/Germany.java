@@ -84,12 +84,11 @@ public class Germany extends DelegateCalendar {
     }
 
     private  final class SettlementCalendar extends WesternCalendar {
-        @Override
-        public String getName() {
+
+    	public String getName() {
             return "German settlement";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -127,12 +126,11 @@ public class Germany extends DelegateCalendar {
     }
 
     private final class FrankfurtStockExchangeCalendar extends WesternCalendar {
-        @Override
+
         public String getName() {
             return "Frankfurt stock exchange";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -162,12 +160,11 @@ public class Germany extends DelegateCalendar {
     }
 
     private final class XetraCalendar extends WesternCalendar {
-        @Override
-        public String getName() {
+
+    	public String getName() {
             return "Xetra";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -197,12 +194,11 @@ public class Germany extends DelegateCalendar {
     }
 
     private final class EurexCalendar extends WesternCalendar {
-        @Override
-        public String getName() {
+
+    	public String getName() {
             return "Eurex";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();

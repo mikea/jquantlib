@@ -61,6 +61,7 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Utilities;
+import org.junit.Test;
 
 
 /**
@@ -240,7 +241,7 @@ public class EuropeanOptionTest {
 	}
 
 
-	// TODO: Test
+	@Test
 	public void testValues() {
 
 	    System.out.println("Testing European option values...");
@@ -342,7 +343,9 @@ public class EuropeanOptionTest {
             sb.append("    result ").append(values[i].result).append('\n');
             sb.append("    tol ").append(values[i].tol); // .append('\n');
             
-        	assertFalse(sb.toString(), error<=tolerance);
+            //FIXME: remove comments
+        	// assertFalse(sb.toString(), error<=tolerance);
+            assertFalse("***** FALSE POSITIVE *****", true);
 	    }
 
 	}

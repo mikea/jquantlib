@@ -404,26 +404,33 @@
   
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.4</version>
-    </dependency>
-    <dependency>
       <groupId>colt</groupId>
       <artifactId>colt</artifactId>
       <version>1.2.0</version>
     </dependency>
+    <!--
     <dependency>
-		<groupId>net.sf.latextaglet</groupId>
-		<artifactId>latextaglet</artifactId>
-		<version>0.1.0</version>
-    </dependency>
-
-    <!-- dependency>
       <groupId>org.jquantlib</groupId>
       <artifactId>annotations</artifactId>
       <version>0.0.1-SNAPSHOT</version>
-    </dependency -->
+    </dependency>
+    -->
+
+    <!-- 'provided' scope dependencies -->
+    <dependency>
+        <groupId>net.sf.latextaglet</groupId>
+        <artifactId>latextaglet</artifactId>
+        <version>0.1.0</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <!-- 'test' scope dependencies -->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.4</version>
+        <scope>test</scope>
+    </dependency>
 
   </dependencies>
 

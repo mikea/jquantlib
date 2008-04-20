@@ -44,12 +44,11 @@ public class Target extends DelegateCalendar {
     }
 
     private final class TargetCalendarImpl extends WesternCalendar {
-        @Override
+
         public String getName() {
             return "TARGET";
         }
 
-        @Override
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth(), dd = date.getDayOfYear();

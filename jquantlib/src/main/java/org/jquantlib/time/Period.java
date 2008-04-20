@@ -149,11 +149,29 @@ public class Period {
         return new Period(n*this.length, this.units);
     }
 
-    public boolean equals(final Period anotherPeriod) {
-        return !(this.lt(anotherPeriod) || anotherPeriod.lt(this));
-    }
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + length;
+		result = prime * result + ((units == null) ? 0 : units.hashCode());
+		return result;
+	}
 
-    public boolean eq(final Period anotherPeriod) {
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		final Period other = (Period) obj;
+		if (length != other.length) return false;
+		if (units == null) {
+			if (other.units != null) return false;
+		} else if (!units.equals(other.units)) return false;
+		return true;
+	}
+
+	public boolean eq(final Period anotherPeriod) {
         return this.equals(anotherPeriod);
     }
 
