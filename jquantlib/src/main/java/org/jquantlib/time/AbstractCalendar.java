@@ -25,51 +25,6 @@ import org.jquantlib.util.Date;
 import cern.colt.list.IntArrayList;
 
 
-
-///**
-// * Returns the holidays between two dates
-// */ 
-//static Date[] holidayList(final Calendar calendar,
-//                          final Date from,
-//                          final Date to,
-//                          boolean includeWeekEnds = false);
-//
-//public Date adjust(final Date d,
-//        BusinessDayConvention convention = Following) /* @ReadOnly */;
-//
-//
-///** Advances the given date of the given number of business days and
-//returns the result.
-//*/
-//Date advance(final Date d,
-//         final int n,
-//         final TimeUnit unit,
-//         final BusinessDayConvention convention = Following,
-//         final boolean endOfMonth = false) /* @ReadOnly */;
-//
-//
-//public Date advance(
-//		final Date date,
-//		final Period& period,
-//		final BusinessDayConvention convention = Following,
-//		final boolean endOfMonth = false) /* @ReadOnly */;
-//
-//
-//
-//public long businessDaysBetween(final Date from,
-//        final Date to,
-//        boolean includeFirst = true,
-//        boolean includeLast = false) /* @ReadOnly */;
-//
-
-
-
-
-
-
-
-
-
 public abstract class AbstractCalendar implements Calendar {
 
 	protected IntArrayList addedHolidays;
@@ -80,8 +35,10 @@ public abstract class AbstractCalendar implements Calendar {
 		this.removedHolidays = new IntArrayList();
 	}
 
+
+// FIXME: code review
 	
-	
+//	----------------------------------------------------------------------------    
 //    /**
 //     * Returns <code>true</code> if the date is a business day for the given market.
 //     */
@@ -104,42 +61,23 @@ public abstract class AbstractCalendar implements Calendar {
 //    public boolean isWeekend(Weekday weekday) {
 //        return isCustomWeekend(weekday);
 //    }
-
-    
-    
-    
-    
-    /**
-     * Returns <code>true</code> if the date is last business day for the
-     * month in given market.
-     */
-    // TODO: add comments
-    public final boolean isEndOfMonth(final Date date) {
-        return (date.getMonth() != adjust(date.inc()).getMonth());
-    }
-
-
-    /**
-     * Last business day of the month to which the given date belongs
-     * 
-     * @param date
-     * @return
-     */
-    // TODO: add comments
-    public final Date getEndOfMonth(final Date date) {
-        return adjust(date.getEndOfMonth(), BusinessDayConvention.Preceding);
-    }
-
-    /**
-     * Returns <code>true</code> if the date is a holiday for the given market.
-     * 
-     * @param date is the Date to be tested
-     */
-    // TODO: add comments
-    public final boolean isHoliday(final Date date) {
-        return !isBusinessDay(date);
-    }
-
+//
+//    
+//	/**
+//	 * Returns the holidays between two dates
+//	 */ 
+//	static Date[] holidayList(final Calendar calendar,
+//	                          final Date from,
+//	                          final Date to,
+//	                          boolean includeWeekEnds = false);
+//
+//	----------------------------------------------------------------------------    
+	
+	
+	
+	//
+    // private methods
+    //
     
 	private void addHoliday(final Date d) {
         // if date was a genuine holiday previously removed, revert the change
@@ -160,17 +98,12 @@ public abstract class AbstractCalendar implements Calendar {
     }
 
     /**
-     * Adjusts a non-business day to the appropriate near business day
-     * with respect to the given convention.  
-     */
-    private final Date adjust(final Date d) {
-    	return adjust(d, BusinessDayConvention.Following);
-    }
-
-    /** Advances the given date of the given number of business days and
+     * Advances the given date of the given number of business days and
      * returns the result.
+     * 
+     * @return Date is date adjusted to next n-th business day
      */
-    private final Date adjust(final Date d, final BusinessDayConvention c) {
+    private final Date adjust(final Date d, final BusinessDayConvention c) /* @ReadOnly */ {
         if (d==null) throw new NullPointerException();
         
         if (c == BusinessDayConvention.Unadjusted)
@@ -197,6 +130,28 @@ public abstract class AbstractCalendar implements Calendar {
         return d1;
     }
 
+
+	//
+	// implements Calendar
+	//
+    
+    public final boolean isEndOfMonth(final Date date) {
+        return (date.getMonth() != adjust(date.inc()).getMonth());
+    }
+
+
+    public final Date getEndOfMonth(final Date date) {
+        return adjust(date.getEndOfMonth(), BusinessDayConvention.Preceding);
+    }
+
+    public final boolean isHoliday(final Date date) {
+        return !isBusinessDay(date);
+    }
+
+    public final Date adjust(final Date d) /* @ReadOnly */ {
+    	return adjust(d, BusinessDayConvention.Following);
+    }
+
     public final Date advance(final Date d, int n, final TimeUnit unit) {
     	return advance(d, n, unit, BusinessDayConvention.Following);
     }
@@ -205,10 +160,6 @@ public abstract class AbstractCalendar implements Calendar {
     	return advance(d, n, unit, c, false);
     }
     
-    /**
-     * Advances the given date as specified by the given period and
-     * returns the result. 
-     */
     public final Date advance(final Date d, int n, final TimeUnit unit, final BusinessDayConvention c, boolean endOfMonth) {
     	if (d==null) throw new NullPointerException();
         if (n == 0) {
@@ -246,47 +197,14 @@ public abstract class AbstractCalendar implements Calendar {
         }
     }
 
-    /**
-     * Advances the given date as specified by the given period and
-     * returns the result. Assumes that it's not the end of a month.
-     * 
-     * @param d
-     * @param p
-     * @param c
-     * @return
-     * @see Calendar#advance(Date, Period, BusinessDayConvention, boolean)
-     */
-    // TODO: add comments
     public Date advance(final Date d, final Period p, final BusinessDayConvention c) {
         return advance(d, p.getLength(), p.getUnits(), c, false);
     }
 
-    /**
-     * Advances the given date as specified by the given period and
-     * returns the result.
-     * 
-     * @param d
-     * @param p
-     * @param c
-     * @param endOfMonth
-     * @return
-     */
-    // TODO: add comments
     public Date advance(final Date d, final Period p, final BusinessDayConvention c, boolean endOfMonth) {
         return advance(d, p.getLength(), p.getUnits(), c, endOfMonth);
     }
 
-    /**
-     * Calculates the number of business days between two given
-     * dates and returns the result.
-     * 
-     * @param from
-     * @param to
-     * @param includeFirst
-     * @param includeLast
-     * @return
-     */
-    // TODO: add comments
     public long businessDaysBetween(final Date from, final Date to, boolean includeFirst, boolean includeLast) {
         int wd = 0;
         if (from == to) {

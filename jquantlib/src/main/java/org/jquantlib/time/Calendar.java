@@ -74,36 +74,41 @@ public interface Calendar {
 	public String getName() /* @ReadOnly */;
 
 	/**
-	 * Returns <tt>true</tt> if the date is a business day for the given
+	 * Returns <code>true</code> if the date is a business day for the given
 	 * market.
 	 */
 	public boolean isBusinessDay(final Date d) /* @ReadOnly */;
 
 	/**
-	 * Returns <tt>true</tt> if the date is a holiday for the given market.
+     * Returns <code>true</code> if the date is a holiday for the given market.
+     * 
+     * @param date is the Date to be tested
 	 */
 	public boolean isHoliday(final Date d) /* @ReadOnly */;
 
 	/**
-	 * Returns <tt>true</tt> if the weekday is part of the weekend for the
+	 * Returns <code>true</code> if the weekday is part of the weekend for the
 	 * given market.
 	 */
 	public boolean isWeekend(Weekday w) /* @ReadOnly */;
 
-	/**
-	 * Returns <tt>true</tt> iff the date is last business day for the month
-	 * in given market.
-	 */
+    /**
+     * Returns <code>true</code> if the date is last business day for the
+     * month in given market.
+     */
 	public boolean isEndOfMonth(final Date d) /* @ReadOnly */;
 
-	/**
-	 * Last business day of the month to which the given date belongs
-	 */
+    /**
+     * Last business day of the month to which the given date belongs
+     * 
+     * @param date
+     * @return
+     */
 	public Date getEndOfMonth(final Date d) /* @ReadOnly */;
 
 
 	
-// XXX	
+// FIXME: code review	
 //	/**
 //	 * Adds a date to the set of holidays for the given calendar.
 //	 */
@@ -113,7 +118,7 @@ public interface Calendar {
 //	 * Removes a date from the set of holidays for the given calendar.
 //	 */
 //	public void removeHoliday(final Date d);
-
+//
 //	/**
 //	 * Adjusts a non-business day to the appropriate near business day with
 //	 * respect to the given convention.
@@ -121,28 +126,43 @@ public interface Calendar {
 //	public Date adjust(final Date d, final BusinessDayConvention convention) /* @ReadOnly */;
 
 	
+    /**
+     * Adjusts a non-business day to the appropriate near business day
+     * with respect to the given convention.
+     */
+    public Date adjust(final Date d) /* @ReadOnly */;
+    
 	/**
 	 * Advances the given date of the given number of business days and returns
 	 * the result.
 	 */
+	// FIXME: improve comments
 	public Date advance(final Date d, int n, final TimeUnit unit);
 	
-	/**
-	 * Advances the given date of the given number of business days and returns
-	 * the result.
-	 */
+    /**
+     * Advances the given date as specified by the given period and
+     * returns the result. Assumes that it's not the end of a month.
+     */
+    public Date advance(final Date d, final Period p, final BusinessDayConvention c) /* @ReadOnly */;
+    
+    /**
+     * Advances the given date as specified by the given period and
+     * returns the result. 
+     */
+	// FIXME: improve comments
 	public Date advance(final Date d, final int n, final TimeUnit unit, final BusinessDayConvention convention, final boolean endOfMonth) /* @ReadOnly */;
 
 	/**
 	 * Advances the given date as specified by the given period and returns the
 	 * result.
 	 */
+	// FIXME: improve comments
 	public Date advance(final Date date, final Period period, final BusinessDayConvention convention, final boolean endOfMonth) /* @ReadOnly */;
 
-	/**
-	 * Calculates the number of business days between two given dates and
-	 * returns the result.
-	 */
+    /**
+     * Calculates the number of business days between two given
+     * dates and returns the result.
+     */
 	public long businessDaysBetween(final Date from, final Date to, boolean includeFirst, boolean includeLast) /* @ReadOnly */;
 
 }

@@ -97,12 +97,7 @@ public abstract class AbstractInterpolation implements Interpolation {
 	public final double[] yValues() {
         return vy;
     }
-
-	public final double evaluate(final double x) {
-        checkRange(x, this.allowsExtrapolation());
-		return evaluateImpl(x);
-	}
-
+	
 	protected final double primitive(final double x) {
         checkRange(x, this.allowsExtrapolation());
 		return primitiveImpl(x);
@@ -123,6 +118,18 @@ public abstract class AbstractInterpolation implements Interpolation {
         return (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
     }
 
+	/**
+	 * This method verifies if
+	 * <li> extrapolation is enabled;</li>
+	 * <li> requested <i>x</i> is valid</li>
+	 * 
+	 * @param x
+	 * @param extrapolate
+	 * 
+	 * @throws IllegalStateException if extrapolation is not enabled.
+	 * @throws IllegalArgumentException if <i>x</i> is our of range
+	 */
+	// FIXME: code review : verify if parameter 'extrapolate' is really needed
 	protected final void checkRange(final double x, boolean extrapolate) {
 		if (! (extrapolate || allowsExtrapolation() || isInRange(x)) ) {
 			StringBuilder sb = new StringBuilder();
@@ -131,20 +138,41 @@ public abstract class AbstractInterpolation implements Interpolation {
 			sb.append("]: extrapolation at ");
 			sb.append(x);
 			sb.append(" not allowed");
-			throw new ArrayIndexOutOfBoundsException(sb.toString());
+			throw new IllegalArgumentException(sb.toString());
 		}
 	}
 
 	// FIXME: code review here: compare against original C++ code
 	protected int locate(double x) /* @ReadOnly */ {
-        if (x < vx[0])
+        if (x <= vx[0])
             return 0;
         else if (x > vx[vx.length-1])
             return vx.length-2;
         else
-            return Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
+        	return Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
     }	
+
 	
+	//
+	// implements UnaryFunctionDouble
+	//
+	
+	/**
+	 * This method validates the range being requested and
+	 * delegates to the concrete implementation, implemented
+	 * by some derived class.
+	 * 
+	 * @see LinearInterpolation.evaluateImpl
+	 */
+	public final double evaluate(final double x) {
+        checkRange(x, this.allowsExtrapolation());
+		return evaluateImpl(x);
+	}
+
+	
+	//
+	// implements Extrapolator
+	//
 
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class

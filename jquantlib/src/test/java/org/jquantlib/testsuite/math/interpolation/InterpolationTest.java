@@ -902,7 +902,7 @@ public class InterpolationTest {
 	    final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
 
 	    Interpolation f = LinearInterpolation.getFactory().interpolate(x, y);
-	    f.update();
+	    f.reload();
 
 	    final double x2[] = { -2.0, -1.0, 0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0 };
 	    int len = x2.length;
@@ -910,20 +910,19 @@ public class InterpolationTest {
 	    double tolerance = 1.0e-12;
 
 	    // case 1: extrapolation not allowed
+	    
 	    try {
 	    	for (int i=0; i<len; i++) {
-	    		y2[i] = f.evaluate(x2[i]);
+		    	y2[i] = f.evaluate(x2[i]);
 	    	}
-	        throw new IllegalStateException();
-	    } catch (ArrayIndexOutOfBoundsException e1) {
-	        // as expected; do nothing
-	    } catch (IllegalStateException e2) {
 	    	assertFalse("failed to throw exception when trying to extrapolate", true);
-	    } catch (Exception e3) {
+	    } catch (IllegalArgumentException e1) {
+	        // This exception was expected. It's OK! Do nothing.
+	    } catch (Exception e2) {
 	    	assertFalse("Unexpected exception", true);
-	    	e3.printStackTrace();
+	    	e2.printStackTrace();
 	    }
-
+	    
 
 	    // case 2: enable extrapolation
 	    f.enableExtrapolation();

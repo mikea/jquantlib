@@ -20,7 +20,7 @@
 
 package org.jquantlib.math.interpolation;
 
-public class BilinearInterpolation extends Interpolation2D {
+public class BilinearInterpolation extends AbstractInterpolation2D {
 
 	/**
      * Private constructor.
@@ -38,11 +38,26 @@ public class BilinearInterpolation extends Interpolation2D {
 		super(x, y, z);
 	}
 
-	public void update() {
-		// nothing!
+	
+    //
+    // implements Interpolation2D
+    //
+    
+	@Deprecated
+	public void update() { reload(); }
+
+	public void reload() {
+		// FIXME: code review
+		
+		// nothing ???????
 	}
 
-	public double getValue(double x, double y) /* @ReadOnly */{
+	
+	//
+    // concrete implementation of BinaryFunctionDouble.evaluate
+    //
+
+	public double evaluateImpl(double x, double y) /* @ReadOnly */{
 		int i = locateX(x);
 		int j = locateY(y);
 
@@ -57,12 +72,21 @@ public class BilinearInterpolation extends Interpolation2D {
 		return (1.0 - t) * (1.0 - u) * z1 + t * (1.0 - u) * z2 + (1.0 - t) * u * z3 + t * u * z4;
 	}
 
-	/**
+	
+	//
+    // inner classes
+    //
+    
+    static public Interpolator2D getFactory() {
+    	return new Factory();
+    }
+    
+    /**
 	 * This static class is a factory for BilinearInterpolation instances.
 	 * 
 	 * @author Richard Gomes
 	 */
-	static public class Bilinear implements Interpolator2D {
+	static private class Factory implements Interpolator2D {
 
 		public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z) {
 			return new BilinearInterpolation(x, y, z);

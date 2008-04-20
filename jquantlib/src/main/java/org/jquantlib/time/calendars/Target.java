@@ -30,7 +30,6 @@ import org.jquantlib.util.Date.Month;
 
 /**
  * @author Srinivas Hasti
- * 
  */
 public class Target extends DelegateCalendar {
     private final static Target TARGET_CALENDAR = new Target();
@@ -56,7 +55,7 @@ public class Target extends DelegateCalendar {
             int y = date.getYear();
             int em = easterMonday(y);
             if (isWeekend(w)
-            // New Year's Day
+            		// New Year's Day
                     || (d == 1 && m == January)
                     // Good Friday
                     || (dd == em - 3 && y >= 2000)

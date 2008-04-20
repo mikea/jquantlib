@@ -39,10 +39,10 @@
 package org.jquantlib.termstructures.volatilities;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.interpolation.BilinearInterpolation;
 import org.jquantlib.math.interpolation.Interpolation2D;
 import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.math.interpolation.Interpolator2D;
-import org.jquantlib.math.interpolation.BilinearInterpolation.Bilinear;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.util.Date;
 
@@ -69,7 +69,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 	private/* @Time */double[] times;
 	private/* @Price */double[] strikes;
 	private/* @Variance */double[][] variances;
-	private Interpolation2D varianceSurface_;
+	private Interpolation2D varianceSurface;
 	private Extrapolation lowerExtrapolation;
 	private Extrapolation upperExtrapolation;
 	private Interpolator2D factory;
@@ -115,7 +115,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 			}
 		}
 		// default: bilinear interpolation
-		factory = new Bilinear();
+		factory = BilinearInterpolation.getFactory();
 	}
 
 	public final DayCounter dayCounter() {
@@ -135,8 +135,9 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 	}
 
 	public void setInterpolation(final Interpolator i) {
-		varianceSurface_ = factory.interpolate(times, strikes, variances);
-		varianceSurface_.update();
+		varianceSurface = factory.interpolate(times, strikes, variances);
+		varianceSurface.enableExtrapolation();
+		varianceSurface.reload();
 		notifyObservers();
 	}
 
@@ -152,12 +153,12 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 			strike = strikes[strikes.length - 1];
 
 		if (t <= times[times.length - 1])
-			return varianceSurface_.getValue(t, strike, true);
+			return varianceSurface.evaluate(t, strike);
 		else {
 // FIXME: verify against QuantLib
 			// t>times_.back() || extrapolate
 			/* @Time */double lastTime = times[times.length - 1];
-			return varianceSurface_.getValue(lastTime, strike, true) * t / lastTime;
+			return varianceSurface.evaluate(lastTime, strike) * t / lastTime;
 		}
 	}
 

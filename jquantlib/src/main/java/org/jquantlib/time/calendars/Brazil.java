@@ -78,6 +78,7 @@ import org.jquantlib.util.Date.Month;
  * @author Srinivas Hasti
  */
 public class Brazil extends DelegateCalendar {
+	
     public static enum Market {
         SETTLEMENT, // !< generic settlement calendar
         EXCHANGE
@@ -156,6 +157,7 @@ public class Brazil extends DelegateCalendar {
     }
 
     private final class ExchangeCalendar extends WesternCalendar {
+    	
         public String getName() {
             return "BOVESPA";
         }

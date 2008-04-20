@@ -72,18 +72,22 @@ public class LinearInterpolation extends AbstractInterpolation {
     // implements Interpolation
     //
     
-    public void update() {
+	@Deprecated
+	public void update() { reload(); }
+
+	public void reload() {
         vp[0] = 0.0;
         for (int i=1; i < vx.length; i++) {
         	double dx = vx[i] - vx[i-1];
         	vs[i-1] = (vy[i] - vy[i-1]) / dx;
             vp[i] = vp[i-1] + dx*(vy[i-1] +0.5*dx*vs[i-1]);
         }
-    }
+	}
+	
 
 
     //
-    // implements UnaryFunctionDouble
+    // concrete implementation of UnaryFunctionDouble.evaluate
     //
     
     protected double evaluateImpl(final double x) {
