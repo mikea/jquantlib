@@ -39,7 +39,7 @@ public class Target extends DelegateCalendar {
         setDelegate(new TargetCalendarImpl());
     }
 
-    public static Target getTarget() {
+    public static Target getCalendar() {
         return TARGET_CALENDAR;
     }
 
