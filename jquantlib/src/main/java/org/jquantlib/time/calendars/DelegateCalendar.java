@@ -39,26 +39,6 @@ public abstract class DelegateCalendar extends AbstractCalendar {
         this.delegate = calendar;
     }
 
-//XXX
-//    public Date advance(Date d, int n, TimeUnit unit, BusinessDayConvention convention, boolean endOfMonth) {
-//        return delegate.advance(d, n, unit, convention, endOfMonth);
-//    }
-//
-//    public Date advance(Date d, int n, TimeUnit unit) {
-//        return delegate.advance(d, n, unit);
-//    }
-//
-//    public Date advance(Date date, Period period, BusinessDayConvention convention, boolean endOfMonth) {
-//        return delegate.advance(date, period, convention, endOfMonth);
-//    }
-//
-//    public long businessDaysBetween(Date from, Date to, boolean includeFirst, boolean includeLast) {
-//        return delegate.businessDaysBetween(from, to, includeFirst, includeLast);
-//    }
-//
-//    public Date getEndOfMonth(Date d) {
-//        return delegate.getEndOfMonth(d);
-//    }
 
     public String getName() {
         return delegate.getName();
@@ -67,15 +47,6 @@ public abstract class DelegateCalendar extends AbstractCalendar {
     public boolean isBusinessDay(Date d) {
         return delegate.isBusinessDay(d);
     }
-
-//XXX    
-//    public boolean isEndOfMonth(Date d) {
-//        return delegate.isEndOfMonth(d);
-//    }
-//
-//    public boolean isHoliday(Date d) {
-//        return delegate.isHoliday(d);
-//    }
 
     public boolean isWeekend(Weekday w) {
         return delegate.isWeekend(w);
