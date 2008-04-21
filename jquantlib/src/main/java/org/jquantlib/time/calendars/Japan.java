@@ -33,6 +33,7 @@ import static org.jquantlib.util.Date.Month.November;
 import static org.jquantlib.util.Date.Month.October;
 import static org.jquantlib.util.Date.Month.September;
 
+import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Date.Month;
@@ -68,18 +69,16 @@ import org.jquantlib.util.Date.Month;
  * 
  * @author Srinivas Hasti
  */
-public class Japan extends DelegateCalendar {
+public class Japan extends AbstractCalendar {
 	private static Japan JAPAN = new Japan();
 
 	private Japan() {
-		setDelegate(this);
 	}
 
 	public static Japan getCalendar() {
 		return JAPAN;
 	}
 
-	@Override
 	public boolean isBusinessDay(Date date) {
 		Weekday w = date.getWeekday();
 		int d = date.getDayOfMonth();
@@ -159,4 +158,12 @@ public class Japan extends DelegateCalendar {
 			return false;
 		return true;
 	}
+
+    public String getName() {
+       return "Japan";
+    }
+
+    public final boolean isWeekend(Weekday weekday) {
+        return weekday == Weekday.Saturday || weekday == Weekday.Sunday;
+    }
 }

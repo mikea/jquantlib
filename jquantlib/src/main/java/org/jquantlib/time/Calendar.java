@@ -39,6 +39,8 @@
 
 package org.jquantlib.time;
 
+import java.util.List;
+
 import org.jquantlib.util.Date;
 
 /**
@@ -164,5 +166,16 @@ public interface Calendar {
      * dates and returns the result.
      */
 	public long businessDaysBetween(final Date from, final Date to, boolean includeFirst, boolean includeLast) /* @ReadOnly */;
+	
+	/**
+     * Returns list of holidays in Date format between two given dates.
+     * 
+     * @param from
+     * @param to
+     * @param includeWeekEnds
+     * @return
+     */
+    public List<Date> getHolidayList(final Date from, final Date to, boolean includeWeekEnds);
+    
 
 }

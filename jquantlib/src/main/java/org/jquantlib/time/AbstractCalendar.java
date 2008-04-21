@@ -20,6 +20,9 @@
 
 package org.jquantlib.time;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jquantlib.util.Date;
 
 import cern.colt.list.IntArrayList;
@@ -237,6 +240,22 @@ public abstract class AbstractCalendar implements Calendar {
         }
 
         return wd;
+    }
+    
+    /**
+     * 
+     */
+    public List<Date> getHolidayList(final Date from, final Date to, boolean includeWeekEnds) {
+        List<Date> holidays = new ArrayList<Date>();
+        if (from.ge(to))
+            throw new IllegalStateException("To date  must be after from date ");
+        Date startDate = new Date(from);
+        for (Date d = startDate; d.le(to); d.inc()) {
+            if (isHoliday(d) && (includeWeekEnds || !isWeekend(d.getWeekday())))
+                holidays.add(d);
+        }
+
+        return holidays;
     }
 
 }
