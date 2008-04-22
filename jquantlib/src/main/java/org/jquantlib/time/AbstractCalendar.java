@@ -139,7 +139,7 @@ public abstract class AbstractCalendar implements Calendar {
 	//
     
     public final boolean isEndOfMonth(final Date date) {
-        return (date.getMonth() != adjust(date.inc()).getMonth());
+        return (date.getMonth() != adjust(date.add(1)).getMonth());
     }
 
 
@@ -210,7 +210,7 @@ public abstract class AbstractCalendar implements Calendar {
 
     public long businessDaysBetween(final Date from, final Date to, boolean includeFirst, boolean includeLast) {
         int wd = 0;
-        if (from == to) {
+        if (from.equals(to)) {
             if (isBusinessDay(from) && (includeFirst || includeLast))
                 wd = 1;
         } else {
@@ -219,14 +219,14 @@ public abstract class AbstractCalendar implements Calendar {
                 while (d.le(to)) {
                     if (isBusinessDay(d))
                         wd++;
-                    d.dec();
+                    d = d.add(1);
                 }
             } else if (from.gt(to)) {
                 Date d = to;
                 while (d.le(from)) {
                     if (isBusinessDay(d))
                         wd++;
-                    d.inc();
+                    d = d.add(1);
                 }
             }
 
@@ -250,7 +250,7 @@ public abstract class AbstractCalendar implements Calendar {
         if (from.ge(to))
             throw new IllegalStateException("To date  must be after from date ");
         Date startDate = new Date(from);
-        for (Date d = startDate; d.le(to); d.inc()) {
+        for (Date d = startDate; d.le(to); d = d.add(1)) {
             if (isHoliday(d) && (includeWeekEnds || !isWeekend(d.getWeekday())))
                 holidays.add(d);
         }

@@ -261,7 +261,17 @@ public class Date implements Observable {
      */
     public Date(int day, int month, int year) {
     	this(fromDMY(day, month, year));
+    }   
+    
+    /**
+     * Create Date instance form the given date
+     * 
+     * @param date
+     */
+    public Date(Date date){
+        this(date.value);
     }
+    
     
     /**
      * This method is intended to calculate the integer value of a (day, month, year)
@@ -282,6 +292,15 @@ public class Date implements Observable {
         return result;
     }
     
+    public boolean equals(Object anObject){
+        if(anObject == null)
+            return false;
+        if(!(anObject instanceof Date))
+            return false;
+        if(this.value != ((Date)anObject).value)
+            return false;
+        return true;
+    }
 
 
     /**
@@ -836,7 +855,8 @@ public class Date implements Observable {
         September (9),
         October   (10),
         November  (11),
-        December  (12),
+        December  (12)
+        /*,
         Jan (1),
         Feb (2),
         Mar (3),
@@ -847,7 +867,7 @@ public class Date implements Observable {
         Sep (9),
         Oct (10),
         Nov (11),
-        Dec (12);
+        Dec (12) */;
 	
 		private final int enumValue;
 		
@@ -873,29 +893,29 @@ public class Date implements Observable {
 		static public Month valueOf(int month) {
 			switch (month) {
 			case 1:
-				return Month.Jan;
+				return Month.January;
 			case 2:
-				return Month.Feb;
+				return Month.February;
 			case 3:
-				return Month.Mar;
+				return Month.March;
 			case 4:
-				return Month.Apr;
+				return Month.April;
 			case 5:
 				return Month.May;
 			case 6:
-				return Month.Jun;
+				return Month.June;
 			case 7:
-				return Month.Jul;
+				return Month.July;
 			case 8:
-				return Month.Aug;
+				return Month.August;
 			case 9:
-				return Month.Sep;
+				return Month.September;
 			case 10:
-				return Month.Oct;
+				return Month.October;
 			case 11:
-				return Month.Nov;
+				return Month.November;
 			case 12:
-				return Month.Dec;
+				return Month.December;
 			default:
 				throw new IllegalArgumentException();
 			}
@@ -946,18 +966,18 @@ public class Date implements Observable {
 		 */
 		static public Month valueOf(char immCode) {
 			switch (immCode) {
-			case 'F': return Month.Jan;
-			case 'G': return Month.Feb;
-			case 'H': return Month.Mar;
-			case 'J': return Month.Apr;
+			case 'F': return Month.January;
+			case 'G': return Month.February;
+			case 'H': return Month.March;
+			case 'J': return Month.April;
 			case 'K': return Month.May;
-			case 'M': return Month.Jun;
-			case 'N': return Month.Jul;
-			case 'Q': return Month.Aug;
-			case 'U': return Month.Sep;
-			case 'V': return Month.Oct;
-			case 'X': return Month.Nov;
-			case 'Z': return Month.Dec;
+			case 'M': return Month.June;
+			case 'N': return Month.July;
+			case 'Q': return Month.August;
+			case 'U': return Month.September;
+			case 'V': return Month.October;
+			case 'X': return Month.November;
+			case 'Z': return Month.December;
 			default:
 				throw new IllegalArgumentException();
 			}
@@ -993,7 +1013,6 @@ public class Date implements Observable {
 				throw new IllegalArgumentException();
 			}
 		}
-
     }
     
 
