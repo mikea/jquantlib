@@ -39,6 +39,8 @@
 
 package org.jquantlib.processes;
 
+import java.util.List;
+
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
@@ -202,6 +204,10 @@ public abstract class StochasticProcess implements Observable, Observer {
 		delegatedObservable.addObserver(observer);
 	}
 
+	public int countObservers() {
+		return delegatedObservable.countObservers();
+	}
+
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
@@ -212,6 +218,14 @@ public abstract class StochasticProcess implements Observable, Observer {
 
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
+	}
+
+	public void deleteObservers() {
+		delegatedObservable.deleteObservers();
+	}
+
+	public List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
 	}
 
 }

@@ -48,104 +48,192 @@ import org.jquantlib.time.calendars.NullCalendar;
 
 public class Utilities {
 
-//#include "utilities.hpp"
-//#include <ql/instruments/payoffs.hpp>
-//#include <ql/termstructures/yieldcurves/flatforward.hpp>
-//#include <ql/termstructures/volatilities/blackconstantvol.hpp>
-//#include <ql/time/calendars/nullcalendar.hpp>
+	//
+	// utilities.hpp
+	//
+
+	
+//    std::string payoffTypeToString(const boost::shared_ptr<Payoff>&);
+//    std::string exerciseTypeToString(const boost::shared_ptr<Exercise>&);
 //
-//#define CHECK_DOWNCAST(Derived,Description) { \
-//    boost::shared_ptr<Derived> hd = boost::dynamic_pointer_cast<Derived>(h); \
-//    if (hd) \
-//        return Description; \
-//}
 //
-//namespace QuantLib {
+//    boost::shared_ptr<YieldTermStructure>
+//    flatRate(const Date& today,
+//             const boost::shared_ptr<Quote>& forward,
+//             const DayCounter& dc);
 //
-//    std::string payoffTypeToString(const boost::shared_ptr<Payoff>& h) {
+//    boost::shared_ptr<YieldTermStructure>
+//    flatRate(const Date& today,
+//             Rate forward,
+//             const DayCounter& dc);
 //
-//        CHECK_DOWNCAST(PlainVanillaPayoff, "plain-vanilla");
-//        CHECK_DOWNCAST(CashOrNothingPayoff, "cash-or-nothing");
-//        CHECK_DOWNCAST(AssetOrNothingPayoff, "asset-or-nothing");
-//        CHECK_DOWNCAST(SuperSharePayoff, "super-share");
-//        CHECK_DOWNCAST(GapPayoff, "gap");
+//    boost::shared_ptr<YieldTermStructure>
+//    flatRate(const boost::shared_ptr<Quote>& forward,
+//             const DayCounter& dc);
 //
-//        QL_FAIL("unknown payoff type");
+//    boost::shared_ptr<YieldTermStructure>
+//    flatRate(Rate forward,
+//             const DayCounter& dc);
+//
+//
+//    boost::shared_ptr<BlackVolTermStructure>
+//    flatVol(const Date& today,
+//            const boost::shared_ptr<Quote>& volatility,
+//            const DayCounter& dc);
+//
+//    boost::shared_ptr<BlackVolTermStructure>
+//    flatVol(const Date& today,
+//            Volatility volatility,
+//            const DayCounter& dc);
+//
+//    boost::shared_ptr<BlackVolTermStructure>
+//    flatVol(const boost::shared_ptr<Quote>& volatility,
+//            const DayCounter& dc);
+//
+//    boost::shared_ptr<BlackVolTermStructure>
+//    flatVol(Volatility volatility,
+//            const DayCounter& dc);
+//
+//
+//    Real relativeError(Real x1, Real x2, Real reference);
+//
+//    //bool checkAbsError(Real x1, Real x2, Real tolerance){
+//    //    return std::fabs(x1 - x2) < tolerance;
+//    //};
+
+    static public class Flag implements Observer {
+      private boolean up_;
+      
+      public Flag() {
+    	  up_ = false;
+      }
+      
+      public void raise() { up_ = true; }
+      
+      public void lower() { up_ = false; }
+      
+      public boolean isUp() /* @ReadOnly */ { return up_; }
+      
+      public void update(Observable observable, Object o) { raise(); }
+      
+    }
+
+//    template<class Iterator>
+//    Real norm(const Iterator& begin, const Iterator& end, Real h) {
+//        // squared values
+//        std::vector<Real> f2(end-begin);
+//        std::transform(begin,end,begin,f2.begin(),
+//                       std::multiplies<Real>());
+//        // numeric integral of f^2
+//        Real I = h * (std::accumulate(f2.begin(),f2.end(),0.0)
+//                      - 0.5*f2.front() - 0.5*f2.back());
+//        return std::sqrt(I);
 //    }
-//
-//
-//    std::string exerciseTypeToString(const boost::shared_ptr<Exercise>& h) {
-//
-//        CHECK_DOWNCAST(EuropeanExercise, "European");
-//        CHECK_DOWNCAST(AmericanExercise, "American");
-//        CHECK_DOWNCAST(BermudanExercise, "Bermudan");
-//
-//        QL_FAIL("unknown exercise type");
-//    }
-//
-
-    static public YieldTermStructure flatRate(
-    		final Date today,
-            final Quote forward,
-            final DayCounter dc) {
-        return new FlatForward(today, forward, dc);
-    }
-
-    static public YieldTermStructure flatRate(
-    		final Date today, 
-    		final /*@Rate*/ double forward, 
-    		final DayCounter dc) {
-        return flatRate(today, new SimpleQuote(forward), dc);
-    }
-
-    static public YieldTermStructure flatRate(
-    		final Quote forward,
-    		final DayCounter dc) {
-        return new FlatForward(0, new NullCalendar(), forward, dc);
-    }
-
-    static public YieldTermStructure flatRate(
-    		final /*@Rate*/ double forward, 
-    		final DayCounter dc) {
-        return flatRate(new SimpleQuote(forward), dc);
-    }
 
 
-    static public BlackVolTermStructure flatVol(
-    		final Date today,
-            final Quote vol,
-            final DayCounter dc) {
-        return new BlackConstantVol(today, vol, dc);
-    }
+	//
+	// utilities.cpp
+	//
+	
+    
+    //#include "utilities.hpp"
+	//#include <ql/instruments/payoffs.hpp>
+	//#include <ql/termstructures/yieldcurves/flatforward.hpp>
+	//#include <ql/termstructures/volatilities/blackconstantvol.hpp>
+	//#include <ql/time/calendars/nullcalendar.hpp>
+	//
+	//#define CHECK_DOWNCAST(Derived,Description) { \
+//	    boost::shared_ptr<Derived> hd = boost::dynamic_pointer_cast<Derived>(h); \
+//	    if (hd) \
+//	        return Description; \
+	//}
+	//
+	//namespace QuantLib {
+	//
+//	    std::string payoffTypeToString(const boost::shared_ptr<Payoff>& h) {
+	//
+//	        CHECK_DOWNCAST(PlainVanillaPayoff, "plain-vanilla");
+//	        CHECK_DOWNCAST(CashOrNothingPayoff, "cash-or-nothing");
+//	        CHECK_DOWNCAST(AssetOrNothingPayoff, "asset-or-nothing");
+//	        CHECK_DOWNCAST(SuperSharePayoff, "super-share");
+//	        CHECK_DOWNCAST(GapPayoff, "gap");
+	//
+//	        QL_FAIL("unknown payoff type");
+//	    }
+	//
+	//
+//	    std::string exerciseTypeToString(const boost::shared_ptr<Exercise>& h) {
+	//
+//	        CHECK_DOWNCAST(EuropeanExercise, "European");
+//	        CHECK_DOWNCAST(AmericanExercise, "American");
+//	        CHECK_DOWNCAST(BermudanExercise, "Bermudan");
+	//
+//	        QL_FAIL("unknown exercise type");
+//	    }
+	//
 
-    static public BlackVolTermStructure flatVol(
-    		final Date today,
-    		final /*@Volatility*/ double vol,
-            final DayCounter dc) {
-        return flatVol(today, new SimpleQuote(vol), dc);
-    }
+	    static public YieldTermStructure flatRate(
+	    		final Date today,
+	            final Quote forward,
+	            final DayCounter dc) {
+	        return new FlatForward(today, forward, dc);
+	    }
 
-    static public BlackVolTermStructure flatVol(
-    		final Quote vol,
-            final DayCounter dc) {
-        return new BlackConstantVol(0, new NullCalendar(), vol, dc);
-    }
+	    static public YieldTermStructure flatRate(
+	    		final Date today, 
+	    		final /*@Rate*/ double forward, 
+	    		final DayCounter dc) {
+	        return flatRate(today, new SimpleQuote(forward), dc);
+	    }
 
-    static public BlackVolTermStructure flatVol(
-    		final /*@Volatility*/ double vol,
-            final DayCounter dc) {
-        return flatVol(new SimpleQuote(vol), dc);
-    }
+	    static public YieldTermStructure flatRate(
+	    		final Quote forward,
+	    		final DayCounter dc) {
+	        return new FlatForward(0, new NullCalendar(), forward, dc);
+	    }
 
-//
-//    Real relativeError(Real x1, Real x2, Real reference) {
-//        if (reference != 0.0)
-//            return std::fabs(x1-x2)/reference;
-//        else
-//            // fall back to absolute error
-//            return std::fabs(x1-x2);
-//    }
-//
-//}
+	    static public YieldTermStructure flatRate(
+	    		final /*@Rate*/ double forward, 
+	    		final DayCounter dc) {
+	        return flatRate(new SimpleQuote(forward), dc);
+	    }
+
+
+	    static public BlackVolTermStructure flatVol(
+	    		final Date today,
+	            final Quote vol,
+	            final DayCounter dc) {
+	        return new BlackConstantVol(today, vol, dc);
+	    }
+
+	    static public BlackVolTermStructure flatVol(
+	    		final Date today,
+	    		final /*@Volatility*/ double vol,
+	            final DayCounter dc) {
+	        return flatVol(today, new SimpleQuote(vol), dc);
+	    }
+
+	    static public BlackVolTermStructure flatVol(
+	    		final Quote vol,
+	            final DayCounter dc) {
+	        return new BlackConstantVol(0, new NullCalendar(), vol, dc);
+	    }
+
+	    static public BlackVolTermStructure flatVol(
+	    		final /*@Volatility*/ double vol,
+	            final DayCounter dc) {
+	        return flatVol(new SimpleQuote(vol), dc);
+	    }
+
+	//
+//	    Real relativeError(Real x1, Real x2, Real reference) {
+//	        if (reference != 0.0)
+//	            return std::fabs(x1-x2)/reference;
+//	        else
+//	            // fall back to absolute error
+//	            return std::fabs(x1-x2);
+//	    }
+	//
+	//}
 
 }

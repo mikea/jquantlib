@@ -35,66 +35,26 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.quotes;
+package org.jquantlib.instruments;
 
-import java.util.List;
+import org.jquantlib.quotes.Quote;
 
-import org.jquantlib.util.DefaultObservable;
-import org.jquantlib.util.Observable;
-import org.jquantlib.util.Observer;
-
-/**
- * Purely virtual base class for market observables
- * 
- * @author Richard Gomes
- */
-// FIXME: understand how this class is used
-public abstract class Quote implements Observable {
-
-	/**
-	 * @return the current value
-	 */
-	public abstract double getValue();
+public class Stock extends Instrument {
 	
-
-	//
-	// implements Observable interface
-	//
+	private Quote quote;
 	
-	/**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
-	 * @see Observable
-	 * @see DefaultObservable
-	 */
-    private Observable delegatedObservable = new DefaultObservable(this);
-
-	public void addObserver(Observer observer) {
-		delegatedObservable.addObserver(observer);
+	public Stock(final Quote quote) {
+		if (quote == null) throw new NullPointerException(); // FIXME: code review: should throw here?
+		this.quote = quote;
+		this.quote.addObserver(this);
 	}
 
-	public int countObservers() {
-		return delegatedObservable.countObservers();
+    @Override
+	public boolean isExpired() /* @ReadOnly */ { return false; }
+    
+	@Override
+    protected void performCalculations() /* @ReadOnly */ {
+		if (quote==null) throw new NullPointerException("null quote set");
+		NPV = quote.getValue();
 	}
-
-	public void deleteObserver(Observer observer) {
-		delegatedObservable.deleteObserver(observer);
-	}
-
-	public void notifyObservers() {
-		delegatedObservable.notifyObservers();
-	}
-
-	public void notifyObservers(Object arg) {
-		delegatedObservable.notifyObservers(arg);
-	}
-
-	public void deleteObservers() {
-		delegatedObservable.deleteObservers();
-	}
-
-	public List<Observer> getObservers() {
-		return delegatedObservable.getObservers();
-	}
-
 }

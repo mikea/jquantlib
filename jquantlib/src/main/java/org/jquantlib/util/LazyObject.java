@@ -37,6 +37,8 @@
 
 package org.jquantlib.util;
 
+import java.util.List;
+
 
 /**
  * Framework for calculation on demand and result caching.
@@ -151,6 +153,10 @@ public abstract class LazyObject implements Observable, Observer {
 		delegatedObservable.addObserver(observer);
 	}
 
+	public int countObservers() {
+		return delegatedObservable.countObservers();
+	}
+
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
@@ -163,5 +169,12 @@ public abstract class LazyObject implements Observable, Observer {
 		delegatedObservable.notifyObservers(arg);
 	}
 
+	public void deleteObservers() {
+		delegatedObservable.deleteObservers();
+	}
+
+	public List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
+	}
 
 }

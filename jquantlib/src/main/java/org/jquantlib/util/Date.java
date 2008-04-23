@@ -42,6 +42,7 @@
 package org.jquantlib.util;
 
 import java.util.Formatter;
+import java.util.List;
 import java.util.Locale;
 
 import org.jquantlib.math.interpolation.Extrapolator;
@@ -1031,6 +1032,10 @@ public class Date implements Observable {
 		delegatedObservable.addObserver(observer);
 	}
 
+	public int countObservers() {
+		return delegatedObservable.countObservers();
+	}
+
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
@@ -1043,7 +1048,15 @@ public class Date implements Observable {
 		delegatedObservable.notifyObservers(arg);
 	}
 
+	public void deleteObservers() {
+		delegatedObservable.deleteObservers();
+	}
 
+	public List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
+	}
+
+	
 	//
 	// inner classes
 	//

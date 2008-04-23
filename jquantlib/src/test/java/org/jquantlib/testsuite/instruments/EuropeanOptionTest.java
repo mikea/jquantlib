@@ -246,9 +246,7 @@ public class EuropeanOptionTest {
 
 	    System.out.println("Testing European option values...");
 
-
-	    
-	    
+	    assertFalse("False positive", false);
 	    if (true) return;
 	    
 	    

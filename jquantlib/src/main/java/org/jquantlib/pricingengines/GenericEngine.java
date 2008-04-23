@@ -20,6 +20,8 @@
 
 package org.jquantlib.pricingengines;
 
+import java.util.List;
+
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.util.DefaultObservable;
@@ -59,22 +61,34 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 	 * @see Observable
 	 * @see DefaultObservable
 	 */
-    private DefaultObservable delegatedObservable = new DefaultObservable(this);
+    private Observable delegatedObservable = new DefaultObservable(this);
 
 	public void addObserver(Observer observer) {
 		delegatedObservable.addObserver(observer);
 	}
-	
+
+	public int countObservers() {
+		return delegatedObservable.countObservers();
+	}
+
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
-	
+
 	public void notifyObservers() {
 		delegatedObservable.notifyObservers();
 	}
-	
+
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
+	}
+
+	public void deleteObservers() {
+		delegatedObservable.deleteObservers();
+	}
+
+	public List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
 	}
 
 }

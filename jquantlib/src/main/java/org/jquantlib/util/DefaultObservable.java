@@ -36,8 +36,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * changes. See references below.
  * 
  * @see <a
- *      href="http://www.jroller.com/martin_fischer/entry/a_generic_java_observer_pattern">Martin
- *      Fischer: Observer and Observable interfaces</a>
+ *      href="http://www.jroller.com/martin_fischer/entry/a_generic_java_observer_pattern">
+ *      Martin Fischer: Observer and Observable interfaces</a>
  * @see <a href="http://jdj.sys-con.com/read/35878.htm">Improved
  *      Observer/Observable</a>
  * @see Observable
@@ -51,9 +51,8 @@ public class DefaultObservable implements Observable {
     private final List<Observer> observers = new CopyOnWriteArrayList<Observer>();
     private final Observable observable;
     
-    public DefaultObservable(Observable observable){
-        if(observable == null)
-            throw new NullPointerException("observable is null");
+    public DefaultObservable(Observable observable) {
+        if(observable == null) throw new NullPointerException("observable is null");
         this.observable = observable;       
     }
     
@@ -63,16 +62,22 @@ public class DefaultObservable implements Observable {
         observers.add(observer);
     }
         
-    /**
-     * Deletes an observer from the list of observers. 
-     * Passing <CODE>null</CODE> will have no effect.
-     * 
-     * @param   o   the observer to be deleted.
-     */
+    public int countObservers() {
+    	return observers.size();
+    }
+    
+    public List<Observer> getObservers() {
+        return Collections.unmodifiableList(this.observers);
+    }
+ 
     public void deleteObserver(final Observer observer) {
         observers.remove(observer);
     }
 
+    public void deleteObservers() {
+    	observers.clear();
+    }
+    
     public void notifyObservers() {
         notifyObservers(null);
     }
@@ -86,12 +91,13 @@ public class DefaultObservable implements Observable {
     /**
      * This method is intended to encapsulate the notification semantics, in
      * order to let extended classes to implement their own version. Possible
-     * implementations are: (a) remote notification; (b) notification via
-     * SwingUtilities.invokeLater.
+     * implementations are:
+     * <li>remote notification;</li>
+     * <li>notification via SwingUtilities.invokeLater</li>
+     * <li>others...</li> 
      * 
      * <p>
      * The default notification simply does
-     * 
      * <pre>
      * observer.update(observable, arg);
      * </pre>
@@ -100,18 +106,9 @@ public class DefaultObservable implements Observable {
      * @param observable
      * @param arg
      */
-    protected void wrappedNotify(Observer observer, Observable observable,
-            Object arg) {
+    protected void wrappedNotify(Observer observer, Observable observable, Object arg) {
         observer.update(observable, arg);
     }
     
-    /**
-     * Returns list of observers registered with the Observable. List returned is
-     * unmodifiable list. 
-     * 
-     * @return list of observers
-     */
-    protected List<Observer> getObservers(){
-        return Collections.unmodifiableList(this.observers);
-    }
+
 }

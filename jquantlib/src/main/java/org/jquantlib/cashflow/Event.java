@@ -101,6 +101,10 @@ public abstract class Event implements Observable, Visitable<Event> {
 		delegatedObservable.addObserver(observer);
 	}
 
+	public int countObservers() {
+		return delegatedObservable.countObservers();
+	}
+
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}

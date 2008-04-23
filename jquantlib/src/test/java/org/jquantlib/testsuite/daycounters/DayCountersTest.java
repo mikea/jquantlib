@@ -45,7 +45,6 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.SimpleDayCounter;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.util.Date;
 import org.junit.Test;
 

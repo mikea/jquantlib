@@ -37,6 +37,8 @@
 
 package org.jquantlib.termstructures;
 
+import java.util.List;
+
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
@@ -337,6 +339,10 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 		delegatedObservable.addObserver(observer);
 	}
 
+	public int countObservers() {
+		return delegatedObservable.countObservers();
+	}
+
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
@@ -347,6 +353,14 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
+	}
+
+	public void deleteObservers() {
+		delegatedObservable.deleteObservers();
+	}
+
+	public List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
 	}
 
 	
