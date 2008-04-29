@@ -20,6 +20,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
@@ -42,7 +43,9 @@ public abstract class Option extends NewInstrument {
 		super(engine);
 		this.payoff = payoff;
 		this.exercise = exercise;
-		this.evaluationDate = Settings.getInstance().getEvaluationDate();
+		//TODO: pass in evaluation date
+		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
+        ;
 	}
 
 	

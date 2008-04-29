@@ -19,16 +19,16 @@
  */
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.util.Date.Month.December;
-import static org.jquantlib.util.Date.Month.January;
-import static org.jquantlib.util.Date.Month.May;
-import static org.jquantlib.util.Date.Month.October;
+import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.OCTOBER;
 
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Date.Month;
+import org.jquantlib.util.Month;
 
 /**
  * @author Srinivas Hasti
@@ -97,7 +97,7 @@ public class Germany extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == January)
+                    || (d == 1 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
@@ -109,17 +109,17 @@ public class Germany extends DelegateCalendar {
                     // Corpus Christi
                     || (dd == em + 59)
                     // Labour Day
-                    || (d == 1 && m == May)
+                    || (d == 1 && m == MAY)
                     // National Day
-                    || (d == 3 && m == October)
+                    || (d == 3 && m == OCTOBER)
                     // Christmas Eve
-                    || (d == 24 && m == December)
+                    || (d == 24 && m == DECEMBER)
                     // Christmas
-                    || (d == 25 && m == December)
+                    || (d == 25 && m == DECEMBER)
                     // Boxing Day
-                    || (d == 26 && m == December)
+                    || (d == 26 && m == DECEMBER)
                     // New Year's Eve
-                    || (d == 31 && m == December))
+                    || (d == 31 && m == DECEMBER))
                 return false;
             return true;
         }
@@ -139,21 +139,21 @@ public class Germany extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == January)
+                    || (d == 1 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day
-                    || (d == 1 && m == May)
+                    || (d == 1 && m == MAY)
                     // Christmas' Eve
-                    || (d == 24 && m == December)
+                    || (d == 24 && m == DECEMBER)
                     // Christmas
-                    || (d == 25 && m == December)
+                    || (d == 25 && m == DECEMBER)
                     // Christmas Day
-                    || (d == 26 && m == December)
+                    || (d == 26 && m == DECEMBER)
                     // New Year's Eve
-                    || (d == 31 && m == December))
+                    || (d == 31 && m == DECEMBER))
                 return false;
             return true;
         }
@@ -173,21 +173,21 @@ public class Germany extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == January)
+                    || (d == 1 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day
-                    || (d == 1 && m == May)
+                    || (d == 1 && m == MAY)
                     // Christmas' Eve
-                    || (d == 24 && m == December)
+                    || (d == 24 && m == DECEMBER)
                     // Christmas
-                    || (d == 25 && m == December)
+                    || (d == 25 && m == DECEMBER)
                     // Christmas Day
-                    || (d == 26 && m == December)
+                    || (d == 26 && m == DECEMBER)
                     // New Year's Eve
-                    || (d == 31 && m == December))
+                    || (d == 31 && m == DECEMBER))
                 return false;
             return true;
         }
@@ -207,21 +207,21 @@ public class Germany extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == January)
+                    || (d == 1 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day
-                    || (d == 1 && m == May)
+                    || (d == 1 && m == MAY)
                     // Christmas' Eve
-                    || (d == 24 && m == December)
+                    || (d == 24 && m == DECEMBER)
                     // Christmas
-                    || (d == 25 && m == December)
+                    || (d == 25 && m == DECEMBER)
                     // Christmas Day
-                    || (d == 26 && m == December)
+                    || (d == 26 && m == DECEMBER)
                     // New Year's Eve
-                    || (d == 31 && m == December))
+                    || (d == 31 && m == DECEMBER))
                 return false;
             return true;
         }

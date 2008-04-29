@@ -59,7 +59,8 @@ public abstract class AbstractInterpolation implements Interpolation {
 	 * caches values from the singleton, intending to avoid contention in
 	 * heavily multi-threaded environments.
 	 */
-	private boolean extraSafetyChecks = Configuration.getInstance().isExtraSafetyChecks();
+	//TODO: Make it settable
+	private boolean extraSafetyChecks = Configuration.getSystemConfiguration(null).isExtraSafetyChecks();
 
 	protected AbstractInterpolation(final double[] x, final double[] y) {
 		vx = x;

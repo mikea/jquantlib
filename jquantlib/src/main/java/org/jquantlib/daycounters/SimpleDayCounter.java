@@ -36,44 +36,42 @@ import org.jquantlib.util.Date;
  */
 public class SimpleDayCounter extends AbstractDayCounter {
 
-	private DayCounter fallback = null;
+    private DayCounter fallback = null;
 
-	public SimpleDayCounter() {
-		this.fallback = new Thirty360();
-	}
+    public SimpleDayCounter() {
+        this.fallback = new Thirty360();
+    }
 
-	public final String getName() {
-		return "Simple";
-	}
+    public final String getName() {
+        return "Simple";
+    }
 
-	public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
-		return fallback.getDayCount(dateStart, dateEnd);
-	}
+    public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+        return fallback.getDayCount(dateStart, dateEnd);
+    }
 
-	public/* @Time */double getYearFraction(
-						final Date dateStart, final Date dateEnd, 
-						final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
-		int dm1 = dateStart.getDayOfMonth();
-		int dm2 = dateEnd.getDayOfMonth();
-		int mm1 = dateStart.getMonth();
-		int mm2 = dateEnd.getMonth();
-		int yy1 = dateStart.getYear();
-		int yy2 = dateEnd.getYear();
+    public/* @Time */double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
+            final Date refPeriodEnd) /* @ReadOnly */{
+        int dm1 = dateStart.getDayOfMonth();
+        int dm2 = dateEnd.getDayOfMonth();
+        int mm1 = dateStart.getMonth();
+        int mm2 = dateEnd.getMonth();
+        int yy1 = dateStart.getYear();
+        int yy2 = dateEnd.getYear();
 
-		if (dm1 == dm2 ||
-				// e.g., Aug 30 -> Feb 28 ?
-				(dm1 > dm2 && dateEnd.isEndOfMonth()) ||
-				// e.g., Feb 28 -> Aug 30 ?
-				(dm1 < dm2 && dateStart.isEndOfMonth())) {
-			return (yy2 - yy1) + (mm2 - mm1) / 12.0;
-		} else {
-			return fallback.getYearFraction(dateStart, dateEnd);
-		}
-	}
-	
-	public/* @Time */double getYearFraction(
-			final Date dateStart, final Date dateEnd) /* @ReadOnly */{
-		return this.getYearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
-	}
+        if (dm1 == dm2 ||
+        // e.g., Aug 30 -> Feb 28 ?
+                (dm1 > dm2 && dateEnd.isEndOfMonth()) ||
+                // e.g., Feb 28 -> Aug 30 ?
+                (dm1 < dm2 && dateStart.isEndOfMonth())) {
+            return (yy2 - yy1) + (mm2 - mm1) / 12.0;
+        } else {
+            return fallback.getYearFraction(dateStart, dateEnd);
+        }
+    }
+
+    public/* @Time */double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+        return this.getYearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
+    }
 
 }

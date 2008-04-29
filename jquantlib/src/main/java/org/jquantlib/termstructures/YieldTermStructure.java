@@ -111,7 +111,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * The resulting interest rate has the required day-counting rule.
 	 */
 	public final InterestRate getZeroRate(final Date d, final DayCounter resultDayCounter, final Compounding comp) {
-		return getZeroRate(d, resultDayCounter, comp, Frequency.Annual);
+		return getZeroRate(d, resultDayCounter, comp, Frequency.ANNUAL);
 	}
 
 	public final InterestRate getZeroRate(final Date d, final DayCounter resultDayCounter, final Compounding comp, final Frequency freq) {
@@ -156,7 +156,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * Dates are not adjusted for holidays
 	 */
 	public InterestRate getForwardRate(final Date d1, final Date d2, final DayCounter resultDayCounter, final Compounding comp) {
-		return getForwardRate(d1, d2, resultDayCounter, comp, Frequency.Annual);
+		return getForwardRate(d1, d2, resultDayCounter, comp, Frequency.ANNUAL);
 	}
 
 	public InterestRate getForwardRate(final Date d1, final Date d2, final DayCounter resultDayCounter, final Compounding comp, final Frequency freq) {
@@ -164,7 +164,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	}
 
 	protected InterestRate getForwardRate(final Date d1, final Date d2, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
-		if (d1.eq(d2)) {
+		if (d1.equals(d2)) {
 			/*@Time*/ double  t1 = getTimeFromReference(d1);
 			/*@Time*/ double  t2 = t1+0.0001;
 			/*@Time*/ double  delta = t2-t1;
@@ -192,7 +192,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	}
 
 	protected InterestRate getForwardRate(final Date d, final Period p, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
-		return getForwardRate(d, d.add(p), dayCounter, comp, freq, extrapolate);
+		return getForwardRate(d, d.getDateAfter(p), dayCounter, comp, freq, extrapolate);
 	}
 
 	/**
@@ -200,7 +200,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 *      org.jquantlib.termstructures.InterestRate.Compounding, Frequency)
 	 */
 	public InterestRate getForwardRate(final /*@Time*/ double  t1, final /*@Time*/ double  t2, final Compounding comp) {
-		return getForwardRate(t1, t2, comp, Frequency.Annual);
+		return getForwardRate(t1, t2, comp, Frequency.ANNUAL);
 	}
 
 	/**
@@ -249,7 +249,7 @@ public abstract class YieldTermStructure extends TermStructure {
 		Date[] dates = new Date[tenor + 1];
 		dates[0] = startDate;
 		for (int i = 1; i <= tenor; i++)
-			dates[i] = startDate.add(new Period(i, TimeUnit.Years));
+			dates[i] = startDate.getDateAfter(new Period(i, TimeUnit.YEARS));
 		return getParRate(dates, freq, extrapolate);
 	}
 

@@ -52,7 +52,7 @@ public enum BusinessDayConvention {
 	/**
 	 * Choose the first business day after the given holiday.
 	 */
-	Following,
+	FOLLOWING,
 	/**
 	 * Choose the first business day after
 	 * the given holiday unless it belongs
@@ -60,12 +60,12 @@ public enum BusinessDayConvention {
 	 * choose the first business day before
 	 * the holiday.
 	 */
-	ModifiedFollowing,
+	MODIFIED_FOLLOWING,
 	/**
 	 * Choose the first business day before
 	 * the given holiday.
 	 */
-	Preceding,
+	PRECEDING,
 	
 	// NON ISDA
 	/**
@@ -75,10 +75,10 @@ public enum BusinessDayConvention {
 	 * choose the first business day after
 	 * the holiday.
 	 */
-	ModifiedPreceding,
+	MODIFIED_PRECEDING,
 	
 	/**
 	 * Do not adjust.
 	 */
-	Unadjusted;
+	UNADJUSTED;
 }

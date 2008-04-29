@@ -77,6 +77,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.jquantlib.examples;
 
+import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
@@ -97,6 +98,8 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.Month;
 
 //import org.quantlib.Actual365Fixed;
 //import org.quantlib.AmericanExercise;
@@ -171,11 +174,11 @@ public class EquityOptions {
     double volatility = 0.2;
     double dividendYield = 0.00;
 
-    Date todaysDate = new Date(15, Date.Month.May, 1998);
-    Date settlementDate = new Date(17, Date.Month.May, 1998);
-    Settings.getInstance().setEvaluationDate(todaysDate);
+    Date todaysDate = DateFactory.getDateUtil().getDate(15, Month.MAY, 1998);
+    Date settlementDate = DateFactory.getDateUtil().getDate(17, Month.MAY, 1998);
+    Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(todaysDate);
 
-    Date maturity = new Date(17, Date.Month.May, 1999);
+    Date maturity = DateFactory.getDateUtil().getDate(17, Month.MAY, 1999);
     DayCounter dayCounter = new Actual365Fixed();
 
 

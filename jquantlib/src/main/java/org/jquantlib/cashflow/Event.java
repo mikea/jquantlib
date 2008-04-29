@@ -22,6 +22,7 @@ package org.jquantlib.cashflow;
 
 import java.util.Date;
 
+import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
@@ -44,7 +45,7 @@ public abstract class Event implements Observable, Visitable<Event> {
 	 * heavily multi-threaded environments.
 	 */
 	// TODO: make this property dynamically configurable
-	private boolean todaysPayments = Settings.getInstance().isTodaysPayments();;
+	private boolean todaysPayments = Configuration.getSystemConfiguration(null).getGlobalSettings().isTodaysPayments();;
 
 	protected Event() { }
 

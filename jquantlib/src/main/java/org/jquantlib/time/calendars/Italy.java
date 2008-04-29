@@ -19,19 +19,19 @@
  */
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.util.Date.Month.April;
-import static org.jquantlib.util.Date.Month.August;
-import static org.jquantlib.util.Date.Month.December;
-import static org.jquantlib.util.Date.Month.January;
-import static org.jquantlib.util.Date.Month.June;
-import static org.jquantlib.util.Date.Month.May;
-import static org.jquantlib.util.Date.Month.November;
+import static org.jquantlib.util.Month.APRIL;
+import static org.jquantlib.util.Month.AUGUST;
+import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.JUNE;
+import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.NOVEMBER;
 
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Date.Month;
+import org.jquantlib.util.Month;
 
 /**
  * Public holidays:
@@ -118,29 +118,29 @@ public class Italy extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == January)
+                    || (d == 1 && m == JANUARY)
                     // Epiphany
-                    || (d == 6 && m == January)
+                    || (d == 6 && m == JANUARY)
                     // Easter Monday
                     || (dd == em)
                     // Liberation Day
-                    || (d == 25 && m == April)
+                    || (d == 25 && m == APRIL)
                     // Labour Day
-                    || (d == 1 && m == May)
+                    || (d == 1 && m == MAY)
                     // Republic Day
-                    || (d == 2 && m == June && y >= 2000)
+                    || (d == 2 && m == JUNE && y >= 2000)
                     // Assumption
-                    || (d == 15 && m == August)
+                    || (d == 15 && m == AUGUST)
                     // All Saints' Day
-                    || (d == 1 && m == November)
+                    || (d == 1 && m == NOVEMBER)
                     // Immaculate Conception
-                    || (d == 8 && m == December)
+                    || (d == 8 && m == DECEMBER)
                     // Christmas
-                    || (d == 25 && m == December)
+                    || (d == 25 && m == DECEMBER)
                     // St. Stephen
-                    || (d == 26 && m == December)
+                    || (d == 26 && m == DECEMBER)
                     // December 31st, 1999 only
-                    || (d == 31 && m == December && y == 1999))
+                    || (d == 31 && m == DECEMBER && y == 1999))
                 return false;
             return true;
         }
@@ -160,23 +160,23 @@ public class Italy extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == January)
+                    || (d == 1 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day
-                    || (d == 1 && m == May)
+                    || (d == 1 && m == MAY)
                     // Assumption
-                    || (d == 15 && m == August)
+                    || (d == 15 && m == AUGUST)
                     // Christmas' Eve
-                    || (d == 24 && m == December)
+                    || (d == 24 && m == DECEMBER)
                     // Christmas
-                    || (d == 25 && m == December)
+                    || (d == 25 && m == DECEMBER)
                     // St. Stephen
-                    || (d == 26 && m == December)
+                    || (d == 26 && m == DECEMBER)
                     // New Year's Eve
-                    || (d == 31 && m == December))
+                    || (d == 31 && m == DECEMBER))
                 return false;
             return true;
         }

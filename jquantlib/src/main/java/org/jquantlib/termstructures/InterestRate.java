@@ -41,7 +41,7 @@ public class InterestRate {
     }
 
     public InterestRate(final /*@Rate*/ double r, final DayCounter dc, final Compounding comp) {
-    	this(r, dc, comp, Frequency.Annual);
+    	this(r, dc, comp, Frequency.ANNUAL);
     }
     
     public InterestRate(final /*@Rate*/ double r, final DayCounter dc, final Compounding comp, final Frequency freq) {
@@ -52,7 +52,7 @@ public class InterestRate {
 
         if (this.compound==Compounding.Compounded || this.compound==Compounding.SimpleThenCompounded) {
             freqMakesSense = true;
-            if (! (freq!=Frequency.Once && freq!=Frequency.NoFrequency)) throw new IllegalArgumentException("frequency not allowed for this interest rate");
+            if (! (freq!=Frequency.ONCE && freq!=Frequency.NO_FREQUENCY)) throw new IllegalArgumentException("frequency not allowed for this interest rate");
             this.freq = freq.toInteger();
         }
     }
@@ -105,7 +105,7 @@ public class InterestRate {
     }
     
     public final Frequency getFrequency() {
-        return freqMakesSense ? Frequency.valueOf(this.freq) : Frequency.NoFrequency;
+        return freqMakesSense ? Frequency.valueOf(this.freq) : Frequency.NO_FREQUENCY;
     }
     
     /**
@@ -139,7 +139,7 @@ public class InterestRate {
     }
 
     public final InterestRate getEquivalentRate(final /*@Time*/ double t, final Compounding comp) {
-    	return getEquivalentRate(t, comp, Frequency.Annual);
+    	return getEquivalentRate(t, comp, Frequency.ANNUAL);
     }
 
     /**
@@ -160,7 +160,7 @@ public class InterestRate {
 			final Date d2,
 			final DayCounter resultDC,
             final Compounding comp) {
-    	return getEquivalentRate(d1, d2, resultDC, comp, Frequency.Annual);
+    	return getEquivalentRate(d1, d2, resultDC, comp, Frequency.ANNUAL);
     }
 
     /**
@@ -235,7 +235,7 @@ public class InterestRate {
     			final /*@Time*/ double t,
     			final DayCounter resultDC,
     			final Compounding comp) {
-    	return getImpliedRate(compound, t, resultDC, comp, Frequency.Annual);
+    	return getImpliedRate(compound, t, resultDC, comp, Frequency.ANNUAL);
     }
     
     static public InterestRate getImpliedRate(
@@ -244,7 +244,7 @@ public class InterestRate {
     			final Date d2,
     			final DayCounter resultDC,
     			final Compounding comp) {
-    	return getImpliedRate(compound, d1, d2, resultDC, comp, Frequency.Annual);
+    	return getImpliedRate(compound, d1, d2, resultDC, comp, Frequency.ANNUAL);
     }
 
     /**
@@ -274,7 +274,7 @@ public class InterestRate {
     	if (compound==Compounding.Simple) {
     		sb.append("simple compounding");
     	} else if (compound==Compounding.Compounded) {
-    		if ((freq==Frequency.NoFrequency.toInteger()) || (freq==Frequency.Once.toInteger())) {
+    		if ((freq==Frequency.NO_FREQUENCY.toInteger()) || (freq==Frequency.ONCE.toInteger())) {
     			throw new IllegalArgumentException(freq+" frequency not allowed for this interest rate");
     		} else {
     			sb.append(freq+" compounding");
@@ -282,7 +282,7 @@ public class InterestRate {
     	} else if (compound==Compounding.Continuous) {
     		sb.append("continuous compounding");
     	} else if (compound==Compounding.SimpleThenCompounded) {
-    		if ((freq==Frequency.NoFrequency.toInteger()) || (freq==Frequency.Once.toInteger())) {
+    		if ((freq==Frequency.NO_FREQUENCY.toInteger()) || (freq==Frequency.ONCE.toInteger())) {
     			throw new IllegalArgumentException(freq+" frequency not allowed for this interest rate");
     		} else {
     			sb.append("simple compounding up to "+(12/freq)+" months, then "+freq+" compounding");

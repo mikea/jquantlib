@@ -48,6 +48,7 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 
 public class FlatForward extends YieldTermStructure {
 
@@ -78,7 +79,7 @@ public class FlatForward extends YieldTermStructure {
             final Quote forward,
             final DayCounter dayCounter,
             final Compounding compounding) {
-		this(referenceDate, forward, dayCounter, compounding, Frequency.Annual);
+		this(referenceDate, forward, dayCounter, compounding, Frequency.ANNUAL);
 	}
 
 	public FlatForward(
@@ -108,7 +109,7 @@ public class FlatForward extends YieldTermStructure {
             final /*@Rate*/ double forward,
             final DayCounter dayCounter,
             final Compounding compounding) {
-		this(referenceDate, forward, dayCounter, compounding, Frequency.Annual);
+		this(referenceDate, forward, dayCounter, compounding, Frequency.ANNUAL);
 	}
 
     public FlatForward(
@@ -149,7 +150,7 @@ public class FlatForward extends YieldTermStructure {
                 final Quote forward,
                 final DayCounter dayCounter,
                 final Compounding compounding) {
-    	this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.Annual);
+    	this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
     }
     
 	// --------------------------------------------
@@ -182,7 +183,7 @@ public class FlatForward extends YieldTermStructure {
                 final /*@Rate*/ double forward,
                 final DayCounter dayCounter,
                 final Compounding compounding) {
-    	this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.Annual);
+    	this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
     }
 
 	// --------------------------------------------
@@ -205,7 +206,7 @@ public class FlatForward extends YieldTermStructure {
     }
 
     public final Date getMaxDate() {
-        return Date.getMaxDate();
+        return DateFactory.getDateUtil().getMaxDate();
     }
 
 

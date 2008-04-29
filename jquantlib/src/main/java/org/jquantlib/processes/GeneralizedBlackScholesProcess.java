@@ -115,8 +115,8 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         // we could be more anticipatory if we know the right dt
         // for which the drift will be used
         /*@Time*/ double t1 = t + 0.0001;
-        /*@Rate*/ double r = riskFreeRate_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency, true).getRate();
-        double d = dividendYield_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency,true).getRate();
+        /*@Rate*/ double r = riskFreeRate_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NO_FREQUENCY, true).getRate();
+        double d = dividendYield_.getForwardRate(t, t1, Compounding.Continuous, Frequency.NO_FREQUENCY,true).getRate();
         return r-d-0.5*sigma*sigma;
     }
 

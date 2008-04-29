@@ -41,8 +41,8 @@ package org.jquantlib.processes;
 
 import java.util.List;
 
-import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
+import org.jquantlib.util.Date;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 

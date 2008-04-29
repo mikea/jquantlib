@@ -19,21 +19,21 @@
  */
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Weekday.Friday;
-import static org.jquantlib.util.Date.Month.April;
-import static org.jquantlib.util.Date.Month.December;
-import static org.jquantlib.util.Date.Month.January;
-import static org.jquantlib.util.Date.Month.July;
-import static org.jquantlib.util.Date.Month.May;
-import static org.jquantlib.util.Date.Month.November;
-import static org.jquantlib.util.Date.Month.October;
-import static org.jquantlib.util.Date.Month.September;
+import static org.jquantlib.time.Weekday.FRIDAY;
+import static org.jquantlib.util.Month.APRIL;
+import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.JULY;
+import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.util.Month.OCTOBER;
+import static org.jquantlib.util.Month.SEPTEMBER;
 
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Date.Month;
+import org.jquantlib.util.Month;
 
 // ! Brazilian calendar
 /**
@@ -123,28 +123,28 @@ public class Brazil extends DelegateCalendar {
         public boolean isBusinessDay(Date date) {
             Weekday w = date.getWeekday();
             int d = date.getDayOfMonth();
-            int m = date.getMonth();
+            Month m = date.getMonthEnum();
             int y = date.getYear();
             int dd = date.getDayOfYear();
             int em = easterMonday(y);
 
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == Month.January.toInteger())
+                    || (d == 1 && m == Month.JANUARY)
                     // Tiradentes Day
-                    || (d == 21 && m == Month.April.toInteger())
+                    || (d == 21 && m == Month.APRIL)
                     // Labor Day
-                    || (d == 1 && m == Month.May.toInteger())
+                    || (d == 1 && m == Month.MAY)
                     // Independence Day
-                    || (d == 7 && m == Month.September.toInteger())
+                    || (d == 7 && m == Month.SEPTEMBER)
                     // Nossa Sra. Aparecida Day
-                    || (d == 12 && m == Month.October.toInteger())
+                    || (d == 12 && m == Month.OCTOBER)
                     // All Souls Day
-                    || (d == 2 && m == Month.November.toInteger())
+                    || (d == 2 && m == Month.NOVEMBER)
                     // Republic Day
-                    || (d == 15 && m == Month.November.toInteger())
+                    || (d == 15 && m == Month.NOVEMBER)
                     // Christmas
-                    || (d == 25 && m == Month.December.toInteger())
+                    || (d == 25 && m == Month.DECEMBER)
                     // Passion of Christ
                     || (dd == em - 3)
                     // Carnival
@@ -154,6 +154,7 @@ public class Brazil extends DelegateCalendar {
                 return false;
             return true;
         }
+
     }
 
     private final class ExchangeCalendar extends WesternCalendar {
@@ -172,27 +173,27 @@ public class Brazil extends DelegateCalendar {
 
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == January)
+                    || (d == 1 && m == JANUARY)
                     // Sao Paulo City Day
-                    || (d == 25 && m == January)
+                    || (d == 25 && m == JANUARY)
                     // Tiradentes Day
-                    || (d == 21 && m == April)
+                    || (d == 21 && m == APRIL)
                     // Labor Day
-                    || (d == 1 && m == May)
+                    || (d == 1 && m == MAY)
                     // Revolution Day
-                    || (d == 9 && m == July)
+                    || (d == 9 && m == JULY)
                     // Independence Day
-                    || (d == 7 && m == September)
+                    || (d == 7 && m == SEPTEMBER)
                     // Nossa Sra. Aparecida Day
-                    || (d == 12 && m == October)
+                    || (d == 12 && m == OCTOBER)
                     // All Souls Day
-                    || (d == 2 && m == November)
+                    || (d == 2 && m == NOVEMBER)
                     // Republic Day
-                    || (d == 15 && m == November)
+                    || (d == 15 && m == NOVEMBER)
                     // Black Consciousness Day
-                    || (d == 20 && m == November && y >= 2007)
+                    || (d == 20 && m == NOVEMBER && y >= 2007)
                     // Christmas
-                    || (d == 25 && m == December)
+                    || (d == 25 && m == DECEMBER)
                     // Passion of Christ
                     || (dd == em - 3)
                     // Carnival
@@ -200,7 +201,7 @@ public class Brazil extends DelegateCalendar {
                     // Corpus Christi
                     || (dd == em + 59)
                     // last business day of the year
-                    || (m == December && (d == 31 || (d >= 29 && w == Friday))))
+                    || (m == DECEMBER && (d == 31 || (d >= 29 && w == FRIDAY))))
                 return false;
             return true;
         }

@@ -23,7 +23,7 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Date.Month;
+import org.jquantlib.util.Month;
 
 /**
  * Public holidays (data from http://www.dti.gov.uk/er/bankhol.htm):
@@ -128,28 +128,28 @@ public class UnitedKingdom extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.Monday)) && m == Month.January.toInteger())
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
                     // first Monday of May (Early May Bank Holiday)
-                    || (d <= 7 && w == Weekday.Monday && m == Month.May.toInteger())
+                    || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
                     // last Monday of May (Spring Bank Holiday)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.May.toInteger() && y != 2002)
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY.toInteger() && y != 2002)
                     // last Monday of August (Summer Bank Holiday)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.August.toInteger())
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST.toInteger())
                     // Christmas (possibly moved to Monday or Tuesday)
-                    || ((d == 25 || (d == 27 && (w == Weekday.Monday || w == Weekday.Tuesday))) && m == Month.December
+                    || ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
                             .toInteger())
                     // Boxing Day (possibly moved to Monday or Tuesday)
-                    || ((d == 26 || (d == 28 && (w == Weekday.Monday || w == Weekday.Tuesday))) && m == Month.December
+                    || ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
                             .toInteger())
                     // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // June 4rd, 2002 only (special Spring Bank Holiday)
-                    || ((d == 3 || d == 4) && m == Month.June.toInteger() && y == 2002)
+                    || ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
                     // December 31st, 1999 only
-                    || (d == 31 && m == Month.December.toInteger() && y == 1999))
+                    || (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
                 return false;
             return true;
         }
@@ -169,28 +169,28 @@ public class UnitedKingdom extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.Monday)) && m == Month.January.toInteger())
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
                     // first Monday of May (Early May Bank Holiday)
-                    || (d <= 7 && w == Weekday.Monday && m == Month.May.toInteger())
+                    || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
                     // last Monday of May (Spring Bank Holiday)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.May.toInteger() && y != 2002)
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY.toInteger() && y != 2002)
                     // last Monday of August (Summer Bank Holiday)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.August.toInteger())
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST.toInteger())
                     // Christmas (possibly moved to Monday or Tuesday)
-                    || ((d == 25 || (d == 27 && (w == Weekday.Monday || w == Weekday.Tuesday))) && m == Month.December
+                    || ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
                             .toInteger())
                     // Boxing Day (possibly moved to Monday or Tuesday)
-                    || ((d == 26 || (d == 28 && (w == Weekday.Monday || w == Weekday.Tuesday))) && m == Month.December
+                    || ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
                             .toInteger())
                     // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // June 4rd, 2002 only (special Spring Bank Holiday)
-                    || ((d == 3 || d == 4) && m == Month.June.toInteger() && y == 2002)
+                    || ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
                     // December 31st, 1999 only
-                    || (d == 31 && m == Month.December.toInteger() && y == 1999))
+                    || (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
                 return false;
             return true;
         }
@@ -210,28 +210,28 @@ public class UnitedKingdom extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.Monday)) && m == Month.January.toInteger())
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
                     // first Monday of May (Early May Bank Holiday)
-                    || (d <= 7 && w == Weekday.Monday && m == Month.May.toInteger())
+                    || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
                     // last Monday of May (Spring Bank Holiday)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.May.toInteger() && y != 2002)
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY.toInteger() && y != 2002)
                     // last Monday of August (Summer Bank Holiday)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.August.toInteger())
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST.toInteger())
                     // Christmas (possibly moved to Monday or Tuesday)
-                    || ((d == 25 || (d == 27 && (w == Weekday.Monday || w == Weekday.Tuesday))) && m == Month.December
+                    || ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
                             .toInteger())
                     // Boxing Day (possibly moved to Monday or Tuesday)
-                    || ((d == 26 || (d == 28 && (w == Weekday.Monday || w == Weekday.Tuesday))) && m == Month.December
+                    || ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
                             .toInteger())
                     // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // June 4rd, 2002 only (special Spring Bank Holiday)
-                    || ((d == 3 || d == 4) && m == Month.June.toInteger() && y == 2002)
+                    || ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
                     // December 31st, 1999 only
-                    || (d == 31 && m == Month.December.toInteger() && y == 1999))
+                    || (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
                 return false;
             return true;
         }

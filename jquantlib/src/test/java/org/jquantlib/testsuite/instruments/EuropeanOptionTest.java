@@ -60,6 +60,7 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Utilities;
 import org.junit.Test;
 
@@ -308,7 +309,7 @@ public class EuropeanOptionTest {
 	    };
 
 	    DayCounter dc = new Actual360();
-	    Date today = Date.getTodaysDate();
+	    Date today = DateFactory.getDateUtil().getTodaysDate();
 
 	    SimpleQuote spot = new SimpleQuote(0.0);
 	    SimpleQuote qRate = new SimpleQuote(0.0);
@@ -322,7 +323,7 @@ public class EuropeanOptionTest {
 	    for (int i=0; i<values.length-1; i++) {
 
 	    	StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-	        Date exDate = today.add( timeToDays(values[i].t) );
+	        Date exDate = today.getDateAfter( timeToDays(values[i].t) );
 	        Exercise exercise = new EuropeanExercise(exDate);
 
 	        spot. setValue(values[i].s);

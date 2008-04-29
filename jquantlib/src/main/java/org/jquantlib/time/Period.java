@@ -54,7 +54,7 @@ public class Period {
 
 	public Period() {
 		this.length = 0;
-		this.units = TimeUnit.Days;
+		this.units = TimeUnit.DAYS;
 	}
 	
 	public Period(int length, final TimeUnit units) {
@@ -64,31 +64,31 @@ public class Period {
 	
 	public Period(Frequency f) {
         switch (f) {
-          case Once:
-          case NoFrequency:
+          case ONCE:
+          case NO_FREQUENCY:
             // same as Period()
-            units = TimeUnit.Days;
+            units = TimeUnit.DAYS;
             length = 0;
             break;
-          case Annual:
-            units = TimeUnit.Years;
+          case ANNUAL:
+            units = TimeUnit.YEARS;
             length = 1;
             break;
-          case Semiannual:
-          case EveryFourthMonth:
-          case Quarterly:
-          case Bimonthly:
-          case Monthly:
-            units = TimeUnit.Months;
+          case SEMI_ANNUAL:
+          case EVERY_FOURTH_DAY:
+          case QUARTELY:
+          case BI_MONTHLY:
+          case MONTHLY:
+            units = TimeUnit.MONTHS;
             length = 12/f.toInteger();
             break;
-          case Biweekly:
-          case Weekly:
-            units = TimeUnit.Weeks;
+          case BI_WEEKLY:
+          case WEEKLY:
+            units = TimeUnit.WEEKS;
             length = 52/f.toInteger();
             break;
-          case Daily:
-            units = TimeUnit.Days;
+          case DAILY:
+            units = TimeUnit.DAYS;
             length = 1; // FIXME: review
             break;
           default:
@@ -108,25 +108,25 @@ public class Period {
         // unsigned version
         int length = Math.abs(this.length);
 
-        if (length==0) return Frequency.NoFrequency;
+        if (length==0) return Frequency.NO_FREQUENCY;
 
         switch (units) {
-          case Years:
+          case YEARS:
             if (! (length==1) ) throw new IllegalArgumentException("cannot instantiate a Frequency from "+this);
-            return Frequency.Annual;
-          case Months:
+            return Frequency.ANNUAL;
+          case MONTHS:
             if (! ((12%length)==0 && (length<=12)) ) throw new IllegalArgumentException("cannot instantiate a Frequency from "+this);
             return Frequency.valueOf(12/length);
-          case Weeks:
+          case WEEKS:
             if (length==1)
-                return Frequency.Weekly;
+                return Frequency.WEEKLY;
             else if (length==2)
-                return Frequency.Biweekly;
+                return Frequency.BI_WEEKLY;
             else
                 throw new IllegalArgumentException("cannot instantiate a Frequency from "+this);
-          case Days:
+          case DAYS:
             if (! (length==1) ) throw new IllegalArgumentException("cannot instantiate a Frequency from "+this);
-            return Frequency.Daily;
+            return Frequency.DAILY;
           default:
             throw new IllegalArgumentException("unknown time unit ("+units);
         }
@@ -196,34 +196,34 @@ public class Period {
         if (p2.length==0) return (this.length<0);
 
         switch (this.units) {
-          case Days:
+          case DAYS:
             switch (p2.units) {
-              case Days:
+              case DAYS:
                 return (this.length < p2.length);
-              case Weeks:
+              case WEEKS:
                 return (this.length < p2.length * 7);
-              case Months:
+              case MONTHS:
                 if (this.length < p2.length * 28)
                     return true;
                 else
                     throw new IllegalArgumentException("undecidable comparison between periods");
-              case Years:
+              case YEARS:
                 return (this.length < p2.length * 365);
               default:
                 throw new IllegalArgumentException("unknown units");
             }
-          case Weeks:
+          case WEEKS:
             switch (p2.units) {
-              case Days:
+              case DAYS:
                 return (this.length * 7 < p2.length);
-              case Weeks:
+              case WEEKS:
                 return (this.length < p2.length);
-              case Months:
+              case MONTHS:
                 if (this.length * 7 < p2.length * 28)
                     return true;
                 else
                     throw new IllegalArgumentException("undecidable comparison between periods");
-              case Years:
+              case YEARS:
                 if (this.length * 7 < p2.length * 365)
                     return true;
                 else
@@ -231,9 +231,9 @@ public class Period {
               default:
                   throw new IllegalArgumentException("unknown units");
             }
-          case Months:
+          case MONTHS:
             switch (p2.units) {
-              case Days:
+              case DAYS:
                 // Sup[days in this.length months] < days in p2
                 if (this.length * 31 < p2.length)
                     return true;
@@ -242,21 +242,21 @@ public class Period {
                     return false;
                 else
                     throw new IllegalArgumentException("undecidable comparison between periods");
-              case Weeks:
+              case WEEKS:
                 if (this.length* 31 < p2.length  * 7)
                     return true;
                 else
                     throw new IllegalArgumentException("undecidable comparison between periods");
-              case Months:
+              case MONTHS:
                 return (this.length < p2.length);
-              case Years:
+              case YEARS:
                 return (this.length < p2.length * 12);
               default:
                   throw new IllegalArgumentException("unknown units");
             }
-          case Years:
+          case YEARS:
             switch (p2.units) {
-              case Days:
+              case DAYS:
                 if (this.length * 366 < p2.length)
                     return true;
                 // almost 365 days in p1 and less than 365 days in p2
@@ -264,14 +264,14 @@ public class Period {
                     return false;
                 else
                     throw new IllegalArgumentException("undecidable comparison between periods");
-              case Weeks:
+              case WEEKS:
                 if (this.length * 366 < p2.length * 7)
                     return true;
                 else
                     throw new IllegalArgumentException("undecidable comparison between periods");
-              case Months:
+              case MONTHS:
                 return (this.length * 12 < p2.length);
-              case Years:
+              case YEARS:
                 return (this.length < p2.length);
               default:
                   throw new IllegalArgumentException("unknown units");

@@ -19,14 +19,12 @@
  */
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.util.Date.Month.December;
-import static org.jquantlib.util.Date.Month.January;
-import static org.jquantlib.util.Date.Month.May;
+import static org.jquantlib.util.Month.*;
 
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Date.Month;
+import org.jquantlib.util.Month;
 
 /**
  * @author Srinivas Hasti
@@ -56,19 +54,19 @@ public class Target extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             		// New Year's Day
-                    || (d == 1 && m == January)
+                    || (d == 1 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3 && y >= 2000)
                     // Easter Monday
                     || (dd == em && y >= 2000)
                     // Labour Day
-                    || (d == 1 && m == May && y >= 2000)
+                    || (d == 1 && m == MAY && y >= 2000)
                     // Christmas
-                    || (d == 25 && m == December)
+                    || (d == 25 && m == DECEMBER)
                     // Day of Goodwill
-                    || (d == 26 && m == December && y >= 2000)
+                    || (d == 26 && m == DECEMBER && y >= 2000)
                     // December 31st, 1998, 1999, and 2001 only
-                    || (d == 31 && m == December && (y == 1998 || y == 1999 || y == 2001)))
+                    || (d == 31 && m == DECEMBER && (y == 1998 || y == 1999 || y == 2001)))
                 return false;
             return true;
         }

@@ -46,53 +46,70 @@ import org.jquantlib.util.Date;
 public class Thirty360 extends AbstractDayCounter {
 
 	public enum Convention {
-		USA, BondBasis, European, EurobondBasis, Italian;
+		USA, BOND_BASIS, EUROPEAN, EURO_BOND_BASIS, ITALIAN;
 	}
-
-	private int dd1, dd2;
-	private int mm1, mm2;
-	private int yy1, yy2;
-
+	
+	private static final Thirty360 THIRTY360_US = new Thirty360(Thirty360.Convention.USA);
+	private static final Thirty360 THIRTY360_EU = new Thirty360(Thirty360.Convention.EUROPEAN);
+	private static final Thirty360 THIRTY360_IT = new Thirty360(Thirty360.Convention.ITALIAN);
+	
 	private Thirty360Abstraction delegate = null;
 
 	public Thirty360() {
-		this(Thirty360.Convention.BondBasis);
+		this(Thirty360.Convention.BOND_BASIS);
 	}
 
-	public Thirty360(final Thirty360.Convention c) {
+	private Thirty360(final Thirty360.Convention c) {
 		super();
 		switch (c) {
 		case USA:
-		case BondBasis:
+		case BOND_BASIS:
 			delegate = new US();
 			break;
-		case European:
-		case EurobondBasis:
+		case EUROPEAN:
+		case EURO_BOND_BASIS:
 			delegate = new EU();
 			break;
-		case Italian:
+		case ITALIAN:
 			delegate = new IT();
 			break;
 		default:
 			throw new UnsupportedOperationException();
 		}
 	}
+	
+	public static Thirty360 getDayCounter(final Thirty360.Convention c) {
+        switch (c) {
+        case USA:
+        case BOND_BASIS:
+            return THIRTY360_US;
+        case EUROPEAN:
+        case EURO_BOND_BASIS:
+           return THIRTY360_EU;
+        case ITALIAN:
+           return THIRTY360_IT;
+        default:
+            throw new UnsupportedOperationException();
+        }
+    }
 
 	public String getName() /* @ReadOnly */{
 		return delegate.getName();
 	}
 
-	public int getDayCount(final Date d1, final Date d2) /* @ReadOnly */{
-		this.dd1 = d1.getDayOfMonth();
-		this.dd2 = d2.getDayOfMonth();
-		this.mm1 = d1.getMonth();
-		this.mm2 = d2.getMonth();
-		this.yy1 = d1.getYear();
-		this.yy2 = d2.getYear();
-
-		((Thirty360Abstraction) delegate).adjust();
-
-		return 360 * (yy2 - yy1) + 30 * (mm2 - mm1 - 1) + Math.max(0, 30 - dd1) + Math.min(30, dd2);
+	public int getDayCount(final Date d1, final Date d2) /* @ReadOnly */{ 
+		int dd1 = d1.getDayOfMonth();
+		int dd2 = d2.getDayOfMonth();
+		int mm1 = d1.getMonth();
+		int mm2 = d2.getMonth();
+		int yy1 = d1.getYear();
+		int yy2 = d2.getYear();
+		return delegate.getDayCount(dd1, dd2, mm1, mm2, yy1, yy2);
+		
+	}
+	
+	public int compute(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2){
+	    return 360 * (yy2 - yy1) + 30 * (mm2 - mm1 - 1) + Math.max(0, 30 - dd1) + Math.min(30, dd2);
 	}
 
 	public/* @Time */double getYearFraction(
@@ -109,8 +126,6 @@ public class Thirty360 extends AbstractDayCounter {
 	//
 	// inner classes
 	//
-
-	
 	/**
 	 * Abstraction of Thirty360 class according to the Bridge Pattern
 	 * 
@@ -120,7 +135,7 @@ public class Thirty360 extends AbstractDayCounter {
 	 */
 	private interface Thirty360Abstraction {
 		public String getName();
-		public void adjust();
+		public int getDayCount(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2);
 	}
 
 	/**
@@ -135,12 +150,12 @@ public class Thirty360 extends AbstractDayCounter {
 		public final String getName() /* @ReadOnly */{
 			return "30/360 (Bond Basis)";
 		}
-
-		public void adjust() {
-			if (dd2 == 31 && dd1 < 30) {
-				dd2 = 1;
-				mm2++;
-			}
+		public int getDayCount(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2){
+		    if (dd2 == 31 && dd1 < 30) {
+                dd2 = 1;
+                mm2++;
+            }
+		    return compute(dd1,dd2,mm1,mm2,yy1,yy2);
 		}
 	}
 
@@ -156,8 +171,9 @@ public class Thirty360 extends AbstractDayCounter {
 			return "30E/360 (Eurobond Basis)";
 		}
 
-		public void adjust() {
-		}
+		public int getDayCount(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2){
+            return compute(dd1,dd2,mm1,mm2,yy1,yy2);
+        }
 	}
 
 	/**
@@ -173,12 +189,12 @@ public class Thirty360 extends AbstractDayCounter {
 			return "30/360 (Italian)";
 		}
 
-		public void adjust() {
+		public int getDayCount(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2) {
 			if (mm1 == 2 && dd1 > 27)
 				dd1 = 30;
 			if (mm2 == 2 && dd2 > 27)
 				dd2 = 30;
+			return compute(dd1,dd2,mm1,mm2,yy1,yy2);
 		}
 	}
-
 }

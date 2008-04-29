@@ -51,7 +51,7 @@ public abstract class WesternCalendar extends AbstractCalendar {
 	};
 
     public final boolean isWeekend(Weekday weekday) {
-        return weekday == Weekday.Saturday || weekday == Weekday.Sunday;
+        return weekday == Weekday.SATURDAY || weekday == Weekday.SUNDAY;
     }
     
     /**

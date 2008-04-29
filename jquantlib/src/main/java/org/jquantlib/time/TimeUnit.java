@@ -36,10 +36,9 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.time;
-
 
 /**
  * Time units
@@ -47,63 +46,46 @@ package org.jquantlib.time;
  * @author Richard Gomes
  */
 public enum TimeUnit {
-	Days, Weeks, Months, Years;
-
+    DAYS, WEEKS, MONTHS, YEARS;
 
     /**
      * Returns the name of time unit in long format (e.g. "week")
-     *
+     * 
      * @return the name of time unit in long format (e.g. "week")
-     */ 
-	public String getLongFormat() {
-		return new LongFormat(this).toString();
-	}
+     */
+    public String getLongFormat() {
+        return getLongFormatString();
+    }
 
     /**
      * Returns the name of time unit in short format (e.g. "w")
-     *
+     * 
      * @return the name of time unit in short format (e.g. "w")
-     */ 
-	public String getShortFormat() {
-		return new ShortFormat(this).toString();
-	}
+     */
+    public String getShortFormat() {
+        return getShortFormatString();
+    }
 
     /**
      * Output time units in long format (e.g. "week")
      * 
      * @note message in singular form
-     */ 
-	private class LongFormat {
-		private TimeUnit units;
-
-		public LongFormat(TimeUnit units) {
-			this.units = units;
-		}
-
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(units.toString().toLowerCase());
-			sb.setLength(sb.length()-1);
-			return sb.toString();
-		}
-	}
+     */
+    private String getLongFormatString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(toString().toLowerCase());
+        sb.setLength(sb.length() - 1);
+        return sb.toString();
+    }
 
     /**
      * Output time units in short format (e.g. "w")
-     */ 
-	private class ShortFormat {
-		private TimeUnit units;
-
-		public ShortFormat(TimeUnit units) {
-			this.units = units;
-		}
-
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append(units.toString().toLowerCase());
-			sb.setLength(1);
-			return sb.toString();
-		}
-	}
+     */
+    private String getShortFormatString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(toString().toLowerCase());
+        sb.setLength(1);
+        return sb.toString();
+    }
 
 }

@@ -22,7 +22,10 @@ package org.jquantlib.daycounters;
 
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.util.BaseDate;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.Month;
 
 /**
  * 
@@ -30,30 +33,31 @@ import org.jquantlib.util.Date;
  * @author Richard Gomes
  * 
  */
-// TODO: Is this the best way if implementing ?
-// We could do it with a singletons to avoid multiple object creations
-// TODO: finish,clean and test
 public class ActualActual extends AbstractDayCounter {
-    
+
     public static enum Convention {
-        ISMA, Bond, ISDA, Historical, Actual365, AFB, Euro
+        ISMA, BOND, ISDA, HISTORICAL, ACTUAL365, AFB, EURO
     };
 
-    private DayCounter delegate;
+    private static final ActualActual ISMA_DAYCOUNTER = new ActualActual(Convention.ISMA);
+    private static final ActualActual ACTUAL365_DAYCOUNTER = new ActualActual(Convention.ISDA);
+    private static final ActualActual AFB_DAYCOUNTER = new ActualActual(Convention.AFB);
 
-    public ActualActual(Convention convention) {
+    private DayCounter delegate = null;
+
+    private ActualActual(Convention convention) {
         switch (convention) {
         case ISMA:
-        case Bond:
+        case BOND:
             delegate = new ISMA();
             break;
         case ISDA:
-        case Historical:
-        case Actual365:
+        case HISTORICAL:
+        case ACTUAL365:
             delegate = new ISDA();
             break;
         case AFB:
-        case Euro:
+        case EURO:
             delegate = new AFB();
             break;
         default:
@@ -61,31 +65,49 @@ public class ActualActual extends AbstractDayCounter {
         }
     }
 
-	public String getName() /* @ReadOnly */ {
-		return delegate.getName();
-	}
+    public static ActualActual getActualActual(Convention convention) {
+        switch (convention) {
+        case ISMA:
+        case BOND:
+            return ISMA_DAYCOUNTER;
+        case ISDA:
+        case HISTORICAL:
+        case ACTUAL365:
+            return ACTUAL365_DAYCOUNTER;
+        case AFB:
+        case EURO:
+            return AFB_DAYCOUNTER;
+        default:
+            throw new IllegalArgumentException("unknown act/act convention");
+        }
+    }
 
-    public double getYearFraction(Date dateStart, Date dateEnd) /* @ReadOnly */ {
+    public String getName() /* @ReadOnly */{
+        return delegate.getName();
+    }
+
+    public double getYearFraction(Date dateStart, Date dateEnd) /* @ReadOnly */{
         return delegate.getYearFraction(dateStart, dateEnd);
     }
 
-    public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */ {
+    public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
+            final Date refPeriodEnd) /* @ReadOnly */{
         return delegate.getYearFraction(dateStart, dateEnd, refPeriodStart, refPeriodEnd);
     }
 
-    private class ISMA extends AbstractDayCounter {
+    private static class ISMA extends AbstractDayCounter {
 
-		public final String getName() /* @ReadOnly */{
-			return "Actual/Actual (ISMA)";
-		}
+        public final String getName() /* @ReadOnly */{
+            return "Actual/Actual (ISMA)";
+        }
 
-        public double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
+        public double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
             return getYearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
         }
 
-        public double getYearFraction(final Date d1, final Date d2, final Date d3, final Date d4) /* @ReadOnly */ {
+        public double getYearFraction(final Date d1, final Date d2, final Date d3, final Date d4) /* @ReadOnly */{
 
-            if (d1.eq(d2))
+            if (d1.equals(d2))
                 return 0.0;
 
             if (d1.gt(d2))
@@ -93,31 +115,27 @@ public class ActualActual extends AbstractDayCounter {
 
             // when the reference period is not specified, try taking
             // it equal to (d1,d2)
-            Date refPeriodStart = (d3.neq(Date.NULL_DATE) ? d3 : d1);
-            Date refPeriodEnd   = (d4.neq(Date.NULL_DATE) ? d4 : d2);
+            Date refPeriodStart = (!d3.equals(Date.NULL_DATE) ? d3 : d1);
+            Date refPeriodEnd = (!d4.equals(Date.NULL_DATE) ? d4 : d2);
 
-            if (! (refPeriodEnd.gt(refPeriodStart) && refPeriodEnd.gt(d1)) ) {
-            	throw new IllegalArgumentException(
-            			"invalid reference period: "
-                        + "date 1: " + d1
-                        + ", date 2: " + d2
-                        + ", reference period start: " + refPeriodStart
-                        + ", reference period end: " + refPeriodEnd );
+            if (!(refPeriodEnd.gt(refPeriodStart) && refPeriodEnd.gt(d1))) {
+                throw new IllegalArgumentException("invalid reference period: " + "date 1: " + d1 + ", date 2: " + d2
+                        + ", reference period start: " + refPeriodStart + ", reference period end: " + refPeriodEnd);
             }
 
             // estimate roughly the length in months of a period
-            int months = (int) (0.5+12 *(refPeriodEnd.subtract(refPeriodStart))/365.0);
+            int months = (int) (0.5 + 12 * (refPeriodStart.getDayCount(refPeriodEnd)) / 365.0);
 
             // for short periods...
             if (months == 0) {
                 // ...take the reference period as 1 year from d1
                 refPeriodStart = d1;
                 // FIXME: performance:: pre-alocate very common periods
-                refPeriodEnd = d1.add(new Period(1, TimeUnit.Years)); 
+                refPeriodEnd = d1.getDateAfter(new Period(1, TimeUnit.YEARS));
                 months = 12;
             }
 
-            /*@Time*/ double period = months/12.0;
+            /* @Time */double period = months / 12.0;
 
             if (d2.le(refPeriodEnd)) {
                 // here refPeriodEnd is a future (notional?) payment date
@@ -138,33 +156,33 @@ public class ActualActual extends AbstractDayCounter {
                     // this case is long first coupon
 
                     // the last notional payment date
-                    Date previousRef = refPeriodStart.subtract(new Period(months, TimeUnit.Months));
+                    Date previousRef = refPeriodStart.getDateAfter(new Period(-months, TimeUnit.MONTHS));
                     if (d2.gt(refPeriodStart))
-                        return getYearFraction(d1, refPeriodStart, previousRef, refPeriodStart) +
-                               getYearFraction(refPeriodStart, d2, refPeriodStart, refPeriodEnd);
+                        return getYearFraction(d1, refPeriodStart, previousRef, refPeriodStart)
+                                + getYearFraction(refPeriodStart, d2, refPeriodStart, refPeriodEnd);
                     else
-                        return getYearFraction(d1,d2,previousRef,refPeriodStart);
+                        return getYearFraction(d1, d2, previousRef, refPeriodStart);
                 }
             } else {
                 // here refPeriodEnd is the last notional payment date
                 // d1 < refPeriodEnd < d2 AND refPeriodStart < refPeriodEnd
                 if (refPeriodStart.gt(d1)) {
-                	throw new IllegalArgumentException("invalid dates: d1 < refPeriodStart < refPeriodEnd < d2");
+                    throw new IllegalArgumentException("invalid dates: d1 < refPeriodStart < refPeriodEnd < d2");
                 }
-                           
+
                 // now it is: refPeriodStart <= d1 < refPeriodEnd < d2
 
                 // the part from d1 to refPeriodEnd
-                /*@Time*/ double sum = getYearFraction(d1, refPeriodEnd, refPeriodStart, refPeriodEnd);
+                /* @Time */double sum = getYearFraction(d1, refPeriodEnd, refPeriodStart, refPeriodEnd);
 
                 // the part from refPeriodEnd to d2
                 // count how many regular periods are in [refPeriodEnd, d2],
                 // then add the remaining time
-                int i=0;
+                int i = 0;
                 Date newRefStart, newRefEnd;
                 do {
-                    newRefStart = refPeriodEnd.add(new Period(months*i, TimeUnit.Months));
-                    newRefEnd = refPeriodEnd.add(new Period(months*(i+1), TimeUnit.Months));
+                    newRefStart = refPeriodEnd.getDateAfter(new Period(months * i, TimeUnit.MONTHS));
+                    newRefEnd = refPeriodEnd.getDateAfter(new Period(months * (i + 1), TimeUnit.MONTHS));
                     if (d2.lt(newRefEnd)) {
                         break;
                     } else {
@@ -179,14 +197,14 @@ public class ActualActual extends AbstractDayCounter {
     }
 
     // TODO: complete impl
-    private class ISDA extends AbstractDayCounter {
+    private static class ISDA extends AbstractDayCounter {
 
-		public final String getName() /* @ReadOnly */{
-			return "Actual/Actual (ISDA)";
-		}
+        public final String getName() /* @ReadOnly */{
+            return "Actual/Actual (ISDA)";
+        }
 
-        public double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
-            if (dateStart.eq(dateEnd))
+        public double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+            if (dateStart.equals(dateEnd))
                 return 0.0;
 
             if (dateStart.gt(dateEnd))
@@ -194,43 +212,51 @@ public class ActualActual extends AbstractDayCounter {
 
             int y1 = dateStart.getYear();
             int y2 = dateEnd.getYear();
-            double dib1 = (Date.isLeap(y1) ? 366.0 : 365.0);
-            double dib2 = (Date.isLeap(y2) ? 366.0 : 365.0);
+            double dib1 = DateFactory.getDateUtil().isLeap(y1) ? 366.0 : 365.0;
+            double dib2 = DateFactory.getDateUtil().isLeap(y2) ? 366.0 : 365.0;
 
-            /*@Time*/ double sum = y2 - y1 - 1;
-            // FIXME: performance:: allocate all needed dates (01-JAN-YYYY) at library startup
-            sum += getDayCount(dateStart, new Date(1, Date.Month.January, y1+1))/dib1;
-            sum += getDayCount(new Date(1, Date.Month.January,y2),dateEnd)/dib2;
+            /* @Time */double sum = y2 - y1 - 1;
+            // FIXME: performance:: allocate all needed dates (01-JAN-YYYY) at
+            // library startup
+            // sum += getDayCount(dateStart, new JQLibDate(1, Month.JANUARY,
+            // y1+1))/dib1;
+            // sum += getDayCount(new JQLibDate(1,
+            // Month.JANUARY,y2),dateEnd)/dib2;
+            
+            //Days from start to starting of following year
+            sum += (dib1 - dateStart.getDayOfYear()+1) / dib1;
+            //Days from beginning of year to the endDate
+            sum += (dateEnd.getDayOfYear()-1) / dib2;
             return sum;
         }
 
-        public double getYearFraction(final Date dateStart, final Date dateEnd, final Date d3, final Date d4) /* @ReadOnly */ {
-        	return this.getYearFraction(dateStart, dateEnd);
+        public double getYearFraction(final Date dateStart, final Date dateEnd, final Date d3, final Date d4) /* @ReadOnly */{
+            return this.getYearFraction(dateStart, dateEnd);
         }
 
     }
 
     // TODO: complete impl
-    private class AFB extends AbstractDayCounter {
+    private static class AFB extends AbstractDayCounter {
 
-		public final String getName() /* @ReadOnly */ {
-			return "Actual/Actual (AFB)";
-		}
+        public final String getName() /* @ReadOnly */{
+            return "Actual/Actual (AFB)";
+        }
 
-        public double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
-            if (dateStart.eq(dateEnd))
+        public double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+            if (dateStart.equals(dateEnd))
                 return 0.0;
 
             if (dateStart.gt(dateEnd))
                 return -getYearFraction(dateEnd, dateStart, Date.NULL_DATE, Date.NULL_DATE);
 
-            Date newD2=dateEnd;
-            Date temp=dateEnd;
-            /*@Time*/ double sum = 0.0;
+            Date newD2 = dateEnd;
+            Date temp = dateEnd;
+            /* @Time */double sum = 0.0;
             while (temp.gt(dateStart)) {
-                temp = newD2.subtract(new Period(1, TimeUnit.Years));
-                if (temp.getDayOfMonth()==28 && temp.getMonth()==2 && Date.isLeap(temp.getYear())) {
-                    temp.inc(1);
+                temp = newD2.getDateAfter(new Period(-1, TimeUnit.YEARS));
+                if (temp.getDayOfMonth() == 28 && temp.getMonth() == 2 && DateFactory.getDateUtil().isLeap(temp.getYear())) {
+                    temp.increment(1);
                 }
                 if (temp.ge(dateStart)) {
                     sum += 1.0;
@@ -240,21 +266,21 @@ public class ActualActual extends AbstractDayCounter {
 
             double den = 365.0;
 
-            if (Date.isLeap(newD2.getYear())) {
-                temp = new Date(29, Date.Month.February, newD2.getYear());
-                if (newD2.gt(temp) && dateStart.le(temp))
+            if (DateFactory.getDateUtil().isLeap(newD2.getYear())) {
+                if (newD2.gt(29, Month.FEBRUARY, newD2.getYear()) && dateStart.le(29, Month.FEBRUARY, newD2.getYear()))
                     den += 1.0;
-            } else if (Date.isLeap(dateStart.getYear())) {
-                temp = new Date(29, Date.Month.February, dateStart.getYear());
-                if (newD2.gt(temp) && dateStart.le(temp))
+            } else if (DateFactory.getDateUtil().isLeap(dateStart.getYear())) {
+                if (newD2.gt(29, Month.FEBRUARY, dateStart.getYear())
+                        && dateStart.le(29, Month.FEBRUARY, dateStart.getYear()))
                     den += 1.0;
             }
 
-            return sum+getDayCount(dateStart, newD2)/den;
+            return sum + getDayCount(dateStart, newD2) / den;
         }
 
-        public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */ {
-        	return this.getYearFraction(dateStart, dateEnd);
+        public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
+                final Date refPeriodEnd) /* @ReadOnly */{
+            return this.getYearFraction(dateStart, dateEnd);
         }
 
     }

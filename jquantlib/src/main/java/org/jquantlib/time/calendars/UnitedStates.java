@@ -23,7 +23,7 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Date.Month;
+import org.jquantlib.util.Month;
 
 /**
  * United States calendars <br>
@@ -168,29 +168,29 @@ public class UnitedStates extends DelegateCalendar {
             int m = date.getMonth();
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday if on Sunday)
-                    || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January.toInteger())
+                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
                     // (or to Friday if on Saturday)
-                    || (d == 31 && w == Weekday.Friday && m == Month.December.toInteger())
+                    || (d == 31 && w == Weekday.FRIDAY && m == Month.DECEMBER.toInteger())
                     // Martin Luther King's birthday (third Monday in January)
-                    || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.January.toInteger())
+                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY.toInteger())
                     // Washington's birthday (third Monday in February)
-                    || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.February.toInteger())
+                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY.toInteger())
                     // Memorial Day (last Monday in May)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.May.toInteger())
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
                     // Independence Day (Monday if Sunday or Friday if Saturday)
-                    || ((d == 4 || (d == 5 && w == Weekday.Monday) || (d == 3 && w == Weekday.Friday)) && m == Month.July
+                    || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
                             .toInteger())
                     // Labor Day (first Monday in September)
-                    || (d <= 7 && w == Weekday.Monday && m == Month.September.toInteger())
+                    || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER.toInteger())
                     // Columbus Day (second Monday in October)
-                    || ((d >= 8 && d <= 14) && w == Weekday.Monday && m == Month.October.toInteger())
+                    || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER.toInteger())
                     // Veteran's Day (Monday if Sunday or Friday if Saturday)
-                    || ((d == 11 || (d == 12 && w == Weekday.Monday) || (d == 10 && w == Weekday.Friday)) && m == Month.November
+                    || ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
                             .toInteger())
                     // Thanksgiving Day (fourth Thursday in November)
-                    || ((d >= 22 && d <= 28) && w == Weekday.Thursday && m == Month.November.toInteger())
+                    || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER.toInteger())
                     // Christmas (Monday if Sunday or Friday if Saturday)
-                    || ((d == 25 || (d == 26 && w == Weekday.Monday) || (d == 24 && w == Weekday.Friday)) && m == Month.December
+                    || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
                             .toInteger()))
                 return false;
             return true;
@@ -211,61 +211,61 @@ public class UnitedStates extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday if on Sunday)
-                    || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January.toInteger())
+                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
                     // Washington's birthday (third Monday in February)
-                    || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.February.toInteger())
+                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY.toInteger())
                     // Good Friday
                     || (dd == em - 3)
                     // Memorial Day (last Monday in May)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.May.toInteger())
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
                     // Independence Day (Monday if Sunday or Friday if Saturday)
-                    || ((d == 4 || (d == 5 && w == Weekday.Monday) || (d == 3 && w == Weekday.Friday)) && m == Month.July
+                    || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
                             .toInteger())
                     // Labor Day (first Monday in September)
-                    || (d <= 7 && w == Weekday.Monday && m == Month.September.toInteger())
+                    || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER.toInteger())
                     // Thanksgiving Day (fourth Thursday in November)
-                    || ((d >= 22 && d <= 28) && w == Weekday.Thursday && m == Month.November.toInteger())
+                    || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER.toInteger())
                     // Christmas (Monday if Sunday or Friday if Saturday)
-                    || ((d == 25 || (d == 26 && w == Weekday.Monday) || (d == 24 && w == Weekday.Friday)) && m == Month.December
+                    || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
                             .toInteger()))
                 return false;
 
             if (y >= 1998) {
                 if (// Martin Luther King's birthday (third Monday in January)
-                ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.January.toInteger())
+                ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY.toInteger())
                 // President Reagan's funeral
-                        || (y == 2004 && m == Month.June.toInteger() && d == 11)
+                        || (y == 2004 && m == Month.JUNE.toInteger() && d == 11)
                         // September 11, 2001
-                        || (y == 2001 && m == Month.September.toInteger() && (11 <= d && d <= 14))
+                        || (y == 2001 && m == Month.SEPTEMBER.toInteger() && (11 <= d && d <= 14))
                         // President Ford's funeral
-                        || (y == 2007 && m == Month.January.toInteger() && d == 2))
+                        || (y == 2007 && m == Month.JANUARY.toInteger() && d == 2))
                     return false;
             } else if (y <= 1980) {
                 if (// Presidential election days
-                ((y % 4 == 0) && m == Month.November.toInteger() && d <= 7 && w == Weekday.Tuesday)
+                ((y % 4 == 0) && m == Month.NOVEMBER.toInteger() && d <= 7 && w == Weekday.TUESDAY)
                 // 1977 Blackout
-                        || (y == 1977 && m == Month.July.toInteger() && d == 14)
+                        || (y == 1977 && m == Month.JULY.toInteger() && d == 14)
                         // Funeral of former President Lyndon B. Johnson.
-                        || (y == 1973 && m == Month.January.toInteger() && d == 25)
+                        || (y == 1973 && m == Month.JANUARY.toInteger() && d == 25)
                         // Funeral of former President Harry S. Truman
-                        || (y == 1972 && m == Month.December.toInteger() && d == 28)
+                        || (y == 1972 && m == Month.DECEMBER.toInteger() && d == 28)
                         // National Day of Participation for the lunar
                         // exploration.
-                        || (y == 1969 && m == Month.July.toInteger() && d == 21)
+                        || (y == 1969 && m == Month.JULY.toInteger() && d == 21)
                         // Funeral of former President Eisenhower.
-                        || (y == 1969 && m == Month.March.toInteger() && d == 31)
+                        || (y == 1969 && m == Month.MARCH.toInteger() && d == 31)
                         // Closed all day - heavy snow.
-                        || (y == 1969 && m == Month.February.toInteger() && d == 10)
+                        || (y == 1969 && m == Month.FEBRUARY.toInteger() && d == 10)
                         // Day after Independence Day.
-                        || (y == 1968 && m == Month.July.toInteger() && d == 5)
+                        || (y == 1968 && m == Month.JULY.toInteger() && d == 5)
                         // June 12-Dec. 31, 1968
                         // Four day week (closed on Wednesdays) - Paperwork
                         // Crisis
-                        || (y == 1968 && dd >= 163 && w == Weekday.Wednesday))
+                        || (y == 1968 && dd >= 163 && w == Weekday.WEDNESDAY))
                     return false;
             } else {
                 if (// Nixon's funeral
-                (y == 1994 && m == Month.April.toInteger() && d == 27))
+                (y == 1994 && m == Month.APRIL.toInteger() && d == 27))
                     return false;
             }
             return true;
@@ -286,29 +286,29 @@ public class UnitedStates extends DelegateCalendar {
             int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday if on Sunday)
-                    || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January.toInteger())
+                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
                     // Martin Luther King's birthday (third Monday in January)
-                    || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.January.toInteger())
+                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY.toInteger())
                     // Washington's birthday (third Monday in February)
-                    || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.February.toInteger())
+                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY.toInteger())
                     // Good Friday
                     || (dd == em - 3)
                     // Memorial Day (last Monday in May)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.May.toInteger())
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
                     // Independence Day (Monday if Sunday or Friday if Saturday)
-                    || ((d == 4 || (d == 5 && w == Weekday.Monday) || (d == 3 && w == Weekday.Friday)) && m == Month.July
+                    || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
                             .toInteger())
                     // Labor Day (first Monday in September)
-                    || (d <= 7 && w == Weekday.Monday && m == Month.September.toInteger())
+                    || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER.toInteger())
                     // Columbus Day (second Monday in October)
-                    || ((d >= 8 && d <= 14) && w == Weekday.Monday && m == Month.October.toInteger())
+                    || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER.toInteger())
                     // Veteran's Day (Monday if Sunday or Friday if Saturday)
-                    || ((d == 11 || (d == 12 && w == Weekday.Monday) || (d == 10 && w == Weekday.Friday)) && m == Month.November
+                    || ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
                             .toInteger())
                     // Thanksgiving Day (fourth Thursday in November)
-                    || ((d >= 22 && d <= 28) && w == Weekday.Thursday && m == Month.November.toInteger())
+                    || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER.toInteger())
                     // Christmas (Monday if Sunday or Friday if Saturday)
-                    || ((d == 25 || (d == 26 && w == Weekday.Monday) || (d == 24 && w == Weekday.Friday)) && m == Month.December
+                    || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
                             .toInteger()))
                 return false;
             return true;
@@ -327,17 +327,17 @@ public class UnitedStates extends DelegateCalendar {
             int m = date.getMonth();
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday if on Sunday)
-                    || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January.toInteger())
+                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
                     // Memorial Day (last Monday in May)
-                    || (d >= 25 && w == Weekday.Monday && m == Month.May.toInteger())
+                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
                     // Independence Day (Monday if Sunday)
-                    || ((d == 4 || (d == 5 && w == Weekday.Monday)) && m == Month.July.toInteger())
+                    || ((d == 4 || (d == 5 && w == Weekday.MONDAY)) && m == Month.JULY.toInteger())
                     // Labor Day (first Monday in September)
-                    || (d <= 7 && w == Weekday.Monday && m == Month.September.toInteger())
+                    || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER.toInteger())
                     // Thanksgiving Day (fourth Thursday in November)
-                    || ((d >= 22 && d <= 28) && w == Weekday.Thursday && m == Month.November.toInteger())
+                    || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER.toInteger())
                     // Christmas (Monday if Sunday)
-                    || ((d == 25 || (d == 26 && w == Weekday.Monday)) && m == Month.December.toInteger()))
+                    || ((d == 25 || (d == 26 && w == Weekday.MONDAY)) && m == Month.DECEMBER.toInteger()))
                 return false;
             return true;
         }

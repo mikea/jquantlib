@@ -39,6 +39,7 @@ package org.jquantlib.termstructures;
 
 import java.util.List;
 
+import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
@@ -125,7 +126,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 		this.moving = false;
 		this.updated = true;
 		this.nCase = 3;
-		today = Settings.getInstance().getEvaluationDate();
+		today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
 		today.addObserver(this);
 	}
 
@@ -164,7 +165,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 		this.moving = false;
 		this.updated = true;
 		this.nCase = 1;
-		today = Settings.getInstance().getEvaluationDate();
+		today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
 		today.addObserver(this);
 	}
 	
@@ -202,7 +203,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 		this.moving = true;
 		this.updated = false;
 		this.nCase = 2;
-		today = Settings.getInstance().getEvaluationDate();
+		today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
 		today.addObserver(this);
 	}
 	
@@ -276,7 +277,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 			return referenceDate;
 		case 2:
 			if (!updated) {
-				referenceDate = calendar.advance(today, settlementDays, TimeUnit.Days);
+				referenceDate = calendar.advance(today, settlementDays, TimeUnit.DAYS);
 				updated = true;
 			}
 			return referenceDate;
@@ -317,7 +318,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	public void update(Observable o, Object arg) {
 		if (moving) {
 			updated = false;
-			today = Settings.getInstance().getEvaluationDate();
+			today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
 			notifyObservers();
 		}
 	}

@@ -44,6 +44,7 @@ import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 
 // Local constant volatility, no time dependence, no asset dependence
 
@@ -89,7 +90,7 @@ public class LocalConstantVol extends LocalVolTermStructure {
 	}
 
 	public final Date getMaxDate() {
-		return Date.getMaxDate();
+		return DateFactory.getDateUtil().getMaxDate();
 	}
 
 	@Override

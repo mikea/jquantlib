@@ -44,6 +44,7 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolatilityTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 
 /**
  * Constant Black volatility, no time-strike dependence
@@ -95,7 +96,7 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     
     @Override
     public final Date getMaxDate() {
-        return Date.getMaxDate();
+        return DateFactory.getDateUtil().getMaxDate();
     }
     
     @Override

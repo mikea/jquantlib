@@ -43,6 +43,8 @@ package org.jquantlib.time;
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.Month;
 
 /**
  * Main cycle of the International %Money Market (a.k.a. %IMM) months
@@ -52,21 +54,57 @@ import org.jquantlib.util.Date;
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
+//TODO: Improve comments
 public class IMM {
+    private static volatile IMM DEFAULT_IMM;
+    private Configuration configuration = null;
+    private Settings settings = null;
+    
+    /**
+     * To create a IMM with user Settings and Configuration
+     * 
+     * @param config
+     * @param settings
+     */
+    public IMM(Configuration config, Settings settings){
+        this.configuration = config;
+        this.settings = settings;
+    }
+    
+    /**
+     * Returns IMM with Global Configuration and Settings
+     * @return
+     */
+    public static IMM getDefaultIMM(){
+        if(DEFAULT_IMM == null){
+            synchronized(IMM.class){
+                if(DEFAULT_IMM == null)
+                    DEFAULT_IMM = new IMM(Configuration.getSystemConfiguration(null), Configuration.getSystemConfiguration(null).getGlobalSettings());
+            }
+        }
+        return DEFAULT_IMM;
+    }
 
-    public static boolean isIMMdate(final Date date) {
+    /**
+     * Checks if Date is an IMM date or not
+     * 
+     * @param date
+     * @return
+     */
+    public boolean isIMMdate(final Date date) {
     	return isIMMdate(date, true);
     }
 
     /**
-     * Returns whether or not the given date is an IMM date
+     * Returns whether or not the given date is an IMM date. For non main cycle,
+     * third Wednesday in a month is returned true,
      * 
      * @param date
      * @param mainCycle
      * @return
      */
-    public static boolean isIMMdate(final Date date, boolean mainCycle) {
-        if (date.getWeekday()!=Weekday.Wednesday)
+    public boolean isIMMdate(final Date date, boolean mainCycle) {
+        if (date.getWeekday()!=Weekday.WEDNESDAY)
             return false;
 
         int d = date.getDayOfMonth();
@@ -75,12 +113,18 @@ public class IMM {
 
         if (!mainCycle) return true;
 
-        Date.Month m = date.getMonthEnum(); 
-        return (m==Date.Month.March || m==Date.Month.June || m==Date.Month.September || m==Date.Month.December);
+        Month m = date.getMonthEnum(); 
+        return (m==Month.MARCH || m==Month.JUNE || m==Month.SEPTEMBER || m==Month.DECEMBER);
     }
 
 
-    public static boolean isIMMcode(final String in) {
+    /**
+     * Checks if Strings specifies a IMM code or not
+     * 
+     * @param in
+     * @return
+     */
+    public boolean isIMMcode(final String in) {
     	return isIMMcode(in, true);
     }
 
@@ -91,7 +135,7 @@ public class IMM {
      * @param mainCycle
      * @return
      */
-    public static boolean isIMMcode(final String in, boolean mainCycle) {
+    public boolean isIMMcode(final String in, boolean mainCycle) {
         if (in.length() != 2)
             return false;
 
@@ -100,6 +144,9 @@ public class IMM {
 
         String str1;
         if (mainCycle) str1 = "hmzuHMZU";
+
+        
+        
         else           str1 = "fghjkmnquvxzFGHJKMNQUVXZ";
         
         if (str1.indexOf(in.charAt(0))==-1)
@@ -108,30 +155,38 @@ public class IMM {
         return true;
     }
 
-    public static Date date(final String immCode) {
+    /**
+     * Returns Date from IMM code
+     * 
+     * @param immCode
+     * @return
+     */
+    public Date date(final String immCode) {
     	return date(immCode, Date.NULL_DATE);
     }
     
 	/**
 	 * Returns the IMM date for the given IMM code (e.g. March 20th, 2013 for H3).
+	 * When <code>Date.NULL_DATE</code> is passed, <code>Settings.getEvaluationDate</code> is used as 
+	 * a reference date.
 	 * 
 	 * @param immCode
 	 * @param refDate
 	 * @return
 	 */
     // FIXME: this method is potentially harmful in heavily multi-threaded environments
-    public static Date date(final String immCode, final Date refDate) {
+    public Date date(final String immCode, final Date refDate) {
         if (! (isIMMcode(immCode, false)) ) throw new IllegalArgumentException(immCode+" is not a valid IMM code");
 
         Date referenceDate;
         if (Date.NULL_DATE.equals(refDate)) {
-        	referenceDate = Settings.getInstance().getEvaluationDate();
+        	referenceDate = settings.getEvaluationDate();
         } else {
         	referenceDate = refDate;
         }
 
         char code = immCode.charAt(0);
-        Date.Month m = Date.Month.valueOf(code);
+        Month m = Month.valueOf(code);
         
         int y = immCode.charAt(1) - '0';
 
@@ -140,24 +195,36 @@ public class IMM {
         if (y==0 && referenceDate.getYear()<=1909) y+=10;
         int yMod = (referenceDate.getYear() % 10);
         y += referenceDate.getYear() - yMod;
-        Date result = nextDate(new Date(1, m, y), false);
+        Date result = nextDate(DateFactory.getDateUtil().getDate(1, m, y), false);
         if (result.lt(referenceDate))
-            return nextDate(new Date(1, m, y+10), false);
+            return nextDate(DateFactory.getDateUtil().getDate(1, m, y+10), false);
 
         return result;
     }
 
-    
-    public static Date nextDate() {
+    /**
+     * Returns next main cycle IMM Date using Settings.getEvaluationDate as reference date.
+     * 
+     * @return
+     */
+    public Date nextDate() {
     	return nextDate(Date.NULL_DATE, true);
     }
 
-    public static Date nextDate(final Date date) {
+    /**
+     *  Returns next main cycle IMM Date from the specified date.
+     *  
+     *  
+     * @param date
+     * @return
+     */
+    public Date nextDate(final Date date) {
     	return nextDate(date, true);
     }
 
     /**
-     * next IMM date following the given date
+     * next IMM date following the given date. * When <code>Date.NULL_DATE</code> is passed, <code>Settings.getEvaluationDate</code> is used as 
+     * a reference date.
      * 
      * @param date
      * @param mainCycle
@@ -165,11 +232,10 @@ public class IMM {
      *   International Money Market section of the Chicago Mercantile
      *   Exchange.
      */
-    // FIXME: this method is potentially harmful in heavily multi-threaded environments
-    public static Date nextDate(final Date date, boolean mainCycle) {
+    public Date nextDate(final Date date, boolean mainCycle) {
         Date refDate;
         if (Date.NULL_DATE.equals(date)) {
-        	refDate = Settings.getInstance().getEvaluationDate();
+        	refDate = settings.getEvaluationDate();
         } else {
         	refDate = date;        
         }
@@ -189,20 +255,33 @@ public class IMM {
             }
         }
 
-        Date result = Date.getNthWeekday(3, Weekday.Wednesday, m, y);
+        Date result = DateFactory.getDateUtil().getNthWeekday(3, Weekday.WEDNESDAY, Month.valueOf(m), y);
         if (result.le(refDate))
-            result = nextDate(new Date(22, m, y), mainCycle);
+            result = nextDate(DateFactory.getDateUtil().getDate(22, Month.valueOf(m), y), mainCycle);
         return result;
     }
 
 
     
-    
-    public static Date nextDate(final String immCode) {
+    /**
+     * Returns next main cycle IMM date from the given IMM code
+     * 
+     * @param immCode
+     * @return
+     */
+    public Date nextDate(final String immCode) {
     	return nextDate(immCode, true, Date.NULL_DATE);
     }
     
-    public static Date nextDate(final String immCode, boolean mainCycle) {
+    
+    /**
+     * Returns next IMM date from the given IMM code
+     * 
+     * @param immCode
+     * @param mainCycle
+     * @return
+     */
+    public Date nextDate(final String immCode, boolean mainCycle) {
     	return nextDate(immCode, mainCycle, Date.NULL_DATE);
     }
 
@@ -217,25 +296,35 @@ public class IMM {
      *  International Money Market section of the Chicago Mercantile
      *  Exchange.
      */
-    public static Date nextDate(final String IMMcode,
+    public Date nextDate(final String IMMcode,
                        boolean mainCycle,
                        final Date referenceDate)  {
         Date immDate = date(IMMcode, referenceDate);
-        return nextDate(immDate.inc(), mainCycle);
+        return nextDate(immDate.increment(), mainCycle);
     }
 
 
-    
-    public static String nextCode() {
+    /**
+     * Returns next main cycle IMM code from the reference date
+     * 
+     * @return
+     */
+    public String nextCode() {
     	return nextCode(Date.NULL_DATE);
     }
 
-    public static String nextCode(final Date d) {
+    /**
+     * Returns next cycle IMM code from the specified date
+     * @param d
+     * @return
+     */
+    public String nextCode(final Date d) {
     	return nextCode(d, true);
     }
 
 
 	/**
+	 * Returns next cycle IMM code
 	 * 
 	 * @param d
 	 * @param mainCycle
@@ -243,24 +332,38 @@ public class IMM {
      * International Money Market section of the Chicago Mercantile
      * Exchange.
 	 */
-    public static String nextCode(final Date d,
+    public String nextCode(final Date d,
                               boolean mainCycle) {
         Date date = nextDate(d, mainCycle);
         return code(date);
     }
 
 
-    public static String nextCode(final String immCode) {
+    /**
+     * Returns next main cycle IMM code from the given IMM Code.
+     * 
+     * @param immCode
+     * @return
+     */
+    public String nextCode(final String immCode) {
     	return nextCode(immCode, true);
     }
 
-    public static String nextCode(final String immCode, boolean mainCycle) {
+    /**
+     * Returns next IMM code from the given IMM code
+     * 
+     * @param immCode
+     * @param mainCycle
+     * @return
+     */
+    public String nextCode(final String immCode, boolean mainCycle) {
     	return nextCode(immCode, mainCycle, Date.NULL_DATE);
     }
 
     
 	/**
-	 * 
+	 * Return next IMM code from the given IMM code and reference date
+	 *  
 	 * @param immCode
 	 * @param mainCycle
 	 * @param referenceDate
@@ -268,7 +371,7 @@ public class IMM {
      * International Money Market section of the Chicago Mercantile
      * Exchange.
 	 */
-    public static String nextCode(final String immCode,
+    public String nextCode(final String immCode,
                               boolean mainCycle,
                               final Date referenceDate) {
         Date date = nextDate(immCode, mainCycle, referenceDate);
@@ -283,7 +386,7 @@ public class IMM {
      * @return
      */
     // FIXME: this method is potentially harmful in heavily multi-threaded environments
-    public static String code(final Date date) {
+    public  String code(final Date date) {
         if (! (isIMMdate(date, false)) ) throw new IllegalArgumentException(date+" is not an IMM date");
 
         int y = date.getYear() % 10;
@@ -291,7 +394,7 @@ public class IMM {
         StringBuilder sb = new StringBuilder();
         sb.append(code).append(y);
         
-        if (Configuration.getInstance().isExtraSafetyChecks()) {
+        if (configuration.isExtraSafetyChecks()) {
         	if (! isIMMcode(sb.toString(), false) ) throw new IllegalArgumentException("the result "+sb.toString()+" is an invalid IMM code");
         }
         return sb.toString();

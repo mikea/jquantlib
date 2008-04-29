@@ -41,7 +41,7 @@ public class DateParser {
             int year = Integer.parseInt(str.substring(0, 4));
             int month = Integer.parseInt(str.substring(5, 7));
             int day = Integer.parseInt(str.substring(8, 10));
-            return new Date(day, month, year);
+            return new DefaultDate(day, month, year);
         } else {
         	throw new IllegalArgumentException("Invalid format " + str);	
         }
@@ -80,6 +80,6 @@ public class DateParser {
                     y += 2000;
             }
         }
-        return new Date(d, Date.Month.valueOf(m), y);
+        return new DefaultDate(d, m, y);
     }
 }

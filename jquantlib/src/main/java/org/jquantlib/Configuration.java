@@ -23,100 +23,189 @@ package org.jquantlib;
 import java.util.prefs.Preferences;
 
 /**
- * This class employs the Singleton Design Pattern in order 
- * to keeps global configuration.
- *
+ * This provides configuration facility for the application. Provides two types
+ * of configurations, System wide configuration and user configuration. System
+ * wide configuration is intended to be shared by the whole system and user
+ * configurations are for user(or session) specific. To enable user
+ * configurations, invoke enableUserConfigurations.
  * <p>
- * Global configurations are intended to be constant during 
- * the entire life cycle of the application.
+ * Singleton pattern is used for the system wide configuration. In an
+ * application server environment, singleton instance could be by class loader
+ * depending on scope of the jquantlib library to the module.
  * 
- * @note In heavily multi-threaded environments threads must cache 
- * configurations from this singleton.
+ * <p>
+ * Each configuration can have one or more Settings. By default every
+ * configuration contains a global Settings that can be shared by multiple
+ * computations. Multiple Settings creation can be enabled by calling
+ * enableMultipleSettings.
+ * 
+ * <p>
+ * System wide configurations are intended to be constant during the entire life
+ * cycle of the application.
+ * 
+ * @note In heavily multi-threaded environments threads must cache
+ *       configurations from this singleton.
  */
-// CODE REVIEW DONE by Richard Gomes
 public class Configuration {
-	
-	/**
-	 * Default value for <i>ExtraSafetyChecks</i> property
-	 * 
-	 * @see #extraSafetyChecks
-	 */
-	private static boolean defaultExtraSafefyChecks = true;
-	
-	/**
-	 * Default value for <i>EnforcesTodayHistoricFixings</i> property
-	 * 
-	 * @see #enforcesTodaysHistoricFixings
-	 */
-	private static boolean defaultEnforcesTodaysHistoricFixings = false;
-	
-	
-	// EXPLAIN its meaning
-	private boolean extraSafetyChecks;
-	
-	
-	// EXPLAIN its meaning
-	private boolean enforcesTodaysHistoricFixings;
-	
-	static private String lock = "lock";
-	static private Configuration singleton = null;
 
-	
-	/**
-	 * Returns a singleton of this class
-	 * 
-	 * @return a singleton of this class
-	 * @see http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html.
-	 */
-	// FIXME: implement properly according to the article
-	static public Configuration getInstance() {
-		if (singleton==null) {
-			synchronized (lock) {
-				if (singleton==null) {
-					singleton = new Configuration();					
-				}
-			}
-			
-		}
-		return singleton; 
-	}
+    /**
+     * Singleton instance for the whole application. In an application server
+     * environment, it could be by class loader depending on scope of the
+     * jquantlib library to the module.
+     */
+    private volatile static Configuration systemConfiguration = null;
 
-	
-	/**
-	 * Default constructor
-	 * 
-	 * @see defaultExtraSafefyChecks
-	 * @see defaultEnforcesTodaysHistoricFixings
-	 * @see defaultTodaysPayments
-	 */
-	private Configuration() {
-		this.extraSafetyChecks = defaultExtraSafefyChecks;
-		this.enforcesTodaysHistoricFixings = defaultEnforcesTodaysHistoricFixings;
-	}
+    /**
+     * Indicates whether user configurations are allowed or not. Default is
+     * false which means singleton instance for the whole application.
+     */
+    private static boolean allowUserConfigurations = false;
 
+    /**
+     * Indicates whether a Configuration shares same Settings instance or not.
+     * Default is true which means one Settings per Configuration. Value of
+     * false will enforce single instance of Setting per Configuration.
+     */
+    private boolean multipleSettings = false;
 
-	/**
-	 * This constructor is provided so that application settings
-	 * can be initialized via implementation independent Preferences.
-	 * 
-	 * @param prefs is a Preferences object
-	 */
-	public Configuration(final Preferences prefs) {
-		if (prefs!=null) {
-			synchronized (lock) {
-				if (singleton!=null) throw new IllegalStateException("Singleton already initialized");
-				this.extraSafetyChecks = prefs.getBoolean("ExtraSafetyChecks", defaultExtraSafefyChecks);
-				this.enforcesTodaysHistoricFixings = prefs.getBoolean("EnforcesTodaysHistoricFixings", defaultEnforcesTodaysHistoricFixings);
-			}
-		}
-	}
-	
-	public boolean isExtraSafetyChecks() {
-		return extraSafetyChecks;
-	}
+    /**
+     * Global settings of a Configuration
+     */
+    private Settings globalSettings = null;
 
-	public boolean isEnforcesTodaysHistoricFixings() {
-		return enforcesTodaysHistoricFixings;
-	}
+    /**
+     * Preferences for the configuration.
+     */
+    private Preferences preferences = null;
 
+    // TODO: Explain these
+    private static boolean defaultExtraSafefyChecks = true;
+    private static boolean defaultEnforcesTodaysHistoricFixings = false;
+    /**
+     * To enforce extra validations
+     */
+    private boolean extraSafetyChecks;
+    /**
+     * 
+     */
+    private boolean enforcesTodaysHistoricFixings;
+
+    /**
+     * 
+     * @param prefs
+     */
+    private Configuration(Preferences prefs) {
+        this.preferences = prefs;
+        if (prefs != null) {
+            this.extraSafetyChecks = prefs.getBoolean("ExtraSafetyChecks", defaultExtraSafefyChecks);
+            this.enforcesTodaysHistoricFixings = prefs.getBoolean("EnforcesTodaysHistoricFixings",
+                    defaultEnforcesTodaysHistoricFixings);
+        }
+        this.globalSettings = new Settings(prefs);
+    }
+
+    /**
+     * Returns a System Configuration instance. when called the first time,
+     * singleton instance is initialized with the preferences passed in. For
+     * subsequent calls, preferences argument is ignored. Configuration returned
+     * is a singleton instance, so it can be shared by multiple clients.
+     * 
+     * @return
+     */
+    public static Configuration getSystemConfiguration(Preferences prefs) {
+        // Double check locking has been fixed in J2SE 5.0 or above with the
+        // usage of volatile
+        if (systemConfiguration == null) {
+            synchronized (Configuration.class) {
+                if (systemConfiguration == null) {
+                    systemConfiguration = new Configuration(prefs);
+                }
+            }
+        }
+        return systemConfiguration;
+    }
+
+    /**
+     * Returns a new Configuration instance if enableUserConfigurations is set
+     * to true. null is returned when allowUserConfigurations is set to false.
+     * Its the client responsibility to hold onto the configuration instance for
+     * all its usage.
+     * 
+     * @return
+     */
+    public static Configuration newConfiguration(Preferences prefs) {
+        if (allowUserConfigurations)
+            return new Configuration(prefs);
+        return null;
+    }
+
+    /**
+     * Enable multiple user configurations
+     */
+    public static void enableUserConfigurations() {
+        allowUserConfigurations = true;
+    }
+
+    /**
+     * Returns preferences set on the Configuration.
+     * 
+     * @return
+     */
+    public Preferences getPreferences() {
+        return this.preferences;
+    }
+
+    /**
+     * Enables creation of multiple settings per Configuration. If your
+     * calculations requires different settings for different calculation, set
+     * this to true and call createSettings to create new Settings for each
+     * usage.
+     */
+    public void enableMultipleSettings() {
+        this.multipleSettings = true;
+    }
+
+    /**
+     * Returns the global settings of the Configuration.
+     * 
+     * @return
+     */
+    public Settings getGlobalSettings() {
+        return globalSettings;
+    }
+
+    /**
+     * To create a new Settings instance. Returns null if enableMultipleSettings
+     * is not set. Settings returned should be cached by the client for its
+     * usage.
+     * 
+     * @return
+     */
+    public Settings newSettings() {
+        if (multipleSettings)
+            return new Settings(preferences);
+        return null;
+    }
+
+    /**
+     * Whether to enforce extra checks on the calculations or not.
+     * 
+     * //TODO: Q ? Should this be at Settings level ?
+     * 
+     * @return
+     */
+    public boolean isExtraSafetyChecks() {
+        return extraSafetyChecks;
+    }
+
+    /**
+     * Enforce today's historic fixings
+     * 
+     * //TODO: Q ? Should this be at Settings level ?
+     * 
+     * @return
+     */
+    public boolean isEnforcesTodaysHistoricFixings() {
+        return enforcesTodaysHistoricFixings;
+    }
 }
