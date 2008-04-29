@@ -83,8 +83,8 @@ public class DefaultObservable implements Observable {
     }
 
     public void notifyObservers(Object arg) {
-        for (Observer observ : observers) {
-            wrappedNotify(observ, observable, arg);
+        for (Observer observer : observers) {
+            wrappedNotify(observer, observable, arg);
         }
     }
 

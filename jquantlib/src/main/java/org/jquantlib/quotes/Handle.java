@@ -18,145 +18,184 @@
  When applicable, the originating copyright notice follows below.
  */
 
+/*
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2003, 2004, 2005, 2006, 2007 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.quotes;
 
+import java.util.List;
+
+import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
+import org.jquantlib.util.Observer;
 
 /**
- * This class exists only as a tagging point for translations of other classes
- * and, in fact, <b>THIS CLASS MUST NEVER BE USED</b> in your code.
- * 
- * @note All methods of this class throw UnsupportedOperationException on purpose.
+ * Shared handle to an observable
+ * <p>
+ * All copies of an instance of this class refer to the same observable by means
+ * of a relinkable weak reference. When such pointer is relinked to another
+ * observable, the change will be propagated to all the copies.
  * 
  * @author Richard Gomes
  */
-@Deprecated
-public class Handle<T extends Observable> {
+public class Handle<T extends Observable> implements Observable, Observer {
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Override
-	@Deprecated
-	public boolean equals(Object other) {
-		throw new UnsupportedOperationException();
-	}
+	protected Link link;
+    
+    public Handle() {
+    	this.link = new Link();
+    }
+    
+    
+    public Handle(final T observable) {
+    	this.link = new Link(observable);
+    }
+    
+    public Handle(final Handle<T> another) {
+    	this.link = another.link;
+    }
+    
+    protected void linkTo(final T observable) {
+    	link.linkTo(observable);
+    }
+    
+    
+    public boolean isObserver() /* @ReadOnly */ {
+    	return link.isObserver();
+    }
+    
+    
+	//
+	// Implements Observer interface
+	//
 	
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public boolean eq(T other) {
-		throw new UnsupportedOperationException();
+	public void update(Observable o, Object arg) {
+		notifyObservers(arg);
 	}
+
 	
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public boolean ne(T other) {
-		throw new UnsupportedOperationException();
+	//
+	// implements Observable interface
+	//
+	
+    public void addObserver(Observer observer) {
+    	link.addObserver(observer);
 	}
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public boolean le(T other) {
-		throw new UnsupportedOperationException();
+	public int countObservers() {
+		return link.countObservers();
 	}
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public boolean lt(T other) {
-		throw new UnsupportedOperationException();
+	public void deleteObserver(Observer observer) {
+		link.deleteObserver(observer);
 	}
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public boolean ge(T other) {
-		throw new UnsupportedOperationException();
+	public void notifyObservers() {
+		link.notifyObservers();
 	}
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public boolean gt(T other) {
-		throw new UnsupportedOperationException();
+	public void notifyObservers(Object arg) {
+		link.notifyObservers(arg);
 	}
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public boolean empty() {
-		throw new UnsupportedOperationException();
+	public void deleteObservers() {
+		link.deleteObservers();
 	}
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 *
-	 *<p>Substitute this code ...
-<code>
-Handle h = observable1;
-h.addObserver(observer1);
-h.addObserver(observer2);
-h.addObserver(observer3);
-h.linkTo(observable2);
-</code>
-by...
-<code>
-observable1.addObserver(observer);
-foreach (Observer observer : observable1.getObservers) {
-  observable2.addObserver(observer);
-}
-observable2.notifyObservers();
-</code>
-	 */
-	@Deprecated
-	public void linkTo(T other) {
-		throw new UnsupportedOperationException();
+	public List<Observer> getObservers() {
+		return link.getObservers();
 	}
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public boolean evaluate() {
-		throw new UnsupportedOperationException();
-	}
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public T dereference() {
-		throw new UnsupportedOperationException();
-	}
 
-	/**
-	 * All methods from class Handle throw UnsupportedOperationException
-	 * on purpose. Never use this class.
-	 */
-	@Deprecated
-	public T currentLink() {
-		throw new UnsupportedOperationException();
-	}
+	
+	//
+    // inner classes
+    //
+    
+    private class Link implements Observable, Observer {
+		public T	observable	= null;
 
+		public Link() {
+			this.observable = null;
+		}
+
+		public Link(T observable) {
+			this.observable = observable;
+		}
+
+		public boolean isObserver() /* @ReadOnly */{
+			return (this.observable != null);
+		}
+
+		public void linkTo(final T observable) {
+			// remove this from observable
+			if (this.observable != null) {
+				this.observable.deleteObserver(this);
+			}
+			// register this as observer to a new observable
+			this.observable = observable;
+			this.observable.addObserver(this);
+			this.observable.notifyObservers();
+		}
+
+		//
+		// Implements Observer interface
+		//
+		
+		public void update(Observable o, Object arg) {
+			notifyObservers(arg);
+		}
+		
+		//
+		// implements Observable interface
+		//
+		
+	    private Observable delegatedObservable = new DefaultObservable(this);
+
+	    public void addObserver(Observer observer) {
+			delegatedObservable.addObserver(observer);
+		}
+
+		public int countObservers() {
+			return delegatedObservable.countObservers();
+		}
+
+		public void deleteObserver(Observer observer) {
+			delegatedObservable.deleteObserver(observer);
+		}
+
+		public void notifyObservers() {
+			delegatedObservable.notifyObservers();
+		}
+
+		public void notifyObservers(Object arg) {
+			delegatedObservable.notifyObservers(arg);
+		}
+
+		public void deleteObservers() {
+			delegatedObservable.deleteObservers();
+		}
+
+		public List<Observer> getObservers() {
+			return delegatedObservable.getObservers();
+		}
+		
+	}
+    
 }
