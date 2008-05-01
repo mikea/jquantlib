@@ -102,17 +102,17 @@ public class Utilities {
 //    //};
 
     static public class Flag implements Observer {
-      private boolean up_;
+      private boolean up;
       
       public Flag() {
-    	  up_ = false;
+    	  up = false;
       }
       
-      public void raise() { up_ = true; }
+      public void raise() { up = true; }
       
-      public void lower() { up_ = false; }
+      public void lower() { up = false; }
       
-      public boolean isUp() /* @ReadOnly */ { return up_; }
+      public boolean isUp() /* @ReadOnly */ { return up; }
       
       public void update(Observable observable, Object o) { raise(); }
       

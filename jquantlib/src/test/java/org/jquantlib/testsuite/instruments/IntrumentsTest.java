@@ -19,7 +19,7 @@
  */
 
 /*
- Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2003 RiskMap srl
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -35,27 +35,60 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.instruments;
+package org.jquantlib.testsuite.instruments;
 
-import org.jquantlib.quotes.Handle;
+import static org.junit.Assert.assertFalse;
+
+import org.jquantlib.instruments.Instrument;
+import org.jquantlib.instruments.Stock;
 import org.jquantlib.quotes.Quote;
+import org.jquantlib.quotes.RelinkableHandle;
+import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.util.Utilities.Flag;
+import org.junit.Test;
 
-public class Stock extends Instrument {
-	
-	private Handle<Quote> quote;
-	
-	public Stock(final Handle<Quote> quote) {
-		if (quote == null) throw new NullPointerException(); // FIXME: code review: should throw here?
-		this.quote = quote;
-		this.quote.addObserver(this);
+public class IntrumentsTest {
+
+//	#include "instruments.hpp"
+//	#include "utilities.hpp"
+//	#include <ql/instruments/stock.hpp>
+//	#include <ql/quotes/simplequote.hpp>
+//
+//	using namespace QuantLib;
+//	using namespace boost::unit_test_framework;
+
+	@Test
+	public void testObservable() {
+
+	    System.out.println("Testing observability of instruments...");
+
+
+	    SimpleQuote me1 = new SimpleQuote(0.0);
+	    RelinkableHandle<Quote>  h = new RelinkableHandle<Quote>(me1);
+	    Instrument s = new Stock(h);
+
+	    Flag f = new Flag();
+	    s.addObserver(f); //f.registerWith(s);
+	    
+	    s.getNPV();
+	    me1.setValue(3.14);
+	    assertFalse("Observer was not notified of instrument change", !f.isUp());
+	    
+	    s.getNPV();
+	    f.lower();
+	    SimpleQuote me2 = new SimpleQuote(0.0);
+
+	    h.setLink(me2);
+	    assertFalse("Observer was not notified of instrument change", !f.isUp());
+
+	    f.lower();
+	    s.freeze();
+	    s.getNPV();
+	    me2.setValue(2.71);
+	    assertFalse("Observer was notified of frozen instrument change", f.isUp());
+	    s.getNPV();
+	    s.unfreeze();
+	    assertFalse("Observer was not notified of instrument change", !f.isUp());
 	}
 
-    @Override
-	public boolean isExpired() /* @ReadOnly */ { return false; }
-    
-	@Override
-    protected void performCalculations() /* @ReadOnly */ {
-		if (quote.isEmpty()) throw new NullPointerException("null quote set");
-		NPV = quote.getLink().getValue();
-	}
 }

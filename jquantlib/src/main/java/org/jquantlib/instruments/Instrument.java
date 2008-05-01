@@ -74,7 +74,6 @@ import org.jquantlib.util.LazyObject;
     	// constructors
     	//
     	
-    	// FIXME: NaN .vs. null ??
         protected Instrument() {
         	super();
         	this.NPV = Double.NaN;
@@ -87,14 +86,12 @@ import org.jquantlib.util.LazyObject;
     	// getters and setters
     	//
 
-    	// FIXME: NaN .vs. null ??
     	public final /*@Price*/ double getNPV() /*@ReadOnly*/ {
     		calculate();
     		if (Double.isNaN(this.NPV)) throw new ArithmeticException("NPV not provided");
     		return NPV;
     	}
 
-    	// FIXME: NaN .vs. null ??
     	public final /*@Price*/ double getErrorEstimate() /*@ReadOnly*/ {
     		calculate();
     		if (Double.isNaN(this.errorEstimate)) throw new ArithmeticException("error estimate not provided");
@@ -106,8 +103,6 @@ import org.jquantlib.util.LazyObject;
     	//
     	// abstract methods
     	//
-    	
-
 
 		/**
     	 * @return <code>true</code> whether the instrument is still tradeable.

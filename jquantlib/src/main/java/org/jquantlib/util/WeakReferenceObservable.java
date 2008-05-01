@@ -26,9 +26,25 @@ import java.lang.ref.WeakReference;
  * Implementation of Observable that holds references to Observers as
  * WeakReferences.
  * 
+ * @note This implementation notifies the observers in a synchronous
+ * fashion. Note that this can cause trouble if you notify the observers while
+ * in a transactional context because the notification is then done also in the
+ * transaction.
+ * 
+ * <p>
+ * This class is based on the work done by Martin Fischer. See references below.
+ * 
+ * @see <a
+ *      href="http://www.jroller.com/martin_fischer/entry/a_generic_java_observer_pattern">
+ *      Martin Fischer: Observer and Observable interfaces</a>
+ * @see <a href="http://jdj.sys-con.com/read/35878.htm">Improved Observer/Observable</a>
+ * 
  * @see Observable
  * @see Observer
+ * @see DefaultObservable
  * 
+ * @author Martin Fischer (original author)
+ * @author Richard Gomes
  * @author Srinivas Hasti
  */
 public class WeakReferenceObservable extends DefaultObservable {
@@ -44,12 +60,12 @@ public class WeakReferenceObservable extends DefaultObservable {
 
     @Override
     public void deleteObserver(Observer observer) {
-        //Also deletes weak references whose referents got gc'ed
-        for (Observer wObserver : getObservers()) {
-            WeakReferenceObserver wReference = (WeakReferenceObserver) wObserver;
-            Observer o = wReference.get();
+        // Also deletes weak references whose referents got gc'ed
+        for (Observer weakObserver : getObservers()) {
+            WeakReferenceObserver weakReference = (WeakReferenceObserver) weakObserver;
+            Observer o = weakReference.get();
             if (o == null || o.equals(observer)) {
-                deleteWeakReference(wReference);
+                deleteWeakReference(weakReference);
             }
         }
     }

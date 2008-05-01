@@ -60,9 +60,9 @@ public class RelinkableHandle<T extends Observable> extends Handle<T> {
     	super(observable);
     }
     
-    
-    public void linkTo(final T observable) {
-    	super.linkTo(observable);
+    @Override
+    public final void setLink(final T observable) {
+    	super.setLink(observable);
     }
     
 }

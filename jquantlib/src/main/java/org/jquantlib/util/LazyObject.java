@@ -116,8 +116,9 @@ public abstract class LazyObject implements Observable, Observer {
 			calculated = true; 
 			try {
 				performCalculations();
-			} finally {
+			} catch (ArithmeticException e) {
 				calculated = false;
+				throw e;
 			}
 		}
 	}

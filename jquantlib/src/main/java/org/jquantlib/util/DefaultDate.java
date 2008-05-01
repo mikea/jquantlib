@@ -84,23 +84,22 @@ public class DefaultDate extends BaseDate{
 
     static private final int monthLeapLength[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-    static private final int monthOffset[] = { 0, 31, 59, 90, 120, 151, // Jan -
-                                                                        // Jun
-            181, 212, 243, 273, 304, 334, // Jun - Dec
+    static private final int monthOffset[] = {
+    		0, 31, 59, 90, 120, 151,		// Jan - Jun
+            181, 212, 243, 273, 304, 334,	// Jun - Dec
             365 // used in dayOfMonth to bracket day
     };
 
-    static private final int monthLeapOffset[] = { 0, 31, 60, 91, 121, 152, // Jan
-                                                                            // -
-                                                                            // Jun
-            182, 213, 244, 274, 305, 335, // Jun - Dec
+    static private final int monthLeapOffset[] = {
+    		0, 31, 60, 91, 121, 152, 		// Jan - Jun
+            182, 213, 244, 274, 305, 335,	// Jun - Dec
             366 // used in dayOfMonth to bracket day
     };
 
     // the list of all December 31st in the preceding year
     // e.g. for 1901 yearOffset[1] is 366, that is, December 31 1900
     static private final int yearOffset[] = {
-    // 1900-1909
+    		// 1900-1909
             0, 366, 731, 1096, 1461, 1827, 2192, 2557, 2922, 3288,
             // 1910-1919
             3653, 4018, 4383, 4749, 5114, 5479, 5844, 6210, 6575, 6940,
@@ -144,7 +143,7 @@ public class DefaultDate extends BaseDate{
             73050 };
 
     static private final boolean yearIsLeap[] = {
-    // 1900 is leap in agreement with Excel's bug
+    		// 1900 is leap in agreement with Excel's bug
             // 1900 is out of valid date range anyway
             // 1900-1909
             true, false, false, false, true, false, false, false, true, false,

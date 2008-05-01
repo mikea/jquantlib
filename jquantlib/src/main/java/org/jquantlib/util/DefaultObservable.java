@@ -25,22 +25,24 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Implementation of a Observable that can be used as delegate for your own
- * implementations. This implementation notifies the observers in a synchronous
+ * Default implementation of a Observable.
+ * 
+ * @note This implementation notifies the observers in a synchronous
  * fashion. Note that this can cause trouble if you notify the observers while
  * in a transactional context because the notification is then done also in the
  * transaction.
  * 
  * <p>
- * This class is based on the work done by Martin Fischer, with only minor
- * changes. See references below.
+ * This class is based on the work done by Martin Fischer. See references below.
  * 
  * @see <a
  *      href="http://www.jroller.com/martin_fischer/entry/a_generic_java_observer_pattern">
  *      Martin Fischer: Observer and Observable interfaces</a>
- * @see <a href="http://jdj.sys-con.com/read/35878.htm">Improved
- *      Observer/Observable</a>
+ * @see <a href="http://jdj.sys-con.com/read/35878.htm">Improved Observer/Observable</a>
+ *      
  * @see Observable
+ * @see Observer
+ * @see WeakReferenceObservable
  * 
  * @author Martin Fischer (original author)
  * @author Richard Gomes

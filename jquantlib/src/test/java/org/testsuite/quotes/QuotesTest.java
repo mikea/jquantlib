@@ -23,8 +23,8 @@ package org.testsuite.quotes;
 import static org.junit.Assert.assertFalse;
 
 import org.jquantlib.quotes.Quote;
+import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
-import org.jquantlib.util.Observer;
 import org.jquantlib.util.Utilities.Flag;
 import org.junit.Test;
 
@@ -36,14 +36,13 @@ import org.junit.Test;
  */
 public class QuotesTest {
 
-
-	private double add10(final double x) { return x+10; }
-	private double mul10(final double x) { return x*10; }
-	private double sub10(final double x) { return x-10; }
-
-	private double add(final double x, final double y) { return x+y; }
-	private double mul(final double x, final double y) { return x*y; }
-	private double sub(final double x, final double y) { return x-y; }
+//	private double add10(final double x) { return x+10; }
+//	private double mul10(final double x) { return x*10; }
+//	private double sub10(final double x) { return x-10; }
+//
+//	private double add(final double x, final double y) { return x+y; }
+//	private double mul(final double x, final double y) { return x*y; }
+//	private double sub(final double x, final double y) { return x-y; }
 
 	@Test
 	public void testObservable() {
@@ -64,12 +63,10 @@ public class QuotesTest {
 		System.out.println("Testing observability of quote handles...");
 
 	    SimpleQuote me1 = new SimpleQuote(0.0);
-	    Quote h = me1;
-	    assertFalse("Should have zero observers", h.countObservers()!=0 );
+	    RelinkableHandle<Quote> h = new RelinkableHandle(me1);
 	    
 	    Flag f = new Flag();
 	    h.addObserver(f);
-	    assertFalse("Should have one observer", h.countObservers()!=1 );
 
 	    me1.setValue(3.14);
         assertFalse("Observer was not notified of quote change", !f.isUp());
@@ -77,15 +74,8 @@ public class QuotesTest {
 	    f.lower();
 	    SimpleQuote me2 = new SimpleQuote(0.0);
 	    
-	    // h.linkTo(me2);
-	    for (Observer observer : h.getObservers()) {
-	      me2.addObserver(observer);
-	    }
-	    assertFalse("Should have one observer", me2.countObservers()!=1 );
-	    me2.notifyObservers();
-	    
+	    h.setLink(me2);
         assertFalse("Observer was not notified of quote change", !f.isUp());
-
 	}
 
 //	@Test
@@ -138,73 +128,67 @@ public class QuotesTest {
 //		
 //		System.out.println("Testing forward-value and implied-stdev quotes...");
 //		
-//	    Real forwardRate = .05;
-//	    DayCounter dc = ActualActual();
-//	    Calendar calendar = TARGET();
-//	    SimpleQuote forwardQuote(new SimpleQuote(forwardRate));
-//	    Quote forwardHandle(forwardQuote);
-//	    Date evaluationDate = Settings::instance().evaluationDate();
-//	    YieldTermStructure>yc (new FlatForward(
-//	        evaluationDate, forwardHandle, dc));
-//	    YieldTermStructure> ycHandle(yc);
-//	    Period euriborTenor(1,Years);
-//	    Index> euribor(new Euribor(euriborTenor, ycHandle));
+//	    double forwardRate = .05;
+//	    DayCounter dc = new ActualActual();
+//	    Calendar calendar = Target.getCalendar();
+//	    SimpleQuote forwardQuote = new SimpleQuote(forwardRate);
+//	    Quote forwardHandle = forwardQuote;
+//	    Date evaluationDate = Settings.getInstance().getEvaluationDate();
+//	    YieldTermStructure yc =new FlatForward(evaluationDate, forwardHandle, dc);
+//	    YieldTermStructure ycHandle = yc;
+//	    Period euriborTenor = new Period(1, TimeUnit.Years);
+//	    Index euribor = new Euribor(euriborTenor, ycHandle);
 //	    Date fixingDate = calendar.advance(evaluationDate, euriborTenor);
-//	    ForwardValueQuote forwardValueQuote( new
-//	        ForwardValueQuote(euribor, fixingDate));
-//	    Rate forwardValue =  forwardValueQuote->value();
-//	    Rate expectedForwardValue = euribor->fixing(fixingDate, true);
+//	    ForwardValueQuote forwardValueQuote = new ForwardValueQuote(euribor, fixingDate);
+//	    /*@Rate*/ double  forwardValue =  forwardValueQuote.getValue();
+//	    /*@Rate*/ double  expectedForwardValue = euribor.fixing(fixingDate, true);
 //	    // we test if the forward value given by the quote is consistent
 //	    // with the one directly given by the index
-//	    if (Math.abs(forwardValue-expectedForwardValue) > 1.0e-15)
-//	        assertFalse("Foward Value Quote quote yields " << forwardValue << "\n"
-//	                   << "expected result is " << expectedForwardValue);
+//        assertFalse("Foward Value Quote quote yields " 
+//        		+ forwardValue + "\n  expected result is " 
+//        		+ expectedForwardValue, 
+//        			Math.abs(forwardValue-expectedForwardValue) <= 1.0e-15);
 //	    // then we test the observer/observable chain
 //	    Flag f;
 //	    f.registerWith(forwardValueQuote);
-//	    forwardQuote->setValue(0.04);
-//	    if (!f.isUp())
-//	        assertFalse("Observer was not notified of quote change");
+//	    forwardQuote.setValue(0.04);
+//        assertFalse("Observer was not notified of quote change", f.isUp());
 //
-//	    // and we retest if the values are still matching
-//	    forwardValue =  forwardValueQuote->value();
-//	    expectedForwardValue = euribor->fixing(fixingDate, true);
-//	    if (Math.abs(forwardValue-expectedForwardValue) > 1.0e-15)
-//	        assertFalse("Foward Value Quote quote yields " << forwardValue << "\n"
-//	                   << "expected result is " << expectedForwardValue);
+//	    // and we re-test if the values are still matching
+//	    forwardValue =  forwardValueQuote.getValue();
+//	    expectedForwardValue = euribor.fixing(fixingDate, true);
+//        assertFalse("Foward Value Quote quote yields " 
+//        		+ forwardValue 
+//        		+ "\n  expected result is " 
+//        		+ expectedForwardValue, 
+//        		Math.abs(forwardValue-expectedForwardValue) <= 1.0e-15);
 //	    // we test the ImpliedStdevQuote class
 //	    f.unregisterWith(forwardValueQuote);
 //	    f.lower();
-//	    Real price = 0.02;
-//	    Rate strike = 0.04;
-//	    Volatility guess = .15;
-//	    Real accuracy = 1.0e-6;
-//	    Option::Type optionType = Option::Call;
-//	    SimpleQuote priceQuote(new SimpleQuote(price));
-//	    Quote priceHandle(priceQuote);
-//	    ImpliedStdDevQuote impliedStdevQuote(new
-//	        ImpliedStdDevQuote(optionType, forwardHandle, priceHandle,
-//	                           strike, guess, accuracy));
-//	    Real impliedStdev = impliedStdevQuote->value();
-//	    Real expectedImpliedStdev =
-//	        blackFormulaImpliedStdDev(optionType, strike,
-//	                                  forwardQuote->value(), price,
-//	                                  1.0, guess, 1.0e-6);
-//	    if (Math.abs(impliedStdev-expectedImpliedStdev) > 1.0e-15)
-//	        assertFalse("impliedStdevQuote yields " << impliedStdev << "\n"
-//	                << "expected result is " << expectedImpliedStdev);
+//	    double price = 0.02;
+//	    /*@Rate*/ double  strike = 0.04;
+//	    /*@Volatility*/ double guess = .15;
+//	    double accuracy = 1.0e-6;
+//	    Option.Type optionType = Option.Type.Call;
+//	    SimpleQuote priceQuote = new SimpleQuote(price);
+//	    Quote priceHandle = priceQuote;
+//	    ImpliedStdDevQuote impliedStdevQuote = new ImpliedStdDevQuote(optionType, forwardHandle, priceHandle, strike, guess, accuracy));
+//	    /*@StdDev*/ double impliedStdev = impliedStdevQuote.getValue();
+//	    /*@StdDev*/ double expectedImpliedStdev = blackFormulaImpliedStdDev(optionType, strike, forwardQuote.getValue(), price, 1.0, guess, 1.0e-6);
+//        assertFalse("impliedStdevQuote yields " 
+//        		+ impliedStdev 
+//        		+ "\n  expected result is " 
+//        		+ expectedImpliedStdev,
+//        		Math.abs(impliedStdev-expectedImpliedStdev) <= 1.0e-15);
 //	    // then we test the observer/observable chain
 //	    Quote quote = impliedStdevQuote;
-//	    f.registerWith(quote);
-//	    forwardQuote->setValue(0.05);
-//	    if (!f.isUp())
-//	        assertFalse("Observer was not notified of quote change");
-//	    quote->value();
+//	    quote.addObserver(f);
+//	    forwardQuote.setValue(0.05);
+//	    assertFalse("Observer was not notified of quote change", f.isUp());
+//	    quote.getValue();
 //	    f.lower();
-//	    priceQuote->setValue(0.11);
-//	    if (!f.isUp())
-//	        assertFalse("Observer was not notified of quote change");
-//
+//	    priceQuote.setValue(0.11);
+//      assertFalse("Observer was not notified of quote change", f.isUp());
 //	}
 	
 

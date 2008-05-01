@@ -40,9 +40,9 @@ package org.jquantlib.quotes;
 
 import java.util.List;
 
-import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
+import org.jquantlib.util.WeakReferenceObservable;
 
 /**
  * Shared handle to an observable
@@ -53,14 +53,13 @@ import org.jquantlib.util.Observer;
  * 
  * @author Richard Gomes
  */
-public class Handle<T extends Observable> implements Observable, Observer {
+public class Handle<T extends Observable> implements Observable {
 
 	protected Link link;
     
     public Handle() {
     	this.link = new Link();
     }
-    
     
     public Handle(final T observable) {
     	this.link = new Link(observable);
@@ -70,130 +69,147 @@ public class Handle<T extends Observable> implements Observable, Observer {
     	this.link = another.link;
     }
     
-    protected void linkTo(final T observable) {
-    	link.linkTo(observable);
-    }
-    
-    
-    public boolean isObserver() /* @ReadOnly */ {
+	public final boolean isEmpty() /* @ReadOnly */ {
+		return link.isEmpty();
+	}
+	
+    public final boolean isObserver() /* @ReadOnly */ {
     	return link.isObserver();
     }
     
+    public final T getLink() {
+    	return link.getLink();
+    }
     
-	//
-	// Implements Observer interface
-	//
-	
-	public void update(Observable o, Object arg) {
-		notifyObservers(arg);
-	}
+    public void setLink(final T observable) {
+    	link.setLink(observable);
+    }
+    
 
-	
 	//
 	// implements Observable interface
 	//
+
+    private Observable delegatedObservable = new WeakReferenceObservable(this);
 	
-    public void addObserver(Observer observer) {
-    	link.addObserver(observer);
+    public final void addObserver(Observer observer) {
+    	delegatedObservable.addObserver(observer);
 	}
 
-	public int countObservers() {
-		return link.countObservers();
+	public final int countObservers() {
+		return delegatedObservable.countObservers();
 	}
 
-	public void deleteObserver(Observer observer) {
-		link.deleteObserver(observer);
+	public final void deleteObserver(Observer observer) {
+		delegatedObservable.deleteObserver(observer);
 	}
 
-	public void notifyObservers() {
-		link.notifyObservers();
+	public final void notifyObservers() {
+		delegatedObservable.notifyObservers();
 	}
 
-	public void notifyObservers(Object arg) {
-		link.notifyObservers(arg);
+	public final void notifyObservers(Object arg) {
+		delegatedObservable.notifyObservers(arg);
 	}
 
-	public void deleteObservers() {
-		link.deleteObservers();
+	public final void deleteObservers() {
+		delegatedObservable.deleteObservers();
 	}
 
-	public List<Observer> getObservers() {
-		return link.getObservers();
+	public final List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
 	}
 
 
-
-	
 	//
     // inner classes
     //
     
     private class Link implements Observable, Observer {
-		public T	observable	= null;
+    	static private final String EMPTY_HANDLE = "empty Handle cannot be dereferenced";
+    	
+		public T observable	= null;
 
 		public Link() {
-			this.observable = null;
+			this(null);
 		}
 
 		public Link(T observable) {
-			this.observable = observable;
+			setLink(observable);
 		}
 
-		public boolean isObserver() /* @ReadOnly */{
+		public final boolean isEmpty() /* @ReadOnly */ {
+			return (this.observable==null);
+		}
+		
+		public final boolean isObserver() /* @ReadOnly */{
 			return (this.observable != null);
 		}
 
-		public void linkTo(final T observable) {
+		public final T getLink() /* @ReadOnly */ {
+			return this.observable;
+		}
+
+		public final void setLink(final T observable) {
 			// remove this from observable
 			if (this.observable != null) {
 				this.observable.deleteObserver(this);
 			}
 			// register this as observer to a new observable
-			this.observable = observable;
-			this.observable.addObserver(this);
-			this.observable.notifyObservers();
+			if (observable!=null) {
+				this.observable = observable;
+				this.observable.addObserver(this);
+				this.observable.notifyObservers();
+			}
 		}
-
+		
+		
 		//
 		// Implements Observer interface
 		//
 		
-		public void update(Observable o, Object arg) {
-			notifyObservers(arg);
+		public final void update(Observable o, Object arg) {
+			delegatedObservable.notifyObservers(arg);
 		}
+
 		
 		//
 		// implements Observable interface
 		//
 		
-	    private Observable delegatedObservable = new DefaultObservable(this);
-
-	    public void addObserver(Observer observer) {
-			delegatedObservable.addObserver(observer);
+	    public final void addObserver(Observer observer) {
+	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
+	    	observable.addObserver(observer);
 		}
 
-		public int countObservers() {
-			return delegatedObservable.countObservers();
+		public final int countObservers() {
+	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
+			return observable.countObservers();
 		}
 
-		public void deleteObserver(Observer observer) {
-			delegatedObservable.deleteObserver(observer);
+		public final void deleteObserver(Observer observer) {
+	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
+			observable.deleteObserver(observer);
 		}
 
-		public void notifyObservers() {
-			delegatedObservable.notifyObservers();
+		public final void notifyObservers() {
+	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
+			observable.notifyObservers();
 		}
 
-		public void notifyObservers(Object arg) {
-			delegatedObservable.notifyObservers(arg);
+		public final void notifyObservers(Object arg) {
+	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
+			observable.notifyObservers(arg);
 		}
 
-		public void deleteObservers() {
-			delegatedObservable.deleteObservers();
+		public final void deleteObservers() {
+	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
+			observable.deleteObservers();
 		}
 
-		public List<Observer> getObservers() {
-			return delegatedObservable.getObservers();
+		public final List<Observer> getObservers() {
+	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
+			return observable.getObservers();
 		}
 		
 	}
