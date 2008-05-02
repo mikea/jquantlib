@@ -46,6 +46,7 @@ import org.jquantlib.time.calendars.Germany;
 import org.jquantlib.time.calendars.Italy;
 import org.jquantlib.time.calendars.Japan;
 import org.jquantlib.time.calendars.JointCalendar;
+import org.jquantlib.time.calendars.Switzerland;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.time.calendars.UnitedKingdom;
 import org.jquantlib.time.calendars.UnitedStates;
@@ -517,6 +518,55 @@ public class CalendarsTest {
                        + " calculated holidays");
     }
 
+    @Test
+    public void testSwitzerlandExchange() {
+        System.out.println("Testing SWX Stock Exchange holiday list...");
+
+        List<Date> expectedHol = new Vector<Date>();
+
+        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2002));
+        expectedHol.add(DateFactory.getDateUtil().getDate(29,MARCH,2002));
+        expectedHol.add(DateFactory.getDateUtil().getDate(1,APRIL,2002));
+        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2002));
+        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2002));
+        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2002));
+        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2002));
+        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2002));
+
+        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2003));
+        expectedHol.add(DateFactory.getDateUtil().getDate(18,APRIL,2003));
+        expectedHol.add(DateFactory.getDateUtil().getDate(21,APRIL,2003));
+        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2003));
+        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2003));
+        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2003));
+        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2003));
+        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2003));
+
+        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getDateUtil().getDate(12,APRIL,2004));
+        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2004));
+        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2004));
+        
+        expectedHol.add(DateFactory.getDateUtil().getDate(25,MARCH,2005));  
+        expectedHol.add(DateFactory.getDateUtil().getDate(28,MARCH,2005));
+        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2005));
+    
+        Calendar c = Switzerland.getCalendar(Switzerland.Market.SWX);
+        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2002),
+                                              DateFactory.getDateUtil().getDate(31,DECEMBER,2005),false);
+        for (int i =0;i<Math.min(hol.size(), expectedHol.size()); i++) {
+            if (!hol.get(i).equals(expectedHol.get(i)))
+                throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
+                           + " while calculated holiday is " + hol.get(i));
+        }
+        if (hol.size()!=expectedHol.size())
+            throw new IllegalStateException("there were " + expectedHol.size()
+                       + " expected holidays, while there are " + hol.size()
+                       + " calculated holidays");
+    }
+    
+    
     @Test
     public void testUKSettlement() {
         System.out.println("Testing UK settlement holiday list...");
