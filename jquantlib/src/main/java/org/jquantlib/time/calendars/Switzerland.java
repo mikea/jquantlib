@@ -33,7 +33,8 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
 /**
- * @author Srinivas Hasti / Dominik Holenstein
+ * @author Srinivas Hasti 
+ * @author Dominik Holenstein
  * 
  */
 public class Switzerland extends DelegateCalendar {
