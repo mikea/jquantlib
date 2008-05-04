@@ -89,9 +89,8 @@ import org.jquantlib.util.Month;
 public class Argentina extends DelegateCalendar {
 	
     public static enum Market {
-        SETTLEMENT, // !< generic settlement calendar
+        SETTLEMENT, 
         EXCHANGE
-        // !< BCBA calendar
     };
 
     private final static Argentina SETTLEMENT_CALENDAR = new Argentina(Market.SETTLEMENT);

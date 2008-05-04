@@ -80,9 +80,8 @@ import org.jquantlib.util.Month;
 public class Brazil extends DelegateCalendar {
 	
     public static enum Market {
-        SETTLEMENT, // !< generic settlement calendar
-        EXCHANGE
-        // !< BOVESPA calendar
+        SETTLEMENT, 
+        EXCHANGE // BOVESPA calendar
     };
 
     private final static Brazil SETTLEMENT_CALENDAR = new Brazil(Market.SETTLEMENT);
@@ -129,7 +128,7 @@ public class Brazil extends DelegateCalendar {
             int em = easterMonday(y);
 
             if (isWeekend(w)
-            // New Year's Day
+            		// New Year's Day
                     || (d == 1 && m == Month.JANUARY)
                     // Tiradentes Day
                     || (d == 21 && m == Month.APRIL)
@@ -172,7 +171,7 @@ public class Brazil extends DelegateCalendar {
             int em = easterMonday(y);
 
             if (isWeekend(w)
-            // New Year's Day
+            		// New Year's Day
                     || (d == 1 && m == JANUARY)
                     // Sao Paulo City Day
                     || (d == 25 && m == JANUARY)
