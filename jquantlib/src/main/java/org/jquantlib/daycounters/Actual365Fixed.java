@@ -50,6 +50,7 @@ import org.jquantlib.util.Date;
  * specified as fixed in an instrument specification,
  * you might want to double-check its meaning.
  * 
+ * @author Srinivas Hasti
  * @author Richard Gomes
  */
 public class Actual365Fixed extends AbstractDayCounter {

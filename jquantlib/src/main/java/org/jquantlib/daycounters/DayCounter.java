@@ -45,15 +45,18 @@ import org.jquantlib.util.Date;
  * This class provides methods for determining the length of a time
  * period according to given market convention, both as a number
  * of days and as a year fraction.
+ * 
+ * @see http://en.wikipedia.org/wiki/Day_count_convention
  *
  * @author Richard Gomes
+ * @author Srinivas Hasti
  */
 public interface DayCounter {
 
     /**
      * @return the name of this DayCounter
      */
-	public String getName() /* @ReadOnly */;
+	public String getName();
     
 	
 	/**
@@ -63,7 +66,7 @@ public interface DayCounter {
 	 * @param dateEnd is the ending Date
 	 * @return the number of days between two dates.
 	 */
-	public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */;
+	public int getDayCount(final Date dateStart, final Date dateEnd);
     
     /**
      * Returns the period between two dates as a fraction of year
@@ -72,8 +75,7 @@ public interface DayCounter {
 	 * @param dateEnd is the ending Date
 	 * @return the period between two dates as a fraction of year.
 	 */
-	// FIXME: verify if necessary ::: document better
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */;
+	public double getYearFraction(final Date dateStart, final Date dateEnd);
 	
 	/**
 	 * Returns the period between two dates as a fraction of year, considering referencing
@@ -86,7 +88,6 @@ public interface DayCounter {
 	 * @return the period between two dates as a fraction of year, considering referencing
 	 * dates for both.
 	 */
-	// FIXME: verify if necessary ::: document better
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */;
+	public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */;
 
 }

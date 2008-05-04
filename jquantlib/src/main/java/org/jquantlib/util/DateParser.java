@@ -27,7 +27,6 @@ package org.jquantlib.util;
  * @author Srinivas Hasti
  * 
  */
-//TODO: Implement Period parser
 public class DateParser {
 
     /**
@@ -41,7 +40,7 @@ public class DateParser {
             int year = Integer.parseInt(str.substring(0, 4));
             int month = Integer.parseInt(str.substring(5, 7));
             int day = Integer.parseInt(str.substring(8, 10));
-            return new DefaultDate(day, month, year);
+            return DateFactory.getDateUtil().getDate(day, Month.valueOf(month), year);
         } else {
         	throw new IllegalArgumentException("Invalid format " + str);	
         }
@@ -80,6 +79,6 @@ public class DateParser {
                     y += 2000;
             }
         }
-        return new DefaultDate(d, m, y);
+        return DateFactory.getDateUtil().getDate(d, Month.valueOf(m), y);
     }
 }

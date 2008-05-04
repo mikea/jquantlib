@@ -50,7 +50,10 @@ import org.jquantlib.util.Date;
  * specified as fixed in an instrument specification,
  * you might want to double-check its meaning.
  * 
+ * @see http://en.wikipedia.org/wiki/Day_count_convention
+ * 
  * @author Richard Gomes
+ * @author Srinivas Hasti
  */
 public class Actual360 extends AbstractDayCounter {
 
@@ -68,13 +71,13 @@ public class Actual360 extends AbstractDayCounter {
 	 * {@inheritDoc}  	
 	 *
 	 */
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd) {
-		return /*@Time*/ getDayCount(dateStart, dateEnd)/360.0;
+	public double getYearFraction(final Date dateStart, final Date dateEnd) {
+		return getDayCount(dateStart, dateEnd)/360.0;
 	}
 	
 
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) {
-		return /*@Time*/ getDayCount(dateStart, dateEnd)/360.0;
+	public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) {
+		return getDayCount(dateStart, dateEnd)/360.0;
 	}
 	
 }

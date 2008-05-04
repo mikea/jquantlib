@@ -46,12 +46,12 @@ public class SimpleDayCounter extends AbstractDayCounter {
         return "Simple";
     }
 
-    public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+    public int getDayCount(final Date dateStart, final Date dateEnd) {
         return fallback.getDayCount(dateStart, dateEnd);
     }
 
-    public/* @Time */double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
-            final Date refPeriodEnd) /* @ReadOnly */{
+    public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
+            final Date refPeriodEnd) {
         int dm1 = dateStart.getDayOfMonth();
         int dm2 = dateEnd.getDayOfMonth();
         int mm1 = dateStart.getMonth();
@@ -70,7 +70,7 @@ public class SimpleDayCounter extends AbstractDayCounter {
         }
     }
 
-    public/* @Time */double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+    public double getYearFraction(final Date dateStart, final Date dateEnd) {
         return this.getYearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
     }
 
