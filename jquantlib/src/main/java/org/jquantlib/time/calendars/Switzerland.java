@@ -130,20 +130,24 @@ public class Switzerland extends DelegateCalendar {
             if (isWeekend(w)
             		// New Year's Day
                     || (d == 1 && m == JANUARY)
+                    // Berchtolds Day
+                    || (d == 2 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day
                     || (d == 1 && m == MAY)
-                    // Christmas' Eve
-                    || (d == 24 && m == DECEMBER)
+                    // Ascension Thursday
+                    || (dd == em + 38)
+                    // White Monday
+                    || (dd == em + 49)
+                    // National Day Switzerland
+                    || (d == 1 && m == AUGUST)
                     // Christmas
                     || (d == 25 && m == DECEMBER)
                     // Christmas Day
-                    || (d == 26 && m == DECEMBER)
-                    // New Year's Eve
-                    || (d == 31 && m == DECEMBER))
+                    || (d == 26 && m == DECEMBER))
                 return false;
             return true;
         }

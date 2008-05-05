@@ -81,11 +81,11 @@ public class Brazil extends DelegateCalendar {
 	
     public static enum Market {
         SETTLEMENT, 
-        EXCHANGE // BOVESPA calendar
+        BOVESPA // BOVESPA calendar
     };
 
     private final static Brazil SETTLEMENT_CALENDAR = new Brazil(Market.SETTLEMENT);
-    private final static Brazil EXCHANGE_CALENDAR   = new Brazil(Market.EXCHANGE);
+    private final static Brazil EXCHANGE_CALENDAR   = new Brazil(Market.BOVESPA);
 
     private Brazil(Market market) {
         Calendar delegate;
@@ -93,7 +93,7 @@ public class Brazil extends DelegateCalendar {
             case SETTLEMENT:
                 delegate = new SettlementCalendar();
                 break;
-            case EXCHANGE:
+            case BOVESPA:
                 delegate = new ExchangeCalendar();
                 break;
             default:
@@ -106,7 +106,7 @@ public class Brazil extends DelegateCalendar {
         switch (market) {
             case SETTLEMENT:
                 return SETTLEMENT_CALENDAR;
-            case EXCHANGE:
+            case BOVESPA:
                 return EXCHANGE_CALENDAR;
             default:
                 throw new IllegalArgumentException("unknown market");

@@ -90,11 +90,11 @@ public class Argentina extends DelegateCalendar {
 	
     public static enum Market {
         SETTLEMENT, 
-        EXCHANGE
+        BCBA
     };
 
     private final static Argentina SETTLEMENT_CALENDAR = new Argentina(Market.SETTLEMENT);
-    private final static Argentina EXCHANGE_CALENDAR   = new Argentina(Market.EXCHANGE);
+    private final static Argentina EXCHANGE_CALENDAR   = new Argentina(Market.BCBA);
 
     private Argentina(Market market) {
         Calendar delegate;
@@ -102,7 +102,7 @@ public class Argentina extends DelegateCalendar {
             case SETTLEMENT:
                 delegate = new SettlementCalendar();
                 break;
-            case EXCHANGE:
+            case BCBA:
                 delegate = new BCBAExchangeCalendar();
                 break;
             default:
@@ -115,7 +115,7 @@ public class Argentina extends DelegateCalendar {
         switch (market) {
             case SETTLEMENT:
                 return SETTLEMENT_CALENDAR;
-            case EXCHANGE:
+            case BCBA:
                 return EXCHANGE_CALENDAR;
             default:
                 throw new IllegalArgumentException("unknown market");
@@ -144,6 +144,8 @@ public class Argentina extends DelegateCalendar {
                     || (d == 2 && m == Month.APRIL)
                     // Labor Day
                     || (d == 1 && m == Month.MAY)
+                    // Revolution, May 25th 
+                    || (d == 25 && m == Month.MAY)
                     // Death of General Manuel Belgrano
                     || (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.JUNE)
                     // Independence Day
@@ -160,7 +162,7 @@ public class Argentina extends DelegateCalendar {
                     // Easter Monday
                     || (dd == em)
                     // Corpus Christi
-                    || (dd == em + 59)
+                    // || (dd == em + 59)
                     // All Souls Day
                     || (d == 2 && m == Month.NOVEMBER)
                     // Immaculate Conception
@@ -195,6 +197,12 @@ public class Argentina extends DelegateCalendar {
             if (isWeekend(w)
             		// New Year's Day / Ano Nuevo
                     || (d == 1 && m == Month.JANUARY)
+                    // Holy Thursday
+                    || (dd == em - 4)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter Monday
+                    || (dd == em)
                     // Día del Veterano y de los Caídos en la Guerra de Malvinas
                     || (d == 2 && m == Month.APRIL)
                     // Labor Day
@@ -205,18 +213,10 @@ public class Argentina extends DelegateCalendar {
                     || (d == 9 && m == JULY)
                     // Death of General José de San Martin
                     || (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.AUGUST)
-                    // Holy Thursday
-                    || (dd == em - 4)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Easter Monday
-                    || (dd == em)
                     // Immaculate Conception
                     || (d == 8 && m == Month.DECEMBER)
                     // Christmas Day
-                	|| (d == 25 && m == Month.DECEMBER)
-            		// New Year's Eve
-            		|| ((d == 31 || (d ==  30 && w == Weekday.FRIDAY)) && m == Month.DECEMBER))
+                	|| (d == 25 && m == Month.DECEMBER))
             	return false;
             return true;
         }
