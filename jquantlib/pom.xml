@@ -79,6 +79,19 @@
       </roles>
       <timezone>-3</timezone>
     </developer>
+    <developer>
+      <id>homdol</id>
+      <name>Dominik Holenstein</name>
+      <email>dholenstein@gmail.com</email>
+      <url/>
+      <organization>jquantlib.org</organization>
+      <organizationUrl>http://www.jquantlib.org/</organizationUrl>
+      <roles>
+        <role>developer</role>
+        <role>tester</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
   <licenses>
     <license>

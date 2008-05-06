@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
+ Copyright (C) 2008 Dominik Holenstein
 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
@@ -48,6 +49,7 @@ import org.jquantlib.util.Month;
  * <li>Nossa Sra. Aparecida Day, October 12th</li>
  * <li>All Souls Day, November 2nd</li>
  * <li>Republic Day, November 15th</li>
+ * <li>Black Consciousness Day, November 20th</li>
  * <li>Christmas, December 25th</li>
  * <li>Passion of Christ</li>
  * <li>Carnival</li>
@@ -76,6 +78,7 @@ import org.jquantlib.util.Month;
  * </ul>
  * 
  * @author Srinivas Hasti
+ * @author Dominik Holenstein
  */
 public class Brazil extends DelegateCalendar {
 	
@@ -181,19 +184,19 @@ public class Brazil extends DelegateCalendar {
                     || (d == 1 && m == MAY)
                     // Revolution Day
                     || (d == 9 && m == JULY)
-                    // Independence Day
-                    || (d == 7 && m == SEPTEMBER)
                     // Nossa Sra. Aparecida Day
-                    || (d == 12 && m == OCTOBER)
+                    // || (d == 12 && m == OCTOBER)-> not closed at the 12th October
                     // All Souls Day
-                    || (d == 2 && m == NOVEMBER)
+                    // || (d == 2 && m == NOVEMBER) -> not closed at the 2nd November
                     // Republic Day
-                    || (d == 15 && m == NOVEMBER)
+                    // || (d == 15 && m == NOVEMBER) -> not closed at the 15th November
                     // Black Consciousness Day
                     || (d == 20 && m == NOVEMBER && y >= 2007)
+                    // Christmas Eve
+                    || (d == 24 && m == DECEMBER)
                     // Christmas
                     || (d == 25 && m == DECEMBER)
-                    // Passion of Christ
+                    // Passion of Christ / Good Friday
                     || (dd == em - 3)
                     // Carnival
                     || (dd == em - 49 || dd == em - 48)
