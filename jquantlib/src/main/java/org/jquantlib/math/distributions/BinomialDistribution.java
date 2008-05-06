@@ -34,9 +34,13 @@ import org.jquantlib.math.Factorial;
 //TODO: Use Colt -> Dominik
 
 public class BinomialDistribution {
+	
+	private static final Factorial factorial_ = new Factorial();
+    private int n_;
+    private double logP_, logOneMinusP_;
+    
 
 	public BinomialDistribution(double p, int n) {
-
 		n_=n;
 
 		if (p==0.0) {
@@ -79,42 +83,35 @@ public class BinomialDistribution {
 	
 	static private double binomialCoefficientLn(int n, int k) {
 
-		if (!(n>=0)) throw new ArithmeticException("n<0 not allowed, " + n);
-
-		if (!(k>=0)) throw new ArithmeticException("k<0 not allowed, " + k);
-
+		if (!(n>=0)) {
+			throw new ArithmeticException("n<0 not allowed, " + n);
+		}
+		if (!(k>=0)) {
+			throw new ArithmeticException("k<0 not allowed, " + k);
+		}
 		if (!(n>=k)){
 			throw new ArithmeticException("n<k not allowed");
 		}
 
         return factorial_.ln(n)-factorial_.ln(k)-factorial_.ln(n-k);
-
     }
 	
-	/*
-	 inline Real binomialCoefficient(BigNatural n, BigNatural k) {
-        return std::floor(0.5+std::exp(binomialCoefficientLn(n, k)));
-    }
-	 */
 	
 	static private double binomialCoefficient(int n, int k) {
 		return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n,k)));
 	}
 	
 	
-	//TODO: Translate C++ code (commented out) -> Dominik
-	//TODO: Write tests for the new functions -> Dominik
-	//TODO: Use Colt -> Dominik
-	//TODO: Translate beta.hpp and beta.cpp 
-	
-	//! Cumulative binomial distribution function
-    /*! Given an integer k it provides the cumulative probability
+	//Cumulative binomial distribution function
+    /*  Given an integer k it provides the cumulative probability
         of observing kk<=k:
         formula here ...
-
     */
 	
 	/*
+	 * This method will be translated later when the class beta.java (beta.cpp and beta.hpp) 
+	 * is available in JquantLib.
+	 * 
     class CumulativeBinomialDistribution
     : public std::unary_function<Real,Real> {
       public:
@@ -124,7 +121,7 @@ public class BinomialDistribution {
             if (k >= n_)
                 return 1.0;
             else
-                return 1.0 - incompleteBetaFunction(k+1, n_-k, p_); // see beta.cpp
+                return 1.0 - incompleteBetaFunction(k+1, n_-k, p_); 
         }
       private:
         BigNatural n_;
@@ -132,17 +129,6 @@ public class BinomialDistribution {
     };
     */
 	
-	/*
-	 * inline
-    CumulativeBinomialDistribution::CumulativeBinomialDistribution(
-                                                       Real p, BigNatural n)
-    : n_(n), p_(p) {
-
-        QL_REQUIRE(p>=0, "negative p not allowed");
-        QL_REQUIRE(p<=1.0, "p>1.0 not allowed");
-
-    } 
-    */
 	static private void evalCumulativeBinomialDistribution(double p){
 		if(!(p>0)) {
 			throw new ArithmeticException("negative p not allowed");
@@ -151,31 +137,16 @@ public class BinomialDistribution {
 			throw new ArithmeticException("p>1.0 not allowed");
 		}
 	}
-	
+	    
 	
 	/*
-	 * /*! Given an odd integer n and a real number z it returns p such that:
-        1 - CumulativeBinomialDistribution((n-1)/2, n, p) =
-                               CumulativeNormalDistribution(z)
-
-        \pre n must be odd
-    
-    inline Real PeizerPrattMethod2Inversion(Real z, BigNatural n) {
-
-        QL_REQUIRE(n%2==1,
-                   "n must be an odd number: " << n << " not allowed");
-
-        Real result = (z/(n+1.0/3.0+0.1/(n+1.0)));
-        result *= result;
-        result = std::exp(-result*(n+1.0/6.0));
-        result = 0.5 + (z>0 ? 1 : -1) * std::sqrt((0.25 * (1.0-result)));
-        return result;
-    }
+	 * Given an odd integer and a real number z it returns p such that:
+	 * 1 - CumulativeBinomialDistribution((n-1/2, n, p) = CumulativeNormalDistribution(z)
+	 * n must be odd
 	 */
-	
 	static private double PeizerPrattMehtod2Inversion(double z, int n) {
 		if(n%2 == 1) {
-			throw new ArithmeticException("n must be and odd number: " + n + " not allowed");
+			throw new ArithmeticException("n must be an odd number: " + n + " not allowed");
 		}
 		
 		double result = (z/(n+1.0/3.0+0.1/(n+1.0)));
@@ -185,10 +156,5 @@ public class BinomialDistribution {
 		
 		return result;	
 	}
-	
-	
-	private static final Factorial factorial_ = new Factorial();
-    private int n_;
-    private double logP_, logOneMinusP_;
 
 }
