@@ -34,6 +34,7 @@ import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.processes.StochasticProcess;
+import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
@@ -256,7 +257,7 @@ public class OneAssetOption extends Option {
         private PricingEngine impliedEngine;
         private final OneAssetOptionResults impliedResults;
         private double targetValue_;
-        private SimpleQuote vol_;
+        private Handle<Quote> vol_;
         
         
         public ImpliedVolatilityHelper(final PricingEngine engine, double targetValue)  {
@@ -281,14 +282,18 @@ public class OneAssetOption extends Option {
         	if (originalProcess==null) throw new NullPointerException("Black-Scholes process required");
 
         	// initialize arguments for calculation of implied volatility
-        	vol_ = new SimpleQuote(0.0);
-        	Quote stateVariable = originalProcess.stateVariable();
-        	YieldTermStructure dividendYield = originalProcess.dividendYield();
-        	YieldTermStructure riskFreeRate = originalProcess.riskFreeRate();
-        	BlackVolTermStructure blackVol = originalProcess.blackVolatility();
+        	vol_ = new Handle<Quote>(new SimpleQuote(0.0));
+        	Handle<? extends Quote> stateVariable = originalProcess.stateVariable();
+        	Handle<YieldTermStructure> dividendYield = originalProcess.dividendYield();
+        	Handle<YieldTermStructure> riskFreeRate = originalProcess.riskFreeRate();
+        	Handle<BlackVolTermStructure> blackVol = originalProcess.blackVolatility();
 
         	// calculate implied volatility
-        	BlackVolTermStructure volatility = new BlackConstantVol(blackVol.getReferenceDate(), vol_, blackVol.getDayCounter());
+        	Handle<BlackVolTermStructure> volatility = new Handle<BlackVolTermStructure>(
+        													new BlackConstantVol(
+        															blackVol.getLink().getReferenceDate(), 
+        															vol_, 
+        															blackVol.getLink().getDayCounter()));
         
         	// build a new stochastic process
         	StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
@@ -302,7 +307,8 @@ public class OneAssetOption extends Option {
         }
 
 		public double evaluate(/* @Volatility */ double x) /* @ReadOnly */ {
-			vol_.setValue(x);
+			SimpleQuote quote = (SimpleQuote)vol_.getLink();
+			quote.setValue(x);
 			this.impliedEngine.calculate();
 			return impliedResults.value - targetValue_;
 		}

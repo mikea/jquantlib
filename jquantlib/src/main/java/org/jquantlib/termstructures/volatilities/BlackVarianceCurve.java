@@ -38,6 +38,8 @@
 
 package org.jquantlib.termstructures.volatilities;
 
+import java.util.Arrays;
+
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
@@ -81,20 +83,21 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
                 boolean forceMonotoneVariance) {
     	super(referenceDate);
     	this.dayCounter = dayCounter;
-    	this.dates = new Date[dates.length];
-    	if (! (dates.length==blackVolCurve.length) ) throw new IllegalArgumentException("mismatch between date vector and black vol vector");
+    	this.dates = Arrays.copyOf(dates, dates.length);
+    	
+    	if (! (this.dates.length==blackVolCurve.length) ) throw new IllegalArgumentException("mismatch between date vector and black vol vector");
 
     	// cannot have dates[0]==referenceDate, since the
-    	// value of the vol at dates[0] would be lost
+    	// value of the volatility at dates[0] would be lost
     	// (variance at referenceDate must be zero)
-    	if (dates[0].le(referenceDate)) throw new IllegalArgumentException("cannot have dates[0] <= referenceDate");
+    	if (this.dates[0].le(referenceDate)) throw new IllegalArgumentException("cannot have dates[0] <= referenceDate");
 
-        variances = new /*@Variance*/ double[dates.length+1];
-        times = new /*@Time*/ double [dates.length+1];
+        variances = new /*@Variance*/ double[this.dates.length+1];
+        times = new /*@Time*/ double [this.dates.length+1];
         variances[0] = 0.0;
         times[0] = 0.0;
         for (int j=1; j<=blackVolCurve.length; j++) {
-            times[j] = getTimeFromReference(dates[j-1]);
+            times[j] = getTimeFromReference(this.dates[j-1]);
             if (! (times[j]>times[j-1]) ) throw new IllegalArgumentException("dates must be sorted unique");
             variances[j] = times[j] * blackVolCurve[j-1]*blackVolCurve[j-1];
             if (! (variances[j]>=variances[j-1] || !forceMonotoneVariance) ) throw new IllegalArgumentException("variance must be non-decreasing");

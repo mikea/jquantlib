@@ -42,12 +42,7 @@ import org.jquantlib.util.Date;
 
 public abstract class AbstractDayCounter implements DayCounter {
 
-   /**
-    * 
-    * {@inheritDoc}  	
-    *
-    */
-	public int getDayCount(final Date dateStart, final Date dateEnd) {
+	public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
 		return dateStart.getDayCount(dateEnd);
 	}
     

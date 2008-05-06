@@ -38,6 +38,7 @@
 package org.jquantlib.termstructures.volatilities;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
@@ -57,13 +58,17 @@ import org.jquantlib.util.Date;
 // TODO: this class is untested, probably unreliable.
 public class LocalVolSurface extends LocalVolTermStructure {
 
-	private BlackVolTermStructure blackTS_;
-	private YieldTermStructure riskFreeTS_;
-	private YieldTermStructure dividendTS_;
-	private Quote underlying_;
+	private Handle<BlackVolTermStructure> blackTS_;
+	private Handle<YieldTermStructure> riskFreeTS_;
+	private Handle<YieldTermStructure> dividendTS_;
+	private Handle<? extends Quote> underlying_;
 
-	public LocalVolSurface(final BlackVolTermStructure blackTS, final YieldTermStructure riskFreeTS, final YieldTermStructure dividendTS, final Quote underlying) {
-		super(blackTS.getDayCounter());
+	public LocalVolSurface(
+			final Handle<BlackVolTermStructure> blackTS, 
+			final Handle<YieldTermStructure> riskFreeTS, 
+			final Handle<YieldTermStructure> dividendTS, 
+			final Handle<? extends Quote> underlying) {
+		super(blackTS.getLink().getDayCounter());
 		this.blackTS_ = blackTS;
 		this.riskFreeTS_ = riskFreeTS;
 		this.dividendTS_ = dividendTS;
@@ -74,35 +79,39 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		this.underlying_.addObserver(this);
 	}
 
-	public LocalVolSurface(final BlackVolTermStructure blackTS, final YieldTermStructure riskFreeTS, final YieldTermStructure dividendTS, final /*@Price*/ double underlying) {
-		super(blackTS.getDayCounter());
+	public LocalVolSurface(
+			final Handle<BlackVolTermStructure> blackTS, 
+			final Handle<YieldTermStructure> riskFreeTS, 
+			final Handle<YieldTermStructure> dividendTS, 
+			final /*@Price*/ double underlying) {
+		super(blackTS.getLink().getDayCounter());
 		this.blackTS_ = blackTS;
 		this.riskFreeTS_ = riskFreeTS;
 		this.dividendTS_ = dividendTS;
-		this.underlying_ = new SimpleQuote(underlying);
+		this.underlying_ = new Handle<Quote>(new SimpleQuote(underlying));
 		this.blackTS_.addObserver(this);
 		this.riskFreeTS_.addObserver(this);
 		this.dividendTS_.addObserver(this);
 	}
 
 	public final Date getReferenceDate() {
-		return this.blackTS_.getReferenceDate();
+		return this.blackTS_.getLink().getReferenceDate();
 	}
 
 	public final DayCounter getDayCounter() {
-		return this.blackTS_.getDayCounter();
+		return this.blackTS_.getLink().getDayCounter();
 	}
 
 	public final Date getMaxDate() {
-		return blackTS_.getMaxDate();
+		return blackTS_.getLink().getMaxDate();
 	}
 
 	public final /*@Price*/ double getMinStrike() {
-		return blackTS_.getMinStrike();
+		return blackTS_.getLink().getMinStrike();
 	}
 
 	public final /*@Price*/ double getMaxStrike() {
-		return blackTS_.getMaxStrike();
+		return blackTS_.getLink().getMaxStrike();
 	}
 
 	// void LocalVolSurface::accept(AcyclicVisitor& v) {
@@ -116,7 +125,13 @@ public class LocalVolSurface extends LocalVolTermStructure {
 
 	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double time, final /*@Price*/ double underlyingLevel) {
 
-		double forwardValue = underlying_.getValue() * ( dividendTS_.getDiscount(time, true) / riskFreeTS_.getDiscount(time, true) );
+		// obtain local copies of objects
+		Quote u = underlying_.getLink();
+		YieldTermStructure dTS = dividendTS_.getLink();
+		YieldTermStructure rTS = riskFreeTS_.getLink();
+		BlackVolTermStructure bTS = blackTS_.getLink();
+		
+		double forwardValue = u.getValue() * ( dTS.getDiscount(time, true) / rTS.getDiscount(time, true) );
 
 		// strike derivatives
 		/*@Price*/ double strike;
@@ -129,9 +144,9 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		dy = ((y != 0.0) ? y * 0.000001 : 0.000001);
 		strikep = strike * Math.exp(dy);
 		strikem = strike / Math.exp(dy);
-		w = blackTS_.blackVariance(time,  strike, true);
-		wp = blackTS_.blackVariance(time, strikep, true);
-		wm = blackTS_.blackVariance(time, strikem, true);
+		w = bTS.blackVariance(time,  strike, true);
+		wp = bTS.blackVariance(time, strikep, true);
+		wm = bTS.blackVariance(time, strikem, true);
 		dwdy = (wp - wm) / (2.0 * dy);
 		d2wdy2 = (wp - 2.0 * w + wm) / (dy * dy);
 
@@ -141,15 +156,15 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		double wpt, wmt, dwdt;
 		if (t == 0.0) {
 			dt = 0.0001;
-			wpt = blackTS_.blackVariance(/*@Time*/ (t + dt), strike, true);
+			wpt = bTS.blackVariance(/*@Time*/ (t + dt), strike, true);
 			if (wpt < w)
 				throw new ArithmeticException("decreasing variance at strike " + strike + " between time " + t + " and time " + t + dt);
 
 			dwdt = (wpt - w) / dt;
 		} else {
 			dt = Math.min(0.0001, t / 2.0);
-			wpt = blackTS_.blackVariance(/*@Time*/ (t + dt), strike, true);
-			wmt = blackTS_.blackVariance(/*@Time*/ (t - dt), strike, true);
+			wpt = bTS.blackVariance(/*@Time*/ (t + dt), strike, true);
+			wmt = bTS.blackVariance(/*@Time*/ (t - dt), strike, true);
 			if (wpt < w)
 				throw new ArithmeticException("decreasing variance at strike " + strike + " between time " + t + " and time " + t + dt);
 			if (w < wmt)

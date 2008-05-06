@@ -41,11 +41,6 @@ public abstract class AbstractCalendar implements Calendar {
         this.addedHolidays = new ObjectArrayList();
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public void addHoliday(final Date d) {
         // if it's already a holiday, leave the calendar alone.
         // Otherwise, add it.
@@ -53,11 +48,6 @@ public abstract class AbstractCalendar implements Calendar {
             addedHolidays.add(d);
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public void removeHoliday(final Date d) {
         // if d was an artificially-added holiday, revert the change
         addedHolidays.delete(d, true);
@@ -78,7 +68,6 @@ public abstract class AbstractCalendar implements Calendar {
      * This base class only checks in list added by addHoliday(Date) call.
      * 
      * {@inheritDoc}  	
-     * 
      */
     public boolean isBusinessDay(final Date date) {
         if (isAddedHoliday(date)) {
@@ -121,29 +110,14 @@ public abstract class AbstractCalendar implements Calendar {
         return d1;
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public final boolean isEndOfMonth(final Date date) {
         return (date.getMonth() != advance(date.getNextDay()).getMonth());
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public final Date getEndOfMonth(final Date date) {
         return adjust(date.getEndOfMonth(), BusinessDayConvention.PRECEDING);
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public final boolean isHoliday(final Date date) {
         return !isBusinessDay(date);
     }
@@ -157,11 +131,6 @@ public abstract class AbstractCalendar implements Calendar {
         return adjust(d, BusinessDayConvention.FOLLOWING);
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public final Date advance(final Date d, int n, final TimeUnit unit) {
         return advance(d, n, unit, BusinessDayConvention.FOLLOWING);
     }
@@ -178,11 +147,6 @@ public abstract class AbstractCalendar implements Calendar {
         return advance(d, n, unit, c, false);
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public final Date advance(final Date d, int n, final TimeUnit unit, final BusinessDayConvention c,
             boolean endOfMonth) {
         if (d == null)
@@ -219,29 +183,14 @@ public abstract class AbstractCalendar implements Calendar {
         }
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public Date advance(final Date d, final Period p, final BusinessDayConvention c) {
         return advance(d, p.getLength(), p.getUnits(), c, false);
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public Date advance(final Date d, final Period p, final BusinessDayConvention c, boolean endOfMonth) {
         return advance(d, p.getLength(), p.getUnits(), c, endOfMonth);
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public long businessDaysBetween(final Date from, final Date to, boolean includeFirst, boolean includeLast) {
         int wd = 0;
         if (from.equals(to)) {
@@ -276,11 +225,6 @@ public abstract class AbstractCalendar implements Calendar {
         return wd;
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public List<Date> getHolidayList(final Date from, final Date to, boolean includeWeekEnds) {
         List<Date> holidays = new ArrayList<Date>();
         if (from.ge(to))

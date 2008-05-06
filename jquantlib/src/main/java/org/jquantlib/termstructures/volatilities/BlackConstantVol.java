@@ -39,6 +39,7 @@ package org.jquantlib.termstructures.volatilities;
 
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolatilityTermStructure;
@@ -55,21 +56,21 @@ import org.jquantlib.util.DateFactory;
  */
 public class BlackConstantVol extends BlackVolatilityTermStructure {
 
-    private Quote volatility;
+    private Handle<? extends Quote> volatility;
     private DayCounter dayCounter;
     
     @Override
     protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-        return volatility.getValue();
+        return volatility.getLink().getValue();
     }
     
     public BlackConstantVol(final Date referenceDate, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
     	super(referenceDate);
-    	this.volatility = new SimpleQuote(volatility);
+    	this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
     	this.dayCounter = dayCounter;
     }
     
-    public BlackConstantVol(final Date referenceDate, final Quote volatility, final DayCounter dayCounter) {
+    public BlackConstantVol(final Date referenceDate, final Handle<? extends Quote> volatility, final DayCounter dayCounter) {
     	super(referenceDate);
     	this.volatility = volatility;
     	this.dayCounter = dayCounter;
@@ -78,11 +79,11 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     
     public BlackConstantVol(int settlementDays, final Calendar calendar, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
     	super(settlementDays, calendar);
-    	this.volatility = new SimpleQuote(volatility);
+    	this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
     	this.dayCounter = dayCounter;
     }
     
-    public BlackConstantVol(int settlementDays, final Calendar calendar, final Quote volatility, final DayCounter dayCounter) {
+    public BlackConstantVol(int settlementDays, final Calendar calendar, final Handle<? extends Quote> volatility, final DayCounter dayCounter) {
     	super(settlementDays, calendar);
     	this.volatility = volatility; 
     	this.dayCounter = dayCounter;

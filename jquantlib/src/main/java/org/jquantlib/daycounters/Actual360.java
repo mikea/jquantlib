@@ -56,6 +56,7 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  */
 public class Actual360 extends AbstractDayCounter {
+
      private static Actual360 actual360 = new Actual360();
      
      private Actual360(){  	 
@@ -65,26 +66,15 @@ public class Actual360 extends AbstractDayCounter {
     	 return actual360;
      }
      
-	/**
-	 * 
-	 * {@inheritDoc}  	
-	 *
-	 */
 	public final String getName() /* @ReadOnly */ {
 		return "Actual/360";
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}  	
-	 *
-	 */
-	public double getYearFraction(final Date dateStart, final Date dateEnd) {
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
 		return getDayCount(dateStart, dateEnd)/360.0;
 	}
 	
-
-	public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) {
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */ {
 		return getDayCount(dateStart, dateEnd)/360.0;
 	}
 	

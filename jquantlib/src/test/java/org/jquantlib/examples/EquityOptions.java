@@ -22,16 +22,14 @@
 Quantlib license
 
 QuantLib is
-    Copyright (C) 2002, 2003, 2004, 2005 	Brazil.Market.swigToEnum(arg0) feriados = x;
-	
-Ferdinando Ametrano
+    Copyright (C) 2002, 2003, 2004, 2005 Ferdinando Ametrano
     Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005 StatPro Italia srl
 
     Copyright (C) 2002, 2003, 2004 Decillion Pty(Ltd)
-    Copyright (C) 2001, 2002, 2003 Nicolas Di Csar
+    Copyright (C) 2001, 2002, 2003 Nicolas Di C�sar�
     Copyright (C) 2003, 2004 Neil Firth
     Copyright (C) 2001, 2002, 2003 Sadruddin Rejeb
-    Copyright (C) 2003 Niels Elken Snderby
+    Copyright (C) 2003 Niels Elken S�nderby
 
     Copyright (C) 2004 FIMAT Group
     Copyright (C) 2003, 2004 Roman Gitlin
@@ -78,7 +76,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.jquantlib.examples;
 
 import org.jquantlib.Configuration;
-import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.EuropeanExercise;
@@ -91,6 +88,7 @@ import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
+import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
@@ -141,6 +139,8 @@ import org.jquantlib.util.Month;
 
 /**
  * Calculates equity option values with a number of methods
+ * 
+ * @see http://quantlib.org/reference/_equity_option_8cpp-example.html
  * 
  * @author Richard Gomes
  */
@@ -206,14 +206,15 @@ public class EquityOptions {
 //    Exercise americanExercise = new AmericanExercise(settlementDate, maturity);
 
     // bootstrap the yield/dividend/volatility curves
-    Quote underlyingH = new SimpleQuote(underlying);
-    YieldTermStructure flatDividendTS = new FlatForward(settlementDate, dividendYield, dayCounter);
-    YieldTermStructure flatTermStructure = new FlatForward(settlementDate, riskFreeRate, dayCounter);
-    BlackVolTermStructure flatVolTS = new BlackConstantVol(settlementDate, volatility, dayCounter);
+    Handle<Quote> underlyingH = new Handle<Quote>(new SimpleQuote(underlying));
+    Handle<YieldTermStructure> flatDividendTS = new Handle<YieldTermStructure>(new FlatForward(settlementDate, dividendYield, dayCounter));
+    Handle<YieldTermStructure> flatTermStructure = new Handle<YieldTermStructure>(new FlatForward(settlementDate, riskFreeRate, dayCounter));
+    Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, volatility, dayCounter));
 
     Payoff payoff = new PlainVanillaPayoff(type, strike);
     StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
 
+    
     // options
     VanillaOption europeanOption = new EuropeanOption(stochasticProcess, payoff, europeanExercise);
     // VanillaOption bermudanOption = new BermudanOption(stochasticProcess, payoff, bermudanExercise);

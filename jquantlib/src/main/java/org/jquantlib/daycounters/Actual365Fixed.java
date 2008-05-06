@@ -62,20 +62,10 @@ public class Actual365Fixed extends AbstractDayCounter {
 		return "Actual/365 (fixed)";
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}  	
-	 *
-	 */
 	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
 		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
 	}
 	
-	/**
-	 * 
-	 * {@inheritDoc}  	
-	 *
-	 */
 	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */ {
 		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
 	}

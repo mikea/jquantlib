@@ -56,7 +56,7 @@ public interface DayCounter {
     /**
      * @return the name of this DayCounter
      */
-	public String getName();
+	public String getName() /* @ReadOnly */;
     
 	
 	/**
@@ -66,7 +66,7 @@ public interface DayCounter {
 	 * @param dateEnd is the ending Date
 	 * @return the number of days between two dates.
 	 */
-	public int getDayCount(final Date dateStart, final Date dateEnd);
+	public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */;
     
     /**
      * Returns the period between two dates as a fraction of year
@@ -75,7 +75,7 @@ public interface DayCounter {
 	 * @param dateEnd is the ending Date
 	 * @return the period between two dates as a fraction of year.
 	 */
-	public double getYearFraction(final Date dateStart, final Date dateEnd);
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */;
 	
 	/**
 	 * Returns the period between two dates as a fraction of year, considering referencing
@@ -88,6 +88,6 @@ public interface DayCounter {
 	 * @return the period between two dates as a fraction of year, considering referencing
 	 * dates for both.
 	 */
-	public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */;
+	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */;
 
 }

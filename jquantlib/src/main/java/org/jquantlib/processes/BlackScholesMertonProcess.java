@@ -20,6 +20,7 @@
 
 package org.jquantlib.processes;
 
+import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -36,18 +37,18 @@ import org.jquantlib.termstructures.YieldTermStructure;
 public class BlackScholesMertonProcess extends GeneralizedBlackScholesProcess {
 
     public BlackScholesMertonProcess(
-            final Quote x0,
-            final YieldTermStructure dividendTS,
-            final YieldTermStructure riskFreeTS,
-            final BlackVolTermStructure blackVolTS) {
+            final Handle<? extends Quote> x0,
+            final Handle<YieldTermStructure> dividendTS,
+            final Handle<YieldTermStructure> riskFreeTS,
+            final Handle<BlackVolTermStructure> blackVolTS) {
     	this(x0, dividendTS, riskFreeTS, blackVolTS, new EulerDiscretization());
     }
 
 	public BlackScholesMertonProcess(
-            final Quote x0,
-            final YieldTermStructure dividendTS,
-            final YieldTermStructure riskFreeTS,
-            final BlackVolTermStructure blackVolTS,
+            final Handle<? extends Quote> x0,
+            final Handle<YieldTermStructure> dividendTS,
+            final Handle<YieldTermStructure> riskFreeTS,
+            final Handle<BlackVolTermStructure> blackVolTS,
             final LinearDiscretization discretization) {
     	super(x0, dividendTS, riskFreeTS, blackVolTS, discretization);
     }

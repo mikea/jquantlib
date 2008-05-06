@@ -44,7 +44,7 @@ import org.jquantlib.util.Date;
  * are grater than 27 become equal to 30 for computational sake.
  * 
  * @author Srinivas Hasti
- * @author Roger Gomes
+ * @author Richard Gomes
  */
 public class Thirty360 extends AbstractDayCounter {
 

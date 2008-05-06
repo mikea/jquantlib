@@ -48,7 +48,7 @@ import java.util.Locale;
  * TimeUnit.
  * 
  * @author Srinivas Hasti
- * @author Roger Gomes
+ * @author Richard Gomes
  */
 public class Period {
 	// Allocate commonly used period objects'

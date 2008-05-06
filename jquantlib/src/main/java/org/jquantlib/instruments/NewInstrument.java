@@ -78,11 +78,14 @@ public abstract class NewInstrument extends Instrument {
 	// FIXME: do the best efforts to remove this method.
 	// This code should be moved to the constructor. Does it make sense?
 	public final void setPricingEngine(final PricingEngine engine) {
-    	if (engine==null) throw new NullPointerException(SHOULD_DEFINE_PRICING_ENGINE);
-   		this.engine.deleteObserver(this);
-    	this.engine = engine;
-   		this.engine.addObserver(this);
-    	update(this, null);
+		if (this.engine!=null) {
+			this.engine.deleteObserver(this);
+		}
+		this.engine = engine;
+		if (this.engine!=null) {
+	   		this.engine.addObserver(this);
+	   		this.engine.notifyObservers();
+		}
     }
 
     

@@ -50,12 +50,11 @@ import org.jquantlib.instruments.EuropeanOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
-import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
-import org.jquantlib.quotes.Quote;
+import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -131,23 +130,28 @@ public class EuropeanOptionTest {
 					Integral,
 					PseudoMonteCarlo, QuasiMonteCarlo; }
 
-	private VanillaOption makeOption(
-							final StrikedTypePayoff payoff,
-							final Exercise exercise,
-							final Quote u,
-							final YieldTermStructure q,
-							final YieldTermStructure r,
-							final BlackVolTermStructure vol,
-							final EngineType engineType,
-							int  binomialSteps,
-							int samples) {
-
-	    PricingEngine engine = null;
-	    
-	    switch (engineType) {
-	      case Analytic:
-	        engine = new AnalyticEuropeanEngine();
-	        break;
+	
+	
+//	
+//	private VanillaOption makeOption(
+//							final StrikedTypePayoff payoff,
+//							final Exercise exercise,
+//							final Quote u,
+//							final YieldTermStructure q,
+//							final YieldTermStructure r,
+//							final BlackVolTermStructure vol,
+//							final EngineType engineType,
+//							int  binomialSteps,
+//							int samples) {
+//
+//	    PricingEngine engine = null;
+//	    
+//	    switch (engineType) {
+//	      case Analytic:
+//	        engine = new AnalyticEuropeanEngine();
+//	        break;
+	        
+	        
 //	      case JR:
 //	        engine = boost::shared_ptr<PricingEngine>(
 //	                new BinomialVanillaEngine<JarrowRudd>(binomialSteps));
@@ -193,19 +197,24 @@ public class EuropeanOptionTest {
 //	        engine = MakeMCEuropeanEngine<LowDiscrepancy>().withSteps(1)
 //	                                                       .withSamples(samples);
 //	        break;
-	      default:
-	        throw new UnsupportedOperationException("unknown engine type: "+engineType);
-	    }
+	
+	
+//	      default:
+//	        throw new UnsupportedOperationException("unknown engine type: "+engineType);
+//	    }
+//
+//	    StochasticProcess stochProcess = new BlackScholesMertonProcess(
+//	    										/*Quote*/ u,
+//	    										/*YieldTermStructure*/ q,
+//	    										/*YieldTermStructure*/ r,
+//	    										/*BlackVolTermStructure*/ vol);
+//
+//	    return new EuropeanOption(stochProcess, payoff, exercise, engine);
+//	}
 
-	    StochasticProcess stochProcess = new BlackScholesMertonProcess(
-	    										/*Quote*/ u,
-	    										/*YieldTermStructure*/ q,
-	    										/*YieldTermStructure*/ r,
-	    										/*BlackVolTermStructure*/ vol);
-
-	    return new EuropeanOption(stochProcess, payoff, exercise, engine);
-	}
-
+	
+	
+	
 //	std::string engineTypeToString(EngineType type) {
 //	    switch (type) {
 //	      case Analytic:
@@ -247,14 +256,6 @@ public class EuropeanOptionTest {
 
 	    System.out.println("Testing European option values...");
 
-	    assertFalse("False positive", false);
-	    if (true) return;
-	    
-	    
-	    
-	    
-	    
-	    
 	    /* The data below are from
 	       "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
 	    */
@@ -311,13 +312,13 @@ public class EuropeanOptionTest {
 	    DayCounter dc = Actual360.getDayCounter();
 	    Date today = DateFactory.getDateUtil().getTodaysDate();
 
-	    SimpleQuote spot = new SimpleQuote(0.0);
-	    SimpleQuote qRate = new SimpleQuote(0.0);
-	    YieldTermStructure qTS = Utilities.flatRate(today, qRate, dc);
-	    SimpleQuote rRate = new SimpleQuote(0.0);
-	    YieldTermStructure rTS = Utilities.flatRate(today, rRate, dc);
-	    SimpleQuote vol = new SimpleQuote(0.0);
-	    BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
+	    Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+	    Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+	    Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
+	    Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+	    Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+	    Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+	    Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
 	    PricingEngine engine = new AnalyticEuropeanEngine();
 
 	    for (int i=0; i<values.length-1; i++) {
@@ -326,14 +327,14 @@ public class EuropeanOptionTest {
 	        Date exDate = today.getDateAfter( timeToDays(values[i].t) );
 	        Exercise exercise = new EuropeanExercise(exDate);
 
-	        spot. setValue(values[i].s);
-	        qRate.setValue(values[i].q);
-	        rRate.setValue(values[i].r);
-	        vol.  setValue(values[i].v);
+	        spot. getLink().setValue(values[i].s);
+	        qRate.getLink().setValue(values[i].q);
+	        rRate.getLink().setValue(values[i].r);
+	        vol.  getLink().setValue(values[i].v);
 
-	        StochasticProcess stochProcess = new BlackScholesMertonProcess(spot, qTS, rTS, volTS);
+	        StochasticProcess process = new BlackScholesMertonProcess(spot, qTS, rTS, volTS);
 
-	        EuropeanOption option = new EuropeanOption(stochProcess, payoff, exercise, engine);
+	        EuropeanOption option = new EuropeanOption(process, payoff, exercise, engine);
 
 	        double calculated = option.getNPV();
 	        double error = Math.abs(calculated-values[i].result);
@@ -801,7 +802,9 @@ public class EuropeanOptionTest {
 //
 //	    QL_TEST_TEARDOWN
 //	}
-//
+
+	
+	
 //	void EuropeanOptionTest::testImpliedVol() {
 //
 //	    BOOST_MESSAGE("Testing European option implied volatility...");

@@ -50,7 +50,7 @@ public class EuropeanOption extends VanillaOption {
 
 	public EuropeanOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
 		super(process, payoff, exercise, engine);
-		if (engine!=null)
+		if (engine==null)
 			setPricingEngine(new AnalyticEuropeanEngine());
 	}
 

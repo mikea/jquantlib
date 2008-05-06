@@ -35,65 +35,30 @@ public abstract class BaseDate implements Date {
      */
     private Observable delegatedObservable = new DefaultObservable(this);
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public void addObserver(Observer observer) {
         delegatedObservable.addObserver(observer);
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public int countObservers() {
         return delegatedObservable.countObservers();
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public void deleteObserver(Observer observer) {
         delegatedObservable.deleteObserver(observer);
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public void notifyObservers() {
         delegatedObservable.notifyObservers();
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public void notifyObservers(Object arg) {
         delegatedObservable.notifyObservers(arg);
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public void deleteObservers() {
         delegatedObservable.deleteObservers();
     }
 
-    /**
-     * 
-     * {@inheritDoc}  	
-     *
-     */
     public List<Observer> getObservers() {
         return delegatedObservable.getObservers();
     }

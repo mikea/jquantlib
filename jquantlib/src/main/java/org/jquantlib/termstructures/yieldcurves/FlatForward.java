@@ -39,6 +39,7 @@
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.Compounding;
@@ -52,7 +53,7 @@ import org.jquantlib.util.DateFactory;
 
 public class FlatForward extends YieldTermStructure {
 
-	private Quote forward;
+	private Handle<? extends Quote> forward;
 	private Compounding compounding;
 	private Frequency frequency;
 	private InterestRate rate;
@@ -62,7 +63,7 @@ public class FlatForward extends YieldTermStructure {
 	
     public FlatForward(
     		final Date referenceDate,
-            final Quote forward,
+            final Handle<? extends Quote> forward,
             final DayCounter dayCounter,
             final Compounding compounding,
             final Frequency frequency) {
@@ -76,7 +77,7 @@ public class FlatForward extends YieldTermStructure {
 
     public FlatForward(
 			final Date referenceDate,
-            final Quote forward,
+            final Handle<? extends Quote> forward,
             final DayCounter dayCounter,
             final Compounding compounding) {
 		this(referenceDate, forward, dayCounter, compounding, Frequency.ANNUAL);
@@ -84,7 +85,7 @@ public class FlatForward extends YieldTermStructure {
 
 	public FlatForward(
 				final Date referenceDate,
-	            final Quote forward,
+	            final Handle<? extends Quote> forward,
 	            final DayCounter dayCounter) {
 		this(referenceDate, forward, dayCounter, Compounding.Continuous);
 	}
@@ -98,7 +99,7 @@ public class FlatForward extends YieldTermStructure {
 			final Compounding compounding,
 			final Frequency frequency) {
 		super(referenceDate, new NullCalendar(), dayCounter);
-		this.forward = new SimpleQuote(forward);
+		this.forward = new Handle<SimpleQuote>(new SimpleQuote(forward));
 		this.compounding = compounding;
 		this.frequency = frequency;
 		updateRate();
@@ -124,7 +125,7 @@ public class FlatForward extends YieldTermStructure {
     public FlatForward(
     		int settlementDays,
             final Calendar calendar,
-            final Quote forward,
+            final Handle<? extends Quote> forward,
             final DayCounter dayCounter,
             final Compounding compounding,
             final Frequency frequency) {
@@ -139,7 +140,7 @@ public class FlatForward extends YieldTermStructure {
     public FlatForward(
     			int settlementDays,
                 final Calendar calendar,
-                final Quote forward,
+                final Handle<? extends Quote> forward,
                 final DayCounter dayCounter) {
     	this(settlementDays, calendar, forward, dayCounter, Compounding.Continuous);
     }
@@ -147,7 +148,7 @@ public class FlatForward extends YieldTermStructure {
     public FlatForward(
     			int settlementDays,
                 final Calendar calendar,
-                final Quote forward,
+                final Handle<? extends Quote> forward,
                 final DayCounter dayCounter,
                 final Compounding compounding) {
     	this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
@@ -163,7 +164,7 @@ public class FlatForward extends YieldTermStructure {
             final Compounding compounding,
             final Frequency frequency) {
 		super(settlementDays, calendar, dayCounter);
-		this.forward = new SimpleQuote(forward);
+		this.forward = new Handle<Quote>(new SimpleQuote(forward));
 		this.compounding = compounding;
 		this.frequency = frequency;
 		updateRate();
@@ -189,7 +190,7 @@ public class FlatForward extends YieldTermStructure {
 	// --------------------------------------------
 	
     private void updateRate() {
-        rate = new InterestRate(forward.getValue(), this.getDayCounter(), this.compounding, this.frequency);
+        rate = new InterestRate(forward.getLink().getValue(), this.getDayCounter(), this.compounding, this.frequency);
     }
 
     @Override

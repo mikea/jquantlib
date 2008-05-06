@@ -38,6 +38,7 @@
 package org.jquantlib.util;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
@@ -174,7 +175,7 @@ public class Utilities {
 
 	    static public YieldTermStructure flatRate(
 	    		final Date today,
-	            final Quote forward,
+	            final Handle<? extends Quote> forward,
 	            final DayCounter dc) {
 	        return new FlatForward(today, forward, dc);
 	    }
@@ -183,11 +184,11 @@ public class Utilities {
 	    		final Date today, 
 	    		final /*@Rate*/ double forward, 
 	    		final DayCounter dc) {
-	        return flatRate(today, new SimpleQuote(forward), dc);
+	        return flatRate(today, new Handle<Quote>(new SimpleQuote(forward)), dc);
 	    }
 
 	    static public YieldTermStructure flatRate(
-	    		final Quote forward,
+	    		final Handle<? extends Quote> forward,
 	    		final DayCounter dc) {
 	        return new FlatForward(0, new NullCalendar(), forward, dc);
 	    }
@@ -195,13 +196,13 @@ public class Utilities {
 	    static public YieldTermStructure flatRate(
 	    		final /*@Rate*/ double forward, 
 	    		final DayCounter dc) {
-	        return flatRate(new SimpleQuote(forward), dc);
+	        return flatRate(new Handle<Quote>(new SimpleQuote(forward)), dc);
 	    }
 
 
 	    static public BlackVolTermStructure flatVol(
 	    		final Date today,
-	            final Quote vol,
+	            final Handle<? extends Quote> vol,
 	            final DayCounter dc) {
 	        return new BlackConstantVol(today, vol, dc);
 	    }
@@ -210,11 +211,11 @@ public class Utilities {
 	    		final Date today,
 	    		final /*@Volatility*/ double vol,
 	            final DayCounter dc) {
-	        return flatVol(today, new SimpleQuote(vol), dc);
+	        return flatVol(today, new Handle<Quote>(new SimpleQuote(vol)), dc);
 	    }
 
 	    static public BlackVolTermStructure flatVol(
-	    		final Quote vol,
+	    		final Handle<? extends Quote> vol,
 	            final DayCounter dc) {
 	        return new BlackConstantVol(0, new NullCalendar(), vol, dc);
 	    }
@@ -222,7 +223,7 @@ public class Utilities {
 	    static public BlackVolTermStructure flatVol(
 	    		final /*@Volatility*/ double vol,
 	            final DayCounter dc) {
-	        return flatVol(new SimpleQuote(vol), dc);
+	        return flatVol(new Handle<Quote>(new SimpleQuote(vol)), dc);
 	    }
 
 	//
