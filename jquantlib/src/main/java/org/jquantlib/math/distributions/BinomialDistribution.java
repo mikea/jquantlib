@@ -105,6 +105,7 @@ public class BinomialDistribution {
 	//TODO: Translate C++ code (commented out) -> Dominik
 	//TODO: Write tests for the new functions -> Dominik
 	//TODO: Use Colt -> Dominik
+	//TODO: Translate beta.hpp and beta.cpp 
 	
 	//! Cumulative binomial distribution function
     /*! Given an integer k it provides the cumulative probability
@@ -123,7 +124,7 @@ public class BinomialDistribution {
             if (k >= n_)
                 return 1.0;
             else
-                return 1.0 - incompleteBetaFunction(k+1, n_-k, p_);
+                return 1.0 - incompleteBetaFunction(k+1, n_-k, p_); // see beta.cpp
         }
       private:
         BigNatural n_;
@@ -142,6 +143,14 @@ public class BinomialDistribution {
 
     } 
     */
+	static private void evalCumulativeBinomialDistribution(double p){
+		if(!(p>0)) {
+			throw new ArithmeticException("negative p not allowed");
+		}
+		if (!(p<=1.0)){
+			throw new ArithmeticException("p>1.0 not allowed");
+		}
+	}
 	
 	
 	/*
@@ -163,6 +172,19 @@ public class BinomialDistribution {
         return result;
     }
 	 */
+	
+	static private double PeizerPrattMehtod2Inversion(double z, int n) {
+		if(n%2 == 1) {
+			throw new ArithmeticException("n must be and odd number: " + n + " not allowed");
+		}
+		
+		double result = (z/(n+1.0/3.0+0.1/(n+1.0)));
+		result *= result;
+		result = Math.exp(-result*(n+1.0/6.0));
+		result = 0.5 + (z>0 ? 1 : -1) * Math.sqrt((0.25*(1.0-result)));
+		
+		return result;	
+	}
 	
 	
 	private static final Factorial factorial_ = new Factorial();
