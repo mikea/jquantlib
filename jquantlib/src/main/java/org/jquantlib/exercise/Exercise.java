@@ -61,7 +61,7 @@ public abstract class Exercise {
 	 * @author Richard Gomes
 	 */
 	public enum Type {
-		American, Bermudan, European;
+		AMERICAN, BERMUDAN, EUROPEAN;
 	}
 
 	private Exercise.Type type;

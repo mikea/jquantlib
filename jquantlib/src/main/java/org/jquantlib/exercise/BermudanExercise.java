@@ -112,11 +112,11 @@ public class BermudanExercise extends EarlyExercise {
 	 * @see EuropeanExercise
 	 */
 	public BermudanExercise(final Date[] dates, boolean payoffAtExpiry) {
-		super(Exercise.Type.Bermudan, payoffAtExpiry);
+		super(Exercise.Type.BERMUDAN, payoffAtExpiry);
 		if (dates==null) throw new NullPointerException();
 		if (dates.length==0) throw new IllegalArgumentException("exercise dates is empty");
 		if (dates.length==1) {
-			super.setType(Exercise.Type.European);
+			super.setType(Exercise.Type.EUROPEAN);
 			super.setPayoffAtExpiry(false);
 		}
 		for (int i=0; i<dates.length; i++) {

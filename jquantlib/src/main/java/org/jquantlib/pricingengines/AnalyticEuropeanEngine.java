@@ -67,7 +67,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 
 	public void calculate() /* @ReadOnly */{
-		if (arguments.exercise.getType() != Exercise.Type.European)
+		if (arguments.exercise.getType() != Exercise.Type.EUROPEAN)
 			throw new IllegalArgumentException("not an European option");
 
 		StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;

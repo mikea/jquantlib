@@ -28,10 +28,10 @@ Ferdinando Ametrano
     Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005 StatPro Italia srl
 
     Copyright (C) 2002, 2003, 2004 Decillion Pty(Ltd)
-    Copyright (C) 2001, 2002, 2003 Nicolas Di C�sar�
+    Copyright (C) 2001, 2002, 2003 Nicolas Di Csar
     Copyright (C) 2003, 2004 Neil Firth
     Copyright (C) 2001, 2002, 2003 Sadruddin Rejeb
-    Copyright (C) 2003 Niels Elken S�nderby
+    Copyright (C) 2003 Niels Elken Snderby
 
     Copyright (C) 2004 FIMAT Group
     Copyright (C) 2003, 2004 Roman Gitlin
@@ -167,7 +167,7 @@ public class EquityOptions {
     
     long beginTime = System.currentTimeMillis();
     
-    Option.Type type = Option.Type.Put;
+    Option.Type type = Option.Type.PUT;
     double strike = 40.0;
     double underlying = 36.0;
     /*@Rate*/ double riskFreeRate = 0.06;

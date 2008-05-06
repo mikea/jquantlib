@@ -131,12 +131,12 @@ public class BlackCalculator /* <T extends Payoff> */ {
 		// in case of plain-vanilla payoffs, it is also the only part
 		// which is executed.
 		Option.Type optionType = payoff.getOptionType();
-		if (optionType == Option.Type.Call) {
+		if (optionType == Option.Type.CALL) {
 			alpha = cum_d1;// N(d1)
 			dAlpha_dD1 = n_d1;// n(d1)
 			beta = -cum_d2;// -N(d2)
 			dBeta_dD2 = -n_d2;// -n(d2)
-		} else if (optionType == Option.Type.Put) {
+		} else if (optionType == Option.Type.PUT) {
 			alpha = -1.0 + cum_d1;// -N(-d1)
 			dAlpha_dD1 = n_d1;// n( d1)
 			beta = 1.0 - cum_d2;// N(-d2)
@@ -434,10 +434,10 @@ public class BlackCalculator /* <T extends Payoff> */ {
 			black.X = payoff.getCashPayoff();
 			black.DXDstrike = 0.0;
 			Option.Type optionType = payoff.getOptionType();
-			if (optionType == Option.Type.Call) {
+			if (optionType == Option.Type.CALL) {
 				black.beta = black.cum_d2;
 				black.dBeta_dD2 = black.n_d2;
-			} else if (optionType == Option.Type.Put) {
+			} else if (optionType == Option.Type.PUT) {
 				black.beta = 1.0 - black.cum_d2;
 				black.dBeta_dD2 = -black.n_d2;
 			} else {
@@ -448,10 +448,10 @@ public class BlackCalculator /* <T extends Payoff> */ {
 		private void visit(final AssetOrNothingPayoff payoff) {
 			black.beta = black.dBeta_dD2 = 0.0;
 			Option.Type optionType = payoff.getOptionType();
-			if (optionType == Option.Type.Call) {
+			if (optionType == Option.Type.CALL) {
 				black.alpha = black.cum_d1;
 				black.dAlpha_dD1 = black.n_d1;
-			} else if (optionType == Option.Type.Put) {
+			} else if (optionType == Option.Type.PUT) {
 				black.alpha = 1.0 - black.cum_d1;
 				black.dAlpha_dD1 = -black.n_d1;
 			} else {

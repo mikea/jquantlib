@@ -58,8 +58,8 @@ public abstract class Option extends NewInstrument {
 	// Public inner classes
 	//
 	
-	public enum Type {
-		Put(-1), Call(1);
+	public static enum Type {
+		PUT(-1), CALL(1);
 
 		private int value;
 

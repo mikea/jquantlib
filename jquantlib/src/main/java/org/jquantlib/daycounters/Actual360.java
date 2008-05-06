@@ -56,7 +56,15 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  */
 public class Actual360 extends AbstractDayCounter {
-
+     private static Actual360 actual360 = new Actual360();
+     
+     private Actual360(){  	 
+     }
+     
+     public static Actual360 getDayCounter(){
+    	 return actual360;
+     }
+     
 	/**
 	 * 
 	 * {@inheritDoc}  	

@@ -69,7 +69,7 @@ public class AmericanExercise extends EarlyExercise {
 	 * @param payoffAtExpiry is <code>true</code> if a payoff is expected to happen on exercise date
 	 */
 	public AmericanExercise(final Date earliestDate, final Date latestDate, boolean payoffAtExpiry) {
-		super(Exercise.Type.American, payoffAtExpiry);
+		super(Exercise.Type.AMERICAN, payoffAtExpiry);
 		if (! (earliestDate.le(latestDate)) ) throw new IllegalArgumentException("earliest > latest exercise date");
 		super.addDate(earliestDate);
 		super.addDate(latestDate);

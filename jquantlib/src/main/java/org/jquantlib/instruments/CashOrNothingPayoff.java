@@ -44,9 +44,9 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
 	}
 
 	public final/* @Price */double valueOf(final/* @Price */double price) {
-		if (type == Option.Type.Call) {
+		if (type == Option.Type.CALL) {
 			return (price-strike > 0.0 ? cashPayoff : 0.0);
-		} else if (type == Option.Type.Put) {
+		} else if (type == Option.Type.PUT) {
 			return (strike-price > 0.0 ? cashPayoff : 0.0);
 		} else {
 			throw new IllegalArgumentException(UNKNOWN_OPTION_TYPE);
