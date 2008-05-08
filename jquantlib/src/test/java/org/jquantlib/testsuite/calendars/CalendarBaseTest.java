@@ -69,8 +69,8 @@ public class CalendarBaseTest {
 	
 	public void HolidayListCheck(List <Date> expectedHol, Calendar c, int year)
     {
-    	List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,year),
-                DateFactory.getDateUtil().getDate(31,DECEMBER,year),false);
+    	List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,year),
+                DateFactory.getFactory().getDate(31,DECEMBER,year),false);
     	
     	for (int i =0;i<Math.min(hol.size(), expectedHol.size()); i++) {
     		if (!hol.get(i).equals(expectedHol.get(i)))

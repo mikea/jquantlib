@@ -77,7 +77,7 @@ public class Settings {
     Settings(final Preferences prefs) {
         if (prefs != null) {
             this.todaysPayments = prefs.getBoolean("TodaysPayments", defaultTodaysPayments);
-            this.evaluationDate = DateFactory.getDateUtil().getTodaysDate();
+            this.evaluationDate = DateFactory.getFactory().getTodaysDate();
         } else {
             setDefaults();
         }
@@ -85,7 +85,7 @@ public class Settings {
 
     private void setDefaults() {
         this.todaysPayments = defaultTodaysPayments;
-        this.evaluationDate = DateFactory.getDateUtil().getTodaysDate();
+        this.evaluationDate = DateFactory.getFactory().getTodaysDate();
     }
 
     /**

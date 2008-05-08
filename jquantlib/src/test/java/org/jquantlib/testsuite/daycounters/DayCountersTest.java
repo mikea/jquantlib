@@ -120,81 +120,81 @@ public class DayCountersTest {
 	    SingleCase testCases[] = new SingleCase[] {
 	        // first example
 	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getDateUtil().getDate(1,Month.NOVEMBER,2003), DateFactory.getDateUtil().getDate(1,Month.MAY,2004), 
+	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004), 
 	                   0.497724380567),
 	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getDateUtil().getDate(1,Month.NOVEMBER,2003), DateFactory.getDateUtil().getDate(1,Month.MAY,2004),
-	                   DateFactory.getDateUtil().getDate(1,Month.NOVEMBER,2003), DateFactory.getDateUtil().getDate(1,Month.MAY,2004),
+	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004),
+	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004),
 	                   0.500000000000),
 	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getDateUtil().getDate(1,Month.NOVEMBER,2003), DateFactory.getDateUtil().getDate(1,Month.MAY,2004),
+	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004),
 	                   0.497267759563),
 	        // short first calculation period (first period)
 	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getDateUtil().getDate(1,Month.FEBRUARY,1999), DateFactory.getDateUtil().getDate(1,Month.JULY,1999),
+	                   DateFactory.getFactory().getDate(1,Month.FEBRUARY,1999), DateFactory.getFactory().getDate(1,Month.JULY,1999),
 	                   0.410958904110),
 	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getDateUtil().getDate(1,Month.FEBRUARY,1999), DateFactory.getDateUtil().getDate(1,Month.JULY,1999),
-	                   DateFactory.getDateUtil().getDate(1,Month.JULY,1998), DateFactory.getDateUtil().getDate(1,Month.JULY,1999),
+	                   DateFactory.getFactory().getDate(1,Month.FEBRUARY,1999), DateFactory.getFactory().getDate(1,Month.JULY,1999),
+	                   DateFactory.getFactory().getDate(1,Month.JULY,1998), DateFactory.getFactory().getDate(1,Month.JULY,1999),
 	                   0.410958904110),
 	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getDateUtil().getDate(1,Month.FEBRUARY,1999), DateFactory.getDateUtil().getDate(1,Month.JULY,1999),
+	                   DateFactory.getFactory().getDate(1,Month.FEBRUARY,1999), DateFactory.getFactory().getDate(1,Month.JULY,1999),
 	                   0.410958904110),
 	        // short first calculation period (second period)
 	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getDateUtil().getDate(1,Month.JULY,1999), DateFactory.getDateUtil().getDate(1,Month.JULY,2000),
+	                   DateFactory.getFactory().getDate(1,Month.JULY,1999), DateFactory.getFactory().getDate(1,Month.JULY,2000),
 	                   1.001377348600),
 	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getDateUtil().getDate(1,Month.JULY,1999), DateFactory.getDateUtil().getDate(1,Month.JULY,2000),
-	                   DateFactory.getDateUtil().getDate(1,Month.JULY,1999), DateFactory.getDateUtil().getDate(1,Month.JULY,2000),
+	                   DateFactory.getFactory().getDate(1,Month.JULY,1999), DateFactory.getFactory().getDate(1,Month.JULY,2000),
+	                   DateFactory.getFactory().getDate(1,Month.JULY,1999), DateFactory.getFactory().getDate(1,Month.JULY,2000),
 	                   1.000000000000),
 	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getDateUtil().getDate(1,Month.JULY,1999), DateFactory.getDateUtil().getDate(1,Month.JULY,2000),
+	                   DateFactory.getFactory().getDate(1,Month.JULY,1999), DateFactory.getFactory().getDate(1,Month.JULY,2000),
 	                   1.000000000000),
 	        // long first calculation period (first period)
 	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getDateUtil().getDate(15,Month.AUGUST,2002), DateFactory.getDateUtil().getDate(15,Month.JULY,2003),
+	                   DateFactory.getFactory().getDate(15,Month.AUGUST,2002), DateFactory.getFactory().getDate(15,Month.JULY,2003),
 	                   0.915068493151),
 	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getDateUtil().getDate(15,Month.AUGUST,2002), DateFactory.getDateUtil().getDate(15,Month.JULY,2003),
-	                   DateFactory.getDateUtil().getDate(15,Month.JANUARY,2003), DateFactory.getDateUtil().getDate(15,Month.JULY,2003),
+	                   DateFactory.getFactory().getDate(15,Month.AUGUST,2002), DateFactory.getFactory().getDate(15,Month.JULY,2003),
+	                   DateFactory.getFactory().getDate(15,Month.JANUARY,2003), DateFactory.getFactory().getDate(15,Month.JULY,2003),
 	                   0.915760869565),
 	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getDateUtil().getDate(15,Month.AUGUST,2002), DateFactory.getDateUtil().getDate(15,Month.JULY,2003),
+	                   DateFactory.getFactory().getDate(15,Month.AUGUST,2002), DateFactory.getFactory().getDate(15,Month.JULY,2003),
 	                   0.915068493151),
 	        // long first calculation period (second period)
 	        /* Warning: the ISDA case is in disagreement with mktc1198.pdf */
 	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getDateUtil().getDate(15,Month.JULY,2003), DateFactory.getDateUtil().getDate(15,Month.JANUARY,2004),
+	                   DateFactory.getFactory().getDate(15,Month.JULY,2003), DateFactory.getFactory().getDate(15,Month.JANUARY,2004),
 	                   0.504004790778),
 	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getDateUtil().getDate(15,Month.JULY,2003), DateFactory.getDateUtil().getDate(15,Month.JANUARY,2004),
-	                   DateFactory.getDateUtil().getDate(15,Month.JULY,2003), DateFactory.getDateUtil().getDate(15,Month.JANUARY,2004),
+	                   DateFactory.getFactory().getDate(15,Month.JULY,2003), DateFactory.getFactory().getDate(15,Month.JANUARY,2004),
+	                   DateFactory.getFactory().getDate(15,Month.JULY,2003), DateFactory.getFactory().getDate(15,Month.JANUARY,2004),
 	                   0.500000000000),
 	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getDateUtil().getDate(15,Month.JULY,2003), DateFactory.getDateUtil().getDate(15,Month.JANUARY,2004),
+	                   DateFactory.getFactory().getDate(15,Month.JULY,2003), DateFactory.getFactory().getDate(15,Month.JANUARY,2004),
 	                   0.504109589041),
 	        // short final calculation period (penultimate period)
 	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getDateUtil().getDate(30,Month.JULY,1999), DateFactory.getDateUtil().getDate(30,Month.JANUARY,2000),
+	                   DateFactory.getFactory().getDate(30,Month.JULY,1999), DateFactory.getFactory().getDate(30,Month.JANUARY,2000),
 	                   0.503892506924),
 	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getDateUtil().getDate(30,Month.JULY,1999), DateFactory.getDateUtil().getDate(30,Month.JANUARY,2000),
-	                   DateFactory.getDateUtil().getDate(30,Month.JULY,1999), DateFactory.getDateUtil().getDate(30,Month.JANUARY,2000),
+	                   DateFactory.getFactory().getDate(30,Month.JULY,1999), DateFactory.getFactory().getDate(30,Month.JANUARY,2000),
+	                   DateFactory.getFactory().getDate(30,Month.JULY,1999), DateFactory.getFactory().getDate(30,Month.JANUARY,2000),
 	                   0.500000000000),
 	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getDateUtil().getDate(30,Month.JULY,1999), DateFactory.getDateUtil().getDate(30,Month.JANUARY,2000),
+	                   DateFactory.getFactory().getDate(30,Month.JULY,1999), DateFactory.getFactory().getDate(30,Month.JANUARY,2000),
 	                   0.504109589041),
 	        // short final calculation period (final period)
 	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getDateUtil().getDate(30,Month.JANUARY,2000), DateFactory.getDateUtil().getDate(30,Month.JUNE,2000),
+	                   DateFactory.getFactory().getDate(30,Month.JANUARY,2000), DateFactory.getFactory().getDate(30,Month.JUNE,2000),
 	                   0.415300546448),
 	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getDateUtil().getDate(30,Month.JANUARY,2000), DateFactory.getDateUtil().getDate(30,Month.JUNE,2000),
-	                   DateFactory.getDateUtil().getDate(30,Month.JANUARY,2000), DateFactory.getDateUtil().getDate(30,Month.JULY,2000),
+	                   DateFactory.getFactory().getDate(30,Month.JANUARY,2000), DateFactory.getFactory().getDate(30,Month.JUNE,2000),
+	                   DateFactory.getFactory().getDate(30,Month.JANUARY,2000), DateFactory.getFactory().getDate(30,Month.JULY,2000),
 	                   0.417582417582),
 	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getDateUtil().getDate(30,Month.JANUARY,2000), DateFactory.getDateUtil().getDate(30,Month.JUNE,2000),
+	                   DateFactory.getFactory().getDate(30,Month.JANUARY,2000), DateFactory.getFactory().getDate(30,Month.JUNE,2000),
 	                   0.41530054644)
 	    };
 
@@ -232,8 +232,8 @@ public class DayCountersTest {
 	    /*@Time*/ double expected[] = { 0.25, 0.5, 1.0 };
 	    
 	    // 4 years should be enough
-	    Date first = DateFactory.getDateUtil().getDate(1,Month.JANUARY,2002);
-	    Date last  = DateFactory.getDateUtil().getDate(31,Month.DECEMBER,2005);
+	    Date first = DateFactory.getFactory().getDate(1,Month.JANUARY,2002);
+	    Date last  = DateFactory.getFactory().getDate(31,Month.DECEMBER,2005);
 	    DayCounter dayCounter = new SimpleDayCounter();
 
 	    for (Date start = first; start.le(last); start.increment()) {
@@ -261,8 +261,8 @@ public class DayCountersTest {
 	    /*@Time*/ double expected[] = new double[] { 1.0, 1.0, 1.0 };
 
 	    // 1 years should be enough
-	    Date first = DateFactory.getDateUtil().getDate(1,Month.JANUARY,2004);
-	    Date last  = DateFactory.getDateUtil().getDate(31,Month.DECEMBER,2004);
+	    Date first = DateFactory.getFactory().getDate(1,Month.JANUARY,2004);
+	    Date last  = DateFactory.getFactory().getDate(31,Month.DECEMBER,2004);
 	    DayCounter dayCounter = new SimpleDayCounter();
 
 	    for (Date start = first; start.le(last); start.increment()) {

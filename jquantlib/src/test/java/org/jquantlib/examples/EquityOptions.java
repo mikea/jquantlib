@@ -174,11 +174,11 @@ public class EquityOptions {
     double volatility = 0.2;
     double dividendYield = 0.00;
 
-    Date todaysDate = DateFactory.getDateUtil().getDate(15, Month.MAY, 1998);
-    Date settlementDate = DateFactory.getDateUtil().getDate(17, Month.MAY, 1998);
+    Date todaysDate = DateFactory.getFactory().getDate(15, Month.MAY, 1998);
+    Date settlementDate = DateFactory.getFactory().getDate(17, Month.MAY, 1998);
     Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(todaysDate);
 
-    Date maturity = DateFactory.getDateUtil().getDate(17, Month.MAY, 1999);
+    Date maturity = DateFactory.getFactory().getDate(17, Month.MAY, 1999);
     DayCounter dayCounter = new Actual365Fixed();
 
 

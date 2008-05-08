@@ -160,7 +160,7 @@ public class OldPricer {
 	            	timeIncrements[i] = i*dt + cases5[l].first;
 	            }
 	           
-	            Date today = DateFactory.getDateUtil().getTodaysDate();
+	            Date today = DateFactory.getFactory().getTodaysDate();
 	            org.jquantlib.termstructures.YieldTermStructure yeildStructureRiskFree =  org.jquantlib.util.Utilities.flatRate(today,cases5[l].riskFreeRate, dc);
 	            org.jquantlib.termstructures.YieldTermStructure yeildStructureDividentYield =  org.jquantlib.util.Utilities.flatRate(today,cases5[l].dividendYield, dc);
 	            org.jquantlib.termstructures.YieldTermStructure yeildStructureVolatility =  org.jquantlib.util.Utilities.flatRate(today,cases5[l].volatility, dc);

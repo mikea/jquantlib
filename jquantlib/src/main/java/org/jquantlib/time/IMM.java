@@ -195,9 +195,9 @@ public class IMM {
         if (y==0 && referenceDate.getYear()<=1909) y+=10;
         int yMod = (referenceDate.getYear() % 10);
         y += referenceDate.getYear() - yMod;
-        Date result = nextDate(DateFactory.getDateUtil().getDate(1, m, y), false);
+        Date result = nextDate(DateFactory.getFactory().getDate(1, m, y), false);
         if (result.lt(referenceDate))
-            return nextDate(DateFactory.getDateUtil().getDate(1, m, y+10), false);
+            return nextDate(DateFactory.getFactory().getDate(1, m, y+10), false);
 
         return result;
     }
@@ -255,9 +255,9 @@ public class IMM {
             }
         }
 
-        Date result = DateFactory.getDateUtil().getNthWeekday(3, Weekday.WEDNESDAY, Month.valueOf(m), y);
+        Date result = DateFactory.getFactory().getNthWeekday(3, Weekday.WEDNESDAY, Month.valueOf(m), y);
         if (result.le(refDate))
-            result = nextDate(DateFactory.getDateUtil().getDate(22, Month.valueOf(m), y), mainCycle);
+            result = nextDate(DateFactory.getFactory().getDate(22, Month.valueOf(m), y), mainCycle);
         return result;
     }
 

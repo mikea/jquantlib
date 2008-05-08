@@ -38,7 +38,7 @@ public abstract class DateFactory {
      * 
      * @param dateUtil
      */
-    public static void setDateUtil(DateFactory dateUtil) {
+    public static void setFactory(DateFactory dateUtil) {
         if(DateFactory.dateUtil != null)
             throw new RuntimeException("Dateutil already set ");
         DateFactory.dateUtil = dateUtil;
@@ -49,7 +49,7 @@ public abstract class DateFactory {
      * 
      * @return
      */
-    public static DateFactory getDateUtil() {
+    public static DateFactory getFactory() {
         if(dateUtil == null)
             return DEFAULT_DATE_UTIL;
         return dateUtil;

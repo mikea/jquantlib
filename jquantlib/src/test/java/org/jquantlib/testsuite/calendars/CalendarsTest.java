@@ -72,8 +72,8 @@ public class CalendarsTest {
 
         Calendar c1 = Target.getCalendar();
         Calendar c2 = UnitedStates.getCalendar(UnitedStates.Market.NYSE);
-        Date d1 = DateFactory.getDateUtil().getDate(1,Month.MAY,2004);      // holiday for both calendars
-        Date d2 = DateFactory.getDateUtil().getDate(26,Month.APRIL,2004);   // business day
+        Date d1 = DateFactory.getFactory().getDate(1,Month.MAY,2004);      // holiday for both calendars
+        Date d2 = DateFactory.getFactory().getDate(26,Month.APRIL,2004);   // business day
 
         if(!c1.isHoliday(d1))
             System.out.println("wrong assumption---correct the test");
@@ -138,8 +138,8 @@ public class CalendarsTest {
                  c1234b = new JointCalendar(JOIN_BUSINESSDAYS,c1,c2,c3,c4);
 
         // test one year, starting today
-        Date firstDate = DateFactory.getDateUtil().getTodaysDate();
-        Date endDate =  DateFactory.getDateUtil().getTodaysDate();
+        Date firstDate = DateFactory.getFactory().getTodaysDate();
+        Date endDate =  DateFactory.getFactory().getTodaysDate();
         endDate.adjust(new Period(1, TimeUnit.YEARS));
         
         for (Date d = firstDate; d.le(endDate); d.increment()) {
@@ -192,31 +192,31 @@ public class CalendarsTest {
         System.out.println("Testing US settlement holiday list...");
 
         List<Date> expectedHol = new ArrayList<Date>();
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(19,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(16,FEBRUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,MAY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(5,JULY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(6,SEPTEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(11,OCTOBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(11,NOVEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,NOVEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(19,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(16,FEBRUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,MAY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(5,JULY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(6,SEPTEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(11,OCTOBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(11,NOVEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(25,NOVEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2004));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(17,JANUARY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,FEBRUARY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(30,MAY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(4,JULY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(5,SEPTEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(10,OCTOBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(11,NOVEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,NOVEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(17,JANUARY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(21,FEBRUARY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(30,MAY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(4,JULY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(5,SEPTEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(10,OCTOBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(11,NOVEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(24,NOVEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2005));
 
         Calendar c = UnitedStates.getCalendar(UnitedStates.Market.SETTLEMENT);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate( 1, JANUARY, 2004),
-                                                         DateFactory.getDateUtil().getDate(31,DECEMBER, 2005),false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate( 1, JANUARY, 2004),
+                                                         DateFactory.getFactory().getDate(31,DECEMBER, 2005),false);
         for (int i=0; i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
                 throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
@@ -233,21 +233,21 @@ public class CalendarsTest {
         System.out.println("Testing US government bond market holiday list...");
 
         List<Date> expectedHol = new ArrayList<Date>();
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(19,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(16,FEBRUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,MAY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(5,JULY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(6,SEPTEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(11,OCTOBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(11,NOVEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,NOVEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(19,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(16,FEBRUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,MAY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(5,JULY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(6,SEPTEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(11,OCTOBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(11,NOVEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(25,NOVEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2004));
 
         Calendar c = UnitedStates.getCalendar(UnitedStates.Market.GOVERNMENTBOND);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2004),
-                                               DateFactory.getDateUtil().getDate(31,DECEMBER,2004), false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2004),
+                                               DateFactory.getFactory().getDate(31,DECEMBER,2004), false);
 
         for (int i=0; i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
@@ -265,39 +265,39 @@ public class CalendarsTest {
         System.out.println("Testing New York Stock Exchange holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(19,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(16,FEBRUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,MAY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(11,JUNE,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(5,JULY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(6,SEPTEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,NOVEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(19,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(16,FEBRUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,MAY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(11,JUNE,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(5,JULY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(6,SEPTEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(25,NOVEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2004));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(17,JANUARY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,FEBRUARY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(30,MAY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(4,JULY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(5,SEPTEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,NOVEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(17,JANUARY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(21,FEBRUARY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(30,MAY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(4,JULY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(5,SEPTEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(24,NOVEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2005));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(2,JANUARY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(16,JANUARY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(20,FEBRUARY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(14,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(29,MAY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(4,JULY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(4,SEPTEMBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(23,NOVEMBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(16,JANUARY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(20,FEBRUARY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(29,MAY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(4,JULY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(4,SEPTEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(23,NOVEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2006));
 
         Calendar c = UnitedStates.getCalendar(UnitedStates.Market.NYSE);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2004),
-                                               DateFactory.getDateUtil().getDate(31,DECEMBER,2006),false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2004),
+                                               DateFactory.getFactory().getDate(31,DECEMBER,2006),false);
 
         int i;
         for (i=0; i<Math.min(hol.size(), expectedHol.size()); i++) {
@@ -311,37 +311,37 @@ public class CalendarsTest {
                        + " calculated holidays");
 
         List<Date> histClose = new Vector<Date>(0);
-        histClose.add(DateFactory.getDateUtil().getDate(11,JUNE,2004));     // Reagan's funeral
-        histClose.add(DateFactory.getDateUtil().getDate(14,SEPTEMBER,2001));// SEPTEMBER 11, 2001
-        histClose.add(DateFactory.getDateUtil().getDate(13,SEPTEMBER,2001));// SEPTEMBER 11, 2001
-        histClose.add(DateFactory.getDateUtil().getDate(12,SEPTEMBER,2001));// SEPTEMBER 11, 2001
-        histClose.add(DateFactory.getDateUtil().getDate(11,SEPTEMBER,2001));// SEPTEMBER 11, 2001
-        histClose.add(DateFactory.getDateUtil().getDate(14,JULY,1977));     // 1977 Blackout
-        histClose.add(DateFactory.getDateUtil().getDate(25,JANUARY,1973));  // Johnson's funeral.
-        histClose.add(DateFactory.getDateUtil().getDate(28,DECEMBER,1972)); // Truman's funeral
-        histClose.add(DateFactory.getDateUtil().getDate(21,JULY,1969));     // Lunar exploration nat. day
-        histClose.add(DateFactory.getDateUtil().getDate(31,MARCH,1969));    // Eisenhower's funeral
-        histClose.add(DateFactory.getDateUtil().getDate(10,FEBRUARY,1969)); // heavy snow
-        histClose.add(DateFactory.getDateUtil().getDate(5,JULY,1968));      // Day after Independence Day
+        histClose.add(DateFactory.getFactory().getDate(11,JUNE,2004));     // Reagan's funeral
+        histClose.add(DateFactory.getFactory().getDate(14,SEPTEMBER,2001));// SEPTEMBER 11, 2001
+        histClose.add(DateFactory.getFactory().getDate(13,SEPTEMBER,2001));// SEPTEMBER 11, 2001
+        histClose.add(DateFactory.getFactory().getDate(12,SEPTEMBER,2001));// SEPTEMBER 11, 2001
+        histClose.add(DateFactory.getFactory().getDate(11,SEPTEMBER,2001));// SEPTEMBER 11, 2001
+        histClose.add(DateFactory.getFactory().getDate(14,JULY,1977));     // 1977 Blackout
+        histClose.add(DateFactory.getFactory().getDate(25,JANUARY,1973));  // Johnson's funeral.
+        histClose.add(DateFactory.getFactory().getDate(28,DECEMBER,1972)); // Truman's funeral
+        histClose.add(DateFactory.getFactory().getDate(21,JULY,1969));     // Lunar exploration nat. day
+        histClose.add(DateFactory.getFactory().getDate(31,MARCH,1969));    // Eisenhower's funeral
+        histClose.add(DateFactory.getFactory().getDate(10,FEBRUARY,1969)); // heavy snow
+        histClose.add(DateFactory.getFactory().getDate(5,JULY,1968));      // Day after Independence Day
         // JUNE 12-Dec. 31, 1968
         // Four day week (closed on Wednesdays) - Paperwork Crisis
-        histClose.add(DateFactory.getDateUtil().getDate(12,JUNE,1968));
-        histClose.add(DateFactory.getDateUtil().getDate(19,JUNE,1968));
-        histClose.add(DateFactory.getDateUtil().getDate(26,JUNE,1968));
-        histClose.add(DateFactory.getDateUtil().getDate(3,JULY,1968 ));
-        histClose.add(DateFactory.getDateUtil().getDate(10,JULY,1968));
-        histClose.add(DateFactory.getDateUtil().getDate(17,JULY,1968));
-        histClose.add(DateFactory.getDateUtil().getDate(20,NOVEMBER,1968));
-        histClose.add(DateFactory.getDateUtil().getDate(27,NOVEMBER,1968));
-        histClose.add(DateFactory.getDateUtil().getDate(4,DECEMBER,1968 ));
-        histClose.add(DateFactory.getDateUtil().getDate(11,DECEMBER,1968));
-        histClose.add(DateFactory.getDateUtil().getDate(18,DECEMBER,1968));
+        histClose.add(DateFactory.getFactory().getDate(12,JUNE,1968));
+        histClose.add(DateFactory.getFactory().getDate(19,JUNE,1968));
+        histClose.add(DateFactory.getFactory().getDate(26,JUNE,1968));
+        histClose.add(DateFactory.getFactory().getDate(3,JULY,1968 ));
+        histClose.add(DateFactory.getFactory().getDate(10,JULY,1968));
+        histClose.add(DateFactory.getFactory().getDate(17,JULY,1968));
+        histClose.add(DateFactory.getFactory().getDate(20,NOVEMBER,1968));
+        histClose.add(DateFactory.getFactory().getDate(27,NOVEMBER,1968));
+        histClose.add(DateFactory.getFactory().getDate(4,DECEMBER,1968 ));
+        histClose.add(DateFactory.getFactory().getDate(11,DECEMBER,1968));
+        histClose.add(DateFactory.getFactory().getDate(18,DECEMBER,1968));
         // Presidential election days
-        histClose.add(DateFactory.getDateUtil().getDate(4,NOVEMBER,1980));
-        histClose.add(DateFactory.getDateUtil().getDate(2,NOVEMBER,1976));
-        histClose.add(DateFactory.getDateUtil().getDate(7,NOVEMBER,1972));
-        histClose.add(DateFactory.getDateUtil().getDate(5,NOVEMBER,1968));
-        histClose.add(DateFactory.getDateUtil().getDate(3,NOVEMBER,1964));
+        histClose.add(DateFactory.getFactory().getDate(4,NOVEMBER,1980));
+        histClose.add(DateFactory.getFactory().getDate(2,NOVEMBER,1976));
+        histClose.add(DateFactory.getFactory().getDate(7,NOVEMBER,1972));
+        histClose.add(DateFactory.getFactory().getDate(5,NOVEMBER,1968));
+        histClose.add(DateFactory.getFactory().getDate(3,NOVEMBER,1964));
         for (i=0; i<histClose.size(); i++) {
             if (!c.isHoliday(histClose.get(i)))
                 throw new IllegalStateException(histClose.get(i)
@@ -356,54 +356,54 @@ public class CalendarsTest {
         System.out.println("Testing TARGET holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,1999));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,1999));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,1999));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,1999));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,APRIL,2000));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,APRIL,2000));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2000));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2000));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2000));
+        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,2000));
+        expectedHol.add(DateFactory.getFactory().getDate(24,APRIL,2000));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2000));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2000));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2000));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2001));
-        expectedHol.add(DateFactory.getDateUtil().getDate(13,APRIL,2001));
-        expectedHol.add(DateFactory.getDateUtil().getDate(16,APRIL,2001));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2001));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2001));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2001));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2001));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2001));
+        expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,2001));
+        expectedHol.add(DateFactory.getFactory().getDate(16,APRIL,2001));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2001));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2001));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2001));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2001));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(29,MARCH,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,APRIL,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(29,MARCH,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(1,APRIL,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2002));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(18,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(18,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2003));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,2004));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2005));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(14,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(17,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2006));
 
         Calendar c = Target.getCalendar();
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,1999),
-                                               DateFactory.getDateUtil().getDate(31,DECEMBER,2006), false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,1999),
+                                               DateFactory.getFactory().getDate(31,DECEMBER,2006), false);
 
         for (int i=0; i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
@@ -423,24 +423,24 @@ public class CalendarsTest {
 
         List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(18,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(18,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2003));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2004));
 
         Calendar c = Germany.getCalendar(Germany.Market.FRANKFURTSTOCKEXCHANGE);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2003),
-                                               DateFactory.getDateUtil().getDate(31,DECEMBER,2004), false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2003),
+                                               DateFactory.getFactory().getDate(31,DECEMBER,2004), false);
         for (int i=0; i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
                 throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
@@ -458,24 +458,24 @@ public class CalendarsTest {
 
         List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(18,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(18,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2003));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2004));
 
         Calendar c = Germany.getCalendar(Germany.Market.EUREX);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2003),
-                                               DateFactory.getDateUtil().getDate(31,DECEMBER,2004), false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2003),
+                                               DateFactory.getFactory().getDate(31,DECEMBER,2004), false);
         for (int i=0; i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
                 throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
@@ -493,24 +493,24 @@ public class CalendarsTest {
 
         List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(18,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(18,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2003));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2004));
 
         Calendar c = Germany.getCalendar(Germany.Market.XETRA);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2003),
-                                               DateFactory.getDateUtil().getDate(31,DECEMBER,2004), false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2003),
+                                               DateFactory.getFactory().getDate(31,DECEMBER,2004), false);
         for (int i =0;i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
                 throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
@@ -528,45 +528,45 @@ public class CalendarsTest {
 
         List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(3,MAY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,MAY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(30,AUGUST,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,DECEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(3,MAY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,MAY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(30,AUGUST,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(27,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(28,DECEMBER,2004));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(3,JANUARY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(2,MAY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(30,MAY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(29,AUGUST,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,DECEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(3,JANUARY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(2,MAY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(30,MAY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(29,AUGUST,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(27,DECEMBER,2005));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(2,JANUARY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(14,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(17,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(29,MAY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,AUGUST,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(29,MAY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(28,AUGUST,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2006));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(6,APRIL,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(7,MAY,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,MAY,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,AUGUST,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(7,MAY,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(28,MAY,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(27,AUGUST,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2007));
 
         Calendar c = UnitedKingdom.getCalendar(UnitedKingdom.Market.SETTLEMENT);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2004),
-                                              DateFactory.getDateUtil().getDate(31,DECEMBER,2007),false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2004),
+                                              DateFactory.getFactory().getDate(31,DECEMBER,2007),false);
         for (int i =0;i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
                 throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
@@ -584,45 +584,45 @@ public class CalendarsTest {
 
         List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(3,MAY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,MAY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(30,AUGUST,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,DECEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(3,MAY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,MAY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(30,AUGUST,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(27,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(28,DECEMBER,2004));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(3,JANUARY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(2,MAY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(30,MAY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(29,AUGUST,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,DECEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(3,JANUARY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(2,MAY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(30,MAY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(29,AUGUST,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(27,DECEMBER,2005));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(2,JANUARY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(14,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(17,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(29,MAY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,AUGUST,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(29,MAY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(28,AUGUST,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2006));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(6,APRIL,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(7,MAY,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,MAY,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,AUGUST,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(7,MAY,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(28,MAY,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(27,AUGUST,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2007));
 
         Calendar c = UnitedKingdom.getCalendar(UnitedKingdom.Market.EXCHANGE);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2004),
-                                               DateFactory.getDateUtil().getDate(31,DECEMBER,2007),false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2004),
+                                               DateFactory.getFactory().getDate(31,DECEMBER,2007),false);
         for (int i =0;i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
                 throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
@@ -640,45 +640,45 @@ public class CalendarsTest {
 
         List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(3,MAY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,MAY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(30,AUGUST,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,DECEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(3,MAY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,MAY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(30,AUGUST,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(27,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(28,DECEMBER,2004));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(3,JANUARY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(2,MAY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(30,MAY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(29,AUGUST,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,DECEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(3,JANUARY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(2,MAY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(30,MAY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(29,AUGUST,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(27,DECEMBER,2005));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(2,JANUARY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(14,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(17,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(29,MAY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,AUGUST,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(29,MAY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(28,AUGUST,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2006));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(6,APRIL,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(7,MAY,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,MAY,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,AUGUST,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2007));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(7,MAY,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(28,MAY,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(27,AUGUST,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2007));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2007));
 
         Calendar c = UnitedKingdom.getCalendar(UnitedKingdom.Market.METALS);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2004),
-                                              DateFactory.getDateUtil().getDate(31,DECEMBER,2007),false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2004),
+                                              DateFactory.getFactory().getDate(31,DECEMBER,2007),false);
         for (int i =0;i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
                 throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
@@ -696,35 +696,35 @@ public class CalendarsTest {
 
         List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(29,MARCH,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,APRIL,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(15,AUGUST,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2002));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(29,MARCH,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(1,APRIL,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(15,AUGUST,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2002));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2002));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(18,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,APRIL,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(15,AUGUST,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,2003));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(18,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(15,AUGUST,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,2003));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2003));
 
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(9,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,APRIL,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(24,DECEMBER,2004));
-        expectedHol.add(DateFactory.getDateUtil().getDate(31,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,2004));
+        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,2004));
 
         Calendar c = Italy.getCalendar(Italy.Market.EXCHANGE);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2002),
-                                              DateFactory.getDateUtil().getDate(31,DECEMBER,2004),false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2002),
+                                              DateFactory.getFactory().getDate(31,DECEMBER,2004),false);
         for (int i =0;i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
                 throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
@@ -743,35 +743,35 @@ public class CalendarsTest {
         List<Date> expectedHol = new Vector<Date>();
 
         //expectedHol.add(DateUtil.getDateUtil().getDate(1,JANUARY,2005)); // Saturday
-        expectedHol.add(DateFactory.getDateUtil().getDate(7,FEBRUARY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(8,FEBRUARY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,MARCH,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,APRIL,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(7,FEBRUARY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(8,FEBRUARY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,2005));
         //expectedHol.add(DateUtil.getDateUtil().getDate(1,MAY,2005)); // Sunday
-        expectedHol.add(DateFactory.getDateUtil().getDate(26,MAY,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(7,SEPTEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,OCTOBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(2,NOVEMBER,2005));
-        expectedHol.add(DateFactory.getDateUtil().getDate(15,NOVEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(26,MAY,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,2005));
+        expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,2005));
         //expectedHol.add(DateUtil.getDateUtil().getDate(25,DECEMBER,2005)); // Sunday
         
         
         //expectedHol.add(DateUtil.getDateUtil().getDate(1,JANUARY,2006)); // Sunday
-        expectedHol.add(DateFactory.getDateUtil().getDate(27,FEBRUARY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(28,FEBRUARY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(14,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(21,APRIL,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(15,JUNE,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(7,SEPTEMBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(12,OCTOBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(2,NOVEMBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(15,NOVEMBER,2006));
-        expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(27,FEBRUARY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(28,FEBRUARY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(15,JUNE,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,2006));
+        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,2006));
 
         Calendar c = Brazil.getCalendar(Brazil.Market.SETTLEMENT);
-        List<Date> hol = c.getHolidayList(DateFactory.getDateUtil().getDate(1,JANUARY,2005),
-                                             DateFactory.getDateUtil().getDate(31,DECEMBER,2006),false);
+        List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,JANUARY,2005),
+                                             DateFactory.getFactory().getDate(31,DECEMBER,2006),false);
         for (int i =0;i<Math.min(hol.size(), expectedHol.size()); i++) {
             if (!hol.get(i).equals(expectedHol.get(i)))
                 throw new IllegalStateException("expected holiday was " + expectedHol.get(i)
@@ -789,8 +789,8 @@ public class CalendarsTest {
 
         Calendar c = Target.getCalendar(); // any calendar would be OK
 
-        Date eom, counter = DateFactory.getDateUtil().getMinDate();
-        Date last = DateFactory.getDateUtil().getMaxDate().adjust(new Period(-2, TimeUnit.MONTHS));
+        Date eom, counter = DateFactory.getFactory().getMinDate();
+        Date last = DateFactory.getFactory().getMaxDate().adjust(new Period(-2, TimeUnit.MONTHS));
 
         while (counter.le(last)) {
             eom = c.getEndOfMonth(counter);
@@ -817,18 +817,18 @@ public class CalendarsTest {
         System.out.println("Testing calculation of business days between dates...");
 
         List<Date> testDates = new Vector<Date>();
-        testDates.add(DateFactory.getDateUtil().getDate(1,FEBRUARY,2002));
-        testDates.add(DateFactory.getDateUtil().getDate(4,FEBRUARY,2002));
-        testDates.add(DateFactory.getDateUtil().getDate(16,MAY,2003));
-        testDates.add(DateFactory.getDateUtil().getDate(17,DECEMBER,2003));
-        testDates.add(DateFactory.getDateUtil().getDate(17,DECEMBER,2004));
-        testDates.add(DateFactory.getDateUtil().getDate(19,DECEMBER,2005));
-        testDates.add(DateFactory.getDateUtil().getDate(2,JANUARY,2006));
-        testDates.add(DateFactory.getDateUtil().getDate(13,MARCH,2006));
-        testDates.add(DateFactory.getDateUtil().getDate(15,MAY,2006));
-        testDates.add(DateFactory.getDateUtil().getDate(17,MARCH,2006));
-        testDates.add(DateFactory.getDateUtil().getDate(15,MAY,2006));
-        testDates.add(DateFactory.getDateUtil().getDate(26,JULY,2006));
+        testDates.add(DateFactory.getFactory().getDate(1,FEBRUARY,2002));
+        testDates.add(DateFactory.getFactory().getDate(4,FEBRUARY,2002));
+        testDates.add(DateFactory.getFactory().getDate(16,MAY,2003));
+        testDates.add(DateFactory.getFactory().getDate(17,DECEMBER,2003));
+        testDates.add(DateFactory.getFactory().getDate(17,DECEMBER,2004));
+        testDates.add(DateFactory.getFactory().getDate(19,DECEMBER,2005));
+        testDates.add(DateFactory.getFactory().getDate(2,JANUARY,2006));
+        testDates.add(DateFactory.getFactory().getDate(13,MARCH,2006));
+        testDates.add(DateFactory.getFactory().getDate(15,MAY,2006));
+        testDates.add(DateFactory.getFactory().getDate(17,MARCH,2006));
+        testDates.add(DateFactory.getFactory().getDate(15,MAY,2006));
+        testDates.add(DateFactory.getFactory().getDate(26,JULY,2006));
 
         int expected[] = {
             1,

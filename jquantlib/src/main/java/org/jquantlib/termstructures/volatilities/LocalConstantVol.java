@@ -105,7 +105,7 @@ public class LocalConstantVol extends LocalVolTermStructure {
 	}
 
 	public final Date getMaxDate() {
-		return DateFactory.getDateUtil().getMaxDate();
+		return DateFactory.getFactory().getMaxDate();
 	}
 
 	@Override

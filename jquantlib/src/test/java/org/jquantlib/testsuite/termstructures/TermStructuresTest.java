@@ -37,113 +37,100 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 package org.jquantlib.testsuite.termstructures;
 
+import org.jquantlib.Settings;
+import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.Calendar;
+import org.jquantlib.time.TimeUnit;
+
 
 public class TermStructuresTest {
 
 
-//
-//
-//#include "termstructures.hpp"
-//#include "utilities.hpp"
-//#include <ql/termstructures/yieldcurves/ratehelpers.hpp>
-//#include <ql/termstructures/yieldcurves/flatforward.hpp>
-//#include <ql/termstructures/yieldcurves/piecewiseyieldcurve.hpp>
-//#include <ql/termstructures/yieldcurves/impliedtermstructure.hpp>
-//#include <ql/termstructures/yieldcurves/forwardspreadedtermstructure.hpp>
-//#include <ql/termstructures/yieldcurves/zerospreadedtermstructure.hpp>
-//#include <ql/time/calendars/target.hpp>
-//#include <ql/time/calendars/nullcalendar.hpp>
-//#include <ql/time/daycounters/actual360.hpp>
-//#include <ql/time/daycounters/thirty360.hpp>
-//#include <ql/math/comparison.hpp>
-//#include <ql/utilities/dataformatters.hpp>
-//
-//using namespace QuantLib;
-//using namespace boost::unit_test_framework;
-//
-//QL_BEGIN_TEST_LOCALS(TermStructureTest)
-//
-//// global data
-//
-//Calendar calendar_;
-//Natural settlementDays_;
-//boost::shared_ptr<YieldTermStructure> termStructure_;
-//boost::shared_ptr<YieldTermStructure> dummyTermStructure_;
-//
-//// utilities
-//
-//struct Datum {
-//    Integer n;
-//    TimeUnit units;
-//    Rate rate;
-//};
-//
-//void setup() {
-//    calendar_ = TARGET();
-//    settlementDays_ = 2;
-//    Date today = calendar_.adjust(Date::todaysDate());
-//    Settings::instance().evaluationDate() = today;
-//    Date settlement = calendar_.advance(today,settlementDays_,Days);
-//    Datum depositData[] = {
-//        { 1, Months, 4.581 },
-//        { 2, Months, 4.573 },
-//        { 3, Months, 4.557 },
-//        { 6, Months, 4.496 },
-//        { 9, Months, 4.490 }
-//    };
-//    Datum swapData[] = {
-//        {  1, Years, 4.54 },
-//        {  5, Years, 4.99 },
-//        { 10, Years, 5.47 },
-//        { 20, Years, 5.89 },
-//        { 30, Years, 5.96 }
-//    };
-//    Size deposits = LENGTH(depositData),
-//         swaps = LENGTH(swapData);
-//
-//    std::vector<boost::shared_ptr<RateHelper> > instruments(deposits+swaps);
-//    Size i;
-//    for (i=0; i<deposits; i++) {
-//        instruments[i] = boost::shared_ptr<RateHelper>(
-//                 new DepositRateHelper(depositData[i].rate/100,
-//                                       depositData[i].n*depositData[i].units,
-//                                       settlementDays_, calendar_,
-//                                       ModifiedFollowing, true,
-//                                       settlementDays_, Actual360()));
-//    }
-//    boost::shared_ptr<IborIndex> index(new IborIndex("dummy",
-//                                             6*Months,
-//                                             settlementDays_,
-//                                             Currency(),
-//                                             calendar_,
-//                                             ModifiedFollowing,
-//                                             false,
-//                                             Actual360()));
-//    for (i=0; i<swaps; i++) {
-//        instruments[i+deposits] = boost::shared_ptr<RateHelper>(
-//                          new SwapRateHelper(swapData[i].rate/100,
-//                                             swapData[i].n*swapData[i].units,
-//                                             settlementDays_, calendar_,
-//                                             Annual, Unadjusted, Thirty360(),
-//                                             index));
-//    }
-//    termStructure_ = boost::shared_ptr<YieldTermStructure>(
-//                    new PiecewiseYieldCurve<Discount,LogLinear>(settlement,
-//                                                                instruments,
-//                                                                Actual360()));
-//    dummyTermStructure_ = boost::shared_ptr<YieldTermStructure>(
-//                    new PiecewiseYieldCurve<Discount,LogLinear>(settlement,
-//                                                                instruments,
-//                                                                Actual360()));
-//}
-//
-//void teardown() {
-//    Settings::instance().evaluationDate() = Date();
-//}
-//
-//QL_END_TEST_LOCALS(TermStructureTest)
-//
-//
+
+
+class Datum {
+    int n;
+    TimeUnit units;
+    double rate;
+	public Datum(int n, TimeUnit units, double rate) {
+		this.n = n;
+		this.units = units;
+		this.rate = rate;
+	}
+}
+class CommonVars{
+	        // common data
+	        Calendar calendar;
+	        int settlementDays;
+	        YieldTermStructure termStructure;
+	        YieldTermStructure dummyTermStructure;
+
+	        // cleanup
+	        Settings backup;
+
+	        // setup
+	        CommonVars() {
+	            calendar = org.jquantlib.time.calendars.Target.getCalendar();
+	            settlementDays = 2;
+	            org.jquantlib.util.Date today = calendar.advance(org.jquantlib.util.DateFactory.getFactory().getTodaysDate());
+	            org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
+	            org.jquantlib.util.Date settlement = calendar.advance(today,settlementDays,TimeUnit.DAYS);
+	            Datum depositData[] = new Datum[]{
+	            		 new Datum( 1, TimeUnit.MONTHS, 4.581 ),
+	            		 new Datum( 2, TimeUnit.MONTHS, 4.573 ),
+	            		 new Datum( 3, TimeUnit.MONTHS, 4.557 ),
+	            		 new Datum( 6, TimeUnit.MONTHS, 4.496 ),
+	            		 new Datum( 9, TimeUnit.MONTHS, 4.490 )
+	            };
+	            Datum swapData[] =  new Datum[] {
+	                new Datum(  1, TimeUnit.YEARS, 4.54 ),
+	                new Datum(  5, TimeUnit.YEARS, 4.99 ),
+	                new Datum( 10, TimeUnit.YEARS, 5.47 ),
+	                new Datum( 20, TimeUnit.YEARS, 5.89 ),
+	                new Datum( 30, TimeUnit.YEARS, 5.96 )
+	            };
+	            int deposits = depositData.length,
+	                swaps = swapData.length;
+	            
+	            
+               /*
+	            std::vector<boost::shared_ptr<RateHelper> > instruments(
+	                                                              deposits+swaps);
+	            for (Size i=0; i<deposits; i++) {
+	                instruments[i] = boost::shared_ptr<RateHelper>(new
+	                    DepositRateHelper(depositData[i].rate/100,
+	                                      depositData[i].n*depositData[i].units,
+	                                      settlementDays, calendar,
+	                                      ModifiedFollowing, true,
+	                                      Actual360()));
+	            }
+	            boost::shared_ptr<IborIndex> index(new IborIndex("dummy",
+	                                                             6*Months,
+	                                                             settlementDays,
+	                                                             Currency(),
+	                                                             calendar,
+	                                                             ModifiedFollowing,
+	                                                             false,
+	                                                             Actual360()));
+	            for (Size i=0; i<swaps; ++i) {
+	                instruments[i+deposits] = boost::shared_ptr<RateHelper>(new
+	                    SwapRateHelper(swapData[i].rate/100,
+	                                   swapData[i].n*swapData[i].units,
+	                                   calendar,
+	                                   Annual, Unadjusted, Thirty360(),
+	                                   index));
+	            }
+	            termStructure = boost::shared_ptr<YieldTermStructure>(new
+	                PiecewiseYieldCurve<Discount,LogLinear>(settlement,
+	                                                        instruments, Actual360()));
+	            dummyTermStructure = boost::shared_ptr<YieldTermStructure>(new
+	                PiecewiseYieldCurve<Discount,LogLinear>(settlement,
+	                                                        instruments, Actual360()));
+	        } */
+	    }
+}
+
+
 //void TermStructureTest::testReferenceChange() {
 //
 //    BOOST_MESSAGE("Testing term structure against evaluation date change...");

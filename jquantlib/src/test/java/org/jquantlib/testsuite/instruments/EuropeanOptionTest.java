@@ -310,7 +310,7 @@ public class EuropeanOptionTest {
 	    };
 
 	    DayCounter dc = Actual360.getDayCounter();
-	    Date today = DateFactory.getDateUtil().getTodaysDate();
+	    Date today = DateFactory.getFactory().getTodaysDate();
 
 	    Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
 	    Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));

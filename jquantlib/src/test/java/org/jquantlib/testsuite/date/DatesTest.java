@@ -49,11 +49,11 @@ public class DatesTest {
 
     @Test
     public void immDates() {
-        Date counter = DateFactory.getDateUtil().getMinDate();
+        Date counter = DateFactory.getFactory().getMinDate();
 
         // 10 years of futures must not exceed Date::maxDate
         Period period = new Period(-10, TimeUnit.YEARS);
-        Date last = DateFactory.getDateUtil().getMaxDate().adjust(period);
+        Date last = DateFactory.getFactory().getMaxDate().adjust(period);
 
         while (counter.le(last)) {
 
@@ -102,14 +102,14 @@ public class DatesTest {
 
         System.out.println("Testing dates...");
 
-        int dyold = DateFactory.getDateUtil().getMinDate().getDayOfYear();
-        int dold = DateFactory.getDateUtil().getMinDate().getDayOfMonth();
-        int mold = DateFactory.getDateUtil().getMinDate().getMonth();
-        int yold = DateFactory.getDateUtil().getMinDate().getYear();
-        Weekday wdold = DateFactory.getDateUtil().getMinDate().getWeekday();
+        int dyold = DateFactory.getFactory().getMinDate().getDayOfYear();
+        int dold = DateFactory.getFactory().getMinDate().getDayOfMonth();
+        int mold = DateFactory.getFactory().getMinDate().getMonth();
+        int yold = DateFactory.getFactory().getMinDate().getYear();
+        Weekday wdold = DateFactory.getFactory().getMinDate().getWeekday();
 
-        Date minDate = DateFactory.getDateUtil().getMinDate().increment(1);
-        Date maxDate = DateFactory.getDateUtil().getMaxDate();
+        Date minDate = DateFactory.getFactory().getMinDate().increment(1);
+        Date maxDate = DateFactory.getFactory().getMaxDate();
 
         for (Date t = minDate; t.le(maxDate); t.increment()) {
             int dy = t.getDayOfYear();
@@ -122,8 +122,8 @@ public class DatesTest {
             assertFalse(
                     "wrong day of year increment: \n" + "    date: " + t + "\n" + "    day of year: " + dy + "\n"
                             + "    previous:    " + dyold,
-                    !((dy == dyold + 1) || (dy == 1 && dyold == 365 && !DateFactory.getDateUtil().isLeap(yold)) || (dy == 1
-                            && dyold == 366 && DateFactory.getDateUtil().isLeap(yold))));
+                    !((dy == dyold + 1) || (dy == 1 && dyold == 365 && !DateFactory.getFactory().isLeap(yold)) || (dy == 1
+                            && dyold == 366 && DateFactory.getFactory().isLeap(yold))));
 
             dyold = dy;
 
@@ -143,7 +143,7 @@ public class DatesTest {
             assertFalse("invalid day of month: \n" + "    date:  " + t + "\n" + "    day: " + d, (d < 1));
 
             assertFalse("invalid day of month: \n" + "    date:  " + t + "\n" + "    day: " + d, !((m == 1 && d <= 31)
-                    || (m == 2 && d <= 28) || (m == 2 && d == 29 && DateFactory.getDateUtil().isLeap(y))
+                    || (m == 2 && d <= 28) || (m == 2 && d == 29 && DateFactory.getFactory().isLeap(y))
                     || (m == 3 && d <= 31) || (m == 4 && d <= 30) || (m == 5 && d <= 31) || (m == 6 && d <= 30)
                     || (m == 7 && d <= 31) || (m == 8 && d <= 31) || (m == 9 && d <= 30) || (m == 10 && d <= 31)
                     || (m == 11 && d <= 30) || (m == 12 && d <= 31)));
