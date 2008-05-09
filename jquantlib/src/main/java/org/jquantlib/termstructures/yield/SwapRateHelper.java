@@ -17,9 +17,12 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the originating copyright notice follows below.
  */
+
 package org.jquantlib.termstructures.yield;
 
-import java.util.List;
+
+// FIXME: move to org.jquantlib.termstructures.yieldcurves
+
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
@@ -31,7 +34,6 @@ import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
-import org.jquantlib.util.Observer;
 
 /**
  * @author Srinivas Hasti
@@ -39,16 +41,16 @@ import org.jquantlib.util.Observer;
  */
 public class SwapRateHelper extends RelativeDateRateHelper {
 	
-    Period tenor;
-    Calendar calendar;
-    BusinessDayConvention fixedConvention;
-    Frequency fixedFrequency;
-    DayCounter fixedDayCount;
-    IborIndex iborIndex;
+    private Period tenor;
+    private Calendar calendar;
+    private BusinessDayConvention fixedConvention;
+    private Frequency fixedFrequency;
+    private DayCounter fixedDayCount;
+    private IborIndex iborIndex;
    // VanillaSwap swap;
-    RelinkableHandle<YieldTermStructure> termStructureHandle;
-    Handle<Quote> spread;
-    Period fwdStart;
+    private RelinkableHandle<YieldTermStructure> termStructureHandle;
+    private Handle<Quote> spread;
+    private Period fwdStart;
     
   /*  SwapRateHelper(const Handle<Quote>& rate,
             const boost::shared_ptr<SwapIndex>& swapIndex,
@@ -82,11 +84,17 @@ SwapRateHelper(Rate rate,
             const Period& fwdStart = 0*Days)*/
 
     
-	public SwapRateHelper(double d, Period tenor, Calendar calendar,
-			BusinessDayConvention fixedConvention, Frequency fixedFrequency,
-			DayCounter fixedDayCount, IborIndex iborIndex,
-			RelinkableHandle<YieldTermStructure> termStructureHandle,
-			Handle<Quote> spread, Period fwdStart) {
+	public SwapRateHelper(
+			final double d, 
+			final Period tenor, 
+			final Calendar calendar,
+			final BusinessDayConvention fixedConvention, 
+			final Frequency fixedFrequency,
+			final DayCounter fixedDayCount, 
+			final IborIndex iborIndex,
+			final RelinkableHandle<YieldTermStructure> termStructureHandle,
+			final Handle<Quote> spread, 
+			final Period fwdStart) {
 		super(d);
 		this.tenor = tenor;
 		this.calendar = calendar;

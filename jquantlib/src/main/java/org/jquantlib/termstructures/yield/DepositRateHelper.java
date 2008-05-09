@@ -19,6 +19,11 @@
  */
 package org.jquantlib.termstructures.yield;
 
+
+//FIXME: move to org.jquantlib.termstructures.yieldcurves
+
+
+
 import java.util.List;
 
 import org.jquantlib.daycounters.DayCounter;

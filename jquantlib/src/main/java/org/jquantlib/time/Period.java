@@ -51,7 +51,7 @@ import java.util.Locale;
  * @author Richard Gomes
  */
 public class Period {
-	// Allocate commonly used period objects'
+	
 	/**
 	 * Constant that can be used to represent one year period forward
 	 */
@@ -62,6 +62,27 @@ public class Period {
 	 */
 	public static final Period ONE_YEAR_BACKWARD = new Period(-1, TimeUnit.YEARS);
 
+	/**
+	 * Constant that can be used to represent one year period forward
+	 */
+	public static final Period ONE_MONTH_FORWARD = new Period(1, TimeUnit.MONTHS);
+
+	/**
+	 * Constant that can be used to represent one year period in the past
+	 */
+	public static final Period ONE_MONTH_BACKWARD = new Period(-1, TimeUnit.MONTHS);
+
+	/**
+	 * Constant that can be used to represent one year period forward
+	 */
+	public static final Period ONE_DAY_FORWARD = new Period(1, TimeUnit.DAYS);
+
+	/**
+	 * Constant that can be used to represent one year period in the past
+	 */
+	public static final Period ONE_DAY_BACKWARD = new Period(-1, TimeUnit.DAYS);
+
+	
 	/**
 	 * Length of the period
 	 */

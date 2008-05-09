@@ -81,6 +81,12 @@ public class Thirty360 extends AbstractDayCounter {
 		}
 	}
 	
+	
+	public static Thirty360 getDayCounter() {
+		return getDayCounter(Thirty360.Convention.BOND_BASIS);
+		
+	}
+	
 	public static Thirty360 getDayCounter(final Thirty360.Convention c) {
         switch (c) {
         case USA:

@@ -19,13 +19,15 @@
  */
 package org.jquantlib.termstructures.yield;
 
-import java.util.List;
+
+//FIXME: move to org.jquantlib.termstructures.yieldcurves
+
+
 
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.BootstrapHelper;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Observable;
-import org.jquantlib.util.Observer;
 
 /**
  * @author Srinivas Hasti
