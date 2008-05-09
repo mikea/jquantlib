@@ -215,7 +215,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	/**
 	 * @return the calendar used for reference date calculation
 	 */
-	public final Calendar getCalendar() {
+	public Calendar getCalendar() /* @ReadOnly */ {
 		return calendar;
 	}
 

@@ -27,7 +27,7 @@ import java.util.List;
  * @author Srinivas Hasti
  * 
  */
-public abstract class BaseDate implements Date {
+public abstract class BaseDate implements Date, FunctionDate {
     
     /**
      * Implements multiple inheritance via delegate pattern to an inner class

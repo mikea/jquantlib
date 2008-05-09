@@ -87,7 +87,7 @@ public class FlatForward extends YieldTermStructure {
 				final Date referenceDate,
 	            final Handle<? extends Quote> forward,
 	            final DayCounter dayCounter) {
-		this(referenceDate, forward, dayCounter, Compounding.Continuous);
+		this(referenceDate, forward, dayCounter, Compounding.CONTINUOUS);
 	}
 	
 	// --------------------------------------------
@@ -117,7 +117,7 @@ public class FlatForward extends YieldTermStructure {
 			final Date referenceDate,
             final /*@Rate*/ double forward,
             final DayCounter dayCounter) {
-		this(referenceDate, forward, dayCounter, Compounding.Continuous);
+		this(referenceDate, forward, dayCounter, Compounding.CONTINUOUS);
 	}
 
 	// --------------------------------------------
@@ -142,7 +142,7 @@ public class FlatForward extends YieldTermStructure {
                 final Calendar calendar,
                 final Handle<? extends Quote> forward,
                 final DayCounter dayCounter) {
-    	this(settlementDays, calendar, forward, dayCounter, Compounding.Continuous);
+    	this(settlementDays, calendar, forward, dayCounter, Compounding.CONTINUOUS);
     }
 
     public FlatForward(
@@ -175,7 +175,7 @@ public class FlatForward extends YieldTermStructure {
                 final Calendar calendar,
                 final /*@Rate*/ double forward,
                 final DayCounter dayCounter) {
-    	this(settlementDays, calendar, forward, dayCounter, Compounding.Continuous);
+    	this(settlementDays, calendar, forward, dayCounter, Compounding.CONTINUOUS);
     }
     
     public FlatForward(
@@ -190,7 +190,7 @@ public class FlatForward extends YieldTermStructure {
 	// --------------------------------------------
 	
     private void updateRate() {
-        rate = new InterestRate(forward.getLink().getValue(), this.getDayCounter(), this.compounding, this.frequency);
+        rate = new InterestRate(forward.getLink().doubleValue(), this.getDayCounter(), this.compounding, this.frequency);
     }
 
     @Override

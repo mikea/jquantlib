@@ -82,7 +82,7 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 
 		/* @DiscountFactor */double dividendDiscount = process.dividendYield().getLink().getDiscount(arguments.exercise.getLastDate());
 		/* @DiscountFactor */double riskFreeDiscount = process.riskFreeRate().getLink().getDiscount(arguments.exercise.getLastDate());
-		/* @Price */double spot = process.stateVariable().getLink().getValue();
+		/* @Price */double spot = process.stateVariable().getLink().doubleValue();
 		/* @Price */double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
 		BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 

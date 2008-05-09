@@ -27,17 +27,17 @@ public enum Compounding {
 	/**
 	 * 1+rt
 	 */
-	Simple,          
+	SIMPLE,          
 	/**
 	 * (1+r)^t
 	 */
-	Compounded,
+	COMPOUNDED,
 	/**
 	 * e^{rt}
 	 */
-	Continuous,
+	CONTINUOUS,
 	/**
 	 * Simple up to the first period then Compounded
 	 */
-	SimpleThenCompounded;
+	SIMPLE_THEN_COMPOUNDED;
 }

@@ -35,12 +35,6 @@ public class SimpleQuote extends Quote {
 		this.value = d;
 	}
 
-	@Override
-	public final double getValue() {
-		if (Double.isNaN(value)) throw new ArithmeticException("invalid simple quote: no value available");
-		return value;
-	}
-	
 	public void setValue(final double value) {
 		double diff = this.value - value; 
 		if (diff != 0.0) {
@@ -49,4 +43,12 @@ public class SimpleQuote extends Quote {
 		}
 	}
 
+	//
+	// implements FunctionDouble
+	//
+	public final double doubleValue() {
+		if (Double.isNaN(value)) throw new ArithmeticException("invalid simple quote: no value available");
+		return value;
+	}
+	
 }

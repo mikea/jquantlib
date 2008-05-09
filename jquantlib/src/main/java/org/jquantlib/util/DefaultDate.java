@@ -67,13 +67,9 @@ import org.jquantlib.time.Weekday;
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
-public class DefaultDate extends BaseDate{
+public class DefaultDate extends BaseDate {
 
     private/* @NonNegative */int value;
-
-    public int getValue() /* @ReadOnly */{
-        return value;
-    }
 
     static private final int MinimumSerialNumber = 367; // Jan 1st, 1901
     static private final int MaximumSerialNumber = 73050; // Dec 31st, 2099
@@ -754,4 +750,14 @@ public class DefaultDate extends BaseDate{
             return DefaultDate.isLeap(year);
         }
     }
+
+
+    //
+    // implements FunctionDate
+    //
+
+    public int dateValue() /* @ReadOnly */{
+        return value;
+    }
+
 }

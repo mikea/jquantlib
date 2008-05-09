@@ -102,78 +102,8 @@ public class Utilities {
 //    //    return std::fabs(x1 - x2) < tolerance;
 //    //};
 
-    static public class Flag implements Observer {
-      private boolean up;
-      
-      public Flag() {
-    	  up = false;
-      }
-      
-      public void raise() { up = true; }
-      
-      public void lower() { up = false; }
-      
-      public boolean isUp() /* @ReadOnly */ { return up; }
-      
-      public void update(Observable observable, Object o) { raise(); }
-      
-    }
-
-//    template<class Iterator>
-//    Real norm(const Iterator& begin, const Iterator& end, Real h) {
-//        // squared values
-//        std::vector<Real> f2(end-begin);
-//        std::transform(begin,end,begin,f2.begin(),
-//                       std::multiplies<Real>());
-//        // numeric integral of f^2
-//        Real I = h * (std::accumulate(f2.begin(),f2.end(),0.0)
-//                      - 0.5*f2.front() - 0.5*f2.back());
-//        return std::sqrt(I);
-//    }
-
-
-	//
-	// utilities.cpp
-	//
-	
     
-    //#include "utilities.hpp"
-	//#include <ql/instruments/payoffs.hpp>
-	//#include <ql/termstructures/yieldcurves/flatforward.hpp>
-	//#include <ql/termstructures/volatilities/blackconstantvol.hpp>
-	//#include <ql/time/calendars/nullcalendar.hpp>
-	//
-	//#define CHECK_DOWNCAST(Derived,Description) { \
-//	    boost::shared_ptr<Derived> hd = boost::dynamic_pointer_cast<Derived>(h); \
-//	    if (hd) \
-//	        return Description; \
-	//}
-	//
-	//namespace QuantLib {
-	//
-//	    std::string payoffTypeToString(const boost::shared_ptr<Payoff>& h) {
-	//
-//	        CHECK_DOWNCAST(PlainVanillaPayoff, "plain-vanilla");
-//	        CHECK_DOWNCAST(CashOrNothingPayoff, "cash-or-nothing");
-//	        CHECK_DOWNCAST(AssetOrNothingPayoff, "asset-or-nothing");
-//	        CHECK_DOWNCAST(SuperSharePayoff, "super-share");
-//	        CHECK_DOWNCAST(GapPayoff, "gap");
-	//
-//	        QL_FAIL("unknown payoff type");
-//	    }
-	//
-	//
-//	    std::string exerciseTypeToString(const boost::shared_ptr<Exercise>& h) {
-	//
-//	        CHECK_DOWNCAST(EuropeanExercise, "European");
-//	        CHECK_DOWNCAST(AmericanExercise, "American");
-//	        CHECK_DOWNCAST(BermudanExercise, "Bermudan");
-	//
-//	        QL_FAIL("unknown exercise type");
-//	    }
-	//
-
-	    static public YieldTermStructure flatRate(
+	static public YieldTermStructure flatRate(
 	    		final Date today,
 	            final Handle<? extends Quote> forward,
 	            final DayCounter dc) {

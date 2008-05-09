@@ -39,6 +39,7 @@ package org.jquantlib.quotes;
 
 import java.util.List;
 
+import org.jquantlib.math.FunctionDouble;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
@@ -49,13 +50,7 @@ import org.jquantlib.util.Observer;
  * @author Richard Gomes
  */
 // FIXME: understand how this class is used
-public abstract class Quote implements Observable {
-
-	/**
-	 * @return the current value
-	 */
-	public abstract double getValue();
-	
+public abstract class Quote implements FunctionDouble, Observable {
 
 	//
 	// implements Observable interface

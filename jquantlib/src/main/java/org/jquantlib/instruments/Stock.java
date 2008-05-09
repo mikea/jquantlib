@@ -56,6 +56,6 @@ public class Stock extends Instrument {
 	@Override
     protected void performCalculations() /* @ReadOnly */ {
 		if (quote.isEmpty()) throw new NullPointerException("null quote set");
-		NPV = quote.getLink().getValue();
+		NPV = quote.getLink().doubleValue();
 	}
 }

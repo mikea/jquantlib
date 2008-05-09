@@ -131,7 +131,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		YieldTermStructure rTS = riskFreeTS_.getLink();
 		BlackVolTermStructure bTS = blackTS_.getLink();
 		
-		double forwardValue = u.getValue() * ( dTS.getDiscount(time, true) / rTS.getDiscount(time, true) );
+		double forwardValue = u.doubleValue() * ( dTS.getDiscount(time, true) / rTS.getDiscount(time, true) );
 
 		// strike derivatives
 		/*@Price*/ double strike;

@@ -44,7 +44,7 @@ import org.jquantlib.instruments.Stock;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
-import org.jquantlib.util.Utilities.Flag;
+import org.jquantlib.util.Flag;
 import org.junit.Test;
 
 public class IntrumentsTest {

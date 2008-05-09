@@ -107,7 +107,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
 	@Override
 	public /*@Price*/ double x0() {
-		return x0_.getLink().getValue();
+		return x0_.getLink().doubleValue();
 	}
 
 	@Override
@@ -117,8 +117,8 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         // for which the drift will be used
         /*@Time*/ double t1 = t + 0.0001;
         YieldTermStructure yts = riskFreeRate_.getLink();
-        /*@Rate*/ double r = yts.getForwardRate(t, t1, Compounding.Continuous, Frequency.NO_FREQUENCY, true).getRate();
-        double d = yts.getForwardRate(t, t1, Compounding.Continuous, Frequency.NO_FREQUENCY,true).getRate();
+        /*@Rate*/ double r = yts.getForwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).doubleValue();
+        double d = yts.getForwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY,true).doubleValue();
         return r-d-0.5*sigma*sigma;
     }
 
@@ -175,7 +175,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         		localVolatility_.setLink(
         				new LocalConstantVol(
         						constVol.getReferenceDate(), 
-        						constVol.blackVol(/*@Time*/ 0.0, /*@Price*/ x0_.getLink().getValue()),
+        						constVol.blackVol(/*@Time*/ 0.0, /*@Price*/ x0_.getLink().doubleValue()),
         						constVol.getDayCounter()));
                 updated_ = true;
         		return localVolatility_;

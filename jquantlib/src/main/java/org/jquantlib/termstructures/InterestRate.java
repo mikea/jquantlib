@@ -21,11 +21,12 @@
 package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.FunctionDouble;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 
 // FIXME: comment this class
-public class InterestRate {
+public class InterestRate implements FunctionDouble {
 
 	private /*@Rate*/ double rate;
     private DayCounter dc;
@@ -50,7 +51,7 @@ public class InterestRate {
     	this.compound = comp;
     	this.freqMakesSense = false;
 
-        if (this.compound==Compounding.Compounded || this.compound==Compounding.SimpleThenCompounded) {
+        if (this.compound==Compounding.COMPOUNDED || this.compound==Compounding.SIMPLE_THEN_COMPOUNDED) {
             freqMakesSense = true;
             if (! (freq!=Frequency.ONCE && freq!=Frequency.NO_FREQUENCY)) throw new IllegalArgumentException("frequency not allowed for this interest rate");
             this.freq = freq.toInteger();
@@ -71,16 +72,16 @@ public class InterestRate {
         if (rate==0.0) throw new IllegalArgumentException("null interest rate");
     	/*@Rate*/ double r = rate;
 
-    	if (compound==Compounding.Simple) {
+    	if (compound==Compounding.SIMPLE) {
         	// 1+r*t
         	return 1.0+r*t;
-        } else if (compound==Compounding.Compounded) {
+        } else if (compound==Compounding.COMPOUNDED) {
         	// (1+r/f)^(f*t)
         	return Math.pow( (1+r/freq), (freq*t) );
-        } else if (compound==Compounding.Continuous) {
+        } else if (compound==Compounding.CONTINUOUS) {
         	// e^(r*t)
         	return Math.exp( (r*t) );
-        } else if (compound==Compounding.SimpleThenCompounded) {
+        } else if (compound==Compounding.SIMPLE_THEN_COMPOUNDED) {
             if (t < (1 / (double)freq) )
             	// 1+r*t
             	return 1.0+r*t;
@@ -90,10 +91,6 @@ public class InterestRate {
         } else {
             throw new IllegalArgumentException("unknown compounding convention");
         }
-    }
-
-    public final /*@Rate*/ double getRate() {
-    	return this.rate;
     }
 
     public final DayCounter getDayCounter() {
@@ -204,19 +201,19 @@ public class InterestRate {
         
         /*@Rate*/ double rate;
         switch (comp) {
-          case Simple:
+          case SIMPLE:
         	// rate = (compound - 1)/time  
             rate = (c-1)/t;
             break;
-          case Compounded:
+          case COMPOUNDED:
         	// rate = (compound^(1/(f*t))-1)*f
         	rate = ( Math.pow( c,(1/(f*t)) )-1 )*f;
             break;
-          case Continuous:
+          case CONTINUOUS:
         	  // rate = log(compound)/t
         	rate = Math.log(c)/t;
             break;
-          case SimpleThenCompounded:
+          case SIMPLE_THEN_COMPOUNDED:
             if (t<=(1/f))
             	// rate = (compound - 1)/time  
                 rate = (c-1)/t;
@@ -271,17 +268,17 @@ public class InterestRate {
     	
     	StringBuilder sb = new StringBuilder();
     	sb.append(rate).append(' ').append(dc).append(' ');
-    	if (compound==Compounding.Simple) {
+    	if (compound==Compounding.SIMPLE) {
     		sb.append("simple compounding");
-    	} else if (compound==Compounding.Compounded) {
+    	} else if (compound==Compounding.COMPOUNDED) {
     		if ((freq==Frequency.NO_FREQUENCY.toInteger()) || (freq==Frequency.ONCE.toInteger())) {
     			throw new IllegalArgumentException(freq+" frequency not allowed for this interest rate");
     		} else {
     			sb.append(freq+" compounding");
     		}
-    	} else if (compound==Compounding.Continuous) {
+    	} else if (compound==Compounding.CONTINUOUS) {
     		sb.append("continuous compounding");
-    	} else if (compound==Compounding.SimpleThenCompounded) {
+    	} else if (compound==Compounding.SIMPLE_THEN_COMPOUNDED) {
     		if ((freq==Frequency.NO_FREQUENCY.toInteger()) || (freq==Frequency.ONCE.toInteger())) {
     			throw new IllegalArgumentException(freq+" frequency not allowed for this interest rate");
     		} else {
@@ -291,6 +288,15 @@ public class InterestRate {
     		throw new IllegalArgumentException("unknown compounding convention ("+compound+")");
     	}
     	return sb.toString();
+    }
+
+
+    //
+    // implements FunctionDouble
+    //
+    
+    public final /*@Rate*/ double doubleValue() {
+    	return this.rate;
     }
 
 }

@@ -60,8 +60,7 @@ public class Period {
 	/**
 	 * Constant that can be used to represent one year period in the past
 	 */
-	public static final Period ONE_YEAR_BACKWARD = new Period(-1,
-			TimeUnit.YEARS);
+	public static final Period ONE_YEAR_BACKWARD = new Period(-1, TimeUnit.YEARS);
 
 	/**
 	 * Length of the period
@@ -133,7 +132,7 @@ public class Period {
 	}
 
 	/**
-	 * Length represented by the period
+	 * Length of the period represented as number of days
 	 * 
 	 * @return length of the period
 	 */

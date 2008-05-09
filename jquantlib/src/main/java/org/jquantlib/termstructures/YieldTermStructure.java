@@ -43,6 +43,7 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
 
 /**
@@ -52,9 +53,9 @@ import org.jquantlib.util.Date;
  * <p>
  * Rates are assumed to be annual continuous compounding.
  */
-// TODO: add derived class ParSwapTermStructure similar to
-// ZeroYieldTermStructure, DiscountStructure, ForwardRateStructure
+// TODO: add derived class ParSwapTermStructure similar to ZeroYieldTermStructure, DiscountStructure, ForwardRateStructure
 // TODO: observability against evaluation date changes is checked.
+// FIXME:: code review on return types of getSomethingRate(...)
 public abstract class YieldTermStructure extends TermStructure {
 
 	protected abstract /*DiscountFactor*/ double discountImpl(final /*@Time*/ double t);
@@ -69,7 +70,9 @@ public abstract class YieldTermStructure extends TermStructure {
 	}
 
 	/**
-	 * Term structures initialized by means of this constructor must manage
+	 * Initialize with a {@link DayCounter} with <b>no explicit reference date</b>.
+	 * 
+	 * @note Term structures initialized by means of this constructor must manage
 	 * their own reference date by overriding the getReferenceDate() method.
 	 * 
 	 * @see TermStructure#TermStructure() documentation for issues regarding
@@ -82,30 +85,82 @@ public abstract class YieldTermStructure extends TermStructure {
 	/**
 	 * Initialize with a fixed reference date
 	 * 
-	 * @see TermStructure#TermStructure() documentation for issues regarding
+	 * @note TermStructure#TermStructure() documentation for issues regarding
 	 *      constructors.
 	 */
 	protected YieldTermStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
 		super(referenceDate, cal, dc);
 	}
+	
+	/**
+	 * @param referenceDate
+	 * @param cal
+	 * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
+	 */
+	protected YieldTermStructure(final Date referenceDate, final Calendar cal) {
+		super(referenceDate, cal, new Actual365Fixed());
+	}
+	
+	/**
+	 * @param referenceDate
+	 * @param dc
+	 * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
+	 */
+	protected YieldTermStructure(final Date referenceDate, final DayCounter dc) {
+		super(referenceDate, Target.getCalendar(), dc);
+	}
+	
+	/**
+	 * @param referenceDate
+	 * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
+	 */
+	protected YieldTermStructure(final Date referenceDate) {
+		super(referenceDate, Target.getCalendar(), new Actual365Fixed());
+	}
 
 	/**
 	 * Calculate the reference date based on the global evaluation date
 	 * 
-	 * @see TermStructure#TermStructure() documentation for issues regarding
+	 * @note TermStructure#TermStructure() documentation for issues regarding
 	 *      constructors.
 	 */
 	protected YieldTermStructure(int settlementDays, final Calendar cal, final DayCounter dc) {
 		super(settlementDays, cal, dc);
 	}
+	
+	/**
+	 * @param settlementDays
+	 * @param cal
+	 * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
+	 */
+	protected YieldTermStructure(int settlementDays, final Calendar cal) {
+		super(settlementDays, cal, new Actual365Fixed());
+	}
 
+	/**
+	 * @param settlementDays
+	 * @param dc
+	 * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
+	 */
+	protected YieldTermStructure(int settlementDays, final DayCounter dc) {
+		super(settlementDays, Target.getCalendar(), dc);
+	}
+
+	/**
+	 * @param settlementDays
+	 * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
+	 */
+	protected YieldTermStructure(int settlementDays) {
+		super(settlementDays, Target.getCalendar(), new Actual365Fixed());
+	}
+
+	
+
+	//
 	// These methods return the implied zero-yield rate for a
 	// given date or time. In the former case, the double is
 	// calculated as a fraction of year from the reference date.};
-
-
-
-
+	//
 
 	/**
 	 * The resulting interest rate has the required day-counting rule.
@@ -114,10 +169,16 @@ public abstract class YieldTermStructure extends TermStructure {
 		return getZeroRate(d, resultDayCounter, comp, Frequency.ANNUAL);
 	}
 
+	/**
+	 * The resulting interest rate has the required day-counting rule.
+	 */
 	public final InterestRate getZeroRate(final Date d, final DayCounter resultDayCounter, final Compounding comp, final Frequency freq) {
 		return getZeroRate(d, resultDayCounter, comp, freq, false);
 	}
 
+	/**
+	 * The resulting interest rate has the required day-counting rule.
+	 */
 	protected final InterestRate getZeroRate(final Date d, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
 		if (d == getReferenceDate()) {
 			/*@Time*/ double t = 0.0001;

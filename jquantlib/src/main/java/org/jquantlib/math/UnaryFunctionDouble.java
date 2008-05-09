@@ -13,8 +13,7 @@ public interface UnaryFunctionDouble {
 	 * @param x
 	 * @return f(x)
 	 */
-	//FIXME Generics on argument return?
 	public double evaluate(double x);
 	
-	//boolean isFailed() TODO error handling
+	//boolean isFailed() // TODO is error handling needed?
 }

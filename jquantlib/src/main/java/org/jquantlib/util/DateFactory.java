@@ -23,7 +23,7 @@ import org.jquantlib.time.Weekday;
 
 /**
  * DateUtil for getting at Date implementation. Different implementations
- * of Date cane be plugged in using this utility. By default, JQuantLib implementation
+ * of Date can be plugged in using this utility. By default, JQuantLib implementation
  * is used.
  *
  * @author Srinivas Hasti
