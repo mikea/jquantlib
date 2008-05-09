@@ -20,8 +20,8 @@
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.Constants;
+import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * @author Richard Gomes
@@ -30,6 +30,8 @@ import org.jquantlib.math.Constants;
 
 
 public class GammaFunction implements UnaryFunctionDouble {
+	
+	private static double a_;
 
 	private static final double c1_ = 76.18009172947146;
     private static final double c2_ = -86.50532032941677;
@@ -38,7 +40,71 @@ public class GammaFunction implements UnaryFunctionDouble {
     private static final double c5_ = 0.1208650973866179e-2;
     private static final double c6_ = -0.5395239384953e-5;
 	
-    public double logValue(double x) {
+    /*
+    GammaFunction (double a){
+    	a_=a;
+    	
+    	if (a_ < 0.0) {
+    		throw new ArithmeticException("invalid parameter for gamma distribution");
+    	}
+    }
+    */
+    
+    
+    public double evaluate(double x){
+    	throw new UnsupportedOperationException();
+    }
+    
+    
+    
+    public double GammaDistribution(double x) {
+     	
+    	if (x <= 0.0) {
+			return 0.0;
+		}
+
+        double gln = logValue(a_);
+
+        if (x<(a_+1.0)) {
+            double ap = a_;
+            double del = 1.0/a_;
+            double sum = del;
+            for (int n=1; n<=100; n++) {
+                ap += 1.0;
+                del *= x/ap;
+                sum += del;
+                if (Math.abs(del) < Math.abs(sum)*3.0e-7)
+                    return sum*Math.exp(-x + a_*Math.log(x) - gln);
+            }
+        } else {
+            double b = x + 1.0 - a_;
+            double c = Constants.QL_MAX_REAL;
+            double d = 1.0/b;
+            double h = d;
+            for (int n=1; n<=100; n++) {
+                double an = -1.0*n*(n-a_);
+                b += 2.0;
+                d = an*d + b;
+                
+                if (Math.abs(d) < Constants.QL_EPSILON) {
+                	d = Constants.QL_EPSILON;
+                }
+                c = b + an/c;
+                if (Math.abs(c) < Constants.QL_EPSILON) {
+                	c = Constants.QL_EPSILON;
+                }
+                d = 1.0/d;
+                double del = d*c;
+                h *= del;
+                if (Math.abs(del - 1.0)<Constants.QL_EPSILON)
+                    return h*Math.exp(-x + a_*Math.log(x) - gln);
+            }
+        }
+        throw new ArithmeticException("too few iterations");
+    	
+    }
+    
+	public double logValue(double x) {
         if (!(x>0.0)){
         	throw new ArithmeticException("positive argument required " + x);
         }
@@ -54,59 +120,6 @@ public class GammaFunction implements UnaryFunctionDouble {
 
         return -temp+Math.log(2.5066282746310005*ser/x);
     }
-    
-    public double evaluate(double x) {
-    	throw new UnsupportedOperationException() ;
-    }
-    
-
-    //FIXME: How is the value a obtained?
-    /*
-	public double evaluate(double x) {
-		if (x <= 0.0) {
-			return 0.0;
-		}
-
-        double gln = logValue(a);
-
-        if (x<(a+1.0)) {
-            double ap = a;
-            double del = 1.0/a;
-            double sum = del;
-            for (int n=1; n<=100; n++) {
-                ap += 1.0;
-                del *= x/ap;
-                sum += del;
-                if (Math.abs(del) < Math.abs(sum)*3.0e-7)
-                    return sum*Math.exp(-x + a*Math.log(x) - gln);
-            }
-        } else {
-            double b = x + 1.0 - a;
-            double c = Constants.QL_MAX_REAL;
-            double d = 1.0/b;
-            double h = d;
-            for (int n=1; n<=100; n++) {
-                double an = -1.0*n*(n-a);
-                b += 2.0;
-                d = an*d + b;
-                
-                if (Math.abs(d) < Constants.QL_EPSILON) {
-                	d = Constants.QL_EPSILON;
-                }
-                c = b + an/c;
-                if (Math.abs(c) < Constants.QL_EPSILON) {
-                	c = Constants.QL_EPSILON;
-                }
-                d = 1.0/d;
-                double del = d*c;
-                h *= del;
-                if (Math.abs(del - 1.0)<Constants.QL_EPSILON)
-                    return h*Math.exp(-x + a*Math.log(x) - gln);
-            }
-        }
-        throw new ArithmeticException("too few iterations");
-	}
-	*/
 
     
 

@@ -31,6 +31,9 @@ package org.jquantlib.math.distributions;
 public class CumulativeBinomialDistribution {
 	
     private int n_;
+    
+//    CumulativeBinomialDistribution(double p, int n){  	
+//    }
 
 /*  Given an integer k it provides the cumulative probability
 //      of observing kk<=k:
@@ -58,6 +61,7 @@ public class CumulativeBinomialDistribution {
 //  };
 //  */
 
+    
 	
 	static private void evaluate(double p){
 		if (!(p>0)) {
