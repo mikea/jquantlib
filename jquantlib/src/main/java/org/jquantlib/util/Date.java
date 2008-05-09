@@ -31,7 +31,7 @@ import org.jquantlib.time.Weekday;
  * @author Srinivas Hasti
  * 
  */
-public interface Date extends Observable{
+public interface Date extends Observable, Comparable<Date>{
 
     /**
      * Returns Month of the year
@@ -478,6 +478,10 @@ public interface Date extends Observable{
         public Updatable<Date> getUpdatable() {
             throw new RuntimeException("Operation not supported on NULL Date");
         }
+
+		public int compareTo(Date o) {
+			 throw new RuntimeException("Operation not supported on NULL Date");
+		}
 
     };
 

@@ -20,87 +20,159 @@
 
 package org.jquantlib.indexes;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
+import org.jquantlib.math.Closeness;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
+import org.jquantlib.util.TimeSeries;
 
 /**
  * @author Srinivas Hasti
- *
+ * 
  */
-public abstract class Index implements Observable{
+public abstract class Index implements Observable {
 
 	public abstract String getName();
-	
-	
-    //! returns the calendar defining valid fixing dates
-    public abstract Calendar fixingCalendar() ;
-    
-    //! returns TRUE if the fixing date is a valid one
-    public abstract boolean isValidFixingDate(Date fixingDate)
-    ;
-    //! returns the fixing at the given date
-    /*! the date passed as arguments must be the actual calendar
-        date of the fixing; no settlement days must be used.
-    */
-    public abstract double fixing(Date fixingDate,
-                        boolean forecastTodaysFixing);
-    
-    //! returns the fixing TimeSeries
-    //const TimeSeries<Real>& timeSeries() const {
-    //    return IndexManager::instance().getHistory(name());
-    //}
-    //! stores the historical fixing at the given date
-    /*! the date passed as arguments must be the actual calendar
-        date of the fixing; no settlement days must be used.
-    */
-    public abstract void addFixing(Date fixingDate,
-                           double fixing,
-                           boolean forceOverwrite);
-    
-    //! stores historical fixings from a TimeSeries
-    /*! the dates in the TimeSeries must be the actual calendar
-        dates of the fixings; no settlement days must be used.
-    */
-    //void addFixings(const TimeSeries<Real>& t,
-    //                bool forceOverwrite = false);
-	
-	  /**
-     * Implements multiple inheritance via delegate pattern to an inner class
-     * 
-     */
-    private Observable delegatedObservable = new DefaultObservable(this);
 
-    public void addObserver(Observer observer) {
-        delegatedObservable.addObserver(observer);
-    }
+	// ! returns the calendar defining valid fixing dates
+	public abstract Calendar getFixingCalendar();
 
-    public int countObservers() {
-        return delegatedObservable.countObservers();
-    }
+	// ! returns TRUE if the fixing date is a valid one
+	public abstract boolean isValidFixingDate(Date fixingDate);
 
-    public void deleteObserver(Observer observer) {
-        delegatedObservable.deleteObserver(observer);
-    }
+	// ! returns the fixing at the given date
+	/*
+	 * ! the date passed as arguments must be the actual calendar date of the
+	 * fixing; no settlement days must be used.
+	 */
+	public abstract double fixing(Date fixingDate, boolean forecastTodaysFixing);
 
-    public void notifyObservers() {
-        delegatedObservable.notifyObservers();
-    }
+	// ! returns the fixing TimeSeries
+	public TimeSeries<Double> timeSeries() {
+		return IndexManager.getInstance().get(getName());
+	}
 
-    public void notifyObservers(Object arg) {
-        delegatedObservable.notifyObservers(arg);
-    }
+	// ! stores the historical fixing at the given date
+	/*
+	 * ! the date passed as arguments must be the actual calendar date of the
+	 * fixing; no settlement days must be used.
+	 */
+	public void addFixing(Date fixingDate, double fixing, boolean forceOverwrite) {
+		List<Date> fixingDates = new ArrayList<Date>();
+		fixingDates.add(fixingDate);
 
-    public void deleteObservers() {
-        delegatedObservable.deleteObservers();
-    }
+		List<Double> fixings = new ArrayList<Double>();
+		fixings.add(fixing);
 
-    public List<Observer> getObservers() {
-        return delegatedObservable.getObservers();
-    }
+		addFixings(fixingDates, fixings, forceOverwrite);
+	}
+
+	// ! stores historical fixings from a TimeSeries
+	/*
+	 * ! the dates in the TimeSeries must be the actual calendar dates of the
+	 * fixings; no settlement days must be used.
+	 */
+	public void addFixings(TimeSeries<Double> t, boolean forceOverwrite) {
+		addFixings(t.dates(), t.values(), forceOverwrite);
+	}
+
+	// ! stores historical fixings at the given dates
+	/*
+	 * ! the dates passed as arguments must be the actual calendar dates of the
+	 * fixings; no settlement days must be used.
+	 */
+	public void addFixings(Collection<Date> dates, Collection<Double> values,
+			boolean forceOverwrite) {
+		String tag = getName();
+		TimeSeries<Double> h = IndexManager.getInstance().get(tag);
+		boolean missingFixing;
+		boolean validFixing;
+		boolean noInvalidFixing = true;
+		boolean noDuplicatedFixing = true;
+		Date invalidDate = null;
+		Date duplicatedDate = null;
+		Double nullValue = null;
+		Double invalidValue = Double.NaN;
+		Double duplicatedValue = Double.NaN;
+
+		Iterator<Double> valuesIterator = values.iterator();
+		for (Date date : dates) {
+			Double value = valuesIterator.next();
+			validFixing = isValidFixingDate(date);
+			double currentValue = h.find(date);
+			missingFixing = forceOverwrite
+					|| Closeness.isClose(currentValue, nullValue);
+			if (validFixing) {
+				if (missingFixing)
+					h.add(date, value);
+				else if (Closeness.isClose(currentValue, value)) {
+					// Do nothing
+				} else {
+					noDuplicatedFixing = false;
+					duplicatedDate = date;
+					duplicatedValue = value;
+				}
+			} else {
+				noInvalidFixing = false;
+				invalidDate = date;
+				invalidValue = value;
+			}
+		}
+		IndexManager.getInstance().put(tag, h);
+		if (!noInvalidFixing)
+			throw new IllegalStateException(
+					"At least one invalid fixing provided: " + invalidDate
+							+ ", " + invalidValue);
+
+		if (!noDuplicatedFixing)
+			throw new IllegalStateException(
+					"At least one duplicated fixing provided: "
+							+ duplicatedDate + ", " + duplicatedValue);
+	}
+
+	public void clearFixings() {
+		IndexManager.getInstance().clearHistory(getName());
+	}
+
+	/**
+	 * Implements multiple inheritance via delegate pattern to an inner class
+	 * 
+	 */
+	private Observable delegatedObservable = new DefaultObservable(this);
+
+	public void addObserver(Observer observer) {
+		delegatedObservable.addObserver(observer);
+	}
+
+	public int countObservers() {
+		return delegatedObservable.countObservers();
+	}
+
+	public void deleteObserver(Observer observer) {
+		delegatedObservable.deleteObserver(observer);
+	}
+
+	public void notifyObservers() {
+		delegatedObservable.notifyObservers();
+	}
+
+	public void notifyObservers(Object arg) {
+		delegatedObservable.notifyObservers(arg);
+	}
+
+	public void deleteObservers() {
+		delegatedObservable.deleteObservers();
+	}
+
+	public List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
+	}
 
 }

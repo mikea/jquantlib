@@ -19,21 +19,72 @@
  */
 package org.jquantlib.util;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
+ * TODO: Class arranges the dates in order which is different from quantlib, make sure
+ * behavior is ok
+ *
  * @author Srinivas Hasti
  *
  */
+
+//TODO: Make this a Observable
 public class TimeSeries<T> {
 	
-	private Map<Date,T> container = new HashMap<Date,T>();
+	private SortedMap<Date,T> series = new TreeMap<Date,T>();
+	
+	
 	public TimeSeries(List<Date> dates, List<T> values){
-		for(Date d:dates){
-			
+		for(int i=0;i<dates.size();i++){
+			series.put(dates.get(i), values.get(i));
 		}
 	}
+	
+	public TimeSeries(Date startingDate, List<T> values){
+		Date tmp = startingDate;
+		for(int i=0;i<values.size();i++){			
+			series.put(tmp, values.get(i));
+			tmp = startingDate.getDateAfter(i);
+		}
+	}
+	
+	 //! returns the first date for which a historical datum exists
+    public Date getFirstDate(){
+    	return series.firstKey(); //TODO: make it read only
+    }
+    //! returns the last date for which a historical datum exists
+    public Date lastDate(){
+    	return series.lastKey(); //TODO: make it read only
+    }
+    //! returns the number of historical data including null ones
+    public int size(){
+    	return series.size();
+    }
+    
+    //! returns whether the series contains any data
+    boolean isEmpty(){
+    	return series.isEmpty();
+    }
+    
+    public T find(Date d){
+    	return series.get(d);
+    }
+    
+    public Collection<T> values(){
+    	return series.values();
+    }
+    
+    public Collection<Date> dates(){
+    	return series.keySet();
+    }
 
+	public void add(Date date, T dt) {
+		series.put(date, dt);
+	}
+    
 }
