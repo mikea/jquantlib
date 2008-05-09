@@ -20,15 +20,7 @@
  */
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Weekday.FRIDAY;
-import static org.jquantlib.util.Month.APRIL;
-import static org.jquantlib.util.Month.DECEMBER;
-import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.JULY;
-import static org.jquantlib.util.Month.MAY;
-import static org.jquantlib.util.Month.NOVEMBER;
-import static org.jquantlib.util.Month.OCTOBER;
-import static org.jquantlib.util.Month.SEPTEMBER;
 
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
@@ -49,11 +41,11 @@ import org.jquantlib.util.Month;
  * <li>Holy Thursday</li>
  * <li>Good Friday</li>
  * <li>Easter Monday</li>
- * <li>Día del Veterano y de los Caídos en la Guerra de Malvinas, 2nd April</li>
+ * <li>Dia del Veterano y de los Caidos en la Guerra de Malvinas, 2nd April</li>
  * <li>Labour Day, May 1st</li>
  * <li>Death of General Manuel Belgrano, third Monday of June</li>
  * <li>Independence Day, July 9th</li>
- * <li>Death of General José de San Martin, third Monday of August</li>
+ * <li>Death of General Jose de San Martin, third Monday of August</li>
  * <li>Independence Day, September 21th</li>
  * <li>Columbus Day, October 12th</li>
  * <li>All Souls Day, November 2nd</li>
@@ -74,11 +66,11 @@ import org.jquantlib.util.Month;
  * <li>Holy Thursday</li>
  * <li>Good Friday</li>
  * <li>Easter Monday</li>
- * <li>Día del Veterano y de los Caídos en la Guerra de Malvinas, 2nd April</li>
+ * <li>Dia del Veterano y de los Caidos en la Guerra de Malvinas, 2nd April</li>
  * <li>Labour Day, May 1st</li>
  * <li>Death of General Manuel Belgrano, third Monday of June</li>
  * <li>Independence Day, July 9th</li>
- * <li>Death of General José de San Martin, third Monday of August</li>
+ * <li>Death of General Jose de San Martin, third Monday of August</li>
  * <li>Immaculate Conception, December 8th</li>
  * <li>Christmas, December 25th</li>
  * </ul>
@@ -140,7 +132,7 @@ public class Argentina extends DelegateCalendar {
             if (isWeekend(w)
             		// New Year's Day
                     || (d == 1 && m == Month.JANUARY)
-                    // Día del Veterano y de los Caídos en la Guerra de Malvinas
+                    // Dï¿½a del Veterano y de los Caï¿½dos en la Guerra de Malvinas
                     || (d == 2 && m == Month.APRIL)
                     // Labor Day
                     || (d == 1 && m == Month.MAY)
@@ -150,7 +142,7 @@ public class Argentina extends DelegateCalendar {
                     || (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.JUNE)
                     // Independence Day
                     || (d == 9 && m == Month.JULY)
-                    // Death of General José de San Martin
+                    // Death of General Josï¿½ de San Martin
                     || (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.AUGUST)
                     // Columbus Day
                     || ((d == 10 || d == 11 || d == 12 || d == 15 || d == 16)
@@ -203,7 +195,7 @@ public class Argentina extends DelegateCalendar {
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
-                    // Día del Veterano y de los Caídos en la Guerra de Malvinas
+                    // Dï¿½a del Veterano y de los Caï¿½dos en la Guerra de Malvinas
                     || (d == 2 && m == Month.APRIL)
                     // Labor Day
                     || (d == 1 && m == Month.MAY)
@@ -211,7 +203,7 @@ public class Argentina extends DelegateCalendar {
                     || (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.JUNE)
                     // Independence Day
                     || (d == 9 && m == JULY)
-                    // Death of General José de San Martin
+                    // Death of General Josï¿½ de San Martin
                     || (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.AUGUST)
                     // Immaculate Conception
                     || (d == 8 && m == Month.DECEMBER)

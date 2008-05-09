@@ -180,6 +180,7 @@
         <configuration>
           <source>${maven.compile.source}</source>
           <target>${maven.compile.target}</target>
+          <encoding>${maven.compile.encoding}</encoding>
         </configuration>
       </plugin>
       
@@ -644,6 +645,7 @@
     <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
     <maven.compile.source>1.6</maven.compile.source>
     <maven.compile.target>1.6</maven.compile.target>
+    <maven.compile.encoding>UTF8</maven.compile.encoding>
     <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
     <maven.jar.index>false</maven.jar.index>
     <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
