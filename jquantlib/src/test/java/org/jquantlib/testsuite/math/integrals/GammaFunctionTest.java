@@ -16,9 +16,11 @@ public class GammaFunctionTest extends TestCase{
 								{1.225, -0.0922078291},
 								{1.5,   -0.1207822376},
 								{1.975, -0.0103670060} };
+		
 		GammaFunction gammFunction = new GammaFunction();
 		for(int i=0;i<values.length;i++){
 			double x = values[i][0];
+			System.out.println("x: " + x);
 			double expected = values[i][1];
 			double realised = gammFunction.logValue(x);
 			double tolerance = 1.0e-10;
