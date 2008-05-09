@@ -20,7 +20,6 @@ public class GammaFunctionTest extends TestCase{
 		GammaFunction gammFunction = new GammaFunction();
 		for(int i=0;i<values.length;i++){
 			double x = values[i][0];
-			System.out.println("x: " + x);
 			double expected = values[i][1];
 			double realised = gammFunction.logValue(x);
 			double tolerance = 1.0e-10;
