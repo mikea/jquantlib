@@ -20,16 +20,13 @@
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
-
 /**
  * @author Richard Gomes
  * @author Dominik Holenstein
  */
 
 
-public class GammaFunction implements UnaryFunctionDouble {
+public class GammaFunction {
 	
 	private static final double c1_ = 76.18009172947146;
     private static final double c2_ = -86.50532032941677;
@@ -38,10 +35,6 @@ public class GammaFunction implements UnaryFunctionDouble {
     private static final double c5_ = 0.1208650973866179e-2;
     private static final double c6_ = -0.5395239384953e-5;
 	    
-    public double evaluate(double x){
-    	throw new UnsupportedOperationException();
-    }
-   
 	public double logValue(double x) {
         if (!(x>0.0)){
         	throw new ArithmeticException("positive argument required " + x);
@@ -58,8 +51,4 @@ public class GammaFunction implements UnaryFunctionDouble {
 
         return -temp+Math.log(2.5066282746310005*ser/x);
     }
-
-    
-
-	
 }

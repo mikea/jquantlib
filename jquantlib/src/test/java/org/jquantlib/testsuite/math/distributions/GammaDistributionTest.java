@@ -33,27 +33,30 @@ import org.junit.Test;
  **/
 
 public class GammaDistributionTest {
-	/*
+	
 	@Test
 	public void testGammaDisribution() {
-		double[][] values =	{	{1, -0.0388257395},
-								{2, -0.0922078291},
-								{5,   -0.1207822376},
-								{6, -0.0103670060} };
+		/*double[] values =	{	-0.0388257395},
+								-0.0922078291},
+								-0.1207822376},
+								-0.0103670060} };
+		*/
 		
 		double a = 1.0; // alpha
+		double x = 3.0; // 
 		
-		GammaDistribution gammDistribution = new GammaDistribution(a);
-		for(int i=0;i<values.length;i++){
-			double x = values[i][0];
-			double expected = values[i][1];
-			double realised = gammDistribution.GammaDistribution(i);
-			double tolerance = 1.0e-10;
-			if (Math.abs(expected-realised)>tolerance){
-				TestCase.fail("x: " + x + " expected: " + expected + " realised: " + realised);
-			}
+		GammaDistribution gammDistribution = new GammaDistribution(a,x);
+		for(int i=1;i<21;i++){
+		//	double x = values[i][0];
+		//	double expected = values[i][1];
+			double realised = gammDistribution.evaluate(i);
+			System.out.println(realised);
+	//		double tolerance = 1.0e-10;
+	//		if (Math.abs(expected-realised)>tolerance){
+	//			TestCase.fail("x: " + x + " expected: " + expected + " realised: " + realised);
+	//		}
 		}
 	}
-	*/
-
+	
 }
+

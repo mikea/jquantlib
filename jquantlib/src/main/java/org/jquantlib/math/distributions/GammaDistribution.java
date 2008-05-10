@@ -33,25 +33,23 @@ import org.jquantlib.math.UnaryFunctionDouble;
 
 public class GammaDistribution {
 	
-	static private double a_;
+	static private double a_; // alpha
 	
-	public GammaDistribution (double a){
-    	a_=a;
-    	
-    	if (a_ < 0.0) {
-    		throw new ArithmeticException("invalid parameter for gamma distribution");
-    	}
+	public GammaDistribution (double a, double x){
+    	a_=a;    	
     }
 	
 	public double evaluate(double x){
-	    	throw new UnsupportedOperationException();
-	    }
-
+		if (a_ <= 0.0) {
+    		throw new ArithmeticException("a_ must be > 0");
+    	}
+		return GammaDist(x);
+	}
 	
-	public double GammaDistribution(double x) {
+	public double GammaDist(double x) {
      	
     	if (x <= 0.0) {
-			return 0.0;
+    		throw new ArithmeticException("x must be > 0");
 		}
 
     	GammaFunction gf = new GammaFunction();
@@ -60,7 +58,7 @@ public class GammaDistribution {
 
         if (x<(a_+1.0)) {
         	double ap = a_;
-        	double del = 1.0/a_;
+        	double del = 1.0/a_; // beta
         	double sum = del;
         	for (int n=1; n<=100; n++) {
         		ap += 1.0;
