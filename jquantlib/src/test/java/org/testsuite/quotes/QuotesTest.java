@@ -20,7 +20,7 @@
 
 package org.testsuite.quotes;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
@@ -53,8 +53,8 @@ public class QuotesTest {
 	    Flag f = new Flag();
 	    me.addObserver(f);
 	    me.setValue(3.14);
-
-        assertFalse("Observer was not notified of quote change", !f.isUp());
+	    if (!f.isUp())
+	    	fail("Observer was not notified of quote change");
 	}
 
 	@Test
@@ -69,13 +69,15 @@ public class QuotesTest {
 	    h.addObserver(f);
 
 	    me1.setValue(3.14);
-        assertFalse("Observer was not notified of quote change", !f.isUp());
+	    if (!f.isUp())
+	    	fail("Observer was not notified of quote change");
 
 	    f.lower();
 	    SimpleQuote me2 = new SimpleQuote(0.0);
 	    
 	    h.setLink(me2);
-        assertFalse("Observer was not notified of quote change", !f.isUp());
+	    if (!f.isUp())
+	    	fail("Observer was not notified of quote change");
 	}
 
 //	@Test
@@ -94,7 +96,7 @@ public class QuotesTest {
 //	        Real x = derived.value(),
 //	             y = funcs[i](me->value());
 //	        if (Math.abs(x-y) > 1.0e-10)
-//	            assertFalse("derived quote yields " << x << "\n"
+//	            fail("derived quote yields " << x << "\n"
 //	                       << "function result is " << y);
 //	    }
 //	}
@@ -118,7 +120,7 @@ public class QuotesTest {
 //	        Real x = composite.value(),
 //	             y = funcs[i](me1->value(),me2->value());
 //	        if (Math.abs(x-y) > 1.0e-10)
-//	            assertFalse("composite quote yields " << x << "\n"
+//	            fail("composite quote yields " << x << "\n"
 //	                       << "function result is " << y);
 //	    }
 //	}
@@ -144,7 +146,7 @@ public class QuotesTest {
 //	    /*@Rate*/ double  expectedForwardValue = euribor.fixing(fixingDate, true);
 //	    // we test if the forward value given by the quote is consistent
 //	    // with the one directly given by the index
-//        assertFalse("Foward Value Quote quote yields " 
+//        fail("Foward Value Quote quote yields " 
 //        		+ forwardValue + "\n  expected result is " 
 //        		+ expectedForwardValue, 
 //        			Math.abs(forwardValue-expectedForwardValue) <= 1.0e-15);
@@ -152,12 +154,12 @@ public class QuotesTest {
 //	    Flag f;
 //	    f.registerWith(forwardValueQuote);
 //	    forwardQuote.setValue(0.04);
-//        assertFalse("Observer was not notified of quote change", f.isUp());
+//        fail("Observer was not notified of quote change", f.isUp());
 //
 //	    // and we re-test if the values are still matching
 //	    forwardValue =  forwardValueQuote.getValue();
 //	    expectedForwardValue = euribor.fixing(fixingDate, true);
-//        assertFalse("Foward Value Quote quote yields " 
+//        fail("Foward Value Quote quote yields " 
 //        		+ forwardValue 
 //        		+ "\n  expected result is " 
 //        		+ expectedForwardValue, 
@@ -175,7 +177,7 @@ public class QuotesTest {
 //	    ImpliedStdDevQuote impliedStdevQuote = new ImpliedStdDevQuote(optionType, forwardHandle, priceHandle, strike, guess, accuracy));
 //	    /*@StdDev*/ double impliedStdev = impliedStdevQuote.getValue();
 //	    /*@StdDev*/ double expectedImpliedStdev = blackFormulaImpliedStdDev(optionType, strike, forwardQuote.getValue(), price, 1.0, guess, 1.0e-6);
-//        assertFalse("impliedStdevQuote yields " 
+//        fail("impliedStdevQuote yields " 
 //        		+ impliedStdev 
 //        		+ "\n  expected result is " 
 //        		+ expectedImpliedStdev,
@@ -184,11 +186,11 @@ public class QuotesTest {
 //	    Quote quote = impliedStdevQuote;
 //	    quote.addObserver(f);
 //	    forwardQuote.setValue(0.05);
-//	    assertFalse("Observer was not notified of quote change", f.isUp());
+//	    fail("Observer was not notified of quote change", f.isUp());
 //	    quote.getValue();
 //	    f.lower();
 //	    priceQuote.setValue(0.11);
-//      assertFalse("Observer was not notified of quote change", f.isUp());
+//      fail("Observer was not notified of quote change", f.isUp());
 //	}
 	
 

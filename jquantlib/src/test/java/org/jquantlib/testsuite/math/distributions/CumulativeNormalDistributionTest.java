@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.math.distributions;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class CumulativeNormalDistributionTest extends TestCase {
+public class CumulativeNormalDistributionTest {
 
 	@Test
 	public void testKnownGoodValuesFromAbramStegun() {

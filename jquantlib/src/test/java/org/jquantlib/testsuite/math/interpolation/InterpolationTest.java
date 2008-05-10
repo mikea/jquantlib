@@ -39,7 +39,7 @@
 package org.jquantlib.testsuite.math.interpolation;
 
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.LinearInterpolation;
@@ -915,11 +915,11 @@ public class InterpolationTest {
 	    	for (int i=0; i<len; i++) {
 		    	y2[i] = f.evaluate(x2[i]);
 	    	}
-	    	assertFalse("failed to throw exception when trying to extrapolate", true);
+	    	fail("failed to throw exception when trying to extrapolate");
 	    } catch (IllegalArgumentException e1) {
 	        // This exception was expected. It's OK! Do nothing.
 	    } catch (Exception e2) {
-	    	assertFalse("Unexpected exception", true);
+	    	fail("Unexpected exception");
 	    	e2.printStackTrace();
 	    }
 	    
@@ -937,7 +937,12 @@ public class InterpolationTest {
 	            sb.append("\n    expected:   ").append(expected);
 	            sb.append("\n    calculated: ").append(y2[i]);
 	            sb.append("\n    error:      ").append(Math.abs(y2[i]-expected));
-	        	assertFalse(sb.toString(), true);
+	            
+	            if (Math.abs(y2[i]-expected) > tolerance)
+	            	fail("failed to reproduce " + (i+1) + "o. expected datum\n"
+	            			+ "    expected:   " + expected + "\n"
+	            			+ "    calculated: " + y2[i] + "\n"
+		                    + "    error:      " + Math.abs(y2[i]-expected) );
 	        }
 	    }
 	}
@@ -1234,7 +1239,7 @@ public class InterpolationTest {
 //	        sb.append("\n    calculated: ").append(calculatedVol);
 //	        sb.append("\n    error:      ").append(Math.abs(calculatedVol-volatilities[i]));
 //	        
-//	        assertFalse(sb.toString(), Math.abs(volatilities[i]-calculatedVol) > tolerance);
+//	        fail(sb.toString(), Math.abs(volatilities[i]-calculatedVol) > tolerance);
 //	    }
 //
 //	    Real alphaGuess = 0.01;

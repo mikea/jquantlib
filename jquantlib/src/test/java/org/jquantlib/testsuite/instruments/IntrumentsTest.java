@@ -37,7 +37,7 @@
 
 package org.jquantlib.testsuite.instruments;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.instruments.Instrument;
 import org.jquantlib.instruments.Stock;
@@ -72,23 +72,28 @@ public class IntrumentsTest {
 	    
 	    s.getNPV();
 	    me1.setValue(3.14);
-	    assertFalse("Observer was not notified of instrument change", !f.isUp());
+	    if (!f.isUp())
+	    	fail("Observer was not notified of instrument change");
 	    
 	    s.getNPV();
 	    f.lower();
 	    SimpleQuote me2 = new SimpleQuote(0.0);
 
 	    h.setLink(me2);
-	    assertFalse("Observer was not notified of instrument change", !f.isUp());
+	    if (!f.isUp())
+	    	fail("Observer was not notified of instrument change");
 
 	    f.lower();
 	    s.freeze();
 	    s.getNPV();
 	    me2.setValue(2.71);
-	    assertFalse("Observer was notified of frozen instrument change", f.isUp());
+	    if (f.isUp())
+	    	fail("Observer was notified of frozen instrument change");
+	    
 	    s.getNPV();
 	    s.unfreeze();
-	    assertFalse("Observer was not notified of instrument change", !f.isUp());
+	    if (!f.isUp())
+	    	fail("Observer was not notified of instrument change");
 	}
 
 }

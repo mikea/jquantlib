@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.math.integrals;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.TabulatedGaussLegendre;
@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class TabulatedGaussLegendreTest extends TestCase {
+public class TabulatedGaussLegendreTest {
 
 	@Test
 	public void testPolynomials() {
@@ -28,13 +28,11 @@ public class TabulatedGaussLegendreTest extends TestCase {
 	    for (int i=0; i<order.length; i++) {
 	        quad.setOrder(order[i]);
 	        double realised = quad.evaluate(f);
-	        
-	        if (Math.abs(realised-expected) > tolerance) {
-	            fail(" integrating " + tag + "\n"
-	                        + "    order " + order[i] + "\n"
-	                        + "    realised: " + realised + "\n"
-	                        + "    expected: " + expected);
-	        }
+	        if (Math.abs(realised-expected) > tolerance)
+            fail(" integrating " + tag + "\n"
+                        + "    order " + order[i] + "\n"
+                        + "    realised: " + realised + "\n"
+                        + "    expected: " + expected);
 	    }
 	}
 }

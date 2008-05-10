@@ -21,7 +21,7 @@
 
 package org.jquantlib.testsuite.math.distributions;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.jquantlib.math.distributions.BinomialDistribution;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import org.junit.Test;
  * @author Dominik Holenstein
  **/
 
-public class BinomialDistributionTest extends TestCase {
+public class BinomialDistributionTest {
 	
 	@Test
 	public void testBinomialDistribution() {

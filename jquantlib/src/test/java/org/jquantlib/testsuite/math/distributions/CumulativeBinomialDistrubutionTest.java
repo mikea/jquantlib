@@ -11,7 +11,7 @@ import org.junit.Ignore;
  * @author Dominik Holenstein
  */
 
-public class CumulativeBinomialDistrubutionTest extends TestCase {
+public class CumulativeBinomialDistrubutionTest {
 	
 	// This test is ignored because it is not finished yet
 	// beta.cpp and beta.hpp need to be translated first

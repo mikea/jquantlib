@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.math.integrals;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.GaussKonrodPattersonIntegrator;
@@ -10,7 +10,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class GaussKonrodPattersonIntegratorTest extends TestCase {
+public class GaussKonrodPattersonIntegratorTest {
 
 	
 	@Test
@@ -25,20 +25,19 @@ public class GaussKonrodPattersonIntegratorTest extends TestCase {
 	@Test
 	public void checkSingleTabulated(UnaryFunctionDouble f, String tag,
 	                         double expected, double tolerance) {
+		
 		Integrator quad = new GaussKonrodPattersonIntegrator();
-
 	    double realised = quad.integrate(f,-1,1);
 	        
-	        if (Math.abs(realised-expected) > tolerance) {
-	            fail(" integrating " + tag + "\n"
-	                        + "    realised: " + realised + "\n"
-	                        + "    expected: " + expected);
-	        }
+        if (Math.abs(realised-expected) > tolerance)
+        	fail(" integrating " + tag + "\n"
+                    + "    realised: " + realised + "\n"
+                    + "    expected: " + expected);
 	    
 	}
 	
 	@Test
-	public void testExp(){
+	public void testExp() {
 		UnaryFunctionDouble exp = new UnaryFunctionDouble() {
 
 			public double evaluate(double x) {
@@ -49,14 +48,11 @@ public class GaussKonrodPattersonIntegratorTest extends TestCase {
 		};
 		
 		Integrator quad = new GaussKonrodPattersonIntegrator(0,0);
-
 		double realised = quad.integrate(exp, 0, 6);
-		
 		double expected = Math.exp(6) - 1.0;
-		
 		double tolerance = 1.0e-10;
-		if (Math.abs(realised-expected)>tolerance){
+		
+		if (Math.abs(realised-expected)>tolerance)
 			fail("Expected: " + expected + " Realised: " + realised);
-		}
 	}
 }

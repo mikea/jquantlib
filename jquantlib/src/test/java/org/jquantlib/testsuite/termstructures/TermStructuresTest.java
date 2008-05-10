@@ -37,7 +37,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 package org.jquantlib.testsuite.termstructures;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual360;
@@ -62,9 +62,7 @@ public class TermStructuresTest {
 	private Calendar calendar;
 	private int settlementDays;
 	private YieldTermStructure termStructure;
-
-//PENDING
-//	private YieldTermStructure dummyTermStructure_;
+	private YieldTermStructure dummyTermStructure;
 
 
 	private class Datum {
@@ -81,78 +79,73 @@ public class TermStructuresTest {
 	
 	
 	public TermStructuresTest() {
-            calendar = org.jquantlib.time.calendars.Target.getCalendar();
-            settlementDays = 2;
-            org.jquantlib.util.Date today = calendar.advance(org.jquantlib.util.DateFactory.getFactory().getTodaysDate());
-            org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
-            org.jquantlib.util.Date settlement = calendar.advance(today,settlementDays,TimeUnit.DAYS);
-            
-            Datum depositData[] = new Datum[] {
-            		 new Datum( 1, TimeUnit.MONTHS, 4.581 ),
-            		 new Datum( 2, TimeUnit.MONTHS, 4.573 ),
-            		 new Datum( 3, TimeUnit.MONTHS, 4.557 ),
-            		 new Datum( 6, TimeUnit.MONTHS, 4.496 ),
-            		 new Datum( 9, TimeUnit.MONTHS, 4.490 )
-            };
-            
-            Datum swapData[] =  new Datum[] {
-                new Datum(  1, TimeUnit.YEARS, 4.54 ),
+        calendar = org.jquantlib.time.calendars.Target.getCalendar();
+        settlementDays = 2;
+        org.jquantlib.util.Date today = calendar.advance(org.jquantlib.util.DateFactory.getFactory().getTodaysDate());
+        org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
+        org.jquantlib.util.Date settlement = calendar.advance(today,settlementDays,TimeUnit.DAYS);
+        
+        Datum depositData[] = new Datum[] {
+        		new Datum( 1, TimeUnit.MONTHS, 4.581 ),
+        		new Datum( 2, TimeUnit.MONTHS, 4.573 ),
+        		new Datum( 3, TimeUnit.MONTHS, 4.557 ),
+        		new Datum( 6, TimeUnit.MONTHS, 4.496 ),
+        		new Datum( 9, TimeUnit.MONTHS, 4.490 )
+        };
+        
+        Datum swapData[] =  new Datum[] {
+        		new Datum(  1, TimeUnit.YEARS, 4.54 ),
                 new Datum(  5, TimeUnit.YEARS, 4.99 ),
                 new Datum( 10, TimeUnit.YEARS, 5.47 ),
                 new Datum( 20, TimeUnit.YEARS, 5.89 ),
                 new Datum( 30, TimeUnit.YEARS, 5.96 )
-            };
-            
-            int deposits = depositData.length;
-            int swaps = swapData.length;
+        };
+        
+        int deposits = depositData.length;
+        int swaps = swapData.length;
             
 //           
 //PENDING
 //            
 //
-//            RateHelper instruments[] = new RateHelper[deposits+swaps];
-//            for (int i=0; i<deposits; i++) {
-//                instruments[i] = new DepositRateHelper(
-//                						depositData[i].rate/100,
-//                                        depositData[i].n*depositData[i].units,
-//                                        settlementDays, calendar,
-//                                        ModifiedFollowing, true,
-//                                        Actual360());
-//            }
-//            
-//            
-//            IborIndex index = new IborIndex(
-//            							"dummy", 
-//            							6 * Period.ONE_MONTH_FORWARD.getLength(),
-//										settlementDays,
-//										Currency(),
-//										calendar,
-//										ModifiedFollowing,
-//										false,
-//										Actual360.getDayCounter());
-//            
-//            for (int i=0; i<swaps; ++i) {
-//                instruments[i+deposits] = new SwapRateHelper(
-//                						swapData[i].rate/100,
-//                						new Period(swapData[i].n, swapData[i].units),
-//	                                    calendar, 
-//	                                    Frequency.ANNUAL,
-//	                                    BusinessDayConvention.UNADJUSTED, Thirty360.getDayCounter(),
-//	                                    index);
-//            }
-//            
-//            termStructure = new PiecewiseYieldCurve<Discount,LogLinear>(settlement, instruments, Actual360.getDayCounter());
-//                                                        
-//            dummyTermStructure = new PiecewiseYieldCurve<Discount,LogLinear>(settlement, instruments, Actual360.getDayCounter());
+//        RateHelper instruments[] = new RateHelper[deposits+swaps];
+//        for (int i=0; i<deposits; i++) {
+//            instruments[i] = new DepositRateHelper(
+//            						depositData[i].rate/100,
+//            						new Period(depositData[i].n, depositData[i].units),
+//                                    settlementDays, calendar,
+//                                    BusinessDayConvention.MODIFIED_FOLLOWING, true,
+//                                    Actual360.getDayCounter());
 //        }
-//
-
+//        
+//        
+//        IborIndex index = new IborIndex(
+//        							"dummy", 
+//        							6 * Period.ONE_MONTH_FORWARD.getLength(),
+//									settlementDays,
+//									Currency(),
+//									calendar,
+//									BusinessDayConvention.MODIFIED_FOLLOWING, false,
+//									Actual360.getDayCounter());
+//        
+//        for (int i=0; i<swaps; ++i) {
+//            instruments[i+deposits] = new SwapRateHelper(
+//            						swapData[i].rate/100,
+//            						new Period(swapData[i].n, swapData[i].units),
+//                                    calendar, Frequency.ANNUAL,
+//                                    BusinessDayConvention.UNADJUSTED, Thirty360.getDayCounter(),
+//                                    index);
+//        }
+//        
+//        termStructure = new PiecewiseYieldCurve<Discount,LogLinear>(settlement, instruments, Actual360.getDayCounter());
+//                                                    
+//        dummyTermStructure = new PiecewiseYieldCurve<Discount,LogLinear>(settlement, instruments, Actual360.getDayCounter());
     }
-	
+
 	
 
 	@Test
-	void testReferenceChange() {
+	public void testReferenceChange() {
 	
 	    System.out.println("Testing term structure against evaluation date change...");
 	
@@ -174,10 +167,10 @@ public class TermStructuresTest {
 	        calculated[i] = termStructure.getDiscount(today.increment(30).increment(days[i]));
 	
 	    for (int i=0; i<days.length; i++) {
-	            assertFalse("\n  Discount at " + days[i] + " days:\n"
+	    	if (!Closeness.isClose(expected[i],calculated[i]))
+	            fail("\n  Discount at " + days[i] + " days:\n"
 	                        + "    before date change: " + expected[i] + "\n"
-	                        + "    after date change:  " + calculated[i],
-	                        !Closeness.isClose(expected[i],calculated[i]));
+	                        + "    after date change:  " + calculated[i]);
 	    }
 	}
 
@@ -197,11 +190,10 @@ public class TermStructuresTest {
 	    /*@DiscountFactor*/ double discount = termStructure.getDiscount(testDate);
 	    /*@DiscountFactor*/ double impliedDiscount = implied.getDiscount(testDate);
 	    	
-        assertFalse(
-            "unable to reproduce discount from implied curve\n"
-            + "    calculated: " + baseDiscount*impliedDiscount + "\n"
-            + "    expected:   " + discount, 
-            Math.abs(discount - baseDiscount*impliedDiscount) > tolerance);
+        if (Math.abs(discount - baseDiscount*impliedDiscount) > tolerance)
+        	fail("unable to reproduce discount from implied curve\n"
+	            + "    calculated: " + baseDiscount*impliedDiscount + "\n"
+	            + "    expected:   " + discount);
 	}
 	
 	@Test
@@ -219,7 +211,8 @@ public class TermStructuresTest {
 	    Flag flag = new Flag();
 	    implied.addObserver(flag);
 	    h.setLink(termStructure);
-	    assertFalse("Observer was not notified of term structure change", !flag.isUp());
+	    if (!flag.isUp())
+	    	fail("Observer was not notified of term structure change");
 	}
 	
 	
@@ -232,18 +225,18 @@ public class TermStructuresTest {
 //	    Quote me = new SimpleQuote(0.01);
 //	    Handle<Quote> mh = new Handle(me);
 //	    
-//	    YieldTermStructure spreaded = new ForwardSpreadedTermStructure( new Handle<YieldTermStructure>(termStructure_), mh);
-//	    Date testDate = termStructure_.getReferenceDate().increment(5 * Period.ONE_YEAR_FORWARD.getLength());
-//	    DayCounter tsdc  = termStructure_.getDayCounter();
+//	    YieldTermStructure spreaded = new ForwardSpreadedTermStructure( new Handle<YieldTermStructure>(termStructure), mh);
+//	    Date testDate = termStructure.getReferenceDate().increment(5 * Period.ONE_YEAR_FORWARD.getLength());
+//	    DayCounter tsdc  = termStructure.getDayCounter();
 //	    DayCounter sprdc = spreaded.getDayCounter();
 //	
 //	    // FIXME :: code review:: could be:: /*@Rate*/ double forward = ... ?????
-//	    InterestRate forward = termStructure_.getForwardRate(testDate, testDate, tsdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
+//	    InterestRate forward = termStructure.getForwardRate(testDate, testDate, tsdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
 //	
 //	    // FIXME :: code review:: could be:: /*@Rate*/ double spreadedForward = ... ?????
 //	    InterestRate spreadedForward = spreaded.getForwardRate(testDate, testDate, sprdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
 //	    
-//        assertFalse(
+//        fail(
 //            "unable to reproduce forward from spreaded curve\n"
 //            + "    calculated: "
 //            + (spreadedForward.doubleValue() - me.doubleValue()) + "\n"
@@ -259,18 +252,18 @@ public class TermStructuresTest {
 //	    System.out.println("Testing observability of forward-spreaded term structure...");
 //	
 //	    SimpleQuote me = new SimpleQuote(0.01);
-//	    Handle<Quote> mh = new Handle(me);
+//	    Handle<Quote> mh = new Handle<Quote>(me);
 //	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(); //(dummyTermStructure_);
 //	    YieldTermStructure spreaded = new ForwardSpreadedTermStructure(h, mh);
 //	    
 //	    Flag flag = new Flag();
 //	    spreaded.addObserver(flag);
-//	    h.setLink(termStructure_);
-//	    assertFalse("Observer was not notified of term structure change", !flag.isUp());
+//	    h.setLink(termStructure);
+//	    fail("Observer was not notified of term structure change", !flag.isUp());
 //	    
 //	    flag.lower();
 //	    me.setValue(0.005);
-//	    assertFalse("Observer was not notified of spread change", !flag.isUp());
+//	    fail("Observer was not notified of spread change", !flag.isUp());
 //	}
 //	
 //	
@@ -282,17 +275,17 @@ public class TermStructuresTest {
 //	    double tolerance = 1.0e-10;
 //	    Quote me = new SimpleQuote(0.01);
 //	    Handle<Quote> mh = new Handle(me);
-//	    YieldTermStructure spreaded = new ZeroSpreadedTermStructure(new Handle<YieldTermStructure>(termStructure_), mh);
-//	    Date testDate = termStructure_.getReferenceDate().increment(5 * Period.ONE_YEAR_FORWARD.getLength());
-//	    DayCounter rfdc  = termStructure_.getDayCounter();
+//	    YieldTermStructure spreaded = new ZeroSpreadedTermStructure(new Handle<YieldTermStructure>(termStructure), mh);
+//	    Date testDate = termStructure.getReferenceDate().increment(5 * Period.ONE_YEAR_FORWARD.getLength());
+//	    DayCounter rfdc  = termStructure.getDayCounter();
 //	    
 //	    // FIXME :: code review:: could be:: /*@Rate*/ double zero = ... ?????
-//	    InterestRate zero = termStructure_.getZeroRate(testDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
+//	    InterestRate zero = termStructure.getZeroRate(testDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
 //	    
 //	    // FIXME :: code review:: could be:: /*@Rate*/ double spreadedZero = ... ?????
 //	    InterestRate spreadedZero = spreaded.getZeroRate(testDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
 //	    
-//	    assertFalse(
+//	    fail(
 //	        "unable to reproduce zero yield from spreaded curve\n"
 //	        + "    calculated: " + (spreadedZero.doubleValue() - me.doubleValue()) + "\n"
 //	        + "    expected:   " + zero.doubleValue(),
@@ -308,19 +301,19 @@ public class TermStructuresTest {
 //	    SimpleQuote me = new SimpleQuote(0.01);
 //	    Handle<Quote> mh = new Handle<Quote>(me);
 //	    
-//	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(dummyTermStructure_);
+//	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(dummyTermStructure);
 //	    YieldTermStructure spreaded = new ZeroSpreadedTermStructure(h, mh);
 //	
 //	    Flag flag = new Flag();
 //	    spreaded.addObserver(flag);
-//	    h.setLink(termStructure_);
+//	    h.setLink(termStructure);
 //	    
-//	    assertFalse("Observer was not notified of term structure change", !flag.isUp());
+//	    fail("Observer was not notified of term structure change", !flag.isUp());
 //	    
 //	    flag.lower();
 //	    me.setValue(0.005);
-//	    assertFalse("Observer was not notified of spread change", !flag.isUp());
+//	    fail("Observer was not notified of spread change", !flag.isUp());
 //	}
-//
+
 
 }

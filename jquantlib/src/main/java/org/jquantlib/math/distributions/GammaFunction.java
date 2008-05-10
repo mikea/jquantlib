@@ -36,9 +36,10 @@ public class GammaFunction {
     private static final double c6_ = -0.5395239384953e-5;
 	    
 	public double logValue(double x) {
-        if (!(x>0.0)){
+        
+		if (x<=0.0)
         	throw new ArithmeticException("positive argument required " + x);
-        }
+
         double temp = x + 5.5;
         temp -= (x + 0.5)*Math.log(temp);
         double ser=1.000000000190015;

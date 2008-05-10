@@ -1,13 +1,13 @@
 package org.jquantlib.testsuite.math.distributions;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.NonCentralChiSquaredDistribution;
 
 /**
  * @author <Richard Gomes>
  */
-public class NonCentralChiSquaredDistributionTest extends TestCase{
+public class NonCentralChiSquaredDistributionTest {
 
 	public void testPenevRayKovELV() {
 		
@@ -28,11 +28,12 @@ public class NonCentralChiSquaredDistributionTest extends TestCase{
 			double expected = values[i][3];
 			NonCentralChiSquaredDistribution nccsd = new NonCentralChiSquaredDistribution(df, ncp);
 			double realised = nccsd.evaluate(x);
-			
-			if (Math.abs(expected-realised)>1.0e-6){
-				fail("Noncentral chi squared failed: df " + df + " ncp " + ncp + " x " + x + " expected " + expected + " realised " + realised);
-			}
-			
+			if (Math.abs(expected-realised)>1.0e-6)
+				fail("Noncentral chi squared failed: df " + df 
+					+ " ncp " + ncp 
+					+ " x " + x 
+					+ " expected " + expected 
+					+ " realised " + realised);
 		}
 	}
 }

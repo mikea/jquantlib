@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.math.distributions;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class NormalDistributionTest extends TestCase {
+public class NormalDistributionTest {
 	
 	@Test
 	public void testKnownGoodValuesFromAbramStegun() {

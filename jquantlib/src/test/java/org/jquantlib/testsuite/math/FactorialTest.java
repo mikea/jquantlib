@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.math;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.Factorial;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class FactorialTest extends TestCase{
+public class FactorialTest {
 
 	@Test
 	public void testCompareToDirect() {
@@ -17,16 +17,14 @@ public class FactorialTest extends TestCase{
 		int n = 4;
 		double expected = factorial(n);
 		double realised = factorial.get(n);
-		if (Math.abs(expected-realised)>1.0e-15){
-			fail("n: " + n + " Expected: " + expected + " realised: " + realised );
-		}
+		if (Math.abs(expected-realised)>1.0e-15)
+			fail("n: " + n + " Expected: " + expected + " realised: " + realised);
 		
 		n = 30;
 		expected = factorial(n);
 		realised = factorial.get(n);
-		if (Math.abs((expected-realised)/expected)>1.0e-10){
-			fail("n: " + n + " Expected: " + expected + " realised: " + realised );
-		}
+		if (Math.abs((expected-realised)/expected)>1.0e-10)
+			fail("n: " + n + " Expected: " + expected + " realised: " + realised);
 
 	}
 	

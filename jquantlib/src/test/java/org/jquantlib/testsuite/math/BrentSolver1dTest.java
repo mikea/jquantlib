@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.math;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.jquantlib.math.BrentSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class BrentSolver1dTest extends TestCase{
+public class BrentSolver1dTest {
 
 	@Test
 	public void testInvertSquare() {

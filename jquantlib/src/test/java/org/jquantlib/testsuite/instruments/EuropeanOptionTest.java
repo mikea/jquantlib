@@ -40,7 +40,7 @@
 
 package org.jquantlib.testsuite.instruments;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
@@ -353,9 +353,19 @@ public class EuropeanOptionTest {
             sb.append("    result ").append(values[i].result).append('\n');
             sb.append("    tol ").append(values[i].tol); // .append('\n');
             
-            //FIXME: remove comments
-        	// assertFalse(sb.toString(), error<=tolerance);
-            assertFalse("***** FALSE POSITIVE *****", true);
+        	if (error>tolerance)
+        		fail(exercise + " " + payoff.getOptionType() + " option with " + payoff + " payoff:\n" 
+        	    + "    spot value:       " + values[i].s + "\n"
+        	    + "    strike:           " + payoff.getStrike() + "\n" 
+        	    + "    dividend yield:   " + values[i].q + "\n" 
+        	    + "    risk-free rate:   " + values[i].r + "\n" 
+        	    + "    reference date:   " + today + "\n" 
+        	    + "    maturity:         " + values[i].t + "\n" 
+        	    + "    volatility:       " + values[i].v + "\n\n" 
+        	    + "    expected:         " + values[i].result + "\n" 
+        	    + "    calculated:       " + calculated + "\n"
+        	    + "    error:            " + error + "\n" 
+        	    + "    tolerance:        " + tolerance);
 	    }
 
 	}
@@ -875,17 +885,17 @@ public class EuropeanOptionTest {
 //	                                                              maxEvaluations);
 //	                      } catch (std::exception& e) {
 //	                          BOOST_ERROR(
-//	                              "\nimplied vol calculation failed:" <<
-//	                              "\n   option:         " << types[i] <<
-//	                              "\n   strike:         " << strikes[j] <<
-//	                              "\n   spot value:     " << u <<
-//	                              "\n   dividend yield: " << io::rate(q) <<
-//	                              "\n   risk-free rate: " << io::rate(r) <<
-//	                              "\n   today:          " << today <<
-//	                              "\n   maturity:       " << exDate <<
-//	                              "\n   volatility:     " << io::volatility(v) <<
-//	                              "\n   option value:   " << value <<
-//	                              "\n" << e.what());
+//	                              "\nimplied vol calculation failed:" +
+//	                              "\n   option:         " + types[i] +
+//	                              "\n   strike:         " + strikes[j] +
+//	                              "\n   spot value:     " + u +
+//	                              "\n   dividend yield: " + io::rate(q) +
+//	                              "\n   risk-free rate: " + io::rate(r) +
+//	                              "\n   today:          " + today +
+//	                              "\n   maturity:       " + exDate +
+//	                              "\n   volatility:     " + io::volatility(v) +
+//	                              "\n   option value:   " + value +
+//	                              "\n" + e.what());
 //	                      }
 //	                      if (std::fabs(implVol-v) > tolerance) {
 //	                          // the difference might not matter
@@ -894,26 +904,26 @@ public class EuropeanOptionTest {
 //	                          Real error = relativeError(value,value2,u);
 //	                          if (error > tolerance) {
 //	                              BOOST_ERROR(
-//	                                  types[i] << " option :\n"
-//	                                  << "    spot value:          " << u << "\n"
-//	                                  << "    strike:              "
-//	                                  << strikes[j] << "\n"
-//	                                  << "    dividend yield:      "
-//	                                  << io::rate(q) << "\n"
-//	                                  << "    risk-free rate:      "
-//	                                  << io::rate(r) << "\n"
-//	                                  << "    maturity:            "
-//	                                  << exDate << "\n\n"
-//	                                  << "    original volatility: "
-//	                                  << io::volatility(v) << "\n"
-//	                                  << "    price:               "
-//	                                  << value << "\n"
-//	                                  << "    implied volatility:  "
-//	                                  << io::volatility(implVol)
-//	                                  << "\n"
-//	                                  << "    corresponding price: "
-//	                                  << value2 << "\n"
-//	                                  << "    error:               " << error);
+//	                                  types[i] + " option :\n"
+//	                                  + "    spot value:          " + u + "\n"
+//	                                  + "    strike:              "
+//	                                  + strikes[j] + "\n"
+//	                                  + "    dividend yield:      "
+//	                                  + io::rate(q) + "\n"
+//	                                  + "    risk-free rate:      "
+//	                                  + io::rate(r) + "\n"
+//	                                  + "    maturity:            "
+//	                                  + exDate + "\n\n"
+//	                                  + "    original volatility: "
+//	                                  + io::volatility(v) + "\n"
+//	                                  + "    price:               "
+//	                                  + value + "\n"
+//	                                  + "    implied volatility:  "
+//	                                  + io::volatility(implVol)
+//	                                  + "\n"
+//	                                  + "    corresponding price: "
+//	                                  + value2 + "\n"
+//	                                  + "    error:               " + error);
 //	                          }
 //	                      }
 //	                  }
@@ -981,10 +991,10 @@ public class EuropeanOptionTest {
 //	    option2->recalculate();
 //	    if (std::fabs(option2->NPV() - refValue) >= 1.0e-8)
 //	        BOOST_ERROR("implied volatility calculation changed the value "
-//	                    << "of another instrument: \n"
-//	                    << std::setprecision(8)
-//	                    << "previous value: " << refValue << "\n"
-//	                    << "current value:  " << option2->NPV());
+//	                    + "of another instrument: \n"
+//	                    + std::setprecision(8)
+//	                    + "previous value: " + refValue + "\n"
+//	                    + "current value:  " + option2->NPV());
 //
 //	    vol->setValue(vol->value()*1.5);
 //

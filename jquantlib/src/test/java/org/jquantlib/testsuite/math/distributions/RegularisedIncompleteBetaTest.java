@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.math.distributions;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.RegularisedIncompleteBeta;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class RegularisedIncompleteBetaTest extends TestCase{
+public class RegularisedIncompleteBetaTest {
 
 	@Test
 	public void testRegIncompleteBetaHartleyFitchExamples() {
@@ -30,9 +30,8 @@ public class RegularisedIncompleteBetaTest extends TestCase{
 			double x = values[i][2];
 			double expected = values[i][3];
 			double realised = beta.evaluate(x, a, b);
-			if (Math.abs(expected-realised)>1.0e-6){
+			if (Math.abs(expected-realised)>1.0e-6)
 				fail("x: " + x + " expected: " + expected + " realised: " + realised);
-			}
 		}
 	}
 }

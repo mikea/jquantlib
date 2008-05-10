@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.math.distributions;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.BivariateNormalDistribution;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class BivariateNormalDistributionTest extends TestCase {
+public class BivariateNormalDistributionTest {
 
 	@Test
 	public void testBivariateAtZero() {
@@ -29,14 +29,12 @@ public class BivariateNormalDistributionTest extends TestCase {
 	            double expected = 0.25 + Math.asin(sgn*rho[i]) / (2*Math.PI) ;
 	            double realised = bvn.evaluate(x,y);
 
-	            
-	            if (Math.abs(realised-expected)>=tolerance) {
-	                fail(" bivariate cumulative distribution\n"
-	                            + "    rho: " + sgn*rho[i] + "\n"
-	                            + "    expected:  " + expected + "\n"
-	                            + "    realised:  " + realised + "\n"
-	                            + "    tolerance: " + tolerance);
-	            }
+	            if (Math.abs(realised-expected)>=tolerance)
+	            	fail(" bivariate cumulative distribution\n"
+                            + "    rho: " + sgn*rho[i] + "\n"
+                            + "    expected:  " + expected + "\n"
+                            + "    realised:  " + realised + "\n"
+                            + "    tolerance: " + tolerance);
 	        }
 	    }
 	}
@@ -115,15 +113,14 @@ public class BivariateNormalDistributionTest extends TestCase {
 	        double value = bcd.evaluate(a, b);
 
 	        double tolerance = 1.0e-6;
-	        if (Math.abs(value-result) >= tolerance) {
-	          fail(" bivariate cumulative distribution\n"
-	                      + "    case: " + i+1 + "\n"
-	                      + "    a:    " + a + "\n"
-	                      + "    b:    " + b + "\n"
-	                      + "    rho:  " + rho + "\n"
-	                      + "    tabulated value:  " + result + "\n"
-	                      + "    result:           " + value);
-	        }
+	        if (Math.abs(value-result) >= tolerance)
+	        	fail(" bivariate cumulative distribution\n"
+                      + "    case: " + i+1 + "\n"
+                      + "    a:    " + a + "\n"
+                      + "    b:    " + b + "\n"
+                      + "    rho:  " + rho + "\n"
+                      + "    tabulated value:  " + result + "\n"
+                      + "    result:           " + value);
 	    }
 	}	
 }

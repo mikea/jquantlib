@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.termstructures.volatilities;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.jquantlib.termstructures.volatilities.Sabr;
 import org.junit.Test;
@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class SabrTest extends TestCase {
+public class SabrTest {
 
 	@Test
 	public void testAgainstKnownValues() {

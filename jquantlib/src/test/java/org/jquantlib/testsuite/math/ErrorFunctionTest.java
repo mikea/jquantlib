@@ -1,6 +1,6 @@
 package org.jquantlib.testsuite.math;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.jquantlib.math.ErrorFunction;
 import org.junit.Test;
@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author <Richard Gomes>
  */
-public class ErrorFunctionTest extends TestCase{
+public class ErrorFunctionTest {
 
 	@Test
 	public void testRegressionExtremeValuesForCoverage(){

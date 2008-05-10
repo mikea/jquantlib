@@ -38,7 +38,7 @@
 
 package org.jquantlib.testsuite.daycounters;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
@@ -209,16 +209,18 @@ public class DayCountersTest {
 	        
 	        /*@Time*/ double  calculated = dayCounter.getYearFraction(d1,d2,rd1,rd2);
 
-        	StringBuilder sb = new StringBuilder();
-        	sb.append(dayCounter.getClass().getName()).append('\n');
-        	sb.append("  period: ").append(d1).append(" to ").append(d2).append('\n');
-        	if (testCases[i].convention == ActualActual.Convention.ISMA) {
-	        	sb.append("  referencePeriod: ").append(rd1).append(" to ").append(rd2).append('\n');
-        	}
-        	sb.append("    calculated: ").append(calculated).append('\n');
-        	sb.append("    expected:   ").append(testCases[i].result);
-
-        	assertFalse(sb.toString(), Math.abs(calculated-testCases[i].result) > 1.0e-10);
+	        if (Math.abs(calculated-testCases[i].result) > 1.0e-10) {
+	        	String period = "period: " + d1 + " to " + d2;
+	        	String refPeriod = "";
+	            if (testCases[i].convention == ActualActual.Convention.ISMA) {
+	                refPeriod = "referencePeriod: " + rd1 + " to " + rd2;
+	            }
+	            fail(dayCounter.getName() + ":\n"
+	                       + period + "\n" 
+	                       + refPeriod + "\n"
+	                       + "    calculated: " + calculated + "\n"
+	                       + "    expected:   " + testCases[i].result);
+	        }
 	    }
 	}
 
@@ -241,13 +243,10 @@ public class DayCountersTest {
 	            Date end = start.getDateAfter(p[i]);
 	            /*@Time*/ double  calculated = dayCounter.getYearFraction(start, end);
 
-	            StringBuilder sb = new StringBuilder();
-	        	sb.append(dayCounter.getClass().getName()).append('\n');
-	        	sb.append("  from ").append(start).append(" to ").append(end).append('\n');
-	        	sb.append("    calculated: ").append(calculated).append('\n');
-	        	sb.append("    expected:   ").append(expected[i]);
-	            
-	        	assertFalse(sb.toString(), Math.abs(calculated-expected[i]) > 1.0e-12);
+	        	if (Math.abs(calculated-expected[i]) > 1.0e-12)
+	                fail("from " + start + " to " + end + ":\n"
+	                        + "    calculated: " + calculated + "\n"
+	                        + "    expected:   " + expected[i]);
 	        }
 	    }
 	}
@@ -270,13 +269,11 @@ public class DayCountersTest {
 	            Date end = start.getDateAfter(p[i]);
 	            /*@Time*/ double  calculated = dayCounter.getYearFraction(start, end);
 
-	            StringBuilder sb = new StringBuilder();
-	        	sb.append(dayCounter.getClass().getName()).append('\n');
-	        	sb.append("  from ").append(start).append(" to ").append(end).append('\n');
-	        	sb.append("    calculated: ").append(calculated).append('\n');
-	        	sb.append("    expected:   ").append(expected[i]);
-	            
-	        	assertFalse(sb.toString(), Math.abs(calculated-expected[i]) <= 1.0e-12);
+	            if (Math.abs(calculated-expected[i]) > 1.0e-12) {
+	                fail("from " + start + " to " + end + ":\n"
+	                           + "    calculated: " + calculated + "\n"
+	                           + "    expected:   " + expected[i]);
+	            }
 	        }
 	    }
 	}
@@ -328,7 +325,7 @@ public class DayCountersTest {
 //        	sb.append("    calculated: ").append(calculated).append('\n');
 //        	sb.append("    expected:   ").append(expected[i]);
 //            
-//        	assertFalse(sb.toString(), Math.abs(calculated-expected[i]) <= 1.0e-12);
+//        	fail(sb.toString(), Math.abs(calculated-expected[i]) <= 1.0e-12);
 //	    }
 //	}
 
