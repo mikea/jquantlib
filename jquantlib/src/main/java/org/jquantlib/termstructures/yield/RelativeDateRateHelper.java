@@ -25,7 +25,7 @@ package org.jquantlib.termstructures.yield;
 
 
 import org.jquantlib.quotes.Handle;
-import org.jquantlib.termstructures.BootstrapHelper;
+import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Observable;
 
@@ -38,7 +38,7 @@ import org.jquantlib.util.Observable;
  * ! This class takes care of rebuilding the date schedule when the global
  * evaluation date changes
  */
-public abstract class RelativeDateRateHelper extends BootstrapHelper {
+public abstract class RelativeDateRateHelper extends RateHelper {
 
 	private Date evaluationDate;
 

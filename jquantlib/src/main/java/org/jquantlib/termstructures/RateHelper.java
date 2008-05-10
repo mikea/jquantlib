@@ -33,13 +33,13 @@ import org.jquantlib.util.Observer;
  *
  */
 //TODO: Finish
-public abstract class BootstrapHelper<T> implements Observer, Observable{
-	 Handle<Quote> quote;
-     T termStructure;
-     Date earliestDate;
-     Date latestDate;
+public abstract class RateHelper<T> implements Observer, Observable{
+	 protected Handle<Quote> quote;
+     protected T termStructure;
+     protected Date earliestDate;
+     protected Date latestDate;
      
-	public BootstrapHelper(Handle<Quote> quote, T termStructure,
+	public RateHelper(Handle<Quote> quote, T termStructure,
 			Date earliestDate, Date latestDate) {
 		super();
 		this.quote = quote;
@@ -50,7 +50,7 @@ public abstract class BootstrapHelper<T> implements Observer, Observable{
 		// registerWith(quote_);
 	}
 	//TODO:
-	public BootstrapHelper(double d){
+	public RateHelper(double d){
 		//: quote_(Handle<Quote>(boost::shared_ptr<Quote>(new SimpleQuote(quote)))),
 	    //  termStructure_(0) {}
 	}
