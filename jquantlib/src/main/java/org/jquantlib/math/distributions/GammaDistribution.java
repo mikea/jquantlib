@@ -35,7 +35,7 @@ public class GammaDistribution {
 	
 	static private double a_; // alpha
 	
-	public GammaDistribution (double a, double x){
+	public GammaDistribution (double a){
     	a_=a;    	
     }
 	
@@ -43,15 +43,14 @@ public class GammaDistribution {
 		if (a_ <= 0.0) {
     		throw new ArithmeticException("a_ must be > 0");
     	}
+		if (x <= 0.0) {
+    		throw new ArithmeticException("x must be > 0");
+		}
 		return GammaDist(x);
 	}
 	
 	public double GammaDist(double x) {
      	
-    	if (x <= 0.0) {
-    		throw new ArithmeticException("x must be > 0");
-		}
-
     	GammaFunction gf = new GammaFunction();
     	
         double gln = gf.logValue(a_);

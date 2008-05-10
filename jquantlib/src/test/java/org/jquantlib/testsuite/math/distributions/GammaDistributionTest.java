@@ -36,20 +36,33 @@ public class GammaDistributionTest {
 	
 	@Test
 	public void testGammaDisribution() {
-		/*double[] values =	{	-0.0388257395},
-								-0.0922078291},
-								-0.1207822376},
-								-0.0103670060} };
-		*/
+		double[][] testvalues = {	{1.0, 0.398942280401433},
+									{2.0, 0.241970724519143},
+									{3.0, 0.053990966513188},
+									{4.0, 0.004431848411938},
+									{5.0, 1.338302258e-4},
+									{6.0, 1.486719515e-6},
+									{7.0, 0.398942280401433},
+									{8.0, 0.241970724519143},
+									{9.0, 0.053990966513188},
+									{10.0, 0.004431848411938},
+									{11.0, 1.338302258e-4},
+									{12.0, 1.486719515e-6},
+									{13.0, 1.486719515e-6},
+									{14.0, 1.486719515e-6},
+									{15.0, 1.486719515e-6}};
+
+		
 		
 		double a = 1.0; // alpha
-		double x = 3.0; // 
+		// double x = 0.0; // 
 		
-		GammaDistribution gammDistribution = new GammaDistribution(a,x);
-		for(int i=1;i<21;i++){
-		//	double x = values[i][0];
+		GammaDistribution gammDistribution = new GammaDistribution(a);
+		for(int i=0;i<testvalues.length;i++){
 		//	double expected = values[i][1];
-			double realised = gammDistribution.evaluate(i);
+			double x = testvalues[i][0];
+		//	System.out.println(x);
+			double realised = gammDistribution.evaluate(x);
 			System.out.println(realised);
 	//		double tolerance = 1.0e-10;
 	//		if (Math.abs(expected-realised)>tolerance){
