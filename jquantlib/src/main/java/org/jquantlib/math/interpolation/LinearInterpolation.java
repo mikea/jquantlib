@@ -28,15 +28,14 @@ public class LinearInterpolation extends AbstractInterpolation {
     private double[] vs;
 
     /**
-     * Private constructor.
+     * Private default constructor.
      * 
-     * @param x
-     * @param y
+	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
+	 * 
+	 * @author Richard Gomes
      */
-    private LinearInterpolation(final double[] x, final double[] y) {
-    	super(x, y);
-    	vp = new double[x.length];
-    	vs = new double[x.length];
+    private LinearInterpolation() {
+    	// access denied to public default constructor
     }
     
 	@Override
@@ -75,7 +74,16 @@ public class LinearInterpolation extends AbstractInterpolation {
 	@Deprecated
 	public void update() { reload(); }
 
+	
+	/**
+	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>  
+	 */
+	@Override
 	public void reload() {
+    	super.reload();
+
+    	vp = new double[vx.length];
+    	vs = new double[vx.length];
         vp[0] = 0.0;
         for (int i=1; i < vx.length; i++) {
         	double dx = vx[i] - vx[i-1];
@@ -100,8 +108,8 @@ public class LinearInterpolation extends AbstractInterpolation {
     // inner classes
     //
     
-    static public Interpolator getFactory() {
-    	return new Factory();
+    static public Interpolator getInterpolator() {
+    	return new LinearInterpolationImpl();
     }
     
     /**
@@ -109,12 +117,19 @@ public class LinearInterpolation extends AbstractInterpolation {
 	 * 
 	 * @author Richard Gomes
 	 */
-	static private class Factory implements Interpolator {
-
-		public Interpolation interpolate(double[] x, double[] y) {
-			return new LinearInterpolation(x, y);
+	static private class LinearInterpolationImpl implements Interpolator {
+		private LinearInterpolation delegate;
+		
+		public LinearInterpolationImpl() {
+			delegate = new LinearInterpolation();
 		}
-
+		
+		public Interpolation interpolate(double[] x, double[] y) {
+			delegate.vx = x;
+			delegate.vy = y;
+			delegate.reload();
+			return delegate;
+		}
 	}
 
 }

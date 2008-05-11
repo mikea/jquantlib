@@ -35,7 +35,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.util;
+package org.jquantlib.testsuite.util;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
@@ -46,6 +46,7 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.calendars.NullCalendar;
+import org.jquantlib.util.Date;
 
 public class Utilities {
 

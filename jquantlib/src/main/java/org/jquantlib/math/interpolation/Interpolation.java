@@ -58,7 +58,7 @@ public interface Interpolation extends Extrapolator, UnaryFunctionDouble {
 	 * 
 	 * @deprecated
 	 */
-	// TODO: change this method name in order to avoid confusion with Obsrver.update 
+	// TODO: change this method name in order to avoid confusion with Observer.update 
 	public void update();
 	
 	/**

@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
+import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
@@ -33,33 +34,40 @@ import org.jquantlib.util.Observer;
  *
  */
 //TODO: Finish
-public abstract class RateHelper<T> implements Observer, Observable{
-	 protected Handle<Quote> quote;
-     protected T termStructure;
-     protected Date earliestDate;
-     protected Date latestDate;
+public abstract class RateHelper<T> implements Observer, Observable {
+
+	protected Handle<Quote> quote;
+    protected T termStructure;
+    protected Date earliestDate;
+    protected Date latestDate;
      
-	public RateHelper(Handle<Quote> quote, T termStructure,
-			Date earliestDate, Date latestDate) {
+	public RateHelper(final Handle<Quote> quote, final T termStructure, final Date earliestDate, final Date latestDate) {
 		super();
 		this.quote = quote;
 		this.termStructure = termStructure;
 		this.earliestDate = earliestDate;
 		this.latestDate = latestDate;
-		//TODO:
-		// registerWith(quote_);
+		this.quote.addObserver(this);
 	}
-	//TODO:
-	public RateHelper(double d){
-		//: quote_(Handle<Quote>(boost::shared_ptr<Quote>(new SimpleQuote(quote)))),
-	    //  termStructure_(0) {}
+	
+    public RateHelper(final Handle<Quote> quote) {
+    	this.quote = quote;
+    	this.quote.addObserver(this);
+    	
+    	// FIXME: termStructure_(0) {}
+		// this.termStructure = new TermStructure(0);
+    }
+
+	public RateHelper(double quote) {
+		this.quote = new Handle<Quote>(new SimpleQuote(quote));
+    	
+		// FIXME: termStructure_(0) {}
+		// this.termStructure = new TermStructure(0); //  termStructure_(0) {}
 	}
 
 	public Date getEarliestDate() {
 		return earliestDate;
 	}
-
-	
 
 	public Date getLatestDate() {
 		return latestDate;
@@ -70,16 +78,18 @@ public abstract class RateHelper<T> implements Observer, Observable{
 	}
 
 	public void setTermStructure(T termStructure) {
+		if (termStructure==null) throw new NullPointerException("null term structure given");
 		this.termStructure = termStructure;
 	}
 
 	 public double getQuoteError(){
-		 //return quote_->value()-impliedQuote();
-		 return 0; //TODO
+		 return quote.getLink().doubleValue()-getImpliedQuote();
 	 }
+	 
      public double getQuoteValue(){
     	 return quote.getLink().doubleValue();
      }
+     
      public boolean quoteIsValid(){
     	 // quote_->isValid();
     	 return true; //TODO

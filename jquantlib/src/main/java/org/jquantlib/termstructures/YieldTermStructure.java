@@ -179,7 +179,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	/**
 	 * The resulting interest rate has the required day-counting rule.
 	 */
-	protected final InterestRate getZeroRate(final Date d, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
+	public final InterestRate getZeroRate(final Date d, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
 		if (d == getReferenceDate()) {
 			/*@Time*/ double t = 0.0001;
 			/*@CompoundFactor*/ double compound = 1/getDiscount(t, extrapolate); // 1/discount(t,extrapolate)
@@ -224,7 +224,7 @@ public abstract class YieldTermStructure extends TermStructure {
 		return getForwardRate(d1, d2, resultDayCounter, comp, freq, false);
 	}
 
-	protected InterestRate getForwardRate(final Date d1, final Date d2, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
+	public InterestRate getForwardRate(final Date d1, final Date d2, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
 		if (d1.equals(d2)) {
 			/*@Time*/ double  t1 = getTimeFromReference(d1);
 			/*@Time*/ double  t2 = t1+0.0001;

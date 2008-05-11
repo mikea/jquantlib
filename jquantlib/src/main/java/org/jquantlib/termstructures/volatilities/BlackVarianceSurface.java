@@ -115,7 +115,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 			}
 		}
 		// default: bilinear interpolation
-		factory = BilinearInterpolation.getFactory();
+		factory = BilinearInterpolation.getInterpolator();
 	}
 
 	public final DayCounter dayCounter() {

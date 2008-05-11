@@ -33,6 +33,7 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 
 //TODO:  Import all the testcase when MC is available
+//FIXME: Rename to OldPricerTest
 public class OldPricer {
 	
 	 class BatchData {
@@ -68,6 +69,7 @@ public class OldPricer {
 	    
 	    private StopClock clock = new StopClock();
 	    
+	    // FIXME: add @Test
 	    void testMcSingleFactorPricers() {
 
 	        System.out.println("Testing old-style Monte Carlo single-factor pricers...");
@@ -161,9 +163,9 @@ public class OldPricer {
 	            }
 	           
 	            Date today = DateFactory.getFactory().getTodaysDate();
-	            org.jquantlib.termstructures.YieldTermStructure yeildStructureRiskFree =  org.jquantlib.util.Utilities.flatRate(today,cases5[l].riskFreeRate, dc);
-	            org.jquantlib.termstructures.YieldTermStructure yeildStructureDividentYield =  org.jquantlib.util.Utilities.flatRate(today,cases5[l].dividendYield, dc);
-	            org.jquantlib.termstructures.YieldTermStructure yeildStructureVolatility =  org.jquantlib.util.Utilities.flatRate(today,cases5[l].volatility, dc);
+	            org.jquantlib.termstructures.YieldTermStructure yeildStructureRiskFree =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].riskFreeRate, dc);
+	            org.jquantlib.termstructures.YieldTermStructure yeildStructureDividentYield =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].dividendYield, dc);
+	            org.jquantlib.termstructures.YieldTermStructure yeildStructureVolatility =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].volatility, dc);
 	            
 	           // TODO: Complete the test case when we have MonteCarlo
 	         

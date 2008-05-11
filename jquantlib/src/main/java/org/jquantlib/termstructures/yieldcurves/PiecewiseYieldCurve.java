@@ -1,4 +1,24 @@
 /*
+ Copyright (C) 2007 Richard Gomes
+
+ This file is part of JQuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://jquantlib.org/
+
+ JQuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ 
+ JQuantLib is based on QuantLib. http://quantlib.org/
+ When applicable, the original copyright notice follows this notice.
+ */
+
+/*
  Copyright (C) 2005, 2006, 2007 StatPro Italia srl
 
  This file is part of QuantLib, a free-software/open-source library
@@ -17,12 +37,16 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.UnaryFunctionDouble;
-import org.jquantlib.number.DiscountFactor;
-import org.jquantlib.number.Time;
-import org.jquantlib.time.Calendar;
+import org.jquantlib.Configuration;
+import org.jquantlib.Settings;
+import org.jquantlib.math.Constants;
+import org.jquantlib.math.interpolation.Interpolator;
+import org.jquantlib.termstructures.Compounding;
+import org.jquantlib.termstructures.RateHelper;
+import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Pair;
 
 
@@ -39,136 +63,244 @@ import org.jquantlib.util.Pair;
  */
 // TEST the correctness of the returned values is tested by checking them against the original inputs.
 // TEST the observability of the term structure is tested.
-public class PiecewiseYieldCurve<C,I> {
 
-  private RateHelper[] instruments_;
-  private double accuracy_;
+//TODO: Finish (Richard)
+public class PiecewiseYieldCurve<C extends YieldTermStructure, I extends Interpolator> extends LazyObject implements CurveTraits<C,I> {
 
+	private CurveTraits<C,I> 	curveTraits;
+	private RateHelper[]		instruments_; //FIXME: generics
+	private double				accuracy_;
 
-  public PiecewiseYieldCurve(
-		  final Date referenceDate,
-		  final RateHelper[] instruments,
-		  final DayCounter dayCounter) {
-	  this(referenceDate, instruments, dayCounter, 1.0e-12, new Interpolator());
-  }
-
-
-  public PiecewiseYieldCurve(
-			  final Date referenceDate,
-			  final RateHelper[] instruments,
-			  final DayCounter dayCounter,
-			  final double accuracy,
-			  final Interpolator i) {
-	  
-  }
-
-  
-  public PiecewiseYieldCurve(
-		  final int settlementDays,
-		  final Calendar calendar,
-		  final RateHelper[] instruments,
-		  final DayCounter dayCounter) {
-	  this(settlementDays, calendar, instruments, dayCounter, 1.0e-12, new Interpolator());
-			
-		}
-
-  
-public PiecewiseYieldCurve(
-  final int settlementDays,
-  final Calendar calendar,
-  final RateHelper[] instruments,
-  final DayCounter dayCounter,
-  final double accuracy,
-  final Interpolator i) {
 	
-}
-
-
-private void checkInstruments() {
 	
-}
-
-private void performCalculations() /* @ReadOnly */ {
 	
-}
-
-private DiscountFactor discountImpl(/*@Time*/ double ) /* @ReadOnly */ {
-	
-}
-
-
-
-
+//	public PiecewiseYieldCurve(final Date referenceDate, final RateHelper[] instruments, final DayCounter dayCounter) {
+//		this(referenceDate, instruments, dayCounter, 1.0e-12, new Interpolator());
+//	}
 //
-// implements interface YieldTermStructure
+//	public PiecewiseYieldCurve(final Date referenceDate, final RateHelper[] instruments, final DayCounter dayCounter,
+//			final double accuracy, final Interpolator i) {
+//		super(referenceDate, dayCounter, i);
+//		this.instruments_ = instruments;
+//		this.accuracy_ = accuracy;
+//		checkInstruments();
+//	}
 //
-
-public final Date[] getDates() /* @ReadOnly */ {
-	calculate();
-	return this.dates;
-}
-
-public Date getMaxDate() /* @ReadOnly */ {
-	calculate();
-	return this.dates[this.dates.length()-1];
-}
-
-public Time[] getTimes() /* @ReadOnly */ {
-	calculate();
-	this.times;
-}
-
-
-public Pair<Date,Double> getNodes() /* @ReadOnly */ {
-	
-}
-
-
-
+//	public PiecewiseYieldCurve(final int settlementDays, final Calendar calendar, final RateHelper[] instruments,
+//			final DayCounter dayCounter) {
+//		this(settlementDays, calendar, instruments, dayCounter, 1.0e-12, new Interpolator());
+//	}
 //
-// implements interface Observer
+//	public PiecewiseYieldCurve(final int settlementDays, final Calendar calendar, final RateHelper[] instruments,
+//			final DayCounter dayCounter, final double accuracy, final Interpolator i) {
+//		super(settlementDays, calendar, dayCounter, i);
+//		this.instruments_ = instruments;
+//		this.accuracy_ = accuracy;
+//		checkInstruments();
+//	}
+
+
+	private void checkInstruments() {
+	
+// QL_REQUIRE(!instruments_.empty(), "no instrument given");
 //
-public void update() {
-	
-}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	private class ObjectiveFunction<C,I> implements UnaryFunctionDouble {
-		
-	    private PiecewiseYieldCurve<C,I> curve;
-	    private RateHelper rateHelper;
-	    private int segment;
-
-	        
-	    public ObjectiveFunction(final PiecewiseYieldCurve<C,I> curve, final RateHelper rateHelper, final int segment) {
-	    	this.curve = curve;
-	    	this.rateHelper = rateHelper;
-	    	this.segment = segment;
-		}
-		
-	    //
-	    // implements UnaryFunctionDouble
-	    //
-		
-	    public double evaluate(double guess) /* @ReadOnly */ {
-	    	C::updateGuess(curve_->data_, guess, segment_);
-	    	curve.interpolation.update();
-	    	return rateHelper_->quoteError();
-	    	
-	    }
+//    // sort rate helpers
+//    for (Size i=0; i<instruments_.size(); i++)
+//        instruments_[i]->setTermStructure(this);
+//    std::sort(instruments_.begin(),instruments_.end(),
+//              detail::RateHelperSorter());
+//    // check that there is no instruments with the same maturity
+//    for (Size i=1; i<instruments_.size(); i++) {
+//        Date m1 = instruments_[i-1]->latestDate(),
+//             m2 = instruments_[i]->latestDate();
+//        QL_REQUIRE(m1 != m2,
+//                   "two instruments have the same maturity ("<< m1 <<")");
+//    }
+//    for (Size i=0; i<instruments_.size(); i++)
+//        registerWith(instruments_[i]);
+    
 	}
+
+	public void performCalculations() /* @ReadOnly */ {
+	
+//	// check that there is no instruments with invalid quote
+//    for (Size i=0; i<instruments_.size(); i++)
+//        QL_REQUIRE(instruments_[i]->referenceQuote()!=Null<Real>(),
+//                   "instrument with null price");
+//
+//    // setup vectors
+//    Size n = instruments_.size();
+//    for (Size i=0; i<n; i++) {
+//        // don't try this at home!
+//        instruments_[i]->setTermStructure(
+//                             const_cast<PiecewiseYieldCurve<C,I>*>(this));
+//    }
+//    this->dates_ = std::vector<Date>(n+1);
+//    this->times_ = std::vector<Time>(n+1);
+//    this->data_ = std::vector<Real>(n+1);
+//    this->dates_[0] = this->referenceDate();
+//    this->times_[0] = 0.0;
+//    this->data_[0] = C::initialValue();
+//    for (Size i=0; i<n; i++) {
+//        this->dates_[i+1] = instruments_[i]->latestDate();
+//        this->times_[i+1] = this->timeFromReference(this->dates_[i+1]);
+//        this->data_[i+1] = this->data_[i];
+//    }
+//    Brent solver;
+//    Size maxIterations = 25;
+//    // bootstrapping loop
+//    for (Size iteration = 0; ; iteration++) {
+//        std::vector<Real> previousData = this->data_;
+//        for (Size i=1; i<n+1; i++) {
+//            if (iteration == 0) {
+//                // extend interpolation a point at a time
+//                if (I::global && i < 2) {
+//                    // not enough points for splines
+//                    this->interpolation_ = Linear().interpolate(
+//                                                this->times_.begin(),
+//                                                this->times_.begin()+i+1,
+//                                                this->data_.begin());
+//                } else {
+//                    this->interpolation_ = this->interpolator_.interpolate(
+//                                                this->times_.begin(),
+//                                                this->times_.begin()+i+1,
+//                                                this->data_.begin());
+//                }
+//            }
+//            this->interpolation_.update();
+//            boost::shared_ptr<RateHelper> instrument = instruments_[i-1];
+//            Real guess;
+//            if (iteration > 0) {
+//                // use perturbed value from previous loop
+//                guess = 0.99*this->data_[i];
+//            } else if (i > 1) {
+//                // extrapolate
+//                guess = C::guess(this,this->dates_[i]);
+//            } else {
+//                guess = C::initialGuess();
+//            }
+//            // bracket
+//            Real min = C::minValueAfter(i, this->data_);
+//            Real max = C::maxValueAfter(i, this->data_);
+//            if (guess <= min || guess >= max)
+//                guess = (min+max)/2.0;
+//            try {
+//                this->data_[i] =
+//                    solver.solve(ObjectiveFunction(this, instrument, i),
+//                                 accuracy_, guess, min, max);
+//            } catch (std::exception& e) {
+//                QL_FAIL("could not bootstrap the " << io::ordinal(i) <<
+//                        " instrument, maturity " << this->dates_[i] <<
+//                        "\n error message: " << e.what());
+//            }
+//        }
+//        // check exit conditions
+//        if (!I::global)
+//            break;   // no need for convergence loop
+//
+//        Real improvement = 0.0;
+//        for (Size i=1; i<n+1; i++)
+//            improvement += std::abs(this->data_[i]-previousData[i]);
+//        if (improvement <= n*accuracy_)  // convergence reached
+//            break;
+//
+//        if (iteration > maxIterations)
+//            QL_FAIL("convergence not reached after "
+//                    << maxIterations << " iterations");
+//    }
+    
+	}
+
+	
+	
+	
+//	
+//	
+//	
+//	private /*@DiscountFactor*/ double discountImpl(/* @Time */double t) /* @ReadOnly */{
+//		calculate();
+//		return base_curve.discountImpl(t);
+//	}
+//
+//
+//
+//	//
+//	// implements interface YieldTermStructure
+//	//
+//
+//	public final Date[] getDates() /* @ReadOnly */{
+//		calculate();
+//		return this.dates;
+//	}
+//
+//	public Date getMaxDate() /* @ReadOnly */{
+//		calculate();
+//		return this.dates[this.dates.length() - 1];
+//	}
+//
+//	public Time[] getTimes() /* @ReadOnly */ {
+//		calculate();
+//		return this.times;
+//	}
+//
+//	public Pair<Date, Double> getNodes() /* @ReadOnly */{
+//		calculate();
+//		return base_curve.getNodes();
+//	}
+//
+//
+//
+//	//
+//	// implements interface Observer
+//	//
+//
+//	public void update() {
+//		base_curve.update();
+//		super.update();
+//	}
+//
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	
+//	private class ObjectiveFunction<C extends BootstrapTrait, I extends Interpolator> implements UnaryFunctionDouble {
+//		
+//	    private PiecewiseYieldCurve<C,I> curve;
+//	    private RateHelper rateHelper;
+//	    private int segment;
+//
+//	        
+//	    public ObjectiveFunction(final PiecewiseYieldCurve<C,I> curve, final RateHelper rateHelper, final int segment) {
+//	    	this.curve = curve;
+//	    	this.rateHelper = rateHelper;
+//	    	this.segment = segment;
+//		}
+//		
+//	    //
+//	    // implements UnaryFunctionDouble
+//	    //
+//		
+//	    public double evaluate(double guess) /* @ReadOnly */ {
+//	    	C::updateGuess(curve_->data_, guess, segment_);
+//	    	curve.interpolation.update();
+//	    	return rateHelper_->quoteError();
+//	    	
+//	    }
+//	}
+//	
+//	
+//	
+	
+	
 	
 	//PiecewiseYieldCurve<C,I>::ObjectiveFunction::ObjectiveFunction(
 	//const PiecewiseYieldCurve<C,I>* curve,
@@ -186,9 +318,289 @@ public void update() {
 	//
 
 	
-	  //PENDING
-	  private class RateHelper { }
+
+
+
+	//
+	// implements interface CurveTraits 
+	// via delegate pattern to an inner class
+	//
+	
+	public Date[] dates() {
+		return curveTraits.dates();
+	}
+
+	public double[] discounts() {
+		return curveTraits.discounts();
+	}
+
+	public CurveTraits<C, I> getCurve() {
+		return curveTraits.getCurve();
+	}
+
+	public double guess(C c, Date d) {
+		return curveTraits.guess(c, d);
+	}
+
+	public double initialGuess() {
+		return curveTraits.initialGuess();
+	}
+
+	public double initialValue() {
+		return curveTraits.initialValue();
+	}
+
+	public Date maxDate() {
+		return curveTraits.maxDate();
+	}
+
+	public double maxValueAfter(int i, double[] data) {
+		return curveTraits.maxValueAfter(i, data);
+	}
+
+	public double minValueAfter(int i, double[] data) {
+		return curveTraits.minValueAfter(i, data);
+	}
+
+	public Pair<Date, Double>[] nodes() {
+		return curveTraits.nodes();
+	}
+
+	public double[] times() {
+		return curveTraits.times();
+	}
+
+	public void updateGuess(double[] data, double discount, int i) {
+		curveTraits.updateGuess(data, discount, i);
+	}
+	
+	
+
+	//
+	// inner classes
+	//
+	
+	/**
+	 * Curve traits
+	 * 
+	 * <p>
+	 * This is an abstract base class which backs a concrete implementation of interface {@link CurveTraits}
+	 * 
+	 * @author Richard Gomes
+	 */
+	private abstract class BootstrapTrait<C extends YieldTermStructure, I extends Interpolator> implements CurveTraits<C,I> {
+
+		/**
+		 * Default global settings
+		 */
+		protected Settings settings;
+
+		/**
+		 * Extended classes are responsible for initializing this field
+		 */
+		protected Curve curve; 
 		
+		protected BootstrapTrait() {
+			// obtain reference to Settings
+			settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+		}
+		
+		
+		//
+		// implements interface Curve
+		//
+		
+		public final Date[] dates() {
+			return curve.dates();
+		}
+
+		public final double[] discounts() {
+			return curve.discounts();
+		}
+
+		public final Date maxDate() {
+			return curve.maxDate();
+		}
+
+		public final Pair<Date, Double>[] nodes() {
+			return curve.nodes();
+		}
+
+		public final double[] times() {
+			return curve.times();
+		}
+
+		
+		//
+		// implements interface Traits
+		//
+
+		public final CurveTraits<C,I> getCurve() /* @ReadOnly */ {
+			return this;
+		}
+		
+	}
+	
+	
+	/**
+	 * Discount curve traits
+	 * 
+	 * <p> 
+	 * This class provides a concrete implementation of interface {@link CurveTraits} using
+	 * {@link InterpolatedDiscountCurve} as its {@link YieldTermStructure}
+	 * 
+	 * @author Richard Gomes
+	 */
+	private final class Discount<C extends YieldTermStructure, I extends Interpolator> extends BootstrapTrait<C,I> {
+		
+		public Discount() {
+			curve = new InterpolatedDiscountCurve<I>();
+		}
+
+		
+		//
+		// implements interface Traits
+		//
+		
+        public final /* @DiscountFactor */ double initialValue() { return 1.0; }
+        
+        public final /* @DiscountFactor */ double initialGuess() { return 0.9; }
+        
+        public final /* @DiscountFactor */ double guess(final YieldTermStructure c, final Date d) {
+            return c.getDiscount(d, true);
+        }
+
+        public final /* @DiscountFactor */ double minValueAfter(int i, final double[] data) {
+            return Constants.QL_EPSILON;
+        }
+        
+        public final /* @DiscountFactor */ double maxValueAfter(int i, final double[] data) {
+            if (settings.isNegativeRates()) {
+                // discount are not required to be decreasing--all bets are off.
+                // We choose as max a value very unlikely to be exceeded.
+                return 3.0;
+            } else {
+                // discounts cannot increase
+                return data[i-1];
+            }
+        }
+        
+        public final void updateGuess(/* @DiscountFactor */ double[] data, /* @DiscountFactor */ double discount, int i) {
+            data[i] = discount;
+        }
+	
+	}
+	
+	
+	/**
+	 * Zero-curve traits
+	 * 
+	 * <p> 
+	 * This class provides a concrete implementation of interface {@link CurveTraits} using
+	 * {@link InterpolatedZeroCurve} as its {@link YieldTermStructure}
+	 * 
+	 * @author Richard Gomes
+	 */
+	private final class ZeroYield<C extends YieldTermStructure, I extends Interpolator> extends BootstrapTrait<C,I> {
+		
+		private YieldTermStructure curve; 
+		
+		public ZeroYield() {
+			curve = new InterpolatedZeroCurve<I>();
+		}
+		
+
+		//
+		// implements interface Traits
+		//
+		
+        public final /* @DiscountFactor */ double initialValue() { return 0.02; }
+        
+        public final /* @DiscountFactor */ double initialGuess() { return 0.02; }
+        
+        public final /* @DiscountFactor */ double guess(final YieldTermStructure c, final Date d) {
+            return c.getZeroRate(d, c.getDayCounter(), Compounding.CONTINUOUS, Frequency.ANNUAL, true).doubleValue();
+        }
+
+        public final /* @DiscountFactor */ double minValueAfter(int i, final double[] data) {
+            if (settings.isNegativeRates()) {
+                // no constraints.
+                // We choose as min a value very unlikely to be exceeded.
+                return -3.0;
+            } else {
+                return Constants.QL_EPSILON;
+            }
+        }
+        
+        public final /* @DiscountFactor */ double maxValueAfter(int i, final double[] data) {
+            // no constraints.
+            // We choose as max a value very unlikely to be exceeded.
+            return 3.0;
+        }
+        
+        public final void updateGuess(/* @DiscountFactor */ double[] data, /* @Rate */ double rate, int i) {
+            data[i] = rate;
+            if (i == 1) data[0] = rate; // first point is updated as well
+        }
+	}
+	
+
+	/**
+	 * Forward-curve traits
+	 * 
+	 * <p> 
+	 * This class provides a concrete implementation of interface {@link CurveTraits} using
+	 * {@link InterpolatedForwardCurve} as its {@link YieldTermStructure}
+	 * 
+	 * @author Richard Gomes
+	 */
+	private final class ForwardRate<C extends YieldTermStructure, I extends Interpolator> extends BootstrapTrait<C,I> {
+		
+		private YieldTermStructure curve; 
+		
+
+//      
+//PENDING
+//		            
+//		public ForwardRate() {
+//			curve = new InterpolatedForwardCurve<I>();
+//		}
+		
+
+		//
+		// implements interface Traits
+		//
+		
+        public final /* @DiscountFactor */ double initialValue() { return 0.02; }
+        
+        public final /* @DiscountFactor */ double initialGuess() { return 0.02; }
+        
+        public final /* @DiscountFactor */ double guess(final YieldTermStructure c, final Date d) {
+            return c.getForwardRate(d, d, c.getDayCounter(), Compounding.CONTINUOUS, Frequency.ANNUAL, true).doubleValue();
+        }
+
+        public final /* @DiscountFactor */ double minValueAfter(int i, final double[] data) {
+            if (settings.isNegativeRates()) {
+                // no constraints.
+                // We choose as min a value very unlikely to be exceeded.
+                return -3.0;
+            } else {
+                return Constants.QL_EPSILON;
+            }
+        }
+        
+        public final /* @DiscountFactor */ double maxValueAfter(int i, final double[] data) {
+            // no constraints.
+            // We choose as max a value very unlikely to be exceeded.
+            return 3.0;
+        }
+        
+        public final void updateGuess(/* @DiscountFactor */ double[] data, /* @Price */ double forward, int i) {
+            data[i] = forward;
+            if (i == 1)
+                data[0] = forward; // first point is updated as well
+        }
+	}
 	
 }
 
@@ -561,3 +973,7 @@ public void update() {
 //
 //
 //#endif
+
+
+
+

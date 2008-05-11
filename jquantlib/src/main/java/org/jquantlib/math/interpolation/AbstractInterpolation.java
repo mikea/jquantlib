@@ -49,7 +49,14 @@ import cern.colt.Sorting;
 
 public abstract class AbstractInterpolation implements Interpolation {
 
+	/**
+	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
+	 */
 	protected double[] vx;
+
+	/**
+	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
+	 */
 	protected double[] vy;
 	
 	
@@ -59,27 +66,9 @@ public abstract class AbstractInterpolation implements Interpolation {
 	 * caches values from the singleton, intending to avoid contention in
 	 * heavily multi-threaded environments.
 	 */
-	//TODO: Make it settable
+	//TODO: We should observe extraSafetyChecks
 	private boolean extraSafetyChecks = Configuration.getSystemConfiguration(null).isExtraSafetyChecks();
 
-	protected AbstractInterpolation(final double[] x, final double[] y) {
-		vx = x;
-		vy = y;
-		if (vx.length < 2)
-			throw new IllegalArgumentException("not enough points to interpolate");
-		if (extraSafetyChecks) {
-			double x1 = vx[0];
-			double x2;
-			for (int i = 1; i < vx.length; i++) {
-				x2 = vx[i];
-				if (x1>x2) throw new IllegalArgumentException("unsorted values on array X");
-				x1=x2;
-			}
-		}
-	}
-
-
-	
 	// FIXME: add comments from here
 	protected abstract double xMin();
 	protected abstract double xMax();
@@ -153,6 +142,28 @@ public abstract class AbstractInterpolation implements Interpolation {
         	return Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
     }	
 
+
+	//
+	// implements Interpolation
+	//
+	
+	/**
+	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
+	 */
+	public void reload() {
+		if (vx.length < 2)
+			throw new IllegalArgumentException("not enough points to interpolate");
+		if (extraSafetyChecks) {
+			double x1 = vx[0];
+			double x2;
+			for (int i = 1; i < vx.length; i++) {
+				x2 = vx[i];
+				if (x1>x2) throw new IllegalArgumentException("unsorted values on array X");
+				x1=x2;
+			}
+		}
+	}
+	
 	
 	//
 	// implements UnaryFunctionDouble

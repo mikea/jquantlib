@@ -30,15 +30,20 @@ import org.jquantlib.math.interpolation.Interpolator2D;
  * <p>
  * Use BilinearInterpolation.Factory instead
  * 
- * @deprecated
  * @see BilinearInterpolation.Factory
  * 
  * @author Richard Gomes
  */
 public class Bilinear implements Interpolator2D {
 
+	private Interpolator2D delegate;
+	
+	public Bilinear() {
+		delegate = BilinearInterpolation.getInterpolator();
+	}
+	
 	public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z) {
-		return BilinearInterpolation.getFactory().interpolate(x, y, z);
+		return delegate.interpolate(x, y, z);
 	}
 
 }

@@ -104,7 +104,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
         }
 
         // default: linear interpolation
-    	factory = LinearInterpolation.getFactory();
+    	factory = LinearInterpolation.getInterpolator();
     }
 
 	public final DayCounter dayCounter() {

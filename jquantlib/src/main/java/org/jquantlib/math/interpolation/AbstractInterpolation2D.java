@@ -26,27 +26,20 @@ import cern.colt.Sorting;
 
 public abstract class AbstractInterpolation2D implements Interpolation2D {
 
+	/**
+	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
+	 */
 	protected double[] vx;
+
+	/**
+	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
+	 */
 	protected double[] vy;
+	
 	protected double[][] mz;
 	
 
-	protected AbstractInterpolation2D(final double[] x, final double[] y, final double[][] z) {
-		vx = x;
-		vy = y;
-		if (vx.length < 2 || vy.length < 2)
-			throw new IllegalArgumentException("not enough points to interpolate");
-		for (int i = 0; i < vx.length-1; i++) {
-			if ( vx[i] > vx[i+1] )
-				throw new IllegalArgumentException("unsorted values on array X");
-			if ( vy[i] > vy[i+1] )
-				throw new IllegalArgumentException("unsorted values on array Y");
-		}
-	}
-	
-
 	protected abstract double evaluateImpl(final double x, final double y);
-	
 	
 	public double xMin() {
 		return vx[0]; // get first element
@@ -132,7 +125,24 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     
     
     
+	//
+	// implements Interpolation2D
+	//
 	
+	/**
+	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
+	 */
+	public void reload() {
+		if (vx.length < 2 || vy.length < 2)
+			throw new IllegalArgumentException("not enough points to interpolate");
+		for (int i = 0; i < vx.length-1; i++) {
+			if ( vx[i] > vx[i+1] )
+				throw new IllegalArgumentException("unsorted values on array X");
+			if ( vy[i] > vy[i+1] )
+				throw new IllegalArgumentException("unsorted values on array Y");
+		}
+	}
+
 	
 	//
 	// implements BinaryFunctionDouble

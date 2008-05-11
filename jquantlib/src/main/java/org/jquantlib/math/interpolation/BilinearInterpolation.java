@@ -22,20 +22,16 @@ package org.jquantlib.math.interpolation;
 
 public class BilinearInterpolation extends AbstractInterpolation2D {
 
-	/**
-     * Private constructor.
+    /**
+     * Private default constructor.
      * 
-     * <p>
-     * This class must be created by its Factory
-     * 
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
 	 * 
-	 * @see BilinearInterpolation.Factory
-	 */
-	private BilinearInterpolation(final double[] x, final double[] y, final double[][] z) {
-		super(x, y, z);
+	 * @author Richard Gomes
+     */
+	private BilinearInterpolation() {
+    	// access denied to public default constructor
+
 	}
 
 	
@@ -49,7 +45,7 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
 	public void reload() {
 		// FIXME: code review
 		
-		// nothing ???????
+		// nothing ??????? it's certainly wrong!
 	}
 
 	
@@ -77,8 +73,8 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
     // inner classes
     //
     
-    static public Interpolator2D getFactory() {
-    	return new Factory();
+    static public Interpolator2D getInterpolator() {
+    	return new BilinearInterpolationImpl();
     }
     
     /**
@@ -86,10 +82,19 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
 	 * 
 	 * @author Richard Gomes
 	 */
-	static private class Factory implements Interpolator2D {
-
+	static private class BilinearInterpolationImpl implements Interpolator2D {
+		private BilinearInterpolation delegate;
+		
+		public BilinearInterpolationImpl() {
+			delegate = new BilinearInterpolation();
+		}
+		
 		public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z) {
-			return new BilinearInterpolation(x, y, z);
+			delegate.vx = x;
+			delegate.vy = y;
+			delegate.mz = z;
+			delegate.reload();
+			return delegate;
 		}
 
 	}

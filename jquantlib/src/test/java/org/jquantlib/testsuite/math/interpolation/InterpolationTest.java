@@ -901,7 +901,7 @@ public class InterpolationTest {
 	    final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
 	    final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
 
-	    Interpolation f = LinearInterpolation.getFactory().interpolate(x, y);
+	    Interpolation f = LinearInterpolation.getInterpolator().interpolate(x, y);
 	    f.reload();
 
 	    final double x2[] = { -2.0, -1.0, 0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0 };

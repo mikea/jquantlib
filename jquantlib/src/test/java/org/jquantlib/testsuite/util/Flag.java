@@ -1,4 +1,7 @@
-package org.jquantlib.util;
+package org.jquantlib.testsuite.util;
+
+import org.jquantlib.util.Observable;
+import org.jquantlib.util.Observer;
 
 /**
  * This is a helper class intended to serve as a simple {@link Observer}.

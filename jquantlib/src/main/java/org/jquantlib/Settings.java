@@ -33,6 +33,19 @@ import org.jquantlib.util.DateFactory;
  * sequence of operations defined by the application.
  * 
  */
+
+//
+//TODO: code review :: see bottom of this file for original C++ defines
+//
+// Some ideas about OSGi
+// 1. Use interfaces from OSGi and not classes from Sun
+// 2. Use the default implementation provided by SpringFramework
+//
+// Some ideas about the API
+// 1. Create another layer on top of OSGi which provides the configurations we need, hiding the details.
+// 2. Organize our layers as QuantLib. See config.hpp and userconfig.hpp
+//
+
 public class Settings {
 
     private static boolean defaultTodaysPayments = false;
@@ -41,9 +54,16 @@ public class Settings {
      * This field determines whether payments expected to happen at the
      * <i>current evaluation date</i> are considered.
      * 
-     * @see #evaluationDate
+     * @see #isTodaysPayments()
      */
     private boolean todaysPayments;
+
+    /**
+     * Define this if negative yield rates should be allowed. This might not be safe.
+     * 
+     * @see #isNegativeRates
+     */
+    private boolean negativeRates;
 
     /**
      * This field keeps the current evaluation date.
@@ -98,6 +118,15 @@ public class Settings {
     }
 
     /**
+     * @return the value of field negativeRates
+     * 
+     * @see #{@link #negativeRates}
+     */
+    public boolean isNegativeRates() {
+        return negativeRates;
+    }
+
+    /**
      * @return the value of field evaluationDate
      * 
      * @see #evaluationDate
@@ -129,3 +158,71 @@ public class Settings {
     }
 
 }
+
+
+
+
+/***************************************************************
+User configuration section:
+modify the following definitions to suit your preferences.
+
+Do not modify this file if you are using a Linux/Unix system:
+it will not be read by the compiler. The definitions below
+will be provided by running ./configure instead.
+****************************************************************/
+
+///* Define this if error messages should include current function
+//information. */
+//#ifndef QL_ERROR_FUNCTIONS
+////#   define QL_ERROR_FUNCTIONS
+//#endif
+//
+///* Define this if error messages should include file and line information. */
+//#ifndef QL_ERROR_LINES
+////#   define QL_ERROR_LINES
+//#endif
+//
+///* Define this if tracing messages should be allowed (whether they are
+//actually emitted will depend on run-time settings.) */
+//#ifndef QL_ENABLE_TRACING
+////#   define QL_ENABLE_TRACING
+//#endif
+//
+///* Define this if negative yield rates should be allowed. This might not be
+//safe. */
+//#ifndef QL_NEGATIVE_RATES
+////#   define QL_NEGATIVE_RATES
+//#endif
+//
+///* Define this if extra safety checks should be performed. This can degrade
+//performance. */
+//#ifndef QL_EXTRA_SAFETY_CHECKS
+////#   define QL_EXTRA_SAFETY_CHECKS
+//#endif
+//
+///* Define this if payments occurring today should enter the NPV of an
+//instrument. */
+//#ifndef QL_TODAYS_PAYMENTS
+////#   define QL_TODAYS_PAYMENTS
+//#endif
+//
+///* Define this if you want to disable deprecated code. */
+//#ifndef QL_DISABLE_DEPRECATED
+////#   define QL_DISABLE_DEPRECATED
+//#endif
+//
+///* Define this to use indexed coupons instead of par coupons in floating
+//legs. */
+//#ifndef QL_USE_INDEXED_COUPON
+////#   define QL_USE_INDEXED_COUPON
+//#endif
+//
+///* Define this to have singletons return different instances for
+//different sessions. You will have to provide and link with the
+//library a sessionId() function in namespace QuantLib, returning a
+//different session id for each session.*/
+//#ifndef QL_ENABLE_SESSIONS
+////#   define QL_ENABLE_SESSIONS
+//#endif
+
+
