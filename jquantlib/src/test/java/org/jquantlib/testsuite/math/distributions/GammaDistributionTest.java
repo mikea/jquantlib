@@ -36,38 +36,34 @@ public class GammaDistributionTest {
 	
 	@Test
 	public void testGammaDisribution() {
-		double[][] testvalues = {	{1.0, 0.398942280401433},
-									{2.0, 0.241970724519143},
-									{3.0, 0.053990966513188},
-									{4.0, 0.004431848411938},
-									{5.0, 1.338302258e-4},
-									{6.0, 1.486719515e-6},
-									{7.0, 0.398942280401433},
-									{8.0, 0.241970724519143},
-									{9.0, 0.053990966513188},
-									{10.0, 0.004431848411938},
-									{11.0, 1.338302258e-4},
-									{12.0, 1.486719515e-6},
-									{13.0, 1.486719515e-6},
-									{14.0, 1.486719515e-6},
-									{15.0, 1.486719515e-6}};
+		double[][] testvalues = {	{1.0, 0.6321205487807914},
+									{2.0, 0.1353352832366127},
+									{3.0, 0.04978706836786395},
+									{4.0, 0.018315638888734182},
+									{5.0, 0.006737946999085468},
+									{6.0, 0.002478752176666357},
+									{7.0, 9.118819655545164E-4},
+									{8.0, 3.354626279025119E-4},
+									{9.0, 1.2340980408667962E-4},
+									{10.0, 4.539992976248486E-5},
+									{11.0, 1.6701700790245663E-5},
+									{12.0, 6.144212353328207E-6},
+									{13.0, 2.2603294069810534E-6},
+									{14.0, 8.315287191035681E-7},
+									{15.0, 3.0590232050182594E-7}};
 
-		
-		
 		double a = 1.0; // alpha
-		// double x = 0.0; // 
 		
 		GammaDistribution gammDistribution = new GammaDistribution(a);
 		for(int i=0;i<testvalues.length;i++){
-		//	double expected = values[i][1];
+			double expected = testvalues[i][1];
 			double x = testvalues[i][0];
-		//	System.out.println(x);
 			double realised = gammDistribution.evaluate(x);
 			System.out.println(realised);
-	//		double tolerance = 1.0e-10;
-	//		if (Math.abs(expected-realised)>tolerance){
-	//			TestCase.fail("x: " + x + " expected: " + expected + " realised: " + realised);
-	//		}
+			double tolerance = 1.0e-10;
+			if (Math.abs(expected-realised)>tolerance){
+				TestCase.fail("x: " + x + " expected: " + expected + " realised: " + realised);
+			}
 		}
 	}
 	
