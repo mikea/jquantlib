@@ -21,10 +21,9 @@
 
 package org.jquantlib.testsuite.math.distributions;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.GammaDistribution;
-import org.jquantlib.math.distributions.GammaFunction;
 import org.junit.Test;
 // import org.junit.Ignore; --> for excluding from tests
 
@@ -55,14 +54,14 @@ public class GammaDistributionTest {
 		double a = 1.0; // alpha
 		
 		GammaDistribution gammDistribution = new GammaDistribution(a);
-		for(int i=0;i<testvalues.length;i++){
+		for (int i=0;i<testvalues.length;i++) {
 			double expected = testvalues[i][1];
 			double x = testvalues[i][0];
 			double realised = gammDistribution.evaluate(x);
 			System.out.println(realised);
 			double tolerance = 1.0e-10;
-			if (Math.abs(expected-realised)>tolerance){
-				TestCase.fail("x: " + x + " expected: " + expected + " realised: " + realised);
+			if (Math.abs(expected-realised)>tolerance) {
+				fail("x: " + x + " expected: " + expected + " realised: " + realised);
 			}
 		}
 	}

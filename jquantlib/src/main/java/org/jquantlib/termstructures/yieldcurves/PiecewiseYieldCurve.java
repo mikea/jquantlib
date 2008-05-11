@@ -37,13 +37,14 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import org.jquantlib.Configuration;
-import org.jquantlib.Settings;
+import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.interpolation.Interpolator;
+import org.jquantlib.math.interpolation.factories.Linear;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.LazyObject;
@@ -65,41 +66,172 @@ import org.jquantlib.util.Pair;
 // TEST the observability of the term structure is tested.
 
 //TODO: Finish (Richard)
-public class PiecewiseYieldCurve<C extends YieldTermStructure, I extends Interpolator> extends LazyObject implements CurveTraits<C,I> {
 
-	private CurveTraits<C,I> 	curveTraits;
+public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> extends LazyObject implements YieldCurveTraits {
+
+	private YieldCurve			delegateCurve;
+	private YieldTraits			delegateTraits;
 	private RateHelper[]		instruments_; //FIXME: generics
 	private double				accuracy_;
 
-	
-	
-	
-//	public PiecewiseYieldCurve(final Date referenceDate, final RateHelper[] instruments, final DayCounter dayCounter) {
-//		this(referenceDate, instruments, dayCounter, 1.0e-12, new Interpolator());
-//	}
-//
-//	public PiecewiseYieldCurve(final Date referenceDate, final RateHelper[] instruments, final DayCounter dayCounter,
-//			final double accuracy, final Interpolator i) {
-//		super(referenceDate, dayCounter, i);
-//		this.instruments_ = instruments;
-//		this.accuracy_ = accuracy;
-//		checkInstruments();
-//	}
-//
-//	public PiecewiseYieldCurve(final int settlementDays, final Calendar calendar, final RateHelper[] instruments,
-//			final DayCounter dayCounter) {
-//		this(settlementDays, calendar, instruments, dayCounter, 1.0e-12, new Interpolator());
-//	}
-//
-//	public PiecewiseYieldCurve(final int settlementDays, final Calendar calendar, final RateHelper[] instruments,
-//			final DayCounter dayCounter, final double accuracy, final Interpolator i) {
-//		super(settlementDays, calendar, dayCounter, i);
-//		this.instruments_ = instruments;
-//		this.accuracy_ = accuracy;
-//		checkInstruments();
-//	}
+
+	/**
+	 * This constructor executes these steps:
+	 * <li>constructs an {@link Interpolator} from the {@link Class} received as parameter</li>
+	 * <li>constructs a {@link YieldTraits} from the {@link Class} received as parameter</li>
+	 * <li>passes arguments received by <i>this</i> constructior to {@link YieldTraits}' constructor</li>
+	 * <li>passes the {@link Interpolator} just constructed to {@link YieldTraits}' constructor</li>
+	 * <p>
+	 * Doing so, this constructor mimics dinamic inheritance from a certain {@link YieldTraits} class by delegating to the
+	 * dinamically created reference.
+	 * 
+	 * @param classTraits
+	 *            is the {@link Class} relative to a {@link YieldTraits} interface
+	 * @param classInterpolator
+	 *            is the {@link Class} relative to a {@link Interpolator} to be used by the concrete implementation of a
+	 *            {@link YieldTraits} interface
+	 * @param referenceDate
+	 * @param instruments
+	 * @param dayCounter
+	 * @param accuracy
+	 */
+	public PiecewiseYieldCurve(Class<C> classTraits, Class<I> classInterpolator,
+			final Date referenceDate, final RateHelper[] instruments, final DayCounter dayCounter,
+			final double accuracy) {
+		
+		try {
+			// Constructs the Interpolator
+			if (classInterpolator==null) {
+				classInterpolator = (Class<I>) Linear.class; // FIXME: code review :: This is arbitrary, I hadn't better to invent here.
+			}
+			Interpolator interpolator = (Interpolator) classInterpolator.getConstructor().newInstance();
+			
+			// =====================================================================
+			// Constructs a concrete implementation of YieldTraits which 
+			// will become ancestor of this class via delegate pattern.
+			//
+			// In other words: will construct Discount or ForwardRate or ZeroYield
+			// passing the arguments received by this constructor, mimicking
+			//
+			// super(referenceDate, dayCounter, interpolator);
+			// =====================================================================
+			delegateTraits = classTraits.getConstructor().newInstance(referenceDate, dayCounter, interpolator);
+			delegateCurve = (YieldCurve) delegateTraits; // TODO: does not look to be very good !!!
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
+		
+		this.instruments_ = instruments;
+		this.accuracy_ = accuracy;
+		checkInstruments();
+	}
+
+	/**
+	 * This constructor executes these steps:
+	 * <li>constructs an {@link Interpolator} from the {@link Class} received as parameter</li>
+	 * <li>constructs a {@link YieldTraits} from the {@link Class} received as parameter</li>
+	 * <li>passes arguments received by <i>this</i> constructior to {@link YieldTraits}' constructor</li>
+	 * <li>passes the {@link Interpolator} just constructed to {@link YieldTraits}' constructor</li>
+	 * <p>
+	 * Doing so, this constructor mimics dinamic inheritance from a certain {@link YieldTraits} class by delegating to the
+	 * dinamically created reference.
+	 * 
+	 * @param classTraits
+	 *            is the {@link Class} relative to a {@link YieldTraits} interface
+	 * @param classInterpolator
+	 *            is the {@link Class} relative to a {@link Interpolator} to be used by the concrete implementation of a
+	 *            {@link YieldTraits} interface
+	 * @param settlementDays
+	 * @param calendar
+	 * @param instruments
+	 * @param dayCounter
+	 * @param accuracy
+	 */
+	public PiecewiseYieldCurve(Class<C> classTraits, Class<I> classInterpolator,
+			final int settlementDays, final Calendar calendar, final RateHelper[] instruments,
+			final DayCounter dayCounter, final double accuracy) {
+		
+		try {
+			// Constructs the Interpolator
+			if (classInterpolator==null) {
+				classInterpolator = (Class<I>) Linear.class; // FIXME: code review :: This is arbitrary, I hadn't better to invent here.
+			}
+			Interpolator interpolator = (Interpolator) classInterpolator.getConstructor().newInstance();
+			
+			// =====================================================================
+			// Constructs a concrete implementation of YieldTraits which 
+			// will become ancestor of this class via delegate pattern.
+			//
+			// In other words: will construct Discount or ForwardRate or ZeroYield
+			// passing the arguments received by this constructor, mimicking
+			//
+			// super(settlementDays, calendar, dayCounter, interpolator);
+			// =====================================================================
+			delegateTraits = classTraits.getConstructor().newInstance(settlementDays, calendar, dayCounter, interpolator);
+			delegateCurve = (YieldCurve) delegateTraits; // TODO: does not look to be very good !!!
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
+		
+		this.instruments_ = instruments;
+		this.accuracy_ = accuracy;
+		checkInstruments();
+	}
+
+	/**
+	 * This constructor executes these steps:
+	 * <li>constructs an {@link Interpolator} from the {@link Class} received as parameter</li>
+	 * <li>constructs a {@link YieldTraits} from the {@link Class} received as parameter</li>
+	 * <li>passes arguments received by <i>this</i> constructior to {@link YieldTraits}' constructor</li>
+	 * <li>passes the {@link Interpolator} just constructed to {@link YieldTraits}' constructor</li>
+	 * <p>
+	 * Doing so, this constructor mimics dinamic inheritance from a certain {@link YieldTraits} class by delegating to the
+	 * dinamically created reference.
+	 * 
+	 * @param classTraits
+	 *            is the {@link Class} relative to a {@link YieldTraits} interface
+	 * @param classInterpolator
+	 *            is the {@link Class} relative to a {@link Interpolator} to be used by the concrete implementation of a
+	 *            {@link YieldTraits} interface
+	 * @param referenceDate
+	 * @param instruments
+	 * @param dayCounter
+	 */
+	public PiecewiseYieldCurve(Class<C> classTraits, Class<I> classInterpolator,
+			final Date referenceDate, final RateHelper[] instruments, final DayCounter dayCounter) {
+		this(classTraits, classInterpolator, referenceDate, instruments, dayCounter, 1.0e-12);
+	}
+
+	/**
+	 * This constructor executes these steps:
+	 * <li>constructs an {@link Interpolator} from the {@link Class} received as parameter</li>
+	 * <li>constructs a {@link YieldTraits} from the {@link Class} received as parameter</li>
+	 * <li>passes arguments received by <i>this</i> constructior to {@link YieldTraits}' constructor</li>
+	 * <li>passes the {@link Interpolator} just constructed to {@link YieldTraits}' constructor</li>
+	 * <p>
+	 * Doing so, this constructor mimics dinamic inheritance from a certain {@link YieldTraits} class by delegating to the
+	 * dinamically created reference.
+	 * 
+	 * @param classTraits
+	 *            is the {@link Class} relative to a {@link YieldTraits} interface
+	 * @param classInterpolator
+	 *            is the {@link Class} relative to a {@link Interpolator} to be used by the concrete implementation of a
+	 *            {@link YieldTraits} interface
+	 * @param settlementDays
+	 * @param calendar
+	 * @param instruments
+	 * @param dayCounter
+	 */
+	public PiecewiseYieldCurve(Class<C> classTraits, Class<I> classInterpolator,
+			final int settlementDays, 
+			final Calendar calendar, 
+			final RateHelper[] instruments, 
+			final DayCounter dayCounter) {
+		this(classTraits, classInterpolator, settlementDays, calendar, instruments, dayCounter, 1.0e-12);
+	}
 
 
+	
 	private void checkInstruments() {
 	
 // QL_REQUIRE(!instruments_.empty(), "no instrument given");
@@ -321,58 +453,6 @@ public class PiecewiseYieldCurve<C extends YieldTermStructure, I extends Interpo
 
 
 
-	//
-	// implements interface CurveTraits 
-	// via delegate pattern to an inner class
-	//
-	
-	public Date[] dates() {
-		return curveTraits.dates();
-	}
-
-	public double[] discounts() {
-		return curveTraits.discounts();
-	}
-
-	public CurveTraits<C, I> getCurve() {
-		return curveTraits.getCurve();
-	}
-
-	public double guess(C c, Date d) {
-		return curveTraits.guess(c, d);
-	}
-
-	public double initialGuess() {
-		return curveTraits.initialGuess();
-	}
-
-	public double initialValue() {
-		return curveTraits.initialValue();
-	}
-
-	public Date maxDate() {
-		return curveTraits.maxDate();
-	}
-
-	public double maxValueAfter(int i, double[] data) {
-		return curveTraits.maxValueAfter(i, data);
-	}
-
-	public double minValueAfter(int i, double[] data) {
-		return curveTraits.minValueAfter(i, data);
-	}
-
-	public Pair<Date, Double>[] nodes() {
-		return curveTraits.nodes();
-	}
-
-	public double[] times() {
-		return curveTraits.times();
-	}
-
-	public void updateGuess(double[] data, double discount, int i) {
-		curveTraits.updateGuess(data, discount, i);
-	}
 	
 	
 
@@ -380,115 +460,75 @@ public class PiecewiseYieldCurve<C extends YieldTermStructure, I extends Interpo
 	// inner classes
 	//
 	
-	/**
-	 * Curve traits
-	 * 
-	 * <p>
-	 * This is an abstract base class which backs a concrete implementation of interface {@link CurveTraits}
-	 * 
-	 * @author Richard Gomes
-	 */
-	private abstract class BootstrapTrait<C extends YieldTermStructure, I extends Interpolator> implements CurveTraits<C,I> {
-
-		/**
-		 * Default global settings
-		 */
-		protected Settings settings;
-
-		/**
-		 * Extended classes are responsible for initializing this field
-		 */
-		protected Curve curve; 
-		
-		protected BootstrapTrait() {
-			// obtain reference to Settings
-			settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-		}
-		
-		
-		//
-		// implements interface Curve
-		//
-		
-		public final Date[] dates() {
-			return curve.dates();
-		}
-
-		public final double[] discounts() {
-			return curve.discounts();
-		}
-
-		public final Date maxDate() {
-			return curve.maxDate();
-		}
-
-		public final Pair<Date, Double>[] nodes() {
-			return curve.nodes();
-		}
-
-		public final double[] times() {
-			return curve.times();
-		}
-
-		
-		//
-		// implements interface Traits
-		//
-
-		public final CurveTraits<C,I> getCurve() /* @ReadOnly */ {
-			return this;
-		}
-		
-	}
-	
 	
 	/**
 	 * Discount curve traits
 	 * 
 	 * <p> 
-	 * This class provides a concrete implementation of interface {@link CurveTraits} using
+	 * This class provides a concrete implementation of interface {@link YieldCurveTraits} using
 	 * {@link InterpolatedDiscountCurve} as its {@link YieldTermStructure}
 	 * 
 	 * @author Richard Gomes
 	 */
-	private final class Discount<C extends YieldTermStructure, I extends Interpolator> extends BootstrapTrait<C,I> {
+	private final class Discount extends InterpolatedForwardCurve<I> implements YieldCurveTraits {
 		
-		public Discount() {
-			curve = new InterpolatedDiscountCurve<I>();
+		public Discount(int settlementDays, final Calendar cal, final DayCounter dc, final I interpolator) {
+			super(settlementDays, cal, dc, interpolator);
+		}
+		
+		public Discount(final Date referenceDate, final DayCounter dc, final I interpolator) {
+			super(referenceDate, dc, interpolator);
 		}
 
 		
 		//
-		// implements interface Traits
+		// implements interface YieldCurveTraits
 		//
 		
+		// FIXME: Override??? from who????
+        @Override
         public final /* @DiscountFactor */ double initialValue() { return 1.0; }
         
+        @Override
         public final /* @DiscountFactor */ double initialGuess() { return 0.9; }
         
+        @Override
         public final /* @DiscountFactor */ double guess(final YieldTermStructure c, final Date d) {
             return c.getDiscount(d, true);
         }
 
+        @Override
         public final /* @DiscountFactor */ double minValueAfter(int i, final double[] data) {
             return Constants.QL_EPSILON;
         }
         
+        @Override
         public final /* @DiscountFactor */ double maxValueAfter(int i, final double[] data) {
-            if (settings.isNegativeRates()) {
+            if (super.isNegativeRates) {
                 // discount are not required to be decreasing--all bets are off.
                 // We choose as max a value very unlikely to be exceeded.
                 return 3.0;
             } else {
-                // discounts cannot increase
+                // discounts cannot increaseYieldCurve
                 return data[i-1];
             }
         }
         
+        @Override
         public final void updateGuess(/* @DiscountFactor */ double[] data, /* @DiscountFactor */ double discount, int i) {
             data[i] = discount;
         }
 	
+    	//
+    	// implements interface YieldCurveTraits
+    	//
+    	
+    	@Override
+    	public YieldCurveTraits getCurve() {
+    		// TODO is this method really necessary in interface definition???
+    		return this;
+    	}
+
 	}
 	
 	
@@ -496,34 +536,41 @@ public class PiecewiseYieldCurve<C extends YieldTermStructure, I extends Interpo
 	 * Zero-curve traits
 	 * 
 	 * <p> 
-	 * This class provides a concrete implementation of interface {@link CurveTraits} using
+	 * This class provides a concrete implementation of interface {@link YieldCurveTraits} using
 	 * {@link InterpolatedZeroCurve} as its {@link YieldTermStructure}
 	 * 
 	 * @author Richard Gomes
 	 */
-	private final class ZeroYield<C extends YieldTermStructure, I extends Interpolator> extends BootstrapTrait<C,I> {
+	private final class ZeroYield extends InterpolatedForwardCurve<I> implements YieldCurveTraits {
 		
-		private YieldTermStructure curve; 
+		public ZeroYield(int settlementDays, final Calendar cal, final DayCounter dc, final I interpolator) {
+			super(settlementDays, cal, dc, interpolator);
+		}
 		
-		public ZeroYield() {
-			curve = new InterpolatedZeroCurve<I>();
+		public ZeroYield(final Date referenceDate, final DayCounter dc, final I interpolator) {
+			super(referenceDate, dc, interpolator);
 		}
 		
 
 		//
-		// implements interface Traits
+		// implements interface YieldCurveTraits
 		//
 		
+		// FIXME: Override??? from who????
+        @Override
         public final /* @DiscountFactor */ double initialValue() { return 0.02; }
         
+        @Override
         public final /* @DiscountFactor */ double initialGuess() { return 0.02; }
         
+        @Override
         public final /* @DiscountFactor */ double guess(final YieldTermStructure c, final Date d) {
             return c.getZeroRate(d, c.getDayCounter(), Compounding.CONTINUOUS, Frequency.ANNUAL, true).doubleValue();
         }
 
+        @Override
         public final /* @DiscountFactor */ double minValueAfter(int i, final double[] data) {
-            if (settings.isNegativeRates()) {
+            if (super.isNegativeRates) {
                 // no constraints.
                 // We choose as min a value very unlikely to be exceeded.
                 return -3.0;
@@ -532,16 +579,29 @@ public class PiecewiseYieldCurve<C extends YieldTermStructure, I extends Interpo
             }
         }
         
+        @Override
         public final /* @DiscountFactor */ double maxValueAfter(int i, final double[] data) {
             // no constraints.
             // We choose as max a value very unlikely to be exceeded.
             return 3.0;
         }
         
+        @Override
         public final void updateGuess(/* @DiscountFactor */ double[] data, /* @Rate */ double rate, int i) {
             data[i] = rate;
-            if (i == 1) data[0] = rate; // first point is updated as well
+            if (i == 1) data[0] = rate; // first point is updated as<C,I> well
         }
+        
+    	//
+    	// implements interface YieldCurveTraits
+    	//
+    	
+    	@Override
+    	public YieldCurveTraits getCurve() {
+    		// TODO is this method really necessary in interface definition???
+    		return this;
+    	}
+
 	}
 	
 
@@ -549,38 +609,41 @@ public class PiecewiseYieldCurve<C extends YieldTermStructure, I extends Interpo
 	 * Forward-curve traits
 	 * 
 	 * <p> 
-	 * This class provides a concrete implementation of interface {@link CurveTraits} using
+	 * This class provides a concrete implementation of interface {@link YieldCurveTraits} using
 	 * {@link InterpolatedForwardCurve} as its {@link YieldTermStructure}
 	 * 
 	 * @author Richard Gomes
 	 */
-	private final class ForwardRate<C extends YieldTermStructure, I extends Interpolator> extends BootstrapTrait<C,I> {
+	private final class ForwardRate extends InterpolatedForwardCurve<I> implements YieldCurveTraits {
 		
-		private YieldTermStructure curve; 
+		public ForwardRate(int settlementDays, final Calendar cal, final DayCounter dc, final I interpolator) {
+			super(settlementDays, cal, dc, interpolator);
+		}
 		
-
-//      
-//PENDING
-//		            
-//		public ForwardRate() {
-//			curve = new InterpolatedForwardCurve<I>();
-//		}
+		public ForwardRate(final Date referenceDate, final DayCounter dc, final I interpolator) {
+			super(referenceDate, dc, interpolator);
+		}
 		
 
 		//
-		// implements interface Traits
+		// implements interface YieldTraits
 		//
 		
-        public final /* @DiscountFactor */ double initialValue() { return 0.02; }
+		// FIXME: Override??? from who????
+        @Override
+		public final /* @DiscountFactor */ double initialValue() { return 0.02; }
         
+        @Override
         public final /* @DiscountFactor */ double initialGuess() { return 0.02; }
         
+        @Override
         public final /* @DiscountFactor */ double guess(final YieldTermStructure c, final Date d) {
             return c.getForwardRate(d, d, c.getDayCounter(), Compounding.CONTINUOUS, Frequency.ANNUAL, true).doubleValue();
         }
 
+        @Override
         public final /* @DiscountFactor */ double minValueAfter(int i, final double[] data) {
-            if (settings.isNegativeRates()) {
+            if (super.isNegativeRates) {
                 // no constraints.
                 // We choose as min a value very unlikely to be exceeded.
                 return -3.0;
@@ -589,19 +652,98 @@ public class PiecewiseYieldCurve<C extends YieldTermStructure, I extends Interpo
             }
         }
         
+        @Override
         public final /* @DiscountFactor */ double maxValueAfter(int i, final double[] data) {
             // no constraints.
             // We choose as max a value very unlikely to be exceeded.
             return 3.0;
         }
         
+        @Override
         public final void updateGuess(/* @DiscountFactor */ double[] data, /* @Price */ double forward, int i) {
             data[i] = forward;
             if (i == 1)
                 data[0] = forward; // first point is updated as well
         }
+        
+    	//
+    	// implements interface YieldCurveTraits
+    	//
+    	
+    	@Override
+    	public YieldCurveTraits getCurve() {
+    		// TODO is this method really necessary in interface definition???
+    		return this;
+    	}
+
+	}
+
+
+
+	//
+	// implements interface YieldCurve
+	//
+	
+	public Date[] dates() {
+		return delegateCurve.dates();
+	}
+
+	public double[] discounts() {
+		return delegateCurve.discounts();
+	}
+
+	public Date maxDate() {
+		return delegateCurve.maxDate();
+	}
+
+	public Pair<Date, Double>[] nodes() {
+		return delegateCurve.nodes();
+	}
+
+	public double[] times() {
+		return delegateCurve.times();
 	}
 	
+
+	//
+	// implements YieldTraits
+	//
+	
+	public double guess(YieldTermStructure c, Date d) {
+		return delegateTraits.guess(c, d);
+	}
+
+	public double initialGuess() {
+		return delegateTraits.initialGuess();
+	}
+
+	public double initialValue() {
+		return delegateTraits.initialValue();
+	}
+
+	public double maxValueAfter(int i, double[] data) {
+		return delegateTraits.maxValueAfter(i, data);
+	}
+
+	public double minValueAfter(int i, double[] data) {
+		return delegateTraits.minValueAfter(i, data);
+	}
+
+	public void updateGuess(double[] data, double discount, int i) {
+		delegateTraits.updateGuess(data, discount, i);
+	}
+
+	
+	//
+	// implements interface YieldCurveTraits
+	//
+	
+	@Override
+	public YieldCurveTraits getCurve() {
+		// TODO is this method really necessary in interface definition???
+		return this;
+	}
+
 }
 
 
@@ -674,7 +816,7 @@ public class PiecewiseYieldCurve<C extends YieldTermStructure, I extends Interpo
 //            instrument.
 //        */
 //        virtual Date latestDate() const { return latestDate_;}
-//        //@}
+//        //@}, Yield
 //        //! \name Observer interface
 //        //@{
 //        virtual void update() { notifyObservers(); }

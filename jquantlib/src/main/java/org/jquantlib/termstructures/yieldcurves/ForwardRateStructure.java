@@ -44,17 +44,22 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 
 // TODO : Finish (Richard)
-public class ForwardRateStructure extends YieldTermStructure {
 
-	public ForwardRateStructure(final DayCounter dc) {
+/**
+ * @note This class is abstract and has protected constructors so that it
+ * can only be constructed by extended classes
+ */
+public abstract class ForwardRateStructure extends YieldTermStructure {
+
+	protected ForwardRateStructure(final DayCounter dc) {
 		super(dc);
 	}
 
-	public ForwardRateStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
+	protected ForwardRateStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
 		super(refDate, cal, dc);
 	}
 
-	public ForwardRateStructure(final int settlDays, final Calendar cal, final DayCounter dc) {
+	protected ForwardRateStructure(final int settlDays, final Calendar cal, final DayCounter dc) {
 		super(settlDays, cal, dc);
 	}
 	

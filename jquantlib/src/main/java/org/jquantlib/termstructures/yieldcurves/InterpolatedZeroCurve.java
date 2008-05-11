@@ -41,7 +41,7 @@ import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
 
-public final class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStructure implements Curve {
+public final class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStructure implements YieldCurve {
 
 	//
 	// extends ZeroYieldStructure

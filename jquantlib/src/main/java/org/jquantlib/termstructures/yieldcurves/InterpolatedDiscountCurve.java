@@ -45,7 +45,7 @@ import org.jquantlib.util.Pair;
 
 // TODO: Finish (Richard)
 
-public final class InterpolatedDiscountCurve<I extends Interpolator> extends YieldTermStructure implements Curve {
+public final class InterpolatedDiscountCurve<I extends Interpolator> extends YieldTermStructure implements YieldCurve {
 
 	//
 	// extends YieldTermStructure

@@ -48,21 +48,22 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
 
 // TODO: Finish (Richard)
-public final class InterpolatedForwardCurve<T extends Interpolator> extends ForwardRateStructure implements Curve {
+public class InterpolatedForwardCurve<T extends Interpolator> extends ForwardRateStructure implements YieldCurve {
 
 	private Date[]				dates;
 	private/* @Rate */double[]	data;			// FIXME: refactor: forwards
 	private/* @Time */double[]	times;
 	private Interpolator		interpolator;
-
 	private Interpolation		interpolation;
 
-	/**
-	 * Default global settings
-	 */
-	private Settings			settings;
-
-	public InterpolatedForwardCurve(final Date[] dates, final/* @Rate */double[] forwards, final DayCounter dayCounter,
+	// obtained from Global Settings
+	protected boolean isNegativeRates;
+	
+	
+	public InterpolatedForwardCurve(
+			final Date[] dates, 
+			final/* @Rate */double[] forwards, 
+			final DayCounter dayCounter,
 			final T interpolator) {
 		// FIXME: code review: calendar
 		// FIXME: must check dates
@@ -74,17 +75,15 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 		if (dates.length <= 1) throw new IllegalArgumentException("too few dates"); // FIXME: message
 		if (dates.length != data.length) throw new IllegalArgumentException("dates/yields count mismatch"); // FIXME: message
 
-		// obtain reference to Settings
-		settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-		boolean isNegativeRates = settings.isNegativeRates();
-
+		// initialize isNegativeRates
+		obtainSettings();
+		
 		times = new /* @Time */double[dates.length];
 		for (int i = 1; i < dates.length; i++) {
-			if (dates[i].le(dates[i - 1])) { throw new IllegalArgumentException("invalid date (" + dates[i] + ", vs "
-					+ dates[i - 1] + ")"); // FIXME: message
-			}
-			if (!isNegativeRates && (data[i] < 0.0)) { throw new IllegalArgumentException("negative forward"); // FIXME: message
-			}
+			if (dates[i].le(dates[i - 1]))
+				throw new IllegalArgumentException("invalid date (" + dates[i] + ", vs " + dates[i - 1] + ")"); // FIXME: message
+			if (!isNegativeRates && (data[i] < 0.0))
+				throw new IllegalArgumentException("negative forward"); // FIXME: message
 			times[i] = dayCounter.getYearFraction(dates[0], dates[i]);
 		}
 
@@ -95,20 +94,42 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 	protected InterpolatedForwardCurve(final DayCounter dayCounter, final T interpolator) {
 		super(dayCounter);
 		this.interpolator = interpolator;
+		// initialize isNegativeRates
+		obtainSettings();
+		// initialize Interpolation
+
+		// TODO: interpolation is left not initialized !!!
 	}
 
 	protected InterpolatedForwardCurve(final Date referenceDate, final DayCounter dayCounter, final T interpolator) {
 		super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review: calendar
 		this.interpolator = interpolator;
+		// initialize isNegativeRates
+		obtainSettings();
+		// initialize Interpolation
+
+		// TODO: interpolation is left not initialized !!!
 	}
 
 	protected InterpolatedForwardCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter,
 			final T interpolator) {
 		super(settlementDays, calendar, dayCounter);
 		this.interpolator = interpolator;
+		// initialize isNegativeRates
+		obtainSettings();
+		// initialize Interpolation
+
+		// TODO: interpolation is left not initialized !!!
 	}
 
-	
+	/**
+	 * Obtains Global Settings and copy settings locally to <i>this</i> instance
+	 */
+	private void obtainSettings() {
+		// obtain reference to Settings
+		Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+		this.isNegativeRates = settings.isNegativeRates();
+	}
 	
 	
 	
@@ -134,7 +155,7 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 	
 	
 	//
-	// implements PiecewiseYieldCurve.Curve
+	// implements PiecewiseYieldCurve.YieldCurve
 	//
 	
 	@Override

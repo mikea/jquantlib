@@ -20,19 +20,41 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Pair;
 
 /**
  * 
  * @author Richard Gomes
- * @param <C>
- * @param <I>
  */
-public interface Curve {
-	public Date maxDate() /* @ReadOnly */;
-	public /*@Time*/ double[] times() /* @ReadOnly */;
-	public Date[] dates() /* @ReadOnly */;
-	public /*@DiscountFactor*/ double[] discounts() /* @ReadOnly */;
-	public Pair<Date, /*@DiscountFactor*/ Double>[] nodes() /* @ReadOnly */;
+public interface YieldTraits {
+    /**
+     * value at reference
+     */ 
+    public /* @DiscountFactor */ double initialValue();
+    
+    /**
+     * initial guess
+     */
+    public /* @DiscountFactor */ double initialGuess();
+    
+    /**
+     * further guesses
+     */
+    public /* @DiscountFactor */ double guess(final YieldTermStructure c, final Date d);
+
+    /**
+     * possible constraints based on previous values
+     */
+    public /* @DiscountFactor */ double minValueAfter(int i, final double[] data);
+    
+    /**
+     * possible constraints based on maximum values
+     */
+    public /* @DiscountFactor */ double maxValueAfter(int i, final double[] data);
+    
+    /**
+     * update with new guess
+     */
+    public void updateGuess(/* @DiscountFactor */ double[] data, /* @DiscountFactor */ double discount, int i);
 }

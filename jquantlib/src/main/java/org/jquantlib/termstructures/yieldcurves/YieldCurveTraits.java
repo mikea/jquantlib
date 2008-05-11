@@ -20,43 +20,15 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.util.Date;
 
 /**
  * 
  * @author Richard Gomes
- * @param <C>
- * @param <I>
  */
-public interface Traits<C extends YieldTermStructure> {
+public interface YieldCurveTraits extends YieldCurve, YieldTraits { 
     /**
-     * value at reference
-     */ 
-    public /* @DiscountFactor */ double initialValue();
-    
-    /**
-     * initial guess
+     * @return a concrete instance of a YieldTermStructure
      */
-    public /* @DiscountFactor */ double initialGuess();
-    
-    /**
-     * further guesses
-     */
-    public /* @DiscountFactor */ double guess(final C c, final Date d);
+    public YieldCurveTraits getCurve() /* @ReadOnly */;
 
-    /**
-     * possible constraints based on previous values
-     */
-    public /* @DiscountFactor */ double minValueAfter(int i, final double[] data);
-    
-    /**
-     * possible constraints based on maximum values
-     */
-    public /* @DiscountFactor */ double maxValueAfter(int i, final double[] data);
-    
-    /**
-     * update with new guess
-     */
-    public void updateGuess(/* @DiscountFactor */ double[] data, /* @DiscountFactor */ double discount, int i);
 }

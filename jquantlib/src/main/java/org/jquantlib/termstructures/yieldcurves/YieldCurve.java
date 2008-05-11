@@ -20,8 +20,8 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.util.Date;
+import org.jquantlib.util.Pair;
 
 /**
  * 
@@ -29,10 +29,10 @@ import org.jquantlib.termstructures.YieldTermStructure;
  * @param <C>
  * @param <I>
  */
-public interface CurveTraits<C extends YieldTermStructure, I extends Interpolator> extends Curve, Traits<C> { 
-    /**
-     * @return a concrete instance of a YieldTermStructure
-     */
-    public CurveTraits<C,I> getCurve() /* @ReadOnly */;
-
+public interface YieldCurve {
+	public Date maxDate() /* @ReadOnly */;
+	public /*@Time*/ double[] times() /* @ReadOnly */;
+	public Date[] dates() /* @ReadOnly */;
+	public /*@DiscountFactor*/ double[] discounts() /* @ReadOnly */;
+	public Pair<Date, /*@DiscountFactor*/ Double>[] nodes() /* @ReadOnly */;
 }
