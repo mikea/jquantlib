@@ -34,7 +34,7 @@ import org.jquantlib.util.Observer;
  *
  */
 //TODO: Finish
-public abstract class RateHelper<T> implements Observer, Observable {
+public abstract class RateHelper<T extends TermStructure> implements Observer, Observable {
 
 	@Override
 	public void update(Observable o, Object arg) {

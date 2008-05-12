@@ -49,6 +49,38 @@ import cern.colt.Sorting;
 
 public abstract class AbstractInterpolation implements Interpolation {
 
+	//
+	// abstract methods
+	//
+	// These methods are used by their counterparts, e.g:
+	//   evaluateImpl is called by evaluate
+	//   primitiveImpl is called by primitive
+	//	 ... and so on.
+	//
+	protected abstract double evaluateImpl(final double x);
+	protected abstract double primitiveImpl(final double x);
+	protected abstract double derivativeImpl(final double x);
+	protected abstract double secondDerivativeImpl(final double x);
+
+	
+	//
+	// private fields
+	//
+	
+	/**
+	 * This private field is automatically initialized by constructor which
+	 * picks up it's value from {@link Settings} singleton. This procedure
+	 * caches values from the singleton, intending to avoid contention in
+	 * heavily multi-threaded environments.
+	 */
+	//TODO: We should observe extraSafetyChecks
+	private boolean extraSafetyChecks = Configuration.getSystemConfiguration(null).isExtraSafetyChecks();
+
+	
+	//
+	// protected fields
+	//
+	
 	/**
 	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
 	 */
@@ -60,54 +92,64 @@ public abstract class AbstractInterpolation implements Interpolation {
 	protected double[] vy;
 	
 	
-	/**
-	 * This private field is automatically initialized by constructor which
-	 * picks up it's value from {@link Settings} singleton. This procedure
-	 * caches values from the singleton, intending to avoid contention in
-	 * heavily multi-threaded environments.
-	 */
-	//TODO: We should observe extraSafetyChecks
-	private boolean extraSafetyChecks = Configuration.getSystemConfiguration(null).isExtraSafetyChecks();
-
-	// FIXME: add comments from here
-	protected abstract double xMin();
-	protected abstract double xMax();
+	//
+	// public methods
+	//
 	
-	// FIXME: add comments from here
-	protected abstract double evaluateImpl(final double x);
-	protected abstract double primitiveImpl(final double x);
-	protected abstract double derivativeImpl(final double x);
-	protected abstract double secondDerivativeImpl(final double x);
-
-	
-	public final double[] xValues() {
+	public final double[] getValuesX() {
         return vx;
     }
 	
-	public final double[] yValues() {
+	public final double[] getValuesY() {
         return vy;
     }
 	
-	protected final double primitive(final double x) {
-        checkRange(x, this.allowsExtrapolation());
+	//
+	// public final double evaluate(final double x) ::: is in a separate section
+	//
+	
+	public final double evaluate(final double x, boolean allowExtrapolation) {
+        checkRange(x, allowExtrapolation);
+		return evaluateImpl(x);
+	}
+
+	public final double primitive(final double x) {
+		return primitive(x, false);
+	}
+	
+	public final double primitive(final double x, boolean allowExtrapolation) {
+        checkRange(x, allowExtrapolation);
 		return primitiveImpl(x);
 	}
 
-	protected final double derivative(final double x) {
-        checkRange(x, this.allowsExtrapolation());
+	public final double derivative(final double x) {
+		return derivative(x, false);
+	}
+	
+	public final double derivative(final double x, boolean allowExtrapolation) {
+        checkRange(x, allowExtrapolation);
 		return derivativeImpl(x);
 	}
 
-	protected final double secondDerivative(final double x) {
-        checkRange(x, this.allowsExtrapolation());
+	public final double secondDerivative(final double x) {
+		return secondDerivative(x, false);
+	}
+	
+	public final double secondDerivative(final double x, boolean allowExtrapolation) {
+        checkRange(x, allowExtrapolation);
 		return secondDerivativeImpl(x);
 	}
 
-	protected final boolean isInRange(final double x) {
-        double x1 = xMin(), x2 = xMax();
+	public final boolean isInRange(final double x) {
+        double x1 = getMinX(), x2 = getMaxX();
         return (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
     }
 
+	
+	//
+	// protected methods
+	//
+	
 	/**
 	 * This method verifies if
 	 * <li> extrapolation is enabled;</li>
@@ -124,7 +166,7 @@ public abstract class AbstractInterpolation implements Interpolation {
 		if (! (extrapolate || allowsExtrapolation() || isInRange(x)) ) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("interpolation range is [");
-			sb.append(xMin()).append(", ").append(xMax());
+			sb.append(getMinX()).append(", ").append(getMaxX());
 			sb.append("]: extrapolation at ");
 			sb.append(x);
 			sb.append(" not allowed");
@@ -169,16 +211,8 @@ public abstract class AbstractInterpolation implements Interpolation {
 	// implements UnaryFunctionDouble
 	//
 	
-	/**
-	 * This method validates the range being requested and
-	 * delegates to the concrete implementation, implemented
-	 * by some derived class.
-	 * 
-	 * @see LinearInterpolation.evaluateImpl
-	 */
 	public final double evaluate(final double x) {
-        checkRange(x, this.allowsExtrapolation());
-		return evaluateImpl(x);
+		return evaluate(x, false);
 	}
 
 	

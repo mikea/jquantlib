@@ -32,6 +32,7 @@ import org.jquantlib.number.Rate;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
@@ -44,7 +45,7 @@ import org.jquantlib.util.Observer;
  * 
  */
 // TODO:
-public class DepositRateHelper extends RelativeDateRateHelper {
+public class DepositRateHelper<T extends TermStructure> extends RelativeDateRateHelper<T> {
 
 	private Date fixingDate;
 	private IborIndex iborIndex;
@@ -92,7 +93,7 @@ public class DepositRateHelper extends RelativeDateRateHelper {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DepositRateHelper(Handle quote, Object termStructure,
+	public DepositRateHelper(Handle<Quote> quote, T termStructure,
 			Date earliestDate, Date latestDate) {
 		super(quote, termStructure, earliestDate, latestDate);
 		// TODO Auto-generated constructor stub

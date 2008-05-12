@@ -43,57 +43,30 @@ import org.jquantlib.util.Pair;
 
 public final class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStructure implements YieldCurve {
 
-	//
-	// extends ZeroYieldStructure
-	//
-	
 	@Override
-	protected final double discountImpl(double t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public final Date getMaxDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	
-	//
-	// implements PiecewiseYieldCurve.Curve
-	//
-	
-	@Override
-	public final Date[] dates() {
+	public double[] getData() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public final double[] discounts() {
+	public Date[] getDates() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public final Date maxDate() {
+	public Pair<Date, Double>[] getNodes() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public final Pair<Date, Double>[] nodes() {
+	public double[] getTimes() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public final double[] times() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
 

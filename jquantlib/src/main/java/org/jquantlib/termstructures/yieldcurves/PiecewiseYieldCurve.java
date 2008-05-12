@@ -40,7 +40,6 @@ package org.jquantlib.termstructures.yieldcurves;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.factories.Linear;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -49,6 +48,8 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Pair;
+
+
 
 
 
@@ -100,12 +101,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 			final double accuracy) {
 		
 		try {
-			// Constructs the Interpolator
-			if (classInterpolator==null) {
-				classInterpolator = (Class<I>) Linear.class; // FIXME: code review :: This is arbitrary, I hadn't better to invent here.
-			}
-			Interpolator interpolator = (Interpolator) classInterpolator.getConstructor().newInstance();
-			
 			// =====================================================================
 			// Constructs a concrete implementation of YieldTraits which 
 			// will become ancestor of this class via delegate pattern.
@@ -115,7 +110,7 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 			//
 			// super(referenceDate, dayCounter, interpolator);
 			// =====================================================================
-			delegateTraits = classTraits.getConstructor().newInstance(referenceDate, dayCounter, interpolator);
+			delegateTraits = classTraits.getConstructor().newInstance(referenceDate, dayCounter, classInterpolator);
 			delegateCurve = (YieldCurve) delegateTraits; // TODO: does not look to be very good !!!
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
@@ -152,12 +147,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 			final DayCounter dayCounter, final double accuracy) {
 		
 		try {
-			// Constructs the Interpolator
-			if (classInterpolator==null) {
-				classInterpolator = (Class<I>) Linear.class; // FIXME: code review :: This is arbitrary, I hadn't better to invent here.
-			}
-			Interpolator interpolator = (Interpolator) classInterpolator.getConstructor().newInstance();
-			
 			// =====================================================================
 			// Constructs a concrete implementation of YieldTraits which 
 			// will become ancestor of this class via delegate pattern.
@@ -167,7 +156,7 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 			//
 			// super(settlementDays, calendar, dayCounter, interpolator);
 			// =====================================================================
-			delegateTraits = classTraits.getConstructor().newInstance(settlementDays, calendar, dayCounter, interpolator);
+			delegateTraits = classTraits.getConstructor().newInstance(settlementDays, calendar, dayCounter, classInterpolator);
 			delegateCurve = (YieldCurve) delegateTraits; // TODO: does not look to be very good !!!
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
@@ -234,50 +223,47 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	
 	private void checkInstruments() {
 	
-// QL_REQUIRE(!instruments_.empty(), "no instrument given");
+//		if (instruments_.length==0) throw new IllegalArgumentException("no instrument given"); // FIXME: message
 //
-//    // sort rate helpers
-//    for (Size i=0; i<instruments_.size(); i++)
-//        instruments_[i]->setTermStructure(this);
-//    std::sort(instruments_.begin(),instruments_.end(),
-//              detail::RateHelperSorter());
-//    // check that there is no instruments with the same maturity
-//    for (Size i=1; i<instruments_.size(); i++) {
-//        Date m1 = instruments_[i-1]->latestDate(),
-//             m2 = instruments_[i]->latestDate();
-//        QL_REQUIRE(m1 != m2,
-//                   "two instruments have the same maturity ("<< m1 <<")");
-//    }
-//    for (Size i=0; i<instruments_.size(); i++)
-//        registerWith(instruments_[i]);
-    
+//		// sort rate helpers
+//	    for (int i=0; i<instruments_.length; i++)
+//	        instruments_[i].setTermStructure(this);
+//	    Sorting.mergeSort(instruments_, 0, instruments_.length-1, new RateHelperSorter());
+//	    // check that there is no instruments with the same maturity
+//	    for (int i=1; i<instruments_.length; i++) {
+//	        Date m1 = instruments_[i-1].getLatestDate();
+//	        Date m2 = instruments_[i].getLatestDate();
+//	        if (m1.equals(m2)) throw new IllegalArgumentException("two instruments have the same maturity " + m1); // FIXME: message
+//	    }
+//	    for (int i=0; i<instruments_.length; i++)
+//	        instruments_[i].addObserver(this);
 	}
 
 	public void performCalculations() /* @ReadOnly */ {
 	
-//	// check that there is no instruments with invalid quote
-//    for (Size i=0; i<instruments_.size(); i++)
-//        QL_REQUIRE(instruments_[i]->referenceQuote()!=Null<Real>(),
-//                   "instrument with null price");
-//
-//    // setup vectors
-//    Size n = instruments_.size();
-//    for (Size i=0; i<n; i++) {
-//        // don't try this at home!
-//        instruments_[i]->setTermStructure(
-//                             const_cast<PiecewiseYieldCurve<C,I>*>(this));
-//    }
-//    this->dates_ = std::vector<Date>(n+1);
-//    this->times_ = std::vector<Time>(n+1);
-//    this->data_ = std::vector<Real>(n+1);
-//    this->dates_[0] = this->referenceDate();
-//    this->times_[0] = 0.0;
-//    this->data_[0] = C::initialValue();
-//    for (Size i=0; i<n; i++) {
-//        this->dates_[i+1] = instruments_[i]->latestDate();
-//        this->times_[i+1] = this->timeFromReference(this->dates_[i+1]);
-//        this->data_[i+1] = this->data_[i];
-//    }
+//		// check that there is no instruments with invalid quote
+//	    for (int i=0; i<instruments_.length; i++)
+//	        if (Double.isNaN(instruments_[i].getQuoteValue())) 
+//	        	throw new IllegalArgumentException("instrument with null price"); // FIXME: message
+//	                   
+//	
+//	    // setup vectors
+//	    int n = instruments_.length;
+//	    for (int i=0; i<n; i++) {
+//	        instruments_[i].setTermStructure(this);
+//	    }
+//	    dates_ = new Date[n+1];
+//	    times_ = new /*@Time*/ double[n+1];
+//	    data_ = new double[n+1];
+//	    dates_[0] = this.getReferenceDate();
+//	    times_[0] = 0.0;
+//	    data_[0] = initialValue();
+//	    for (int i=0; i<n; i++) {
+//	        dates_[i+1] = instruments_[i].getLatestDate();
+//	        times_[i+1] = this.getTimeFromReference(dates_[i+1]);
+//	        data_[i+1]  = this.getData_(i);
+//	    }
+	    
 //    Brent solver;
 //    Size maxIterations = 25;
 //    // bootstrapping loop
@@ -461,6 +447,25 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	//
 	
 	
+	public enum Traits {
+	    DISCOUNT		(PiecewiseYieldCurve.Discount.class),
+	    FORWARD_RATE	(PiecewiseYieldCurve.ForwardRate.class),
+	    ZERO_YIELD		(PiecewiseYieldCurve.ZeroYield.class);
+
+		private final Class<? extends YieldCurveTraits> klass;
+		
+		private Traits(Class<? extends YieldCurveTraits> klass) {
+			this.klass = klass;
+		}
+		
+		public Class<? extends YieldCurveTraits> toClass() {
+			return this.klass;
+		}
+
+	}
+	
+	
+	
 	/**
 	 * Discount curve traits
 	 * 
@@ -470,14 +475,15 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * 
 	 * @author Richard Gomes
 	 */
-	private final class Discount extends InterpolatedForwardCurve<I> implements YieldCurveTraits {
+	// FIXME : should not be public
+	public final class Discount extends InterpolatedForwardCurve<I> implements YieldCurveTraits {
 		
-		public Discount(int settlementDays, final Calendar cal, final DayCounter dc, final I interpolator) {
-			super(settlementDays, cal, dc, interpolator);
+		public Discount(int settlementDays, final Calendar cal, final DayCounter dc, final Class<I> classInterpolator) {
+			super(settlementDays, cal, dc, classInterpolator);
 		}
 		
-		public Discount(final Date referenceDate, final DayCounter dc, final I interpolator) {
-			super(referenceDate, dc, interpolator);
+		public Discount(final Date referenceDate, final DayCounter dc, final Class<I> classInterpolator) {
+			super(referenceDate, dc, classInterpolator);
 		}
 
 		
@@ -485,7 +491,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 		// implements interface YieldCurveTraits
 		//
 		
-		// FIXME: Override??? from who????
         @Override
         public final /* @DiscountFactor */ double initialValue() { return 1.0; }
         
@@ -519,16 +524,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
             data[i] = discount;
         }
 	
-    	//
-    	// implements interface YieldCurveTraits
-    	//
-    	
-    	@Override
-    	public YieldCurveTraits getCurve() {
-    		// TODO is this method really necessary in interface definition???
-    		return this;
-    	}
-
 	}
 	
 	
@@ -541,14 +536,15 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * 
 	 * @author Richard Gomes
 	 */
-	private final class ZeroYield extends InterpolatedForwardCurve<I> implements YieldCurveTraits {
+	// FIXME: should not be public
+	public final class ZeroYield extends InterpolatedForwardCurve<I> implements YieldCurveTraits {
 		
-		public ZeroYield(int settlementDays, final Calendar cal, final DayCounter dc, final I interpolator) {
-			super(settlementDays, cal, dc, interpolator);
+		public ZeroYield(int settlementDays, final Calendar cal, final DayCounter dc, final Class<I> classInterpolator) {
+			super(settlementDays, cal, dc, classInterpolator);
 		}
 		
-		public ZeroYield(final Date referenceDate, final DayCounter dc, final I interpolator) {
-			super(referenceDate, dc, interpolator);
+		public ZeroYield(final Date referenceDate, final DayCounter dc, final Class<I> classInterpolator) {
+			super(referenceDate, dc, classInterpolator);
 		}
 		
 
@@ -556,7 +552,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 		// implements interface YieldCurveTraits
 		//
 		
-		// FIXME: Override??? from who????
         @Override
         public final /* @DiscountFactor */ double initialValue() { return 0.02; }
         
@@ -592,16 +587,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
             if (i == 1) data[0] = rate; // first point is updated as<C,I> well
         }
         
-    	//
-    	// implements interface YieldCurveTraits
-    	//
-    	
-    	@Override
-    	public YieldCurveTraits getCurve() {
-    		// TODO is this method really necessary in interface definition???
-    		return this;
-    	}
-
 	}
 	
 
@@ -614,14 +599,15 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * 
 	 * @author Richard Gomes
 	 */
-	private final class ForwardRate extends InterpolatedForwardCurve<I> implements YieldCurveTraits {
+	// FIXME: should not be public
+	public final class ForwardRate extends InterpolatedForwardCurve<I> implements YieldCurveTraits {
 		
-		public ForwardRate(int settlementDays, final Calendar cal, final DayCounter dc, final I interpolator) {
-			super(settlementDays, cal, dc, interpolator);
+		public ForwardRate(int settlementDays, final Calendar cal, final DayCounter dc, final Class<I> classInterpolator) {
+			super(settlementDays, cal, dc, classInterpolator);
 		}
 		
-		public ForwardRate(final Date referenceDate, final DayCounter dc, final I interpolator) {
-			super(referenceDate, dc, interpolator);
+		public ForwardRate(final Date referenceDate, final DayCounter dc, final Class<I> classInterpolator) {
+			super(referenceDate, dc, classInterpolator);
 		}
 		
 
@@ -629,7 +615,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 		// implements interface YieldTraits
 		//
 		
-		// FIXME: Override??? from who????
         @Override
 		public final /* @DiscountFactor */ double initialValue() { return 0.02; }
         
@@ -666,16 +651,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
                 data[0] = forward; // first point is updated as well
         }
         
-    	//
-    	// implements interface YieldCurveTraits
-    	//
-    	
-    	@Override
-    	public YieldCurveTraits getCurve() {
-    		// TODO is this method really necessary in interface definition???
-    		return this;
-    	}
-
 	}
 
 
@@ -684,24 +659,24 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	// implements interface YieldCurve
 	//
 	
-	public Date[] dates() {
-		return delegateCurve.dates();
+	public Date[] getDates() {
+		return delegateCurve.getDates();
 	}
 
-	public double[] discounts() {
-		return delegateCurve.discounts();
+	public double[] getData() {
+		return delegateCurve.getData();
 	}
 
-	public Date maxDate() {
-		return delegateCurve.maxDate();
+	public Date getMaxDate() {
+		return delegateCurve.getMaxDate();
 	}
 
-	public Pair<Date, Double>[] nodes() {
-		return delegateCurve.nodes();
+	public Pair<Date, Double>[] getNodes() {
+		return delegateCurve.getNodes();
 	}
 
-	public double[] times() {
-		return delegateCurve.times();
+	public double[] getTimes() {
+		return delegateCurve.getTimes();
 	}
 	
 
@@ -731,17 +706,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 
 	public void updateGuess(double[] data, double discount, int i) {
 		delegateTraits.updateGuess(data, discount, i);
-	}
-
-	
-	//
-	// implements interface YieldCurveTraits
-	//
-	
-	@Override
-	public YieldCurveTraits getCurve() {
-		// TODO is this method really necessary in interface definition???
-		return this;
 	}
 
 }

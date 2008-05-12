@@ -67,4 +67,18 @@ public interface Interpolation extends Extrapolator, UnaryFunctionDouble {
 	 */
 	public void reload();
 	
+    public double getMinX();
+    public double getMaxX();
+    public double[] getValuesX();
+    public double[] getValuesY();
+    public boolean isInRange(double x);
+    public double primitive(double x);
+    public double derivative(double x);
+    public double secondDerivative(double x);
+
+    public double evaluate(double x, boolean b);
+    public double primitive(double x, boolean b);
+    public double derivative(double x, boolean b);
+    public double secondDerivative(double x, boolean b);
+    
 }

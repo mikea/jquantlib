@@ -39,12 +39,12 @@ public class LinearInterpolation extends AbstractInterpolation {
     }
     
 	@Override
-	public double xMin() {
+	public double getMinX() {
 		return  vx[0]; // get first element
 	}
 
 	@Override
-	public double xMax() {
+	public double getMaxX() {
 		return vx[vx.length-1]; // get last element
 	}
 

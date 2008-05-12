@@ -25,10 +25,8 @@ package org.jquantlib.termstructures.yieldcurves;
  * 
  * @author Richard Gomes
  */
-public interface YieldCurveTraits extends YieldCurve, YieldTraits { 
-    /**
-     * @return a concrete instance of a YieldTermStructure
-     */
-    public YieldCurveTraits getCurve() /* @ReadOnly */;
-
+public interface YieldCurveTraits extends YieldCurve, YieldTraits {
+	
+	// no more methods
+	
 }

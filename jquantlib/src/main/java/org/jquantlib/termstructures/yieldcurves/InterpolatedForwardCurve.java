@@ -42,19 +42,23 @@ import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
+import org.jquantlib.math.interpolation.factories.Linear;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
 
 // TODO: Finish (Richard)
-public class InterpolatedForwardCurve<T extends Interpolator> extends ForwardRateStructure implements YieldCurve {
 
-	private Date[]				dates;
-	private/* @Rate */double[]	data;			// FIXME: refactor: forwards
-	private/* @Time */double[]	times;
-	private Interpolator		interpolator;
-	private Interpolation		interpolation;
+/**
+ * Term structure based on interpolation of forward rates
+ */
+public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRateStructure implements YieldCurve {
+
+	protected Date[]				dates;
+	protected/* @Time */double[]	times;
+	protected/* @Rate */double[]	data; // forwards
+	protected Interpolation			interpolation;
 
 	// obtained from Global Settings
 	protected boolean isNegativeRates;
@@ -64,13 +68,12 @@ public class InterpolatedForwardCurve<T extends Interpolator> extends ForwardRat
 			final Date[] dates, 
 			final/* @Rate */double[] forwards, 
 			final DayCounter dayCounter,
-			final T interpolator) {
+			final Class<I> classInterpolator) {
 		// FIXME: code review: calendar
 		// FIXME: must check dates
 		super(dates[0], Target.getCalendar(), dayCounter);
 		this.dates = dates;
 		this.data = forwards;
-		this.interpolator = interpolator;
 
 		if (dates.length <= 1) throw new IllegalArgumentException("too few dates"); // FIXME: message
 		if (dates.length != data.length) throw new IllegalArgumentException("dates/yields count mismatch"); // FIXME: message
@@ -87,39 +90,42 @@ public class InterpolatedForwardCurve<T extends Interpolator> extends ForwardRat
 			times[i] = dayCounter.getYearFraction(dates[0], dates[i]);
 		}
 
-		this.interpolation = interpolator.interpolate(times, data);
+		this.interpolation = obtainInterpolator(classInterpolator).interpolate(times, data);
 		this.interpolation.update();
 	}
 
-	protected InterpolatedForwardCurve(final DayCounter dayCounter, final T interpolator) {
+	protected InterpolatedForwardCurve(final DayCounter dayCounter, final Class<I> classInterpolator) {
 		super(dayCounter);
-		this.interpolator = interpolator;
-		// initialize isNegativeRates
 		obtainSettings();
-		// initialize Interpolation
-
-		// TODO: interpolation is left not initialized !!!
+		
+		// FIXME: code review ::: this is probably wrong
+		this.times = new /*@Time*/ double[0];
+		this.dates = new Date[0];
+		this.data  = new double[0];
+		this.interpolation = obtainInterpolator(classInterpolator).interpolate(times, data);
 	}
 
-	protected InterpolatedForwardCurve(final Date referenceDate, final DayCounter dayCounter, final T interpolator) {
+	protected InterpolatedForwardCurve(final Date referenceDate, final DayCounter dayCounter, final Class<I> classInterpolator) {
 		super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review: calendar
-		this.interpolator = interpolator;
-		// initialize isNegativeRates
 		obtainSettings();
-		// initialize Interpolation
-
-		// TODO: interpolation is left not initialized !!!
+		
+		// FIXME: code review ::: this is probably wrong
+		this.times = new /*@Time*/ double[0];
+		this.dates = new Date[0];
+		this.data  = new double[0];
+		this.interpolation = obtainInterpolator(classInterpolator).interpolate(times, data);
 	}
 
 	protected InterpolatedForwardCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter,
-			final T interpolator) {
+			final Class<I> classInterpolator) {
 		super(settlementDays, calendar, dayCounter);
-		this.interpolator = interpolator;
-		// initialize isNegativeRates
 		obtainSettings();
-		// initialize Interpolation
-
-		// TODO: interpolation is left not initialized !!!
+		
+		// FIXME: code review ::: this is probably wrong
+		this.times = new /*@Time*/ double[0];
+		this.dates = new Date[0];
+		this.data  = new double[0];
+		this.interpolation = obtainInterpolator(classInterpolator).interpolate(times, data);
 	}
 
 	/**
@@ -132,196 +138,67 @@ public class InterpolatedForwardCurve<T extends Interpolator> extends ForwardRat
 	}
 	
 	
-	
-	
+	private Interpolator obtainInterpolator(final Class<I> classInterpolator) {
+		// Constructs the Interpolator
+		try {
+			Class<I> klass = classInterpolator;
+			if (classInterpolator==null) {
+				klass = (Class<I>) Linear.class; // FIXME: code review :: This is arbitrary, I hadn't better to invent here.
+			}
+			Interpolator interpolator = (Interpolator) (klass.getConstructor().newInstance());
+			return interpolator;
+		} catch (Exception e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
 	
 	
 	//
 	// extends ForwardRateStructure
 	//
 	
-	@Override
-	protected final double discountImpl(double t) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    protected /*@Rate*/ double forwardImpl(/*@Time*/ double t) /* @ReadOnly */ {
+        return interpolation.evaluate(t, true); // FIXME: code review
+    }
 
-	@Override
-	public final Date getMaxDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    protected /*@Rate*/ double zeroYieldImpl(/*@Time*/ double t) /* @ReadOnly */ {
+        if (t == 0.0)
+            return forwardImpl(0.0);
+        else
+            return interpolation.primitive(t, true)/t; // FIXME: code review
+    }
 
-	
 	
 	//
 	// implements PiecewiseYieldCurve.YieldCurve
 	//
 	
 	@Override
-	public final Date[] dates() {
-		// TODO Auto-generated method stub
-		return null;
+	public final Date[] getDates() /* @ReadOnly */ {
+		return dates;
 	}
 
 	@Override
-	public final double[] discounts() {
-		// TODO Auto-generated method stub
-		return null;
+	public final double[] getData() /* @ReadOnly */ {
+		return data;
 	}
 
 	@Override
-	public final Date maxDate() {
-		// TODO Auto-generated method stub
-		return null;
+	public final Date getMaxDate() /* @ReadOnly */ {
+		return dates[dates.length-1];
 	}
 
 	@Override
-	public final Pair<Date, Double>[] nodes() {
-		// TODO Auto-generated method stub
-		return null;
+	public final Pair<Date, Double>[] getNodes() /* @ReadOnly */ {
+      Pair<Date, /*@Rate*/ Double>[] results = new Pair /* <Date, @Rate Double> */ [dates.length];
+      for (int i=0; i<dates.length; ++i)
+          results[i] = new Pair<Date, Double>(dates[i], data[i]);
+      return results;
 	}
 
 	@Override
-	public final double[] times() {
-		// TODO Auto-generated method stub
-		return null;
+	public final double[] getTimes() /* @ReadOnly */ {
+		return times;
 	}
-
 
 }
-
-
-
-/*! \file forwardcurve.hpp
-   \brief interpolated forward-rate structure
-*/
-
-//#ifndef quantlib_forward_curve_hpp
-//#define quantlib_forward_curve_hpp
-//
-//#include <ql/termstructures/yieldcurves/forwardstructure.hpp>
-//#include <ql/math/interpolations/backwardflatinterpolation.hpp>
-//#include <vector>
-//#include <utility>
-//
-//namespace QuantLib {
-//
-//   //! Term structure based on interpolation of forward rates
-//   /*! \ingroup yieldtermstructures */
-//   template <class Interpolator>
-//   class InterpolatedForwardCurve : public ForwardRateStructure {
-//     public:
-//       // constructor
-//       InterpolatedForwardCurve(const std::vector<Date>& dates,
-//                                const std::vector<Rate>& forwards,
-//                                const DayCounter& dayCounter,
-//                                const Interpolator& interpolator
-//                                                           = Interpolator());
-//       //! \name Inspectors
-//       //@{
-//       Date maxDate() const;
-//       const std::vector<Time>& times() const;
-//       const std::vector<Date>& dates() const;
-//       const std::vector<Rate>& forwards() const;
-//       std::vector<std::pair<Date,Rate> > nodes() const;
-//     protected:
-//       InterpolatedForwardCurve(const DayCounter&,
-//                                const Interpolator& interpolator
-//                                                           = Interpolator());
-//       InterpolatedForwardCurve(const Date& referenceDate,
-//                                const DayCounter&,
-//                                const Interpolator& interpolator
-//                                                           = Interpolator());
-//       InterpolatedForwardCurve(Natural settlementDays,
-//                                const Calendar&,
-//                                const DayCounter&,
-//                                const Interpolator& interpolator
-//                                                           = Interpolator());
-//       Rate forwardImpl(Time t) const;
-//       Rate zeroYieldImpl(Time t) const;
-//       mutable std::vector<Date> dates_;
-//       mutable std::vector<Time> times_;
-//       mutable std::vector<Rate> data_;
-//       mutable Interpolation interpolation_;
-//       Interpolator interpolator_;
-//   };
-//
-//   //! Term structure based on flat interpolation of forward rates
-//   /*! \ingroup yieldtermstructures */
-//   typedef InterpolatedForwardCurve<BackwardFlat> ForwardCurve;
-//
-//
-//   // inline definitions
-//
-//   template <class T>
-//   inline Date InterpolatedForwardCurve<T>::maxDate() const {
-//       return dates_.back();
-//   }
-//
-//   template <class T>
-//   inline const std::vector<Time>& InterpolatedForwardCurve<T>::times()
-//                                                                      const {
-//       return times_;
-//   }
-//
-//   template <class T>
-//   inline const std::vector<Date>&
-//   InterpolatedForwardCurve<T>::dates() const {
-//       return dates_;
-//   }
-//
-//   template <class T>
-//   inline const std::vector<Rate>&
-//   InterpolatedForwardCurve<T>::forwards() const {
-//       return data_;
-//   }
-//
-//   template <class T>
-//   inline std::vector<std::pair<Date,Rate> >
-//   InterpolatedForwardCurve<T>::nodes() const {
-//       std::vector<std::pair<Date,Rate> > results(dates_.size());
-//       for (Size i=0; i<dates_.size(); ++i)
-//           results[i] = std::make_pair(dates_[i],data_[i]);
-//       return results;
-//   }
-//
-//   template <class T>
-//   inline InterpolatedForwardCurve<T>::InterpolatedForwardCurve(
-//                                                const DayCounter& dayCounter,
-//                                                const T& interpolator)
-//   : interpolator_(interpolator) {}
-//
-//   template <class T>
-//   inline InterpolatedForwardCurve<T>::InterpolatedForwardCurve(
-//                                                const Date& referenceDate,
-//                                                const DayCounter& dayCounter,
-//                                                const T& interpolator)
-//   : ForwardRateStructure(referenceDate, Calendar(), dayCounter),
-//     interpolator_(interpolator) {}
-//
-//   template <class T>
-//   inline InterpolatedForwardCurve<T>::InterpolatedForwardCurve(
-//                                                Natural settlementDays,
-//                                                const Calendar& calendar,
-//                                                const DayCounter& dayCounter,
-//                                                const T& interpolator)
-//   : ForwardRateStructure(settlementDays, calendar, dayCounter),
-//     interpolator_(interpolator) {}
-//
-//   template <class T>
-//   Rate InterpolatedForwardCurve<T>::forwardImpl(Time t) const {
-//       return interpolation_(t, true);
-//   }
-//
-//   template <class T>
-//   Rate InterpolatedForwardCurve<T>::zeroYieldImpl(Time t) const {
-//       if (t == 0.0)
-//           return forwardImpl(0.0);
-//       else
-//           return interpolation_.primitive(t, true)/t;
-//   }
-//
-//
-//
-//}

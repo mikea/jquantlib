@@ -30,9 +30,9 @@ import org.jquantlib.util.Pair;
  * @param <I>
  */
 public interface YieldCurve {
-	public Date maxDate() /* @ReadOnly */;
-	public /*@Time*/ double[] times() /* @ReadOnly */;
-	public Date[] dates() /* @ReadOnly */;
-	public /*@DiscountFactor*/ double[] discounts() /* @ReadOnly */;
-	public Pair<Date, /*@DiscountFactor*/ Double>[] nodes() /* @ReadOnly */;
+	public Date getMaxDate() /* @ReadOnly */;
+	public /*@Time*/ double[] getTimes() /* @ReadOnly */;
+	public Date[] getDates() /* @ReadOnly */;
+	public double[] getData() /* @ReadOnly */;
+	public Pair<Date, Double>[] getNodes() /* @ReadOnly */;
 }

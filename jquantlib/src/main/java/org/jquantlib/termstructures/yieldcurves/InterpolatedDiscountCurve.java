@@ -47,57 +47,42 @@ import org.jquantlib.util.Pair;
 
 public final class InterpolatedDiscountCurve<I extends Interpolator> extends YieldTermStructure implements YieldCurve {
 
-	//
-	// extends YieldTermStructure
-	//
-	
 	@Override
-	protected final double discountImpl(double t) {
+	protected double discountImpl(double t) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public final Date getMaxDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	
-	//
-	// implements PiecewiseYieldCurve.Curve
-	//
-	
-	@Override
-	public final Date[] dates() {
+	public Date getMaxDate() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public final double[] discounts() {
+	public double[] getData() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public final Date maxDate() {
+	public Date[] getDates() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public final Pair<Date, Double>[] nodes() {
+	public Pair<Date, Double>[] getNodes() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public final double[] times() {
+	public double[] getTimes() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 }
 

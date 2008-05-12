@@ -23,20 +23,22 @@ package org.jquantlib.termstructures.yield;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.quotes.Handle;
+import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.RateHelper;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Observable;
 
 /**
- * @author Srinivas Hasti
+ * Rate helper with date schedule relative to the global evaluation date
  * 
- */
-// ! Rate helper with date schedule relative to the global evaluation date
-/*
- * ! This class takes care of rebuilding the date schedule when the global
+ * <p>
+ * This class takes care of rebuilding the date schedule when the global
  * evaluation date changes
- */
-public abstract class RelativeDateRateHelper extends RateHelper {
+ * 
+ * @author Srinivas Hasti
+ */ 
+public abstract class RelativeDateRateHelper<T extends TermStructure> extends RateHelper<T> {
 
 	private Date evaluationDate;
 
@@ -48,7 +50,7 @@ public abstract class RelativeDateRateHelper extends RateHelper {
 				.getGlobalSettings().getEvaluationDate();
 	}
 
-	public RelativeDateRateHelper(Handle quote, Object termStructure,
+	public RelativeDateRateHelper(Handle<Quote> quote, T termStructure,
 			Date earliestDate, Date latestDate) {
 		super(quote, termStructure, earliestDate, latestDate);
 		Configuration.getSystemConfiguration(null).getGlobalSettings()

@@ -42,11 +42,15 @@ import static org.junit.Assert.fail;
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.math.Closeness;
+import org.jquantlib.math.interpolation.factories.Linear;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.RelinkableHandle;
+import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.termstructures.yieldcurves.ImpliedTermStructure;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
+import org.jquantlib.termstructures.yieldcurves.YieldCurveTraits;
 import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Period;
@@ -104,11 +108,12 @@ public class TermStructuresTest {
         int deposits = depositData.length;
         int swaps = swapData.length;
             
-//           
-//PENDING
-//            
+        RateHelper instruments[] = new RateHelper[deposits+swaps];
+        
+//      
+//PENDING (srinivas)
+//                  
 //
-//        RateHelper instruments[] = new RateHelper[deposits+swaps];
 //        for (int i=0; i<deposits; i++) {
 //            instruments[i] = new DepositRateHelper(
 //            						depositData[i].rate/100,
@@ -136,10 +141,36 @@ public class TermStructuresTest {
 //                                    BusinessDayConvention.UNADJUSTED, Thirty360.getDayCounter(),
 //                                    index);
 //        }
-//        
-//        termStructure = new PiecewiseYieldCurve<Discount,LogLinear>(settlement, instruments, Actual360.getDayCounter());
-//                                                    
-//        dummyTermStructure = new PiecewiseYieldCurve<Discount,LogLinear>(settlement, instruments, Actual360.getDayCounter());
+        
+        
+        
+        
+        //
+        // PENDING (Richard)
+        //
+        
+        termStructure = null; // FIXME
+        		//new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, /*Log*/Linear>(
+        		//		PiecewiseYieldCurve.Discount.class, /*Log*/Linear.class,
+        		//		settlement, instruments, Actual360.getDayCounter());
+                                                    
+        dummyTermStructure = null; // FIXME
+        		//new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, /*Log*/Linear>(
+        		//		PiecewiseYieldCurve.Discount.class, /*Log*/Linear.class,
+        		//		settlement, instruments, Actual360.getDayCounter());
+        
+
+        //XXX
+        YieldCurveTraits TEST_SYNTAX_termStructure = new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, /*Log*/Linear>(
+        		PiecewiseYieldCurve.Discount.class, /*Log*/Linear.class,
+        		settlement, instruments, Actual360.getDayCounter());
+        
+        //XXX
+        YieldCurveTraits TEST_SYNTAX_dummyTermStructure = new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, /*Log*/Linear>(
+        		PiecewiseYieldCurve.Discount.class, /*Log*/Linear.class,
+        		settlement, instruments, Actual360.getDayCounter());
+        
+        
     }
 
 	
