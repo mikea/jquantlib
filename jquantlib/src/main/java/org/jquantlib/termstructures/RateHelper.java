@@ -36,6 +36,13 @@ import org.jquantlib.util.Observer;
 //TODO: Finish
 public abstract class RateHelper<T> implements Observer, Observable {
 
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	protected Handle<Quote> quote;
     protected T termStructure;
     protected Date earliestDate;

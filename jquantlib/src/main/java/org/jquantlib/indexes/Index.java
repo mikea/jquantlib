@@ -37,31 +37,46 @@ import org.jquantlib.util.TimeSeries;
  * @author Srinivas Hasti
  * 
  */
+//TODO: Code review and comments
 public abstract class Index implements Observable {
 
+	/**
+	 * Return name of the Index
+	 * @return
+	 */
 	public abstract String getName();
 
-	// ! returns the calendar defining valid fixing dates
+	/**
+	 * Returns the calendar defining valid fixing dates
+	 */
 	public abstract Calendar getFixingCalendar();
 
-	// ! returns TRUE if the fixing date is a valid one
+	/**
+	 * 
+	 *  Returns TRUE if the fixing date is a valid one
+	 */
 	public abstract boolean isValidFixingDate(Date fixingDate);
 
-	// ! returns the fixing at the given date
-	/*
+	/**
+	 * Returns the fixing at the given date
 	 * ! the date passed as arguments must be the actual calendar date of the
 	 * fixing; no settlement days must be used.
 	 */
 	public abstract double fixing(Date fixingDate, boolean forecastTodaysFixing);
 
-	// ! returns the fixing TimeSeries
+	/**
+	 * 
+	 * Returns the fixing TimeSeries
+	 */
 	public TimeSeries<Double> timeSeries() {
 		return IndexManager.getInstance().get(getName());
 	}
 
-	// ! stores the historical fixing at the given date
+	 
 	/*
-	 * ! the date passed as arguments must be the actual calendar date of the
+	 * Stores the historical fixing at the given date
+	 * 
+	 * The date passed as arguments must be the actual calendar date of the
 	 * fixing; no settlement days must be used.
 	 */
 	public void addFixing(Date fixingDate, double fixing, boolean forceOverwrite) {
@@ -74,18 +89,22 @@ public abstract class Index implements Observable {
 		addFixings(fixingDates, fixings, forceOverwrite);
 	}
 
-	// ! stores historical fixings from a TimeSeries
+	
 	/*
-	 * ! the dates in the TimeSeries must be the actual calendar dates of the
+	 * Stores historical fixings from a TimeSeries
+	 * 
+	 * The dates in the TimeSeries must be the actual calendar dates of the
 	 * fixings; no settlement days must be used.
 	 */
 	public void addFixings(TimeSeries<Double> t, boolean forceOverwrite) {
 		addFixings(t.dates(), t.values(), forceOverwrite);
 	}
 
-	// ! stores historical fixings at the given dates
+	
 	/*
-	 * ! the dates passed as arguments must be the actual calendar dates of the
+	 * Stores historical fixings at the given dates
+	 * 
+	 * the dates passed as arguments must be the actual calendar dates of the
 	 * fixings; no settlement days must be used.
 	 */
 	public void addFixings(Collection<Date> dates, Collection<Double> values,
@@ -137,6 +156,9 @@ public abstract class Index implements Observable {
 							+ duplicatedDate + ", " + duplicatedValue);
 	}
 
+	/**
+	 * Clear the fixings stored for the index
+	 */
 	public void clearFixings() {
 		IndexManager.getInstance().clearHistory(getName());
 	}

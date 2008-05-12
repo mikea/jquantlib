@@ -19,11 +19,9 @@
  */
 package org.jquantlib.termstructures.yield;
 
+// FIXME: move to org.jquantlib.termstructures.yieldcurves
 
-//FIXME: move to org.jquantlib.termstructures.yieldcurves
-
-
-
+import org.jquantlib.Configuration;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.util.Date;
@@ -44,26 +42,29 @@ public abstract class RelativeDateRateHelper extends RateHelper {
 
 	public RelativeDateRateHelper(double d) {
 		super(d);
-		// TODO
-		// registerWith(Settings::instance().evaluationDate());
-		// evaluationDate_ = Settings::instance().evaluationDate();
+		Configuration.getSystemConfiguration(null).getGlobalSettings()
+				.getEvaluationDate().addObserver(this);
+		evaluationDate = Configuration.getSystemConfiguration(null)
+				.getGlobalSettings().getEvaluationDate();
 	}
 
 	public RelativeDateRateHelper(Handle quote, Object termStructure,
 			Date earliestDate, Date latestDate) {
 		super(quote, termStructure, earliestDate, latestDate);
-		// TODO
-		// registerWith(Settings::instance().evaluationDate());
-		// evaluationDate_ = Settings::instance().evaluationDate();
+		Configuration.getSystemConfiguration(null).getGlobalSettings()
+				.getEvaluationDate().addObserver(this);
+		evaluationDate = Configuration.getSystemConfiguration(null)
+				.getGlobalSettings().getEvaluationDate();
 	}
 
 	public void update(Observable o, Object arg) {
-		// TODO:
-		// if (evaluationDate_ != Settings::instance().evaluationDate()) {
-		// evaluationDate_ = Settings::instance().evaluationDate();
-		// initializeDates();
-		// }
-		// RateHelper::update();
+		if (!evaluationDate.equals(Configuration.getSystemConfiguration(null)
+				.getGlobalSettings().getEvaluationDate())) {
+			evaluationDate = Configuration.getSystemConfiguration(null)
+					.getGlobalSettings().getEvaluationDate();
+			initializeDates();
+		}
+		super.update(o, arg);
 	}
 
 	protected abstract void initializeDates();

@@ -35,6 +35,7 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  * 
  */
+//TODO: Code review
 public class IborIndex extends InterestRateIndex {
 
 	private BusinessDayConvention convention;
@@ -50,7 +51,7 @@ public class IborIndex extends InterestRateIndex {
 		this.convention = convention;
 		this.termStructure = handle;
 		this.endOfMonth = endOfMonth;
-		// registerWith(termStructure_); TODO
+		handle.getLink().addObserver(this);
 	}
 
 	/*

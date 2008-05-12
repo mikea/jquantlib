@@ -34,7 +34,7 @@ import java.util.TreeMap;
  */
 
 //TODO: Make this a Observable
-public class TimeSeries<T> {
+public class TimeSeries<T> implements Observable {
 	
 	private SortedMap<Date,T> series = new TreeMap<Date,T>();
 	
@@ -86,5 +86,42 @@ public class TimeSeries<T> {
 	public void add(Date date, T dt) {
 		series.put(date, dt);
 	}
+	
+	
+	/**
+	 * Implements multiple inheritance via delegate pattern to an inner class
+	 * 
+	 */
+	private Observable delegatedObservable = new DefaultObservable(this);
+
+	public void addObserver(Observer observer) {
+		delegatedObservable.addObserver(observer);
+	}
+
+	public int countObservers() {
+		return delegatedObservable.countObservers();
+	}
+
+	public void deleteObserver(Observer observer) {
+		delegatedObservable.deleteObserver(observer);
+	}
+
+	public void notifyObservers() {
+		delegatedObservable.notifyObservers();
+	}
+
+	public void notifyObservers(Object arg) {
+		delegatedObservable.notifyObservers(arg);
+	}
+	
+	public void deleteObservers() {
+		delegatedObservable.deleteObservers();
+	}
+
+	public List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
+	}
+
+
     
 }

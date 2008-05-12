@@ -21,6 +21,7 @@ package org.jquantlib.indexes;
 
 import java.util.Currency;
 
+import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -28,8 +29,15 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Observable;
+import org.jquantlib.util.Observer;
 
-public abstract class InterestRateIndex extends Index {
+/**
+ * 
+ * @author Srinivas Hasti
+ *
+ */
+public abstract class InterestRateIndex extends Index implements Observer {
 	private String familyName;
 	private Period tenor;
 	private int fixingDays;
@@ -49,9 +57,11 @@ public abstract class InterestRateIndex extends Index {
 		if (fixingDays < 3)
 			throw new IllegalArgumentException("wrong number (" + fixingDays
 					+ ") of fixing days");
+		
 		// tenor.normalize(); //TODO
-		// registerWith(Settings::instance().evaluationDate()); TODO
-		// registerWith(IndexManager::instance().notifier(name())); TODO
+		Configuration.getSystemConfiguration(null)
+		.getGlobalSettings().getEvaluationDate().addObserver(this);
+		IndexManager.getInstance().get(getName()).addObserver(this);		
 	}
 
 	@Override
@@ -157,5 +167,9 @@ public abstract class InterestRateIndex extends Index {
 	public abstract Date maturityDate(Date valueDate);
 
 	protected abstract double forecastFixing(Date fixingDate);
+
+	public void update(Observable o, Object arg) {
+	    notifyObservers(arg);	
+	}
 
 }
