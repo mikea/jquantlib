@@ -25,10 +25,13 @@ import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.math.interpolation.LogLinearInterpolation;
 
+
 /**
+ * This class provides log-linear interpolation factory and traits
+ * 
+ * @author Dominik Holenstein
  * @author Richard Gomes
  */
-
 public class LogLinear implements Interpolator {
 	
 	private Interpolator delegate;

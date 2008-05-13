@@ -26,7 +26,7 @@ import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
-import org.jquantlib.termstructures.TermStructure;
+import org.jquantlib.termstructures.TermStructureIntf;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
@@ -39,7 +39,7 @@ import org.jquantlib.util.Date;
  * 
  */
 // TODO:
-public class DepositRateHelper<T extends TermStructure> extends
+public class DepositRateHelper<T extends TermStructureIntf> extends
 		RelativeDateRateHelper<T> {
 
 	private Date fixingDate;

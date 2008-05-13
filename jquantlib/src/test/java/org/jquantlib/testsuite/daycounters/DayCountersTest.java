@@ -269,7 +269,7 @@ public class DayCountersTest {
 	            Date end = start.getDateAfter(p[i]);
 	            /*@Time*/ double  calculated = dayCounter.getYearFraction(start, end);
 
-	            if (Math.abs(calculated-expected[i]) > 1.0e-12) {
+	            if (Math.abs(calculated-expected[i]) <= 1.0e-12) {
 	                fail("from " + start + " to " + end + ":\n"
 	                           + "    calculated: " + calculated + "\n"
 	                           + "    expected:   " + expected[i]);

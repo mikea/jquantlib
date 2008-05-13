@@ -3,12 +3,14 @@ package org.jquantlib.testsuite.math.distributions;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.NonCentralChiSquaredDistribution;
+import org.junit.Test;
 
 /**
  * @author <Richard Gomes>
  */
 public class NonCentralChiSquaredDistributionTest {
 
+	@Test
 	public void testPenevRayKovELV() {
 		
 		double[][] values = { 	{1,3,12,0.958368},

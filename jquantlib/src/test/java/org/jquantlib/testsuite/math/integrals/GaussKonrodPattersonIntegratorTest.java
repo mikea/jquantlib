@@ -22,8 +22,7 @@ public class GaussKonrodPattersonIntegratorTest {
 		checkSingleTabulated(new FourthFunction(), "f(x)=x^4", 2.0/5.0, 1.0e-13);		
 	}
 	
-	@Test
-	public void checkSingleTabulated(UnaryFunctionDouble f, String tag,
+	private void checkSingleTabulated(UnaryFunctionDouble f, String tag,
 	                         double expected, double tolerance) {
 		
 		Integrator quad = new GaussKonrodPattersonIntegrator();

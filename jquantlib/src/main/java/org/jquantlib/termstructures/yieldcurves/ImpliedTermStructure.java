@@ -36,6 +36,7 @@ package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.YieldTermStructureIntf;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 
@@ -48,11 +49,11 @@ import org.jquantlib.util.Date;
  */
 // TEST the correctness of the returned values is tested by checking them against numerical calculations.
 // TEST observability against changes in the underlying term structure is checked.
-public class ImpliedTermStructure extends YieldTermStructure {
+public class ImpliedTermStructure<T extends YieldTermStructureIntf> extends YieldTermStructure {
 
-	private Handle<YieldTermStructure>	originalCurve;
+	private Handle<T>	originalCurve;
 
-	public ImpliedTermStructure(final Handle<YieldTermStructure> h, final Date referenceDate) {
+	public ImpliedTermStructure(final Handle<T> h, final Date referenceDate) {
 		super(referenceDate);
 		this.originalCurve = h;
 		this.originalCurve.addObserver(this);
@@ -60,22 +61,22 @@ public class ImpliedTermStructure extends YieldTermStructure {
 
 	@Override
 	public Calendar getCalendar() /* @ReadOnly */ {
-		return originalCurve.getLink().getCalendar();
+		return null; // FIXME: originalCurve.getLink().getCalendar();
 	}
 
 	@Override
 	public Date getMaxDate() /* @ReadOnly */ {
-		return originalCurve.getLink().getMaxDate();
+		return null; // FIXME: originalCurve.getLink().getMaxDate();
 	}
 
 	@Override
 	protected /*@DiscountFactor*/ double discountImpl(/*@Time*/double t) /* @ReadOnly */{
-		YieldTermStructure yts = originalCurve.getLink();
+		YieldTermStructureIntf yts = originalCurve.getLink();
 		/* t is relative to the current reference date
 		   and needs to be converted to the time relative
 		   to the reference date of the original curve */
 		Date ref = getReferenceDate();
-		/*@Time*/double originalTime = t + getDayCounter().getYearFraction(yts.getReferenceDate(), ref);
+		/*@Time*/double originalTime = 0.0; // FUXME: t + getDayCounter().getYearFraction(yts.getReferenceDate(), ref);
 		/* discount at evaluation date cannot be cached
 		   since the original curve could change between
 		   invocations of this method */

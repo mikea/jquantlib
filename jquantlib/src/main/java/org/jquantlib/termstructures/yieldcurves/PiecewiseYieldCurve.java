@@ -37,17 +37,25 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import java.util.List;
+
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Constants;
+import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.termstructures.Compounding;
+import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.termstructures.RateHelper;
+import org.jquantlib.termstructures.TermStructureIntf;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.LazyObject;
+import org.jquantlib.util.Observable;
+import org.jquantlib.util.Observer;
 import org.jquantlib.util.Pair;
+import org.jquantlib.util.Visitor;
 
 
 
@@ -68,10 +76,11 @@ import org.jquantlib.util.Pair;
 
 //TODO: Finish (Richard)
 
-public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> extends LazyObject implements YieldCurveTraits {
+public class PiecewiseYieldCurve<C extends YieldCurveTraits, I extends Interpolator> 
+			extends LazyObject 
+			implements YieldCurveTraits {
 
-	private YieldCurve			delegateCurve;
-	private YieldTraits			delegateTraits;
+	private YieldCurveTraits	delegate;
 	private RateHelper[]		instruments_; //FIXME: generics
 	private double				accuracy_;
 
@@ -83,8 +92,8 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * <li>passes arguments received by <i>this</i> constructior to {@link YieldTraits}' constructor</li>
 	 * <li>passes the {@link Interpolator} just constructed to {@link YieldTraits}' constructor</li>
 	 * <p>
-	 * Doing so, this constructor mimics dinamic inheritance from a certain {@link YieldTraits} class by delegating to the
-	 * dinamically created reference.
+	 * Doing so, this constructor mimics dynamic inheritance from a certain {@link YieldTraits} class by delegating to the
+	 * dynamically created reference.
 	 * 
 	 * @param classTraits
 	 *            is the {@link Class} relative to a {@link YieldTraits} interface
@@ -96,7 +105,7 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * @param dayCounter
 	 * @param accuracy
 	 */
-	public PiecewiseYieldCurve(Class<C> classTraits, Class<I> classInterpolator,
+	public PiecewiseYieldCurve(Class<C> classCurveTraits, Class<I> classInterpolator,
 			final Date referenceDate, final RateHelper[] instruments, final DayCounter dayCounter,
 			final double accuracy) {
 		
@@ -110,8 +119,7 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 			//
 			// super(referenceDate, dayCounter, interpolator);
 			// =====================================================================
-			delegateTraits = classTraits.getConstructor().newInstance(referenceDate, dayCounter, classInterpolator);
-			delegateCurve = (YieldCurve) delegateTraits; // TODO: does not look to be very good !!!
+			delegate = classCurveTraits.getConstructor().newInstance(referenceDate, dayCounter, classInterpolator);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -128,8 +136,8 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * <li>passes arguments received by <i>this</i> constructior to {@link YieldTraits}' constructor</li>
 	 * <li>passes the {@link Interpolator} just constructed to {@link YieldTraits}' constructor</li>
 	 * <p>
-	 * Doing so, this constructor mimics dinamic inheritance from a certain {@link YieldTraits} class by delegating to the
-	 * dinamically created reference.
+	 * Doing so, this constructor mimics dynamic inheritance from a certain {@link YieldTraits} class by delegating to the
+	 * dynamically created reference.
 	 * 
 	 * @param classTraits
 	 *            is the {@link Class} relative to a {@link YieldTraits} interface
@@ -142,7 +150,7 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * @param dayCounter
 	 * @param accuracy
 	 */
-	public PiecewiseYieldCurve(Class<C> classTraits, Class<I> classInterpolator,
+	public PiecewiseYieldCurve(Class<C> classCurveTraits, Class<I> classInterpolator,
 			final int settlementDays, final Calendar calendar, final RateHelper[] instruments,
 			final DayCounter dayCounter, final double accuracy) {
 		
@@ -156,8 +164,7 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 			//
 			// super(settlementDays, calendar, dayCounter, interpolator);
 			// =====================================================================
-			delegateTraits = classTraits.getConstructor().newInstance(settlementDays, calendar, dayCounter, classInterpolator);
-			delegateCurve = (YieldCurve) delegateTraits; // TODO: does not look to be very good !!!
+			delegate = classCurveTraits.getConstructor().newInstance(settlementDays, calendar, dayCounter, classInterpolator);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -174,8 +181,8 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * <li>passes arguments received by <i>this</i> constructior to {@link YieldTraits}' constructor</li>
 	 * <li>passes the {@link Interpolator} just constructed to {@link YieldTraits}' constructor</li>
 	 * <p>
-	 * Doing so, this constructor mimics dinamic inheritance from a certain {@link YieldTraits} class by delegating to the
-	 * dinamically created reference.
+	 * Doing so, this constructor mimics dynamic inheritance from a certain {@link YieldTraits} class by delegating to the
+	 * dynamically created reference.
 	 * 
 	 * @param classTraits
 	 *            is the {@link Class} relative to a {@link YieldTraits} interface
@@ -186,9 +193,9 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * @param instruments
 	 * @param dayCounter
 	 */
-	public PiecewiseYieldCurve(Class<C> classTraits, Class<I> classInterpolator,
+	public PiecewiseYieldCurve(Class<C> classCurveTraits, Class<I> classInterpolator,
 			final Date referenceDate, final RateHelper[] instruments, final DayCounter dayCounter) {
-		this(classTraits, classInterpolator, referenceDate, instruments, dayCounter, 1.0e-12);
+		this(classCurveTraits, classInterpolator, referenceDate, instruments, dayCounter, 1.0e-12);
 	}
 
 	/**
@@ -198,8 +205,8 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * <li>passes arguments received by <i>this</i> constructior to {@link YieldTraits}' constructor</li>
 	 * <li>passes the {@link Interpolator} just constructed to {@link YieldTraits}' constructor</li>
 	 * <p>
-	 * Doing so, this constructor mimics dinamic inheritance from a certain {@link YieldTraits} class by delegating to the
-	 * dinamically created reference.
+	 * Doing so, this constructor mimics dynamic inheritance from a certain {@link YieldTraits} class by delegating to the
+	 * dynamically created reference.
 	 * 
 	 * @param classTraits
 	 *            is the {@link Class} relative to a {@link YieldTraits} interface
@@ -211,12 +218,12 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	 * @param instruments
 	 * @param dayCounter
 	 */
-	public PiecewiseYieldCurve(Class<C> classTraits, Class<I> classInterpolator,
+	public PiecewiseYieldCurve(Class<C> classCurveTraits, Class<I> classInterpolator,
 			final int settlementDays, 
 			final Calendar calendar, 
 			final RateHelper[] instruments, 
 			final DayCounter dayCounter) {
-		this(classTraits, classInterpolator, settlementDays, calendar, instruments, dayCounter, 1.0e-12);
+		this(classCurveTraits, classInterpolator, settlementDays, calendar, instruments, dayCounter, 1.0e-12);
 	}
 
 
@@ -332,91 +339,67 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	
 	
 	
-//	
-//	
-//	
-//	private /*@DiscountFactor*/ double discountImpl(/* @Time */double t) /* @ReadOnly */{
-//		calculate();
-//		return base_curve.discountImpl(t);
-//	}
-//
-//
-//
-//	//
-//	// implements interface YieldTermStructure
-//	//
-//
-//	public final Date[] getDates() /* @ReadOnly */{
-//		calculate();
-//		return this.dates;
-//	}
-//
-//	public Date getMaxDate() /* @ReadOnly */{
-//		calculate();
-//		return this.dates[this.dates.length() - 1];
-//	}
-//
-//	public Time[] getTimes() /* @ReadOnly */ {
-//		calculate();
-//		return this.times;
-//	}
-//
-//	public Pair<Date, Double> getNodes() /* @ReadOnly */{
-//		calculate();
-//		return base_curve.getNodes();
-//	}
-//
-//
-//
-//	//
-//	// implements interface Observer
-//	//
-//
-//	public void update() {
-//		base_curve.update();
-//		super.update();
-//	}
-//
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	private class ObjectiveFunction<C extends BootstrapTrait, I extends Interpolator> implements UnaryFunctionDouble {
-//		
-//	    private PiecewiseYieldCurve<C,I> curve;
-//	    private RateHelper rateHelper;
-//	    private int segment;
-//
-//	        
-//	    public ObjectiveFunction(final PiecewiseYieldCurve<C,I> curve, final RateHelper rateHelper, final int segment) {
-//	    	this.curve = curve;
-//	    	this.rateHelper = rateHelper;
-//	    	this.segment = segment;
-//		}
-//		
-//	    //
-//	    // implements UnaryFunctionDouble
-//	    //
-//		
-//	    public double evaluate(double guess) /* @ReadOnly */ {
-//	    	C::updateGuess(curve_->data_, guess, segment_);
-//	    	curve.interpolation.update();
-//	    	return rateHelper_->quoteError();
-//	    	
-//	    }
-//	}
-//	
-//	
-//	
+	
+	
+	
+	private /*@DiscountFactor*/ double discountImpl(/* @Time */double t) /* @ReadOnly */{
+		calculate();
+		return 0.0; // TODO: delegate.discountImpl(t);
+	}
+
+
+
+	//
+	// implements interface Observer
+	//
+
+	public void update() {
+		// TODO
+		//delegate.update();
+		//super.update();
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private class ObjectiveFunction<C extends YieldCurveTraits, I extends Interpolator> implements UnaryFunctionDouble {
+		
+	    private PiecewiseYieldCurve<C,I> curve;
+	    private RateHelper rateHelper;
+	    private int segment;
+
+	        
+	    public ObjectiveFunction(final PiecewiseYieldCurve<C,I> curve, final RateHelper rateHelper, final int segment) {
+	    	this.curve = curve;
+	    	this.rateHelper = rateHelper;
+	    	this.segment = segment;
+		}
+		
+	    //
+	    // implements UnaryFunctionDouble
+	    //
+		
+	    public double evaluate(double guess) /* @ReadOnly */ {
+	    	curve.updateGuess(curve.getData(), guess, segment);
+	    	// TODO
+	    	//curve.interpolation.update();
+	    	//return rateHelper.quoteError();
+	    	return 0.0; //XXX
+	    }
+	}
+	
+	
+	
 	
 	
 	
@@ -445,26 +428,6 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	//
 	// inner classes
 	//
-	
-	
-	public enum Traits {
-	    DISCOUNT		(PiecewiseYieldCurve.Discount.class),
-	    FORWARD_RATE	(PiecewiseYieldCurve.ForwardRate.class),
-	    ZERO_YIELD		(PiecewiseYieldCurve.ZeroYield.class);
-
-		private final Class<? extends YieldCurveTraits> klass;
-		
-		private Traits(Class<? extends YieldCurveTraits> klass) {
-			this.klass = klass;
-		}
-		
-		public Class<? extends YieldCurveTraits> toClass() {
-			return this.klass;
-		}
-
-	}
-	
-	
 	
 	/**
 	 * Discount curve traits
@@ -526,6 +489,9 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	
 	}
 	
+	
+	// ======================================================================
+
 	
 	/**
 	 * Zero-curve traits
@@ -590,6 +556,9 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	}
 	
 
+	// ======================================================================
+	
+	
 	/**
 	 * Forward-curve traits
 	 * 
@@ -654,29 +623,31 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	}
 
 
+	// ======================================================================
+	
 
 	//
 	// implements interface YieldCurve
 	//
 	
 	public Date[] getDates() {
-		return delegateCurve.getDates();
+		return delegate.getDates();
 	}
 
 	public double[] getData() {
-		return delegateCurve.getData();
+		return delegate.getData();
 	}
 
 	public Date getMaxDate() {
-		return delegateCurve.getMaxDate();
+		return delegate.getMaxDate();
 	}
 
 	public Pair<Date, Double>[] getNodes() {
-		return delegateCurve.getNodes();
+		return delegate.getNodes();
 	}
 
 	public double[] getTimes() {
-		return delegateCurve.getTimes();
+		return delegate.getTimes();
 	}
 	
 
@@ -685,27 +656,174 @@ public class PiecewiseYieldCurve<C extends YieldTraits, I extends Interpolator> 
 	//
 	
 	public double guess(YieldTermStructure c, Date d) {
-		return delegateTraits.guess(c, d);
+		return delegate.guess(c, d);
 	}
 
 	public double initialGuess() {
-		return delegateTraits.initialGuess();
+		return delegate.initialGuess();
 	}
 
 	public double initialValue() {
-		return delegateTraits.initialValue();
+		return delegate.initialValue();
 	}
 
 	public double maxValueAfter(int i, double[] data) {
-		return delegateTraits.maxValueAfter(i, data);
+		return delegate.maxValueAfter(i, data);
 	}
 
 	public double minValueAfter(int i, double[] data) {
-		return delegateTraits.minValueAfter(i, data);
+		return delegate.minValueAfter(i, data);
 	}
 
 	public void updateGuess(double[] data, double discount, int i) {
-		delegateTraits.updateGuess(data, discount, i);
+		delegate.updateGuess(data, discount, i);
+	}
+
+	
+	//
+	// implements YieldTermStructureIntf
+	//
+	
+	public double getDiscount(Date d, boolean extrapolate) {
+		return delegate.getDiscount(d, extrapolate);
+	}
+
+	public double getDiscount(Date d) {
+		return delegate.getDiscount(d);
+	}
+
+	public double getDiscount(double t, boolean extrapolate) {
+		return delegate.getDiscount(t, extrapolate);
+	}
+
+	public double getDiscount(double t) {
+		return delegate.getDiscount(t);
+	}
+
+	public InterestRate getForwardRate(Date d1, Date d2, DayCounter dayCounter, Compounding comp, Frequency freq,
+			boolean extrapolate) {
+		return delegate.getForwardRate(d1, d2, dayCounter, comp, freq, extrapolate);
+	}
+
+	public InterestRate getForwardRate(Date d1, Date d2, DayCounter resultDayCounter, Compounding comp, Frequency freq) {
+		return delegate.getForwardRate(d1, d2, resultDayCounter, comp, freq);
+	}
+
+	public InterestRate getForwardRate(Date d1, Date d2, DayCounter resultDayCounter, Compounding comp) {
+		return delegate.getForwardRate(d1, d2, resultDayCounter, comp);
+	}
+
+	public InterestRate getForwardRate(double time1, double time2, Compounding comp, Frequency freq, boolean extrapolate) {
+		return delegate.getForwardRate(time1, time2, comp, freq, extrapolate);
+	}
+
+	public InterestRate getForwardRate(double t1, double t2, Compounding comp, Frequency freq) {
+		return delegate.getForwardRate(t1, t2, comp, freq);
+	}
+
+	public InterestRate getForwardRate(double t1, double t2, Compounding comp) {
+		return delegate.getForwardRate(t1, t2, comp);
+	}
+
+	public InterestRate getZeroRate(Date d, DayCounter dayCounter, Compounding comp, Frequency freq, boolean extrapolate) {
+		return delegate.getZeroRate(d, dayCounter, comp, freq, extrapolate);
+	}
+
+	public InterestRate getZeroRate(Date d, DayCounter resultDayCounter, Compounding comp, Frequency freq) {
+		return delegate.getZeroRate(d, resultDayCounter, comp, freq);
+	}
+
+	public InterestRate getZeroRate(Date d, DayCounter resultDayCounter, Compounding comp) {
+		return delegate.getZeroRate(d, resultDayCounter, comp);
+	}
+
+	
+	//
+	// implements TermStructureIntf
+	//
+	
+	public Calendar getCalendar() {
+		return delegate.getCalendar();
+	}
+
+	public DayCounter getDayCounter() {
+		return delegate.getDayCounter();
+	}
+
+	public double getMaxTime() {
+		return delegate.getMaxTime();
+	}
+
+	
+	public Date getReferenceDate() {
+		return delegate.getReferenceDate();
+	}
+
+	//
+	// implements Observable
+	//
+	
+	public void addObserver(Observer observer) {
+		delegate.addObserver(observer);
+	}
+
+	public int countObservers() {
+		return delegate.countObservers();
+	}
+
+	public void deleteObserver(Observer observer) {
+		delegate.deleteObserver(observer);
+	}
+
+	public void deleteObservers() {
+		delegate.deleteObservers();
+	}
+
+	public List<Observer> getObservers() {
+		return delegate.getObservers();
+	}
+
+	public void notifyObservers() {
+		delegate.notifyObservers();
+	}
+
+	public void notifyObservers(Object arg) {
+		delegate.notifyObservers(arg);
+	}
+
+
+	//
+	// implements Extrapolator
+	//
+	
+	public boolean allowsExtrapolation() {
+		return delegate.allowsExtrapolation();
+	}
+
+	public void disableExtrapolation() {
+		delegate.disableExtrapolation();
+	}
+
+	public void enableExtrapolation() {
+		delegate.enableExtrapolation();
+	}
+
+	
+	//
+	// implements Visitor
+	//
+	
+	public void accept(Visitor<TermStructureIntf> v) {
+		delegate.accept(v);
+	}
+
+	
+	//
+	// implements Observer
+	//
+	
+	public void update(Observable o, Object arg) {
+		delegate.update(o, arg);
 	}
 
 }

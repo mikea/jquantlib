@@ -25,7 +25,7 @@ import org.jquantlib.Configuration;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.RateHelper;
-import org.jquantlib.termstructures.TermStructure;
+import org.jquantlib.termstructures.TermStructureIntf;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Observable;
 
@@ -38,7 +38,7 @@ import org.jquantlib.util.Observable;
  * 
  * @author Srinivas Hasti
  */ 
-public abstract class RelativeDateRateHelper<T extends TermStructure> extends RateHelper<T> {
+public abstract class RelativeDateRateHelper<T extends TermStructureIntf> extends RateHelper<T> {
 
 	protected Date evaluationDate;
 

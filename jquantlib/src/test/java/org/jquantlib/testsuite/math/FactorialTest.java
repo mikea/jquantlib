@@ -28,7 +28,6 @@ public class FactorialTest {
 
 	}
 	
-	@Test
 	private double factorial(int n){
 		double x = 1.0;
 		for(int i=2;i<=n;i++){

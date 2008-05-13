@@ -51,7 +51,6 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.Visitable;
 import org.jquantlib.util.Visitor;
 
 
@@ -82,7 +81,7 @@ import org.jquantlib.util.Visitor;
  * @author Richard Gomes
  */
 // FIXME: document this class
-public abstract class TermStructure implements Observable, Observer, Extrapolator, Visitable<TermStructure> {
+public abstract class TermStructure implements TermStructureIntf {
 
 	private Date referenceDate;
 	private int settlementDays;
@@ -207,13 +206,13 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 		today.addObserver(this);
 	}
 	
-	/**
-	 * @return the latest date for which the curve can return values
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.TermStructureIntf#getMaxDate()
 	 */
 	public abstract Date getMaxDate();
 
-	/**
-	 * @return the calendar used for reference date calculation
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.TermStructureIntf#getCalendar()
 	 */
 	public Calendar getCalendar() /* @ReadOnly */ {
 		return calendar;
@@ -248,28 +247,22 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 			throw new IllegalArgumentException("double ("+time+") is past max curve double ("+getMaxTime()+")");
 	}
 	
-	/**
-	 * @return the day counter used for date/double conversion 
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.TermStructureIntf#getDayCounter()
 	 */
 	public DayCounter getDayCounter() {
 		return dayCounter;
 	}
 
-	/**
-	 * @return the latest double for which the curve can return values
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.TermStructureIntf#getMaxTime()
 	 */
 	public final /*@Time*/ double getMaxTime(){
 		return getTimeFromReference(getMaxDate());
 	}
 
-	/**
-	 * Returns the Date at which discount = 1.0 and/or variance = 0.0
-	 * 
-	 * @note Term structures initialized by means of this
-	 * constructor must manage their own reference date 
-	 * by overriding the referenceDate() method.
-	 *  
-	 * @returns the Date at which discount = 1.0 and/or variance = 0.0
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.TermStructureIntf#getReferenceDate()
 	 */
 	public Date getReferenceDate() {
 		switch (nCase) {
@@ -372,7 +365,7 @@ public abstract class TermStructure implements Observable, Observer, Extrapolato
 	
 	private static final String NULL_VISITOR = "null term structure visitor";
 
-	public final void accept(final Visitor<TermStructure> v) {
+	public final void accept(final Visitor<TermStructureIntf> v) {
 		if (v != null) {
 			v.visit(this);
 		} else {

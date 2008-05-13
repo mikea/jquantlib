@@ -20,12 +20,14 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.termstructures.YieldTermStructureIntf;
+
 
 /**
  * 
  * @author Richard Gomes
  */
-public interface YieldCurveTraits extends YieldCurve, YieldTraits {
+public interface YieldCurveTraits extends YieldTermStructureIntf, YieldCurve, YieldTraits {
 	
 	// no more methods
 	

@@ -93,7 +93,7 @@ public class SwitzerlandCalendarTest {
     	// expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,year)); --> Sunday
 	
     	// Call the Holiday Check
-    	CalendarBaseTest cbt = new CalendarBaseTest();
+    	CalendarUtil cbt = new CalendarUtil();
 		cbt.HolidayListCheck(expectedHol, c, year); 
 	}
 	
@@ -116,7 +116,7 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
     		
     	// Call the Holiday Check
-    	CalendarBaseTest cbt = new CalendarBaseTest();
+    	CalendarUtil cbt = new CalendarUtil();
 		cbt.HolidayListCheck(expectedHol, c, year);
 	}
 	
@@ -138,7 +138,7 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
     		
     	// Call the Holiday Check
-    	CalendarBaseTest cbt = new CalendarBaseTest();
+    	CalendarUtil cbt = new CalendarUtil();
 		cbt.HolidayListCheck(expectedHol, c, year); 
 	}
 	
@@ -161,7 +161,7 @@ public class SwitzerlandCalendarTest {
     	// expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,year)); --> Saturday
     		
     	// Call the Holiday Check
-    	CalendarBaseTest cbt = new CalendarBaseTest();
+    	CalendarUtil cbt = new CalendarUtil();
 		cbt.HolidayListCheck(expectedHol, c, year); 
 	}
 	
@@ -183,7 +183,7 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year)); 
     		
     	// Call the Holiday Check
-    	CalendarBaseTest cbt = new CalendarBaseTest();
+    	CalendarUtil cbt = new CalendarUtil();
 		cbt.HolidayListCheck(expectedHol, c, year); 
 	}
 }

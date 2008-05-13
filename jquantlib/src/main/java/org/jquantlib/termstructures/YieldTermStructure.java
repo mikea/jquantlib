@@ -56,7 +56,7 @@ import org.jquantlib.util.Date;
 // TODO: add derived class ParSwapTermStructure similar to ZeroYieldTermStructure, DiscountStructure, ForwardRateStructure
 // TODO: observability against evaluation date changes is checked.
 // FIXME:: code review on return types of getSomethingRate(...)
-public abstract class YieldTermStructure extends TermStructure {
+public abstract class YieldTermStructure extends TermStructure implements YieldTermStructureIntf {
 
 	protected abstract /*DiscountFactor*/ double discountImpl(final /*@Time*/ double t);
 	
@@ -162,22 +162,22 @@ public abstract class YieldTermStructure extends TermStructure {
 	// calculated as a fraction of year from the reference date.};
 	//
 
-	/**
-	 * The resulting interest rate has the required day-counting rule.
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getZeroRate(org.jquantlib.util.Date, org.jquantlib.daycounters.DayCounter, org.jquantlib.termstructures.Compounding)
 	 */
 	public final InterestRate getZeroRate(final Date d, final DayCounter resultDayCounter, final Compounding comp) {
 		return getZeroRate(d, resultDayCounter, comp, Frequency.ANNUAL);
 	}
 
-	/**
-	 * The resulting interest rate has the required day-counting rule.
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getZeroRate(org.jquantlib.util.Date, org.jquantlib.daycounters.DayCounter, org.jquantlib.termstructures.Compounding, org.jquantlib.time.Frequency)
 	 */
 	public final InterestRate getZeroRate(final Date d, final DayCounter resultDayCounter, final Compounding comp, final Frequency freq) {
 		return getZeroRate(d, resultDayCounter, comp, freq, false);
 	}
 
-	/**
-	 * The resulting interest rate has the required day-counting rule.
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getZeroRate(org.jquantlib.util.Date, org.jquantlib.daycounters.DayCounter, org.jquantlib.termstructures.Compounding, org.jquantlib.time.Frequency, boolean)
 	 */
 	public final InterestRate getZeroRate(final Date d, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
 		if (d == getReferenceDate()) {
@@ -204,26 +204,23 @@ public abstract class YieldTermStructure extends TermStructure {
 		return InterestRate.getImpliedRate(compound, time, this.getDayCounter(), comp, freq);
 	}
 
-	/**
-	 * Forward rates
-	 * 
-	 * <p>
-	 * These methods returns the implied forward interest rate between two dates
-	 * or times. In the former case, times are calculated as fractions of year
-	 * from the reference date. The resulting interest rate has the required
-	 * day-counting rule.
-	 * 
-	 * <p>
-	 * Dates are not adjusted for holidays
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getForwardRate(org.jquantlib.util.Date, org.jquantlib.util.Date, org.jquantlib.daycounters.DayCounter, org.jquantlib.termstructures.Compounding)
 	 */
 	public InterestRate getForwardRate(final Date d1, final Date d2, final DayCounter resultDayCounter, final Compounding comp) {
 		return getForwardRate(d1, d2, resultDayCounter, comp, Frequency.ANNUAL);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getForwardRate(org.jquantlib.util.Date, org.jquantlib.util.Date, org.jquantlib.daycounters.DayCounter, org.jquantlib.termstructures.Compounding, org.jquantlib.time.Frequency)
+	 */
 	public InterestRate getForwardRate(final Date d1, final Date d2, final DayCounter resultDayCounter, final Compounding comp, final Frequency freq) {
 		return getForwardRate(d1, d2, resultDayCounter, comp, freq, false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getForwardRate(org.jquantlib.util.Date, org.jquantlib.util.Date, org.jquantlib.daycounters.DayCounter, org.jquantlib.termstructures.Compounding, org.jquantlib.time.Frequency, boolean)
+	 */
 	public InterestRate getForwardRate(final Date d1, final Date d2, final DayCounter dayCounter, final Compounding comp, final Frequency freq, boolean extrapolate) {
 		if (d1.equals(d2)) {
 			/*@Time*/ double  t1 = getTimeFromReference(d1);
@@ -256,26 +253,22 @@ public abstract class YieldTermStructure extends TermStructure {
 		return getForwardRate(d, d.getDateAfter(p), dayCounter, comp, freq, extrapolate);
 	}
 
-	/**
-	 * @see YieldTermStructure#forwardRate(Date, Date, DayCounter,
-	 *      org.jquantlib.termstructures.InterestRate.Compounding, Frequency)
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getForwardRate(double, double, org.jquantlib.termstructures.Compounding)
 	 */
 	public InterestRate getForwardRate(final /*@Time*/ double  t1, final /*@Time*/ double  t2, final Compounding comp) {
 		return getForwardRate(t1, t2, comp, Frequency.ANNUAL);
 	}
 
-	/**
-	 * @see YieldTermStructure#forwardRate(Date, Date, DayCounter,
-	 *      org.jquantlib.termstructures.InterestRate.Compounding, Frequency)
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getForwardRate(double, double, org.jquantlib.termstructures.Compounding, org.jquantlib.time.Frequency)
 	 */
 	public InterestRate getForwardRate(final /*@Time*/ double  t1, final /*@Time*/ double t2, final Compounding comp, final Frequency freq) {
 		return getForwardRate(t1, t2, comp, freq, false);
 	}
 
-	/**
-	 * The resulting interest rate has the same day-counting rule used by the
-	 * term structure. The same rule should be used for the calculating the
-	 * passed times t1 and t2.
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getForwardRate(double, double, org.jquantlib.termstructures.Compounding, org.jquantlib.time.Frequency, boolean)
 	 */
 	// FIXME; this method is clearly buggy
 	public InterestRate getForwardRate(final /*@Time*/ double  time1, final /*@Time*/ double  time2, final Compounding comp, final Frequency freq, boolean extrapolate) {
@@ -349,31 +342,31 @@ public abstract class YieldTermStructure extends TermStructure {
 		return result;
 	}
 
-	/**
-	 * Discount Factors
-	 * 
-	 * <p>
-	 * These methods return the discount factor for a given date or time. In the
-	 * former case, the double is calculated as a fraction of year from the
-	 * reference date.
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getDiscount(org.jquantlib.util.Date)
 	 */
 	public /*@DiscountFactor*/ double getDiscount(final Date d) {
 		return getDiscount(d, false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getDiscount(org.jquantlib.util.Date, boolean)
+	 */
 	public /*@DiscountFactor*/ double getDiscount(final Date d, boolean extrapolate) {
 		checkRange(d, extrapolate);
 		return discountImpl(getTimeFromReference(d));
 	}
 
-	/**
-	 * The same day-counting rule used by the term structure should be used for
-	 * calculating the passed double t.
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getDiscount(double)
 	 */
 	public /*@DiscountFactor*/ double getDiscount(final /*@Time*/ double t) {
 		return getDiscount(t, false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jquantlib.termstructures.YieldTermStructureImpl#getDiscount(double, boolean)
+	 */
 	public /*@DiscountFactor*/ double getDiscount(final /*@Time*/ double t, boolean extrapolate) {
 		checkRange(t, extrapolate);
 		return discountImpl(t);

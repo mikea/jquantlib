@@ -21,55 +21,46 @@
 package org.jquantlib.math.interpolation;
 
 
-import org.jquantlib.math.interpolation.Interpolation;
-import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.LinearInterpolation;
-
 /**
- * This class is provided for backwards compatibility only.
+ * This class provides log-linear interpolation between discrete points
  * 
- * <p>
- * Use LogLinearInterpolation.Factory instead
- * 
- * @see LogLinearInterpolation.Factory
- * 
+ * @author Dominik Holenstein
  * @author Richard Gomes
  */
-
-//FIXME comments
+// TODO implement primitive, derivative, and secondDerivative functions.
 public class LogLinearInterpolation extends AbstractInterpolation {
 	
-	private double[] logY_;
-	private Interpolator linearInterpolation_;
+	private double[] logY;
+	private Interpolation linearInterpolation;
 	
 	
-	private LogLinearInterpolation(){
-		//access denied to public default constructor
+	private LogLinearInterpolation() {
+		//access denied to default constructor
 	}
 	
 	@Override
-	public double getMinX(){
+	public double getMinX() /* @ReadOnly */ {
 		return vx[0]; // get first element
 	}
 	
 	@Override
-	public double getMaxX() {
+	public double getMaxX() /* @ReadOnly */ {
 		return vx[vx.length-1]; // get last element
 	}
 	
 	@Override
-	protected double primitiveImpl(final double x){
-		throw new ArithmeticException("LogLinear primitive not implemented)");
+	protected double primitiveImpl(final double x) /* @ReadOnly */ {
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	protected double derivativeImpl(final double x){
-		throw new ArithmeticException("LogLinear primitive not implemented)");
+	protected double derivativeImpl(final double x) /* @ReadOnly */ {
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	protected double secondDerivativeImpl(final double x){
-		throw new ArithmeticException("LogLinear primitive not implemented)");
+	protected double secondDerivativeImpl(final double x) /* @ReadOnly */ {
+		throw new UnsupportedOperationException();
 	}
 	
 	//
@@ -88,39 +79,21 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 		super.reload();
 		
 		for (int i=0; i<vx.length; i++){
-			if (!(vx[i]>0.0)){
+			if (vx[i] <= 0.0) {
 				throw new ArithmeticException("negative or null value " + vx[i] + " at " + i + " position.");
 			}
-			logY_[i] = Math.log(vy[i]);
+			logY[i] = Math.log(vy[i]);
 		}
-		
-		//FIXME Review the Java code and compare to C++ code (from loglinearinterpolation.hpp)
-		/*
-		 * C++ code: 
-		 * linearInterpolation_ = LinearInterpolation(this->xBegin_,
-                                                           this->xEnd_,
-                                                           logY_.begin());
-                linearInterpolation_.update();
-		 */
-		linearInterpolation_ = LinearInterpolation.getInterpolator();
-		linearInterpolation_.interpolate(vx, logY_);
+		linearInterpolation = LinearInterpolation.getInterpolator().interpolate(vx, logY);
 	}
 	
+
 	// 
-	// concrete implementation of UnaryFunctionDouble.evalute
+	// concrete implementation of UnaryFunctionDouble.evaluate
 	//
 	
-	// FIXME: The method evaluateImpl(final double x) is not correct.
-	
-	/*
-	 * C++ code (from loglinearinterpolation.hpp):
-	 * Real value(Real x) const {
-                return std::exp(linearInterpolation_(x,true));
-            }
-	 */
-	protected double evaluateImpl(final double x){
-		int i = locate(x);
-		return(Math.exp(logY_[i]));
+	protected double evaluateImpl(final double x) /* @ReadOnly */ {
+		return Math.exp(linearInterpolation.evaluate(x));
 	}
 	
 	//
@@ -134,6 +107,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	/**
 	 * This static class is a factory for LogLinearInterpolation instances.
 	 * 
+	 * @author Dominik Holenstein
 	 * @author Richard Gomes
 	 */	
 	
@@ -144,7 +118,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 			delegate = new LogLinearInterpolation();
 		}
 		
-		public Interpolation interpolate(double[] x, double[] y){
+		public Interpolation interpolate(double[] x, double[] y) /* @ReadOnly */ {
 			delegate.vx = x;
 			delegate.vy = y;
 			delegate.reload();

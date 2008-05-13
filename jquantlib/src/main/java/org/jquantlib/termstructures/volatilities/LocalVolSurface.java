@@ -44,6 +44,7 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.YieldTermStructureIntf;
 import org.jquantlib.util.Date;
 
 /**
@@ -127,8 +128,8 @@ public class LocalVolSurface extends LocalVolTermStructure {
 
 		// obtain local copies of objects
 		Quote u = underlying_.getLink();
-		YieldTermStructure dTS = dividendTS_.getLink();
-		YieldTermStructure rTS = riskFreeTS_.getLink();
+		YieldTermStructureIntf dTS = dividendTS_.getLink();
+		YieldTermStructureIntf rTS = riskFreeTS_.getLink();
 		BlackVolTermStructure bTS = blackTS_.getLink();
 		
 		double forwardValue = u.doubleValue() * ( dTS.getDiscount(time, true) / rTS.getDiscount(time, true) );

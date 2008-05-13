@@ -24,14 +24,11 @@ import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.math.interpolation.LinearInterpolation;
 
+
 /**
- * This class is provided for backwards compatibility only.
+ * This class provides linear interpolation factory and traits
  * 
- * <p>
- * Use LinearInterpolation.Factory instead
- * 
- * @see LinearInterpolation.Factory
- * 
+ * @author Dominik Holenstein
  * @author Richard Gomes
  */
 public class Linear implements Interpolator {

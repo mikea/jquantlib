@@ -20,7 +20,6 @@ public class TabulatedGaussLegendreTest {
 		checkSingleTabulated(new FourthFunction(), "f(x)=x^4", 2.0/5.0, 1.0e-13);		
 	}
 	
-	@Test
 	public void checkSingleTabulated(UnaryFunctionDouble f, String tag,
 	                         double expected, double tolerance) {
 	    final int order[] = { 6, 7, 12, 20 };

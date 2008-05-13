@@ -93,7 +93,7 @@ public class ArgentinaCalendarTest {
     	// expectedHol.add(DateFactory.getDateUtil().getDate(25,DECEMBER,year)); --> Sunday 
     
     	// Call the Holiday Check
-    	CalendarBaseTest cbt = new CalendarBaseTest();
+    	CalendarUtil cbt = new CalendarUtil();
     	cbt.HolidayListCheck(expectedHol, c, year);
    
     }
@@ -117,7 +117,7 @@ public class ArgentinaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
         
         // Call the Holiday Check
-    	CalendarBaseTest cbt = new CalendarBaseTest();
+    	CalendarUtil cbt = new CalendarUtil();
     	cbt.HolidayListCheck(expectedHol, c, year);
     }
     
@@ -140,7 +140,7 @@ public class ArgentinaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
         
         // Call the Holiday Check
-        CalendarBaseTest cbt = new CalendarBaseTest();
+        CalendarUtil cbt = new CalendarUtil();
     	cbt.HolidayListCheck(expectedHol, c, year);
     }
     
@@ -163,7 +163,7 @@ public class ArgentinaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
         
         // Call the Holiday Check
-        CalendarBaseTest cbt = new CalendarBaseTest();
+        CalendarUtil cbt = new CalendarUtil();
     	cbt.HolidayListCheck(expectedHol, c, year);
     	
     }
@@ -187,7 +187,7 @@ public class ArgentinaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
         
         // Call the Holiday Check
-        CalendarBaseTest cbt = new CalendarBaseTest();
+        CalendarUtil cbt = new CalendarUtil();
     	cbt.HolidayListCheck(expectedHol, c, year);
     	
     }

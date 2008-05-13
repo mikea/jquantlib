@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.jquantlib.testsuite.calendars.CalendarBaseTest;
+import org.jquantlib.testsuite.calendars.CalendarUtil;
 
 
 import org.jquantlib.time.Calendar;

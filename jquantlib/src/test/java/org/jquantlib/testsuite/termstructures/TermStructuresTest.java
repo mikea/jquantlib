@@ -39,18 +39,16 @@ package org.jquantlib.testsuite.termstructures;
 
 import static org.junit.Assert.fail;
 
-import java.util.Currency;
-
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual360;
-import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.Closeness;
-import org.jquantlib.math.interpolation.factories.Linear;
+import org.jquantlib.math.interpolation.factories.LogLinear;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.YieldTermStructureIntf;
 import org.jquantlib.termstructures.yield.DepositRateHelper;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.termstructures.yieldcurves.ImpliedTermStructure;
@@ -71,8 +69,8 @@ public class TermStructuresTest {
 
 	private Calendar calendar;
 	private int settlementDays;
-	private YieldTermStructure termStructure;
-	private YieldTermStructure dummyTermStructure;
+	private YieldCurveTraits termStructure;
+	private YieldCurveTraits dummyTermStructure;
 
 
 	private class Datum {
@@ -136,10 +134,9 @@ public class TermStructuresTest {
 								BusinessDayConvention.MODIFIED_FOLLOWING, 
 								false,
 								Actual360.getDayCounter());
-//        
-//     
-//  PENDING (srinivas)
-//                       
+       
+//       
+//TODO
 //        for (int i=0; i<swaps; ++i) {
 //            instruments[i+deposits] = new SwapRateHelper(
 //            						swapData[i].rate/100,
@@ -149,35 +146,13 @@ public class TermStructuresTest {
 //                                    index);
 //        }
         
-        
-        
-        
-        //
-        // PENDING (Richard)
-        //
-        
-        termStructure = null; // FIXME
-        		//new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, /*Log*/Linear>(
-        		//		PiecewiseYieldCurve.Discount.class, /*Log*/Linear.class,
-        		//		settlement, instruments, Actual360.getDayCounter());
+        termStructure = new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, LogLinear>(
+        						PiecewiseYieldCurve.Discount.class, LogLinear.class,
+        						settlement, instruments, Actual360.getDayCounter());
                                                     
-        dummyTermStructure = null; // FIXME
-        		//new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, /*Log*/Linear>(
-        		//		PiecewiseYieldCurve.Discount.class, /*Log*/Linear.class,
-        		//		settlement, instruments, Actual360.getDayCounter());
-        
-
-        //XXX
-        YieldCurveTraits TEST_SYNTAX_termStructure = new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, /*Log*/Linear>(
-        		PiecewiseYieldCurve.Discount.class, /*Log*/Linear.class,
-        		settlement, instruments, Actual360.getDayCounter());
-        
-        //XXX
-        YieldCurveTraits TEST_SYNTAX_dummyTermStructure = new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, /*Log*/Linear>(
-        		PiecewiseYieldCurve.Discount.class, /*Log*/Linear.class,
-        		settlement, instruments, Actual360.getDayCounter());
-        
-        
+        dummyTermStructure = new PiecewiseYieldCurve<PiecewiseYieldCurve.Discount, LogLinear>(
+        						PiecewiseYieldCurve.Discount.class, LogLinear.class,
+        						settlement, instruments, Actual360.getDayCounter());
     }
 
 	
@@ -187,22 +162,21 @@ public class TermStructuresTest {
 	
 	    System.out.println("Testing term structure against evaluation date change...");
 	
-	    //FIXME::: code review:: wrong hierarchy ???
-	    termStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
+	    YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
 	
 	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
 	    int days[] = { 10, 30, 60, 120, 360, 720 };
 	    /*@DiscountFactor*/ double[] expected = new /*@DiscountFactor*/ double[days.length];
 	    
 	    for (int i=0; i<days.length; i++)
-	        expected[i] = termStructure.getDiscount(today.increment(days[i]));
+	        expected[i] = localTermStructure.getDiscount(today.increment(days[i]));
 	
 	    Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today.increment(30));
 	
 	    /*@DiscountFactor*/ double[] calculated = new /*@DiscountFactor*/ double[days.length];
 	
 	    for (int i=0; i<days.length; i++)
-	        calculated[i] = termStructure.getDiscount(today.increment(30).increment(days[i]));
+	        calculated[i] = localTermStructure.getDiscount(today.increment(30).increment(days[i]));
 	
 	    for (int i=0; i<days.length; i++) {
 	    	if (!Closeness.isClose(expected[i],calculated[i]))
@@ -223,7 +197,9 @@ public class TermStructuresTest {
 	    Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
 	    Date testDate = newSettlement.increment(5 * Period.ONE_YEAR_FORWARD.getLength());
 	    
-	    YieldTermStructure implied = new ImpliedTermStructure(new Handle<YieldTermStructure>(termStructure), newSettlement);
+	    YieldTermStructureIntf implied = new ImpliedTermStructure<YieldTermStructureIntf>(
+	    		new Handle<YieldTermStructureIntf>(termStructure), newSettlement);
+	    
 	    /*@DiscountFactor*/ double baseDiscount = termStructure.getDiscount(newSettlement);
 	    /*@DiscountFactor*/ double discount = termStructure.getDiscount(testDate);
 	    /*@DiscountFactor*/ double impliedDiscount = implied.getDiscount(testDate);
@@ -243,8 +219,8 @@ public class TermStructuresTest {
 	    Date newToday = today.increment(3 * Period.ONE_YEAR_FORWARD.getLength());
 	    Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
 	    
-	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(); 
-	    YieldTermStructure implied = new ImpliedTermStructure(h, newSettlement);
+	    RelinkableHandle<YieldCurveTraits> h = new RelinkableHandle<YieldCurveTraits>(); 
+	    YieldTermStructure implied = new ImpliedTermStructure<YieldCurveTraits>(h, newSettlement);
 	    
 	    Flag flag = new Flag();
 	    implied.addObserver(flag);

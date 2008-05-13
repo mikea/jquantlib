@@ -21,7 +21,12 @@
 package org.jquantlib.math.interpolation;
 
 
-// FIXME: comments
+/**
+ * This class provides linear interpolation between discrete points
+ * 
+ * @author Dominik Holenstein
+ * @author Richard Gomes
+ */
 public class LinearInterpolation extends AbstractInterpolation {
 
     private double[] vp;
@@ -35,34 +40,34 @@ public class LinearInterpolation extends AbstractInterpolation {
 	 * @author Richard Gomes
      */
     private LinearInterpolation() {
-    	// access denied to public default constructor
+    	// access denied to default constructor
     }
     
 	@Override
-	public double getMinX() {
+	public double getMinX() /* @ReadOnly */ {
 		return  vx[0]; // get first element
 	}
 
 	@Override
-	public double getMaxX() {
+	public double getMaxX() /* @ReadOnly */ {
 		return vx[vx.length-1]; // get last element
 	}
 
 	@Override
-	protected double primitiveImpl(final double x) {
+	protected double primitiveImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
         double dx = x - vx[i];
         return vp[i-1] + dx*(vy[i-1] + 0.5*dx*vs[i-1]);
 	}
 
 	@Override
-	protected double derivativeImpl(final double x) {
+	protected double derivativeImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
         return vs[i];
 	}
 
 	@Override
-	protected double secondDerivativeImpl(final double x) {
+	protected double secondDerivativeImpl(final double x) /* @ReadOnly */ {
         return 0.0;
 	}
 
@@ -98,7 +103,7 @@ public class LinearInterpolation extends AbstractInterpolation {
     // concrete implementation of UnaryFunctionDouble.evaluate
     //
     
-    protected double evaluateImpl(final double x) {
+    protected double evaluateImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
         return vy[i] + (x - vx[i])*vs[i];
 	}
@@ -108,7 +113,7 @@ public class LinearInterpolation extends AbstractInterpolation {
     // inner classes
     //
     
-    static public Interpolator getInterpolator() {
+    static public Interpolator getInterpolator() /* @ReadOnly */ {
     	return new LinearInterpolationImpl();
     }
     
@@ -124,7 +129,7 @@ public class LinearInterpolation extends AbstractInterpolation {
 			delegate = new LinearInterpolation();
 		}
 		
-		public Interpolation interpolate(double[] x, double[] y) {
+		public Interpolation interpolate(double[] x, double[] y) /* @ReadOnly */ {
 			delegate.vx = x;
 			delegate.vy = y;
 			delegate.reload();

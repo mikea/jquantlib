@@ -45,6 +45,7 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.YieldTermStructureIntf;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.volatilities.BlackVarianceCurve;
 import org.jquantlib.termstructures.volatilities.LocalConstantVol;
@@ -116,7 +117,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         // we could be more anticipatory if we know the right dt
         // for which the drift will be used
         /*@Time*/ double t1 = t + 0.0001;
-        YieldTermStructure yts = riskFreeRate_.getLink();
+        YieldTermStructureIntf yts = riskFreeRate_.getLink();
         /*@Rate*/ double r = yts.getForwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).doubleValue();
         double d = yts.getForwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY,true).doubleValue();
         return r-d-0.5*sigma*sigma;

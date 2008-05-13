@@ -148,7 +148,7 @@ public class BrazilCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
         
         // Call the Holiday Check
-        CalendarBaseTest cbt = new CalendarBaseTest();
+        CalendarUtil cbt = new CalendarUtil();
     	cbt.HolidayListCheck(expectedHol, c, year);
     }
     
