@@ -36,13 +36,6 @@ import org.jquantlib.util.Observer;
 //TODO: Finish
 public abstract class RateHelper<T extends TermStructure> implements Observer, Observable {
 
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 	protected Handle<Quote> quote;
     protected T termStructure;
     protected Date earliestDate;
@@ -55,6 +48,12 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 		this.earliestDate = earliestDate;
 		this.latestDate = latestDate;
 		this.quote.addObserver(this);
+	}
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
 	}
 	
     public RateHelper(final Handle<Quote> quote) {

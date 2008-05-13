@@ -39,19 +39,25 @@ package org.jquantlib.testsuite.termstructures;
 
 import static org.junit.Assert.fail;
 
+import java.util.Currency;
+
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual360;
+import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolation.factories.Linear;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.yield.DepositRateHelper;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.termstructures.yieldcurves.ImpliedTermStructure;
 import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
 import org.jquantlib.termstructures.yieldcurves.YieldCurveTraits;
 import org.jquantlib.testsuite.util.Flag;
+import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -110,29 +116,30 @@ public class TermStructuresTest {
             
         RateHelper instruments[] = new RateHelper[deposits+swaps];
         
-//      
-//PENDING (srinivas)
-//                  
-//
-//        for (int i=0; i<deposits; i++) {
-//            instruments[i] = new DepositRateHelper(
-//            						depositData[i].rate/100,
-//            						new Period(depositData[i].n, depositData[i].units),
-//                                    settlementDays, calendar,
-//                                    BusinessDayConvention.MODIFIED_FOLLOWING, true,
-//                                    Actual360.getDayCounter());
-//        }
+
+        for (int i=0; i<deposits; i++) {
+            instruments[i] = new DepositRateHelper(
+            						depositData[i].rate/100,
+            						new Period(depositData[i].n, depositData[i].units),
+                                    settlementDays, calendar,
+                                    BusinessDayConvention.MODIFIED_FOLLOWING, true,
+                                    Actual360.getDayCounter());
+        }
+       
+       
+       IborIndex index = new IborIndex(
+       							"dummy", 
+       							new Period(6,TimeUnit.MONTHS),
+       							settlementDays,
+       							calendar,
+								null,								
+								BusinessDayConvention.MODIFIED_FOLLOWING, 
+								false,
+								Actual360.getDayCounter());
 //        
-//        
-//        IborIndex index = new IborIndex(
-//        							"dummy", 
-//        							6 * Period.ONE_MONTH_FORWARD.getLength(),
-//									settlementDays,
-//									Currency(),
-//									calendar,
-//									BusinessDayConvention.MODIFIED_FOLLOWING, false,
-//									Actual360.getDayCounter());
-//        
+//     
+//  PENDING (srinivas)
+//                       
 //        for (int i=0; i<swaps; ++i) {
 //            instruments[i+deposits] = new SwapRateHelper(
 //            						swapData[i].rate/100,

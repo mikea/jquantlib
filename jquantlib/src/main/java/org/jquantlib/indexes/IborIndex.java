@@ -42,6 +42,7 @@ public class IborIndex extends InterestRateIndex {
 	private Handle<YieldTermStructure> termStructure;
 	private boolean endOfMonth;
 
+	//For now using java currency
 	public IborIndex(String familyName, Period tenor, int fixingDays,
 			Calendar fixingCalendar, Currency currency,
 			BusinessDayConvention convention, boolean endOfMonth,
@@ -52,6 +53,16 @@ public class IborIndex extends InterestRateIndex {
 		this.termStructure = handle;
 		this.endOfMonth = endOfMonth;
 		handle.getLink().addObserver(this);
+	}
+	
+	public IborIndex(String familyName, Period tenor, int fixingDays,
+			Calendar fixingCalendar, Currency currency,
+			BusinessDayConvention convention, boolean endOfMonth,
+			DayCounter dayCounter) {
+		super(familyName, tenor, fixingDays, fixingCalendar, currency,
+				dayCounter);
+		this.convention = convention;
+		this.endOfMonth = endOfMonth;
 	}
 
 	/*

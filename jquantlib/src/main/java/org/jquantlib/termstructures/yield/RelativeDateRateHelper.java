@@ -40,7 +40,7 @@ import org.jquantlib.util.Observable;
  */ 
 public abstract class RelativeDateRateHelper<T extends TermStructure> extends RateHelper<T> {
 
-	private Date evaluationDate;
+	protected Date evaluationDate;
 
 	public RelativeDateRateHelper(double d) {
 		super(d);
