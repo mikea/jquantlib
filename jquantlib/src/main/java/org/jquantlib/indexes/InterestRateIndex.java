@@ -54,14 +54,14 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		this.currency = currency;
 		this.dayCounter = dayCounter;
 
-		if (fixingDays < 3)
+		if (fixingDays > 2)
 			throw new IllegalArgumentException("wrong number (" + fixingDays
 					+ ") of fixing days");
 		
 		// tenor.normalize(); //TODO
 		Configuration.getSystemConfiguration(null)
 		.getGlobalSettings().getEvaluationDate().addObserver(this);
-		IndexManager.getInstance().get(getName()).addObserver(this);		
+		IndexManager.getInstance().notifier(getName()).addObserver(this);		
 	}
 
 	@Override

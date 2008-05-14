@@ -21,6 +21,7 @@ package org.jquantlib.indexes;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jquantlib.util.Observable;
 import org.jquantlib.util.TimeSeries;
 
 public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> {
@@ -45,6 +46,16 @@ public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> 
 		return instance;
 	}
 	
+	//TODO: Code review
+	public Observable notifier(String name){
+		TimeSeries<Double> value = super.get(name);
+		if(value == null){
+			value = new TimeSeries<Double>();
+			super.put(name, value);
+		}
+		return value;
+	}
+
 	public void clearHistory(String name){
 		super.remove(name);
 	}

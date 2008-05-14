@@ -52,7 +52,8 @@ public class IborIndex extends InterestRateIndex {
 		this.convention = convention;
 		this.termStructure = handle;
 		this.endOfMonth = endOfMonth;
-		handle.getLink().addObserver(this);
+		if(handle != null)
+		   handle.getLink().addObserver(this);
 	}
 	
 	public IborIndex(String familyName, Period tenor, int fixingDays,

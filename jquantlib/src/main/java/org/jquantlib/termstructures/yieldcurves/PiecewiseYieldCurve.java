@@ -37,6 +37,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.jquantlib.daycounters.DayCounter;
@@ -119,7 +120,7 @@ public class PiecewiseYieldCurve<C extends YieldCurveTraits, I extends Interpola
 			//
 			// super(referenceDate, dayCounter, interpolator);
 			// =====================================================================
-			delegate = classCurveTraits.getConstructor().newInstance(referenceDate, dayCounter, classInterpolator);
+			delegate = classCurveTraits.getDeclaredConstructor(PiecewiseYieldCurve.class,Date.class,DayCounter.class,classInterpolator.getClass()).newInstance(this,referenceDate, dayCounter, classInterpolator);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
 		}

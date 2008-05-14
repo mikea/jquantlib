@@ -145,7 +145,7 @@ public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRat
 			if (classInterpolator==null) {
 				klass = (Class<I>) Linear.class; // FIXME: code review :: This is arbitrary, I hadn't better to invent here.
 			}
-			Interpolator interpolator = (Interpolator) (klass.getConstructor().newInstance());
+			Interpolator interpolator = (Interpolator) (klass.getDeclaredConstructor().newInstance());
 			return interpolator;
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e);
