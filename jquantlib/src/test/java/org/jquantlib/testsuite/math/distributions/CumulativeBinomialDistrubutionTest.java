@@ -2,6 +2,8 @@ package org.jquantlib.testsuite.math.distributions;
 
 
 import static org.junit.Assert.fail;
+
+import org.jquantlib.math.distributions.CumulativeBinomialDistribution;
 import org.junit.Test;
 
 /**
@@ -10,23 +12,40 @@ import org.junit.Test;
 
 public class CumulativeBinomialDistrubutionTest {
 	
-	// This test is ignored because it is not finished yet
-	// beta.cpp and beta.hpp need to be translated first
 	@Test
-	public void testKnownGoodValuesFromAbramStegun() {
+	public void testCumulativeBinomialDistribution() {
 		
-//		double[][] testvalues = {	{0.0, 0.398942280401433},
-//									{1.0, 0.241970724519143},
-//									{2.0, 0.053990966513188},
-//									{3.0, 0.004431848411938},
-//									{4.0, 1.338302258e-4},
-//									{5.0, 1.486719515e-6}};
-//									
-//		
-//		CumulativeBinomialDistribution cumindist = new CumulativeBinomialDistribution();
+	double[] testvalues = {		1.52587890625E-5,
+								2.593994140625E-4,
+								0.00209045410156,
+								0.01063537597656,
+								0.03840637207031,
+								0.10505676269531,
+								0.22724914550781,
+								0.40180969238281,
+								0.59819030761719,
+								0.77275085449219,
+								0.89494323730469,
+								0.96159362792969,
+								0.98936462402344,
+								0.99790954589844,
+								0.99974060058594,
+								0.99998474121094, };
 
-		fail("TEST NOT FINISHED YET");
+		double p = 0.5; 					// probability that an event occurs
+		int n = testvalues.length;			// number of trials
 		
+		CumulativeBinomialDistribution cumbinomdist = new CumulativeBinomialDistribution(p,n);
+		for (int i=0;i<testvalues.length;i++) {
+			double expected = testvalues[i];
+			double realised = cumbinomdist.evaluate(i); // i = number of successful events
+			System.out.println(realised);
+			double tolerance = 1.0e-11;
+			if (Math.abs(expected-realised)>tolerance) {
+				fail("x: " + i + " expected: " + expected + " realised: " + realised);
+			}	
+		}
+	
 	}
-		
 }
+

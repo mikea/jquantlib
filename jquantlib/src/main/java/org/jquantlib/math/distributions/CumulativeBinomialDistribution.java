@@ -48,7 +48,7 @@ public class CumulativeBinomialDistribution {
 		}
     }
 
-	static private double evaluate(double k){
+	public double evaluate(int k){
 		 if (k >= n_)return 1.0;
          else return 1.0 - Beta.incompleteBetaFunction(k+1, n_-k, p_, accuracy, maxIteration);
 	}
