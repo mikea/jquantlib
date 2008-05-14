@@ -37,36 +37,96 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
 
 public final class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStructure implements YieldCurve {
 
+	//
+	// private fields
+	//
+	// In the original C++ implementation these fields are protected and, doing so, accessible by
+	// PiecewiseCurve, which *optionally* extends this class, depending on template metaprogramming.
+	//
+	private Date[]				dates;
+	private /* @Time */double[]	times;
+	private /* @Rate */double[]	data; // forwards
+	
+	//
+	// protected fields
+	//
+	
+	protected Interpolation			interpolation;
+	protected boolean isNegativeRates;
+
+	
+	//
+	// implements PiecewiseYieldCurve.YieldCurve
+	//
+	
 	@Override
-	public double[] getData() {
-		// TODO Auto-generated method stub
-		return null;
+	public final Date[] getDates() /* @ReadOnly */ {
+		return dates;
 	}
 
 	@Override
-	public Date[] getDates() {
-		// TODO Auto-generated method stub
-		return null;
+	public final double[] getData() /* @ReadOnly */ {
+		return data;
 	}
 
 	@Override
-	public Pair<Date, Double>[] getNodes() {
-		// TODO Auto-generated method stub
-		return null;
+	public final Date getMaxDate() /* @ReadOnly */ {
+		return dates[dates.length-1];
+	}
+	
+	@Override
+	public final Pair<Date, Double>[] getNodes() /* @ReadOnly */ {
+      Pair<Date, /*@Rate*/ Double>[] results = new Pair /* <Date, @Rate Double> */ [dates.length];
+      for (int i=0; i<dates.length; ++i)
+          results[i] = new Pair<Date, Double>(dates[i], data[i]);
+      return results;
 	}
 
 	@Override
-	public double[] getTimes() {
-		// TODO Auto-generated method stub
-		return null;
+	public final double[] getTimes() /* @ReadOnly */ {
+		return times;
 	}
 
+	// In particular, these methods should not exist in the interface.
+	// In the original C++ implementation the related fields are protected and, doing so, accessible by
+	// PiecewiseCurve, which *optionally* extends ancestor classes using template metaprogramming.
+	
+	@Override 
+	public final void setMaxDate(final Date maxDate) {
+		dates[dates.length-1] = maxDate;
+	}
+
+	@Override
+	public void setDates(Date[] dates) {
+		this.dates = dates;
+	}
+
+	@Override
+	public void setTimes(double[] times) {
+		this.times = times;
+	}
+
+	@Override
+	public void setData(double[] data) {
+		this.data = data;
+	}
+
+	@Override
+	public final void setNodes(Pair<Date, Double>[] pairs) /* @ReadOnly */ {
+		this.dates = new Date[pairs.length];
+		this.data = new double[pairs.length];
+	    for (int i=0; i<dates.length; ++i) {
+	        dates[i] = pairs[i].getFirst();
+	        data[i]  = pairs[i].getSecond();
+	    }
+	}
 
 }
 

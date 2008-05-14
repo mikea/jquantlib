@@ -55,12 +55,21 @@ import org.jquantlib.util.Pair;
  */
 public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRateStructure implements YieldCurve {
 
-	protected Date[]				dates;
-	protected/* @Time */double[]	times;
-	protected/* @Rate */double[]	data; // forwards
+	//
+	// private fields
+	//
+	// In the original C++ implementation these fields are protected and, doing so, accessible by
+	// PiecewiseCurve, which *optionally* extends this class, depending on template metaprogramming.
+	//
+	private Date[]				dates;
+	private /* @Time */double[]	times;
+	private /* @Rate */double[]	data; // forwards
+	
+	//
+	// protected fields
+	//
+	
 	protected Interpolation			interpolation;
-
-	// obtained from Global Settings
 	protected boolean isNegativeRates;
 	
 	
@@ -187,7 +196,7 @@ public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRat
 	public final Date getMaxDate() /* @ReadOnly */ {
 		return dates[dates.length-1];
 	}
-
+	
 	@Override
 	public final Pair<Date, Double>[] getNodes() /* @ReadOnly */ {
       Pair<Date, /*@Rate*/ Double>[] results = new Pair /* <Date, @Rate Double> */ [dates.length];
@@ -199,6 +208,40 @@ public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRat
 	@Override
 	public final double[] getTimes() /* @ReadOnly */ {
 		return times;
+	}
+
+	// In particular, these methods should not exist in the interface.
+	// In the original C++ implementation the related fields are protected and, doing so, accessible by
+	// PiecewiseCurve, which *optionally* extends ancestor classes using template metaprogramming.
+	
+	@Override 
+	public final void setMaxDate(final Date maxDate) {
+		dates[dates.length-1] = maxDate;
+	}
+
+	@Override
+	public void setDates(Date[] dates) {
+		this.dates = dates;
+	}
+
+	@Override
+	public void setTimes(double[] times) {
+		this.times = times;
+	}
+
+	@Override
+	public void setData(double[] data) {
+		this.data = data;
+	}
+
+	@Override
+	public final void setNodes(Pair<Date, Double>[] pairs) /* @ReadOnly */ {
+		this.dates = new Date[pairs.length];
+		this.data = new double[pairs.length];
+	    for (int i=0; i<dates.length; ++i) {
+	        dates[i] = pairs[i].getFirst();
+	        data[i]  = pairs[i].getSecond();
+	    }
 	}
 
 }

@@ -35,4 +35,17 @@ public interface YieldCurve {
 	public Date[] getDates() /* @ReadOnly */;
 	public double[] getData() /* @ReadOnly */;
 	public Pair<Date, Double>[] getNodes() /* @ReadOnly */;
+
+
+	//
+	// The original C++ implementation does not provide these setters.
+	// Sorry for that!
+	//
+	
+	public void setMaxDate(Date maxDate) /* @ReadOnly */;
+	public void setTimes(/*@Time*/ double[] times) /* @ReadOnly */;
+	public void setDates(Date[] dates) /* @ReadOnly */;
+	public void setData(double[] data) /* @ReadOnly */;
+	public void setNodes(Pair<Date, Double>[] pairs) /* @ReadOnly */;
+
 }

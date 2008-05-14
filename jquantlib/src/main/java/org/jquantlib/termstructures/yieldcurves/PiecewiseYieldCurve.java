@@ -37,7 +37,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import java.lang.reflect.Constructor;
+import java.util.Comparator;
 import java.util.List;
 
 import org.jquantlib.daycounters.DayCounter;
@@ -57,6 +57,8 @@ import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 import org.jquantlib.util.Pair;
 import org.jquantlib.util.Visitor;
+
+import cern.colt.Sorting;
 
 
 
@@ -231,45 +233,48 @@ public class PiecewiseYieldCurve<C extends YieldCurveTraits, I extends Interpola
 	
 	private void checkInstruments() {
 	
-//		if (instruments_.length==0) throw new IllegalArgumentException("no instrument given"); // FIXME: message
-//
-//		// sort rate helpers
-//	    for (int i=0; i<instruments_.length; i++)
-//	        instruments_[i].setTermStructure(this);
-//	    Sorting.mergeSort(instruments_, 0, instruments_.length-1, new RateHelperSorter());
-//	    // check that there is no instruments with the same maturity
-//	    for (int i=1; i<instruments_.length; i++) {
-//	        Date m1 = instruments_[i-1].getLatestDate();
-//	        Date m2 = instruments_[i].getLatestDate();
-//	        if (m1.equals(m2)) throw new IllegalArgumentException("two instruments have the same maturity " + m1); // FIXME: message
-//	    }
-//	    for (int i=0; i<instruments_.length; i++)
-//	        instruments_[i].addObserver(this);
+		if (instruments_.length==0) throw new IllegalArgumentException("no instrument given"); // FIXME: message
+
+		// sort rate helpers
+	    for (int i=0; i<instruments_.length; i++)
+	        instruments_[i].setTermStructure(this);
+	    Sorting.quickSort(instruments_, 0, instruments_.length-1, new RateHelperSorter());
+	    // check that there is no instruments with the same maturity
+	    for (int i=1; i<instruments_.length; i++) {
+	        Date m1 = instruments_[i-1].getLatestDate();
+	        Date m2 = instruments_[i].getLatestDate();
+	        if (m1.equals(m2)) throw new IllegalArgumentException("two instruments have the same maturity " + m1); // FIXME: message
+	    }
+	    for (int i=0; i<instruments_.length; i++)
+	        instruments_[i].addObserver(this);
 	}
 
+	
 	public void performCalculations() /* @ReadOnly */ {
 	
-//		// check that there is no instruments with invalid quote
-//	    for (int i=0; i<instruments_.length; i++)
-//	        if (Double.isNaN(instruments_[i].getQuoteValue())) 
-//	        	throw new IllegalArgumentException("instrument with null price"); // FIXME: message
-//	                   
-//	
-//	    // setup vectors
-//	    int n = instruments_.length;
+		// check that there is no instruments with invalid quote
+	    for (int i=0; i<instruments_.length; i++)
+	        if (Double.isNaN(instruments_[i].getQuoteValue())) 
+	        	throw new IllegalArgumentException("instrument with null price"); // FIXME: message
+	                   
+	
+	    // setup vectors
+	    int n = instruments_.length;
+	    for (int i=0; i<n; i++) {
+	        instruments_[i].setTermStructure(this);
+	    }
+
+	    
+	    Date[] dates = new Date[n+1];
+	    /*@Time*/ double[] times = new /*@Time*/ double[n+1];
+	    double data[] = new double[n+1];
+	    dates[0] = this.getReferenceDate();
+	    times[0] = 0.0;
+	    data[0] = initialValue();
 //	    for (int i=0; i<n; i++) {
-//	        instruments_[i].setTermStructure(this);
-//	    }
-//	    dates_ = new Date[n+1];
-//	    times_ = new /*@Time*/ double[n+1];
-//	    data_ = new double[n+1];
-//	    dates_[0] = this.getReferenceDate();
-//	    times_[0] = 0.0;
-//	    data_[0] = initialValue();
-//	    for (int i=0; i<n; i++) {
-//	        dates_[i+1] = instruments_[i].getLatestDate();
-//	        times_[i+1] = this.getTimeFromReference(dates_[i+1]);
-//	        data_[i+1]  = this.getData_(i);
+//	        dates[i+1] = instruments_[i].getLatestDate();
+//	        times[i+1] = getTimeFromReference(dates[i+1]);
+//	        data[i+1]  = data[i];
 //	    }
 	    
 //    Brent solver;
@@ -626,9 +631,23 @@ public class PiecewiseYieldCurve<C extends YieldCurveTraits, I extends Interpola
 
 	// ======================================================================
 	
+    private class RateHelperSorter implements Comparator {
+          public int compare(final Object o1, final Object o2) /* @ReadOnly */ {
+        	  RateHelper rate1 = (RateHelper)o1;
+        	  RateHelper rate2 = (RateHelper)o2;
+              return rate1.getLatestDate().compareTo(rate2.getLatestDate());
+          }
+      }
 
+	// ======================================================================
+    
+	
 	//
 	// implements interface YieldCurve
+    //
+    // NOTE: Ideally, PiecewiseYieldCurve should not implement/expose these methods
+    // These methods are only *used* by PiecewiseYieldCurve and should only be implemented/exposed
+    // by ancestor classes, accessed via delegate pattern.
 	//
 	
 	public Date[] getDates() {
@@ -651,7 +670,33 @@ public class PiecewiseYieldCurve<C extends YieldCurveTraits, I extends Interpola
 		return delegate.getTimes();
 	}
 	
+	// In particular, these methods should not exist in the interface.
+	// In the original C++ implementation the related fields are protected and, doing so, accessible by
+	// PiecewiseCurve, which *optionally* extends ancestor classes using template metaprogramming.
+	
+	public void setDates(final Date[] dates) {
+		delegate.setDates(dates);
+	}
 
+	public void setData(final double[] data) {
+		delegate.setData(data);
+	}
+
+	public void setMaxDate(final Date date) {
+		delegate.setMaxDate(date);
+	}
+
+	public void setNodes(final Pair<Date, Double>[] pairs) {
+		delegate.setNodes(pairs);
+	}
+
+	public void setTimes(final /*@Time*/ double[] times) {
+		delegate.setTimes(times);
+	}
+
+	
+	
+	
 	//
 	// implements YieldTraits
 	//
@@ -912,15 +957,8 @@ public class PiecewiseYieldCurve<C extends YieldCurveTraits, I extends Interpola
 //
 //    // helper class
 //    namespace detail {
-//
-//        class RateHelperSorter {
-//          public:
-//            bool operator()(const boost::shared_ptr<RateHelper>& h1,
-//                            const boost::shared_ptr<RateHelper>& h2) const {
-//                return (h1->latestDate() < h2->latestDate());
-//            }
-//        };
-//
+
+
 //    }
 //
 //    //! Piecewise yield term structure
