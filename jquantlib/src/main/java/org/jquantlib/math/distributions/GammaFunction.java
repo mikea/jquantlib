@@ -37,12 +37,12 @@ public class GammaFunction {
 	    
 	public double logValue(double x) {
         
-		if (x<=0.0)
-        	throw new ArithmeticException("positive argument required " + x);
+		if (x<=0.0) throw new ArithmeticException("positive argument required " + x);
 
         double temp = x + 5.5;
         temp -= (x + 0.5)*Math.log(temp);
         double ser=1.000000000190015;
+        
         ser += c1_/(x + 1.0);
         ser += c2_/(x + 2.0);
         ser += c3_/(x + 3.0);

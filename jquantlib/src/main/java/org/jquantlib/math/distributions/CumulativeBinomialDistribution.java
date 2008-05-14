@@ -25,53 +25,35 @@
 
 package org.jquantlib.math.distributions;
 
-// FIXME: Implement beta.cpp/beta.hpp
-// import org.jquantlib.math.beta;
+
+import org.jquantlib.math.Beta;
+
+//TODO: Add test case for the CumulativeBinomialDistribution
 
 public class CumulativeBinomialDistribution {
-	
-    private int n_;
+	static private double accuracy = 1e-16;
+	static private int maxIteration = 100;
+    static private int n_;
+    static private double p_;
     
-//    CumulativeBinomialDistribution(double p, int n){  	
-//    }
-
-/*  Given an integer k it provides the cumulative probability
-//      of observing kk<=k:
-//      formula here ...
-//  */
-//	
-/*
-//	 * This method will be translated later when the class beta.java (beta.cpp and beta.hpp) 
-//	 * is available in JquantLib.
-//	 * 
-//  class CumulativeBinomialDistribution
-//  : public std::unary_function<Real,Real> {
-//    public:
-//      CumulativeBinomialDistribution(Real p, BigNatural n);
-//      // function
-//      Real operator()(BigNatural k) const {
-//          if (k >= n_)
-//              return 1.0;
-//          else
-//              return 1.0 - incompleteBetaFunction(k+1, n_-k, p_); 
-//      }
-//    private:
-//      BigNatural n_;
-//      Real p_;
-//  };
-//  */
-
-    
-	
-	static private void evaluate(double p){
-		if (!(p>0)) {
+    public CumulativeBinomialDistribution(double p, int n){  
+    	n_ = n;
+    	p_ = p;
+    	
+    	if ((p<=0.0)) {
 			throw new ArithmeticException("negative p not allowed");
 		}
-		if (!(p<=1.0)){
+		if ((p>1.0)){
 			throw new ArithmeticException("p>1.0 not allowed");
 		}
+    }
+
+	static private double evaluate(double k){
+		 if (k >= n_)return 1.0;
+         else return 1.0 - Beta.incompleteBetaFunction(k+1, n_-k, p_, accuracy, maxIteration);
 	}
 		
+	
 	/*
 	 * Given an odd integer and a real number z it returns p such that:
 	 * 1 - CumulativeBinomialDistribution((n-1/2, n, p) = CumulativeNormalDistribution(z)
