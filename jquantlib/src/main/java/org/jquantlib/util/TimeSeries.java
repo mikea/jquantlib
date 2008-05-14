@@ -38,6 +38,9 @@ public class TimeSeries<T> implements Observable {
 	
 	private SortedMap<Date,T> series = new TreeMap<Date,T>();
 	
+	public TimeSeries(){
+		
+	}
 	
 	public TimeSeries(List<Date> dates, List<T> values){
 		for(int i=0;i<dates.size();i++){
