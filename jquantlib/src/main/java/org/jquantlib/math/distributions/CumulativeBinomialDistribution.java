@@ -37,8 +37,8 @@ public class CumulativeBinomialDistribution {
     static private double p_;
     
     public CumulativeBinomialDistribution(double p, int n){  
-    	n_ = n;
-    	p_ = p;
+    	n_ = n; // number of trials
+    	p_ = p; // probability of success on a single trial
     	
     	if ((p<=0.0)) {
 			throw new ArithmeticException("negative p not allowed");

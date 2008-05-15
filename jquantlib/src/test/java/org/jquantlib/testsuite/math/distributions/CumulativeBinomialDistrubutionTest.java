@@ -1,5 +1,25 @@
-package org.jquantlib.testsuite.math.distributions;
+/*
+ Copyright (C) 2008 Dominik Holenstein
+ 
+ This file is part of JQuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://jquantlib.org/
 
+ JQuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <jquantlib-dev@lists.sf.net>. The license is also available online at
+ <http://jquantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ 
+ JQuantLib is based on QuantLib. http://quantlib.org/
+ When applicable, th
+
+*/
+
+package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
@@ -39,7 +59,7 @@ public class CumulativeBinomialDistrubutionTest {
 		for (int i=0;i<testvalues.length;i++) {
 			double expected = testvalues[i];
 			double realised = cumbinomdist.evaluate(i); // i = number of successful events
-			System.out.println(realised);
+			// 	System.out.println(realised);
 			double tolerance = 1.0e-11;
 			if (Math.abs(expected-realised)>tolerance) {
 				fail("x: " + i + " expected: " + expected + " realised: " + realised);
