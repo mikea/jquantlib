@@ -33,6 +33,7 @@ import org.junit.Test;
 
 public class GammaDistributionTest {
 	
+	//FIXME Add more test values for the test.
 	@Test
 	public void testGammaDisribution() {
 		
@@ -53,7 +54,7 @@ public class GammaDistributionTest {
 									{14.0, 8.315287191035681E-7},
 									{15.0, 3.0590232050182594E-7}};
 			
-		//FIXME Needed for extended test cases
+		
 		/*
 		// for a = 0.1
 		double[][] testvalues2= {	{1.0, 0.9758726484126121},
