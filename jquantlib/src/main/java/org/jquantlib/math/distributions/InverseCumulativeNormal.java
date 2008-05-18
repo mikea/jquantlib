@@ -18,17 +18,12 @@
  When applicable, the originating copyright notice follows below.
  */
 
-
-
-
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.ErrorFunction;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.NormalDistribution;
-
-
 
 
 /**
@@ -39,12 +34,7 @@ import org.jquantlib.math.distributions.NormalDistribution;
 
 
 public class InverseCumulativeNormal extends NormalDistribution implements UnaryFunctionDouble {
-	
-	//TODO: check whether this code is correctly translated.
-	//C++:
-	//const CumulativeNormalDistribution InverseCumulativeNormal::f_;
-	static CumulativeNormalDistribution f_;
-	
+		
 	 // Coefficients for the rational approximation.
     static double a1_ = -3.969683028665376e+01;
     static double a2_ =  2.209460984245205e+02;
@@ -80,31 +70,32 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
 	}
 
 	public InverseCumulativeNormal(double average, double sigma) {
-		
+		super(average, sigma);
 	}
 	
 	
-	public double evaluate (double x){
-		if (sigma <= 0.0) throw new IllegalArgumentException("sigma must be greater than 0.0 ("+sigma+" not allowed)");
-
+	public double evaluate (double x)/* @ReadOnly */  {
+		
 		double z;
 		double r;
+		
+		if (sigma <= 0.0) throw new IllegalArgumentException("sigma must be greater than 0.0 ("+sigma+" not allowed)");
 
 		if (x < x_low_) {
 			// Rational approximation for the lower region 0<x<u_low
 			z = Math.sqrt(-2.0*Math.log(x));
          z = (((((c1_*z+c2_)*z+c3_)*z+c4_)*z+c5_)*z+c6_) /
              ((((d1_*z+d2_)*z+d3_)*z+d4_)*z+1.0);
-     } else if (x <= x_high_) {
-         // Rational approximation for the central region u_low<=x<=u_high
-         z = x - 0.5;
-         r = z*z;
-         z = (((((a1_*r+a2_)*r+a3_)*r+a4_)*r+a5_)*r+a6_)*z /
+		} else if (x <= x_high_) {
+			// Rational approximation for the central region u_low<=x<=u_high
+			z = x - 0.5;
+			r = z*z;
+			z = (((((a1_*r+a2_)*r+a3_)*r+a4_)*r+a5_)*r+a6_)*z /
              (((((b1_*r+b2_)*r+b3_)*r+b4_)*r+b5_)*r+1.0);
-     } else {
-         // Rational approximation for the upper region u_high<x<1
-         z = Math.sqrt(-2.0*Math.log(1.0-x));
-         z = -(((((c1_*z+c2_)*z+c3_)*z+c4_)*z+c5_)*z+c6_) /
+		} else {
+			// Rational approximation for the upper region u_high<x<1
+     	   z = Math.sqrt(-2.0*Math.log(1.0-x));
+     	   z = -(((((c1_*z+c2_)*z+c3_)*z+c4_)*z+c5_)*z+c6_) /
              ((((d1_*z+d2_)*z+d3_)*z+d4_)*z+1.0);
      }
 
@@ -118,8 +109,8 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
 	//TODO: check whether this code is correctly translated.
 	// C++:
 	// r = (f_(z) - x) * M_SQRT2 * M_SQRTPI * exp(0.5 * z*z);
-	CumulativeNormalDistribution cumnormdist = new CumulativeNormalDistribution(sigma, average);
-    r = (cumnormdist.evaluate(z) - x) * Constants.M_SQRT_2 * Constants.M_SQRTPI * Math.exp(0.5 * z*z);
+	CumulativeNormalDistribution f_ = new CumulativeNormalDistribution();
+    r = (f_.evaluate(z) - x) * Constants.M_SQRT_2 * Constants.M_SQRTPI * Math.exp(0.5 * z*z);
      
     //  Halley's method
     z -= r/(1+0.5*z*r);
@@ -127,5 +118,4 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
     return average + z*sigma;
 
 	}
-
 }

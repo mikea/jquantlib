@@ -50,7 +50,6 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
 		double xn = (x - average) / sigma;
 		return gaussian.evaluate(xn) / sigma;
 	}
-
 }
 
 
