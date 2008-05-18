@@ -69,7 +69,8 @@ public class InterestRate implements FunctionDouble {
     public final /*@CompoundFactor*/ double compoundFactor(final /*@Time*/ double time) {
     	/*@Time*/ double t = time;
     	if (t<0.0) throw new IllegalArgumentException("negative time not allowed");
-        if (rate==0.0) throw new IllegalArgumentException("null interest rate");
+        if (rate<0.0) throw new IllegalArgumentException("null interest rate");
+        
     	/*@Rate*/ double r = rate;
 
     	if (compound==Compounding.SIMPLE) {

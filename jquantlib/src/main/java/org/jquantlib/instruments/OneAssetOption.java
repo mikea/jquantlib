@@ -212,6 +212,9 @@ public class OneAssetOption extends Option {
     	
     	if (! MoreGreeks.class.isAssignableFrom(results.getClass())) throw new ClassCastException(results.toString());
     	
+    	// obtain results from chained results
+    	super.fetchResults(results);
+    	
     	// bind a Results interface to specific Classes
     	final MoreGreeks moreGreeks = (MoreGreeks) results;
     	final Greeks     greeks     = (Greeks) results;
