@@ -20,23 +20,22 @@
 
 package org.jquantlib.math.interpolation.factories;
 
+import org.jquantlib.math.interpolation.BackwardFlatInterpolation;
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.LinearInterpolation;
 
 
 /**
  * This class provides linear interpolation factory and traits
  * 
- * @author Dominik Holenstein
  * @author Richard Gomes
  */
-public class Linear implements Interpolator {
+public class BackwardFlat implements Interpolator {
 
 	private Interpolator delegate;
 	
-	public Linear() {
-		delegate = LinearInterpolation.getInterpolator();
+	public BackwardFlat() {
+		delegate = BackwardFlatInterpolation.getInterpolator();
 	}
 	
 	//
@@ -54,6 +53,6 @@ public class Linear implements Interpolator {
 	public final boolean isGlobal() /* @ReadOnly */ {
 		return delegate.isGlobal();
 	}
-	
+
 }
 

@@ -3,6 +3,7 @@ package org.jquantlib.math;
 /**
  * @author <Richard Gomes>
  */
+// FIXME: refactor to "Brent" under package "solvers1d"
 public class BrentSolver1D extends AbstractSolver1D {
 
 	@Override

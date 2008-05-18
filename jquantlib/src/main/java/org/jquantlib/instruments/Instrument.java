@@ -129,7 +129,7 @@ import org.jquantlib.util.LazyObject;
         
         
     	//
-    	// overriden methods from LazyObject
+    	// overridden methods from AbstractLazyObject
     	//
     	
     	@Override

@@ -81,8 +81,18 @@ import org.jquantlib.util.Visitor;
  * @author Richard Gomes
  */
 // FIXME: document this class
-public abstract class TermStructure implements TermStructureIntf {
+public abstract class TermStructure implements Observer, Observable {
 
+	//
+	// protected fields
+	//
+	protected Settings settings;
+	
+	
+	//
+	// private fields
+	//
+	
 	private Date referenceDate;
 	private int settlementDays;
 	private Calendar calendar;
@@ -99,6 +109,10 @@ public abstract class TermStructure implements TermStructureIntf {
 	 */
 	private Date today = null;
 
+	
+	//
+	// constructors
+	//
 	
 	/**
 	 * <p>This constructor requires an override of method {@link TermStructure#getReferenceDate()} in 
@@ -125,7 +139,9 @@ public abstract class TermStructure implements TermStructureIntf {
 		this.moving = false;
 		this.updated = true;
 		this.nCase = 3;
-		today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
+
+		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
 		today.addObserver(this);
 	}
 
@@ -164,7 +180,9 @@ public abstract class TermStructure implements TermStructureIntf {
 		this.moving = false;
 		this.updated = true;
 		this.nCase = 1;
-		today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
+
+		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
 		today.addObserver(this);
 	}
 	
@@ -202,17 +220,29 @@ public abstract class TermStructure implements TermStructureIntf {
 		this.moving = true;
 		this.updated = false;
 		this.nCase = 2;
-		today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
+
+		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
 		today.addObserver(this);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jquantlib.termstructures.TermStructureIntf#getMaxDate()
+	
+	//
+	// abstract methods
+	//
+	
+	/**
+	 * @return the latest date for which the curve can return values
 	 */
 	public abstract Date getMaxDate();
 
-	/* (non-Javadoc)
-	 * @see org.jquantlib.termstructures.TermStructureIntf#getCalendar()
+	
+	//
+	// public methods
+	//
+	
+	/**
+	 * @return the calendar used for reference date calculation
 	 */
 	public Calendar getCalendar() /* @ReadOnly */ {
 		return calendar;
@@ -226,10 +256,15 @@ public abstract class TermStructure implements TermStructureIntf {
 	 * @param date
 	 * @return the fraction of the year as a double
 	 */
-	protected final /*@Time*/ double getTimeFromReference(final Date date) {
+	public final /*@Time*/ double getTimeFromReference(final Date date) {
 		return dayCounter.getYearFraction(getReferenceDate(), date);
 	}
 
+	
+	//
+	// protected methods
+	//
+	
 	/**
 	 * This method performs date-range check
 	 */ 
@@ -247,22 +282,28 @@ public abstract class TermStructure implements TermStructureIntf {
 			throw new IllegalArgumentException("double ("+time+") is past max curve double ("+getMaxTime()+")");
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jquantlib.termstructures.TermStructureIntf#getDayCounter()
+	/**
+	 * @return the day counter used for date/double conversion 
 	 */
 	public DayCounter getDayCounter() {
 		return dayCounter;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.jquantlib.termstructures.TermStructureIntf#getMaxTime()
+	/**
+	 * @return the latest double for which the curve can return values
 	 */
 	public final /*@Time*/ double getMaxTime(){
 		return getTimeFromReference(getMaxDate());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.jquantlib.termstructures.TermStructureIntf#getReferenceDate()
+	/**
+	 * Returns the Date at which discount = 1.0 and/or variance = 0.0
+	 * 
+	 * @note Term structures initialized by means of this
+	 * constructor must manage their own reference date 
+	 * by overriding the referenceDate() method.
+	 *  
+	 * @returns the Date at which discount = 1.0 and/or variance = 0.0
 	 */
 	public Date getReferenceDate() {
 		switch (nCase) {
@@ -281,6 +322,10 @@ public abstract class TermStructure implements TermStructureIntf {
 		}
 	}
 
+	
+	//
+	// implements Extrapolator
+	//
 	
 	/**
 	 * Implements multiple inheritance via delegate pattern to a inner class
@@ -302,23 +347,21 @@ public abstract class TermStructure implements TermStructureIntf {
 	}
 
 	
-
-	
 	//
-	// Implements Observer interface
+	// implements Observer
 	//
 	
 	public void update(Observable o, Object arg) {
 		if (moving) {
 			updated = false;
-			today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
+			today = settings.getEvaluationDate(); //TODO: Allow today be set
 			notifyObservers();
 		}
 	}
 
 	
 	//
-	// implements Observable interface
+	// implements Observable
 	//
 	
 	/**
@@ -358,14 +401,13 @@ public abstract class TermStructure implements TermStructureIntf {
 	}
 
 	
-	
 	//
-	// implements Visitable interface
+	// implements Visitable
 	//
 	
 	private static final String NULL_VISITOR = "null term structure visitor";
 
-	public final void accept(final Visitor<TermStructureIntf> v) {
+	public final void accept(final Visitor<TermStructure> v) {
 		if (v != null) {
 			v.visit(this);
 		} else {

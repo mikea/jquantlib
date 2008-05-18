@@ -28,7 +28,7 @@ import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Option.Type;
-import org.jquantlib.termstructures.YieldTermStructureIntf;
+import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.testsuite.util.StopClock;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
@@ -164,9 +164,9 @@ public class OldPricer {
 	            }
 	           
 	            Date today = DateFactory.getFactory().getTodaysDate();
-	            YieldTermStructureIntf yeildStructureRiskFree =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].riskFreeRate, dc);
-	            YieldTermStructureIntf yeildStructureDividentYield =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].dividendYield, dc);
-	            YieldTermStructureIntf yeildStructureVolatility =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].volatility, dc);
+	            YieldTermStructure yeildStructureRiskFree =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].riskFreeRate, dc);
+	            YieldTermStructure yeildStructureDividentYield =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].dividendYield, dc);
+	            YieldTermStructure yeildStructureVolatility =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].volatility, dc);
 	            
 	           // TODO: Complete the test case when we have MonteCarlo
 	         

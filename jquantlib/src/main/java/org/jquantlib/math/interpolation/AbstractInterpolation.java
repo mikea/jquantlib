@@ -96,10 +96,22 @@ public abstract class AbstractInterpolation implements Interpolation {
 	// public methods
 	//
 	
+	@Override
+	public final double getMinX() /* @ReadOnly */ {
+		return  vx[0]; // get first element
+	}
+
+	@Override
+	public final double getMaxX() /* @ReadOnly */ {
+		return vx[vx.length-1]; // get last element
+	}
+
+	@Override
 	public final double[] getValuesX() {
         return vx;
     }
 	
+	@Override
 	public final double[] getValuesY() {
         return vy;
     }
@@ -108,38 +120,46 @@ public abstract class AbstractInterpolation implements Interpolation {
 	// public final double evaluate(final double x) ::: is in a separate section
 	//
 	
+	@Override
 	public final double evaluate(final double x, boolean allowExtrapolation) {
         checkRange(x, allowExtrapolation);
 		return evaluateImpl(x);
 	}
 
+	@Override
 	public final double primitive(final double x) {
 		return primitive(x, false);
 	}
 	
+	@Override
 	public final double primitive(final double x, boolean allowExtrapolation) {
         checkRange(x, allowExtrapolation);
 		return primitiveImpl(x);
 	}
 
+	@Override
 	public final double derivative(final double x) {
 		return derivative(x, false);
 	}
 	
+	@Override
 	public final double derivative(final double x, boolean allowExtrapolation) {
         checkRange(x, allowExtrapolation);
 		return derivativeImpl(x);
 	}
 
+	@Override
 	public final double secondDerivative(final double x) {
 		return secondDerivative(x, false);
 	}
 	
+	@Override
 	public final double secondDerivative(final double x, boolean allowExtrapolation) {
         checkRange(x, allowExtrapolation);
 		return secondDerivativeImpl(x);
 	}
 
+	@Override
 	public final boolean isInRange(final double x) {
         double x1 = getMinX(), x2 = getMaxX();
         return (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
@@ -161,7 +181,6 @@ public abstract class AbstractInterpolation implements Interpolation {
 	 * @throws IllegalStateException if extrapolation is not enabled.
 	 * @throws IllegalArgumentException if <i>x</i> is our of range
 	 */
-	// FIXME: code review : verify if parameter 'extrapolate' is really needed
 	protected final void checkRange(final double x, boolean extrapolate) {
 		if (! (extrapolate || allowsExtrapolation() || isInRange(x)) ) {
 			StringBuilder sb = new StringBuilder();
@@ -211,6 +230,7 @@ public abstract class AbstractInterpolation implements Interpolation {
 	// implements UnaryFunctionDouble
 	//
 	
+	@Override
 	public final double evaluate(final double x) {
 		return evaluate(x, false);
 	}
@@ -227,14 +247,17 @@ public abstract class AbstractInterpolation implements Interpolation {
 	 */
 	private DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
 	
+	@Override
 	public final boolean allowsExtrapolation() {
 		return delegatedExtrapolator.allowsExtrapolation();
 	}
 
+	@Override
 	public void disableExtrapolation() {
 		delegatedExtrapolator.disableExtrapolation();
 	}
 
+	@Override
 	public void enableExtrapolation() {
 		delegatedExtrapolator.enableExtrapolation();
 	}

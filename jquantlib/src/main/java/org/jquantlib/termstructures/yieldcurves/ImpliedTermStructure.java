@@ -36,7 +36,6 @@ package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.YieldTermStructureIntf;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 
@@ -49,7 +48,7 @@ import org.jquantlib.util.Date;
  */
 // TEST the correctness of the returned values is tested by checking them against numerical calculations.
 // TEST observability against changes in the underlying term structure is checked.
-public class ImpliedTermStructure<T extends YieldTermStructureIntf> extends YieldTermStructure {
+public class ImpliedTermStructure<T extends YieldTermStructure> extends YieldTermStructure {
 
 	private Handle<T>	originalCurve;
 
@@ -71,7 +70,7 @@ public class ImpliedTermStructure<T extends YieldTermStructureIntf> extends Yiel
 
 	@Override
 	protected /*@DiscountFactor*/ double discountImpl(/*@Time*/double t) /* @ReadOnly */{
-		YieldTermStructureIntf yts = originalCurve.getLink();
+		YieldTermStructure yts = originalCurve.getLink();
 		/* t is relative to the current reference date
 		   and needs to be converted to the time relative
 		   to the reference date of the original curve */

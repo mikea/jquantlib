@@ -41,7 +41,7 @@ public abstract class OldInstrument extends Instrument {
      * 
      * <p>
      * When an OldInstrument is used, derived classes are obliged to
-     * override this method.
+     * override this method otherwise an Exception is thrown.
      */
 	@Override
     protected void performCalculations() {

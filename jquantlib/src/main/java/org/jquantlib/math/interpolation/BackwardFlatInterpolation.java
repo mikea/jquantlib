@@ -23,17 +23,14 @@ package org.jquantlib.math.interpolation;
 import java.util.Arrays;
 
 
-
 /**
- * This class provides linear interpolation between discrete points
+ * Backward-flat interpolation between discrete points
  * 
- * @author Dominik Holenstein
  * @author Richard Gomes
  */
-public class LinearInterpolation extends AbstractInterpolation {
+public class BackwardFlatInterpolation extends AbstractInterpolation {
 
-    private double[] vp;
-    private double[] vs;
+    private double[] primitive;
 
     /**
      * Private default constructor.
@@ -42,7 +39,7 @@ public class LinearInterpolation extends AbstractInterpolation {
 	 * 
 	 * @author Richard Gomes
      */
-    private LinearInterpolation() {
+    private BackwardFlatInterpolation() {
     	// access denied to default constructor
     }
     
@@ -50,13 +47,12 @@ public class LinearInterpolation extends AbstractInterpolation {
 	protected double primitiveImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
         double dx = x - vx[i];
-        return vp[i-1] + dx*(vy[i-1] + 0.5*dx*vs[i-1]);
+        return primitive[i] + dx*vy[i+1];
 	}
 
 	@Override
 	protected double derivativeImpl(final double x) /* @ReadOnly */ {
-        int i = locate(x);
-        return vs[i];
+        return 0.0;
 	}
 
 	@Override
@@ -79,14 +75,12 @@ public class LinearInterpolation extends AbstractInterpolation {
 	@Override
 	public void reload() {
     	super.reload();
-
-    	vp = new double[vx.length];
-    	vs = new double[vx.length];
-        vp[0] = 0.0;
-        for (int i=1; i < vx.length; i++) {
-        	double dx = vx[i] - vx[i-1];
-        	vs[i-1] = (vy[i] - vy[i-1]) / dx;
-            vp[i] = vp[i-1] + dx*(vy[i-1] +0.5*dx*vs[i-1]);
+		
+    	primitive = new double[vx.length];
+        primitive[0] = 0.0;
+        for (int i=1; i<vx.length; i++) {
+            double dx = vx[i] - vx[i-1];
+            primitive[i] = primitive[i-1] + dx*vy[i];
         }
 	}
 	
@@ -97,8 +91,13 @@ public class LinearInterpolation extends AbstractInterpolation {
     //
     
     protected double evaluateImpl(final double x) /* @ReadOnly */ {
-        int i = locate(x);
-        return vy[i] + (x - vx[i])*vs[i];
+    	if (x <= vx[0])
+            return vy[0];
+    	int i = locate(x);
+        if (x == vx[i])
+            return vy[i];
+        else
+            return vy[i+1];
 	}
 
     
@@ -107,7 +106,7 @@ public class LinearInterpolation extends AbstractInterpolation {
     //
     
     static public Interpolator getInterpolator() /* @ReadOnly */ {
-    	return new LinearInterpolationImpl();
+    	return new BackwardFlarInterpolationImpl();
     }
     
     /**
@@ -115,11 +114,11 @@ public class LinearInterpolation extends AbstractInterpolation {
 	 * 
 	 * @author Richard Gomes
 	 */
-	static private class LinearInterpolationImpl implements Interpolator {
-		private LinearInterpolation delegate;
+	static private class BackwardFlarInterpolationImpl implements Interpolator {
+		private BackwardFlatInterpolation delegate;
 		
-		public LinearInterpolationImpl() {
-			delegate = new LinearInterpolation();
+		public BackwardFlarInterpolationImpl() {
+			delegate = new BackwardFlatInterpolation();
 		}
 		
 		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
@@ -132,11 +131,10 @@ public class LinearInterpolation extends AbstractInterpolation {
 			delegate.reload();
 			return delegate;
 		}
-		
+
 		public final boolean isGlobal() {
 			return false; // only CubicSpline and Sabr are global, whatever it means!
 		}
-		
 	}
 
 }

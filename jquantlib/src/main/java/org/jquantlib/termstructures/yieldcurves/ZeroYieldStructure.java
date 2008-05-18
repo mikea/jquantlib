@@ -38,94 +38,142 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.daycounters.Actual365Fixed;
+import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.Calendar;
+import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
 
-public class ZeroYieldStructure extends YieldTermStructure {
+/**
+ * Zero-yield term structure
+ * <p>
+ * This abstract class acts as an adapter to YieldTermStructure allowing the programmer to implement only the
+ * <tt>zeroYieldImpl(Time, bool)</tt> method in derived classes. Discount and forward are calculated from zero yields.
+ * <p>
+ * Rates are assumed to be annual continuous compounding.
+ * 
+ * @see TermStructure documentation for issues regarding constructors.
+ * 
+ * @author Richard Gomes
+ */
+public abstract class ZeroYieldStructure extends YieldTermStructure {
 
-	@Override
-	protected double discountImpl(double t) {
-		// TODO Auto-generated method stub
-		return 0;
+	//
+	// public constructors
+	//
+
+	
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param dc
+	 */
+	public ZeroYieldStructure() {
+		this(new Actual365Fixed());
 	}
 
-	@Override
-	public Date getMaxDate() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param dc
+	 */
+	public ZeroYieldStructure(final DayCounter dc) {
+		super(dc);
 	}
 
+	// ---
+	
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param refDate
+	 * @param cal
+	 * @param dc
+	 */
+	public ZeroYieldStructure(final Date refDate, final Calendar cal) {
+		this(refDate, cal, new Actual365Fixed());
+	}
+
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param refDate
+	 * @param cal
+	 * @param dc
+	 */
+	public ZeroYieldStructure(final Date refDate, final DayCounter dc) {
+		this(refDate, Target.getCalendar(), dc); // FIXME: code review : default calendar
+	}
+
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param refDate
+	 * @param cal
+	 * @param dc
+	 */
+	public ZeroYieldStructure(final Date refDate) {
+		this(refDate, Target.getCalendar(), new Actual365Fixed()); // FIXME: code review : default calendar
+	}
+
+
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param refDate
+	 * @param cal
+	 * @param dc
+	 */
+	public ZeroYieldStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
+		super(refDate, cal, dc);
+	}
+
+	// ---
+	
+	
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param settlementDays
+	 * @param cal
+	 * @param dc
+	 */
+	public ZeroYieldStructure(final int settlementDays, final Calendar cal) {
+		this(settlementDays, cal, new Actual365Fixed());
+	}
+
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param settlementDays
+	 * @param cal
+	 * @param dc
+	 */
+	public ZeroYieldStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
+		super(settlementDays, cal, dc);
+	}
+
+	
+	//
+	// protected methods
+	//
+	
+	/**
+	 * Returns the discount factor for the given date calculating it from the zero yield.
+	 */
+	@Override
+    protected final /*@DiscountFactor*/ double discountImpl(/*@Time*/ double t) /* @ReadOnly */ {
+        /*@Rate*/ double r = zeroYieldImpl(t);
+        return Math.exp(-r*t);
+    }
+
+	
+	//
+	// abstract methods
+	//
+	
+	protected abstract /*@Rate*/ double zeroYieldImpl(/*@Time*/ double t) /* @ReadOnly */;
+	
 }
-
-
-
-///*! \file zeroyieldstructure.hpp
-//   \brief Zero-yield based term structure
-//*/
-//
-//#ifndef quantlib_zero_yield_structure_hpp
-//#define quantlib_zero_yield_structure_hpp
-//
-//#include <ql/yieldtermstructure.hpp>
-//
-//namespace QuantLib {
-//
-//   //! Zero-yield term structure
-//   /*! This abstract class acts as an adapter to YieldTermStructure
-//       allowing the programmer to implement only the
-//       <tt>zeroYieldImpl(Time, bool)</tt> method in derived classes.
-//       Discount and forward are calculated from zero yields.
-//
-//       Rates are assumed to be annual continuous compounding.
-//
-//       \ingroup yieldtermstructures
-//   */
-//   class ZeroYieldStructure : public YieldTermStructure {
-//     public:
-//       /*! \name Constructors
-//           See the TermStructure documentation for issues regarding
-//           constructors.
-//       */
-//       //@{
-//       ZeroYieldStructure(const DayCounter& dc = Actual365Fixed());
-//       ZeroYieldStructure(const Date& referenceDate,
-//                          const Calendar& calendar = Calendar(),
-//                          const DayCounter& dc = Actual365Fixed());
-//       ZeroYieldStructure(Natural settlementDays,
-//                          const Calendar&,
-//                          const DayCounter& dc = Actual365Fixed());
-//       //@}
-//       virtual ~ZeroYieldStructure() {}
-//     protected:
-//       //! \name YieldTermStructure implementation
-//       //@{
-//       /*! Returns the discount factor for the given date calculating it
-//           from the zero yield.
-//       */
-//       DiscountFactor discountImpl(Time) const;
-//       //! zero-yield calculation
-//       virtual Rate zeroYieldImpl(Time) const = 0;
-//       //@}
-//   };
-//
-//   // inline definitions
-//
-//   inline ZeroYieldStructure::ZeroYieldStructure(const DayCounter& dc)
-//   : YieldTermStructure(dc) {}
-//
-//   inline ZeroYieldStructure::ZeroYieldStructure(const Date& refDate,
-//                                                 const Calendar& cal,
-//                                                 const DayCounter& dc)
-//   : YieldTermStructure(refDate, cal, dc) {}
-//
-//   inline ZeroYieldStructure::ZeroYieldStructure(Natural settlementDays,
-//                                                 const Calendar& cal,
-//                                                 const DayCounter& dc)
-//   : YieldTermStructure(settlementDays, cal, dc) {}
-//
-//   inline DiscountFactor ZeroYieldStructure::discountImpl(Time t) const {
-//       Rate r = zeroYieldImpl(t);
-//       return DiscountFactor(std::exp(-r*t));
-//   }
-//
-//}

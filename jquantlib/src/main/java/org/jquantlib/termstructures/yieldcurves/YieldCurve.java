@@ -26,26 +26,19 @@ import org.jquantlib.util.Pair;
 /**
  * 
  * @author Richard Gomes
- * @param <C>
- * @param <I>
  */
+// TODO: comments
 public interface YieldCurve {
 	public Date getMaxDate() /* @ReadOnly */;
 	public /*@Time*/ double[] getTimes() /* @ReadOnly */;
 	public Date[] getDates() /* @ReadOnly */;
-	public double[] getData() /* @ReadOnly */;
 	public Pair<Date, Double>[] getNodes() /* @ReadOnly */;
 
-
-	//
-	// The original C++ implementation does not provide these setters.
-	// Sorry for that!
-	//
-	
-	public void setMaxDate(Date maxDate) /* @ReadOnly */;
-	public void setTimes(/*@Time*/ double[] times) /* @ReadOnly */;
-	public void setDates(Date[] dates) /* @ReadOnly */;
-	public void setData(double[] data) /* @ReadOnly */;
-	public void setNodes(Pair<Date, Double>[] pairs) /* @ReadOnly */;
+	/**
+	 * This method is used polymorphically by concrete implementations.
+	 * 
+	 * @return a chunk of data
+	 */
+	public double[] getData() /* @ReadOnly */;
 
 }

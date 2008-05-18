@@ -22,7 +22,11 @@ package org.jquantlib.math.interpolation;
 
 
 
-// TODO:: refactor to "Interpolation2DFactory"
+/**
+ * @see Interpolator
+ *  
+ * @author Richard Gomes
+ */
 public interface Interpolator2D {
 
 	public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z);

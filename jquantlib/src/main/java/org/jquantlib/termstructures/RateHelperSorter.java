@@ -18,17 +18,21 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.termstructures.yieldcurves;
+package org.jquantlib.termstructures;
 
-import org.jquantlib.termstructures.YieldTermStructureIntf;
-
+import java.util.Comparator;
 
 /**
+ * This class implements a {@link Comparator} for {@link RateHelper} objects.
+ * 
+ * @see Comparator
+ * @see RateHelper
  * 
  * @author Richard Gomes
+ * @param <T>
  */
-public interface YieldCurveTraits extends YieldTermStructureIntf, YieldCurve, YieldTraits {
-	
-	// no more methods
-	
+public class RateHelperSorter<T extends RateHelper<YieldTermStructure>> implements Comparator<T> {
+	public int compare(final T h1, final T h2) /* @ReadOnly */ {
+		return h1.getLatestDate().compareTo(h2.getLatestDate());
+	}
 }

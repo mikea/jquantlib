@@ -30,113 +30,186 @@ import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 /**
+ * Base helper class for yield-curve bootstrapping
+ * <p>
+ * This class provides an abstraction for the instruments used to bootstrap a term structure. It is advised that a rate helper for
+ * an instrument contains an instance of the actual instrument class to ensure consistency between the algorithms used during
+ * bootstrapping and later instrument pricing. This is not yet fully enforced in the available rate helpers, though - only
+ * SwapRateHelper and FixedCouponBondHelper contain their corresponding instrument for the time being.
+ * 
  * @author Srinivas Hasti
- *
+ * @author Richard Gomes
  */
-//TODO: Finish
-public abstract class RateHelper<T extends TermStructureIntf> implements Observer, Observable {
+public abstract class RateHelper<T extends TermStructure> implements Observer, Observable {
 
-	protected Handle<Quote> quote;
-    protected T termStructure;
-    protected Date earliestDate;
-    protected Date latestDate;
-     
+	//
+	// protected fields
+	//
+
+	protected Handle<Quote>	quote;
+	protected T				termStructure;
+	protected Date			earliestDate;
+	protected Date			latestDate;
+
+	//
+	// public constructors
+	//
+
 	public RateHelper(final Handle<Quote> quote, final T termStructure, final Date earliestDate, final Date latestDate) {
 		super();
-		this.quote = quote;
-		this.termStructure = termStructure;
+		this.termStructure = termStructure; // FIXME: code review : do we need a dummy non-null TermStructure ???
 		this.earliestDate = earliestDate;
 		this.latestDate = latestDate;
+		this.quote = quote;
 		this.quote.addObserver(this);
 	}
-	
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-    public RateHelper(final Handle<Quote> quote) {
-    	this.quote = quote;
-    	this.quote.addObserver(this);
-    	
-    	// FIXME: termStructure_(0) {}
-		// this.termStructure = new TermStructure(0);
-    }
 
-	public RateHelper(double quote) {
+	public RateHelper(final Handle<Quote> quote) {
+		this.termStructure = null; // FIXME: code review : do we need a dummy non-null TermStructure ???
+		this.earliestDate = null;
+		this.latestDate = null;
+		this.quote = quote;
+		this.quote.addObserver(this);
+	}
+
+	public RateHelper(final double quote) {
+		this.termStructure = null; // FIXME: code review : do we need a dummy non-null TermStructure ???
+		this.earliestDate = null;
+		this.latestDate = null;
 		this.quote = new Handle<Quote>(new SimpleQuote(quote));
-    	
-		// FIXME: termStructure_(0) {}
-		// this.termStructure = new TermStructure(0); //  termStructure_(0) {}
 	}
 
-	public Date getEarliestDate() {
+	//
+	// public methods
+	//
+
+	/**
+	 * The earliest date at which discounts are needed by the helper in order to provide a quote.
+	 * 
+	 * @return the earliest relevant date
+	 */
+	public final Date getEarliestDate() {
 		return earliestDate;
 	}
 
-	public Date getLatestDate() {
+	/**
+	 * The latest date at which discounts are needed by the helper in order to provide a quote. It does not necessarily equal the
+	 * maturity of the underlying instrument.
+	 * 
+	 * @return the latest relevant date
+	 */
+	public final Date getLatestDate() {
 		return latestDate;
 	}
 
-	public T getTermStructure() {
-		return termStructure;
-	}
+//XXX
+//	public T getTermStructure() {
+//		return termStructure;
+//	}
 
-	public void setTermStructure(T termStructure) {
-		if (termStructure==null) throw new NullPointerException("null term structure given");
+	/**
+	 * Sets the term structure to be used for pricing
+	 * 
+	 * @param termStructure
+	 */
+//	
+// COMMENTS kept for JQuantLib developers only as they refer to original C++ code:
+//	
+//	 Being a pointer and not a shared_ptr, the term
+//   structure is not guaranteed to remain allocated
+//   for the whole life of the rate helper. It is
+//   responsibility of the programmer to ensure that
+//   the pointer remains valid. It is advised that
+//   rate helpers be used only in term structure
+//   constructors, setting the term structure to
+//   <b>this</b>, i.e., the one being constructed.
+//	
+	public final void setTermStructure(final T termStructure) {
+		if (termStructure == null) throw new NullPointerException("null term structure given"); // FIXME: message
 		this.termStructure = termStructure;
 	}
 
-	 public double getQuoteError(){
-		 return quote.getLink().doubleValue()-getImpliedQuote();
-	 }
-	 
-     public double getQuoteValue(){
-    	 return quote.getLink().doubleValue();
-     }
-     
-     public boolean quoteIsValid(){
-    	 // quote_->isValid();
-    	 return true; //TODO
-     }
-     
-     public abstract double getImpliedQuote();
-     
-     
-     /**
-      * Implements multiple inheritance via delegate pattern to an inner class
-      * 
-      */
-     private Observable delegatedObservable = new DefaultObservable(this);
+	public final double getQuoteError() {
+		return quote.getLink().doubleValue() - getImpliedQuote();
+	}
 
-     public void addObserver(Observer observer) {
-         delegatedObservable.addObserver(observer);
-     }
+	public final double getQuoteValue() {
+		return quote.getLink().doubleValue();
+	}
 
-     public int countObservers() {
-         return delegatedObservable.countObservers();
-     }
+//XXX	
+//	public final boolean quoteIsValid() {
+//		// quote_->isValid();
+//		return true; //TODO
+//	}
 
-     public void deleteObserver(Observer observer) {
-         delegatedObservable.deleteObserver(observer);
-     }
+	public double getReferenceQuote() /* @ReadOnly */ {
+		return quote.getLink().doubleValue();
+	}
+	
 
-     public void notifyObservers() {
-         delegatedObservable.notifyObservers();
-     }
+	
+// TODO: code review :: how this method is used?
+//	virtual DiscountFactor discountGuess() const {
+//            return Null<Real>();
+//        }
+	
+	
+	//
+	// abstract methods
+	//
 
-     public void notifyObservers(Object arg) {
-         delegatedObservable.notifyObservers(arg);
-     }
+	public abstract double getImpliedQuote();
 
-     public void deleteObservers() {
-         delegatedObservable.deleteObservers();
-     }
+	//
+	// implements Observer
+	//
 
-     public List<Observer> getObservers() {
-         return delegatedObservable.getObservers();
-     }
-     
-     
+	@Override
+	public void update(final Observable o, final Object arg) {
+		this.notifyObservers(arg); // FIXME: maybe all calls to notifyObservers should forward "arg" in entire JQuantLib ???
+	}
+
+	/**
+	 * Implements multiple inheritance via delegate pattern to an inner class
+	 * 
+	 * @see Observable
+	 */
+	private final Observable	delegatedObservable	= new DefaultObservable(this);
+
+	@Override
+	public final void addObserver(final Observer observer) {
+		delegatedObservable.addObserver(observer);
+	}
+
+	@Override
+	public final int countObservers() {
+		return delegatedObservable.countObservers();
+	}
+
+	@Override
+	public final void deleteObserver(final Observer observer) {
+		delegatedObservable.deleteObserver(observer);
+	}
+
+	@Override
+	public final void notifyObservers() {
+		delegatedObservable.notifyObservers();
+	}
+
+	@Override
+	public final void notifyObservers(final Object arg) {
+		delegatedObservable.notifyObservers(arg);
+	}
+
+	@Override
+	public final void deleteObservers() {
+		delegatedObservable.deleteObservers();
+	}
+
+	@Override
+	public final List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
+	}
+
 }

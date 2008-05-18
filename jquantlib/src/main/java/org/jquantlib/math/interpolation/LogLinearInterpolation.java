@@ -20,6 +20,8 @@
 
 package org.jquantlib.math.interpolation;
 
+import java.util.Arrays;
+
 
 /**
  * This class provides log-linear interpolation between discrete points
@@ -36,16 +38,6 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	
 	private LogLinearInterpolation() {
 		//access denied to default constructor
-	}
-	
-	@Override
-	public double getMinX() /* @ReadOnly */ {
-		return vx[0]; // get first element
-	}
-	
-	@Override
-	public double getMaxX() /* @ReadOnly */ {
-		return vx[vx.length-1]; // get last element
 	}
 	
 	@Override
@@ -118,11 +110,20 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 			delegate = new LogLinearInterpolation();
 		}
 		
-		public Interpolation interpolate(double[] x, double[] y) /* @ReadOnly */ {
-			delegate.vx = x;
-			delegate.vy = y;
+		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
+			return interpolate(x.length, x, y);
+		}
+
+		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
+			delegate.vx = Arrays.copyOf(x, size);
+			delegate.vy = Arrays.copyOf(y, size);
 			delegate.reload();
 			return delegate;
 		}
+
+		public final boolean isGlobal() {
+			return false; // only CubicSpline and Sabr are global, whatever it means!
+		}
 	}
+	
 }

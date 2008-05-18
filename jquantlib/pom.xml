@@ -460,6 +460,7 @@
                     <use>true</use>
                     <splitindex>true</splitindex>
                     <stylesheet>maven</stylesheet>
+                    <linksource>true</linksource>
                     <encoding>UTF-8</encoding>
                     <docencoding>UTF-8</docencoding>
                     <charset>UTF-8</charset>
@@ -539,8 +540,14 @@
                   <report>maven-checkstyle-plugin</report>
                 </configuration>
             </plugin>
-            -->		
-    
+            -->
+            
+            <plugin>
+	            <artifactId>org.codehaus.mojo</artifactId>
+	            <groupId>javancss-maven-plugin</groupId>
+	            <version>2.0-beta-2</version>
+            </plugin>
+
 		    <plugin>
 		      <groupId>org.codehaus.mojo</groupId>
 		      <artifactId>taglist-maven-plugin</artifactId>
@@ -597,13 +604,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>surefire-report-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <linksource>true</linksource>
-                </configuration>
             </plugin>
 		    
 		    <plugin>

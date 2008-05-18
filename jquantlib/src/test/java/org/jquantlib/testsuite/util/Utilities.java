@@ -43,7 +43,6 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.YieldTermStructureIntf;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.calendars.NullCalendar;
@@ -112,20 +111,20 @@ public class Utilities {
 	        return new FlatForward(today, forward, dc);
 	    }
 
-	    static public YieldTermStructureIntf flatRate(
+	    static public YieldTermStructure flatRate(
 	    		final Date today, 
 	    		final /*@Rate*/ double forward, 
 	    		final DayCounter dc) {
 	        return flatRate(today, new Handle<Quote>(new SimpleQuote(forward)), dc);
 	    }
 
-	    static public YieldTermStructureIntf flatRate(
+	    static public YieldTermStructure flatRate(
 	    		final Handle<? extends Quote> forward,
 	    		final DayCounter dc) {
 	        return new FlatForward(0, new NullCalendar(), forward, dc);
 	    }
 
-	    static public YieldTermStructureIntf flatRate(
+	    static public YieldTermStructure flatRate(
 	    		final /*@Rate*/ double forward, 
 	    		final DayCounter dc) {
 	        return flatRate(new Handle<Quote>(new SimpleQuote(forward)), dc);

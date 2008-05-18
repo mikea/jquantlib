@@ -41,6 +41,10 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  * 
  */
+
+// FIXME: refactor package name to
+// org.jquantlib.testsuite.termstructures.yieldcurves
+
 public class PiecewiseYieldCurveTest {
 
 	public class Datum {

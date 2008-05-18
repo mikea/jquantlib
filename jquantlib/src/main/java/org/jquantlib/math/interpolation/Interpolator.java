@@ -22,9 +22,16 @@ package org.jquantlib.math.interpolation;
 
 
 
-// TODO:: refactor to "InterpolationFactory"
+/**
+ * @see Interpolator2D
+ * 
+ * @author Richard Gomes
+ */
 public interface Interpolator {
 
 	public Interpolation interpolate(final double[] x, final double[] y);
+	public Interpolation interpolate(final int size, final double[] x, final double[] y);
+	
+	public boolean isGlobal();
 
 }

@@ -40,7 +40,20 @@ public class LogLinear implements Interpolator {
 		delegate = LogLinearInterpolation.getInterpolator();
 	}
 	
-	public Interpolation interpolate(double[] x, double[] y){
+	//
+	// implements Interpolator
+	//
+	
+	public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
+
+	public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
+		return delegate.interpolate(x, y);
+	}
+
+	public final boolean isGlobal() /* @ReadOnly */ {
+		return delegate.isGlobal();
+	}
+
 }

@@ -3,6 +3,7 @@ package org.jquantlib.math;
 /**
  * @author <Richard Gomes>
  */
+//FIXME: refactor package "solvers1d"
 abstract public class AbstractSolver1D {
 
 	public AbstractSolver1D() {

@@ -19,46 +19,139 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
-
-// TODO : Finish (Richard)
 
 /**
  * Forward-rate term structure
  * <p>
  * This abstract class acts as an adapter to TermStructure allowing the programmer to implement only method
- * {@link #forwardImpl(double)} in derived classes. Zero yields and discounts are calculated from forwards. Rates are assumed to be
+ * <code>forwardImpl(double)</code> in derived classes. Zero yields and discounts are calculated from forwards. Rates are assumed to be
  * annual continuous compounding.
  * 
- * @note This class is abstract and has protected constructors so that it can only be constructed by extended classes
+ * @see TermStructure documentation for issues regarding constructors.
+ * 
+ * @author Richard Gomes
  */
 public abstract class ForwardRateStructure extends YieldTermStructure {
 
+	//
+	// constructors
+	//
+	
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param dc
+	 */
+	protected ForwardRateStructure() {
+		this(new Actual365Fixed());
+	}
+
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param dc
+	 */
 	protected ForwardRateStructure(final DayCounter dc) {
 		super(dc);
 	}
 
+	// ---
+	
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param refDate
+	 * @param cal
+	 * @param dc
+	 */
+	protected ForwardRateStructure(final Date refDate, final Calendar cal) {
+		this(refDate, cal, new Actual365Fixed());
+	}
+
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param refDate
+	 * @param cal
+	 * @param dc
+	 */
+	protected ForwardRateStructure(final Date refDate, final DayCounter dc) {
+		this(refDate, Target.getCalendar(), dc); // FIXME: code review : default calendar
+	}
+
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param refDate
+	 * @param cal
+	 * @param dc
+	 */
+	protected ForwardRateStructure(final Date refDate) {
+		this(refDate, Target.getCalendar(), new Actual365Fixed()); // FIXME: code review : default calendar
+	}
+
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param refDate
+	 * @param cal
+	 * @param dc
+	 */
 	protected ForwardRateStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
 		super(refDate, cal, dc);
 	}
 
+	// ---
+	
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param settlementDays
+	 * @param cal
+	 * @param dc
+	 */
+	protected ForwardRateStructure(final int settlDays, final Calendar cal) {
+		super(settlDays, cal, new Actual365Fixed());
+	}
+
+	/**
+	 * @see TermStructure documentation for issues regarding constructors.
+	 * 
+	 * @param settlementDays
+	 * @param cal
+	 * @param dc
+	 */
 	protected ForwardRateStructure(final int settlDays, final Calendar cal, final DayCounter dc) {
 		super(settlDays, cal, dc);
 	}
 
+	
+	//
+	// abstract methods
+	//
+	
 	/**
 	 * Instantaneous forward-rate calculation
 	 */
 	protected abstract /* @Rate */ double forwardImpl(/* @Time */double t);
 
+
+	//
+	// protected methods
+	//
+	
 	/**
 	 * Returns the zero yield rate for the given date calculating it from the instantaneous forward rate.
 	 * 
-	 * @note This is just a default, highly inefficient and possibly wildly inaccurate implementation. Derived classes should
-	 *       implement their own zeroYield method.
+	 * @note This is just a default, highly inefficient and possibly wildly inaccurate implementation.
+	 * Derived classes should implement their own zeroYield method.
 	 */
 	protected/* @Rate */double zeroYieldImpl(/* @Time */double t) /* @ReadOnly */{
 		if (t == 0.0) return forwardImpl(0.0);
