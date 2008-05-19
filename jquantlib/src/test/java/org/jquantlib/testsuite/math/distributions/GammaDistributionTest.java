@@ -83,7 +83,7 @@ public class GammaDistributionTest {
 			double expected = testvalues[i][1];
 			double x = testvalues[i][0];
 			double realised = gammDistribution.evaluate(x);
-			System.out.println(realised);
+			// System.out.println(realised);
 			double tolerance = 1.0e-10;
 			if (Math.abs(expected-realised)>tolerance) {
 				fail("x: " + x + " expected: " + expected + " realised: " + realised);

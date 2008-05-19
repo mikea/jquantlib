@@ -60,9 +60,12 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
     static final double d3_ =  2.445134137142996e+00;
     static final double d4_ =  3.754408661907416e+00;
 
-    // Limits of the approximation regions
+    // Limits of the approximation regions (break-points)
     static final double x_low_ = 0.02425;
     static final double x_high_= 1.0 - x_low_;
+    
+    // refinement for higher precision
+    private boolean highPrecision = true;
 	
 	public InverseCumulativeNormal() {
 		super();
@@ -83,7 +86,7 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
 		if (x < x_low_) {
 			// Rational approximation for the lower region 0<x<u_low
 			z = Math.sqrt(-2.0*Math.log(x));
-         z = (((((c1_*z+c2_)*z+c3_)*z+c4_)*z+c5_)*z+c6_) /
+			z = (((((c1_*z+c2_)*z+c3_)*z+c4_)*z+c5_)*z+c6_) /
              ((((d1_*z+d2_)*z+d3_)*z+d4_)*z+1.0);
 		} else if (x <= x_high_) {
 			// Rational approximation for the central region u_low<=x<=u_high
@@ -96,24 +99,40 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
      	   z = Math.sqrt(-2.0*Math.log(1.0-x));
      	   z = -(((((c1_*z+c2_)*z+c3_)*z+c4_)*z+c5_)*z+c6_) /
              ((((d1_*z+d2_)*z+d3_)*z+d4_)*z+1.0);
-     }
-
-
-     // The relative error of the approximation has absolute value less
-     // than 1.15e-9.  One iteration of Halley's rational method (third
-     // order) gives full machine precision.
-     // #define REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD
-     // error (f_(z) - x) divided by the cumulative's derivative
+		}
 		
+	//	if (highPrecision == true) refine(z,x);
+		
+		CumulativeNormalDistribution f_ = new CumulativeNormalDistribution();
+		r = (f_.evaluate(z) - x) * Constants.M_SQRT_2 * Constants.M_SQRTPI * Math.exp(0.5 * z*z);
+     
+		//  Halley's method
+		z -= r/(1+0.5*z*r);
+		
+		return average + z*sigma;
+	}
+	
+	
+	
+	// The relative error of the approximation has absolute value less
+	// than 1.15e-9.  One iteration of Halley's rational method (third
+	// order) gives full machine precision.
+	// #define REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD
+ 	// error (f_(z) - x) divided by the cumulative's derivative
+	
 	//TODO: check whether this code is correctly translated.
 	// C++:
 	// r = (f_(z) - x) * M_SQRT2 * M_SQRTPI * exp(0.5 * z*z);
-	CumulativeNormalDistribution f_ = new CumulativeNormalDistribution();
-    r = (f_.evaluate(z) - x) * Constants.M_SQRT_2 * Constants.M_SQRTPI * Math.exp(0.5 * z*z);
+	private double refine(double z, double x){
+		
+		double r;
+		
+		CumulativeNormalDistribution f_ = new CumulativeNormalDistribution();
+		r = (f_.evaluate(z) - x) * Constants.M_SQRT_2 * Constants.M_SQRTPI * Math.exp(0.5 * z*z);
      
-    //  Halley's method
-    z -= r/(1+0.5*z*r);
-    
-    return average + z*sigma;
+		//  Halley's method
+		z -= r/(1+0.5*z*r);
+		
+		return z;
 	}
 }

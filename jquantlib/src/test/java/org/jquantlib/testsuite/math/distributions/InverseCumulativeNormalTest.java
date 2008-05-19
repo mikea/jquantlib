@@ -13,20 +13,20 @@ import org.junit.Test;
 
 public class InverseCumulativeNormalTest {
 /*	
-	// @Test
+	@Test
 	public void testKnownGoodValuesFromAbramStegun() {
 		
-		double[][] testvalues = {   {0.01, -2.32634787634015},
-									{0.1, -1.28155156597495},
-									{0.2, -0.84162123128771},
-									{0.3, -0.52440050989389},
-									{0.4, -0.25334710627794},
+		double[][] testvalues = {   {0.01,-2.32634787404084},
+									{0.1, -1.2815515641401562},
+									{0.2, -0.8416212327266185},
+									{0.3, -0.5244005132792953},
+									{0.4, -0.2533471028599986},
 									{0.5, 0.0},
-									{0.6, 0.25334710627794},
-									{0.7, 0.52440050989389},
-									{0.8, 0.841621235013},
-									{0.9, 1.28155155479908},
-									{0.99, 2.32634790241718}};
+									{0.6, 0.2533471028599986},
+									{0.7, 0.5244005132792951},
+									{0.8, 0.8416212327266186},
+									{0.9, 1.2815515641401562},
+									{0.99, 2.326347874388028}};
 									
 									
 		InverseCumulativeNormal icn = new InverseCumulativeNormal();
@@ -37,8 +37,7 @@ public class InverseCumulativeNormalTest {
 			double computed = icn.evaluate(z);
 			double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
 			assertEquals(expected, computed,tolerance);
-			assertEquals(1.0, computed+ icn.evaluate(-z),tolerance);
-			
+			assertEquals(1.0, computed + icn.evaluate(-z),tolerance);
 		}
 	}
 	
@@ -48,13 +47,16 @@ public class InverseCumulativeNormalTest {
 		InverseCumulativeNormal icn = new InverseCumulativeNormal();
 		
 		assertEquals(0, icn.evaluate(z),1.0e-15);
+		
 		z = -10;
 		assertEquals(0, icn.evaluate(z),1.0e-15);
+		
 		z = 10;
 		assertEquals(1.0, icn.evaluate(z),1.0e-15);
+		
 		z = 40;
 		assertEquals(1.0, icn.evaluate(z),1.0e-15);
-		
+				
 	}
 
 */
