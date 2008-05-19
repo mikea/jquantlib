@@ -372,6 +372,25 @@ public class DefaultDate extends BaseDate {
         int dow = dayOfWeek.toInteger();
         return this.increment((wd > dow ? 7 : 0) - wd + dow);
     }
+    
+    
+    /**
+     * Returns a new Date which is the n-th week day of a month/year represented
+     * by current date
+     * 
+     * @param nth
+     *            is the desired week
+     * @param dayOfWeek
+     *            is the desired week day
+     * @param month
+     *            is the desired month
+     * @param year
+     *            is the desired year
+     * @return a new Date which is the n-th week day of a certain month/year
+     */
+    public Date getNthWeekday(int nth, Weekday dayOfWeek) {
+        return getNthWeekday(nth, dayOfWeek, this.getMonth(), this.getYear());
+    }
 
     /**
      * Returns a new Date which is the n-th week day of a certain month/year

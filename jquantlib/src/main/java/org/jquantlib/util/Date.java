@@ -112,6 +112,14 @@ public interface Date extends Observable, Comparable<Date>{
      *         parameter
      */
     public Date getNextWeekday(final Weekday dayOfWeek);
+    
+    /**
+     * Returns Nth weekday of the month represented by the current
+     * date
+     * 
+     * @return
+     */
+    public Date getNthWeekday(int n, Weekday weekday);
 
     /**
      * Returns a new Date instance representing next day from the current
@@ -480,6 +488,10 @@ public interface Date extends Observable, Comparable<Date>{
         }
 
 		public int compareTo(Date o) {
+			 throw new RuntimeException("Operation not supported on NULL Date");
+		}
+
+		public Date getNthWeekday(int n, Weekday weekday) {
 			 throw new RuntimeException("Operation not supported on NULL Date");
 		}
 

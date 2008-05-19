@@ -82,7 +82,7 @@ public abstract class AbstractCalendar implements Calendar {
      * 
      * @return Date is date adjusted to next n-th business day
      */
-    private final Date adjust(final Date d, final BusinessDayConvention c) {
+    public final Date adjust(final Date d, final BusinessDayConvention c) {
         if (d == null)
             throw new NullPointerException();
 

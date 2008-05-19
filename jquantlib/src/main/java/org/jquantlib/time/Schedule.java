@@ -21,6 +21,7 @@ package org.jquantlib.time;
 
 import java.util.List;
 
+import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 
@@ -41,12 +42,12 @@ public class Schedule {
 	private boolean finalIsRegular;
 	private List<Date> dates;
 	private List<Boolean> isRegular;
-	
+
 	private Schedule(Period tenor, Calendar calendar,
 			BusinessDayConvention convention,
 			BusinessDayConvention terminationDateConvention,
 			DateGenerationRule rule, boolean endOfMonth, Date firstDate,
-			Date nextToLastDate, List<Date> dates, boolean finalIsRegular, 
+			Date nextToLastDate, List<Date> dates, boolean finalIsRegular,
 			boolean fullInterface) {
 		super();
 		this.tenor = tenor;
@@ -62,223 +63,318 @@ public class Schedule {
 		this.fullInterface = fullInterface;
 	}
 
-	public Schedule(List<Date> dates,
-             Calendar calendar,
-             BusinessDayConvention convention){
-		this(new Period(),calendar,convention,convention,DateGenerationRule.FORWARD,false,DateFactory.getFactory().getTodaysDate(),DateFactory.getFactory().getTodaysDate(),
-				dates,true,false);
-		
+	public Schedule(List<Date> dates, Calendar calendar,
+			BusinessDayConvention convention) {
+		this(new Period(), calendar, convention, convention,
+				DateGenerationRule.FORWARD, false, DateFactory.getFactory()
+						.getTodaysDate(), DateFactory.getFactory()
+						.getTodaysDate(), dates, true, false);
+
 	}
 
-
-	public Schedule(Date effectiveDate,
-            Date terminationDate, Period tenor, Calendar calendar,
-			BusinessDayConvention convention,
+	public Schedule(Date effectiveDate, Date terminationDate, Period tenor,
+			Calendar calendar, BusinessDayConvention convention,
 			BusinessDayConvention terminationDateConvention,
-			DateGenerationRule rule, boolean endOfMonth, 
-			Date firstDate,
+			DateGenerationRule rule, boolean endOfMonth, Date firstDate,
 			Date nextToLastDate) {
-		this(tenor,calendar,convention,terminationDateConvention,rule,endOfMonth,firstDate,nextToLastDate,
-				null,true,true);
-	    if(effectiveDate == Date.NULL_DATE || effectiveDate == null)
-	    	throw new IllegalArgumentException("Effective date is null");
-	    if(terminationDate == Date.NULL_DATE || terminationDate == null)
-	    	throw new IllegalArgumentException("TerminationDate date is null");
-	    
-	    if(effectiveDate.ge(terminationDate))
-	    	throw new IllegalArgumentException("Effective date later than or equal to termination date ");
-	    
-	    if (tenor.getLength()==0)
-            rule = DateGenerationRule.ZERO;
-        else
-            if(tenor.getLength()<0)
-            	throw new IllegalArgumentException("non positive tenor (" + tenor + ") not allowed");
+		this(tenor, calendar, convention, terminationDateConvention, rule,
+				endOfMonth, firstDate, nextToLastDate, null, true, true);
+		if (effectiveDate == Date.NULL_DATE || effectiveDate == null)
+			throw new IllegalArgumentException("Effective date is null");
+		if (terminationDate == Date.NULL_DATE || terminationDate == null)
+			throw new IllegalArgumentException("TerminationDate date is null");
 
-        if (firstDate != Date.NULL_DATE && firstDate != null) {
-            switch (rule) {
-              case BACKWARD:
-              case FORWARD:
-                 if(firstDate.lt(effectiveDate) &&
-                           firstDate.ge(terminationDate))
-                	 throw new IllegalStateException(
-                           "first date (" + firstDate +
-                           ") out of [effective (" + effectiveDate +
-                           "), termination (" + terminationDate +
-                           ")] date range");
-                break;
-              case THIRD_WEDNESDAY:
-                  if(!IMM.getDefaultIMM().isIMMdate(firstDate, false)){
-                      throw new IllegalStateException("first date (" + firstDate +
-                      ") is not an IMM date");
-                  }
-                      
-                break;
-              case ZERO:
-                 throw new IllegalStateException("first date incompatible with " + rule+
-                        " date generation rule");
-              default:
-                 throw new IllegalStateException("unknown Rule (" + rule + ")");
-            }
-        }
-        
-        if (nextToLastDate != Date.NULL_DATE && nextToLastDate != null) {
-            switch (rule) {
-              case BACKWARD:
-              case FORWARD:
-                if(nextToLastDate.le(effectiveDate) &&
-                           nextToLastDate.ge(terminationDate))
-                	throw new IllegalStateException(
-                           "next to last date (" + nextToLastDate +
-                           ") out of [effective (" + effectiveDate +
-                           "), termination (" + terminationDate +
-                           ")] date range");
-                break;
-              case THIRD_WEDNESDAY:
-                  if(!IMM.getDefaultIMM().isIMMdate(nextToLastDate, false)){
-                      throw new IllegalStateException("first date (" + firstDate +
-                             ") is not an IMM date");
-                  }
-              case ZERO:
-                throw new IllegalStateException("next to last date incompatible with " + rule +
-                        " date generation rule");
-              default:
-                throw new IllegalStateException("unknown Rule (" + rule + ")");
-            }
-        }
+		if (effectiveDate.ge(terminationDate))
+			throw new IllegalArgumentException(
+					"Effective date later than or equal to termination date ");
 
-        /*
+		if (tenor.getLength() == 0)
+			rule = DateGenerationRule.ZERO;
+		else if (tenor.getLength() < 0)
+			throw new IllegalArgumentException("non positive tenor (" + tenor
+					+ ") not allowed");
 
-        // calendar needed for endOfMonth adjustment
-        Calendar nullCalendar = NullCalendar();
-        Integer periods = 1;
-        Date seed, exitDate;
-        switch (rule_) {
+		if (firstDate != Date.NULL_DATE && firstDate != null) {
+			switch (rule) {
+			case BACKWARD:
+			case FORWARD:
+				if (firstDate.lt(effectiveDate)
+						&& firstDate.ge(terminationDate))
+					throw new IllegalStateException("first date (" + firstDate
+							+ ") out of [effective (" + effectiveDate
+							+ "), termination (" + terminationDate
+							+ ")] date range");
+				break;
+			case THIRD_WEDNESDAY:
+				if (!IMM.getDefaultIMM().isIMMdate(firstDate, false)) {
+					throw new IllegalStateException("first date (" + firstDate
+							+ ") is not an IMM date");
+				}
 
-          case DateGeneration::Zero:
-            tenor_ = 0*Days;
-            dates_.push_back(effectiveDate);
-            dates_.push_back(terminationDate);
-            isRegular_.push_back(true);
-            break;
+				break;
+			case ZERO:
+				throw new IllegalStateException("first date incompatible with "
+						+ rule + " date generation rule");
+			default:
+				throw new IllegalStateException("unknown Rule (" + rule + ")");
+			}
+		}
 
-          case DateGeneration::Backward:
+		if (nextToLastDate != Date.NULL_DATE && nextToLastDate != null) {
+			switch (rule) {
+			case BACKWARD:
+			case FORWARD:
+				if (nextToLastDate.le(effectiveDate)
+						&& nextToLastDate.ge(terminationDate))
+					throw new IllegalStateException("next to last date ("
+							+ nextToLastDate + ") out of [effective ("
+							+ effectiveDate + "), termination ("
+							+ terminationDate + ")] date range");
+				break;
+			case THIRD_WEDNESDAY:
+				if (!IMM.getDefaultIMM().isIMMdate(nextToLastDate, false)) {
+					throw new IllegalStateException("first date (" + firstDate
+							+ ") is not an IMM date");
+				}
+			case ZERO:
+				throw new IllegalStateException(
+						"next to last date incompatible with " + rule
+								+ " date generation rule");
+			default:
+				throw new IllegalStateException("unknown Rule (" + rule + ")");
+			}
+		}
 
-            dates_.push_back(terminationDate);
+		// calendar needed for endOfMonth adjustment
+		Calendar nullCalendar = new NullCalendar();
+		int periods = 1;
+		Date seed, exitDate;
+		switch (rule) {
 
-            seed = terminationDate;
-            if (nextToLastDate != Date()) {
-                dates_.insert(dates_.begin(), nextToLastDate);
-                Date temp = nullCalendar.advance(seed,
-                    -periods*tenor_, convention, endOfMonth);
-                if (temp!=nextToLastDate)
-                    isRegular_.insert(isRegular_.begin(), false);
-                else
-                    isRegular_.insert(isRegular_.begin(), true);
-                seed = nextToLastDate;
-            }
+		case ZERO:
+			tenor = new Period(0, TimeUnit.DAYS);
+			dates.add(effectiveDate);
+			dates.add(terminationDate);
+			isRegular.add(true);
+			break;
 
-            exitDate = effectiveDate;
-            if (firstDate != Date())
-                exitDate = firstDate;
+		case BACKWARD:
 
-            while (true) {
-                Date temp = nullCalendar.advance(seed,
-                    -periods*tenor_, convention, endOfMonth);
-                if (temp < exitDate)
-                    break;
-                else {
-                    dates_.insert(dates_.begin(), temp);
-                    isRegular_.insert(isRegular_.begin(), true);
-                    ++periods;
-                }
-            }
+			dates.add(terminationDate);
 
-            if (endOfMonth && calendar.isEndOfMonth(seed))
-                convention=Preceding;
+			seed = terminationDate;
+			if (nextToLastDate != Date.NULL_DATE && nextToLastDate != null) {
+				// Add it after 1'st element
+				dates.add(1, nextToLastDate);
+				Date temp = nullCalendar.advance(seed, new Period(-periods
+						* tenor.getLength(), tenor.getUnits()), convention,
+						endOfMonth);
+				if (!temp.equals(nextToLastDate))
+					isRegular.add(0, false);
+				else
+					isRegular.add(0, true);
+				seed = nextToLastDate;
+			}
 
-            if (calendar.adjust(dates_.front(),convention)!=
-                calendar.adjust(effectiveDate, convention)) {
-                dates_.insert(dates_.begin(), effectiveDate);
-                isRegular_.insert(isRegular_.begin(), false);
-            }
-            break;
+			exitDate = effectiveDate;
+			if (firstDate != Date.NULL_DATE && firstDate != null)
+				exitDate = firstDate;
 
-          case DateGeneration::ThirdWednesday:
-            QL_REQUIRE(!endOfMonth,
-                       "endOfMonth convention incompatible with " << rule_ <<
-                       " date generation rule");
-          // fall through
-          case DateGeneration::Forward:
+			while (true) {
+				Date temp = nullCalendar.advance(seed, new Period(-periods
+						* tenor.getLength(), tenor.getUnits()), convention,
+						endOfMonth);
+				if (temp.lt(exitDate))
+					break;
+				else {
+					dates.add(0, temp);
+					isRegular.add(0, true);
+					++periods;
+				}
+			}
 
-            dates_.push_back(effectiveDate);
+			if (endOfMonth && calendar.isEndOfMonth(seed))
+				convention = BusinessDayConvention.PRECEDING;
 
-            seed = effectiveDate;
-            if (firstDate!=Date()) {
-                dates_.push_back(firstDate);
-                Date temp = nullCalendar.advance(seed,
-                    periods*tenor_, convention, endOfMonth);
-                if (temp!=firstDate)
-                    isRegular_.push_back(false);
-                else
-                    isRegular_.push_back(true);
-                seed = firstDate;
-            }
+			if (calendar.adjust(dates.get(0), convention) != calendar.adjust(
+					effectiveDate, convention)) {
+				dates.add(0, effectiveDate);
+				isRegular.add(0, false);
+			}
+			break;
 
-            exitDate = terminationDate;
-            if (nextToLastDate != Date())
-                exitDate = nextToLastDate;
+		case THIRD_WEDNESDAY:
+			if (endOfMonth)
+				throw new IllegalStateException(
+						"endOfMonth convention incompatible with " + rule
+								+ " date generation rule");
+			// fall through
+		case FORWARD:
 
-            while (true) {
-                Date temp = nullCalendar.advance(seed,
-                    periods*tenor_, convention, endOfMonth);
-                if (temp > exitDate)
-                    break;
-                else {
-                    dates_.push_back(temp);
-                    isRegular_.push_back(true);
-                    ++periods;
-                }
-            }
+			dates.add(effectiveDate);
 
-            if (endOfMonth && calendar.isEndOfMonth(seed))
-                convention=Preceding;
+			seed = effectiveDate;
+			if (firstDate != Date.NULL_DATE && firstDate != null) {
+				dates.add(firstDate);
+				Date temp = nullCalendar.advance(seed, new Period(periods
+						* tenor.getLength(), tenor.getUnits()), convention,
+						endOfMonth);
+				if (temp != firstDate)
+					isRegular.add(false);
+				else
+					isRegular.add(true);
+				seed = firstDate;
+			}
 
-            if (calendar.adjust(dates_.back(),terminationDateConvention)!=
-                calendar.adjust(terminationDate, terminationDateConvention)) {
-                dates_.push_back(terminationDate);
-                isRegular_.push_back(false);
-            }
+			exitDate = terminationDate;
+			if (nextToLastDate != Date.NULL_DATE && nextToLastDate != null)
+				exitDate = nextToLastDate;
 
-            break;
+			while (true) {
+				Date temp = nullCalendar.advance(seed, new Period(periods
+						* tenor.getLength(), tenor.getUnits()), convention,
+						endOfMonth);
+				if (temp.gt(exitDate))
+					break;
+				else {
+					dates.add(temp);
+					isRegular.add(true);
+					++periods;
+				}
+			}
 
-          default:
-            QL_FAIL("unknown DateGeneration::Rule (" << Integer(rule_) << ")");
-        }
+			if (endOfMonth && calendar.isEndOfMonth(seed))
+				convention = BusinessDayConvention.PRECEDING;
 
-        // adjustments
-        if (rule_==DateGeneration::ThirdWednesday)
-            for (Size i=1; i<dates_.size()-1; ++i)
-                dates_[i] = Date::nthWeekday(3, Wednesday,
-                                             dates_[i].month(),
-                                             dates_[i].year());
+			if (!calendar.adjust(dates.get(dates.size() - 1),
+					terminationDateConvention)
+					.equals(
+							calendar.adjust(terminationDate,
+									terminationDateConvention))) {
+				dates.add(terminationDate);
+				isRegular.add(false);
+			}
 
-        for (Size i=0; i<dates_.size()-1; ++i)
-            dates_[i]=calendar.adjust(dates_[i], convention);
+			break;
 
-        // termination date is NOT adjusted as per ISDA specifications,
-        // unless otherwise specified in the confirmation of the deal
-        if (terminationDateConvention!=Unadjusted) {
-            dates_[dates_.size()-1]=calendar.adjust(dates_[dates_.size()-1],
-                                                    terminationDateConvention);
-        }
-	     */
-                
-	    
+		default:
+			throw new IllegalStateException("unknown DateGeneration::Rule ("
+					+ rule + ")");
+		}
+
+		// adjustments
+		if (rule == DateGenerationRule.THIRD_WEDNESDAY)
+			for (int i = 1; i < dates.size() - 1; ++i) {
+				Date d = dates.get(i);
+				Date adjDate = d.getNthWeekday(3, Weekday.WEDNESDAY);
+				d.getUpdatable().update(adjDate);
+			}
+
+		for (int i = 0; i < dates.size() - 1; ++i) {
+			dates.get(i).getUpdatable().update(
+					calendar.adjust(dates.get(i), convention));
+		}
+
+		// termination date is NOT adjusted as per ISDA specifications,
+		// unless otherwise specified in the confirmation of the deal
+		if (terminationDateConvention != BusinessDayConvention.UNADJUSTED) {
+			dates.get(dates.size() - 1).getUpdatable().update(
+					calendar.adjust(dates.get(dates.size() - 1),
+							terminationDateConvention));
+		}
+
 	}
-	
-	
 
 	public Schedule() {
 	}
+	
+	/*
+	
+	std::vector<Date>::const_iterator
+    Schedule::lower_bound(const Date& refDate) const {
+        Date d = (refDate==Date() ?
+                  Settings::instance().evaluationDate() :
+                  refDate);
+        return std::lower_bound(dates_.begin(), dates_.end(), d);
+    }
+
+    Date Schedule::nextDate(const Date& refDate) const {
+        std::vector<Date>::const_iterator res = lower_bound(refDate);
+        if (res!=dates_.end())
+            return *res;
+        else
+            return Date();
+    }
+
+    Date Schedule::previousDate(const Date& refDate) const {
+        std::vector<Date>::const_iterator res = lower_bound(refDate);
+        if (res!=dates_.begin())
+            return *(--res);
+        else
+            return Date();
+    }
+
+    bool Schedule::isRegular(Size i) const {
+        QL_REQUIRE(fullInterface_, "full interface not available");
+        QL_REQUIRE(i<=isRegular_.size() && i>0,
+                   "index (" << i << ") must be in [1, " <<
+                   isRegular_.size() <<"]");
+        return isRegular_[i-1];
+    }
+
+
+    MakeSchedule::MakeSchedule(const Date& effectiveDate,
+                               const Date& terminationDate,
+                               const Period& tenor,
+                               const Calendar& calendar,
+                               BusinessDayConvention convention)
+    : calendar_(calendar),
+      effectiveDate_(effectiveDate), terminationDate_(terminationDate),
+      tenor_(tenor),
+      convention_(convention), terminationDateConvention_(convention),
+      rule_(DateGeneration::Backward), endOfMonth_(false),
+      firstDate_(Date()), nextToLastDate_(Date()) {}
+
+    MakeSchedule& MakeSchedule::withTerminationDateConvention(
+                                                BusinessDayConvention conv) {
+        terminationDateConvention_ = conv;
+        return *this;
+    }
+
+    MakeSchedule& MakeSchedule::withRule(DateGeneration::Rule r) {
+        rule_ = r;
+        return *this;
+    }
+
+    MakeSchedule& MakeSchedule::forwards() {
+        rule_ = DateGeneration::Forward;
+        return *this;
+    }
+
+    MakeSchedule& MakeSchedule::backwards() {
+        rule_ = DateGeneration::Backward;
+        return *this;
+    }
+
+    MakeSchedule& MakeSchedule::endOfMonth(bool flag) {
+        endOfMonth_ = flag;
+        return *this;
+    }
+
+    MakeSchedule& MakeSchedule::withFirstDate(const Date& d) {
+        firstDate_ = d;
+        return *this;
+    }
+
+    MakeSchedule& MakeSchedule::withNextToLastDate(const Date& d) {
+        nextToLastDate_ = d;
+        return *this;
+    }
+
+    MakeSchedule::operator Schedule() const {
+        return Schedule(effectiveDate_, terminationDate_, tenor_, calendar_,
+                        convention_, terminationDateConvention_,
+                        rule_, endOfMonth_, firstDate_, nextToLastDate_);
+    } */
 
 }

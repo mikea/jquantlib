@@ -21,19 +21,14 @@ package org.jquantlib.testsuite.termstructures.yield;
 
 import java.util.List;
 
-import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.quotes.Handle;
-import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.yield.DepositRateHelper;
-import org.jquantlib.termstructures.yield.SwapRateHelper;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
+import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
 
@@ -164,7 +159,7 @@ public class PiecewiseYieldCurveTest {
 		public List<RateHelper<YieldTermStructure>> fraHelpers;
 		public List<RateHelper<YieldTermStructure>> bondHelpers;
 		public List<RateHelper<YieldTermStructure>> bmaHelpers;
-		//public List<Schedule> schedules;
+		public List<Schedule> schedules;
 		public YieldTermStructure termStructure;
        
 		/*
