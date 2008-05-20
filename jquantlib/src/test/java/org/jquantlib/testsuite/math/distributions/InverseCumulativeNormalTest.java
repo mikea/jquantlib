@@ -16,19 +16,20 @@ public class InverseCumulativeNormalTest {
 	@Test
 	public void testInverseCumulativNormal() {
 		
-		//FIXME: Add better 'good values' for this test. 
-		//FIXME: The test values are ok up to the 9th position compared to QuantLib. We need 15 positions.
-		double[][] testvalues = {   {0.01,-2.326347874214435},
-									{0.1, -1.2815515648423783},
-									{0.2, -0.8416212331497663},
-									{0.3, -0.5244005129936681},
-									{0.4, -0.2533471029978992},
+		// Test values have been compared with values produced with QuantLibXL in Excel.
+		// The error is between 0 and 7.99361E-15 (absolute value).
+		// This is the best result compared to Excel, Gnumeric and Quantrix 				
+		double[][] testvalues = {   {0.01,-2.326347874388028},
+									{0.1, -1.2815515641401563},
+									{0.2, -0.8416212327266185},
+									{0.3, -0.5244005132792953},
+									{0.4, -0.2533471028599986},
 									{0.5, 0.0},
-									{0.6, 0.25334710299789914},
-									{0.7, 0.5244005129936679},
-									{0.8, 0.8416212331497664},
-									{0.9, 1.2815515648423783},
-									{0.99, 2.326347874214435}};
+									{0.6, 0.2533471028599986},
+									{0.7, 0.5244005132792952},
+									{0.8, 0.8416212327266186},
+									{0.9, 1.2815515641401563},
+									{0.99, 2.326347874388028}};
 									
 									
 		InverseCumulativeNormal icn = new InverseCumulativeNormal();
