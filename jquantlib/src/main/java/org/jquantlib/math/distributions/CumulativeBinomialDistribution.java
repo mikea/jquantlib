@@ -28,6 +28,12 @@ package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Beta;
 
+/**
+ * 
+ * @author Richard Gomes
+ *
+ */
+
 //TODO: Add test case for the CumulativeBinomialDistribution
 
 public class CumulativeBinomialDistribution {

@@ -18,7 +18,6 @@
  When applicable, the originating copyright notice follows below.
  */
 
-
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.distributions.GammaFunction;
