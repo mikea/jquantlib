@@ -131,7 +131,7 @@ public class Period {
 			break;
 		case SEMI_ANNUAL:
 		case EVERY_FOURTH_DAY:
-		case QUARTELY:
+		case QUARTERLY:
 		case BI_MONTHLY:
 		case MONTHLY:
 			units = TimeUnit.MONTHS;

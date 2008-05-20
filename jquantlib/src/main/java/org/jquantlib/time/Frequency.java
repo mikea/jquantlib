@@ -50,7 +50,7 @@ public enum Frequency {
     /** once a year */			ANNUAL			 (1),
     /** twice a year */			SEMI_ANNUAL		 (2),
     /** every fourth month */	EVERY_FOURTH_DAY (3),
-    /** every third month */	QUARTELY		 (4),
+    /** every third month */	QUARTERLY		 (4),
     /** every second month */	BI_MONTHLY		 (6),
     /** once a month */			MONTHLY			 (12),
     /** every second week */	BI_WEEKLY		 (26),
@@ -76,7 +76,7 @@ public enum Frequency {
 		case 3:
 			return Frequency.EVERY_FOURTH_DAY;
 		case 4:
-			return Frequency.QUARTELY;
+			return Frequency.QUARTERLY;
 		case 6:
 			return Frequency.BI_MONTHLY;
 		case 12:

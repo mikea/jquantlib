@@ -19,6 +19,9 @@
  */
 package org.jquantlib.time;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jquantlib.time.calendars.NullCalendar;
@@ -287,94 +290,111 @@ public class Schedule {
 
 	public Schedule() {
 	}
-	
+
+	public Iterator<Date> getDatesAfter(Date date) {
+		List<Date> ldates = new ArrayList<Date>();
+		int index = -1;
+		for (int i = 0; i < dates.size(); i++) {
+			Date d = dates.get(i);
+			if (d.equals(date)) {
+				index = i;
+				break;
+			}
+		}
+		if (index > 0) {
+			for (int i = index; i < dates.size(); i++) {
+				ldates.add(dates.get(i));
+			}
+			return ldates.iterator();
+		}
+		return Collections.EMPTY_LIST.iterator();
+	}
+
+	public Date getNextDate(Date refDate) {
+		int index = -1;
+		for (int i = 0; i < dates.size(); i++) {
+			Date d = dates.get(i);
+			if (d.equals(refDate)) {
+				index = i;
+				break;
+			}
+		}
+		if (index >= 0 && index != dates.size() - 1) {
+			return dates.get(index + 1);
+		}
+		return null;
+	}
+
+	public Date getPreviousDate(Date refDate) {
+		int index = -1;
+		for (int i = 0; i < dates.size(); i++) {
+			Date d = dates.get(i);
+			if (d.equals(refDate)) {
+				index = i;
+				break;
+			}
+		}
+		if (index > 0) {
+			return dates.get(index - 1);
+		}
+		return null;
+	}
+
+	public boolean isRegular(int i) {
+		if (!fullInterface)
+			throw new IllegalStateException("full interface not available");
+
+		if (i > isRegular.size() && i < 0)
+			throw new IllegalArgumentException("index (" + i
+					+ ") must be in [1, " + isRegular.size() + "]");
+		return isRegular.get(i - 1);
+	}
+
 	/*
-	
-	std::vector<Date>::const_iterator
-    Schedule::lower_bound(const Date& refDate) const {
-        Date d = (refDate==Date() ?
-                  Settings::instance().evaluationDate() :
-                  refDate);
-        return std::lower_bound(dates_.begin(), dates_.end(), d);
-    }
-
-    Date Schedule::nextDate(const Date& refDate) const {
-        std::vector<Date>::const_iterator res = lower_bound(refDate);
-        if (res!=dates_.end())
-            return *res;
-        else
-            return Date();
-    }
-
-    Date Schedule::previousDate(const Date& refDate) const {
-        std::vector<Date>::const_iterator res = lower_bound(refDate);
-        if (res!=dates_.begin())
-            return *(--res);
-        else
-            return Date();
-    }
-
-    bool Schedule::isRegular(Size i) const {
-        QL_REQUIRE(fullInterface_, "full interface not available");
-        QL_REQUIRE(i<=isRegular_.size() && i>0,
-                   "index (" << i << ") must be in [1, " <<
-                   isRegular_.size() <<"]");
-        return isRegular_[i-1];
-    }
-
-
-    MakeSchedule::MakeSchedule(const Date& effectiveDate,
-                               const Date& terminationDate,
-                               const Period& tenor,
-                               const Calendar& calendar,
-                               BusinessDayConvention convention)
-    : calendar_(calendar),
-      effectiveDate_(effectiveDate), terminationDate_(terminationDate),
-      tenor_(tenor),
-      convention_(convention), terminationDateConvention_(convention),
-      rule_(DateGeneration::Backward), endOfMonth_(false),
-      firstDate_(Date()), nextToLastDate_(Date()) {}
-
-    MakeSchedule& MakeSchedule::withTerminationDateConvention(
-                                                BusinessDayConvention conv) {
-        terminationDateConvention_ = conv;
-        return *this;
-    }
-
-    MakeSchedule& MakeSchedule::withRule(DateGeneration::Rule r) {
-        rule_ = r;
-        return *this;
-    }
-
-    MakeSchedule& MakeSchedule::forwards() {
-        rule_ = DateGeneration::Forward;
-        return *this;
-    }
-
-    MakeSchedule& MakeSchedule::backwards() {
-        rule_ = DateGeneration::Backward;
-        return *this;
-    }
-
-    MakeSchedule& MakeSchedule::endOfMonth(bool flag) {
-        endOfMonth_ = flag;
-        return *this;
-    }
-
-    MakeSchedule& MakeSchedule::withFirstDate(const Date& d) {
-        firstDate_ = d;
-        return *this;
-    }
-
-    MakeSchedule& MakeSchedule::withNextToLastDate(const Date& d) {
-        nextToLastDate_ = d;
-        return *this;
-    }
-
-    MakeSchedule::operator Schedule() const {
-        return Schedule(effectiveDate_, terminationDate_, tenor_, calendar_,
-                        convention_, terminationDateConvention_,
-                        rule_, endOfMonth_, firstDate_, nextToLastDate_);
-    } */
+	 * Date Schedule::previousDate(const Date& refDate) const { std::vector<Date>::const_iterator
+	 * res = lower_bound(refDate); if (res!=dates_.begin()) return *(--res);
+	 * else return Date(); }
+	 * 
+	 * bool Schedule::isRegular(Size i) const { QL_REQUIRE(fullInterface_, "full
+	 * interface not available"); QL_REQUIRE(i<=isRegular_.size() && i>0,
+	 * "index (" << i << ") must be in [1, " << isRegular_.size() <<"]");
+	 * return isRegular_[i-1]; }
+	 * 
+	 * 
+	 * MakeSchedule::MakeSchedule(const Date& effectiveDate, const Date&
+	 * terminationDate, const Period& tenor, const Calendar& calendar,
+	 * BusinessDayConvention convention) : calendar_(calendar),
+	 * effectiveDate_(effectiveDate), terminationDate_(terminationDate),
+	 * tenor_(tenor), convention_(convention),
+	 * terminationDateConvention_(convention), rule_(DateGeneration::Backward),
+	 * endOfMonth_(false), firstDate_(Date()), nextToLastDate_(Date()) {}
+	 * 
+	 * MakeSchedule& MakeSchedule::withTerminationDateConvention(
+	 * BusinessDayConvention conv) { terminationDateConvention_ = conv; return
+	 * *this; }
+	 * 
+	 * MakeSchedule& MakeSchedule::withRule(DateGeneration::Rule r) { rule_ = r;
+	 * return *this; }
+	 * 
+	 * MakeSchedule& MakeSchedule::forwards() { rule_ = DateGeneration::Forward;
+	 * return *this; }
+	 * 
+	 * MakeSchedule& MakeSchedule::backwards() { rule_ =
+	 * DateGeneration::Backward; return *this; }
+	 * 
+	 * MakeSchedule& MakeSchedule::endOfMonth(bool flag) { endOfMonth_ = flag;
+	 * return *this; }
+	 * 
+	 * MakeSchedule& MakeSchedule::withFirstDate(const Date& d) { firstDate_ =
+	 * d; return *this; }
+	 * 
+	 * MakeSchedule& MakeSchedule::withNextToLastDate(const Date& d) {
+	 * nextToLastDate_ = d; return *this; }
+	 * 
+	 * MakeSchedule::operator Schedule() const { return Schedule(effectiveDate_,
+	 * terminationDate_, tenor_, calendar_, convention_,
+	 * terminationDateConvention_, rule_, endOfMonth_, firstDate_,
+	 * nextToLastDate_); }
+	 */
 
 }

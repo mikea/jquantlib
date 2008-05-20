@@ -19,18 +19,28 @@
  */
 package org.jquantlib.testsuite.termstructures.yield;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.Configuration;
+import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.daycounters.ActualActual.Convention;
+import org.jquantlib.quotes.Handle;
+import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.yield.DepositRateHelper;
+import org.jquantlib.termstructures.yield.SwapRateHelper;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 
 /**
  * @author Srinivas Hasti
@@ -155,106 +165,129 @@ public class PiecewiseYieldCurveTest {
 		public List<SimpleQuote> fraRates;
 		public List<SimpleQuote> prices;
 		public List<SimpleQuote> fractions;
-		public List<RateHelper<YieldTermStructure>> instruments;
-		public List<RateHelper<YieldTermStructure>> fraHelpers;
-		public List<RateHelper<YieldTermStructure>> bondHelpers;
-		public List<RateHelper<YieldTermStructure>> bmaHelpers;
+		public List<RateHelper> instruments;
+		public List<RateHelper> fraHelpers;
+		public List<RateHelper> bondHelpers;
+		public List<RateHelper> bmaHelpers;
 		public List<Schedule> schedules;
 		public YieldTermStructure termStructure;
        
-		/*
-		// cleanup
-		public SavedSettings backup;
-		public IndexHistoryCleaner cleaner;
+		
+		//public SavedSettings backup;
+		//public IndexHistoryCleaner cleaner;
 
 		// setup
 		public CommonVars()
 		{
 			// data
-			calendar = TARGET();
+			calendar = Target.getCalendar();
 			settlementDays = 2;
-			today = calendar.adjust(Date.todaysDate());
-			Settings.instance().evaluationDate() = today;
-			settlement = calendar.advance(today,settlementDays,TimeUnit.Days);
-			fixedLegConvention = BusinessDayConvention.Unadjusted;
-			fixedLegFrequency = Frequency.Annual;
-			fixedLegDayCounter = Thirty360();
+			today = calendar.advance(DateFactory.getFactory().getTodaysDate());
+			Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
+			settlement = calendar.advance(today,settlementDays,TimeUnit.DAYS);
+			fixedLegConvention = BusinessDayConvention.UNADJUSTED;
+			fixedLegFrequency = Frequency.ANNUAL;
+			fixedLegDayCounter = new org.jquantlib.daycounters.Thirty360();
 			bondSettlementDays = 3;
-			bondDayCounter = ActualActual();
-			bondConvention = BusinessDayConvention.Following;
+			bondDayCounter = ActualActual.getActualActual(Convention.BOND);
+			bondConvention = BusinessDayConvention.FOLLOWING;
 			bondRedemption = 100.0;
-			bmaFrequency = Frequency.Quarterly;
-			bmaConvention = BusinessDayConvention.Following;
-			bmaDayCounter = ActualActual();
+			bmaFrequency = Frequency.QUARTERLY;
+			bmaConvention = BusinessDayConvention.FOLLOWING;
+			bmaDayCounter = ActualActual.getActualActual(Convention.BOND);
 
-			deposits = (sizeof(GlobalMembersPiecewiseyieldcurve.depositData)/sizeof(GlobalMembersPiecewiseyieldcurve.depositData[0]));
-			fras = (sizeof(GlobalMembersPiecewiseyieldcurve.fraData)/sizeof(GlobalMembersPiecewiseyieldcurve.fraData[0]));
-			swaps = (sizeof(GlobalMembersPiecewiseyieldcurve.swapData)/sizeof(GlobalMembersPiecewiseyieldcurve.swapData[0]));
-			bonds = (sizeof(GlobalMembersPiecewiseyieldcurve.bondData)/sizeof(GlobalMembersPiecewiseyieldcurve.bondData[0]));
-			bmas = (sizeof(GlobalMembersPiecewiseyieldcurve.bmaData)/sizeof(GlobalMembersPiecewiseyieldcurve.bmaData[0]));
+			deposits = depositData.length;
+            fras = fraData.length;
+            swaps = swapData.length;
+            bonds = bondData.length;
+            bmas = bmaData.length;
 
-			// market elements
-			rates = std.<boost.shared_ptr<SimpleQuote> >vector(deposits+swaps);
-			fraRates = std.<boost.shared_ptr<SimpleQuote> >vector(fras);
-			prices = std.<boost.shared_ptr<SimpleQuote> >vector(bonds);
-			fractions = std.<boost.shared_ptr<SimpleQuote> >vector(bmas);
-			for (int i =0; i<deposits; i++)
-			{
-				rates[i] = boost.<SimpleQuote>shared_ptr(new SimpleQuote(GlobalMembersPiecewiseyieldcurve.depositData[i].rate/100));
-			}
-			for (int i =0; i<swaps; i++)
-			{
-				rates[i+deposits] = boost.<SimpleQuote>shared_ptr(new SimpleQuote(GlobalMembersPiecewiseyieldcurve.swapData[i].rate/100));
-			}
-			for (int i =0; i<fras; i++)
-			{
-				fraRates[i] = boost.<SimpleQuote>shared_ptr(new SimpleQuote(GlobalMembersPiecewiseyieldcurve.fraData[i].rate/100));
-			}
-			for (int i =0; i<bonds; i++)
-			{
-				prices[i] = boost.<SimpleQuote>shared_ptr(new SimpleQuote(GlobalMembersPiecewiseyieldcurve.bondData[i].price));
-			}
-			for (int i =0; i<bmas; i++)
-			{
-				fractions[i] = boost.<SimpleQuote>shared_ptr(new SimpleQuote(GlobalMembersPiecewiseyieldcurve.bmaData[i].rate/100));
-			}
+		   // market elements
+            rates =
+                new ArrayList<SimpleQuote>();
+            fraRates = new ArrayList<SimpleQuote>();
+            prices = new ArrayList<SimpleQuote>();
+            fractions = new ArrayList<SimpleQuote>();
+            for (int i=0; i<deposits; i++) {
+                rates.add(new SimpleQuote(depositData[i].rate/100));
+            }
+            for (int i=0; i<swaps; i++) {
+               rates.add(
+                                       new SimpleQuote(swapData[i].rate/100));
+            }
+            for (int i=0; i<fras; i++) {
+                fraRates.add(
+                                        new SimpleQuote(fraData[i].rate/100));
+            }
+            for (int i=0; i<bonds; i++) {
+                prices.add(
+                                          new SimpleQuote(bondData[i].price));
+            }
+            for (int i=0; i<bmas; i++) {
+                fractions.add(
+                                        new SimpleQuote(bmaData[i].rate/100));
+            }
 
-			// rate helpers
-			instruments = std.<boost.shared_ptr<RateHelper<YieldTermStructure>> >vector(deposits+swaps);
-			fraHelpers = std.<boost.shared_ptr<RateHelper<YieldTermStructure>> >vector(fras);
-			bondHelpers = std.<boost.shared_ptr<RateHelper<YieldTermStructure>> >vector(bonds);
-			schedules = std.<Schedule>vector(bonds);
-			bmaHelpers = std.<boost.shared_ptr<RateHelper<YieldTermStructure>> >vector(bmas);
+            // rate helpers
+            instruments =
+                new ArrayList<RateHelper> ();
+            fraHelpers = new ArrayList<RateHelper> ();
+            bondHelpers = new ArrayList<RateHelper>();
+            schedules = new ArrayList<Schedule>();
+            bmaHelpers = new ArrayList<RateHelper>();
+          /*
+            boost::shared_ptr<IborIndex> euribor6m(new Euribor6M);
+            for (Size i=0; i<deposits; i++) {
+                Handle<Quote> r(rates[i]);
+                instruments[i] = boost::shared_ptr<RateHelper>(new
+                    DepositRateHelper(r, depositData[i].n*depositData[i].units,
+                                      euribor6m->fixingDays(), calendar,
+                                      euribor6m->businessDayConvention(),
+                                      euribor6m->endOfMonth(),
+                                      euribor6m->dayCounter()));
+            }
+            for (Size i=0; i<swaps; i++) {
+                Handle<Quote> r(rates[i+deposits]);
+                instruments[i+deposits] = boost::shared_ptr<RateHelper>(new
+                    SwapRateHelper(r, swapData[i].n*swapData[i].units,
+                                   calendar,
+                                   fixedLegFrequency, fixedLegConvention,
+                                   fixedLegDayCounter, euribor6m));
+            }
 
-			boost.shared_ptr<IborIndex> euribor6m = new boost.shared_ptr(new Euribor6M);
-			for (int i =0; i<deposits; i++)
-			{
-				Handle<Quote>[] r = new Handle[i](rates);
-				instruments[i] = boost.<RateHelper<YieldTermStructure>>shared_ptr(new DepositRateHelper(r, GlobalMembersPiecewiseyieldcurve.depositData[i].n *GlobalMembersPiecewiseyieldcurve.depositData[i].units, euribor6m.fixingDays(), calendar, euribor6m.businessDayConvention(), euribor6m.endOfMonth(), euribor6m.dayCounter()));
-			}
-			for (int i =0; i<swaps; i++)
-			{
-				Handle<Quote>[] r = new Handle[i+deposits](rates);
-				instruments[i+deposits] = boost.<RateHelper<YieldTermStructure>>shared_ptr(new SwapRateHelper(r, GlobalMembersPiecewiseyieldcurve.swapData[i].n *GlobalMembersPiecewiseyieldcurve.swapData[i].units, calendar, fixedLegFrequency, fixedLegConvention, fixedLegDayCounter, euribor6m));
-			}
+            Euribor3M euribor3m;
+            for (Size i=0; i<fras; i++) {
+                Handle<Quote> r(fraRates[i]);
+                fraHelpers[i] = boost::shared_ptr<RateHelper>(new
+                    FraRateHelper(r, fraData[i].n, fraData[i].n + 3,
+                                  euribor3m.fixingDays(),
+                                  euribor3m.fixingCalendar(),
+                                  euribor3m.businessDayConvention(),
+                                  euribor3m.endOfMonth(),
+                                  euribor3m.dayCounter()));
+            }
 
-			Euribor3M euribor3m;
-			for (int i =0; i<fras; i++)
-			{
-				Handle<Quote>[] r = new Handle[i](fraRates);
-				fraHelpers[i] = boost.<RateHelper<YieldTermStructure>>shared_ptr(new FraRateHelper(r, GlobalMembersPiecewiseyieldcurve.fraData[i].n, GlobalMembersPiecewiseyieldcurve.fraData[i].n + 3, euribor3m.fixingDays(), euribor3m.fixingCalendar(), euribor3m.businessDayConvention(), euribor3m.endOfMonth(), euribor3m.dayCounter()));
-			}
-
-			for (int i =0; i<bonds; i++)
-			{
-				Handle<Quote>[] p = new Handle[i](prices);
-				Date maturity = calendar.advance(today, GlobalMembersPiecewiseyieldcurve.bondData[i].n, GlobalMembersPiecewiseyieldcurve.bondData[i].units);
-				Date issue = calendar.advance(maturity, -GlobalMembersPiecewiseyieldcurve.bondData[i].length, TimeUnit.Years);
-				std.vector<Double>[] coupons = new std.vector[i](1, GlobalMembersPiecewiseyieldcurve.bondData.coupon/100.0);
-				schedules[i] = Schedule(issue, maturity, Period(GlobalMembersPiecewiseyieldcurve.bondData[i].frequency), calendar, bondConvention, bondConvention, DateGeneration.Backward, false);
-				bondHelpers[i] = boost.<RateHelper<YieldTermStructure>>shared_ptr(new FixedRateBondHelper(p, bondSettlementDays, bondRedemption, schedules[i], coupons, bondDayCounter, bondConvention, bondRedemption, issue));
-			}
-		}*/
+            for (Size i=0; i<bonds; i++) {
+                Handle<Quote> p(prices[i]);
+                Date maturity =
+                    calendar.advance(today, bondData[i].n, bondData[i].units);
+                Date issue =
+                    calendar.advance(maturity, -bondData[i].length, Years);
+                std::vector<Rate> coupons(1, bondData[i].coupon/100.0);
+                schedules[i] = Schedule(issue, maturity,
+                                        Period(bondData[i].frequency),
+                                        calendar,
+                                        bondConvention, bondConvention,
+                                        DateGeneration::Backward, false);
+                bondHelpers[i] = boost::shared_ptr<RateHelper>(new
+                    FixedRateBondHelper(p,
+                                        bondSettlementDays,
+                                        bondRedemption, schedules[i],
+                                        coupons, bondDayCounter,
+                                        bondConvention,
+                                        bondRedemption, issue));
+            } */
+        }
 	}
 
 }
