@@ -81,8 +81,12 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
 		double z;
 		double r;
 		
+		// x has to be between 0.00 and 1.00
+		if (x <=0.0) return 0.00;
+		if (x >=1.0) return 1.00;
+		
 		if (sigma <= 0.0) throw new IllegalArgumentException("sigma must be greater than 0.0 ("+sigma+" not allowed)");
-
+		
 		if (x < x_low_) {
 			// Rational approximation for the lower region 0<x<u_low
 			z = Math.sqrt(-2.0*Math.log(x));
@@ -101,9 +105,9 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
              ((((d1_*z+d2_)*z+d3_)*z+d4_)*z+1.0);
 		}
 		
-	//	if (highPrecision == true) refine(z,x);
-		
 		CumulativeNormalDistribution f_ = new CumulativeNormalDistribution();
+		
+		// error
 		r = (f_.evaluate(z) - x) * Constants.M_SQRT_2 * Constants.M_SQRTPI * Math.exp(0.5 * z*z);
      
 		//  Halley's method
@@ -119,10 +123,8 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
 	// order) gives full machine precision.
 	// #define REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD
  	// error (f_(z) - x) divided by the cumulative's derivative
-	
-	//TODO: check whether this code is correctly translated.
-	// C++:
 	// r = (f_(z) - x) * M_SQRT2 * M_SQRTPI * exp(0.5 * z*z);
+	
 	private double refine(double z, double x){
 		
 		double r;
