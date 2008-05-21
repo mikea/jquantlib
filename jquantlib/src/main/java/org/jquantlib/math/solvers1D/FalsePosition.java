@@ -36,7 +36,7 @@ Cambridge University Press
 */
 
 //TODO FalsePosition: Add test case.
-public class FalsePosition extends AbstractSolver1D {
+public class FalsePosition extends AbstractSolver1D<UnaryFunctionDouble> {
 	
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {

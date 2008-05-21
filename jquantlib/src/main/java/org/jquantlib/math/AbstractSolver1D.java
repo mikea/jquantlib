@@ -21,11 +21,11 @@
 package org.jquantlib.math;
 
 /**
- * @author Richard Gomes
+ * @author <Richard Gomes>
  */
 
 //FIXME: refactor package "solvers1d"
-abstract public class AbstractSolver1D {
+abstract public class AbstractSolver1D<F extends UnaryFunctionDouble> {
 	
 	private static final int MAX_FUNCTION_EVALUATIONS = 100;
 
@@ -37,6 +37,10 @@ abstract public class AbstractSolver1D {
 	protected int evaluationNumber_;
 	protected double lowerBound_, upperBound_;
 
+	//
+	// public constructors
+	//
+	
 	public AbstractSolver1D() {
 		maxEvaluations_ = MAX_FUNCTION_EVALUATIONS;
 		lowerBoundEnforced_ = false;
@@ -50,8 +54,17 @@ abstract public class AbstractSolver1D {
 		upperBoundEnforced_ = upperBoundenforeced;
 	}
 
-	abstract protected double solveImpl(final UnaryFunctionDouble f, double accuracy);
+	//
+	// protected abstract methods
+	//
+	
+	abstract protected double solveImpl(final F f, double accuracy);
 
+	
+	//
+	// public methods
+	//
+	
 	/** This method returns the zero of the function <code>f</code>,
 	 * determined with the given accuracy <code>epsilon</code>;
 	 * depending on the particular solver, this might mean that
@@ -64,12 +77,10 @@ abstract public class AbstractSolver1D {
 	 *  scan the range of the possible bracketing values.
 	 *  */
 
-	public double solve(final UnaryFunctionDouble f, double accuracy, double guess,
-			double step) {
+	public double solve(final F f, double accuracy, double guess, double step) {
 
 		if (!(accuracy > 0.0)) {
-			throw new ArithmeticException("accuracy (" + accuracy
-					+ ") must be positive");
+			throw new ArithmeticException("accuracy (" + accuracy + ") must be positive");
 
 		}
 		// check whether we really want to use epsilon
@@ -147,12 +158,11 @@ abstract public class AbstractSolver1D {
 	//    f(x_\mathrm{max}) \leq 0 \leq f(x_\mathrm{min}) \f$ must
 	//    be true).
 	//*/
-	public double solve(final UnaryFunctionDouble f, double accuracy, double guess,
+	public double solve(final F f, double accuracy, double guess,
 			double xMin, double xMax) {
 
 		if (!(accuracy > 0.0)) {
-			throw new ArithmeticException("accuracy (" + accuracy
-					+ ") must be positive");
+			throw new ArithmeticException("accuracy (" + accuracy + ") must be positive");
 		}
 		// check whether we really want to use epsilon
 		accuracy = Math.max(accuracy, Constants.QL_EPSILON);
@@ -161,18 +171,15 @@ abstract public class AbstractSolver1D {
 		xMax_ = xMax;
 
 		if (!(xMin_ < xMax_)) {
-			throw new ArithmeticException("invalid range: xMin_ (" + xMin_
-					+ ") >= xMax_ (" + xMax_ + ")");
+			throw new ArithmeticException("invalid range: xMin_ (" + xMin_ + ") >= xMax_ (" + xMax_ + ")");
 		}
 
 		if (!(!lowerBoundEnforced_ || xMin_ >= lowerBound_)) {
-			throw new ArithmeticException("xMin_ (" + xMin_
-					+ ") < enforced low bound (" + lowerBound_ + ")");
+			throw new ArithmeticException("xMin_ (" + xMin_	+ ") < enforced low bound (" + lowerBound_ + ")");
 		}
 
 		if (!(!upperBoundEnforced_ || xMax_ <= upperBound_)) {
-			throw new ArithmeticException("xMax_ (" + xMax_
-					+ ") > enforced hi bound (" + upperBound_ + ")");
+			throw new ArithmeticException("xMax_ (" + xMax_ + ") > enforced hi bound (" + upperBound_ + ")");
 		}
 
 		fxMin_ = f.evaluate(xMin_);
@@ -186,18 +193,15 @@ abstract public class AbstractSolver1D {
 		evaluationNumber_ = 2;
 
 		if (!(fxMin_ * fxMax_ < 0.0)) {
-			throw new ArithmeticException("root not bracketed: f[" + xMin_
-					+ "," + xMax_ + "] -> [" + fxMin_ + "," + fxMax_ + "]");
+			throw new ArithmeticException("root not bracketed: f[" + xMin_ + "," + xMax_ + "] -> [" + fxMin_ + "," + fxMax_ + "]");
 		}
 
 		if (!(guess > xMin_)) {
-			throw new ArithmeticException("guess (" + guess + ") < xMin_ ("
-					+ xMin_ + ")");
+			throw new ArithmeticException("guess (" + guess + ") < xMin_ ("	+ xMin_ + ")");
 		}
 
 		if (!(guess < xMax_)) {
-			throw new ArithmeticException("guess (" + guess + ") > xMax_ ("
-					+ xMax_ + ")");
+			throw new ArithmeticException("guess (" + guess + ") > xMax_ ("	+ xMax_ + ")");
 		}
 
 		root_ = guess;
@@ -228,6 +232,11 @@ abstract public class AbstractSolver1D {
 		return evaluationNumber_;
 	}
 
+	
+	//
+	// private methods
+	//
+	
 	private double enforceBounds(double x) {
 		if (lowerBoundEnforced_ && x < lowerBound_)
 			return lowerBound_;
@@ -235,7 +244,5 @@ abstract public class AbstractSolver1D {
 			return upperBound_;
 		return x;
 	}
-
-	
 
 }

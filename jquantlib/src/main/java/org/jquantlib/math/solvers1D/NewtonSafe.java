@@ -21,8 +21,7 @@
 package org.jquantlib.math.solvers1D;
 
 import org.jquantlib.math.AbstractSolver1D;
-import org.jquantlib.math.UnaryFunctionDouble;
-import org.jquantlib.testsuite.math.NewtonDerivative;
+import org.jquantlib.math.distributions.Derivative;
 
 /**
  * 
@@ -35,16 +34,14 @@ Press, Teukolsky, Vetterling, and Flannery,
 "Numerical Recipes in C", 2nd edition,
 Cambridge University Press
 */
-public class NewtonSafe extends AbstractSolver1D {
+public class NewtonSafe extends AbstractSolver1D<Derivative> {
 	
 	@Override
-	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
+	protected double solveImpl(Derivative f, double xAccuracy) {
 
         double froot, dfroot, dx, dxold;
         double xh, xl;
         
-        NewtonDerivative d = new NewtonDerivative();
-
         // Orient the search so that f(xl) < 0
         if (fxMin_ < 0.0) {
             xl=xMin_;
@@ -63,11 +60,7 @@ public class NewtonSafe extends AbstractSolver1D {
         dx=dxold;
 
         froot = f.evaluate(root_);
-        
-        dfroot = d.derivative(root_); // derivative() is a user defined method
-        //QL_REQUIRE(dfroot != Null<Real>(),
-        //           "NewtonSafe requires function's derivative");
-        
+        dfroot = f.derivative(root_);
         evaluationNumber_++;
 
         while (evaluationNumber_<= getMaxEvaluations()) {
@@ -87,9 +80,11 @@ public class NewtonSafe extends AbstractSolver1D {
             // Convergence criterion
             if (Math.abs(dx) < xAccuracy)
                 return root_;
+            
             froot = f.evaluate(root_);
-            dfroot = d.derivative(root_); // derivative() is a user defined method
+            dfroot = f.derivative(root_);
             evaluationNumber_++;
+            
             if (froot < 0.0)
                 xl=root_;
             else

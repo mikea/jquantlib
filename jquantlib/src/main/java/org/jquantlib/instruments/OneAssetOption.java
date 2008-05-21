@@ -152,7 +152,7 @@ public class OneAssetOption extends Option {
 
         /* @Volatility */ double guess = (minVol+maxVol)/2.0;
         ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(engine, targetValue);
-        AbstractSolver1D solver = new BrentSolver1D(); // FIXME: (integration review)
+        AbstractSolver1D<UnaryFunctionDouble> solver = new BrentSolver1D();
         solver.setMaxEvaluations(maxEvaluations);
         /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
         return result;

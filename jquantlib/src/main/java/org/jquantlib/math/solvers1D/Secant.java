@@ -35,7 +35,7 @@ Cambridge University Press
 */
 
 // TODO Secant.java: Add test case.
-public class Secant extends AbstractSolver1D {
+public class Secant extends AbstractSolver1D<UnaryFunctionDouble> {
 	
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy)  {

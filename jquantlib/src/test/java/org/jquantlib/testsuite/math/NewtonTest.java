@@ -20,9 +20,9 @@
 
 package org.jquantlib.testsuite.math;
 
-import org.jquantlib.math.UnaryFunctionDouble;
 import static org.junit.Assert.assertEquals;
 
+import org.jquantlib.math.distributions.Derivative;
 import org.jquantlib.math.solvers1D.Newton;
 import org.junit.Test;
 
@@ -40,12 +40,17 @@ public class NewtonTest {
 		double xMin = 0.0;
 		double xMax = 3.0;
 		
-		UnaryFunctionDouble f = new UnaryFunctionDouble() {
+		final Derivative f = new Derivative() {
 
+			@Override
 			public double evaluate(double x) {
 				return x*x-1;
 			}
 			
+			@Override
+			public double derivative (double x) {
+				return 2*x;
+			}
 		};
 		
 		Newton newt = new Newton();

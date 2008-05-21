@@ -37,7 +37,7 @@ Cambridge University Press
 */
 
 // TODO Ridder.java: Add Test case.
-public class Ridder extends AbstractSolver1D {
+public class Ridder extends AbstractSolver1D<UnaryFunctionDouble> {
 	
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAcc){

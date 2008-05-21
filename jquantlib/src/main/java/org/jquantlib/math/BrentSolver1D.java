@@ -25,7 +25,7 @@ package org.jquantlib.math;
  */
 
 // FIXME: refactor to "Brent" under package "solvers1d"
-public class BrentSolver1D extends AbstractSolver1D {
+public class BrentSolver1D extends AbstractSolver1D<UnaryFunctionDouble> {
 
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {

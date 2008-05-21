@@ -21,9 +21,7 @@
 package org.jquantlib.math.solvers1D;
 
 import org.jquantlib.math.AbstractSolver1D;
-import org.jquantlib.math.UnaryFunctionDouble;
-import org.jquantlib.math.solvers1D.NewtonSafe;
-import org.jquantlib.testsuite.math.NewtonDerivative;
+import org.jquantlib.math.distributions.Derivative;
 
 
 /**
@@ -37,19 +35,15 @@ Press, Teukolsky, Vetterling, and Flannery,
 "Numerical Recipes in C", 2nd edition,
 Cambridge University Press
 */
-public class Newton extends AbstractSolver1D {
+public class Newton extends AbstractSolver1D<Derivative> {
 	
 	@Override
-	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
+	protected double solveImpl(Derivative f, double xAccuracy) {
 		
 		double froot, dfroot, dx;
 
-		NewtonDerivative d = new NewtonDerivative();
-		
         froot = f.evaluate(root_);
-        dfroot = d.derivative(root_); // derivative() is a user defined method
-       //  QL_REQUIRE(dfroot != Null<Real>(),
-       //            "Newton requires function's derivative");
+        dfroot = f.derivative(root_);
         evaluationNumber_++;
 
         while (evaluationNumber_<= getMaxEvaluations()) {
@@ -64,7 +58,7 @@ public class Newton extends AbstractSolver1D {
             if (Math.abs(dx) < xAccuracy)
                 return root_;
             froot = f.evaluate(root_);
-            dfroot = d.derivative(root_); // derivative() is a user defined method
+            dfroot = f.derivative(root_);
             evaluationNumber_++;
         }
 		throw new ArithmeticException("maximum number of function evaluations ("

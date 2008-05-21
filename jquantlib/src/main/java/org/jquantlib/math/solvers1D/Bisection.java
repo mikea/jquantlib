@@ -40,7 +40,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
 	University Press
 	 */
 
-public class Bisection extends AbstractSolver1D  {
+public class Bisection extends AbstractSolver1D<UnaryFunctionDouble>  {
 	
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
