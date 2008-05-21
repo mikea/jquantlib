@@ -7,7 +7,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
 import org.junit.Test;
 
 /**
- * @author <Richard Gomes>
+ * @author Richard Gomes
  */
 public class BrentSolver1dTest {
 
