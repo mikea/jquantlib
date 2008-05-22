@@ -21,59 +21,53 @@
 
 package org.jquantlib.math.distributions;
 
+import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.Factorial;
+import org.jquantlib.math.Constants;
 
 /**
  * 
  * @author Dominik Holenstein
+ * <p>
+ * <strong>Inverse cumulative Poisson distribution function</strong>
+   <p>
+   Test the correctness of the returned value is tested by
+   checking it against known good results.
  *
  */
 
-//TODO InverseCumulativePoissonDistribution: Translate the C++ code
-public class InverseCumulativePoissonDistribution {
+// TODO InverseCumulativePoissonDistribution: Add test case.
+public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble {
 	
-/*
- //! Inverse cumulative Poisson distribution function
-    /*! \test the correctness of the returned value is tested by
-              checking it against known good results.
+	private double lambda_;
+
+      // public:
+      //   InverseCumulativePoisson(Real lambda = 1.0);
     
-    class InverseCumulativePoisson : public std::unary_function<Real,Real> {
-      public:
-        InverseCumulativePoisson(Real lambda = 1.0);
-        Real operator()(Real x) const;
-      private:
-        Real lambda_;
-        Real calcSummand(BigNatural index) const;
-    };
-    
-    inline InverseCumulativePoisson::InverseCumulativePoisson(Real lambda)
-    : lambda_(lambda) {
-        QL_REQUIRE(lambda_ > 0.0, "lambda must be positive");
+    public InverseCumulativePoissonDistribution(double lambda) {
+    	lambda_ = lambda;
+    	lambda_ = 1.0;
+    	if(lambda_ <= 0.0) throw new ArithmeticException("lambda must be positive");
     }
 
-    inline Real InverseCumulativePoisson::operator()(Real x) const {
-        QL_REQUIRE(x >= 0.0 && x <= 1.0,
-                   "Inverse cumulative Poisson distribution is "
+    public double evaluate (double x)  {
+        if(x <= 0.0 && x >= 1.0) throw new ArithmeticException(
+                   "Inverse cumulative Poisson distribution is " +
                    "only defined on the interval [0,1]");
 
-        if (x == 1.0)
-            return QL_MAX_REAL;
+        if (x == 1.0) return Constants.QL_MAX_REAL;
 
-        Real sum = 0.0;
-        BigNatural index = 0;
+        double sum = 0.0;
+        int index = 0;
         while (x > sum) {
             sum += calcSummand(index);
             index++;
         }
-
-        return Real(index-1);
+        return (double)(index-1);
     }
 
-    inline Real InverseCumulativePoisson::calcSummand(BigNatural index) const {
-        return std::exp(-lambda_) * std::pow(lambda_, Integer(index)) /
-            Factorial::get(index);
-    }
-
- */
-
+	private double calcSummand(int index){
+		Factorial fact = new Factorial();
+		return Math.exp(-lambda_) * Math.pow(lambda_, index) / fact.get(index);
+	}
 }

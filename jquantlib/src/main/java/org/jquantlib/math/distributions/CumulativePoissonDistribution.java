@@ -26,34 +26,40 @@ import org.jquantlib.math.distributions.IncompleteGamma;
 /**
  * 
  * @author Dominik Holenstein
+ * <p>
+ * 
+ * <strong>Cumulative Poisson distribution function</strong><br>
+ * 
+    This function provides an approximation of the
+    integral of the Poisson distribution.<p>
+
+     For this implementation see
+     "Numerical Recipes in C", 2nd edition,
+     Press, Teukolsky, Vetterling, Flannery, chapter 6<p>
+
+     Test the correctness of the returned value is tested by
+     checking it against known good results
  *
  */
 
-//TODO CumulativePoissonDistribution: Translate the C++ code
+//TODO CumulativePoissonDistribution: Write a test case.
 public class CumulativePoissonDistribution {
-	
-/*
-
-//! Cumulative Poisson distribution function
-    /*! This function provides an approximation of the
-        integral of the Poisson distribution.
-
-        For this implementation see
-        "Numerical Recipes in C", 2nd edition,
-        Press, Teukolsky, Vetterling, Flannery, chapter 6
-
-        \test the correctness of the returned value is tested by
-              checking it against known good results.
-   
-    class CumulativePoissonDistribution
-        : public std::unary_function<Real,Real> {
-      public:
-        CumulativePoissonDistribution(Real mu) : mu_(mu) {}
-        Real operator()(BigNatural k) const {
-            return 1.0 - incompleteGammaFunction(k+1, mu_);
-        }
-      private:
-        Real mu_;
-    };
-*/
+		
+		private double mu_;
+		
+		private double accuracy = 1.0e-15;
+		private int maxIteration = 100;
+            
+		public CumulativePoissonDistribution(double mu) {
+			mu_ = mu;
+		}
+        
+		// TODO Check double k_ = (double)k; -> is this cast a good idea?
+        double evaluate (int k){
+        	
+        	// this cast is necessary because the incompleteGammaFunction requires double,double,double,int parameters.
+        	double k_ = (double)k;
+        	IncompleteGamma incmplgamma = new IncompleteGamma();
+            return 1.0 - incmplgamma.incompleteGammaFunction(k_+1, mu_, accuracy, maxIteration);
+        } 
 }

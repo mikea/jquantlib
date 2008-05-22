@@ -9,6 +9,7 @@ import org.jquantlib.math.distributions.GammaFunction;
  */
 public class Factorial {
 
+	
 
 	/**
 	 * Computes n factorial, <code>n!</code> 
@@ -71,11 +72,7 @@ public class Factorial {
                					403291461126605635584000000.0,       10888869450418352160768000000.0
 
 	};
-
 	
 	private static final int _tabulated = _firstFactorials.length;
-
-
-
 }
 

@@ -78,9 +78,9 @@ public class IncompleteGamma {
 
     public double incompleteGammaFunctionContinuedFractionRepr(double a, double x,
                                                       double accuracy,
-                                                      Integer maxIteration) {
+                                                      int maxIteration) {
 
-        Integer i;
+        int i;
         double an, b, c, d, del, h;
         
         GammaFunction gf = new GammaFunction();

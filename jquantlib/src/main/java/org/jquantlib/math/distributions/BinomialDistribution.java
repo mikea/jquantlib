@@ -30,7 +30,6 @@ import org.jquantlib.math.Factorial;
 
 public class BinomialDistribution {
 	
-	//TODO: Move CummulativeBinomialDistribution to a seperate class -> Dominik
 	//TODO: Write tests -> Dominik
 	//TODO: Use Colt -> Dominik
 	
@@ -61,7 +60,7 @@ public class BinomialDistribution {
 
 	}
 	
-	
+	// TODO Consider developing an UnaryFunctionSomething for int vars.
 	public double evaluate(int k) {
 
         if (k > n_) return 0.0;
