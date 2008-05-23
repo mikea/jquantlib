@@ -24,7 +24,6 @@ package org.jquantlib.math.solvers1D;
  * @author Dominik Holenstein
  */
 
-//TODO Bisection: Add test case.
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
 
