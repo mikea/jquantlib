@@ -9,6 +9,8 @@ import org.junit.Test;
 /**
  * @author Richard Gomes
  */
+
+// TODO Move this test case to testsuite/math/solvers1D
 public class BrentSolver1dTest {
 
 	@Test

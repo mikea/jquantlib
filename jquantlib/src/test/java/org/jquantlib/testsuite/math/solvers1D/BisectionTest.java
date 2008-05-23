@@ -18,12 +18,12 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.testsuite.math;
+package org.jquantlib.testsuite.math.solvers1D;
 
 import static org.junit.Assert.assertEquals;
 
 import org.jquantlib.math.distributions.Derivative;
-import org.jquantlib.math.solvers1D.NewtonSafe;
+import org.jquantlib.math.solvers1D.Bisection;
 import org.junit.Test;
 
 /**
@@ -32,7 +32,8 @@ import org.junit.Test;
  *
  */
 
-public class NewtonSafeTest {
+// TODO Make this test JUnit 4.4 conform.
+public class BisectionTest {
 	
 	@Test
 	public void testNewtonSafe() {
@@ -55,17 +56,17 @@ public class NewtonSafeTest {
 			}
 		};
 		
-		NewtonSafe newtonsafe = new NewtonSafe();
+		Bisection bisection = new Bisection();
 		
-		double root = newtonsafe.solve(f, accuracy, guess, xMin, xMax);
+		double root = bisection.solve(f, accuracy, guess, xMin, xMax);
 		
 		assertEquals(1.0, root, accuracy);
-		assertEquals(100, newtonsafe.getMaxEvaluations());
+		assertEquals(100, bisection.getMaxEvaluations());
 		
-		root = newtonsafe.solve(f, accuracy, 0.01, 0.1);
+		root = bisection.solve(f, accuracy, 0.01, 0.1);
 
 		assertEquals(1.0, root, accuracy);
-		assertEquals(10, newtonsafe.getNumEvaluations());
+		assertEquals(56, bisection.getNumEvaluations());
 	}
 
 }

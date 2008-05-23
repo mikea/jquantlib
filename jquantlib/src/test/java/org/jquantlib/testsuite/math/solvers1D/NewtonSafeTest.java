@@ -18,22 +18,25 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.testsuite.math;
+package org.jquantlib.testsuite.math.solvers1D;
 
 import static org.junit.Assert.assertEquals;
 
 import org.jquantlib.math.distributions.Derivative;
-import org.jquantlib.math.solvers1D.Newton;
+import org.jquantlib.math.solvers1D.NewtonSafe;
 import org.junit.Test;
 
 /**
+ * 
  * @author Dominik Holenstein
+ *
  */
 
-public class NewtonTest {
+//TODO Make this test JUnit 4.4 conform.
+public class NewtonSafeTest {
 	
 	@Test
-	public void testNewton () {
+	public void testNewtonSafe() {
 		
 		double accuracy = 1.0e-15;
 		double guess = 1.5;
@@ -53,17 +56,17 @@ public class NewtonTest {
 			}
 		};
 		
-		Newton newt = new Newton();
+		NewtonSafe newtonsafe = new NewtonSafe();
 		
-		double root = newt.solve(f, accuracy, guess, xMin, xMax);
+		double root = newtonsafe.solve(f, accuracy, guess, xMin, xMax);
 		
 		assertEquals(1.0, root, accuracy);
-		assertEquals(100, newt.getMaxEvaluations());
+		assertEquals(100, newtonsafe.getMaxEvaluations());
 		
-		root = newt.solve(f, accuracy, 0.01, 0.1);
+		root = newtonsafe.solve(f, accuracy, 0.01, 0.1);
 
 		assertEquals(1.0, root, accuracy);
-		assertEquals(10, newt.getNumEvaluations());
+		assertEquals(10, newtonsafe.getNumEvaluations());
 	}
-}
 
+}
