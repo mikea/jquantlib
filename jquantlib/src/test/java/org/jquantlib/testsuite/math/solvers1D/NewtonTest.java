@@ -20,7 +20,7 @@
 
 package org.jquantlib.testsuite.math.solvers1D;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.Derivative;
 import org.jquantlib.math.solvers1D.Newton;
@@ -30,7 +30,6 @@ import org.junit.Test;
  * @author Dominik Holenstein
  */
 
-//TODO Make this test JUnit 4.4 conform.
 public class NewtonTest {
 	
 	@Test
@@ -58,13 +57,27 @@ public class NewtonTest {
 		
 		double root = newt.solve(f, accuracy, guess, xMin, xMax);
 		
-		assertEquals(1.0, root, accuracy);
-		assertEquals(100, newt.getMaxEvaluations());
+		// assertEquals(1.0, root, accuracy);
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
+		
+		// assertEquals(100, newt.getMaxEvaluations());
+		if(newt.getMaxEvaluations() != 100){
+			fail("expected: 100" + " but was: " + newt.getMaxEvaluations());
+		}
 		
 		root = newt.solve(f, accuracy, 0.01, 0.1);
 
-		assertEquals(1.0, root, accuracy);
-		assertEquals(10, newt.getNumEvaluations());
+		// assertEquals(1.0, root, accuracy);
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
+		
+		//assertEquals(10, newt.getNumEvaluations());
+		if(newt.getNumEvaluations() != 10){
+			fail("expected: 10" + " but was: " + newt.getNumEvaluations());
+		}
 	}
 }
 

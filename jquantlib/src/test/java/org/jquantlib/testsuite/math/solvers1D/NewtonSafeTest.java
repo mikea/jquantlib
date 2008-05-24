@@ -78,7 +78,7 @@ public class NewtonSafeTest {
 		
 		//assertEquals(10, newtonsafe.getNumEvaluations());
 		if(newtonsafe.getNumEvaluations() != 10){
-			fail("expected: 10" + " but was: " + newtonsafe.getMaxEvaluations());
+			fail("expected: 10" + " but was: " + newtonsafe.getNumEvaluations());
 		}
 	}
 }

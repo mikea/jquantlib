@@ -20,7 +20,7 @@
 
 package org.jquantlib.testsuite.math.solvers1D;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.Derivative;
 import org.jquantlib.math.solvers1D.Bisection;
@@ -60,13 +60,28 @@ public class BisectionTest {
 		
 		double root = bisection.solve(f, accuracy, guess, xMin, xMax);
 		
-		assertEquals(1.0, root, accuracy);
-		assertEquals(100, bisection.getMaxEvaluations());
+		// assertEquals(1.0, root, accuracy);
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
+		
+		// assertEquals(100, bisection.getMaxEvaluations());
+		if(bisection.getMaxEvaluations() != 100){
+			fail("expected: 100" + " but was: " + bisection.getMaxEvaluations());
+		}
 		
 		root = bisection.solve(f, accuracy, 0.01, 0.1);
 
-		assertEquals(1.0, root, accuracy);
-		assertEquals(56, bisection.getNumEvaluations());
+		// assertEquals(1.0, root, accuracy);
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
+		
+		// TODO Check why getNumEvalutions is 56 with guess = 0.01 and step = 0.1
+		//assertEquals(56, bisection.getNumEvaluations());
+		if(bisection.getNumEvaluations() != 56){
+			fail("expected: 56" + " but was: " + bisection.getNumEvaluations());
+		}
+		
 	}
-
 }
