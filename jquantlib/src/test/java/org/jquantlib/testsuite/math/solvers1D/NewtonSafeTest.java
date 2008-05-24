@@ -20,7 +20,7 @@
 
 package org.jquantlib.testsuite.math.solvers1D;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.Derivative;
 import org.jquantlib.math.solvers1D.NewtonSafe;
@@ -32,7 +32,6 @@ import org.junit.Test;
  *
  */
 
-//TODO Make this test JUnit 4.4 conform.
 public class NewtonSafeTest {
 	
 	@Test
@@ -60,13 +59,26 @@ public class NewtonSafeTest {
 		
 		double root = newtonsafe.solve(f, accuracy, guess, xMin, xMax);
 		
-		assertEquals(1.0, root, accuracy);
-		assertEquals(100, newtonsafe.getMaxEvaluations());
+		// assertEquals(1.0, root, accuracy);
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
+		
+		// assertEquals(100, newtonsafe.getMaxEvaluations());
+		if(newtonsafe.getMaxEvaluations() != 100){
+			fail("expected: 100" + " but was: " + newtonsafe.getMaxEvaluations());
+		}
 		
 		root = newtonsafe.solve(f, accuracy, 0.01, 0.1);
 
-		assertEquals(1.0, root, accuracy);
-		assertEquals(10, newtonsafe.getNumEvaluations());
+		// assertEquals(1.0, root, accuracy);
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
+		
+		//assertEquals(10, newtonsafe.getNumEvaluations());
+		if(newtonsafe.getNumEvaluations() != 10){
+			fail("expected: 10" + " but was: " + newtonsafe.getMaxEvaluations());
+		}
 	}
-
 }
