@@ -1,6 +1,7 @@
 package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.junit.Test;
@@ -11,8 +12,9 @@ import org.junit.Test;
 public class NormalDistributionTest {
 	
 	@Test
-	public void testKnownGoodValuesFromAbramStegun() {
+	public void testNormalDistribution() {
 		
+		// good values from Abram, Stegun
 		double[][] testvalues = {	{0.0, 0.398942280401433},
 									{1.0, 0.241970724519143},
 									{2.0, 0.053990966513188},
@@ -28,10 +30,16 @@ public class NormalDistributionTest {
 			double expected = testvalues[i][1];
 			double computed = normal.evaluate(z);
 			double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
-			assertEquals(expected, computed,tolerance);
-			assertEquals(expected, normal.evaluate(-z),tolerance);
 			
+			//assertEquals(expected, computed,tolerance);
+			if(expected-computed>tolerance){
+				fail("expected : " + expected + " but was "+ computed);
+			}
+			
+			//assertEquals(expected, normal.evaluate(-z),tolerance);
+			if(Math.abs(expected-normal.evaluate(-z))>tolerance){
+				fail("expected: " + expected + " but was " + normal.evaluate(-z));
+			}
 		}
 	}
-
 }

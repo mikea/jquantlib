@@ -59,7 +59,6 @@ public class CumulativeBinomialDistrubutionTest {
 		for (int i=0;i<testvalues.length;i++) {
 			double expected = testvalues[i];
 			double realised = cumbinomdist.evaluate(i); // i = number of successful events
-			// 	System.out.println(realised);
 			double tolerance = 1.0e-11;
 			if (Math.abs(expected-realised)>tolerance) {
 				fail("x: " + i + " expected: " + expected + " realised: " + realised);

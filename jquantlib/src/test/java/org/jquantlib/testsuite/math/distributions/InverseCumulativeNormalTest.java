@@ -36,7 +36,7 @@ public class InverseCumulativeNormalTest {
 	@Test
 	public void testInverseCumulativNormal() {
 		
-		// Test values have been compared with values produced with QuantLibXL in Excel.
+		// Test values have been compared with values produced by QuantLibXL in Excel.
 		// The error is between 0 and 7.99361E-15 (absolute value).
 		// This is the best result compared to Excel, Gnumeric and Quantrix 
 		// TODO Fix the error compared to QuantLib

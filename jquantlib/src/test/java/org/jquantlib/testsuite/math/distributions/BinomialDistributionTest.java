@@ -21,7 +21,7 @@
 
 package org.jquantlib.testsuite.math.distributions;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.BinomialDistribution;
 import org.junit.Test;
@@ -64,11 +64,14 @@ public class BinomialDistributionTest {
 			int z = i;
 			double expected = testvalues[i];
 			double computed = binomdist.evaluate(z);
-			// System.out.println("computed: " + computed); // --> for testing while developing
+			
 			// double tolerance = (z<6 ) ? 1.0e-15: 1.0e-10;
-			double tolerance = 1.0e-10;
-			// System.out.println("tolerance: " + tolerance); // --> for testing while developing
-			assertEquals(expected, computed, tolerance);			
+			double tolerance = 1.0e-15; // try to to get 1.0e-15 accuracy whenever possible
+			
+			//assertEquals(expected, computed, tolerance);
+			if(computed - expected > tolerance){
+				fail("expected: " +  expected + " but was: " + computed);
+			}
 		}
 	}
 }

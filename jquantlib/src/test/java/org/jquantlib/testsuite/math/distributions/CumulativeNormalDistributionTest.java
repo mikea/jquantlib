@@ -20,7 +20,7 @@
 
 package org.jquantlib.testsuite.math.distributions;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.junit.Test;
@@ -63,25 +63,49 @@ public class CumulativeNormalDistributionTest {
 			double expected = testvalues[i][1];
 			double computed = cnd.evaluate(z);
 			double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
-			assertEquals(expected, computed,tolerance);
-			assertEquals(1.0, computed+ cnd.evaluate(-z),tolerance);
 			
+			
+			// assertEquals(expected, computed,tolerance);
+			if(expected - computed > tolerance){
+				fail("expected:  + " + expected + " but was " + computed);
+			}
+			
+			// assertEquals(1.0, computed+ cnd.evaluate(-z),tolerance);
+			if (Math.abs(1.0-(computed+cnd.evaluate(-z)))>tolerance) {
+				fail("expected: 1.0" + " but is: " + computed + cnd.evaluate(-z));
+			}
 		}
 	}
 	
 	@Test
 	public void testExtremes(){
 		double z = -40;
+		// double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
+		double tolerance = 1.0e-15;
+		
 		CumulativeNormalDistribution cnd = new CumulativeNormalDistribution();
 		
-		assertEquals(0, cnd.evaluate(z),1.0e-15);
-		z = -10;
-		assertEquals(0, cnd.evaluate(z),1.0e-15);
-		z = 10;
-		assertEquals(1.0, cnd.evaluate(z),1.0e-15);
-		z = 40;
-		assertEquals(1.0, cnd.evaluate(z),1.0e-15);
+		// assertEquals(0, cnd.evaluate(z),1.0e-15);
+		if (Math.abs(0.0-(cnd.evaluate(z)))>tolerance) {
+			fail("expected: 1.0" + " but is: " + cnd.evaluate(z));
+		}
 		
-	}
+		z = -10;
+		// assertEquals(0, cnd.evaluate(z),1.0e-15);
+		if (Math.abs(0.0-cnd.evaluate(z))>tolerance) {
+			fail("expected: 1.0" + " but is: " + cnd.evaluate(z));
+		}
 	
+		z = 10;
+		// assertEquals(1.0, cnd.evaluate(z),1.0e-15);
+		if (Math.abs(1.0-(cnd.evaluate(z)))>tolerance) {
+			fail("expected: 1.0" + " but is: " + cnd.evaluate(z));
+		}
+		
+		z = 40;
+		// assertEquals(1.0, cnd.evaluate(z),1.0e-15);
+		if (Math.abs(1.0-(cnd.evaluate(z)))>tolerance) {
+			fail("expected: 1.0" + " but is: " + cnd.evaluate(z));
+		}
+	}
 }

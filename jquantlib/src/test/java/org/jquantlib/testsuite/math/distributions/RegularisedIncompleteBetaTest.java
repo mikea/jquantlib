@@ -16,6 +16,7 @@ public class RegularisedIncompleteBetaTest {
 		
 		RegularisedIncompleteBeta beta = new RegularisedIncompleteBeta();
 		
+		// FIXME Is 1.0e-6 accuracy ok?
 		double[][] values = { {30, 5, 0.7, 0.0116578},
 							  {30, 5, 0.94, 0.94936},
 							  {30, 5, 0.96, 0.989182},

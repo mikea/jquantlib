@@ -31,9 +31,10 @@ import org.junit.Test;
  * @author Dominik Holenstein
  **/
 
+
 public class GammaDistributionTest {
 	
-	//FIXME Add more and better test values for the test.
+	//FIXME Compare the test values to QuantLib
 	@Test
 	public void testGammaDisribution() {
 		
@@ -54,40 +55,50 @@ public class GammaDistributionTest {
 									{14.0, 8.315287191035681E-7},
 									{15.0, 3.0590232050182594E-7}};
 			
-		
-		/*
 		// for a = 0.1
 		double[][] testvalues2= {	{1.0, 0.9758726484126121},
-									{2.0, 0.00567382397981},
+									{2.0, 0.005673823979811235},
 									{3.0, 0.001565271747114275},
-									{4.0, 0.01607265197947},
-									{5.0, 0.01189704436616},
-									{6.0, 0.00913579848625},
-									{7.0, 0.00719556586135},
-									{8.0, 0.00577354761971},
-									{9.0, 0.00469868178577},
-									{10.0, 0.00386691694371},
-									{11.0, 0.00321130813348},
-									{12.0, 0.0026868463172},
-									{13.0, 0.00226218168765},
-									{14.0, 0.00191483703772},
-									{15.0, 0.00162830392598}};
-		*/
-							
-		double a = 1.0; // alpha
+									{4.0, 4.6461128723220273E-4},
+									{5.0, 1.439389658467268E-4},
+									{6.0, 4.587266119320674E-5},
+									{7.0, 1.4917168148427797E-5},
+									{8.0, 4.924807948019276E-6},
+									{9.0, 1.645169609700308E-6},
+									{10.0, 5.547985717901634E-7},
+									{11.0, 1.8854922924246192E-7},
+									{12.0, 6.449477029349438E-8},
+									{13.0, 2.2182342798583913E-8},
+									{14.0, 7.665444025768806E-9},
+									{15.0, 2.659774281674882E-9}};
 		
+		// Test for a = 1.0 (alpha)
+		double a = 1.0; 
 		GammaDistribution gammDistribution = new GammaDistribution(a);
 		for (int i=0;i<testvalues.length;i++) {
 			double expected = testvalues[i][1];
 			double x = testvalues[i][0];
-			double realised = gammDistribution.evaluate(x);
-			// System.out.println(realised);
-			double tolerance = 1.0e-10;
-			if (Math.abs(expected-realised)>tolerance) {
-				fail("x: " + x + " expected: " + expected + " realised: " + realised);
+			double computed = gammDistribution.evaluate(x);
+			// System.out.println(computed); // for testing
+			double tolerance = 1.0e-15;
+			if (Math.abs(expected-computed)>tolerance) {
+				fail("x: " + x + " expected: " + expected + " realised: " + computed);
+			}
+		}
+		
+		// Test for a = 0.1 (alpha)
+		a = 0.1;
+		GammaDistribution gammDist = new GammaDistribution(a);
+		for (int i=0;i<testvalues2.length;i++) {
+			double expected = testvalues2[i][1];
+			double x = testvalues2[i][0];
+			double computed = gammDist.evaluate(x);
+			// System.out.println(computed); // for testing
+			double tolerance = 1.0e-15;
+			if (Math.abs(expected-computed)>tolerance) {
+				fail("x: " + x + " expected: " + expected + " realised: " + computed);
 			}
 		}
 	}
-	
 }
 
