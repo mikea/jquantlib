@@ -42,7 +42,7 @@ public class NonCentralChiSquaredDistribution implements UnaryFunctionDouble {
 		ncp_ = ncp;
 	}
 	
-	public double evaluate(double x) {
+	public double evaluate(double x) /* @Read-only */ {
 		//C++ appears to be based on Algorithm AS 275
 		//with perhaps one addition, see below
         if (x <= 0.0)

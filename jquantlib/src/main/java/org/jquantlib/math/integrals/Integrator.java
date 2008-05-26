@@ -10,4 +10,5 @@ public interface Integrator {
 	double integrate(UnaryFunctionDouble f, double a, double b);
 	
 	int getNumberOfEvaluations();
+	
 }

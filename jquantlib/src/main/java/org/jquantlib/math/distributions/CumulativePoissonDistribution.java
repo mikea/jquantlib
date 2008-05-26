@@ -55,7 +55,7 @@ public class CumulativePoissonDistribution {
 		}
         
 		// TODO Check double k_ = (double)k; -> is this cast a good idea?
-        double evaluate (int k){
+       public  double evaluate (int k) /* @Read-only */ {
         	
         	// this cast is necessary because the incompleteGammaFunction requires double,double,double,int parameters.
         	double k_ = (double)k;

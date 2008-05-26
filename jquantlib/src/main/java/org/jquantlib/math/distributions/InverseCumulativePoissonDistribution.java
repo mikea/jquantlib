@@ -50,7 +50,7 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
     	if(lambda_ <= 0.0) throw new ArithmeticException("lambda must be positive");
     }
 
-    public double evaluate (double x)  {
+    public double evaluate (double x) /* @Read-only */ {
         if(x <= 0.0 && x >= 1.0) throw new ArithmeticException(
                    "Inverse cumulative Poisson distribution is " +
                    "only defined on the interval [0,1]");
