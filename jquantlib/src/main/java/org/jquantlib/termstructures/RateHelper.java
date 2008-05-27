@@ -78,6 +78,10 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 		this.latestDate = null;
 		this.quote = new Handle<Quote>(new SimpleQuote(quote));
 	}
+	
+	protected RateHelper(){
+		
+	}
 
 	//
 	// public methods

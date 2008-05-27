@@ -20,10 +20,11 @@
 
 package org.jquantlib.cashflow;
 
-import java.util.Date;
+import java.util.List;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
+import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
@@ -117,6 +118,23 @@ public abstract class Event implements Observable, Visitable<Event> {
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.jquantlib.util.Observable#deleteObservers()
+	 */
+	@Override
+	public void deleteObservers() {
+		delegatedObservable.deleteObservers();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.jquantlib.util.Observable#getObservers()
+	 */
+	@Override
+	public List<Observer> getObservers() {
+		return delegatedObservable.getObservers();
+	}
+
 
 	//
 	// implements Visitable interface

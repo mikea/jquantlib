@@ -26,16 +26,20 @@ import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.ActualActual.Convention;
+import org.jquantlib.indexes.Euribor;
+import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yield.DepositRateHelper;
-import org.jquantlib.termstructures.yield.SwapRateHelper;
+import org.jquantlib.termstructures.yield.FraRateHelper;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.DateGenerationRule;
 import org.jquantlib.time.Frequency;
+import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
@@ -85,20 +89,23 @@ public class PiecewiseYieldCurveTest {
 		}
 	}
 
-	Datum[] depositData = { new Datum(1, TimeUnit.WEEKS, 4.559),
+	Datum[] depositData = { 
+			new Datum(1, TimeUnit.WEEKS, 4.559),
 			new Datum(1, TimeUnit.MONTHS, 4.581),
 			new Datum(2, TimeUnit.MONTHS, 4.573),
 			new Datum(3, TimeUnit.MONTHS, 4.557),
 			new Datum(6, TimeUnit.MONTHS, 4.496),
 			new Datum(9, TimeUnit.MONTHS, 4.490) };
 
-	Datum[] fraData = { new Datum(1, TimeUnit.MONTHS, 4.581),
+	Datum[] fraData = { 
+			new Datum(1, TimeUnit.MONTHS, 4.581),
 			new Datum(2, TimeUnit.MONTHS, 4.573),
 			new Datum(3, TimeUnit.MONTHS, 4.557),
 			new Datum(6, TimeUnit.MONTHS, 4.496),
 			new Datum(9, TimeUnit.MONTHS, 4.490) };
 
-	Datum[] swapData = { new Datum(1, TimeUnit.YEARS, 4.54),
+	Datum[] swapData = { 
+			new Datum(1, TimeUnit.YEARS, 4.54),
 			new Datum(2, TimeUnit.YEARS, 4.63),
 			new Datum(3, TimeUnit.YEARS, 4.75),
 			new Datum(4, TimeUnit.YEARS, 4.86),
@@ -161,10 +168,10 @@ public class PiecewiseYieldCurveTest {
 		public int swaps;
 		public int bonds;
 		public int bmas;
-		public List<SimpleQuote> rates;
-		public List<SimpleQuote> fraRates;
-		public List<SimpleQuote> prices;
-		public List<SimpleQuote> fractions;
+		public List<Quote> rates;
+		public List<Quote> fraRates;
+		public List<Quote> prices;
+		public List<Quote> fractions;
 		public List<RateHelper> instruments;
 		public List<RateHelper> fraHelpers;
 		public List<RateHelper> bondHelpers;
@@ -204,10 +211,10 @@ public class PiecewiseYieldCurveTest {
 
 		   // market elements
             rates =
-                new ArrayList<SimpleQuote>();
-            fraRates = new ArrayList<SimpleQuote>();
-            prices = new ArrayList<SimpleQuote>();
-            fractions = new ArrayList<SimpleQuote>();
+                new ArrayList<Quote>();
+            fraRates = new ArrayList<Quote>();
+            prices = new ArrayList<Quote>();
+            fractions = new ArrayList<Quote>();
             for (int i=0; i<deposits; i++) {
                 rates.add(new SimpleQuote(depositData[i].rate/100));
             }
@@ -235,58 +242,60 @@ public class PiecewiseYieldCurveTest {
             bondHelpers = new ArrayList<RateHelper>();
             schedules = new ArrayList<Schedule>();
             bmaHelpers = new ArrayList<RateHelper>();
-          /*
-            boost::shared_ptr<IborIndex> euribor6m(new Euribor6M);
-            for (Size i=0; i<deposits; i++) {
-                Handle<Quote> r(rates[i]);
-                instruments[i] = boost::shared_ptr<RateHelper>(new
-                    DepositRateHelper(r, depositData[i].n*depositData[i].units,
-                                      euribor6m->fixingDays(), calendar,
-                                      euribor6m->businessDayConvention(),
-                                      euribor6m->endOfMonth(),
-                                      euribor6m->dayCounter()));
+            
+            IborIndex euribor6m = new Euribor(new Period(6, TimeUnit.MONTHS), new Handle<YieldTermStructure>());            
+            for (int i=0; i<deposits; i++) {
+                Handle<Quote> r = new Handle(rates.get(i));
+                instruments.add(i,new
+                    DepositRateHelper(r, new Period(depositData[i].n,depositData[i].units),
+                                      euribor6m.getFixingDays(), calendar,
+                                      euribor6m.getConvention(),
+                                      euribor6m.isEndOfMonth(),
+                                      euribor6m.getDayCounter()));
             }
-            for (Size i=0; i<swaps; i++) {
-                Handle<Quote> r(rates[i+deposits]);
-                instruments[i+deposits] = boost::shared_ptr<RateHelper>(new
-                    SwapRateHelper(r, swapData[i].n*swapData[i].units,
+            
+            /*for (int i=0; i<swaps; i++) {
+                Handle<Quote> r = new Handle(rates.get(i+deposits));
+                instruments.add((i+deposits), new
+                    SwapRateHelper(r, new Period(swapData[i].n,swapData[i].units),
                                    calendar,
                                    fixedLegFrequency, fixedLegConvention,
                                    fixedLegDayCounter, euribor6m));
-            }
-
-            Euribor3M euribor3m;
-            for (Size i=0; i<fras; i++) {
-                Handle<Quote> r(fraRates[i]);
-                fraHelpers[i] = boost::shared_ptr<RateHelper>(new
+            }*/
+            
+            Euribor euribor3m = new Euribor(new Period(3, TimeUnit.MONTHS), new Handle<YieldTermStructure>());            
+            for (int i=0; i<fras; i++) {
+                Handle<Quote> r = new Handle(fraRates.get(i));
+                fraHelpers.add(i, new
                     FraRateHelper(r, fraData[i].n, fraData[i].n + 3,
-                                  euribor3m.fixingDays(),
-                                  euribor3m.fixingCalendar(),
-                                  euribor3m.businessDayConvention(),
-                                  euribor3m.endOfMonth(),
-                                  euribor3m.dayCounter()));
+                                  euribor3m.getFixingDays(),
+                                  euribor3m.getFixingCalendar(),
+                                  euribor3m.getConvention(),
+                                  euribor3m.isEndOfMonth(),
+                                  euribor3m.getDayCounter()));
             }
-
-            for (Size i=0; i<bonds; i++) {
-                Handle<Quote> p(prices[i]);
+            
+            for (int i=0; i<bonds; i++) {
+                Handle<Quote> p = new Handle(prices.get(i));
                 Date maturity =
                     calendar.advance(today, bondData[i].n, bondData[i].units);
                 Date issue =
-                    calendar.advance(maturity, -bondData[i].length, Years);
-                std::vector<Rate> coupons(1, bondData[i].coupon/100.0);
-                schedules[i] = Schedule(issue, maturity,
-                                        Period(bondData[i].frequency),
+                    calendar.advance(maturity, -bondData[i].length, TimeUnit.YEARS);
+                /*std::vector<Rate> coupons(1, bondData[i].coupon/100.0);
+                schedules.add(i, new Schedule(issue, maturity,
+                                        new Period(bondData[i].frequency),
                                         calendar,
                                         bondConvention, bondConvention,
-                                        DateGeneration::Backward, false);
+                                        DateGenerationRule.BACKWARD, false, Date.NULL_DATE, Date.NULL_DATE));
                 bondHelpers[i] = boost::shared_ptr<RateHelper>(new
                     FixedRateBondHelper(p,
                                         bondSettlementDays,
                                         bondRedemption, schedules[i],
                                         coupons, bondDayCounter,
                                         bondConvention,
-                                        bondRedemption, issue));
-            } */
+                                        bondRedemption, issue)); */
+            }
+            
         }
 	}
 

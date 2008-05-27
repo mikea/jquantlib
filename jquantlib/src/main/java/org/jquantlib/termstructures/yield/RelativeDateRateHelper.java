@@ -49,6 +49,10 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
 		evaluationDate = Configuration.getSystemConfiguration(null)
 				.getGlobalSettings().getEvaluationDate();
 	}
+	
+	protected RelativeDateRateHelper(){
+		super();
+	}
 
 	public RelativeDateRateHelper(Handle<Quote> quote, T termStructure,
 			Date earliestDate, Date latestDate) {

@@ -43,7 +43,8 @@ public class IborIndex extends InterestRateIndex {
 	private boolean endOfMonth;
 
 	//For now using java currency
-	public IborIndex(String familyName, Period tenor, int fixingDays,
+	public IborIndex(String familyName, 
+			Period tenor, int fixingDays,
 			Calendar fixingCalendar, Currency currency,
 			BusinessDayConvention convention, boolean endOfMonth,
 			DayCounter dayCounter, Handle<YieldTermStructure> handle) {
