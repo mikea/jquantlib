@@ -3,7 +3,7 @@ package org.jquantlib.math.integrals;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * @author <Richard Gomes>
+ * @author Richard Gomes
  */
 public interface Integrator {
 

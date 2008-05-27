@@ -7,6 +7,11 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author <Richard Gomes>
  */
 public class GaussKonrodPattersonIntegrator implements Integrator {
+	
+	private int _numberOfEvaluations;
+	private double _absoluteAccuracy;
+	private double _relativeAccuracy;
+	private double _absoluteError;
 
 	public GaussKonrodPattersonIntegrator(double relativeAccuracy,
 			double absoluteAccuracy) {
@@ -148,7 +153,6 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 	}
 
 	public int getNumberOfEvaluations() {
-
 		return _numberOfEvaluations;
 	}
 
@@ -344,8 +348,5 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 		_numberOfEvaluations = x;
 	}
 
-	private int _numberOfEvaluations;
-	private double _absoluteAccuracy;
-	private double _relativeAccuracy;
-	private double _absoluteError;
+	
 }
