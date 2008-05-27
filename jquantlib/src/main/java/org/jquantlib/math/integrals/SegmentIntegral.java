@@ -21,14 +21,32 @@
 package org.jquantlib.math.integrals;
 
 import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.integrals.Integrator;
 
-/**
- * @author Richard Gomes
- */
-public interface Integrator {
+// TODO: Add test case.
+// TODO: Check the getNumberOfEvaluations() method.
 
-	double integrate(UnaryFunctionDouble f, double a, double b);
+public class SegmentIntegral implements Integrator{
 	
-	int getNumberOfEvaluations();
+	private int intervals_;
 	
+	public SegmentIntegral(int intervals) {
+		if (intervals < 1) {
+			throw new ArithmeticException("at least 1 interval needed, 0 given");
+		}
+		intervals_ = intervals;
+	}
+	
+	public double integrate(UnaryFunctionDouble f, double a, double b) {
+		double dx = (b-a)/getNumberOfEvaluations(); // getNumberOfEvaluations() returns intervals_
+        double sum = 0.5*(f.evaluate(a)+f.evaluate(b));
+        double end = b - 0.5*dx;
+        for (double x = a+dx; x < end; x += dx)
+            sum += f.evaluate(x);
+        return sum*dx;
+	}
+	
+	public int getNumberOfEvaluations() {
+		return intervals_;
+	}
 }
