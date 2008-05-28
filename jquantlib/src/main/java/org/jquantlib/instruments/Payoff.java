@@ -44,7 +44,7 @@ import org.jquantlib.util.Visitor;
 /**
  * Abstract base class for option payoffs
  */
-public abstract class Payoff implements Visitable<Payoff> {
+public abstract class Payoff implements Visitable<Object> {
 
 	protected static final String UNKNOWN_OPTION_TYPE = "unknown option type";
 
@@ -64,13 +64,12 @@ public abstract class Payoff implements Visitable<Payoff> {
 	// implements Visitable pattern
 	//
 	
-	private static final String NULL_VISITOR = "null payoff visitor";
-
-	public final void accept(final Visitor<Payoff> v) {
+	@Override
+	public final void accept(final Visitor<Object> v) {
 		if (v != null) {
 			v.visit(this);
 		} else {
-			throw new NullPointerException(NULL_VISITOR);
+			throw new NullPointerException("null payoff visitor");
 		}
 	}
 

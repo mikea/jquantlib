@@ -43,6 +43,8 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 // Black variance term structure
 
@@ -55,7 +57,7 @@ import org.jquantlib.util.Date;
  *  Volatility is assumed to be expressed on an annual basis.
  */
 // FIXME: code review
-public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
+public abstract class BlackVarianceTermStructure extends BlackVolTermStructure implements Visitable<Object> {
 
         /*! \name Constructors
             See the TermStructure documentation for issues regarding
@@ -117,5 +119,18 @@ public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
 		/*@Variance*/ double var = blackVarianceImpl(/*Time*/ nonZeroMaturity, strike);
 		return Math.sqrt(var/nonZeroMaturity);
     }
+
+	//
+	// implements Visitable
+	//
+	
+	@Override
+	public void accept(final Visitor<Object> v) {
+		if (v != null) {
+			v.visit(this);
+		} else {
+			super.accept(v);
+		}
+	}
 
 }

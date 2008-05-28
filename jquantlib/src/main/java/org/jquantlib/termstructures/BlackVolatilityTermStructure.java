@@ -43,6 +43,8 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 /**
  * This abstract class acts as an adapter to BlackVolTermStructure allowing the
@@ -54,7 +56,7 @@ import org.jquantlib.util.Date;
  * Volatility is assumed to be expressed on an annual basis.
  */
 // FIXME: ElementVisitor
-abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure {
+abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure implements Visitable<Object> {
 
 	/**
 	 * Term structures initialized by means of this constructor must manage
@@ -118,14 +120,17 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 		return variance;
 	}
 
-// XXX	
-//	@Override
-//	protected void accept(final ElementVisitor<BlackVolTermStructure> v) {
-//		if (v != null) {
-//			v.visit(this);
-//		} else {
-//			super.accept(v);
-//		}
-//	}
+	//
+	// implements Visitable
+	//
+	
+	@Override
+	public void accept(final Visitor<Object> v) {
+		if (v != null) {
+			v.visit(this);
+		} else {
+			super.accept(v);
+		}
+	}
 
 }

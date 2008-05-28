@@ -21,7 +21,6 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.UnaryFunctionDouble;
-import org.jquantlib.math.distributions.NormalDistribution;
 
 /**
  * 

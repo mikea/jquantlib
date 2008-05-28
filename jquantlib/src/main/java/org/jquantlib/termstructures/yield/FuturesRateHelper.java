@@ -21,7 +21,6 @@ package org.jquantlib.termstructures.yield;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.number.Rate;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;

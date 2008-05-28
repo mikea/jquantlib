@@ -38,19 +38,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.jquantlib.testsuite.calendars.CalendarUtil;
-
-
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.time.calendars.Argentina;
 import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.time.calendars.Germany;
 import org.jquantlib.time.calendars.Italy;
 import org.jquantlib.time.calendars.Japan;
 import org.jquantlib.time.calendars.JointCalendar;
-import org.jquantlib.time.calendars.Switzerland;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.time.calendars.UnitedKingdom;
 import org.jquantlib.time.calendars.UnitedStates;

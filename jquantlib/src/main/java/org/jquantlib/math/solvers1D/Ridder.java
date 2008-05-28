@@ -21,8 +21,8 @@
 package org.jquantlib.math.solvers1D;
 
 import org.jquantlib.math.AbstractSolver1D;
-import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.Constants;
+import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * 

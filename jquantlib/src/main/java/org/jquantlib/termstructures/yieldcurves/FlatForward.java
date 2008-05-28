@@ -50,6 +50,8 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.Observable;
+import org.jquantlib.util.Observer;
 
 public class FlatForward extends YieldTermStructure {
 
@@ -211,38 +213,18 @@ public class FlatForward extends YieldTermStructure {
     }
 
 
-
-
-// FIXME: code review
-
-
     //
     // Implements Observer interface
     //
-    
-//    private Observer delegate = new DefaultObserverImpl();
     
     /**
      * This method implements {@link Observer#update(Observable, Object)}
      * 
      * @see Observer#update(Observable, Object)
      */
-//    public void update(Observable o, Object arg) {
-//        updateRate();
-//        delegate.update(o, arg);
-//    }
-
-    
-    //
-    // delegated private inner class
-    //
-    
-//    private class DefaultObserverImpl implements Observer {
-//    	
-//        public void update(Observable o, Object arg) {
-//        System.out.println("blah!");
-//        }
-//        
-//    }
+    public void update(Observable o, Object arg) {
+        updateRate();
+        super.update(o, arg);
+    }
 
 }

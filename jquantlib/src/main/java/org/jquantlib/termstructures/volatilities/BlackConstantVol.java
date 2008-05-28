@@ -46,6 +46,8 @@ import org.jquantlib.termstructures.BlackVolatilityTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 /**
  * Constant Black volatility, no time-strike dependence
@@ -54,7 +56,7 @@ import org.jquantlib.util.DateFactory;
  * interface for a constant Black volatility (no time/strike
  * dependence).
  */
-public class BlackConstantVol extends BlackVolatilityTermStructure {
+public class BlackConstantVol extends BlackVolatilityTermStructure implements Visitable<Object> {
 
     private Handle<? extends Quote> volatility;
     private DayCounter dayCounter;
@@ -108,6 +110,19 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
 	@Override
     public final /*@Price*/ double getMaxStrike() {
     	return Double.POSITIVE_INFINITY;
+	}
+
+	//
+	// implements Visitable
+	//
+	
+	@Override
+	public void accept(final Visitor<Object> v) {
+		if (v != null) {
+			v.visit(this);
+		} else {
+			super.accept(v);
+		}
 	}
 
 }

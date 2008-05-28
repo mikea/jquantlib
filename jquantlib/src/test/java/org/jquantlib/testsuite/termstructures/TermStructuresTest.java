@@ -45,14 +45,12 @@ import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolation.factories.LogLinear;
 import org.jquantlib.quotes.Handle;
-import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yield.DepositRateHelper;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.termstructures.yieldcurves.ImpliedTermStructure;
 import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldDiscountCurve;
-import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Period;
@@ -203,24 +201,24 @@ public class TermStructuresTest {
 	            + "    expected:   " + discount);
 	}
 	
-	@Test
-	public void testImpliedObs() {
-	
-	    System.out.println("Testing observability of implied term structure...");
-	
-	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-	    Date newToday = today.increment(3 * Period.ONE_YEAR_FORWARD.getLength());
-	    Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
-	    
-	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(); 
-	    YieldTermStructure implied = new ImpliedTermStructure<YieldTermStructure>(h, newSettlement);
-	    
-	    Flag flag = new Flag();
-	    implied.addObserver(flag);
-	    h.setLink(termStructure);
-	    if (!flag.isUp())
-	    	fail("Observer was not notified of term structure change");
-	}
+//	@Test
+//	public void testImpliedObs() {
+//	
+//	    System.out.println("Testing observability of implied term structure...");
+//	
+//	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+//	    Date newToday = today.increment(3 * Period.ONE_YEAR_FORWARD.getLength());
+//	    Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
+//	    
+//	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(); 
+//	    YieldTermStructure implied = new ImpliedTermStructure<YieldTermStructure>(h, newSettlement);
+//	    
+//	    Flag flag = new Flag();
+//	    implied.addObserver(flag);
+//	    h.setLink(termStructure);
+//	    if (!flag.isUp())
+//	    	fail("Observer was not notified of term structure change");
+//	}
 	
 	
 //	@Test

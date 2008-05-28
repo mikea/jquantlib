@@ -50,19 +50,28 @@ import org.jquantlib.util.Observable;
  * @author Richard Gomes
  */
 public class RelinkableHandle<T extends Observable> extends Handle<T> {
-
-    public RelinkableHandle() {
-    	super();
-    }
-    
+//XXX
+//    public RelinkableHandle() {
+//    	super();
+//    }
+//    
     
     public RelinkableHandle(final T observable) {
-    	super(observable);
+    	super(observable, true);
+    }
+    
+    public RelinkableHandle(final T observable, boolean isObserver) {
+    	super(observable, isObserver);
     }
     
     @Override
     public final void setLink(final T observable) {
-    	super.setLink(observable);
+    	super.setLink(observable, true);
+    }
+    
+    @Override
+    public final void setLink(final T observable, boolean isObserver) {
+    	super.setLink(observable, isObserver);
     }
     
 }

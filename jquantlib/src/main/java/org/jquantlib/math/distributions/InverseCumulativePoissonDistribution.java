@@ -21,9 +21,9 @@
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.math.UnaryFunctionDouble;
-import org.jquantlib.math.Factorial;
 import org.jquantlib.math.Constants;
+import org.jquantlib.math.Factorial;
+import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * 

@@ -21,8 +21,9 @@
 
 package org.jquantlib.testsuite.math.distributions;
 
-import org.jquantlib.math.distributions.PoissonDistribution;
 import static org.junit.Assert.fail;
+
+import org.jquantlib.math.distributions.PoissonDistribution;
 import org.junit.Test;
 
 

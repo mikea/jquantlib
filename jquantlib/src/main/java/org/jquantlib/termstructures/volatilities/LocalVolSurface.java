@@ -45,6 +45,8 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 /**
  * For details about this implementation refer to "Stochastic Volatility and
@@ -56,7 +58,7 @@ import org.jquantlib.util.Date;
  *      article</a>
  */
 // TODO: this class is untested, probably unreliable.
-public class LocalVolSurface extends LocalVolTermStructure {
+public class LocalVolSurface extends LocalVolTermStructure implements Visitable<Object> {
 
 	private Handle<BlackVolTermStructure> blackTS_;
 	private Handle<YieldTermStructure> riskFreeTS_;
@@ -187,6 +189,19 @@ public class LocalVolSurface extends LocalVolTermStructure {
 			// commented out at original source QuantLib
 			// return std::sqrt(dwdt / (1.0 - y/w*dwdy +
 			// 0.25*(-0.25 - 1.0/w + y*y/w/w)*dwdy*dwdy + 0.5*d2wdy2));
+		}
+	}
+
+	//
+	// implements Visitable
+	//
+	
+	@Override
+	public void accept(final Visitor<Object> v) {
+		if (v != null) {
+			v.visit(this);
+		} else {
+			super.accept(v);
 		}
 	}
 

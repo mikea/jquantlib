@@ -20,7 +20,6 @@
 
 package org.jquantlib.testsuite.math.distributions;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.NormalDistribution;

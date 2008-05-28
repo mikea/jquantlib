@@ -41,10 +41,12 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 // Local volatility curve derived from a Black curve
 
-public class LocalVolCurve extends LocalVolTermStructure {
+public class LocalVolCurve extends LocalVolTermStructure implements Visitable<Object> {
 
 	private BlackVarianceCurve blackVarianceCurve_;
 
@@ -97,14 +99,17 @@ public class LocalVolCurve extends LocalVolTermStructure {
 		return Math.sqrt(derivative);
 	}
 
-	// FIXME: Visitor
-	// inline void LocalVolCurve::accept(AcyclicVisitor& v) {
-	// Visitor<LocalVolCurve>* v1 =
-	// dynamic_cast<Visitor<LocalVolCurve>*>(&v);
-	// if (v1 != 0)
-	// v1->visit(*this);
-	// else
-	// LocalVolTermStructure::accept(v);
-	// }
+	//
+	// implements Visitable
+	//
+	
+	@Override
+	public void accept(final Visitor<Object> v) {
+		if (v != null) {
+			v.visit(this);
+		} else {
+			super.accept(v);
+		}
+	}
 
 }

@@ -46,6 +46,7 @@ import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.math.interpolation.LinearInterpolation;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Visitable;
 
 // Black volatility curve modelled as variance curve
 
@@ -61,7 +62,7 @@ import org.jquantlib.util.Date;
  * 
  */
 // TODO check time extrapolation
-public class BlackVarianceCurve extends BlackVarianceTermStructure {
+public class BlackVarianceCurve extends BlackVarianceTermStructure implements Visitable<Object> {
 
 	private DayCounter dayCounter;
 	private Date maxDate;

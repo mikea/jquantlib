@@ -21,7 +21,6 @@
 package org.jquantlib.math;
 
 import org.jquantlib.math.distributions.GammaFunction;
-import org.jquantlib.math.Constants;
 
 /**
  * @author Dominik Holenstein

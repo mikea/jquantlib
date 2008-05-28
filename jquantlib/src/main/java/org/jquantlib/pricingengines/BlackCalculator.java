@@ -42,7 +42,6 @@ import org.jquantlib.instruments.AssetOrNothingPayoff;
 import org.jquantlib.instruments.CashOrNothingPayoff;
 import org.jquantlib.instruments.GapPayoff;
 import org.jquantlib.instruments.Option;
-import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.math.Constants;
@@ -59,8 +58,7 @@ import org.jquantlib.util.Visitor;
  * @author Richard Gomes
  */
 // FIXME When the variance is null, division by zero occur during...
-// FIXME: code review: probably should use Generics
-public class BlackCalculator /* <T extends Payoff> */ {
+public class BlackCalculator {
 
 	//
 	// FIXME: code review: can these variables be 'private' ?
@@ -394,7 +392,7 @@ public class BlackCalculator /* <T extends Payoff> */ {
 	// inner classes
 	//
 	
-	private class Calculator<T extends Payoff> implements Visitor<T> {
+	private class Calculator implements Visitor<Object> {
 
 		private static final String NULL_VISITABLE_OBJECT = "null visitable object";
 		private static final String INVALID_OPTION_TYPE = "invalid option type";
@@ -406,18 +404,20 @@ public class BlackCalculator /* <T extends Payoff> */ {
 			this.black = black;
 		}
 
-		public void visit(final T o) {
+		//
+		// implements Visitor
+		//
+		
+		public void visit(final Object o) {
 			if (o==null) throw new NullPointerException(NULL_VISITABLE_OBJECT);
 			
-			if (o instanceof PlainVanillaPayoff) {
+			if (PlainVanillaPayoff.class.isAssignableFrom(o.getClass())) {
 				visit((PlainVanillaPayoff)o);
-			} else if (o instanceof CashOrNothingPayoff) {
+			} else if (CashOrNothingPayoff.class.isAssignableFrom(o.getClass())) {
 				visit((CashOrNothingPayoff)o);
-			} else if (o instanceof AssetOrNothingPayoff) {
+			} else if (AssetOrNothingPayoff.class.isAssignableFrom(o.getClass())) {
 				visit((AssetOrNothingPayoff)o);
-			} else if (o instanceof GapPayoff) {
-				visit((GapPayoff)o);
-			} else if (o instanceof GapPayoff) {
+			} else if (GapPayoff.class.isAssignableFrom(o.getClass())) {
 				visit((GapPayoff)o);
 			} else {
 				throw new UnsupportedOperationException(INVALID_PAYOFF_TYPE + o.getClass().getName());

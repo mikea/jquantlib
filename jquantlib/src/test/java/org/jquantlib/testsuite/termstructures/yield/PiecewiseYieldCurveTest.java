@@ -26,20 +26,14 @@ import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.ActualActual.Convention;
-import org.jquantlib.indexes.Euribor;
-import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.yield.DepositRateHelper;
-import org.jquantlib.termstructures.yield.FraRateHelper;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.time.DateGenerationRule;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
@@ -243,16 +237,18 @@ public class PiecewiseYieldCurveTest {
             schedules = new ArrayList<Schedule>();
             bmaHelpers = new ArrayList<RateHelper>();
             
-            IborIndex euribor6m = new Euribor(new Period(6, TimeUnit.MONTHS), new Handle<YieldTermStructure>());            
-            for (int i=0; i<deposits; i++) {
-                Handle<Quote> r = new Handle(rates.get(i));
-                instruments.add(i,new
-                    DepositRateHelper(r, new Period(depositData[i].n,depositData[i].units),
-                                      euribor6m.getFixingDays(), calendar,
-                                      euribor6m.getConvention(),
-                                      euribor6m.isEndOfMonth(),
-                                      euribor6m.getDayCounter()));
-            }
+//  Srinivas: please review usage of Handle
+//            
+//            IborIndex euribor6m = new Euribor(new Period(6, TimeUnit.MONTHS), new Handle<YieldTermStructure>());            
+//            for (int i=0; i<deposits; i++) {
+//                Handle<Quote> r = new Handle(rates.get(i));
+//                instruments.add(i,new
+//                    DepositRateHelper(r, new Period(depositData[i].n,depositData[i].units),
+//                                      euribor6m.getFixingDays(), calendar,
+//                                      euribor6m.getConvention(),
+//                                      euribor6m.isEndOfMonth(),
+//                                      euribor6m.getDayCounter()));
+//            }
             
             /*for (int i=0; i<swaps; i++) {
                 Handle<Quote> r = new Handle(rates.get(i+deposits));
@@ -263,17 +259,19 @@ public class PiecewiseYieldCurveTest {
                                    fixedLegDayCounter, euribor6m));
             }*/
             
-            Euribor euribor3m = new Euribor(new Period(3, TimeUnit.MONTHS), new Handle<YieldTermStructure>());            
-            for (int i=0; i<fras; i++) {
-                Handle<Quote> r = new Handle(fraRates.get(i));
-                fraHelpers.add(i, new
-                    FraRateHelper(r, fraData[i].n, fraData[i].n + 3,
-                                  euribor3m.getFixingDays(),
-                                  euribor3m.getFixingCalendar(),
-                                  euribor3m.getConvention(),
-                                  euribor3m.isEndOfMonth(),
-                                  euribor3m.getDayCounter()));
-            }
+//  Srinivas: please review usage of Handle
+//          
+//            Euribor euribor3m = new Euribor(new Period(3, TimeUnit.MONTHS), new Handle<YieldTermStructure>());            
+//            for (int i=0; i<fras; i++) {
+//                Handle<Quote> r = new Handle(fraRates.get(i));
+//                fraHelpers.add(i, new
+//                    FraRateHelper(r, fraData[i].n, fraData[i].n + 3,
+//                                  euribor3m.getFixingDays(),
+//                                  euribor3m.getFixingCalendar(),
+//                                  euribor3m.getConvention(),
+//                                  euribor3m.isEndOfMonth(),
+//                                  euribor3m.getDayCounter()));
+//            }
             
             for (int i=0; i<bonds; i++) {
                 Handle<Quote> p = new Handle(prices.get(i));

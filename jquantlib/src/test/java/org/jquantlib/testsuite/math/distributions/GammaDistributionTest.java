@@ -25,7 +25,6 @@ import static org.junit.Assert.fail;
 
 import org.jquantlib.math.distributions.GammaDistribution;
 import org.junit.Test;
-// import org.junit.Ignore; --> for excluding from tests
 
 /**
  * @author Dominik Holenstein

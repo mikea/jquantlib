@@ -1,6 +1,5 @@
 package org.jquantlib.testsuite.math;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.math.BrentSolver1D;

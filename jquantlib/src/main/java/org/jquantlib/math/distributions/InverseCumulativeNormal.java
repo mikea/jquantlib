@@ -20,9 +20,8 @@
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.distributions.NormalDistribution;
+import org.jquantlib.math.UnaryFunctionDouble;
 
 
 /**

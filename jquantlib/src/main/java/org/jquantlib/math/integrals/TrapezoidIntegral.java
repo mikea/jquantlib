@@ -21,7 +21,6 @@
 package org.jquantlib.math.integrals;
 
 import org.jquantlib.math.UnaryFunctionDouble;
-import org.jquantlib.math.integrals.Integrator;
 
 /**
  * 

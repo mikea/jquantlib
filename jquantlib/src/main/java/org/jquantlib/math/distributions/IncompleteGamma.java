@@ -20,7 +20,6 @@
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.math.distributions.GammaFunction;
 import org.jquantlib.math.Constants;
 
 /**

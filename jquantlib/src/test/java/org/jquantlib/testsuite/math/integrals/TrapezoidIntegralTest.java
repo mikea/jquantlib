@@ -1,11 +1,5 @@
 package org.jquantlib.testsuite.math.integrals;
 
-import static org.junit.Assert.fail;
-
-import org.jquantlib.math.UnaryFunctionDouble;
-import org.jquantlib.math.integrals.TrapezoidIntegral;
-import org.jquantlib.math.integrals.Integrator;
-import org.junit.Test;
 
 
 // TODO Test is failing. Check line double expected = Math.exp(6);

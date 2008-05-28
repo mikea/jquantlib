@@ -84,8 +84,9 @@ public abstract class NewInstrument extends Instrument {
 		this.engine = engine;
 		if (this.engine!=null) {
 	   		this.engine.addObserver(this);
-	   		this.engine.notifyObservers();
 		}
+   		// this.engine.notifyObservers();
+		update(this, null);
     }
 
     

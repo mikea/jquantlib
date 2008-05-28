@@ -20,9 +20,9 @@
 
 package org.jquantlib.testsuite.math.distributions;
 
-import org.jquantlib.math.distributions.CumulativePoissonDistribution;
-
 import static org.junit.Assert.fail;
+
+import org.jquantlib.math.distributions.CumulativePoissonDistribution;
 import org.junit.Test;
 
 

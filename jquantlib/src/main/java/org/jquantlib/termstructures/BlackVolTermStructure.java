@@ -23,6 +23,8 @@ package org.jquantlib.termstructures;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 /**
  * Black-volatility term structure
@@ -37,7 +39,7 @@ import org.jquantlib.util.Date;
  * @author Richard Gomes
  */
 // FIXME: code review
-public abstract class BlackVolTermStructure extends TermStructure {
+public abstract class BlackVolTermStructure extends TermStructure implements Visitable<Object> {
 
 	static private final double dT = 1.0/365.0;
 
@@ -228,6 +230,19 @@ public abstract class BlackVolTermStructure extends TermStructure {
 		/*@Variance*/ double v2 = blackVarianceImpl(time2, strike);
 		if (v2<v1) throw new ArithmeticException("variances must be non-decreasing");
 		return v2-v1;
+	}
+
+	//
+	// implements Visitable
+	//
+	
+	@Override
+	public void accept(final Visitor<Object> v) {
+		if (v != null) {
+			v.visit(this);
+		} else {
+			throw new UnsupportedOperationException("not a Black-volatility term structure visitor");
+		}
 	}
 
 }

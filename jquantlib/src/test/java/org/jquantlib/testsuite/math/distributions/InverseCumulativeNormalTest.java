@@ -22,10 +22,10 @@ package org.jquantlib.testsuite.math.distributions;
 
 // import static org.junit.Assert.assertEquals; --> not JUnit 4.4 conform
 
+import static org.junit.Assert.fail;
+
 import org.jquantlib.math.distributions.InverseCumulativeNormal;
 import org.junit.Test;
-
-import static org.junit.Assert.fail;
 
 /**
  * @author Dominik Holenstein

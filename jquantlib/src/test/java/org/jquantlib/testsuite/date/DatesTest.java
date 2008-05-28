@@ -26,9 +26,9 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
-import org.jquantlib.util.DateParser;
 import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.DateParser;
+import org.jquantlib.util.Month;
 import org.junit.Test;
 
 /**

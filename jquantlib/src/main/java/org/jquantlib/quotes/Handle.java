@@ -53,16 +53,22 @@ import org.jquantlib.util.WeakReferenceObservable;
  * 
  * @author Richard Gomes
  */
+// TODO: better explain hot Handle and Link work together
 public class Handle<T extends Observable> implements Observable {
 
 	protected Link link;
-    
-    public Handle() {
-    	this.link = new Link();
-    }
+
+//XXX	
+//    public Handle() {
+//    	this.link = new Link();
+//    }
     
     public Handle(final T observable) {
-    	this.link = new Link(observable);
+    	this(observable, true);
+    }
+    
+    public Handle(final T observable, boolean isObserver) {
+    	this.link = new Link(observable, isObserver);
     }
     
     public Handle(final Handle<T> another) {
@@ -72,17 +78,17 @@ public class Handle<T extends Observable> implements Observable {
 	public final boolean isEmpty() /* @ReadOnly */ {
 		return link.isEmpty();
 	}
-	
-    public final boolean isObserver() /* @ReadOnly */ {
-    	return link.isObserver();
-    }
-    
+
     public final T getLink() {
     	return link.getLink();
     }
     
     public void setLink(final T observable) {
-    	link.setLink(observable);
+    	this.setLink(observable, true);
+    }
+    
+    public void setLink(final T observable, boolean isObserver) {
+    	link.setLink(observable, isObserver);
     }
     
 
@@ -129,36 +135,45 @@ public class Handle<T extends Observable> implements Observable {
     	static private final String EMPTY_HANDLE = "empty Handle cannot be dereferenced";
     	
 		public T observable	= null;
+		private boolean isObserver = false;
+		
+//XXX
+//		public Link() {
+//			this(null);
+//		}
+//
+//		public Link(T observable) {
+//			setLink(observable);
+//		}
 
-		public Link() {
-			this(null);
-		}
-
-		public Link(T observable) {
-			setLink(observable);
+		public Link(T observable, boolean isObserver) {
+			setLink(observable, isObserver);
 		}
 
 		public final boolean isEmpty() /* @ReadOnly */ {
 			return (this.observable==null);
-		}
-		
-		public final boolean isObserver() /* @ReadOnly */{
-			return (this.observable != null);
 		}
 
 		public final T getLink() /* @ReadOnly */ {
 			return this.observable;
 		}
 
-		public final void setLink(final T observable) {
+//XXX		
+//		public final void setLink(final T observable) {
+//			setLink(observable, true);
+//		}
+		
+		public final void setLink(final T observable, boolean isObserver) {
 			// remove this from observable
-			if (this.observable != null) {
-				this.observable.deleteObserver(this);
-			}
-			// register this as observer to a new observable
-			if (observable!=null) {
+			if ((this.observable!=observable) || (this.isObserver!=isObserver)) {
+				if (this.observable!=null && this.isObserver) {
+					this.observable.deleteObserver(this);
+				}
 				this.observable = observable;
-				this.observable.addObserver(this);
+				this.isObserver = isObserver;
+				if (this.observable!=null && this.isObserver) {
+					this.observable.addObserver(this);
+				}
 				this.observable.notifyObservers();
 			}
 		}

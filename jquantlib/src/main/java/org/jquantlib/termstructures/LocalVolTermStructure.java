@@ -43,9 +43,11 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 // FIXME: format comments, etc
-public abstract class LocalVolTermStructure extends TermStructure {
+public abstract class LocalVolTermStructure extends TermStructure implements Visitable<Object> {
 
         //! default constructor
         /*! \warning term structures initialized by means of this
@@ -141,20 +143,17 @@ public abstract class LocalVolTermStructure extends TermStructure {
         	}
         }
 
-        
-        
-// XXX
-//        inline void LocalVolTermStructure::accept(AcyclicVisitor& v) {
-//            Visitor<LocalVolTermStructure>* v1 =
-//                dynamic_cast<Visitor<LocalVolTermStructure>*>(&v);
-//            if (v1 != 0)
-//                v1->visit(*this);
-//            else
-//                QL_FAIL("not a local-volatility term structure visitor");
-//        }
+    	//
+    	// implements Visitable
+    	//
+    	
+    	@Override
+    	public void accept(final Visitor<Object> v) {
+    		if (v != null) {
+    			v.visit(this);
+    		} else {
+    			throw new UnsupportedOperationException("not a local-volatility term structure visitor");
+    		}
+    	}
 
-
-        
-        
-        
 }

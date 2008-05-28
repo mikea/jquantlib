@@ -121,6 +121,22 @@ public class EuropeanOptionTest {
 	    	this.result = result;
 	    	this.tol = tol;
 	    }
+
+	    public String toString() {
+	    	StringBuilder sb = new StringBuilder();
+	    	sb.append('[');
+	    	sb.append(type).append(", ");
+	    	sb.append(strike).append(", ");
+	    	sb.append(s).append(", ");
+	    	sb.append(q).append(", ");
+	    	sb.append(r).append(", ");
+	    	sb.append(t).append(", ");
+	    	sb.append(v).append(", ");
+	    	sb.append(result).append(", ");
+	    	sb.append(tol);
+	    	sb.append(']');
+	    	return sb.toString();
+	    }
 	}
 
 	private enum EngineType { 
@@ -323,6 +339,8 @@ public class EuropeanOptionTest {
 
 	    for (int i=0; i<values.length-1; i++) {
 
+	    	System.out.println(values[i]);
+	    	
 	    	StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 	        Date exDate = today.getDateAfter( timeToDays(values[i].t) );
 	        Exercise exercise = new EuropeanExercise(exDate);

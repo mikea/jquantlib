@@ -51,7 +51,6 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.Visitor;
 
 
 
@@ -99,6 +98,7 @@ public abstract class TermStructure implements Observer, Observable {
 	private DayCounter dayCounter;
 	private boolean moving;
 	private boolean updated;
+
 	private int nCase;
 
 	/**
@@ -140,9 +140,10 @@ public abstract class TermStructure implements Observer, Observable {
 		this.updated = true;
 		this.nCase = 3;
 
-		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
-		today.addObserver(this);
+//XXX		
+//		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+//		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
+//		today.addObserver(this);
 	}
 
 	/**
@@ -181,9 +182,10 @@ public abstract class TermStructure implements Observer, Observable {
 		this.updated = true;
 		this.nCase = 1;
 
-		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
-		today.addObserver(this);
+//XXX		
+//		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+//		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
+//		today.addObserver(this);
 	}
 	
 	/**
@@ -301,7 +303,7 @@ public abstract class TermStructure implements Observer, Observable {
 	 * 
 	 * @note Term structures initialized by means of this
 	 * constructor must manage their own reference date 
-	 * by overriding the referenceDate() method.
+	 * by overriding the getReferenceDate() method.
 	 *  
 	 * @returns the Date at which discount = 1.0 and/or variance = 0.0
 	 */
@@ -318,7 +320,7 @@ public abstract class TermStructure implements Observer, Observable {
 		case 3:
 			throw new UnsupportedOperationException("getReferenceDate must be overridden on derived classes");
 		default:
-			throw new IllegalArgumentException();
+			throw new IllegalStateException();
 		}
 	}
 
@@ -354,9 +356,9 @@ public abstract class TermStructure implements Observer, Observable {
 	public void update(Observable o, Object arg) {
 		if (moving) {
 			updated = false;
-			today = settings.getEvaluationDate(); //TODO: Allow today be set
-			notifyObservers();
+			//XXX today = settings.getEvaluationDate(); //TODO: Allow today be set
 		}
+		notifyObservers();
 	}
 
 	
@@ -398,21 +400,6 @@ public abstract class TermStructure implements Observer, Observable {
 
 	public List<Observer> getObservers() {
 		return delegatedObservable.getObservers();
-	}
-
-	
-	//
-	// implements Visitable
-	//
-	
-	private static final String NULL_VISITOR = "null term structure visitor";
-
-	public final void accept(final Visitor<TermStructure> v) {
-		if (v != null) {
-			v.visit(this);
-		} else {
-			throw new NullPointerException(NULL_VISITOR);
-		}
 	}
 
 }

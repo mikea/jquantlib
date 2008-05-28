@@ -21,9 +21,6 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Factorial;
-// import cern.jet.math.Functions; --> not yet implemented
-import net.sf.latextaglet.*;
-import net.sf.latextaglet.internal.*;
 
 /**
  * @author Richard Gomes

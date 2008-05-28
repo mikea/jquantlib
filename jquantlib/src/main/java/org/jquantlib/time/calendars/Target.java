@@ -19,7 +19,9 @@
  */
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.util.Month.*;
+import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.MAY;
 
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;

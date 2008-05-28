@@ -45,6 +45,8 @@ import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.math.interpolation.Interpolator2D;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Visitable;
+import org.jquantlib.util.Visitor;
 
 /**
  * This class calculates time/strike dependent Black volatilities using as input
@@ -58,7 +60,7 @@ import org.jquantlib.util.Date;
  */
 // TODO: check time extrapolation
 // CODE REVIEW DONE by Richard Gomes
-public class BlackVarianceSurface extends BlackVarianceTermStructure {
+public class BlackVarianceSurface extends BlackVarianceTermStructure implements Visitable<Object> {
 
 	public enum Extrapolation {
 		ConstantExtrapolation, InterpolatorDefaultExtrapolation
@@ -159,6 +161,19 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 			// t>times_.back() || extrapolate
 			/* @Time */double lastTime = times[times.length - 1];
 			return varianceSurface.evaluate(lastTime, strike) * t / lastTime;
+		}
+	}
+
+	//
+	// implements Visitable
+	//
+	
+	@Override
+	public void accept(final Visitor<Object> v) {
+		if (v != null) {
+			v.visit(this);
+		} else {
+			super.accept(v);
 		}
 	}
 
