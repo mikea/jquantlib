@@ -44,9 +44,6 @@ import org.jquantlib.math.Factorial;
 
 public class BinomialDistribution {
 	
-	//TODO: Write tests -> Dominik
-	//TODO: Use Colt -> Dominik
-	
 	private static final Factorial factorial_ = new Factorial();
     private int n_;
     private double logP_, logOneMinusP_;
@@ -112,10 +109,4 @@ public class BinomialDistribution {
 	static private double binomialCoefficient(int n, int k) {
 		return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n,k)));
 	}
-	
-	
-	
-	
-
-
 }
