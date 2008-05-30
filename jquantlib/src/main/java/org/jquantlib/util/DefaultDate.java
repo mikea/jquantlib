@@ -67,6 +67,7 @@ import org.jquantlib.time.Weekday;
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
+//TODO: OSGi
 public class DefaultDate extends BaseDate {
 
     private/* @NonNegative */int value;
@@ -512,6 +513,10 @@ public class DefaultDate extends BaseDate {
     public boolean ge(final Date date) {
         return value >= ((DefaultDate) date).value;
     }
+    
+    public boolean eq(final Date date) {
+    	return value == ((DefaultDate) date).value;
+    }
 
     /**
      * Returns the String representing this Date in a long format. This is the
@@ -660,8 +665,16 @@ public class DefaultDate extends BaseDate {
      * @see Updatable
      */
     public Updatable<Date> getUpdatable() {
-        return new UpdatableDate(this);
+        return updatable;
     }
+    
+    
+    //
+    // inner classes
+    //
+    
+    private final UpdatableDate updatable = new UpdatableDate(this);
+    
     /**
      * This inner class provides controlled update access to a Date object.
      * 
@@ -688,7 +701,7 @@ public class DefaultDate extends BaseDate {
         
     }
     
-    public static class JQLibDateUtil extends DateFactory{
+    public static class JQLibDateUtil extends DateFactory {
         /**
          * Returns a instance that is the Maximum date that can be represented by
          * the Date implementation.

@@ -39,6 +39,7 @@ import org.jquantlib.time.Period;
  * @author Srinivas Hasti
  *
  */
+//TODO: Finish
 public class SwapRateHelper extends RelativeDateRateHelper {
 	
     private Period tenor;
@@ -52,36 +53,47 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     private Handle<Quote> spread;
     private Period fwdStart;
     
-  /*  SwapRateHelper(const Handle<Quote>& rate,
-            const boost::shared_ptr<SwapIndex>& swapIndex,
-            const Handle<Quote>& spread = Handle<Quote>(),
-            const Period& fwdStart = 0*Days);
-SwapRateHelper(const Handle<Quote>& rate,
-            const Period& tenor,
-            const Calendar& calendar,
-            // fixed leg
-            Frequency fixedFrequency,
-            BusinessDayConvention fixedConvention,
-            const DayCounter& fixedDayCount,
-            // floating leg
-            const boost::shared_ptr<IborIndex>& iborIndex,
-            const Handle<Quote>& spread = Handle<Quote>(),
-            const Period& fwdStart = 0*Days);
-SwapRateHelper(Rate rate,
-            const Period& tenor,
-            const Calendar& calendar,
-            // fixed leg
-            Frequency fixedFrequency,
-            BusinessDayConvention fixedConvention,
-            const DayCounter& fixedDayCount,
-            // floating leg
-            const boost::shared_ptr<IborIndex>& iborIndex,
-            const Handle<Quote>& spread = Handle<Quote>(),
-            const Period& fwdStart = 0*Days);
-SwapRateHelper(Rate rate,
-            const boost::shared_ptr<SwapIndex>& swapIndex,
-            const Handle<Quote>& spread = Handle<Quote>(),
-            const Period& fwdStart = 0*Days)*/
+//public SwapRateHelper(final Handle<Quote> rate,
+//            final SwapIndex swapIndex,
+//            final Handle<Quote> spread = Handle<Quote>(),
+//            final Period fwdStart = 0*Days) {
+//	// TODO: Finish
+//}
+//            
+//public SwapRateHelper(final Handle<Quote> rate,
+//            final Period tenor,
+//            final Calendar calendar,
+//            // fixed leg
+//            Frequency fixedFrequency,
+//            BusinessDayConvention fixedConvention,
+//            final DayCounter fixedDayCount,
+//            // floating leg
+//            final IborIndex iborIndex,
+//            final Handle<Quote> spread = Handle<Quote>(),
+//            final Period fwdStart = 0*Days) {
+//	// TODO: Finish
+//}
+//            
+//public SwapRateHelper(Rate rate,
+//            final Period tenor,
+//            final Calendar calendar,
+//            // fixed leg
+//            Frequency fixedFrequency,
+//            BusinessDayConvention fixedConvention,
+//            final DayCounter fixedDayCount,
+//            // floating leg
+//            final IborIndex iborIndex,
+//            final Handle<Quote> spread = Handle<Quote>(),
+//            final Period fwdStart = 0*Days) {
+//	// TODO: Finish
+//}
+//            
+//public SwapRateHelper(Rate rate,
+//            final SwapIndex swapIndex,
+//            final Handle<Quote> spread = Handle<Quote>(),
+//            final Period fwdStart = 0*Days) {
+//	// TODO: Finish
+//}
 
     
 	public SwapRateHelper(

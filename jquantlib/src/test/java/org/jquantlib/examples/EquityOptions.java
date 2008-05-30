@@ -95,6 +95,7 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
+import org.jquantlib.testsuite.util.StopClock;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
@@ -165,7 +166,8 @@ public class EquityOptions {
 
     System.out.println("Calculating options...");
     
-    long beginTime = System.currentTimeMillis();
+    StopClock clock = new StopClock();
+    clock.startClock();
     
     Option.Type type = Option.Type.PUT;
     double strike = 40.0;
@@ -341,8 +343,9 @@ public class EquityOptions {
     
 //    System.out.printf("%34s %13.9f %13.9f %s\n", method, org.jquantlib.util.NaN, org.jquantlib.util.NaN, "   TO BE DONE");
 
-        long msecs = (System.currentTimeMillis()-beginTime);
-        System.out.println("Run completed in "+msecs+" ms.");
+    	clock.stopClock();
+        clock.log();
     
     }
+    
 }

@@ -26,7 +26,12 @@ import org.junit.Test;
 import cern.jet.random.Binomial;
 
 public class BinomialTest {
-  StopClock clock = new StopClock(StopClock.Unit.NANO);
+
+	private StopClock clock;
+  
+  public BinomialTest() {
+	  clock = new StopClock(StopClock.Unit.ns);
+  }
  
   
   @Test public void runColt(){
@@ -70,11 +75,13 @@ public class BinomialTest {
 	  System.out.println(v);
 	  clock.log();
   }
-  
-  public static void main(String[] str){
-	  BinomialTest binomialTest = new BinomialTest();
-	  binomialTest.runJQ();
-	  binomialTest.runColt();
-	  
-  }
+
+//XXX: not needed  
+//  public static void main(String[] str){
+//	  BinomialTest binomialTest = new BinomialTest();
+//	  binomialTest.runJQ();
+//	  binomialTest.runColt();
+//	  
+//  }
+
 }

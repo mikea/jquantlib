@@ -79,35 +79,85 @@ import org.jquantlib.util.Observer;
  *  
  * @author Richard Gomes
  */
-// FIXME: document this class
 public abstract class TermStructure implements Observer, Observable {
 
+	static private final String THIS_METHOD_MUST_BE_OVERRIDDEN = "This method must be overridden";
+	
+	
 	//
 	// protected fields
 	//
-	protected Settings settings;
+	protected final Settings settings;
 	
 	
 	//
 	// private fields
 	//
 	
+	/**
+	 * <p>Case 1: The constructor taking a date is to be used.
+	 * The default implementation of {@link TermStructure#getReferenceDate()} will
+	 * then return such date.
+	 * 
+	 * <p>Case 2: The constructor taking a number of days and a calendar is to be used 
+	 * so that {@link TermStructure#getReferenceDate()} will return a date calculated based on the
+	 * current evaluation date and the term structure and observers will be notified when the
+	 * evaluation date changes.
+	 * 
+	 * <p>Case 3: The {@link TermStructure#getReferenceDate()} method must
+	 * be overridden in derived classes so that it fetches and
+	 * return the appropriate date.
+	 */
 	private Date referenceDate;
-	private int settlementDays;
+	
+	/**
+	 * Beware that this variable must always be accessed via {@link #getCalendar()} method.
+	 * Extended classes have the option to redefine semantics of a calendar by keeping their own private
+	 * calendar variable and providing their own version of {@link #getCalendar()} method. When extended 
+	 * classes fail to provide their version of {@link #getCalendar()} method, <i><b>this</b>.getCalendar</i> 
+	 * must throw an {@link IllegalStateException} because the private variable calendar was never initialised.
+	 * 
+	 * @see #getCalendar
+	 */
 	private Calendar calendar;
-	private DayCounter dayCounter;
-	private boolean moving;
+	
+	/**
+	 * Beware that this variable must always be accessed via {@link #getDayCounter()} method.
+	 * Extended classes have the option to redefine semantics of a day counter by keeping their own private
+	 * dayCounter variable and providing their own version of {@link #getDayCounter()} method. When extended 
+	 * classes fail to provide their version of {@link #getDayCounter()} method, <i><b>this</b>.getDayCounter</i> 
+	 * must throw an {@link IllegalStateException} because the private variable dayCounter was never initialised.
+	 * 
+	 * @see #getDayCounter
+	 */
+	private final DayCounter dayCounter;
+	
+	/**
+	 * This variable must be <i>false</i> when Case 2; <i>true</i> otherwise
+	 */
 	private boolean updated;
 
-	private int nCase;
+
+	//
+	// private final fields
+	//
+	
+	private final int settlementDays;
+	
+	/**
+	 * This variable must be <i>true</i> when Case 2; <i>false</i> otherwise
+	 */
+	private final boolean moving;
 
 	/**
-	 * This private field is automatically initialized by constructor which
+	 * This private field is automatically initialized by constructors.
+	 * In the specific case of Case 2, the corresponding constructor
 	 * picks up it's value from {@link Settings} singleton. This procedure
 	 * caches values from the singleton, intending to avoid contention in
-	 * heavily multi-threaded environments.
+	 * heavily multi-threaded environments. In this specific case this class
+	 * observes date changes in order to update this variable.
 	 */
-	private Date today = null;
+	private Date today;
 
 	
 	//
@@ -134,16 +184,15 @@ public abstract class TermStructure implements Observer, Observable {
 	 */
 	public TermStructure(final DayCounter dc) {
 		if (dc==null) throw new NullPointerException(); // TODO: message
+		this.referenceDate = null;
 		this.settlementDays = 0;
 		this.dayCounter = dc;
+		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+
+		// When Case 1 or Case 3
 		this.moving = false;
 		this.updated = true;
-		this.nCase = 3;
-
-//XXX		
-//		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-//		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
-//		today.addObserver(this);
+		this.today = null;
 	}
 
 	/**
@@ -178,14 +227,12 @@ public abstract class TermStructure implements Observer, Observable {
 		this.settlementDays = 0;
 		this.calendar = calendar;
 		this.dayCounter = dc;
+		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+
+		// When Case 1 or Case 3
 		this.moving = false;
 		this.updated = true;
-		this.nCase = 1;
-
-//XXX		
-//		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-//		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
-//		today.addObserver(this);
+		this.today = null;
 	}
 	
 	/**
@@ -216,15 +263,16 @@ public abstract class TermStructure implements Observer, Observable {
      * @see TermStructure documentation for more details about constructors.
 	 */ 
 	public TermStructure(final int settlementDays, final Calendar calendar, final DayCounter dc) {
+		this.referenceDate = null;
 		this.settlementDays = settlementDays;
 		this.calendar = calendar;
 		this.dayCounter = dc;
+		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+
+		// When Case 2
 		this.moving = true;
 		this.updated = false;
-		this.nCase = 2;
-
-		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-		this.today = settings.getEvaluationDate(); //TODO: Allow today be set
+		this.today = settings.getEvaluationDate();
 		today.addObserver(this);
 	}
 	
@@ -245,8 +293,11 @@ public abstract class TermStructure implements Observer, Observable {
 	
 	/**
 	 * @return the calendar used for reference date calculation
+	 * 
+	 * @see #calendar
 	 */
 	public Calendar getCalendar() /* @ReadOnly */ {
+		if (this.calendar == null) throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);
 		return calendar;
 	}
 
@@ -254,12 +305,12 @@ public abstract class TermStructure implements Observer, Observable {
 	 * This method performs a date to double conversion which represents
 	 * the fraction of the year between the reference date and 
 	 * the date passed as parameter.
-	 *  
+	 *  type filter text
 	 * @param date
 	 * @return the fraction of the year as a double
 	 */
 	public final /*@Time*/ double getTimeFromReference(final Date date) {
-		return dayCounter.getYearFraction(getReferenceDate(), date);
+		return getDayCounter().getYearFraction(getReferenceDate(), date);
 	}
 
 	
@@ -285,9 +336,12 @@ public abstract class TermStructure implements Observer, Observable {
 	}
 	
 	/**
-	 * @return the day counter used for date/double conversion 
+	 * @return the day counter used for date/double conversion
+	 * 
+	 * @see #dayCounter
 	 */
 	public DayCounter getDayCounter() {
+		if (this.dayCounter == null) throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);
 		return dayCounter;
 	}
 
@@ -308,20 +362,17 @@ public abstract class TermStructure implements Observer, Observable {
 	 * @returns the Date at which discount = 1.0 and/or variance = 0.0
 	 */
 	public Date getReferenceDate() {
-		switch (nCase) {
-		case 1:
-			return referenceDate;
-		case 2:
+		if (moving) {
 			if (!updated) {
-				referenceDate = calendar.advance(today, settlementDays, TimeUnit.DAYS);
+				referenceDate = getCalendar().advance(today, settlementDays, TimeUnit.DAYS);
 				updated = true;
 			}
-			return referenceDate;
-		case 3:
-			throw new UnsupportedOperationException("getReferenceDate must be overridden on derived classes");
-		default:
-			throw new IllegalStateException();
 		}
+		
+		if (referenceDate==null) // i.e: Case 3
+			throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN); 
+
+		return referenceDate;
 	}
 
 	
@@ -356,7 +407,6 @@ public abstract class TermStructure implements Observer, Observable {
 	public void update(Observable o, Object arg) {
 		if (moving) {
 			updated = false;
-			//XXX today = settings.getEvaluationDate(); //TODO: Allow today be set
 		}
 		notifyObservers();
 	}

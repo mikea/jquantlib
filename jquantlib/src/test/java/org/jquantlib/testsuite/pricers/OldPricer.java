@@ -32,6 +32,7 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.testsuite.util.StopClock;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
+import org.junit.Test;
 
 //TODO:  Import all the testcase when MC is available
 //FIXME: Rename to OldPricerTest
@@ -70,8 +71,7 @@ public class OldPricer {
 	    
 	    private StopClock clock = new StopClock();
 	    
-	    // FIXME: add @Test
-	    void testMcSingleFactorPricers() {
+	    /* @Test public*/ void testMcSingleFactorPricers() {
 
 	        System.out.println("Testing old-style Monte Carlo single-factor pricers...");
 
@@ -93,73 +93,43 @@ public class OldPricer {
 	        // edited by Clewlow, Strickland
 
 	        BatchData cases5[] = {
-	              new BatchData(Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 2,
-	              0.13, true, 1.51917595129) ,
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 4,
-	              0.13, true, 1.67940165674 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 8,
-	              0.13, true, 1.75371215251 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 12,
-	              0.13, true, 1.77595318693 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 26,
-	              0.13, true, 1.81430536630 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 52,
-	              0.13, true, 1.82269246898 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 100,
-	              0.13, true, 1.83822402464 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 250,
-	              0.13, true, 1.83875059026 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 500,
-	              0.13, true, 1.83750703638 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0, 11.0/12.0, 1000,
-	              0.13, true, 1.83887181884 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 2,
-	              0.13, true, 1.51154400089 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 4,
-	              0.13, true, 1.67103508506 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 8,
-	              0.13, true, 1.74529684070 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 12,
-	              0.13, true, 1.76667074564 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 26,
-	              0.13, true, 1.80528400613 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 52,
-	              0.13, true, 1.81400883891 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 100,
-	              0.13, true, 1.82922901451 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 250,
-	              0.13, true, 1.82937111773 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 500,
-	              0.13, true, 1.82826193186 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 1000,
-	              0.13, true, 1.82967846654 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 2,
-	              0.13, true, 1.49648170891 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 4,
-	              0.13, true, 1.65443100462 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 8,
-	              0.13, true, 1.72817806731 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 12,
-	              0.13, true, 1.74877367895 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 26,
-	              0.13, true, 1.78733801988 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 52,
-	              0.13, true, 1.79624826757 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 100,
-	              0.13, true, 1.81114186876 ),
-	              new BatchData ( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 250,
-	              0.13, true, 1.81101152587 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 500,
-	              0.13, true, 1.81002311939 ),
-	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 1000,
-	              0.13, true, 1.81145760308 )
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,    2, 0.13, true, 1.51917595129 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,    4, 0.13, true, 1.67940165674 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,    8, 0.13, true, 1.75371215251 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,   12, 0.13, true, 1.77595318693 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,   26, 0.13, true, 1.81430536630 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,   52, 0.13, true, 1.82269246898 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,  100, 0.13, true, 1.83822402464 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,  250, 0.13, true, 1.83875059026 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,  500, 0.13, true, 1.83750703638 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0, 1000, 0.13, true, 1.83887181884 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0,    2, 0.13, true, 1.51154400089 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0,    4, 0.13, true, 1.67103508506 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0,    8, 0.13, true, 1.74529684070 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0,   12, 0.13, true, 1.76667074564 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0,   26, 0.13, true, 1.80528400613 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0,   52, 0.13, true, 1.81400883891 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0,  100, 0.13, true, 1.82922901451 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0,  250, 0.13, true, 1.82937111773 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0,  500, 0.13, true, 1.82826193186 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 1.0/12.0, 11.0/12.0, 1000, 0.13, true, 1.82967846654 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0,    2, 0.13, true, 1.49648170891 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0,    4, 0.13, true, 1.65443100462 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0,    8, 0.13, true, 1.72817806731 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0,   12, 0.13, true, 1.74877367895 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0,   26, 0.13, true, 1.78733801988 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0,   52, 0.13, true, 1.79624826757 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0,  100, 0.13, true, 1.81114186876 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0,  250, 0.13, true, 1.81101152587 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0,  500, 0.13, true, 1.81002311939 ),
+	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 1000, 0.13, true, 1.81145760308 )
 	        };
 
 	        
 	        for (int l=0; l<cases5.length; l++) {
 	            int dt = (int) cases5[l].length/(cases5[l].fixings-1);
 	            double[] timeIncrements = new double[cases5[l].fixings];
-	            for(int i=0;i<cases5[i].fixings;i++){
+	            for (int i=0; i<cases5[l].fixings; i++) {
 	            	timeIncrements[i] = i*dt + cases5[l].first;
 	            }
 	           
@@ -171,6 +141,8 @@ public class OldPricer {
 	           // TODO: Complete the test case when we have MonteCarlo
 	         
 	        }
+	        clock.stopClock();
+	        clock.log();
 	    }
        
 }

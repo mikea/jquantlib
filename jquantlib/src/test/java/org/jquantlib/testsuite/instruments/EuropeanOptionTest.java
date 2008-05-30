@@ -58,6 +58,7 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.testsuite.util.StopClock;
 import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
@@ -337,9 +338,13 @@ public class EuropeanOptionTest {
 	    Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
 	    PricingEngine engine = new AnalyticEuropeanEngine();
 
+	    StopClock clock = new StopClock();
+    	clock.reset();
+    	clock.startClock();
+
 	    for (int i=0; i<values.length-1; i++) {
 
-	    	System.out.println(values[i]);
+	    	System.out.print(values[i]);
 	    	
 	    	StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 	        Date exDate = today.getDateAfter( timeToDays(values[i].t) );
@@ -371,7 +376,9 @@ public class EuropeanOptionTest {
             sb.append("    result ").append(values[i].result).append('\n');
             sb.append("    tol ").append(values[i].tol); // .append('\n');
             
-        	if (error>tolerance)
+        	if (error<=tolerance)
+        		System.out.println(" error="+error);
+        	else
         		fail(exercise + " " + payoff.getOptionType() + " option with " + payoff + " payoff:\n" 
         	    + "    spot value:       " + values[i].s + "\n"
         	    + "    strike:           " + payoff.getStrike() + "\n" 
@@ -385,7 +392,8 @@ public class EuropeanOptionTest {
         	    + "    error:            " + error + "\n" 
         	    + "    tolerance:        " + tolerance);
 	    }
-
+	    clock.stopClock();
+	    clock.log();
 	}
 
 //

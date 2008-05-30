@@ -261,6 +261,15 @@ public interface Date extends Observable, Comparable<Date>{
     public boolean ge(int day, Month month, int year);
 
     /**
+     * Compares if <code>this</code> Date is equal to a given Date
+     * 
+     * @param date
+     *            is the date to be compared against <code>this</code> Date
+     * @return f <code>this</code> Date is equal to a given Date
+     */
+    public boolean eq(final Date date);
+
+    /**
      * Compares if <code>this</code> Date is equal to a Date represented by
      * the parameters
      * 
@@ -335,10 +344,6 @@ public interface Date extends Observable, Comparable<Date>{
             throw new RuntimeException("Operation not supported on NULL Date");
         }
 
-        public boolean ge(Date date) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
         public int getDayCount(Date date) {
             throw new RuntimeException("Operation not supported on NULL Date");
         }
@@ -408,6 +413,14 @@ public interface Date extends Observable, Comparable<Date>{
         }
 
         public boolean isLeap() {
+            throw new RuntimeException("Operation not supported on NULL Date");
+        }
+
+        public boolean eq(Date date) {
+            throw new RuntimeException("Operation not supported on NULL Date");
+        }
+
+        public boolean ge(Date date) {
             throw new RuntimeException("Operation not supported on NULL Date");
         }
 

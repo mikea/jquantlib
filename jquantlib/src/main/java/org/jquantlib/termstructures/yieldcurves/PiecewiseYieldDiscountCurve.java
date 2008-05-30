@@ -23,7 +23,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 	
 
 	// TODO: analyse if fields should be kept in a separate object
-	private CurveData	curveData	= new CurveData();
+	private CurveData	curveData;
 	private class CurveData {
 		public RateHelper<YieldTermStructure>[]	instruments;
 		public double							accuracy;
@@ -52,9 +52,12 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 	public PiecewiseYieldDiscountCurve(final Date referenceDate, final RateHelper<YieldTermStructure>[] instruments,
 			final DayCounter dayCounter, final double accuracy, final T interpolator) {
 		super(referenceDate, dayCounter, interpolator);
-		curveData.instruments = instruments;
-		curveData.accuracy = accuracy;
-		calculator.checkInstruments();
+		this.curveData = new CurveData();
+		this.curveData.instruments = instruments;
+		this.curveData.accuracy = accuracy;
+		this.traits = new Discount();
+		this.calculator = new PiecewiseYieldLazyCurve(this, this, traits, curveData);
+		this.calculator.checkInstruments();
 	}
 
 	// ---
@@ -151,7 +154,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 	 * 
 	 * @see YieldTraits
 	 */
-	private YieldTraits	traits	= new Discount();
+	private YieldTraits	traits;
 
 	private class Discount implements YieldTraits {
 
@@ -199,7 +202,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 	 * 
 	 * @see LazyObject
 	 */
-	private PiecewiseYieldLazyCurve	calculator	= new PiecewiseYieldLazyCurve(this, this, traits, curveData);	// FIXME: code review:   this???
+	private PiecewiseYieldLazyCurve	calculator;
 
 	private class PiecewiseYieldLazyCurve extends LazyObject {
 
@@ -208,8 +211,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 		private YieldTraits			traits;
 		private CurveData			curveData;
 
-		public PiecewiseYieldLazyCurve(final YieldTermStructure yts, final YieldCurve curve, final YieldTraits traits,
-				final CurveData curveData) {
+		public PiecewiseYieldLazyCurve(final YieldTermStructure yts, final YieldCurve curve, final YieldTraits traits, final CurveData curveData) {
 			this.yts = yts;
 			this.curve = curve;
 			this.traits = traits;
@@ -306,7 +308,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 			for (int i = 1; i < curveData.instruments.length; i++) {
 				Date m1 = curveData.instruments[i - 1].getLatestDate();
 				Date m2 = curveData.instruments[i].getLatestDate();
-				if (m1.equals(m2)) // FIXME: verify equality 
+				if (m1.eq(m2)) // FIXME: verify equality 
 					throw new IllegalArgumentException("two instruments have the same maturity (" + m1 + ")"); // FIXME: message
 			}
 			for (int i = 1; i < curveData.instruments.length; i++)

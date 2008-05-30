@@ -29,6 +29,7 @@ import org.jquantlib.time.Weekday;
  * @author Srinivas Hasti
  * 
  */
+//TODO: OSGi
 public abstract class DateFactory {
     private static DateFactory dateUtil;
     private static DateFactory DEFAULT_DATE_UTIL = new DefaultDate.JQLibDateUtil();
@@ -39,7 +40,7 @@ public abstract class DateFactory {
      * @param dateUtil
      */
     public static void setFactory(DateFactory dateUtil) {
-        if(DateFactory.dateUtil != null)
+        if (DateFactory.dateUtil != null)
             throw new RuntimeException("Dateutil already set ");
         DateFactory.dateUtil = dateUtil;
     }
@@ -50,7 +51,7 @@ public abstract class DateFactory {
      * @return
      */
     public static DateFactory getFactory() {
-        if(dateUtil == null)
+        if (dateUtil == null)
             return DEFAULT_DATE_UTIL;
         return dateUtil;
     }

@@ -48,12 +48,11 @@ public class IborIndex extends InterestRateIndex {
 			Calendar fixingCalendar, Currency currency,
 			BusinessDayConvention convention, boolean endOfMonth,
 			DayCounter dayCounter, Handle<YieldTermStructure> handle) {
-		super(familyName, tenor, fixingDays, fixingCalendar, currency,
-				dayCounter);
+		super(familyName, tenor, fixingDays, fixingCalendar, currency, dayCounter);
 		this.convention = convention;
 		this.termStructure = handle;
 		this.endOfMonth = endOfMonth;
-		if(handle != null)
+		if (handle != null)
 		   handle.getLink().addObserver(this);
 	}
 	
@@ -61,8 +60,7 @@ public class IborIndex extends InterestRateIndex {
 			Calendar fixingCalendar, Currency currency,
 			BusinessDayConvention convention, boolean endOfMonth,
 			DayCounter dayCounter) {
-		super(familyName, tenor, fixingDays, fixingCalendar, currency,
-				dayCounter);
+		super(familyName, tenor, fixingDays, fixingCalendar, currency, dayCounter);
 		this.convention = convention;
 		this.endOfMonth = endOfMonth;
 	}
@@ -75,15 +73,12 @@ public class IborIndex extends InterestRateIndex {
 	@Override
 	protected double forecastFixing(Date fixingDate) {
 		if (!termStructure.isEmpty())
-			throw new IllegalStateException(
-					"no forecasting term structure set to " + getName());
+			throw new IllegalStateException("no forecasting term structure set to " + getName());
 		Date fixingValueDate = valueDate(fixingDate);
 		Date endValueDate = maturityDate(fixingValueDate);
-		double fixingDiscount = termStructure.getLink().getDiscount(
-				fixingValueDate);
+		double fixingDiscount = termStructure.getLink().getDiscount(fixingValueDate);
 		double endDiscount = termStructure.getLink().getDiscount(endValueDate);
-		double fixingPeriod = getDayCounter().getYearFraction(fixingValueDate,
-				endValueDate);
+		double fixingPeriod = getDayCounter().getYearFraction(fixingValueDate, endValueDate);
 		return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
 	}
 
@@ -104,8 +99,7 @@ public class IborIndex extends InterestRateIndex {
 	 */
 	@Override
 	public Date maturityDate(Date valueDate) {
-		return getFixingCalendar().advance(valueDate, getTenor(), convention,
-				endOfMonth);
+		return getFixingCalendar().advance(valueDate, getTenor(), convention, endOfMonth);
 	}
 
 	public BusinessDayConvention getConvention() {

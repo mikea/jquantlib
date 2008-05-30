@@ -21,7 +21,7 @@ package org.jquantlib.testsuite.util;
 
 public class StopClock {
 	public static enum Unit {
-		MICRO, NANO;
+		ms, ns;
 	}
 
 	private Unit units;
@@ -29,7 +29,7 @@ public class StopClock {
 	private long stopTime;
 
 	public StopClock() {
-		this.units = Unit.MICRO;
+		this(Unit.ms);
 	}
 
 	public StopClock(Unit unit) {
@@ -37,20 +37,21 @@ public class StopClock {
 	}
 
 	public void startClock() {
-		if (units == Unit.MICRO)
+		if (units == Unit.ms)
 			startTime = System.currentTimeMillis();
 		else
 			startTime = System.nanoTime();
+		stopTime = startTime;
 	}
 
 	public void stopClock() {
-		if (units == Unit.MICRO)
+		if (units == Unit.ms)
 			stopTime = System.currentTimeMillis();
 		else
 			stopTime = System.nanoTime();
 	}
 
-	public long timeElapsed() {
+	public long getElapsedTime() {
 		return stopTime - startTime;
 	}
 
@@ -64,7 +65,7 @@ public class StopClock {
 	}
 	
 	public String toString(){
-		return ("Time taken: "+timeElapsed()+" "+units);
+		return ("Time taken: "+getElapsedTime()+units);
 	}
 	
 	public void log(){

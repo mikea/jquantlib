@@ -46,8 +46,9 @@ import org.jquantlib.util.Date;
  * @note This term structure will remain linked to the original structure, i.e., any changes in the latter will be reflected in this
  *       structure as well.
  */
-// TEST the correctness of the returned values is tested by checking them against numerical calculations.
-// TEST observability against changes in the underlying term structure is checked.
+//TEST the correctness of the returned values is tested by checking them against numerical calculations.
+//TEST observability against changes in the underlying term structure is checked.
+//FIXME: code review
 public class ImpliedTermStructure<T extends YieldTermStructure> extends YieldTermStructure {
 
 	private Handle<T>	originalCurve;
