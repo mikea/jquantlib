@@ -5,57 +5,13 @@ import org.jquantlib.math.distributions.GammaFunction;
 /**
  * Computes n factorial; <code>n!</code>
  * 
- * @author <Richard Gomes>
+ * @author Richard Gomes
  */
 public class Factorial {
-
 	
-
-	/**
-	 * Computes n factorial, <code>n!</code> 
-	 * @param n
-	 * @return <code>n!</code>
-	 */
-	public double get(int n) {
-		
-		check(n);
-		
-		if (n<=_tabulated) {
-			return _firstFactorials[n];
-		}
-		
-		return Math.exp(_gammaFunction.logValue(n+1));
-	   
-	}
-
-
-	/**
-	 * Computes log of n factorial, <code>ln(n!)</code>
-	 * @param n
-	 * @return <code>ln(n!)</code>
-	 */
-	public double ln(int n) {
+	private static final GammaFunction gammaFunction = new GammaFunction();
 	
-		check(n);
-		
-		if (n<=_tabulated) {
-		
-			return Math.log(_firstFactorials[n]);
-		} 
-		
-		return _gammaFunction.logValue(n+1);
-	   
-	}	
-	
-	private void check(int n){
-
-		if (n<0) throw new ArithmeticException("Factorial: expected n>=0, " + n);
-	
-	}
-	
-	private static final GammaFunction _gammaFunction = new GammaFunction();
-	
-	private static final double _firstFactorials[] = {
+	private static final double firstFactorials[] = {
                					1.0,                                   1.0,
                					2.0,                                   6.0,
                					24.0,                                 120.0,
@@ -73,6 +29,37 @@ public class Factorial {
 
 	};
 	
-	private static final int _tabulated = _firstFactorials.length;
+	private static final int tabulated = firstFactorials.length;
+
+	/**
+	 * Computes n factorial, <code>n!</code> 
+	 * @param n
+	 * @return <code> n!</code>
+	 */
+	public double get(int n) {
+		check(n);
+		if (n <= tabulated) {
+			return firstFactorials[n];
+		}
+		return Math.exp(gammaFunction.logValue(n + 1));
+	}
+
+
+	/**
+	 * Computes log of n factorial, <code>ln(n!)</code>
+	 * @param n
+	 * @return <code>ln(n!)</code>
+	 */
+	public double ln(int n) {
+		check(n);
+		if (n <= tabulated) {
+			return Math.log(firstFactorials[n]);
+		} 
+		return gammaFunction.logValue(n + 1);
+	}	
+	
+	private void check(int n){
+		if (n < 0) throw new ArithmeticException("Factorial: expected n >= 0, " + n);
+	}
 }
 

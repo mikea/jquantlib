@@ -50,7 +50,7 @@ import org.jquantlib.math.integrals.TabulatedGaussLegendre;
  * Approximations To Cumulative Normal Distibutions", Graeme
  * West, Dec 2004 available at www.finmod.co.za. Also available
  * in Wilmott Magazine, 2005, (May), 70-76, The main code is a
- * port of the C++ code at www.finmod.co.za/cumfunctions.zip.
+ * port of the C++ code at www.finmod.co.za/cumnorm.zip.
  * <p>
  * The algorithm is based on the near double-precision algorithm
  * described in "Numerical Computation of Rectangular Bivariate
@@ -85,26 +85,14 @@ public class BivariateNormalDistribution {
 		}
 		correlation_ = rho;
 	}
-
+	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @return BVN
+	 */
 	public double evaluate(double x, double y) {
-
-		/* 	The implementation is described at section 2.4 "Hybrid
-			Numerical Integration Algorithms" of "Numerical Computation
-			of Rectangular Bivariate an Trivariate Normal and t
-			Probabilities", Genz (2004), Statistics and Computing 14,
-			151-160. (available at
-			www.sci.wsu.edu/math/faculty/henz/homepage)
-
-			The Gauss-Legendre quadrature have been extracted to
-			TabulatedGaussLegendre (x,w zero-based)
-
-			The functions to be integrated numerically have been moved
-			to classes eqn3 and eqn6
-
-			Change some magic numbers to M_PI 
-			
-		 */
-
 		TabulatedGaussLegendre gaussLegendreQuad = new TabulatedGaussLegendre(
 				20);
 		if (Math.abs(correlation_) < 0.3) {
@@ -168,8 +156,14 @@ public class BivariateNormalDistribution {
 		return BVN;
 	}
 
-	private class eqn3 implements UnaryFunctionDouble { /* Relates to eqn3 Genz 2004 */
+	/**
+	 * Relates to equation 3, see Genz 2004.
+	 */
+	
+	private class eqn3 implements UnaryFunctionDouble { 
 
+		private double hk_, asr_, hs_;
+		
 		public eqn3(double h, double k, double asr) {
 			hk_ = h * k;
 			hs_ = (h * h + k * k) / 2;
@@ -180,11 +174,13 @@ public class BivariateNormalDistribution {
 			double sn = Math.sin(asr_ * (-x + 1) * 0.5);
 			return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn));
 		}
-
-		private double hk_, asr_, hs_;
 	};
 
-	private class eqn6 implements UnaryFunctionDouble { /* Relates to eqn6 Genz 2004 */
+	/**
+	 * Relates t equation 6, see Genz 2004.
+	 * 	 
+	 */
+	private class eqn6 implements UnaryFunctionDouble { 
 		
 		private double a_, c_, d_, bs_, hk_;
 
@@ -206,11 +202,7 @@ public class BivariateNormalDistribution {
 						/ (2 * (1 + rs)))
 						/ rs - (1 + c_ * xs * (1 + d_ * xs))));
 			} 
-			
 			return 0.0;
 		}
-
-		
 	};
-
 }

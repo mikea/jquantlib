@@ -44,95 +44,84 @@ import org.jquantlib.math.Factorial;
 
 public class BinomialDistribution {
 
-	private static final Factorial factorial_ = new Factorial();
-	
-	/**
-	 * @param n_ sequence of independent yes/no experiments
-	 */
-    private int n_;
-    
-    /**
-     * @param logP_ Natural logarithm of p
-     * @param logOneMinusP_ Natural logarithm of 1-p
-     */
-    private double logP_, logOneMinusP_;
-
+	private static final Factorial factorial = new Factorial();
+    private int nExp;
+    private double logP, logOneMinusP;
 
     /**
-     * <b>public BinomilalDistribution(final double p, final int n)</b> <br>
-     * Constructor to initialize the private p and n and to ensure that 
-     * p is within the range of [0..1]. <br>
-     * If p = 0.0 then logMinusP_ is set to 0.0. <br>
-     * If p = 1.0 then logP is set to 1.0. <p>
-     * 
-     * @param p	Probability
+     * Constructor of the Binomial Distribution taking two arguments for
+     * initialization.
+     * @param p	Probability of success of each trial
      * @param n Sequence of independent yes/no experiments
      */
 	public BinomialDistribution(final double p, final int n) {
-		n_=n;
+		nExp = n;
 
 		if (p == 0.0) {
-			logOneMinusP_ = 0.0;
+			logOneMinusP = 0.0;
 		} else if (p == 1.0) {
-			logP_ = 0.0;
+			logP = 0.0;
 		} else {
-			if (!(p > 0)){
+			if ((p < 0)){
 				throw new ArithmeticException("negative p not allowed");
 			}
-			if (!(p < 1.0)){
-				throw new ArithmeticException("p>1.0 not allowed");
+			if ((p > 1.0)){
+				throw new ArithmeticException("p > 1.0 not allowed");
 			}
-		
-			logP_ = Math.log(p);
-			logOneMinusP_ = Math.log(1.0 - p);
-
+			logP = Math.log(p);
+			logOneMinusP = Math.log(1.0 - p);
 		}
-
 	}
 	
-	// TODO Consider developing an UnaryFunctionSomething for int vars.
+	// TODO Consider developing an UnaryFunctionSomething for integer variables.
+	/**
+	 * Computes the probability of <code>k</code> successful trials. 
+	 * @param k
+	 * @return Math.exp(binomialCoefficientLn(nExp, k) +
+                            k * logP + (nExp-k) * logOneMinusP);
+	 */
 	public double evaluate(final int k) {
 
-        if (k > n_) return 0.0;
+        if (k > nExp) return 0.0;
 
         // p == 1.0
-        if (logP_ == 0.0) {
-            return (k == n_ ? 1.0 : 0.0);
+        if (logP == 0.0) {
+            return (k == nExp ? 1.0 : 0.0);
         }
         // p==0.0
-        if (logOneMinusP_ == 0.0){
+        if (logOneMinusP == 0.0){
             return (k == 0 ? 1.0 : 0.0);
         }
-        return Math.exp(binomialCoefficientLn(n_, k) +
-                            k * logP_ + (n_-k) * logOneMinusP_);
+        return Math.exp(binomialCoefficientLn(nExp, k) +
+                            k * logP + (nExp-k) * logOneMinusP);
 	}
 
 	/**
-	 * 
+	 * Computes the natural logarithm of the binoomial coefficient.
 	 * @param n
 	 * @param k
-	 * @return Natural logartihm of the binomial coefficient
+	 * @return Natural logarithm of the binomial coefficient
 	 */
 	private static double binomialCoefficientLn(final int n, final int k) {
 
 		if (!(n >= 0)) {
-			throw new ArithmeticException("n<0 not allowed, " + n);
+			throw new ArithmeticException("n < 0 not allowed, " + n);
 		}
 		if (!(k >= 0)) {
-			throw new ArithmeticException("k<0 not allowed, " + k);
+			throw new ArithmeticException("k < 0 not allowed, " + k);
 		}
 		if (!(n >= k)){
-			throw new ArithmeticException("n<k not allowed");
+			throw new ArithmeticException("n < k not allowed");
 		}
 
-        return factorial_.ln(n) - factorial_.ln(k) - factorial_.ln(n - k);
+        return factorial.ln(n) - factorial.ln(k) - factorial.ln(n - k);
     }
 	
 	/**
-	 * 
+	 * Computes the binomial coefficient.
 	 * @param n
 	 * @param k
-	 * @return Binomial Coefficient
+	 * @return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)))
 	 */
 	private static double binomialCoefficient(final int n, final int k) {
 		return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)));
