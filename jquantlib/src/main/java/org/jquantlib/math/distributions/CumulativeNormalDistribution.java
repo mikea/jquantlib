@@ -25,6 +25,10 @@ import org.jquantlib.math.ErrorFunction;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
+ * Cumulative normal distribution function.<br>
+ * Given x it provides an approximation to the integral of the gaussian normal distribution.<br>
+ * For this implementation see M. Abramowitz and I. Stegun, Handbook of Mathematical Functions, Dover Publications, New York (1972)
+ * 
  * @author Richard Gomes
  */
 public class CumulativeNormalDistribution extends NormalDistribution implements UnaryFunctionDouble {
@@ -40,12 +44,17 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
 		super(average, sigma);
 	}
 
-	public double evaluate(double z) {
+	/** 
+	 * Computes the cumulative normal distribution.
+	 * @param z
+	 * @return result
+	 */
+	public double evaluate(double z) /* @Read-only */ {
 		
         double result = 0.5 * ( 1.0 + errorFunction.evaluate( z*Constants.M_SQRT_2 ) );
         if (result<=1e-8) { 
-        	//See Jackels book
-        	//TODO: investigate the threshold level
+        	// See Jackels book
+        	// TODO: investigate the threshold level
             // Asymptotic expansion for very negative z following (26.2.12)
             // on page 408 in M. Abramowitz and A. Stegun,
             // Pocketbook of Mathematical Functions, ISBN 3-87144818-4.
@@ -66,6 +75,11 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
         return result;
 	}
 	
+	/**
+	 * Computes the derivative.
+	 * @param x
+	 * @return <code>gaussian.evaluate(xn) / sigma</code>
+	 */
 	public double derivative(double x) /* @ReadOnly */ {
 		double xn = (x - average) / sigma;
 		return gaussian.evaluate(xn) / sigma;

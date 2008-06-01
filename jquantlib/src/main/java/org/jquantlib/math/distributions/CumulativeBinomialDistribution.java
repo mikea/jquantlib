@@ -29,12 +29,12 @@ package org.jquantlib.math.distributions;
 import org.jquantlib.math.Beta;
 
 /**
+ * Cumulative binomial distribution function.<br>
+ * Given an integer k it provides the cumulative probability of observing kk<=k.
  * 
  * @author Richard Gomes
  *
  */
-
-//TODO: Add test case for the CumulativeBinomialDistribution
 
 public class CumulativeBinomialDistribution {
 	static private double accuracy = 1e-16;
@@ -42,8 +42,13 @@ public class CumulativeBinomialDistribution {
     static private int n_;
     static private double p_;
     
+    /**
+     * This constructor initializes p and n
+     * @param p Probability of success of a single trial
+     * @param n The total number of trials
+     */
     public CumulativeBinomialDistribution(double p, int n){  
-    	n_ = n; // number of trials
+    	n_ = n; // total number of trials
     	p_ = p; // probability of success on a single trial
     	
     	if ((p<=0.0)) {
@@ -54,16 +59,24 @@ public class CumulativeBinomialDistribution {
 		}
     }
 
+    /**
+     * Computes the Cumulative Binomial Distribution.
+     * @param k
+     * @return 1.0 - Beta.incompleteBetaFunction(k+1, n_-k, p_, accuracy, maxIteration)
+     */
 	public double evaluate(int k){
 		 if (k >= n_)return 1.0;
          else return 1.0 - Beta.incompleteBetaFunction(k+1, n_-k, p_, accuracy, maxIteration);
 	}
 		
 	
-	/*
-	 * Given an odd integer and a real number z it returns p such that:
+	/**
+	 * Given an odd integer and a real number z it returns p such that:<br>
 	 * 1 - CumulativeBinomialDistribution((n-1/2, n, p) = CumulativeNormalDistribution(z)
-	 * n must be odd
+	 * n must be odd.
+	 * @param z
+	 * @param n
+	 * @return result
 	 */
 	static private double PeizerPrattMehtod2Inversion(double z, int n) {
 		if(n%2 == 1) {
@@ -77,5 +90,4 @@ public class CumulativeBinomialDistribution {
 		
 		return result;	
 	}
-
 }

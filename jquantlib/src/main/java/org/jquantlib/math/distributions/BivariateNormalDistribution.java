@@ -50,13 +50,13 @@ import org.jquantlib.math.integrals.TabulatedGaussLegendre;
  * Approximations To Cumulative Normal Distibutions", Graeme
  * West, Dec 2004 available at www.finmod.co.za. Also available
  * in Wilmott Magazine, 2005, (May), 70-76, The main code is a
- * port of the C++ code at www.finmod.co.za/cumnorm.zip.
+ * port of the C++ code at <a href="www.finmod.co.za/cumnorm.zip">www.finmod.co.za/cummnorm.zip</a>.
  * <p>
  * The algorithm is based on the near double-precision algorithm
  * described in "Numerical Computation of Rectangular Bivariate
  * an Trivariate Normal and t Probabilities", Genz (2004),
  * Statistics and Computing 14, 151-160. (available at
- * www.sci.wsu.edu/math/faculty/henz/homepage)
+ * <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/bvnt.html">www.math.wsu.edu/faculty/genz/papers/bvnt/bvnt.html</a>)
  * <p>
  * This implementation mainly differs from the original
  * code in two regards;
@@ -87,7 +87,7 @@ public class BivariateNormalDistribution {
 	}
 	
 	/**
-	 * 
+	 * Computes the Bivariate Normal Distribution.
 	 * @param x
 	 * @param y
 	 * @return BVN
@@ -157,12 +157,22 @@ public class BivariateNormalDistribution {
 	}
 
 	/**
-	 * Relates to equation 3, see Genz 2004.
+	 * Relates to equation 3, see Genz 2004.<br>
+	 * <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">The Transformed BVN Problem</a>
+	 * 
 	 */
 	
 	private class eqn3 implements UnaryFunctionDouble { 
 
 		private double hk_, asr_, hs_;
+		
+		/**
+		 * Equation 3, see Genz 2004.
+		 * @param h
+		 * @param k
+		 * @param asr
+		 * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
+		 */
 		
 		public eqn3(double h, double k, double asr) {
 			hk_ = h * k;
@@ -170,6 +180,14 @@ public class BivariateNormalDistribution {
 			asr_ = asr;
 		}
 
+		/**
+		 * Computes equation 3, see Genz 2004.<br>
+		 * <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">The Transformed BVN Problem</a>
+		 * @param h
+		 * @param k
+		 * @param asr
+		 * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
+		 */
 		public double evaluate(double x) {
 			double sn = Math.sin(asr_ * (-x + 1) * 0.5);
 			return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn));
@@ -177,7 +195,8 @@ public class BivariateNormalDistribution {
 	};
 
 	/**
-	 * Relates t equation 6, see Genz 2004.
+	 * Relates to equation 6, see Genz 2004.<br>
+	 * <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Numerical Integration Results</a>
 	 * 	 
 	 */
 	private class eqn6 implements UnaryFunctionDouble { 
@@ -192,6 +211,16 @@ public class BivariateNormalDistribution {
 			hk_ = hk;
 		}
 
+		/**
+		 * Computes equation 6, see Genz 2004.<br>
+		 * <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Numerical Integration Results</a>
+		 * @param x
+		 * @return <code>if (asr > -100.0) </code> return (a_ * Math.exp(asr) * (Math.exp(-hk_ * (1 - rs)
+						/ (2 * (1 + rs)))
+						/ rs - (1 + c_ * xs * (1 + d_ * xs))))<br>
+				   <code>else</code> return 0.00
+		 * 
+		 */
 		public double evaluate(double x) {
 			double xs = a_ * (-x + 1);
 			xs = Math.abs(xs * xs);
