@@ -70,6 +70,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	public void reload() {
 		super.reload();
 		
+		logY = new double[vx.length];
 		for (int i=0; i<vx.length; i++){
 			if (vx[i] <= 0.0) {
 				throw new ArithmeticException("negative or null value " + vx[i] + " at " + i + " position.");
@@ -88,13 +89,19 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 		return Math.exp(linearInterpolation.evaluate(x));
 	}
 	
+    //
+    // static methods
+    //
+    
+	static public Interpolator getInterpolator() {
+		LogLinearInterpolation logLinearInterpolation = new LogLinearInterpolation();
+		return logLinearInterpolation. new LogLinearInterpolationImpl(logLinearInterpolation);
+	}
+	
+
 	//
 	// inner classes
 	//
-	
-	static public Interpolator getInterpolator() {
-		return new LogLinearInterpolationImpl();
-	}
 	
 	/**
 	 * This static class is a factory for LogLinearInterpolation instances.
@@ -103,13 +110,13 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	 * @author Richard Gomes
 	 */	
 	
-	static private class LogLinearInterpolationImpl implements Interpolator {
+	private class LogLinearInterpolationImpl implements Interpolator {
 		private LogLinearInterpolation delegate;
 		
-		public LogLinearInterpolationImpl() {
-			delegate = new LogLinearInterpolation();
+		public LogLinearInterpolationImpl(final LogLinearInterpolation delegate) {
+			this.delegate = delegate;
 		}
-		
+
 		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
 			return interpolate(x.length, x, y);
 		}

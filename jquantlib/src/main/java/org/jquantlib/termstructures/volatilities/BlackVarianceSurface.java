@@ -44,8 +44,9 @@ import org.jquantlib.math.interpolation.Interpolation2D;
 import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.math.interpolation.Interpolator2D;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Visitable;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -60,7 +61,7 @@ import org.jquantlib.util.Visitor;
  */
 // TODO: check time extrapolation
 // CODE REVIEW DONE by Richard Gomes
-public class BlackVarianceSurface extends BlackVarianceTermStructure implements Visitable<Object> {
+public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
 	public enum Extrapolation {
 		ConstantExtrapolation, InterpolatorDefaultExtrapolation
@@ -165,13 +166,14 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure implements 
 	}
 
 	//
-	// implements Visitable
+	// implements TypedVisitable
 	//
 	
 	@Override
-	public void accept(final Visitor<Object> v) {
-		if (v != null) {
-			v.visit(this);
+	public void accept(final TypedVisitor<TermStructure> v) {
+		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
 		} else {
 			super.accept(v);
 		}

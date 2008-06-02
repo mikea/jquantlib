@@ -53,7 +53,7 @@ import org.junit.Test;
 public class BrazilCalendarTest {
 	
 	@Test
-    public void Brazil() {
+    public void testBrazil() {
                        
     	Calendar c = Brazil.getCalendar(Brazil.Market.BOVESPA);
     	
@@ -146,7 +146,7 @@ public class BrazilCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.HolidayListCheck(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, c, year);
     }
     
     /*

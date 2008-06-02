@@ -174,7 +174,9 @@ public class Handle<T extends Observable> implements Observable {
 				if (this.observable!=null && this.isObserver) {
 					this.observable.addObserver(this);
 				}
-				this.observable.notifyObservers();
+				if (this.observable!=null) {
+					this.observable.notifyObservers();
+				}
 			}
 		}
 		

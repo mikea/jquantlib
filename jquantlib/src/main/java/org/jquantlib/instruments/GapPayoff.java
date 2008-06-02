@@ -20,6 +20,9 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
+
 
 
 
@@ -47,5 +50,20 @@ public class GapPayoff extends StrikedTypePayoff {
     		throw new IllegalArgumentException(UNKNOWN_OPTION_TYPE);
     	}
     }
+
+
+	//
+	// implements TypedVisitable
+	//
+	
+	@Override
+	public void accept(final TypedVisitor<Payoff> v) {
+		Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
+		} else {
+			super.accept(v);
+		}
+	}
 
 }

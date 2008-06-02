@@ -44,12 +44,9 @@ public class ActualActual extends AbstractDayCounter {
 		ISMA, BOND, ISDA, HISTORICAL, ACTUAL365, AFB, EURO
 	};
 
-	private static final ActualActual ISMA_DAYCOUNTER = new ActualActual(
-			Convention.ISMA);
-	private static final ActualActual ACTUAL365_DAYCOUNTER = new ActualActual(
-			Convention.ISDA);
-	private static final ActualActual AFB_DAYCOUNTER = new ActualActual(
-			Convention.AFB);
+	private static final ActualActual ISMA_DAYCOUNTER = new ActualActual(Convention.ISMA);
+	private static final ActualActual ACTUAL365_DAYCOUNTER = new ActualActual(Convention.ISDA);
+	private static final ActualActual AFB_DAYCOUNTER = new ActualActual(Convention.AFB);
 
 	private DayCounter delegate = null;
 
@@ -110,7 +107,7 @@ public class ActualActual extends AbstractDayCounter {
 				refPeriodEnd);
 	}
 
-	private static class ISMA extends AbstractDayCounter {
+	private class ISMA extends AbstractDayCounter {
 
 		public final String getName() /* @ReadOnly */{
 			return "Actual/Actual (ISMA)";
@@ -224,7 +221,7 @@ public class ActualActual extends AbstractDayCounter {
 		}
 	}
 
-	private static class ISDA extends AbstractDayCounter {
+	private class ISDA extends AbstractDayCounter {
 
 		public final String getName() /* @ReadOnly */{
 			return "Actual/Actual (ISDA)";
@@ -259,7 +256,7 @@ public class ActualActual extends AbstractDayCounter {
 
 	}
 
-	private static class AFB extends AbstractDayCounter {
+	private class AFB extends AbstractDayCounter {
 
 		public final String getName() {
 			return "Actual/Actual (AFB)";

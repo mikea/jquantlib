@@ -19,6 +19,9 @@
  */
 package org.jquantlib.cashflow;
 
+import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
+
 
 /**
  * @author Srinivas Hasti
@@ -51,7 +54,20 @@ public abstract class CashFlow extends Event implements Comparable<CashFlow> {
 
            return 1;
 	}
+
+
+	//
+	// implements TypedVisitable
+	//
 	
-	
+	@Override
+	public void accept(final TypedVisitor<Event> v) {
+		Visitor<Event> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
+		} else {
+			super.accept(v);
+		}
+	}
 
 }

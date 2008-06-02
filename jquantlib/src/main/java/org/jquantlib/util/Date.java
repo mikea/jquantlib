@@ -31,7 +31,7 @@ import org.jquantlib.time.Weekday;
  * @author Srinivas Hasti
  * 
  */
-public interface Date extends Observable, Comparable<Date>{
+public interface Date extends Observable, Comparable<Date> {
 
     /**
      * Returns Month of the year
@@ -333,179 +333,236 @@ public interface Date extends Observable, Comparable<Date>{
     public Updatable<Date> getUpdatable();
 
     /**
-     * To use it in place of non initialized date object reference
+     * To use it in place of non initialized date object reference.
+     * 
+     * @note the method <i>compareTo</i> always throws {@link UnsupportedOperationException}
      */
-    public Date NULL_DATE = new Date() {
-        public Date decrement() {
-            throw new RuntimeException("Operation not supported on NULL Date");
+    public final Date NULL_DATE = new Date() {
+    	static private final String NULL_DATE_STR = "NULL Date";
+    	
+        @Override
+        public int hashCode() {
+            return super.hashCode();
         }
-
-        public Date decrement(int days) {
-            throw new RuntimeException("Operation not supported on NULL Date");
+        
+        @Override
+        public boolean equals(Object another) {
+            return super.equals(another);
         }
-
-        public int getDayCount(Date date) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public int getDayOfMonth() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public int getDayOfYear() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Date getEndOfMonth() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public String getISOFormat() {
-            return "NULL Date";
-        }
-
-        public String getLongFormat() {
-            return "NULL Date";
-        }
-
-        public int getMonth() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Month getMonthEnum() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Date getNextWeekday(Weekday dayOfWeek) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public String getShortFormat() {
-            return "NULL Date";
-        }
-
-        public Weekday getWeekday() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public int getYear() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean gt(Date date) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Date increment() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Date increment(int days) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Date adjust(Period p) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean isEndOfMonth() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean isLeap() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean eq(Date date) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean ge(Date date) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean le(Date date) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean lt(Date date) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Date getDateAfter(Period p) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Date getNextDay() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Date getPreviousDay() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean eq(int day, Month month, int year) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean ge(int day, Month month, int year) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean gt(int day, Month month, int year) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean le(int day, Month month, int year) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public boolean lt(int day, Month month, int year) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public void addObserver(Observer observer) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public int countObservers() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public void deleteObserver(Observer observer) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public void deleteObservers() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public List<Observer> getObservers() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public void notifyObservers() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public void notifyObservers(Object arg) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Date getDateAfter(int n) {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-        public Updatable<Date> getUpdatable() {
-            throw new RuntimeException("Operation not supported on NULL Date");
-        }
-
-		public int compareTo(Date o) {
-			 throw new RuntimeException("Operation not supported on NULL Date");
+        
+        @Override
+        public int compareTo(Date o) {
+            throw new UnsupportedOperationException();
 		}
 
+        @Override
+        public Date decrement() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date decrement(int days) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int getDayCount(Date date) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int getDayOfMonth() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int getDayOfYear() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date getEndOfMonth() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String getISOFormat() {
+            return NULL_DATE_STR;
+        }
+
+        @Override
+        public String getLongFormat() {
+            return NULL_DATE_STR;
+        }
+
+        @Override
+        public int getMonth() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Month getMonthEnum() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date getNextWeekday(Weekday dayOfWeek) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String getShortFormat() {
+            return NULL_DATE_STR;
+        }
+
+        @Override
+        public Weekday getWeekday() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int getYear() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean gt(Date date) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date increment() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date increment(int days) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date adjust(Period p) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isEndOfMonth() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isLeap() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean eq(Date date) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean ge(Date date) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean le(Date date) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean lt(Date date) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date getDateAfter(Period p) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date getNextDay() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date getPreviousDay() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean eq(int day, Month month, int year) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean ge(int day, Month month, int year) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean gt(int day, Month month, int year) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean le(int day, Month month, int year) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean lt(int day, Month month, int year) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void addObserver(Observer observer) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int countObservers() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void deleteObserver(Observer observer) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void deleteObservers() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<Observer> getObservers() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void notifyObservers() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void notifyObservers(Object arg) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date getDateAfter(int n) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Updatable<Date> getUpdatable() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
 		public Date getNthWeekday(int n, Weekday weekday) {
-			 throw new RuntimeException("Operation not supported on NULL Date");
+            throw new UnsupportedOperationException();
 		}
 
     };

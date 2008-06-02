@@ -146,18 +146,6 @@ import org.jquantlib.util.Month;
  * @author Richard Gomes
  */
 public class EquityOptions {
-//    static {
-//	/*
-//	 * You need to run this thing with something like:
-//	 * -Djava.library.path=/usr/local/lib
-//	 */
-//	System.out.println("Loading QuantLib...");
-//        try {
-//	    System.loadLibrary("QuantLibJNI");
-//	} catch (RuntimeException e) {
-//	    e.printStackTrace();
-//	}
-//    }
 
     /**
      * @param args

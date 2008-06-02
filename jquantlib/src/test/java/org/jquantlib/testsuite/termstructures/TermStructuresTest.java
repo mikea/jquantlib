@@ -108,11 +108,11 @@ public class TermStructuresTest {
         int deposits = depositData.length;
         int swaps = swapData.length;
             
-        RateHelper instruments[] = new RateHelper[deposits+swaps];
+        RateHelper<YieldTermStructure> instruments[] = new RateHelper[deposits+swaps];
         
 
         for (int i=0; i<deposits; i++) {
-            instruments[i] = new DepositRateHelper(
+            instruments[i] = new DepositRateHelper<YieldTermStructure>(
             						depositData[i].rate/100,
             						new Period(depositData[i].n, depositData[i].units),
                                     settlementDays, calendar,

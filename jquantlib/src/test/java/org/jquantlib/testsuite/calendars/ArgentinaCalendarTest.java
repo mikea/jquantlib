@@ -91,7 +91,7 @@ public class ArgentinaCalendarTest {
     
     	// Call the Holiday Check
     	CalendarUtil cbt = new CalendarUtil();
-    	cbt.HolidayListCheck(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, c, year);
    
     }
     
@@ -115,7 +115,7 @@ public class ArgentinaCalendarTest {
         
         // Call the Holiday Check
     	CalendarUtil cbt = new CalendarUtil();
-    	cbt.HolidayListCheck(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, c, year);
     }
     
     void testArgentinaYear2008(Calendar c)
@@ -138,7 +138,7 @@ public class ArgentinaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.HolidayListCheck(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, c, year);
     }
     
     void testArgentinaYear2009(Calendar c) {
@@ -161,7 +161,7 @@ public class ArgentinaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.HolidayListCheck(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, c, year);
     	
     }
 
@@ -185,7 +185,7 @@ public class ArgentinaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.HolidayListCheck(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, c, year);
     	
     }
 }

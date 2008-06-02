@@ -259,14 +259,16 @@ public class DefaultDate extends BaseDate {
         return result;
     }
 
+    @Override
+    public int hashCode() {
+    	return ((Object)this).hashCode();
+    }
+    
+    @Override
     public boolean equals(Object anObject) {
-        if (anObject == null)
-            return false;
-        if (!(anObject instanceof DefaultDate))
-            return false;
-        if (this.value != ((DefaultDate) anObject).value)
-            return false;
-        return true;
+        if (anObject==null) return false;
+        if (!(anObject instanceof DefaultDate)) return false;
+        return eq((Date)anObject);
     }
 
     public final int getMonth() {
@@ -498,6 +500,10 @@ public class DefaultDate extends BaseDate {
         return (this.getDayOfMonth() == getMonthLength(this.getMonth(), isLeap(this.getYear())));
     }
 
+    public boolean eq(final Date date) {
+        return value == ((DefaultDate) date).value;
+    }
+
     public boolean lt(final Date date) {
         return value < ((DefaultDate) date).value;
     }
@@ -514,9 +520,6 @@ public class DefaultDate extends BaseDate {
         return value >= ((DefaultDate) date).value;
     }
     
-    public boolean eq(final Date date) {
-    	return value == ((DefaultDate) date).value;
-    }
 
     /**
      * Returns the String representing this Date in a long format. This is the

@@ -28,7 +28,8 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.Visitable;
+import org.jquantlib.util.TypedVisitable;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -36,8 +37,7 @@ import org.jquantlib.util.Visitor;
  * 
  * @author Richard Gomes
  */
-//CODE REVIEW DONE by Richard Gomes
-public abstract class Event implements Observable, Visitable<Event> {
+public abstract class Event implements Observable, TypedVisitable<Event> {
 
 	/**
 	 * This private field is automatically initialized by constructor which
@@ -137,16 +137,17 @@ public abstract class Event implements Observable, Visitable<Event> {
 
 
 	//
-	// implements Visitable interface
+	// implements TypedVisitable
 	//
-
-	private static final String NULL_VISITOR = "null event visitor";
-
-	public final void accept(final Visitor<Event> v) {
-		if (v != null) {
-			v.visit(this);
+	
+	@Override
+	public void accept(final TypedVisitor<Event> v) {
+		Visitor<Event> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
 		} else {
-			throw new NullPointerException(NULL_VISITOR);
+			throw new UnsupportedOperationException("null event visitor");
 		}
 	}
+	
 }

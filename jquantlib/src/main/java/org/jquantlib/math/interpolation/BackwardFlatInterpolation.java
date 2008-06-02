@@ -100,25 +100,31 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
             return vy[i+1];
 	}
 
+    //
+    // static methods
+    //
+    
+    static public Interpolator getInterpolator() /* @ReadOnly */ {
+    	BackwardFlatInterpolation backwardFlatInterpolation = new BackwardFlatInterpolation();
+		return backwardFlatInterpolation. new BackwardFlarInterpolationImpl(backwardFlatInterpolation);
+    }
+    
     
     //
     // inner classes
     //
     
-    static public Interpolator getInterpolator() /* @ReadOnly */ {
-    	return new BackwardFlarInterpolationImpl();
-    }
-    
     /**
-	 * This static class is a factory for LinearInterpolation instances.
+	 * This class is a factory for LinearInterpolation instances.
 	 * 
 	 * @author Richard Gomes
 	 */
-	static private class BackwardFlarInterpolationImpl implements Interpolator {
+    
+	private class BackwardFlarInterpolationImpl implements Interpolator {
 		private BackwardFlatInterpolation delegate;
 		
-		public BackwardFlarInterpolationImpl() {
-			delegate = new BackwardFlatInterpolation();
+		public BackwardFlarInterpolationImpl(final BackwardFlatInterpolation delegate) {
+			this.delegate = delegate;
 		}
 		
 		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {

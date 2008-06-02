@@ -43,10 +43,11 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolatilityTermStructure;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.jquantlib.util.Visitable;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -56,7 +57,7 @@ import org.jquantlib.util.Visitor;
  * interface for a constant Black volatility (no time/strike
  * dependence).
  */
-public class BlackConstantVol extends BlackVolatilityTermStructure implements Visitable<Object> {
+public class BlackConstantVol extends BlackVolatilityTermStructure {
 
     private Handle<? extends Quote> volatility;
     private DayCounter dayCounter;
@@ -113,13 +114,14 @@ public class BlackConstantVol extends BlackVolatilityTermStructure implements Vi
 	}
 
 	//
-	// implements Visitable
+	// implements TypedVisitable
 	//
 	
 	@Override
-	public void accept(final Visitor<Object> v) {
-		if (v != null) {
-			v.visit(this);
+	public void accept(final TypedVisitor<TermStructure> v) {
+		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
 		} else {
 			super.accept(v);
 		}

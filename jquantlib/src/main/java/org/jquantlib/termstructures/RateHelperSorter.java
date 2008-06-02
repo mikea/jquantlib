@@ -20,6 +20,7 @@
 
 package org.jquantlib.termstructures;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -31,7 +32,10 @@ import java.util.Comparator;
  * @author Richard Gomes
  * @param <T>
  */
-public class RateHelperSorter<T extends RateHelper<YieldTermStructure>> implements Comparator<T> {
+public class RateHelperSorter<T extends RateHelper<YieldTermStructure>> implements Comparator<T>, Serializable {
+	
+	private static final long serialVersionUID = 6335152611463577317L;
+
 	public int compare(final T h1, final T h2) /* @ReadOnly */ {
 		return h1.getLatestDate().compareTo(h2.getLatestDate());
 	}

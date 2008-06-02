@@ -38,7 +38,7 @@ import org.jquantlib.util.Month;
 
 public class CalendarUtil {
 	
-	protected void HolidayListCheck(List <Date> expectedHol, Calendar c, int year) {
+	protected void checkHolidayList(List <Date> expectedHol, Calendar c, int year) {
 		
     	List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1, Month.JANUARY, year),
                 DateFactory.getFactory().getDate(31, Month.DECEMBER, year), false);

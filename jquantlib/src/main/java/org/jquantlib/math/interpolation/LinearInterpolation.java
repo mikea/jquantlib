@@ -103,23 +103,29 @@ public class LinearInterpolation extends AbstractInterpolation {
 
     
     //
-    // inner classes
+    // static methods
     //
     
     static public Interpolator getInterpolator() /* @ReadOnly */ {
-    	return new LinearInterpolationImpl();
+    	LinearInterpolation linearInterpolation = new LinearInterpolation();
+		return linearInterpolation. new LinearInterpolationImpl(linearInterpolation);
     }
     
+    
+    //
+    // inner classes
+    //
+    
     /**
-	 * This static class is a factory for LinearInterpolation instances.
+	 * This class is a factory for LinearInterpolation instances.
 	 * 
 	 * @author Richard Gomes
 	 */
-	static private class LinearInterpolationImpl implements Interpolator {
+	private class LinearInterpolationImpl implements Interpolator {
 		private LinearInterpolation delegate;
 		
-		public LinearInterpolationImpl() {
-			delegate = new LinearInterpolation();
+		public LinearInterpolationImpl(final LinearInterpolation delegate) {
+			this.delegate = delegate;
 		}
 		
 		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {

@@ -38,13 +38,14 @@
 
 package org.jquantlib.instruments;
 
-import org.jquantlib.util.Visitable;
+import org.jquantlib.util.TypedVisitable;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
  * Abstract base class for option payoffs
  */
-public abstract class Payoff implements Visitable<Object> {
+public abstract class Payoff implements TypedVisitable<Payoff> {
 
 	protected static final String UNKNOWN_OPTION_TYPE = "unknown option type";
 
@@ -61,15 +62,16 @@ public abstract class Payoff implements Visitable<Object> {
 
 
 	//
-	// implements Visitable pattern
+	// implements TypedVisitable
 	//
 	
 	@Override
-	public final void accept(final Visitor<Object> v) {
-		if (v != null) {
-			v.visit(this);
+	public void accept(final TypedVisitor<Payoff> v) {
+		Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
 		} else {
-			throw new NullPointerException("null payoff visitor");
+			throw new UnsupportedOperationException("null payoff visitor");
 		}
 	}
 

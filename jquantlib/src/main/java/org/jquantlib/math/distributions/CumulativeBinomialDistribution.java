@@ -39,8 +39,8 @@ import org.jquantlib.math.Beta;
 public class CumulativeBinomialDistribution {
 	static private double accuracy = 1e-16;
 	static private int maxIteration = 100;
-    static private int n_;
-    static private double p_;
+    private int n_;
+    private double p_;
     
     /**
      * This constructor initializes p and n
@@ -78,8 +78,8 @@ public class CumulativeBinomialDistribution {
 	 * @param n
 	 * @return result
 	 */
-	static private double PeizerPrattMehtod2Inversion(double z, int n) {
-		if(n%2 == 1) {
+	static private double PeizerPrattMethod2Inversion(double z, int n) {
+		if (n%2 == 1) {
 			throw new ArithmeticException("n must be an odd number: " + n + " not allowed");
 		}
 		

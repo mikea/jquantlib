@@ -30,9 +30,9 @@ import java.util.List;
 public abstract class BaseDate implements Date, FunctionDate {
     
     public int compareTo(Date o) {
-		if(this.equals(o))
+		if (this.equals(o))
 			return 0;
-		if(this.le(o))
+		if (this.le(o))
 			return -1;
 		return 1;
 	}

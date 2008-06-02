@@ -17,12 +17,4 @@ public class Pair<T1, T2> {
 		return second;
 	}
 
-	public Class getTypeFirst() {
-		return first.getClass();
-	}
-
-	public Class getTypeSecond() {
-		return second.getClass();
-	}
-
 }

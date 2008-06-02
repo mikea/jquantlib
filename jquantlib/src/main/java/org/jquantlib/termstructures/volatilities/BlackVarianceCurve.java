@@ -45,8 +45,10 @@ import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.math.interpolation.LinearInterpolation;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Visitable;
+import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
 
 // Black volatility curve modelled as variance curve
 
@@ -62,7 +64,7 @@ import org.jquantlib.util.Visitable;
  * 
  */
 // TODO check time extrapolation
-public class BlackVarianceCurve extends BlackVarianceTermStructure implements Visitable<Object> {
+public class BlackVarianceCurve extends BlackVarianceTermStructure {
 
 	private DayCounter dayCounter;
 	private Date maxDate;
@@ -142,6 +144,20 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure implements Vi
 			// extrapolate with flat vol
 			/*@Time*/ double lastTime = times[times.length];
 			return varianceCurve.evaluate(lastTime) * t / lastTime;
+		}
+	}
+
+	//
+	// implements TypedVisitable
+	//
+	
+	@Override
+	public void accept(final TypedVisitor<TermStructure> v) {
+		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
+		} else {
+			super.accept(v);
 		}
 	}
 

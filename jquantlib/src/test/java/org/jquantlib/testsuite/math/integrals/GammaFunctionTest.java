@@ -47,7 +47,7 @@ public class GammaFunctionTest {
 	                    + "    expected:   " + expected);
 
 	    for (int i=2; i<9000; i++) {
-	        expected  += Math.log(new Double(i));
+	        expected  += Math.log(i);
 	        calculated = gfn.logValue(i+1);
 	        if (Math.abs(calculated-expected)/expected > 1.0e-9)
 	            fail("GammaFunction(" + i + ")\n"

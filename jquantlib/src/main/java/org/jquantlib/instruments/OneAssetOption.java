@@ -169,7 +169,6 @@ public class OneAssetOption extends Option {
      */
     private /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue) /* @ReadOnly */ {
     	return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
- 
     }
     
     
@@ -188,8 +187,8 @@ public class OneAssetOption extends Option {
     	
     	if (! OneAssetOptionArguments.class.isAssignableFrom(arguments.getClass())) throw new ClassCastException(arguments.toString());
     	
-        OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments) arguments;
-        OptionArguments         optionArguments   = (OptionArguments) arguments;
+        final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments) arguments;
+        final OptionArguments         optionArguments   = (OptionArguments) arguments;
 
         // set up stochastic process
         oneAssetArguments.stochasticProcess = stochasticProcess;
@@ -209,16 +208,20 @@ public class OneAssetOption extends Option {
      * overridden to read from it. This is mandatory in case a pricing engine is used.
      */
     public void fetchResults(final Results results) /* @ReadOnly */ {
-    	
-    	if (! MoreGreeks.class.isAssignableFrom(results.getClass())) throw new ClassCastException(results.toString());
+    	final MoreGreeks moreGreeks;
+    	final Greeks     greeks;
     	
     	// obtain results from chained results
     	super.fetchResults(results);
     	
-    	// bind a Results interface to specific Classes
-    	final MoreGreeks moreGreeks = (MoreGreeks) results;
-    	final Greeks     greeks     = (Greeks) results;
-        
+    	// bind a Results interface to specific classes
+    	if (MoreGreeks.class.isAssignableFrom(results.getClass())) {
+        	moreGreeks = (MoreGreeks) results;
+        	greeks     = (Greeks) results;
+    	} else {
+    		throw new ClassCastException(results.getClass().getName());
+    	}
+    	
         //
 		// No check on Double.NaN values - just copy. this allows:
 		// a) To decide in derived options what to do when null results are returned

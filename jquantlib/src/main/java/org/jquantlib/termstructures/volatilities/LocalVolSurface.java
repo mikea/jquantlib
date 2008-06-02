@@ -43,9 +43,10 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.LocalVolTermStructure;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Visitable;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -58,7 +59,7 @@ import org.jquantlib.util.Visitor;
  *      article</a>
  */
 // TODO: this class is untested, probably unreliable.
-public class LocalVolSurface extends LocalVolTermStructure implements Visitable<Object> {
+public class LocalVolSurface extends LocalVolTermStructure {
 
 	private Handle<BlackVolTermStructure> blackTS_;
 	private Handle<YieldTermStructure> riskFreeTS_;
@@ -193,13 +194,14 @@ public class LocalVolSurface extends LocalVolTermStructure implements Visitable<
 	}
 
 	//
-	// implements Visitable
+	// implements TypedVisitable
 	//
 	
 	@Override
-	public void accept(final Visitor<Object> v) {
-		if (v != null) {
-			v.visit(this);
+	public void accept(final TypedVisitor<TermStructure> v) {
+		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
 		} else {
 			super.accept(v);
 		}

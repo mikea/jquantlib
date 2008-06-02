@@ -79,8 +79,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 			Double pastFixing = IndexManager.getInstance().get(getName()).find(
 					fixingDate);
 			if (pastFixing == null)
-				throw new RuntimeException("Missing " + getName()
-						+ " fixing for " + fixingDate);
+				throw new IllegalArgumentException("Missing " + getName() + " fixing for " + fixingDate);
 			return pastFixing;
 		}
 		if ((fixingDate.equals(today)) && !forecastTodaysFixing) {
@@ -120,8 +119,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		Date fixingDate = getFixingCalendar().advance(valueDate, (fixingDays),
 				TimeUnit.DAYS);
 		if (!(isValidFixingDate(fixingDate)))
-			throw new RuntimeException("fixing date " + fixingDate
-					+ " is not valid");
+			throw new IllegalArgumentException("fixing date " + fixingDate + " is not valid");
 		return fixingDate;
 	}
 

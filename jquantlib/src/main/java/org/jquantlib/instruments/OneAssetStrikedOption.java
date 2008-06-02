@@ -64,7 +64,7 @@ public class OneAssetStrikedOption extends OneAssetOption {
     @Override    
     public void setupArguments(final Arguments args) /* @ReadOnly */ {
 		super.setupArguments(args);
-		OneAssetOptionArguments moreArgs = (OneAssetOptionArguments)args;
+		final OneAssetOptionArguments moreArgs = (OneAssetOptionArguments)args;
         moreArgs.payoff = payoff;
 	}
 
@@ -78,8 +78,16 @@ public class OneAssetStrikedOption extends OneAssetOption {
 	 */
     @Override    
 	public void fetchResults(final Results results) /* @ReadOnly */ {
+		final MoreGreeks moreGreeks;
+
 		super.fetchResults(results);
-        final MoreGreeks moreGreeks = (MoreGreeks) results;
+
+    	if (MoreGreeks.class.isAssignableFrom(results.getClass())) {
+        	moreGreeks = (MoreGreeks) results;
+    	} else {
+    		throw new ClassCastException(results.getClass().getName());
+    	}
+    	
 		strikeSensitivity = moreGreeks.strikeSensitivity;
 	}
         

@@ -41,6 +41,7 @@ package org.jquantlib.processes;
 
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
+import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.LocalVolTermStructure;
@@ -68,7 +69,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     private Handle<YieldTermStructure> riskFreeRate_;
     private Handle<YieldTermStructure> dividendYield_;
     private Handle<BlackVolTermStructure> blackVolatility_;
-    private Handle<LocalVolTermStructure> localVolatility_;
+    private RelinkableHandle<LocalVolTermStructure> localVolatility_;
     private boolean updated_;
 
     
@@ -166,7 +167,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     public final Handle<LocalVolTermStructure> localVolatility() {
         if (!updated_) {
         	
-        	Class klass = blackVolatility_.getLink().getClass();
+        	Class<? extends BlackVolTermStructure> klass = blackVolatility_.getLink().getClass();
 
             // constant Black vol?
         	if (BlackConstantVol.class.isAssignableFrom(klass)) {

@@ -41,7 +41,7 @@ public abstract class DateFactory {
      */
     public static void setFactory(DateFactory dateUtil) {
         if (DateFactory.dateUtil != null)
-            throw new RuntimeException("Dateutil already set ");
+            throw new IllegalStateException("Dateutil already set ");
         DateFactory.dateUtil = dateUtil;
     }
 

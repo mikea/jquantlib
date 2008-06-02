@@ -308,7 +308,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 			for (int i = 1; i < curveData.instruments.length; i++) {
 				Date m1 = curveData.instruments[i - 1].getLatestDate();
 				Date m2 = curveData.instruments[i].getLatestDate();
-				if (m1.eq(m2)) // FIXME: verify equality 
+				if (m1.equals(m2)) // FIXME: verify equality 
 					throw new IllegalArgumentException("two instruments have the same maturity (" + m1 + ")"); // FIXME: message
 			}
 			for (int i = 1; i < curveData.instruments.length; i++)

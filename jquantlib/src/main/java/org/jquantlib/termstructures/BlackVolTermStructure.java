@@ -23,7 +23,8 @@ package org.jquantlib.termstructures;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Visitable;
+import org.jquantlib.util.TypedVisitable;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -39,7 +40,7 @@ import org.jquantlib.util.Visitor;
  * @author Richard Gomes
  */
 // FIXME: code review
-public abstract class BlackVolTermStructure extends TermStructure implements Visitable<Object> {
+public abstract class BlackVolTermStructure extends TermStructure implements TypedVisitable<TermStructure> {
 
 	static private final double dT = 1.0/365.0;
 
@@ -233,13 +234,14 @@ public abstract class BlackVolTermStructure extends TermStructure implements Vis
 	}
 
 	//
-	// implements Visitable
+	// implements TypedVisitable
 	//
 	
 	@Override
-	public void accept(final Visitor<Object> v) {
-		if (v != null) {
-			v.visit(this);
+	public void accept(final TypedVisitor<TermStructure> v) {
+		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
 		} else {
 			throw new UnsupportedOperationException("not a Black-volatility term structure visitor");
 		}

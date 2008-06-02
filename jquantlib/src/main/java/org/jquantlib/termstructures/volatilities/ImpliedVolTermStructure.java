@@ -41,8 +41,9 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.BlackVolTermStructure;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Visitable;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -56,7 +57,7 @@ import org.jquantlib.util.Visitor;
  * @note It doesn't make financial sense to have an asset-dependent implied Volatility Term Structure. 
  *       This class should be used with term structures that are time dependent only.
  */
-public class ImpliedVolTermStructure extends BlackVarianceTermStructure implements Visitable<Object> {
+public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 
 	private Handle<BlackVolTermStructure> originalTS;
 	
@@ -100,15 +101,17 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure implemen
 
 	
 	//
-	// implements Visitable
+	// implements TypedVisitable
 	//
 	
-    @Override
-    public void accept(final Visitor<Object> v) {
-        if (v != null)
-            v.visit(this);
-        else
-            super.accept(v);
-    }
+	@Override
+	public void accept(final TypedVisitor<TermStructure> v) {
+		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
+		} else {
+			super.accept(v);
+		}
+	}
 
 }

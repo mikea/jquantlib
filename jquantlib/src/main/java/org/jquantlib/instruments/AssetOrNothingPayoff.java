@@ -20,6 +20,9 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
+
 /**
  * Binary asset-or-nothing payoff
  */
@@ -36,6 +39,21 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
 			return (strike - price > 0.0 ? price : 0.0);
 		} else {
 			throw new IllegalArgumentException("unknown/illegal option type");
+		}
+	}
+
+
+	//
+	// implements TypedVisitable
+	//
+	
+	@Override
+	public void accept(final TypedVisitor<Payoff> v) {
+		Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
+		} else {
+			super.accept(v);
 		}
 	}
 

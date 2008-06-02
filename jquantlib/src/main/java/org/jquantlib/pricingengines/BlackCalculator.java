@@ -42,10 +42,12 @@ import org.jquantlib.instruments.AssetOrNothingPayoff;
 import org.jquantlib.instruments.CashOrNothingPayoff;
 import org.jquantlib.instruments.GapPayoff;
 import org.jquantlib.instruments.Option;
+import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -145,7 +147,7 @@ public class BlackCalculator {
 
 		// now dispatch on type.
 
-		Calculator calc = new Calculator(this); // FIXME: should user Generics???
+		Calculator calc = new Calculator(this);
 		payoff.accept(calc);
 	}
 
@@ -392,9 +394,8 @@ public class BlackCalculator {
 	// inner classes
 	//
 	
-	private class Calculator implements Visitor<Object> {
+	private class Calculator implements TypedVisitor<Payoff> {
 
-		private static final String NULL_VISITABLE_OBJECT = "null visitable object";
 		private static final String INVALID_OPTION_TYPE = "invalid option type";
 		private static final String INVALID_PAYOFF_TYPE = "invalid payoff type";
 		
@@ -405,63 +406,92 @@ public class BlackCalculator {
 		}
 
 		//
-		// implements Visitor
+		// implements TypedVisitor
 		//
 		
-		public void visit(final Object o) {
-			if (o==null) throw new NullPointerException(NULL_VISITABLE_OBJECT);
-			
-			if (PlainVanillaPayoff.class.isAssignableFrom(o.getClass())) {
-				visit((PlainVanillaPayoff)o);
-			} else if (CashOrNothingPayoff.class.isAssignableFrom(o.getClass())) {
-				visit((CashOrNothingPayoff)o);
-			} else if (AssetOrNothingPayoff.class.isAssignableFrom(o.getClass())) {
-				visit((AssetOrNothingPayoff)o);
-			} else if (GapPayoff.class.isAssignableFrom(o.getClass())) {
-				visit((GapPayoff)o);
+		
+		@Override
+		public Visitor<Payoff> getVisitor(Class<? extends Payoff> klass) {
+			if (klass==PlainVanillaPayoff.class) {
+				return plainVanillaPayoffVisitor;
+			} else if (klass==CashOrNothingPayoff.class) {
+				return cashOrNothingPayoffVisitor;
+			} else if (klass==AssetOrNothingPayoff.class) {
+				return assetOrNothingPayoffVisitor;
+			} else if (klass==GapPayoff.class) {
+				return gapPayoffVisitor;
 			} else {
-				throw new UnsupportedOperationException(INVALID_PAYOFF_TYPE + o.getClass().getName());
+				throw new UnsupportedOperationException(INVALID_PAYOFF_TYPE + klass);
 			}
 		}
 		
+		//
+		// composition pattern to an inner Visitor<Number>
+		//
 		
-		private void visit(final PlainVanillaPayoff payoff) {
-			// nothing
-		}
-
-		private void visit(final CashOrNothingPayoff payoff) {
-			black.alpha = black.dAlpha_dD1 = 0.0;
-			black.X = payoff.getCashPayoff();
-			black.DXDstrike = 0.0;
-			Option.Type optionType = payoff.getOptionType();
-			if (optionType == Option.Type.CALL) {
-				black.beta = black.cum_d2;
-				black.dBeta_dD2 = black.n_d2;
-			} else if (optionType == Option.Type.PUT) {
-				black.beta = 1.0 - black.cum_d2;
-				black.dBeta_dD2 = -black.n_d2;
-			} else {
-				throw new IllegalArgumentException(INVALID_OPTION_TYPE);
+		private PlainVanillaPayoffVisitor plainVanillaPayoffVisitor = new PlainVanillaPayoffVisitor();
+		
+		private class PlainVanillaPayoffVisitor implements Visitor<Payoff> {
+			@Override
+			public void visit(Payoff o) {
+				// nothing
 			}
 		}
 
-		private void visit(final AssetOrNothingPayoff payoff) {
-			black.beta = black.dBeta_dD2 = 0.0;
-			Option.Type optionType = payoff.getOptionType();
-			if (optionType == Option.Type.CALL) {
-				black.alpha = black.cum_d1;
-				black.dAlpha_dD1 = black.n_d1;
-			} else if (optionType == Option.Type.PUT) {
-				black.alpha = 1.0 - black.cum_d1;
-				black.dAlpha_dD1 = -black.n_d1;
-			} else {
-				throw new IllegalArgumentException(INVALID_OPTION_TYPE);
+
+		private CashOrNothingPayoffVisitor cashOrNothingPayoffVisitor = new CashOrNothingPayoffVisitor();
+		
+		private class CashOrNothingPayoffVisitor implements Visitor<Payoff> {
+			@Override
+			public void visit(Payoff o) {
+				CashOrNothingPayoff payoff = (CashOrNothingPayoff)o;
+				black.alpha = black.dAlpha_dD1 = 0.0;
+				black.X = payoff.getCashPayoff();
+				black.DXDstrike = 0.0;
+				Option.Type optionType = payoff.getOptionType();
+				if (optionType == Option.Type.CALL) {
+					black.beta = black.cum_d2;
+					black.dBeta_dD2 = black.n_d2;
+				} else if (optionType == Option.Type.PUT) {
+					black.beta = 1.0 - black.cum_d2;
+					black.dBeta_dD2 = -black.n_d2;
+				} else {
+					throw new IllegalArgumentException(INVALID_OPTION_TYPE);
+				}
 			}
 		}
 
-		private void visit(final GapPayoff payoff) {
-			black.X = payoff.getSecondStrike();
-			black.DXDstrike = 0.0;
+
+		private AssetOrNothingPayoffVisitor assetOrNothingPayoffVisitor = new AssetOrNothingPayoffVisitor();
+		
+		private class AssetOrNothingPayoffVisitor implements Visitor<Payoff> {
+			@Override
+			public void visit(Payoff o) {
+				AssetOrNothingPayoff payoff = (AssetOrNothingPayoff)o;
+				black.beta = black.dBeta_dD2 = 0.0;
+				Option.Type optionType = payoff.getOptionType();
+				if (optionType == Option.Type.CALL) {
+					black.alpha = black.cum_d1;
+					black.dAlpha_dD1 = black.n_d1;
+				} else if (optionType == Option.Type.PUT) {
+					black.alpha = 1.0 - black.cum_d1;
+					black.dAlpha_dD1 = -black.n_d1;
+				} else {
+					throw new IllegalArgumentException(INVALID_OPTION_TYPE);
+				}
+			}
+		}
+
+
+		private GapPayoffVisitor gapPayoffVisitor = new GapPayoffVisitor();
+		
+		private class GapPayoffVisitor implements Visitor<Payoff> {
+			@Override
+			public void visit(Payoff o) {
+				GapPayoff payoff = (GapPayoff)o;
+				black.X = payoff.getSecondStrike();
+				black.DXDstrike = 0.0;
+			}
 		}
 
 	}

@@ -40,13 +40,14 @@ package org.jquantlib.termstructures.volatilities;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.LocalVolTermStructure;
+import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Visitable;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 // Local volatility curve derived from a Black curve
 
-public class LocalVolCurve extends LocalVolTermStructure implements Visitable<Object> {
+public class LocalVolCurve extends LocalVolTermStructure {
 
 	private BlackVarianceCurve blackVarianceCurve_;
 
@@ -100,13 +101,14 @@ public class LocalVolCurve extends LocalVolTermStructure implements Visitable<Ob
 	}
 
 	//
-	// implements Visitable
+	// implements TypedVisitable
 	//
 	
 	@Override
-	public void accept(final Visitor<Object> v) {
-		if (v != null) {
-			v.visit(this);
+	public void accept(final TypedVisitor<TermStructure> v) {
+		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null) {
+			v1.visit(this);
 		} else {
 			super.accept(v);
 		}
