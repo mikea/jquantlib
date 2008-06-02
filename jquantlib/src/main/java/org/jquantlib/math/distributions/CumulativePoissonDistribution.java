@@ -23,32 +23,28 @@ package org.jquantlib.math.distributions;
 
 
 /**
- * Cumulative Poisson distribution function<br>
+ * Cumulative Poisson distribution function
  * 
-    This function provides an approximation of the
-    integral of the Poisson distribution.<p>
-    
-    In probability theory and statistics, the Poisson <br>
-    distribution is a discrete probability distribution that <br>
-    expresses the probability of a number of events occurring in <br>
-    a fixed period of time if these events occur with a known <br>
-    average rate and independently of the time since the last <br>
-    event. The Poisson distribution can also be used for the <br>
-    number of events in other specified intervals such as distance, <br>
-    area or volume.<br>
-    (Source: <a href="http://en.wikipedia.org/wiki/Poisson_distribution">Poisson Distribution on Wikipedia</a>)<p>
-
-     For this implementation see
-     "Numerical Recipes in C", 2nd edition,
-     Press, Teukolsky, Vetterling, Flannery, chapter 6.<p>
-
-     Test the correctness of the returned value is tested by
-     checking it against known good results.
-     
-     @author Dominik Holenstein
- *
+ * <p>
+ * This function provides an approximation of the integral of the Poisson
+ * distribution.
+ * 
+ * <p>
+ * In probability theory and statistics, the Poisson distribution is a discrete
+ * probability distribution that expresses the probability of a number of events
+ * occurring in a fixed period of time if these events occur with a known
+ * average rate and independently of the time since the last event. The Poisson
+ * distribution can also be used for the number of events in other specified
+ * intervals such as distance, area or volume.
+ * 
+ * @see http://en.wikipedia.org/wiki/Poisson_distribution Poisson Distribution on Wikipedia
+ * 
+ * @see "Numerical Recipes in C", 2nd edition, Teukolsky, Vetterling, Flannery, chapter 6.
+ * 
+ * @author Dominik Holenstein
  */
 
+//TODO Test the correctness of the returned value against known good results.
 //TODO CumulativePoissonDistribution: Write a test case.
 public class CumulativePoissonDistribution {
 		
