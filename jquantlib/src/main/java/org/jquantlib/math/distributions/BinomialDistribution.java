@@ -25,21 +25,27 @@ import org.jquantlib.math.Factorial;
 /**
  * @author Richard Gomes
  * @author Dominik Holenstein
- * <p>
- *
- * @see
- * <strong>Binomial Distribution</strong><br>
- * (source: <a href="http://en.wikipedia.org/wiki/Binomial_distribution">Binomial Distribution on Wikipedia</a>)<br>
- * In probability theory and statistics, the binomial distribution <br>
- * is the discrete probability distribution of the number of successes <br>
- * in a sequence of n independent yes/no experiments, each of which <br>
- * yields success with probability p. Such a success/failure experiment <br>
- * is also called a Bernoulli experiment or Bernoulli trial. In fact, when <br>
- * n = 1, the binomial distribution is a Bernoulli distribution. The binomial <br>
- * distribution is the basis for the popular binomial test of statistical <br>
- * significance. A binomial distribution should not be confused with a <br>
- * bimodal distribution.<p>
- *
+ *         <p>
+ * 
+ * @see <strong>Binomial Distribution</strong><br>
+ *      (source: <a
+ *      href="http://en.wikipedia.org/wiki/Binomial_distribution">Binomial
+ *      Distribution on Wikipedia</a>)<br>
+ *      In probability theory and statistics, the binomial distribution <br>
+ *      is the discrete probability distribution of the number of successes <br>
+ *      in a sequence of n independent yes/no experiments, each of which <br>
+ *      yields success with probability p. Such a success/failure experiment
+ *      <br>
+ *      is also called a Bernoulli experiment or Bernoulli trial. In fact, when
+ *      <br>
+ *      n = 1, the binomial distribution is a Bernoulli distribution. The
+ *      binomial <br>
+ *      distribution is the basis for the popular binomial test of statistical
+ *      <br>
+ *      significance. A binomial distribution should not be confused with a <br>
+ *      bimodal distribution.
+ *      <p>
+ * 
  */
 
 public class BinomialDistribution {
@@ -49,11 +55,14 @@ public class BinomialDistribution {
     private double logP, logOneMinusP;
 
     /**
-     * Constructor of the Binomial Distribution taking two arguments for
-     * initialization.
-     * @param p	Probability of success of each trial
-     * @param n Sequence of independent yes/no experiments
-     */
+	 * Constructor of the Binomial Distribution taking two arguments for
+	 * initialization.
+	 * 
+	 * @param p
+	 *            Probability of success of each trial
+	 * @param n
+	 *            Sequence of independent yes/no experiments
+	 */
 	public BinomialDistribution(final double p, final int n) {
 		nExp = n;
 
@@ -62,10 +71,10 @@ public class BinomialDistribution {
 		} else if (p == 1.0) {
 			logP = 0.0;
 		} else {
-			if ((p < 0)){
+			if ((p < 0)) {
 				throw new ArithmeticException("negative p not allowed");
 			}
-			if ((p > 1.0)){
+			if ((p > 1.0)) {
 				throw new ArithmeticException("p > 1.0 not allowed");
 			}
 			logP = Math.log(p);
@@ -75,29 +84,34 @@ public class BinomialDistribution {
 	
 	// TODO Consider developing an UnaryFunctionSomething for integer variables.
 	/**
-	 * Computes the probability of <code>k</code> successful trials. 
+	 * Computes the probability of <code>k</code> successful trials.
+	 * 
 	 * @param k
-	 * @return Math.exp(binomialCoefficientLn(nExp, k) +
-                            k * logP + (nExp-k) * logOneMinusP);
+	 * @return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp-k) *
+	 *         logOneMinusP);
 	 */
 	public double evaluate(final int k) {
 
-        if (k > nExp) return 0.0;
+        if (k > nExp)
+			return 0.0;
 
         // p == 1.0
         if (logP == 0.0) {
-            return (k == nExp ? 1.0 : 0.0);
-        }
+			return (k == nExp ? 1.0 : 0.0);
+		}
+        
         // p==0.0
-        if (logOneMinusP == 0.0){
-            return (k == 0 ? 1.0 : 0.0);
-        }
-        return Math.exp(binomialCoefficientLn(nExp, k) +
-                            k * logP + (nExp-k) * logOneMinusP);
+        if (logOneMinusP == 0.0) {
+			return (k == 0 ? 1.0 : 0.0);
+		}
+        
+        return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp - k)
+				* logOneMinusP);
 	}
 
 	/**
 	 * Computes the natural logarithm of the binoomial coefficient.
+	 * 
 	 * @param n
 	 * @param k
 	 * @return Natural logarithm of the binomial coefficient
@@ -119,6 +133,7 @@ public class BinomialDistribution {
 	
 	/**
 	 * Computes the binomial coefficient.
+	 * 
 	 * @param n
 	 * @param k
 	 * @return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)))
