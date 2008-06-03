@@ -51,15 +51,26 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 		double[] fv3 = new double[5];
 		double[] fv4 = new double[5];
 
-		double[] savfun = new double[21]; /*
-											 * array of function values which
-											 * have been computed
-											 */
-		double res10, res21, res43, res87; /* 10, 21, 43 and 87 point results */
-		double err;
-		double resAbs; /* approximation to the integral of abs(f) */
-		double resasc; /* approximation to the integral of abs(f-i/(b-a)) */
+		/**
+		 * array of function values which have been computed
+		 */
+		double[] savfun = new double[21]; 
+		
+		/**
+		 * 10, 21, 43 and 87 point results 
+		 */
+		double res10, res21, res43, res87;
+		
+		/**
+		 * approximation to the integral of abs(f)
+		 */
+		double resAbs;
+		
+		/** approximation to the integral of abs(f-i/(b-a)) */
+		double resasc; 
 
+		double err;
+		
 		if (!(a < b)) {
 			throw new ArithmeticException("b must be greater than a)");
 		}

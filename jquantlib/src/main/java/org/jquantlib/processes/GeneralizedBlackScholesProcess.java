@@ -99,6 +99,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     	riskFreeRate_ = riskFreeTS;
     	dividendYield_ = dividendTS;
     	blackVolatility_ = blackVolTS;
+    	localVolatility_ = new RelinkableHandle<LocalVolTermStructure>();
     	updated_ = false;
     	x0_.addObserver(this);
     	riskFreeRate_.addObserver(this);
@@ -166,7 +167,6 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
     public final Handle<LocalVolTermStructure> localVolatility() {
         if (!updated_) {
-        	
         	Class<? extends BlackVolTermStructure> klass = blackVolatility_.getLink().getClass();
 
             // constant Black vol?

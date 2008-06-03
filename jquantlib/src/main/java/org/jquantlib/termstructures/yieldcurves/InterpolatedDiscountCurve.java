@@ -29,6 +29,8 @@ import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
 
+import cern.colt.Arrays;
+
 
 /**
  * Term structure based on interpolation of discount factors.
@@ -86,8 +88,8 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 	public InterpolatedDiscountCurve(final Date[] dates, final/* @DiscountFactor */double[] discounts,
 			final DayCounter dayCounter, final Calendar cal, final T interpolator) {
 		super(dates[0], cal, dayCounter);
-		this.dates = dates;
-		this.data = discounts;
+    	this.dates = (Date[]) Arrays.trimToCapacity(dates, dates.length);
+		this.data = Arrays.trimToCapacity(discounts, discounts.length);
 		this.isNegativeRates = settings.isNegativeRates();
 		this.interpolator = (interpolator!=null) ? interpolator : new LogLinear();
 
@@ -127,12 +129,12 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 
 	@Override
 	public Date[] getDates() /* @ReadOnly */{
-		return dates;
+    	return (Date[]) Arrays.trimToCapacity(dates, dates.length);
 	}
 
 	@Override
 	public /* @DiscountFactor */double[] getData() /* @ReadOnly */{
-		return data;
+    	return Arrays.trimToCapacity(data, data.length);
 	}
 
 	@Override
@@ -150,7 +152,7 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 
 	@Override
 	public double[] getTimes() /* @ReadOnly */{
-		return times;
+    	return Arrays.trimToCapacity(times, times.length);
 	}
 
 }

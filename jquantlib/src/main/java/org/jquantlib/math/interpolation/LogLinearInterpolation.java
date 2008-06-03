@@ -20,7 +20,7 @@
 
 package org.jquantlib.math.interpolation;
 
-import java.util.Arrays;
+import cern.colt.Arrays;
 
 
 /**
@@ -122,8 +122,8 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 		}
 
 		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
-			delegate.vx = Arrays.copyOf(x, size);
-			delegate.vy = Arrays.copyOf(y, size);
+			delegate.vx = Arrays.trimToCapacity(x, size);
+			delegate.vy = Arrays.trimToCapacity(y, size);
 			delegate.reload();
 			return delegate;
 		}

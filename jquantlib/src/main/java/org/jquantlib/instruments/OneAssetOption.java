@@ -61,13 +61,6 @@ public class OneAssetOption extends Option {
     private StochasticProcess stochasticProcess;
     
     
-    // FIXME: code review
-    // Verify where this variable is initialized and where impliedVolatility(double) is called.
-    // I suppose impliedVolatility(double) should be called by the constructor in order to determine the
-    // implied volatility, which is based on the current supply/demand measured from the market.
-    private double targetValue;
-
-    
     public OneAssetOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
     	super(payoff, exercise, engine);
         this.stochasticProcess = process;
@@ -167,7 +160,7 @@ public class OneAssetOption extends Option {
      * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
      * a target value lower than the intrinsic value in the case of American options.
      */
-    private /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue) /* @ReadOnly */ {
+    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue) /* @ReadOnly */ {
     	return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
     }
     

@@ -49,6 +49,8 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
+import cern.colt.Arrays;
+
 /**
  * This class calculates time/strike dependent Black volatilities using as input
  * a matrix of Black volatilities observed in the market.
@@ -90,7 +92,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
 		this.dayCounter = dayCounter;
 		this.maxDate = dates[dates.length];
-		this.strikes = strikes;
+		this.strikes = Arrays.trimToCapacity(strikes, strikes.length);
 		this.lowerExtrapolation = lowerExtrapolation;
 		this.upperExtrapolation = upperExtrapolation;
 

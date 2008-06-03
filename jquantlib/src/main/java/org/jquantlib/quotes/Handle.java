@@ -58,10 +58,9 @@ public class Handle<T extends Observable> implements Observable {
 
 	protected Link link;
 
-//XXX	
-//    public Handle() {
-//    	this.link = new Link();
-//    }
+    public Handle() {
+    	this(null, true);
+    }
     
     public Handle(final T observable) {
     	this(observable, true);
