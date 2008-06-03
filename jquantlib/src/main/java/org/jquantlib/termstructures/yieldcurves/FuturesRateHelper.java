@@ -17,7 +17,7 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the originating copyright notice follows below.
  */
-package org.jquantlib.termstructures.yield;
+package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;

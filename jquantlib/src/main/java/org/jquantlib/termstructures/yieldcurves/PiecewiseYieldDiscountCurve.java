@@ -1,11 +1,11 @@
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.BrentSolver1D;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.interpolation.Interpolator;
 import org.jquantlib.math.interpolation.factories.Linear;
+import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.RateHelperSorter;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -246,7 +246,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 				data[i + 1] = data[i];
 			}
 
-			BrentSolver1D solver = new BrentSolver1D();
+			Brent solver = new Brent();
 			int maxIterations = 25;
 			// bootstrapping loop
 			for (int iteration = 0;; iteration++) {

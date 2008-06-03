@@ -293,8 +293,6 @@ public abstract class TermStructure implements Observer, Observable {
 	
 	/**
 	 * @return the calendar used for reference date calculation
-	 * 
-	 * @see #calendar
 	 */
 	public Calendar getCalendar() /* @ReadOnly */ {
 		if (this.calendar == null) throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);

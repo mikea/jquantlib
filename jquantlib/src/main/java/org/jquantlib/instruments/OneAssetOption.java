@@ -22,8 +22,8 @@ package org.jquantlib.instruments;
 
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.math.AbstractSolver1D;
-import org.jquantlib.math.BrentSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
@@ -145,7 +145,7 @@ public class OneAssetOption extends Option {
 
         /* @Volatility */ double guess = (minVol+maxVol)/2.0;
         ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(engine, targetValue);
-        AbstractSolver1D<UnaryFunctionDouble> solver = new BrentSolver1D();
+        AbstractSolver1D<UnaryFunctionDouble> solver = new Brent();
         solver.setMaxEvaluations(maxEvaluations);
         /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
         return result;

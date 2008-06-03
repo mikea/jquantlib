@@ -39,6 +39,7 @@ import org.jquantlib.math.Beta;
 public class CumulativeBinomialDistribution {
 	static private double accuracy = 1e-16;
 	static private int maxIteration = 100;
+	
     private int n_;
     private double p_;
     
@@ -79,9 +80,7 @@ public class CumulativeBinomialDistribution {
 	 * @return result
 	 */
 	static private double PeizerPrattMethod2Inversion(double z, int n) {
-		if (n%2 == 1) {
-			throw new ArithmeticException("n must be an odd number: " + n + " not allowed");
-		}
+		if (n%2 != 0) throw new ArithmeticException("n must be an odd number: " + n + " not allowed");
 		
 		double result = (z/(n+1.0/3.0+0.1/(n+1.0)));
 		result *= result;

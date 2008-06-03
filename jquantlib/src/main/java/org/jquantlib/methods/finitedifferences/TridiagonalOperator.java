@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.quantlib.methods.finitedifferences;
+package org.jquantlib.methods.finitedifferences;
 
 /**
  * @author shasti

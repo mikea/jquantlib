@@ -17,7 +17,7 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the originating copyright notice follows below.
  */
-package org.jquantlib.testsuite.termstructures.yield;
+package org.jquantlib.testsuite.termstructures.yieldcurves;
 
 import java.util.ArrayList;
 import java.util.List;

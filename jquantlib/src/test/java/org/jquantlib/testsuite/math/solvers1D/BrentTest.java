@@ -1,9 +1,9 @@
-package org.jquantlib.testsuite.math;
+package org.jquantlib.testsuite.math.solvers1D;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.math.BrentSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.solvers1D.Brent;
 import org.junit.Test;
 
 /**
@@ -11,7 +11,7 @@ import org.junit.Test;
  */
 
 // TODO Move this test case to testsuite/math/solvers1D
-public class BrentSolver1dTest {
+public class BrentTest {
 
 	@Test
 	public void testInvertSquare() {
@@ -25,7 +25,7 @@ public class BrentSolver1dTest {
 		};
 	
 	double accuracy = 1.0e-15;
-	BrentSolver1D brent = new BrentSolver1D();
+	Brent brent = new Brent();
 	
 	double soln = brent.solve(square, accuracy, 0.01, 0, 2);
 

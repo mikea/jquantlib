@@ -47,7 +47,7 @@ import org.jquantlib.math.interpolation.factories.LogLinear;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.yield.DepositRateHelper;
+import org.jquantlib.termstructures.yieldcurves.DepositRateHelper;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.termstructures.yieldcurves.ImpliedTermStructure;
 import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldDiscountCurve;

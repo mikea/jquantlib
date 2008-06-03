@@ -18,7 +18,7 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.termstructures.yield;
+package org.jquantlib.termstructures.yieldcurves;
 
 
 // FIXME: move to org.jquantlib.termstructures.yieldcurves

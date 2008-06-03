@@ -1,4 +1,4 @@
-package org.jquantlib.termstructures.yield;
+package org.jquantlib.termstructures.yieldcurves;
 
 import java.util.List;
 

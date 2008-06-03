@@ -18,23 +18,25 @@
  When applicable, the originating copyright notice follows below.
  */
 
-package org.jquantlib.math;
+package org.jquantlib.math.solvers1D;
+
+import org.jquantlib.math.AbstractSolver1D;
+import org.jquantlib.math.Constants;
+import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * @author <Richard Gomes>
  */
+public class Brent extends AbstractSolver1D<UnaryFunctionDouble> {
 
-// FIXME: refactor to "Brent" under package "solvers1d"
-public class BrentSolver1D extends AbstractSolver1D<UnaryFunctionDouble> {
-
+    /**
+ 	 * The implementation of the algorithm was inspired by <br/>
+ 	 * <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes in C", 2nd
+	 * edition, Cambridge University Press</i>
+	 */
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
 	
-//        /* The implementation of the algorithm was inspired by
-//           Press, Teukolsky, Vetterling, and Flannery,
-//           "Numerical Recipes in C", 2nd edition, Cambridge
-//           University Press
-//        */
 
         double min1, min2;
         double froot, p, q, r, s, xAcc1, xMid;
