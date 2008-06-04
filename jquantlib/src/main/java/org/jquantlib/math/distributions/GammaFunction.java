@@ -26,18 +26,35 @@ package org.jquantlib.math.distributions;
  */
 
 
+/**
+ * In mathematics, the Gamma function 
+ * is an extension of the factorial function to real and complex numbers. 
+ * The Gamma function is a component in various probability-distribution functions, 
+ * and as such it is applicable in the fields of probability and statistics, as well 
+ * as combinatorics.<br/>
+ * See here: <a href="http://en.wikipedia.org/wiki/Gamma_function">Gamma Function on Wikipedia</a>
+ */
+
 public class GammaFunction {
 	
-	private static final double c1_ = 76.18009172947146;
+    private static final double c1_ = 76.18009172947146;
     private static final double c2_ = -86.50532032941677;
     private static final double c3_ = 24.01409824083091;
     private static final double c4_ = -1.231739572450155;
     private static final double c5_ = 0.1208650973866179e-2;
     private static final double c6_ = -0.5395239384953e-5;
 	    
-	public double logValue(double x) {
+    
+    /**
+     * Computes the log of the Gamma.
+     * @param x
+     * @return <code>-temp+Math.log(2.5066282746310005*ser/x)</code>
+     */
+    public double logValue(double x) {
         
-		if (x<=0.0) throw new ArithmeticException("positive argument required " + x);
+	if (x<=0.0) {
+	    throw new ArithmeticException("positive argument required " + x);
+	}
 
         double temp = x + 5.5;
         temp -= (x + 0.5)*Math.log(temp);

@@ -52,22 +52,24 @@ public class CumulativeBinomialDistribution {
     	n_ = n; // total number of trials
     	p_ = p; // probability of success on a single trial
     	
-    	if ((p<=0.0)) {
-			throw new ArithmeticException("negative p not allowed");
-		}
-		if ((p>1.0)){
-			throw new ArithmeticException("p>1.0 not allowed");
-		}
+    	if ((p <= 0.0)) {
+	    throw new ArithmeticException("negative p not allowed");
+	}
+	if ((p > 1.0)) {
+	    throw new ArithmeticException("p>1.0 not allowed");
+	}
     }
 
     /**
      * Computes the Cumulative Binomial Distribution.
-     * @param k
+     * @param k 
      * @return 1.0 - Beta.incompleteBetaFunction(k+1, n_-k, p_, accuracy, maxIteration)
      */
 	public double evaluate(int k){
-		 if (k >= n_)return 1.0;
-         else return 1.0 - Beta.incompleteBetaFunction(k+1, n_-k, p_, accuracy, maxIteration);
+	    if (k >= n_) {
+		return 1.0;
+	} else
+	    return 1.0 - Beta.incompleteBetaFunction(k + 1, n_ - k, p_, accuracy, maxIteration);
 	}
 		
 	
@@ -75,8 +77,9 @@ public class CumulativeBinomialDistribution {
 	 * Given an odd integer and a real number z it returns p such that:<br>
 	 * 1 - CumulativeBinomialDistribution((n-1/2, n, p) = CumulativeNormalDistribution(z)
 	 * n must be odd.
-	 * @param z
-	 * @param n
+	 * This method delivers a high level of accuracy.
+	 * @param z Input value for the standard normal distribution N(z)
+	 * @param n Number of steps in the binomial tree
 	 * @return result
 	 */
 	static private double PeizerPrattMethod2Inversion(double z, int n) {

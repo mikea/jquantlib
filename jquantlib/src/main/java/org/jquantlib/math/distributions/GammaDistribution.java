@@ -28,61 +28,87 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Dominik Holenstein
  */
 
+/**
+ * The gamma distribution is a two-parameter family of continuous probability distributions.<br/>
+ * See here: <a href="http://en.wikipedia.org/wiki/Gamma_distribution">Gamma Distribution on Wikipedia</a>
+ * <br/>
+ * A gamma distribution is a general type of statistical distribution that is related to the beta 
+ * distribution and arises naturally in processes for which the waiting times between Poisson 
+ * distributed events are relevant. See here: <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma Distribution on Wolfram MathWorld</a>
+ * 
+ *
+ */
 
 public class GammaDistribution implements UnaryFunctionDouble {
 	
 	private double a_;
 	
-	public GammaDistribution (double a) {
-    	a_=a;
-    	
-    	if (a_ < 0.0) throw new ArithmeticException("invalid parameter for gamma distribution");
-    }
+	/**
+	 * Intitializes <code>a_</code> and checks that <code>a_</code> is not smaller than 0.00.
+	 * @param a
+	 * @throws ArithmeticException if <code>a_</code> is smaller than 0.00
+	 */
+	public GammaDistribution(double a) {
+	    a_ = a;
+
+	    if (a_ < 0.0) {
+		throw new ArithmeticException("invalid parameter for gamma distribution");
+	    }
+	}
 	
-	public double evaluate(double x) {
+	/**
+	 * Computes the Gamma distribution.
+	 * @param x random variable
+	 * @return Gamma distribution of <code>x</code>
+	 */
+	
+	public double evaluate(double x) /* Read-only */ {
      	
-    	if (x <= 0.0) return 0.0;
+    	if (x <= 0.0){
+    	    return 0.0;
+    	}
 
     	GammaFunction gf = new GammaFunction();
-    	
         double gln = gf.logValue(a_);
 
-        if (x<(a_+1.0)) {
-        	double ap = a_;
-        	double del = 1.0/a_;
-        	double sum = del;
-        	for (int n=1; n<=100; n++) {
-        		ap += 1.0;
-        		del *= x/ap;
-        		sum += del;
-        		if (Math.abs(del) < Math.abs(sum)*3.0e-7)
-        			return sum*Math.exp(-x + a_*Math.log(x) - gln);
-        	}
+        if (x < (a_ + 1.0)) {
+	    double ap = a_;
+	    double del = 1.0 / a_;
+	    double sum = del;
+	    for (int n = 1; n <= 100; n++) {
+		ap += 1.0;
+		del *= x / ap;
+		sum += del;
+		if (Math.abs(del) < Math.abs(sum) * 3.0e-7) {
+		    return sum * Math.exp(-x + a_ * Math.log(x) - gln);
+		}
+	    }
         } else {
-        	double b = x + 1.0 - a_;
-        	double c = Constants.QL_MAX_REAL;
-        	double d = 1.0/b;
-        	double h = d;
-        	for (int n=1; n<=100; n++) {
-        		double an = -1.0*n*(n-a_);
-        			b += 2.0;
-        			d = an*d + b;
-                
-        		if (Math.abs(d) < Constants.QL_EPSILON) {
-        			d = Constants.QL_EPSILON;
-        		}
-        		c = b + an/c;
-        		if (Math.abs(c) < Constants.QL_EPSILON) {
-        			c = Constants.QL_EPSILON;
-        		}
-        		d = 1.0/d;
-        		double del = d*c;
-        		h *= del;
-        		if (Math.abs(del - 1.0)<Constants.QL_EPSILON)
-        			return h*Math.exp(-x + a_*Math.log(x) - gln);
-        	}
+	    double b = x + 1.0 - a_;
+	    double c = Constants.QL_MAX_REAL;
+	    double d = 1.0 / b;
+	    double h = d;
+	    for (int n = 1; n <= 100; n++) {
+		double an = -1.0 * n * (n - a_);
+		b += 2.0;
+		d = an * d + b;
+
+		if (Math.abs(d) < Constants.QL_EPSILON) {
+		    d = Constants.QL_EPSILON;
+		}
+		c = b + an / c;
+		if (Math.abs(c) < Constants.QL_EPSILON) {
+		    c = Constants.QL_EPSILON;
+		}
+		d = 1.0 / d;
+		double del = d * c;
+		h *= del;
+		if (Math.abs(del - 1.0) < Constants.QL_EPSILON) {
+		    return h * Math.exp(-x + a_ * Math.log(x) - gln);
+		}
+	    }
         }
         throw new ArithmeticException("too few iterations");
-	}
+    }
 }
 

@@ -24,7 +24,7 @@ import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * @author <Richard Gomes>
+ * @author Richard Gomes
  */
 public class GaussKonrodPattersonIntegrator implements Integrator {
 	
