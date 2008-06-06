@@ -27,20 +27,18 @@ import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * Inverse cumulative Poisson distribution function. 
-   Test the correctness of the returned value is tested by
-   checking it against known good results.
  *
  * @author Dominik Holenstein
  */
-
 // TODO InverseCumulativePoissonDistribution: Add test case.
+// TEST the correctness of the returned value is tested by checking it against known good results.
 public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble {
 	
 	private double lambda_;
 
-      // C++ code:
-      // public:
-      //   InverseCumulativePoisson(Real lambda = 1.0);
+    public InverseCumulativePoissonDistribution() {
+    	this(1.0);
+    }
     
 	
     public InverseCumulativePoissonDistribution(double lambda) {
@@ -55,6 +53,7 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
 
     /**
      * Computes the inverse cumulative poisson distribution.
+     * 
      * @param x
      * @returns the inverse of the cumulative poisson distribution of input <code>x</code>
      */
@@ -77,7 +76,7 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
     }
 
     private double calcSummand(int index) {
-	Factorial fact = new Factorial();
-	return Math.exp(-lambda_) * Math.pow(lambda_, index) / fact.get(index);
+		Factorial fact = new Factorial();
+		return Math.exp(-lambda_) * Math.pow(lambda_, index) / fact.get(index);
     }
 }

@@ -29,16 +29,18 @@ import org.jquantlib.math.UnaryFunctionDouble;
  */
 
 /**
- * The gamma distribution is a two-parameter family of continuous probability distributions.<br/>
- * See here: <a href="http://en.wikipedia.org/wiki/Gamma_distribution">Gamma Distribution on Wikipedia</a>
- * <br/>
+ * The gamma distribution is a two-parameter family of continuous probability distributions.
+ * <p>
  * A gamma distribution is a general type of statistical distribution that is related to the beta 
  * distribution and arises naturally in processes for which the waiting times between Poisson 
- * distributed events are relevant. See here: <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma Distribution on Wolfram MathWorld</a>
+ * distributed events are relevant.
  * 
- *
+ * @see <a href="http://en.wikipedia.org/wiki/Gamma_distribution">Gamma Distribution on Wikipedia</a>
+ * @see <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma Distribution on Wolfram MathWorld</a>
+ * 
+ * @author Richard Gomes
+ * @author Dominik Holenstein
  */
-
 public class GammaDistribution implements UnaryFunctionDouble {
 	
 	private double a_;
@@ -61,7 +63,6 @@ public class GammaDistribution implements UnaryFunctionDouble {
 	 * @param x random variable
 	 * @return Gamma distribution of <code>x</code>
 	 */
-	
 	public double evaluate(double x) /* Read-only */ {
      	
     	if (x <= 0.0){

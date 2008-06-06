@@ -25,17 +25,15 @@ import org.jquantlib.math.UnaryFunctionDouble;
 
 
 /**
- * 
  * The inverse normal cumulative distribution is a non-linear function for which 
  * no closed-form solution exists. The function is continuous, monotonically increasing, 
- * infinitely differentiable, and maps the open interval (0,1) to the whole real line. <br/>
- * (see: <a href="http://home.online.no/~pjacklam/notes/invnorm/">An algorithm for computing the inverse normal cumulative distribution function </a>)
+ * infinitely differentiable, and maps the open interval (0,1) to the whole real line.
+ * 
+ * @see <a href="http://home.online.no/~pjacklam/notes/invnorm/">
+ * 		An algorithm for computing the inverse normal cumulative distribution function</a>
  * 
  * @author Dominik Holenstein
- *
  */
-
-
 public class InverseCumulativeNormal extends NormalDistribution implements UnaryFunctionDouble {
 		
     static final double a1_ = -3.969683028665376e+01;
@@ -68,6 +66,7 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
       
     /**
      * Limits of the approximation regions (break-points)
+     * 
      * @param x_low_
      * @param X_high_
      */
@@ -132,7 +131,7 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
 	// order) gives full machine precision.
 	// #define REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD
 	// error (f_(z) - x) divided by the cumulative's derivative
-	// r = (f_(z) - x) * M_SQRT2 *y§ M_SQRTPI * exp(0.5 * z*z);
+	// r = (f_(z) - x) * M_SQRT2 *yï¿½ M_SQRTPI * exp(0.5 * z*z);
 
 	// Only run if highPrecision is set to true.
 	// This is not implemented in QuantLib 0.8.1 yet therefore highPrecision

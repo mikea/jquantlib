@@ -30,7 +30,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
 
 public interface Derivative extends UnaryFunctionDouble {
     	
-    	/**
+    /**
 	 * Computes the derivation of the function; f(x)
 	 * 
 	 * @param x

@@ -21,20 +21,17 @@
 package org.jquantlib.math.distributions;
 
 /**
- * @author Richard Gomes
- * @author Dominik Holenstein
- */
-
-
-/**
  * In mathematics, the Gamma function 
  * is an extension of the factorial function to real and complex numbers. 
  * The Gamma function is a component in various probability-distribution functions, 
  * and as such it is applicable in the fields of probability and statistics, as well 
- * as combinatorics.<br/>
- * See here: <a href="http://en.wikipedia.org/wiki/Gamma_function">Gamma Function on Wikipedia</a>
+ * as combinatorics.
+ * 
+ * @see <a href="http://en.wikipedia.org/wiki/Gamma_function">Gamma Function on Wikipedia</a>
+ * 
+ * @author Richard Gomes
+ * @author Dominik Holenstein
  */
-
 public class GammaFunction {
 	
     private static final double c1_ = 76.18009172947146;
