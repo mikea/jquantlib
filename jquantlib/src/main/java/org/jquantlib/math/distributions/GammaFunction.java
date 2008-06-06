@@ -50,23 +50,23 @@ public class GammaFunction {
      * @param x
      * @return <code>-temp+Math.log(2.5066282746310005*ser/x)</code>
      */
-    public double logValue(double x) {
-        
-	if (x<=0.0) {
+    public double logValue(double x) /* Read-only */{
+
+	if (x <= 0.0) {
 	    throw new ArithmeticException("positive argument required " + x);
 	}
 
-        double temp = x + 5.5;
-        temp -= (x + 0.5)*Math.log(temp);
-        double ser=1.000000000190015;
-        
-        ser += c1_/(x + 1.0);
-        ser += c2_/(x + 2.0);
-        ser += c3_/(x + 3.0);
-        ser += c4_/(x + 4.0);
-        ser += c5_/(x + 5.0);
-        ser += c6_/(x + 6.0);
+	double temp = x + 5.5;
+	temp -= (x + 0.5) * Math.log(temp);
+	double ser = 1.000000000190015;
 
-        return -temp+Math.log(2.5066282746310005*ser/x);
+	ser += c1_ / (x + 1.0);
+	ser += c2_ / (x + 2.0);
+	ser += c3_ / (x + 3.0);
+	ser += c4_ / (x + 4.0);
+	ser += c5_ / (x + 5.0);
+	ser += c6_ / (x + 6.0);
+
+	return -temp + Math.log(2.5066282746310005 * ser / x);
     }
 }

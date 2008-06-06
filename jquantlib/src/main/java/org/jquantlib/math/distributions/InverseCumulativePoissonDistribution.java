@@ -26,14 +26,11 @@ import org.jquantlib.math.Factorial;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * 
- * @author Dominik Holenstein
- * <p>
- * <strong>Inverse cumulative Poisson distribution function</strong>
-   <p>
+ * Inverse cumulative Poisson distribution function. 
    Test the correctness of the returned value is tested by
    checking it against known good results.
  *
+ * @author Dominik Holenstein
  */
 
 // TODO InverseCumulativePoissonDistribution: Add test case.
@@ -41,21 +38,34 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
 	
 	private double lambda_;
 
+      // C++ code:
       // public:
       //   InverseCumulativePoisson(Real lambda = 1.0);
     
+	
     public InverseCumulativePoissonDistribution(double lambda) {
     	lambda_ = lambda;
+    	
+    	// FIXME lambda_ is initialized with lambda first and then set equal to 1.0. This doesn't make sense.
     	lambda_ = 1.0;
-    	if(lambda_ <= 0.0) throw new ArithmeticException("lambda must be positive");
+    	if(lambda_ <= 0.0) {
+    	    throw new ArithmeticException("lambda must be positive");
+    	}
     }
 
+    /**
+     * Computes the inverse cumulative poisson distribution.
+     * @param x
+     * @returns the inverse of the cumulative poisson distribution of input <code>x</code>
+     */
     public double evaluate (double x) /* @Read-only */ {
-        if(x <= 0.0 && x >= 1.0) throw new ArithmeticException(
-                   "Inverse cumulative Poisson distribution is " +
-                   "only defined on the interval [0,1]");
+        if(x <= 0.0 && x >= 1.0) {
+            throw new ArithmeticException("Inverse cumulative Poisson distribution is only defined on the interval [0,1]");
+        }
 
-        if (x == 1.0) return Constants.QL_MAX_REAL;
+        if (x == 1.0) {
+            return Constants.QL_MAX_REAL;
+        }
 
         double sum = 0.0;
         int index = 0;
@@ -66,8 +76,8 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
         return (double)(index-1);
     }
 
-	private double calcSummand(int index){
-		Factorial fact = new Factorial();
-		return Math.exp(-lambda_) * Math.pow(lambda_, index) / fact.get(index);
-	}
+    private double calcSummand(int index) {
+	Factorial fact = new Factorial();
+	return Math.exp(-lambda_) * Math.pow(lambda_, index) / fact.get(index);
+    }
 }

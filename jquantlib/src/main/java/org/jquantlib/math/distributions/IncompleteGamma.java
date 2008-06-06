@@ -23,6 +23,13 @@ package org.jquantlib.math.distributions;
 import org.jquantlib.math.Constants;
 
 /**
+ * In mathematics, the gamma function is defined by a definite integral. 
+ * The incomplete gamma function is defined as an integral function of 
+ * the same integrand.(see: <a href="http://en.wikipedia.org/wiki/Incomplete_gamma_function">Incomplete Gamma Function on Wikipedia"</a>)<br/>
+ * The incomplete Gamma Function P(a,x) is monotonic and (for a greater than one or so) 
+ * rises from "near-zero" to "near-unity" in a range of x centered on about a-1 and of 
+ * width about sqr(a). (taken from: "Numerical Recipes in C", p. 216, <a href="http://www.nrbook.com/a/bookcpdf/c6-2.pdf">Incomplete Gamma Function</a>)
+ *  * 
  * @author Richard Gomes
  * @author Dominik Holenstein
  */
