@@ -39,7 +39,7 @@ public class GammaFunctionTest {
 //	                        << std::fabs(calculated-expected)/expected);
 //	    }
 
-	    System.out.println("Testing Gamma function...");
+	    // System.out.println("Testing Gamma function..."); --> commented out for release 0.02
 
 	    GammaFunction gfn = new GammaFunction();
 	    
@@ -59,7 +59,6 @@ public class GammaFunctionTest {
 	                        + "    expected:   " + expected + "\n"
 	                        + "    rel. error: " + Math.abs(calculated-expected)/expected);
 	    }
-	
 	}
 
 	
