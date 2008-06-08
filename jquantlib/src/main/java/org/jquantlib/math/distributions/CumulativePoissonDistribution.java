@@ -23,9 +23,7 @@ package org.jquantlib.math.distributions;
 
 
 /**
- * Cumulative Poisson distribution function
- *
- * <p>
+ * Cumulative Poisson distribution function.<br/>
  * This function provides an approximation of the integral of the Poisson
  * distribution.<br/>
  *
@@ -36,9 +34,9 @@ package org.jquantlib.math.distributions;
  * distribution can also be used for the number of events in other specified
  * intervals such as distance, area or volume.
  *
- * @see <a href="http://en.wikipedia.org/wiki/Poisson_distribution">Poisson Distribution on Wikipedia</a>
+ * @see Wikipedia: <a href="http://en.wikipedia.org/wiki/Poisson_distribution">Poisson Distribution on Wikipedia</a>
  *
- * @see "Numerical Recipes in C", 2nd edition, Teukolsky, Vetterling, Flannery, chapter 6.
+ * @see Book: <i>"Numerical Recipes in C", 2nd edition, Teukolsky, Vetterling, Flannery, chapter 6.</i>
  *
  * @author Dominik Holenstein
  */

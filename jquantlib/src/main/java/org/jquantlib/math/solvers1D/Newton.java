@@ -26,17 +26,24 @@ import org.jquantlib.math.distributions.Derivative;
 
 /**
  * 
+ * Newton's 1d solver. <br/>
+ * The implementation of the algorithm was inspired by
+ * <i>Press, Teukolsky, Vetterling, and Flannery,
+ * "Numerical Recipes in C", 2nd edition,
+ * Cambridge University Press</i>
+ * 
  * @author Dominik Holenstein
  *
  */
 
-/* The implementation of the algorithm was inspired by
-Press, Teukolsky, Vetterling, and Flannery,
-"Numerical Recipes in C", 2nd edition,
-Cambridge University Press
-*/
 public class Newton extends AbstractSolver1D<Derivative> {
 	
+	/**
+	 * Computes the roots of a function by using Newton's method.
+	 * @param f the function
+	 * @param xAccuracy the provided accuracy 
+	 * @returns <code>root_</code>
+	 */
 	@Override
 	protected double solveImpl(Derivative f, double xAccuracy) {
 		
@@ -55,16 +62,13 @@ public class Newton extends AbstractSolver1D<Derivative> {
                 s.setMaxEvaluations(getMaxEvaluations()-evaluationNumber_);
                 return s.solve(f, xAccuracy, root_+dx, xMin_, xMax_);
             }
-            if (Math.abs(dx) < xAccuracy)
-                return root_;
+            if (Math.abs(dx) < xAccuracy) {
+            	return root_;
+            }
             froot = f.evaluate(root_);
             dfroot = f.derivative(root_);
             evaluationNumber_++;
         }
-		throw new ArithmeticException("maximum number of function evaluations ("
-                + getMaxEvaluations() + ") exceeded");
+		throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");     
 	}
-	
-	
-
 }

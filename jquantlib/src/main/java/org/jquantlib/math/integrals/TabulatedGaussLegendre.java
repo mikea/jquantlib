@@ -26,76 +26,8 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author <Richard Gomes>
  */
 public class TabulatedGaussLegendre {
-
-
-	public TabulatedGaussLegendre(){
-		setOrder(20);
-	}
-
-	public TabulatedGaussLegendre(int order){
-		setOrder(order);
-	}
-
-    public double evaluate(UnaryFunctionDouble f) {
-        if (w_==null){
-        	throw new ArithmeticException("Null weights");
-        }
-        if (x_==null){
-            throw new ArithmeticException("Null abscissas");
-        	
-        }
-        int startIdx;
-        double val;
-
-        final boolean isOrderOdd = ((order_ & 1) != 0);
-
-        if (isOrderOdd) {
-          if (!(n_>0)){
-        	  throw new ArithmeticException("assume at least 1 point in quadrature");
-          }
-          val = w_[0]*f.evaluate(x_[0]);
-          startIdx=1;
-        } else {
-          val = 0.0;
-          startIdx=0;
-        }
-
-        for (int i=startIdx; i<n_; ++i) {
-        	double w = w_[i];
-        	double x = x_[i];
-            val += w*f.evaluate(x);
-            val += w*f.evaluate(-x);
-        }
-        return val;
-    }
-
 	
-	
-//	public int getOrder() {
-//		return order_;
-//	}
-//	
-    public void setOrder(int order) {
-        switch(order) {
-          case(6):
-            order_=order; x_=x6; w_=w6; n_=n6;
-            break;
-          case(7):
-            order_=order; x_=x7; w_=w7; n_=n7;
-            break;
-          case(12):
-            order_=order; x_=x12; w_=w12; n_=n12;
-            break;
-          case(20):
-            order_=order; x_=x20; w_=w20; n_=n20;
-            break;
-          default:
-            throw new ArithmeticException("order " + order + " not supported");
-        }
-    }
-
-
-    // Abscissas and Weights from Abramowitz and Stegun
+	// Abscissas and Weights from Abramowitz and Stegun
 
     /* order 6 */
     private static final double x6[] = { 	0.238619186083197,
@@ -168,4 +100,69 @@ public class TabulatedGaussLegendre {
 	private double[] w_;
 	private int n_;
 
+
+	public TabulatedGaussLegendre(){
+		setOrder(20);
+	}
+
+	public TabulatedGaussLegendre(int order){
+		setOrder(order);
+	}
+
+    public double evaluate(UnaryFunctionDouble f) {
+        if (w_==null){
+        	throw new ArithmeticException("Null weights");
+        }
+        if (x_==null){
+            throw new ArithmeticException("Null abscissas");
+        }
+        int startIdx;
+        double val;
+
+        final boolean isOrderOdd = ((order_ & 1) != 0);
+
+        if (isOrderOdd) {
+          if (!(n_>0)){
+        	  throw new ArithmeticException("assume at least 1 point in quadrature");
+          }
+          val = w_[0]*f.evaluate(x_[0]);
+          startIdx=1;
+        } else {
+          val = 0.0;
+          startIdx=0;
+        }
+
+        for (int i=startIdx; i<n_; ++i) {
+        	double w = w_[i];
+        	double x = x_[i];
+            val += w*f.evaluate(x);
+            val += w*f.evaluate(-x);
+        }
+        return val;
+    }
+
+	
+	
+//	public int getOrder() {
+//		return order_;
+//	}
+//	
+    public void setOrder(int order) {
+        switch(order) {
+          case(6):
+            order_=order; x_=x6; w_=w6; n_=n6;
+            break;
+          case(7):
+            order_=order; x_=x7; w_=w7; n_=n7;
+            break;
+          case(12):
+            order_=order; x_=x12; w_=w12; n_=n12;
+            break;
+          case(20):
+            order_=order; x_=x20; w_=w20; n_=n20;
+            break;
+          default:
+            throw new ArithmeticException("order " + order + " not supported");
+        }
+    }
 }

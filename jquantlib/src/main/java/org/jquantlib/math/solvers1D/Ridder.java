@@ -26,28 +26,33 @@ import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * 
+ * Method by 1d solver. <br/>
+ * The implementation of the algorithm was inspired by
+ * <i>Press, Teukolsky, Vetterling, and Flannery,
+ * "Numerical Recipes in C", 2nd edition,
+ * Cambridge University Press</i>
+ * 
  * @author Dominik Holenstein
  *
  */
 
-/* The implementation of the algorithm was inspired by
-Press, Teukolsky, Vetterling, and Flannery,
-"Numerical Recipes in C", 2nd edition,
-Cambridge University Press
-*/
-
-// TODO Ridder.java: Add Test case.
 public class Ridder extends AbstractSolver1D<UnaryFunctionDouble> {
 	
+	/**
+	 * Computes the roots of a function by using the method due to Ridder.
+	 * @param f the function
+	 * @param xAccuracy the provided accuracy 
+	 * @returns <code>root_</code>
+	 */
 	@Override
-	protected double solveImpl(UnaryFunctionDouble f, double xAcc){
+	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy){
 
         double fxMid, froot, s, xMid, nextRoot;
 
         // test on Black-Scholes implied volatility show that
         // Ridder solver algorithm actually provides an
         // accuracy 100 times below promised
-        double xAccuracy = xAcc/100.0;
+        double xAccuracy_ = xAccuracy/100.0;
 
         // Any highly unlikely value, to simplify logic below
         root_ = Constants.QL_MIN_POSITIVE_REAL;
@@ -58,13 +63,14 @@ public class Ridder extends AbstractSolver1D<UnaryFunctionDouble> {
             fxMid=f.evaluate(xMid);
             evaluationNumber_++;
             s = Math.sqrt(fxMid*fxMid-fxMin_*fxMax_);
-            if (s == 0.0)
-                return root_;
+            if (s == 0.0) {
+            	return root_;
+            }
             // Updating formula
-            nextRoot = xMid + (xMid - xMin_) *
-                ((fxMin_ >= fxMax_ ? 1.0 : -1.0) * fxMid / s);
-            if (Math.abs(nextRoot-root_) <= xAccuracy)
-                return root_;
+            nextRoot = xMid + (xMid - xMin_) * ((fxMin_ >= fxMax_ ? 1.0 : -1.0) * fxMid / s);
+            if (Math.abs(nextRoot-root_) <= xAccuracy_){
+            	return root_;
+            }
 
             root_=nextRoot;
             // Second of two function evaluations per iteration
@@ -89,10 +95,11 @@ public class Ridder extends AbstractSolver1D<UnaryFunctionDouble> {
                 throw new ArithmeticException("never get here.");
             }
 
-            if (Math.abs(xMax_-xMin_) <= xAccuracy) return root_;
+            if (Math.abs(xMax_-xMin_) <= xAccuracy_) {
+            	return root_;
+            }
         }
-        throw new ArithmeticException("maximum number of function evaluations ("
-                + getMaxEvaluations() + ") exceeded");
+        throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");        
     }
       
     private double sign(double a, double b) {

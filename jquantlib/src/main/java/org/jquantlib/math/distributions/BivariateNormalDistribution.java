@@ -49,15 +49,15 @@ import org.jquantlib.math.integrals.TabulatedGaussLegendre;
  * The bivariate normal distribution is a distribution of a pair of variables whose 
  * conditional distributions are normal and that satisfy certain other technical conditions. 
  * 
- * The implementation derives from the article "Better Approximations To Cumulative
- * Normal Distibutions", Graeme West, Dec 2004 available at www.finmod.co.za.
- * Also available in Wilmott Magazine, 2005, (May), 70-76, The main code is a
+ * The implementation derives from the article <i>"Better Approximations To Cumulative
+ * Normal Distibutions", Graeme West, Dec 2004</i> available at www.finmod.co.za.
+ * Also available in <i>Wilmott Magazine, 2005, (May), 70-76,</i> The main code is a
  * port of the C++ code at <a
  * href="www.finmod.co.za/cumnorm.zip">www.finmod.co.za/cummnorm.zip</a>.
  * <p>
  * The algorithm is based on the near double-precision algorithm described in
- * "Numerical Computation of Rectangular Bivariate an Trivariate Normal and t
- * Probabilities", Genz (2004), Statistics and Computing 14, 151-160. (available
+ * <i>"Numerical Computation of Rectangular Bivariate an Trivariate Normal and t
+ * Probabilities", Genz (2004), Statistics and Computing 14, 151-160. </i>(available
  * at <a
  * href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/bvnt.html">www.math.wsu.edu/faculty/genz/papers/bvnt/bvnt.html</a>)
  * <p>

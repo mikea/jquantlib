@@ -25,6 +25,12 @@ import org.jquantlib.math.distributions.Derivative;
 
 /**
  * 
+ * Newton Safe 1d solver. <br/>
+ * The implementation of the algorithm was inspired by
+ * <i>Press, Teukolsky, Vetterling, and Flannery,
+ * "Numerical Recipes in C", 2nd edition,
+ * Cambridge University Press</i>
+ * 
  * @author Dominik Holenstein
  *
  */
@@ -36,6 +42,12 @@ Cambridge University Press
 */
 public class NewtonSafe extends AbstractSolver1D<Derivative> {
 	
+	 /**
+	 * Computes the roots of a function by using the Newton Safe method.
+	 * @param f the function
+	 * @param xAccuracy the provided accuracy 
+	 * @returns <code>root_</code>
+	 */
 	@Override
 	protected double solveImpl(Derivative f, double xAccuracy) {
 
@@ -78,19 +90,21 @@ public class NewtonSafe extends AbstractSolver1D<Derivative> {
                 root_ -= dx;
             }
             // Convergence criterion
-            if (Math.abs(dx) < xAccuracy)
-                return root_;
+            if (Math.abs(dx) < xAccuracy){
+            	return root_;
+            }
             
             froot = f.evaluate(root_);
             dfroot = f.derivative(root_);
             evaluationNumber_++;
             
-            if (froot < 0.0)
-                xl=root_;
-            else
-                xh=root_;
+            if (froot < 0.0){
+            	xl=root_;
+            }  
+            else {
+            	xh=root_;
+            }
         }
-        throw new ArithmeticException("maximum number of function evaluations ("
-                + getMaxEvaluations() + ") exceeded");
+        throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");     
     }
 }

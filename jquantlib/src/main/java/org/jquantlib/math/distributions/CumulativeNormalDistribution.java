@@ -25,9 +25,9 @@ import org.jquantlib.math.ErrorFunction;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * Cumulative normal distribution function.<br>
+ * Cumulative normal distribution function.<br/>
  * Given x it provides an approximation to the integral of the gaussian normal distribution.<br>
- * For this implementation see M. Abramowitz and I. Stegun, Handbook of Mathematical Functions, Dover Publications, New York (1972)
+ * For this implementation see <i>M. Abramowitz and I. Stegun, Handbook of Mathematical Functions, Dover Publications, New York (1972)</i>
  * 
  * @author Richard Gomes
  */

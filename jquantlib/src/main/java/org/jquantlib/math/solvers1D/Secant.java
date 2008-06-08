@@ -24,19 +24,26 @@ import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 
-/** 
+/**
+ * 
+ * Secant 1d solver. <br/>
+ * The implementation of the algorithm was inspired by
+ * <i>Press, Teukolsky, Vetterling, and Flannery,
+ * "Numerical Recipes in C", 2nd edition,
+ * Cambridge University Press</i>
+ * 
  * @author Dominik Holenstein
+ *
  */
 
-/* The implementation of the algorithm was inspired by
-Press, Teukolsky, Vetterling, and Flannery,
-"Numerical Recipes in C", 2nd edition,
-Cambridge University Press
-*/
-
-// TODO Secant.java: Add test case.
 public class Secant extends AbstractSolver1D<UnaryFunctionDouble> {
 	
+	/**
+	 * Computes the roots of a function by using the Secant method.
+	 * @param f the function
+	 * @param xAccuracy the provided accuracy 
+	 * @returns <code>root_</code>
+	 */
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy)  {
 
@@ -45,27 +52,27 @@ public class Secant extends AbstractSolver1D<UnaryFunctionDouble> {
         // Pick the bound with the smaller function value
         // as the most recent guess
         if (Math.abs(fxMin_) < Math.abs(fxMax_)) {
-            root_=xMin_;
-            froot=fxMin_;
-            xl=xMax_;
-            fl=fxMax_;
-        } else {
-            root_=xMax_;
-            froot=fxMax_;
-            xl=xMin_;
-            fl=fxMin_;
-        }
-        while (evaluationNumber_<= getMaxEvaluations()) {
-            dx=(xl-root_)*froot/(froot-fl);
-            xl=root_;
-            fl=froot;
-            root_ += dx;
-            froot=f.evaluate(root_);
-            evaluationNumber_++;
-            if (Math.abs(dx) < xAccuracy || froot == 0.0)
-                return root_;
-        }
-        throw new ArithmeticException("maximum number of function evaluations ("
-                + getMaxEvaluations() + ") exceeded");
+			root_ = xMin_;
+			froot = fxMin_;
+			xl = xMax_;
+			fl = fxMax_;
+		} else {
+			root_ = xMax_;
+			froot = fxMax_;
+			xl = xMin_;
+			fl = fxMin_;
+		}
+        while (evaluationNumber_ <= getMaxEvaluations()) {
+			dx = (xl - root_) * froot / (froot - fl);
+			xl = root_;
+			fl = froot;
+			root_ += dx;
+			froot = f.evaluate(root_);
+			evaluationNumber_++;
+			if (Math.abs(dx) < xAccuracy || froot == 0.0) {
+				return root_;
+			}
+		}
+        throw new ArithmeticException("maximum number of function evaluations (" + getMaxEvaluations() + ") exceeded");
     }
 }

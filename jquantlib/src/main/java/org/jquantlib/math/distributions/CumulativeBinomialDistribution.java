@@ -29,7 +29,7 @@ package org.jquantlib.math.distributions;
 import org.jquantlib.math.Beta;
 
 /**
- * Cumulative binomial distribution function.<br>
+ * Cumulative binomial distribution function.<br/>
  * Given an integer k it provides the cumulative probability of observing kk<=k.
  * 
  * @author Richard Gomes
@@ -45,8 +45,8 @@ public class CumulativeBinomialDistribution {
     
     /**
      * This constructor initializes p and n
-     * @param p Probability of success of a single trial
-     * @param n The total number of trials
+     * @param p probability of success of a single trial
+     * @param n the total number of trials
      */
     public CumulativeBinomialDistribution(double p, int n){  
     	n_ = n; // total number of trials
