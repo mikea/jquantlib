@@ -25,19 +25,25 @@ import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * 
+ * False Position method. <br/>
+ * The implementation of the algorithm was inspired by
+ * <i>Press, Teukolsky, Vetterling, and Flannery,
+ * "Numerical Recipes in C", 2nd edition,
+ * Cambridge University Press</i>
+ * 
  * @author Dominik Holenstein
  *
  */
 
-/* The implementation of the algorithm was inspired by
-Press, Teukolsky, Vetterling, and Flannery,
-"Numerical Recipes in C", 2nd edition,
-Cambridge University Press
-*/
-
 //TODO FalsePosition: Add test case.
 public class FalsePosition extends AbstractSolver1D<UnaryFunctionDouble> {
 	
+	/**
+	 * Computes the roots of a function by using the False Position method.
+	 * @param f the function
+	 * @param xAccuracy the provided accuracy 
+	 * @returns <code>root_</code>
+	 */
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
 		
@@ -62,7 +68,7 @@ public class FalsePosition extends AbstractSolver1D<UnaryFunctionDouble> {
             root_=xl+dx*fl/(fl-fh);
             froot=f.evaluate(root_);
             evaluationNumber_++;
-            if (froot < 0.0) {       // Replace appropriate limit
+            if (froot < 0.0) {  // Replace appropriate limit
                 del=xl-root_;
                 xl=root_;
                 fl=froot;
@@ -78,7 +84,6 @@ public class FalsePosition extends AbstractSolver1D<UnaryFunctionDouble> {
                 return root_;
             }
         }
-		throw new ArithmeticException("maximum number of function evaluations ("
-                + getMaxEvaluations() + ") exceeded");
+		throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");        
 	}
 }

@@ -20,52 +20,57 @@
 
 package org.jquantlib.math.solvers1D;
 
-/**
- * @author Dominik Holenstein
- */
-
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
 
-	/*
-	 * 	Bisection 1-D solver
-    	test the correctness of the returned values is tested by
-  	 checking them against known good results.
-	 */
-
-	/* The implementation of the algorithm was inspired by
-	Press, Teukolsky, Vetterling, and Flannery,
-	"Numerical Recipes in C", 2nd edition, Cambridge
-	University Press
-	 */
+/**
+ * 
+ * Bisection 1-D solver<br/>
+ * Test the correctness of the returned 
+ * values is tested by checking them against known good results.
+ * 
+ * The implementation of the algorithm was inspired by
+ * <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes 
+ * in C", 2nd edition, Cambridge University Press</i>
+ * 
+ * @author Dominik Holenstein
+ */
 
 public class Bisection extends AbstractSolver1D<UnaryFunctionDouble>  {
+	
+	/**
+	 * Computes the roots of a function by using the Bisection method.
+	 * @param f the function
+	 * @param xAccuracy the provided accuracy 
+	 * @returns <code>root_</code>
+	 */
 	
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
 		double dx, xMid, fMid;
 
-        // Orient the search so that f>0 lies at root_+dx
-        if (fxMin_ < 0.0) {
-            dx = xMax_-xMin_;
-            root_ = xMin_;
-        } else {
-            dx = xMin_-xMax_;
-            root_ = xMax_;
-        }
+		// Orient the search so that f>0 lies at root_+dx
+		if (fxMin_ < 0.0) {
+			dx = xMax_ - xMin_;
+			root_ = xMin_;
+		} else {
+			dx = xMin_ - xMax_;
+			root_ = xMax_;
+		}
 
-        while (evaluationNumber_<= getMaxEvaluations()) {
-            dx /= 2.0;
-            xMid=root_+dx;
-            fMid=f.evaluate(xMid);
-            evaluationNumber_++;
-            if (fMid <= 0.0)
-                root_=xMid;
-            if (Math.abs(dx) < xAccuracy || fMid == 0.0) {
-                return root_;
-            }
-        }
-        throw new ArithmeticException("maximum number of function evaluations ("
-                + getMaxEvaluations() + ") exceeded");
+		while (evaluationNumber_ <= getMaxEvaluations()) {
+			dx /= 2.0;
+			xMid = root_ + dx;
+			fMid = f.evaluate(xMid);
+			evaluationNumber_++;
+			if (fMid <= 0.0) {
+				root_ = xMid;
+			}
+			if (Math.abs(dx) < xAccuracy || fMid == 0.0) {
+				return root_;
+			}
+		}
+		throw new ArithmeticException(
+				"maximum number of function evaluations (" + getMaxEvaluations() + ") exceeded");
 	}
 }

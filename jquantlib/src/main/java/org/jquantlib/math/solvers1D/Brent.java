@@ -25,19 +25,24 @@ import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * @author <Richard Gomes>
- */
+ * 
+ * The implementation of the algorithm was inspired by <br/>
+ * <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes in C", 2nd
+ * edition, Cambridge University Press</i>
+	 
+ * @author Richard Gomes
+ **/
 public class Brent extends AbstractSolver1D<UnaryFunctionDouble> {
 
-    /**
- 	 * The implementation of the algorithm was inspired by <br/>
- 	 * <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes in C", 2nd
-	 * edition, Cambridge University Press</i>
+	/**
+	 * Computes the roots of a function by using the Brent method.
+	 * @param f the function
+	 * @param xAccuracy the provided accuracy 
+	 * @returns <code>root_</code>
 	 */
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
 	
-
         double min1, min2;
         double froot, p, q, r, s, xAcc1, xMid;
         double d = 0.0, e = 0.0;
@@ -45,22 +50,20 @@ public class Brent extends AbstractSolver1D<UnaryFunctionDouble> {
         root_ = xMax_;
         froot = fxMax_;
         while (evaluationNumber_<=getMaxEvaluations()) {
-            if ((froot > 0.0 && fxMax_ > 0.0) ||
-                (froot < 0.0 && fxMax_ < 0.0)) {
-
-                // Rename xMin_, root_, xMax_ and adjust bounds
-                xMax_=xMin_;
-                fxMax_=fxMin_;
-                e=d=root_-xMin_;
-            }
+            if ((froot > 0.0 && fxMax_ > 0.0) || (froot < 0.0 && fxMax_ < 0.0)) {
+				// Rename xMin_, root_, xMax_ and adjust bounds
+				xMax_ = xMin_;
+				fxMax_ = fxMin_;
+				e = d = root_ - xMin_;
+			}
             if (Math.abs(fxMax_) < Math.abs(froot)) {
-                xMin_=root_;
-                root_=xMax_;
-                xMax_=xMin_;
-                fxMin_=froot;
-                froot=fxMax_;
-                fxMax_=fxMin_;
-            }
+				xMin_ = root_;
+				root_ = xMax_;
+				xMax_ = xMin_;
+				fxMin_ = froot;
+				froot = fxMax_;
+				fxMax_ = fxMin_;
+			}
             // Convergence check
             xAcc1=2.0*Constants.QL_EPSILON*Math.abs(root_)+0.5*xAccuracy;
             xMid=(xMax_-root_)/2.0;
@@ -92,30 +95,26 @@ public class Brent extends AbstractSolver1D<UnaryFunctionDouble> {
                     e=d;
                 }
             } else {
-                // Bounds decreasing too slowly, use bisection
-                d=xMid;
+                d=xMid; // Bounds decreasing too slowly, use bisection
                 e=d;
             }
             xMin_=root_;
             fxMin_=froot;
-            if (Math.abs(d) > xAcc1)
-                root_ += d;
-            else
-                root_ += sign(xAcc1,xMid);
+            if (Math.abs(d) > xAcc1) {
+            	root_ += d;
+            }
+            else {
+            	root_ += sign(xAcc1,xMid);
+            }
             froot=f.evaluate(root_);
             evaluationNumber_++;
         }
         
-        throw new ArithmeticException("maximum number of function evaluations ("
-                + getMaxEvaluations() + ") exceeded");
+        throw new ArithmeticException("maximum number of function evaluations (" + getMaxEvaluations() + ") exceeded");
+               
     }
     
     private double sign(double a, double b) {
         return b >= 0.0 ? Math.abs(a) : -Math.abs(a);
     }
-
-	
-	
-	
-
 }
