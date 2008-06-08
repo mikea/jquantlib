@@ -30,6 +30,10 @@ import org.junit.Test;
  */
 public class CumulativeNormalDistributionTest {
 
+	public CumulativeNormalDistributionTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testKnownGoodValuesFromAbramStegun() {
 		

@@ -11,6 +11,10 @@ import org.junit.Test;
  */
 public class SabrTest {
 
+	public SabrTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testAgainstKnownValues() {
 		

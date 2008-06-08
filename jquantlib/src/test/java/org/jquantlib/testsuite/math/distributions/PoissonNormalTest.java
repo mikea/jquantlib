@@ -34,6 +34,10 @@ import org.junit.Test;
  */
 public class PoissonNormalTest {
 	
+	public PoissonNormalTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testPoissonDistribution() {
 		

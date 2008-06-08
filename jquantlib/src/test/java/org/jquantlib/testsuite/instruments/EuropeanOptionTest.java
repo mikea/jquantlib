@@ -72,24 +72,9 @@ import org.junit.Test;
  */
 public class EuropeanOptionTest {
 
-
-//	#define REPORT_FAILURE(greekName, payoff, exercise, s, q, r, today, \
-//            v, expected, calculated, error, tolerance) \
-//  BOOST_ERROR(exerciseTypeToString(exercise) << " " \
-//    << payoff->optionType() << " option with " \
-//    << payoffTypeToString(payoff) << " payoff:\n" \
-//    << "    spot value:       " << s << "\n" \
-//    << "    strike:           " << payoff->strike() << "\n" \
-//    << "    dividend yield:   " << io::rate(q) << "\n" \
-//    << "    risk-free rate:   " << io::rate(r) << "\n" \
-//    << "    reference date:   " << today << "\n" \
-//    << "    maturity:         " << exercise->lastDate() << "\n" \
-//    << "    volatility:       " << io::volatility(v) << "\n\n" \
-//    << "    expected " << greekName << ":   " << expected << "\n" \
-//    << "    calculated " << greekName << ": " << calculated << "\n"\
-//    << "    error:            " << error << "\n" \
-//    << "    tolerance:        " << tolerance);
-	
+	public EuropeanOptionTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
 	
 	
 	private class EuropeanOptionData {

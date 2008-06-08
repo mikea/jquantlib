@@ -10,6 +10,10 @@ import org.junit.Test;
  */
 public class FactorialTest {
 
+	public FactorialTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+
 	@Test
 	public void testCompareToDirect() {
 		

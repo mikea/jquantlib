@@ -24,18 +24,15 @@ import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * 
  * Bisection 1-D solver<br/>
- * Test the correctness of the returned 
- * values is tested by checking them against known good results.
- * 
+ * <p>
  * The implementation of the algorithm was inspired by
  * <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes 
  * in C", 2nd edition, Cambridge University Press</i>
  * 
  * @author Dominik Holenstein
  */
-
+// TEST the correctness of the returned values is tested by checking them against known good results.
 public class Bisection extends AbstractSolver1D<UnaryFunctionDouble>  {
 	
 	/**

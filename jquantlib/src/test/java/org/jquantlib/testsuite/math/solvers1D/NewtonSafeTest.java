@@ -34,6 +34,10 @@ import org.junit.Test;
 
 public class NewtonSafeTest {
 	
+	public NewtonSafeTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testNewtonSafe() {
 		

@@ -49,14 +49,10 @@ import org.junit.Test;
 
 public class IntrumentsTest {
 
-//	#include "instruments.hpp"
-//	#include "utilities.hpp"
-//	#include <ql/instruments/stock.hpp>
-//	#include <ql/quotes/simplequote.hpp>
-//
-//	using namespace QuantLib;
-//	using namespace boost::unit_test_framework;
-
+	public IntrumentsTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testObservable() {
 

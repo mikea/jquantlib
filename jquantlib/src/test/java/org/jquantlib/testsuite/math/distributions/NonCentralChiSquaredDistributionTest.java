@@ -30,6 +30,10 @@ import org.junit.Test;
  */
 public class NonCentralChiSquaredDistributionTest {
 
+	public NonCentralChiSquaredDistributionTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testPenevRayKovELV() {
 		

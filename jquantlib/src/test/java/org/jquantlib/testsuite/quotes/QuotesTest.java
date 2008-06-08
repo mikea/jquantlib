@@ -36,6 +36,10 @@ import org.junit.Test;
  */
 public class QuotesTest {
 
+	public QuotesTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 //	private double add10(final double x) { return x+10; }
 //	private double mul10(final double x) { return x*10; }
 //	private double sub10(final double x) { return x-10; }
@@ -146,7 +150,7 @@ public class QuotesTest {
 //	    /*@Rate*/ double  expectedForwardValue = euribor.fixing(fixingDate, true);
 //	    // we test if the forward value given by the quote is consistent
 //	    // with the one directly given by the index
-//        fail("Foward Value Quote quote yields " 
+//        fail("Forward Value Quote quote yields " 
 //        		+ forwardValue + "\n  expected result is " 
 //        		+ expectedForwardValue, 
 //        			Math.abs(forwardValue-expectedForwardValue) <= 1.0e-15);

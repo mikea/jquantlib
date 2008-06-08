@@ -52,6 +52,10 @@ import org.junit.Test;
 
 public class BrazilCalendarTest {
 	
+	public BrazilCalendarTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
     public void testBrazil() {
                        

@@ -30,6 +30,7 @@ public class BinomialTest {
 	private StopClock clock;
   
   public BinomialTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	  clock = new StopClock(StopClock.Unit.ns);
   }
  

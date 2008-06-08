@@ -32,6 +32,10 @@ import org.junit.Test;
 
 public class BinomialDistributionTest {
 	
+	public BinomialDistributionTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testBinomialDistribution() {
 				

@@ -24,17 +24,15 @@ import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * 
- * False Position method. <br/>
+ * False Position method.
+ * <p>
  * The implementation of the algorithm was inspired by
  * <i>Press, Teukolsky, Vetterling, and Flannery,
  * "Numerical Recipes in C", 2nd edition,
  * Cambridge University Press</i>
  * 
  * @author Dominik Holenstein
- *
  */
-
 //TODO FalsePosition: Add test case.
 public class FalsePosition extends AbstractSolver1D<UnaryFunctionDouble> {
 	

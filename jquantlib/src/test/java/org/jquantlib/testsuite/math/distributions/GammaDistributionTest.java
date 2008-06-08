@@ -33,6 +33,10 @@ import org.junit.Test;
 
 public class GammaDistributionTest {
 	
+	public GammaDistributionTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	//FIXME Compare the test values to QuantLib
 	@Test
 	public void testGammaDisribution() {

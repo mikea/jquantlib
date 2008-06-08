@@ -33,6 +33,10 @@ import org.junit.Test;
 
 public class InverseCumulativeNormalTest {
 	
+	public InverseCumulativeNormalTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testInverseCumulativNormal() {
 		

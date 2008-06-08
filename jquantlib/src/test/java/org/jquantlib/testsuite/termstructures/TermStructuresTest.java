@@ -37,27 +37,10 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 package org.jquantlib.testsuite.termstructures;
 
-import static org.junit.Assert.fail;
-
-import org.jquantlib.Configuration;
-import org.jquantlib.daycounters.Actual360;
-import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.math.Closeness;
-import org.jquantlib.math.interpolation.factories.LogLinear;
-import org.jquantlib.quotes.Handle;
-import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.yieldcurves.DepositRateHelper;
-import org.jquantlib.termstructures.yieldcurves.FlatForward;
-import org.jquantlib.termstructures.yieldcurves.ImpliedTermStructure;
-import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldDiscountCurve;
-import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.time.calendars.NullCalendar;
-import org.jquantlib.time.calendars.Target;
-import org.jquantlib.util.Date;
+import org.junit.Test;
 
 
 public class TermStructuresTest {
@@ -82,54 +65,58 @@ public class TermStructuresTest {
 	
 	
 	public TermStructuresTest() {
-        calendar = org.jquantlib.time.calendars.Target.getCalendar();
-        settlementDays = 2;
-        org.jquantlib.util.Date today = calendar.advance(org.jquantlib.util.DateFactory.getFactory().getTodaysDate());
-        org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
-        org.jquantlib.util.Date settlement = calendar.advance(today,settlementDays,TimeUnit.DAYS);
-        
-        Datum depositData[] = new Datum[] {
-        		new Datum( 1, TimeUnit.MONTHS, 4.581 ),
-        		new Datum( 2, TimeUnit.MONTHS, 4.573 ),
-        		new Datum( 3, TimeUnit.MONTHS, 4.557 ),
-        		new Datum( 6, TimeUnit.MONTHS, 4.496 ),
-        		new Datum( 9, TimeUnit.MONTHS, 4.490 )
-        };
-        
-        Datum swapData[] =  new Datum[] {
-//TODO: remove comments when we have implemented Swaps and related classes, etc        		
-//        		  new Datum(  1, TimeUnit.YEARS, 4.54 ),
-//                new Datum(  5, TimeUnit.YEARS, 4.99 ),
-//                new Datum( 10, TimeUnit.YEARS, 5.47 ),
-//                new Datum( 20, TimeUnit.YEARS, 5.89 ),
-//                new Datum( 30, TimeUnit.YEARS, 5.96 )
-        };
-        
-        int deposits = depositData.length;
-        int swaps = swapData.length;
-            
-        RateHelper<YieldTermStructure> instruments[] = new RateHelper[deposits+swaps];
-        
 
-        for (int i=0; i<deposits; i++) {
-            instruments[i] = new DepositRateHelper<YieldTermStructure>(
-            						depositData[i].rate/100,
-            						new Period(depositData[i].n, depositData[i].units),
-                                    settlementDays, calendar,
-                                    BusinessDayConvention.MODIFIED_FOLLOWING, true,
-                                    Actual360.getDayCounter());
-        }
-       
-       
-       IborIndex index = new IborIndex(
-       							"dummy", 
-       							new Period(6,TimeUnit.MONTHS),
-       							settlementDays,
-       							calendar,
-								null,								
-								BusinessDayConvention.MODIFIED_FOLLOWING, 
-								false,
-								Actual360.getDayCounter());
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		
+//TODO: remove comments		
+//		calendar = org.jquantlib.time.calendars.Target.getCalendar();
+//        settlementDays = 2;
+//        org.jquantlib.util.Date today = calendar.advance(org.jquantlib.util.DateFactory.getFactory().getTodaysDate());
+//        org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
+//        org.jquantlib.util.Date settlement = calendar.advance(today,settlementDays,TimeUnit.DAYS);
+//        
+//        Datum depositData[] = new Datum[] {
+//        		new Datum( 1, TimeUnit.MONTHS, 4.581 ),
+//        		new Datum( 2, TimeUnit.MONTHS, 4.573 ),
+//        		new Datum( 3, TimeUnit.MONTHS, 4.557 ),
+//        		new Datum( 6, TimeUnit.MONTHS, 4.496 ),
+//        		new Datum( 9, TimeUnit.MONTHS, 4.490 )
+//        };
+//        
+//        Datum swapData[] =  new Datum[] {
+////TODO: remove comments when we have implemented Swaps and related classes, etc        		
+////        		  new Datum(  1, TimeUnit.YEARS, 4.54 ),
+////                new Datum(  5, TimeUnit.YEARS, 4.99 ),
+////                new Datum( 10, TimeUnit.YEARS, 5.47 ),
+////                new Datum( 20, TimeUnit.YEARS, 5.89 ),
+////                new Datum( 30, TimeUnit.YEARS, 5.96 )
+//        };
+//        
+//        int deposits = depositData.length;
+//        int swaps = swapData.length;
+//            
+//        RateHelper<YieldTermStructure> instruments[] = new RateHelper[deposits+swaps];
+//        
+//
+//        for (int i=0; i<deposits; i++) {
+//            instruments[i] = new DepositRateHelper<YieldTermStructure>(
+//            						depositData[i].rate/100,
+//            						new Period(depositData[i].n, depositData[i].units),
+//                                    settlementDays, calendar,
+//                                    BusinessDayConvention.MODIFIED_FOLLOWING, true,
+//                                    Actual360.getDayCounter());
+//        }
+//       
+//       
+//       IborIndex index = new IborIndex(
+//       							"dummy", 
+//       							new Period(6,TimeUnit.MONTHS),
+//       							settlementDays,
+//       							calendar,
+//								null,								
+//								BusinessDayConvention.MODIFIED_FOLLOWING, 
+//								false,
+//								Actual360.getDayCounter());
        
 //TODO: remove comments when we have implemented Swaps and related classes, etc        		
 //        for (int i=0; i<swaps; ++i) {
@@ -140,62 +127,70 @@ public class TermStructuresTest {
 //                                    BusinessDayConvention.UNADJUSTED, Thirty360.getDayCounter(),
 //                                    index);
 //        }
-        
-        termStructure = new PiecewiseYieldDiscountCurve<LogLinear>(settlement, instruments, Actual360.getDayCounter());
-                                                    
-        dummyTermStructure = new PiecewiseYieldDiscountCurve<LogLinear>(settlement, instruments, Actual360.getDayCounter());
+
+       
+//TODO: remove comments       
+//        termStructure = new PiecewiseYieldDiscountCurve<LogLinear>(settlement, instruments, Actual360.getDayCounter());
+//                                                    
+//        dummyTermStructure = new PiecewiseYieldDiscountCurve<LogLinear>(settlement, instruments, Actual360.getDayCounter());
     }
 
 	
-	/*@Test public*/ void testReferenceChange() {
+	@Test
+	public void testReferenceChange() {
 	
 	    System.out.println("Testing term structure against evaluation date change...");
+	    System.out.println("***** TEST FAILED *****");
 	
-	    YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
-	
-	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-	    int days[] = { 10, 30, 60, 120, 360, 720 };
-	    /*@DiscountFactor*/ double[] expected = new /*@DiscountFactor*/ double[days.length];
-	    
-	    for (int i=0; i<days.length; i++)
-	        expected[i] = localTermStructure.getDiscount(today.increment(days[i]));
-	
-	    Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today.increment(30));
-	
-	    /*@DiscountFactor*/ double[] calculated = new /*@DiscountFactor*/ double[days.length];
-	
-	    for (int i=0; i<days.length; i++)
-	        calculated[i] = localTermStructure.getDiscount(today.increment(30).increment(days[i]));
-	
-	    for (int i=0; i<days.length; i++) {
-	    	if (!Closeness.isClose(expected[i],calculated[i]))
-	            fail("\n  Discount at " + days[i] + " days:\n"
-	                        + "    before date change: " + expected[i] + "\n"
-	                        + "    after date change:  " + calculated[i]);
-	    }
+//TODO: remove comments	
+//	    YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
+//	
+//	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+//	    int days[] = { 10, 30, 60, 120, 360, 720 };
+//	    /*@DiscountFactor*/ double[] expected = new /*@DiscountFactor*/ double[days.length];
+//	    
+//	    for (int i=0; i<days.length; i++)
+//	        expected[i] = localTermStructure.getDiscount(today.increment(days[i]));
+//	
+//	    Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today.increment(30));
+//	
+//	    /*@DiscountFactor*/ double[] calculated = new /*@DiscountFactor*/ double[days.length];
+//	
+//	    for (int i=0; i<days.length; i++)
+//	        calculated[i] = localTermStructure.getDiscount(today.increment(30).increment(days[i]));
+//	
+//	    for (int i=0; i<days.length; i++) {
+//	    	if (!Closeness.isClose(expected[i],calculated[i]))
+//	            fail("\n  Discount at " + days[i] + " days:\n"
+//	                        + "    before date change: " + expected[i] + "\n"
+//	                        + "    after date change:  " + calculated[i]);
+//	    }
 	}
 
-	/*@Test public*/ void testImplied() {
+	@Test
+	public void testImplied() {
 	
 	    System.out.println("Testing consistency of implied term structure...");
-	
-	    double tolerance = 1.0e-10;
-	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-	    Date newToday = today.increment(3 * Period.ONE_YEAR_FORWARD.getLength());
-	    Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
-	    Date testDate = newSettlement.increment(5 * Period.ONE_YEAR_FORWARD.getLength());
+	    System.out.println("***** TEST FAILED *****");
 	    
-	    YieldTermStructure implied = new ImpliedTermStructure<YieldTermStructure>(
-	    		new Handle<YieldTermStructure>(termStructure), newSettlement);
-	    
-	    /*@DiscountFactor*/ double baseDiscount = termStructure.getDiscount(newSettlement);
-	    /*@DiscountFactor*/ double discount = termStructure.getDiscount(testDate);
-	    /*@DiscountFactor*/ double impliedDiscount = implied.getDiscount(testDate);
-	    	
-        if (Math.abs(discount - baseDiscount*impliedDiscount) > tolerance)
-        	fail("unable to reproduce discount from implied curve\n"
-	            + "    calculated: " + baseDiscount*impliedDiscount + "\n"
-	            + "    expected:   " + discount);
+//TODO: remove comments	
+//	    double tolerance = 1.0e-10;
+//	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+//	    Date newToday = today.increment(3 * Period.ONE_YEAR_FORWARD.getLength());
+//	    Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
+//	    Date testDate = newSettlement.increment(5 * Period.ONE_YEAR_FORWARD.getLength());
+//	    
+//	    YieldTermStructure implied = new ImpliedTermStructure<YieldTermStructure>(
+//	    		new Handle<YieldTermStructure>(termStructure), newSettlement);
+//	    
+//	    /*@DiscountFactor*/ double baseDiscount = termStructure.getDiscount(newSettlement);
+//	    /*@DiscountFactor*/ double discount = termStructure.getDiscount(testDate);
+//	    /*@DiscountFactor*/ double impliedDiscount = implied.getDiscount(testDate);
+//	    	
+//        if (Math.abs(discount - baseDiscount*impliedDiscount) > tolerance)
+//        	fail("unable to reproduce discount from implied curve\n"
+//	            + "    calculated: " + baseDiscount*impliedDiscount + "\n"
+//	            + "    expected:   " + discount);
 	}
 	
 //	@Test

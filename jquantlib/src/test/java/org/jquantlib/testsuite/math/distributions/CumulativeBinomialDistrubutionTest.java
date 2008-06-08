@@ -32,6 +32,11 @@ import org.junit.Test;
 
 public class CumulativeBinomialDistrubutionTest {
 	
+	
+	public CumulativeBinomialDistrubutionTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testCumulativeBinomialDistribution() {
 		

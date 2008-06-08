@@ -8,7 +8,6 @@ import org.jquantlib.math.UnaryFunctionDouble;
 class CubeFunction implements UnaryFunctionDouble {
 
 	public double evaluate(double x) {
-		// TODO Auto-generated method stub
 		return x*x*x;
 	}
 

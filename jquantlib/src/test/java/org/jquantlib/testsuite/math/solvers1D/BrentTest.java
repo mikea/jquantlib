@@ -13,6 +13,10 @@ import org.junit.Test;
 // TODO Move this test case to testsuite/math/solvers1D
 public class BrentTest {
 
+	public BrentTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testInvertSquare() {
 		

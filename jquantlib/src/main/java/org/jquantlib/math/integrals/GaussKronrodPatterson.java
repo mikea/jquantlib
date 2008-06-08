@@ -18,32 +18,78 @@
  When applicable, the originating copyright notice follows below.
  */
 
+/*
+ Copyright (C) 2006 François du Vignaud
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.math.integrals;
 
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * @author Richard Gomes
+ * @author Dominik Holenstein
  */
-public class GaussKonrodPattersonIntegrator implements Integrator {
+public class GaussKronrodPatterson extends Integrator {
 	
-	private int _numberOfEvaluations;
-	private double _absoluteAccuracy;
-	private double _relativeAccuracy;
-	private double _absoluteError;
-
-	public GaussKonrodPattersonIntegrator(double relativeAccuracy,
-			double absoluteAccuracy) {
-		_relativeAccuracy = relativeAccuracy;
-		_absoluteAccuracy = absoluteAccuracy;
+	//
+	// private fields
+	//
+	
+	private double relativeAccuracy;
+	
+	
+	//
+	// public constructors
+	//
+	
+	public GaussKronrodPatterson(final double absoluteAccuracy, final int maxEvaluations, final double relativeAccuracy) {
+		super(absoluteAccuracy, maxEvaluations);
+		this.relativeAccuracy = relativeAccuracy;
 	}
 
-	public GaussKonrodPattersonIntegrator() {
+
+	public GaussKronrodPatterson(double relativeAccuracy, double absoluteAccuracy) {
+		this(absoluteAccuracy, 100, relativeAccuracy);
+	}
+
+	public GaussKronrodPatterson() {
 		this(1.0e-6, 1.0);
 	}
+	
+	
+	//
+	// public final methods
+	//
+	
+	public final double getRelativeAccuracy() {
+		return relativeAccuracy;
+	}
 
-	public double integrate(UnaryFunctionDouble f, double a, double b) {
+	public final void setRelativeAccuracy(double relativeAccuracy) {
+		this.relativeAccuracy = relativeAccuracy;
+	}
+
+
+	//
+	// protected virtual methods
+	//
+	
+	@Override
+	protected double integrate(UnaryFunctionDouble f, double a, double b) {
 
 		double result;
 		double[] fv1 = new double[5];
@@ -183,14 +229,6 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 		return result;
 	}
 
-	public int getNumberOfEvaluations() {
-		return _numberOfEvaluations;
-	}
-
-	public double getAbsoluteError() {
-		return _absoluteError;
-	}
-
 	private double rescaleError(double err, double resultAbs, double resultAsc) {
 		err = Math.abs(err);
 		if (resultAsc != 0 && err != 0) {
@@ -217,35 +255,40 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 	 */
 
 	/* x1, abscissae common to the 10-, 21-, 43- and 87-point rule */
-	private static final double x1[] = { 0.973906528517171720077964012084452,
+	private static final double x1[] = { 
+			0.973906528517171720077964012084452,
 			0.865063366688984510732096688423493,
 			0.679409568299024406234327365114874,
 			0.433395394129247190799265943165784,
 			0.148874338981631210884826001129720 };
 
 	/* w10, weights of the 10-point formula */
-	private static final double w10[] = { 0.066671344308688137593568809893332,
+	private static final double w10[] = { 
+			0.066671344308688137593568809893332,
 			0.149451349150580593145776339657697,
 			0.219086362515982043995534934228163,
 			0.269266719309996355091226921569469,
 			0.295524224714752870173892994651338 };
 
 	/* x2, abscissae common to the 21-, 43- and 87-point rule */
-	private static final double x2[] = { 0.995657163025808080735527280689003,
+	private static final double x2[] = { 
+			0.995657163025808080735527280689003,
 			0.930157491355708226001207180059508,
 			0.780817726586416897063717578345042,
 			0.562757134668604683339000099272694,
 			0.294392862701460198131126603103866 };
 
 	/* w21a, weights of the 21-point formula for abscissae x1 */
-	private static final double w21a[] = { 0.032558162307964727478818972459390,
+	private static final double w21a[] = { 
+			0.032558162307964727478818972459390,
 			0.075039674810919952767043140916190,
 			0.109387158802297641899210590325805,
 			0.134709217311473325928054001771707,
 			0.147739104901338491374841515972068 };
 
 	/* w21b, weights of the 21-point formula for abscissae x2 */
-	private static final double w21b[] = { 0.011694638867371874278064396062192,
+	private static final double w21b[] = { 
+			0.011694638867371874278064396062192,
 			0.054755896574351996031381300244580,
 			0.093125454583697605535065465083366,
 			0.123491976262065851077958109831074,
@@ -253,7 +296,8 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 			0.149445554002916905664936468389821 };
 
 	/* x3, abscissae common to the 43- and 87-point rule */
-	private static final double x3[] = { 0.999333360901932081394099323919911,
+	private static final double x3[] = { 
+			0.999333360901932081394099323919911,
 			0.987433402908088869795961478381209,
 			0.954807934814266299257919200290473,
 			0.900148695748328293625099494069092,
@@ -266,7 +310,8 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 			0.074650617461383322043914435796506 };
 
 	/* w43a, weights of the 43-point formula for abscissae x1, x3 */
-	private static final double w43a[] = { 0.016296734289666564924281974617663,
+	private static final double w43a[] = { 
+			0.016296734289666564924281974617663,
 			0.037522876120869501461613795898115,
 			0.054694902058255442147212685465005,
 			0.067355414609478086075553166302174,
@@ -278,7 +323,8 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 			0.071387267268693397768559114425516 };
 
 	/* w43b, weights of the 43-point formula for abscissae x3 */
-	private static final double w43b[] = { 0.001844477640212414100389106552965,
+	private static final double w43b[] = { 
+			0.001844477640212414100389106552965,
 			0.010798689585891651740465406741293,
 			0.021895363867795428102523123075149,
 			0.032597463975345689443882222526137,
@@ -292,7 +338,8 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 			0.074722147517403005594425168280423 };
 
 	/* x4, abscissae of the 87-point rule */
-	private static final double x4[] = { 0.999902977262729234490529830591582,
+	private static final double x4[] = { 
+			0.999902977262729234490529830591582,
 			0.997989895986678745427496322365960,
 			0.992175497860687222808523352251425,
 			0.981358163572712773571916941623894,
@@ -316,7 +363,8 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 			0.037352123394619870814998165437704 };
 
 	/* w87a, weights of the 87-point formula for abscissae x1, x2, x3 */
-	private static final double w87a[] = { 0.008148377384149172900002878448190,
+	private static final double w87a[] = { 
+			0.008148377384149172900002878448190,
 			0.018761438201562822243935059003794,
 			0.027347451050052286161582829741283,
 			0.033677707311637930046581056957588,
@@ -339,7 +387,8 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 			0.037253875503047708539592001191226 };
 
 	/* w87b, weights of the 87-point formula for abscissae x4 */
-	private static final double w87b[] = { 0.000274145563762072350016527092881,
+	private static final double w87b[] = { 
+			0.000274145563762072350016527092881,
 			0.001807124155057942948341311753254,
 			0.004096869282759164864458070683480,
 			0.006758290051847378699816577897424,
@@ -363,21 +412,4 @@ public class GaussKonrodPattersonIntegrator implements Integrator {
 			0.037334228751935040321235449094698,
 			0.037361073762679023410321241766599 };
 
-	private double getAbsoluteAccuracy() {
-		return _absoluteAccuracy;
-	}
-
-	private double getRelativeAccuracy() {
-		return _relativeAccuracy;
-	}
-
-	private void setAbsoluteError(double x) {
-		_absoluteError = x;
-	}
-
-	private void setNumberOfEvaluations(int x) {
-		_numberOfEvaluations = x;
-	}
-
-	
 }

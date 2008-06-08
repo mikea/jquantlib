@@ -47,6 +47,10 @@ import org.junit.Test;
 
 public class InterpolationTest {
 
+	public InterpolationTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 
 //	#define BEGIN(x) (x+0)
 //	#define END(x) (x+LENGTH(x))

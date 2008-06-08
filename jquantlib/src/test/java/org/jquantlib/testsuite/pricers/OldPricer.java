@@ -38,7 +38,11 @@ import org.junit.Test;
 //FIXME: Rename to OldPricerTest
 public class OldPricer {
 	
-	 class BatchData {
+	public OldPricer() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
+	private class BatchData {
 	        Option.Type type;
 	        double underlying;
 	        double strike;

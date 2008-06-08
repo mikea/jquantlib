@@ -10,6 +10,10 @@ import org.junit.Test;
  */
 public class ErrorFunctionTest {
 
+	public ErrorFunctionTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testRegressionExtremeValuesForCoverage(){
 		

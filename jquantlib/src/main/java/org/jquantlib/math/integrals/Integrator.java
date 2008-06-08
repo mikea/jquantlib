@@ -20,15 +20,109 @@
 
 package org.jquantlib.math.integrals;
 
+import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
+ * This is the abstract base class for all integrators
+ * 
  * @author Richard Gomes
  */
-public interface Integrator {
+public abstract class Integrator {
 
-	double integrate(UnaryFunctionDouble f, double a, double b);
+    //
+	// private fields
+	//
 	
-	int getNumberOfEvaluations();
+	private double absoluteAccuracy;
+    private double absoluteError;
+    private int maxEvaluations;
+    private int numberOfEvaluations;
 	
+    
+	//
+	// public constructors
+	//
+	
+	public Integrator(final double absoluteAccuracy, final int maxEvaluations) {
+		if (absoluteAccuracy <= Constants.QL_EPSILON)
+			throw new IllegalArgumentException("required tolerance(" + absoluteAccuracy + ") must be > "+Constants.QL_EPSILON);
+
+		this.absoluteAccuracy = absoluteAccuracy;
+		this.maxEvaluations = maxEvaluations;
+	}
+	
+    //
+    // protected abstract methods
+    //
+    
+    protected abstract double integrate(UnaryFunctionDouble f, double a, double b) /* @ReadOnly */;
+
+	
+    //
+    // protected final methods
+    //
+    
+    protected final void setAbsoluteError(final double error) /* @ReadOnly */ {
+        absoluteError = error;
+    }
+
+    protected final void setNumberOfEvaluations(final int evaluations) /* @ReadOnly */ {
+        this.numberOfEvaluations = evaluations;
+    }
+
+    protected final void increaseNumberOfEvaluations(final int increase) /* @ReadOnly */ {
+        this.numberOfEvaluations += increase;
+    }
+
+
+    //
+    // protected virtual methods
+    //
+    
+    protected int getNumberOfEvaluations() /* @ReadOnly */ {
+        return this.numberOfEvaluations;
+    }
+
+
+	//
+	// public final methods
+	//
+	
+	public double evaluate(UnaryFunctionDouble f, double a, double b) /* @ReadOnly */{
+		if (a == b) return 0.0;
+		if (a > b) return -1 * evaluate(f, b, a);
+		this.numberOfEvaluations = 0;
+		return integrate(f, a, b);
+	}
+    
+    public final void setAbsoluteAccuracy(final double accuracy) {
+        absoluteAccuracy= accuracy;
+    }
+
+    public final void setMaxEvaluations(final int maxEvaluations) {
+        this.maxEvaluations = maxEvaluations;
+    }
+
+    public final double getAbsoluteAccuracy() /* @ReadOnly */ {
+        return absoluteAccuracy;
+    }
+
+    public final int getMaxEvaluations() /* @ReadOnly */ {
+        return this.maxEvaluations;
+    }
+
+    public final double getAbsoluteError() /* @ReadOnly */ {
+        return absoluteError;
+    }
+
+    
+    //
+    // public virtual methods
+    //
+    
+    public boolean isIntegrationSuccess() /* @ReadOnly */ {
+        return numberOfEvaluations <= maxEvaluations && absoluteError <= absoluteAccuracy;
+    }
+
 }

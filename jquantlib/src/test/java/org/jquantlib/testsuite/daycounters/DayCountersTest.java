@@ -57,6 +57,10 @@ import org.junit.Test;
  */
 public class DayCountersTest {
 
+	public DayCountersTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	private class SingleCase {
 	    private ActualActual.Convention convention;
 	    private Date start;

@@ -10,6 +10,10 @@ import org.junit.Test;
  */
 public class RegularisedIncompleteBetaTest {
 
+	public RegularisedIncompleteBetaTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testRegIncompleteBetaHartleyFitchExamples() {
 		

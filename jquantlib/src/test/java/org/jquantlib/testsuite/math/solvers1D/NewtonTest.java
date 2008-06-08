@@ -32,6 +32,10 @@ import org.junit.Test;
 
 public class NewtonTest {
 	
+	public NewtonTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testNewton () {
 		

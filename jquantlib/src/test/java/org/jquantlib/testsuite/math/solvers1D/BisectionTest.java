@@ -35,6 +35,10 @@ import org.junit.Test;
 // TODO Make this test JUnit 4.4 conform.
 public class BisectionTest {
 	
+	public BisectionTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testNewtonSafe() {
 		

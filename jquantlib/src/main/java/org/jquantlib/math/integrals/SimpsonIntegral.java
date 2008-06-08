@@ -18,37 +18,61 @@
  When applicable, the originating copyright notice follows below.
  */
 
+/*
+ Copyright (C) 2003 Roman Gitlin
+ Copyright (C) 2003 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.math.integrals;
 
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
+ * Integral of a one-dimensional function using Simpson formula
  * 
  * @author Dominik Holenstein
- *
  */
-
-//Integral of a one-dimensional function
-//Test the correctness of the result is tested by checking it
-//against known good values.
-
-// TODO: Add test case.  
-public class SimpsonIntegral extends TrapezoidIntegral implements Integrator {
+//TODO: Add test case.  
+//TEST the correctness of the result is tested by checking it against known good values.
+public class SimpsonIntegral extends TrapezoidIntegral {
 	
-	public SimpsonIntegral (double accuracy, int NumberOfEvaluations) {
-		super(accuracy,NumberOfEvaluations, Method.Default);
+	//
+	// public constructors
+	//
+	
+	public SimpsonIntegral (final double accuracy, final int maxIterations) {
+		super(accuracy, Method.Default, maxIterations);
 	}
-	/*
-    class SimpsonIntegral : public TrapezoidIntegral {
-      public:
-        SimpsonIntegral(Real accuracy,
-                        Size maxIterations = Null<Size>())
-        : TrapezoidIntegral(accuracy, Default, maxIterations) {}
-      
-        	
-        } */
-      public double integrate (UnaryFunctionDouble f, double a, double b) {
-        
+	
+	//
+	// private methods
+	//
+	
+	@Override
+	protected Method getMethod() {
+		// This method reduces visibility of an ancestor method
+		throw new UnsupportedOperationException(); // FIXME: message
+	}
+	
+	//
+	// protected virtual methods
+	//
+	
+	@Override
+    protected double integrate (UnaryFunctionDouble f, double a, double b) {
         // start from the coarsest trapezoid...
         int N = 1;
         double I = (f.evaluate(a)+f.evaluate(b))*(b-a)/2.0, newI;
@@ -60,7 +84,7 @@ public class SimpsonIntegral extends TrapezoidIntegral implements Integrator {
            N *= 2;
            newAdjI = (4.0*newI-I)/3.0;
            // good enough? Also, don't run away immediately
-           if (Math.abs(adjI-newAdjI) <= getAccuracy() && i > 5)
+           if (Math.abs(adjI-newAdjI) <= getAbsoluteAccuracy() && i > 5)
              // ok, exit
              return newAdjI;
              // oh well. Another step.
@@ -70,4 +94,5 @@ public class SimpsonIntegral extends TrapezoidIntegral implements Integrator {
          } while (i < getNumberOfEvaluations());
          throw new ArithmeticException("max number of iterations reached");
     }
+	
 }

@@ -1,4 +1,4 @@
-package org.jquantlib.testsuite.util;
+package org.jquantlib.testsuite.patterns;
 
 import static org.junit.Assert.fail;
 
@@ -9,6 +9,10 @@ import org.junit.Test;
 
 public class VisitorTest {
 
+	public VisitorTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testTypedVisitorPattern() {
 		

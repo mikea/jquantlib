@@ -47,6 +47,10 @@ public class DatesTest {
             "F7", "G7", "H7", "J7", "K7", "M7", "N7", "Q7", "U7", "V7", "X7", "Z7", "F8", "G8", "H8", "J8", "K8", "M8",
             "N8", "Q8", "U8", "V8", "X8", "Z8", "F9", "G9", "H9", "J9", "K9", "M9", "N9", "Q9", "U9", "V9", "X9", "Z9" };
 
+    public DatesTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    }
+    
     @Test
     public void immDates() {
         Date counter = DateFactory.getFactory().getMinDate();

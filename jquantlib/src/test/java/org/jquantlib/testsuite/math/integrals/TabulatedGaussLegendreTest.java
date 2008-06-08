@@ -11,6 +11,10 @@ import org.junit.Test;
  */
 public class TabulatedGaussLegendreTest {
 
+	public TabulatedGaussLegendreTest() {
+		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
 	@Test
 	public void testPolynomials() {
 		checkSingleTabulated(new ConstantFunction(), "f(x)=1", 2.0, 1.0e-13);

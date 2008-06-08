@@ -25,11 +25,12 @@ import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * 
+ * Brent 1-D solver
+ * <p>
  * The implementation of the algorithm was inspired by <br/>
  * <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes in C", 2nd
  * edition, Cambridge University Press</i>
-	 
+ *	 
  * @author Richard Gomes
  **/
 public class Brent extends AbstractSolver1D<UnaryFunctionDouble> {
