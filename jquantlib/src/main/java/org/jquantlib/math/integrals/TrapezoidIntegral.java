@@ -91,11 +91,12 @@ public class TrapezoidIntegral extends Integrator {
 	//
 	
 	protected final double defaultIteration(final UnaryFunctionDouble f, double a, double b, double I, int N) /* @ReadOnly */ {
-		double sum = 0.0;
+	    double sum = 0.0;
 	    double dx = (b-a)/N;
 	    double x = a + dx/2.0;
-	    for (int i=0; i<N; x += dx, ++i)
+	    for (int i=0; i<N; x += dx, ++i) {
 	    	sum += f.evaluate(x);
+	    }
 	    return (I + dx*sum)/2.0;
 	}
 
@@ -128,34 +129,35 @@ public class TrapezoidIntegral extends Integrator {
 	@Override
 	protected double integrate(final UnaryFunctionDouble f, double a, double b) /* @ReadOnly */ {
 
-		// start from the coarsest trapezoid...
-		int N = 1;
-		double I = (f.evaluate(a)+f.evaluate(b))*(b-a)/2.0;
-		double newI;
+	    // start from the coarsest trapezoid...
+	    int N = 1;
+	    double I = (f.evaluate(a)+f.evaluate(b))*(b-a)/2.0;
+	    double newI;
 	      
-		// ...and refine it
-		int i = 1;
+	    // ...and refine it
+	    int i = 1;
+	    
 	    do {
-	    	switch (method) {
-	        	case MidPoint:
-	        		newI = midPointIteration(f,a,b,I,N);
-	                N *= 3;
-	                break;
-	            default:
-	            	newI = defaultIteration(f,a,b,I,N);
-	                N *= 2;
-	                break;
-	    	}
-	            
-		    // good enough? Also, don't run away immediately
-		    if (Math.abs(I-newI) <= getAbsoluteAccuracy() && i > 5)
-		        return newI; // ok, exit
+		switch (method) {
+	    case MidPoint:
+		newI = midPointIteration(f, a, b, I, N);
+		N *= 3;
+		break;
+	    default:
+		newI = defaultIteration(f, a, b, I, N);
+		N *= 2;
+		break;
+	    }
+	    // good enough? Also, don't run away immediately
+	    if (Math.abs(I-newI) <= getAbsoluteAccuracy() && i > 5) {
+		return newI; // ok, exit
+	    }
 		    
-	        // oh well. Another step.
-	        I = newI;
-	        i++;
-	    } while (i < this.getMaxEvaluations());
-	    throw new ArithmeticException("max number of iterations reached");
+	    // oh well. Another step.
+	    I = newI;
+	    i++;
+	 } while (i < this.getMaxEvaluations());
+	 throw new ArithmeticException("max number of iterations reached");
 	}
 	        
 }

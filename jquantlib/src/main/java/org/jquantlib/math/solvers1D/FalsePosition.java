@@ -45,7 +45,7 @@ public class FalsePosition extends AbstractSolver1D<UnaryFunctionDouble> {
 	@Override
 	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
 		
-		double fl, fh, xl, xh, dx, del, froot;
+	double fl, fh, xl, xh, dx, del, froot;
 
         // Identify the limits so that xl corresponds to the low side
         if (fxMin_ < 0.0) {
