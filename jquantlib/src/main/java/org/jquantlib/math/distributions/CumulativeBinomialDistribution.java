@@ -7,15 +7,15 @@
  JQuantLib is free software: you can redistribute it and/or modify it
  under the terms of the QuantLib license.  You should have received a
  copy of the license along with this program; if not, please email
- <jquantlib-dev@lists.sf.net>. The license is also available online at
- <http://jquantlib.org/license.shtml>.
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
 
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  
  JQuantLib is based on QuantLib. http://quantlib.org/
- When applicable, the originating copyright notice follows below.
+ When applicable, the original copyright notice follows this notice.
  */
 
 /**
@@ -29,7 +29,8 @@ package org.jquantlib.math.distributions;
 import org.jquantlib.math.Beta;
 
 /**
- * Cumulative binomial distribution function.<br/>
+ * Cumulative binomial distribution function.
+ * <p>
  * Given an integer k it provides the cumulative probability of observing kk<=k.
  * 
  * @author Richard Gomes
@@ -45,8 +46,8 @@ public class CumulativeBinomialDistribution {
     
     /**
      * This constructor initializes p and n
-     * @param p probability of success of a single trial
-     * @param n the total number of trials
+     * @param p is the probability of success of a single trial
+     * @param n is the total number of trials
      */
     public CumulativeBinomialDistribution(double p, int n){  
     	n_ = n; // total number of trials

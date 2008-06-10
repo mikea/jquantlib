@@ -7,15 +7,15 @@
  JQuantLib is free software: you can redistribute it and/or modify it
  under the terms of the QuantLib license.  You should have received a
  copy of the license along with this program; if not, please email
- <jquantlib-dev@lists.sf.net>. The license is also available online at
- <http://jquantlib.org/license.shtml>.
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
 
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  
  JQuantLib is based on QuantLib. http://quantlib.org/
- When applicable, the originating copyright notice follows below.
+ When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.math.distributions;
@@ -25,8 +25,9 @@ import org.jquantlib.math.ErrorFunction;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * Cumulative normal distribution function.<br/>
- * Given x it provides an approximation to the integral of the gaussian normal distribution.<br>
+ * Cumulative normal distribution function.
+ * <p>
+ * Given x it provides an approximation to the integral of the gaussian normal distribution.
  * For this implementation see <i>M. Abramowitz and I. Stegun, Handbook of Mathematical Functions, Dover Publications, New York (1972)</i>
  * 
  * @author Richard Gomes

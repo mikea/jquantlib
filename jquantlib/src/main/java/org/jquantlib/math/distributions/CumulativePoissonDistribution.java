@@ -7,23 +7,23 @@
  JQuantLib is free software: you can redistribute it and/or modify it
  under the terms of the QuantLib license.  You should have received a
  copy of the license along with this program; if not, please email
- <jquantlib-dev@lists.sf.net>. The license is also available online at
- <http://jquantlib.org/license.shtml>.
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
 
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  
  JQuantLib is based on QuantLib. http://quantlib.org/
- When applicable, the originating copyright notice follows below.
+ When applicable, the original copyright notice follows this notice.
  */
-
 
 package org.jquantlib.math.distributions;
 
 
 /**
- * Cumulative Poisson distribution function.<br/>
+ * Cumulative Poisson distribution function
+ * <p>
  * This function provides an approximation of the integral of the Poisson
  * distribution.<br/>
  *
@@ -34,7 +34,7 @@ package org.jquantlib.math.distributions;
  * distribution can also be used for the number of events in other specified
  * intervals such as distance, area or volume.
  *
- * @see Wikipedia: <a href="http://en.wikipedia.org/wiki/Poisson_distribution">Poisson Distribution on Wikipedia</a>
+ * @see Wikipedia: <a href="http://en.wikipedia.org/wiki/Poisson_distribution">Poisson Distribution</a>
  *
  * @see Book: <i>"Numerical Recipes in C", 2nd edition, Teukolsky, Vetterling, Flannery, chapter 6.</i>
  *

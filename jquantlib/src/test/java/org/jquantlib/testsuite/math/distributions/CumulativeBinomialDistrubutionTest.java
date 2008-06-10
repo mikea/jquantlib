@@ -1,6 +1,9 @@
 /*
  Copyright (C) 2008 Dominik Holenstein
  
+/*
+ Copyright (C) 2007 Richard Gomes
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,8 +19,7 @@
  
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
-
-*/
+ */
 
 package org.jquantlib.testsuite.math.distributions;
 

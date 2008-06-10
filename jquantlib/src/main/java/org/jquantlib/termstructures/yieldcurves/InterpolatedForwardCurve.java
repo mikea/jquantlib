@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007 Richard Gomes
+ Copyright (C) 2008 Richard Gomes
 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
