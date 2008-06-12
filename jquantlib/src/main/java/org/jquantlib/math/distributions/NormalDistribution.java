@@ -24,10 +24,12 @@ import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * Provides the probability density function (pdf) of the (unit) normal distribution.<br/>
+ * Provides the probability density function (pdf) of the (unit) normal distribution
+ * 
  * {@latex[
  * 	\frac{1}{\sigma \sqrt{2\pi} } \exp \left(-\frac{(x-\mu)^2}{2\sigma ^2} \right)
  * }
+ * 
  * @see <a href="http://en.wikipedia.org/wiki/Probability_density_function">Normal Distribution on Wikipedia</a>
  *  
  * @author Richard Gomes
