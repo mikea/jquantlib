@@ -24,7 +24,11 @@ import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * Provides the probability density function of the (unit) normal distribution
+ * Provides the probability density function (pdf) of the (unit) normal distribution.<br/>
+ * {@latex[
+ * 	\frac{1}{\sigma \sqrt{2\pi} } \exp \left(-\frac{(x-\mu)^2}{2\sigma ^2} \right)
+ * }
+ * @see <a href="http://en.wikipedia.org/wiki/Probability_density_function">Normal Distribution on Wikipedia</a>
  *  
  * @author Richard Gomes
  */
@@ -36,10 +40,19 @@ public class NormalDistribution implements UnaryFunctionDouble {
 	private double denominator;
 	private double derNormalizationFactor;
 
+	/**
+	 * If no agruments are provided to the constructor then the <code>average</code> ({@latex \mu})  is 0.0 and <code>sigma</code> ({@latex \sigma}) is 1.0.
+	 * 
+	 */
 	public NormalDistribution() {
 		this(0.0, 1.0);
 	}
 	
+	/**
+	 * Constructor to initialize <code>average</code> and <code>sigma</code>.
+	 * @param average
+	 * @param sigma
+	 */
 	public NormalDistribution(double average, double sigma) {
         if (sigma <= 0.0) throw new IllegalArgumentException("sigma must be greater than 0.0 ("+sigma+" not allowed)");
 
@@ -51,7 +64,11 @@ public class NormalDistribution implements UnaryFunctionDouble {
 	    this.denominator = 2.0*derNormalizationFactor;
 	}
 	
-	
+	/**
+	 * Computes the normal distribution for parameter <code>x</code>
+	 * @param x
+	 * @return the normal distribution (pdf) for input <code>x</code>
+	 */
 	public double evaluate(double x) /* @ReadOnly */ {
 		double exponent = -0.5*x*x;
 		if (exponent <= -690.0) {

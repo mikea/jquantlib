@@ -44,6 +44,8 @@ import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.TabulatedGaussLegendre;
 
+
+
 /**
  * Cumulative bivariate normal distibution function (West 2004).
  * The bivariate normal distribution is a distribution of a pair of variables whose 
