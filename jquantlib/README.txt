@@ -4,7 +4,7 @@ JQuantLib is a Quantitative Finance framework written in Java. It aims to
 provide enough tools for a broad range of financial instrument valuation
 using a number of algorithms, pricing engines, simulation methods, etc.
 
-If you are impatient, jump to ''Building JQuantLib from command line''
+If  you are impatient, jump to ''Building JQuantLib from command line''
  
 
 ==Audience== 
