@@ -29,11 +29,9 @@ import org.jquantlib.util.Visitor;
 
 /**
  * Black-volatility term structure
- * 
  * <p>
  * This abstract class defines the interface of concrete Black-volatility term
  * structures which will be derived from this one.
- * 
  * <p>
  * Volatilities are assumed to be expressed on an annual basis.
  * 

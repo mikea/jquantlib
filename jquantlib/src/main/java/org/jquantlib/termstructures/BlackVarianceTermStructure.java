@@ -34,7 +34,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.termstructures;
 
@@ -44,95 +44,135 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
-import org.jquantlib.util.Visitable;
 import org.jquantlib.util.Visitor;
 
-// Black variance term structure
-
-/** This abstract class acts as an adapter to VolTermStructure allowing
- *  the programmer to implement only the
- *  <tt>blackVarianceImpl(Time, Real, bool)</tt> method in derived
- *  classes.
- *
- *  <p>
- *  Volatility is assumed to be expressed on an annual basis.
+/**
+ * Black variance term structure
+ * <p>
+ * This abstract class acts as an adapter to VolTermStructure allowing the programmer to implement only the
+ * <tt>blackVarianceImpl(Time, Real, bool)</tt> method in derived classes.
+ * <p>
+ * Volatility is assumed to be expressed on an annual basis.
+ * 
+ * @note Term structures initialized by means of this constructor must manage their own reference date by overriding the
+ *       referenceDate() method.
+ * @note See the TermStructure documentation for issues regarding constructors.
+ * 
+ * @author Richard Gomes
  */
-// FIXME: code review
 public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
 
-        /*! \name Constructors
-            See the TermStructure documentation for issues regarding
-            constructors.
-        */
+    //
+    // public constructors
+    //
+    
+    /**
+     * Term structures initialized by means of this constructor must manage their own reference date by overriding the
+     * referenceDate() method.
+     */
+    public BlackVarianceTermStructure() {
+        this(new Actual365Fixed());
+    }
 
-        /*! \warning term structures initialized by means of this
-                     constructor must manage their own reference date
-                     by overriding the referenceDate() method.
-        */
-	public BlackVarianceTermStructure() {
-		this(new Actual365Fixed());
-	}
-	
+    // --------------------------------------------------------------------------------------------------
+    // Term structures initialized by means of this constructor must manage their own reference date 
+    // by overriding the referenceDate() method.
+    // --------------------------------------------------------------------------------------------------
+    
+    /**
+     * Term structures initialized by means of this constructor must manage their own reference date by overriding the
+     * referenceDate() method.
+     * 
+     * @note See the TermStructure documentation for issues regarding constructors.
+     */
     public BlackVarianceTermStructure(final DayCounter dc) {
-    	super(dc);
+        super(dc);
     }
 
-    //! initialize with a fixed reference date
+    /**
+     * Initialize with a fixed reference date
+     * 
+     * @note See the TermStructure documentation for issues regarding constructors.
+     */
     public BlackVarianceTermStructure(final Date referenceDate) {
-    	this(referenceDate, new NullCalendar());
+        this(referenceDate, new NullCalendar());
     }
 
+    /**
+     * Initialize with a fixed reference date
+     * 
+     * @note See the TermStructure documentation for issues regarding constructors.
+     */
     public BlackVarianceTermStructure(final Date referenceDate, final Calendar cal) {
-    	this(referenceDate, cal, new Actual365Fixed());
+        this(referenceDate, cal, new Actual365Fixed());
     }
 
+    /**
+     * Initialize with a fixed reference date
+     * 
+     * @note See the TermStructure documentation for issues regarding constructors.
+     */
     public BlackVarianceTermStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
-    	super(referenceDate, cal, dc);
+        super(referenceDate, cal, dc);
     }
 
 
+    // --------------------------------------------------------------------------------------------------
+    // Calculate the reference date based on the global evaluation date
+    // --------------------------------------------------------------------------------------------------
     
-    
-    
-    
-    
-    //! calculate the reference date based on the global evaluation date
+    /**
+     * Calculate the reference date based on the global evaluation date
+     * 
+     * @note See the TermStructure documentation for issues regarding constructors.
+     */
     public BlackVarianceTermStructure(int settlementDays, final Calendar cal) {
-    	super(settlementDays, cal, new Actual365Fixed());
+        super(settlementDays, cal, new Actual365Fixed());
     }
 
+    /**
+     * Calculate the reference date based on the global evaluation date
+     * 
+     * @note See the TermStructure documentation for issues regarding constructors.
+     */
     public BlackVarianceTermStructure(int settlementDays, final Calendar cal, final DayCounter dc) {
-    	super(settlementDays, cal, dc);
+        super(settlementDays, cal, dc);
+    }
+
+
+    //
+    // protected methods
+    //
+    
+    /**
+     * Returns the volatility for the given strike and date calculating it from the variance.
+     */
+    @Override
+    protected final/* @Volatility */double blackVolImpl(final/* @Time */double maturity, final/* @Price */double strike) {
+        /* @Time */double nonZeroMaturity;
+        /* @Time */double m = maturity;
+        if (m == 0.0) {
+            nonZeroMaturity = 0.00001;
+        } else {
+            nonZeroMaturity = m;
+        }
+        /* @Variance */double var = blackVarianceImpl(/* Time */nonZeroMaturity, strike);
+        return Math.sqrt(var / nonZeroMaturity);
     }
 
     
-    /*! Returns the volatility for the given strike and date calculating it
-        from the variance.
-    */
-    protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-    	/*@Time*/ double nonZeroMaturity;
-    	/*@Time*/ double m = maturity;
-		if (m==0.0) {
-			nonZeroMaturity = 0.00001;
-		} else {
-			nonZeroMaturity = m;
-		}
-		/*@Variance*/ double var = blackVarianceImpl(/*Time*/ nonZeroMaturity, strike);
-		return Math.sqrt(var/nonZeroMaturity);
-    }
+    //
+    // implements TypedVisitable
+    //
 
-	//
-	// implements TypedVisitable
-	//
-	
-	@Override
-	public void accept(final TypedVisitor<TermStructure> v) {
-		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
-	}
+    @Override
+    public void accept(final TypedVisitor<TermStructure> v) {
+        Visitor<TermStructure> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
+    }
 
 }

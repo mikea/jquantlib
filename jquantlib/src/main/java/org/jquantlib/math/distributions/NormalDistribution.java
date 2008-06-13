@@ -21,7 +21,6 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * Provides the probability density function (pdf) of the (unit) normal distribution
@@ -34,17 +33,30 @@ import org.jquantlib.math.UnaryFunctionDouble;
  *  
  * @author Richard Gomes
  */
-public class NormalDistribution implements UnaryFunctionDouble {
+public class NormalDistribution implements Derivative {
 
+	//
+	// protected fields
+	//
+	
 	protected double average;
 	protected double sigma;
-	private double normalizationFactor;
-	private double denominator;
+	
+	//
+	// private fields
+	//
+	
+	private double normalizationFactor; // FIXME: code review
+	private double denominator; // FIXME: code review
 	private double derNormalizationFactor;
 
+	
+	//
+	// public constructors
+	//
+	
 	/**
-	 * If no agruments are provided to the constructor then the <code>average</code> ({@latex \mu})  is 0.0 and <code>sigma</code> ({@latex \sigma}) is 1.0.
-	 * 
+	 * If no arguments are provided to the constructor then {@latex$ \mu \leftarrow 0.0})  and {@latex \sigma \leftarrow 1.0 }.
 	 */
 	public NormalDistribution() {
 		this(0.0, 1.0);
@@ -66,11 +78,20 @@ public class NormalDistribution implements UnaryFunctionDouble {
 	    this.denominator = 2.0*derNormalizationFactor;
 	}
 	
+	
+	//
+	// implements Derivative
+	//
+	
 	/**
-	 * Computes the normal distribution for parameter <code>x</code>
+	 * @InheritDoc
+	 * 
+	 * Computes the Normal distribution at point {@latex$ x }
+	 * 
 	 * @param x
-	 * @return the normal distribution (pdf) for input <code>x</code>
+	 * @return the Normal distribution at point {@latex$ x }
 	 */
+	@Override
 	public double evaluate(double x) /* @ReadOnly */ {
 		double exponent = -0.5*x*x;
 		if (exponent <= -690.0) {
@@ -79,7 +100,17 @@ public class NormalDistribution implements UnaryFunctionDouble {
 		return Constants.M_1_SQRT2PI*Math.exp(exponent);
 	}
 
+	/**
+	 * @InheritDoc
+	 * 
+	 * Calculates the first derivative of a Normal distribution at point {@latex$ x }
+	 * 
+	 * @param x
+	 * @return the first derivative of a Normal distribution at point {@latex$ x }
+	 */
+	@Override
 	public double derivative(double x) /* @ReadOnly */ {
 	    return (evaluate(x) * (average - x)) / derNormalizationFactor;
 	}
+
 }

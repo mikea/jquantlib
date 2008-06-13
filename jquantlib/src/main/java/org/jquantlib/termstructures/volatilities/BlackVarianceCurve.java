@@ -50,22 +50,27 @@ import org.jquantlib.util.Visitor;
 
 import cern.colt.Arrays;
 
-// Black volatility curve modelled as variance curve
-
 /**
+ * Black volatility curve modelled as variance curve
+ * <p>
  * This class calculates time-dependent Black volatilities using as input a
  * vector of (ATM) Black volatilities observed in the market.
- * 
+ * <p>
  * The calculation is performed interpolating on the variance curve. Linear
  * interpolation is used as default; this can be changed by the
  * setInterpolation() method.
- * 
+ * <p>
  * For strike dependence, see BlackVarianceSurface.
  * 
+ * @author Richard Gomes
  */
 // TODO check time extrapolation
 public class BlackVarianceCurve extends BlackVarianceTermStructure {
 
+	//
+	// private fields
+	//
+	
 	private DayCounter dayCounter;
 	private Date maxDate;
 	private Date[] dates;
@@ -74,6 +79,11 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 	private Interpolation varianceCurve;
 	private Interpolator factory;
 
+	
+	//
+	// public constructors
+	//
+	
 	public BlackVarianceCurve(final Date referenceDate, final Date[] dates, /*@Volatility*/ double[] blackVolCurve, final DayCounter dayCounter) {
 		this(referenceDate, dates, blackVolCurve, dayCounter, true);
 	}
@@ -87,6 +97,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     	super(referenceDate);
     	this.dayCounter = dayCounter;
     	this.dates = (Date[]) Arrays.trimToCapacity(dates, dates.length);
+    	this.maxDate = dates[dates.length-1];
     	
     	if (! (this.dates.length==blackVolCurve.length) ) throw new IllegalArgumentException("mismatch between date vector and black vol vector");
 
@@ -110,6 +121,10 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     	factory = LinearInterpolation.getInterpolator();
     }
 
+	//
+	// public final methods
+	//
+	
 	public final DayCounter dayCounter() {
 		return dayCounter;
 	}
@@ -130,13 +145,19 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 		this.setInterpolation(factory);
 	}
 
-	public void setInterpolation(final Interpolator factory) {
+	public final void setInterpolation(final Interpolator factory) {
 		varianceCurve = factory.interpolate(times, variances);
 		varianceCurve.enableExtrapolation();
 		varianceCurve.reload();
 		notifyObservers();
 	}
 
+
+	//
+	// protected final methods
+	//
+	
+	@Override
 	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, /*@Price*/ double maturity) {
 		if (t <= times[times.length]) {
 			return varianceCurve.evaluate(t);

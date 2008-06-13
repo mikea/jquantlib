@@ -21,6 +21,7 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Factorial;
+import org.jquantlib.math.UnaryFunctionInteger;
 
 /**
  * @author Richard Gomes
@@ -41,13 +42,21 @@ import org.jquantlib.math.Factorial;
  *      bimodal distribution.
  *     
  */
+public class BinomialDistribution implements UnaryFunctionInteger {
 
-public class BinomialDistribution {
-
-	private static final Factorial factorial = new Factorial();
-    private int nExp;
-    private double logP;
-    private double logOneMinusP;
+	//
+    // private static final methods
+    //
+    
+    private static final Factorial factorial = new Factorial();
+	
+    //
+    // private final methods
+    //
+    
+    private final int nExp;
+    private  double logP; //TODO: code review
+    private  double logOneMinusP; //TODO: code review
 
     /**
 	 * Constructor of the Binomial Distribution taking two arguments for
@@ -58,13 +67,14 @@ public class BinomialDistribution {
 	 * @param n
 	 *            Sequence of independent yes/no experiments
 	 */
+    //TODO: code review
 	public BinomialDistribution(final double p, final int n) {
-		nExp = n;
+		this.nExp = n;
 
 		if (p == 0.0) {
-			logOneMinusP = 0.0;
+			this.logOneMinusP = 0.0;
 		} else if (p == 1.0) {
-			logP = 0.0;
+			this.logP = 0.0;
 		} else {
 			if ((p < 0)) {
 				throw new ArithmeticException("negative p not allowed");
@@ -72,12 +82,15 @@ public class BinomialDistribution {
 			if ((p > 1.0)) {
 				throw new ArithmeticException("p > 1.0 not allowed");
 			}
-			logP = Math.log(p);
-			logOneMinusP = Math.log(1.0 - p);
+			this.logP = Math.log(p);
+			this.logOneMinusP = Math.log(1.0 - p);
 		}
 	}
 	
-	// TODO Consider developing an UnaryFunctionSomething for integer variables.
+	//
+	// implements UnaryFunctionInteger
+	//
+	
 	/**
 	 * Computes the probability of <code>k</code> successful trials.
 	 * 
@@ -85,6 +98,7 @@ public class BinomialDistribution {
 	 *            Number of successful trials
 	 * @return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp-k) * logOneMinusP);
 	 */
+	@Override
 	public double evaluate(final int k) {
 
         if (k > nExp) {
@@ -101,8 +115,7 @@ public class BinomialDistribution {
 			return (k == 0 ? 1.0 : 0.0);
 		}
         
-        return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp - k)
-				* logOneMinusP);
+        return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp - k) * logOneMinusP);
 	}
 
 	/**
@@ -138,7 +151,7 @@ public class BinomialDistribution {
 	 *            Number of successful trials
 	 * @return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)))
 	 */
-	static double binomialCoefficient(final int n, final int k) {
+	private static double binomialCoefficient(final int n, final int k) {
 		return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)));
 	}
 }

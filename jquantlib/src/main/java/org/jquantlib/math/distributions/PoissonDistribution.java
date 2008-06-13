@@ -21,49 +21,67 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Factorial;
+import org.jquantlib.math.UnaryFunctionInteger;
 
 /**
- * @author Dominik Holenstein
- * 
+ * Normal distribution function
  * <p>
-  * <strong>Normal distribution function </strong><br>
-    Given an integer <strong> k </strong>, it returns its probability
-    in a Poisson distribution.
-	<p>
-    Test the correctness of the returned value is tested by
-    checking it against known good results.
+ * Given an integer {@latex$ k}, it returns its probability in a Poisson distribution.
+ * 
+ * @author Dominik Holenstein
  */
-
+// TEST the correctness of the returned value is tested by checking it against known good results.
 // TODO PoissonDistribution: check logMu_ -> is never used
-public class PoissonDistribution {
+public class PoissonDistribution implements UnaryFunctionInteger {
  
-	private double mu_;
-	private double logMu_;
+	//
+    // private fields
+    //
     
-    /**
-     * <strong>PoissonDistribution constructor</strong><br>
-     * Initialize the mean (-> mu_)
-     * @param mu
+    private double mu;
+	private double logMu;
+    
+    //
+	// public constructors
+	//
+	
+	/**
+     * PoissonDistribution constructor
+     * <p>
+     * Initialize the mean value {@latex$ \mu}
+     * 
+     * @param the mean value {@latex$ \mu}
      */
     public PoissonDistribution(double mu) {
-       mu_ = mu;
-       if(mu_< 0.0) throw new ArithmeticException("mu must be non negative (" + mu_ + " not allowed)");
-       if(mu_ != 0.0) logMu_ = Math.log(mu_);
+       this.mu = mu;
+       if (this.mu< 0.0) throw new ArithmeticException("mu must be non negative (" + this.mu + " not allowed)");
+       if (this.mu != 0.0) this.logMu = Math.log(this.mu);
     }
 
+    
+    //
+    // implements UnaryFunctionInteger
+    //
+    
     /**
-     * <strong>PoissonDistribution evaluation</strong><br>
-     * Compute the Poisson Distribution with input mu and k.
+     * @InheritDoc
+     * 
+     * PoissonDistribution evaluation
+     * <p>
+     * Compute the Poisson Distribution with input {@latex$ \mu} and {@latex$ k}.
+     * 
      * @param k
      * @return Math.exp(k*Math.log(mu_) - logFactorial - mu_)
      */
+    @Override
     public double evaluate(int k)/* @Read-only */ {
-        if (mu_==0.0) {
+        if (mu==0.0) {
             if (k==0) return 1.0;
             else      return 0.0;
         }
         Factorial fact = new Factorial();
         double logFactorial = fact.ln(k);
-        return Math.exp(k*Math.log(mu_) - logFactorial - mu_);
+        return Math.exp(k*Math.log(mu) - logFactorial - mu);
     }
+    
 }

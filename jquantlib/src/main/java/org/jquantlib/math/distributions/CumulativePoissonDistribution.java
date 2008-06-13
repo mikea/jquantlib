@@ -20,13 +20,15 @@
 
 package org.jquantlib.math.distributions;
 
+import org.jquantlib.math.UnaryFunctionInteger;
+
 
 /**
  * Cumulative Poisson distribution function
  * <p>
  * This function provides an approximation of the integral of the Poisson
- * distribution.<br/>
- *
+ * distribution.
+ * <p>
  * In probability theory and statistics, the Poisson distribution is a discrete
  * probability distribution that expresses the probability of a number of events
  * occurring in a fixed period of time if these events occur with a known
@@ -35,39 +37,55 @@ package org.jquantlib.math.distributions;
  * intervals such as distance, area or volume.
  *
  * @see Wikipedia: <a href="http://en.wikipedia.org/wiki/Poisson_distribution">Poisson Distribution</a>
- *
  * @see Book: <i>"Numerical Recipes in C", 2nd edition, Teukolsky, Vetterling, Flannery, chapter 6.</i>
  *
  * @author Dominik Holenstein
  */
-
 //TODO Test the correctness of the returned value against known good results.
 //TODO CumulativePoissonDistribution: Write a test case.
-public class CumulativePoissonDistribution {
+public class CumulativePoissonDistribution implements UnaryFunctionInteger {
 
-    	private double mu_;
-	private final double accuracy = 1.0e-15;
-	private final int maxIteration = 100;
+	//
+	// private static fields
+	//
+	
+	private static final double accuracy = 1.0e-15;
+	private static final int maxIteration = 100;
 
+    //
+	// static fields
+	//
+	
+	private final double mu;
+    
+	//
+	// public constructors
+	//
+	
 	public CumulativePoissonDistribution(double mu) {
-	    mu_ = mu;
+	    this.mu = mu;
 	}
 
+	
+	//
+	// implements UnaryFunctionInteger
+	//
+	
 	/**
-	 * Computes the cumulative poisson distribution by using the 
-	 * incomplete gamma function.
+	 * @InheritDoc
+	 * 
+	 * Computes the cumulative Poisson distribution by using the incomplete gamma function
+	 * .
 	 * @param k is the number of occurrences of an event 
-	 * @return 1.0 - incmplgamma.incompleteGammaFunction(k_+1, mu_, accuracy, maxIteration);
+	 * @return the cumulative Poisson distribution by using the incomplete gamma function
 	 */
-	// TODO Check double k_ = (double)k; -> is this cast a good idea?
-	public  double evaluate (int k) /* @Read-only */ {
+	@Override
+	public double evaluate (int k) /* @Read-only */ {
     	   if (k < 0) {
     	       throw new ArithmeticException("k must be >= 1, but is " + k);
     	   }
 
-    	   // this cast is necessary because the incompleteGammaFunction requires double,double,double,int parameters.
-    	   double k_ = (double)k;
     	   IncompleteGamma incmplgamma = new IncompleteGamma();
-           return 1.0 - incmplgamma.incompleteGammaFunction(k_+1, mu_, accuracy, maxIteration);
+           return 1.0 - incmplgamma.incompleteGammaFunction((double)k +1, mu, accuracy, maxIteration);
 	}
 }
