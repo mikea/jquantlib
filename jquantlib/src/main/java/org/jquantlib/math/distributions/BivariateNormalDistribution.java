@@ -63,6 +63,13 @@ import org.jquantlib.math.integrals.TabulatedGaussLegendre;
  * at <a
  * href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/bvnt.html">www.math.wsu.edu/faculty/genz/papers/bvnt/bvnt.html</a>)
  * <p>
+ * 
+ * The standard bivariate normal distribution function is given by
+ * {@latex[
+ * 	\Phi({ \bf b}, \rho)= \frac{1}{2 \pi \sqrt{1- \rho^{2}}} \int_{- \infty}^{b_1} \int_{- \infty}^{b_2} e^{-(x^{2}-2 \rho xy +y^{2})/(2(1- \rho^{2}))}dydx
+ * } <p>
+ * 
+ * 
  * This implementation mainly differs from the original code in two regards;
  * <ol>
  * <li>The implementation of the cumulative normal distribution is
