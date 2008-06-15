@@ -18,6 +18,25 @@
  When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2003 Ferdinando Ametrano
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2007 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.instruments;
 
 import org.jquantlib.exercise.Exercise;
@@ -45,6 +64,10 @@ import cern.colt.list.DoubleArrayList;
 
 public class OneAssetOption extends Option {
 
+    //
+    // private fields
+    //
+    
     // results
     private double delta;
     private double deltaForward;
@@ -60,6 +83,10 @@ public class OneAssetOption extends Option {
     // arguments
     private StochasticProcess stochasticProcess;
     
+
+    //
+    // public constructors
+    //
     
     public OneAssetOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
     	super(payoff, exercise, engine);
@@ -67,6 +94,10 @@ public class OneAssetOption extends Option {
         this.stochasticProcess.addObserver(this);
     }
 
+    //
+    // public methods
+    //
+    
     public double delta() /* @ReadOnly */ {
         calculate();
         if (Double.isNaN(delta)) throw new IllegalArgumentException("delta not provided");
@@ -127,7 +158,91 @@ public class OneAssetOption extends Option {
         return itmCashProbability;
     }
 
+    @Override
+    public void setupArguments(final Arguments arguments) /* @ReadOnly */ {
+        
+        if (! OneAssetOptionArguments.class.isAssignableFrom(arguments.getClass())) throw new ClassCastException(arguments.toString());
+        
+        final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments) arguments;
+        final OptionArguments         optionArguments   = (OptionArguments) arguments;
+
+        // set up stochastic process
+        oneAssetArguments.stochasticProcess = stochasticProcess;
+        // setup exercise dates
+        optionArguments.exercise = exercise;
+        // set up stopping times
+        int n = exercise.size();
+        DoubleArrayList arr = new DoubleArrayList(n);
+        for (int i=0; i<n; ++i) {
+            arr.add(/*@Time*/ stochasticProcess.getTime(exercise.getDate(i)));
+        }
+        optionArguments.stoppingTimes = arr;
+    }
+
+    /**
+     * When a derived result structure is defined for an instrument, this method should be 
+     * overridden to read from it. This is mandatory in case a pricing engine is used.
+     */
+    public void fetchResults(final Results results) /* @ReadOnly */ {
+        final MoreGreeks moreGreeks;
+        final Greeks     greeks;
+        
+        // obtain results from chained results
+        super.fetchResults(results);
+        
+        // bind a Results interface to specific classes
+        if (MoreGreeks.class.isAssignableFrom(results.getClass())) {
+            moreGreeks = (MoreGreeks) results;
+            greeks     = (Greeks) results;
+        } else {
+            throw new ClassCastException(results.getClass().getName());
+        }
+        
+        //
+        // No check on Double.NaN values - just copy. this allows:
+        // a) To decide in derived options what to do when null results are returned
+        //    (throw numerical calculation?)
+        // b) To implement slim engines which only calculate the value.
+        //    Of course care must be taken not to call the greeks methods when using these.
+        //
+        delta          = greeks.delta;
+        gamma          = greeks.gamma;
+        theta          = greeks.theta;
+        vega           = greeks.vega;
+        rho            = greeks.rho;
+        dividendRho    = greeks.dividendRho;
+
+        //
+        // No check on Double.NaN values - just copy. this allows:
+        // a) To decide in derived options what to do when null results are returned
+        //    (throw numerical calculation?)
+        // b) To implement slim engines which only calculate the value.
+        //    Of course care must be taken not to call the greeks methods when using these.
+        //
+        deltaForward       = moreGreeks.deltaForward;
+        elasticity         = moreGreeks.elasticity;
+        thetaPerDay        = moreGreeks.thetaPerDay;
+        itmCashProbability = moreGreeks.itmCashProbability;
+    }
+
+    /**
+     * Currently, this method returns the Black-Scholes implied volatility. 
+     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
+     *  
+     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
+     * In these cases the calculation can fail and the result (if any) is almost meaningless.
+     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
+     * a target value lower than the intrinsic value in the case of American options.
+     */
+    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue) /* @ReadOnly */ {
+        return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
+    }
     
+
+    //
+    // private final methods
+    //
+
     /**
      * @Note Currently, this method returns the Black-Scholes implied volatility. 
      * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
@@ -137,7 +252,7 @@ public class OneAssetOption extends Option {
      * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
      * a target value lower than the intrinsic value in the case of American options.
      */
-    private /* @Volatility */ double impliedVolatility(
+    private final /* @Volatility */ double impliedVolatility(
     							/*@Price*/ double targetValue, double accuracy, int maxEvaluations, 
     							/* @Volatility */ double minVol, /* @Volatility */ double maxVol) /* @ReadOnly */ {
         calculate();
@@ -151,23 +266,11 @@ public class OneAssetOption extends Option {
         return result;
     }
 
-    /**
-     * Currently, this method returns the Black-Scholes implied volatility. 
-     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
-     *  
-     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
-     * In these cases the calculation can fail and the result (if any) is almost meaningless.
-     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
-     * a target value lower than the intrinsic value in the case of American options.
-     */
-    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue) /* @ReadOnly */ {
-    	return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
-    }
+    //
+    // protected methods
+    //
     
-    
-    
-    
-    
+    @Override
     protected void setupExpired() /* @ReadOnly */ {
         super.setupExpired();
         delta = deltaForward = elasticity = gamma = theta =
@@ -175,77 +278,9 @@ public class OneAssetOption extends Option {
         itmCashProbability = 0.0;
     }
 
-    @Override
-    public void setupArguments(final Arguments arguments) /* @ReadOnly */ {
-    	
-    	if (! OneAssetOptionArguments.class.isAssignableFrom(arguments.getClass())) throw new ClassCastException(arguments.toString());
-    	
-        final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments) arguments;
-        final OptionArguments         optionArguments   = (OptionArguments) arguments;
-
-        // set up stochastic process
-        oneAssetArguments.stochasticProcess = stochasticProcess;
-        // setup exercise dates
-        optionArguments.exercise = exercise;
-        // set up stopping times
-        int n = exercise.size();
-        DoubleArrayList arr = new DoubleArrayList(n);
-        for (int i=0; i<n; ++i) {
-        	arr.add(/*@Time*/ stochasticProcess.getTime(exercise.getDate(i)));
-        }
-        optionArguments.stoppingTimes = arr;
-    }
-
-    /**
-     * When a derived result structure is defined for an instrument, this method should be 
-     * overridden to read from it. This is mandatory in case a pricing engine is used.
-     */
-    public void fetchResults(final Results results) /* @ReadOnly */ {
-    	final MoreGreeks moreGreeks;
-    	final Greeks     greeks;
-    	
-    	// obtain results from chained results
-    	super.fetchResults(results);
-    	
-    	// bind a Results interface to specific classes
-    	if (MoreGreeks.class.isAssignableFrom(results.getClass())) {
-        	moreGreeks = (MoreGreeks) results;
-        	greeks     = (Greeks) results;
-    	} else {
-    		throw new ClassCastException(results.getClass().getName());
-    	}
-    	
-        //
-		// No check on Double.NaN values - just copy. this allows:
-		// a) To decide in derived options what to do when null results are returned
-		//    (throw numerical calculation?)
-		// b) To implement slim engines which only calculate the value.
-		//    Of course care must be taken not to call the greeks methods when using these.
-		//
-        delta          = greeks.delta;
-        gamma          = greeks.gamma;
-        theta          = greeks.theta;
-        vega           = greeks.vega;
-        rho            = greeks.rho;
-        dividendRho    = greeks.dividendRho;
-
-        //
-		// No check on Double.NaN values - just copy. this allows:
-		// a) To decide in derived options what to do when null results are returned
-		//    (throw numerical calculation?)
-		// b) To implement slim engines which only calculate the value.
-		//    Of course care must be taken not to call the greeks methods when using these.
-		//
-        deltaForward       = moreGreeks.deltaForward;
-        elasticity         = moreGreeks.elasticity;
-        thetaPerDay        = moreGreeks.thetaPerDay;
-        itmCashProbability = moreGreeks.itmCashProbability;
-    }
-
-    
     
     //
-    // Inner class ImpliedVolHelper
+    // private inner classes
     //
     
     /**
@@ -253,15 +288,16 @@ public class OneAssetOption extends Option {
      */
     private class ImpliedVolatilityHelper implements UnaryFunctionDouble {
     	
-        private PricingEngine impliedEngine;
         private final OneAssetOptionResults impliedResults;
-        private double targetValue_;
-        private Handle<Quote> vol_;
+
+        private PricingEngine impliedEngine;
+        private Handle<Quote> vol;
+        private double targetValue;
         
         
         public ImpliedVolatilityHelper(final PricingEngine engine, double targetValue)  {
         	this.impliedEngine = engine;
-        	this.targetValue_ = targetValue;
+        	this.targetValue = targetValue;
 
             // obtain arguments from pricing engine
             Arguments tmpArgs = impliedEngine.getArguments();
@@ -281,7 +317,7 @@ public class OneAssetOption extends Option {
         	if (originalProcess==null) throw new NullPointerException("Black-Scholes process required");
 
         	// initialize arguments for calculation of implied volatility
-        	vol_ = new Handle<Quote>(new SimpleQuote(0.0));
+        	this.vol = new Handle<Quote>(new SimpleQuote(0.0));
         	Handle<? extends Quote> stateVariable = originalProcess.stateVariable();
         	Handle<YieldTermStructure> dividendYield = originalProcess.dividendYield();
         	Handle<YieldTermStructure> riskFreeRate = originalProcess.riskFreeRate();
@@ -291,7 +327,7 @@ public class OneAssetOption extends Option {
         	Handle<BlackVolTermStructure> volatility = new Handle<BlackVolTermStructure>(
         													new BlackConstantVol(
         															blackVol.getLink().getReferenceDate(), 
-        															vol_, 
+        															vol, 
         															blackVol.getLink().getDayCounter()));
         
         	// build a new stochastic process
@@ -305,14 +341,13 @@ public class OneAssetOption extends Option {
         	impliedResults = (OneAssetOptionResults)impliedEngine.getResults();
         }
 
-		public double evaluate(/* @Volatility */ double x) /* @ReadOnly */ {
-			SimpleQuote quote = (SimpleQuote)vol_.getLink();
+		public final double evaluate(/* @Volatility */ double x) /* @ReadOnly */ {
+			SimpleQuote quote = (SimpleQuote)vol.getLink();
 			quote.setValue(x);
 			this.impliedEngine.calculate();
-			return impliedResults.value - targetValue_;
+			return impliedResults.value - targetValue;
 		}
 
     }
-    
     
 }

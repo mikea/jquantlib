@@ -24,29 +24,65 @@ import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
- * Binary gap payoff
+ * Binary <i>cash-or-nothing</i> payoff which pays off nothing if the underlying asset price {@latex$ S_{T}} finishes
+ * below/above the strike price {@latex$ K}, or pays out a predetermined constant amount if the underlying asset finishes
+ * above/below the strike price.
+ * <p> 
+ * Definitions of Binary path-independent payoffs can be found in 
+ * <i>M. Rubinstein, E. Reiner:"Unscrambling The Binary Code", Risk, Vol.4 no.9,1991</i>.
  * 
- * <p>
- * This payoff is equivalent to being a) long a PlainVanillaPayoff at the first
- * strike (same Call/Put type) and b) short a CashOrNothingPayoff at the first
- * strike (same Call/Put type) with cash payoff equal to the difference between
- * the second and the first strike.
+ * @see <a href="http://www.in-the-money.com/artandpap/Binary%20Options.doc">Binary Options</a>
  * 
- * @note <b>WARNING:</b> this payoff can be negative depending on the strikes
+ * @author Richard Gomes
  */
 public class CashOrNothingPayoff extends StrikedTypePayoff {
 
-	protected/* @Payoff */double cashPayoff;
+    //
+    // protected fields
+    //
+    
+    /**
+     * Represents the predetermined cash payoff 
+     */
+    protected/* @Payoff */double cashPayoff;
 
+    //
+    // public constructors
+    //
+    
+    /**
+     * Constructs a typed {@link Payoff} with a fixed strike price and the policy of a <i>cash-or-nothing</i> payoff
+     * 
+     * @param type is an {@link Option.Type}
+     * @param strike is the strike price
+     * @param cashPayoff is the cash payoff value
+     */
 	public CashOrNothingPayoff(final Option.Type type, final/* @Price */double strike, final /*@Payoff*/ double cashPayoff) {
 		super(type, strike);
 		this.cashPayoff = cashPayoff;
 	}
 
-	public/* @Payoff */double getCashPayoff() /* @ReadOnly */{
+	/**
+	 * @return the cash payoff value
+	 */
+	public final /* @Payoff */double getCashPayoff() /* @ReadOnly */{
 		return cashPayoff;
 	}
 
+    //
+    // public final methods
+    //
+    
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Pays off nothing if the underlying asset price {@latex$ S_{T}} finishes below/above the strike price {@latex$ K}, or pays
+     * out a predermined constant amount if the underlying asset finishes above/below the strike price.
+     * <li>CALL Option: if {@latex$ S_{T}>K \rightarrow X}, otherwise zero</li>
+     * <li>PUT Option: if {@latex$ K>S_{T} \rightarrow X}, otherwise zero</li>
+     * where {@latex$ S_{T}} is the asset price at maturity and {@latex$ X} is the predetermined cash payoff
+     */
+	@Override
 	public final/* @Price */double valueOf(final/* @Price */double price) {
 		if (type == Option.Type.CALL) {
 			return (price-strike > 0.0 ? cashPayoff : 0.0);
@@ -64,7 +100,7 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
 	
 	@Override
 	public void accept(final TypedVisitor<Payoff> v) {
-		Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
 		if (v1 != null) {
 			v1.visit(this);
 		} else {

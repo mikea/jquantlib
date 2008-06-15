@@ -24,23 +24,20 @@ import org.jquantlib.math.Factorial;
 import org.jquantlib.math.UnaryFunctionInteger;
 
 /**
+ * Binomial Distribution
+ * <p>
+ * In probability theory and statistics, the binomial distribution is the discrete probability distribution of the number of
+ * successes in a sequence of n independent yes/no experiments, each of which yields success with probability p. Such a
+ * success/failure experiment is also called a Bernoulli experiment or Bernoulli trial. In fact, when n = 1, the binomial
+ * distribution is a Bernoulli distribution.
+ * <p>
+ * The binomial distribution is the basis for the popular binomial test of statistical
+ * significance. A binomial distribution should not be confused with a bimodal distribution.
+ * 
+ * @see <a href="http://en.wikipedia.org/wiki/Binomial_distribution">Binomial Distribution on Wikipedia</a>
+ * 
  * @author Richard Gomes
  * @author Dominik Holenstein
- *       
- * @see <strong>Binomial Distribution</strong><br>
- *      (source: <a
- *      href="http://en.wikipedia.org/wiki/Binomial_distribution">Binomial
- *      Distribution on Wikipedia</a>)
- *      In probability theory and statistics, the binomial distribution 
- *      is the discrete probability distribution of the number of successes
- *      in a sequence of n independent yes/no experiments, each of which
- *      yields success with probability p. Such a success/failure experiment
- *      is also called a Bernoulli experiment or Bernoulli trial. In fact, when
- *      n = 1, the binomial distribution is a Bernoulli distribution. The
- *      binomial distribution is the basis for the popular binomial test of statistical
- *      significance. A binomial distribution should not be confused with a 
- *      bimodal distribution.
- *     
  */
 public class BinomialDistribution implements UnaryFunctionInteger {
 
@@ -119,7 +116,7 @@ public class BinomialDistribution implements UnaryFunctionInteger {
 	}
 
 	/**
-	 * Computes the natural logarithm of the binoomial coefficient.
+	 * Computes the natural logarithm of the binomial coefficient.
 	 * 
 	 * @param n
 	 *            Number of total trials

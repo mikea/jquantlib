@@ -22,13 +22,29 @@ package org.jquantlib.instruments;
 
 /**
  * Plain-vanilla payoff
+ * <p>
+ * Pays off nothing if the underlying asset price {@latex$ S_{T}} finishes below/above the strike price {@latex$ K}, or pays
+ * out a the difference between the asset price {@latex$ S_{T}} and the strike price {@latex$ K} if the underlying asset finishes
+ * above/below the strike price.
+ * 
+ * @see <a href="http://www.in-the-money.com/artandpap/Binary%20Options.doc">Binary Options</a>
+ * 
+ * @author Richard Gomes
  */
 public class PlainVanillaPayoff extends StrikedTypePayoff {
 	public PlainVanillaPayoff(final Option.Type type, final /*@Price*/ double strike) {
 		super(type, strike);
 	}
 	
-    public final/*@Price*/double valueOf(final /*@Price*/ double price) {
+	/**
+     * Pays off nothing if the underlying asset price {@latex$ S_{T}} finishes below/above the strike price {@latex$ K}, or pays
+     * out a the difference between the asset price {@latex$ S_{T}} and the strike price {@latex$ K} if the underlying asset finishes
+     * above/below the strike price.
+     * <li>CALL Option: {@latex$ \max(S_{T}-K,0)}</li>
+     * <li>PUT Option:  {@latex$ \max(K-S_{T},0)}</li>
+     * where {@latex$ S_{T}} is the asset price at maturity and {@latex$ K} is the strike price.
+	 */
+	public final/*@Price*/double valueOf(final /*@Price*/ double price) {
     	if (type==Option.Type.CALL) {
     		return Math.max(price - strike, 0.0);
     	} else if (type==Option.Type.PUT) {

@@ -21,32 +21,50 @@
 package org.jquantlib.util;
 
 /**
- * This interface works together to {@link TypedVisitor} in order to provide
+ * This interface works together with {@link TypedVisitor} in order to provide
  * the functionality of obtaining a specific {@link Visitor}.
- * 
- * <p>This functionality is needed every time a class acts as a Visitor of more
+ * <p>
+ * This functionality is needed every time a class acts as a Visitor of more
  * than one data structure or when a class acting as a Visitable requires a
  * certain kind of Visitor.
  * 
  * @note A class which implements {@link TypedVisitable} probably does not need
  * to implement {@link Visitable}
  * 
- * @author Richard Gomes
- * 
  * @see Visitor
  * @see Visitable
  * @see TypedVisitor
- * 
  * @see <a href="http://www.exciton.cs.rice.edu/JavaResources/DesignPatterns/VisitorPattern.htm">The Visitor Design Pattern</a>
  *
  * @param <T> defines the data structure to be visited
+ * 
+ * @author Richard Gomes
  */
 public interface TypedVisitable<T> {
 
 	/**
-	 * 
-	 * @param v
-	 */
-	public void accept(TypedVisitor<T> v);
+     * This method is intended to extend the semantics of method {@link Visitable#accept(Visitor)}
+     * <p>
+     * In a conventional Visitor design pattern, the <code>accept</code> method is called when access to visit a data structure is
+     * requested. A {@link Visitor} object is passed as argument in case permission is granted to that {@link Visitor} to access the
+     * data structure. Obviously, {@link Visitor}s and {@link Visitable}s work in pairs and the class which provides the data
+     * structure to be visited also implements {@link Visitable} in order to properly grant access when the expected {@link Visitor}
+     * is received.
+     * <p>
+     * In the case of a {@link TypedVisitable}, a {@link TypedVisitor} is passed instead of a {@link Visitor}. A
+     * {@link TypedVisitor} is in fact, a composition of {@link Visitor}s and not only a single {@link Visitor}. A
+     * {@link TypedVisitor} is responsible for returning the correct {@link Visitor} responsible for processing a certain data
+     * structure.
+     * <p>
+     * The initial design of pairs made of &lt;{@link Visitor},{@link Visitable}&gt; is extended to a concept of a matrix made
+     * of multiple {@link Visitor}s against multiple {@link Visitable}s. Every class which implements {@link TypedVisitable}
+     * passes different data structures when querying {@link TypedVisitor}s.
+     * 
+     * @param v
+     *            is a {@link TypedVisitor} which keeps data structures extended from <code>T</code>
+     *            
+     * @see TypedVisitor#getVisitor(Class)
+     */
+    public void accept(TypedVisitor<T> v);
 
 }

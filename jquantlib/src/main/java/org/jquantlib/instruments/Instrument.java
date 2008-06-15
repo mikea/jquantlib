@@ -34,112 +34,108 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.util.LazyObject;
 
-    /** Defines an abstract instrument class
-     * 
-     * <p>An instrument may or may not make use of a pricing engine.
-     * An old style instrument must provide it's own calculation logic whilst
-     * a new style instrument relies on a pricing engine for performing calculations.
-     * 
-     * @see http://quantlib.org/reference/group__instruments.html
-	 * 
-	 * @author Richard Gomes
-	 * 
-     * @author Richard Gomes
+/**
+ * This is an abstract {@link Instrument} class which is able to use a {@link PricingEngine} implemented
+ * internally or externally to it. Extended classes {@link OldInstrument} and {@link NewInstrument} are
+ * responsible for defining the adequate behavior.
+ * <p>
+ * An <i>old style instrument</i> must provide it's own calculation logic whilst a
+ * <i>new style instrument</i> relies on a certain pricing engine for performing calculations.
+ *
+ * @see OldInstrument
+ * @see NewInstrument
+ * @see PricingEngine
+ * @see <a href="http://quantlib.org/reference/group__instruments.html">QuantLib: Financial Instruments</a>
+ * 
+ * @author Richard Gomes
+ */
+public abstract class Instrument extends LazyObject {
+
+    //
+    // protected fields
+    //
+
+    /**
+     * Represents the net present value of the instrument.
      */
-    public abstract class Instrument extends LazyObject {
+    protected/*@Price*/double NPV;
 
-    	//
-    	// fields
-    	//
-    	
-    	/**
-    	 * Represents the net present value of the instrument.
-    	 */
-    	protected /*@Price*/ double NPV;
-    	
-    	/**
-    	 * Represents the error estimate on the NPV when available.
-    	 */
-    	protected /*@Price*/ double errorEstimate;
-    	
+    /**
+     * Represents the error estimate on the NPV when available.
+     */
+    protected/*@Price*/double errorEstimate;
 
-    	
-    	//
-    	// constructors
-    	//
-    	
-        protected Instrument() {
-        	super();
-        	this.NPV = Double.NaN;
-        	this.errorEstimate = 0.0;
+    //
+    // public abstract methods
+    //
+
+    /**
+     * @return <code>true</code> if the instrument is still tradeable.
+     */
+    public abstract boolean isExpired();
+
+    //
+    // protected constructors
+    //
+
+    protected Instrument() {
+        super();
+        this.NPV = Double.NaN;
+        this.errorEstimate = 0.0;
+    }
+
+    //
+    // public final methods
+    //
+
+    public final/*@Price*/double getNPV() /*@ReadOnly*/{
+        calculate();
+        if (Double.isNaN(this.NPV))
+            throw new ArithmeticException("NPV not provided");
+        return NPV;
+    }
+
+    public final/*@Price*/double getErrorEstimate() /*@ReadOnly*/{
+        calculate();
+        if (Double.isNaN(this.errorEstimate))
+            throw new ArithmeticException("error estimate not provided");
+        return errorEstimate;
+    }
+
+    //
+    // protected methods
+    //
+
+    /**
+     * This method must leave the instrument in a consistent
+     * state when the expiration condition is met.
+     * 
+     * @see NewInstrument.setupExpired()
+     */
+    protected void setupExpired() /*@ReadOnly*/{
+        NPV = 0.0;
+        errorEstimate = 0.0;
+    }
+
+    //
+    // overridden protected methods from LazyObject
+    //
+
+    @Override
+    protected void calculate() /*@ReadOnly*/{
+        if (isExpired()) {
+            setupExpired();
+            calculated = true;
+        } else {
+            super.calculate();
         }
-        
-        
-        
-    	//
-    	// getters and setters
-    	//
-
-    	public final /*@Price*/ double getNPV() /*@ReadOnly*/ {
-    		calculate();
-    		if (Double.isNaN(this.NPV)) throw new ArithmeticException("NPV not provided");
-    		return NPV;
-    	}
-
-    	public final /*@Price*/ double getErrorEstimate() /*@ReadOnly*/ {
-    		calculate();
-    		if (Double.isNaN(this.errorEstimate)) throw new ArithmeticException("error estimate not provided");
-    		return errorEstimate;
-    	}
-
-    	
-    	
-    	//
-    	// abstract methods
-    	//
-
-		/**
-    	 * @return <code>true</code> whether the instrument is still tradeable.
-    	 */
-    	public abstract boolean isExpired();
-
-
-    	
-    	//
-    	// protected methods
-    	//
-    	
-    	/**
-         * This method must leave the instrument in a consistent
-         * state when the expiration condition is met.
-         * 
-         * @see NewInstrument.setupExpired()
-         */
-        protected void setupExpired() /*@ReadOnly*/ {
-            NPV = 0.0;
-            errorEstimate = 0.0;
-        }
-
-        
-        
-    	//
-    	// overridden methods from AbstractLazyObject
-    	//
-    	
-    	@Override
-    	protected void calculate() /*@ReadOnly*/ {
-    		if (isExpired()) {
-    			setupExpired();
-    			calculated = true;
-    		} else {
-    			super.calculate();
-    		}
-    	}
+    }
 
 }

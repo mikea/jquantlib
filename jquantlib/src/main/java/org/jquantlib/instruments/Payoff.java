@@ -44,21 +44,28 @@ import org.jquantlib.util.Visitor;
 
 /**
  * Abstract base class for option payoffs
+ * 
+ * @author Richard Gomes
  */
 public abstract class Payoff implements TypedVisitable<Payoff> {
 
-	protected static final String UNKNOWN_OPTION_TYPE = "unknown option type";
+    //
+    // protected static final
+    //
+    
+    /**
+	 * This protected constant is declared for convenience of extended classes
+	 */
+    protected static final String UNKNOWN_OPTION_TYPE = "unknown option type";
 
-	// FIXME code review
-
-	// This method is not needed as this.getClass().getName() can be used
-	// virtual std::string name() const = 0;
-	
-	// This method is not needed as this.toString(0 can be used
-	// virtual std::string description() const = 0;
-	
-
-	protected abstract/* @Price */double valueOf(/* @Price */double price);
+    //
+    // protected abstract methods
+    //
+    
+    /**
+     * Returns the value of an {@link Instrument} at maturity under {@link Payoff} conditions
+     */
+    protected abstract /* @Price */double valueOf(/* @Price */double price);
 
 
 	//
@@ -67,7 +74,7 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
 	
 	@Override
 	public void accept(final TypedVisitor<Payoff> v) {
-		Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
 		if (v1 != null) {
 			v1.visit(this);
 		} else {

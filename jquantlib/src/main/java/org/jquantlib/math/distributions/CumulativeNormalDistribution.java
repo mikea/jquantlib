@@ -25,14 +25,15 @@ import org.jquantlib.math.ErrorFunction;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * Cumulative normal distribution function (cdf).
+ * Cumulative normal distribution function (CDF).
  * <p>
- * Given x it provides an approximation to the integral of the gaussian normal distribution.
+ * Given x it provides an approximation to the integral of the Gaussian Normal Distribution.
  * 
  * {@latex[
  * 	\frac12 \left(1+\mathrm{erf}\left( \frac{x-\mu}{\sigma\sqrt2}\right) \right)
  * }
- * @see <i>M. Abramowitz and I. Stegun, Handbook of Mathematical Functions, Dover Publications, New York (1972)</i>
+ * <p>
+ * @see cite: <i>M. Abramowitz and I. Stegun, Handbook of Mathematical Functions, Dover Publications, New York (1972)</i>
  * @see <a href="http://en.wikipedia.org/wiki/Normal_distribution">Cumulative Normal Distribution on Wikipedia</a>
  * 
  * @author Richard Gomes
@@ -52,10 +53,12 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
 
 	/** 
 	 * Computes the cumulative normal distribution.
-	 * See Jaeckels book "Monte Carlo Methods in Finance", ISBN-13: 978-0471497417 
-	 * Asymptotic expansion for very negative z following (26.2.12)
-         * on page 408 in M. Abramowitz and A. Stegun,
-         * Pocketbook of Mathematical Functions, ISBN 3-87144818-4.
+	 * <p>
+     * Asymptotic expansion for very negative z as references on M. Abramowitz book. 
+	 * 
+	 * @see cite: "Monte Carlo Methods in Finance", ISBN-13: 978-0471497417
+     * @see cite: M. Abramowitz and A. Stegun, Pocketbook of Mathematical Functions, ISBN 3-87144818-4, p.408, item 26.2.12
+     * 
 	 * @param z
 	 * @return result
 	 */
@@ -71,15 +74,15 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
             double sum=1.0, zsqr=z*z, i=1.0, g=1.0, x, y,
                  a=Constants.QL_MAX_REAL, lasta;
             do {
-		lasta = a;
-		x = (4.0 * i - 3.0) / zsqr;
-		y = x * ((4.0 * i - 1) / zsqr);
-		a = g * (x - y);
-		sum -= a;
-		g *= y;
-		++i;
-		a = Math.abs(a);
-	    } while (lasta > a && a >= Math.abs(sum * Constants.QL_EPSILON));
+        		lasta = a;
+        		x = (4.0 * i - 3.0) / zsqr;
+        		y = x * ((4.0 * i - 1) / zsqr);
+        		a = g * (x - y);
+        		sum -= a;
+        		g *= y;
+        		++i;
+        		a = Math.abs(a);
+    	    } while (lasta > a && a >= Math.abs(sum * Constants.QL_EPSILON));
             result = -gaussian.evaluate(z)/z*sum;
         }
         return result;

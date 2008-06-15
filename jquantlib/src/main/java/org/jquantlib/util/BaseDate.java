@@ -30,7 +30,7 @@ import java.util.List;
  */
 public abstract class BaseDate implements Date, FunctionDate {
     
-    public int compareTo(Date o) {
+    public final int compareTo(final Date o) {
 		if (this.equals(o))
 			return 0;
 		if (this.le(o))
@@ -42,33 +42,33 @@ public abstract class BaseDate implements Date, FunctionDate {
      * Implements multiple inheritance via delegate pattern to an inner class
      * 
      */
-    private Observable delegatedObservable = new DefaultObservable(this);
+    private final Observable delegatedObservable = new DefaultObservable(this);
 
-    public void addObserver(Observer observer) {
+    public final void addObserver(final Observer observer) {
         delegatedObservable.addObserver(observer);
     }
 
-    public int countObservers() {
+    public final int countObservers() {
         return delegatedObservable.countObservers();
     }
 
-    public void deleteObserver(Observer observer) {
+    public final void deleteObserver(final Observer observer) {
         delegatedObservable.deleteObserver(observer);
     }
 
-    public void notifyObservers() {
+    public final void notifyObservers() {
         delegatedObservable.notifyObservers();
     }
 
-    public void notifyObservers(Object arg) {
+    public final void notifyObservers(final Object arg) {
         delegatedObservable.notifyObservers(arg);
     }
 
-    public void deleteObservers() {
+    public final void deleteObservers() {
         delegatedObservable.deleteObservers();
     }
 
-    public List<Observer> getObservers() {
+    public final List<Observer> getObservers() {
         return delegatedObservable.getObservers();
     }
 

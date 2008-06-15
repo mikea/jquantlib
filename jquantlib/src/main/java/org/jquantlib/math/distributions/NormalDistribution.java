@@ -48,7 +48,7 @@ public class NormalDistribution implements Derivative {
 	
 	private double normalizationFactor; // FIXME: code review
 	private double denominator; // FIXME: code review
-	private double derNormalizationFactor;
+	private double denormalizationFactor;
 
 	
 	//
@@ -74,8 +74,8 @@ public class NormalDistribution implements Derivative {
 		this.sigma = sigma;
 		
 	    this.normalizationFactor = Constants.M_SQRT_2*Constants.M_1_SQRTPI/sigma;
-	    this.derNormalizationFactor = sigma*sigma;
-	    this.denominator = 2.0*derNormalizationFactor;
+	    this.denormalizationFactor = sigma*sigma;
+	    this.denominator = 2.0*denormalizationFactor;
 	}
 	
 	
@@ -110,7 +110,7 @@ public class NormalDistribution implements Derivative {
 	 */
 	@Override
 	public double derivative(double x) /* @ReadOnly */ {
-	    return (evaluate(x) * (average - x)) / derNormalizationFactor;
+	    return (evaluate(x) * (average - x)) / denormalizationFactor;
 	}
 
 }

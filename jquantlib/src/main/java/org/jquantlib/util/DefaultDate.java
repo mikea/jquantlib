@@ -192,7 +192,7 @@ public class DefaultDate extends BaseDate {
      * @param value
      *            is a serial which corresponds to a Date
      */
-    private DefaultDate(int value) {
+    private DefaultDate(final int value) {
         this.value = value;
     }
 
@@ -206,7 +206,7 @@ public class DefaultDate extends BaseDate {
      * @param year
      *            is the year
      */
-    public DefaultDate(int day, Month month, int year) {
+    public DefaultDate(final int day, final Month month, final int year) {
         this(fromDMY(day, month.toInteger(), year));
     }
 
@@ -220,7 +220,7 @@ public class DefaultDate extends BaseDate {
      * @param year
      *            is the year
      */
-    public DefaultDate(int day, int month, int year) {
+    public DefaultDate(final int day, final int month, final int year) {
         this(fromDMY(day, month, year));
     }
 
@@ -229,7 +229,7 @@ public class DefaultDate extends BaseDate {
      * 
      * @param date
      */
-    public DefaultDate(DefaultDate date) {
+    public DefaultDate(final DefaultDate date) {
         this(date.value);
     }
 
@@ -245,36 +245,36 @@ public class DefaultDate extends BaseDate {
      *            is the year as a number
      * @return
      */
-    static private int fromDMY(int d, int m, int y) {
+    static private final int fromDMY(final int d, final int m, final int y) {
         if (!(y > 1900 && y < 2100))
             throw new IllegalArgumentException("year " + y + " out of bound. It must be in [1901,2099]");
         if (!(m > 0 && m < 13))
             throw new IllegalArgumentException("month " + m + " outside January-December range [1,12]");
 
-        boolean leap = isLeap(y);
-        int len = getMonthLength(m, leap), offset = getMonthOffset(m, leap);
+        final boolean leap = isLeap(y);
+        final int len = getMonthLength(m, leap), offset = getMonthOffset(m, leap);
         if (!(d > 0 && d <= len))
             throw new ArithmeticException("day outside month (" + m + ") day-range [1," + len + "]");
-        int result = d + offset + getYearOffset(y);
+        final int result = d + offset + getYearOffset(y);
         return result;
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
     	return ((Object)this).hashCode();
     }
     
     @Override
-    public boolean equals(Object anObject) {
+    public final boolean equals(final Object anObject) {
         if (anObject==null) return false;
         if (!(anObject instanceof DefaultDate)) return false;
         return eq((Date)anObject);
     }
 
     public final int getMonth() {
-        int d = getDayOfYear(); // dayOfYear is 1 based
+        final int d = getDayOfYear(); // dayOfYear is 1 based
         Integer m = d / 30 + 1;
-        boolean leap = isLeap(getYear());
+        final boolean leap = isLeap(getYear());
         while (d <= getMonthOffset(m, leap))
             --m;
         while (d > getMonthOffset(m + 1, leap))
@@ -293,31 +293,31 @@ public class DefaultDate extends BaseDate {
         return y;
     }
 
-    public DefaultDate increment() {
+    public final DefaultDate increment() {
         value++;
         notifyObservers();
         return this;
     }
 
-    public Date decrement() {
+    public final Date decrement() {
         value--;
         notifyObservers();
         return this;
     }
 
-    public DefaultDate increment(final int days) {
+    public final DefaultDate increment(final int days) {
         value += days;
         notifyObservers();
         return this;
     }
 
-    public Date decrement(final int days) {
+    public final Date decrement(final int days) {
         value -= days;
         notifyObservers();
         return this;
     }
 
-    public Date adjust(final Period p) {
+    public final Date adjust(final Period p) {
         value = getAdvancedDateValue(this, p.getLength(), p.getUnits());
         notifyObservers();
         return this;
@@ -328,11 +328,11 @@ public class DefaultDate extends BaseDate {
      * 
      * @return a new Date object which represents the current Date
      */
-    static public Date getTodaysDate() {
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
-        int m = cal.get(java.util.Calendar.MONTH);
-        int y = cal.get(java.util.Calendar.YEAR);
+    static public final Date getTodaysDate() {
+        final java.util.Calendar cal = java.util.Calendar.getInstance();
+        final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
+        final int m = cal.get(java.util.Calendar.MONTH);
+        final int y = cal.get(java.util.Calendar.YEAR);
         return new DefaultDate(d, m + 1, y);
     }
 
@@ -354,8 +354,8 @@ public class DefaultDate extends BaseDate {
         return new DefaultDate(MaximumSerialNumber);
     }
 
-    public boolean isLeap() {
-        return DefaultDate.isLeap(this.getYear());
+    public final boolean isLeap() {
+        return isLeap(this.getYear());
     }
 
     /**
@@ -366,13 +366,13 @@ public class DefaultDate extends BaseDate {
      * @return <code>true</code> if a leap year; <code>false</code>
      *         otherwise
      */
-    static public boolean isLeap(int y) {
+    public static final boolean isLeap(final int y) {
         return yearIsLeap[y - 1900];
     }
 
-    public Date getNextWeekday(final Weekday dayOfWeek) {
-        int wd = this.getWeekday().toInteger();
-        int dow = dayOfWeek.toInteger();
+    public final Date getNextWeekday(final Weekday dayOfWeek) {
+        final int wd = this.getWeekday().toInteger();
+        final int dow = dayOfWeek.toInteger();
         return this.increment((wd > dow ? 7 : 0) - wd + dow);
     }
     
@@ -391,7 +391,7 @@ public class DefaultDate extends BaseDate {
      *            is the desired year
      * @return a new Date which is the n-th week day of a certain month/year
      */
-    public Date getNthWeekday(int nth, Weekday dayOfWeek) {
+    public final Date getNthWeekday(final int nth, final Weekday dayOfWeek) {
         return getNthWeekday(nth, dayOfWeek, this.getMonth(), this.getYear());
     }
 
@@ -408,7 +408,7 @@ public class DefaultDate extends BaseDate {
      *            is the desired year
      * @return a new Date which is the n-th week day of a certain month/year
      */
-    static public Date getNthWeekday(int nth, Weekday dayOfWeek, Month month, int year) {
+    public static final Date getNthWeekday(final int nth, final Weekday dayOfWeek, final Month month, final int year) {
         return getNthWeekday(nth, dayOfWeek, month.toInteger(), year);
     }
 
@@ -425,16 +425,16 @@ public class DefaultDate extends BaseDate {
      *            is the desired year
      * @return a new Date which is the n-th week day of a certain month/year
      */
-    static public DefaultDate getNthWeekday(int nth, Weekday dayOfWeek, int month, int year) {
+    public static final DefaultDate getNthWeekday(final int nth, final Weekday dayOfWeek, final int month, final int year) {
         if (!(nth > 0))
             throw new IllegalArgumentException("zeroth day of week in a given (month, year) is undefined");
         if (!(nth < 6))
             throw new IllegalArgumentException("no more than 5 weekday in a given (month, year)");
-        int m = month;
-        int y = year;
-        int dow = dayOfWeek.toInteger();
-        int first = new DefaultDate(1, m, y).getWeekday().toInteger();
-        int skip = nth - (dow >= first ? 1 : 0);
+        final int m = month;
+        final int y = year;
+        final int dow = dayOfWeek.toInteger();
+        final int first = new DefaultDate(1, m, y).getWeekday().toInteger();
+        final int skip = nth - (dow >= first ? 1 : 0);
         return new DefaultDate(1 + dow - first + skip * 7, m, y);
     }
 
@@ -447,7 +447,7 @@ public class DefaultDate extends BaseDate {
      *            if <code>true</code> means a leap year
      * @return the length of a certain month
      */
-    static private int getMonthLength(final int m, boolean leapYear) {
+    static private final int getMonthLength(final int m, final boolean leapYear) {
         return (leapYear ? monthLeapLength[m - 1] : monthLength[m - 1]);
     }
 
@@ -462,7 +462,7 @@ public class DefaultDate extends BaseDate {
      * @return the offset of a certain month or the length of an year
      * @see DefaultDate#yearOffset
      */
-    static private int getMonthOffset(final int m, boolean leapYear) {
+    static private final int getMonthOffset(final int m, final boolean leapYear) {
         return (leapYear ? monthLeapOffset[m - 1] : monthOffset[m - 1]);
     }
 
@@ -473,12 +473,12 @@ public class DefaultDate extends BaseDate {
      *            is the desired year
      * @return the offset of a certain year
      */
-    static private int getYearOffset(final int y) {
+    static private final int getYearOffset(final int y) {
         return yearOffset[y - 1900];
     }
 
     public final Weekday getWeekday() {
-        int w = value % 7;
+        final int w = value % 7;
         return Weekday.valueOf(w == 0 ? 7 : w);
     }
 
@@ -490,33 +490,33 @@ public class DefaultDate extends BaseDate {
         return value - getYearOffset(getYear());
     }
 
-    public DefaultDate getEndOfMonth() {
-        int m = this.getMonth();
-        int y = this.getYear();
+    public final DefaultDate getEndOfMonth() {
+        final int m = this.getMonth();
+        final int y = this.getYear();
         return new DefaultDate(getMonthLength(m, isLeap(y)), m, y);
     }
 
-    public boolean isEndOfMonth() {
+    public final boolean isEndOfMonth() {
         return (this.getDayOfMonth() == getMonthLength(this.getMonth(), isLeap(this.getYear())));
     }
 
-    public boolean eq(final Date date) {
+    public final boolean eq(final Date date) {
         return value == ((DefaultDate) date).value;
     }
 
-    public boolean lt(final Date date) {
+    public final boolean lt(final Date date) {
         return value < ((DefaultDate) date).value;
     }
 
-    public boolean le(final Date date) {
+    public final boolean le(final Date date) {
         return value <= ((DefaultDate) date).value;
     }
 
-    public boolean gt(final Date date) {
+    public final boolean gt(final Date date) {
         return value > ((DefaultDate) date).value;
     }
 
-    public boolean ge(final Date date) {
+    public final boolean ge(final Date date) {
         return value >= ((DefaultDate) date).value;
     }
     
@@ -528,51 +528,51 @@ public class DefaultDate extends BaseDate {
      * @return the String representing this Date in a long format
      * @see DefaultDate#getLongFormat
      */
-    public String toString() {
+    public final String toString() {
         return getLongFormat();
     }
 
-    public String getLongFormat() {
+    public final String getLongFormat() {
         if (NULL_DATE.equals(this)) {
             return "null date";
         } else {
-            StringBuilder sb = new StringBuilder();
-            Formatter formatter = new Formatter(sb, Locale.US);
+            final StringBuilder sb = new StringBuilder();
+            final Formatter formatter = new Formatter(sb, Locale.US);
             formatter.format("%s %d, %d", this.getMonthEnum(), this.getDayOfMonth(), this.getYear());
             return sb.toString();
         }
     }
 
-    public String getShortFormat() {
+    public final String getShortFormat() {
         if (NULL_DATE.equals(this)) {
             return "null date";
         } else {
-            StringBuilder sb = new StringBuilder();
-            Formatter formatter = new Formatter(sb, Locale.US);
+            final StringBuilder sb = new StringBuilder();
+            final Formatter formatter = new Formatter(sb, Locale.US);
             formatter.format("%s %d, %d", this.getMonthEnum(), this.getDayOfMonth(), this.getYear());
             return sb.toString();
         }
     }
 
-    public String getISOFormat() {
+    public final String getISOFormat() {
         if (NULL_DATE.equals(this)) {
             return "null date";
         } else {
-            StringBuilder sb = new StringBuilder();
-            Formatter formatter = new Formatter(sb, Locale.US);
+            final StringBuilder sb = new StringBuilder();
+            final Formatter formatter = new Formatter(sb, Locale.US);
             formatter.format("%04d-%02d-%02d", this.getYear(), this.getMonth(), this.getDayOfMonth());
             return sb.toString();
         }
     }
 
-    private void checkSerialNumber(int value) {
+    private final void checkSerialNumber(final int value) {
         if (!(value >= MinimumSerialNumber && value <= MaximumSerialNumber))
             throw new IllegalArgumentException("Date's serial number (" + value + ") outside allowed range ["
                     + MinimumSerialNumber + "-" + MaximumSerialNumber + "], i.e. [" + getMinDate() + "-" + getMaxDate()
                     + "]");
     }
 
-    private int getAdvancedDateValue(final DefaultDate date, final int n, final TimeUnit units) {
+    private final int getAdvancedDateValue(final DefaultDate date, final int n, final TimeUnit units) {
         switch (units) {
         case DAYS:
             return (n+date.value);
@@ -594,7 +594,7 @@ public class DefaultDate extends BaseDate {
             if (!(y >= 1900 && y <= 2099))
                 throw new IllegalArgumentException("year " + y + " out of bounds. It must be in [1901,2099]");
 
-            int length = getMonthLength(m, isLeap(y));
+            final int length = getMonthLength(m, isLeap(y));
             if (d > length)
                 d = length;
 
@@ -602,8 +602,8 @@ public class DefaultDate extends BaseDate {
         }
         case YEARS: {
             int d = date.getDayOfMonth();
-            int m = date.getMonth();
-            int y = date.getYear() + n;
+            final int m = date.getMonth();
+            final int y = date.getYear() + n;
 
             if (!(y >= 1900 && y <= 2099))
                 throw new IllegalArgumentException("year " + y + " out of bounds. It must be in [1901,2099]");
@@ -619,46 +619,46 @@ public class DefaultDate extends BaseDate {
     } 
 
    
-    public int getDayCount(Date date) {
+    public final int getDayCount(final Date date) {
         return  ((DefaultDate) date).value - value;
     }
 
-    public Date getDateAfter(Period p) {
-       int newDateValue = getAdvancedDateValue(this, p.getLength(), p.getUnits());
+    public final Date getDateAfter(final Period p) {
+       final int newDateValue = getAdvancedDateValue(this, p.getLength(), p.getUnits());
        return new DefaultDate(newDateValue);
     }
 
-    public Date getNextDay() {
-        int newDateValue = value + 1;
+    public final Date getNextDay() {
+        final int newDateValue = value + 1;
         return new DefaultDate(newDateValue);
     }
 
-    public Date getPreviousDay() {
-        int newDateValue = value - 1;
+    public final Date getPreviousDay() {
+        final int newDateValue = value - 1;
         return new DefaultDate(newDateValue);
     }
 
-    public boolean eq(int day, Month month, int year) {
+    public final boolean eq(final int day, final Month month, final int year) {
        return this.value == fromDMY(day,month.toInteger(),year);
     }
 
-    public boolean ge(int day, Month month, int year) {
+    public final boolean ge(final int day, final Month month, final int year) {
         return this.value >= fromDMY(day,month.toInteger(),year);
     }
 
-    public boolean gt(int day, Month month, int year) {
+    public final boolean gt(final int day, final Month month, final int year) {
        return this.value > fromDMY(day,month.toInteger(),year);
     }
 
-    public boolean le(int day, Month month, int year) {
+    public final boolean le(final int day, final Month month, final int year) {
         return this.value <= fromDMY(day,month.toInteger(),year);
     }
 
-    public boolean lt(int day, Month month, int year) {
+    public final boolean lt(final int day, final Month month, final int year) {
         return this.value < fromDMY(day,month.toInteger(),year);
     }
 
-    public Date getDateAfter(int n) {
+    public final Date getDateAfter(final int n) {
        return new DefaultDate(value+n);
     }
     
@@ -667,7 +667,8 @@ public class DefaultDate extends BaseDate {
      * 
      * @see Updatable
      */
-    public Updatable<Date> getUpdatable() {
+    public final Updatable<Date> getUpdatable() {
+        if (updatable==null) updatable = new UpdatableDate(this);
         return updatable;
     }
     
@@ -676,7 +677,8 @@ public class DefaultDate extends BaseDate {
     // inner classes
     //
     
-    private final UpdatableDate updatable = new UpdatableDate(this);
+    //XXX private final UpdatableDate updatable = new UpdatableDate(this);
+    private UpdatableDate updatable = null;
     
     /**
      * This inner class provides controlled update access to a Date object.
@@ -685,15 +687,15 @@ public class DefaultDate extends BaseDate {
      * 
      * @author Richard Gomes
      */
-    private class UpdatableDate implements Updatable<Date> {
+    private final class UpdatableDate implements Updatable<Date> {
         
-        private DefaultDate target = null;
+        private final DefaultDate target;
         
-        public UpdatableDate(DefaultDate date) {
+        public UpdatableDate(final DefaultDate date) {
             this.target = date;
         }
         
-        public void update(Date source) {
+        public final void update(final Date source) {
             if (source==null) throw new NullPointerException();
             
             if (this.target==NULL_DATE) {
@@ -704,14 +706,14 @@ public class DefaultDate extends BaseDate {
         
     }
     
-    public static class JQLibDateUtil extends DateFactory {
+    public static final class JQLibDateUtil extends DateFactory {
         /**
          * Returns a instance that is the Maximum date that can be represented by
          * the Date implementation.
          * 
          * @return Maximum date represented by the implementation
          */
-        public Date getMaxDate(){
+        public final Date getMaxDate(){
             return DefaultDate.getMaxDate();
         }
         
@@ -721,7 +723,7 @@ public class DefaultDate extends BaseDate {
          * 
          * @return Minimum date represented by the implementation
          */
-        public Date getMinDate(){
+        public final Date getMinDate(){
             return DefaultDate.getMinDate();
         }
         
@@ -730,7 +732,7 @@ public class DefaultDate extends BaseDate {
          * 
          * @return
          */
-        public Date getTodaysDate(){
+        public final Date getTodaysDate(){
             return DefaultDate.getTodaysDate();
         }
         
@@ -742,7 +744,7 @@ public class DefaultDate extends BaseDate {
          * @param year
          * @return
          */
-        public Date getDate(int day, Month month, int year){
+        public final Date getDate(final int day, final Month month, final int year){
             return new DefaultDate(day, month, year);
         }
         
@@ -754,11 +756,11 @@ public class DefaultDate extends BaseDate {
          * @param year
          * @return
          */
-        public Date getDate(int day, int month, int year){
+        public final Date getDate(final int day, final int month, final int year){
             return new DefaultDate(day, month, year);
         }
         
-        public Date getNthWeekday(int nth, Weekday dayOfWeek, Month month, int year){
+        public final Date getNthWeekday(final int nth, final Weekday dayOfWeek, final Month month, final int year){
             return DefaultDate.getNthWeekday(nth, dayOfWeek, month, year);
         }
         
@@ -767,7 +769,7 @@ public class DefaultDate extends BaseDate {
          * @param str
          * @return
          */
-        public Date parseISO(String str){
+        public final Date parseISO(final String str){
             return DateParser.parseISO(str);
         }
         
@@ -777,11 +779,11 @@ public class DefaultDate extends BaseDate {
          * @param fmt
          * @return
          */
-        public Date parse(String str, String fmt){
+        public final Date parse(final String str, final String fmt){
             return DateParser.parse(str, fmt);
         }
      
-        public boolean isLeap(int year){
+        public final boolean isLeap(final int year){
             return DefaultDate.isLeap(year);
         }
     }
@@ -791,7 +793,7 @@ public class DefaultDate extends BaseDate {
     // implements FunctionDate
     //
 
-    public int dateValue() /* @ReadOnly */{
+    public final int dateValue() /* @ReadOnly */{
         return value;
     }
 

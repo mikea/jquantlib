@@ -18,30 +18,64 @@
  When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2003, 2004, 2005, 2006, 2007 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ */
+
 package org.jquantlib.instruments;
 
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.results.Results;
+import org.jquantlib.util.LazyObject;
 
 /**
- * Defines an old-style instrument, which <i>does not</i> make use of a pricing engine.
+ * Defines an <i>old-style</i> {@link Instrument} which does not make use of an external {@link PricingEngine}.
+ * <p>
+ * Methods inherited from {@link Instrument} which are related to {@link PricingEngine}s intentionally
+ * throw {@link UnsupportedOperationException} and cannot be overridden by extended classes.
  * 
- * @see http://quantlib.org/reference/group__instruments.html
+ * @see Instrument
+ * @see NewInstrument
+ * @see PricingEngine
+ * @see <a href="http://quantlib.org/reference/group__instruments.html">QuantLib: Financial Instruments</a>
  * 
  * @author Richard Gomes
  */
 public abstract class OldInstrument extends Instrument {
 
-	private static String SHOULD_NOT_EXTEND_FROM_THIS_CLASS = "Should not extend from this class";
-	private static String SHOULD_OVERRIDE_THIS_METHOD = "Should override this method";
+	//
+    // private static final fields
+    //
+    
+    private static final String SHOULD_NOT_EXTEND_FROM_THIS_CLASS = "Should not extend from this class";
+	private static final String SHOULD_OVERRIDE_THIS_METHOD = "Should override this method";
 	
-    /**
+    //
+	// protected *virtual* methods overridden from Instrument
+	//
+	
+	/**
      * This method performs the actual calculations and set any needed results.
-     * 
      * <p>
-     * When an OldInstrument is used, derived classes are obliged to
-     * override this method otherwise an Exception is thrown.
+     * When an {@link OldInstrument} is used, derived classes are <i>required</i> to
+     * override this method otherwise an {@link UnsupportedOperationException} is thrown.
+     * 
+     * @see LazyObject#performCalculations
      */
 	@Override
     protected void performCalculations() {
@@ -50,31 +84,43 @@ public abstract class OldInstrument extends Instrument {
 
     
     //
-    // final methods
+    // protected *final* methods overridden from Instrument
     //
     
     /**
-     * This methods is intended to "catch all" calls and immediately throw
-     * an exception. It will probably happen when OldInstrument is used as
-     * base class when in fact, NewInstrument should be used.
+     * This methods is intended to <i>catch all</i> calls and immediately throw
+     * {@link UnsupportedOperationException}. It will probably happen when an {@link OldInstrument} is used as
+     * base class when in fact, a {@link NewInstrument} should be used.
+     * 
+     * @see NewInstrument
+     * @see Instrument
+     * @see PricingEngine
      */
     protected final void setupArguments(final Arguments arguments) {
         throw new UnsupportedOperationException(SHOULD_NOT_EXTEND_FROM_THIS_CLASS);
     }
     
     /**
-     * This methods is intended to "catch all" calls and immediately throw
-     * an exception. It will probably happen when OldInstrument is used as
-     * base class when in fact, NewInstrument should be used.
+     * This methods is intended to <i>catch all</i> calls and immediately throw
+     * {@link UnsupportedOperationException}. It will probably happen when an {@link OldInstrument} is used as
+     * base class when in fact, a {@link NewInstrument} should be used.
+     * 
+     * @see NewInstrument
+     * @see Instrument
+     * @see PricingEngine
      */
     protected final void fetchResults(final Results results) /* @ReadOnly */ {
         throw new UnsupportedOperationException(SHOULD_NOT_EXTEND_FROM_THIS_CLASS);
     }
     
     /**
-     * This methods is intended to "catch all" calls and immediately throw
-     * an exception. It will probably happen when OldInstrument is used as
-     * base class when in fact, NewInstrument should be used.
+     * This methods is intended to <i>catch all</i> calls and immediately throw
+     * {@link UnsupportedOperationException}. It will probably happen when an {@link OldInstrument} is used as
+     * base class when in fact, a {@link NewInstrument} should be used.
+     * 
+     * @see NewInstrument
+     * @see Instrument
+     * @see PricingEngine
      */
 	protected final void setPricingEngine(final PricingEngine engine) {
         throw new UnsupportedOperationException(SHOULD_NOT_EXTEND_FROM_THIS_CLASS);

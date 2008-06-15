@@ -571,6 +571,7 @@
                   <tag>@Override</tag>
 		          <tag>@Deprecated</tag>
 		          <tag>@SupressWarnings</tag>
+		          <tag>@note</tag>
 		        </tags>
 		      </configuration>
 		    </plugin>

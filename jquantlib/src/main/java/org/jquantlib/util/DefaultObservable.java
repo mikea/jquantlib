@@ -24,62 +24,73 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+// --------------------------------------------------------
+// This class is based on the work done by Martin Fischer.
+// See references in JavaDoc
+//--------------------------------------------------------
+
 /**
- * Default implementation of a Observable.
- * 
- * @note This implementation notifies the observers in a synchronous
- * fashion. Note that this can cause trouble if you notify the observers while
- * in a transactional context because the notification is then done also in the
- * transaction.
- * 
+ * Default implementation of an {@link Observable}.
  * <p>
- * This class is based on the work done by Martin Fischer. See references below.
+ * This implementation notifies the observers in a synchronous fashion. Note that this can cause trouble if you notify the observers
+ * while in a transactional context because once the notification is done it cannot be rolled back.
  * 
- * @see <a
- *      href="http://www.jroller.com/martin_fischer/entry/a_generic_java_observer_pattern">
- *      Martin Fischer: Observer and Observable interfaces</a>
+ * @see <a href="http://www.jroller.com/martin_fischer/entry/a_generic_java_observer_pattern"> Martin Fischer: Observer and
+ *      Observable interfaces</a>
  * @see <a href="http://jdj.sys-con.com/read/35878.htm">Improved Observer/Observable</a>
- *      
+ * 
  * @see Observable
  * @see Observer
  * @see WeakReferenceObservable
  * 
- * @author Martin Fischer (original author)
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
 public class DefaultObservable implements Observable {
 
+    //
+    // private final fields
+    //
+
     private final List<Observer> observers = new CopyOnWriteArrayList<Observer>();
     private final Observable observable;
-    
+
+    //
+    // public constructors
+    //
+
     public DefaultObservable(Observable observable) {
-        if(observable == null) throw new NullPointerException("observable is null");
-        this.observable = observable;       
+        if (observable == null)
+            throw new NullPointerException("observable is null");
+        this.observable = observable;
     }
-    
+
+    //
+    // public methods
+    //
+
     public void addObserver(final Observer observer) {
         if (observer == null)
             throw new NullPointerException("observer is null");
         observers.add(observer);
     }
-        
+
     public int countObservers() {
-    	return observers.size();
+        return observers.size();
     }
-    
+
     public List<Observer> getObservers() {
         return Collections.unmodifiableList(this.observers);
     }
- 
+
     public void deleteObserver(final Observer observer) {
         observers.remove(observer);
     }
 
     public void deleteObservers() {
-    	observers.clear();
+        observers.clear();
     }
-    
+
     public void notifyObservers() {
         notifyObservers(null);
     }
@@ -89,6 +100,10 @@ public class DefaultObservable implements Observable {
             wrappedNotify(observer, observable, arg);
         }
     }
+
+    //
+    // protected methods
+    //
 
     /**
      * This method is intended to encapsulate the notification semantics, in
@@ -111,6 +126,5 @@ public class DefaultObservable implements Observable {
     protected void wrappedNotify(Observer observer, Observable observable, Object arg) {
         observer.update(observable, arg);
     }
-    
 
 }

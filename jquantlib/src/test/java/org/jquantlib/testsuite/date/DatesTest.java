@@ -22,6 +22,7 @@ package org.jquantlib.testsuite.date;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.testsuite.util.StopClock;
 import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -61,7 +62,8 @@ public class DatesTest {
         Date last = DateFactory.getFactory().getMaxDate().adjust(period);
         System.out.println("Testing imm dates");
         IMM iMM = IMM.getDefaultIMM();
-        long startTime = System.currentTimeMillis();
+        StopClock clock = new StopClock();
+        clock.startClock();
         while (counter.le(last)) {
 
             Date immDate = iMM.nextDate(counter, false);
@@ -100,7 +102,8 @@ public class DatesTest {
 
             counter.increment();
         }
-        System.out.println("Time took "+(System.currentTimeMillis()-startTime));
+        clock.stopClock();
+        clock.log();
     }
 
     @Test
@@ -117,7 +120,8 @@ public class DatesTest {
         Date minDate = DateFactory.getFactory().getMinDate().increment(1);
         Date maxDate = DateFactory.getFactory().getMaxDate();
 
-        long startTime = System.currentTimeMillis();
+        StopClock clock = new StopClock();
+        clock.startClock();
         for (Date t = minDate; t.le(maxDate); t.increment()) {
             int dy = t.getDayOfYear();
             int d = t.getDayOfMonth();
@@ -169,13 +173,16 @@ public class DatesTest {
             			+ "    previous: " + wdold);
             wdold = wd;
         }
-        System.out.println("Time took "+(System.currentTimeMillis()-startTime));
+        clock.stopClock();
+        clock.log();
 
     }
 
     @Test
     public void isoDates() {
         System.out.println("Testing ISO dates...");
+        StopClock clock = new StopClock();
+        clock.startClock();
         String input_date = "2006-01-15";
         Date d = DateParser.parseISO(input_date);
         if ((d.getDayOfMonth() != 15) || (d.getMonth() != Month.JANUARY.toInteger()) || (d.getYear() != 2006))
@@ -184,6 +191,8 @@ public class DatesTest {
         			+ " day of month:  " + d.getDayOfMonth() + "\n" 
         			+ " month:         " + d.getMonth() + "\n" 
         			+ " year:          " + d.getYear());
+        clock.stopClock();
+        clock.log();
     }
 
 }

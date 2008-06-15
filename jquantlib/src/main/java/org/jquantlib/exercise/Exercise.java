@@ -44,28 +44,24 @@ import org.jquantlib.util.Date;
 import cern.colt.list.ObjectArrayList;
 
 
-
-
-
-
 /**
- * Base exercise class
+ * Abstract base class for exercise dates
  * 
  * @author Richard Gomes
  */
 public abstract class Exercise {
 
-	/**
-	 * Defines the exercise type. It can be American, Bermudan or European
-	 * 
-	 * @author Richard Gomes
-	 */
-	public enum Type {
-		AMERICAN, BERMUDAN, EUROPEAN;
-	}
-
+	//
+	// private fields
+	//
+	
 	private Exercise.Type type;
-	private ObjectArrayList dates;
+	private final ObjectArrayList dates;
+	
+
+	//
+	// protected constructors
+	//
 	
 	/**
 	 * Constructs an exercise and defines the exercise type
@@ -74,11 +70,32 @@ public abstract class Exercise {
 	 * 
 	 * @see Exercise.Type
 	 */
-	protected Exercise(Exercise.Type type) {
+	protected Exercise(final Exercise.Type type) {
 		this.type = type;
 		this.dates = new ObjectArrayList(5); // some reasonable prime number
 	}
 
+	//
+	// protected final methods
+	//
+	
+	/**
+     * This method is only used by extended classes on the very special cases 
+     * when the type of the exercise must be changed.
+     * 
+     * @param type is the exercise type
+     * 
+     * @see Exercise.Type
+     * @see BermudanExercise
+     */
+    protected final void setType(final Exercise.Type type) {
+        this.type = type;
+    }
+
+    //
+    // public final methods
+    //
+    
 	/**
 	 * Returns the exercise type
 	 * 
@@ -86,37 +103,37 @@ public abstract class Exercise {
 	 * 
 	 * @see Exercise.Type
 	 */
-	public Exercise.Type getType() {
+	public final Exercise.Type getType() {
 		return type;
 	}
 	
-	/**
-	 * This method is only used by extended classes on the very special cases 
-	 * when the type of the exercise must be changed.
-	 * 
-	 * @param type is the exercise type
-	 * 
-	 * @see Exercise.Type
-	 * @see BermudanExercise
-	 */
-	protected void setType(Exercise.Type type) {
-		this.type = type;
-	}
-
-	public int size() {
+	public final int size() {
 		return dates.size();
 	}
 	
-    public void addDate(final Date date) {
+    public final void addDate(final Date date) {
     	dates.add(date);
     }
 	
-	public Date getDate(final int index) /* @ReadOnly */ {
+	public final Date getDate(final int index) /* @ReadOnly */ {
 		return (Date)dates.get(index);
 	}
 	
-	public Date getLastDate() /* @ReadOnly */ {
+	public final Date getLastDate() /* @ReadOnly */ {
 		return getDate(dates.size()-1);
 	}
 	
+    //
+    // public static inner enums
+    //
+    
+    /**
+     * Defines the exercise type. It can be American, Bermudan or European
+     * 
+     * @author Richard Gomes
+     */
+    public static enum Type {
+        AMERICAN, BERMUDAN, EUROPEAN;
+    }
+
 }

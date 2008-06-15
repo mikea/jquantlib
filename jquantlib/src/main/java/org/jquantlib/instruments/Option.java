@@ -28,8 +28,16 @@ import org.jquantlib.util.Date;
 
 public abstract class Option extends NewInstrument {
 
-	protected Payoff payoff;
-	protected Exercise exercise;
+    //
+    // protected final fields
+    //
+    
+    protected final Payoff payoff;
+	protected final Exercise exercise;
+	
+	//
+	// private fields
+	//
 	
 	/**
 	 * This private field is automatically initialized by constructor which
@@ -39,25 +47,37 @@ public abstract class Option extends NewInstrument {
 	 */
 	private Date evaluationDate = null;
 
+	//
+	// public constructors
+	//
+	
+	/**
+	 * This constructor
+	 */
 	public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
 		super(engine);
 		this.payoff = payoff;
 		this.exercise = exercise;
-		//TODO: pass in evaluation date
-		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate(); //TODO: Allow today be set
-        ;
+		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
 	}
 
+	//
+	// public methods overriden from Instrument
+	//
 	
-    public boolean isExpired() /* @ReadOnly */ {
+	@Override
+	public boolean isExpired() /* @ReadOnly */ {
         return exercise.getLastDate().le( evaluationDate );
     }
 
 	
 	//
-	// Public inner classes
+	// public static inner enums
 	//
 	
+	/**
+	 * This enumeration represents options types: CALLs and PUTs.
+	 */
 	public static enum Type {
 		PUT(-1), CALL(1);
 
@@ -67,10 +87,14 @@ public abstract class Option extends NewInstrument {
 			this.value = type;
 		}
 
+		/**
+		 * This method returns the <i>mathematical signal</i> associated to an option type.
+		 * 
+		 * @return 1 for CALLs; -1 for PUTs
+		 */
 		public int toInteger() {
 			return value;
 		}
 	}
-
 
 }

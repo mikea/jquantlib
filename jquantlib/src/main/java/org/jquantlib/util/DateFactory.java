@@ -33,7 +33,7 @@ import org.jquantlib.time.Weekday;
 //TODO: OSGi
 public abstract class DateFactory {
     private static DateFactory dateUtil;
-    private static DateFactory DEFAULT_DATE_UTIL = new DefaultDate.JQLibDateUtil();
+    private static final DateFactory DEFAULT_DATE_UTIL = new DefaultDate.JQLibDateUtil();
 
     /**
      * Sets the dateUtil to be used
