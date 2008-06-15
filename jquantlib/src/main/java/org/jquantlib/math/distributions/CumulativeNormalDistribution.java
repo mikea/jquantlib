@@ -25,10 +25,15 @@ import org.jquantlib.math.ErrorFunction;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
- * Cumulative normal distribution function.
+ * Cumulative normal distribution function (cdf).
  * <p>
  * Given x it provides an approximation to the integral of the gaussian normal distribution.
- * For this implementation see <i>M. Abramowitz and I. Stegun, Handbook of Mathematical Functions, Dover Publications, New York (1972)</i>
+ * 
+ * {@latex[
+ * 	\frac12 \left(1+\mathrm{erf}\left( \frac{x-\mu}{\sigma\sqrt2}\right) \right)
+ * }
+ * @see <i>M. Abramowitz and I. Stegun, Handbook of Mathematical Functions, Dover Publications, New York (1972)</i>
+ * @see <a href="http://en.wikipedia.org/wiki/Normal_distribution">Cumulative Normal Distribution on Wikipedia</a>
  * 
  * @author Richard Gomes
  */
