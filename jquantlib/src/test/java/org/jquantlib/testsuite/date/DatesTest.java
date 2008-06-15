@@ -59,22 +59,24 @@ public class DatesTest {
         // 10 years of futures must not exceed Date::maxDate
         Period period = new Period(-10, TimeUnit.YEARS);
         Date last = DateFactory.getFactory().getMaxDate().adjust(period);
-
+        System.out.println("Testing imm dates");
+        IMM iMM = IMM.getDefaultIMM();
+        long startTime = System.currentTimeMillis();
         while (counter.le(last)) {
 
-            Date imm = IMM.getDefaultIMM().nextDate(counter, false);
+            Date immDate = iMM.nextDate(counter, false);
 
             // check that imm is greater than counter
-            if (imm.le(counter))
-            	fail("\n  " + imm.getWeekday() + " " + imm + " is not greater than " + counter.getWeekday() + " " + counter);
+            if (immDate.le(counter))
+            	fail("\n  " + immDate.getWeekday() + " " + immDate + " is not greater than " + counter.getWeekday() + " " + counter);
 
             // check that imm is an IMM date
-            if (!IMM.getDefaultIMM().isIMMdate(imm, false))
-            	fail("\n  " + imm.getWeekday() + " " + imm + " is not an IMM date (calculated from " + counter.getWeekday() + " " + counter + ")");
+            if (!iMM.isIMMdate(immDate, false))
+            	fail("\n  " + immDate.getWeekday() + " " + immDate + " is not an IMM date (calculated from " + counter.getWeekday() + " " + counter + ")");
 
             // check that imm is <= to the next IMM date in the main cycle
-            if (imm.gt(IMM.getDefaultIMM().nextDate(counter, true)))
-            	fail("\n  " + imm.getWeekday() + " " + imm + " is not less than or equal to the next future in the main cycle " + IMM.getDefaultIMM().nextDate(counter, true));
+            if (immDate.gt(iMM.nextDate(counter, true)))
+            	fail("\n  " + immDate.getWeekday() + " " + immDate + " is not less than or equal to the next future in the main cycle " + IMM.getDefaultIMM().nextDate(counter, true));
 
             //
             // COMMENTED AT SOURCE QuantLib 0.8.1
@@ -87,17 +89,18 @@ public class DatesTest {
             // + IMM.getDefaultIMM().weekday() + " " + imm);
 
             // check that for every date IMMdate is the inverse of IMMcode
-            if (!IMM.getDefaultIMM().date(IMM.getDefaultIMM().code(imm), counter).equals(imm))
-            	fail("\n  " + IMM.getDefaultIMM().code(imm) + " at calendar day " + counter + " is not the IMM code matching " + imm);
+            if (!iMM.date(iMM.code(immDate), counter).equals(immDate))
+            	fail("\n  " + iMM.code(immDate) + " at calendar day " + counter + " is not the IMM code matching " + immDate);
 
             // check that for every date the 120 IMM codes refer to future dates
             for (int i = 0; i < 40; ++i) {
-            	if (IMM.getDefaultIMM().date(IMMcodes[i], counter).lt(counter))
-            		fail("\n  " + IMM.getDefaultIMM().date(IMMcodes[i], counter) + " is wrong for " + IMMcodes[i] + " at reference date " + counter);
+            	if (iMM.date(IMMcodes[i], counter).lt(counter))
+            		fail("\n  " + iMM.date(IMMcodes[i], counter) + " is wrong for " + IMMcodes[i] + " at reference date " + counter);
             }
 
             counter.increment();
         }
+        System.out.println("Time took "+(System.currentTimeMillis()-startTime));
     }
 
     @Test
@@ -114,6 +117,7 @@ public class DatesTest {
         Date minDate = DateFactory.getFactory().getMinDate().increment(1);
         Date maxDate = DateFactory.getFactory().getMaxDate();
 
+        long startTime = System.currentTimeMillis();
         for (Date t = minDate; t.le(maxDate); t.increment()) {
             int dy = t.getDayOfYear();
             int d = t.getDayOfMonth();
@@ -165,6 +169,7 @@ public class DatesTest {
             			+ "    previous: " + wdold);
             wdold = wd;
         }
+        System.out.println("Time took "+(System.currentTimeMillis()-startTime));
 
     }
 

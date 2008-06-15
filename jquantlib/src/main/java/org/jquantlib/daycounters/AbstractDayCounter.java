@@ -40,6 +40,12 @@ package org.jquantlib.daycounters;
 
 import org.jquantlib.util.Date;
 
+/**
+ * Abstract implementation of DayCounter
+ * 
+ * @author Srinivas Hasti
+ *
+ */
 public abstract class AbstractDayCounter implements DayCounter {
 
 	public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
