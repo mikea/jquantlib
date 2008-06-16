@@ -46,7 +46,7 @@ import org.jquantlib.util.Date;
  * period according to given market convention, both as a number
  * of days and as a year fraction.
  * 
- * @see http://en.wikipedia.org/wiki/Day_count_convention
+ * @see <a href="http://en.wikipedia.org/wiki/Day_count_convention">Day count convention</a>
  *
  * @author Richard Gomes
  * @author Srinivas Hasti

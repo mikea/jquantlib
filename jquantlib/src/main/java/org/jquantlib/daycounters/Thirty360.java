@@ -135,10 +135,11 @@ public class Thirty360 extends AbstractDayCounter {
 	//
 	// inner classes
 	//
+	
 	/**
-	 * Abstraction of Thirty360 class according to the Bridge Pattern
+	 * Abstraction of Thirty360 class
 	 * 
-	 * @see http://en.wikipedia.org/wiki/Bridge_pattern
+     * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a> 
 	 * 
 	 * @author Richard Gomes
 	 */
@@ -150,7 +151,7 @@ public class Thirty360 extends AbstractDayCounter {
 	/**
 	 * Implementation of Thirty360 class abstraction according to US convention
 	 * 
-	 * @see http://en.wikipedia.org/wiki/Bridge_pattern
+     * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a> 
 	 * 
 	 * @author Richard Gomes
 	 */
@@ -171,7 +172,7 @@ public class Thirty360 extends AbstractDayCounter {
 	/**
 	 * Implementation of Thirty360 class abstraction according to European convention
 	 * 
-	 * @see http://en.wikipedia.org/wiki/Bridge_pattern
+     * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a> 
 	 * 
 	 * @author Richard Gomes
 	 */
@@ -188,7 +189,7 @@ public class Thirty360 extends AbstractDayCounter {
 	/**
 	 * Implementation of Thirty360 class abstraction according to Italian convention
 	 * 
-	 * @see http://en.wikipedia.org/wiki/Bridge_pattern
+     * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a> 
 	 * 
 	 * @author Richard Gomes
 	 */

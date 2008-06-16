@@ -27,7 +27,7 @@ package org.jquantlib.math.distributions;
  * and as such it is applicable in the fields of probability and statistics, as well 
  * as combinatorics.
  * 
- * @see <a href="http://en.wikipedia.org/wiki/Gamma_function">Gamma Function on Wikipedia</a>
+ * @see <a href="http://en.wikipedia.org/wiki/Gamma_function">Gamma Function</a>
  * 
  * @author Richard Gomes
  * @author Dominik Holenstein

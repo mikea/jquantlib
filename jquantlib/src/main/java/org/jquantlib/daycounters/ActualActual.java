@@ -29,7 +29,7 @@ import org.jquantlib.util.Month;
 /**
  * Implementation of ActualActual day counters.
  * 
- * @see http://en.wikipedia.org/wiki/Day_count_convention
+ * @see <a href="http://en.wikipedia.org/wiki/Day_count_convention">Day count convention</a>
  * 
  * @author Srinivas Hasti
  * @author Richard Gomes

@@ -34,7 +34,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * }
  * <p>
  * @see cite: <i>M. Abramowitz and I. Stegun, Handbook of Mathematical Functions, Dover Publications, New York (1972)</i>
- * @see <a href="http://en.wikipedia.org/wiki/Normal_distribution">Cumulative Normal Distribution on Wikipedia</a>
+ * @see <a href="http://en.wikipedia.org/wiki/Normal_distribution">Cumulative Normal Distribution</a>
  * 
  * @author Richard Gomes
  */

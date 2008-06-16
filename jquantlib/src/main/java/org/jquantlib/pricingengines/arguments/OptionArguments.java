@@ -18,24 +18,55 @@
  When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.pricingengines.arguments;
 
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Payoff;
+import org.jquantlib.pricingengines.PricingEngine;
 
 import cern.colt.list.DoubleArrayList;
 
-// FIXME: add comments
+/**
+ * Keeps arguments used by {@link PricingEngine}s and necessary for Option valuation
+ * 
+ * @note Public fields as this class works pretty much as Data Transfer Objects 
+ * 
+ * @author Richard Gomes
+ */
 public class OptionArguments extends Arguments {
 	
-	//
-	// Public fields as this class works pretty much as 
-	// a Data Transfer Object
-	//
-
-	// FIXME: assign JSR-308 annotations
+    /**
+     * Represents the {@link Payoff} policy to be used
+     * 
+     * @see Payoff
+     */
 	public Payoff payoff;
+	
+	/**
+	 * Represent the {@link Exercise} dates
+	 * 
+	 * @see Exercise
+	 */
 	public Exercise exercise;
+	
+	//PENDING: understand how and where this field is used
 	public /*@Time*/ DoubleArrayList stoppingTimes;
 	
 	public OptionArguments() {

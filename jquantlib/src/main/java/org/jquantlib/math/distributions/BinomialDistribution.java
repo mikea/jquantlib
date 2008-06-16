@@ -34,7 +34,7 @@ import org.jquantlib.math.UnaryFunctionInteger;
  * The binomial distribution is the basis for the popular binomial test of statistical
  * significance. A binomial distribution should not be confused with a bimodal distribution.
  * 
- * @see <a href="http://en.wikipedia.org/wiki/Binomial_distribution">Binomial Distribution on Wikipedia</a>
+ * @see <a href="http://en.wikipedia.org/wiki/Binomial_distribution">Binomial Distribution</a>
  * 
  * @author Richard Gomes
  * @author Dominik Holenstein

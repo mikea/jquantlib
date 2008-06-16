@@ -49,7 +49,7 @@ import org.jquantlib.util.Month;
 /**
  * Main cycle of the International %Money Market (a.k.a. %IMM) months
  * 
- * @see http://en.wikipedia.org/wiki/International_Monetary_Market
+ * @see <a href="http://en.wikipedia.org/wiki/International_Monetary_Market">International Monetary Market</a>
  * 
  * @author Richard Gomes
  * @author Srinivas Hasti

@@ -42,7 +42,7 @@ import org.jquantlib.quotes.Quote;
 
 public class Stock extends Instrument {
 	
-	private Handle<Quote> quote;
+	private final Handle<Quote> quote;
 	
 	public Stock(final Handle<Quote> quote) {
 		if (quote == null) throw new NullPointerException(); // FIXME: code review: should throw here?

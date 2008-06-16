@@ -79,8 +79,8 @@ public abstract class NewInstrument extends Instrument {
     //
 
     /**
-     * When a derived argument structure is defined for an instrument, this method should be overridden to fill it. This is
-     * mandatory in case a pricing engine is used.
+     * Passes arguments to be used by a {@link PricingEngine}.
+     * When a derived argument structure is defined for an instrument, this method should be overridden to fill it.
      * 
      * @param arguments keeps values to be used by the external {@link PricingEngine}
      * 
@@ -193,6 +193,7 @@ public abstract class NewInstrument extends Instrument {
     }
 
     /**
+     * Obtains the {@link Results} populated by a {@link PricingEngine}.
      * When a derived result structure is defined for an instrument, this method should be overridden to read from it.
      * 
      * @param results contains the {@link Results} object populated by a {@link PricingEngine}

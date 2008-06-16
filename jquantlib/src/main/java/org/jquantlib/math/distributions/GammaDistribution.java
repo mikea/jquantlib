@@ -35,7 +35,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * distribution and arises naturally in processes for which the waiting times between Poisson 
  * distributed events are relevant.
  * 
- * @see <a href="http://en.wikipedia.org/wiki/Gamma_distribution">Gamma Distribution on Wikipedia</a>
+ * @see <a href="http://en.wikipedia.org/wiki/Gamma_distribution">Gamma Distribution</a>
  * @see <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma Distribution on Wolfram MathWorld</a>
  * 
  * @author Richard Gomes

@@ -29,7 +29,7 @@ import org.jquantlib.math.Constants;
  * 	\frac{1}{\sigma \sqrt{2\pi} } \exp \left(-\frac{(x-\mu)^2}{2\sigma ^2} \right)
  * }
  * 
- * @see <a href="http://en.wikipedia.org/wiki/Probability_density_function">Normal Distribution on Wikipedia</a>
+ * @see <a href="http://en.wikipedia.org/wiki/Probability_density_function">Normal Distribution</a>
  *  
  * @author Richard Gomes
  */

@@ -158,6 +158,11 @@ public class OneAssetOption extends Option {
         return itmCashProbability;
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * Passes the {@link StochasticProcess}, {@link Exercise} 
+     */
     @Override
     public void setupArguments(final Arguments arguments) /* @ReadOnly */ {
         
@@ -180,15 +185,20 @@ public class OneAssetOption extends Option {
     }
 
     /**
-     * When a derived result structure is defined for an instrument, this method should be 
-     * overridden to read from it. This is mandatory in case a pricing engine is used.
+     * {@inheritDoc}
+     *
+     * Obtains {@link Greeks} and {@link MoreGreeks} calculated by a {@link PricingEngine}
+     * 
+     * @see Greeks
+     * @see MoreGreeks
+     * @see PricingEngine
      */
     public void fetchResults(final Results results) /* @ReadOnly */ {
-        final MoreGreeks moreGreeks;
-        final Greeks     greeks;
-        
         // obtain results from chained results
         super.fetchResults(results);
+        
+        final MoreGreeks moreGreeks;
+        final Greeks     greeks;
         
         // bind a Results interface to specific classes
         if (MoreGreeks.class.isAssignableFrom(results.getClass())) {

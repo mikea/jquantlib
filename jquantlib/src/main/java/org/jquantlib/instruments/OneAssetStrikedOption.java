@@ -18,6 +18,25 @@
  When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2003 Ferdinando Ametrano
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2007 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.instruments;
 
 import org.jquantlib.exercise.Exercise;
@@ -28,6 +47,11 @@ import org.jquantlib.pricingengines.results.MoreGreeks;
 import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.processes.StochasticProcess;
 
+/**
+ * Base class for options on a single asset with striked payoff
+ * 
+ * @author Richard Gomes
+ */
 public class OneAssetStrikedOption extends OneAssetOption {
 
     // results
@@ -69,18 +93,19 @@ public class OneAssetStrikedOption extends OneAssetOption {
 	}
 
 	/**
-     * @note This method accesses directly fields from base class {@link OneAssetOption.Results}.
+     * This method accesses directly fields from base class {@link OneAssetOption.Results}.
+     * <p>
      * These fields are exposed by {@link Instrument.InstrumentResults} which is the base class of {@link OneAssetOption.Results}.
      * This programming style is not recommended and we should use getters/setters instead.
      * At the moment, we keep the original implementation.
-     * 
-     * @author Richard Gomes
 	 */
+    // TODO: code review
     @Override    
 	public void fetchResults(final Results results) /* @ReadOnly */ {
-		final MoreGreeks moreGreeks;
+        // obtain results from chained results
+        super.fetchResults(results);
 
-		super.fetchResults(results);
+		final MoreGreeks moreGreeks;
 
     	if (MoreGreeks.class.isAssignableFrom(results.getClass())) {
         	moreGreeks = (MoreGreeks) results;

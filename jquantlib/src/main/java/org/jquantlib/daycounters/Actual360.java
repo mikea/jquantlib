@@ -50,7 +50,7 @@ import org.jquantlib.util.Date;
  * specified as fixed in an instrument specification,
  * you might want to double-check its meaning.
  * 
- * @see http://en.wikipedia.org/wiki/Day_count_convention
+ * @see <a href="http://en.wikipedia.org/wiki/Day_count_convention">Day count Convention</a>
  * 
  * @author Richard Gomes
  * @author Srinivas Hasti
