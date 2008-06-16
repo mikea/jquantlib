@@ -81,10 +81,20 @@ import org.jquantlib.math.integrals.TabulatedGaussLegendre;
  */
 
 public class BivariateNormalDistribution {
+	
+	//
+	// private fields
+	//
+	
 
     private final double correlation_;
     private final static CumulativeNormalDistribution cumnorm_ = new CumulativeNormalDistribution();
 
+    
+    //
+    // public constructor
+    //
+    
     /**
      * Constructor of BivariateNormalDistribution to initialize the correlation.
      * The correlation <code>rho</code> must be >=-1.0 and <=1.0.
@@ -100,6 +110,12 @@ public class BivariateNormalDistribution {
 	correlation_ = rho;
     }
 
+    
+    //
+    // Implements evaluation
+    //
+    
+    
     /**
      * Computes the Bivariate Normal Distribution of the two variables <code>x</code> and <code>y</code>
      * which can be correlated in a particular manner.
