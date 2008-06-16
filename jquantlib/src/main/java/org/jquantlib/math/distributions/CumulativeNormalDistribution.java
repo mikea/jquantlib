@@ -55,13 +55,13 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
 	    super();
 	}
 
-	public CumulativeNormalDistribution(double average, double sigma) {
+	public CumulativeNormalDistribution(final double average, final double sigma) {
 	    super(average, sigma);
 	}
 
 	
 	//
-	// Implements UnaryFuncationDouble
+	// Implements UnaryFunctionDouble
 	//
 	
 	/** 
@@ -75,7 +75,8 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
 	 * @param z
 	 * @return result
 	 */
-	public double evaluate(double z) /* @Read-only */ {
+	@Override
+	public double evaluate(final double z) /* @Read-only */ {
 		
         double result = 0.5 * ( 1.0 + errorFunction.evaluate( z*Constants.M_SQRT_2 ) );
         if (result<=1e-8) { 
@@ -84,8 +85,9 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
             // Asymptotic expansion for very negative z following (26.2.12)
             // on page 408 in M. Abramowitz and A. Stegun,
             // Pocketbook of Mathematical Functions, ISBN 3-87144818-4.
-            double sum=1.0, zsqr=z*z, i=1.0, g=1.0, x, y,
-                 a=Constants.QL_MAX_REAL, lasta;
+            double sum=1.0;
+            final double zsqr=z*z;
+            double i=1.0, g=1.0, x, y, a=Constants.QL_MAX_REAL, lasta;
             do {
         		lasta = a;
         		x = (4.0 * i - 3.0) / zsqr;
@@ -103,7 +105,7 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
 	
 	
 	//
-	// implements derivation
+	// implements Derivative
 	//
 	
 	/**
@@ -111,8 +113,9 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
 	 * @param x
 	 * @return <code>gaussian.evaluate(xn) / sigma</code>
 	 */
-	public double derivative(double x) /* @ReadOnly */ {
-	    double xn = (x - average) / sigma;
+	@Override
+	public double derivative(final double x) /* @ReadOnly */ {
+	    final double xn = (x - average) / sigma;
 	    return gaussian.evaluate(xn) / sigma;
 	}
 }

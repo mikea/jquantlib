@@ -50,6 +50,8 @@ import cern.colt.list.DoubleArrayList;
  * 
  * @author Richard Gomes
  */
+//TODO :: remove std::vector<Time> stoppingTimes
+//TODO :: how to handle strike-less option (asian average strike, forward, etc.?
 public class OptionArguments extends Arguments {
 	
     /**
@@ -66,7 +68,7 @@ public class OptionArguments extends Arguments {
 	 */
 	public Exercise exercise;
 	
-	//PENDING: understand how and where this field is used
+	//TODO:Shouldn't be here. It should be moved elsewhere
 	public /*@Time*/ DoubleArrayList stoppingTimes;
 	
 	public OptionArguments() {

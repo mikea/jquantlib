@@ -112,7 +112,7 @@ public class BivariateNormalDistribution {
 
     
     //
-    // Implements UnaryFunction Double
+    // Implements UnaryFunctionDouble
     //
     
     
@@ -141,100 +141,96 @@ public class BivariateNormalDistribution {
 	double BVN = 0.0;
 
 	if (Math.abs(correlation_) < 0.925) {
-	    if (Math.abs(correlation_) > 0) {
-		double asr = Math.asin(correlation_);
-		eqn3 f = new eqn3(h, k, asr);
-		BVN = gaussLegendreQuad.evaluate(f);
-		BVN *= asr * (0.25 / Math.PI);
-	    }
-	    BVN += cumnorm_.evaluate(-h) * cumnorm_.evaluate(-k);
-	} else {
-	    if (correlation_ < 0) {
-		k *= -1;
-		hk *= -1;
-	    }
-	    if (Math.abs(correlation_) < 1) {
-		double Ass = (1 - correlation_) * (1 + correlation_);
-		double a = Math.sqrt(Ass);
-		double bs = (h - k) * (h - k);
-		double c = (4 - hk) / 8;
-		double d = (12 - hk) / 16;
-		double asr = -(bs / Ass + hk) / 2;
-		if (asr > -100) {
-		    BVN = a * Math.exp(asr) * (1 - c * (bs - Ass) * (1 - d * bs / 5) / 3 + c * d * Ass * Ass / 5);
-		}
-		if (-hk < 100) {
-		    double B = Math.sqrt(bs);
-		    BVN -= Math.exp(-hk / 2) * Constants.M_SQRT2PI * cumnorm_.evaluate(-B / a) * B
-			    * (1 - c * bs * (1 - d * bs / 5) / 3);
-		}
-		a /= 2;
-		eqn6 f = new eqn6(a, c, d, bs, hk);
-		BVN += gaussLegendreQuad.evaluate(f);
-		BVN /= (-2.0 * Math.PI);
-	    }
+            if (Math.abs(correlation_) > 0) {
+                double asr = Math.asin(correlation_);
+                eqn3 f = new eqn3(h, k, asr);
+                BVN = gaussLegendreQuad.evaluate(f);
+                BVN *= asr * (0.25 / Math.PI);
+            }
+            BVN += cumnorm_.evaluate(-h) * cumnorm_.evaluate(-k);
+        } else {
+            if (correlation_ < 0) {
+                k *= -1;
+                hk *= -1;
+            }
+            if (Math.abs(correlation_) < 1) {
+                double Ass = (1 - correlation_) * (1 + correlation_);
+                double a = Math.sqrt(Ass);
+                double bs = (h - k) * (h - k);
+                double c = (4 - hk) / 8;
+                double d = (12 - hk) / 16;
+                double asr = -(bs / Ass + hk) / 2;
+                if (asr > -100) {
+                    BVN = a * Math.exp(asr) * (1 - c * (bs - Ass) * (1 - d * bs / 5) / 3 + c * d * Ass * Ass / 5);
+                }
+                if (-hk < 100) {
+                    double B = Math.sqrt(bs);
+                    BVN -= Math.exp(-hk / 2) * Constants.M_SQRT2PI * cumnorm_.evaluate(-B / a) * B
+                            * (1 - c * bs * (1 - d * bs / 5) / 3);
+                }
+                a /= 2;
+                eqn6 f = new eqn6(a, c, d, bs, hk);
+                BVN += gaussLegendreQuad.evaluate(f);
+                BVN /= (-2.0 * Math.PI);
+            }
 
-	    if (correlation_ > 0) {
-		BVN += cumnorm_.evaluate(-Math.max(h, k));
-	    } else {
-		BVN *= -1;
-		if (k > h) {
-		    BVN += cumnorm_.evaluate(k) - cumnorm_.evaluate(h);
-		}
-	    }
-	}
-	return BVN;
+            if (correlation_ > 0) {
+                BVN += cumnorm_.evaluate(-Math.max(h, k));
+            } else {
+                BVN *= -1;
+                if (k > h) {
+                    BVN += cumnorm_.evaluate(k) - cumnorm_.evaluate(h);
+                }
+            }
+        }
+        return BVN;
     }
 
     /**
-     * Relates to equation 3, see Genz 2004.<br>
-     * <a
-     * href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">The
-     * Transformed BVN Problem</a>
+     * Relates to equation 3, see references
      * 
+     * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">Genz 2004, The Transformed BVN Problem</a>
      */
 
     private class eqn3 implements UnaryFunctionDouble {
 
-	private double hk_, asr_, hs_;
-
-	/**
-	 * Equation 3, see Genz 2004.
-	 * 
-	 * @param h
-	 * @param k
-	 * @param asr ASIN of <code>correlation_</code>
-	 * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
-	 */
-
-	public eqn3(double h, double k, double asr) {
-	    hk_ = h * k;
-	    hs_ = (h * h + k * k) / 2;
-	    asr_ = asr;
-	}
-
-	/**
-	 * Computes equation 3, see Genz 2004.<br>
-	 * <a
-	 * href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">The
-	 * Transformed BVN Problem</a>
-	 * 
-	 * @param h
-	 * @param k
-	 * @param asr ASIN of <code>correlation_</code>
-	 * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
-	 */
-	public double evaluate(double x) {
-	    double sn = Math.sin(asr_ * (-x + 1) * 0.5);
-	    return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn));
-	}
-    };
+    	private double hk_, asr_, hs_;
+    
+    	/**
+    	 * Equation 3, see Genz 2004.
+    	 * 
+    	 * @param h
+    	 * @param k
+    	 * @param asr ASIN of <code>correlation_</code>
+    	 * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
+    	 */
+    
+    	public eqn3(double h, double k, double asr) {
+    	    hk_ = h * k;
+    	    hs_ = (h * h + k * k) / 2;
+    	    asr_ = asr;
+    	}
+    
+    	/**
+    	 * Computes equation 3, see references
+    	 * 
+    	 * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">Genz 2004, The Transformed BVN Problem</a>
+    	 * 
+    	 * @param h
+    	 * @param k
+    	 * @param asr ASIN of <code>correlation_</code>
+    	 * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
+    	 */
+    	public double evaluate(double x) {
+    	    double sn = Math.sin(asr_ * (-x + 1) * 0.5);
+    	    return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn));
+    	}
+    }
 
     /**
-     * Relates to equation 6, see Genz 2004.<br>
-     * <a
-     * href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Numerical
-     * Integration Results</a>
+     * Relates to equation 6, see references
+     * 
+     * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Genz 2004, Numerical Integration Results</a>
      * 
      */
     private class eqn6 implements UnaryFunctionDouble {
@@ -258,10 +254,9 @@ public class BivariateNormalDistribution {
 	}
 
 	/**
-	 * Computes equation 6, see Genz 2004.<br>
-	 * <a
-	 * href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Numerical
-	 * Integration Results</a>
+	 * Computes equation 6, see references<br>
+	 * 
+	 * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Genz 2004, Numerical Integration Results</a>
 	 * 
 	 * @param x
 	 * @return <code>if (asr > -100.0) </code> return (a_ * Math.exp(asr) *

@@ -46,27 +46,32 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
  * Pricing engine for European vanilla options using analytical formulae
- * 
- * @note <b>TEST:</b> the correctness of the returned value is tested by reproducing
- *       results available in literature. - the correctness of the returned
- *       greeks is tested by reproducing results available in literature. - the
- *       correctness of the returned greeks is tested by reproducing numerical
- *       derivatives. - the correctness of the returned implied volatility is
- *       tested by using it for reproducing the target value. - the
- *       implied-volatility calculation is tested by checking that it does not
- *       modify the option. - the correctness of the returned value in case of
- *       cash-or-nothing digital payoff is tested by reproducing results
- *       available in literature. - the correctness of the returned value in
- *       case of asset-or-nothing digital payoff is tested by reproducing
- *       results available in literature. - the correctness of the returned
- *       value in case of gap digital payoff is tested by reproducing results
- *       available in literature. - the correctness of the returned greeks in
- *       case of cash-or-nothing digital payoff is tested by reproducing
- *       numerical derivatives.
+ * <p>
+ * The correctness of the returned value is tested by reproducing results available in literature.
+ * <li>the correctness of the returned <i>greeks</i> is tested by reproducing results available in literature.</li>
+ * <li>the correctness of the returned greeks is tested by reproducing numerical derivatives.</li>
+ * <li>the correctness of the returned implied volatility is tested by using it for reproducing the target value.</li>
+ * <li>the <i>implied volatility</i> calculation is tested by checking that it does not modify the option.</li>
+ * <li>the correctness of the returned value in case of <i>cash-or-nothing</i> binary payoff is tested by reproducing results
+ *     available in literature.</li>
+ * <li>the correctness of the returned value in case of <i>asset-or-nothing</i> binary payoff is tested by
+ *     reproducing results available in literature.</li>
+ * <li>the correctness of the returned value in case of <i>gap-or-nothing</i> binary payoff is tested by
+ *     reproducing results available in literature.</li>
+ * <li>the correctness of the returned <i>greeks</i> in case of <i>cash-or-nothing</i> binary payoff
+ *     is tested by reproducing numerical derivatives.</li>
+ *     
+ * @see PricingEngine
  */
+//TEST: write more test cases
 public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 
-	public void calculate() /* @ReadOnly */{
+	//
+    // implements PricingEngine
+    //
+    
+    @Override
+    public void calculate() /* @ReadOnly */{
 		if (arguments.exercise.getType() != Exercise.Type.EUROPEAN)
 			throw new IllegalArgumentException("not an European option");
 
@@ -114,4 +119,5 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 		results.strikeSensitivity = black.strikeSensitivity();
 		results.itmCashProbability = black.itmCashProbability();
 	}
+
 }
