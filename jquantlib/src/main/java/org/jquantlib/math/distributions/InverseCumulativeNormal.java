@@ -36,6 +36,10 @@ import org.jquantlib.math.UnaryFunctionDouble;
  */
 public class InverseCumulativeNormal extends NormalDistribution implements UnaryFunctionDouble {
 		
+	//
+	// static final fields (constants)
+	//
+	
     static final double a1_ = -3.969683028665376e+01;
     static final double a2_ =  2.209460984245205e+02;
     static final double a3_ = -2.759285104469687e+02;
@@ -73,9 +77,19 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
     static final double x_low_ = 0.02425;
     static final double x_high_= 1.0 - x_low_;
     
+    
+    //
+    // private fields
+    //
+    
     // refinement for higher precision
     private boolean highPrecision = false;
 
+    
+    //
+    // public constructors
+    //
+    
     public InverseCumulativeNormal() {
 	super();
     }
@@ -84,6 +98,11 @@ public class InverseCumulativeNormal extends NormalDistribution implements Unary
 	super(average, sigma);
     }
 
+    
+    //
+    // implements UnaryFunctionDouble
+    //
+    
     /**
      * Computes the inverse cumulative normal distribution.
      * @param x

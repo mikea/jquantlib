@@ -43,7 +43,17 @@ import org.jquantlib.math.UnaryFunctionDouble;
  */
 public class GammaDistribution implements UnaryFunctionDouble {
 	
+	//
+	// private field
+	//
+	
 	private double a_;
+	
+	
+	//
+	// public constructor
+	//
+	
 	
 	/**
 	 * Intitializes <code>a_</code> and checks that <code>a_</code> is not smaller than 0.00.
@@ -57,6 +67,12 @@ public class GammaDistribution implements UnaryFunctionDouble {
 		throw new ArithmeticException("invalid parameter for gamma distribution");
 	    }
 	}
+	
+	
+	//
+	// implements UnaryFunctionDouble
+	//
+	
 	
 	/**
 	 * Computes the Gamma distribution.

@@ -40,9 +40,17 @@ import org.jquantlib.math.UnaryFunctionDouble;
  */
 public class CumulativeNormalDistribution extends NormalDistribution implements UnaryFunctionDouble {
 
+	//
+	// static private fields
+	// 
+	
 	static private final ErrorFunction errorFunction = new ErrorFunction(); 
 	static private final NormalDistribution gaussian = new NormalDistribution();
 
+	//
+	// public constructors
+	//
+	
 	public CumulativeNormalDistribution() {
 	    super();
 	}
@@ -51,6 +59,11 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
 	    super(average, sigma);
 	}
 
+	
+	//
+	// Implements UnaryFuncationDouble
+	//
+	
 	/** 
 	 * Computes the cumulative normal distribution.
 	 * <p>
@@ -87,6 +100,11 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
         }
         return result;
 	}
+	
+	
+	//
+	// implements derivation
+	//
 	
 	/**
 	 * Computes the derivative.

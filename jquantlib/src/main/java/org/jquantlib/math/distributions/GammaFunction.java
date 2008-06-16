@@ -34,6 +34,10 @@ package org.jquantlib.math.distributions;
  */
 public class GammaFunction {
 	
+	//
+	// private static fields (constants)
+	// 
+	
     private static final double c1_ = 76.18009172947146;
     private static final double c2_ = -86.50532032941677;
     private static final double c3_ = 24.01409824083091;
@@ -41,6 +45,11 @@ public class GammaFunction {
     private static final double c5_ = 0.1208650973866179e-2;
     private static final double c6_ = -0.5395239384953e-5;
 	    
+    
+    //
+    // computes the logValue
+    //
+    
     
     /**
      * Computes the log of the Gamma.

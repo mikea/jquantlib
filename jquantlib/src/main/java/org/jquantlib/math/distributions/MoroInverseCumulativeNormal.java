@@ -31,6 +31,11 @@ import org.jquantlib.math.UnaryFunctionDouble;
 // TODO Add test case for MoroInverseCumulativeNormal class.
 public class MoroInverseCumulativeNormal extends NormalDistribution implements UnaryFunctionDouble{
 	
+	//
+	// static final fields (constants)
+	//
+	
+	
 	static final double a0_ =  2.50662823884;
 	static final double a1_ =-18.61500062529;
 	static final double a2_ = 41.39119773534;
@@ -51,6 +56,11 @@ public class MoroInverseCumulativeNormal extends NormalDistribution implements U
 	static final double c7_ = 0.0000002888167364;
 	static final double c8_ = 0.0000003960315187;
 
+	
+	//
+	// public constructors
+	//
+	
     public MoroInverseCumulativeNormal() {
     	super();
     }
@@ -58,6 +68,11 @@ public class MoroInverseCumulativeNormal extends NormalDistribution implements U
     public MoroInverseCumulativeNormal(double average, double sigma) {
     	super(average, sigma);
     }    
+    
+    
+    //
+    // implements UnaryFunctionDouble
+    //
         
     public double evaluate(double x) /* Read-only */ {
         double result;

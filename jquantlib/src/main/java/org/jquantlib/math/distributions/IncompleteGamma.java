@@ -41,6 +41,10 @@ import org.jquantlib.math.Constants;
 //FIXME: Check duplicated code compared to the GammaDistribution class
 public class IncompleteGamma {
 
+	//
+	// computes the incomplete Gamma Function
+	//
+	
     public double incompleteGammaFunction(double a, double x, double accuracy, int maxIteration) {
 
 	if (!(a > 0.0)) {

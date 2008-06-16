@@ -28,6 +28,10 @@ import org.jquantlib.math.UnaryFunctionDouble;
  */
 public class NonCentralChiSquaredDistribution implements UnaryFunctionDouble {
 
+	//
+	// private fields
+	//
+	
 	/** degrees of freedom */
 	private double df_;
 	
@@ -36,11 +40,21 @@ public class NonCentralChiSquaredDistribution implements UnaryFunctionDouble {
 	
 	private GammaFunction gammaFunction_ = new GammaFunction();
 	
+	
+	//
+	// public constructor
+	//
+	
 	public NonCentralChiSquaredDistribution(double df, double ncp){
 		//TODO check on valid parameters
 		df_ = df;
 		ncp_ = ncp;
 	}
+	
+	
+	//
+	// implements UnaryFunctionDouble
+	//
 	
 	public double evaluate(double x) /* @Read-only */ {
 		//C++ appears to be based on Algorithm AS 275

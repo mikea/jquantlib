@@ -112,7 +112,7 @@ public class BivariateNormalDistribution {
 
     
     //
-    // Implements evaluation
+    // Implements UnaryFunction Double
     //
     
     

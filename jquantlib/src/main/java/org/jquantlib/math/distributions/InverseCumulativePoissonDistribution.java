@@ -33,8 +33,17 @@ import org.jquantlib.math.UnaryFunctionDouble;
 // TEST the correctness of the returned value is tested by checking it against known good results.
 public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble {
 	
+	//
+	// private fields
+	//
+	
 	private double lambda_;
 
+	
+	//
+	// public constructors
+	//
+	
     public InverseCumulativePoissonDistribution() {
     	this(1.0);
     }
@@ -50,6 +59,11 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
     	}
     }
 
+    //
+    // implements UnaryFunctionDouble
+    //
+    
+    
     /**
      * Computes the inverse cumulative poisson distribution.
      * 
@@ -73,6 +87,11 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
         }
         return (double)(index-1);
     }
+    
+    
+    //
+    // implements the calcSummand function
+    //
 
     private double calcSummand(int index) {
 		Factorial fact = new Factorial();
