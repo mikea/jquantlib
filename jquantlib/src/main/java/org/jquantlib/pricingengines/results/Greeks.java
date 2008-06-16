@@ -37,13 +37,13 @@
 
 package org.jquantlib.pricingengines.results;
 
+import org.jquantlib.instruments.NewInstrument;
 import org.jquantlib.pricingengines.PricingEngine;
-
-import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+import org.jquantlib.pricingengines.arguments.Arguments;
 
 
 /**
- * This class keeps Greeks and other {@link Result}s calculated by a {@link PricingEngine}
+ * This class keeps Greeks and other {@link Results} calculated by a {@link PricingEngine}
  * <p>
  * In mathematical finance, the Greeks are the quantities representing the market sensitivities of derivatives such as options. Each
  * "Greek" measures a different aspect of the risk in an option position, and corresponds to a parameter on which the value of an
