@@ -56,7 +56,7 @@ public class Thirty360 extends AbstractDayCounter {
 	private static final Thirty360 THIRTY360_EU = new Thirty360(Thirty360.Convention.EUROPEAN);
 	private static final Thirty360 THIRTY360_IT = new Thirty360(Thirty360.Convention.ITALIAN);
 	
-	private Thirty360Abstraction delegate = null;
+	private final Thirty360Abstraction delegate;
 
 	public Thirty360() {
 		this(Thirty360.Convention.BOND_BASIS);
@@ -82,12 +82,12 @@ public class Thirty360 extends AbstractDayCounter {
 	}
 	
 	
-	public static Thirty360 getDayCounter() {
+	public static final Thirty360 getDayCounter() {
 		return getDayCounter(Thirty360.Convention.BOND_BASIS);
 		
 	}
 	
-	public static Thirty360 getDayCounter(final Thirty360.Convention c) {
+	public static final Thirty360 getDayCounter(final Thirty360.Convention c) {
         switch (c) {
         case USA:
         case BOND_BASIS:
@@ -102,32 +102,36 @@ public class Thirty360 extends AbstractDayCounter {
         }
     }
 
-	public String getName() /* @ReadOnly */{
+    @Override
+	public final String getName() /* @ReadOnly */{
 		return delegate.getName();
 	}
 
-	public int getDayCount(final Date d1, final Date d2) /* @ReadOnly */{ 
-		int dd1 = d1.getDayOfMonth();
-		int dd2 = d2.getDayOfMonth();
-		int mm1 = d1.getMonth();
-		int mm2 = d2.getMonth();
-		int yy1 = d1.getYear();
-		int yy2 = d2.getYear();
+    @Override
+	public final int getDayCount(final Date d1, final Date d2) /* @ReadOnly */{ 
+		final int dd1 = d1.getDayOfMonth();
+		final int dd2 = d2.getDayOfMonth();
+		final int mm1 = d1.getMonth();
+		final int mm2 = d2.getMonth();
+		final int yy1 = d1.getYear();
+		final int yy2 = d2.getYear();
 		return delegate.getDayCount(dd1, dd2, mm1, mm2, yy1, yy2);
 		
 	}
 	
-	public int compute(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2){
+	public final int compute(final int dd1, final int dd2, final int mm1, final int mm2, final int yy1, final int yy2){
 	    return 360 * (yy2 - yy1) + 30 * (mm2 - mm1 - 1) + Math.max(0, 30 - dd1) + Math.min(30, dd2);
 	}
 
-	public/* @Time */double getYearFraction(
+    @Override
+	public final /* @Time */ double getYearFraction(
 						final Date dateStart, final Date dateEnd, 
 						final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
 		return getDayCount(dateStart, dateEnd) / 360.0;
 	}
 
-	public/* @Time */double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+    @Override
+	public final /* @Time */double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
 		return getDayCount(dateStart, dateEnd) / 360.0;
 	}
 
@@ -155,12 +159,15 @@ public class Thirty360 extends AbstractDayCounter {
 	 * 
 	 * @author Richard Gomes
 	 */
-	private class US implements Thirty360Abstraction {
+	private final class US implements Thirty360Abstraction {
 
+        @Override
 		public final String getName() /* @ReadOnly */{
 			return "30/360 (Bond Basis)";
 		}
-		public int getDayCount(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2){
+
+        @Override
+		public final int getDayCount(final int dd1, int dd2, final int mm1, int mm2, final int yy1, final int yy2){
 		    if (dd2 == 31 && dd1 < 30) {
                 dd2 = 1;
                 mm2++;
@@ -176,12 +183,15 @@ public class Thirty360 extends AbstractDayCounter {
 	 * 
 	 * @author Richard Gomes
 	 */
-	private class EU implements Thirty360Abstraction {
-		public final String getName() /* @ReadOnly */{
+	private final class EU implements Thirty360Abstraction {
+	    
+        @Override
+	    public final String getName() /* @ReadOnly */{
 			return "30E/360 (Eurobond Basis)";
 		}
 
-		public int getDayCount(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2){
+        @Override
+		public final int getDayCount(final int dd1, final int dd2, final int mm1, final int mm2, final int yy1, final int yy2){
             return compute(dd1,dd2,mm1,mm2,yy1,yy2);
         }
 	}
@@ -193,13 +203,15 @@ public class Thirty360 extends AbstractDayCounter {
 	 * 
 	 * @author Richard Gomes
 	 */
-	private class IT implements Thirty360Abstraction {
+	private final class IT implements Thirty360Abstraction {
 
-		public final String getName() /* @ReadOnly */{
+	    @Override
+	    public final String getName() /* @ReadOnly */{
 			return "30/360 (Italian)";
 		}
 
-		public int getDayCount(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2) {
+        @Override
+		public final int getDayCount(int dd1, int dd2, final int mm1, final int mm2, final int yy1, final int yy2) {
 			if (mm1 == 2 && dd1 > 27)
 				dd1 = 30;
 			if (mm2 == 2 && dd2 > 27)

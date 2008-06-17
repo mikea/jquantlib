@@ -41,14 +41,7 @@ package org.jquantlib.daycounters;
 import org.jquantlib.util.Date;
 
 /**
- * "Actual/365 (Fixed)" day count convention, also know as
- * "Act/365 (Fixed)", "A/365 (Fixed)", or "A/365F".
- * 
- * @note According to ISDA, "Actual/365" (without "Fixed") is
- * an alias for "Actual/Actual (ISDA)"DayCounter (see
- * ActualActual.)  If Actual/365 is not explicitly
- * specified as fixed in an instrument specification,
- * you might want to double-check its meaning.
+ * Actual/360 day count convention, also known as "Act/360", or "A/360".
  * 
  * @see <a href="http://en.wikipedia.org/wiki/Day_count_convention">Day count Convention</a>
  * 
@@ -57,24 +50,27 @@ import org.jquantlib.util.Date;
  */
 public class Actual360 extends AbstractDayCounter {
 
-	private static Actual360	actual360	= new Actual360();
+	private static final Actual360	actual360	= new Actual360();
 
 	private Actual360() {
 	}
 
-	public static Actual360 getDayCounter() {
+	public static final Actual360 getDayCounter() {
 		return actual360;
 	}
 
+    @Override
 	public final String getName() /* @ReadOnly */{
 		return "Actual/360";
 	}
 
-	public/*@Time*/double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+    @Override
+	public /*@Time*/ final double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
 		return getDayCount(dateStart, dateEnd) / 360.0;
 	}
 
-	public/*@Time*/double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
+    @Override
+	public /*@Time*/ final double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
 			final Date refPeriodEnd) /* @ReadOnly */{
 		return getDayCount(dateStart, dateEnd) / 360.0;
 	}

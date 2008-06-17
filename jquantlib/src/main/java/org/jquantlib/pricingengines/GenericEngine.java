@@ -45,18 +45,37 @@ import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
-// FIXME: comments
-// FIXME: verify 'final' mathods
+/**
+ * This is a generic definition of a PriceEngine which takes its arguments from an {@link Arguments} structure and
+ * returns its results in a {@link Results} structure.
+ * 
+ * @param <A> is an parameterized Arguments object
+ * @param <R> is an parameterized Results object
+ * 
+ * @author Richard Gomes
+ */
 public abstract class GenericEngine<A extends Arguments, R extends Results> implements PricingEngine {
 
-	protected A arguments;
+	//
+    // protected fields
+    //
+    
+    protected A arguments;
 	protected R results;
 
+	//
+	// public constructors
+	//
+	
 	public GenericEngine(final A arguments, final R results) {
 		this.arguments = arguments;
 		this.results = results;
 	}
 
+	//
+	// public final methods
+	//
+	
 	public final A getArguments() {
 		return arguments;
 	}
@@ -65,6 +84,10 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 		return results;
 	}
 
+	//
+	// public methods
+	//
+	
 	public void reset() {
 		results.reset();
 	}
@@ -82,31 +105,38 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 	 */
     private final Observable delegatedObservable = new DefaultObservable(this);
 
-	public void addObserver(final Observer observer) {
+    @Override
+    public final void addObserver(final Observer observer) {
 		delegatedObservable.addObserver(observer);
 	}
 
-	public int countObservers() {
+    @Override
+	public final int countObservers() {
 		return delegatedObservable.countObservers();
 	}
 
-	public void deleteObserver(final Observer observer) {
+    @Override
+	public final void deleteObserver(final Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
 
-	public void notifyObservers() {
+    @Override
+	public final void notifyObservers() {
 		delegatedObservable.notifyObservers();
 	}
 
-	public void notifyObservers(final Object arg) {
+    @Override
+	public final void notifyObservers(final Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
 
-	public void deleteObservers() {
+    @Override
+	public final void deleteObservers() {
 		delegatedObservable.deleteObservers();
 	}
 
-	public List<Observer> getObservers() {
+    @Override
+	public final List<Observer> getObservers() {
 		return delegatedObservable.getObservers();
 	}
 

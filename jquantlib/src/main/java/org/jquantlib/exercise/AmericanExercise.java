@@ -62,7 +62,7 @@ public class AmericanExercise extends EarlyExercise {
 	}
 
 	/**
-	 * Constructs an AmericanExercise with two limiting dates define and a defined payoff.
+	 * Constructs an AmericanExercise with two limiting dates and a defined payoff.
 	 *  
 	 * @param earliestDate is the earliest Date of exercise
 	 * @param latestDate is the latest Date of exercise

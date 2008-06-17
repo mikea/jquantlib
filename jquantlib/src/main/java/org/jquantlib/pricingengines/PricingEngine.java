@@ -64,7 +64,11 @@ import org.jquantlib.util.Observable;
 
 
 /**
- * Interface for pricing engines
+ * Interface for pricing engines which extends an Observable
+ * 
+ * @see Observable
+ * @see Arguments
+ * @see Results
  * 
  * @author Richard Gomes
  */

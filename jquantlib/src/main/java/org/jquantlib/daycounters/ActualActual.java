@@ -48,7 +48,7 @@ public class ActualActual extends AbstractDayCounter {
 	private static final ActualActual ACTUAL365_DAYCOUNTER = new ActualActual(Convention.ISDA);
 	private static final ActualActual AFB_DAYCOUNTER = new ActualActual(Convention.AFB);
 
-	private DayCounter delegate = null;
+	private final DayCounter delegate;
 
 	private ActualActual(Convention convention) {
 		switch (convention) {
@@ -93,32 +93,44 @@ public class ActualActual extends AbstractDayCounter {
 		}
 	}
 
-	public String getName() {
+	
+    @Override
+	public final String getName() {
 		return delegate.getName();
 	}
 
-	public double getYearFraction(Date dateStart, Date dateEnd) /* @ReadOnly */{
+    @Override
+	public final double getYearFraction(Date dateStart, Date dateEnd) /* @ReadOnly */{
 		return delegate.getYearFraction(dateStart, dateEnd);
 	}
 
-	public double getYearFraction(final Date dateStart, final Date dateEnd,
+    @Override
+	public final double getYearFraction(final Date dateStart, final Date dateEnd,
 			final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
 		return delegate.getYearFraction(dateStart, dateEnd, refPeriodStart,
 				refPeriodEnd);
 	}
 
-	private class ISMA extends AbstractDayCounter {
 
-		public final String getName() /* @ReadOnly */{
+    //
+    // inner classes
+    //
+    
+    private class ISMA extends AbstractDayCounter {
+
+        @Override
+        public final String getName() /* @ReadOnly */{
 			return "Actual/Actual (ISMA)";
 		}
 
-		public double getYearFraction(final Date dateStart, final Date dateEnd) {
+        @Override
+		public final double getYearFraction(final Date dateStart, final Date dateEnd) {
 			return getYearFraction(dateStart, dateEnd, Date.NULL_DATE,
 					Date.NULL_DATE);
 		}
 
-		public double getYearFraction(final Date d1, final Date d2,
+        @Override
+		public final double getYearFraction(final Date d1, final Date d2,
 				final Date d3, final Date d4) {
 
 			if (d1.equals(d2))
@@ -223,11 +235,13 @@ public class ActualActual extends AbstractDayCounter {
 
 	private class ISDA extends AbstractDayCounter {
 
+        @Override
 		public final String getName() /* @ReadOnly */{
 			return "Actual/Actual (ISDA)";
 		}
 
-		public double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+        @Override
+		public final double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
 			if (dateStart.equals(dateEnd))
 				return 0.0;
 
@@ -249,7 +263,8 @@ public class ActualActual extends AbstractDayCounter {
 			return sum;
 		}
 
-		public double getYearFraction(final Date dateStart, final Date dateEnd,
+        @Override
+		public final double getYearFraction(final Date dateStart, final Date dateEnd,
 				final Date d3, final Date d4) /* @ReadOnly */{
 			return this.getYearFraction(dateStart, dateEnd);
 		}
@@ -258,11 +273,13 @@ public class ActualActual extends AbstractDayCounter {
 
 	private class AFB extends AbstractDayCounter {
 
+        @Override
 		public final String getName() {
 			return "Actual/Actual (AFB)";
 		}
 
-		public double getYearFraction(final Date dateStart, final Date dateEnd) {
+        @Override
+		public final double getYearFraction(final Date dateStart, final Date dateEnd) {
 			if (dateStart.equals(dateEnd))
 				return 0.0;
 
@@ -301,7 +318,8 @@ public class ActualActual extends AbstractDayCounter {
 			return sum + getDayCount(dateStart, newD2) / den;
 		}
 
-		public double getYearFraction(final Date dateStart, final Date dateEnd,
+        @Override
+		public final double getYearFraction(final Date dateStart, final Date dateEnd,
 				final Date refPeriodStart, final Date refPeriodEnd) {
 			return this.getYearFraction(dateStart, dateEnd);
 		}

@@ -55,18 +55,18 @@ import org.jquantlib.util.Date;
  */
 public class Actual365Fixed extends AbstractDayCounter {
 
-	/**
-	 * @see DayCounter#getName()
-	 */
+    @Override
 	public final String getName() /* @ReadOnly */ {
 		return "Actual/365 (fixed)";
 	}
 	
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
+    @Override
+	public /*@Time*/ final double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
 		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
 	}
 	
-	public /*@Time*/ double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */ {
+    @Override
+	public /*@Time*/ final double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */ {
 		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
 	}
 	

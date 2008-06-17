@@ -65,11 +65,11 @@ public class BlackCalculator {
 	//
 	// FIXME: code review: can these variables be 'private' ?
 	//
-	protected/* @Price */double strike;
-	protected/* @Price */double forward;
-	protected/* @StdDev */double stdDev;
-	protected/* @DiscountFactor */double discount;
-	protected/* @Variance */double variance;
+	protected /* @Price */double strike;
+	protected /* @Price */double forward;
+	protected /* @StdDev */double stdDev;
+	protected /* @DiscountFactor */double discount;
+	protected /* @Variance */double variance;
 	protected double D1, D2, alpha, beta, dAlpha_dD1, dBeta_dD2;
 	protected double n_d1, cum_d1, n_d2, cum_d2;
 	protected double X, DXDs, DXDstrike;

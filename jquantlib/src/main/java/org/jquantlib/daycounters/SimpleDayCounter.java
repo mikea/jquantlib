@@ -24,7 +24,6 @@ import org.jquantlib.util.Date;
 
 /**
  * Simple day counter for reproducing theoretical calculations.
- * 
  * <p>
  * This day counter tries to ensure that whole-month distances are returned as a
  * simple fraction, i.e., 1 year = 1.0, 6 months = 0.5, 3 months = 0.25 and so
@@ -33,10 +32,12 @@ import org.jquantlib.util.Date;
  * @note This day counter should be used together with NullCalendar, which
  *       ensures that dates at whole-month distances share the same day of
  *       month. It is <b>not</b> guaranteed to work with any other calendar.
+ *       
+ * @author Srinivas Hasti
  */
 public class SimpleDayCounter extends AbstractDayCounter {
 
-    private DayCounter fallback = null;
+    private final DayCounter fallback;
 
     public SimpleDayCounter() {
         this.fallback = new Thirty360();
@@ -46,11 +47,11 @@ public class SimpleDayCounter extends AbstractDayCounter {
         return "Simple";
     }
 
-    public int getDayCount(final Date dateStart, final Date dateEnd) {
+    public final int getDayCount(final Date dateStart, final Date dateEnd) {
         return fallback.getDayCount(dateStart, dateEnd);
     }
 
-    public double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
+    public final double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
             final Date refPeriodEnd) {
         int dm1 = dateStart.getDayOfMonth();
         int dm2 = dateEnd.getDayOfMonth();
@@ -70,7 +71,7 @@ public class SimpleDayCounter extends AbstractDayCounter {
         }
     }
 
-    public double getYearFraction(final Date dateStart, final Date dateEnd) {
+    public final double getYearFraction(final Date dateStart, final Date dateEnd) {
         return this.getYearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
     }
 

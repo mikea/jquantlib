@@ -29,7 +29,12 @@ import org.jquantlib.util.Date;
  */
 public class EuropeanExercise extends Exercise {
 
-	public EuropeanExercise(final Date date) {
+	/**
+	 * Defines the exercise date for an European Option.
+	 * 
+	 * @param date is the exercise date
+	 */
+    public EuropeanExercise(final Date date) {
 		super(Exercise.Type.EUROPEAN);
 		if (date==null) throw new NullPointerException();
 		super.addDate(date);

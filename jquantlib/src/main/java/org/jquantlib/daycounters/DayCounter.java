@@ -42,7 +42,7 @@ import org.jquantlib.util.Date;
 
 
 /**
- * This class provides methods for determining the length of a time
+ * This interface provides methods for determining the length of a time
  * period according to given market convention, both as a number
  * of days and as a year fraction.
  * 

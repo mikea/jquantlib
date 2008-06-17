@@ -40,20 +40,41 @@ package org.jquantlib.instruments;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 
+/**
+ * Simple stock class
+ * 
+ * @author Richard Gomes
+ */
 public class Stock extends Instrument {
 	
-	private final Handle<Quote> quote;
+	//
+    // private final fields
+    //
+    
+    private final Handle<Quote> quote;
 	
-	public Stock(final Handle<Quote> quote) {
+	//
+    // public constructors
+    //
+    
+    public Stock(final Handle<Quote> quote) {
 		if (quote == null) throw new NullPointerException(); // FIXME: code review: should throw here?
 		this.quote = quote;
 		this.quote.addObserver(this);
 	}
-
-    @Override
+    
+	//
+	// overrides Instrument
+	//
+	
+	@Override
 	public boolean isExpired() /* @ReadOnly */ { return false; }
     
-	@Override
+	//
+    // overrides LazyObject
+    //
+    
+    @Override
     protected void performCalculations() /* @ReadOnly */ {
 		if (quote.isEmpty()) throw new NullPointerException("null quote set");
 		NPV = quote.getLink().doubleValue();
