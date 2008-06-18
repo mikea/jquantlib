@@ -27,6 +27,10 @@ import org.jquantlib.math.distributions.GammaFunction;
  */
 public class RegularisedIncompleteBeta {
 
+	//
+	// private fields
+	//
+	
 	private double tolerance_;
 	private int maxIterations_;
 	

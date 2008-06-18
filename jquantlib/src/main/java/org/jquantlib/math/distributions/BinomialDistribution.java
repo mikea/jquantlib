@@ -48,10 +48,16 @@ public class BinomialDistribution implements UnaryFunctionInteger {
     private static final Factorial factorial = new Factorial();
 	
     //
-    // private final methods
+    // private final fields
     //
     
     private final int nExp;
+    
+    
+    //
+    // private fields
+    //
+    
     private  double logP; //TODO: code review
     private  double logOneMinusP; //TODO: code review
 
