@@ -23,6 +23,10 @@ package org.jquantlib.math;
 import org.jquantlib.math.distributions.GammaFunction;
 
 /**
+ * The implementation of the algorithm was inspired by
+    "Numerical Recipes in C", 2nd edition,
+    Press, Teukolsky, Vetterling, Flannery, chapter 6.
+    
  * @author Dominik Holenstein
  */
 
@@ -42,8 +46,11 @@ public class Beta {
       double qam = a-1.0;
       double c = 1.0;
       double d = 1.0-qab*x/qap;
-      if (Math.abs(d) < Constants.QL_EPSILON)
-          d = Constants.QL_EPSILON;
+      
+      if (Math.abs(d) < Constants.QL_EPSILON) {
+    	  d = Constants.QL_EPSILON;
+      }
+          
       d = 1.0/d;
       double result = d;
 
@@ -53,31 +60,40 @@ public class Beta {
           aa=m*(b-m)*x/((qam+m2)*(a+m2));
           d=1.0+aa*d;
           
-          if (Math.abs(d) < Constants.QL_EPSILON) 
+          if (Math.abs(d) < Constants.QL_EPSILON) {
         	  d=Constants.QL_EPSILON;
+          }
+        	  
           c=1.0+aa/c;
           
-          if (Math.abs(c) < Constants.QL_EPSILON) 
+          if (Math.abs(c) < Constants.QL_EPSILON) {
         	  c=Constants.QL_EPSILON;
+          }
+        	  
           
           d=1.0/d;
           result *= d*c;
           aa = -(a+m)*(qab+m)*x/((a+m2)*(qap+m2));
           d=1.0+aa*d;
           
-          if (Math.abs(d) < Constants.QL_EPSILON) 
+          if (Math.abs(d) < Constants.QL_EPSILON) {
         	  d=Constants.QL_EPSILON;
-          
+          }
+        	  
           c=1.0+aa/c;
           
-          if (Math.abs(c) < Constants.QL_EPSILON) 
+          if (Math.abs(c) < Constants.QL_EPSILON) {
         	  c=Constants.QL_EPSILON;
+          }
+        	  
           d=1.0/d;
           del=d*c;
           result *= del;
           
-          if (Math.abs(del-1.0) < accuracy)
-              return result;
+          if (Math.abs(del - 1.0) < accuracy){
+        	  return result;
+          }
+				
       }
       throw new ArithmeticException("a or b too big, or maxIteration too small in betacf");
   }
@@ -87,22 +103,33 @@ public class Beta {
 	  
 	  GammaFunction gf = new GammaFunction();
 	 
-	  if (a <= 0.0) throw new ArithmeticException("a must be greater than zero");
-	  if (b <= 0.0) throw new ArithmeticException("b must be greater than zero");
+	  if (a <= 0.0) {
+		  throw new ArithmeticException("a must be greater than zero");
+	  }
+	  
+	  if (b <= 0.0) {
+		  throw new ArithmeticException("b must be greater than zero");
+	  }
 
-	  if (x == 0.0) return 0.0;
-	  else if (x == 1.0)return 1.0;
+	  if (x == 0.0) {
+		  return 0.0;
+	  }
+	  else if (x == 1.0){
+		  return 1.0;
+	  }
 	  else
-		  if (x<=0.0 && x>=1.0) throw new ArithmeticException("x must be in [0,1]");
+		  if (x<=0.0 && x>=1.0) {
+			  throw new ArithmeticException("x must be in [0,1]");
+		  }
 
-	  double result = Math.exp(gf.logValue(a+b) -
-			  gf.logValue(a) - gf.logValue(b) +
-			  a*Math.log(x) + b*Math.log(1.0-x));
+	  double result = Math.exp(gf.logValue(a+b) - gf.logValue(a) - gf.logValue(b) + a*Math.log(x) + b*Math.log(1.0-x));
 
-	  if (x < (a+1.0)/(a+b+2.0))
+	  if (x < (a+1.0)/(a+b+2.0)) {
 		  return result * betaContinuedFraction(a, b, x, accuracy, maxIteration)/a;
-	  else
+	  }
+	  else {
 		  return 1.0 - result * betaContinuedFraction(b, a, 1.0-x, accuracy, maxIteration)/b;
+	  }
   }
 	
   static double betaFunction(double z, double w) {
