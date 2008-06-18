@@ -273,4 +273,3 @@ they think is the best what to distribute and install JQuantLib binaries.
 
 The main source of information is our wiki at http://wiki.jquantlib.org/
 
-== Test by Dominik ==
