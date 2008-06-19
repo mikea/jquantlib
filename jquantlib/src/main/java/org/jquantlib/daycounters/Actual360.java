@@ -50,15 +50,28 @@ import org.jquantlib.util.Date;
  */
 public class Actual360 extends AbstractDayCounter {
 
-	private static final Actual360	actual360	= new Actual360();
-
-	private Actual360() {
-	}
-
+	//
+	// static constructors
+	//
+	
+    private static final Actual360  actual360   = new Actual360();
+	
 	public static final Actual360 getDayCounter() {
 		return actual360;
 	}
 
+	
+    //
+    // private default constructor
+    //
+    
+    private Actual360() { }
+
+    
+    //
+    // implements DayCounter
+    //
+    
     @Override
 	public final String getName() /* @ReadOnly */{
 		return "Actual/360";

@@ -24,12 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.TimeSeries;
 
+//FIXME: code review
 public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	private static volatile IndexManager instance;
 
@@ -47,7 +43,7 @@ public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> 
 	}
 	
 	//TODO: Code review
-	public Observable notifier(String name){
+	public Observable notifier(String name) {
 		TimeSeries<Double> value = super.get(name);
 		if(value == null){
 			value = new TimeSeries<Double>();

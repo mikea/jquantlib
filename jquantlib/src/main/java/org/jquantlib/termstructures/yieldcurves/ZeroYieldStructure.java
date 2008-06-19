@@ -71,7 +71,7 @@ public abstract class ZeroYieldStructure extends YieldTermStructure {
 	 * @param dc
 	 */
 	public ZeroYieldStructure() {
-		this(new Actual365Fixed());
+		this(Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -93,7 +93,7 @@ public abstract class ZeroYieldStructure extends YieldTermStructure {
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final Date refDate, final Calendar cal) {
-		this(refDate, cal, new Actual365Fixed());
+		this(refDate, cal, Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -115,7 +115,7 @@ public abstract class ZeroYieldStructure extends YieldTermStructure {
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final Date refDate) {
-		this(refDate, Target.getCalendar(), new Actual365Fixed()); // FIXME: code review : default calendar
+		this(refDate, Target.getCalendar(), Actual365Fixed.getDayCounter()); // FIXME: code review : default calendar
 	}
 
 
@@ -141,7 +141,7 @@ public abstract class ZeroYieldStructure extends YieldTermStructure {
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final int settlementDays, final Calendar cal) {
-		this(settlementDays, cal, new Actual365Fixed());
+		this(settlementDays, cal, Actual365Fixed.getDayCounter());
 	}
 
 	/**

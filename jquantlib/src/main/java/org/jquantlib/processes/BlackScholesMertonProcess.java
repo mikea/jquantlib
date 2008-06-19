@@ -27,12 +27,14 @@ import org.jquantlib.termstructures.YieldTermStructure;
 
 /**
  * Merton (1973) extension to the Black-Scholes stochastic process
- * 
- * <p>This class describes the stochastic process for a stock or
+ * <p>
+ * This class describes the stochastic process for a stock or
  * stock index paying a continuous dividend yield given by
- * <p>{@latex[
+ * {@latex[
  * dS(t, S) = (r(t) - q(t) - \frac{\sigma(t, S)^2}{2}) dt
  * }
+ * 
+ * @author Richard Gomes
  */ 
 public class BlackScholesMertonProcess extends GeneralizedBlackScholesProcess {
 

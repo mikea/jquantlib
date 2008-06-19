@@ -37,20 +37,71 @@ import org.jquantlib.util.Month;
  */
 public class ActualActual extends AbstractDayCounter {
 
-	/**
-	 * Calendar Conventions
+	//
+    // public enums
+    //
+    
+    /**
+	 * Actual/Actual Calendar Conventions
 	 */
 	public static enum Convention {
 		ISMA, BOND, ISDA, HISTORICAL, ACTUAL365, AFB, EURO
 	};
 
+	
+	//
+	// private final static fields
+	//
+	
 	private static final ActualActual ISMA_DAYCOUNTER = new ActualActual(Convention.ISMA);
 	private static final ActualActual ACTUAL365_DAYCOUNTER = new ActualActual(Convention.ISDA);
 	private static final ActualActual AFB_DAYCOUNTER = new ActualActual(Convention.AFB);
 
+	
+    //
+    // public static final constructors
+    //
+    
+    /**
+     * Returns ActualActual day counter for the specified convention type
+     * 
+     * @param convention
+     * @return
+     */
+    public static final ActualActual getDayCounter(final Convention convention) {
+        switch (convention) {
+        case ISMA:
+        case BOND:
+            return ISMA_DAYCOUNTER;
+        case ISDA:
+        case HISTORICAL:
+        case ACTUAL365:
+            return ACTUAL365_DAYCOUNTER;
+        case AFB:
+        case EURO:
+            return AFB_DAYCOUNTER;
+        default:
+            throw new IllegalArgumentException("unknown act/act convention");
+        }
+    }
+
+    //
+	// private final fields
+	//
+	
 	private final DayCounter delegate;
 
-	private ActualActual(Convention convention) {
+	//
+	// private constructors
+	//
+	
+	/**
+	 * This constructor is intended to be used internally by <code>this</code> class at initialization time,
+	 * when specialized day counters are constructed.
+	 */
+	private ActualActual(final Convention convention) {
+	    super();
+	    
 		switch (convention) {
 		case ISMA:
 		case BOND:
@@ -70,37 +121,17 @@ public class ActualActual extends AbstractDayCounter {
 		}
 	}
 
-	/**
-	 * Returns ActualActual day counter for the specified convention type
-	 * 
-	 * @param convention
-	 * @return
-	 */
-	public static ActualActual getActualActual(Convention convention) {
-		switch (convention) {
-		case ISMA:
-		case BOND:
-			return ISMA_DAYCOUNTER;
-		case ISDA:
-		case HISTORICAL:
-		case ACTUAL365:
-			return ACTUAL365_DAYCOUNTER;
-		case AFB:
-		case EURO:
-			return AFB_DAYCOUNTER;
-		default:
-			throw new IllegalArgumentException("unknown act/act convention");
-		}
-	}
-
+	//
+	// implements DayCounter
+	//
 	
-    @Override
+	@Override
 	public final String getName() {
 		return delegate.getName();
 	}
 
     @Override
-	public final double getYearFraction(Date dateStart, Date dateEnd) /* @ReadOnly */{
+	public final double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
 		return delegate.getYearFraction(dateStart, dateEnd);
 	}
 
@@ -116,7 +147,7 @@ public class ActualActual extends AbstractDayCounter {
     // inner classes
     //
     
-    private class ISMA extends AbstractDayCounter {
+    private final class ISMA extends AbstractDayCounter {
 
         @Override
         public final String getName() /* @ReadOnly */{
@@ -163,7 +194,7 @@ public class ActualActual extends AbstractDayCounter {
 				months = 12;
 			}
 
-			double period = months / 12.0;
+			final double period = months / 12.0;
 
 			if (d2.le(refPeriodEnd)) {
 				// here refPeriodEnd is a future (notional?) payment date
@@ -185,7 +216,7 @@ public class ActualActual extends AbstractDayCounter {
 					// this case is long first coupon
 
 					// the last notional payment date
-					Date previousRef = refPeriodStart.getDateAfter(new Period(
+					final Date previousRef = refPeriodStart.getDateAfter(new Period(
 							-months, TimeUnit.MONTHS));
 					if (d2.gt(refPeriodStart))
 						return getYearFraction(d1, refPeriodStart, previousRef,
@@ -233,7 +264,7 @@ public class ActualActual extends AbstractDayCounter {
 		}
 	}
 
-	private class ISDA extends AbstractDayCounter {
+	private final class ISDA extends AbstractDayCounter {
 
         @Override
 		public final String getName() /* @ReadOnly */{
@@ -249,10 +280,10 @@ public class ActualActual extends AbstractDayCounter {
 				return -getYearFraction(dateEnd, dateStart, Date.NULL_DATE,
 						Date.NULL_DATE);
 
-			int y1 = dateStart.getYear();
-			int y2 = dateEnd.getYear();
-			double dib1 = DateFactory.getFactory().isLeap(y1) ? 366.0 : 365.0;
-			double dib2 = DateFactory.getFactory().isLeap(y2) ? 366.0 : 365.0;
+			final int y1 = dateStart.getYear();
+			final int y2 = dateEnd.getYear();
+			final double dib1 = DateFactory.getFactory().isLeap(y1) ? 366.0 : 365.0;
+			final double dib2 = DateFactory.getFactory().isLeap(y2) ? 366.0 : 365.0;
 
 			double sum = y2 - y1 - 1;
 
@@ -271,7 +302,7 @@ public class ActualActual extends AbstractDayCounter {
 
 	}
 
-	private class AFB extends AbstractDayCounter {
+	private final class AFB extends AbstractDayCounter {
 
         @Override
 		public final String getName() {

@@ -36,5 +36,14 @@ package org.jquantlib.util;
  */
 public interface Visitor<T> {
 
-	public void visit(T  o);
+	/**
+	 * This method is responsible for processing a data structure.
+	 *  
+	 * @param o is a data structure
+	 * 
+	 * @see Visitable
+	 * @see TypedVisitor
+	 * @see TypedVisitable
+	 */
+    public void visit(T  o);
 }

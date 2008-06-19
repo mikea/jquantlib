@@ -57,6 +57,8 @@ import cern.jet.math.Functions;
  * <p>{@latex[
  * d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t.
  * }
+ * 
+ * @author Richard Gomes
  */ 
 public abstract class StochasticProcess implements Observable, Observer {
 

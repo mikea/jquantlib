@@ -30,7 +30,8 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  *
  */
-//TODO: Complete impl
+//TODO: Complete implementation
+// FIXME: code review
 public class Bond extends NewInstrument {
 	  protected int settlementDays;
 	  protected Calendar calendar;

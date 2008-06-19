@@ -35,6 +35,17 @@ package org.jquantlib.util;
  */
 public interface Visitable<T> {
 
-	public void accept(Visitor<T> v);
+	/**
+	 * This method is responsible for determining if a Visitor passed as argument is eligible for handling the data structures
+	 * kept by <code>this</code> class. In the affirmative case, <code>accept</code> is responsible for passing <code>this</code>
+	 * data structures to the Visitor. 
+	 * 
+	 * @param v is the Visitor
+	 * 
+	 * @see Visitor
+	 * @see TypedVisitor
+	 * @see TypedVisitable
+	 */
+    public void accept(Visitor<T> v);
 	
 }

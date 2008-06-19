@@ -55,6 +55,28 @@ import org.jquantlib.util.Date;
  */
 public class Actual365Fixed extends AbstractDayCounter {
 
+    //
+    // static constructors
+    //
+    
+    private static final Actual365Fixed  actual365Fixed   = new Actual365Fixed();
+    
+    public static final Actual365Fixed getDayCounter() {
+        return actual365Fixed;
+    }
+
+    
+    //
+    // private default constructor
+    //
+    
+    private Actual365Fixed() {}
+    
+
+    //
+    // implements DayCounter
+    //
+    
     @Override
 	public final String getName() /* @ReadOnly */ {
 		return "Actual/365 (fixed)";

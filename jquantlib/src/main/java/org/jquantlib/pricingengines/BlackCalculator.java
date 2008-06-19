@@ -53,26 +53,28 @@ import org.jquantlib.util.Visitor;
 /**
  * Black 1976 calculator class
  * 
- * @note <b>bug:</b> When the variance is null, division by zero occur during
+ * @note <b>BUG:</b> When the variance is null, division by zero occur during
  *       the calculation of delta, delta forward, gamma, gamma forward, rho,
  *       dividend rho, vega, and strike sensitivity.
  * 
  * @author Richard Gomes
  */
-// FIXME When the variance is null, division by zero occur during...
+// FIXME When the variance is null, division by zero occur during calculations of 
+// TODO: write test cases, including a situation when variance is zero
 public class BlackCalculator {
 
-	//
-	// FIXME: code review: can these variables be 'private' ?
-	//
-	protected /* @Price */double strike;
-	protected /* @Price */double forward;
-	protected /* @StdDev */double stdDev;
-	protected /* @DiscountFactor */double discount;
-	protected /* @Variance */double variance;
-	protected double D1, D2, alpha, beta, dAlpha_dD1, dBeta_dD2;
-	protected double n_d1, cum_d1, n_d2, cum_d2;
-	protected double X, DXDs, DXDstrike;
+    private final /* @Price */ double strike;
+	private final /* @Price */ double forward;
+	private final /* @StdDev */ double stdDev;
+	private final /* @DiscountFactor */ double discount;
+	private final /* @Variance */ double variance;
+
+	
+	private double D1, D2, alpha, beta, dAlpha_dD1, dBeta_dD2;
+	private double n_d1, cum_d1, n_d2, cum_d2;
+	private double x;
+    final double dX_dS;
+    private double dx_dStrike;
 
 	public BlackCalculator(final StrikedTypePayoff payoff, final double forward, final double stdDev) {
 		this(payoff, forward, stdDev, 1.0);
@@ -102,7 +104,7 @@ public class BlackCalculator {
 			} else {
 				D1 = Math.log(forward / strike) / stdDev + 0.5 * stdDev;
 				D2 = D1 - stdDev;
-				CumulativeNormalDistribution f = new CumulativeNormalDistribution();
+				final CumulativeNormalDistribution f = new CumulativeNormalDistribution();
 				cum_d1 = f.evaluate(D1);
 				cum_d2 = f.evaluate(D2);
 				n_d1 = f.derivative(D1);
@@ -120,17 +122,17 @@ public class BlackCalculator {
 			n_d2 = 0.0;
 		}
 
-		X = strike;
-		DXDstrike = 1.0;
+		x = strike;
+		dx_dStrike = 1.0;
 
 		// the following one will probably disappear as soon as
 		// super-share will be properly handled
-		DXDs = 0.0;
+		dX_dS = 0.0;
 
 		// this part is always executed.
 		// in case of plain-vanilla payoffs, it is also the only part
 		// which is executed.
-		Option.Type optionType = payoff.getOptionType();
+		final Option.Type optionType = payoff.getOptionType();
 		if (optionType == Option.Type.CALL) {
 			alpha = cum_d1;// N(d1)
 			dAlpha_dD1 = n_d1;// n(d1)
@@ -147,12 +149,12 @@ public class BlackCalculator {
 
 		// now dispatch on type.
 
-		Calculator calc = new Calculator(this);
+		final Calculator calc = new Calculator(this);
 		payoff.accept(calc);
 	}
 
 	public/* @Price */double value() /* @ReadOnly */{
-		/* @Price */double result = discount * (forward * alpha + X * beta);
+		/* @Price */final double result = discount * (forward * alpha + x * beta);
 		return result;
 	}
 
@@ -164,12 +166,12 @@ public class BlackCalculator {
 		if (spot <= 0.0)
 			throw new IllegalArgumentException("positive spot value required: " + spot + " not allowed");
 
-		double DforwardDs = forward / spot;
+		final double DforwardDs = forward / spot;
 
-		double temp = stdDev * spot;
-		double DalphaDs = dAlpha_dD1 / temp;
-		double DbetaDs = dBeta_dD2 / temp;
-		double temp2 = DalphaDs * forward + alpha * DforwardDs + DbetaDs * X + beta * DXDs;
+		final double temp = stdDev * spot;
+		final double DalphaDs = dAlpha_dD1 / temp;
+		final double DbetaDs = dBeta_dD2 / temp;
+		final double temp2 = DalphaDs * forward + alpha * DforwardDs + DbetaDs * x + beta * dX_dS;
 
 		return discount * temp2;
 	}
@@ -179,10 +181,10 @@ public class BlackCalculator {
 	 */
 	public/* @Price */double deltaForward() /* @ReadOnly */{
 
-		double temp = stdDev * forward;
-		double DalphaDforward = dAlpha_dD1 / temp;
-		double DbetaDforward = dBeta_dD2 / temp;
-		double temp2 = DalphaDforward * forward + alpha + DbetaDforward * X;
+		final double temp = stdDev * forward;
+		final double DalphaDforward = dAlpha_dD1 / temp;
+		final double DbetaDforward = dBeta_dD2 / temp;
+		final double temp2 = DalphaDforward * forward + alpha + DbetaDforward * x;
 		// DXDforward = 0.0; // commented in the source QuantLib
 
 		return discount * temp2;
@@ -192,8 +194,8 @@ public class BlackCalculator {
 	 * Sensitivity in percent to a percent change in the underlying spot price.
 	 */
 	public double elasticity(final double spot) /* @ReadOnly */{
-		double val = value();
-		double del = delta(spot);
+		final double val = value();
+		final double del = delta(spot);
 		if (val > Constants.QL_EPSILON)
 			return del / val * spot;
 		else if (Math.abs(del) < Constants.QL_EPSILON)
@@ -209,8 +211,8 @@ public class BlackCalculator {
 	 * price.
 	 */
 	public double elasticityForward() /* @ReadOnly */{
-		double val = value();
-		double del = deltaForward();
+		final double val = value();
+		final double del = deltaForward();
 		if (val > Constants.QL_EPSILON)
 			return del / val * forward;
 		else if (Math.abs(del) < Constants.QL_EPSILON)
@@ -230,16 +232,16 @@ public class BlackCalculator {
 		if (spot <= 0.0)
 			throw new IllegalArgumentException("positive spot value required: " + spot + " not allowed");
 
-		double DforwardDs = forward / spot;
+		final double DforwardDs = forward / spot;
 
-		double temp = stdDev * spot;
+		final double temp = stdDev * spot;
 		double DalphaDs = dAlpha_dD1 / temp;
 		double DbetaDs = dBeta_dD2 / temp;
 
-		double D2alphaDs2 = -DalphaDs / spot * (1 + D1 / stdDev);
-		double D2betaDs2 = -DbetaDs / spot * (1 + D2 / stdDev);
+		final double D2alphaDs2 = -DalphaDs / spot * (1 + D1 / stdDev);
+		final double D2betaDs2 = -DbetaDs / spot * (1 + D2 / stdDev);
 
-		double temp2 = D2alphaDs2 * forward + 2.0 * DalphaDs * DforwardDs + D2betaDs2 * X + 2.0 * DbetaDs * DXDs;
+		final double temp2 = D2alphaDs2 * forward + 2.0 * DalphaDs * DforwardDs + D2betaDs2 * x + 2.0 * DbetaDs * dX_dS;
 
 		return discount * temp2;
 	}
@@ -250,14 +252,14 @@ public class BlackCalculator {
 	 */
 	public double gammaForward() /* @ReadOnly */{
 
-		double temp = stdDev * forward;
+		final double temp = stdDev * forward;
 		double DalphaDforward = dAlpha_dD1 / temp;
 		double DbetaDforward = dBeta_dD2 / temp;
 
-		double D2alphaDforward2 = -DalphaDforward / forward * (1 + D1 / stdDev);
-		double D2betaDforward2 = -DbetaDforward / forward * (1 + D2 / stdDev);
+		final double D2alphaDforward2 = -DalphaDforward / forward * (1 + D1 / stdDev);
+		final double D2betaDforward2 = -DbetaDforward / forward * (1 + D2 / stdDev);
 
-		double temp2 = D2alphaDforward2 * forward + 2.0 * DalphaDforward + D2betaDforward2 * X;
+		final double temp2 = D2alphaDforward2 * forward + 2.0 * DalphaDforward + D2betaDforward2 * x;
 
 		// DXDforward = 0.0; // commented in the source QuantLib
 
@@ -291,7 +293,7 @@ public class BlackCalculator {
 	/**
 	 * Sensitivity to time to maturity per day, assuming 365 day per year.
 	 */
-	public double thetaPerDay(final double spot, /* @Time */double maturity) /* @ReadOnly */{
+	public double thetaPerDay(final double spot, /* @Time */final double maturity) /* @ReadOnly */{
 		return theta(spot, maturity) / 365.0;
 	}
 
@@ -302,12 +304,12 @@ public class BlackCalculator {
 		if (maturity < 0.0)
 			throw new IllegalArgumentException("negative maturity not allowed");
 
-		double temp = Math.log(strike / forward) / variance;
+		final double temp = Math.log(strike / forward) / variance;
 		// actually DalphaDsigma / SQRT(T)
-		double DalphaDsigma = dAlpha_dD1 * (temp + 0.5);
-		double DbetaDsigma = dBeta_dD2 * (temp - 0.5);
+		final double DalphaDsigma = dAlpha_dD1 * (temp + 0.5);
+		final double DbetaDsigma = dBeta_dD2 * (temp - 0.5);
 
-		double temp2 = DalphaDsigma * forward + DbetaDsigma * X;
+		final double temp2 = DalphaDsigma * forward + DbetaDsigma * x;
 
 		return discount * Math.sqrt(maturity) * temp2;
 
@@ -321,9 +323,9 @@ public class BlackCalculator {
 			throw new IllegalArgumentException("negative maturity not allowed");
 
 		// actually DalphaDr / T
-		double DalphaDr = dAlpha_dD1 / stdDev;
-		double DbetaDr = dBeta_dD2 / stdDev;
-		double temp = DalphaDr * forward + alpha * forward + DbetaDr * X;
+		final double DalphaDr = dAlpha_dD1 / stdDev;
+		final double DbetaDr = dBeta_dD2 / stdDev;
+		final double temp = DalphaDr * forward + alpha * forward + DbetaDr * x;
 
 		return maturity * (discount * temp - value());
 	}
@@ -336,10 +338,10 @@ public class BlackCalculator {
 			throw new IllegalArgumentException("negative maturity not allowed");
 
 		// actually DalphaDq / T
-		double DalphaDq = -dAlpha_dD1 / stdDev;
-		double DbetaDq = -dBeta_dD2 / stdDev;
+		final double DalphaDq = -dAlpha_dD1 / stdDev;
+		final double DbetaDq = -dBeta_dD2 / stdDev;
 
-		double temp = DalphaDq * forward - alpha * forward + DbetaDq * X;
+		final double temp = DalphaDq * forward - alpha * forward + DbetaDq * x;
 
 		return maturity * discount * temp;
 	}
@@ -371,11 +373,11 @@ public class BlackCalculator {
 	 */
 	public double strikeSensitivity() /* @ReadOnly */{
 
-		double temp = stdDev * strike;
-		double DalphaDstrike = -dAlpha_dD1 / temp;
-		double DbetaDstrike = -dBeta_dD2 / temp;
+		final double temp = stdDev * strike;
+		final double DalphaDstrike = -dAlpha_dD1 / temp;
+		final double DbetaDstrike = -dBeta_dD2 / temp;
 
-		double temp2 = DalphaDstrike * forward + DbetaDstrike * X + beta * DXDstrike;
+		final double temp2 = DalphaDstrike * forward + DbetaDstrike * x + beta * dx_dStrike;
 
 		return discount * temp2;
 	}
@@ -396,22 +398,29 @@ public class BlackCalculator {
 	
 	private class Calculator implements TypedVisitor<Payoff> {
 
-		private static final String INVALID_OPTION_TYPE = "invalid option type";
+	    private static final String INVALID_OPTION_TYPE = "invalid option type";
 		private static final String INVALID_PAYOFF_TYPE = "invalid payoff type";
 		
-		private BlackCalculator black;
+		//
+		// private fields
+		//
+		
+		private final BlackCalculator black;
 
+		//
+		// public constructors
+		//
+		
 		public Calculator(final BlackCalculator black) {
 			this.black = black;
 		}
 
 		//
-		// implements TypedVisitor
+		// implements TypedVisitor<Payoff>
 		//
 		
-		
 		@Override
-		public Visitor<Payoff> getVisitor(Class<? extends Payoff> klass) {
+		public Visitor<Payoff> getVisitor(final Class<? extends Payoff> klass) {
 			if (klass==PlainVanillaPayoff.class) {
 				return plainVanillaPayoffVisitor;
 			} else if (klass==CashOrNothingPayoff.class) {
@@ -425,30 +434,36 @@ public class BlackCalculator {
 			}
 		}
 		
-		//
-		// composition pattern to an inner Visitor<Number>
-		//
+        //
+        // implements Visitor<PlainVanillaPayoff>
+        //
 		
-		private PlainVanillaPayoffVisitor plainVanillaPayoffVisitor = new PlainVanillaPayoffVisitor();
+		private final PlainVanillaPayoffVisitor plainVanillaPayoffVisitor = new PlainVanillaPayoffVisitor();
 		
-		private class PlainVanillaPayoffVisitor implements Visitor<Payoff> {
-			@Override
-			public void visit(Payoff o) {
+		private final class PlainVanillaPayoffVisitor implements Visitor<Payoff> {
+			
+		    @Override
+			public final void visit(final Payoff o) {
 				// nothing
 			}
 		}
 
 
-		private CashOrNothingPayoffVisitor cashOrNothingPayoffVisitor = new CashOrNothingPayoffVisitor();
+        //
+        // implements Visitor<CashOrNothingPayoff>
+        //
+        
+		private final CashOrNothingPayoffVisitor cashOrNothingPayoffVisitor = new CashOrNothingPayoffVisitor();
 		
-		private class CashOrNothingPayoffVisitor implements Visitor<Payoff> {
+		private final class CashOrNothingPayoffVisitor implements Visitor<Payoff> {
+		    
 			@Override
-			public void visit(Payoff o) {
-				CashOrNothingPayoff payoff = (CashOrNothingPayoff)o;
+			public final void visit(final Payoff o) {
+				final CashOrNothingPayoff payoff = (CashOrNothingPayoff)o;
 				black.alpha = black.dAlpha_dD1 = 0.0;
-				black.X = payoff.getCashPayoff();
-				black.DXDstrike = 0.0;
-				Option.Type optionType = payoff.getOptionType();
+				black.x = payoff.getCashPayoff();
+				black.dx_dStrike = 0.0;
+				final Option.Type optionType = payoff.getOptionType();
 				if (optionType == Option.Type.CALL) {
 					black.beta = black.cum_d2;
 					black.dBeta_dD2 = black.n_d2;
@@ -462,14 +477,19 @@ public class BlackCalculator {
 		}
 
 
-		private AssetOrNothingPayoffVisitor assetOrNothingPayoffVisitor = new AssetOrNothingPayoffVisitor();
+        //
+        // implements Visitor<AssetOrNothingPayoff>
+        //
+        
+		private final AssetOrNothingPayoffVisitor assetOrNothingPayoffVisitor = new AssetOrNothingPayoffVisitor();
 		
-		private class AssetOrNothingPayoffVisitor implements Visitor<Payoff> {
+		private final class AssetOrNothingPayoffVisitor implements Visitor<Payoff> {
+		    
 			@Override
-			public void visit(Payoff o) {
-				AssetOrNothingPayoff payoff = (AssetOrNothingPayoff)o;
+			public void visit(final Payoff o) {
+				final AssetOrNothingPayoff payoff = (AssetOrNothingPayoff)o;
 				black.beta = black.dBeta_dD2 = 0.0;
-				Option.Type optionType = payoff.getOptionType();
+				final Option.Type optionType = payoff.getOptionType();
 				if (optionType == Option.Type.CALL) {
 					black.alpha = black.cum_d1;
 					black.dAlpha_dD1 = black.n_d1;
@@ -483,14 +503,19 @@ public class BlackCalculator {
 		}
 
 
-		private GapPayoffVisitor gapPayoffVisitor = new GapPayoffVisitor();
+		//
+		// implements Visitor<GapPayoff>
+		//
 		
-		private class GapPayoffVisitor implements Visitor<Payoff> {
+		private final GapPayoffVisitor gapPayoffVisitor = new GapPayoffVisitor();
+		
+		private final class GapPayoffVisitor implements Visitor<Payoff> {
+		    
 			@Override
-			public void visit(Payoff o) {
-				GapPayoff payoff = (GapPayoff)o;
-				black.X = payoff.getSecondStrike();
-				black.DXDstrike = 0.0;
+			public final void visit(final Payoff o) {
+				final GapPayoff payoff = (GapPayoff)o;
+				black.x = payoff.getSecondStrike();
+				black.dx_dStrike = 0.0;
 			}
 		}
 

@@ -63,7 +63,7 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 	 * their own reference date by overriding the referenceDate() method.
 	 */
 	public BlackVolatilityTermStructure() {
-		this(new Actual365Fixed());
+		this(Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -85,7 +85,7 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 	 * Initialize with a fixed reference date
 	 */
 	public BlackVolatilityTermStructure(final Date referenceDate, final Calendar cal) {
-		this(referenceDate, cal, new Actual365Fixed());
+		this(referenceDate, cal, Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -99,7 +99,7 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 	 * Calculate the reference date based on the global evaluation date
 	 */
 	public BlackVolatilityTermStructure(int settlementDays, final Calendar cal) {
-		this(settlementDays, cal, new Actual365Fixed());
+		this(settlementDays, cal, Actual365Fixed.getDayCounter());
 	}
 
 	/**

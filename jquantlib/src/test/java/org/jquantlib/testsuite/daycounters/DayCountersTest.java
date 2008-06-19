@@ -203,7 +203,7 @@ public class DayCountersTest {
 	    };
 
 	    for (int i=0; i<testCases.length-1; i++) {
-	        ActualActual dayCounter =  ActualActual.getActualActual(testCases[i].convention);
+	        ActualActual dayCounter =  ActualActual.getDayCounter(testCases[i].convention);
 	        Date d1 = testCases[i].start;
 	        Date d2 = testCases[i].end;
 	        Date rd1 = testCases[i].refStart;

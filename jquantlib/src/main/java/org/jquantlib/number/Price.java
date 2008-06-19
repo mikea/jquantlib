@@ -26,12 +26,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation is intended to tag numeric fields
+ * This interface is intended to be used as a <i>tagging annotation</i> which is helpful when
+ * we add <i>semantic meaning</i> to Java types.
+ * <p>
+ * As an example, consider an <code>int</code> variable which represents an amount of apples and another
+ * <code>int</code> variable which represents an amount of pears. In spite the two variables are <code>int</code> and we
+ * surely are able to perform mathematical operations with them, <i>semantically</i> they represent different <i>concepts</i> in
+ * the real world and we should never mix them.
+ * 
+ * @see <a href="http://groups.csail.mit.edu/pag/jsr308/">JSR 308: Annotations on Java Types</a>
+ * @see <a href="http://www.jquantlib.org/index.php/Strong_Type_Checking">Strong Type Checking</a>  
  * 
  * @author Richard Gomes
  */
-
-@Typecast
+@Typedef
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER })
 public @interface Price {

@@ -27,6 +27,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.ANNOTATION_TYPE)
-public @interface Typecast {
-	// Marks other annotations as 'typecasts'
+public @interface Typedef {
+	// Tags other annotations as 'typedefs'
 }

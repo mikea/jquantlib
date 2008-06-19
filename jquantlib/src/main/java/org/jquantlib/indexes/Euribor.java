@@ -35,12 +35,13 @@ import org.jquantlib.time.calendars.Target;
  * @author Srinivas Hasti
  * 
  */
+// FIXME: code review
 public class Euribor extends IborIndex {
 
 	public static class Euribor365 extends Euribor {
 		public Euribor365(Period tenor, Handle<YieldTermStructure> h) {
 			super("Euribor365", tenor, 2, // settlement days
-					new Actual365Fixed(), h);
+					Actual365Fixed.getDayCounter(), h);
 			if (tenor.getUnits() == TimeUnit.DAYS)
 				throw new IllegalArgumentException("for daily tenors (" + tenor
 						+ ") dedicated DailyTenor constructor must be used");
@@ -65,7 +66,7 @@ public class Euribor extends IborIndex {
 			super("Euribor", new Period(1, TimeUnit.DAYS), settlementDays,
 					Target.getCalendar(), Currency.getInstance("EUR"),
 					euriborConvention(new Period(1, TimeUnit.DAYS)),
-					euriborEOM(new Period(1, TimeUnit.DAYS)), new Actual365Fixed(), h);
+					euriborEOM(new Period(1, TimeUnit.DAYS)), Actual365Fixed.getDayCounter(), h);
 		}
 	}
 

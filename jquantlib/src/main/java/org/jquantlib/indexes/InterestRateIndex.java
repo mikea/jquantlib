@@ -37,6 +37,7 @@ import org.jquantlib.util.Observer;
  * @author Srinivas Hasti
  *
  */
+//FIXME :: code review
 public abstract class InterestRateIndex extends Index implements Observer {
 	private String familyName;
 	private Period tenor;

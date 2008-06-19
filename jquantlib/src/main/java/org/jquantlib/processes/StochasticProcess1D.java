@@ -40,6 +40,10 @@
 package org.jquantlib.processes;
 
 
+/**
+ * 
+ * @author Richard Gomes
+ */
 public abstract class StochasticProcess1D extends StochasticProcess {
 	
     protected Discretization1D discretization1D; 

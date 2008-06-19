@@ -24,46 +24,91 @@ import org.jquantlib.util.Date;
 
 /**
  * 30/360 day count convention
- * 
  * <p>
  * The 30/360 day count can be calculated according to US, European, or Italian
  * conventions.
- * 
+ * <p>
  * US (NASD) convention: if the starting date is the 31st of a month, it becomes
  * equal to the 30th of the same month. If the ending date is the 31st of a
  * month and the starting date is earlier than the 30th of a month, the ending
  * date becomes equal to the 1st of the next month, otherwise the ending date
  * becomes equal to the 30th of the same month. Also known as "30/360",
  * "360/360", or "Bond Basis"
- * 
+ * <p>
  * European convention: starting dates or ending dates that occur on the 31st of
  * a month become equal to the 30th of the same month. Also known as "30E/360",
  * or "Eurobond Basis"
- * 
+ * <p>
  * Italian convention: starting dates or ending dates that occur on February and
  * are grater than 27 become equal to 30 for computational sake.
+ * 
+ * @see <a href="http://en.wikipedia.org/wiki/Day_count_convention">Day count convention</a>
  * 
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
 public class Thirty360 extends AbstractDayCounter {
 
-	public enum Convention {
+	//
+    // public enums
+    //
+    
+    /**
+     * 30/360 Calendar Conventions
+     */
+    public enum Convention {
 		USA, BOND_BASIS, EUROPEAN, EURO_BOND_BASIS, ITALIAN;
 	}
-	
+
+    
+    //
+    // private final static fields
+    //
+    
 	private static final Thirty360 THIRTY360_US = new Thirty360(Thirty360.Convention.USA);
 	private static final Thirty360 THIRTY360_EU = new Thirty360(Thirty360.Convention.EUROPEAN);
 	private static final Thirty360 THIRTY360_IT = new Thirty360(Thirty360.Convention.ITALIAN);
 	
+	
+    //
+    // public static final constructors
+    //
+    
+    public static final Thirty360 getDayCounter() {
+        return getDayCounter(Thirty360.Convention.BOND_BASIS);
+        
+    }
+    
+    public static final Thirty360 getDayCounter(final Thirty360.Convention c) {
+        switch (c) {
+        case USA:
+        case BOND_BASIS:
+            return THIRTY360_US;
+        case EUROPEAN:
+        case EURO_BOND_BASIS:
+           return THIRTY360_EU;
+        case ITALIAN:
+           return THIRTY360_IT;
+        default:
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    
+    //
+    // private final fields
+    //
+    
 	private final Thirty360Abstraction delegate;
 
-	public Thirty360() {
-		this(Thirty360.Convention.BOND_BASIS);
-	}
-
+	
+    //
+    // private constructors
+    //
+    
 	private Thirty360(final Thirty360.Convention c) {
 		super();
+		
 		switch (c) {
 		case USA:
 		case BOND_BASIS:
@@ -82,26 +127,19 @@ public class Thirty360 extends AbstractDayCounter {
 	}
 	
 	
-	public static final Thirty360 getDayCounter() {
-		return getDayCounter(Thirty360.Convention.BOND_BASIS);
-		
-	}
+	//
+	// public final methods
+	//
 	
-	public static final Thirty360 getDayCounter(final Thirty360.Convention c) {
-        switch (c) {
-        case USA:
-        case BOND_BASIS:
-            return THIRTY360_US;
-        case EUROPEAN:
-        case EURO_BOND_BASIS:
-           return THIRTY360_EU;
-        case ITALIAN:
-           return THIRTY360_IT;
-        default:
-            throw new UnsupportedOperationException();
-        }
+	public final int compute(final int dd1, final int dd2, final int mm1, final int mm2, final int yy1, final int yy2){
+        return 360 * (yy2 - yy1) + 30 * (mm2 - mm1 - 1) + Math.max(0, 30 - dd1) + Math.min(30, dd2);
     }
 
+	
+    //
+    // implements DayCounter
+    //
+    
     @Override
 	public final String getName() /* @ReadOnly */{
 		return delegate.getName();
@@ -119,10 +157,6 @@ public class Thirty360 extends AbstractDayCounter {
 		
 	}
 	
-	public final int compute(final int dd1, final int dd2, final int mm1, final int mm2, final int yy1, final int yy2){
-	    return 360 * (yy2 - yy1) + 30 * (mm2 - mm1 - 1) + Math.max(0, 30 - dd1) + Math.min(30, dd2);
-	}
-
     @Override
 	public final /* @Time */ double getYearFraction(
 						final Date dateStart, final Date dateEnd, 

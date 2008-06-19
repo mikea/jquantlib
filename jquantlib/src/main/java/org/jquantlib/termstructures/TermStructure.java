@@ -172,7 +172,7 @@ public abstract class TermStructure implements Observer, Observable {
      * @see TermStructure documentation for more details about constructors.
 	 */
 	public TermStructure() {
-		this(new Actual365Fixed());
+		this(Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -206,7 +206,7 @@ public abstract class TermStructure implements Observer, Observable {
      * @see TermStructure documentation for more details about constructors.
 	 */ 
 	public TermStructure(final Date referenceDate, final Calendar calendar) {
-		this(referenceDate, calendar, new Actual365Fixed());
+		this(referenceDate, calendar, Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -247,7 +247,7 @@ public abstract class TermStructure implements Observer, Observable {
      * @see TermStructure documentation for more details about constructors.
 	 */ 
 	public TermStructure(final int settlementDays, final Calendar calendar) {
-		this(settlementDays, calendar, new Actual365Fixed());
+		this(settlementDays, calendar, Actual365Fixed.getDayCounter());
 	}
 
 	

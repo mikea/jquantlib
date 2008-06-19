@@ -40,7 +40,7 @@ public class SimpleDayCounter extends AbstractDayCounter {
     private final DayCounter fallback;
 
     public SimpleDayCounter() {
-        this.fallback = new Thirty360();
+        this.fallback = Thirty360.getDayCounter();
     }
 
     public final String getName() {

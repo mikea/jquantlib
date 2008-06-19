@@ -169,7 +169,7 @@ public class EquityOptions {
 		Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(todaysDate);
 
 		Date maturity = DateFactory.getFactory().getDate(17, Month.MAY, 1999);
-		DayCounter dayCounter = new Actual365Fixed();
+		DayCounter dayCounter = Actual365Fixed.getDayCounter();
 
 		// write column headings
 		//                 "         1         2         3         4         5         6         7         8"

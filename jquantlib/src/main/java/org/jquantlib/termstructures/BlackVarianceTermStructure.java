@@ -71,7 +71,7 @@ public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
      * referenceDate() method.
      */
     public BlackVarianceTermStructure() {
-        this(new Actual365Fixed());
+        this(Actual365Fixed.getDayCounter());
     }
 
     // --------------------------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
      * @note See the TermStructure documentation for issues regarding constructors.
      */
     public BlackVarianceTermStructure(final Date referenceDate, final Calendar cal) {
-        this(referenceDate, cal, new Actual365Fixed());
+        this(referenceDate, cal, Actual365Fixed.getDayCounter());
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
      * @note See the TermStructure documentation for issues regarding constructors.
      */
     public BlackVarianceTermStructure(int settlementDays, final Calendar cal) {
-        super(settlementDays, cal, new Actual365Fixed());
+        super(settlementDays, cal, Actual365Fixed.getDayCounter());
     }
 
     /**

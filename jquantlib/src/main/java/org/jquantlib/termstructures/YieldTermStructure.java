@@ -74,7 +74,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 *      constructors.
 	 */
 	protected YieldTermStructure() {
-		this(new Actual365Fixed());
+		this(Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -106,7 +106,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
 	 */
 	protected YieldTermStructure(final Date referenceDate, final Calendar cal) {
-		super(referenceDate, cal, new Actual365Fixed());
+		super(referenceDate, cal, Actual365Fixed.getDayCounter());
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
 	 */
 	protected YieldTermStructure(final Date referenceDate) {
-		super(referenceDate, Target.getCalendar(), new Actual365Fixed());
+		super(referenceDate, Target.getCalendar(), Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -142,7 +142,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
 	 */
 	protected YieldTermStructure(int settlementDays, final Calendar cal) {
-		super(settlementDays, cal, new Actual365Fixed());
+		super(settlementDays, cal, Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -159,7 +159,7 @@ public abstract class YieldTermStructure extends TermStructure {
 	 * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
 	 */
 	protected YieldTermStructure(int settlementDays) {
-		super(settlementDays, Target.getCalendar(), new Actual365Fixed());
+		super(settlementDays, Target.getCalendar(), Actual365Fixed.getDayCounter());
 	}
 
 	

@@ -62,6 +62,8 @@ import org.jquantlib.util.Observable;
  * <p>{@latex[
  * dS(t, S) = (r(t) - q(t) - \frac{\sigma(t, S)^2}{2}) dt + \sigma dW_t.
  * }
+ * 
+ * @author Richard Gomes
  */
 public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 

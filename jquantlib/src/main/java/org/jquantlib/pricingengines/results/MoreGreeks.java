@@ -65,10 +65,20 @@ public class MoreGreeks extends Greeks {
 
     //FIXME: comment fields
     
+    /**
+     * Probability that an Option expires <i>in-the-money</i>
+     * 
+     * @see <a href="http://www.optiontradingpedia.com/in_the_money_options.htm">In The Money Options</a>
+     */
     public /*@Real*/ double itmCashProbability;
+    
 	public /*@Real*/ double deltaForward;
+	
+	
 	public /*@Real*/ double elasticity;
+	
 	public /*@Real*/ double thetaPerDay;
+	
 	public /*@Real*/ double strikeSensitivity;
 
 	public MoreGreeks() {

@@ -69,7 +69,7 @@ public abstract class ForwardRateStructure extends YieldTermStructure {
 	 * @param dc
 	 */
 	protected ForwardRateStructure() {
-		this(new Actual365Fixed());
+		this(Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -91,7 +91,7 @@ public abstract class ForwardRateStructure extends YieldTermStructure {
 	 * @param dc
 	 */
 	protected ForwardRateStructure(final Date refDate, final Calendar cal) {
-		this(refDate, cal, new Actual365Fixed());
+		this(refDate, cal, Actual365Fixed.getDayCounter());
 	}
 
 	/**
@@ -113,7 +113,7 @@ public abstract class ForwardRateStructure extends YieldTermStructure {
 	 * @param dc
 	 */
 	protected ForwardRateStructure(final Date refDate) {
-		this(refDate, Target.getCalendar(), new Actual365Fixed()); // FIXME: code review : default calendar
+		this(refDate, Target.getCalendar(), Actual365Fixed.getDayCounter()); // FIXME: code review : default calendar
 	}
 
 	/**
@@ -137,7 +137,7 @@ public abstract class ForwardRateStructure extends YieldTermStructure {
 	 * @param dc
 	 */
 	protected ForwardRateStructure(final int settlDays, final Calendar cal) {
-		super(settlDays, cal, new Actual365Fixed());
+		super(settlDays, cal, Actual365Fixed.getDayCounter());
 	}
 
 	/**

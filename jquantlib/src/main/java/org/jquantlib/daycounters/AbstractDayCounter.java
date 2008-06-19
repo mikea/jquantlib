@@ -48,6 +48,17 @@ import org.jquantlib.util.Date;
  */
 public abstract class AbstractDayCounter implements DayCounter {
 
+    //
+    // protected default constructor
+    //
+    
+    protected AbstractDayCounter() {}
+    
+    //
+    // implements DayCounter
+    //
+    
+    @Override
 	public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
 		return dateStart.getDayCount(dateEnd);
 	}

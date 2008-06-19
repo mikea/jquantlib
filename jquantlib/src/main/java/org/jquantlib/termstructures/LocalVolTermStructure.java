@@ -56,7 +56,7 @@ public abstract class LocalVolTermStructure extends TermStructure implements Typ
                      by overriding the referenceDate() method.
         */
         public LocalVolTermStructure() {
-			this(new Actual365Fixed());
+			this(Actual365Fixed.getDayCounter());
 		}
 
 		public LocalVolTermStructure(final DayCounter dc) {
@@ -71,7 +71,7 @@ public abstract class LocalVolTermStructure extends TermStructure implements Typ
         }
         
         public LocalVolTermStructure(final Date referenceDate, final Calendar cal) {
-        	this(referenceDate, cal, new Actual365Fixed());
+        	this(referenceDate, cal, Actual365Fixed.getDayCounter());
         	
         }
         
@@ -87,7 +87,7 @@ public abstract class LocalVolTermStructure extends TermStructure implements Typ
         }
         
         public LocalVolTermStructure(int settlementDays, final Calendar cal) {
-        	this(settlementDays, cal, new Actual365Fixed());
+        	this(settlementDays, cal, Actual365Fixed.getDayCounter());
         }
         
         public LocalVolTermStructure(int settlementDays, final Calendar cal, final DayCounter dc) {
