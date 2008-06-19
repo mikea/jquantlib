@@ -27,16 +27,31 @@ package org.jquantlib.math;
 //FIXME: refactor package "solvers1d"
 abstract public class AbstractSolver1D<F extends UnaryFunctionDouble> {
 	
+	//
+	// Constants
+	//
+	
 	private static final int MAX_FUNCTION_EVALUATIONS = 100;
 
+	
+	//
+	// private fields
+	//
+	
 	private int maxEvaluations_;
 	private boolean lowerBoundEnforced_;
 	private boolean upperBoundEnforced_;
 
+	
+	//
+	// protected fields
+	//
+	
 	protected double root_, xMin_, xMax_, fxMin_, fxMax_;
 	protected int evaluationNumber_;
 	protected double lowerBound_, upperBound_;
 
+	
 	//
 	// public constructors
 	//
@@ -69,7 +84,7 @@ abstract public class AbstractSolver1D<F extends UnaryFunctionDouble> {
 	 * determined with the given accuracy <code>epsilon</code>;
 	 * depending on the particular solver, this might mean that
 	 * the returned <code>x</code> is such that <code>|f(x)| < epsilon f</code>,
-	 *  or that <code>f |x-\xi| < \epsilon \f$ where \f$ \xi \f$
+	 *  or that <code>f |x-\xi| < \epsilon \f$ where \f$ \xi \f$ </code>
 	 *  is the real zero.
 	 *  <p>
 	 *  This method contains a bracketing routine to which an
@@ -81,7 +96,6 @@ abstract public class AbstractSolver1D<F extends UnaryFunctionDouble> {
 
 		if (!(accuracy > 0.0)) {
 			throw new ArithmeticException("accuracy (" + accuracy + ") must be positive");
-
 		}
 		// check whether we really want to use epsilon
 		accuracy = Math.max(accuracy, Constants.QL_EPSILON);
@@ -93,7 +107,7 @@ abstract public class AbstractSolver1D<F extends UnaryFunctionDouble> {
 		fxMax_ = f.evaluate(root_);
 
 		// monotonically crescent bias, as in optionValue(volatility)
-		if (fxMax_ == 0.0)
+		if (fxMax_ == 0.0) 
 			return root_;
 		else if (fxMax_ > 0.0) {
 			xMin_ = enforceBounds(root_ - step);
@@ -185,11 +199,11 @@ abstract public class AbstractSolver1D<F extends UnaryFunctionDouble> {
 		fxMin_ = f.evaluate(xMin_);
 		if (fxMin_ == 0.0)
 			return xMin_;
-
+		
 		fxMax_ = f.evaluate(xMax_);
 		if (fxMax_ == 0.0)
 			return xMax_;
-
+		
 		evaluationNumber_ = 2;
 
 		if (!(fxMin_ * fxMax_ < 0.0)) {
