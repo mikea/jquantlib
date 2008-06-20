@@ -37,7 +37,7 @@
 
 package org.jquantlib.util;
 
-import java.util.List;
+import java.util.List; //FIXME: performance
 
 /**
  * Framework for calculation on demand and result caching.

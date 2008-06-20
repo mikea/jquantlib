@@ -20,7 +20,7 @@
 
 package org.jquantlib.termstructures;
 
-import java.util.List;
+import java.util.List; // FIXME :: performance
 
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;

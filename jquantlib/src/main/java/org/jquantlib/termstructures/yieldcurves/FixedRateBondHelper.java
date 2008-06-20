@@ -20,7 +20,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import java.util.List;
+import java.util.List; // FIXME :: performance
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;

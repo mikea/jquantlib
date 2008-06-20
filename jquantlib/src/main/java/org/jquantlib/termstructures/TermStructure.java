@@ -37,7 +37,7 @@
 
 package org.jquantlib.termstructures;
 
-import java.util.List;
+import java.util.List; // FIXME :: performance
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;

@@ -19,7 +19,7 @@
  */
 package org.jquantlib.instruments;
 
-import java.util.List;
+import java.util.List; // FIXME :: performance
 
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.pricingengines.arguments.Arguments;

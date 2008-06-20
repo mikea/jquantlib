@@ -42,7 +42,7 @@
     <MoveCompletedEndsForward>0</MoveCompletedEndsForward>
     <BaselineForEarnedValue>0</BaselineForEarnedValue>
     <AutoAddNewResourcesAndTasks>1</AutoAddNewResourcesAndTasks>
-    <CurrentDate>2008-06-14T23:50:00</CurrentDate>
+    <CurrentDate>2008-06-20T02:06:00</CurrentDate>
     <MicrosoftProjectServerURL>1</MicrosoftProjectServerURL>
     <Autolink>1</Autolink>
     <NewTaskStartDate>0</NewTaskStartDate>
@@ -1775,8 +1775,8 @@
         </Calendar>
         <Calendar>
             <UID>10</UID>
-            <Name>Richard Gomes</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
+            <Name>Standard [JQuantLib] [JQuantLib] [JQuantLib]</Name>
+            <IsBaseCalendar>1</IsBaseCalendar>
             <WeekDays>
                 <WeekDay>
                     <DayType>1</DayType>
@@ -1860,8 +1860,8 @@
         </Calendar>
         <Calendar>
             <UID>11</UID>
-            <Name>Gary Kennedy</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
+            <Name>24 Hours [JQuantLib] [JQuantLib] [JQuantLib]</Name>
+            <IsBaseCalendar>1</IsBaseCalendar>
             <WeekDays>
                 <WeekDay>
                     <DayType>1</DayType>
@@ -1945,8 +1945,8 @@
         </Calendar>
         <Calendar>
             <UID>12</UID>
-            <Name>Srinivas Hasti</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
+            <Name>Night Shift [JQuantLib] [JQuantLib] [JQuantLib]</Name>
+            <IsBaseCalendar>1</IsBaseCalendar>
             <WeekDays>
                 <WeekDay>
                     <DayType>1</DayType>
@@ -2030,6 +2030,111 @@
         </Calendar>
         <Calendar>
             <UID>13</UID>
+            <Name>Richard Gomes</Name>
+            <IsBaseCalendar>0</IsBaseCalendar>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
+        </Calendar>
+        <Calendar>
+            <UID>14</UID>
+            <Name>Gary Kennedy</Name>
+            <IsBaseCalendar>0</IsBaseCalendar>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
+        </Calendar>
+        <Calendar>
+            <UID>15</UID>
+            <Name>Srinivas Hasti</Name>
+            <IsBaseCalendar>0</IsBaseCalendar>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
+        </Calendar>
+        <Calendar>
+            <UID>16</UID>
             <Name>Dominik Holenstein</Name>
             <IsBaseCalendar>0</IsBaseCalendar>
             <WeekDays>
@@ -2039,73 +2144,23 @@
                 </WeekDay>
                 <WeekDay>
                     <DayType>2</DayType>
-                    <DayWorking>1</DayWorking>
-                    <WorkingTimes>
-                        <WorkingTime>
-                            <FromTime>08:00:00</FromTime>
-                            <ToTime>12:00:00</ToTime>
-                        </WorkingTime>
-                        <WorkingTime>
-                            <FromTime>13:00:00</FromTime>
-                            <ToTime>17:00:00</ToTime>
-                        </WorkingTime>
-                    </WorkingTimes>
+                    <DayWorking>0</DayWorking>
                 </WeekDay>
                 <WeekDay>
                     <DayType>3</DayType>
-                    <DayWorking>1</DayWorking>
-                    <WorkingTimes>
-                        <WorkingTime>
-                            <FromTime>08:00:00</FromTime>
-                            <ToTime>12:00:00</ToTime>
-                        </WorkingTime>
-                        <WorkingTime>
-                            <FromTime>13:00:00</FromTime>
-                            <ToTime>17:00:00</ToTime>
-                        </WorkingTime>
-                    </WorkingTimes>
+                    <DayWorking>0</DayWorking>
                 </WeekDay>
                 <WeekDay>
                     <DayType>4</DayType>
-                    <DayWorking>1</DayWorking>
-                    <WorkingTimes>
-                        <WorkingTime>
-                            <FromTime>08:00:00</FromTime>
-                            <ToTime>12:00:00</ToTime>
-                        </WorkingTime>
-                        <WorkingTime>
-                            <FromTime>13:00:00</FromTime>
-                            <ToTime>17:00:00</ToTime>
-                        </WorkingTime>
-                    </WorkingTimes>
+                    <DayWorking>0</DayWorking>
                 </WeekDay>
                 <WeekDay>
                     <DayType>5</DayType>
-                    <DayWorking>1</DayWorking>
-                    <WorkingTimes>
-                        <WorkingTime>
-                            <FromTime>08:00:00</FromTime>
-                            <ToTime>12:00:00</ToTime>
-                        </WorkingTime>
-                        <WorkingTime>
-                            <FromTime>13:00:00</FromTime>
-                            <ToTime>17:00:00</ToTime>
-                        </WorkingTime>
-                    </WorkingTimes>
+                    <DayWorking>0</DayWorking>
                 </WeekDay>
                 <WeekDay>
                     <DayType>6</DayType>
-                    <DayWorking>1</DayWorking>
-                    <WorkingTimes>
-                        <WorkingTime>
-                            <FromTime>08:00:00</FromTime>
-                            <ToTime>12:00:00</ToTime>
-                        </WorkingTime>
-                        <WorkingTime>
-                            <FromTime>13:00:00</FromTime>
-                            <ToTime>17:00:00</ToTime>
-                        </WorkingTime>
-                    </WorkingTimes>
+                    <DayWorking>0</DayWorking>
                 </WeekDay>
                 <WeekDay>
                     <DayType>7</DayType>
@@ -2121,7 +2176,7 @@
             <Name>Core</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-08T22:29:00</CreateDate>
+            <CreateDate>2008-06-08T23:29:00</CreateDate>
             <WBS/>
             <OutlineNumber>1</OutlineNumber>
             <OutlineLevel>1</OutlineLevel>
@@ -2188,7 +2243,7 @@
             <Name>Maven multimodule</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T22:46:00</CreateDate>
+            <CreateDate>2008-06-09T23:46:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.1</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -2255,7 +2310,7 @@
             <Name>OSGi</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T22:47:00</CreateDate>
+            <CreateDate>2008-06-09T23:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -2322,7 +2377,7 @@
             <Name>Proof of concept with SpringFramework</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:45:00</CreateDate>
+            <CreateDate>2008-06-10T00:45:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -2389,7 +2444,7 @@
             <Name>Core (optional use of OSGi)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:44:00</CreateDate>
+            <CreateDate>2008-06-10T00:44:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -2456,7 +2511,7 @@
             <Name>Bundles</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:44:00</CreateDate>
+            <CreateDate>2008-06-10T00:44:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -2523,7 +2578,7 @@
             <Name>Configuration</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T22:47:00</CreateDate>
+            <CreateDate>2008-06-09T23:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -2590,7 +2645,7 @@
             <Name>Date</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T22:47:00</CreateDate>
+            <CreateDate>2008-06-09T23:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -2657,7 +2712,7 @@
             <Name>Calendar</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T20:49:00</CreateDate>
+            <CreateDate>2008-06-14T21:49:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -2724,7 +2779,7 @@
             <Name>Algebra</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T22:47:00</CreateDate>
+            <CreateDate>2008-06-09T23:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -2791,7 +2846,7 @@
             <Name>Financial Instruments</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:47:00</CreateDate>
+            <CreateDate>2008-06-10T00:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>3</OutlineNumber>
             <OutlineLevel>1</OutlineLevel>
@@ -2858,7 +2913,7 @@
             <Name>Options</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-08T22:30:00</CreateDate>
+            <CreateDate>2008-06-08T23:30:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -2925,7 +2980,7 @@
             <Name>European Options</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-08T22:30:00</CreateDate>
+            <CreateDate>2008-06-08T23:30:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -2992,7 +3047,7 @@
             <Name>Black-Scholes</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:33:00</CreateDate>
+            <CreateDate>2008-06-10T00:33:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.1.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3059,7 +3114,7 @@
             <Name>Integral</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:36:00</CreateDate>
+            <CreateDate>2008-06-10T00:36:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.1.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3126,7 +3181,7 @@
             <Name>Monte Carlo (crude)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:33:00</CreateDate>
+            <CreateDate>2008-06-10T00:33:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.1.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3193,7 +3248,7 @@
             <Name>Monte Carlo (Sobol)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:33:00</CreateDate>
+            <CreateDate>2008-06-10T00:33:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.1.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3260,7 +3315,7 @@
             <Name>American Options</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-08T22:31:00</CreateDate>
+            <CreateDate>2008-06-08T23:31:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -3327,7 +3382,7 @@
             <Name>Barone-Adesi/Whaley</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:06:00</CreateDate>
+            <CreateDate>2008-06-10T00:06:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3394,7 +3449,7 @@
             <Name>Bjerksund/Stensland</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:34:00</CreateDate>
+            <CreateDate>2008-06-10T00:34:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3461,7 +3516,7 @@
             <Name>Monte Carlo (Longstaff Schwartz)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:35:00</CreateDate>
+            <CreateDate>2008-06-10T00:35:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3528,7 +3583,7 @@
             <Name>Finite differences</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:38:00</CreateDate>
+            <CreateDate>2008-06-10T00:38:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3595,7 +3650,7 @@
             <Name>Binomial Jarrow-Rudd</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:40:00</CreateDate>
+            <CreateDate>2008-06-10T00:40:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.5</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3662,7 +3717,7 @@
             <Name>Binomial Cox-Ross-Rubinstein</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:41:00</CreateDate>
+            <CreateDate>2008-06-10T00:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.6</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3729,7 +3784,7 @@
             <Name>Additive equiprobabilities</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:41:00</CreateDate>
+            <CreateDate>2008-06-10T00:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.7</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3796,7 +3851,7 @@
             <Name>Binomial Trigeorgis</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:41:00</CreateDate>
+            <CreateDate>2008-06-10T00:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.8</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3863,7 +3918,7 @@
             <Name>Binomial Tian</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:41:00</CreateDate>
+            <CreateDate>2008-06-10T00:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.9</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3930,7 +3985,7 @@
             <Name>Binomial Leisen-Reimer</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:41:00</CreateDate>
+            <CreateDate>2008-06-10T00:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.10</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3997,7 +4052,7 @@
             <Name>Binomial Joshi</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:41:00</CreateDate>
+            <CreateDate>2008-06-10T00:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.2.11</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -4064,7 +4119,7 @@
             <Name>Forwards, etc</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:35:00</CreateDate>
+            <CreateDate>2008-06-10T01:35:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.3</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4131,7 +4186,7 @@
             <Name>Forward Options</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:39:00</CreateDate>
+            <CreateDate>2008-06-10T01:39:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.3.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -4198,7 +4253,7 @@
             <Name>FRA</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:39:00</CreateDate>
+            <CreateDate>2008-06-10T01:39:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.3.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -4265,7 +4320,7 @@
             <Name>Repo</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:42:00</CreateDate>
+            <CreateDate>2008-06-10T01:42:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.1.3.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -4332,7 +4387,7 @@
             <Name>Bonds</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T23:46:00</CreateDate>
+            <CreateDate>2008-06-10T00:46:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.3</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -4399,7 +4454,7 @@
             <Name>Jarrow-Rudd</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:22:00</CreateDate>
+            <CreateDate>2008-06-10T01:22:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.3.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4466,7 +4521,7 @@
             <Name>Cox-Ross-Rubinstein</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:22:00</CreateDate>
+            <CreateDate>2008-06-10T01:22:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.3.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4533,7 +4588,7 @@
             <Name>Additive equiprobabilities</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:23:00</CreateDate>
+            <CreateDate>2008-06-10T01:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.3.3</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4600,7 +4655,7 @@
             <Name>Trigeorgis</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:23:00</CreateDate>
+            <CreateDate>2008-06-10T01:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.3.4</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4667,7 +4722,7 @@
             <Name>Tian</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:23:00</CreateDate>
+            <CreateDate>2008-06-10T01:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.3.5</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4734,7 +4789,7 @@
             <Name>Leisen-Reimer</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:23:00</CreateDate>
+            <CreateDate>2008-06-10T01:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>3.3.6</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4796,15 +4851,82 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>45</UID>
-            <ID>45</ID>
-            <Name>Infrastructure</Name>
+            <UID>44</UID>
+            <ID>44</ID>
+            <Name>Support Libraries</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:42:00</CreateDate>
+            <CreateDate>2008-06-20T01:54:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.6</OutlineNumber>
+            <OutlineNumber>3.5</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>45</UID>
+            <ID>45</ID>
+            <Name>GridColt</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-20T01:54:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.5.1</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -4865,13 +4987,147 @@
         <Task>
             <UID>46</UID>
             <ID>46</ID>
-            <Name>Mirror USA</Name>
+            <Name>Insert into SVN</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:43:00</CreateDate>
+            <CreateDate>2008-06-20T01:59:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.6.1</OutlineNumber>
-            <OutlineLevel>3</OutlineLevel>
+            <OutlineNumber>3.5.1.1</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes>Put ParallelColt into our repository but do not insert "lib" directory; </Notes>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>47</UID>
+            <ID>47</ID>
+            <Name>Refactor ParallelColt</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-20T01:55:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.5.1.2</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes> </Notes>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>48</UID>
+            <ID>48</ID>
+            <Name>Move unit tests</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-20T02:00:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.5.1.2.1</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -4930,15 +5186,15 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>47</UID>
-            <ID>47</ID>
-            <Name>MIrror Switzerland</Name>
+            <UID>49</UID>
+            <ID>49</ID>
+            <Name>Move resources</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:43:00</CreateDate>
+            <CreateDate>2008-06-20T02:00:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.6.2</OutlineNumber>
-            <OutlineLevel>3</OutlineLevel>
+            <OutlineNumber>3.5.1.2.2</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -4999,13 +5255,13 @@
         <Task>
             <UID>50</UID>
             <ID>50</ID>
-            <Name>Quality Assurance</Name>
+            <Name>"Mavenize"</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:09:00</CreateDate>
+            <CreateDate>2008-06-20T01:55:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9</OutlineNumber>
-            <OutlineLevel>2</OutlineLevel>
+            <OutlineNumber>3.5.1.3</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -5054,7 +5310,7 @@
             <LevelingDelay>0</LevelingDelay>
             <LevelingDelayFormat>5</LevelingDelayFormat>
             <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
+            <Notes>Create a pom.xml Insert dependencies into our Maven repository; Remove lib directory</Notes>
             <HideBar>0</HideBar>
             <Rollup>0</Rollup>
             <BCWS>0</BCWS>
@@ -5066,79 +5322,12 @@
         <Task>
             <UID>51</UID>
             <ID>51</ID>
-            <Name>Coding Standards</Name>
+            <Name>Adopt fastutil</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:33:00</CreateDate>
+            <CreateDate>2008-06-20T02:01:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.1</OutlineNumber>
-            <OutlineLevel>3</OutlineLevel>
-            <Priority>500</Priority>
-            <Start>2008-06-09T08:00:00</Start>
-            <Finish>2008-06-09T17:00:00</Finish>
-            <Duration>PT8H0M0S</Duration>
-            <DurationFormat>7</DurationFormat>
-            <Work>PT0H0M0S</Work>
-            <ResumeValid>0</ResumeValid>
-            <EffortDriven>1</EffortDriven>
-            <Recurring>0</Recurring>
-            <OverAllocated>0</OverAllocated>
-            <Estimated>1</Estimated>
-            <Milestone>0</Milestone>
-            <Summary>0</Summary>
-            <Critical>1</Critical>
-            <IsSubproject>0</IsSubproject>
-            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-            <ExternalTask>0</ExternalTask>
-            <StartVariance>0</StartVariance>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0</WorkVariance>
-            <FreeSlack>0</FreeSlack>
-            <TotalSlack>0</TotalSlack>
-            <FixedCost>0</FixedCost>
-            <FixedCostAccrual>3</FixedCostAccrual>
-            <Cost>0</Cost>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <ActualDuration>PT0H0M0S</ActualDuration>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT8H0M0S</RemainingDuration>
-            <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <ACWP>0</ACWP>
-            <CV>0</CV>
-            <ConstraintType>0</ConstraintType>
-            <CalendarUID>-1</CalendarUID>
-            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
-            <LevelAssignments>0</LevelAssignments>
-            <LevelingCanSplit>0</LevelingCanSplit>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>5</LevelingDelayFormat>
-            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
-            <HideBar>0</HideBar>
-            <Rollup>0</Rollup>
-            <BCWS>0</BCWS>
-            <BCWP>0</BCWP>
-            <EarnedValueMethod>0</EarnedValueMethod>
-            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
-            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
-        </Task>
-        <Task>
-            <UID>52</UID>
-            <ID>52</ID>
-            <Name>Verify copyrights/licenses</Name>
-            <Type>0</Type>
-            <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:33:00</CreateDate>
-            <WBS/>
-            <OutlineNumber>3.9.1.1</OutlineNumber>
+            <OutlineNumber>3.5.1.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -5188,208 +5377,7 @@
             <LevelingDelay>0</LevelingDelay>
             <LevelingDelayFormat>5</LevelingDelayFormat>
             <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
-            <HideBar>0</HideBar>
-            <Rollup>0</Rollup>
-            <BCWS>0</BCWS>
-            <BCWP>0</BCWP>
-            <EarnedValueMethod>0</EarnedValueMethod>
-            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
-            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
-        </Task>
-        <Task>
-            <UID>53</UID>
-            <ID>53</ID>
-            <Name>Comment class headers</Name>
-            <Type>0</Type>
-            <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:33:00</CreateDate>
-            <WBS/>
-            <OutlineNumber>3.9.1.2</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
-            <Priority>500</Priority>
-            <Start>2008-06-09T08:00:00</Start>
-            <Finish>2008-06-09T17:00:00</Finish>
-            <Duration>PT8H0M0S</Duration>
-            <DurationFormat>7</DurationFormat>
-            <Work>PT0H0M0S</Work>
-            <ResumeValid>0</ResumeValid>
-            <EffortDriven>1</EffortDriven>
-            <Recurring>0</Recurring>
-            <OverAllocated>0</OverAllocated>
-            <Estimated>1</Estimated>
-            <Milestone>0</Milestone>
-            <Summary>0</Summary>
-            <Critical>1</Critical>
-            <IsSubproject>0</IsSubproject>
-            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-            <ExternalTask>0</ExternalTask>
-            <StartVariance>0</StartVariance>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0</WorkVariance>
-            <FreeSlack>0</FreeSlack>
-            <TotalSlack>0</TotalSlack>
-            <FixedCost>0</FixedCost>
-            <FixedCostAccrual>3</FixedCostAccrual>
-            <Cost>0</Cost>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <ActualDuration>PT0H0M0S</ActualDuration>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT8H0M0S</RemainingDuration>
-            <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <ACWP>0</ACWP>
-            <CV>0</CV>
-            <ConstraintType>0</ConstraintType>
-            <CalendarUID>-1</CalendarUID>
-            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
-            <LevelAssignments>0</LevelAssignments>
-            <LevelingCanSplit>0</LevelingCanSplit>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>5</LevelingDelayFormat>
-            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
-            <HideBar>0</HideBar>
-            <Rollup>0</Rollup>
-            <BCWS>0</BCWS>
-            <BCWP>0</BCWP>
-            <EarnedValueMethod>0</EarnedValueMethod>
-            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
-            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
-        </Task>
-        <Task>
-            <UID>54</UID>
-            <ID>54</ID>
-            <Name>Comment all constructors</Name>
-            <Type>0</Type>
-            <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:34:00</CreateDate>
-            <WBS/>
-            <OutlineNumber>3.9.1.3</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
-            <Priority>500</Priority>
-            <Start>2008-06-09T08:00:00</Start>
-            <Finish>2008-06-09T17:00:00</Finish>
-            <Duration>PT8H0M0S</Duration>
-            <DurationFormat>7</DurationFormat>
-            <Work>PT0H0M0S</Work>
-            <ResumeValid>0</ResumeValid>
-            <EffortDriven>1</EffortDriven>
-            <Recurring>0</Recurring>
-            <OverAllocated>0</OverAllocated>
-            <Estimated>1</Estimated>
-            <Milestone>0</Milestone>
-            <Summary>0</Summary>
-            <Critical>1</Critical>
-            <IsSubproject>0</IsSubproject>
-            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-            <ExternalTask>0</ExternalTask>
-            <StartVariance>0</StartVariance>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0</WorkVariance>
-            <FreeSlack>0</FreeSlack>
-            <TotalSlack>0</TotalSlack>
-            <FixedCost>0</FixedCost>
-            <FixedCostAccrual>3</FixedCostAccrual>
-            <Cost>0</Cost>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <ActualDuration>PT0H0M0S</ActualDuration>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT8H0M0S</RemainingDuration>
-            <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <ACWP>0</ACWP>
-            <CV>0</CV>
-            <ConstraintType>0</ConstraintType>
-            <CalendarUID>-1</CalendarUID>
-            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
-            <LevelAssignments>0</LevelAssignments>
-            <LevelingCanSplit>0</LevelingCanSplit>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>5</LevelingDelayFormat>
-            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
-            <HideBar>0</HideBar>
-            <Rollup>0</Rollup>
-            <BCWS>0</BCWS>
-            <BCWP>0</BCWP>
-            <EarnedValueMethod>0</EarnedValueMethod>
-            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
-            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
-        </Task>
-        <Task>
-            <UID>55</UID>
-            <ID>55</ID>
-            <Name>Solve list from checkstyle</Name>
-            <Type>0</Type>
-            <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:37:00</CreateDate>
-            <WBS/>
-            <OutlineNumber>3.9.1.4</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
-            <Priority>500</Priority>
-            <Start>2008-06-09T08:00:00</Start>
-            <Finish>2008-06-09T17:00:00</Finish>
-            <Duration>PT8H0M0S</Duration>
-            <DurationFormat>7</DurationFormat>
-            <Work>PT0H0M0S</Work>
-            <ResumeValid>0</ResumeValid>
-            <EffortDriven>1</EffortDriven>
-            <Recurring>0</Recurring>
-            <OverAllocated>0</OverAllocated>
-            <Estimated>1</Estimated>
-            <Milestone>0</Milestone>
-            <Summary>0</Summary>
-            <Critical>1</Critical>
-            <IsSubproject>0</IsSubproject>
-            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-            <ExternalTask>0</ExternalTask>
-            <StartVariance>0</StartVariance>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0</WorkVariance>
-            <FreeSlack>0</FreeSlack>
-            <TotalSlack>0</TotalSlack>
-            <FixedCost>0</FixedCost>
-            <FixedCostAccrual>3</FixedCostAccrual>
-            <Cost>0</Cost>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <ActualDuration>PT0H0M0S</ActualDuration>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT8H0M0S</RemainingDuration>
-            <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <ACWP>0</ACWP>
-            <CV>0</CV>
-            <ConstraintType>0</ConstraintType>
-            <CalendarUID>-1</CalendarUID>
-            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
-            <LevelAssignments>0</LevelAssignments>
-            <LevelingCanSplit>0</LevelingCanSplit>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>5</LevelingDelayFormat>
-            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
+            <Notes>Remove classes which implement arrays of primitive types; Substitute calls by fastutil calls; </Notes>
             <HideBar>0</HideBar>
             <Rollup>0</Rollup>
             <BCWS>0</BCWS>
@@ -5401,13 +5389,13 @@
         <Task>
             <UID>56</UID>
             <ID>56</ID>
-            <Name>Code Quality</Name>
+            <Name>Infrastructure</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:38:00</CreateDate>
+            <CreateDate>2008-06-10T01:42:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.2</OutlineNumber>
-            <OutlineLevel>3</OutlineLevel>
+            <OutlineNumber>3.10</OutlineNumber>
+            <OutlineLevel>2</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -5468,13 +5456,13 @@
         <Task>
             <UID>57</UID>
             <ID>57</ID>
-            <Name>Solve list from FindBugs</Name>
+            <Name>Mirror USA</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:38:00</CreateDate>
+            <CreateDate>2008-06-10T01:43:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.2.1</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.10.1</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -5535,13 +5523,13 @@
         <Task>
             <UID>58</UID>
             <ID>58</ID>
-            <Name>Solve list from PMD</Name>
+            <Name>MIrror Switzerland</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:38:00</CreateDate>
+            <CreateDate>2008-06-10T01:43:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.2.2</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.10.2</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -5600,15 +5588,15 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>59</UID>
-            <ID>59</ID>
-            <Name>All test cases must pass</Name>
+            <UID>61</UID>
+            <ID>61</ID>
+            <Name>Quality Assurance</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:39:00</CreateDate>
+            <CreateDate>2008-06-10T02:09:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.2.3</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.13</OutlineNumber>
+            <OutlineLevel>2</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -5669,12 +5657,12 @@
         <Task>
             <UID>62</UID>
             <ID>62</ID>
-            <Name>Developer Guides (Wiki)</Name>
+            <Name>Coding Standards</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:54:00</CreateDate>
+            <CreateDate>2008-06-14T13:33:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.5</OutlineNumber>
+            <OutlineNumber>3.13.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -5736,12 +5724,12 @@
         <Task>
             <UID>63</UID>
             <ID>63</ID>
-            <Name>The Code Translation process</Name>
+            <Name>Verify copyrights/licenses</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T15:19:00</CreateDate>
+            <CreateDate>2008-06-14T13:33:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.5.1</OutlineNumber>
+            <OutlineNumber>3.13.1.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -5791,7 +5779,7 @@
             <LevelingDelay>0</LevelingDelay>
             <LevelingDelayFormat>5</LevelingDelayFormat>
             <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes>http://www.jquantlib.org/index.php/Translation_Guidelines</Notes>
+            <Notes/>
             <HideBar>0</HideBar>
             <Rollup>0</Rollup>
             <BCWS>0</BCWS>
@@ -5803,12 +5791,12 @@
         <Task>
             <UID>64</UID>
             <ID>64</ID>
-            <Name>The Quality Assurance process</Name>
+            <Name>Comment class headers</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:54:00</CreateDate>
+            <CreateDate>2008-06-14T13:33:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.5.2</OutlineNumber>
+            <OutlineNumber>3.13.1.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -5858,7 +5846,208 @@
             <LevelingDelay>0</LevelingDelay>
             <LevelingDelayFormat>5</LevelingDelayFormat>
             <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes># Solve issues reported by FindBugs; # Review the copyright/license notice # Review class header (javadocs) # Add javadocs to all constructors # Review object model. For instance: I've created interface UnaryFunctionInteger whilst reviewing distributions. # Tidy up the code, adding comments, reordering methods and putting all similar methods together. # Review comments and javadocs # Conformance with Java Conventions, such like names of fields and methods # Add "final" and "private" like a paranoid wherever possible. # JSR-308 related, such as: add /*@ReadOnly*/ whereaver makes sense and based on Quanlib/C++ code. # Run test cases and make sure we dont have regression.  If you think something should be reviewed, simply add // TODO:: code review  Note: Not finished classes are those flagged by FindBugs, CheckStyle, PMD or Tags </Notes>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>65</UID>
+            <ID>65</ID>
+            <Name>Comment all constructors</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:34:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.13.1.3</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>66</UID>
+            <ID>66</ID>
+            <Name>Solve list from checkstyle</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:37:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.13.1.4</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>67</UID>
+            <ID>67</ID>
+            <Name>Code Quality</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:38:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.13.2</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
             <HideBar>0</HideBar>
             <Rollup>0</Rollup>
             <BCWS>0</BCWS>
@@ -5870,13 +6059,13 @@
         <Task>
             <UID>68</UID>
             <ID>68</ID>
-            <Name>Java Conventions</Name>
+            <Name>Solve list from FindBugs</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:09:00</CreateDate>
+            <CreateDate>2008-06-14T13:38:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.9</OutlineNumber>
-            <OutlineLevel>3</OutlineLevel>
+            <OutlineNumber>3.13.2.1</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -5937,12 +6126,12 @@
         <Task>
             <UID>69</UID>
             <ID>69</ID>
-            <Name>Code formatting conventions</Name>
+            <Name>Solve list from PMD</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:46:00</CreateDate>
+            <CreateDate>2008-06-14T13:38:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.9.1</OutlineNumber>
+            <OutlineNumber>3.13.2.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -6004,13 +6193,13 @@
         <Task>
             <UID>70</UID>
             <ID>70</ID>
-            <Name>Discuss/determine rulesets</Name>
+            <Name>All test cases must pass</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:47:00</CreateDate>
+            <CreateDate>2008-06-14T13:39:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.9.1.1</OutlineNumber>
-            <OutlineLevel>5</OutlineLevel>
+            <OutlineNumber>3.13.2.3</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -6069,149 +6258,15 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>71</UID>
-            <ID>71</ID>
-            <Name>Adopt default formatting</Name>
-            <Type>0</Type>
-            <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:25:00</CreateDate>
-            <WBS/>
-            <OutlineNumber>3.9.9.1.2</OutlineNumber>
-            <OutlineLevel>5</OutlineLevel>
-            <Priority>500</Priority>
-            <Start>2008-06-09T08:00:00</Start>
-            <Finish>2008-06-09T17:00:00</Finish>
-            <Duration>PT8H0M0S</Duration>
-            <DurationFormat>7</DurationFormat>
-            <Work>PT0H0M0S</Work>
-            <ResumeValid>0</ResumeValid>
-            <EffortDriven>1</EffortDriven>
-            <Recurring>0</Recurring>
-            <OverAllocated>0</OverAllocated>
-            <Estimated>1</Estimated>
-            <Milestone>0</Milestone>
-            <Summary>0</Summary>
-            <Critical>1</Critical>
-            <IsSubproject>0</IsSubproject>
-            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-            <ExternalTask>0</ExternalTask>
-            <StartVariance>0</StartVariance>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0</WorkVariance>
-            <FreeSlack>0</FreeSlack>
-            <TotalSlack>0</TotalSlack>
-            <FixedCost>0</FixedCost>
-            <FixedCostAccrual>3</FixedCostAccrual>
-            <Cost>0</Cost>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <ActualDuration>PT0H0M0S</ActualDuration>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT8H0M0S</RemainingDuration>
-            <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <ACWP>0</ACWP>
-            <CV>0</CV>
-            <ConstraintType>0</ConstraintType>
-            <CalendarUID>-1</CalendarUID>
-            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
-            <LevelAssignments>0</LevelAssignments>
-            <LevelingCanSplit>0</LevelingCanSplit>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>5</LevelingDelayFormat>
-            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes>Developers must install eclipse-formmater.xml</Notes>
-            <HideBar>0</HideBar>
-            <Rollup>0</Rollup>
-            <BCWS>0</BCWS>
-            <BCWP>0</BCWP>
-            <EarnedValueMethod>0</EarnedValueMethod>
-            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
-            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
-        </Task>
-        <Task>
-            <UID>72</UID>
-            <ID>72</ID>
-            <Name>Configure Checkstyle accordingly</Name>
-            <Type>0</Type>
-            <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:25:00</CreateDate>
-            <WBS/>
-            <OutlineNumber>3.9.9.1.3</OutlineNumber>
-            <OutlineLevel>5</OutlineLevel>
-            <Priority>500</Priority>
-            <Start>2008-06-09T08:00:00</Start>
-            <Finish>2008-06-09T17:00:00</Finish>
-            <Duration>PT8H0M0S</Duration>
-            <DurationFormat>7</DurationFormat>
-            <Work>PT0H0M0S</Work>
-            <ResumeValid>0</ResumeValid>
-            <EffortDriven>1</EffortDriven>
-            <Recurring>0</Recurring>
-            <OverAllocated>0</OverAllocated>
-            <Estimated>1</Estimated>
-            <Milestone>0</Milestone>
-            <Summary>0</Summary>
-            <Critical>1</Critical>
-            <IsSubproject>0</IsSubproject>
-            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-            <ExternalTask>0</ExternalTask>
-            <StartVariance>0</StartVariance>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0</WorkVariance>
-            <FreeSlack>0</FreeSlack>
-            <TotalSlack>0</TotalSlack>
-            <FixedCost>0</FixedCost>
-            <FixedCostAccrual>3</FixedCostAccrual>
-            <Cost>0</Cost>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <ActualDuration>PT0H0M0S</ActualDuration>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT8H0M0S</RemainingDuration>
-            <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <ACWP>0</ACWP>
-            <CV>0</CV>
-            <ConstraintType>0</ConstraintType>
-            <CalendarUID>-1</CalendarUID>
-            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
-            <LevelAssignments>0</LevelAssignments>
-            <LevelingCanSplit>0</LevelingCanSplit>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>5</LevelingDelayFormat>
-            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes>Checkstyle must match conventions from eclipse-formatter.xml</Notes>
-            <HideBar>0</HideBar>
-            <Rollup>0</Rollup>
-            <BCWS>0</BCWS>
-            <BCWP>0</BCWP>
-            <EarnedValueMethod>0</EarnedValueMethod>
-            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
-            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
-        </Task>
-        <Task>
             <UID>73</UID>
             <ID>73</ID>
-            <Name>Discuss results</Name>
+            <Name>Developer Guides (Wiki)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:46:00</CreateDate>
+            <CreateDate>2008-06-14T15:54:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.9.1.4</OutlineNumber>
-            <OutlineLevel>5</OutlineLevel>
+            <OutlineNumber>3.13.5</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -6272,12 +6327,12 @@
         <Task>
             <UID>74</UID>
             <ID>74</ID>
-            <Name>Configure PMD</Name>
+            <Name>The Code Translation process</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:25:00</CreateDate>
+            <CreateDate>2008-06-14T16:19:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.9.2</OutlineNumber>
+            <OutlineNumber>3.13.5.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -6327,7 +6382,7 @@
             <LevelingDelay>0</LevelingDelay>
             <LevelingDelayFormat>5</LevelingDelayFormat>
             <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
+            <Notes>http://www.jquantlib.org/index.php/Translation_Guidelines</Notes>
             <HideBar>0</HideBar>
             <Rollup>0</Rollup>
             <BCWS>0</BCWS>
@@ -6339,213 +6394,12 @@
         <Task>
             <UID>75</UID>
             <ID>75</ID>
-            <Name>Discuss/determine rulesets</Name>
+            <Name>The Quality Assurance process</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:44:00</CreateDate>
+            <CreateDate>2008-06-14T15:54:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.9.2.1</OutlineNumber>
-            <OutlineLevel>5</OutlineLevel>
-            <Priority>500</Priority>
-            <Start>2008-06-09T08:00:00</Start>
-            <Finish>2008-06-09T17:00:00</Finish>
-            <Duration>PT8H0M0S</Duration>
-            <DurationFormat>7</DurationFormat>
-            <Work>PT0H0M0S</Work>
-            <ResumeValid>0</ResumeValid>
-            <EffortDriven>1</EffortDriven>
-            <Recurring>0</Recurring>
-            <OverAllocated>0</OverAllocated>
-            <Estimated>1</Estimated>
-            <Milestone>0</Milestone>
-            <Summary>0</Summary>
-            <Critical>1</Critical>
-            <IsSubproject>0</IsSubproject>
-            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-            <ExternalTask>0</ExternalTask>
-            <StartVariance>0</StartVariance>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0</WorkVariance>
-            <FreeSlack>0</FreeSlack>
-            <TotalSlack>0</TotalSlack>
-            <FixedCost>0</FixedCost>
-            <FixedCostAccrual>3</FixedCostAccrual>
-            <Cost>0</Cost>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <ActualDuration>PT0H0M0S</ActualDuration>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT8H0M0S</RemainingDuration>
-            <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <ACWP>0</ACWP>
-            <CV>0</CV>
-            <ConstraintType>0</ConstraintType>
-            <CalendarUID>-1</CalendarUID>
-            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
-            <LevelAssignments>0</LevelAssignments>
-            <LevelingCanSplit>0</LevelingCanSplit>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>5</LevelingDelayFormat>
-            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
-            <HideBar>0</HideBar>
-            <Rollup>0</Rollup>
-            <BCWS>0</BCWS>
-            <BCWP>0</BCWP>
-            <EarnedValueMethod>0</EarnedValueMethod>
-            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
-            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
-        </Task>
-        <Task>
-            <UID>76</UID>
-            <ID>76</ID>
-            <Name>Configure and test in our build process</Name>
-            <Type>0</Type>
-            <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:45:00</CreateDate>
-            <WBS/>
-            <OutlineNumber>3.9.9.2.2</OutlineNumber>
-            <OutlineLevel>5</OutlineLevel>
-            <Priority>500</Priority>
-            <Start>2008-06-09T08:00:00</Start>
-            <Finish>2008-06-09T17:00:00</Finish>
-            <Duration>PT8H0M0S</Duration>
-            <DurationFormat>7</DurationFormat>
-            <Work>PT0H0M0S</Work>
-            <ResumeValid>0</ResumeValid>
-            <EffortDriven>1</EffortDriven>
-            <Recurring>0</Recurring>
-            <OverAllocated>0</OverAllocated>
-            <Estimated>1</Estimated>
-            <Milestone>0</Milestone>
-            <Summary>0</Summary>
-            <Critical>1</Critical>
-            <IsSubproject>0</IsSubproject>
-            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-            <ExternalTask>0</ExternalTask>
-            <StartVariance>0</StartVariance>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0</WorkVariance>
-            <FreeSlack>0</FreeSlack>
-            <TotalSlack>0</TotalSlack>
-            <FixedCost>0</FixedCost>
-            <FixedCostAccrual>3</FixedCostAccrual>
-            <Cost>0</Cost>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <ActualDuration>PT0H0M0S</ActualDuration>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT8H0M0S</RemainingDuration>
-            <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <ACWP>0</ACWP>
-            <CV>0</CV>
-            <ConstraintType>0</ConstraintType>
-            <CalendarUID>-1</CalendarUID>
-            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
-            <LevelAssignments>0</LevelAssignments>
-            <LevelingCanSplit>0</LevelingCanSplit>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>5</LevelingDelayFormat>
-            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
-            <HideBar>0</HideBar>
-            <Rollup>0</Rollup>
-            <BCWS>0</BCWS>
-            <BCWP>0</BCWP>
-            <EarnedValueMethod>0</EarnedValueMethod>
-            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
-            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
-        </Task>
-        <Task>
-            <UID>77</UID>
-            <ID>77</ID>
-            <Name>Discuss results</Name>
-            <Type>0</Type>
-            <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:45:00</CreateDate>
-            <WBS/>
-            <OutlineNumber>3.9.9.2.3</OutlineNumber>
-            <OutlineLevel>5</OutlineLevel>
-            <Priority>500</Priority>
-            <Start>2008-06-09T08:00:00</Start>
-            <Finish>2008-06-09T17:00:00</Finish>
-            <Duration>PT8H0M0S</Duration>
-            <DurationFormat>7</DurationFormat>
-            <Work>PT0H0M0S</Work>
-            <ResumeValid>0</ResumeValid>
-            <EffortDriven>1</EffortDriven>
-            <Recurring>0</Recurring>
-            <OverAllocated>0</OverAllocated>
-            <Estimated>1</Estimated>
-            <Milestone>0</Milestone>
-            <Summary>0</Summary>
-            <Critical>1</Critical>
-            <IsSubproject>0</IsSubproject>
-            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-            <ExternalTask>0</ExternalTask>
-            <StartVariance>0</StartVariance>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0</WorkVariance>
-            <FreeSlack>0</FreeSlack>
-            <TotalSlack>0</TotalSlack>
-            <FixedCost>0</FixedCost>
-            <FixedCostAccrual>3</FixedCostAccrual>
-            <Cost>0</Cost>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <ActualDuration>PT0H0M0S</ActualDuration>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT8H0M0S</RemainingDuration>
-            <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <ACWP>0</ACWP>
-            <CV>0</CV>
-            <ConstraintType>0</ConstraintType>
-            <CalendarUID>-1</CalendarUID>
-            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
-            <LevelAssignments>0</LevelAssignments>
-            <LevelingCanSplit>0</LevelingCanSplit>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>5</LevelingDelayFormat>
-            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
-            <HideBar>0</HideBar>
-            <Rollup>0</Rollup>
-            <BCWS>0</BCWS>
-            <BCWP>0</BCWP>
-            <EarnedValueMethod>0</EarnedValueMethod>
-            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
-            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
-        </Task>
-        <Task>
-            <UID>78</UID>
-            <ID>78</ID>
-            <Name>Configure FindBugs</Name>
-            <Type>0</Type>
-            <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:26:00</CreateDate>
-            <WBS/>
-            <OutlineNumber>3.9.9.3</OutlineNumber>
+            <OutlineNumber>3.13.5.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -6595,7 +6449,7 @@
             <LevelingDelay>0</LevelingDelay>
             <LevelingDelayFormat>5</LevelingDelayFormat>
             <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
+            <Notes># Solve issues reported by FindBugs; # Review the copyright/license notice # Review class header (javadocs) # Add javadocs to all constructors # Review object model. For instance: I've created interface UnaryFunctionInteger whilst reviewing distributions. # Tidy up the code, adding comments, reordering methods and putting all similar methods together. # Review comments and javadocs # Conformance with Java Conventions, such like names of fields and methods # Add "final" and "private" like a paranoid wherever possible. # JSR-308 related, such as: add /*@ReadOnly*/ whereaver makes sense and based on Quanlib/C++ code. # Run test cases and make sure we dont have regression.  If you think something should be reviewed, simply add // TODO:: code review  Note: Not finished classes are those flagged by FindBugs, CheckStyle, PMD or Tags </Notes>
             <HideBar>0</HideBar>
             <Rollup>0</Rollup>
             <BCWS>0</BCWS>
@@ -6607,13 +6461,13 @@
         <Task>
             <UID>79</UID>
             <ID>79</ID>
-            <Name>Discuss/determine rulesets</Name>
+            <Name>Java Conventions</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:45:00</CreateDate>
+            <CreateDate>2008-06-10T02:09:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.9.3.1</OutlineNumber>
-            <OutlineLevel>5</OutlineLevel>
+            <OutlineNumber>3.13.9</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -6674,13 +6528,13 @@
         <Task>
             <UID>80</UID>
             <ID>80</ID>
-            <Name>Configure and test in our build process</Name>
+            <Name>Code formatting conventions</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:45:00</CreateDate>
+            <CreateDate>2008-06-14T13:46:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.9.3.2</OutlineNumber>
-            <OutlineLevel>5</OutlineLevel>
+            <OutlineNumber>3.13.9.1</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -6741,12 +6595,12 @@
         <Task>
             <UID>81</UID>
             <ID>81</ID>
-            <Name>Discuss results</Name>
+            <Name>Discuss/determine rulesets</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:45:00</CreateDate>
+            <CreateDate>2008-06-14T13:47:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.9.3.3</OutlineNumber>
+            <OutlineNumber>3.13.9.1.1</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -6808,13 +6662,13 @@
         <Task>
             <UID>82</UID>
             <ID>82</ID>
-            <Name>JSR-308</Name>
+            <Name>Adopt default formatting</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:09:00</CreateDate>
+            <CreateDate>2008-06-14T13:25:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.10</OutlineNumber>
-            <OutlineLevel>3</OutlineLevel>
+            <OutlineNumber>3.13.9.1.2</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -6863,7 +6717,7 @@
             <LevelingDelay>0</LevelingDelay>
             <LevelingDelayFormat>5</LevelingDelayFormat>
             <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
+            <Notes>Developers must install eclipse-formmater.xml</Notes>
             <HideBar>0</HideBar>
             <Rollup>0</Rollup>
             <BCWS>0</BCWS>
@@ -6875,13 +6729,13 @@
         <Task>
             <UID>83</UID>
             <ID>83</ID>
-            <Name>Proof of concept</Name>
+            <Name>Configure Checkstyle accordingly</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:26:00</CreateDate>
+            <CreateDate>2008-06-14T13:25:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.10.1</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.13.9.1.3</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -6930,7 +6784,7 @@
             <LevelingDelay>0</LevelingDelay>
             <LevelingDelayFormat>5</LevelingDelayFormat>
             <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-            <Notes/>
+            <Notes>Checkstyle must match conventions from eclipse-formatter.xml</Notes>
             <HideBar>0</HideBar>
             <Rollup>0</Rollup>
             <BCWS>0</BCWS>
@@ -6942,13 +6796,13 @@
         <Task>
             <UID>84</UID>
             <ID>84</ID>
-            <Name>Define annotations to be used</Name>
+            <Name>Discuss results</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:27:00</CreateDate>
+            <CreateDate>2008-06-14T13:46:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.10.2</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.13.9.1.4</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -7009,12 +6863,12 @@
         <Task>
             <UID>85</UID>
             <ID>85</ID>
-            <Name>Configure annotation processors</Name>
+            <Name>Configure PMD</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:27:00</CreateDate>
+            <CreateDate>2008-06-14T13:25:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.10.3</OutlineNumber>
+            <OutlineNumber>3.13.9.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -7076,13 +6930,13 @@
         <Task>
             <UID>86</UID>
             <ID>86</ID>
-            <Name>Evaluate results</Name>
+            <Name>Discuss/determine rulesets</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:28:00</CreateDate>
+            <CreateDate>2008-06-14T13:44:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.10.4</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.13.9.2.1</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -7143,13 +6997,13 @@
         <Task>
             <UID>87</UID>
             <ID>87</ID>
-            <Name>Propose next steps</Name>
+            <Name>Configure and test in our build process</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:28:00</CreateDate>
+            <CreateDate>2008-06-14T13:45:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.10.5</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.13.9.2.2</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -7210,13 +7064,13 @@
         <Task>
             <UID>88</UID>
             <ID>88</ID>
-            <Name>Performance</Name>
+            <Name>Discuss results</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:10:00</CreateDate>
+            <CreateDate>2008-06-14T13:45:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.11</OutlineNumber>
-            <OutlineLevel>3</OutlineLevel>
+            <OutlineNumber>3.13.9.2.3</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -7277,12 +7131,12 @@
         <Task>
             <UID>89</UID>
             <ID>89</ID>
-            <Name>Install StopClock on tests</Name>
+            <Name>Configure FindBugs</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:28:00</CreateDate>
+            <CreateDate>2008-06-14T13:26:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.11.1</OutlineNumber>
+            <OutlineNumber>3.13.9.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -7344,13 +7198,13 @@
         <Task>
             <UID>90</UID>
             <ID>90</ID>
-            <Name>Install StopClock on examples</Name>
+            <Name>Discuss/determine rulesets</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:29:00</CreateDate>
+            <CreateDate>2008-06-14T13:45:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.11.2</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.13.9.3.1</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -7411,13 +7265,80 @@
         <Task>
             <UID>91</UID>
             <ID>91</ID>
-            <Name>Do not use Java Collections</Name>
+            <Name>Configure and test in our build process</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T20:35:00</CreateDate>
+            <CreateDate>2008-06-14T13:45:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.11.3</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.13.9.3.2</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>92</UID>
+            <ID>92</ID>
+            <Name>Discuss results</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:45:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.13.9.3.3</OutlineNumber>
+            <OutlineLevel>5</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -7478,13 +7399,13 @@
         <Task>
             <UID>93</UID>
             <ID>93</ID>
-            <Name>Run with Colt</Name>
+            <Name>JSR-308</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:31:00</CreateDate>
+            <CreateDate>2008-06-10T02:09:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.11.5</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.13.10</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -7545,12 +7466,12 @@
         <Task>
             <UID>94</UID>
             <ID>94</ID>
-            <Name>Run with Parallel Colt</Name>
+            <Name>Proof of concept</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:31:00</CreateDate>
+            <CreateDate>2008-06-14T13:26:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.11.6</OutlineNumber>
+            <OutlineNumber>3.13.10.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -7612,12 +7533,12 @@
         <Task>
             <UID>95</UID>
             <ID>95</ID>
-            <Name>Run on Azul</Name>
+            <Name>Define annotations to be used</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:32:00</CreateDate>
+            <CreateDate>2008-06-14T13:27:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.11.7</OutlineNumber>
+            <OutlineNumber>3.13.10.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
@@ -7679,13 +7600,683 @@
         <Task>
             <UID>96</UID>
             <ID>96</ID>
+            <Name>Configure annotation processors</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:27:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.13.10.3</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>97</UID>
+            <ID>97</ID>
+            <Name>Evaluate results</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:28:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.13.10.4</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>98</UID>
+            <ID>98</ID>
+            <Name>Propose next steps</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:28:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.13.10.5</OutlineNumber>
+            <OutlineLevel>4</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>101</UID>
+            <ID>101</ID>
+            <Name>Performance</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-10T02:10:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.16</OutlineNumber>
+            <OutlineLevel>2</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>102</UID>
+            <ID>102</ID>
+            <Name>Install StopClock on tests</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:28:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.16.1</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>103</UID>
+            <ID>103</ID>
+            <Name>Install StopClock on examples</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:29:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.16.2</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>104</UID>
+            <ID>104</ID>
+            <Name>Do not use Java Collections</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T21:35:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.16.3</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>106</UID>
+            <ID>106</ID>
+            <Name>Run with Colt</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:31:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.16.5</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>107</UID>
+            <ID>107</ID>
+            <Name>Run with GridColt</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:31:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.16.6</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>108</UID>
+            <ID>108</ID>
+            <Name>Run on Azul</Name>
+            <Type>0</Type>
+            <IsNull>0</IsNull>
+            <CreateDate>2008-06-14T13:32:00</CreateDate>
+            <WBS/>
+            <OutlineNumber>3.16.7</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
+            <Priority>500</Priority>
+            <Start>2008-06-09T08:00:00</Start>
+            <Finish>2008-06-09T17:00:00</Finish>
+            <Duration>PT8H0M0S</Duration>
+            <DurationFormat>7</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>1</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT8H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <ConstraintDate>1970-01-01T00:00:00</ConstraintDate>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>5</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>109</UID>
+            <ID>109</ID>
             <Name>Publish results on Wiki</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T12:32:00</CreateDate>
+            <CreateDate>2008-06-14T13:32:00</CreateDate>
             <WBS/>
-            <OutlineNumber>3.9.11.8</OutlineNumber>
-            <OutlineLevel>4</OutlineLevel>
+            <OutlineNumber>3.16.8</OutlineNumber>
+            <OutlineLevel>3</OutlineLevel>
             <Priority>500</Priority>
             <Start>2008-06-09T08:00:00</Start>
             <Finish>2008-06-09T17:00:00</Finish>
@@ -7906,8 +8497,8 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>44</UID>
-            <ID>44</ID>
+            <UID>52</UID>
+            <ID>52</ID>
             <Type>0</Type>
             <IsNull>1</IsNull>
             <Priority>500</Priority>
@@ -7960,8 +8551,8 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>48</UID>
-            <ID>48</ID>
+            <UID>53</UID>
+            <ID>53</ID>
             <Type>0</Type>
             <IsNull>1</IsNull>
             <Priority>500</Priority>
@@ -8014,8 +8605,116 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>49</UID>
-            <ID>49</ID>
+            <UID>54</UID>
+            <ID>54</ID>
+            <Type>0</Type>
+            <IsNull>1</IsNull>
+            <Priority>500</Priority>
+            <Duration>PT0H0M0S</Duration>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>0</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>0</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>0</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <CalendarUID>-1</CalendarUID>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>55</UID>
+            <ID>55</ID>
+            <Type>0</Type>
+            <IsNull>1</IsNull>
+            <Priority>500</Priority>
+            <Duration>PT0H0M0S</Duration>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>0</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>0</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>0</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <CalendarUID>-1</CalendarUID>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>59</UID>
+            <ID>59</ID>
             <Type>0</Type>
             <IsNull>1</IsNull>
             <Priority>500</Priority>
@@ -8122,8 +8821,8 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>61</UID>
-            <ID>61</ID>
+            <UID>71</UID>
+            <ID>71</ID>
             <Type>0</Type>
             <IsNull>1</IsNull>
             <Priority>500</Priority>
@@ -8176,8 +8875,8 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>65</UID>
-            <ID>65</ID>
+            <UID>72</UID>
+            <ID>72</ID>
             <Type>0</Type>
             <IsNull>1</IsNull>
             <Priority>500</Priority>
@@ -8230,8 +8929,8 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>66</UID>
-            <ID>66</ID>
+            <UID>76</UID>
+            <ID>76</ID>
             <Type>0</Type>
             <IsNull>1</IsNull>
             <Priority>500</Priority>
@@ -8284,8 +8983,8 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>67</UID>
-            <ID>67</ID>
+            <UID>77</UID>
+            <ID>77</ID>
             <Type>0</Type>
             <IsNull>1</IsNull>
             <Priority>500</Priority>
@@ -8338,8 +9037,170 @@
             <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
         </Task>
         <Task>
-            <UID>92</UID>
-            <ID>92</ID>
+            <UID>78</UID>
+            <ID>78</ID>
+            <Type>0</Type>
+            <IsNull>1</IsNull>
+            <Priority>500</Priority>
+            <Duration>PT0H0M0S</Duration>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>0</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>0</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>0</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <CalendarUID>-1</CalendarUID>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>99</UID>
+            <ID>99</ID>
+            <Type>0</Type>
+            <IsNull>1</IsNull>
+            <Priority>500</Priority>
+            <Duration>PT0H0M0S</Duration>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>0</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>0</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>0</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <CalendarUID>-1</CalendarUID>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>100</UID>
+            <ID>100</ID>
+            <Type>0</Type>
+            <IsNull>1</IsNull>
+            <Priority>500</Priority>
+            <Duration>PT0H0M0S</Duration>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>0</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>0</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>0</Summary>
+            <Critical>0</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0</ACWP>
+            <CV>0</CV>
+            <CalendarUID>-1</CalendarUID>
+            <LevelAssignments>0</LevelAssignments>
+            <LevelingCanSplit>0</LevelingCanSplit>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <Notes/>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0</BCWS>
+            <BCWP>0</BCWP>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <ActualWorkProtected>PT0H0M0S</ActualWorkProtected>
+            <ActualOvertimeWorkProtected>PT0H0M0S</ActualOvertimeWorkProtected>
+        </Task>
+        <Task>
+            <UID>105</UID>
+            <ID>105</ID>
             <Type>0</Type>
             <IsNull>1</IsNull>
             <Priority>500</Priority>
@@ -8474,7 +9335,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>10</CalendarUID>
+            <CalendarUID>13</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -8520,7 +9381,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>11</CalendarUID>
+            <CalendarUID>14</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -8566,7 +9427,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>12</CalendarUID>
+            <CalendarUID>15</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -8612,7 +9473,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>13</CalendarUID>
+            <CalendarUID>16</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -9586,7 +10447,7 @@
         </Assignment>
         <Assignment>
             <UID>40</UID>
-            <TaskUID>45</TaskUID>
+            <TaskUID>44</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9610,7 +10471,7 @@
         </Assignment>
         <Assignment>
             <UID>41</UID>
-            <TaskUID>46</TaskUID>
+            <TaskUID>45</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9634,7 +10495,7 @@
         </Assignment>
         <Assignment>
             <UID>42</UID>
-            <TaskUID>47</TaskUID>
+            <TaskUID>46</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9658,7 +10519,7 @@
         </Assignment>
         <Assignment>
             <UID>43</UID>
-            <TaskUID>50</TaskUID>
+            <TaskUID>47</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9682,7 +10543,7 @@
         </Assignment>
         <Assignment>
             <UID>44</UID>
-            <TaskUID>51</TaskUID>
+            <TaskUID>48</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9706,7 +10567,7 @@
         </Assignment>
         <Assignment>
             <UID>45</UID>
-            <TaskUID>52</TaskUID>
+            <TaskUID>49</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9730,7 +10591,7 @@
         </Assignment>
         <Assignment>
             <UID>46</UID>
-            <TaskUID>53</TaskUID>
+            <TaskUID>50</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9754,7 +10615,7 @@
         </Assignment>
         <Assignment>
             <UID>47</UID>
-            <TaskUID>54</TaskUID>
+            <TaskUID>51</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9778,7 +10639,7 @@
         </Assignment>
         <Assignment>
             <UID>48</UID>
-            <TaskUID>55</TaskUID>
+            <TaskUID>56</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9802,7 +10663,7 @@
         </Assignment>
         <Assignment>
             <UID>49</UID>
-            <TaskUID>56</TaskUID>
+            <TaskUID>57</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9826,7 +10687,7 @@
         </Assignment>
         <Assignment>
             <UID>50</UID>
-            <TaskUID>57</TaskUID>
+            <TaskUID>58</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9850,7 +10711,7 @@
         </Assignment>
         <Assignment>
             <UID>51</UID>
-            <TaskUID>58</TaskUID>
+            <TaskUID>61</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9874,7 +10735,7 @@
         </Assignment>
         <Assignment>
             <UID>52</UID>
-            <TaskUID>59</TaskUID>
+            <TaskUID>62</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9898,7 +10759,7 @@
         </Assignment>
         <Assignment>
             <UID>53</UID>
-            <TaskUID>62</TaskUID>
+            <TaskUID>63</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9922,7 +10783,7 @@
         </Assignment>
         <Assignment>
             <UID>54</UID>
-            <TaskUID>63</TaskUID>
+            <TaskUID>64</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9946,7 +10807,7 @@
         </Assignment>
         <Assignment>
             <UID>55</UID>
-            <TaskUID>64</TaskUID>
+            <TaskUID>65</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9970,7 +10831,7 @@
         </Assignment>
         <Assignment>
             <UID>56</UID>
-            <TaskUID>68</TaskUID>
+            <TaskUID>66</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -9994,7 +10855,7 @@
         </Assignment>
         <Assignment>
             <UID>57</UID>
-            <TaskUID>69</TaskUID>
+            <TaskUID>67</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10018,7 +10879,7 @@
         </Assignment>
         <Assignment>
             <UID>58</UID>
-            <TaskUID>70</TaskUID>
+            <TaskUID>68</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10042,7 +10903,7 @@
         </Assignment>
         <Assignment>
             <UID>59</UID>
-            <TaskUID>71</TaskUID>
+            <TaskUID>69</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10066,7 +10927,7 @@
         </Assignment>
         <Assignment>
             <UID>60</UID>
-            <TaskUID>72</TaskUID>
+            <TaskUID>70</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10162,7 +11023,7 @@
         </Assignment>
         <Assignment>
             <UID>64</UID>
-            <TaskUID>76</TaskUID>
+            <TaskUID>79</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10186,7 +11047,7 @@
         </Assignment>
         <Assignment>
             <UID>65</UID>
-            <TaskUID>77</TaskUID>
+            <TaskUID>80</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10210,7 +11071,7 @@
         </Assignment>
         <Assignment>
             <UID>66</UID>
-            <TaskUID>78</TaskUID>
+            <TaskUID>81</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10234,7 +11095,7 @@
         </Assignment>
         <Assignment>
             <UID>67</UID>
-            <TaskUID>79</TaskUID>
+            <TaskUID>82</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10258,7 +11119,7 @@
         </Assignment>
         <Assignment>
             <UID>68</UID>
-            <TaskUID>80</TaskUID>
+            <TaskUID>83</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10282,7 +11143,7 @@
         </Assignment>
         <Assignment>
             <UID>69</UID>
-            <TaskUID>81</TaskUID>
+            <TaskUID>84</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10306,7 +11167,7 @@
         </Assignment>
         <Assignment>
             <UID>70</UID>
-            <TaskUID>82</TaskUID>
+            <TaskUID>85</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10330,7 +11191,7 @@
         </Assignment>
         <Assignment>
             <UID>71</UID>
-            <TaskUID>83</TaskUID>
+            <TaskUID>86</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10354,7 +11215,7 @@
         </Assignment>
         <Assignment>
             <UID>72</UID>
-            <TaskUID>84</TaskUID>
+            <TaskUID>87</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10378,7 +11239,7 @@
         </Assignment>
         <Assignment>
             <UID>73</UID>
-            <TaskUID>85</TaskUID>
+            <TaskUID>88</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10402,7 +11263,7 @@
         </Assignment>
         <Assignment>
             <UID>74</UID>
-            <TaskUID>86</TaskUID>
+            <TaskUID>89</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10426,7 +11287,7 @@
         </Assignment>
         <Assignment>
             <UID>75</UID>
-            <TaskUID>87</TaskUID>
+            <TaskUID>90</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10450,7 +11311,7 @@
         </Assignment>
         <Assignment>
             <UID>76</UID>
-            <TaskUID>88</TaskUID>
+            <TaskUID>91</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10474,7 +11335,7 @@
         </Assignment>
         <Assignment>
             <UID>77</UID>
-            <TaskUID>89</TaskUID>
+            <TaskUID>92</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10498,7 +11359,7 @@
         </Assignment>
         <Assignment>
             <UID>78</UID>
-            <TaskUID>90</TaskUID>
+            <TaskUID>93</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10522,7 +11383,7 @@
         </Assignment>
         <Assignment>
             <UID>79</UID>
-            <TaskUID>91</TaskUID>
+            <TaskUID>94</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10546,7 +11407,7 @@
         </Assignment>
         <Assignment>
             <UID>80</UID>
-            <TaskUID>93</TaskUID>
+            <TaskUID>95</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10570,7 +11431,7 @@
         </Assignment>
         <Assignment>
             <UID>81</UID>
-            <TaskUID>94</TaskUID>
+            <TaskUID>96</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10594,7 +11455,7 @@
         </Assignment>
         <Assignment>
             <UID>82</UID>
-            <TaskUID>95</TaskUID>
+            <TaskUID>97</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10618,7 +11479,7 @@
         </Assignment>
         <Assignment>
             <UID>83</UID>
-            <TaskUID>96</TaskUID>
+            <TaskUID>98</TaskUID>
             <ResourceUID>-65535</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
@@ -10634,6 +11495,198 @@
             <TimephasedData>
                 <Type>1</Type>
                 <UID>83</UID>
+                <Start>2008-06-08T23:00:00</Start>
+                <Finish>2008-06-09T17:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+        </Assignment>
+        <Assignment>
+            <UID>84</UID>
+            <TaskUID>101</TaskUID>
+            <ResourceUID>-65535</ResourceUID>
+            <ActualCost>0</ActualCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <Cost>0</Cost>
+            <Delay>0</Delay>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <RemainingWork>PT8H0M0S</RemainingWork>
+            <Stop>1970-01-01T01:00:00</Stop>
+            <Resume>2008-06-09T09:00:00</Resume>
+            <Units>1</Units>
+            <Work>PT8H0M0S</Work>
+            <WorkContour>0</WorkContour>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>84</UID>
+                <Start>2008-06-08T23:00:00</Start>
+                <Finish>2008-06-09T17:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+        </Assignment>
+        <Assignment>
+            <UID>85</UID>
+            <TaskUID>102</TaskUID>
+            <ResourceUID>-65535</ResourceUID>
+            <ActualCost>0</ActualCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <Cost>0</Cost>
+            <Delay>0</Delay>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <RemainingWork>PT8H0M0S</RemainingWork>
+            <Stop>1970-01-01T01:00:00</Stop>
+            <Resume>2008-06-09T09:00:00</Resume>
+            <Units>1</Units>
+            <Work>PT8H0M0S</Work>
+            <WorkContour>0</WorkContour>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>85</UID>
+                <Start>2008-06-08T23:00:00</Start>
+                <Finish>2008-06-09T17:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+        </Assignment>
+        <Assignment>
+            <UID>86</UID>
+            <TaskUID>103</TaskUID>
+            <ResourceUID>-65535</ResourceUID>
+            <ActualCost>0</ActualCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <Cost>0</Cost>
+            <Delay>0</Delay>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <RemainingWork>PT8H0M0S</RemainingWork>
+            <Stop>1970-01-01T01:00:00</Stop>
+            <Resume>2008-06-09T09:00:00</Resume>
+            <Units>1</Units>
+            <Work>PT8H0M0S</Work>
+            <WorkContour>0</WorkContour>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>86</UID>
+                <Start>2008-06-08T23:00:00</Start>
+                <Finish>2008-06-09T17:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+        </Assignment>
+        <Assignment>
+            <UID>87</UID>
+            <TaskUID>104</TaskUID>
+            <ResourceUID>-65535</ResourceUID>
+            <ActualCost>0</ActualCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <Cost>0</Cost>
+            <Delay>0</Delay>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <RemainingWork>PT8H0M0S</RemainingWork>
+            <Stop>1970-01-01T01:00:00</Stop>
+            <Resume>2008-06-09T09:00:00</Resume>
+            <Units>1</Units>
+            <Work>PT8H0M0S</Work>
+            <WorkContour>0</WorkContour>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>87</UID>
+                <Start>2008-06-08T23:00:00</Start>
+                <Finish>2008-06-09T17:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+        </Assignment>
+        <Assignment>
+            <UID>88</UID>
+            <TaskUID>106</TaskUID>
+            <ResourceUID>-65535</ResourceUID>
+            <ActualCost>0</ActualCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <Cost>0</Cost>
+            <Delay>0</Delay>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <RemainingWork>PT8H0M0S</RemainingWork>
+            <Stop>1970-01-01T01:00:00</Stop>
+            <Resume>2008-06-09T09:00:00</Resume>
+            <Units>1</Units>
+            <Work>PT8H0M0S</Work>
+            <WorkContour>0</WorkContour>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>88</UID>
+                <Start>2008-06-08T23:00:00</Start>
+                <Finish>2008-06-09T17:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+        </Assignment>
+        <Assignment>
+            <UID>89</UID>
+            <TaskUID>107</TaskUID>
+            <ResourceUID>-65535</ResourceUID>
+            <ActualCost>0</ActualCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <Cost>0</Cost>
+            <Delay>0</Delay>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <RemainingWork>PT8H0M0S</RemainingWork>
+            <Stop>1970-01-01T01:00:00</Stop>
+            <Resume>2008-06-09T09:00:00</Resume>
+            <Units>1</Units>
+            <Work>PT8H0M0S</Work>
+            <WorkContour>0</WorkContour>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>89</UID>
+                <Start>2008-06-08T23:00:00</Start>
+                <Finish>2008-06-09T17:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+        </Assignment>
+        <Assignment>
+            <UID>90</UID>
+            <TaskUID>108</TaskUID>
+            <ResourceUID>-65535</ResourceUID>
+            <ActualCost>0</ActualCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <Cost>0</Cost>
+            <Delay>0</Delay>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <RemainingWork>PT8H0M0S</RemainingWork>
+            <Stop>1970-01-01T01:00:00</Stop>
+            <Resume>2008-06-09T09:00:00</Resume>
+            <Units>1</Units>
+            <Work>PT8H0M0S</Work>
+            <WorkContour>0</WorkContour>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>90</UID>
+                <Start>2008-06-08T23:00:00</Start>
+                <Finish>2008-06-09T17:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+        </Assignment>
+        <Assignment>
+            <UID>91</UID>
+            <TaskUID>109</TaskUID>
+            <ResourceUID>-65535</ResourceUID>
+            <ActualCost>0</ActualCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <Cost>0</Cost>
+            <Delay>0</Delay>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <RemainingWork>PT8H0M0S</RemainingWork>
+            <Stop>1970-01-01T01:00:00</Stop>
+            <Resume>2008-06-09T09:00:00</Resume>
+            <Units>1</Units>
+            <Work>PT8H0M0S</Work>
+            <WorkContour>0</WorkContour>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>91</UID>
                 <Start>2008-06-08T23:00:00</Start>
                 <Finish>2008-06-09T17:00:00</Finish>
                 <Unit>3</Unit>

@@ -20,10 +20,10 @@
 
 package org.jquantlib.util;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Collection; //FIXME: performance
+import java.util.List; //FIXME: performance
+import java.util.SortedMap; //FIXME: performance
+import java.util.TreeMap; //FIXME: performance
 
 /**
  * TODO: Class arranges the dates in order which is different from quantlib, make sure

@@ -20,8 +20,8 @@
 
 package org.jquantlib.time;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList; // FIXME :: performance
+import java.util.List; // FIXME :: performance
 
 import org.jquantlib.util.Date;
 

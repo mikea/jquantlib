@@ -20,7 +20,7 @@
 
 package org.jquantlib.util;
 
-import java.util.List;
+import java.util.List; //FIXME: performance
 
 /**
  * Base implementation that can be shared by Date implementations.

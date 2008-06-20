@@ -20,8 +20,8 @@
 
 package org.jquantlib.util;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Collections; //FIXME: performance
+import java.util.List; //FIXME: performance
 import java.util.concurrent.CopyOnWriteArrayList;
 
 // --------------------------------------------------------

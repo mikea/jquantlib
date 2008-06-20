@@ -38,7 +38,7 @@
 
 package org.jquantlib.quotes;
 
-import java.util.List;
+import java.util.List; // FIXME :: performance
 
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;

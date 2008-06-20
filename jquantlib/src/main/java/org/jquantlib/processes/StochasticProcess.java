@@ -39,7 +39,7 @@
 
 package org.jquantlib.processes;
 
-import java.util.List;
+import java.util.List; // FIXME :: performance
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;

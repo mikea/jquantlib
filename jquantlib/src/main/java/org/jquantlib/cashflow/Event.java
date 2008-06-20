@@ -20,7 +20,7 @@
 
 package org.jquantlib.cashflow;
 
-import java.util.List;
+import java.util.List; //FIXME: performance
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;

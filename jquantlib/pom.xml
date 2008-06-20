@@ -4,12 +4,12 @@
   <groupId>org.jquantlib</groupId>
   <artifactId>jquantlib</artifactId>
   <name>JQuantLib</name>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.2-RC1</version>
   <description>JQuantLib aims to provide a free, open-source and comprehensive framework for quantitative finance, written in Java. See also: http://www.jquantlib.org/</description>
   <url>${maven.deploy.site.url}</url>
   
   <prerequisites> 
-	  <maven>2.0.8</maven>
+	  <maven>2.0.9</maven>
   </prerequisites>
   
   <ciManagement>
@@ -196,7 +196,7 @@
               <addExtensions>true</addExtensions>
             </manifest>
             <manifestEntries>
-              <Implementation-Build>${buildNumber}</Implementation-Build>
+              <Implementation-Build>${project.version}-${buildNumber}</Implementation-Build> <!-- TODO: adopt standards -->
               <App-Realm>${profile.manifest.app.realm}</App-Realm>
               <App-Mode>${profile.manifest.app.mode}</App-Mode>
               <App-URL>${profile.manifest.app.url}</App-URL>
@@ -225,7 +225,7 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
-          <finalName>${project.artifactId}-${project.version}</finalName>
+          <finalName>${project.artifactId}-${project.version}-ubber</finalName>
           <appendAssemblyId>false</appendAssemblyId>
           <archive>
             <index>${maven.jar.index}</index>
@@ -233,13 +233,22 @@
               <mainClass>${maven.jar.manifest.mainClass}</mainClass>
             </manifest>
             <manifestEntries>
-              <Implementation-Build>${buildNumber}</Implementation-Build>
+              <Implementation-Build>${project.version}-${buildNumber}</Implementation-Build>
               <App-Realm>${profile.manifest.app.realm}</App-Realm>
               <App-Mode>${profile.manifest.app.mode}</App-Mode>
               <App-URL>${profile.manifest.app.url}</App-URL>
             </manifestEntries>
           </archive>
         </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>attached</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       
       <plugin>
@@ -249,7 +258,7 @@
             <echo>project.build.directory=${project.build.directory}</echo>
             <echo>project.groupId=${project.groupId}</echo>
             <echo>project.artifactId=${project.artifactId}</echo>
-            <echo>project.version=${project.version}</echo>
+            <echo>project.version=${project.version}-${buildNumber}</echo>
             <echo>maven.compile.source=${maven.compile.source}</echo>
             <echo>maven.compile.target=${maven.compile.target}</echo>
             <echo>maven.jar.manifest.mainClass=${maven.jar.manifest.mainClass}</echo>
@@ -431,13 +440,6 @@
       <artifactId>colt</artifactId>
       <version>1.2.0</version>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>org.jquantlib</groupId>
-      <artifactId>annotations</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    -->
 
     <!-- 'provided' scope dependencies -->
     <dependency>
@@ -647,7 +649,7 @@
     </snapshotRepository>
     <site>
       <id>stagingSite-jquantlib.org</id>
-      <url>dav:${maven.deploy.site.url}/${project.artifactId}</url>
+      <url>dav:${maven.deploy.site.url}</url>
     </site>
   </distributionManagement>
   
@@ -666,7 +668,7 @@
     <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
     <maven.jar.index>false</maven.jar.index>
     <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
-    <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites</maven.deploy.site.url>
+    <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites/${project.artifactId}</maven.deploy.site.url>
     <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
   </properties>
 </project>

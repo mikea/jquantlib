@@ -21,10 +21,10 @@
 
 package org.jquantlib.time;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.ArrayList; //FIXME: performance
+import java.util.Collections; //FIXME: performance
+import java.util.Iterator; //FIXME: performance
+import java.util.List; //FIXME: performance
 
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;

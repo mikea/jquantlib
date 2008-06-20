@@ -20,10 +20,10 @@
 
 package org.jquantlib.indexes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.ArrayList; // FIXME :: performance
+import java.util.Collection; //FIXME: performance
+import java.util.Iterator; //FIXME: performance
+import java.util.List; //FIXME: performance
 
 import org.jquantlib.math.Closeness;
 import org.jquantlib.time.Calendar;
@@ -80,7 +80,7 @@ public abstract class Index implements Observable {
 	 * fixing; no settlement days must be used.
 	 */
 	public void addFixing(Date fixingDate, double fixing, boolean forceOverwrite) {
-		List<Date> fixingDates = new ArrayList<Date>();
+		List<Date> fixingDates = new ArrayList();
 		fixingDates.add(fixingDate);
 
 		List<Double> fixings = new ArrayList<Double>();
