@@ -22,7 +22,6 @@ package org.jquantlib.testsuite.date;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.testsuite.util.StopClock;
 import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -31,6 +30,7 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.DateParser;
 import org.jquantlib.util.Month;
+import org.jquantlib.util.StopClock;
 import org.junit.Test;
 
 /**

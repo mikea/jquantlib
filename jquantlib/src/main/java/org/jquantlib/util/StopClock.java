@@ -18,7 +18,7 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.testsuite.util;
+package org.jquantlib.util;
 
 public class StopClock {
 	public static enum Unit {

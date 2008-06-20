@@ -187,7 +187,7 @@
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
-          <finalName>${project.artifactId}-${project.version}</finalName>
+          <finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
           <archive>
             <index>${maven.jar.index}</index>
             <manifest>
@@ -225,7 +225,7 @@
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
-          <finalName>${project.artifactId}-${project.version}-ubber</finalName>
+          <finalName>${project.artifactId}-${project.version}-${buildNumber}_ubber</finalName>
           <appendAssemblyId>false</appendAssemblyId>
           <archive>
             <index>${maven.jar.index}</index>

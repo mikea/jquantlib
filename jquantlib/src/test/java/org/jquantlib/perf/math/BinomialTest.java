@@ -21,7 +21,7 @@
 package org.jquantlib.perf.math;
 
 import org.jquantlib.math.distributions.BinomialDistribution;
-import org.jquantlib.testsuite.util.StopClock;
+import org.jquantlib.util.StopClock;
 import org.junit.Test;
 
 import cern.jet.random.Binomial;

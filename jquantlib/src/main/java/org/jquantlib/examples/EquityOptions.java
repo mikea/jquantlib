@@ -95,47 +95,10 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
-import org.jquantlib.testsuite.util.StopClock;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
-
-//import org.quantlib.Actual365Fixed;
-//import org.quantlib.AmericanExercise;
-//import org.quantlib.AnalyticEuropeanEngine;
-//import org.quantlib.BaroneAdesiWhaleyEngine;
-//import org.quantlib.BermudanExercise;
-//import org.quantlib.BinomialVanillaEngine;
-//import org.quantlib.BjerksundStenslandEngine;
-//import org.quantlib.BlackConstantVol;
-//import org.quantlib.BlackScholesMertonProcess;
-//import org.quantlib.BlackVolTermStructure;
-//import org.quantlib.BlackVolTermStructureHandle;
-//import org.quantlib.Date;
-//import org.quantlib.DateVector;
-//import org.quantlib.DayCounter;
-//import org.quantlib.EuropeanExercise;
-//import org.quantlib.Exercise;
-//import org.quantlib.FDAmericanEngine;
-//import org.quantlib.FDBermudanEngine;
-//import org.quantlib.FDEuropeanEngine;
-//import org.quantlib.FlatForward;
-//import org.quantlib.IntegralEngine;
-//import org.quantlib.MCEuropeanEngine;
-//import org.quantlib.Month;
-//import org.quantlib.Option;
-//import org.quantlib.Payoff;
-//import org.quantlib.Period;
-//import org.quantlib.PlainVanillaPayoff;
-//import org.quantlib.Quote;
-//import org.quantlib.QuoteHandle;
-//import org.quantlib.Settings;
-//import org.quantlib.SimpleQuote;
-//import org.quantlib.StochasticProcess;
-//import org.quantlib.TimeUnit;
-//import org.quantlib.VanillaOption;
-//import org.quantlib.YieldTermStructure;
-//import org.quantlib.YieldTermStructureHandle;
+import org.jquantlib.util.StopClock;
 
 /**
  * Calculates equity option values with a number of methods

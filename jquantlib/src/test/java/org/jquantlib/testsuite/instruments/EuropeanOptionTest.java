@@ -56,10 +56,10 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.testsuite.util.StopClock;
 import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.StopClock;
 import org.junit.Test;
 
 
