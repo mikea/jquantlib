@@ -160,7 +160,6 @@
             </goals>
             <configuration>
               <tasks>
-                <echo>HOME=${HOME}</echo>
                 <echo>java.version=${java.version}</echo>
                 <echo>java.vm.version=${java.vm.version}</echo>
                 <echo>java.home=${java.home}</echo>
@@ -196,7 +195,15 @@
               <addExtensions>true</addExtensions>
             </manifest>
             <manifestEntries>
-              <Implementation-Build>${project.version}-${buildNumber}</Implementation-Build> <!-- TODO: adopt standards -->
+            
+              <Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes -->
+			  <Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
+			  <Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
+			  <Implementation-Title>${project.name}</Implementation-Title>
+			  <Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
+			  <Implementation-Version>${project.version}</Implementation-Version>
+              <Implementation-Build>${buildNumber}</Implementation-Build>
+              
               <App-Realm>${profile.manifest.app.realm}</App-Realm>
               <App-Mode>${profile.manifest.app.mode}</App-Mode>
               <App-URL>${profile.manifest.app.url}</App-URL>
