@@ -78,6 +78,12 @@ public class Factorial {
 		return gammaFunction.logValue(n + 1);
 	}	
 	
+	/**
+	 * Checks if <code>n</code> is >= 0.
+	 * 
+	 * @param n
+	 * @throws Arithmetic Exception if <code>n<0</code>
+	 */
 	private void check(int n){
 		if (n < 0) throw new ArithmeticException("Factorial: expected n >= 0, " + n);
 	}

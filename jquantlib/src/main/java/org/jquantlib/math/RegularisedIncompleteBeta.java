@@ -34,6 +34,8 @@ public class RegularisedIncompleteBeta {
 	private double tolerance_;
 	private int maxIterations_;
 	
+	private static final GammaFunction _gammaFunction = new GammaFunction();
+	
 	public RegularisedIncompleteBeta(double tolerance, int maxIterations){
 
 		checkMaxIterations(maxIterations);
@@ -103,6 +105,8 @@ public class RegularisedIncompleteBeta {
    */
   public double evaluate(double x,double a, double b) {
 	  
+	  
+	  
 	  checkMaxIterations(maxIterations_);
 
 	  if (!(a > 0.0)){
@@ -138,11 +142,12 @@ public class RegularisedIncompleteBeta {
           	betaContinuedFraction(b, a, 1.0-x, tolerance_, maxIterations_)/b;
   	}
 
+    /**
+     * Checks if <code>maxIterations</code> is >= 1.
+     * @param maxIterations
+     * @throws IllegalArgumentException if <code>maxIterations<1</code>
+     */
 	private void checkMaxIterations(int maxIterations){
 		if (maxIterations<1) throw new IllegalArgumentException("Expected maxIterations>0, " + maxIterations);
 	}
-
-	private static final GammaFunction _gammaFunction = new GammaFunction();
-	
-
 }
