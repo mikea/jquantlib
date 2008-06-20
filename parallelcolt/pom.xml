@@ -6,11 +6,35 @@
   <name>parallelcolt</name>
   <version>0.0.1-SNAPSHOT</version>
   <description>Parallel Colt</description>
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.4</version>
     </dependency>
+    
+    <!-- I havent added to repository yet! -->
+    <dependency>
+      <groupId>blas</groupId>
+      <artifactId>blas</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>f2jutil</groupId>
+      <artifactId>f2jutil</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>xerbla</groupId>
+      <artifactId>xerbla</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>lapack</groupId>
+      <artifactId>lapack</artifactId>
+      <version>0.0.1</version>
+    </dependency>
+    
   </dependencies>
 </project>
