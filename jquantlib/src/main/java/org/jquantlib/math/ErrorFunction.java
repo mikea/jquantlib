@@ -21,7 +21,17 @@
 package org.jquantlib.math;
 
 /**
- * @author <Richard Gomes>
+ * In mathematics, the error function (also called the Gauss error function) 
+ * is a non-elementary function which occurs in probability, statistics and 
+ * partial differential equations. It is defined as:
+ * 
+ * {@latex[
+ * \operatorname{erf}(x) = \frac{2}{\sqrt{\pi}}\int_0^x e^{-t^2} dt
+ * }
+ * 
+ * @see <a href="http://en.wikipedia.org/wiki/Error_function">Error Function on Wikipedia</a>
+ * 
+ * @author Richard Gomes
  */
 public class ErrorFunction {
 
@@ -120,11 +130,13 @@ public class ErrorFunction {
     private final static double tiny =  Constants.QL_EPSILON;
     
     private final static double  one =  1.00000000000000000000e+00; /* 0x3FF00000, 0x00000000 */
-        /* c = (float)0.84506291151 */
+        
+    /* c = (float)0.84506291151 */
     private final static double erx =  8.45062911510467529297e-01; /* 0x3FEB0AC1, 0x60000000 */
-        //
-        // Coefficients for approximation to  erf on [0,0.84375]
-        //
+        
+    //
+    // Coefficients for approximation to  erf on [0,0.84375]
+    //
     private final static double efx  =  1.28379167095512586316e-01; /* 0x3FC06EBA, 0x8214DB69 */
     private final static double efx8 =  1.02703333676410069053e+00; /* 0x3FF06EBA, 0x8214DB69 */
     private final static double pp0  =  1.28379167095512558561e-01; /* 0x3FC06EBA, 0x8214DB68 */
@@ -137,9 +149,10 @@ public class ErrorFunction {
     private final static double qq3  =  5.08130628187576562776e-03; /* 0x3F74D022, 0xC4D36B0F */
     private final static double qq4  =  1.32494738004321644526e-04; /* 0x3F215DC9, 0x221C1A10 */
     private final static double qq5  = -3.96022827877536812320e-06; /* 0xBED09C43, 0x42A26120 */
-        //
-        // Coefficients for approximation to  erf  in [0.84375,1.25]
-        //
+        
+    //
+    // Coefficients for approximation to  erf  in [0.84375,1.25]
+    //
     private final static double pa0  = -2.36211856075265944077e-03; /* 0xBF6359B8, 0xBEF77538 */
     private final static double pa1  =  4.14856118683748331666e-01; /* 0x3FDA8D00, 0xAD92B34D */
     private final static double pa2  = -3.72207876035701323847e-01; /* 0xBFD7D240, 0xFBB8C3F1 */
@@ -153,9 +166,10 @@ public class ErrorFunction {
     private final static double qa4  =  1.26171219808761642112e-01; /* 0x3FC02660, 0xE763351F */
     private final static double qa5  =  1.36370839120290507362e-02; /* 0x3F8BEDC2, 0x6B51DD1C */
     private final static double qa6  =  1.19844998467991074170e-02; /* 0x3F888B54, 0x5735151D */
-        //
-        // Coefficients for approximation to  erfc in [1.25,1/0.35]
-        //
+    
+    //
+    // Coefficients for approximation to  erfc in [1.25,1/0.35]
+    //
     private final static double ra0  = -9.86494403484714822705e-03; /* 0xBF843412, 0x600D6435 */
     private final static double ra1  = -6.93858572707181764372e-01; /* 0xBFE63416, 0xE4BA7360 */
     private final static double ra2  = -1.05586262253232909814e+01; /* 0xC0251E04, 0x41B0E726 */
@@ -172,9 +186,10 @@ public class ErrorFunction {
     private final static double sa6  =  1.08635005541779435134e+02; /* 0x405B28A3, 0xEE48AE2C */
     private final static double sa7  =  6.57024977031928170135e+00; /* 0x401A47EF, 0x8E484A93 */
     private final static double sa8  = -6.04244152148580987438e-02; /* 0xBFAEEFF2, 0xEE749A62 */
-        //
-        // Coefficients for approximation to  erfc in [1/.35,28]
-        //
+        
+    //
+    // Coefficients for approximation to  erfc in [1/.35,28]
+    //
     private final static double rb0  = -9.86494292470009928597e-03; /* 0xBF843412, 0x39E86F4A */
     private final static double rb1  = -7.99283237680523006574e-01; /* 0xBFE993BA, 0x70C285DE */
     private final static double rb2  = -1.77579549177547519889e+01; /* 0xC031C209, 0x555F995A */
@@ -253,7 +268,5 @@ public class ErrorFunction {
 	        if(x>=0) return one-r/ax;
 	        
 	        return  r/ax-one;
-
 	    }
-
 }

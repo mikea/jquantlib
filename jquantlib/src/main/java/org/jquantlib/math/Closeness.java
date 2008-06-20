@@ -32,6 +32,11 @@ package org.jquantlib.math;
  */
 //FIXME: code review
 final public class Closeness {
+	
+	//
+	// Static public final methods
+	//
+	
 	static public final boolean isClose(double x, double y) /* @ReadOnly */ {
 	    return isClose(x,y,42);
 	}

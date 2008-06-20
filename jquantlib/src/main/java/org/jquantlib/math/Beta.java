@@ -23,10 +23,21 @@ package org.jquantlib.math;
 import org.jquantlib.math.distributions.GammaFunction;
 
 /**
+ * 
+ * In mathematics, the beta function, also called the Euler integral of the first kind, 
+ * is a special function defined by 
+ * {@latex[
+ * \beta (x,y) = \int _0^1t^{x-1}(1-t)^{y-1}\,dt
+ * } for {@latex$ Re(x), Re(y) > 0}.<p>
+ * 
  * The implementation of the algorithm was inspired by
     "Numerical Recipes in C", 2nd edition,
     Press, Teukolsky, Vetterling, Flannery, chapter 6.
-    
+ *
+ *
+ * @see <a href="http://en.wikipedia.org/wiki/Beta_function">Beta function on Wikipedia</a>
+ * @see <a href="http://www.nrbook.com/a/bookcpdf/c6-1.pdf">Numerical Recipes in C, Chapter 6.1 (PDF, 58 KB)</a>
+ *    
  * @author Dominik Holenstein
  */
 
