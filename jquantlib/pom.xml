@@ -99,11 +99,11 @@
       <url>http://www.opensource.org/licenses/bsd-license.php</url>
       <distribution>manual</distribution>
       <comments>Open Source Initialive OSI - The BSD License</comments>
-    </license>
-  </licenses>
-  <scm>
-    <connection>${maven.scm.connection}</connection>
-    <developerConnection>${maven.scm.developerConnection}</developerConnection>
+	    </license>
+	  </licenses>
+	  <scm>
+	    <connection>${maven.scm.connection}</connection>
+	    <developerConnection>${maven.scm.developerConnection}</developerConnection>
     <url>${maven.scm.url}</url>
   </scm>
   <organization>
@@ -135,7 +135,6 @@
         </executions>
         <configuration>
           <doCheck>${maven.buildNumber.doCheck}</doCheck>
-          <doUpdate>${maven.buildNumber.doUpdate}</doUpdate>
         </configuration>
       </plugin>
       
@@ -197,12 +196,12 @@
             <manifestEntries>
             
               <Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes -->
-			  <Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
-			  <Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
-			  <Implementation-Title>${project.name}</Implementation-Title>
-			  <Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
-			  <Implementation-Version>${project.version}</Implementation-Version>
-              <Implementation-Build>${buildNumber}</Implementation-Build>
+							<Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
+							<Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
+							<Implementation-Title>${project.name}</Implementation-Title>
+							<Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
               
               <App-Realm>${profile.manifest.app.realm}</App-Realm>
               <App-Mode>${profile.manifest.app.mode}</App-Mode>
@@ -240,7 +239,15 @@
               <mainClass>${maven.jar.manifest.mainClass}</mainClass>
             </manifest>
             <manifestEntries>
-              <Implementation-Build>${project.version}-${buildNumber}</Implementation-Build>
+            
+              <Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes -->
+              <Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
+              <Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
+              <Implementation-Title>${project.name}</Implementation-Title>
+              <Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
+              <Implementation-Version>${project.version}</Implementation-Version>
+              <Implementation-Build>${buildNumber}</Implementation-Build>
+              
               <App-Realm>${profile.manifest.app.realm}</App-Realm>
               <App-Mode>${profile.manifest.app.mode}</App-Mode>
               <App-URL>${profile.manifest.app.url}</App-URL>
@@ -306,6 +313,20 @@
   </build>
   
   <profiles>
+
+    <profile>
+      <id>[revision=unchecked]</id>
+      <activation>
+        <property>
+          <name>revision</name>
+          <value>unchecked</value>
+        </property>
+      </activation>
+      <properties>
+        <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
+      </properties>
+    </profile>
+
     <profile>
       <id>[mode=debug]</id>
       <activation>
@@ -318,13 +339,11 @@
       <properties>
         <profile.manifest.app.mode>debug</profile.manifest.app.mode>
         <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
-        <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
       </properties>
     </profile>
     <profile>
       <id>[mode=dev]</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
         <property>
           <name>mode</name>
           <value>dev</value>
@@ -358,6 +377,7 @@
         <profile.manifest.app.mode>prod</profile.manifest.app.mode>
       </properties>
     </profile>
+
     <profile>
       <id>[realm=default]</id>
       <activation>
@@ -371,6 +391,7 @@
         <profile.manifest.app.realm>default</profile.manifest.app.realm>
       </properties>
     </profile>
+
   </profiles>
 
   <repositories>
@@ -667,8 +688,7 @@
     <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.developerConnection>
     <maven.scm.connection>scm:svn:http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.connection>
     <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.url>
-    <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
-    <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
+    <maven.buildNumber.doCheck>true</maven.buildNumber.doCheck>
     <maven.compile.source>1.6</maven.compile.source>
     <maven.compile.target>1.6</maven.compile.target>
     <maven.compile.encoding>UTF8</maven.compile.encoding>
