@@ -4,7 +4,7 @@ JQuantLib is a Quantitative Finance framework written in Java. It aims to
 provide enough tools for a broad range of financial instrument valuation
 using a number of algorithms, pricing engines, simulation methods, etc.
 
-If  you are impatient, jump to ''Building JQuantLib from command line''
+If you are impatient, jump to ''Building JQuantLib from command line''
  
 
 ==Audience== 
@@ -52,7 +52,7 @@ simply type the following command under Debian and variants:
 JQuantLib depends on [http://maven.apache.org Maven2] for its build process.
 In spite Maven is available as a Debian package, we prefer to install
 it by hand from the official Apache download site because it's a better 
-controlled method which does not imply on installation of the entire Java 
+controlled method which does not imply on the installation of the entire Java 
 environment chosen by Debian packages. Doing so, you control which Java 
 environment you are using and in the future, you will be able to switch to 
 Java7 in order to take advantage of some advanced compilation options it 
@@ -107,15 +107,19 @@ the standard build environment offered by Maven:
  mvn clean package
  
 The first time you execute the ''mvn'' command above, Maven2 will download
-all dependencies for you. This process will take some time. You can take a
-break and have a coffee. When you return, you will find JQuantLib's .jar
-file under your ''target'' directory.
+all dependencies for you. This process will take time enough for a cup coffee.
+When you return, you will find some JARs under your ''target'' directory.
 
  ls -al target
 
-Now you can run JQuantLib Unit tests by typing
+The biggest file is a ''single JAR file'', a.k.a. ''ubber'' JAR, which contains
+everything needed to run. So... go for it!
 
-  mvn test
+ java -jar target/jquantlib*ubber.jar
+
+You will see a very simple demonstration of what JQuantLib is able to calculate.
+As JQuantLib evolves, more financial instruments, more pricing engines and
+algorithms will be shown.
 
 
 ===Obtaining documentation===
@@ -131,11 +135,12 @@ variants simply by typing:
 Maven is able to generate full documentation, including JavaDocs, results
 of automated tests, quality reports, etc simply by typing:
 
+ cd ~/workspace/jquantlib
  mvn site
 
 Now browse the generated documentation;
 
- firefox site/index.html
+ firefox target/site/index.html
 
 
 ==Building JQuantLib under Eclipse==
@@ -160,9 +165,10 @@ Please install the following plug-ins:
 
 '''Essential plug-ins
        
-* Subversive is a plugin which integrates Eclipse and Subversion. We've chosen
-Subversive instead of [http://subclipse.tigris.org/ Subclipse] because the former
-looks more mature and keeps history after refactoring whilst the latter doesn't.
+* Subversive is a <span style="color:blue">highly recommended</span> plugin which
+integrates Eclipse and Subversion. We've chosen Subversive instead of 
+[http://subclipse.tigris.org/ Subclipse] because the Subversive looks more mature
+and it keeps the history after refactorings whilst Subclipse doesn't, afaik.
  
  name: Subversive
  URL: http://download.eclipse.org/technology/subversive/0.7/update-site/
@@ -180,9 +186,9 @@ provided by Maven into your Eclipse IDE, among other features.
  URL: http://m2eclipse.codehaus.org/update/
 
 Tips
-** Select m2eclipse and ask Eclipse to "Select Required"
-** Select Mylyn and Mylyn extras
-** Unselect broken references to BuckMinster products, if any.
+* Select m2eclipse and ask Eclipse to "Select Required"
+* Select Mylyn and Mylyn extras
+* Unselect broken references to BuckMinster products, if any.
  
 * [http://findbugs.cs.umd.edu FindBugs] analyses your code and point out
 places where you probably have a bug or a bad practice listed in FindBugs
@@ -246,8 +252,8 @@ plugin will perform a magic for you:
 * compile JQuantLib
 
 The first time you open ''jquantlib'' project, it may take a relatively long
-time to compile due to the amount and file sizes of dependencies involved.
-You can take a break and have a coffee.
+time to compile due to the amount of dependencies involved. You can take your time
+and have a coffee.
 
 
 ===Running Unit tests===
@@ -266,10 +272,12 @@ EclEmma plugin will execute all test cases. You can see the output in
 
 JQuantLib is a software library, intended to be included by developers in 
 applications developed by them. Developers are responsible for chosing what
-they think is the best what to distribute and install JQuantLib binaries.
+they think is more adequate for a particular purpose.
 
 
 ==Additional documentation==
 
 The main source of information is our wiki at http://wiki.jquantlib.org/
 
+
+[[User:RichardGomes|RichardGomes]] 01:51, 5 June 2008 (UTC)
