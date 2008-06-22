@@ -4,7 +4,7 @@
   <groupId>org.jquantlib</groupId>
   <artifactId>jquantlib</artifactId>
   <name>JQuantLib</name>
-  <version>0.0.2-RC1</version>
+  <version>0.1.0-RC1</version>
   <description>JQuantLib aims to provide a free, open-source and comprehensive framework for quantitative finance, written in Java. See also: http://www.jquantlib.org/</description>
   <url>${maven.deploy.site.url}</url>
   
