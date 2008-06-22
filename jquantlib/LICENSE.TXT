@@ -3,6 +3,8 @@ JQuantLib is
 
 All rights reserved.
 
+This source code is release under the BSD License.
+ 
 JQuantLib includes code taken from QuantLib.
 
 Redistribution and use in source and binary forms, with or without
