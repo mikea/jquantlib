@@ -95,14 +95,7 @@ public abstract class NewInstrument extends Instrument {
 
     /**
      * Default constructor for a <i>new-style</i> {@link Instrument}
-     * <p>
-     * This constructor is deprecated and should be avoided.<br/> Reason: Once we split the original C++ class Instrument into 3
-     * Java classes: Instrument, OldInstrument and NewInstrument, there's no reason anymore for postponing the moment we pass a
-     * PricingEngine as argument to NewInstrument. This is because every extended class of NewInstrument knows that this should be
-     * done and it can be done at construction, probably.
      */
-    // PENDING: we must do the best efforts to remove this constructor
-    @Deprecated
     protected NewInstrument() {
         super();
         this.engine = null;
@@ -125,19 +118,12 @@ public abstract class NewInstrument extends Instrument {
     //
 
     /**
-     * This method defines the external {@link PricingEngine} to be used for a <i>new-style</i> {@link Instrument}.
-     * <p>
-     * This method is deprecated and should be avoided.<br/> Reason: Once we split the original C++ class Instrument into 3 Java
-     * classes: Instrument, OldInstrument and NewInstrument, there's no reason anymore for postponing the moment we pass a
-     * PricingEngine as argument to NewInstrument. This is because every extended class of NewInstrument knows that this should be
-     * done and it can be done at construction, probably.
+     * This method defines an external {@link PricingEngine} to be used for a <i>new-style</i> {@link Instrument}.
      * 
      * @param engine is the external {@link PricingEngine} to be used
      * 
      * @see PricingEngine
      */
-    // PENDING: we must do the best efforts to remove this method
-    @Deprecated
     public final void setPricingEngine(final PricingEngine engine) {
         if (this.engine != null) {
             this.engine.deleteObserver(this);

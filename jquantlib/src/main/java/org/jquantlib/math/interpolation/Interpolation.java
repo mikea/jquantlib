@@ -54,7 +54,7 @@ public interface Interpolation extends Extrapolator, UnaryFunctionDouble {
 	 * This method performs the interpolation itself.
 	 * 
 	 * @note This method is deprecated as it causes confusion with
-	 * Observer.update. Concrete implementations must fall back to Interpolation#reload.
+	 * Observer.update. Concrete implementations must use Interpolation#reload insted.
 	 * 
 	 * @deprecated
 	 */

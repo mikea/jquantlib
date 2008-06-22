@@ -65,6 +65,11 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
     // implements Interpolation
     //
     
+	/**
+	 * This method must be avoided due to confusion with <code>Observer.update(org.jquantlib.util.Observable, Object)</code>
+	 * <p>
+	 * Use <code>reload()</code> instead.
+	 */
 	@Deprecated
 	public void update() { reload(); }
 
