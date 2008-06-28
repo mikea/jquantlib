@@ -26,7 +26,7 @@ package org.jquantlib.math.randomnumbers;
 
 import java.util.*;
 import java.util.Date;
-// import org.jquantlib.math.randomnumbers.MersenneTwisterUniformRng;
+import org.jquantlib.math.randomnumbers.MersenneTwisterUniformRng;
 
 
 /**
@@ -37,7 +37,7 @@ import java.util.Date;
 
 //TODO: Under construction
 
-/*
+
 public class SeedGenerator {
 	
 	//
@@ -79,14 +79,13 @@ public class SeedGenerator {
 		long skip = second.nextInt32() % 1000;
 		
 		
-		ArrayList<Long> init = new ArrayList<Long>();
+		long[] init = new long[4];
 
-		init.add(second.nextInt32());
-		init.add(second.nextInt32());
-		init.add(second.nextInt32());
-		init.add(second.nextInt32());
+		for (int i=0; i<4; i++) {
+			init[i] = second.nextInt32();
+		}
 			
-		rng_ = MersenneTwisterUniformRngByArray(init);
+	//	rng_ = MersenneTwisterUniformRngByArray(init);  --> Constructor for long[] not available yet
 		
 		for (long i=0; i<skip; i++ ){
 			rng_.nextInt32();
@@ -119,4 +118,4 @@ public class SeedGenerator {
 	
 }
 
-*/
+
