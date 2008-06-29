@@ -48,53 +48,32 @@ public class MersenneTwisterUniformRng {
 	private static final int MATRIX_A = 0x9908b0df;
 	
 	// Period parameters
-	private static final int N = 624;
-	private static final int M = 397;
-	private static int[] mag01 = {0x0,MATRIX_A};
-	
+	private static final long N = 624;
+	private static final long M = 397;
 	
 	// most significant w-r bits
-	private static final int UPPER_MASK = 0x80000000;
+	private static final long UPPER_MASK = 0x80000000;
 	
 	// least significant r bits
-	private static final int LOWER_MASK = 0x7fffffff;
+	private static final long LOWER_MASK = 0x7fffffff;
 	
-	//
-	private static final int TEMPERING_MASK_B=0x9d2c5680;
-	private static final int TEMPERING_MASK_C=0xefc60000;
-	
-	public static final int DEFAULT_SEED = 4357;
+	// Tempering Masks
+	private static final long TEMPERING_MASK_B=0x9d2c5680;
+	private static final long TEMPERING_MASK_C=0xefc60000;
 	
 	
 	//
 	// private fields
 	//
 	
-	private int mti; 
-	private int[] mt = new int[N];
+	private int  mti; 
+	private long[] mt = new long[(int)N];
 	
 	
 	
 	//
 	// Constructors
 	//
-	
-	/**
-	 * Constructs and returns a random number generator with the given seed.
-	 */
-	public MersenneTwisterUniformRng(int[] seed){
-		seedInitialization(seed);
-	}
-	
-	
-	/**
-	 * Constructs and returns a random number generator seeded with the given date.
-	 *
-	 * @param d typically <tt>new java.util.Date()</tt>
-	 */
-	public MersenneTwisterUniformRng() {
-		seedInitialization(System.currentTimeMillis());
-	}
 	
 	/** Creates a new random number generator using a single long seed.
 	   * @param seed the initial seed (64 bits integer)
@@ -108,25 +87,21 @@ public class MersenneTwisterUniformRng {
 	  // Seed initializers
 	  //
 	/**
-	 * Initialize the generator with a given int seed.
-	 * @param seed the initial seed as a 32 bits integer
+	 * Initialize the generator with a given long seed.
+	 * @param seed the initial seed as long
 	 */
-	public void seedInitialization(int seed) {
-	    // we use a long masked by 0xffffffffL as a poor man unsigned int
-	    long longMT = seed;
-	    mt[0]= (int) longMT;
+	public void seedInitialization(long seed) {
+		long s = SeedGenerator.getInstance().get();
+	    mt[0]= s & 0xffffffff;
 	    for (mti = 1; mti < N; ++mti) {
-	      // See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier.
-	      // initializer from the 2002-01-09 C version by Makoto Matsumoto
-	      longMT = (1812433253l * (longMT ^ (longMT >> 30)) + mti) & 0xffffffffL; 
-	      mt[mti]= (int) longMT;
+	    	mt[mti] = (1812433253 * (mt[mti-1] ^ (mt[mti-1] >> 30 )) + mti);
+	    	// See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier.
+	    	// initializer from the 2002-01-09 C version by Makoto Matsumoto
+	    	mt[mti]&= 0xffffffff;
 	    }
 	  }
 	
-	/**
-	 * Initialize the generator with the given int seed.
-	 * @param seeds
-	 */
+	/*
 	protected void seedInitialization(int[] seeds){
 		       
         seedInitialization(19650218);
@@ -163,12 +138,9 @@ public class MersenneTwisterUniformRng {
         mt[0] = 0x80000000; // MSB is 1; assuring non-zero initial array
 		
 	}
+	*/
 	
-	 /** Initialize the generator with given long seed.
-	   * <p>The state of the generator is exactly the same as a new
-	   * generator built with the same seed.</p>
-	   * @param seed the initial seed (64 bits integer)
-	   */
+	/*
 	  public void seedInitialization(long seed) {
 	    if (mt == null) {
 	      // this is probably a spurious call from base class constructor,
@@ -178,28 +150,27 @@ public class MersenneTwisterUniformRng {
 	    }
 	    seedInitialization(new int[] { (int) (seed >>> 32), (int) (seed & 0xffffffffl) });
 	  }
-	
+	*/
 	
 	
 	public long nextInt32() {
 			  	
-	  	int y;
+	  	long y;
 	  	int k;
 	  	
 	  	long[] mag01 = {0x0, MATRIX_A};
 
         if (mti >= N) { /* generate N words at one time */
             
-        	int mtNext = mt[0];
+        	long mtNext = mt[0];
 
-            for (k=0;k<N-M;++k) {
-            	int mtThis = mtNext;
+            for (k=0;k<N-M;k++) {
+            	long mtThis = mtNext;
                 y = (mtThis & UPPER_MASK)|(mtNext & LOWER_MASK);
-                int kPlusM = k+M;
-    //            mt[k] = mt[k+M] ^ (y >>> 1) ^ mag01[y & 0x1];
+  //              mt[k] = mt[k+(int)M] ^ (y >>> 1) ^ mag01[y & 0x1];
             }
-            for (k=N; k<N-1;++k) {
-            	int mtThis = mtNext;
+            for (k=(int)N; k<N-1;++k) {
+            	long mtThis = mtNext;
             	mtNext = mt[k+1];
                 y = (mtThis & UPPER_MASK)|(mtNext & LOWER_MASK);
      //           mt[k] = mt[k+(M-N)] ^ (y >>> 1) ^ mag01[y & 0x1];

@@ -69,7 +69,6 @@ public class SeedGenerator {
 		long firstSeed = now.getTime();
 		MersenneTwisterUniformRng first = new MersenneTwisterUniformRng(firstSeed);
 		
-		
 		// secondSeed is as random as it could be
 		// feel free to suggest improvements
 	 	long secondSeed = first.nextInt32();
@@ -77,21 +76,17 @@ public class SeedGenerator {
 		
 		// use the second rng to initialize the final one
 		long skip = second.nextInt32() % 1000;
+		List<Long> init = new ArrayList<Long>(4);
+		init.add(second.nextInt32());
+		init.add(second.nextInt32());
+		init.add(second.nextInt32());
+		init.add(second.nextInt32());
 		
-		
-		long[] init = new long[4];
-
-		for (int i=0; i<4; i++) {
-			init[i] = second.nextInt32();
-		}
-			
-	//	rng_ = MersenneTwisterUniformRngByArray(init);  --> Constructor for long[] not available yet
+	//	MerseenneTwisterUniformRng rng_ = MersenneTwisterUniformRngByArray(init);  // --> Constructor for long[] not available yet
 		
 		for (long i=0; i<skip; i++ ){
 			rng_.nextInt32();
 		}
-	
-		
 	}
 	
 	//
@@ -110,7 +105,6 @@ public class SeedGenerator {
 		return instance; 
 	}
 
-	
 	
 	public long get() {
 		return  rng_.nextInt32();
