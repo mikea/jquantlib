@@ -51,7 +51,7 @@ public class SeedGenerator {
 	// private fields
 	//
 	
-	private MersenneTwisterUniformRng rng_;
+	private MersenneTwisterUniformRng rng_ = new MersenneTwisterUniformRng();
 	
 	
 	//
@@ -62,7 +62,7 @@ public class SeedGenerator {
 		// rng_ = 42;
 	}
 
-	private void initialize() {
+	public void initialize() {
 		
 		// firstSeed is chosen based on Date and used for the first rng 
 		Date now = new Date();

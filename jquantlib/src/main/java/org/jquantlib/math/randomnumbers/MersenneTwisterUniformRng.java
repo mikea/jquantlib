@@ -25,8 +25,8 @@ package org.jquantlib.math.randomnumbers;
 
 import java.util.ArrayList;
 import java.util.Date;
-
 import org.jquantlib.math.randomnumbers.SeedGenerator;
+import org.jquantlib.methods.montecarlo.Sample;
 
 
 /**
@@ -45,11 +45,11 @@ public class MersenneTwisterUniformRng {
 	//
 	
 	// constant vector a	
-	private static final int MATRIX_A = 0x9908b0df;
+	private static final long MATRIX_A = 0x9908b0df;
 	
 	// Period parameters
-	private static final long N = 624;
-	private static final long M = 397;
+	private static final int N = 624;
+	private static final int M = 397;
 	
 	// most significant w-r bits
 	private static final long UPPER_MASK = 0x80000000;
@@ -67,13 +67,15 @@ public class MersenneTwisterUniformRng {
 	//
 	
 	private int  mti; 
-	private long[] mt = new long[(int)N];
-	
+	private long[] mt = new long[N];
 	
 	
 	//
 	// Constructors
 	//
+	
+	public MersenneTwisterUniformRng(){
+	}
 	
 	/** Creates a new random number generator using a single long seed.
 	   * @param seed the initial seed (64 bits integer)
@@ -93,90 +95,70 @@ public class MersenneTwisterUniformRng {
 	public void seedInitialization(long seed) {
 		long s = SeedGenerator.getInstance().get();
 	    mt[0]= s & 0xffffffff;
-	    for (mti = 1; mti < N; ++mti) {
+	    for (mti = 1; mti < N; mti++) {
 	    	mt[mti] = (1812433253 * (mt[mti-1] ^ (mt[mti-1] >> 30 )) + mti);
 	    	// See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier.
 	    	// initializer from the 2002-01-09 C version by Makoto Matsumoto
-	    	mt[mti]&= 0xffffffff;
+	    	
+	    	// for >32 bit machines
+	    	// mt[mti]&= 0xffffffff;
 	    }
 	  }
 	
-	/*
-	protected void seedInitialization(int[] seeds){
-		       
+
+	protected void seedInitialization(ArrayList<Long> seeds){   
         seedInitialization(19650218);
-        int i = 1;
-        int j = 0;
-
-        for (int k = Math.max(N, seeds.length); k != 0; k--) {
-          long l0 = (mt[i] & 0x7fffffffl)   | ((mt[i]   < 0) ? 0x80000000l : 0x0l);
-          long l1 = (mt[i-1] & 0x7fffffffl) | ((mt[i-1] < 0) ? 0x80000000l : 0x0l);
-          long l  = (l0 ^ ((l1 ^ (l1 >> 30)) * 1664525l)) + seeds[j] + j; // non linear
-          mt[i]   = (int) (l & 0xffffffffl);
-          i++; j++;
-          if (i >= N) {
-            mt[0] = mt[N - 1];
-            i = 1;
-          }
-          if (j >= seeds.length) {
-            j = 0;
-          }
+        int i=1;
+        int j=0;
+        
+        for (int k = Math.max(N, seeds.size()); k != 0; k--) {
+            mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >>> 30)) * 1664525)) + seeds.indexOf(j) + j; // non linear 
+            // mt[i] &= 0xffffffff; // for WORDSIZE > 32 machines 
+            i++; 
+            j++;
+            if (i>=N) { 
+            	mt[0] = mt[N-1]; i=1; 
+            }
+            if (j>=seeds.size()) {
+            	j=0;
+            }
         }
-
-        for (int k = N - 1; k != 0; k--) {
-          long l0 = (mt[i] & 0x7fffffffl)   | ((mt[i]   < 0) ? 0x80000000l : 0x0l);
-          long l1 = (mt[i-1] & 0x7fffffffl) | ((mt[i-1] < 0) ? 0x80000000l : 0x0l);
-          long l  = (l0 ^ ((l1 ^ (l1 >> 30)) * 1566083941l)) - i; // non linear
-          mt[i]   = (int) (l & 0xffffffffL);
-          i++;
-          if (i >= N) {
-            mt[0] = mt[N - 1];
-            i = 1;
-          }
-        }
-
+        
+        for (int k=N-1; k!=0; k--) {
+            mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >>> 30)) * 1566083941)) - i; // non linear 
+         //    mt[i] &= 0xffffffffUL; // for WORDSIZE > 32 machines 
+            i++;
+            if (i>=N) { mt[0] = mt[N-1]; i=1; }
+        } 
+        
         mt[0] = 0x80000000; // MSB is 1; assuring non-zero initial array
-		
 	}
-	*/
-	
-	/*
-	  public void seedInitialization(long seed) {
-	    if (mt == null) {
-	      // this is probably a spurious call from base class constructor,
-	      // we do nothing and wait for the setSeed in our own
-	      // constructors after array allocation
-	      return;
-	    }
-	    seedInitialization(new int[] { (int) (seed >>> 32), (int) (seed & 0xffffffffl) });
-	  }
-	*/
 	
 	
+	/**
+	 * Return a random number on [0,0xffffffff]-interval
+	 * @return y 
+	 * 
+	 */
 	public long nextInt32() {
 			  	
 	  	long y;
-	  	int k;
-	  	
-	  	long[] mag01 = {0x0, MATRIX_A};
+	  	long[] mag01 = {0x0, MATRIX_A}; 
 
         if (mti >= N) { /* generate N words at one time */
-            
+        	int kk;
         	long mtNext = mt[0];
 
-            for (k=0;k<N-M;k++) {
-            	long mtThis = mtNext;
-                y = (mtThis & UPPER_MASK)|(mtNext & LOWER_MASK);
-  //              mt[k] = mt[k+(int)M] ^ (y >>> 1) ^ mag01[y & 0x1];
+            for (kk=0;kk<N-M;kk++) {
+                y = (mt[kk] & UPPER_MASK)|(mt[kk+1] & LOWER_MASK);
+                mt[kk] = mt[kk+M] ^ (y >>> 1) ^ mag01[(int)	y & 0x1];
             }
-            for (k=(int)N; k<N-1;++k) {
-            	long mtThis = mtNext;
-            	mtNext = mt[k+1];
-                y = (mtThis & UPPER_MASK)|(mtNext & LOWER_MASK);
-     //           mt[k] = mt[k+(M-N)] ^ (y >>> 1) ^ mag01[y & 0x1];
+            for (kk=N; kk<N-1;kk++) {
+                y = (mt[kk] & UPPER_MASK)|(mt[kk+1] & LOWER_MASK);
+                mt[kk] = mt[kk+(M-N)] ^ (y >>> 1) ^ mag01[(int)y & 0x1];
             }
             y = (mtNext & UPPER_MASK)|(mt[0] & LOWER_MASK);
-     //       mt[N-1] = mt[M-1] ^ (y >>> 1) ^ mag01[y & 0x1];
+            mt[N-1] = mt[M-1] ^ (y >>> 1) ^ mag01[(int)y & 0x1];
 
             mti = 0;
         }
@@ -189,11 +171,24 @@ public class MersenneTwisterUniformRng {
 		y ^= y >>> 11; // y ^= TEMPERING_SHIFT_U(y );
 		y ^= (y << 7) & TEMPERING_MASK_B; // y ^= TEMPERING_SHIFT_S(y) & TEMPERING_MASK_B;
 		y ^= (y << 15) & TEMPERING_MASK_C; // y ^= TEMPERING_SHIFT_T(y) & TEMPERING_MASK_C;	
-		// y &= 0xffffffff; //you may delete this line if word size = 32 
 		y ^= y >>> 18; // y ^= TEMPERING_SHIFT_L(y);
 
 		return y;
 	}
+	
+	/**
+	 * Returns a sample with weight 1.0 containing a random number on
+	 * (0.0, 1.0)-real-interval.
+	 * @return 
+	 */
+	
+	public final Sample<Double> next() {
+		// divide by 2^32
+		double result = ((double)nextInt32() + 0.5)/4294967296.0;
+		Sample<Double> sample_value = new Sample<Double>(result,1.0);
+		return sample_value;
+	}
+
 }
 
 
