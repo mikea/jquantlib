@@ -29,6 +29,9 @@ package org.jquantlib.methods.montecarlo;
  * @param <E>
  */
 
+//TODO: Add JavaDocs
+//TODO: Code review
+
 //weighted sample
 public class Sample<T> {
 	
