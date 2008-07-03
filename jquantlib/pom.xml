@@ -92,6 +92,19 @@
       </roles>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>aaron_k_roth</id>
+      <name>Aaron Roth</name>
+      <email/>
+      <url/>
+      <organization>JQuantLib.org</organization>
+      <organizationUrl>http://www.jquantlib.org/</organizationUrl>
+      <roles>
+        <role>developer</role>
+        <role>tester</role>
+      </roles>
+      <timezone>0</timezone>
+    </developer>
   </developers>
   <licenses>
     <license>
