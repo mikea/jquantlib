@@ -1335,7 +1335,7 @@ public class SobolRsg {
     // const int SobolRsg::bits_ = 8*sizeof(unsigned long);
 	
 	// bits_ = 8*sizeof(long) = 8 * 8(bytes)
-	private static final int bits_ = 64;									// C++:static const int bits_;
+	private static final int bits_ = 64;		// C++:static const int bits_;
 	
 	// 1/(2^bits_) (written as (1/2)/(2^(bits_-1)) to avoid long overflow)
     private static final double normalizationFactor_= 0.5/(1 << (bits_-1)); // static const double normalizationFactor_;
@@ -1346,16 +1346,18 @@ public class SobolRsg {
 	// private fields
 	//
 	private int dimensionality_; 							// Size dimensionality_;
-	private long sequenceCounter_; 							// mutable  long sequenceCounter_;
+	private long sequenceCounter_; 							// mutable unsigned long sequenceCounter_;
 	private boolean firstDraw_; 							// mutable bool firstDraw_;
 	private Sample<ArrayList<Double>> sequence_; 			// typedef Sample<std::vector<Real> > sample_type; / mutable sample_type sequence_;
-	private ArrayList<Long> integerSequence_; 				// mutable std::vector< long> integerSequence_
+	private ArrayList<Long> integerSequence_; 				// mutable std::vector<unsigned long> integerSequence_
 	
 	//FIXME: Is this the correct translation of std::vector<std::vector< long> > directionIntegers_?
 	private ArrayList<ArrayList<Long>> directionIntegers_; 			// std::vector<std::vector< long> > directionIntegers_
 	
 	
 	//pre dimensionality must be <= PPMT_MAX_DIM 
+	
+	//C++ constructor:
 	//public SobolRsg(int dimensionality, long seed = 0, DirectionIntegers directionIntegers = Jaeckel);
 	
     public SobolRsg(int dimensionality, long seed, DirectionIntegers directionIntegers) {
