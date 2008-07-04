@@ -67,7 +67,7 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
     /**
      * Returns the value of an {@link Instrument} at maturity under {@link Payoff} conditions
      */
-    protected abstract /* @Price */double valueOf(/* @Price */double price);
+    public abstract /* @Price */double valueOf(/* @Price */double price);
 
 
 	//
