@@ -4,26 +4,31 @@
   <groupId>org.jquantlib</groupId>
   <artifactId>jquantlib</artifactId>
   <name>JQuantLib</name>
-  <version>0.1.0-RC1</version>
-  <description>JQuantLib aims to provide a free, open-source and comprehensive framework for quantitative finance, written in Java. See also: http://www.jquantlib.org/</description>
-  <url>${maven.deploy.site.url}</url>
+  <version>0.1.2-SNAPSHOT</version>
+  <description>JQuantLib aims to provide a free, open-source and comprehensive framework for quantitative finance, written in Java.</description>
+  <url>http://www.jquantlib.org/</url>
   
   <prerequisites> 
-	  <maven>2.0.9</maven>
+    <maven>2.0.9</maven>
   </prerequisites>
   
   <ciManagement>
-    <system>continuum</system>
+    <system>Continuum</system>
     <url>${maven.ci.url}</url>
     <notifiers>
       <notifier>
-        <type>mail</type>
-        <sendOnError>true</sendOnError>
-        <sendOnFailure>true</sendOnFailure>
-        <sendOnSuccess>true</sendOnSuccess>
-        <sendOnWarning>true</sendOnWarning>
         <configuration>
-            <address>admin@jquantlib.org</address>
+          <address>rgomes1997@yahoo.co.uk</address>
+        </configuration>
+      </notifier>
+      <notifier>
+        <configuration>
+          <address>srinivas_h@yahoo.com</address>
+        </configuration>
+      </notifier>
+      <notifier>
+        <configuration>
+          <address>dholenstein@gmail.com</address>
         </configuration>
       </notifier>
     </notifiers>
@@ -69,7 +74,7 @@
     <developer>
       <id>shasti</id>
       <name>Srinivas Hasti</name>
-      <email/>
+      <email>srinivas_h@yahoo.com</email>
       <url/>
       <organization>JQuantLib.org</organization>
       <organizationUrl>http://www.jquantlib.org/</organizationUrl>
@@ -77,7 +82,7 @@
         <role>developer</role>
         <role>tester</role>
       </roles>
-      <timezone>-3</timezone>
+      <timezone>-5</timezone>
     </developer>
     <developer>
       <id>homdol</id>
@@ -111,12 +116,12 @@
       <name>BSD License</name>
       <url>http://www.opensource.org/licenses/bsd-license.php</url>
       <distribution>manual</distribution>
-      <comments>Open Source Initialive OSI - The BSD License</comments>
-	    </license>
-	  </licenses>
-	  <scm>
-	    <connection>${maven.scm.connection}</connection>
-	    <developerConnection>${maven.scm.developerConnection}</developerConnection>
+      <comments>Open Source Initiative OSI - The BSD License</comments>
+      </license>
+    </licenses>
+    <scm>
+      <connection>${maven.scm.connection}</connection>
+      <developerConnection>${maven.scm.developerConnection}</developerConnection>
     <url>${maven.scm.url}</url>
   </scm>
   <organization>
@@ -161,7 +166,7 @@
         </configuration>
       </plugin>
       
-	  <plugin>
+    <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
@@ -184,14 +189,17 @@
             </configuration>
           </execution>
         </executions>
-	  </plugin>
-	  
+    </plugin>
+    
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>${maven.compile.source}</source>
-          <target>${maven.compile.target}</target>
+          <source>${maven.compile.jdk}</source>
+          <target>${maven.compile.jdk}</target>
           <encoding>${maven.compile.encoding}</encoding>
+          <meminitial>${maven.compile.meminitial}</meminitial>
+          <maxmem>${maven.compile.maxmem}</maxmem>
+          <fork>${maven.compile.fork}</fork>
         </configuration>
       </plugin>
       
@@ -209,16 +217,16 @@
             <manifestEntries>
             
               <Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes -->
-							<Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
-							<Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
-							<Implementation-Title>${project.name}</Implementation-Title>
-							<Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
-							<Implementation-Version>${project.version}</Implementation-Version>
-							<Implementation-Build>${buildNumber}</Implementation-Build>
+              <Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
+              <Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
+              <Implementation-Title>${project.name}</Implementation-Title>
+              <Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
+              <Implementation-Version>${project.version}</Implementation-Version>
+              <Implementation-Build>${buildNumber}</Implementation-Build>
               
-              <App-Realm>${profile.manifest.app.realm}</App-Realm>
-              <App-Mode>${profile.manifest.app.mode}</App-Mode>
-              <App-URL>${profile.manifest.app.url}</App-URL>
+              <App-Realm>${profile.manifest.app.realm}</App-Realm> <!-- reserved for the future -->
+              <App-Mode>${profile.manifest.app.mode}</App-Mode>    <!-- reserved for the future --> 
+              <App-URL>${project.url}</App-URL>
             </manifestEntries>
           </archive>
         </configuration>
@@ -261,9 +269,9 @@
               <Implementation-Version>${project.version}</Implementation-Version>
               <Implementation-Build>${buildNumber}</Implementation-Build>
               
-              <App-Realm>${profile.manifest.app.realm}</App-Realm>
-              <App-Mode>${profile.manifest.app.mode}</App-Mode>
-              <App-URL>${profile.manifest.app.url}</App-URL>
+              <App-Realm>${profile.manifest.app.realm}</App-Realm> <!-- reserved for the future -->
+              <App-Mode>${profile.manifest.app.mode}</App-Mode>    <!-- reserved for the future -->
+              <App-URL>${project.url}</App-URL>
             </manifestEntries>
           </archive>
         </configuration>
@@ -286,12 +294,12 @@
             <echo>project.groupId=${project.groupId}</echo>
             <echo>project.artifactId=${project.artifactId}</echo>
             <echo>project.version=${project.version}-${buildNumber}</echo>
-            <echo>maven.compile.source=${maven.compile.source}</echo>
-            <echo>maven.compile.target=${maven.compile.target}</echo>
+            <echo>project.url=${project.url}</echo>
+            <echo>maven.compile.jdk=${maven.compile.jdk}</echo>
             <echo>maven.jar.manifest.mainClass=${maven.jar.manifest.mainClass}</echo>
-            <echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo>
-            <echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>
-            <echo>profile.manifest.app.url=${profile.manifest.app.url}</echo>
+            <echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo> <!-- reserved for the future -->
+            <echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>   <!-- reserved for the future -->
+            <echo>project.url=${project.url}</echo>
           </tasks>
         </configuration>
       </plugin>
@@ -325,6 +333,8 @@
 
   </build>
   
+  
+  
   <profiles>
 
     <profile>
@@ -340,10 +350,11 @@
       </properties>
     </profile>
 
-    <profile>
+
+
+    <profile> <!-- reserved for the future -->
       <id>[mode=debug]</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
         <property>
           <name>mode</name>
           <value>debug</value>
@@ -354,7 +365,8 @@
         <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
       </properties>
     </profile>
-    <profile>
+
+    <profile> <!-- reserved for the future -->
       <id>[mode=dev]</id>
       <activation>
         <property>
@@ -366,7 +378,8 @@
         <profile.manifest.app.mode>dev</profile.manifest.app.mode>
       </properties>
     </profile>
-    <profile>
+
+    <profile> <!-- reserved for the future -->
       <id>[mode=test]</id>
       <activation>
         <property>
@@ -378,7 +391,8 @@
         <profile.manifest.app.mode>test</profile.manifest.app.mode>
       </properties>
     </profile>
-    <profile>
+
+    <profile> <!-- reserved for the future -->
       <id>[mode=prod]</id>
       <activation>
         <property>
@@ -391,7 +405,7 @@
       </properties>
     </profile>
 
-    <profile>
+    <profile> <!-- reserved for the future -->
       <id>[realm=default]</id>
       <activation>
         <activeByDefault>true</activeByDefault>
@@ -409,34 +423,26 @@
 
   <repositories>
     <repository>
-      <releases/>
-      <snapshots/>
-      <id>inhouse</id>
-      <name>Inhouse Release Repository</name>
-      <url>${maven.deploy.repository.url}/inhouse</url>
+      <id>jquantlib-external_free</id>
+      <name>JQuantLib external_free</name>
+      <url>${maven.deploy.repository.url}/jquantlib-external_free/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
-    <repository>
-      <releases/>
-      <snapshots/>
-      <id>inhouse_snapshot</id>
-      <name>Inhouse Snapshot Repository</name>
-      <url>${maven.deploy.repository.url}/inhouse_snapshot</url>
-    </repository>
-    <repository>
-      <releases/>
-      <snapshots/>
-      <id>external_free</id>
-      <name>External Free Repository</name>
-      <url>${maven.deploy.repository.url}/external_free</url>
-    </repository>
-    <repository>
-      <releases/>
-      <snapshots/>
-      <id>external_non_free</id>
-      <name>External Non-Free Repository</name>
-      <url>${maven.deploy.repository.url}/external_non_free</url>
-    </repository>
-    <repository>
+  
+  
+    <!--
+      ***************************************************************
+      ** IF ARCHIVA SEEMS TO BE OFFLINE, UNCOMMENT THE BLOCK BELOW **
+      ** http://www.jquantlib.org:8080/archiva                     **
+      ***************************************************************
+      -->
+        
+    <!-- repository>
       <releases/>
       <snapshots/>
       <id>central</id>
@@ -449,21 +455,27 @@
       <id>ibiblio</id>
       <name>Ibiblio Maven2 repository</name>
       <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-    </repository>
+    </repository -->
+    
   </repositories>
 
+
+  
   <pluginRepositories>
+  
     <pluginRepository>
       <id>tlc</id>
       <name>TLC Repository</name>
       <url>http://commons.ucalgary.ca/pub/m2</url>
     </pluginRepository>
+    
     <pluginRepository>
       <releases/>
       <id>sourceforge</id>
       <name>SourceForge maven2-plugins</name>
       <url>http://maven-plugins.sourceforge.net/repository</url>
     </pluginRepository>
+    
     <pluginRepository>
       <releases>
         <enabled>false</enabled>
@@ -473,9 +485,13 @@
       <name>Maven Plugin Snapshots</name>
       <url>http://people.apache.org/repo/m2-snapshot-repository</url>
     </pluginRepository>
+    
   </pluginRepositories>
   
+
+
   <dependencies>
+  
     <dependency>
       <groupId>colt</groupId>
       <artifactId>colt</artifactId>
@@ -500,7 +516,8 @@
 
   </dependencies>
 
-	<reporting>
+
+  <reporting>
         <plugins>
 
             <plugin>
@@ -522,31 +539,31 @@
                     
                     <header>
                         
-	                        &lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font>
+                          &lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font>
                         
                     </header>
                     
                     <bottom><![CDATA[
                         
-	                        <font size="-1">
-						    <a href="http://sourceforge.net/tracker/?group_id=205911">
-						    Submit a bug or feature</a>
-						    <br/><br/>
-						    JQuantLib is free software: you can redistribute it and/or modify it
-						    under the terms of the QuantLib license.  You should have received a
-						    copy of the license along with this program; if not, please email
-						    mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
-						    <a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
-						    </font>
-					    
-					]]></bottom>
+                          <font size="-1">
+                <a href="http://sourceforge.net/tracker/?group_id=205911">
+                Submit a bug or feature</a>
+                <br/><br/>
+                JQuantLib is free software: you can redistribute it and/or modify it
+                under the terms of the QuantLib license.  You should have received a
+                copy of the license along with this program; if not, please email
+                mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
+                <a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
+                </font>
+              
+          ]]></bottom>
 
-		            <links>
-			            <link>http://java.sun.com/j2se/${java.src.version}/docs/api/</link>
-			            <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-			            <link>http://logging.apache.org/log4j/docs/api/</link>
+                <links>
+                  <link>http://java.sun.com/j2se/${java.src.version}/docs/api/</link>
+                  <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+                  <link>http://logging.apache.org/log4j/docs/api/</link>
                         <link>http://junit.sourceforge.net/javadoc/</link>
-		            </links>
+                </links>
 
                     <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
                     <docletArtifact>
@@ -576,10 +593,10 @@
                 </configuration>
             </plugin>   
 
-		    <plugin>
-		      <artifactId>maven-jxr-plugin</artifactId>
-		    </plugin>
-		    
+        <plugin>
+          <artifactId>maven-jxr-plugin</artifactId>
+        </plugin>
+        
             <!--
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
@@ -601,61 +618,61 @@
             </plugin>
             
 
-		    <plugin>
-		      <groupId>org.codehaus.mojo</groupId>
-		      <artifactId>taglist-maven-plugin</artifactId>
-		      <configuration>
-		        <tags>
-		          <tag>TODO</tag>
-		          <tag>FIXME</tag>
-		          <tag>XXX</tag>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>taglist-maven-plugin</artifactId>
+          <configuration>
+            <tags>
+              <tag>TODO</tag>
+              <tag>FIXME</tag>
+              <tag>XXX</tag>
                   <tag>TEST</tag>
                   <tag>PENDING</tag>
                   <tag>@Override</tag>
-		          <tag>@Deprecated</tag>
-		          <tag>@SupressWarnings</tag>
-		          <tag>@note</tag>
-		        </tags>
-		      </configuration>
-		    </plugin>
-		
-		    <plugin>
-		      <artifactId>maven-pmd-plugin</artifactId>
-		      <configuration>
-		        <linkXref>true</linkXref>
-		        <sourceEncoding>utf-8</sourceEncoding>
-		        <minimumTokens>100</minimumTokens>
-		        <targetJdk>${maven.compile.target}</targetJdk>
-		        <excludes>
-		          <exclude>**/*Bean.java</exclude>
-		          <exclude>**/generated/*.java</exclude>
-		        </excludes>
-		        <rulesets>
-		          <ruleset>/rulesets/basic.xml</ruleset>
-		          <ruleset>/rulesets/braces.xml</ruleset>
-		          <ruleset>/rulesets/naming.xml</ruleset>
-		          <ruleset>/rulesets/controversial.xml</ruleset>
-		        </rulesets>
-		      </configuration>
-		      <reportSets>
-		        <reportSet>
-		          <reports>
-		            <report>pmd</report>
-		            <report>cpd</report>
-		          </reports>
-		        </reportSet>
-		      </reportSets>
-		    </plugin>
+              <tag>@Deprecated</tag>
+              <tag>@SupressWarnings</tag>
+              <tag>@note</tag>
+            </tags>
+          </configuration>
+        </plugin>
+    
+        <plugin>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <configuration>
+            <linkXref>true</linkXref>
+            <sourceEncoding>utf-8</sourceEncoding>
+            <minimumTokens>100</minimumTokens>
+            <targetJdk>${maven.compile.jdk}</targetJdk>
+            <excludes>
+              <exclude>**/*Bean.java</exclude>
+              <exclude>**/generated/*.java</exclude>
+            </excludes>
+            <rulesets>
+              <ruleset>/rulesets/basic.xml</ruleset>
+              <ruleset>/rulesets/braces.xml</ruleset>
+              <ruleset>/rulesets/naming.xml</ruleset>
+              <ruleset>/rulesets/controversial.xml</ruleset>
+            </rulesets>
+          </configuration>
+          <reportSets>
+            <reportSet>
+              <reports>
+                <report>pmd</report>
+                <report>cpd</report>
+              </reports>
+            </reportSet>
+          </reportSets>
+        </plugin>
 
-		    <plugin>
-		    	<groupId>org.codehaus.mojo</groupId>
-		    	<artifactId>jdepend-maven-plugin</artifactId>
-		    	<version>2.0-beta-1</version>
-		    </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jdepend-maven-plugin</artifactId>
+          <version>2.0-beta-1</version>
+        </plugin>
 
-		    <plugin> 
-		        <groupId>org.codehaus.mojo</groupId>
-		        <artifactId>findbugs-maven-plugin</artifactId>
+        <plugin> 
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
                 <configuration>
                     <report>maven-findbugs-plugin</report>
                 </configuration> 
@@ -665,50 +682,45 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>surefire-report-maven-plugin</artifactId>
             </plugin>
-		    
-		    <plugin>
+        
+        <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
-				<configuration>
+        <configuration>
                     <report>maven-cobertura-plugin</report>
-				</configuration>
+        </configuration>
             </plugin>
-		    
-	    </plugins>
+        
+      </plugins>
   </reporting>
 
   <distributionManagement>
-    <repository>
-      <id>inhouse-jquantlib.org</id>
-      <name>Inhouse Release Repository</name>
-      <url>dav:${maven.deploy.repository.url}/inhouse</url>
-    </repository>
     <snapshotRepository>
-      <id>inhouse_snapshot-jquantlib.org</id>
-      <name>Inhouse Snapshot Repository</name>
-      <url>dav:${maven.deploy.repository.url}/inhouse_snapshot</url>
+      <id>jquantlib-external_free</id>
+      <url>dav:${maven.deploy.repository.url}/jquantlib-external_free/</url>
     </snapshotRepository>
-    <site>
-      <id>stagingSite-jquantlib.org</id>
-      <url>dav:${maven.deploy.site.url}</url>
-    </site>
   </distributionManagement>
   
   <properties>
-    <profile.manifest.app.realm>default</profile.manifest.app.realm>
-    <profile.manifest.app.url>${project.url}</profile.manifest.app.url>
-    <profile.manifest.app.mode>debug</profile.manifest.app.mode>
+    <!-- Application independent properties -->
+    <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
     <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.developerConnection>
     <maven.scm.connection>scm:svn:http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.connection>
     <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.url>
-    <maven.buildNumber.doCheck>true</maven.buildNumber.doCheck>
-    <maven.compile.source>1.6</maven.compile.source>
-    <maven.compile.target>1.6</maven.compile.target>
+    <maven.compile.jdk>1.6</maven.compile.jdk>
     <maven.compile.encoding>UTF8</maven.compile.encoding>
-    <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
+    <maven.compile.meminitial>128m</maven.compile.meminitial>
+    <maven.compile.maxmem>512m</maven.compile.maxmem>
+    <maven.compile.fork>false</maven.compile.fork> <!-- Be cautious: may fork a different JVM -->
     <maven.jar.index>false</maven.jar.index>
-    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
+    <maven.deploy.repository.url>http://www.jquantlib.org:8080/archiva/repository</maven.deploy.repository.url>
     <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites/${project.artifactId}</maven.deploy.site.url>
     <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
+    
+    <!-- Application dependent properties -->
+    <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
+    <profile.manifest.app.realm>default</profile.manifest.app.realm>
+    <profile.manifest.app.mode>debug</profile.manifest.app.mode>
   </properties>
+  
 </project>
