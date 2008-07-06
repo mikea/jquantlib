@@ -206,7 +206,6 @@
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
-          <finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
           <archive>
             <index>${maven.jar.index}</index>
             <manifest>
@@ -249,11 +248,7 @@
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <finalName>${project.artifactId}-${project.version}-${buildNumber}_ubber</finalName>
-          <appendAssemblyId>false</appendAssemblyId>
+          <descriptorSourceDirectory>src/main/assembly</descriptorSourceDirectory>
           <archive>
             <index>${maven.jar.index}</index>
             <manifest>
@@ -277,7 +272,7 @@
         </configuration>
         <executions>
           <execution>
-            <id>make-assembly</id>
+            <id>ubber</id>
             <phase>package</phase>
             <goals>
               <goal>attached</goal>
