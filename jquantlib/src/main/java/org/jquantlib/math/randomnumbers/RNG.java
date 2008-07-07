@@ -48,6 +48,4 @@ import org.jquantlib.methods.montecarlo.Sample;
 public interface RNG {
 
     public Sample next() /* @ReadOnly */; // FIXME: Sample should have a parameter
-    public /* @Unsigned */ long nextInt32(); // FIXME: Not sure if should participate in this interface
-
 }
