@@ -105,6 +105,14 @@ public class Utilities {
 //    //    return std::fabs(x1 - x2) < tolerance;
 //    //};
 
+    static public double relativeError(final double x1, final double x2, final double reference) {
+        if (reference != 0.0)
+            return Math.abs(x1-x2)/reference;
+        else
+            // fall back to absolute error
+            return Math.abs(x1-x2);
+    }
+
     
 	static public YieldTermStructure flatRate(
 	    		final Date today,

@@ -36,7 +36,7 @@ package org.jquantlib.methods.montecarlo;
 public class Sample<T> {
 	
 	//
-	// public fields
+	// private fields
 	//
     private T value;
     private double weight;
@@ -51,10 +51,10 @@ public class Sample<T> {
     
     
     //
-    // get values
+    // public methods
     //
     
-    public T getVal(){
+    public T getVal(){ // FIXME: getValue could be better?
     	return value;
     }
     

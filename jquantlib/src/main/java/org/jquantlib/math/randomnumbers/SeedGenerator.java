@@ -24,9 +24,9 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import java.util.*;
+import java.util.ArrayList; // FIXME: performance
 import java.util.Date;
-import org.jquantlib.math.randomnumbers.MersenneTwisterUniformRng;
+import java.util.List;
 
 
 /**

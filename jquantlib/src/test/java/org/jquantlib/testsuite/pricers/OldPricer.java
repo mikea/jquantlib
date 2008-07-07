@@ -34,7 +34,6 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
-import org.junit.Test;
 
 //TODO:  Import all the testcase when MC is available
 //FIXME: Rename to OldPricerTest
