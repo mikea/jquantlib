@@ -113,8 +113,8 @@ public class RandomSequenceGenerator<R extends RNG> implements USG {
         DoubleArrayList array = new DoubleArrayList(dimensionality_);
         for (int i = 0; i < dimensionality_; i++) {
             Sample<Double> x = rng_.next(); // FIXME: code review :: not sure it is a Sample<Double>
-            array.add(x.getVal());
-            weight *= x.getWeight();
+            array.add(x.value);
+            weight *= x.weight;
         }
         sequence_ =  new Sample<DoubleArrayList>(array, weight);
         return sequence_;

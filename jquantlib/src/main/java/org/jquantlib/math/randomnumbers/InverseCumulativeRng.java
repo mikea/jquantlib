@@ -70,7 +70,7 @@ public class InverseCumulativeRng<R extends RNG, I extends IC> {
     public Sample<Double> getNext() /* @ReadOnly */ {
         Sample<Double> sample = uniformGenerator_.next(); // FIXME: usage of sample_type :: typedef Sample<Real> sample_type;
         
-        return new Sample<Double>(ICND_.evaluate(sample.getVal()), sample.getWeight());
+        return new Sample<Double>(ICND_.evaluate(sample.value), sample.weight);
     }
     
 }

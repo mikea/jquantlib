@@ -80,13 +80,13 @@ public class InverseCumulativeRsg<G extends USG, I extends IC> {
      */
     public Sample<DoubleArrayList> nextSequence() /* @ReadOnly */{
         Sample<DoubleArrayList> sample = uniformSequenceGenerator_.nextSequence();
-        DoubleArrayList sequence = sample.getVal();
+        DoubleArrayList sequence = sample.value;
 
         DoubleArrayList array = new DoubleArrayList(dimension_);
         for (int i = 0; i < dimension_; i++) {
             array.add(ICD_.evaluate(sequence.get(i)));
         }
-        return new Sample<DoubleArrayList>(array, sample.getWeight());
+        return new Sample<DoubleArrayList>(array, sample.weight);
     }
 
     public final Sample<DoubleArrayList> lastSequence() /* @ReadOnly */{
