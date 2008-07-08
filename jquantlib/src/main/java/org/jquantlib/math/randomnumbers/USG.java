@@ -45,9 +45,9 @@ import org.jquantlib.methods.montecarlo.Sample;
 /**
  * @author Richard Gomes
  */
-public interface USG {
+public interface USG<T> {
     
-    public Sample nextSequence() /* @ReadOnly */; // FIXME: Sample should have a parameter 
+    public Sample<T> nextSequence(); 
     public /*@NonNegative*/ int dimension() /* @ReadOnly */;
     
 }

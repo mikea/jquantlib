@@ -22,25 +22,25 @@
 
 package org.jquantlib.time;
 
-import java.util.ArrayList; // FIXME :: performance
-import java.util.List; // FIXME :: performance
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jquantlib.util.Date;
-
-import cern.colt.list.ObjectArrayList;
 
 public abstract class AbstractCalendar implements Calendar {
 
     /**
      * To store artifically added holidays
      */
-    private ObjectArrayList addedHolidays;
+    private List<Date> addedHolidays;
 
     /**
      * Constructor
      */
     protected AbstractCalendar() {
-        this.addedHolidays = new ObjectArrayList();
+        this.addedHolidays = new ObjectArrayList<Date>();
     }
 
     public void addHoliday(final Date d) {
@@ -52,7 +52,7 @@ public abstract class AbstractCalendar implements Calendar {
 
     public void removeHoliday(final Date d) {
         // if d was an artificially-added holiday, revert the change
-        addedHolidays.delete(d, true);
+        addedHolidays.remove(d);
     }
 
     /**
@@ -63,7 +63,7 @@ public abstract class AbstractCalendar implements Calendar {
      *         false if its not added
      */
     protected boolean isAddedHoliday(Date date) {
-        return addedHolidays.contains(date, true);
+        return addedHolidays.contains(date);
     }
 
     /**

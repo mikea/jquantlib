@@ -40,6 +40,8 @@
 
 package org.jquantlib.termstructures.volatilities;
 
+import it.unimi.dsi.fastutil.doubles.DoubleArrays;
+
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.BilinearInterpolation;
 import org.jquantlib.math.interpolation.Interpolation2D;
@@ -50,8 +52,6 @@ import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
-
-import cern.colt.Arrays;
 
 /**
  * This class calculates time/strike dependent Black volatilities using as input
@@ -94,7 +94,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
 		this.dayCounter = dayCounter;
 		this.maxDate = dates[dates.length];
-		this.strikes = Arrays.trimToCapacity(strikes, strikes.length);
+		this.strikes = strikes.clone();
 		this.lowerExtrapolation = lowerExtrapolation;
 		this.upperExtrapolation = upperExtrapolation;
 

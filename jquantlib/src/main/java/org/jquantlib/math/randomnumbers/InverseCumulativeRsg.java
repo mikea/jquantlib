@@ -40,9 +40,11 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import org.jquantlib.methods.montecarlo.Sample;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
-import cern.colt.list.DoubleArrayList;
+import java.util.List;
+
+import org.jquantlib.methods.montecarlo.Sample;
 
 /**
  * Inverse cumulative random sequence generator
@@ -58,13 +60,13 @@ public class InverseCumulativeRsg<G extends USG, I extends IC> {
 
     private G uniformSequenceGenerator_;
     private/*@NonNegative*/int dimension_;
-    private Sample<DoubleArrayList> x_; // FIXME: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
+    private Sample<List<Double>> x_; // FIXME: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
     private I ICD_;
 
     public InverseCumulativeRsg(final G uniformSequenceGenerator) {
         this.uniformSequenceGenerator_ = uniformSequenceGenerator;
         this.dimension_ = this.uniformSequenceGenerator_.dimension();
-        this.x_ = new Sample<DoubleArrayList>(new DoubleArrayList(), 1.0);
+        this.x_ = new Sample<List<Double>>(new DoubleArrayList(), 1.0);
         
         // FIXME: ICD_ not initialized!!!! Verify if a static is passed by template
         
@@ -89,7 +91,7 @@ public class InverseCumulativeRsg<G extends USG, I extends IC> {
         return new Sample<DoubleArrayList>(array, sample.weight);
     }
 
-    public final Sample<DoubleArrayList> lastSequence() /* @ReadOnly */{
+    public final Sample<List<Double>> lastSequence() /* @ReadOnly */{
         return x_;
     }
 

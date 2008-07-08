@@ -37,7 +37,6 @@ import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Pair;
 
-import cern.colt.Arrays;
 import cern.colt.Sorting;
 
 public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends InterpolatedDiscountCurve<T> {
@@ -129,7 +128,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 	@Override
 	public final Date[] getDates() /* @ReadOnly */{
 		calculator.calculate();
-    	return (Date[]) Arrays.trimToCapacity(dates, dates.length);
+    	return dates.clone();
 	}
 
 	@Override

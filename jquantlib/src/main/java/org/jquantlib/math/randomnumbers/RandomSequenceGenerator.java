@@ -39,13 +39,14 @@
 
 package org.jquantlib.math.randomnumbers;
 
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 import org.jquantlib.methods.montecarlo.Sample;
 import org.jquantlib.util.TypeToken;
-
-import cern.colt.list.DoubleArrayList;
-import cern.colt.list.IntArrayList;
 
 /**
  * Random sequence generator based on a pseudo-random number generator
@@ -61,15 +62,15 @@ public class RandomSequenceGenerator<R extends RNG> implements USG {
     
     private /*@NonNegative*/ int dimensionality_;
     private R rng_;
-    private Sample<DoubleArrayList> sequence_; // FIXME :: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
-    private IntArrayList int32Sequence_;
+    private Sample<List<Double>> sequence_; // FIXME :: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
+    private List<Integer> int32Sequence_;
 
     
     public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final R rng) {
         if (dimensionality<1) throw new IllegalArgumentException("dimensionality must be greater than 0");
         this.dimensionality_ = dimensionality;
         this.rng_ = rng;
-        this.sequence_ = new Sample<DoubleArrayList>(new DoubleArrayList(this.dimensionality_), 1.0);
+        this.sequence_ = new Sample<List<Double>>(new DoubleArrayList(this.dimensionality_), 1.0);
         this.int32Sequence_ = new IntArrayList(this.dimensionality_);
     }
     
@@ -77,7 +78,7 @@ public class RandomSequenceGenerator<R extends RNG> implements USG {
     public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final long seed) {
         if (dimensionality<1) throw new IllegalArgumentException("dimensionality must be greater than 0");
         this.dimensionality_ = dimensionality;
-        this.sequence_ = new Sample<DoubleArrayList>(new DoubleArrayList(this.dimensionality_), 1.0);
+        this.sequence_ = new Sample<List<Double>>(new DoubleArrayList(this.dimensionality_), 1.0);
         this.int32Sequence_ = new IntArrayList(this.dimensionality_);
         
         try {
@@ -92,14 +93,14 @@ public class RandomSequenceGenerator<R extends RNG> implements USG {
         this(dimensionality, 0);
     }
 
-    public IntArrayList getNextInt32Sequence() /* @ReadOnly */ { // FIXME: Aaron:: code review  :: int or long????
+    public List<Integer> getNextInt32Sequence() /* @ReadOnly */ { // FIXME: Aaron:: code review  :: int or long????
         for (int i=0; i<dimensionality_; i++) {
             int32Sequence_.add( 0 /* rng_.nextInt32() */ ); // FIXME: Aaron:: code review  :: int or long????
         }
         return int32Sequence_;
     }
 
-    public final Sample<DoubleArrayList> lastSequence() /* @ReadOnly */ {
+    public final Sample<List<Double>> lastSequence() /* @ReadOnly */ {
         return sequence_;
     }
     
@@ -108,7 +109,7 @@ public class RandomSequenceGenerator<R extends RNG> implements USG {
     // implements USG
     //
     
-    public final Sample<DoubleArrayList> nextSequence() /* @ReadOnly */ {
+    public final Sample<List<Double>> nextSequence() /* @ReadOnly */ {
         double weight = 1.0;
         
         DoubleArrayList array = new DoubleArrayList(dimensionality_);
@@ -117,7 +118,7 @@ public class RandomSequenceGenerator<R extends RNG> implements USG {
             array.add(x.value);
             weight *= x.weight;
         }
-        sequence_ =  new Sample<DoubleArrayList>(array, weight);
+        sequence_ =  new Sample<List<Double>>(array, weight);
         return sequence_;
     }
 

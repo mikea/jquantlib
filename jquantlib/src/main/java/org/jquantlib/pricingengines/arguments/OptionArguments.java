@@ -39,11 +39,11 @@
 
 package org.jquantlib.pricingengines.arguments;
 
+import java.util.List;
+
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.pricingengines.PricingEngine;
-
-import cern.colt.list.DoubleArrayList;
 
 /**
  * Keeps arguments used by {@link PricingEngine}s and necessary for Option valuation
@@ -71,7 +71,7 @@ public class OptionArguments extends Arguments {
 	public Exercise exercise;
 	
 	//TODO:Shouldn't be here. It should be moved elsewhere
-	public /*@Time*/ DoubleArrayList stoppingTimes;
+	public /*@Time*/ List<Double> stoppingTimes;
 	
 	public OptionArguments() {
 		super();

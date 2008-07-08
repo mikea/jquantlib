@@ -41,6 +41,10 @@
 
 package org.jquantlib.instruments;
 
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+import java.util.List;
+
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
@@ -61,8 +65,6 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
-
-import cern.colt.list.DoubleArrayList;
 
 public class OneAssetOption extends Option {
 
@@ -179,7 +181,7 @@ public class OneAssetOption extends Option {
         optionArguments.exercise = exercise;
         // set up stopping times
         int n = exercise.size();
-        DoubleArrayList arr = new DoubleArrayList(n);
+        List<Double> arr = new DoubleArrayList(n);
         for (int i=0; i<n; ++i) {
             arr.add(/*@Time*/ stochasticProcess.getTime(exercise.getDate(i)));
         }

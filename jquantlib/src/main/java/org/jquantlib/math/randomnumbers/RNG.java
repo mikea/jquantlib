@@ -45,7 +45,7 @@ import org.jquantlib.methods.montecarlo.Sample;
 /**
  * @author Richard Gomes
  */
-public interface RNG {
+public interface RNG<T> {
 
-    public Sample next() /* @ReadOnly */; // FIXME: Sample should have a parameter
+    public Sample<T> next();
 }

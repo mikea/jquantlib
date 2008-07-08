@@ -40,6 +40,9 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import it.unimi.dsi.fastutil.doubles.DoubleArrays;
+import it.unimi.dsi.fastutil.objects.ObjectArrays;
+
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
@@ -49,8 +52,6 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
-
-import cern.colt.Arrays;
 
 
 /**
@@ -109,8 +110,8 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 	public InterpolatedDiscountCurve(final Date[] dates, final/* @DiscountFactor */double[] discounts,
 			final DayCounter dayCounter, final Calendar cal, final T interpolator) {
 		super(dates[0], cal, dayCounter);
-    	this.dates = (Date[]) Arrays.trimToCapacity(dates, dates.length);
-		this.data = Arrays.trimToCapacity(discounts, discounts.length);
+    	this.dates = dates.clone();
+		this.data = discounts.clone();
 		this.isNegativeRates = settings.isNegativeRates();
 		this.interpolator = (interpolator!=null) ? interpolator : new LogLinear();
 
@@ -150,12 +151,12 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 
 	@Override
 	public Date[] getDates() /* @ReadOnly */{
-    	return (Date[]) Arrays.trimToCapacity(dates, dates.length);
+    	return dates.clone();
 	}
 
 	@Override
 	public /* @DiscountFactor */double[] getData() /* @ReadOnly */{
-    	return Arrays.trimToCapacity(data, data.length);
+    	return data.clone();
 	}
 
 	@Override
@@ -173,7 +174,7 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 
 	@Override
 	public double[] getTimes() /* @ReadOnly */{
-    	return Arrays.trimToCapacity(times, times.length);
+    	return times.clone();
 	}
 
 }

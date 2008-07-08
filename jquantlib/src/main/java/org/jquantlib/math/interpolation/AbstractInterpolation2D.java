@@ -23,7 +23,6 @@
 package org.jquantlib.math.interpolation;
 
 import static org.jquantlib.math.Closeness.isClose;
-import cern.colt.Arrays;
 import cern.colt.Sorting;
 
 
@@ -61,15 +60,16 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 	}
 
 	public final double[] xValues() {
-    	return Arrays.trimToCapacity(vx, vx.length);
+    	return vx.clone();
     }
 	
 	public final double[] yValues() {
-    	return Arrays.trimToCapacity(vy, vy.length);
+    	return vy.clone();
     }
 
 	public final double[][] zData() {
-    	return (double[][])Arrays.trimToCapacity(mz, mz.length);
+        return mz.clone();
+    	// return (double[][])Arrays.trimToCapacity(mz, mz.length);
     }
 
     protected int locateX(double x) /* @ReadOnly */ {

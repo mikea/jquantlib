@@ -39,6 +39,9 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import it.unimi.dsi.fastutil.doubles.DoubleArrays;
+import it.unimi.dsi.fastutil.objects.ObjectArrays;
+
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
@@ -47,8 +50,6 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
-
-import cern.colt.Arrays;
 
 /**
  * Term structure based on interpolation of forward rates
@@ -104,8 +105,8 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 		// FIXME: code review: calendar
 		// FIXME: must check dates
 		super(dates[0], Target.getCalendar(), dayCounter);
-    	this.dates = (Date[]) Arrays.trimToCapacity(dates, dates.length);
-		this.data = Arrays.trimToCapacity(forwards, forwards.length);
+    	this.dates = dates.clone();
+		this.data = forwards.clone();
 		this.isNegativeRates = settings.isNegativeRates();
 		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
 
@@ -132,12 +133,12 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 
 	@Override
 	public final Date[] getDates() /* @ReadOnly */{
-    	return (Date[]) Arrays.trimToCapacity(dates, dates.length);
+    	return dates.clone();
 	}
 
 	@Override
 	public final/* @DiscountFactor */double[] getData() /* @ReadOnly */{
-    	return Arrays.trimToCapacity(data, data.length);
+    	return data.clone();
 	}
 
 	@Override
@@ -155,7 +156,7 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 
 	@Override
 	public final double[] getTimes() /* @ReadOnly */{
-    	return Arrays.trimToCapacity(times, times.length);
+    	return times.clone();
 	}
 
 	@Override

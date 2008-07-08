@@ -22,7 +22,7 @@
 
 package org.jquantlib.math.interpolation;
 
-import cern.colt.Arrays;
+import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 
 
 /**
@@ -129,8 +129,8 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 		}
 
 		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
-			delegate.vx = Arrays.trimToCapacity(x, size);
-			delegate.vy = Arrays.trimToCapacity(y, size);
+			delegate.vx = DoubleArrays.copy(x, 0, size);
+			delegate.vy = DoubleArrays.copy(y, 0, size);
 			delegate.reload();
 			return delegate;
 		}

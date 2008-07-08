@@ -46,8 +46,8 @@ import static org.jquantlib.math.Closeness.isClose;
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 
-import cern.colt.Arrays;
 import cern.colt.Sorting;
+
 
 
 public abstract class AbstractInterpolation implements Interpolation {
@@ -111,12 +111,12 @@ public abstract class AbstractInterpolation implements Interpolation {
 
 	@Override
 	public final double[] getValuesX() {
-    	return Arrays.trimToCapacity(vx, vx.length);
+    	return vx.clone();
     }
 	
 	@Override
 	public final double[] getValuesY() {
-    	return Arrays.trimToCapacity(vy, vy.length);
+    	return vy.clone();
     }
 	
 	//

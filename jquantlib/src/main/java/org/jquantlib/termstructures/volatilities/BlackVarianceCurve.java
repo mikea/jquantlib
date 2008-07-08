@@ -40,6 +40,8 @@
 
 package org.jquantlib.termstructures.volatilities;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrays;
+
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolation.Interpolation;
 import org.jquantlib.math.interpolation.Interpolator;
@@ -49,8 +51,6 @@ import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
-
-import cern.colt.Arrays;
 
 /**
  * Black volatility curve modelled as variance curve
@@ -98,7 +98,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
                 boolean forceMonotoneVariance) {
     	super(referenceDate);
     	this.dayCounter = dayCounter;
-    	this.dates = (Date[]) Arrays.trimToCapacity(dates, dates.length);
+    	this.dates = dates.clone();
     	this.maxDate = dates[dates.length-1];
     	
     	if (! (this.dates.length==blackVolCurve.length) ) throw new IllegalArgumentException("mismatch between date vector and black vol vector");

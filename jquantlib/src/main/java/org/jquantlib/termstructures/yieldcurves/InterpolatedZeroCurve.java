@@ -48,8 +48,6 @@ import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
 
-import cern.colt.Arrays;
-
 /**
  * Term structure based on interpolation of zero yields
  * 
@@ -101,12 +99,12 @@ public final class InterpolatedZeroCurve<T extends Interpolator> extends ZeroYie
 
 	@Override
 	public final Date[] getDates() /* @ReadOnly */{
-    	return (Date[]) Arrays.trimToCapacity(dates, dates.length);
+    	return dates.clone();
 	}
 
 	@Override
 	public final/* @DiscountFactor */double[] getData() /* @ReadOnly */{
-    	return Arrays.trimToCapacity(data, data.length);
+    	return data.clone();
 	}
 
 	@Override
@@ -124,7 +122,7 @@ public final class InterpolatedZeroCurve<T extends Interpolator> extends ZeroYie
 
 	@Override
 	public final double[] getTimes() /* @ReadOnly */{
-    	return Arrays.trimToCapacity(times, times.length);
+    	return times.clone();
 	}
 
 	@Override

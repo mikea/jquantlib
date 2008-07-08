@@ -41,9 +41,11 @@
 
 package org.jquantlib.exercise;
 
-import org.jquantlib.util.Date;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import cern.colt.list.ObjectArrayList;
+import java.util.List;
+
+import org.jquantlib.util.Date;
 
 
 /**
@@ -58,7 +60,7 @@ public abstract class Exercise {
 	//
 	
 	private Exercise.Type type;
-	private final ObjectArrayList dates;
+	private final List<Date> dates;
 	
 
 	//
@@ -74,7 +76,7 @@ public abstract class Exercise {
 	 */
 	protected Exercise(final Exercise.Type type) {
 		this.type = type;
-		this.dates = new ObjectArrayList(5); // some reasonable prime number
+		this.dates = new ObjectArrayList<Date>(5); // some reasonable prime number
 	}
 
 	//
