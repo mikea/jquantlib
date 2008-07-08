@@ -57,7 +57,7 @@ public class GenericPseudoRandom<R extends RNG, I extends IC> {
     /*static*/ public InverseCumulativeRsg<? extends RandomSequenceGenerator<R>, I> 
                 makeSequenceGenerator(final int dimension, final Class<R> klass, /* @Unsigned */ long seed) {
         
-        RandomSequenceGenerator<R> g = new RandomSequenceGenerator<R>(dimension, klass, seed);
+        RandomSequenceGenerator<R> g = new RandomSequenceGenerator<R>(dimension, seed);
         
         if (icInstance!=null) {
             return new InverseCumulativeRsg(g, icInstance);
