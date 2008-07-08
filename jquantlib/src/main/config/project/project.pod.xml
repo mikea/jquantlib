@@ -12,8 +12,8 @@
     <CurrencySymbol>$</CurrencySymbol>
     <CurrencySymbolPosition>0</CurrencySymbolPosition>
     <CalendarUID>4</CalendarUID>
-    <DefaultStartTime>09:00:00</DefaultStartTime>
-    <DefaultFinishTime>18:00:00</DefaultFinishTime>
+    <DefaultStartTime>03:00:00</DefaultStartTime>
+    <DefaultFinishTime>12:00:00</DefaultFinishTime>
     <MinutesPerDay>480</MinutesPerDay>
     <MinutesPerWeek>2400</MinutesPerWeek>
     <DaysPerMonth>20</DaysPerMonth>
@@ -42,7 +42,7 @@
     <MoveCompletedEndsForward>0</MoveCompletedEndsForward>
     <BaselineForEarnedValue>0</BaselineForEarnedValue>
     <AutoAddNewResourcesAndTasks>1</AutoAddNewResourcesAndTasks>
-    <CurrentDate>2008-07-03T03:32:00</CurrentDate>
+    <CurrentDate>2008-07-08T18:47:00</CurrentDate>
     <MicrosoftProjectServerURL>1</MicrosoftProjectServerURL>
     <Autolink>1</Autolink>
     <NewTaskStartDate>0</NewTaskStartDate>
@@ -2285,15 +2285,93 @@
         </Calendar>
         <Calendar>
             <UID>16</UID>
-            <Name>Richard Gomes</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-            <WeekDays/>
+            <Name>Standard [JQuantLib] [JQuantLib] [JQuantLib] [JQuantLib] [JQuantLib]</Name>
+            <IsBaseCalendar>1</IsBaseCalendar>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
         </Calendar>
         <Calendar>
             <UID>17</UID>
-            <Name>Gary Kennedy</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
+            <Name>24 Hours [JQuantLib] [JQuantLib] [JQuantLib] [JQuantLib] [JQuantLib]</Name>
+            <IsBaseCalendar>1</IsBaseCalendar>
             <WeekDays>
                 <WeekDay>
                     <DayType>1</DayType>
@@ -2377,6 +2455,211 @@
         </Calendar>
         <Calendar>
             <UID>18</UID>
+            <Name>Night Shift [JQuantLib] [JQuantLib] [JQuantLib] [JQuantLib] [JQuantLib]</Name>
+            <IsBaseCalendar>1</IsBaseCalendar>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
+        </Calendar>
+        <Calendar>
+            <UID>19</UID>
+            <Name>Richard Gomes</Name>
+            <IsBaseCalendar>0</IsBaseCalendar>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
+        </Calendar>
+        <Calendar>
+            <UID>20</UID>
+            <Name>Gary Kennedy</Name>
+            <IsBaseCalendar>0</IsBaseCalendar>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
+        </Calendar>
+        <Calendar>
+            <UID>21</UID>
             <Name>Srinivas Hasti</Name>
             <IsBaseCalendar>0</IsBaseCalendar>
             <WeekDays>
@@ -2461,7 +2744,7 @@
             </WeekDays>
         </Calendar>
         <Calendar>
-            <UID>19</UID>
+            <UID>22</UID>
             <Name>Dominik Holenstein</Name>
             <IsBaseCalendar>0</IsBaseCalendar>
             <WeekDays>
@@ -2546,32 +2829,344 @@
             </WeekDays>
         </Calendar>
         <Calendar>
-            <UID>20</UID>
+            <UID>23</UID>
             <Name>Aaron Roth</Name>
             <IsBaseCalendar>0</IsBaseCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-            <WeekDays/>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
         </Calendar>
         <Calendar>
-            <UID>21</UID>
+            <UID>24</UID>
             <Name>Tim Swetonic</Name>
             <IsBaseCalendar>0</IsBaseCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-            <WeekDays/>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
         </Calendar>
         <Calendar>
-            <UID>22</UID>
+            <UID>25</UID>
             <Name>Boiler Maker</Name>
             <IsBaseCalendar>0</IsBaseCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-            <WeekDays/>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
         </Calendar>
         <Calendar>
-            <UID>23</UID>
+            <UID>26</UID>
             <Name>Gerard Loeffler</Name>
             <IsBaseCalendar>0</IsBaseCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-            <WeekDays/>
+            <WeekDays>
+                <WeekDay>
+                    <DayType>1</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>2</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>3</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>4</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>5</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>6</DayType>
+                    <DayWorking>1</DayWorking>
+                    <WorkingTimes>
+                        <WorkingTime>
+                            <FromTime>08:00:00</FromTime>
+                            <ToTime>12:00:00</ToTime>
+                        </WorkingTime>
+                        <WorkingTime>
+                            <FromTime>13:00:00</FromTime>
+                            <ToTime>17:00:00</ToTime>
+                        </WorkingTime>
+                    </WorkingTimes>
+                </WeekDay>
+                <WeekDay>
+                    <DayType>7</DayType>
+                    <DayWorking>0</DayWorking>
+                </WeekDay>
+            </WeekDays>
         </Calendar>
     </Calendars>
     <Tasks>
@@ -2581,7 +3176,7 @@
             <Name>Core</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T00:29:00</CreateDate>
+            <CreateDate>2008-06-08T19:29:00</CreateDate>
             <WBS/>
             <OutlineNumber>1</OutlineNumber>
             <OutlineLevel>1</OutlineLevel>
@@ -2618,7 +3213,7 @@
             <ActualWork>PT0H0M0S</ActualWork>
             <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
             <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT120H0M0S</RemainingDuration>
+            <RemainingDuration>PT118H21M49S</RemainingDuration>
             <RemainingCost>0</RemainingCost>
             <RemainingWork>PT0H0M0S</RemainingWork>
             <RemainingOvertimeCost>0</RemainingOvertimeCost>
@@ -2648,7 +3243,7 @@
             <Name>Maven multimodule</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:46:00</CreateDate>
+            <CreateDate>2008-06-09T19:46:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.1</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -2715,7 +3310,7 @@
             <Name>OSGi</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:47:00</CreateDate>
+            <CreateDate>2008-06-09T19:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -2782,7 +3377,7 @@
             <Name>Proof of concept with SpringFramework</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:45:00</CreateDate>
+            <CreateDate>2008-06-09T20:45:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -2849,7 +3444,7 @@
             <Name>Core (optional use of OSGi)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:44:00</CreateDate>
+            <CreateDate>2008-06-09T20:44:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -2916,7 +3511,7 @@
             <Name>Bundles</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:44:00</CreateDate>
+            <CreateDate>2008-06-09T20:44:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -2983,7 +3578,7 @@
             <Name>Configuration</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:47:00</CreateDate>
+            <CreateDate>2008-06-09T19:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3050,7 +3645,7 @@
             <Name>refactor interface</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:34:00</CreateDate>
+            <CreateDate>2008-07-02T21:34:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.1.1</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3117,7 +3712,7 @@
             <Name>create bundle</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:34:00</CreateDate>
+            <CreateDate>2008-07-02T21:34:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.1.2</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3184,7 +3779,7 @@
             <Name>tests</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:35:00</CreateDate>
+            <CreateDate>2008-07-02T21:35:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.1.3</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3251,7 +3846,7 @@
             <Name>Date</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:47:00</CreateDate>
+            <CreateDate>2008-06-09T19:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3318,7 +3913,7 @@
             <Name>refactor interface</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:36:00</CreateDate>
+            <CreateDate>2008-07-02T21:36:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.2.1</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3385,7 +3980,7 @@
             <Name>create bundle</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:36:00</CreateDate>
+            <CreateDate>2008-07-02T21:36:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.2.2</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3452,7 +4047,7 @@
             <Name>tests</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:36:00</CreateDate>
+            <CreateDate>2008-07-02T21:36:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.2.3</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3519,7 +4114,7 @@
             <Name>Calendar</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T22:49:00</CreateDate>
+            <CreateDate>2008-06-14T17:49:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3586,7 +4181,7 @@
             <Name>refactor interface</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:36:00</CreateDate>
+            <CreateDate>2008-07-02T21:36:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.3.1</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3653,7 +4248,7 @@
             <Name>create bundle</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:36:00</CreateDate>
+            <CreateDate>2008-07-02T21:36:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.3.2</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3720,7 +4315,7 @@
             <Name>tests</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:36:00</CreateDate>
+            <CreateDate>2008-07-02T21:36:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.3.3</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3787,7 +4382,7 @@
             <Name>Algebra</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T00:47:00</CreateDate>
+            <CreateDate>2008-06-09T19:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -3854,7 +4449,7 @@
             <Name>refactor interface</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:35:00</CreateDate>
+            <CreateDate>2008-07-02T21:35:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.4.1</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3921,7 +4516,7 @@
             <Name>create bundle</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:35:00</CreateDate>
+            <CreateDate>2008-07-02T21:35:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.4.2</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -3988,7 +4583,7 @@
             <Name>tests</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:35:00</CreateDate>
+            <CreateDate>2008-07-02T21:35:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.2.3.4.3</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -4055,7 +4650,7 @@
             <Name>Calendars</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:53:00</CreateDate>
+            <CreateDate>2008-07-02T21:53:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -4092,7 +4687,7 @@
             <ActualWork>PT0H0M0S</ActualWork>
             <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
             <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT120H0M0S</RemainingDuration>
+            <RemainingDuration>PT116H32M18S</RemainingDuration>
             <RemainingCost>0</RemainingCost>
             <RemainingWork>PT0H0M0S</RemainingWork>
             <RemainingOvertimeCost>0</RemainingOvertimeCost>
@@ -4122,7 +4717,7 @@
             <Name>Australia</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:54:00</CreateDate>
+            <CreateDate>2008-07-02T21:54:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4189,7 +4784,7 @@
             <Name>China</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:54:00</CreateDate>
+            <CreateDate>2008-07-02T21:54:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4260,7 +4855,7 @@
             <Name>New Zealand</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:54:00</CreateDate>
+            <CreateDate>2008-07-02T21:54:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.3</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4327,7 +4922,7 @@
             <Name>Argentina</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:56:00</CreateDate>
+            <CreateDate>2008-07-02T21:56:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.4</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4398,7 +4993,7 @@
             <Name>Hong Kong</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:56:00</CreateDate>
+            <CreateDate>2008-07-02T21:56:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.5</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4465,7 +5060,7 @@
             <Name>India</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:56:00</CreateDate>
+            <CreateDate>2008-07-02T21:56:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.6</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4536,7 +5131,7 @@
             <Name>Singapore</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:56:00</CreateDate>
+            <CreateDate>2008-07-02T21:56:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.7</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4603,7 +5198,7 @@
             <Name>Mexico</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T02:56:00</CreateDate>
+            <CreateDate>2008-07-02T21:56:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.8</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4613,6 +5208,7 @@
             <Duration>PT16H0M0S</Duration>
             <DurationFormat>7</DurationFormat>
             <Work>PT0H0M0S</Work>
+            <Stop>2008-06-12T13:00:00</Stop>
             <ResumeValid>0</ResumeValid>
             <EffortDriven>1</EffortDriven>
             <Recurring>0</Recurring>
@@ -4640,7 +5236,7 @@
             <ActualWork>PT0H0M0S</ActualWork>
             <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
             <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT16H0M0S</RemainingDuration>
+            <RemainingDuration>PT4H0M0S</RemainingDuration>
             <RemainingCost>0</RemainingCost>
             <RemainingWork>PT0H0M0S</RemainingWork>
             <RemainingOvertimeCost>0</RemainingOvertimeCost>
@@ -4674,7 +5270,7 @@
             <Name>Math, Algebra, etc</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T03:16:00</CreateDate>
+            <CreateDate>2008-07-02T22:16:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.10</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4741,7 +5337,7 @@
             <Name>Array</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T03:17:00</CreateDate>
+            <CreateDate>2008-07-02T22:17:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.11</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4808,7 +5404,7 @@
             <Name>TimeGrid</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T03:32:00</CreateDate>
+            <CreateDate>2008-07-02T22:32:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.12</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4875,7 +5471,7 @@
             <Name>Random Number Generators</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T03:23:00</CreateDate>
+            <CreateDate>2008-07-02T22:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.13</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -4942,7 +5538,7 @@
             <Name>Marsenne Twister</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T03:26:00</CreateDate>
+            <CreateDate>2008-07-02T22:26:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.13.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5009,7 +5605,7 @@
             <Name>Sobol</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T03:23:00</CreateDate>
+            <CreateDate>2008-07-02T22:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>1.5.13.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5076,7 +5672,7 @@
             <Name>Financial Instruments</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:47:00</CreateDate>
+            <CreateDate>2008-06-09T20:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>5</OutlineNumber>
             <OutlineLevel>1</OutlineLevel>
@@ -5143,7 +5739,7 @@
             <Name>Options</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T00:30:00</CreateDate>
+            <CreateDate>2008-06-08T19:30:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -5210,7 +5806,7 @@
             <Name>European Options</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T00:30:00</CreateDate>
+            <CreateDate>2008-06-08T19:30:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -5277,7 +5873,7 @@
             <Name>Black-Scholes</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:33:00</CreateDate>
+            <CreateDate>2008-06-09T20:33:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.1.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5344,7 +5940,7 @@
             <Name>Integral</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:36:00</CreateDate>
+            <CreateDate>2008-06-09T20:36:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.1.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5411,7 +6007,7 @@
             <Name>Monte Carlo (crude)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-07-03T03:04:00</CreateDate>
+            <CreateDate>2008-07-02T22:04:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.1.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5478,7 +6074,7 @@
             <Name>Monte Carlo (Sobol)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:33:00</CreateDate>
+            <CreateDate>2008-06-09T20:33:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.1.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5545,7 +6141,7 @@
             <Name>American Options</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-09T00:31:00</CreateDate>
+            <CreateDate>2008-06-08T19:31:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -5612,7 +6208,7 @@
             <Name>Barone-Adesi/Whaley</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:06:00</CreateDate>
+            <CreateDate>2008-06-09T20:06:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5679,7 +6275,7 @@
             <Name>Bjerksund/Stensland</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:34:00</CreateDate>
+            <CreateDate>2008-06-09T20:34:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5746,7 +6342,7 @@
             <Name>Monte Carlo (Longstaff Schwartz)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:35:00</CreateDate>
+            <CreateDate>2008-06-09T20:35:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5813,7 +6409,7 @@
             <Name>Finite differences</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:38:00</CreateDate>
+            <CreateDate>2008-06-09T20:38:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5880,7 +6476,7 @@
             <Name>Binomial Jarrow-Rudd</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:40:00</CreateDate>
+            <CreateDate>2008-06-09T20:40:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.5</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -5947,7 +6543,7 @@
             <Name>Binomial Cox-Ross-Rubinstein</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:41:00</CreateDate>
+            <CreateDate>2008-06-09T20:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.6</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -6014,7 +6610,7 @@
             <Name>Additive equiprobabilities</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:41:00</CreateDate>
+            <CreateDate>2008-06-09T20:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.7</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -6081,7 +6677,7 @@
             <Name>Binomial Trigeorgis</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:41:00</CreateDate>
+            <CreateDate>2008-06-09T20:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.8</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -6148,7 +6744,7 @@
             <Name>Binomial Tian</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:41:00</CreateDate>
+            <CreateDate>2008-06-09T20:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.9</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -6215,7 +6811,7 @@
             <Name>Binomial Leisen-Reimer</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:41:00</CreateDate>
+            <CreateDate>2008-06-09T20:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.10</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -6282,7 +6878,7 @@
             <Name>Binomial Joshi</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:41:00</CreateDate>
+            <CreateDate>2008-06-09T20:41:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.2.11</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -6349,7 +6945,7 @@
             <Name>Forwards, etc</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:35:00</CreateDate>
+            <CreateDate>2008-06-09T21:35:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.3</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -6416,7 +7012,7 @@
             <Name>Forward Options</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:39:00</CreateDate>
+            <CreateDate>2008-06-09T21:39:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.3.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -6483,7 +7079,7 @@
             <Name>FRA</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:39:00</CreateDate>
+            <CreateDate>2008-06-09T21:39:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.3.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -6550,7 +7146,7 @@
             <Name>Repo</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:42:00</CreateDate>
+            <CreateDate>2008-06-09T21:42:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.1.3.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -6617,7 +7213,7 @@
             <Name>Bonds</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T01:46:00</CreateDate>
+            <CreateDate>2008-06-09T20:46:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.3</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -6684,7 +7280,7 @@
             <Name>Jarrow-Rudd</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:22:00</CreateDate>
+            <CreateDate>2008-06-09T21:22:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.3.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -6751,7 +7347,7 @@
             <Name>Cox-Ross-Rubinstein</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:22:00</CreateDate>
+            <CreateDate>2008-06-09T21:22:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.3.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -6818,7 +7414,7 @@
             <Name>Additive equiprobabilities</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:23:00</CreateDate>
+            <CreateDate>2008-06-09T21:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.3.3</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -6885,7 +7481,7 @@
             <Name>Trigeorgis</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:23:00</CreateDate>
+            <CreateDate>2008-06-09T21:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.3.4</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -6952,7 +7548,7 @@
             <Name>Tian</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:23:00</CreateDate>
+            <CreateDate>2008-06-09T21:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.3.5</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -7019,7 +7615,7 @@
             <Name>Leisen-Reimer</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:23:00</CreateDate>
+            <CreateDate>2008-06-09T21:23:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.3.6</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -7086,7 +7682,7 @@
             <Name>Support Libraries</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-20T02:54:00</CreateDate>
+            <CreateDate>2008-06-19T21:54:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.5</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -7153,7 +7749,7 @@
             <Name>GridColt</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-20T02:54:00</CreateDate>
+            <CreateDate>2008-06-19T21:54:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.5.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -7220,7 +7816,7 @@
             <Name>Insert into SVN</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-20T02:59:00</CreateDate>
+            <CreateDate>2008-06-19T21:59:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.5.1.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -7287,7 +7883,7 @@
             <Name>Refactor ParallelColt</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-20T02:55:00</CreateDate>
+            <CreateDate>2008-06-19T21:55:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.5.1.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -7354,7 +7950,7 @@
             <Name>Move unit tests</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-20T03:00:00</CreateDate>
+            <CreateDate>2008-06-19T22:00:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.5.1.2.1</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -7421,7 +8017,7 @@
             <Name>Move resources</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-20T03:00:00</CreateDate>
+            <CreateDate>2008-06-19T22:00:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.5.1.2.2</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -7488,7 +8084,7 @@
             <Name>"Mavenize"</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-20T02:55:00</CreateDate>
+            <CreateDate>2008-06-19T21:55:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.5.1.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -7555,7 +8151,7 @@
             <Name>Adopt fastutil</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-20T03:01:00</CreateDate>
+            <CreateDate>2008-06-19T22:01:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.5.1.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -7622,7 +8218,7 @@
             <Name>Infrastructure</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:42:00</CreateDate>
+            <CreateDate>2008-06-09T21:42:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.10</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -7689,7 +8285,7 @@
             <Name>Mirror USA</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:43:00</CreateDate>
+            <CreateDate>2008-06-09T21:43:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.10.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -7756,7 +8352,7 @@
             <Name>MIrror Switzerland</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T02:43:00</CreateDate>
+            <CreateDate>2008-06-09T21:43:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.10.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -7823,7 +8419,7 @@
             <Name>Quality Assurance</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T03:09:00</CreateDate>
+            <CreateDate>2008-06-09T22:09:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -7890,7 +8486,7 @@
             <Name>Coding Standards</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:33:00</CreateDate>
+            <CreateDate>2008-06-14T09:33:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -7957,7 +8553,7 @@
             <Name>Verify copyrights/licenses</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:33:00</CreateDate>
+            <CreateDate>2008-06-14T09:33:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.1.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8024,7 +8620,7 @@
             <Name>Comment class headers</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:33:00</CreateDate>
+            <CreateDate>2008-06-14T09:33:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.1.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8091,7 +8687,7 @@
             <Name>Comment all constructors</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:34:00</CreateDate>
+            <CreateDate>2008-06-14T09:34:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.1.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8158,7 +8754,7 @@
             <Name>Solve list from checkstyle</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:37:00</CreateDate>
+            <CreateDate>2008-06-14T09:37:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.1.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8225,7 +8821,7 @@
             <Name>Code Quality</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:38:00</CreateDate>
+            <CreateDate>2008-06-14T09:38:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -8292,7 +8888,7 @@
             <Name>Solve list from FindBugs</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:38:00</CreateDate>
+            <CreateDate>2008-06-14T09:38:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.2.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8359,7 +8955,7 @@
             <Name>Solve list from PMD</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:38:00</CreateDate>
+            <CreateDate>2008-06-14T09:38:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.2.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8426,7 +9022,7 @@
             <Name>All test cases must pass</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:39:00</CreateDate>
+            <CreateDate>2008-06-14T09:39:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.2.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8493,7 +9089,7 @@
             <Name>Developer Guides (Wiki)</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T16:54:00</CreateDate>
+            <CreateDate>2008-06-14T11:54:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.5</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -8560,7 +9156,7 @@
             <Name>The Code Translation process</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T17:19:00</CreateDate>
+            <CreateDate>2008-06-14T12:19:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.5.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8627,7 +9223,7 @@
             <Name>The Quality Assurance process</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T16:54:00</CreateDate>
+            <CreateDate>2008-06-14T11:54:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.5.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8694,7 +9290,7 @@
             <Name>Java Conventions</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T03:09:00</CreateDate>
+            <CreateDate>2008-06-09T22:09:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -8761,7 +9357,7 @@
             <Name>Code formatting conventions</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:46:00</CreateDate>
+            <CreateDate>2008-06-14T09:46:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -8828,7 +9424,7 @@
             <Name>Discuss/determine rulesets</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:47:00</CreateDate>
+            <CreateDate>2008-06-14T09:47:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.1.1</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -8895,7 +9491,7 @@
             <Name>Adopt default formatting</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:25:00</CreateDate>
+            <CreateDate>2008-06-14T09:25:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.1.2</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -8962,7 +9558,7 @@
             <Name>Configure Checkstyle accordingly</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:25:00</CreateDate>
+            <CreateDate>2008-06-14T09:25:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.1.3</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -9029,7 +9625,7 @@
             <Name>Discuss results</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:46:00</CreateDate>
+            <CreateDate>2008-06-14T09:46:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.1.4</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -9096,7 +9692,7 @@
             <Name>Configure PMD</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:25:00</CreateDate>
+            <CreateDate>2008-06-14T09:25:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -9163,7 +9759,7 @@
             <Name>Discuss/determine rulesets</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:44:00</CreateDate>
+            <CreateDate>2008-06-14T09:44:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.2.1</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -9230,7 +9826,7 @@
             <Name>Configure and test in our build process</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:45:00</CreateDate>
+            <CreateDate>2008-06-14T09:45:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.2.2</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -9297,7 +9893,7 @@
             <Name>Discuss results</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:45:00</CreateDate>
+            <CreateDate>2008-06-14T09:45:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.2.3</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -9364,7 +9960,7 @@
             <Name>Configure FindBugs</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:26:00</CreateDate>
+            <CreateDate>2008-06-14T09:26:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -9431,7 +10027,7 @@
             <Name>Discuss/determine rulesets</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:45:00</CreateDate>
+            <CreateDate>2008-06-14T09:45:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.3.1</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -9498,7 +10094,7 @@
             <Name>Configure and test in our build process</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:45:00</CreateDate>
+            <CreateDate>2008-06-14T09:45:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.3.2</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -9565,7 +10161,7 @@
             <Name>Discuss results</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:45:00</CreateDate>
+            <CreateDate>2008-06-14T09:45:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.9.3.3</OutlineNumber>
             <OutlineLevel>5</OutlineLevel>
@@ -9632,7 +10228,7 @@
             <Name>JSR-308</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T03:09:00</CreateDate>
+            <CreateDate>2008-06-09T22:09:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.10</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -9699,7 +10295,7 @@
             <Name>Proof of concept</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:26:00</CreateDate>
+            <CreateDate>2008-06-14T09:26:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.10.1</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -9766,7 +10362,7 @@
             <Name>Define annotations to be used</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:27:00</CreateDate>
+            <CreateDate>2008-06-14T09:27:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.10.2</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -9833,7 +10429,7 @@
             <Name>Configure annotation processors</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:27:00</CreateDate>
+            <CreateDate>2008-06-14T09:27:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.10.3</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -9900,7 +10496,7 @@
             <Name>Evaluate results</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:28:00</CreateDate>
+            <CreateDate>2008-06-14T09:28:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.10.4</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -9967,7 +10563,7 @@
             <Name>Propose next steps</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:28:00</CreateDate>
+            <CreateDate>2008-06-14T09:28:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.13.10.5</OutlineNumber>
             <OutlineLevel>4</OutlineLevel>
@@ -10034,7 +10630,7 @@
             <Name>Performance</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-10T03:10:00</CreateDate>
+            <CreateDate>2008-06-09T22:10:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.16</OutlineNumber>
             <OutlineLevel>2</OutlineLevel>
@@ -10101,7 +10697,7 @@
             <Name>Install StopClock on tests</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:28:00</CreateDate>
+            <CreateDate>2008-06-14T09:28:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.16.1</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -10168,7 +10764,7 @@
             <Name>Install StopClock on examples</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:29:00</CreateDate>
+            <CreateDate>2008-06-14T09:29:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.16.2</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -10235,7 +10831,7 @@
             <Name>Do not use Java Collections</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T22:35:00</CreateDate>
+            <CreateDate>2008-06-14T17:35:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.16.3</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -10302,7 +10898,7 @@
             <Name>Run with Colt</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:31:00</CreateDate>
+            <CreateDate>2008-06-14T09:31:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.16.5</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -10369,7 +10965,7 @@
             <Name>Run with GridColt</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:31:00</CreateDate>
+            <CreateDate>2008-06-14T09:31:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.16.6</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -10436,7 +11032,7 @@
             <Name>Run on Azul</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:32:00</CreateDate>
+            <CreateDate>2008-06-14T09:32:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.16.7</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -10503,7 +11099,7 @@
             <Name>Publish results on Wiki</Name>
             <Type>0</Type>
             <IsNull>0</IsNull>
-            <CreateDate>2008-06-14T14:32:00</CreateDate>
+            <CreateDate>2008-06-14T09:32:00</CreateDate>
             <WBS/>
             <OutlineNumber>5.16.8</OutlineNumber>
             <OutlineLevel>3</OutlineLevel>
@@ -11835,7 +12431,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>16</CalendarUID>
+            <CalendarUID>19</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -11881,7 +12477,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>17</CalendarUID>
+            <CalendarUID>20</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -11927,7 +12523,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>18</CalendarUID>
+            <CalendarUID>21</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -11973,7 +12569,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>19</CalendarUID>
+            <CalendarUID>22</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -12019,7 +12615,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>20</CalendarUID>
+            <CalendarUID>23</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -12065,7 +12661,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>21</CalendarUID>
+            <CalendarUID>24</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -12111,7 +12707,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>22</CalendarUID>
+            <CalendarUID>25</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -12157,7 +12753,7 @@
             <SV>0</SV>
             <CV>0</CV>
             <ACWP>0</ACWP>
-            <CalendarUID>23</CalendarUID>
+            <CalendarUID>26</CalendarUID>
             <Notes/>
             <BCWS>0</BCWS>
             <BCWP>0</BCWP>
@@ -12178,17 +12774,129 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT120H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>0</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-11T23:00:00</Start>
+                <Finish>2008-06-12T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-12T23:00:00</Start>
+                <Finish>2008-06-13T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-15T23:00:00</Start>
+                <Finish>2008-06-16T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-16T23:00:00</Start>
+                <Finish>2008-06-17T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-17T23:00:00</Start>
+                <Finish>2008-06-18T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-18T23:00:00</Start>
+                <Finish>2008-06-19T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-19T23:00:00</Start>
+                <Finish>2008-06-20T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-22T23:00:00</Start>
+                <Finish>2008-06-23T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-23T23:00:00</Start>
+                <Finish>2008-06-24T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-24T23:00:00</Start>
+                <Finish>2008-06-25T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-25T23:00:00</Start>
+                <Finish>2008-06-26T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>0</UID>
+                <Start>2008-06-26T23:00:00</Start>
+                <Finish>2008-06-27T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -12203,8 +12911,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12226,17 +12934,129 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT120H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>2</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-11T23:00:00</Start>
+                <Finish>2008-06-12T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-12T23:00:00</Start>
+                <Finish>2008-06-13T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-15T23:00:00</Start>
+                <Finish>2008-06-16T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-16T23:00:00</Start>
+                <Finish>2008-06-17T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-17T23:00:00</Start>
+                <Finish>2008-06-18T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-18T23:00:00</Start>
+                <Finish>2008-06-19T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-19T23:00:00</Start>
+                <Finish>2008-06-20T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-22T23:00:00</Start>
+                <Finish>2008-06-23T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-23T23:00:00</Start>
+                <Finish>2008-06-24T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-24T23:00:00</Start>
+                <Finish>2008-06-25T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-25T23:00:00</Start>
+                <Finish>2008-06-26T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>2</UID>
+                <Start>2008-06-26T23:00:00</Start>
+                <Finish>2008-06-27T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -12251,8 +13071,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT120H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12387,8 +13207,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT80H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT80H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12482,17 +13302,41 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT32H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT32H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>5</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>5</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>5</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>5</UID>
+                <Start>2008-06-11T23:00:00</Start>
+                <Finish>2008-06-12T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -12506,17 +13350,33 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT24H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT24H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>6</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>6</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>6</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -12531,8 +13391,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12563,8 +13423,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT24H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT24H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12603,8 +13463,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12634,17 +13494,41 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT32H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT32H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>10</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>10</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>10</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>10</UID>
+                <Start>2008-06-11T23:00:00</Start>
+                <Finish>2008-06-12T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -12659,8 +13543,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT24H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT24H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12699,8 +13583,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT32H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT32H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12747,8 +13631,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12778,17 +13662,33 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT24H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT24H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>14</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>14</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>14</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -12803,8 +13703,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT24H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT24H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12843,8 +13743,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT24H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT24H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12883,8 +13783,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12914,17 +13814,33 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT24H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT24H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>18</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>18</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>18</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -12939,8 +13855,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT24H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT24H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -12979,8 +13895,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT24H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT24H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13019,8 +13935,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13050,17 +13966,129 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT120H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>22</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-11T23:00:00</Start>
+                <Finish>2008-06-12T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-12T23:00:00</Start>
+                <Finish>2008-06-13T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-15T23:00:00</Start>
+                <Finish>2008-06-16T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-16T23:00:00</Start>
+                <Finish>2008-06-17T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-17T23:00:00</Start>
+                <Finish>2008-06-18T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-18T23:00:00</Start>
+                <Finish>2008-06-19T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-19T23:00:00</Start>
+                <Finish>2008-06-20T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-22T23:00:00</Start>
+                <Finish>2008-06-23T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-23T23:00:00</Start>
+                <Finish>2008-06-24T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-24T23:00:00</Start>
+                <Finish>2008-06-25T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-25T23:00:00</Start>
+                <Finish>2008-06-26T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>22</UID>
+                <Start>2008-06-26T23:00:00</Start>
+                <Finish>2008-06-27T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -13075,8 +14103,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13107,8 +14135,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-11T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-11T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13139,8 +14167,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13171,8 +14199,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-11T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-11T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13203,8 +14231,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13235,8 +14263,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-11T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-11T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13267,8 +14295,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13292,33 +14320,41 @@
         <Assignment>
             <UID>30</UID>
             <TaskUID>33</TaskUID>
-            <ResourceUID>8</ResourceUID>
+            <ResourceUID>7</ResourceUID>
             <ActualCost>0</ActualCost>
             <ActualWork>PT0H0M0S</ActualWork>
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-11T09:00:00</Resume>
+            <RemainingWork>PT4H0M0S</RemainingWork>
+            <Stop>2008-06-12T08:00:00</Stop>
+            <Resume>2008-06-12T08:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
-                <Type>1</Type>
+                <Type>2</Type>
                 <UID>30</UID>
-                <Start>2008-06-10T23:00:00</Start>
-                <Finish>2008-06-11T23:00:00</Finish>
+                <Start>2008-06-11T08:00:00</Start>
+                <Finish>2008-06-12T08:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
             <TimephasedData>
+                <Type>2</Type>
+                <UID>30</UID>
+                <Start>2008-06-12T08:00:00</Start>
+                <Finish>2008-06-12T13:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT4H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
                 <Type>1</Type>
                 <UID>30</UID>
-                <Start>2008-06-11T23:00:00</Start>
+                <Start>2008-06-12T13:00:00</Start>
                 <Finish>2008-06-12T17:00:00</Finish>
                 <Unit>3</Unit>
-                <Value>PT8H0M0S</Value>
+                <Value>PT4H0M0S</Value>
             </TimephasedData>
         </Assignment>
         <Assignment>
@@ -13331,8 +14367,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13355,8 +14391,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT16H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT16H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13387,8 +14423,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13410,17 +14446,129 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT120H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>34</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-11T23:00:00</Start>
+                <Finish>2008-06-12T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-12T23:00:00</Start>
+                <Finish>2008-06-13T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-15T23:00:00</Start>
+                <Finish>2008-06-16T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-16T23:00:00</Start>
+                <Finish>2008-06-17T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-17T23:00:00</Start>
+                <Finish>2008-06-18T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-18T23:00:00</Start>
+                <Finish>2008-06-19T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-19T23:00:00</Start>
+                <Finish>2008-06-20T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-22T23:00:00</Start>
+                <Finish>2008-06-23T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-23T23:00:00</Start>
+                <Finish>2008-06-24T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-24T23:00:00</Start>
+                <Finish>2008-06-25T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-25T23:00:00</Start>
+                <Finish>2008-06-26T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>34</UID>
+                <Start>2008-06-26T23:00:00</Start>
+                <Finish>2008-06-27T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -13435,8 +14583,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT120H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13571,8 +14719,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT120H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13706,17 +14854,129 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT120H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>37</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-11T23:00:00</Start>
+                <Finish>2008-06-12T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-12T23:00:00</Start>
+                <Finish>2008-06-13T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-15T23:00:00</Start>
+                <Finish>2008-06-16T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-16T23:00:00</Start>
+                <Finish>2008-06-17T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-17T23:00:00</Start>
+                <Finish>2008-06-18T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-18T23:00:00</Start>
+                <Finish>2008-06-19T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-19T23:00:00</Start>
+                <Finish>2008-06-20T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-22T23:00:00</Start>
+                <Finish>2008-06-23T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-23T23:00:00</Start>
+                <Finish>2008-06-24T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-24T23:00:00</Start>
+                <Finish>2008-06-25T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-25T23:00:00</Start>
+                <Finish>2008-06-26T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>37</UID>
+                <Start>2008-06-26T23:00:00</Start>
+                <Finish>2008-06-27T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -13730,17 +14990,129 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT120H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>38</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-11T23:00:00</Start>
+                <Finish>2008-06-12T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-12T23:00:00</Start>
+                <Finish>2008-06-13T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-15T23:00:00</Start>
+                <Finish>2008-06-16T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-16T23:00:00</Start>
+                <Finish>2008-06-17T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-17T23:00:00</Start>
+                <Finish>2008-06-18T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-18T23:00:00</Start>
+                <Finish>2008-06-19T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-19T23:00:00</Start>
+                <Finish>2008-06-20T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-22T23:00:00</Start>
+                <Finish>2008-06-23T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-23T23:00:00</Start>
+                <Finish>2008-06-24T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-24T23:00:00</Start>
+                <Finish>2008-06-25T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-25T23:00:00</Start>
+                <Finish>2008-06-26T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>38</UID>
+                <Start>2008-06-26T23:00:00</Start>
+                <Finish>2008-06-27T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -13754,17 +15126,129 @@
             <Cost>0</Cost>
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <RemainingWork>PT120H0M0S</RemainingWork>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
-            <Work>PT8H0M0S</Work>
+            <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
             <TimephasedData>
                 <Type>1</Type>
                 <UID>39</UID>
                 <Start>2008-06-08T23:00:00</Start>
-                <Finish>2008-06-09T17:00:00</Finish>
+                <Finish>2008-06-09T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-09T23:00:00</Start>
+                <Finish>2008-06-10T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-10T23:00:00</Start>
+                <Finish>2008-06-11T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-11T23:00:00</Start>
+                <Finish>2008-06-12T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-12T23:00:00</Start>
+                <Finish>2008-06-13T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-15T23:00:00</Start>
+                <Finish>2008-06-16T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-16T23:00:00</Start>
+                <Finish>2008-06-17T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-17T23:00:00</Start>
+                <Finish>2008-06-18T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-18T23:00:00</Start>
+                <Finish>2008-06-19T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-19T23:00:00</Start>
+                <Finish>2008-06-20T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-22T23:00:00</Start>
+                <Finish>2008-06-23T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-23T23:00:00</Start>
+                <Finish>2008-06-24T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-24T23:00:00</Start>
+                <Finish>2008-06-25T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-25T23:00:00</Start>
+                <Finish>2008-06-26T23:00:00</Finish>
+                <Unit>3</Unit>
+                <Value>PT8H0M0S</Value>
+            </TimephasedData>
+            <TimephasedData>
+                <Type>1</Type>
+                <UID>39</UID>
+                <Start>2008-06-26T23:00:00</Start>
+                <Finish>2008-06-27T17:00:00</Finish>
                 <Unit>3</Unit>
                 <Value>PT8H0M0S</Value>
             </TimephasedData>
@@ -13779,8 +15263,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13803,8 +15287,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT120H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13939,8 +15423,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT40H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT40H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -13995,8 +15479,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT120H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT120H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14131,8 +15615,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14155,8 +15639,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14179,8 +15663,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14203,8 +15687,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14227,8 +15711,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14251,8 +15735,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14275,8 +15759,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14299,8 +15783,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14323,8 +15807,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14347,8 +15831,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14371,8 +15855,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14395,8 +15879,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14419,8 +15903,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14443,8 +15927,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14467,8 +15951,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14491,8 +15975,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14515,8 +15999,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14539,8 +16023,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14563,8 +16047,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14587,8 +16071,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14611,8 +16095,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14635,8 +16119,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14659,8 +16143,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14683,8 +16167,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14707,8 +16191,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14731,8 +16215,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14755,8 +16239,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14779,8 +16263,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14803,8 +16287,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14827,8 +16311,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14851,8 +16335,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14875,8 +16359,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14899,8 +16383,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14923,8 +16407,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14947,8 +16431,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14971,8 +16455,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -14995,8 +16479,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15019,8 +16503,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15043,8 +16527,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15067,8 +16551,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15091,8 +16575,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15115,8 +16599,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15139,8 +16623,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15163,8 +16647,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15187,8 +16671,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15211,8 +16695,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15235,8 +16719,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15259,8 +16743,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15283,8 +16767,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15307,8 +16791,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15331,8 +16815,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15355,8 +16839,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15379,8 +16863,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15403,8 +16887,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15427,8 +16911,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15451,8 +16935,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15475,8 +16959,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15499,8 +16983,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15523,8 +17007,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15547,8 +17031,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15571,8 +17055,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15595,8 +17079,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15619,8 +17103,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15643,8 +17127,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15667,8 +17151,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15691,8 +17175,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15715,8 +17199,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15739,8 +17223,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15763,8 +17247,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15787,8 +17271,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15811,8 +17295,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15835,8 +17319,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15859,8 +17343,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15883,8 +17367,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
@@ -15907,8 +17391,8 @@
             <Delay>0</Delay>
             <OvertimeWork>PT0H0M0S</OvertimeWork>
             <RemainingWork>PT8H0M0S</RemainingWork>
-            <Stop>1970-01-01T01:00:00</Stop>
-            <Resume>2008-06-09T09:00:00</Resume>
+            <Stop>1969-12-31T18:00:00</Stop>
+            <Resume>2008-06-09T03:00:00</Resume>
             <Units>1</Units>
             <Work>PT8H0M0S</Work>
             <WorkContour>0</WorkContour>
