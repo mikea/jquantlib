@@ -42,6 +42,7 @@ package org.jquantlib.math.randomnumbers;
 import java.lang.reflect.Constructor;
 
 import org.jquantlib.methods.montecarlo.Sample;
+import org.jquantlib.util.TypeToken;
 
 import cern.colt.list.DoubleArrayList;
 import cern.colt.list.IntArrayList;
@@ -73,22 +74,22 @@ public class RandomSequenceGenerator<R extends RNG> implements USG {
     }
     
     
-    public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final Class<R> klass, final long seed) {
+    public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final long seed) {
         if (dimensionality<1) throw new IllegalArgumentException("dimensionality must be greater than 0");
         this.dimensionality_ = dimensionality;
         this.sequence_ = new Sample<DoubleArrayList>(new DoubleArrayList(this.dimensionality_), 1.0);
         this.int32Sequence_ = new IntArrayList(this.dimensionality_);
-        // builds the RNG from Class
+        
         try {
-            Constructor<R> constructor = klass.getConstructor(Long.class);
-            this.rng_ = constructor.newInstance(seed);
+            Constructor<R> c = (Constructor<R>) TypeToken.getClazz(this.getClass()).getConstructor(long.class);
+            this.rng_ = c.newInstance(seed);
         } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
     }
 
-    public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final Class<R> klass) {
-        this(dimensionality, klass, 0);
+    public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality) {
+        this(dimensionality, 0);
     }
 
     public IntArrayList getNextInt32Sequence() /* @ReadOnly */ { // FIXME: Aaron:: code review  :: int or long????
