@@ -44,8 +44,8 @@ public class TypeTokenTest {
         }
         
         D d = new D();
-        if (c.getClazz() != Integer.class) {
-            fail("C should be java.lang.Integer");
+        if (d.getClazz() != Integer.class) {
+            fail("D should be java.lang.Integer");
         }
     }
     
