@@ -67,14 +67,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.jquantlib.math.randomnumbers;
 
-import org.jquantlib.math.randomnumbers.RNG;
+
 import org.jquantlib.math.randomnumbers.SeedGenerator;
+import org.jquantlib.math.randomnumbers.UniformRng;
+
 
 /**
  * @author Aaron Roth
  */
-public class SFMTUniformRng {
-
+public class SFMTUniformRng extends UniformRng {
     /**
      * Mersenne Exponent. The period of the sequence is a multiple of
      * 2<sup><code>MEXP</code></sup> &minus; 1. If you adapt this code to
@@ -165,7 +166,7 @@ public class SFMTUniformRng {
     
     public SFMTUniformRng() {
         long seed = SeedGenerator.getInstance().get();
-        seedInitialization( new int[] {(int) seed, (int) (seed >>> 32)} );
+        seed((int) seed, (int) (seed >>> 32));
     }
 
     /**
@@ -175,7 +176,7 @@ public class SFMTUniformRng {
      * @param seed      initial seed for this generator.
      */
     public SFMTUniformRng(int seed) {
-        seedInitialization(seed);
+        seed(seed);
     }
 
     /**
@@ -293,9 +294,10 @@ public class SFMTUniformRng {
     /**
      * Generates and returns the next 32-bit pseudorandom number.
      *
-     * @return          next number.
+     * @return          next int.
      */
-    public int nextInt32() {
+    @Override
+    public int nextInt() {
         // If we've exahusted the current internal state, generate a new one.
         if (idx >= N32) {
             genRandAll();
@@ -307,10 +309,12 @@ public class SFMTUniformRng {
     
     /**
      * Initializes the internal state array with a 32-bit seed.
+     * The version of {@link #seedInitialization(int[] seeds)}
+     * that takes an array of ints as its seeds is to be preferred.
      *
      * @param seed      32-bit seed.
      */
-    public void seedInitialization(int seed) {
+    public void seed(int seed) {
         sfmt[0] = seed;
         
         for (int i = 1; i < N32; i++) {
@@ -323,7 +327,7 @@ public class SFMTUniformRng {
     }
     
     /**
-     * Helper function used by {@link #seedInitialization}.
+     * Helper function used by {@link #seedInitialization(int[] seeds)}.
      *
      * @param x         32-bit integer.
      * @return          32-bit integer.
@@ -333,7 +337,7 @@ public class SFMTUniformRng {
     }
 
     /**
-     * Helper function used by {@link #seedInitialization}.
+     * Helper function used by {@link #seedInitialization(int[] seeds)}.
      *
      * @param x         32-bit integer.
      * @return          32-bit integer.
@@ -347,7 +351,8 @@ public class SFMTUniformRng {
      *
      * @param seeds       array of 32-bit integers, used as seeds.
      */
-    public void seedInitialization(int... seeds) {
+    @Override
+    public void seed(int... seeds) {
         int lag = N32 >= 623 ? 11 : N32 >= 68 ? 7 : N32 >= 39 ? 5 : 3;
         int mid = (N32 - lag) / 2;
         
