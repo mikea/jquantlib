@@ -10,23 +10,26 @@ public class PdeProxy<T /* extends TypeReference<PdeSecondOrderParabolic> */> ex
 	//
 	// Comments added by Richard:
 	//
-	// If you have a 'kind of' decorator pattern by extending an interface/class and receive a parameter which extends the same
-	// interface/class. For instance:
+	// If you need a 'kind of' decorator pattern by extending an interface/class and receive a parameter which extends the same
+	// interface/class, you can use something like this:
 	//
 	//     public class PdeProxy<T extends PdeSecondOrderParabolic> extends PdeSecondOrderParabolic
+	//
+	// On the other hand...
 	//
 	// If you are receiving a parameter which should be 'typed' because you need to instantiate a class of that type, you can
 	// use both org.jquantlib.util.TypeReference or org.jquantlib.TypeToken. TypeToken is easier to be used by the lazy programmer
 	// because you have static helper methods. TypeReferece is much more elegant and you will certainly impress your audience 
 	// when you show your cleverness.
 	//
-	// This is how a lazy programmer had used TypeToken in RandomSequenceGenerator:
+	// This is how a lazy programmer used TypeToken in RandomSequenceGenerator:
 	//
 	//	      Constructor<R> c = (Constructor<R>) TypeToken.getClazz(this.getClass()).getConstructor(long.class);
 	//        this.rng_ = c.newInstance(seed);
 	//
-	// If what you are trying to do is something like "pass a class to be used as a proxy", you can so something highly clever 
-	// like this:
+	// If what you are trying to do is something like "pass a class to be used as a proxy", but not passing a instance of it, 
+	// I mean: you'd like to mention what class type you need but you are not willing to create an instance of it and pass as a
+	// parameter to your constructor, you can so something highly clever like this:
 	//
 	//  public class PdeProxy<T extends TypeReference<PdeSecondOrderParabolic>> extends PdeSecondOrderParabolic
 	//  ...
