@@ -420,7 +420,7 @@
     <repository>
       <id>jquantlib-external_free</id>
       <name>JQuantLib external_free</name>
-      <url>${maven.deploy.repository.url}/jquantlib-external_free/</url>
+      <url>${maven.deploy.repository.url}/${maven.deploy.repository.id}/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -429,15 +429,7 @@
       </snapshots>
     </repository>
   
-  
-    <!--
-      ***************************************************************
-      ** IF ARCHIVA SEEMS TO BE OFFLINE, UNCOMMENT THE BLOCK BELOW **
-      ** http://www.jquantlib.org:8080/archiva                     **
-      ***************************************************************
-      -->
-        
-    <!-- repository>
+    <repository>
       <releases/>
       <snapshots/>
       <id>central</id>
@@ -450,7 +442,7 @@
       <id>ibiblio</id>
       <name>Ibiblio Maven2 repository</name>
       <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
-    </repository -->
+    </repository>
     
   </repositories>
 
@@ -698,7 +690,7 @@
   <distributionManagement>
     <snapshotRepository>
       <id>jquantlib-external_free</id>
-      <url>dav:${maven.deploy.repository.url}/jquantlib-external_free/</url>
+      <url>dav:${maven.deploy.repository.url}/${maven.deploy.repository.id}/</url>
     </snapshotRepository>
   </distributionManagement>
   
@@ -716,7 +708,10 @@
     <maven.jar.index>false</maven.jar.index>
     
     <!-- maven.deploy.repository.url>http://www.jquantlib.org:8080/archiva/repository</maven.deploy.repository.url -->
-    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos/external_free</maven.deploy.repository.url>
+    <!-- maven.deploy.repository.id>jquantlib-external_free</maven.deploy.repository.id -->
+    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
+    <maven.deploy.repository.id>external_free</maven.deploy.repository.id>
+
     <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites/${project.artifactId}</maven.deploy.site.url>
     <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
     
