@@ -28,6 +28,9 @@ import java.lang.reflect.Method;
  * @author Srinivas Hasti
  * 
  */
+
+// Richard: see my comments in PdeProxy
+@Deprecated
 public class MethodUtil { 
 	
 	public static <T> T invoke(Object object, String method, Object... args) {
