@@ -24,8 +24,7 @@
 package org.jquantlib.math.randomnumbers;
 
 import java.util.ArrayList;
-import java.util.Date;
-import org.jquantlib.math.randomnumbers.SeedGenerator;
+
 import org.jquantlib.methods.montecarlo.Sample;
 
 
@@ -38,7 +37,7 @@ import org.jquantlib.methods.montecarlo.Sample;
 // TODO: Under construction
 
 
-public class MersenneTwisterUniformRng {
+public class MersenneTwisterUniformRng implements RNG<Double> {
 	
 	//
 	// Constants

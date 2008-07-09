@@ -23,7 +23,7 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.randomnumbers.IC;
 
 
 /**
@@ -36,7 +36,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * 
  * @author Dominik Holenstein
  */
-public class InverseCumulativeNormal extends NormalDistribution implements UnaryFunctionDouble {
+public class InverseCumulativeNormal extends NormalDistribution implements IC {
 		
 	//
 	// static final fields (constants)
