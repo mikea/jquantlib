@@ -714,7 +714,9 @@
     <maven.compile.maxmem>512m</maven.compile.maxmem>
     <maven.compile.fork>false</maven.compile.fork> <!-- Be cautious: may fork a different JVM -->
     <maven.jar.index>false</maven.jar.index>
-    <maven.deploy.repository.url>http://www.jquantlib.org:8080/archiva/repository</maven.deploy.repository.url>
+    
+    <!-- maven.deploy.repository.url>http://www.jquantlib.org:8080/archiva/repository</maven.deploy.repository.url -->
+    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos/external_free</maven.deploy.repository.url>
     <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites/${project.artifactId}</maven.deploy.site.url>
     <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
     
