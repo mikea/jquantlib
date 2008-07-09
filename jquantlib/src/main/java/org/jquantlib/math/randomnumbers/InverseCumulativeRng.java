@@ -72,5 +72,4 @@ public class InverseCumulativeRng<R extends RNG, I extends IC> {
         
         return new Sample<Double>(ICND_.evaluate(sample.value), sample.weight);
     }
-    
 }

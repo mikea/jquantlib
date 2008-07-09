@@ -36,11 +36,15 @@ public class UniformRng_0_1 extends SampleGenerator<Double> {
     // If it becomes necessary, it will be possible to write additional
     // constructors allowing this class to generate distributions on the
     // closed interval [0, 1] (or half-closed intervals, (0, 1], [0, 1), etc.)
+
+    // Simply call the constructor in the superclass that takes no parameters.
+    public UniformRng_0_1() { }
     
     public UniformRng_0_1(final UniformPseudorandomIntGenerator uprig) {
         super(uprig);
     }
     
+    @Override
     public Sample<Double> next() {
         // If nextInt() returns Integer.MIN_VALUE, take nextInt() again.
         // This still yields a uniform distribution (assuming the ints of the

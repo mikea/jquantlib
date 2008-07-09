@@ -34,9 +34,12 @@ import org.jquantlib.methods.montecarlo.Sample;
 public abstract class SampleGenerator<SampleType> implements SeedableWithInts {
     protected final UniformPseudorandomIntGenerator uprig;
     
-    // We might want to choose a default UniformPseudorandomIntGenerator
-    // so that we can create a constructor with no arguments, e.g.
-    // public SampleGenerator() { this.uprig = default something or other }
+    // By default, use the SIMD-oriented Fast Mersenne Twister uniform
+    // random number (that is, int) generator. And use the default seeding
+    // of this RNG as well...
+    public SampleGenerator() {
+        this.uprig = new SFMTUniformRng();
+    }
     
     public SampleGenerator(final UniformPseudorandomIntGenerator uprig) {
         this.uprig = uprig;
