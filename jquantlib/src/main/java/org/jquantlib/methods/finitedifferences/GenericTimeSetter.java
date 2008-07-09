@@ -24,13 +24,13 @@ package org.jquantlib.methods.finitedifferences;
 import org.jquantlib.math.TransformedGrid;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator.TimeSetter;
 
-public class GenericTimeSetter implements TimeSetter {
+public class GenericTimeSetter<T> implements TimeSetter {
 	private TransformedGrid grid;
 	private PdeSecondOrderParabolic pde;
 
-	public GenericTimeSetter(TransformedGrid grid, PdeSecondOrderParabolic pde) {
+	public GenericTimeSetter(TransformedGrid grid, T pde) {
 		this.grid = grid;
-		this.pde = pde;
+		this.pde = new PdeProxy<T>(pde);
 	}
 
 	@Override
