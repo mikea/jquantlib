@@ -4,10 +4,10 @@ import org.jquantlib.math.TransformedGrid;
 
 public class PdeOperator<T> extends TridiagonalOperator {
 
-	public PdeOperator(TransformedGrid grid, PdeSecondOrderParabolic process,
+	public PdeOperator(TransformedGrid grid, T process,
 			double residualTime) {
 		super(grid.size());
-		timeSetter = new GenericTimeSetter(grid, process);
+		timeSetter = new GenericTimeSetter<T>(grid, process);
 		setTime(residualTime);
 	}
 
