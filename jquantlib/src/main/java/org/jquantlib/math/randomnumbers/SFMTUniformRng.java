@@ -69,13 +69,13 @@ package org.jquantlib.math.randomnumbers;
 
 
 import org.jquantlib.math.randomnumbers.SeedGenerator;
-import org.jquantlib.math.randomnumbers.UniformRng;
+import org.jquantlib.math.randomnumbers.UniformPseudorandomIntGenerator;
 
 
 /**
  * @author Aaron Roth
  */
-public class SFMTUniformRng extends UniformRng {
+public class SFMTUniformRng extends UniformPseudorandomIntGenerator {
     /**
      * Mersenne Exponent. The period of the sequence is a multiple of
      * 2<sup><code>MEXP</code></sup> &minus; 1. If you adapt this code to

@@ -23,11 +23,10 @@
 package org.jquantlib.math.randomnumbers;
 
 /**
- * Generate uniformly distributed doubles on the open unit interval, (0, 1).
- * 
+ *
  * @author Aaron Roth
+ *
  */
-public interface UniformPseudorandomRealNumberGenerator {
-    // We're losing a little efficieny because this function is in an interface.
-    public double nextDoubleInOpenUnitInterval();
+public abstract class UniformPseudorandomIntGenerator implements SeedableWithInts {
+    public abstract int nextInt();
 }
