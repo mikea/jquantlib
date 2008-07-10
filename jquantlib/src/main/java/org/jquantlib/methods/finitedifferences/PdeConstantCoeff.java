@@ -25,13 +25,13 @@ package org.jquantlib.methods.finitedifferences;
 // TODO: performance of reflection ? can we assume T is going to be
 // StochasticProcess1D
 public class PdeConstantCoeff<T> extends PdeSecondOrderParabolic {
-	/* Real */private double diffusion;
-	/* Real */private double drift;
-	/* Real */private double discount;
+	/* Real*/private double diffusion;
+	/* Real*/private double drift;
+	/* Real*/private double discount;
 
 	public PdeConstantCoeff(T process,
-	/* Time */double t, /* Real */double x) {
-		PdeProxy<T> pde = new PdeProxy<T>(process);
+	/*Time*/double t, /*Real*/double x) {
+	    PdeSecondOrderParabolic pde = DynamicPdeSecondOrderParabolic.getInstance(process);
 		diffusion = pde.diffusion(t, x);
 		drift = pde.drift(t, x);
 		discount = pde.discount(t, x);

@@ -21,21 +21,40 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import org.jquantlib.math.TransformedGrid;
-import org.jquantlib.methods.finitedifferences.TridiagonalOperator.TimeSetter;
+/**
+ * @author Srinivas Hasti
+ */
+import java.lang.reflect.Proxy;
 
-public class GenericTimeSetter<T> implements TimeSetter {
-    private TransformedGrid grid;
-    private PdeSecondOrderParabolic pde;
+import org.jquantlib.util.reflect.DynamicProxyInvocationHandler;
 
-    public GenericTimeSetter(TransformedGrid grid, T process) {
-        this.grid = grid;
-        this.pde = DynamicPdeSecondOrderParabolic.getInstance(process);
+public class DynamicPdeSecondOrderParabolic extends PdeSecondOrderParabolic {
+
+    private PdeParabolic pde;
+
+    private DynamicPdeSecondOrderParabolic(PdeParabolic pde) {
+        this.pde = pde;
     }
 
     @Override
-    public void setTime(double t, TridiagonalOperator l) {
-        pde.generateOperator(t, grid, l);
+    public double diffusion(double t, double x) {
+        return pde.diffusion(t, x);
+    }
+
+    @Override
+    public double discount(double t, double x) {
+        return pde.discount(t, x);
+    }
+
+    @Override
+    public double drift(double t, double x) {
+        return pde.drift(t, x);
+    }
+
+    public static <T> DynamicPdeSecondOrderParabolic getInstance(T process) {
+        PdeParabolic parabolic = (PdeParabolic) Proxy.newProxyInstance(PdeParabolic.class.getClassLoader(), PdeParabolic.class
+                .getInterfaces(), new DynamicProxyInvocationHandler<T>(process));
+        return new DynamicPdeSecondOrderParabolic(parabolic);
     }
 
 }

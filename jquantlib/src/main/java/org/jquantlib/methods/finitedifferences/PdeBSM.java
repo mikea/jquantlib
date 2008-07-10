@@ -1,6 +1,5 @@
 package org.jquantlib.methods.finitedifferences;
 
-import org.jquantlib.math.LogGrid;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.time.Frequency;
@@ -8,9 +7,8 @@ import org.jquantlib.time.Frequency;
 public class PdeBSM extends PdeSecondOrderParabolic {
 
 	private GeneralizedBlackScholesProcess process;
-	private LogGrid grid;
-
-	PdeBSM(GeneralizedBlackScholesProcess process) {
+	
+	public PdeBSM(GeneralizedBlackScholesProcess process) {
 		this.process = process;
 	}
 

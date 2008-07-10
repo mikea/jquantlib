@@ -21,21 +21,21 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import org.jquantlib.math.TransformedGrid;
-import org.jquantlib.methods.finitedifferences.TridiagonalOperator.TimeSetter;
+/**
+ * The process objects passed into Pde classes
+ * must implement the methods defined by this.
+ * 
+ * @author Srinivas Hasti
+ * 
+ */
+public interface PdeParabolic {
 
-public class GenericTimeSetter<T> implements TimeSetter {
-    private TransformedGrid grid;
-    private PdeSecondOrderParabolic pde;
+    public abstract /*Real*/ double diffusion(/*Time*/double t, /*Real*/
+    double x);
 
-    public GenericTimeSetter(TransformedGrid grid, T process) {
-        this.grid = grid;
-        this.pde = DynamicPdeSecondOrderParabolic.getInstance(process);
-    }
+    public abstract /*Real*/ double drift( /*Time*/double t, /*Real*/
+    double x);
 
-    @Override
-    public void setTime(double t, TridiagonalOperator l) {
-        pde.generateOperator(t, grid, l);
-    }
-
+    public abstract /*Real*/  double discount(/*Time*/double t, /*Real*/
+    double x);
 }
