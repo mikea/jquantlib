@@ -1,9 +1,5 @@
 package org.jquantlib.methods.finitedifferences;
 
-import java.lang.reflect.Constructor;
-
-import org.jquantlib.util.MethodUtil;
-import org.jquantlib.util.TypeToken;
 
 public class PdeProxy<T /* extends TypeReference<PdeSecondOrderParabolic> */> extends PdeSecondOrderParabolic {
 	
@@ -53,22 +49,22 @@ public class PdeProxy<T /* extends TypeReference<PdeSecondOrderParabolic> */> ex
 		this.pde = pde;
 	}
 
-	@Override
+	// @Override
 	public double diffusion(double t, double x) {
 		// Richard: return pde.diffusion(t, x);
-		return MethodUtil.invoke(pde, "diffusion", new Object[] { t, x });
+		return Double.NaN; // return MethodUtil.invoke(pde, "diffusion", new Object[] { t, x });
 	}
 
-	@Override
+	// @Override
 	public double discount(double t, double x) {
 		// Richard: return pde.drift(t, x);
-		return MethodUtil.invoke(pde, "drift", new Object[] { t, x });
+		return Double.NaN; // return MethodUtil.invoke(pde, "drift", new Object[] { t, x });
 	}
 
-	@Override
+	// @Override
 	public double drift(double t, double x) {
 		// Richard: return pde.discount(t, x);
-		return MethodUtil.invoke(pde, "discount", new Object[] { t, x });
+		return Double.NaN; // return MethodUtil.invoke(pde, "discount", new Object[] { t, x });
 	}
 
 }
