@@ -23,7 +23,7 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.randomnumbers.InverseCumulative;
+import org.jquantlib.math.randomnumbers.trial.InverseCumulative;
 
 
 /**
@@ -36,6 +36,10 @@ import org.jquantlib.math.randomnumbers.InverseCumulative;
  * 
  * @author Dominik Holenstein
  */
+
+// RICHARD: This class uses trial code:
+// org.jquantlib.math.randomnumbers.trial.InverseCumulative;
+
 public class InverseCumulativeNormal extends NormalDistribution implements InverseCumulative {
 		
 	//

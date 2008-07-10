@@ -38,7 +38,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 
-package org.jquantlib.math.randomnumbers;
+package org.jquantlib.math.randomnumbers.trial;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 

@@ -68,8 +68,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.jquantlib.math.randomnumbers;
 
 
-import org.jquantlib.math.randomnumbers.SeedGenerator;
 import org.jquantlib.math.randomnumbers.UniformRng;
+import org.jquantlib.math.randomnumbers.trial.SeedGenerator;
 
 
 /**

@@ -18,7 +18,7 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers;
+package org.jquantlib.math.randomnumbers.trial;
 
 /**
  * @author Richard Gomes

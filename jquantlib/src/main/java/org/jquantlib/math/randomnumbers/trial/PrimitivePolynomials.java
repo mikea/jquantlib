@@ -73,7 +73,7 @@
  */
 
 
-package org.jquantlib.math.randomnumbers;
+package org.jquantlib.math.randomnumbers.trial;
 
 /**
  * 

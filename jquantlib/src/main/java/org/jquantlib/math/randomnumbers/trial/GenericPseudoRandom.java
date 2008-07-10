@@ -21,8 +21,9 @@
  */
 
 /*
- Copyright (C) 2003, 2004 Ferdinando Ametrano
+ Copyright (C) 2004 Ferdinando Ametrano
  Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2004 Walter Penschke
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -38,36 +39,42 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.math.randomnumbers;
+package org.jquantlib.math.randomnumbers.trial;
 
-import org.jquantlib.methods.montecarlo.Sample;
+
+
 
 /**
- * Inverse cumulative random number generator
- * <p>
- * It uses a uniform deviate in (0, 1) as the source of cumulative distribution values. Then an inverse cumulative distribution is
- * used to calculate the distribution deviate.
- * 
- * The uniform deviate is supplied by RNG.
  * 
  * @author Richard Gomes
+ * @param <URSG>
+ * @param <IC>
  */
-public class InverseCumulativeRng<RNG extends RandomNumberGenerator, IC extends InverseCumulative> {
+
+//public class GenericPseudoRandom<URSG extends RandomSequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> {
+public class GenericPseudoRandom<RNG extends RandomNumberGenerator, IC extends InverseCumulative> {
+
+    // FIXME: static :(
+    static public boolean allowsErrorEstimate = true;
     
-    private RNG uniformGenerator_;
-    private IC ICND_; // FIXME: not initialized; possibly a static variable used via templates
+    // FIXME: static :(
+    /*static*/ private IC icInstance;
 
-
-    public InverseCumulativeRng(final RNG ug) {
-        this.uniformGenerator_ = ug;
-    }
-
-    /**
-     * @return a sample from a Gaussian distribution
-     */
-    public Sample<Double> getNext() /* @ReadOnly */ {
-        Sample<Double> sample = uniformGenerator_.next(); // FIXME: usage of sample_type :: typedef Sample<Real> sample_type;
-        
-        return new Sample<Double>(ICND_.evaluate(sample.value), sample.weight);
-    }
+//    // FIXME: static :(
+//    /*static*/ public InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC> makeSequenceGenerator(
+//            final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
+//
+//        try {
+//            
+//            RandomSequenceGenerator<RNG, IC> rsg = null;
+//            
+//            
+//            Constructor<URSG> c1 = (Constructor<URSG>) TypeToken.getClazz(this.getClass()).getConstructor(int.class, long.class);
+//            URSG g = c1.newInstance(dimension, seed);
+//            return (icInstance!=null) ? new InverseCumulativeRsg(g, icInstance) : new InverseCumulativeRsg(g);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+    
 }

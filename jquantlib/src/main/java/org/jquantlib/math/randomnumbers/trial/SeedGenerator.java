@@ -22,11 +22,12 @@
 
 
 
-package org.jquantlib.math.randomnumbers;
+package org.jquantlib.math.randomnumbers.trial;
 
 import java.util.ArrayList; // FIXME: performance
 import java.util.Date;
 import java.util.List;
+
 
 
 /**

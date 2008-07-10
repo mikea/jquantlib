@@ -1,11 +1,13 @@
 /*
  Copyright (C) 2007 Richard Gomes
 
+ This source code is release under the BSD License.
+ 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
  JQuantLib is free software: you can redistribute it and/or modify it
- under the terms of the QuantLib license.  You should have received a
+ under the terms of the JQuantLib license.  You should have received a
  copy of the license along with this program; if not, please email
  <jquant-devel@lists.sourceforge.net>. The license is also available online at
  <http://www.jquantlib.org/index.php/LICENSE.TXT>.
@@ -19,9 +21,8 @@
  */
 
 /*
- Copyright (C) 2004 Ferdinando Ametrano
+ Copyright (C) 2003, 2004 Ferdinando Ametrano
  Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
- Copyright (C) 2004 Walter Penschke
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -37,39 +38,36 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.math.randomnumbers;
-
-import java.lang.reflect.Constructor;
-import java.util.List;
+package org.jquantlib.math.randomnumbers.trial;
 
 import org.jquantlib.methods.montecarlo.Sample;
-import org.jquantlib.util.TypeToken;
 
 /**
+ * Inverse cumulative random number generator
+ * <p>
+ * It uses a uniform deviate in (0, 1) as the source of cumulative distribution values. Then an inverse cumulative distribution is
+ * used to calculate the distribution deviate.
+ * 
+ * The uniform deviate is supplied by RNG.
  * 
  * @author Richard Gomes
- * @param <URSG>
- * @param <IC>
  */
-public class GenericLowDiscrepancy<URSG extends SequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> {
-
-    // FIXME: static :(
-    static public boolean allowsErrorEstimate = false;
+public class InverseCumulativeRng<RNG extends RandomNumberGenerator, IC extends InverseCumulative> {
     
-    // FIXME: static :(
-    /*static*/ private IC icInstance;
+    private RNG uniformGenerator_;
+    private IC ICND_; // FIXME: not initialized; possibly a static variable used via templates
 
-    // FIXME: static :(
-    /*static*/ public InverseCumulativeRsg<URSG, IC> makeSequenceGenerator(
-            final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
 
-        try {
-            Constructor<URSG> c1 = (Constructor<URSG>) TypeToken.getClazz(this.getClass()).getConstructor(int.class, long.class);
-            URSG g = c1.newInstance(dimension, seed);
-            return (icInstance!=null) ? new InverseCumulativeRsg(g, icInstance) : new InverseCumulativeRsg(g);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public InverseCumulativeRng(final RNG ug) {
+        this.uniformGenerator_ = ug;
     }
-    
+
+    /**
+     * @return a sample from a Gaussian distribution
+     */
+    public Sample<Double> getNext() /* @ReadOnly */ {
+        Sample<Double> sample = uniformGenerator_.next(); // FIXME: usage of sample_type :: typedef Sample<Real> sample_type;
+        
+        return new Sample<Double>(ICND_.evaluate(sample.value), sample.weight);
+    }
 }
