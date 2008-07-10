@@ -81,15 +81,16 @@ public class TimeGrid <T extends List<Double>> {
     }
    	
     public TimeGrid(T list) {
-        // #if defined(QL_FULL_ITERATOR_SUPPORT) --> not necessary in Java
-        // : mandatoryTimes_(begin, end) {
-        //#else
-    	
-    	Iterator<Double> it = list.iterator();
-    	while (it.hasNext()) {
-    	    mandatoryTimes_.add(it.next());
-    	}
-    	
+        // RICHARD: You can assume QL_FULL_ITERATOR_SUPPORT is true in Java because we have JCF interfaces
+        //XXX #if defined(QL_FULL_ITERATOR_SUPPORT) --> not necessary in Java
+        
+        mandatoryTimes_.addAll(list);
+        
+        //XXX #else
+
+        
+        
+        
     	
     	// std::sort(mandatoryTimes_.begin(),mandatoryTimes_.end());
     	Collections.sort(mandatoryTimes_);
@@ -256,7 +257,11 @@ public class TimeGrid <T extends List<Double>> {
         	return times_.lastIndexOf(mandatoryTimes_); 
         }
         
-    	// TODO: Translate
+
+        // RICHARD: ==== Have a look at DoubleBidirectionalIterator in fastutil :) ====
+        
+        
+        // TODO: Translate
         //private const_reverse_iterator rbegin() /*Read-only*/ { 
         //	return times_.rbegin(); 
         //}
