@@ -23,7 +23,7 @@
 package org.jquantlib.math.randomnumbers;
 
 import org.jquantlib.math.randomnumbers.UniformRng_0_1;
-import org.jquantlib.math.randomnumbers.IC;
+import org.jquantlib.math.randomnumbers.InverseCumulative;
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**
@@ -32,9 +32,9 @@ import org.jquantlib.methods.montecarlo.Sample;
  */
 public class AaronsInverseCumulativeRng<SampleType> extends SampleGenerator<SampleType> {
     private final UniformRng_0_1 uniformRng;
-    private final IC inverseCdf;
+    private final InverseCumulative inverseCdf;
     
-    public AaronsInverseCumulativeRng(final UniformRng_0_1 uniformRng, final IC inverseCdf) {
+    public AaronsInverseCumulativeRng(final UniformRng_0_1 uniformRng, final InverseCumulative inverseCdf) {
         this.uniformRng = uniformRng;
         this.inverseCdf = inverseCdf; // IC should take a type parameter of type SampleType
     }

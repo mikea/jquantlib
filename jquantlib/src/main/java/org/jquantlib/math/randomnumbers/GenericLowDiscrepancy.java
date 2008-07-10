@@ -1,13 +1,11 @@
 /*
  Copyright (C) 2007 Richard Gomes
 
- This source code is release under the BSD License.
- 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
  JQuantLib is free software: you can redistribute it and/or modify it
- under the terms of the JQuantLib license.  You should have received a
+ under the terms of the QuantLib license.  You should have received a
  copy of the license along with this program; if not, please email
  <jquant-devel@lists.sourceforge.net>. The license is also available online at
  <http://www.jquantlib.org/index.php/LICENSE.TXT>.
@@ -21,8 +19,9 @@
  */
 
 /*
- Copyright (C) 2003, 2004 Ferdinando Ametrano
+ Copyright (C) 2004 Ferdinando Ametrano
  Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2004 Walter Penschke
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -40,12 +39,37 @@
 
 package org.jquantlib.math.randomnumbers;
 
+import java.lang.reflect.Constructor;
+import java.util.List;
+
 import org.jquantlib.methods.montecarlo.Sample;
+import org.jquantlib.util.TypeToken;
 
 /**
+ * 
  * @author Richard Gomes
+ * @param <URSG>
+ * @param <IC>
  */
-public interface RNG<T> {
+public class GenericLowDiscrepancy<URSG extends SequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> {
 
-    public Sample<T> next();
+    // FIXME: static :(
+    static public boolean allowsErrorEstimate = false;
+    
+    // FIXME: static :(
+    /*static*/ private IC icInstance;
+
+    // FIXME: static :(
+    /*static*/ public InverseCumulativeRsg<URSG, IC> makeSequenceGenerator(
+            final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
+
+        try {
+            Constructor<URSG> c1 = (Constructor<URSG>) TypeToken.getClazz(this.getClass()).getConstructor(int.class, long.class);
+            URSG g = c1.newInstance(dimension, seed);
+            return (icInstance!=null) ? new InverseCumulativeRsg(g, icInstance) : new InverseCumulativeRsg(g);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
 }

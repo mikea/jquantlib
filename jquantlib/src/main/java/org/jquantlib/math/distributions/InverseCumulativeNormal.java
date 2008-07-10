@@ -23,7 +23,7 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.randomnumbers.IC;
+import org.jquantlib.math.randomnumbers.InverseCumulative;
 
 
 /**
@@ -36,7 +36,7 @@ import org.jquantlib.math.randomnumbers.IC;
  * 
  * @author Dominik Holenstein
  */
-public class InverseCumulativeNormal extends NormalDistribution implements IC {
+public class InverseCumulativeNormal extends NormalDistribution implements InverseCumulative {
 		
 	//
 	// static final fields (constants)

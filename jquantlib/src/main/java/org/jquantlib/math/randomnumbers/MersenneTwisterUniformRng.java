@@ -37,7 +37,7 @@ import org.jquantlib.methods.montecarlo.Sample;
 // TODO: Under construction
 
 
-public class MersenneTwisterUniformRng implements RNG<Double> {
+public class MersenneTwisterUniformRng implements RandomNumberGenerator {
 	
 	//
 	// Constants
@@ -139,6 +139,7 @@ public class MersenneTwisterUniformRng implements RNG<Double> {
 	 * @return y 
 	 * 
 	 */
+    @Override
 	public long nextInt32() {
 			  	
 	  	long y;
@@ -181,6 +182,7 @@ public class MersenneTwisterUniformRng implements RNG<Double> {
 	 * @return 
 	 */
 	
+	@Override
 	public final Sample<Double> next() {
 		// divide by 2^32
 		double result = ((double)nextInt32() + 0.5)/4294967296.0;

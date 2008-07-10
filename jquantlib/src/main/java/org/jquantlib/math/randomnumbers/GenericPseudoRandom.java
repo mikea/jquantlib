@@ -41,101 +41,39 @@
 
 package org.jquantlib.math.randomnumbers;
 
+
+
 /**
+ * 
  * @author Richard Gomes
+ * @param <URSG>
+ * @param <IC>
  */
-public class GenericPseudoRandom<R extends RNG, I extends IC> {
+
+//public class GenericPseudoRandom<URSG extends RandomSequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> {
+public class GenericPseudoRandom<RNG extends RandomNumberGenerator, IC extends InverseCumulative> {
+
+    // FIXME: static :(
+    static public boolean allowsErrorEstimate = true;
     
-    // FIXME: code review
-    // private enum { allowsErrorEstimate = 1 };
-    
-    // data
-    static private IC icInstance;
-    
-    
-    // FIXME: code review
-    /*static*/ public InverseCumulativeRsg<? extends RandomSequenceGenerator<R>, I> 
-                makeSequenceGenerator(final int dimension, /* @Unsigned */ long seed) {
-        
-        RandomSequenceGenerator<R> g = new RandomSequenceGenerator<R>(dimension, seed);
-        
-        if (icInstance!=null) {
-            return new InverseCumulativeRsg(g, icInstance);
-        } else {
-            return new InverseCumulativeRsg(g);
-        }
-    }
+    // FIXME: static :(
+    /*static*/ private IC icInstance;
+
+//    // FIXME: static :(
+//    /*static*/ public InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC> makeSequenceGenerator(
+//            final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
+//
+//        try {
+//            
+//            RandomSequenceGenerator<RNG, IC> rsg = null;
+//            
+//            
+//            Constructor<URSG> c1 = (Constructor<URSG>) TypeToken.getClazz(this.getClass()).getConstructor(int.class, long.class);
+//            URSG g = c1.newInstance(dimension, seed);
+//            return (icInstance!=null) ? new InverseCumulativeRsg(g, icInstance) : new InverseCumulativeRsg(g);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
     
 }
-
-
-//namespace QuantLib {
-//
-//    // random number traits
-//
-//    template <class URNG, class IC>
-//    struct GenericPseudoRandom {
-//        // typedefs
-//        typedef URNG urng_type;
-//        typedef InverseCumulativeRng<urng_type,IC> rng_type;
-//        typedef RandomSequenceGenerator<urng_type> ursg_type;
-//        typedef InverseCumulativeRsg<ursg_type,IC> rsg_type;
-//        // more traits
-//        enum { allowsErrorEstimate = 1 };
-//        // factory
-//        static rsg_type make_sequence_generator(Size dimension,
-//                                                BigNatural seed) {
-//            ursg_type g(dimension, seed);
-//            return (icInstance ? rsg_type(g, *icInstance) : rsg_type(g));
-//        }
-//        // data
-//        static boost::shared_ptr<IC> icInstance;
-//    };
-//
-//    // static member initialization
-//    template<class URNG, class IC>
-//    boost::shared_ptr<IC> GenericPseudoRandom<URNG, IC>::icInstance;
-//
-//
-//    //! default traits for pseudo-random number generation
-//    /*! \test a sequence generator is generated and tested by comparing
-//              samples against known good values.
-//    */
-//    typedef GenericPseudoRandom<MersenneTwisterUniformRng,
-//                                InverseCumulativeNormal> PseudoRandom;
-//
-//    //! traits for Poisson-distributed pseudo-random number generation
-//    /*! \test sequence generators are generated and tested by comparing
-//              samples against known good values.
-//    */
-//    typedef GenericPseudoRandom<MersenneTwisterUniformRng,
-//                                InverseCumulativePoisson> PoissonPseudoRandom;
-//
-//
-//    template <class URSG, class IC>
-//    struct GenericLowDiscrepancy {
-//        // typedefs
-//        typedef URSG ursg_type;
-//        typedef InverseCumulativeRsg<ursg_type,IC> rsg_type;
-//        // more traits
-//        enum { allowsErrorEstimate = 0 };
-//        // factory
-//        static rsg_type make_sequence_generator(Size dimension,
-//                                                BigNatural seed) {
-//            ursg_type g(dimension, seed);
-//            return (icInstance ? rsg_type(g, *icInstance) : rsg_type(g));
-//        }
-//        // data
-//        static boost::shared_ptr<IC> icInstance;
-//    };
-//
-//    // static member initialization
-//    template<class URSG, class IC>
-//    boost::shared_ptr<IC> GenericLowDiscrepancy<URSG, IC>::icInstance;
-//
-//
-//    //! default traits for low-discrepancy sequence generation
-//    typedef GenericLowDiscrepancy<SobolRsg,
-//                                  InverseCumulativeNormal> LowDiscrepancy;
-//
-//}

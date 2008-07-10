@@ -189,117 +189,119 @@ public class EquityOptions {
 		europeanOption.setPricingEngine(new AnalyticEuropeanEngine());
 		System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, Double.NaN });
 
-		        // Barone-Adesi and Whaley approximation for American
-		        method = "Barone-Adesi/Whaley";
-		        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        americanOption.setPricingEngine(new BaroneAdesiWhaleyEngine());
-		//        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
-		
-		        // Bjerksund and Stensland approximation for American
-		        method = "Bjerksund/Stensland";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        americanOption.setPricingEngine(new BjerksundStenslandEngine());
-		//        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
-		
-		        // Integral
-		        method = "Integral";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(new IntegralEngine());
-		//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), inline Double.NaN, Double.NaN } );
-		
-		        // Finite differences
-		        method = "Finite differences";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        int timeSteps = 801;
-		//        europeanOption.setPricingEngine(new FDEuropeanEngine(timeSteps,timeSteps-1));
-		//        bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
-		//        americanOption.setPricingEngine(new FDAmericanEngine(timeSteps,timeSteps-1));
-		//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() });
-		        
-		        // Binomial method
-		        method = "Binomial Jarrow-Rudd";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(new BinomialVanillaEngine("JarrowRudd", timeSteps));
-		//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("JarrowRudd", timeSteps));
-		//        americanOption.setPricingEngine(new BinomialVanillaEngine("JarrowRudd", timeSteps));
-		//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
-		
-		        method = "Binomial Cox-Ross-Rubinstein";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(new BinomialVanillaEngine("CoxRossRubinstein", timeSteps));
-		//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("CoxRossRubinstein", timeSteps));
-		//        americanOption.setPricingEngine(new BinomialVanillaEngine("CoxRossRubinstein", timeSteps));
-		//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
-		
-		        method = "Additive equiprobabilities";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(new BinomialVanillaEngine("AdditiveEQPBinomialTree", timeSteps));
-		//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("AdditiveEQPBinomialTree", timeSteps));
-		//        americanOption.setPricingEngine(new BinomialVanillaEngine("AdditiveEQPBinomialTree", timeSteps));
-		//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
-		
-		        method = "Binomial Trigeorgis";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(new BinomialVanillaEngine("Trigeorgis", timeSteps));
-		//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("Trigeorgis", timeSteps));
-		//        americanOption.setPricingEngine(new BinomialVanillaEngine("Trigeorgis", timeSteps));
-		//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
-		
-		        method = "Binomial Tian";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(new BinomialVanillaEngine("Tian", timeSteps));
-		//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("Tian", timeSteps));
-		//        americanOption.setPricingEngine(new BinomialVanillaEngine("Tian", timeSteps));
-		//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
-		
-		        method = "Binomial Leisen-Reimer";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(new BinomialVanillaEngine("LeisenReimer", timeSteps));
-		//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("LeisenReimer", timeSteps));
-		//        americanOption.setPricingEngine(new BinomialVanillaEngine("LeisenReimer", timeSteps));
-		//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
-		
-		        method = "Binomial Joshi";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(new BinomialVanillaEngine("Joshi4", timeSteps));
-		//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("Joshi4", timeSteps));
-		//        americanOption.setPricingEngine(new BinomialVanillaEngine("Joshi4", timeSteps));
-		//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
-		//
-		//
-		//        // Monte Carlo Method
-		//        timeSteps = 1;
-		//        int mcSeed = 42;
-		//        int nSamples = 32768; // 2^15
-		//        int maxSamples = 1048576; // 2^20
-		        
-		        method = "Monte Carlo (crude)";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(
-		//            new MCEuropeanEngine(
-		//                "PseudoRandom", timeSteps, 252,
-		//                false, false, false,
-		//                nSamples, 0.02, maxSamples, mcSeed));
-		//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
-		
-		        method = "Monte Carlo (Sobol)";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        europeanOption.setPricingEngine(
-		//            new MCEuropeanEngine(
-		//                "LowDiscrepancy", timeSteps, 252,
-		//                false, false, false,
-		//                nSamples, 0.02, maxSamples, mcSeed));
-		//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
-		//
-		
-		        method = "Monte Carlo (Longstaff Schwartz)";
-                System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-		//        MakeMCAmericanEngine<PseudoRandom>().withSteps(100)
-		//            .withAntitheticVariate()
-		//            .withCalibrationSamples(4096)
-		//            .withTolerance(0.02)
-		// .           withSeed(mcSeed);
-		//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
+        // Barone-Adesi and Whaley approximation for American
+        method = "Barone-Adesi/Whaley";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        americanOption.setPricingEngine(new BaroneAdesiWhaleyEngine());
+//        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
+
+        // Bjerksund and Stensland approximation for American
+        method = "Bjerksund/Stensland";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        americanOption.setPricingEngine(new BjerksundStenslandEngine());
+//        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
+
+        // Integral
+        method = "Integral";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        europeanOption.setPricingEngine(new IntegralEngine());
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), inline Double.NaN, Double.NaN } );
+
+        // Finite differences
+        method = "Finite differences";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        int timeSteps = 801;
+//        europeanOption.setPricingEngine(new FDEuropeanEngine(timeSteps,timeSteps-1));
+//        bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
+//        americanOption.setPricingEngine(new FDAmericanEngine(timeSteps,timeSteps-1));
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() });
+        
+        // Binomial method
+        method = "Binomial Jarrow-Rudd";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine("JarrowRudd", timeSteps));
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("JarrowRudd", timeSteps));
+//        americanOption.setPricingEngine(new BinomialVanillaEngine("JarrowRudd", timeSteps));
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+
+        method = "Binomial Cox-Ross-Rubinstein";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine("CoxRossRubinstein", timeSteps));
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("CoxRossRubinstein", timeSteps));
+//        americanOption.setPricingEngine(new BinomialVanillaEngine("CoxRossRubinstein", timeSteps));
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+
+        method = "Additive equiprobabilities";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine("AdditiveEQPBinomialTree", timeSteps));
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("AdditiveEQPBinomialTree", timeSteps));
+//        americanOption.setPricingEngine(new BinomialVanillaEngine("AdditiveEQPBinomialTree", timeSteps));
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+
+        method = "Binomial Trigeorgis";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine("Trigeorgis", timeSteps));
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("Trigeorgis", timeSteps));
+//        americanOption.setPricingEngine(new BinomialVanillaEngine("Trigeorgis", timeSteps));
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+
+        method = "Binomial Tian";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine("Tian", timeSteps));
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("Tian", timeSteps));
+//        americanOption.setPricingEngine(new BinomialVanillaEngine("Tian", timeSteps));
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+
+        method = "Binomial Leisen-Reimer";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine("LeisenReimer", timeSteps));
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("LeisenReimer", timeSteps));
+//        americanOption.setPricingEngine(new BinomialVanillaEngine("LeisenReimer", timeSteps));
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+
+        method = "Binomial Joshi";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine("Joshi4", timeSteps));
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("Joshi4", timeSteps));
+//        americanOption.setPricingEngine(new BinomialVanillaEngine("Joshi4", timeSteps));
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+//
+//
+        // Monte Carlo Method
+        timeSteps = 1;
+        int mcSeed = 42;
+        int nSamples = 32768; // 2^15
+        int maxSamples = 1048576; // 2^20
+        
+        method = "Monte Carlo (crude)";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+// ========================================================================================
+//        europeanOption.setPricingEngine(
+//            new MCEuropeanEngine(
+//                "PseudoRandom", timeSteps, 252,
+//                false, false, false,
+//                nSamples, 0.02, maxSamples, mcSeed));
+//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
+// ========================================================================================
+
+        method = "Monte Carlo (Sobol)";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        europeanOption.setPricingEngine(
+//            new MCEuropeanEngine(
+//                "LowDiscrepancy", timeSteps, 252,
+//                false, false, false,
+//                nSamples, 0.02, maxSamples, mcSeed));
+//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
+//
+
+        method = "Monte Carlo (Longstaff Schwartz)";
+        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+//        MakeMCAmericanEngine<PseudoRandom>().withSteps(100)
+//            .withAntitheticVariate()
+//            .withCalibrationSamples(4096)
+//            .withTolerance(0.02)
+// .           withSeed(mcSeed);
+//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
 
 		clock.stopClock();
 		clock.log();

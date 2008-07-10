@@ -56,14 +56,15 @@ import org.jquantlib.methods.montecarlo.Sample;
  * 
  * @author Richard Gomes
  */
-public class InverseCumulativeRsg<G extends USG, I extends IC> {
+public class InverseCumulativeRsg<USG extends UniformSequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> 
+            implements UniformSequenceGenerator<Sample<List<Double>>> {
 
-    private G uniformSequenceGenerator_;
+    private USG uniformSequenceGenerator_;
     private/*@NonNegative*/int dimension_;
     private Sample<List<Double>> x_; // FIXME: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
-    private I ICD_;
+    private InverseCumulative ICD_;
 
-    public InverseCumulativeRsg(final G uniformSequenceGenerator) {
+    public InverseCumulativeRsg(final USG uniformSequenceGenerator) {
         this.uniformSequenceGenerator_ = uniformSequenceGenerator;
         this.dimension_ = this.uniformSequenceGenerator_.dimension();
         this.x_ = new Sample<List<Double>>(new DoubleArrayList(), 1.0);
@@ -72,7 +73,7 @@ public class InverseCumulativeRsg<G extends USG, I extends IC> {
         
     }
 
-    public InverseCumulativeRsg(final G uniformSequenceGenerator, final I inverseCum) {
+    public InverseCumulativeRsg(final USG uniformSequenceGenerator, final InverseCumulative inverseCum) {
         this(uniformSequenceGenerator);
         this.ICD_ = inverseCum;
     }
@@ -80,22 +81,25 @@ public class InverseCumulativeRsg<G extends USG, I extends IC> {
     /**
      * @return next sample from the Gaussian distribution
      */
-    public Sample<DoubleArrayList> nextSequence() /* @ReadOnly */{
-        Sample<DoubleArrayList> sample = uniformSequenceGenerator_.nextSequence();
-        DoubleArrayList sequence = sample.value;
+    @Override
+    public Sample<List<Double>> nextSequence() /* @ReadOnly */{
+        Sample<List<Double>> sample = uniformSequenceGenerator_.nextSequence();
+        List<Double> sequence = sample.value;
 
-        DoubleArrayList array = new DoubleArrayList(dimension_);
+        List<Double> array = new DoubleArrayList(dimension_);
         for (int i = 0; i < dimension_; i++) {
             array.add(ICD_.evaluate(sequence.get(i)));
         }
-        return new Sample<DoubleArrayList>(array, sample.weight);
+        return new Sample<List<Double>>(array, sample.weight);
     }
 
+    @Override
     public final Sample<List<Double>> lastSequence() /* @ReadOnly */{
         return x_;
     }
 
-    public/*@NonNegative*/int getDimension() /* @ReadOnly */{
+    @Override
+    public/*@NonNegative*/int dimension() /* @ReadOnly */{
         return dimension_;
     }
 

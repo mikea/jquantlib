@@ -45,22 +45,20 @@ import org.jquantlib.methods.montecarlo.Sample;
 /**
  * Inverse cumulative random number generator
  * <p>
- It uses a uniform deviate in (0, 1) as the source of cumulative
-    distribution values.
-    Then an inverse cumulative distribution is used to calculate
-    the distribution deviate.
-
-    The uniform deviate is supplied by RNG.
-
+ * It uses a uniform deviate in (0, 1) as the source of cumulative distribution values. Then an inverse cumulative distribution is
+ * used to calculate the distribution deviate.
+ * 
+ * The uniform deviate is supplied by RNG.
+ * 
  * @author Richard Gomes
-*/
-public class InverseCumulativeRng<R extends RNG, I extends IC> {
+ */
+public class InverseCumulativeRng<RNG extends RandomNumberGenerator, IC extends InverseCumulative> {
     
-    private R uniformGenerator_;
+    private RNG uniformGenerator_;
     private IC ICND_; // FIXME: not initialized; possibly a static variable used via templates
 
 
-    public InverseCumulativeRng(final R ug) {
+    public InverseCumulativeRng(final RNG ug) {
         this.uniformGenerator_ = ug;
     }
 
