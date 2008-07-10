@@ -23,10 +23,11 @@
 
 package org.jquantlib.time;
 
-import java.util.*;
-import java.util.Date;
-import org.jquantlib.math.Closeness;
-import org.jquantlib.math.ErrorFunction;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * TimeGrid class.
@@ -35,7 +36,7 @@ import org.jquantlib.math.ErrorFunction;
  * @author Dominik Holenstein
  *
  */
-public class TimeGrid <MyIterator>{
+public class TimeGrid <T extends List<Double>> {
 	
 	// Typical C++ stuff...
 	// typedef std::vector<Time>::const_iterator const_iterator;
@@ -51,12 +52,13 @@ public class TimeGrid <MyIterator>{
 	private double end_;
 	private int steps_;
 	
-	private MyIterator endIterator_;
-	private MyIterator beginIterator_;
+// XXX
+//	private MyIterator endIterator_;
+//	private MyIterator beginIterator_;
 	
-	private ArrayList<Double> times_ = new ArrayList<Double>();
-    private ArrayList<Double> dt_ = new ArrayList<Double>();
-    private ArrayList<Double> mandatoryTimes_ = new ArrayList<Double>();
+	private List<Double> times_ = new DoubleArrayList();
+    private List<Double> dt_ = new DoubleArrayList();
+    private List<Double> mandatoryTimes_ = new DoubleArrayList();
 	
 	
 	// 
@@ -78,21 +80,16 @@ public class TimeGrid <MyIterator>{
     	this.steps_ = steps;
     }
    	
-    public TimeGrid(MyIterator begin, MyIterator end){
+    public TimeGrid(T list) {
         // #if defined(QL_FULL_ITERATOR_SUPPORT) --> not necessary in Java
         // : mandatoryTimes_(begin, end) {
         //#else
     	
-    	this.beginIterator_ = begin;
-    	this.endIterator_ = end;
-    	
-    	
-    	
-    	while (beginIterator_ != endIterator_){
-    		// C++: push back
-    		double i = (Double)beginIterator_;
-    		mandatoryTimes_.add(i++);
+    	Iterator<Double> it = list.iterator();
+    	while (it.hasNext()) {
+    	    mandatoryTimes_.add(it.next());
     	}
+    	
     	
     	// std::sort(mandatoryTimes_.begin(),mandatoryTimes_.end());
     	Collections.sort(mandatoryTimes_);
@@ -111,7 +108,7 @@ public class TimeGrid <MyIterator>{
         //                     std::ptr_fun(close_enough));
         ///    mandatoryTimes_.resize(e - mandatoryTimes_.begin());
     	
-        ArrayList<Double> e = new ArrayList<Double>();
+        List<Double> e = new DoubleArrayList();
         
     	
     	// if (mandatoryTimes_[0] > 0.0)
@@ -224,7 +221,7 @@ public class TimeGrid <MyIterator>{
         //    return times_[closestIndex(t)];
         //}
         
-        public final ArrayList<Double> mandatoryTimes() /*Read-only*/ {
+        public final List<Double> mandatoryTimes() /*Read-only*/ {
             return mandatoryTimes_;
         }
         
