@@ -22,21 +22,22 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import org.jquantlib.math.randomnumbers.UniformRng_0_1;
-import org.jquantlib.math.randomnumbers.InverseCumulative;
+import org.jquantlib.math.randomnumbers.UniformRng;
+import org.jquantlib.math.randomnumbers.InverseCdf;
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**
  *
  * @author Aaron Roth
  */
-public class AaronsInverseCumulativeRng<SampleType> extends SampleGenerator<SampleType> {
-    private final UniformRng_0_1 uniformRng;
-    private final InverseCumulative inverseCdf;
-    
-    public AaronsInverseCumulativeRng(final UniformRng_0_1 uniformRng, final InverseCumulative inverseCdf) {
-        this.uniformRng = uniformRng;
-        this.inverseCdf = inverseCdf; // IC should take a type parameter of type SampleType
+public class AaronsInverseCumulativeRng<SampleValueType, UniformRngNumberType> extends SampleGenerator<SampleValueType, UniformRngNumberType>  {
+    private final InverseCdf<UniformRngNumberType, SampleValueType> inverseCdf;
+
+    public AaronsInverseCumulativeRng( final UniformRng<UniformRngNumberType> uniformRng
+                                     , final InverseCdf<UniformRngNumberType, SampleValueType> inverseCdf)
+    {
+        super(uniformRng);
+        this.inverseCdf = inverseCdf;
     }
 
     /**
@@ -44,13 +45,9 @@ public class AaronsInverseCumulativeRng<SampleType> extends SampleGenerator<Samp
      * Huh? why is the distribution necessarily Gaussian?
      */
     @Override
-    public Sample<SampleType> next() /* @ReadOnly */ {
-        Sample<Double> sample = uniformRng.next(); // FIXME: usage of sample_type :: typedef Sample<Real> sample_type;
-        
-        // Well, there's really no point in parameterizing this whole class with a SampleType,
-        // since UnaryFunctionDouble#evaluate only ever returns a double, forcing SampleType
-        // to also always be a double. Probably UnaryFunctionDouble should be rewritten as
-        // a parameterized class UnaryFunction<T>.
-        return new Sample(inverseCdf.evaluate(sample.value), sample.weight);
+    public Sample<SampleValueType> next() /* @ReadOnly */ {
+        UniformRngNumberType nextUniformRandom = uniformRng.next();
+
+        return new Sample(inverseCdf.evaluate(nextUniformRandom), 1.0);
     }
 }

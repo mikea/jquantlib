@@ -22,7 +22,7 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import org.jquantlib.math.randomnumbers.UniformPseudorandomIntGenerator;
+import org.jquantlib.math.randomnumbers.UniformRng;
 import org.jquantlib.math.randomnumbers.SeedableWithInts;
 import org.jquantlib.methods.montecarlo.Sample;
 
@@ -31,24 +31,22 @@ import org.jquantlib.methods.montecarlo.Sample;
  *
  * @author Aaron Roth
  */
-public abstract class SampleGenerator<SampleType> implements SeedableWithInts {
-    protected final UniformPseudorandomIntGenerator uprig;
-    
-    // By default, use the SIMD-oriented Fast Mersenne Twister uniform
-    // random number (that is, int) generator. And use the default seeding
-    // of this RNG as well...
-    public SampleGenerator() {
-        this.uprig = new SFMTUniformRng();
+public abstract class SampleGenerator<SampleValueType, UniformRngNumberType> implements SeedableWithInts {
+    protected final UniformRng<UniformRngNumberType> uniformRng;
+
+    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng) {
+        this.uniformRng = uniformRng;
     }
     
-    public SampleGenerator(final UniformPseudorandomIntGenerator uprig) {
-        this.uprig = uprig;
+    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng, int... seeds) {
+        this.uniformRng = uniformRng;
+        seed(seeds);
     }
     
-    public abstract Sample<SampleType> next();
+    public abstract Sample<SampleValueType> next();
     
     @Override
     public void seed(int... seeds) {
-        uprig.seed(seeds);
+        uniformRng.seed(seeds);
     }
 }

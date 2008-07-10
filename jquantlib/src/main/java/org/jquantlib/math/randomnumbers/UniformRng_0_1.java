@@ -22,30 +22,46 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import org.jquantlib.math.randomnumbers.UniformPseudorandomIntGenerator;
+import org.jquantlib.math.randomnumbers.UniformRng;
 import org.jquantlib.math.randomnumbers.SeedableWithInts;
-import org.jquantlib.methods.montecarlo.Sample;
+import org.jquantlib.math.randomnumbers.SFMTUniformRng;
+
 
 /**
  *
  * @author Aaron Roth
  */
-public class UniformRng_0_1 extends SampleGenerator<Double> {
+public class UniformRng_0_1 extends UniformRng<Double> {
     private static final double divisor = 2.0 * Integer.MAX_VALUE + 2.0;
+    
+    private final UniformRng<Integer> uniformRng;
+    private final UniformRng<Integer> defaultUniformRng() { return new SFMTUniformRng(); }
     
     // If it becomes necessary, it will be possible to write additional
     // constructors allowing this class to generate distributions on the
     // closed interval [0, 1] (or half-closed intervals, (0, 1], [0, 1), etc.)
 
-    // Simply call the constructor in the superclass that takes no parameters.
-    public UniformRng_0_1() { }
-    
-    public UniformRng_0_1(final UniformPseudorandomIntGenerator uprig) {
-        super(uprig);
+    public UniformRng_0_1() {
+        this.uniformRng = defaultUniformRng();
     }
     
+    public UniformRng_0_1(int... seeds) {
+        this.uniformRng = defaultUniformRng();
+        seed(seeds);
+    }
+    
+    public UniformRng_0_1(final UniformRng<Integer> uniformRng) {
+        this.uniformRng = uniformRng;
+    }
+    
+    public UniformRng_0_1(final UniformRng<Integer> uniformRng, int... seeds) {
+        this.uniformRng = uniformRng;
+        seed(seeds);
+    }
+    
+    
     @Override
-    public Sample<Double> next() {
+    public Double next() {
         // If nextInt() returns Integer.MIN_VALUE, take nextInt() again.
         // This still yields a uniform distribution (assuming the ints of the
         // RNG were originally uniformly distributed) on the remaining ints
@@ -56,8 +72,13 @@ public class UniformRng_0_1 extends SampleGenerator<Double> {
         // the calculation below must be suitably modified to make use of two
         // successive (32-bit) ints returned by nextInt().
         int n;
-        do { n = uprig.nextInt(); } while (n == Integer.MIN_VALUE);
+        do { n = uniformRng.next(); } while (n == Integer.MIN_VALUE);
         
-        return new Sample(n / divisor + 0.5, 1.0);
-    }    
+        return ( n / divisor + 0.5 );
+    }
+    
+    @Override
+    public void seed(int... seeds) {
+        uniformRng.seed(seeds);
+    }
 }
