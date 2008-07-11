@@ -43,7 +43,7 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.jquantlib.methods.montecarlo.Sample;
-import org.jquantlib.util.TypeToken;
+import org.jquantlib.util.reflect.TypeReference;
 
 /**
  * 
@@ -51,20 +51,22 @@ import org.jquantlib.util.TypeToken;
  * @param <URSG>
  * @param <IC>
  */
-public class GenericLowDiscrepancy<URSG extends SequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> {
+public class GenericLowDiscrepancy<URSG extends UniformSequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> 
+            extends TypeReference {
 
     // FIXME: static :(
     static public boolean allowsErrorEstimate = false;
     
-    // FIXME: static :(
-    /*static*/ private IC icInstance;
+    
+    /*static*/ // FIXME: static :( 
+    private IC icInstance; // FIXME: where it is initialized ???
 
-    // FIXME: static :(
-    /*static*/ public InverseCumulativeRsg<URSG, IC> makeSequenceGenerator(
+    /*static*/ // FIXME: static :(
+    public InverseCumulativeRsg<URSG, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
 
         try {
-            Constructor<URSG> c1 = (Constructor<URSG>) TypeToken.getClazz(this.getClass()).getConstructor(int.class, long.class);
+            Constructor<URSG> c1 = (Constructor<URSG>) getGenericParameterClass().getConstructor(int.class, long.class);
             URSG g = c1.newInstance(dimension, seed);
             return (icInstance!=null) ? new InverseCumulativeRsg(g, icInstance) : new InverseCumulativeRsg(g);
         } catch (Exception e) {

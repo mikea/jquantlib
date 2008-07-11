@@ -98,7 +98,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  *
  */
 
-public class SobolRsg implements SequenceGenerator<Sample<List<Double>>> {
+public class SobolRsg<RNG extends RandomNumberGenerator> implements UniformSequenceGenerator<Sample<List<Double>>> {
 	
 	// Sobol' Levitan coefficients of the free direction integers as given
     // by Bratley, P., Fox, B.L. (1988)
@@ -1236,7 +1236,7 @@ public class SobolRsg implements SequenceGenerator<Sample<List<Double>>> {
 	//
 	
 	
-    @Override
+    // @Override
 	public final List<Long> nextInt32Sequence() /* @Read-only */ {
 		if (firstDraw_) {
             // it was precomputed in the constructor
@@ -1277,7 +1277,6 @@ public class SobolRsg implements SequenceGenerator<Sample<List<Double>>> {
 	
 	
 	 // skip to the n-th sample in the low-discrepancy sequence 
-    @Override
     public void skipTo(/*@NonNegative*/ long skip){
     	long N = skip+1;
     	

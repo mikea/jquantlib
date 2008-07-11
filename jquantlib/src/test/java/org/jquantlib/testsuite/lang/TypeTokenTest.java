@@ -24,7 +24,7 @@ package org.jquantlib.testsuite.lang;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.util.TypeToken;
+import org.jquantlib.util.reflect.TypeToken;
 import org.junit.Test;
 
 /**
