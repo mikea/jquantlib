@@ -33,9 +33,9 @@ public class TridiagonalOperator {
 	}
  
 	protected TimeSetter timeSetter;
-	protected final double lowerDiagonal[];
-	protected final double diagonal[];
-	protected final double upperDiagonal[];
+	protected double lowerDiagonal[];
+	protected double diagonal[];
+	protected double upperDiagonal[];
 
 	public TridiagonalOperator(int size) {
 		if (size >= 2) {
@@ -61,6 +61,16 @@ public class TridiagonalOperator {
 		this.diagonal = diag;
 		this.upperDiagonal = udiag;
 	}
+
+    public TridiagonalOperator(TridiagonalOperator t) {
+    	this.diagonal = t.diagonal();
+    	this.upperDiagonal = t.upperDiagonal();
+    	this.lowerDiagonal = t.lowerDiagonal();
+    	this.timeSetter = t.getTimeSetter();
+    }
+    
+    //public TridiagonalOperator operator=(const Disposable<TridiagonalOperator>&);
+	//TODO: implement?
 
 	public void setFirstRow(double b, double c) {
        diagonal[0]      = b;
@@ -98,5 +108,195 @@ public class TridiagonalOperator {
     public int size()  {
         return diagonal.length;
     }
+
+
+    //default scope in c++? public?
+    // unary operators
+    public TridiagonalOperator add(final TridiagonalOperator D) {
+	    TridiagonalOperator D1 = D;
+	    return D1;
+    }
+    
+    public TridiagonalOperator subtract(final TridiagonalOperator D) {
+    	//TODO: not sure if this is the right way to subtract
+    	
+    	double[] low = this.lowerDiagonal;
+        for(int i = 0; i < low.length; i++) {
+        	low[i] -= D.lowerDiagonal()[i]; 
+        }
+
+        double[] mid = this.diagonal;
+        for(int i = 0; i < mid.length; i++) {
+        	mid[i] -= D.diagonal()[i]; 
+        }
+
+        double[] high = this.upperDiagonal;
+        for(int i = 0; i < high.length; i++) {
+        	high[i] -= D.upperDiagonal()[i]; 
+        }
+        
+        return new TridiagonalOperator(low,mid,high);
+
+    }
+    
+    // binary operators
+    public TridiagonalOperator add(final TridiagonalOperator D1, final TridiagonalOperator D2) {
+    	double[] low = D1.lowerDiagonal();
+        for(int i = 0; i < low.length; i++) {
+        	low[i] += D2.lowerDiagonal()[i]; 
+        }
+
+        double[] mid = D1.diagonal();
+        for(int i = 0; i < mid.length; i++) {
+        	mid[i] += D2.diagonal()[i]; 
+        }
+
+        double[] high = D1.upperDiagonal();
+        for(int i = 0; i < high.length; i++) {
+        	high[i] += D2.upperDiagonal()[i]; 
+        }
+        
+        return new TridiagonalOperator(low,mid,high);
+    }
+    
+    public TridiagonalOperator subtract(final  TridiagonalOperator D1, final TridiagonalOperator D2) {
+    	double[] low = D1.lowerDiagonal();
+        for(int i = 0; i < low.length; i++) {
+        	low[i] -= D2.lowerDiagonal()[i]; 
+        }
+
+        double[] mid = D1.diagonal();
+        for(int i = 0; i < mid.length; i++) {
+        	mid[i] -= D2.diagonal()[i]; 
+        }
+
+        double[] high = D1.upperDiagonal();
+        for(int i = 0; i < high.length; i++) {
+        	high[i] -= D2.upperDiagonal()[i]; 
+        }
+        
+        return new TridiagonalOperator(low,mid,high);
+    }
+    
+    public TridiagonalOperator multiply(double a, final TridiagonalOperator D) {
+        double[] low = D.lowerDiagonal();
+        for(int i = 0; i < low.length; i++) {
+        	low[i] *= a;
+        }
+
+        double[] mid = D.diagonal();
+        for(int i = 0; i < mid.length; i++) {
+        	mid[i] *= a;
+        }
+
+        double[] high = D.upperDiagonal();
+        for(int i = 0; i < high.length; i++) {
+        	high[i] *= a;
+        }
+	    
+        return new TridiagonalOperator(low,mid,high);
+
+    }
+    
+    public TridiagonalOperator multiply(final TridiagonalOperator D, double a) {
+    	return multiply(a, D);
+    }
+
+    public TridiagonalOperator divide(final TridiagonalOperator D, double a) {
+        double[] low = D.lowerDiagonal();
+        for(int i = 0; i < low.length; i++) {
+        	low[i] /= a;
+        }
+
+        double[] mid = D.diagonal();
+        for(int i = 0; i < mid.length; i++) {
+        	mid[i] /= a;
+        }
+
+        double[] high = D.upperDiagonal();
+        for(int i = 0; i < high.length; i++) {
+        	high[i] /= a;
+        }
+	    
+        return new TridiagonalOperator(low,mid,high);
+
+    }
+    	
+  //public:
+  //  typedef Array array_type;
+    
+    //! \name Operator interface
+    //@{
+    //! apply operator to a given array
+    
+    //Disposable<Array> applyTo(const Array& v) const;
+    public final double[] applyTo() {
+    	//TODO: figure out return type
+    	//TODO: implement
+    	return null;
+    }
+    
+    //! solve linear system for a given right-hand side
+    public final double[] solveFor(final double[] rhs) {
+    	//TODO: implement
+    	return null;
+    }
+    
+    //! solve linear system with SOR approach
+    public final double[] SOR(double[] rhs, int tol) {
+    	//TODO: implement
+    	return null;
+    }
+    
+    //! identity instance
+    public static TridiagonalOperator identity(int size) {
+    	//TODO: implement
+    	return null;
+    }
+
+
+
+
+//TODO: test assignment
+/*inline TridiagonalOperator& TridiagonalOperator::operator=(
+                            const Disposable<TridiagonalOperator>& from) {
+    swap(const_cast<Disposable<TridiagonalOperator>&>(from));
+    return *this;
+}*/
+
+
+	public boolean isTimeDependent() {
+	    return timeSetter != null;
+	}
+	
+	public final double[] lowerDiagonal() {
+	    return lowerDiagonal;
+	}
+	
+	public final double[] diagonal() {
+	    return diagonal;
+	}
+	
+	public final double[] upperDiagonal() {
+	    return upperDiagonal;
+	}
+	
+	
+	public void swap(TridiagonalOperator from) {
+		this.diagonal = from.diagonal();
+	    this.lowerDiagonal = from.lowerDiagonal();
+	    this.upperDiagonal = from.upperDiagonal();
+	    this.timeSetter = from.getTimeSetter();
+	}
+
+	public TimeSetter getTimeSetter() {
+		return this.timeSetter;
+	}
+
+	public void swap(TridiagonalOperator L1, TridiagonalOperator L2) {
+		TridiagonalOperator temp = L1;
+	    L1 = L2;
+	    L2 = temp;
+	}
 
 }
