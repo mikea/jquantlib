@@ -18,19 +18,13 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers.trial;
-
-import org.jquantlib.methods.montecarlo.Sample;
+package org.jquantlib.math.statistics;
 
 /**
  * @author Richard Gomes
  */
-public interface RandomNumberGenerator {
+public class Statistics {
+    
+    // FIXME: Decide if it's a class, interface or if we simply get rid of it
 
-    //FIXME: code review: should use parameterized type instead of Double ??
-    public Sample<Double> next() /* @ReadOnly */;
-    
-    public /*@NonNegative*/ long nextInt32() /* @ReadOnly */;
-    
-    // public boolean allowErrorEstimate(); // FIXME: should declare this method???
 }

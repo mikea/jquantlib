@@ -18,19 +18,13 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers.trial;
-
-import org.jquantlib.methods.montecarlo.Sample;
+package org.jquantlib.methods.montecarlo;
 
 /**
  * @author Richard Gomes
  */
-public interface RandomNumberGenerator {
+public interface Variate {
 
-    //FIXME: code review: should use parameterized type instead of Double ??
-    public Sample<Double> next() /* @ReadOnly */;
-    
-    public /*@NonNegative*/ long nextInt32() /* @ReadOnly */;
-    
-    // public boolean allowErrorEstimate(); // FIXME: should declare this method???
+ // Tagging interface
+ 
 }
