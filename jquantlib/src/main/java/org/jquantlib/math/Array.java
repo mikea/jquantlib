@@ -39,6 +39,8 @@
 
 package org.jquantlib.math;
 
+import java.util.Iterator;
+
 /**
  * 1-D array used in linear algebra.
  * <p>
@@ -369,6 +371,12 @@ public class Array {
 			throw new Exception("the two arrays must be the same length");
 		}
 	}
+	private static void vectorOperationValidation(final Array vectorA, final Array vectorB)
+	throws Exception{
+		if(vectorA!=null){
+			vectorA.vectorOperationValidation(vectorB);
+		}
+	}
 
 	public void operatorDivide(final Array paramArray) throws Exception{
 		vectorOperationValidation(paramArray);
@@ -472,7 +480,102 @@ public class Array {
 		return get(size);
 	}
 
+        public static void swap(final Array vectorA, final Array vectorB)throws Exception{
+		vectorOperationValidation(vectorA, vectorB);
+		double storage;
+		double[] dataA = vectorA.data;
+		double[] dataB = vectorB.data;
+		for(int i=0;i<dataA.length;++i){
+			storage=dataA[i];
+			dataA[i]=dataB[i];
+			dataB[i]=storage;
+		}
+	}
+	
+        public static void shallowSwap(final Array vectorA, final Array vectorB){
+		double[] swapArray =  vectorA.data;
+		vectorA.data = vectorB.data;
+		vectorB.data = swapArray;
+	}
 
+        public static void quickSwap(final Array vectorA, final Array vectorB){
+		double[] swapArray = new double[vectorA.data.length];
+		System.arraycopy(vectorA.data, 0, swapArray, 0, vectorA.size);
+		System.arraycopy(vectorB.data, 0, vectorA.data, 0, vectorB.size);
+		System.arraycopy(swapArray, 0, vectorB.data, 0, swapArray.length);
+	}
+	public void swap(final Array paramVector)throws Exception{
+		Array.swap(this,paramVector);
+	}
+	public void shallowSwap(final Array paramVector){
+		Array.shallowSwap(this,paramVector);
+	}
+	public void quickSwap(final Array paramVector){
+		Array.quickSwap(this,paramVector);
+	}
+
+        public Array absCopy(){
+		double[] da = new double[data.length];
+		for(int i=0;i<data.length;++i){
+			da[i]=Math.abs(data[i]);
+		}
+		return new Array(da);
+	}
+
+        public void abs(){
+		for(int i=0;i<data.length;++i){
+			data[i]=Math.abs(data[i]);
+		}
+	}
+
+        public Array sqrtCopy(){
+		double[] da = new double[data.length];
+		for(int i=0;i<data.length;++i){
+			da[i]=Math.sqrt(data[i]);
+		}
+		return new Array(da);
+	}
+
+        public void sqrt(){
+		for(int i=0;i<data.length;++i){
+			data[i]=Math.sqrt(data[i]);
+		}
+	}
+
+        public Array logCopy(){
+		double[] da = new double[data.length];
+		for(int i=0;i<data.length;++i){
+			da[i]=Math.log(data[i]);
+		}
+		return new Array(da);
+	}
+
+        public void log(){
+		for(int i=0;i<data.length;++i){
+			data[i]=Math.log(data[i]);
+		}
+	}
+
+        public Array expCopy(){
+		double[] da = new double[data.length];
+		for(int i=0;i<data.length;++i){
+			da[i]=Math.exp(data[i]);
+		}
+		return new Array(da);
+	}
+
+        public void exp(){
+		for(int i=0;i<data.length;++i){
+			data[i]=Math.exp(data[i]);
+		}
+	}
+
+	@Override
+	public String toString(){
+		StringBuffer sb = new StringBuffer();
+		sb.append(data.toString());
+		return sb.toString();
+	}
 
 }
 
