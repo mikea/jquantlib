@@ -98,6 +98,10 @@ public class Array {
 		      data[i]=i*increment;
 	      }
       }
+      public Array(double[] d){
+	      this.data=d;
+	      this.size = d.length;
+      }
 	//----------------------------------------------------------------------
 	//  END Constructors
 	//----------------------------------------------------------------------
@@ -189,6 +193,283 @@ public class Array {
 			}
 		}
 		return true;
+	}
+
+
+	/*
+	+,-,*,/
+		Real
+		Array
+	 */
+	public static double[] quickOperatorAdd
+		(final double[] vectorA,final double[] vectorB){
+		double[] outputData = new double[vectorA.length];
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]+vectorB[i];
+		}
+		return outputData;
+	}
+	public static double[] quickOperatorSubtract
+		(final double[] vectorA,final double[] vectorB){
+		double[] outputData = new double[vectorA.length];
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]-vectorB[i];
+		}
+		return outputData;
+	}
+
+	public static double[] quickOperatorMultiply
+		(final double[] vectorA,final double[] vectorB){
+		double[] outputData = new double[vectorA.length];
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]*vectorB[i];
+		}
+		return outputData;
+	}
+	public static double[] quickOperatorDivide
+		(final double[] vectorA,final double[] vectorB){
+		double[] outputData = new double[vectorA.length];
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]/vectorB[i];
+		}
+		return outputData;
+	}
+
+	public static double[] quickOperatorAdd
+		(final double[] vectorA,final double scale){
+		double[] outputData = new double[vectorA.length];
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]+scale;
+		}
+		return outputData;
+	}
+	public static double[] quickOperatorSubtract
+		(final double[] vectorA,final double scale){
+		double[] outputData = new double[vectorA.length];
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]-scale;
+		}
+		return outputData;
+	}
+
+	public static double[] quickOperatorMultiply
+		(final double[] vectorA,final double scale){
+		double[] outputData = new double[vectorA.length];
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]*scale;
+		}
+		return outputData;
+	}
+
+	public static double[] quickOperatorDivide
+		(final double[] vectorA,final double scale){
+		double[] outputData = new double[vectorA.length];
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]/ scale;
+		}
+		return outputData;
+	}
+
+	public static double[] quickOperatorAddReplace
+		(final double[] vectorA,final double[] vectorB){
+		double[] outputData = vectorA;
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]+vectorB[i];
+		}
+		return outputData;
+	}
+	public static double[] quickOperatorSubtractReplace
+		(final double[] vectorA,final double[] vectorB){
+		double[] outputData = vectorA;
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]-vectorB[i];
+		}
+		return outputData;
+	}
+
+	public static double[] quickOperatorMultiplyReplace
+		(final double[] vectorA,final double[] vectorB){
+		double[] outputData = vectorA;
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]*vectorB[i];
+		}
+		return outputData;
+	}
+	public static double[] quickOperatorDivideReplace
+		(final double[] vectorA,final double[] vectorB){
+		double[] outputData = vectorA;
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]/vectorB[i];
+		}
+		return outputData;
+	}
+
+	public static double[] quickOperatorAddReplace
+		(final double[] vectorA,final double scale){
+		double[] outputData = vectorA;
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]+scale;
+		}
+		return outputData;
+	}
+	public static double[] quickOperatorSubtractReplace
+		(final double[] vectorA,final double scale){
+		double[] outputData = vectorA;
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]-scale;
+		}
+		return outputData;
+	}
+
+	public static double[] quickOperatorMultiplyReplace
+		(final double[] vectorA,final double scale){
+		double[] outputData = vectorA;
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]*scale;
+		}
+		return outputData;
+	}
+
+	public static double[] quickOperatorDivideReplace
+		(final double[] vectorA,final double scale){
+		double[] outputData = vectorA;
+		for(int i=0;i<vectorA.length;++i){
+			outputData[i] = vectorA[i]/ scale;
+		}
+		return outputData;
+	}
+
+	//----------------------------------------------------------------------
+	//
+	//   Methods and Operators on this instance.
+	//
+	public void operatorDivide(final double scale){
+		data = quickOperatorDivideReplace(data,scale);
+	}
+	public void operatorMultiply(final double scale){
+		data = quickOperatorMultiplyReplace(data,scale);
+	}
+	public void operatorSubtract(final double scale){
+		data = quickOperatorSubtractReplace(data,scale);
+	}
+	public void operatorAdd(final double scale){
+		data = quickOperatorAddReplace(data,scale);
+	}
+
+	
+	private void vectorOperationValidation(final Array paramArray) throws Exception{
+
+		if(data == null){
+			throw new Exception("the underlying array must not be null");
+		}else if(paramArray==null){
+			throw new Exception("the param array must not be null");
+		}else if(paramArray.data == null){
+			throw new Exception("the param array's underlying must not be null");
+		}else if(data.length!=paramArray.data.length){
+			throw new Exception("the two arrays must be the same length");
+		}
+	}
+
+	public void operatorDivide(final Array paramArray) throws Exception{
+		vectorOperationValidation(paramArray);
+		data = quickOperatorDivideReplace(data,paramArray.data);
+	}
+	public void operatorMultiply(final Array paramArray) throws Exception{
+		vectorOperationValidation(paramArray);
+		data = quickOperatorMultiplyReplace(data,paramArray.data);
+	}
+	public void operatorSubtract(final Array paramArray) throws Exception{
+		vectorOperationValidation(paramArray);
+		data = quickOperatorSubtractReplace(data,paramArray.data);
+	}
+	public void operatorAdd(final Array paramArray) throws Exception{
+		vectorOperationValidation(paramArray);
+		data = quickOperatorAddReplace(data,paramArray.data);
+	}
+
+
+	public Array operatorDivideCopy(final Array paramArray) throws Exception{
+		vectorOperationValidation(paramArray);
+		return quickOperatorDivideCopy(paramArray);
+	}
+
+	public Array operatorMultiplyCopy(final Array paramArray) throws Exception{
+		vectorOperationValidation(paramArray);
+		return quickOperatorMultiplyCopy(paramArray);
+	}
+
+	public Array operatorSubtractCopy(final Array paramArray) throws Exception{
+		vectorOperationValidation(paramArray);
+		return quickOperatorSubtractCopy(paramArray);
+	}
+
+	public Array operatorAddCopy(final Array paramArray) throws Exception{
+		vectorOperationValidation(paramArray);
+		return quickOperatorAddCopy(paramArray);
+	}
+
+
+	public void quickOperatorDivide(final Array paramArray){
+		data = quickOperatorDivideReplace(data,paramArray.data);
+	}
+	public void quickOperatorMultiply(final Array paramArray){
+		data = quickOperatorMultiplyReplace(data,paramArray.data);
+	}
+	public void quickOperatorSubtract(final Array paramArray){
+		data = quickOperatorSubtractReplace(data,paramArray.data);
+	}
+	public void quickOperatorAdd(final Array paramArray){
+		data = quickOperatorAddReplace(data,paramArray.data);
+	}
+
+	public Array quickOperatorDivideCopy(final Array paramArray){
+		double[] dataCopy = quickOperatorDivide(data,paramArray.data);
+		return new Array(dataCopy);
+	}
+	public Array quickOperatorMultiplyCopy(final Array paramArray){
+		double[] dataCopy = quickOperatorMultiply(data,paramArray.data);
+		return new Array(dataCopy);
+
+	}
+	public Array quickOperatorSubtractCopy(final Array paramArray){
+		double[] dataCopy = quickOperatorSubtract(data,paramArray.data);
+		return new Array(dataCopy);
+	}
+	public Array quickOperatorAddCopy(final Array paramArray){
+		double[] dataCopy = quickOperatorAdd(data,paramArray.data);
+		return new Array(dataCopy);
+	}
+
+	public void validateData(int s) throws Exception{
+		if(data == null || data.length<s+1){
+			throw new Exception("data is not properly conditioned.");
+		}
+	}
+
+	public double get(int i) throws Exception{
+		validateData(i);
+		return quickGet(i);
+	}
+	
+	public double quickGet(int i){
+		return data[i];
+	}
+
+	/**
+	 * @deprecated @use get(int i)
+	 * @param i
+	 * @return
+	 */
+	public double at(int i) throws Exception{
+		return get(i);
+	}
+
+	public double front() throws Exception{
+		return get(0);
+	}
+
+	public double back() throws Exception{
+		return get(size);
 	}
 
 
