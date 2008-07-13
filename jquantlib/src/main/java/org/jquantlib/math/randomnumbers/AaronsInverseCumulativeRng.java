@@ -30,7 +30,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  *
  * @author Aaron Roth
  */
-public class AaronsInverseCumulativeRng<SampleValueType, UniformRngNumberType> extends SampleGenerator<SampleValueType, UniformRngNumberType>  {
+public class AaronsInverseCumulativeRng<UniformRngNumberType, SampleValueType> extends SampleGenerator<UniformRngNumberType, SampleValueType>  {
     private final InverseCdf<UniformRngNumberType, SampleValueType> inverseCdf;
 
     public AaronsInverseCumulativeRng( final UniformRng<UniformRngNumberType> uniformRng
@@ -46,8 +46,6 @@ public class AaronsInverseCumulativeRng<SampleValueType, UniformRngNumberType> e
      */
     @Override
     public Sample<SampleValueType> next() /* @ReadOnly */ {
-        UniformRngNumberType nextUniformRandom = uniformRng.next();
-
-        return new Sample(inverseCdf.evaluate(nextUniformRandom), 1.0);
+        return new Sample(inverseCdf.evaluate(uniformRng.next()), 1.0);
     }
 }

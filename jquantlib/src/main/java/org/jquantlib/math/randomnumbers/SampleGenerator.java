@@ -31,7 +31,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  *
  * @author Aaron Roth
  */
-public abstract class SampleGenerator<SampleValueType, UniformRngNumberType> implements SeedableWithInts {
+public abstract class SampleGenerator<UniformRngNumberType, SampleValueType> implements SeedableWithInts {
     protected final UniformRng<UniformRngNumberType> uniformRng;
 
     public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng) {
