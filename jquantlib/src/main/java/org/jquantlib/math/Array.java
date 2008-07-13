@@ -45,10 +45,153 @@ package org.jquantlib.math;
  * This class implements the concept of vector as used in linear algebra.
  * As such, it is <b>not</b> meant to be used as a container java.util.List should be used instead.
  * 
+ * //  TODO: Discussion Points
+ *    I generally disagree with the O-O philosophy of 
+ *    creating a class that both has operations, and data for things like this.
+ *    However, That philosophy will stay in tack here until further notice.
+ * 
  * @author Richard Gomes
+ * @author Q.Boiler
  */
 //TEST construction of arrays is checked in a number of cases
 public class Array {
+	double[] data;
+	int size;
+
+	/**  This will be used to load linear algabra package that,
+	 *   JQuantLib Uses.   However, most of the operations will
+	 *   not respect this variable, so use of this should merely 
+	 *   be viewed as a suggestion.
+	 */
+	public static enum LAPACK_MODE 
+	        {PARALLEL_COLT, COLT, FAST_UTIL, LOCAL_CALC, JAL};
+	//  Huge Assumption,  Colt Algebra class is thread safe.
+        private static cern.colt.matrix.linalg.Algebra algebra = new cern.colt.matrix.linalg.Algebra();
+
+
+	//----------------------------------------------------------------------
+	//  
+	//  Constructors
+	//
+	//----------------------------------------------------------------------
+
+        public Array(int s){
+
+		this.data = new double[s];
+		this.size = s;
+
+	}
+
+        public Array(int s, double value){
+		this(s);
+		for(int i=0;i<s;++i){
+			data[i]=value;
+		}
+	}
+
+      /**! brief creates the array and fills it according to
+        * \f$ a_{0} = value, a_{i}=a_{i-1}+increment \f$
+      */
+      public Array(int s, double value, double increment){
+	      this(s);
+	      for(int i=0;i<size;++i){
+		      data[i]=i*increment;
+	      }
+      }
+	//----------------------------------------------------------------------
+	//  END Constructors
+	//----------------------------------------------------------------------
+
+
+	
+	/**  Calulates the dotProduct of vectorA, and vectorB.
+	 *   @throws Exception if vectorA or vectorB is null, or if vectorA.length
+	 *    is not equal to vectorB.length.  
+	 */
+        public static double dotProduct(final Array vectorA, final Array vectorB) throws Exception{
+		return dotProduct(vectorA.data,vectorB.data);
+	}
+
+	/** 
+	 * Calculates the dotProduct of vectorA and vectorB, No null checks or 
+	 * bounds checks are performed
+	 * @param vectorA has the precondition that it is a non-null Array the same size as vectorB
+	 * @param vectorB has the precondition that it is a non-null Array the same size as vectorA
+	 * @return the dotProduct/InnerProduct of vectorA and vectorB.
+	 */
+	public static double quickDotProduct(final Array vectorA, final Array vectorB){
+		//  This will only throw un-checked exceptions.
+		return quickDotProduct(vectorA.data,vectorB.data);
+	}
+
+	/**  Calulates the dotProduct of vectorA, and vectorB.
+	 *   @throws Exception if vectorA or vectorB is null, or if vectorA.length
+	 *    is not equal to vectorB.length.  
+	 */
+        public static double dotProduct(final double[] vectorA, final double[] vectorB) throws Exception{
+		
+		//  Done as a local calc.
+		if(vectorA != null && vectorB !=null && vectorA.length==vectorB.length){
+			return quickDotProduct(vectorA,vectorB);
+		}else{
+			//  TODO make this a JQuantLib Specific Checked Exception.
+			throw new Exception("VectorA and VectorB must both be non-null and the same length.");
+		}
+
+	}
+
+
+	/** 
+	 * Calculates the dotProduct of vectorA and vectorB, No null checks or 
+	 * bounds checks are performed
+	 * @param vectorA has the precondition that it is a non-null double[] the same size as vectorB
+	 * @param vectorB has the precondition that it is a non-null double[] the same size as vectorA
+	 * @return the dotProduct/InnerProduct of vectorA and vectorB.
+	 */
+	public static double quickDotProduct(final double[] vectorA, final double[] vectorB){
+		//  This will only throw un-checked exceptions.
+		double result = 0.0d;
+		for(int i=0;i<vectorA.length;++i){
+			result+=vectorA[i]*vectorB[i];
+		}
+		return result;
+	}
+
+	/**
+	 * If both arrays are null true will be returned, this may be confusing.
+	 * if both are identical false is returned.
+	 * @param paramArray
+	 * @return
+	 */
+        public boolean operatorNotEquals(final Array paramArray) {
+		return !operatorEquals(paramArray);
+	}
+
+        public boolean operatorEquals(final Array paramArray) {
+		if(this.data==null  || paramArray == null || paramArray.data ==null){
+			return false;
+		}else if(data.length!=paramArray.data.length){
+			return false;
+		}else{
+			return operatorEquals(paramArray.data);
+		}
+	}
+	/**
+	 * returns true or false or throws an exception.
+	 * NO BOUNDS CHECKING OR NULL CHECKING is done here.
+	 * @param paramData
+	 * @return
+	 */
+	public boolean operatorEquals(final double[] paramData){
+		for(int i=0;i<data.length;++i){
+			if(data[i]!=paramData[i]){
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 
 }
 
