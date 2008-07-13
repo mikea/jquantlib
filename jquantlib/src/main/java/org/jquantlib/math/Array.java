@@ -114,7 +114,7 @@ public class Array {
 	 *   @throws Exception if vectorA or vectorB is null, or if vectorA.length
 	 *    is not equal to vectorB.length.  
 	 */
-        public static double dotProduct(final Array vectorA, final Array vectorB) throws Exception{
+        public static double dotProduct(final Array vectorA, final Array vectorB){
 		return dotProduct(vectorA.data,vectorB.data);
 	}
 
@@ -134,14 +134,14 @@ public class Array {
 	 *   @throws Exception if vectorA or vectorB is null, or if vectorA.length
 	 *    is not equal to vectorB.length.  
 	 */
-        public static double dotProduct(final double[] vectorA, final double[] vectorB) throws Exception{
+        public static double dotProduct(final double[] vectorA, final double[] vectorB) {
 		
 		//  Done as a local calc.
 		if(vectorA != null && vectorB !=null && vectorA.length==vectorB.length){
 			return quickDotProduct(vectorA,vectorB);
 		}else{
 			//  TODO make this a JQuantLib Specific Checked Exception.
-			throw new Exception("VectorA and VectorB must both be non-null and the same length.");
+			throw new RuntimeException("VectorA and VectorB must both be non-null and the same length.");
 		}
 
 	}
@@ -359,30 +359,30 @@ public class Array {
 	}
 
 	
-	private void vectorOperationValidation(final Array paramArray) throws Exception{
+	private void vectorOperationValidation(final Array paramArray){
 
 		if(data == null){
-			throw new Exception("the underlying array must not be null");
+			throw new RuntimeException("the underlying array must not be null");
 		}else if(paramArray==null){
-			throw new Exception("the param array must not be null");
+			throw new RuntimeException("the param array must not be null");
 		}else if(paramArray.data == null){
-			throw new Exception("the param array's underlying must not be null");
+			throw new RuntimeException("the param array's underlying must not be null");
 		}else if(data.length!=paramArray.data.length){
-			throw new Exception("the two arrays must be the same length");
+			throw new RuntimeException("the two arrays must be the same length");
 		}
 	}
 	private static void vectorOperationValidation(final Array vectorA, final Array vectorB)
-	throws Exception{
+	{
 		if(vectorA!=null){
 			vectorA.vectorOperationValidation(vectorB);
 		}
 	}
 
-	public void operatorDivide(final Array paramArray) throws Exception{
+	public void operatorDivide(final Array paramArray) {
 		vectorOperationValidation(paramArray);
 		data = quickOperatorDivideReplace(data,paramArray.data);
 	}
-	public void operatorMultiply(final Array paramArray) throws Exception{
+	public void operatorMultiply(final Array paramArray) {
 		vectorOperationValidation(paramArray);
 		data = quickOperatorMultiplyReplace(data,paramArray.data);
 	}
@@ -390,28 +390,28 @@ public class Array {
 		vectorOperationValidation(paramArray);
 		data = quickOperatorSubtractReplace(data,paramArray.data);
 	}
-	public void operatorAdd(final Array paramArray) throws Exception{
+	public void operatorAdd(final Array paramArray) {
 		vectorOperationValidation(paramArray);
 		data = quickOperatorAddReplace(data,paramArray.data);
 	}
 
 
-	public Array operatorDivideCopy(final Array paramArray) throws Exception{
+	public Array operatorDivideCopy(final Array paramArray) {
 		vectorOperationValidation(paramArray);
 		return quickOperatorDivideCopy(paramArray);
 	}
 
-	public Array operatorMultiplyCopy(final Array paramArray) throws Exception{
+	public Array operatorMultiplyCopy(final Array paramArray) {
 		vectorOperationValidation(paramArray);
 		return quickOperatorMultiplyCopy(paramArray);
 	}
 
-	public Array operatorSubtractCopy(final Array paramArray) throws Exception{
+	public Array operatorSubtractCopy(final Array paramArray) {
 		vectorOperationValidation(paramArray);
 		return quickOperatorSubtractCopy(paramArray);
 	}
 
-	public Array operatorAddCopy(final Array paramArray) throws Exception{
+	public Array operatorAddCopy(final Array paramArray) {
 		vectorOperationValidation(paramArray);
 		return quickOperatorAddCopy(paramArray);
 	}
@@ -448,13 +448,13 @@ public class Array {
 		return new Array(dataCopy);
 	}
 
-	public void validateData(int s) throws Exception{
+	public void validateData(int s) {
 		if(data == null || data.length<s+1){
-			throw new Exception("data is not properly conditioned.");
+			throw new RuntimeException("data is not properly conditioned.");
 		}
 	}
 
-	public double get(int i) throws Exception{
+	public double get(int i) {
 		validateData(i);
 		return quickGet(i);
 	}
@@ -468,19 +468,35 @@ public class Array {
 	 * @param i
 	 * @return
 	 */
-	public double at(int i) throws Exception{
+	public double at(int i) {
 		return get(i);
 	}
 
-	public double front() throws Exception{
+	public double front() {
 		return get(0);
 	}
 
-	public double back() throws Exception{
+	public double back() {
 		return get(size);
 	}
+	public int size(){
+		return data.length;
+	}
 
-        public static void swap(final Array vectorA, final Array vectorB)throws Exception{
+	public void set(int index, double value){
+
+		if(data.length>index){
+			quickSet(index,value);
+		}else{
+			throw new RuntimeException("Illegal Argument, index must be less than the Array size.");
+		}
+	}
+
+	public void quickSet(int index, double value){
+		data[index]=value;
+	}
+
+        public static void swap(final Array vectorA, final Array vectorB){
 		vectorOperationValidation(vectorA, vectorB);
 		double storage;
 		double[] dataA = vectorA.data;
@@ -504,7 +520,7 @@ public class Array {
 		System.arraycopy(vectorB.data, 0, vectorA.data, 0, vectorB.size);
 		System.arraycopy(swapArray, 0, vectorB.data, 0, swapArray.length);
 	}
-	public void swap(final Array paramVector)throws Exception{
+	public void swap(final Array paramVector){
 		Array.swap(this,paramVector);
 	}
 	public void shallowSwap(final Array paramVector){
