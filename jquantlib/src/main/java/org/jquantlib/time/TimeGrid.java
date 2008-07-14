@@ -23,11 +23,16 @@
 
 package org.jquantlib.time;
 
+import it.unimi.dsi.fastutil.BidirectionalIterator;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import org.jquantlib.math.Closeness;
+import org.jquantlib.util.ReverseIterator;
+import org.jquantlib.util.UnmodifiableIterator;
 
 /**
  * TimeGrid class.
@@ -71,29 +76,18 @@ public class TimeGrid <T extends List<Double>> {
 	* Time grid with mandatory time points
     * Mandatory points are guaranteed to belong to the grid.
     * No additional points are added.
+    * 
     * @param end
     * @param steps
     */
-
     public TimeGrid(double end, int steps){
     	this.end_ = end;
     	this.steps_ = steps;
     }
    	
     public TimeGrid(T list) {
-        // RICHARD: You can assume QL_FULL_ITERATOR_SUPPORT is true in Java because we have JCF interfaces
-        //XXX #if defined(QL_FULL_ITERATOR_SUPPORT) --> not necessary in Java
-        
         mandatoryTimes_.addAll(list);
-        
-        //XXX #else
-
-        
-        
-        
-    	
-    	// std::sort(mandatoryTimes_.begin(),mandatoryTimes_.end());
-    	Collections.sort(mandatoryTimes_);
+    	Collections.sort(mandatoryTimes_); // FIXME: performance
     	   	
     	// We seem to assume that the grid begins at 0.
         // Let's enforce the assumption for the time being
@@ -102,30 +96,33 @@ public class TimeGrid <T extends List<Double>> {
         	throw new ArithmeticException("negative times not allowed");
         }
     	
-        // TODO: Currently working here.
-        // ArrayList<Double> e = 
-        //     std::vector<Time>::iterator e =
-        //         std::unique(mandatoryTimes_.begin(),mandatoryTimes_.end(),
-        //                     std::ptr_fun(close_enough));
-        ///    mandatoryTimes_.resize(e - mandatoryTimes_.begin());
+        List<Double> e = new DoubleArrayList(mandatoryTimes_.size());
+        double prev = mandatoryTimes_.get(0); 
+        e.add(prev);
+        int size = 1;
+        for (int i=1; i<mandatoryTimes_.size(); i++) {
+        	double curr = mandatoryTimes_.get(i);
+        	if (! Closeness.isCloseEnough(prev, curr)) {
+        		e.add(curr); size++;
+        	}
+        	prev = curr;
+        }
+        // resize array, discarding unneeded memory
+        ((DoubleArrayList) e).size(size);
     	
-        List<Double> e = new DoubleArrayList();
-        
-    	
-    	// if (mandatoryTimes_[0] > 0.0)
-        //     times_.push_back(0.0);
     	if(mandatoryTimes_.get(0) > 0.00){
     		times_.add(0, 0.00);
     	}
-    	
-    	// TODO: Translate
-        // times_.insert(times_.end(), mandatoryTimes_.begin(), mandatoryTimes_.end());
+    	times_.addAll(mandatoryTimes_);
 
-    	// TODO: Translate
+    	// TODO: (RICHARD::) It's necessary to understand what std::adjacent_difference does !! :(
+    	// :::::::::::::::  http://www.sgi.com/tech/stl/adjacent_difference.html :::::::::::::::::::
         // std::adjacent_difference(times_.begin()+1,times_.end(), std::back_inserter(dt_));
 
         }
-        
+
+    
+    
         
         
         // Time grid with mandatory time points
@@ -134,18 +131,12 @@ public class TimeGrid <T extends List<Double>> {
         //    between pairs of mandatory times in order to reach the
         //    desired number of steps.
         //
-    
-    	// TODO: Translate
-    	/*
-        public TimeGrid(MyIterator begin, MyIterator end, int steps)
-        // #if defined(QL_FULL_ITERATOR_SUPPORT) --> not necessary in Java 
-        : mandatoryTimes_(begin, end) {
-        #else
-        {
-            while (begin != end)
-                mandatoryTimes_.push_back(*(begin++));
-        #endif
-            std::sort(mandatoryTimes_.begin(),mandatoryTimes_.end());
+// TODO: Translate
+	    public TimeGrid(final T list, final int steps) {
+	        mandatoryTimes_.addAll(list);
+	    	Collections.sort(mandatoryTimes_); // FIXME: performance
+
+	    	/*
             // We seem to assume that the grid begins at 0.
             // Let's enforce the assumption for the time being
             // (even though I'm not sure that I agree.)
@@ -200,6 +191,10 @@ public class TimeGrid <T extends List<Double>> {
         }
         
         */ 
+	    
+	    
+	    }
+    
     
     
         //
@@ -209,51 +204,50 @@ public class TimeGrid <T extends List<Double>> {
     	// TODO: Translations
         //returns the index i such that grid[i] = t
         // public int index /*Read-only*/ (double t){
+        // ?????
         //}
         
         // returns the index i such that grid[i] is closest to t
         // public int closestIndex /*Read-only*/ (double t){
+    	// ???????
         // }
         
         // returns the time on the grid closest to the given t
         
-    	// TODO: Translate
-        //public int closestTime /*Read-only*/(double t)  {
-        //    return times_[closestIndex(t)];
-        //}
+//        public int closestTime (final double t) /*@Readonly*/ {
+//            return times_.get(closestIndex(t));
+//        }
         
-        public final List<Double> mandatoryTimes() /*Read-only*/ {
+        public final List<Double> mandatoryTimes() /*@Readonly*/ {
             return mandatoryTimes_;
         }
         
-        // TODO: Translate
-        // public double dt (/* Read-only */(int i) { 
-        // return dt_[i]; }
-        //}
+        public double dt (final int i) /*@Readonly*/ { 
+           return dt_.get(i);
+        }
        
-		// TODO: Translate
-        //private double operator[] /*Read-only*/ (int i) { 
-        //	return times_[i]; 
-        //}
+        private double get(final int i) /*@Readonly*/ { 
+        	return times_.get(i); 
+        }
         
-        private double at(int i) /*Read-only*/ { 
+        private double at(final int i) /*@Readonly*/ { 
         	return times_.get(i); 
         }
         
         
-        private int size() /*Read-only*/ { 
+        private int size() /*@Readonly*/ { 
         	return times_.size(); 
         }
         
-        private boolean empty() /*Read-only*/ { 
+        private boolean empty() /*@Readonly*/ { 
         	return times_.isEmpty(); 
         }
         
-        private double begin() /*Read-only*/ { 
+        private double begin() /*@Readonly*/ { 
         	return times_.get(0); 
         }
         
-        private double end() /*Read-only*/ {
+        private double end() /*@Readonly*/ {
         	return times_.lastIndexOf(mandatoryTimes_); 
         }
         
@@ -262,20 +256,24 @@ public class TimeGrid <T extends List<Double>> {
         
         
         // TODO: Translate
-        //private const_reverse_iterator rbegin() /*Read-only*/ { 
-        //	return times_.rbegin(); 
-        //}
+        private Iterator<Double> reverseIterator() /*@Readonly*/ { 
+        	BidirectionalIterator<Double> it = ((DoubleArrayList)times_).listIterator();
+        	return new UnmodifiableIterator<Double>(new ReverseIterator<Double>(it)); 
+        }
         
-        // private const_reverse_iterator rend() /*Read-only*/ { 
+        // XXX: (RICHARD::) This method dissapears because reverseIterator returns an Iterator which implicitly 
+        // XXX: has a begin and an end.
+        //
+        // private const_reverse_iterator rend() /*@Readonly*/ { 
         // 	return times_.rend(); 
         // }
         
-        // private double front() /*Read-only*/ { 
-        // 	return times_.front();
-        //}
+        private double front() /*@Readonly*/ { 
+         	return times_.get(0);
+        }
         
-        //private double back() /*Read-only*/ { 
-        //	return times_.; 
-        //}
+        private double back() /*@Readonly*/ { 
+        	return times_.get(times_.size()-1); 
+        }
 
 }
