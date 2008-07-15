@@ -23,8 +23,9 @@
 
 package org.jquantlib.time;
 
-import it.unimi.dsi.fastutil.BidirectionalIterator;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleBidirectionalIterator;
+import it.unimi.dsi.fastutil.doubles.DoubleIterators;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -32,38 +33,29 @@ import java.util.List;
 
 import org.jquantlib.math.Closeness;
 import org.jquantlib.util.ReverseIterator;
-import org.jquantlib.util.UnmodifiableIterator;
+
+import cern.colt.Sorting;
 
 /**
  * TimeGrid class.
  * 
- * 
  * @author Dominik Holenstein
- *
+ * @author Richard Gomes
  */
+// TODO: Taken over from QuantLib: What was the rationale for limiting the grid to positive times? 
+// Investigate and see whether we can use it for negative ones as well.
 public class TimeGrid <T extends List<Double>> {
 	
-	// Typical C++ stuff...
-	// typedef std::vector<Time>::const_iterator const_iterator;
-    // typedef std::vector<Time>::const_reverse_iterator const_reverse_iterator;
-	
-	// time grid class
-    // TODO: Taken over from QuantLib: What was the rationale for limiting the grid to positive times? Investigate and see whether we can use it for negative ones as well.
-   
 	//
 	// private fields
 	//	
-	
-	private double end_;
-	private int steps_;
-	
-// XXX
-//	private MyIterator endIterator_;
-//	private MyIterator beginIterator_;
-	
-	private List<Double> times_ = new DoubleArrayList();
+    private List<Double> times_ = new DoubleArrayList();
     private List<Double> dt_ = new DoubleArrayList();
     private List<Double> mandatoryTimes_ = new DoubleArrayList();
+
+// XXX    
+//	private double end_;
+//	private int steps_;
 	
 	
 	// 
@@ -72,20 +64,37 @@ public class TimeGrid <T extends List<Double>> {
 	public TimeGrid() {
 	}
 
-	/** Regularly spaced time-grid
-	* Time grid with mandatory time points
-    * Mandatory points are guaranteed to belong to the grid.
-    * No additional points are added.
-    * 
-    * @param end
-    * @param steps
-    */
-    public TimeGrid(double end, int steps){
-    	this.end_ = end;
-    	this.steps_ = steps;
+	/**
+     * Regularly spaced time-grid
+     * 
+     * @param end
+     * @param steps
+     */
+    public TimeGrid(/*@Time*/ double end, /*@NonNegative*/ int steps) {
+        // We seem to assume that the grid begins at 0.
+        // Let's enforce the assumption for the time being
+        // (even though I'm not sure that I agree.)
+        if (end <= 0.0) throw new IllegalArgumentException("negative times not allowed"); // FIXME: message
+        /*@Time*/ double dt = end/steps;
+        this.times_ = new DoubleArrayList(steps);
+        for (int i=0; i<=steps; i++)
+            times_.add(dt*i);
+
+        this.mandatoryTimes_ = new DoubleArrayList(1);
+        this.mandatoryTimes_.add(end);
+        this.dt_ = new DoubleArrayList(steps);
+        this.dt_.set(steps, dt);
     }
-   	
-    public TimeGrid(T list) {
+
+    
+    
+    /**
+     * Time grid with mandatory time points
+     * Mandatory points are guaranteed to belong to the grid.
+     * No additional points are added.
+     * @param list
+     */
+    public TimeGrid(final T list) {
         mandatoryTimes_.addAll(list);
     	Collections.sort(mandatoryTimes_); // FIXME: performance
     	   	
@@ -121,102 +130,129 @@ public class TimeGrid <T extends List<Double>> {
 
         }
 
-    
-    
-        
-        
-        // Time grid with mandatory time points
-        // Mandatory points are guaranteed to belong to the grid.
-        //    Additional points are then added with regular spacing
-        //    between pairs of mandatory times in order to reach the
-        //    desired number of steps.
-        //
-// TODO: Translate
-	    public TimeGrid(final T list, final int steps) {
-	        mandatoryTimes_.addAll(list);
-	    	Collections.sort(mandatoryTimes_); // FIXME: performance
 
-	    	/*
-            // We seem to assume that the grid begins at 0.
-            // Let's enforce the assumption for the time being
-            // (even though I'm not sure that I agree.)
-            QL_REQUIRE(mandatoryTimes_.front() >= 0.0,
-                       "negative times not allowed");
-            std::vector<Double>::iterator e =
-                std::unique(mandatoryTimes_.begin(),mandatoryTimes_.end(),
-                            std::ptr_fun(close_enough));
-            mandatoryTimes_.resize(e - mandatoryTimes_.begin());
-
-            double last = mandatoryTimes_.back();
-            double dtMax;
-            // The resulting timegrid have points at times listed in the input
-            // list. Between these points, there are inner-points which are
-            // regularly spaced.
-            if (steps == 0) {
-                ArrayList<Double> diff;
-                std::adjacent_difference(mandatoryTimes_.begin(),
-                                         mandatoryTimes_.end(),
-                                         std::back_inserter(diff));
-                if (diff.front()==0.0)
-                    diff.erase(diff.begin());
-                dtMax = *(std::min_element(diff.begin(), diff.end()));
-            } else {
-                dtMax = last/steps;
-            }
+    
+        /**
+         * Time grid with mandatory time points
+         * <p>
+         * Mandatory points are guaranteed to belong to the grid.
+         * Additional points are then added with regular spacing
+         * between pairs of mandatory times in order to reach the
+         * desired number of steps.
+         */
+        public TimeGrid(final T list, final int steps) {
+          mandatoryTimes_.addAll(list);
+          Collections.sort(mandatoryTimes_); // FIXME: performance
             
-                      
-            double periodBegin = 0.0;
-            times_.push_back(periodBegin);
-            for (std::vector<Double>::const_iterator t=mandatoryTimes_.begin();
-                                                   t<mandatoryTimes_.end();
-                                                   t++) {
-                double periodEnd = t;
-                if (periodEnd != 0.0) {
-                    // the nearest integer
-                    int nSteps = (int)((periodEnd - periodBegin)/dtMax+0.5);
-                    // at least one time step!
-                    nSteps = (nSteps!=0 ? nSteps : 1);
-                    Time dt = (periodEnd - periodBegin)/nSteps;
-                    times_.reserve(nSteps);
-                    for (int n=1; n<=nSteps; ++n)
-                        times_.push_back(periodBegin + n*dt);
-                }
-                periodBegin = periodEnd;
-            }
+//	            // We seem to assume that the grid begins at 0.
+//	            // Let's enforce the assumption for the time being
+//	            // (even though I'm not sure that I agree.)
+//	            QL_REQUIRE(mandatoryTimes_.front() >= 0.0,
+//	                       "negative times not allowed");
+//	            std::vector<Time>::iterator e =
+//	                std::unique(mandatoryTimes_.begin(),mandatoryTimes_.end(),
+//	                            std::ptr_fun(close_enough));
+//	            mandatoryTimes_.resize(e - mandatoryTimes_.begin());
+//
+//	            Time last = mandatoryTimes_.back();
+//	            Time dtMax;
+//	            // The resulting timegrid have points at times listed in the input
+//	            // list. Between these points, there are inner-points which are
+//	            // regularly spaced.
+//	            if (steps == 0) {
+//	                std::vector<Time> diff;
+//	                std::adjacent_difference(mandatoryTimes_.begin(),
+//	                                         mandatoryTimes_.end(),
+//	                                         std::back_inserter(diff));
+//	                if (diff.front()==0.0)
+//	                    diff.erase(diff.begin());
+//	                dtMax = *(std::min_element(diff.begin(), diff.end()));
+//	            } else {
+//	                dtMax = last/steps;
+//	            }
+//
+//	            Time periodBegin = 0.0;
+//	            times_.push_back(periodBegin);
+//	            for (std::vector<Time>::const_iterator t=mandatoryTimes_.begin();
+//	                                                   t<mandatoryTimes_.end();
+//	                                                   t++) {
+//	                Time periodEnd = *t;
+//	                if (periodEnd != 0.0) {
+//	                    // the nearest integer
+//	                    Size nSteps = Size((periodEnd - periodBegin)/dtMax+0.5);
+//	                    // at least one time step!
+//	                    nSteps = (nSteps!=0 ? nSteps : 1);
+//	                    Time dt = (periodEnd - periodBegin)/nSteps;
+//	                    times_.reserve(nSteps);
+//	                    for (Size n=1; n<=nSteps; ++n)
+//	                        times_.push_back(periodBegin + n*dt);
+//	                }
+//	                periodBegin = periodEnd;
+//	            }
+//
+//	            std::adjacent_difference(times_.begin()+1,times_.end(),
+//	                                     std::back_inserter(dt_));
+          
+        }
 
-            std::adjacent_difference(times_.begin()+1,times_.end(),
-                                     std::back_inserter(dt_));
-        }
-        
-        }
-        
-        */ 
-	    
-	    
+    
+
+    
+    
+	    public /*@NonNegative*/ int index(/*@Time*/ double t) /* @ReadOnly */ {
+	        /*@NonNegative*/ int i = closestIndex(t);
+	        if (Closeness.isCloseEnough(t, times_.get(i))) {
+	            return i;
+	        } else {
+	            if (t < front()) {
+	                throw new IllegalArgumentException(
+	                        "using inadequate time grid: all nodes are later than the required time t = "
+	                        + t + " (earliest node is t1 = " + times_.get(0) + ")" );
+	            } else if (t > back()) {
+	                throw new IllegalArgumentException(
+	                        "using inadequate time grid: all nodes are earlier than the required time t = "
+	                        + t + " (latest node is t1 = " + back() + ")" );
+	            } else {
+	                /*@NonNegative*/ int j, k;
+	                if (t > times_.get(i)) {
+	                    j = i;
+	                    k = i+1;
+	                } else {
+	                    j = i-1;
+	                    k = i;
+	                }
+	                throw new IllegalArgumentException(
+	                        "using inadequate time grid: the nodes closest to the required time t = "
+	                        + t + " are t1 = " + times_.get(j) + " and t2 = " + times_.get(k) );
+	            }
+	        }
 	    }
-    
-    
-    
-        //
-        //name Time grid interface
-        //
-    
-    	// TODO: Translations
-        //returns the index i such that grid[i] = t
-        // public int index /*Read-only*/ (double t){
-        // ?????
-        //}
+
         
-        // returns the index i such that grid[i] is closest to t
-        // public int closestIndex /*Read-only*/ (double t){
-    	// ???????
-        // }
+	    public /*@NonNegative*/ int closestIndex(final /*@Time*/ double t) /* @ReadOnly */ {
+	        int size = times_.size();
+	        int result = Sorting.binarySearchFromTo( ((DoubleArrayList)times_).toDoubleArray(), t, 0, size-1) /*-1*/;
+	        
+	        if (result == 0) {
+	            return 0;
+	        } else if (result == size) {
+	            return size-1;
+	        } else {
+	            /*@Time*/ double dt1 = times_.get(result) - t;
+	            /*@Time*/ double dt2 = t - times_.get(result-1);
+	            if (dt1 < dt2)
+	                return result;
+	            else
+	                return (result)-1;
+	        }
+	    }
         
-        // returns the time on the grid closest to the given t
-        
-//        public int closestTime (final double t) /*@Readonly*/ {
-//            return times_.get(closestIndex(t));
-//        }
+	    /**
+	     * @return the time on the grid closest to the given t
+	     */
+        public /*@Time*/ double closestTime (final /*@Time*/ double t) /*@Readonly*/ {
+            return times_.get(closestIndex(t));
+        }
         
         public final List<Double> mandatoryTimes() /*@Readonly*/ {
             return mandatoryTimes_;
@@ -226,39 +262,34 @@ public class TimeGrid <T extends List<Double>> {
            return dt_.get(i);
         }
        
-        private double get(final int i) /*@Readonly*/ { 
+        public double get(final int i) /*@Readonly*/ { 
         	return times_.get(i); 
         }
         
-        private double at(final int i) /*@Readonly*/ { 
+        public double at(final int i) /*@Readonly*/ { 
         	return times_.get(i); 
         }
         
         
-        private int size() /*@Readonly*/ { 
+        public int size() /*@Readonly*/ { 
         	return times_.size(); 
         }
         
-        private boolean empty() /*@Readonly*/ { 
+        public boolean empty() /*@Readonly*/ { 
         	return times_.isEmpty(); 
         }
         
-        private double begin() /*@Readonly*/ { 
+        public double begin() /*@Readonly*/ { 
         	return times_.get(0); 
         }
         
-        private double end() /*@Readonly*/ {
+        public double end() /*@Readonly*/ {
         	return times_.lastIndexOf(mandatoryTimes_); 
         }
-        
 
-        // RICHARD: ==== Have a look at DoubleBidirectionalIterator in fastutil :) ====
-        
-        
-        // TODO: Translate
-        private Iterator<Double> reverseIterator() /*@Readonly*/ { 
-        	BidirectionalIterator<Double> it = ((DoubleArrayList)times_).listIterator();
-        	return new UnmodifiableIterator<Double>(new ReverseIterator<Double>(it)); 
+        public Iterator<Double> reverseIterator() /*@Readonly*/ { 
+        	DoubleBidirectionalIterator it = ((DoubleArrayList)times_).listIterator();
+        	return new ReverseIterator<Double>(new DoubleIterators.UnmodifiableBidirectionalIterator(it));
         }
         
         // XXX: (RICHARD::) This method dissapears because reverseIterator returns an Iterator which implicitly 
@@ -268,11 +299,11 @@ public class TimeGrid <T extends List<Double>> {
         // 	return times_.rend(); 
         // }
         
-        private double front() /*@Readonly*/ { 
+        public double front() /*@Readonly*/ { 
          	return times_.get(0);
         }
         
-        private double back() /*@Readonly*/ { 
+        public double back() /*@Readonly*/ { 
         	return times_.get(times_.size()-1); 
         }
 
