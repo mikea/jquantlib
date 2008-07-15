@@ -95,6 +95,11 @@ public class PerformanceDriver {
 		for (Iterator<PerformanceResults> it = results.iterator(); it.hasNext();) {
 			PerformanceResults performanceResults = it.next();
 			System.out.println(performanceResults.toString());
+			if(performanceResults.compositeResults!=null){
+				System.out.println("\t----------------Composite Tests----------------------------------");
+				printResults(performanceResults.compositeResults);
+				System.out.println("\t----------------END Composite Tests----------------------------------");
+			}
 		}
 	}
 }

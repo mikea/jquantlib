@@ -21,6 +21,8 @@
 
 package org.jquantlib.performance;
 
+import java.util.List;
+
 /**
  *
  * @author Q.Boiler
@@ -30,6 +32,7 @@ public class PerformanceResults {
 	public enum RUNTIME_UNITS{SECONDS,MILLISECONDS,NANOSECONDS};
 	public RUNTIME_UNITS units;
 	public String testName;
+	public List<PerformanceResults> compositeResults= null;
 
 	@Override
 	public String toString(){
