@@ -143,61 +143,72 @@ public class TimeGrid <T extends List<Double>> {
         public TimeGrid(final T list, final int steps) {
           mandatoryTimes_.addAll(list);
           Collections.sort(mandatoryTimes_); // FIXME: performance
-            
-//	            // We seem to assume that the grid begins at 0.
-//	            // Let's enforce the assumption for the time being
-//	            // (even though I'm not sure that I agree.)
-//	            QL_REQUIRE(mandatoryTimes_.front() >= 0.0,
-//	                       "negative times not allowed");
-//	            std::vector<Time>::iterator e =
-//	                std::unique(mandatoryTimes_.begin(),mandatoryTimes_.end(),
-//	                            std::ptr_fun(close_enough));
-//	            mandatoryTimes_.resize(e - mandatoryTimes_.begin());
-//
-//	            Time last = mandatoryTimes_.back();
-//	            Time dtMax;
-//	            // The resulting timegrid have points at times listed in the input
-//	            // list. Between these points, there are inner-points which are
-//	            // regularly spaced.
-//	            if (steps == 0) {
-//	                std::vector<Time> diff;
-//	                std::adjacent_difference(mandatoryTimes_.begin(),
-//	                                         mandatoryTimes_.end(),
-//	                                         std::back_inserter(diff));
-//	                if (diff.front()==0.0)
-//	                    diff.erase(diff.begin());
-//	                dtMax = *(std::min_element(diff.begin(), diff.end()));
-//	            } else {
-//	                dtMax = last/steps;
-//	            }
-//
-//	            Time periodBegin = 0.0;
-//	            times_.push_back(periodBegin);
-//	            for (std::vector<Time>::const_iterator t=mandatoryTimes_.begin();
-//	                                                   t<mandatoryTimes_.end();
-//	                                                   t++) {
-//	                Time periodEnd = *t;
-//	                if (periodEnd != 0.0) {
-//	                    // the nearest integer
-//	                    Size nSteps = Size((periodEnd - periodBegin)/dtMax+0.5);
-//	                    // at least one time step!
-//	                    nSteps = (nSteps!=0 ? nSteps : 1);
-//	                    Time dt = (periodEnd - periodBegin)/nSteps;
-//	                    times_.reserve(nSteps);
-//	                    for (Size n=1; n<=nSteps; ++n)
-//	                        times_.push_back(periodBegin + n*dt);
-//	                }
-//	                periodBegin = periodEnd;
-//	            }
-//
-//	            std::adjacent_difference(times_.begin()+1,times_.end(),
-//	                                     std::back_inserter(dt_));
           
+          // We seem to assume that the grid begins at 0.
+          // Let's enforce the assumption for the time being
+          // (even though I'm not sure that I agree.)
+          if (mandatoryTimes_.get(0) < 0.0) {
+          	throw new ArithmeticException("negative times not allowed");
+          }
+          
+          List<Double> e = new DoubleArrayList(mandatoryTimes_.size());
+          
+          //TODO: Translation.
+//        mandatoryTimes_.resize(e - mandatoryTimes_.begin());
+          
+          // TODO: Check the translation.
+          double last = mandatoryTimes_.get(mandatoryTimes_.indexOf(back())); 
+          
+          // TODO: remove this assignment as soon as we have translated the commented code below.
+          double dtMax = 0.00;
+          
+          // The resulting timegrid have points at times listed in the input
+          // list. Between these points, there are inner-points which are
+          // regularly spaced.
+          if (steps == 0) {
+        	  List<Double> diff = new DoubleArrayList();
+        	  
+        	  // TODO: Understand what std::adjacent_difference and std::back_inserter(diff) are doing
+//       	  std::adjacent_difference(mandatoryTimes_.begin(),
+//                      mandatoryTimes_.end(),
+//                      std::back_inserter(diff));
+        	  
+//              if (diff.front()==0.0)
+//              diff.erase(diff.begin());
+//          dtMax = *(std::min_element(diff.begin(), diff.end()));
+//      } else {
+//          dtMax = last/steps;
+//      }
+        	  double periodBegin = 0.00;
+        	  times_.add(periodBegin);
+        	  
+        	  for (int i=1; i<mandatoryTimes_.size(); i++) {
+              	double periodEnd = i;
+              	
+              	if (periodEnd != 0.0) {
+              	// the nearest integer
+              	int nSteps = (int)((periodEnd - periodBegin)/dtMax+0.5);
+              	
+              	// at least one time step!
+              	nSteps = (nSteps!=0 ? nSteps : 1);
+              	
+                double dt = (periodEnd - periodBegin)/nSteps;
+                
+                // TODO: Is this necessary in Java? See here for vector::reserve : http://www.cplusplus.com/reference/stl/vector/reserve.html
+                // times_.reserve(nSteps);
+                
+                for (int n=1; n<=nSteps; ++n)
+                    times_.add(periodBegin + n*dt);
+              	}
+              	periodBegin = periodEnd;
+              }
+        	  // TODO: Understand what adjacent_difference does.
+//	            std::adjacent_difference(times_.begin()+1,times_.end(),
+//              std::back_inserter(dt_));
+        	  
+          }
         }
 
-    
-
-    
     
 	    public /*@NonNegative*/ int index(/*@Time*/ double t) /* @ReadOnly */ {
 	        /*@NonNegative*/ int i = closestIndex(t);
