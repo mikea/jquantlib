@@ -22,111 +22,129 @@
 
 package org.jquantlib.util;
 
-import java.util.Collection; //FIXME: performance
-import java.util.List; //FIXME: performance
-import java.util.SortedMap; //FIXME: performance
-import java.util.TreeMap; //FIXME: performance
+import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
+import it.unimi.dsi.fastutil.objects.ObjectCollection;
+import it.unimi.dsi.fastutil.objects.ObjectCollections;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.SortedMap;
 
 /**
- * TODO: Class arranges the dates in order which is different from quantlib, make sure
- * behavior is ok
- *
+ * TODO: Class arranges the dates in order which is different from quantlib, make sure behavior is ok
+ * 
  * @author Srinivas Hasti
- *
  */
-
-//TODO: Make this a Observable
 public class TimeSeries<T> implements Observable {
-	
-	private SortedMap<Date,T> series = new TreeMap<Date,T>();
-	
-	public TimeSeries(){
-		
-	}
-	
-	public TimeSeries(List<Date> dates, List<T> values){
-		for(int i=0;i<dates.size();i++){
-			series.put(dates.get(i), values.get(i));
-		}
-	}
-	
-	public TimeSeries(Date startingDate, List<T> values){
-		Date tmp = startingDate;
-		for(int i=0;i<values.size();i++){			
-			series.put(tmp, values.get(i));
-			tmp = startingDate.getDateAfter(i);
-		}
-	}
-	
-	 //! returns the first date for which a historical datum exists
-    public Date getFirstDate(){
-    	return series.firstKey(); //TODO: make it read only
+
+    private final SortedMap<Date, T> series = new Object2ObjectAVLTreeMap<Date, T>();
+
+    public TimeSeries() {
+
     }
-    //! returns the last date for which a historical datum exists
-    public Date lastDate(){
-    	return series.lastKey(); //TODO: make it read only
+
+    public TimeSeries(final List<Date> dates, final List<T> values) {
+        for (int i = 0; i < dates.size(); i++) {
+            series.put(dates.get(i), values.get(i));
+        }
     }
-    //! returns the number of historical data including null ones
-    public int size(){
-    	return series.size();
+
+    public TimeSeries(final Date startingDate, final List<T> values) {
+        Date tmp = startingDate;
+        for (int i = 0; i < values.size(); i++) {
+            series.put(tmp, values.get(i));
+            tmp = startingDate.getDateAfter(i);
+        }
     }
+
+    /**
+     * @return the first date for which a historical datum exists
+     */
+    public Date getFirstDate() /* @ReadOnly */ {
+        return series.firstKey();
+    }
+
+    /**
+     * @return the last date for which a historical datum exists
+     */
+    public Date lastDate() /* @ReadOnly */ {
+        return series.lastKey();
+    }
+
+    /**
+     * @return the number of historical data including null ones
+     */
+    public int size() /* @ReadOnly */ {
+        return series.size();
+    }
+
+    /**
+     * @return whether the series contains any data
+     */
+    public boolean isEmpty() /* @ReadOnly */ {
+        return series.isEmpty();
+    }
+
+    public T find(final Date d) /* @ReadOnly */ {
+        return series.get(d);
+    }
+
+    public Collection<T> values() /* @ReadOnly */ {
+        return ObjectCollections.unmodifiable((ObjectCollection<T>)series.values());
+    }
+
+    @SuppressWarnings("unchecked")
+    public Collection<Date> dates() /* @ReadOnly */ {
+        return ObjectCollections.unmodifiable((ObjectCollection<Date>)series.keySet());
+    }
+
+    public void add(final Date date, final T dt) {
+        series.put(date, dt);
+    }
+
+
+    //
+    // implements Observable
+    //
     
-    //! returns whether the series contains any data
-    boolean isEmpty(){
-    	return series.isEmpty();
-    }
-    
-    public T find(Date d){
-    	return series.get(d);
-    }
-    
-    public Collection<T> values(){
-    	return series.values();
-    }
-    
-    public Collection<Date> dates(){
-    	return series.keySet();
+    /**
+     * Implements multiple inheritance via delegate pattern to an inner class
+     */
+    private final Observable delegatedObservable = new DefaultObservable(this);
+
+    @Override
+    public void addObserver(final Observer observer) {
+        delegatedObservable.addObserver(observer);
     }
 
-	public void add(Date date, T dt) {
-		series.put(date, dt);
-	}
-	
-	
-	/**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
-	 */
-	private Observable delegatedObservable = new DefaultObservable(this);
+    @Override
+    public int countObservers() {
+        return delegatedObservable.countObservers();
+    }
 
-	public void addObserver(Observer observer) {
-		delegatedObservable.addObserver(observer);
-	}
+    @Override
+    public void deleteObserver(final Observer observer) {
+        delegatedObservable.deleteObserver(observer);
+    }
 
-	public int countObservers() {
-		return delegatedObservable.countObservers();
-	}
+    @Override
+    public void notifyObservers() {
+        delegatedObservable.notifyObservers();
+    }
 
-	public void deleteObserver(Observer observer) {
-		delegatedObservable.deleteObserver(observer);
-	}
+    @Override
+    public void notifyObservers(final Object arg) {
+        delegatedObservable.notifyObservers(arg);
+    }
 
-	public void notifyObservers() {
-		delegatedObservable.notifyObservers();
-	}
+    @Override
+    public void deleteObservers() {
+        delegatedObservable.deleteObservers();
+    }
 
-	public void notifyObservers(Object arg) {
-		delegatedObservable.notifyObservers(arg);
-	}
-	
-	public void deleteObservers() {
-		delegatedObservable.deleteObservers();
-	}
+    @Override
+    public List<Observer> getObservers() {
+        return delegatedObservable.getObservers();
+    }
 
-	public List<Observer> getObservers() {
-		return delegatedObservable.getObservers();
-	}
-
-
-    
 }
