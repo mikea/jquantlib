@@ -299,8 +299,12 @@ public class TimeGrid <T extends List<Double>> {
         }
 
         public Iterator<Double> reverseIterator() /*@Readonly*/ { 
+        	// obtain forward iterator
         	DoubleBidirectionalIterator it = ((DoubleArrayList)times_).listIterator();
-        	return new ReverseIterator<Double>(new DoubleIterators.UnmodifiableBidirectionalIterator(it));
+        	// position forward iterator on its tail
+        	it.skip(times_.size());
+        	// obtain an unmodifiable reverse iterator
+        	return new ReverseIterator<Double>(DoubleIterators.unmodifiable(it));
         }
         
         // XXX: (RICHARD::) This method dissapears because reverseIterator returns an Iterator which implicitly 

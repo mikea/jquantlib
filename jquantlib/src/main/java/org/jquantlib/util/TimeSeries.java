@@ -31,25 +31,25 @@ import java.util.List;
 import java.util.SortedMap;
 
 /**
- * TODO: Class arranges the dates in order which is different from quantlib, make sure behavior is ok
- * 
  * @author Srinivas Hasti
  */
 public class TimeSeries<T> implements Observable {
 
-    private final SortedMap<Date, T> series = new Object2ObjectAVLTreeMap<Date, T>();
+	private final SortedMap<Date, T> series = new Object2ObjectAVLTreeMap<Date, T>();
 
     public TimeSeries() {
-
+    	// nothing
     }
 
     public TimeSeries(final List<Date> dates, final List<T> values) {
+    	this();
         for (int i = 0; i < dates.size(); i++) {
             series.put(dates.get(i), values.get(i));
         }
     }
 
     public TimeSeries(final Date startingDate, final List<T> values) {
+    	this();
         Date tmp = startingDate;
         for (int i = 0; i < values.size(); i++) {
             series.put(tmp, values.get(i));
@@ -60,7 +60,7 @@ public class TimeSeries<T> implements Observable {
     /**
      * @return the first date for which a historical datum exists
      */
-    public Date getFirstDate() /* @ReadOnly */ {
+    public Date firstDate() /* @ReadOnly */ {
         return series.firstKey();
     }
 
