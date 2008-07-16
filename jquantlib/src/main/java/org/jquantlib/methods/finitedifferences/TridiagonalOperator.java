@@ -28,7 +28,7 @@ import org.jquantlib.math.Array;
  * @author Srinivas Hasti
  * @author Tim Swetonic
  */
-public class TridiagonalOperator implements Operator{
+public class TridiagonalOperator implements Operator {
 
 	public static interface TimeSetter {
 		public void setTime(double t, TridiagonalOperator l);
@@ -57,7 +57,7 @@ public class TridiagonalOperator implements Operator{
 	public TridiagonalOperator(Array ldiag, Array diag, Array udiag) {
 		if (ldiag.size() != diag.size() - 1)
 			throw new IllegalStateException("wrong size for lower diagonal");
-		if (udiag.size() == diag.size() - 1)
+		if (udiag.size() != diag.size() - 1)
 			throw new IllegalStateException("wrong size for upper diagonal");
 		this.lowerDiagonal = ldiag;
 		this.diagonal = diag;
@@ -184,18 +184,7 @@ public class TridiagonalOperator implements Operator{
     //@{
     //! apply operator to a given array
     
-    //Disposable<Array> applyTo(const Array& v) const;
-    public final Array applyTo() {
-    	//TODO: figure out return type
-    	//TODO: implement
-    	return null;
-    }
     
-    //! solve linear system for a given right-hand side
-    public final Array solveFor(final double[] rhs) {
-    	//TODO: implement
-    	return null;
-    }
     
     //! solve linear system with SOR approach
     public final Array SOR(double[] rhs, int tol) {
@@ -204,11 +193,13 @@ public class TridiagonalOperator implements Operator{
     }
     
     //! identity instance
-   // public static TridiagonalOperator identity(int size) {
-    	//TODO: implement
-    //	return null;
-    //}
-
+   public TridiagonalOperator identity(int size) {
+        TridiagonalOperator I = new TridiagonalOperator(
+        		new Array(size-1, 0.0),     // lower diagonal
+                new Array(size,   1.0),     // diagonal
+                new Array(size-1, 0.0));    // upper diagonal
+        return I;
+    }
 
 
 
@@ -254,22 +245,57 @@ public class TridiagonalOperator implements Operator{
 	    L2.swap(temp);
 	}
 
-    @Override
-    public Array applyTo(Array a) {
-        // TODO Auto-generated method stub
-        return null;
+    public Array applyTo(Array v) {
+    	if(v.size()==size())
+    		throw new IllegalStateException("vector of the wrong size (" + v.size() + "instead of " + size() + ")");
+    		
+		Array result = this.diagonal;
+		//multiply result values by (diagonal * v)
+		result.operatorMultiply(v);
+		
+		 // matricial product
+		 result.set(0, 
+				 result.get(0) + (this.upperDiagonal.get(0)*v.get(1)));
+		
+		 for (int j=1; j<=size()-2; j++) {
+		     result.set(j,
+		    		 result.get(j) + (lowerDiagonal.get(j-1)*v.get(j-1)) 
+		    		 + (upperDiagonal.get(j)*v.get(j+1)));
+		 }
+
+	     result.set(size()-1, 
+	    		 result.get(size()-1) + (lowerDiagonal.get(size()-2)*v.get(size()-2)));
+		
+		 return result;
     }
 
-    @Override
-    public Operator identity(int size) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
-    @Override
-    public Array solveFor(Array a) {
-        // TODO Auto-generated method stub
-        return null;
+    //! solve linear system for a given right-hand side
+    public final Array solveFor(final Array rhs) {
+		//TODO: implement
+	    Array result = new Array(size());
+	    Array tmp = new Array(size());
+	
+	    double bet = diagonal.get(0);
+	    
+	    if(bet == 0.0)
+	    	throw new IllegalStateException("division by zero");
+	    
+	    result.set(0, rhs.get(0)/bet);
+	    int j;
+	    for (j=1; j<=size()-1; j++){
+	        tmp.set(j, upperDiagonal.get(j-1)/bet);
+	        bet = diagonal.get(j) - lowerDiagonal.get(j-1) * tmp.get(j);
+	        if(bet == 0.0)
+	        	throw new IllegalStateException("division by zero");
+	        result.set(j, (rhs.get(j) - lowerDiagonal.get(j-1)*result.get(j-1)) / bet);
+	    }
+	    
+	    // cannot be j>=0 with Size j
+	    for(j=size()-2; j>0; --j)
+	    	result.set(j, result.get(j) - (tmp.get(j+1)*result.get(j+1)));
+	
+	    result.set(0, result.get(0) - (tmp.get(1)*result.get(1)));
+	    return result;
     }
-
 }
