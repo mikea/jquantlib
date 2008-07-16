@@ -22,8 +22,7 @@
 
 package org.jquantlib.methods.finitedifferences;
 
-import java.util.List;
-
+import org.jquantlib.math.Array;
 import org.jquantlib.math.LogGrid;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
@@ -39,10 +38,11 @@ public class BSMOperator extends TridiagonalOperator {
         setMidRows(pd, pm, pu);
     }
 
-    public BSMOperator(List grid, GeneralizedBlackScholesProcess process, double residualTime) {
+    public BSMOperator(Array grid, GeneralizedBlackScholesProcess process, double residualTime) {
         super(grid.size());
         LogGrid logGrid = null; // TODO: initialize with (grid);
-        PdeConstantCoeff<PdeBSM> cc = new PdeConstantCoeff(process, residualTime, process.stateVariable().getLink().doubleValue());
+        PdeConstantCoeff<GeneralizedBlackScholesProcess> cc = new PdeConstantCoeff<GeneralizedBlackScholesProcess>(process,
+                residualTime, process.stateVariable().getLink().doubleValue());
         cc.generateOperator(residualTime, logGrid, this);
     }
 }

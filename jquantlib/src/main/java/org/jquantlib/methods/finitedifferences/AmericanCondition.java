@@ -22,9 +22,8 @@
 
 package org.jquantlib.methods.finitedifferences;
 
-import java.util.List;
-
 import org.jquantlib.instruments.Option.Type;
+import org.jquantlib.math.Array;
 
 /**
  * @author Srinivas Hasti
@@ -36,7 +35,7 @@ public class AmericanCondition extends CurveDependentStepCondition {
 		super(type, strike);
 	}
 
-	public AmericanCondition(List<Double> a) {
+	public AmericanCondition(Array a) {
 		super(a);
 	}
 

@@ -21,72 +21,71 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import java.util.List;
-
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.math.Array;
 
-public class CurveDependentStepCondition implements StepConditon<List<Double>> {
+public class CurveDependentStepCondition implements StepCondition<Array> {
 
-	public static interface CurveWrapper {
-		double getValue(List<Double> a, int i);
-	}
-	
-	private CurveWrapper curveItem;	
+    public static interface CurveWrapper {
+        double getValue(Array a, int i);
+    }
 
-	public CurveDependentStepCondition(Option.Type type, double strike) {
-		curveItem = new PayoffWrapper(type, strike);
-	}
+    private CurveWrapper curveItem;
 
-	public CurveDependentStepCondition(Payoff p) {
-		curveItem = new PayoffWrapper(p);
-	}
+    public CurveDependentStepCondition(Option.Type type, double strike) {
+        curveItem = new PayoffWrapper(type, strike);
+    }
 
-	public CurveDependentStepCondition(List<Double> a) {
-		curveItem = new ArrayWrapper(a);
-	}
+    public CurveDependentStepCondition(Payoff p) {
+        curveItem = new PayoffWrapper(p);
+    }
 
-	protected double applyToValue(double a, double b) {
-		throw new RuntimeException("not yet implemented");
-	}
+    public CurveDependentStepCondition(Array a) {
+        curveItem = new ArrayWrapper(a);
+    }
 
-	@Override
-	public void applyTo(List<Double> a, double t) {
-		for (int i = 0; i < a.size(); i++) {
-			a.set(i, applyToValue(a.get(i), getValue(a, i)));
-		}
-	}
+    protected double applyToValue(double a, double b) {
+        throw new RuntimeException("not yet implemented");
+    }
 
-	protected double getValue(List<Double> a, int index) {
-		return curveItem.getValue(a, index);
-	}
+    @Override
+    public void applyTo(Array a, double t) {
+        for (int i = 0; i < a.size(); i++) {
+            a.set(i, applyToValue(a.get(i), getValue(a, i)));
+        }
+    }
 
-	class ArrayWrapper implements CurveWrapper {
-		private List<Double> values;
+    protected double getValue(Array a, int index) {
+        return curveItem.getValue(a, index);
+    }
 
-		public ArrayWrapper(List<Double> values) {
-			this.values = values;
-		}
+    class ArrayWrapper implements CurveWrapper {
+        private Array values;
 
-		public double getValue(List<Double> a, int i) {
-			return values.get(i);
-		}
-	};
+        public ArrayWrapper(Array values) {
+            this.values = values;
+        }
 
-	class PayoffWrapper implements CurveWrapper {
-		private Payoff payoff;
+        public double getValue(Array a, int i) {
+            return values.get(i);
+        }
+    };
 
-		public PayoffWrapper(Payoff p) {
-			this.payoff = p;
-		}
+    class PayoffWrapper implements CurveWrapper {
+        private Payoff payoff;
 
-		public PayoffWrapper(Option.Type type, double strike) {
-			payoff = new PlainVanillaPayoff(type, strike);
-		}
+        public PayoffWrapper(Payoff p) {
+            this.payoff = p;
+        }
 
-		public double getValue(List<Double> a, int i) {
-			return payoff.valueOf(a.get(i));
-		}
-	};
+        public PayoffWrapper(Option.Type type, double strike) {
+            payoff = new PlainVanillaPayoff(type, strike);
+        }
+
+        public double getValue(Array a, int i) {
+            return payoff.valueOf(a.get(i));
+        }
+    };
 }

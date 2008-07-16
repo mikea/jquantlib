@@ -28,7 +28,7 @@ import org.jquantlib.math.Array;
  * @author Srinivas Hasti
  * @author Tim Swetonic
  */
-public class TridiagonalOperator {
+public class TridiagonalOperator implements Operator{
 
 	public static interface TimeSetter {
 		public void setTime(double t, TridiagonalOperator l);
@@ -204,10 +204,10 @@ public class TridiagonalOperator {
     }
     
     //! identity instance
-    public static TridiagonalOperator identity(int size) {
+   // public static TridiagonalOperator identity(int size) {
     	//TODO: implement
-    	return null;
-    }
+    //	return null;
+    //}
 
 
 
@@ -253,5 +253,23 @@ public class TridiagonalOperator {
 	    L1.swap(L2);
 	    L2.swap(temp);
 	}
+
+    @Override
+    public Array applyTo(Array a) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Operator identity(int size) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Array solveFor(Array a) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

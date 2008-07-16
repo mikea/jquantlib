@@ -22,9 +22,8 @@
 
 package org.jquantlib.methods.finitedifferences;
 
-import java.util.List;
-
 import org.jquantlib.instruments.Option;
+import org.jquantlib.math.Array;
 
 public class ShoutCondition extends CurveDependentStepCondition {
 	/* @Time */private final double resTime;
@@ -38,14 +37,14 @@ public class ShoutCondition extends CurveDependentStepCondition {
 		this.rate = rate;
 	}
 
-	public ShoutCondition(List<Double> intrinsicValues,
+	public ShoutCondition(Array intrinsicValues,
 			double/*@Time*/resTime, double /*@Rate*/rate) {
 		super(intrinsicValues);
 		this.resTime = resTime;
 		this.rate = rate;
 	}
 
-	public void applyTo(List<Double> a, double/*@Time*/ t) {
+	public void applyTo(Array a, double/*@Time*/ t) {
 		disc = Math.exp(-rate * (t - resTime));
 		super.applyTo(a, t);
 	}

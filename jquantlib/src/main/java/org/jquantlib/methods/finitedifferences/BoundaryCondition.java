@@ -22,11 +22,13 @@
 
 package org.jquantlib.methods.finitedifferences;
 
+import org.jquantlib.math.Array;
+
 /**
  * @author Srinivas Hasti
  * 
  */
-public interface BoundaryCondition<T, S> {
+public interface BoundaryCondition<T extends Operator> {
 	
 	public static enum Side {
 		NONE, UPPER, LOWER;
@@ -36,26 +38,26 @@ public interface BoundaryCondition<T, S> {
 	 * ! This method modifies an operator \f$ L \f$ before it is applied to an
 	 * array \f$ u \f$ so that \f$ v = Lu \f$ will satisfy the given condition.
 	 */
-	public void applyBeforeApplying(T operatorType);
+	public void applyBeforeApplying(T operator);
 
 	/*
 	 * ! This method modifies an array \f$ u \f$ so that it satisfies the given
 	 * condition.
 	 */
-	public void applyAfterApplying(S arrayType);
+	public void applyAfterApplying(Array array);
 
 	/*
 	 * ! This method modifies an operator \f$ L \f$ before the linear system \f$
 	 * Lu' = u \f$ is solved so that \f$ u' \f$ will satisfy the given
 	 * condition.
 	 */
-	public void applyBeforeSolving(T operatorType, S rhs);
+	public void applyBeforeSolving(T operator, Array array);
 
 	/*
 	 * ! This method modifies an array \f$ u \f$ so that it satisfies the given
 	 * condition.
 	 */
-	public void applyAfterSolving(S arrayType);
+	public void applyAfterSolving(Array array);
 
 	/*
 	 * ! This method sets the current time for time-dependent boundary

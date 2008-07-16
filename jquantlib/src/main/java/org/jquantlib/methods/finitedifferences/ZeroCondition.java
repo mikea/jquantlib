@@ -28,7 +28,7 @@ import java.util.List;
  * @author Srinivas Hasti
  *
  */
-public class ZeroCondition implements StepConditon<List<Double>> {
+public class ZeroCondition implements StepCondition<List<Double>> {
 
 	/* (non-Javadoc)
 	 * @see org.jquantlib.methods.finitedifferences.StepConditon#applyTo(java.lang.Object, double)

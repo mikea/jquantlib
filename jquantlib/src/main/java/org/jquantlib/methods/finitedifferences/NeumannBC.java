@@ -21,10 +21,10 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import java.util.List;
+import org.jquantlib.math.Array;
 
 public class NeumannBC implements
-		BoundaryCondition<TridiagonalOperator, List<Double>> {
+		BoundaryCondition<TridiagonalOperator> {
 	private/* @Real */double value;
 	private Side side;
 
@@ -34,7 +34,7 @@ public class NeumannBC implements
 	}
 
 	@Override
-	public void applyAfterApplying(List<Double> u) {
+	public void applyAfterApplying(Array u) {
 		switch (side) {
 		case LOWER:
 			u.set(0, u.get(1) - value);
@@ -46,10 +46,7 @@ public class NeumannBC implements
 			throw new IllegalStateException(
 					"unknown side for Neumann boundary condition");
 		}
-
 	}
-
-	
 
 	@Override
 	public void applyBeforeApplying(TridiagonalOperator operator) {
@@ -68,7 +65,7 @@ public class NeumannBC implements
 
 	@Override
 	public void applyBeforeSolving(TridiagonalOperator operator,
-			List<Double> rhs) {
+		 Array rhs) {
 		switch (side) {
 		case LOWER:
 			operator.setFirstRow(-1.0, 1.0);
@@ -86,7 +83,7 @@ public class NeumannBC implements
 	}
 
 	@Override
-	public void applyAfterSolving(List<Double> arrayType) {
+	public void applyAfterSolving(Array arrayType) {
 
 	}
 	
