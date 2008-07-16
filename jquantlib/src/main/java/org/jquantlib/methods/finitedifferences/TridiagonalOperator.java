@@ -71,9 +71,6 @@ public class TridiagonalOperator implements Operator {
     	this.timeSetter = t.getTimeSetter();
     }
     
-    //public TridiagonalOperator operator=(const Disposable<TridiagonalOperator>&);
-	//TODO: implement?
-
 	public void setFirstRow(double b, double c) {
 		diagonal.set(0, b);
 		upperDiagonal.set(0, c);
@@ -121,8 +118,6 @@ public class TridiagonalOperator implements Operator {
     }
     
     public TridiagonalOperator subtract(final TridiagonalOperator D) {
-    	//TODO: not sure if this is the right way to subtract
-    	//TODO: test this assisgnment
         Array low = this.lowerDiagonal.quickOperatorSubtractCopy(D.lowerDiagonal()); 
         Array mid = this.diagonal.quickOperatorSubtractCopy(D.diagonal());
         Array high = this.upperDiagonal.quickOperatorSubtractCopy(D.upperDiagonal()); 
@@ -134,7 +129,6 @@ public class TridiagonalOperator implements Operator {
     // binary operators
     public TridiagonalOperator add(final TridiagonalOperator D1, final TridiagonalOperator D2) {
 
-    	//TODO: test this assisgnment
         Array low = D1.lowerDiagonal.quickOperatorAddCopy(D2.lowerDiagonal());
         Array mid = D1.diagonal.quickOperatorAddCopy(D2.diagonal());
         Array high = D1.upperDiagonal.quickOperatorAddCopy(D2.upperDiagonal());
@@ -187,9 +181,49 @@ public class TridiagonalOperator implements Operator {
     
     
     //! solve linear system with SOR approach
-    public final Array SOR(double[] rhs, int tol) {
-    	//TODO: implement
-    	return null;
+    public final Array SOR(final Array rhs, int tol) throws Exception {
+        if(rhs.size() != size()) 
+        	throw new IllegalStateException("rhs has the wrong size");
+
+        // initial guess
+        Array result = rhs;
+
+        // solve tridiagonal system with SOR technique
+        int sorIteration, i;
+        double omega = 1.5;
+        double err = 2.0*tol;
+        double temp;
+        for (sorIteration=0; err>tol ; sorIteration++) {
+            if(sorIteration>100000) {
+            	throw new Exception("tolerance (" + tol + ") not reached in "
+                       + sorIteration + " iterations. "
+                       + "The error still is " + err);
+            }
+
+            temp = omega * (rhs.get(0)     -
+                            upperDiagonal.get(0)   * result.get(1) -
+                            diagonal.get(0)        * result.get(0))/diagonal.get(0);
+            err = temp*temp;
+            result.set(0, result.get(0) + temp);
+
+            for (i=1; i<size()-1 ; i++) {
+                temp = omega *(rhs.get(i)     -
+                               upperDiagonal.get(i)   * result.get(i+1) -
+                               diagonal.get(i)        * result.get(i) -
+                               lowerDiagonal.get(i-1) * result.get(i-1))/diagonal.get(i);
+                err += temp * temp;
+                result.set(i, result.get(i) + temp);
+            }
+
+            temp = omega * (rhs.get(i)     -
+                            diagonal.get(i)        * result.get(i) -
+                            lowerDiagonal.get(i-1) * result.get(i-1))/diagonal.get(i);
+            err += temp*temp;
+            result.set(i, result.get(i) + temp);
+        }
+        
+        return result;
+        
     }
     
     //! identity instance
@@ -272,7 +306,6 @@ public class TridiagonalOperator implements Operator {
 
     //! solve linear system for a given right-hand side
     public final Array solveFor(final Array rhs) {
-		//TODO: implement
 	    Array result = new Array(size());
 	    Array tmp = new Array(size());
 	
