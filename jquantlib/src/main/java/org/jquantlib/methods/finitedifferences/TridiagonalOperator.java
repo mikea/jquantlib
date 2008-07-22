@@ -280,7 +280,7 @@ public class TridiagonalOperator implements Operator {
 	}
 
     public Array applyTo(Array v) {
-    	if(v.size()==size())
+    	if(v.size() != size())
     		throw new IllegalStateException("vector of the wrong size (" + v.size() + "instead of " + size() + ")");
     		
 		Array result = this.diagonal;
