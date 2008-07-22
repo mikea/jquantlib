@@ -17,7 +17,7 @@ and variants.
 
 
 ==What this README is about?==
-
+ 
 This README file is about how JQuantLib can be obtained and built both
 using command line commands in a Linux box or using the excellent
 [http://www.eclipse.org Eclipse] IDE. You can jump directly to the
