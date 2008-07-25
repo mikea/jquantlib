@@ -45,7 +45,7 @@ package org.jquantlib.pricingengines.vanilla;
  * 
  * @author Richard Gomes
  */
-public class MCVanillaEngine {
+public class MCVanillaEngine /*extends McSimulation<MC extends Variate, RNG extends RandomNumberGenerator, S>*/ {
 
 }
 

@@ -60,6 +60,13 @@ import org.jquantlib.math.statistics.Statistics;
  */
 public class MonteCarloModel<MC extends Variate, RNG extends RandomNumberGenerator, S extends Statistics> {
 
+//    private PathGeneratorType pathGenerator_;
+//    private PathPricerType pathPricer_;
+//    private StatsType sampleAccumulator_;
+//    private boolean isAntitheticVariate_;
+//    private PathPricerType cvPathPricer_;
+//    private ResultType cvOptionValue_;
+//    private boolean isControlVariate_;
     
     
     

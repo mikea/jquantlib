@@ -35,150 +35,111 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.methods.montecarlo;
 
+import java.util.List;
+
 import org.jquantlib.math.Array;
 import org.jquantlib.time.TimeGrid;
+import org.jquantlib.util.stdlibc.DoubleForwardIterator;
+import org.jquantlib.util.stdlibc.DoubleReverseIterator;
 
 /**
  * 
  * Single-factor random walk
- *
+ * 
  * @note The path includes the initial asset value as its first point.
- *
- * @category mcarlo
+ * 
+ * 
  * 
  * @author Richard Gomes
  */
+
+
+// FIXME: still working on this mess !!!
+// FIXME: code review: verify if DoubleReference should be used here
+
+
 public class Path {
 
-    private TimeGrid timeGrid_; // FIXME: should use generic type
+    private TimeGrid<List<Double>> timeGrid_; // FIXME: should use generic type
     private Array values_;
 
+    public Path(final TimeGrid<List<Double>> timeGrid, final Array values) {
+        this.timeGrid_ = timeGrid;
+        this.values_ = values;
+        if (values_.empty()) {
+            values_ = new Array(timeGrid_.size());
+        }
+        if (values_.size() != timeGrid_.size())
+            throw new IllegalArgumentException("different number of times and asset values"); // FIXME: message
+    }
+
+    // public /* @Real */ Double back() {
+    // return values_.get(values_.size()-1);
+    // }
+
+
+    public boolean empty() /* @ReadOnly */{
+        return timeGrid_.empty();
+    }
+
+    public/* @NonNegative */int length() /* @ReadOnly */{
+        return timeGrid_.size();
+    }    // public /* @Real */ Double back() {
+    // return values_.get(values_.size()-1);
+    // }
+
+
+
+    public/* @Real */double get(/* @NonNegative */int i) /* @ReadOnly */{
+        return values_.get(i);
+    }
+
+    // public /* @Real */ Double get(/*@NonNegative*/ int i) {
+    // return values_[i];
+    // }
+
+    public/* @Real */double at(/* @NonNegative */int i) /* @ReadOnly */{
+        return values_.at(i);
+    }
+
+    // public /* @Real */ Double (/*@NonNegative*/ int i) {
+    // return values_.at(i);
+    // }
+
+    public/* @Real */double value(/* @NonNegative */int i) /* @ReadOnly */{
+        return values_.get(i);
+    }
+
+    // public /* @Real */ Double value(/*@NonNegative*/ int i) {
+    // return values_.get(i);
+    // }
+
+    public/* @Real */double front() /* @ReadOnly */{
+        return values_.get(0);
+    }
+
+    public/* @Real */double back() /* @ReadOnly */{
+        return values_.get(values_.size() - 1);
+    }
+
+    public/* @Time */double time(/* @NonNegative */int i) /* @ReadOnly */{
+        return timeGrid_.get(i);
+    }
+
+    public final TimeGrid<List<Double>> timeGrid() /* @ReadOnly */{
+        return timeGrid_;
+    }
+
+    public DoubleForwardIterator forwardIterator() /* @ReadOnly */{
+        return values_.forwardIterator();
+    }
+
+    public DoubleReverseIterator reverseIterator() /* @ReadOnly */{
+        return values_.reverseIterator();
+    }
+
 }
-
-
-//class Path {
-//    public:
-//      Path(const TimeGrid& timeGrid,
-//           const Array& values = Array());
-//      //! \name inspectors
-//      //@{
-//      bool empty() const;
-//      Size length() const;
-//      //! asset value at the \f$ i \f$-th point
-//      Real operator[](Size i) const;
-//      Real at(Size i) const;
-//      Real& operator[](Size i);
-//      Real& at(Size i);
-//      Real value(Size i) const;
-//      Real& value(Size i);
-//      //! time at the \f$ i \f$-th point
-//      Time time(Size i) const;
-//      //! initial asset value
-//      Real front() const;
-//      Real& front();
-//      //! final asset value
-//      Real back() const;
-//      Real& back();
-//      //! time grid
-//      const TimeGrid& timeGrid() const;
-//      //@}
-//      //! \name iterators
-//      //@{
-//      typedef Array::const_iterator iterator;
-//      typedef Array::const_reverse_iterator reverse_iterator;
-//      iterator begin() const;
-//      iterator end() const;
-//      reverse_iterator rbegin() const;
-//      reverse_iterator rend() const;
-//      //@}
-//    private:
-//      TimeGrid timeGrid_;
-//      Array values_;
-//  };
-//
-//
-//  // inline definitions
-//
-//  inline Path::Path(const TimeGrid& timeGrid, const Array& values)
-//  : timeGrid_(timeGrid), values_(values) {
-//      if (values_.empty())
-//          values_ = Array(timeGrid_.size());
-//      QL_REQUIRE(values_.size() == timeGrid_.size(),
-//                 "different number of times and asset values");
-//  }
-//
-//  inline bool Path::empty() const {
-//      return timeGrid_.empty();
-//  }
-//
-//  inline Size Path::length() const {
-//      return timeGrid_.size();
-//  }
-//
-//  inline Real Path::operator[](Size i) const {
-//      return values_[i];
-//  }
-//
-//  inline Real Path::at(Size i) const {
-//      return values_.at(i);
-//  }
-//
-//  inline Real& Path::operator[](Size i) {
-//      return values_[i];
-//  }
-//
-//  inline Real& Path::at(Size i) {
-//      return values_.at(i);
-//  }
-//
-//  inline Real Path::value(Size i) const {
-//      return values_[i];
-//  }
-//
-//  inline Real& Path::value(Size i) {
-//      return values_[i];
-//  }
-//
-//  inline Real Path::front() const {
-//      return values_[0];
-//  }
-//
-//  inline Real& Path::front() {
-//      return values_[0];
-//  }
-//
-//  inline Real Path::back() const {
-//      return values_[values_.size()-1];
-//  }
-//
-//  inline Real& Path::back() {
-//      return values_[values_.size()-1];
-//  }
-//
-//  inline Time Path::time(Size i) const {
-//      return timeGrid_[i];
-//  }
-//
-//  inline const TimeGrid& Path::timeGrid() const {
-//      return timeGrid_;
-//  }
-//
-//  inline Path::iterator Path::begin() const {
-//      return values_.begin();
-//  }
-//
-//  inline Path::iterator Path::end() const {
-//      return values_.end();
-//  }
-//
-//  inline Path::reverse_iterator Path::rbegin() const {
-//      return values_.rbegin();
-//  }
-//
-//  inline Path::reverse_iterator Path::rend() const {
-//      return values_.rend();
-//  }

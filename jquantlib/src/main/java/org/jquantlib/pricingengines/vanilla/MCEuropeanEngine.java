@@ -46,7 +46,10 @@ package org.jquantlib.pricingengines.vanilla;
  * @author Richard Gomes
  */
 //test the correctness of the returned value is tested by checking it against analytic results.
-public class MCEuropeanEngine {
+public class MCEuropeanEngine /*extends MCVanillaEngine<
+        SingleVariate extends Variate, 
+        RNG extends RandomNumberGenerator, 
+        S extends Statistics>*/ {
 
 }
 

@@ -22,21 +22,22 @@
 
 package org.jquantlib.util;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
-import it.unimi.dsi.fastutil.objects.ObjectCollection;
-import it.unimi.dsi.fastutil.objects.ObjectCollections;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.SortedMap;
+
+import org.jquantlib.util.stdlibc.Iterators;
+import org.jquantlib.util.stdlibc.ObjectForwardIterator;
 
 /**
  * @author Srinivas Hasti
  */
 public class TimeSeries<T> implements Observable {
 
-	private final SortedMap<Date, T> series = new Object2ObjectAVLTreeMap<Date, T>();
-
+	private final List<Date> dates = new ObjectArrayList<Date>();
+    private final List<T> values = new ObjectArrayList<T>();
+	
+	
     public TimeSeries() {
     	// nothing
     }
@@ -44,7 +45,8 @@ public class TimeSeries<T> implements Observable {
     public TimeSeries(final List<Date> dates, final List<T> values) {
     	this();
         for (int i = 0; i < dates.size(); i++) {
-            series.put(dates.get(i), values.get(i));
+            this.dates.add(dates.get(i));
+            this.values.add(values.get(i));
         }
     }
 
@@ -52,7 +54,8 @@ public class TimeSeries<T> implements Observable {
     	this();
         Date tmp = startingDate;
         for (int i = 0; i < values.size(); i++) {
-            series.put(tmp, values.get(i));
+            this.dates.add(tmp);
+            this.values.add(values.get(i));
             tmp = startingDate.getDateAfter(i);
         }
     }
@@ -61,48 +64,63 @@ public class TimeSeries<T> implements Observable {
      * @return the first date for which a historical datum exists
      */
     public Date firstDate() /* @ReadOnly */ {
-        return series.firstKey();
+        return dates.get(0);
     }
 
     /**
      * @return the last date for which a historical datum exists
      */
     public Date lastDate() /* @ReadOnly */ {
-        return series.lastKey();
+        return dates.get(dates.size()-1);
     }
 
     /**
      * @return the number of historical data including null ones
      */
     public int size() /* @ReadOnly */ {
-        return series.size();
+        return dates.size();
     }
 
     /**
      * @return whether the series contains any data
      */
     public boolean isEmpty() /* @ReadOnly */ {
-        return series.isEmpty();
+        return dates.isEmpty();
     }
 
     public T find(final Date d) /* @ReadOnly */ {
-        return series.get(d);
-    }
-
-    public Collection<T> values() /* @ReadOnly */ {
-        return ObjectCollections.unmodifiable((ObjectCollection<T>)series.values());
-    }
-
-    @SuppressWarnings("unchecked")
-    public Collection<Date> dates() /* @ReadOnly */ {
-        return ObjectCollections.unmodifiable((ObjectCollection<Date>)series.keySet());
+        int index = dates.indexOf(d);
+        if (index == -1) return null;
+        return values.get(index);
     }
 
     public void add(final Date date, final T dt) {
-        series.put(date, dt);
+        this.dates.add(date);
+        this.values.add(dt);
     }
 
+    public List<Date> dates() {
+        return this.dates;
+    }
+    
+    public List<T> values() {
+        return this.values;
+    }
+    
+    
 
+//    @SuppressWarnings("unchecked")
+//    public ObjectForwardIterator<Date> dates() /*@Readonly*/ { 
+//        return Iterators.forwardIterator( ((ObjectArrayList<Date>)dates).elements() );
+//    }
+//    
+//    @SuppressWarnings("unchecked")
+//    public ObjectForwardIterator<T> values() /*@Readonly*/ { 
+//        return Iterators.forwardIterator( ((ObjectArrayList<T>)values).elements() );
+//    }
+    
+
+    
     //
     // implements Observable
     //

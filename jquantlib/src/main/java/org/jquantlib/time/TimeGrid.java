@@ -24,15 +24,14 @@
 package org.jquantlib.time;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import it.unimi.dsi.fastutil.doubles.DoubleBidirectionalIterator;
-import it.unimi.dsi.fastutil.doubles.DoubleIterators;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jquantlib.math.Closeness;
-import org.jquantlib.util.ReverseIterator;
+import org.jquantlib.util.stdlibc.DoubleForwardIterator;
+import org.jquantlib.util.stdlibc.DoubleReverseIterator;
+import org.jquantlib.util.stdlibc.Iterators;
 
 import cern.colt.Sorting;
 
@@ -75,6 +74,7 @@ public class TimeGrid <T extends List<Double>> {
         // Let's enforce the assumption for the time being
         // (even though I'm not sure that I agree.)
         if (end <= 0.0) throw new IllegalArgumentException("negative times not allowed"); // FIXME: message
+        
         /*@Time*/ double dt = end/steps;
         this.times_ = new DoubleArrayList(steps);
         for (int i=0; i<=steps; i++)
@@ -96,7 +96,7 @@ public class TimeGrid <T extends List<Double>> {
      */
     public TimeGrid(final T list) {
         mandatoryTimes_.addAll(list);
-    	Collections.sort(mandatoryTimes_); // FIXME: performance
+    	Collections.sort(mandatoryTimes_); // FIXME: performance -> Question from Dominik: Using Colt?
     	   	
     	// We seem to assume that the grid begins at 0.
         // Let's enforce the assumption for the time being
@@ -127,87 +127,118 @@ public class TimeGrid <T extends List<Double>> {
     	// TODO: (RICHARD::) It's necessary to understand what std::adjacent_difference does !! :(
     	// :::::::::::::::  http://www.sgi.com/tech/stl/adjacent_difference.html :::::::::::::::::::
         // std::adjacent_difference(times_.begin()+1,times_.end(), std::back_inserter(dt_));
+    	for (int i=1; i<times_.size(); i++) {
+    		double curr = times_.get(i);
+    		if (i == 0) {
+    			dt_.add(curr);
+    		}
+    		else {
+    			prev = times_.get(i-1);
+    			dt_.add(curr-prev);
+    		}
+    	}
 
-        }
+    } // end of constructor
 
 
     
-        /**
-         * Time grid with mandatory time points
-         * <p>
-         * Mandatory points are guaranteed to belong to the grid.
-         * Additional points are then added with regular spacing
-         * between pairs of mandatory times in order to reach the
-         * desired number of steps.
-         */
-        public TimeGrid(final T list, final int steps) {
-          mandatoryTimes_.addAll(list);
-          Collections.sort(mandatoryTimes_); // FIXME: performance
+    /**
+     * Time grid with mandatory time points
+     * <p>
+     * Mandatory points are guaranteed to belong to the grid.
+     * Additional points are then added with regular spacing
+     * between pairs of mandatory times in order to reach the
+     * desired number of steps.
+     */
+    public TimeGrid(final T list, final int steps) {
+    	mandatoryTimes_.addAll(list);
+    	Collections.sort(mandatoryTimes_); // FIXME: performance
           
-          // We seem to assume that the grid begins at 0.
-          // Let's enforce the assumption for the time being
-          // (even though I'm not sure that I agree.)
-          if (mandatoryTimes_.get(0) < 0.0) {
-          	throw new ArithmeticException("negative times not allowed");
-          }
+    	// We seem to assume that the grid begins at 0.
+    	// Let's enforce the assumption for the time being
+    	// (even though I'm not sure that I agree.)
+    	if (mandatoryTimes_.get(0) < 0.0) {
+    		throw new ArithmeticException("negative times not allowed");
+    	}
           
-          List<Double> e = new DoubleArrayList(mandatoryTimes_.size());
+    	List<Double> e = new DoubleArrayList(mandatoryTimes_.size());
           
-          //TODO: Translation.
-//        mandatoryTimes_.resize(e - mandatoryTimes_.begin());
+    	//TODO: Translation.
+//      mandatoryTimes_.resize(e - mandatoryTimes_.begin());
           
-          // TODO: Check the translation.
-          double last = mandatoryTimes_.get(mandatoryTimes_.indexOf(back())); 
+    	// TODO: Check the translation.
+        double last = mandatoryTimes_.get(mandatoryTimes_.indexOf(back())); 
+        double dtMax;
           
-          // TODO: remove this assignment as soon as we have translated the commented code below.
-          double dtMax = 0.00;
-          
-          // The resulting timegrid have points at times listed in the input
-          // list. Between these points, there are inner-points which are
-          // regularly spaced.
-          if (steps == 0) {
-        	  List<Double> diff = new DoubleArrayList();
+        // The resulting timegrid have points at times listed in the input
+        // list. Between these points, there are inner-points which are
+        // regularly spaced.
+        if (steps == 0) {
+        	List<Double> diff = new DoubleArrayList();
         	  
-        	  // TODO: Understand what std::adjacent_difference and std::back_inserter(diff) are doing
-//       	  std::adjacent_difference(mandatoryTimes_.begin(),
-//                      mandatoryTimes_.end(),
-//                      std::back_inserter(diff));
-        	  
-//              if (diff.front()==0.0)
-//              diff.erase(diff.begin());
-//          dtMax = *(std::min_element(diff.begin(), diff.end()));
-//      } else {
+        	// TODO: Understand what std::adjacent_difference and std::back_inserter(diff) are doing
+//       	std::adjacent_difference(mandatoryTimes_.begin(), mandatoryTimes_.end(), std::back_inserter(diff));  	  
+//              if (diff.front()==0.0) diff.erase(diff.begin());
+//              dtMax = *(std::min_element(diff.begin(), diff.end()));
+//          } else {
 //          dtMax = last/steps;
 //      }
-        	  double periodBegin = 0.00;
-        	  times_.add(periodBegin);
+        	for (int i=0; i<mandatoryTimes_.size(); i++) {
+        		double curr = mandatoryTimes_.get(i);
+          		if (i == 0) {
+          			diff.add(curr);
+          		}
+          		else {
+          			double prev = mandatoryTimes_.get(i-1);
+          			diff.add(curr-prev);
+          		}
+        	}
         	  
-        	  for (int i=1; i<mandatoryTimes_.size(); i++) {
-              	double periodEnd = i;
-              	
-              	if (periodEnd != 0.0) {
-              	// the nearest integer
+        	if (diff.get(0) == 0.00) diff.remove(begin());
+        	dtMax = Collections.min(diff); // QuantLib: dtMax = *(std::min_element(diff.begin(), diff.end()));
+        }
+        else {
+        	dtMax = last / steps;
+        }
+        	  
+        double periodBegin = 0.00;
+        times_.add(periodBegin);
+        	  
+        for (int i=1; i<mandatoryTimes_.size(); i++) {
+        	double periodEnd = i;
+        	if (periodEnd != 0.0) {
+        		// the nearest integer
               	int nSteps = (int)((periodEnd - periodBegin)/dtMax+0.5);
               	
               	// at least one time step!
               	nSteps = (nSteps!=0 ? nSteps : 1);
               	
-                double dt = (periodEnd - periodBegin)/nSteps;
+              	double dt = (periodEnd - periodBegin)/nSteps;
                 
-                // TODO: Is this necessary in Java? See here for vector::reserve : http://www.cplusplus.com/reference/stl/vector/reserve.html
-                // times_.reserve(nSteps);
+              	// TODO: Is this necessary in Java? See here for vector::reserve : http://www.cplusplus.com/reference/stl/vector/reserve.html
+              	// times_.reserve(nSteps);
                 
-                for (int n=1; n<=nSteps; ++n)
-                    times_.add(periodBegin + n*dt);
-              	}
-              	periodBegin = periodEnd;
-              }
-        	  // TODO: Understand what adjacent_difference does.
-//	            std::adjacent_difference(times_.begin()+1,times_.end(),
-//              std::back_inserter(dt_));
-        	  
-          }
+              	for (int n=1; n<=nSteps; ++n)
+              		times_.add(periodBegin + n*dt);
+        	}
+        	periodBegin = periodEnd;
         }
+        // TODO: Understand what adjacent_difference does.
+//	    std::adjacent_difference(times_.begin()+1,times_.end(),
+//      std::back_inserter(dt_));
+        	  
+        for (int i=1; i<mandatoryTimes_.size(); i++) {
+        	double curr = times_.get(i);
+        	if (i == 0) {
+        		dt_.add(curr);
+          	}
+          	else {
+          		double prev = times_.get(i-1);
+          		dt_.add(curr-prev);
+          	}
+         }
+    } // end of constructor
+    
 
     
 	    public /*@NonNegative*/ int index(/*@Time*/ double t) /* @ReadOnly */ {
@@ -298,21 +329,13 @@ public class TimeGrid <T extends List<Double>> {
         	return times_.lastIndexOf(mandatoryTimes_); 
         }
 
-        public Iterator<Double> reverseIterator() /*@Readonly*/ { 
-        	// obtain forward iterator
-        	DoubleBidirectionalIterator it = ((DoubleArrayList)times_).listIterator();
-        	// position forward iterator on its tail
-        	it.skip(times_.size());
-        	// obtain an unmodifiable reverse iterator
-        	return new ReverseIterator<Double>(DoubleIterators.unmodifiable(it));
+        public DoubleForwardIterator forwardIterator() /*@Readonly*/ { 
+            return Iterators.forwardIterator( ((DoubleArrayList)times_ ).elements() );
         }
         
-        // XXX: (RICHARD::) This method dissapears because reverseIterator returns an Iterator which implicitly 
-        // XXX: has a begin and an end.
-        //
-        // private const_reverse_iterator rend() /*@Readonly*/ { 
-        // 	return times_.rend(); 
-        // }
+        public DoubleReverseIterator reverseIterator() /*@Readonly*/ { 
+            return Iterators.reverseIterator( ((DoubleArrayList)times_ ).elements() );
+        }
         
         public double front() /*@Readonly*/ { 
          	return times_.get(0);

@@ -47,7 +47,13 @@ import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
  */
 public class SingleVariate<RNG extends RandomNumberGenerator> implements Variate {
 
-    // FIXME: decide how to implement
+// FIXME: should not expose fields    
+  public RNG rng_traits;
+  public Path path_type;
+//  public PathPricer<Path> path_pricer_type;
+//  public typename RNG::rsg_type rsg_type;
+//  public PathGenerator<rsg_type> path_generator_type;
+//  enum { allowsErrorEstimate = RNG::allowsErrorEstimate };
 
 }
 

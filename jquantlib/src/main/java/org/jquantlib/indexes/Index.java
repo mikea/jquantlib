@@ -22,10 +22,9 @@
 
 package org.jquantlib.indexes;
 
-import java.util.ArrayList; // FIXME :: performance
-import java.util.Collection; //FIXME: performance
-import java.util.Iterator; //FIXME: performance
-import java.util.List; //FIXME: performance
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
+import java.util.List;
 
 import org.jquantlib.math.Closeness;
 import org.jquantlib.time.Calendar;
@@ -34,6 +33,8 @@ import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.stdlibc.Iterators;
+import org.jquantlib.util.stdlibc.ObjectForwardIterator;
 
 /**
  * @author Srinivas Hasti
@@ -82,13 +83,13 @@ public abstract class Index implements Observable {
 	 * fixing; no settlement days must be used.
 	 */
 	public void addFixing(Date fixingDate, double fixing, boolean forceOverwrite) {
-		List<Date> fixingDates = new ArrayList();
-		fixingDates.add(fixingDate);
+	    ObjectArrayList<Date> dates = new ObjectArrayList<Date>();
+		dates.add(fixingDate);
 
-		List<Double> fixings = new ArrayList<Double>();
+		ObjectArrayList<Double> fixings = new ObjectArrayList<Double>();
 		fixings.add(fixing);
 
-		addFixings(fixingDates, fixings, forceOverwrite);
+		addFixings(dates, fixings, forceOverwrite);
 	}
 
 	
@@ -109,8 +110,7 @@ public abstract class Index implements Observable {
 	 * the dates passed as arguments must be the actual calendar dates of the
 	 * fixings; no settlement days must be used.
 	 */
-	public void addFixings(Collection<Date> dates, Collection<Double> values,
-			boolean forceOverwrite) {
+	public void addFixings(List<Date> dates, List<Double> values, boolean forceOverwrite) {
 		String tag = getName();
 		TimeSeries<Double> h = IndexManager.getInstance().get(tag);
 		boolean missingFixing;
@@ -123,29 +123,30 @@ public abstract class Index implements Observable {
 		Double invalidValue = Double.NaN;
 		Double duplicatedValue = Double.NaN;
 
-		Iterator<Double> valuesIterator = values.iterator();
-		for (Date date : dates) {
-			Double value = valuesIterator.next();
-			validFixing = isValidFixingDate(date);
-			double currentValue = h.find(date);
-			missingFixing = forceOverwrite
-					|| Closeness.isClose(currentValue, nullValue);
-			if (validFixing) {
-				if (missingFixing)
-					h.add(date, value);
-				else if (Closeness.isClose(currentValue, value)) {
-					// Do nothing
-				} else {
-					noDuplicatedFixing = false;
-					duplicatedDate = date;
-					duplicatedValue = value;
-				}
-			} else {
-				noInvalidFixing = false;
-				invalidDate = date;
-				invalidValue = value;
-			}
+		for (int i=0; i<dates.size(); i++) {
+		    Date date = dates.get(i);
+		    Double value = values.get(i);
+            validFixing = isValidFixingDate(date);
+            double currentValue = h.find(date);
+            missingFixing = forceOverwrite
+                    || Closeness.isClose(currentValue, nullValue);
+            if (validFixing) {
+                if (missingFixing)
+                    h.add(date, value);
+                else if (Closeness.isClose(currentValue, value)) {
+                    // Do nothing
+                } else {
+                    noDuplicatedFixing = false;
+                    duplicatedDate = date;
+                    duplicatedValue = value;
+                }
+            } else {
+                noInvalidFixing = false;
+                invalidDate = date;
+                invalidValue = value;
+            }
 		}
+		
 		IndexManager.getInstance().put(tag, h);
 		if (!noInvalidFixing)
 			throw new IllegalStateException(

@@ -39,6 +39,10 @@
 
 package org.jquantlib.pricingengines;
 
+import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
+import org.jquantlib.math.statistics.Statistics;
+import org.jquantlib.methods.montecarlo.Variate;
+
 /**
  * 
  * Base class for Monte Carlo engines
@@ -50,8 +54,10 @@ package org.jquantlib.pricingengines;
  * 
  * @author Richard Gomes
  */
-public class MCSimulation {
+public class MCSimulation<MC extends Variate, RNG extends RandomNumberGenerator, S extends Statistics> {
 
+    
+    
 }
 
 
