@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
+ Copyright (C) 2008 Tim Swetonic
 
  This source code is release under the BSD License.
  
@@ -21,11 +22,31 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.processes.StochasticProcess1D;
+
 /**
  * @author Srinivas Hasti
+ * @author Tim Swetonic
  *
  */
 //concrete impl
 public class Trigeorgis extends EqualJumpsBinomialTree<Trigeorgis> {
+
+
+    public Trigeorgis(final StochasticProcess1D process,
+            /*Time*/ double end,
+            int steps,
+            /*Real*/ double d) {
+        
+        super(process, end, steps); 
+
+        dx_ = Math.sqrt(process.variance(0.0, x0_, dt_)+driftPerStep_*driftPerStep_);
+        pu_ = 0.5 + 0.5*driftPerStep_/dx_;
+        pd_ = 1.0 - pu_;
+        
+        if(pu_ < 0 || pu_ > 1)
+            throw new IllegalStateException("negative probability");
+        
+    }
 
 }
