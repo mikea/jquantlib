@@ -21,34 +21,39 @@
  */
 package org.jquantlib.methods.lattices;
 
+import java.math.BigInteger;
+import org.jquantlib.processes.StochasticProcess1D;
+
 /**
  * @author Srinivas Hasti
+ * @author Tim Swetonic
  *
  */
 public class EqualProbabilitiesBinomialTree<T extends BinomialTree> extends BinomialTree<T> {
 
-	@Override
-	public int descendant(int i, int index, int branch) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    protected double up_;
+    
+    public  EqualProbabilitiesBinomialTree(final StochasticProcess1D process,
+              /* @Time */double end,
+              /* @Size */int steps) {
+      super(process, end, steps); 
+    }
+      
 
 	@Override
-	public int probability(int i, int index, int branch) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double probability(int i, int index, int branch) {
+		return 0.5;
 	}
 
-	@Override
-	public int size(int i) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public double underlying(int i, int index) {
-		// TODO Auto-generated method stub
-		return 0;
+	    BigInteger j = BigInteger.valueOf((long)index)
+	        .multiply(new BigInteger("2"))
+	            .subtract(new BigInteger(String.valueOf(i)));
+	    
+        // exploiting the forward value tree centering
+        return this.x0_*Math.exp(i*this.driftPerStep_ + j.intValue()*this.up_);
 	}
 
 }

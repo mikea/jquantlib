@@ -21,10 +21,50 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.processes.StochasticProcess1D;
+
 /**
  * @author Srinivas Hasti
+ * @author Tim Swetonic
  * 
  */
 public abstract class BinomialTree<T extends Tree> extends Tree<T> {
+    // protected:
+    // Real x0_, driftPerStep_;
+    // Time dt_;
+
+    protected/* @Real */double x0_;
+    protected/* @Real */double driftPerStep_;
+    protected/* @Time */double dt_;
+
+    public static Branches branches = Branches.BINOMIAL;
+    
+    public BinomialTree() {
+
+    }
+
+    public <T> BinomialTree(final StochasticProcess1D process,
+    /* @Time */double end,
+    /* @Size */int steps) {
+
+        super(steps + 1);
+
+        x0_ = process.x0();
+        dt_ = end / steps;
+        driftPerStep_ = process.drift(0.0, x0_) * dt_;
+    }
+
+
+    public/* @Size */int size(/* @Size */int i) {
+        return i + 1;
+    }
+
+    public/* @Size */int descendant(/* @Size */int unused, /* @Size */
+            int index, /*
+                        * @Size
+                        */
+            int branch) {
+        return index + branch;
+    }
 
 }

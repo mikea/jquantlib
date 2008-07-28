@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
+ Copyright (C) 2008 Tim Swetonic
 
  This source code is release under the BSD License.
  
@@ -21,35 +22,31 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.processes.StochasticProcess1D;
+
 /**
  * @author Srinivas Hasti
+ * @author Tim Swetonic
  *
  */
 //concrete impl
 public class CoxRossRubinstein extends EqualJumpsBinomialTree<CoxRossRubinstein> {
 
-	@Override
-	public int descendant(int i, int index, int branch) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public CoxRossRubinstein(final StochasticProcess1D process,
+               /*Time*/ double end, 
+               /*Size*/ int steps, 
+               /*Real*/ double d) {
+        
+        super(process, end, steps); 
 
-	@Override
-	public int probability(int i, int index, int branch) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+        dx_ = process.stdDeviation(0.0, x0_, dt_);
+        pu_ = 0.5 + 0.5*driftPerStep_/dx_;;
+        pd_ = 1.0 - pu_;
 
-	@Override
-	public int size(int i) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double underlying(int i, int index) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+        if(pu_ > 1.0 || pu_ < 0.0)
+            throw new IllegalStateException("negative probability");
+//        QL_REQUIRE(pu_<=1.0, "negative probability");
+//        QL_REQUIRE(pu_>=0.0, "negative probability");
+    }
 
 }

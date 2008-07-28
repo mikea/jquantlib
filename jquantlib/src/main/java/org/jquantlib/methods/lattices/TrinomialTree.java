@@ -34,7 +34,7 @@ public class TrinomialTree extends Tree<TrinomialTree> {
 	}
 
 	@Override
-	public int probability(int i, int index, int branch) {
+	public double probability(int i, int index, int branch) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

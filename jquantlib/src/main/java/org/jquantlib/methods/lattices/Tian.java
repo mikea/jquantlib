@@ -26,7 +26,11 @@ package org.jquantlib.methods.lattices;
  *
  */
 public class Tian extends BinomialTree<Tian> {
-
+	
+	public Tian() {
+		super();
+	}
+	
 	@Override
 	public int descendant(int i, int index, int branch) {
 		// TODO Auto-generated method stub
@@ -34,7 +38,7 @@ public class Tian extends BinomialTree<Tian> {
 	}
 
 	@Override
-	public int probability(int i, int index, int branch) {
+	public double probability(int i, int index, int branch) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

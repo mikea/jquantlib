@@ -26,8 +26,23 @@ import org.jquantlib.util.CuriouslyRecurringGeneric;
 
 /**
  * @author Srinivas Hasti
+ * @author Tim Swetonic
  * 
  */
 public abstract class Tree<T extends Tree> implements TreeFactor {
+	private /*@Size*/ int columns_;
+	
+	public <T> Tree() {
+		
+	}
+	
+	public Tree(/*@Size*/ int columns) {
+		columns_ = columns;
+	}
+    
+	public final /*@Size*/ int columns() { 
+		return columns_; 
+	}
+      
 
 }

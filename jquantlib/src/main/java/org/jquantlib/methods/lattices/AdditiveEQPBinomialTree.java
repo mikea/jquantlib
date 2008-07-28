@@ -21,35 +21,27 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.processes.StochasticProcess1D;
+
 /**
  * @author Srinivas Hasti
+ * @author Tim Swetonic
  *
  */
 //concrete impl
 public class AdditiveEQPBinomialTree extends EqualProbabilitiesBinomialTree<AdditiveEQPBinomialTree> {
 
-	@Override
-	public int descendant(int i, int index, int branch) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	@Override
-	public int probability(int i, int index, int branch) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int size(int i) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double underlying(int i, int index) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public AdditiveEQPBinomialTree(final StochasticProcess1D process,
+              /*Time*/ double end, 
+              int steps, 
+              double d) {
+        
+        super(process, end, steps);
+        up_ = - 0.5 * driftPerStep_ + 0.5 *
+        Math.sqrt(4.0*process.variance(0.0, x0_, dt_)-
+            3.0*driftPerStep_*driftPerStep_);
+        
+    }
 
 }

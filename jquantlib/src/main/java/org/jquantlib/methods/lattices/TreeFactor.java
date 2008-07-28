@@ -32,7 +32,7 @@ public interface TreeFactor {
 
     int descendant(int i, int index, int branch);
 
-    int probability(int i, int index, int branch);
+    /* Real */ double probability(int i, int index, int branch);
 
     public static enum Branches {
         BINOMIAL(2), TRINOMIAL(3);

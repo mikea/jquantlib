@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
+ Copyright (C) 2008 Tim Swetonic
 
  This source code is release under the BSD License.
  
@@ -21,10 +22,22 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.processes.StochasticProcess1D;
+
 /**
  * @author Srinivas Hasti
+ * @author Tim Swetonic
  *
  */
 public class JarrowRudd extends EqualProbabilitiesBinomialTree<JarrowRudd> {
+
+    public JarrowRudd(final StochasticProcess1D process,
+            /*Time*/ double end, 
+            /*Size*/ int steps, 
+            /*Real*/ double d) {
+        super(process, end, steps); 
+        // drift removed
+        up_ = process.stdDeviation(0.0, x0_, dt_);
+    }
 
 }
