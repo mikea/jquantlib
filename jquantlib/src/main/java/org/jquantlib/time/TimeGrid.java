@@ -31,7 +31,7 @@ import java.util.List;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.util.stdlibc.DoubleForwardIterator;
 import org.jquantlib.util.stdlibc.DoubleReverseIterator;
-import org.jquantlib.util.stdlibc.Iterators;
+import org.jquantlib.util.stdlibc.Std;
 
 import cern.colt.Sorting;
 
@@ -330,11 +330,11 @@ public class TimeGrid <T extends List<Double>> {
         }
 
         public DoubleForwardIterator forwardIterator() /*@Readonly*/ { 
-            return Iterators.forwardIterator( ((DoubleArrayList)times_ ).elements() );
+            return Std.forwardIterator( ((DoubleArrayList)times_ ).elements() );
         }
         
         public DoubleReverseIterator reverseIterator() /*@Readonly*/ { 
-            return Iterators.reverseIterator( ((DoubleArrayList)times_ ).elements() );
+            return Std.reverseIterator( ((DoubleArrayList)times_ ).elements() );
         }
         
         public double front() /*@Readonly*/ { 

@@ -2,18 +2,10 @@
 package org.jquantlib.time;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import it.unimi.dsi.fastutil.doubles.DoubleBidirectionalIterator;
-import it.unimi.dsi.fastutil.doubles.DoubleIterators;
 
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import org.jquantlib.math.Closeness;
-import org.jquantlib.util.ReverseIterator;
-import org.jquantlib.util.Std;
-
-import cern.colt.Sorting;
+import org.jquantlib.util.stdlibc.Std;
 
 /**
  * This class is just for testing the adjcent_difference implementation in the class TimeGrid and 
@@ -21,6 +13,7 @@ import cern.colt.Sorting;
  * @author Dominik Holenstein
  *
  */
+// FIXME: move to test suite
 public class AdjDiff {
 	
 	private static List<Double> times_ = new DoubleArrayList();

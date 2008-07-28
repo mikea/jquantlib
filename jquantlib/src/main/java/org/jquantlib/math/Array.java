@@ -41,9 +41,9 @@ package org.jquantlib.math;
 
 import org.jquantlib.util.stdlibc.DoubleForwardIterator;
 import org.jquantlib.util.stdlibc.DoubleReverseIterator;
-import org.jquantlib.util.stdlibc.Iterators;
 import org.jquantlib.util.stdlibc.MutableDoubleForwardIterator;
 import org.jquantlib.util.stdlibc.MutableDoubleReverseIterator;
+import org.jquantlib.util.stdlibc.Std;
 
 /**
  * 1-D array used in linear algebra.
@@ -489,19 +489,19 @@ public class Array {
     
     
     public DoubleForwardIterator forwardIterator() {
-        return Iterators.forwardIterator(data);
+        return Std.forwardIterator(data);
     }
 
     public MutableDoubleForwardIterator mutableForwardIterator() {
-        return Iterators.mutableForwardIterator(data);
+        return Std.mutableForwardIterator(data);
     }
 
     public DoubleReverseIterator reverseIterator() {
-        return Iterators.reverseIterator(data);
+        return Std.reverseIterator(data);
     }
 
     public MutableDoubleReverseIterator mutableReverseIterator() {
-        return Iterators.mutableReverseIterator(data);
+        return Std.mutableReverseIterator(data);
     }
 
 

@@ -33,8 +33,6 @@ import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 import org.jquantlib.util.TimeSeries;
-import org.jquantlib.util.stdlibc.Iterators;
-import org.jquantlib.util.stdlibc.ObjectForwardIterator;
 
 /**
  * @author Srinivas Hasti

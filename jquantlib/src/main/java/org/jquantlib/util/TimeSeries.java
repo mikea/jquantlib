@@ -26,8 +26,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.List;
 
-import org.jquantlib.util.stdlibc.Iterators;
-import org.jquantlib.util.stdlibc.ObjectForwardIterator;
 
 /**
  * @author Srinivas Hasti
