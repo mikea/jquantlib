@@ -40,6 +40,9 @@
 
 package org.jquantlib.methods.montecarlo;
 
+import org.jquantlib.math.UnaryFunction;
+
+
 /**
  * Base class for path pricers
  * <p>
@@ -49,8 +52,9 @@ package org.jquantlib.methods.montecarlo;
  * 
  * @author Richard Gomes
  */
-public abstract class PathPricer<PathType, ValueType extends Double> { // FIXME: implements UnaryFunctionPathType
+//FIXME: study how to solve warning on usage of type Double
+public abstract class PathPricer<PathType> implements UnaryFunction<PathType, Double> {
 
-    public abstract ValueType evaluate(final PathType path);
+    public abstract Double evaluate(final PathType path);
 
 }

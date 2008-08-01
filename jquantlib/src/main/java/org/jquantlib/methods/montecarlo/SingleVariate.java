@@ -38,20 +38,25 @@
 
 package org.jquantlib.methods.montecarlo;
 
+import org.jquantlib.math.randomnumbers.trial.InverseCumulative;
+import org.jquantlib.math.randomnumbers.trial.InverseCumulativeRsg;
 import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
+import org.jquantlib.math.randomnumbers.trial.RandomSequenceGenerator;
 
 /**
  * Default Monte Carlo traits for single-variate models
  * 
  * @author Richard Gomes
  */
-public class SingleVariate<RNG extends RandomNumberGenerator> implements Variate {
-
-// FIXME: should not expose fields    
+public class SingleVariate<RNG extends RandomNumberGenerator, IC extends InverseCumulative> implements Variate {
+    
+// FIXME: should not expose fields
+// FIXME: adhere to standards
   public RNG rng_traits;
   public Path path_type;
-//  public PathPricer<Path> path_pricer_type;
-//  public typename RNG::rsg_type rsg_type;
+  public PathPricer<Path> path_pricer_type;
+  public InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC> rsg_type;
+//TODO: code review
 //  public PathGenerator<rsg_type> path_generator_type;
 //  enum { allowsErrorEstimate = RNG::allowsErrorEstimate };
 

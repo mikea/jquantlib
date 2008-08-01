@@ -118,9 +118,9 @@ public class TridiagonalOperator implements Operator {
     }
     
     public TridiagonalOperator subtract(final TridiagonalOperator D) {
-        Array low = this.lowerDiagonal.quickOperatorSubtractCopy(D.lowerDiagonal()); 
-        Array mid = this.diagonal.quickOperatorSubtractCopy(D.diagonal());
-        Array high = this.upperDiagonal.quickOperatorSubtractCopy(D.upperDiagonal()); 
+        Array low = this.lowerDiagonal.operatorSubtractCopy(D.lowerDiagonal()); 
+        Array mid = this.diagonal.operatorSubtractCopy(D.diagonal());
+        Array high = this.upperDiagonal.operatorSubtractCopy(D.upperDiagonal()); 
         
         return new TridiagonalOperator(low,mid,high);
 
@@ -129,18 +129,18 @@ public class TridiagonalOperator implements Operator {
     // binary operators
     public TridiagonalOperator add(final TridiagonalOperator D1, final TridiagonalOperator D2) {
 
-        Array low = D1.lowerDiagonal.quickOperatorAddCopy(D2.lowerDiagonal());
-        Array mid = D1.diagonal.quickOperatorAddCopy(D2.diagonal());
-        Array high = D1.upperDiagonal.quickOperatorAddCopy(D2.upperDiagonal());
+        Array low = D1.lowerDiagonal.operatorAddCopy(D2.lowerDiagonal());
+        Array mid = D1.diagonal.operatorAddCopy(D2.diagonal());
+        Array high = D1.upperDiagonal.operatorAddCopy(D2.upperDiagonal());
         
         return new TridiagonalOperator(low,mid,high);
     }
     
     public TridiagonalOperator subtract(final  TridiagonalOperator D1, final TridiagonalOperator D2) {
     	
-    	Array low = D1.lowerDiagonal.quickOperatorSubtractCopy(D2.lowerDiagonal);
-    	Array mid = D1.diagonal.quickOperatorSubtractCopy(D2.diagonal);
-    	Array high = D1.upperDiagonal.quickOperatorSubtractCopy(D2.upperDiagonal);
+    	Array low = D1.lowerDiagonal.operatorSubtractCopy(D2.lowerDiagonal);
+    	Array mid = D1.diagonal.operatorSubtractCopy(D2.diagonal);
+    	Array high = D1.upperDiagonal.operatorSubtractCopy(D2.upperDiagonal);
             
         return new TridiagonalOperator(low,mid,high);
     }

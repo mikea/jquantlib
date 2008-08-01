@@ -43,8 +43,7 @@ package org.jquantlib.methods.montecarlo;
 
 import java.util.List;
 
-import org.jquantlib.math.randomnumbers.trial.SequenceGenerator;
-import org.jquantlib.processes.StochasticProcess;
+import org.jquantlib.math.randomnumbers.trial.RandomSequenceGenerator;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 
@@ -53,106 +52,106 @@ import org.jquantlib.time.TimeGrid;
  * <p>
  * Generates random paths with drift(S,t) and variance(S,t) using a gaussian sequence generator
  * 
- *  @category mcarlo
+ * @category mcarlo
  *
  * @author Richard Gomes
  */
 //TEST the generated paths are checked against cached results 
-public class PathGenerator<GSG extends SequenceGenerator> { // should be GaussianSequenceGenerator ?
+public class PathGenerator<GSG extends RandomSequenceGenerator> { // should be GaussianSequenceGenerator ?
 
-//    private boolean brownianBridge_;
-//    private GSG generator_;
-//    private /*@NonNegative*/ int dimension_;
-//    private TimeGrid timeGrid_;
-//    private StochasticProcess1D process_;
-//    private Sample<Path> next_;
-//    private List</* @Real */ Double> temp_;
-//    private BrownianBridge bb_;
-//
-//
-//    
-//    
-//    public PathGenerator(
-//                          final StochasticProcess process,
-//                          final /*@Time*/ double  length,
-//                          final /*@NonNegative*/ int timeSteps,
-//                          final GSG generator,
-//                          final boolean brownianBridge) {
-//        this.brownianBridge_ = brownianBridge;
-//        this.generator_ = generator;
-//        this.dimension_ = generator.dimension();
-//        this.timeGrid_ = new TimeGrid(length, timeSteps);
-//        this.process_ = process;
+    private boolean brownianBridge_;
+    private GSG generator_;
+    private /*@NonNegative*/ int dimension_;
+    private TimeGrid timeGrid_;
+    private StochasticProcess1D process_;
+    private Sample<Path> next_;
+    private List</* @Real */ Double> temp_;
+    private BrownianBridge bb_;
+
+
+    
+    
+    public PathGenerator(
+                          final StochasticProcess1D process, // QuantLib/C++ :: StochasticProcess
+                          final /*@Time*/ double  length,
+                          final /*@NonNegative*/ int timeSteps,
+                          final GSG generator,
+                          final boolean brownianBridge) {
+        this.brownianBridge_ = brownianBridge;
+        this.generator_ = generator;
+        this.dimension_ = generator.dimension();
+        this.timeGrid_ = new TimeGrid(length, timeSteps);
+        this.process_ = process;
+// TODO: code review
 //        this.next_ = new Sample(new Path(timeGrid), 1.0);
 //        this.temp_ = dimension;
-//        this.bb_ = new BrownianBridge(this.timeGrid_);
-//        
-//        if (dimension_!= timeSteps)
-//            throw new IllegalArgumentException(
-//                    "sequence generator dimensionality (" + dimension_ + ") != timeSteps (" + timeSteps + ")");
-//    }
-//
-//    template <class GSG>
-//    PathGenerator<GSG>::PathGenerator(
-//                          const boost::shared_ptr<StochasticProcess>& process,
-//                          const TimeGrid& timeGrid,
-//                          const GSG& generator,
-//                          bool brownianBridge)
-//    : brownianBridge_(brownianBridge), generator_(generator),
-//      dimension_(generator_.dimension()), timeGrid_(timeGrid),
-//      process_(boost::dynamic_pointer_cast<StochasticProcess1D>(process)),
-//      next_(Path(timeGrid_),1.0), temp_(dimension_), bb_(timeGrid_) {
-//        QL_REQUIRE(dimension_==timeGrid_.size()-1,
-//                   "sequence generator dimensionality (" << dimension_
-//                   << ") != timeSteps (" << timeGrid_.size()-1 << ")");
-//    }
-//
-//    template <class GSG>
-//    private const typename PathGenerator<GSG>::sample_type&
-//    PathGenerator<GSG>::next() const {
-//        return next(false);
-//    }
-//
-//    template <class GSG>
-//    const typename PathGenerator<GSG>::sample_type&
-//    PathGenerator<GSG>::antithetic() const {
-//        return next(true);
-//    }
-//
-//    template <class GSG>
-//    const typename PathGenerator<GSG>::sample_type&
-//    PathGenerator<GSG>::next(bool antithetic) const {
-//
-//        typedef typename GSG::sample_type sequence_type;
-//        const sequence_type& sequence_ =
-//            antithetic ? generator_.lastSequence()
-//                       : generator_.nextSequence();
-//
+        this.bb_ = new BrownianBridge(this.timeGrid_);
+        
+        if (dimension_!= timeSteps)
+            throw new IllegalArgumentException(
+                    "sequence generator dimensionality (" + dimension_ + ") != timeSteps (" + timeSteps + ")");
+    }
+
+    public PathGenerator(
+                        final StochasticProcess1D process, // QuantLib/C++ :: StochasticProcess
+                        final TimeGrid timeGrid,
+                        final GSG generator,
+                        final boolean brownianBridge) {
+        this.brownianBridge_ = brownianBridge;
+        this.generator_ = generator;
+        this.dimension_ = generator.dimension();
+        this.timeGrid_ = timeGrid;
+        this.process_ = process;
+// TODO: code review
+//        this.next_ = new Sample(new Path(timeGrid), 1.0);
+//        this.temp_ = dimension;
+        this.bb_ = new BrownianBridge(this.timeGrid_);
+
+        if (dimension_ != timeGrid_.size()-1)
+            throw new IllegalArgumentException(
+                    "sequence generator dimensionality (" + dimension_ + ") != timeSteps (" + (timeGrid_.size()-1) + ")");
+    }
+
+    private final Sample<Path> // typename PathGenerator<GSG>::sample_type&
+    next() /* @ReadOnly */ {
+        return next(false);
+    }
+
+    public final Sample<Path> // typename PathGenerator<GSG>::sample_type&
+    antithetic() /* @ReadOnly */ {
+        return next(true);
+    }
+
+    public final Sample<Path> // typename PathGenerator<GSG>::sample_type&
+    next(final boolean antithetic) /* @ReadOnly */ {
+
+        // typedef typename GSG::sample_type sequence_type; = Sample<Path>
+        final Sample<Path> sequence_ =
+            antithetic ? generator_.lastSequence()
+                       : generator_.nextSequence();
+
+// TODO : code review            
 //        if (brownianBridge_) {
-//            bb_.transform(sequence_.value.begin(),
-//                          sequence_.value.end(),
-//                          temp_.begin());
+//            double tmp[] = bb_.transform(sequence_.value);
+//            temp_ = new DoubleArrayList(tmp, 0, this.dimension_);
 //        } else {
-//            std::copy(sequence_.value.begin(),
-//                      sequence_.value.end(),
-//                      temp_.begin());
+//            DoubleArrays.copy(sequence_.value, 0, this.dimension_);
 //        }
 //
 //        next_.weight = sequence_.weight;
-//
-//        Path& path = next_.value;
-//        path.front() = process_->x0();
-//
-//        for (Size i=1; i<path.length(); i++) {
-//            Time t = timeGrid_[i-1];
-//            Time dt = timeGrid_.dt(i-1);
-//            path[i] = process_->evolve(t, path[i-1], dt,
-//                                       antithetic ? -temp_[i-1] :
-//                                                     temp_[i-1]);
-//        }
-//
-//        return next_;
-//    }
+
+        Path path = next_.value;
+        path.frontReference().setValue(process_.x0());
+
+        for (int i=1; i<path.length(); i++) {
+            /*@Time*/ double  t = timeGrid_.get(i-1);
+            /*@Time*/ double  dt = timeGrid_.dt(i-1);
+            double d = process_.evolve(t, path.get(i-1), dt, antithetic ? -temp_.get(i-1) : temp_.get(i-1));
+            path.getReference(i).setValue(d);
+        }
+
+        return next_;
+    }
 
 
 

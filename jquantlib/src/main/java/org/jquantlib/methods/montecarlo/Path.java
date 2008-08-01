@@ -44,6 +44,7 @@ import java.util.List;
 import org.jquantlib.math.Array;
 import org.jquantlib.time.TimeGrid;
 import org.jquantlib.util.stdlibc.DoubleForwardIterator;
+import org.jquantlib.util.stdlibc.DoubleReference;
 import org.jquantlib.util.stdlibc.DoubleReverseIterator;
 
 /**
@@ -77,55 +78,14 @@ public class Path {
             throw new IllegalArgumentException("different number of times and asset values"); // FIXME: message
     }
 
-    // public /* @Real */ Double back() {
-    // return values_.get(values_.size()-1);
-    // }
-
-
     public boolean empty() /* @ReadOnly */{
         return timeGrid_.empty();
     }
 
     public/* @NonNegative */int length() /* @ReadOnly */{
         return timeGrid_.size();
-    }    // public /* @Real */ Double back() {
-    // return values_.get(values_.size()-1);
-    // }
-
-
-
-    public/* @Real */double get(/* @NonNegative */int i) /* @ReadOnly */{
-        return values_.get(i);
-    }
-
-    // public /* @Real */ Double get(/*@NonNegative*/ int i) {
-    // return values_[i];
-    // }
-
-    public/* @Real */double at(/* @NonNegative */int i) /* @ReadOnly */{
-        return values_.at(i);
-    }
-
-    // public /* @Real */ Double (/*@NonNegative*/ int i) {
-    // return values_.at(i);
-    // }
-
-    public/* @Real */double value(/* @NonNegative */int i) /* @ReadOnly */{
-        return values_.get(i);
-    }
-
-    // public /* @Real */ Double value(/*@NonNegative*/ int i) {
-    // return values_.get(i);
-    // }
-
-    public/* @Real */double front() /* @ReadOnly */{
-        return values_.get(0);
-    }
-
-    public/* @Real */double back() /* @ReadOnly */{
-        return values_.get(values_.size() - 1);
-    }
-
+    }    
+    
     public/* @Time */double time(/* @NonNegative */int i) /* @ReadOnly */{
         return timeGrid_.get(i);
     }
@@ -140,6 +100,57 @@ public class Path {
 
     public DoubleReverseIterator reverseIterator() /* @ReadOnly */{
         return values_.reverseIterator();
+    }
+
+    
+    //
+    // read-only versions of get, at, value, front and back
+    //
+    
+    public/* @Real */double get(/* @NonNegative */int i) /* @ReadOnly */{
+        return values_.get(i);
+    }
+
+    public/* @Real */double at(/* @NonNegative */int i) /* @ReadOnly */{
+        return values_.at(i);
+    }
+
+    public/* @Real */double value(/* @NonNegative */int i) /* @ReadOnly */{
+        return values_.get(i);
+    }
+
+    public/* @Real */double front() /* @ReadOnly */{
+        return values_.get(0);
+    }
+
+    public/* @Real */double back() /* @ReadOnly */{
+        return values_.get(values_.size() - 1);
+    }
+
+
+    
+    //
+    // read-write versions of get, at, value, front and back
+    //
+    
+    public DoubleReference getReference(/*@NonNegative*/ int i) {
+        return values_.getReference(i);
+    }
+
+    public DoubleReference atReference(/*@NonNegative*/ int i) {
+        return values_.atReference(i);
+    }
+
+    public DoubleReference valueReference(/*@NonNegative*/ int i) {
+        return values_.getReference(i);
+    }
+
+    public DoubleReference frontReference() {
+        return values_.frontReference();
+    }
+
+    public DoubleReference backReference() {
+        return values_.backReference();
     }
 
 }

@@ -203,22 +203,22 @@ public class BrownianBridge {
     /**
      * Brownian-bridge constructor
      */
-    public double[] transform(final List<Double> list) /* @ReadOnly */{
-        if (list == null || list.size() == 0)
+    public double[] transform(final List<Double> inputList) /* @ReadOnly */{
+        if (inputList == null || inputList.size() == 0)
             throw new IllegalArgumentException("invalid sequence");
-        if (list.size() != size_)
+        if (inputList.size() != size_)
             throw new IllegalArgumentException("incompatible sequence size");
         // We use output to store the path...
         double[] output = new double[size_];
-        output[size_ - 1] = stdDev_[0] * list.get(0);
+        output[size_ - 1] = stdDev_[0] * inputList.get(0);
         for (int i = 1; i < size_; ++i) {
             int j = leftIndex_[i];
             int k = rightIndex_[i];
             int l = bridgeIndex_[i];
             if (j != 0) {
-                output[l] = leftWeight_[i] * output[j - 1] + rightWeight_[i] * output[k] + stdDev_[i] * list.get(i);
+                output[l] = leftWeight_[i] * output[j - 1] + rightWeight_[i] * output[k] + stdDev_[i] * inputList.get(i);
             } else {
-                output[l] = rightWeight_[i] * output[k] + stdDev_[i] * list.get(i);
+                output[l] = rightWeight_[i] * output[k] + stdDev_[i] * inputList.get(i);
             }
         }
         // ...after which, we calculate the variations and

@@ -619,9 +619,10 @@
               <tag>TODO</tag>
               <tag>FIXME</tag>
               <tag>XXX</tag>
-                  <tag>TEST</tag>
-                  <tag>PENDING</tag>
-                  <tag>@Override</tag>
+              <tag>TEST</tag>
+              <tag>PENDING</tag>
+              <tag>PERFORMANCE</tag>
+              <tag>@Override</tag>
               <tag>@Deprecated</tag>
               <tag>@SupressWarnings</tag>
               <tag>@note</tag>
