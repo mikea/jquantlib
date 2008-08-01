@@ -88,8 +88,12 @@ public class Array {
      */
     public Array(int s, double value, double increment) {
         this(s);
-        for (int i = 0; i < size; ++i) {
-            data[i] = i * increment;
+		
+		if(size>0){
+			data[0]=value;
+		}
+        for (int i = 1; i < size; ++i) {
+            data[i] = data[i-1] + increment;
         }
     }
 
@@ -151,6 +155,7 @@ public class Array {
     }
 
     public boolean operatorEquals(final Array paramArray) {
+		
         if (this.data == null || paramArray == null || paramArray.data == null) {
             return false;
         } else if (data.length != paramArray.data.length) {
