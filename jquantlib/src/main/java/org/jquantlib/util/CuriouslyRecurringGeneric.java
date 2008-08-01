@@ -25,7 +25,7 @@ package org.jquantlib.util;
  * @author Srinivas Hasti
  * 
  */
-public abstract class CuriouslyRecurringGeneric<T extends CuriouslyRecurringGeneric> {
+public abstract class CuriouslyRecurringGeneric<T extends CuriouslyRecurringGeneric<T>> {
 
     public T impl() {
         return (T) this;
