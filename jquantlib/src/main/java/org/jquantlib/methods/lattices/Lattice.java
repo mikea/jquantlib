@@ -21,11 +21,20 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.time.TimeGrid;
+
 /**
  * @author Srinivas Hasti
  *
  */
 //ql/numericalmethod.hpp
 public class Lattice {
+	 private TimeGrid t;
 
+	public Lattice(TimeGrid t) {
+		super();
+		this.t = t;
+	}
+	  
+	 
 }
