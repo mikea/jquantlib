@@ -55,22 +55,11 @@ public class Matrix {
 	       columns = 0;
 	       rows = 0;
        }
-       public Matrix(int rows, int columns){
+       public Matrix(int pRows, int pColumns){
+	       columns=pColumns;
+	       rows= pRows;
 		data = new double[columns][rows];
 	}
-       public double get(int i, int j){
-	       //  Error condition should be set...
-	       //  TODO  it may be appropriate to throw an exception.
-	       //  return Double.NaN;
-	       return data[i][j]; 
-       }
-
-       public void set(int i, int j, double value){
-	       //  Error condition should be set...
-	       //  TODO  it may be appropriate to throw an exception.
-	       //  return Double.NaN;
-	       data[i][j] = value; 
-       }
         public Matrix(int pRows, int pColumns, double value){
 
 		columns = pColumns;
@@ -87,16 +76,29 @@ public class Matrix {
 			}
 		}
 	}
+
         public Matrix(final Matrix m){
 		columns = m.columns;
 		rows = m.rows;
 		data = new double[columns][rows];
 		for (int i = 0; i < data.length; i++) {
 			System.arraycopy(m.data[i], 0, data[i], 0, rows);
-			double[] ds = data[i];
-			
 		}
 	}
+
+       public double get(int i, int j){
+	       //  Error condition should be set...
+	       //  TODO  it may be appropriate to throw an exception.
+	       //  return Double.NaN;
+	       return data[i][j]; 
+       }
+
+       public void set(int i, int j, double value){
+	       //  Error condition should be set...
+	       //  TODO  it may be appropriate to throw an exception.
+	       //  return Double.NaN;
+	       data[i][j] = value; 
+       }
 
         public Matrix operatorEquals(final Matrix right){
 
@@ -199,7 +201,115 @@ public class Matrix {
 			return ;
 		}
 	}
+      public Matrix operatorPlus(final Matrix left, final Matrix right) {
+	      if(left.columns!=right.columns || left.rows != right.rows){
+		      
+		      //  Errors can be done without throwing exceptions.
+		      //  But for now we will throw an exception.
+		      throw new RuntimeException("right and left matrix must be the same size.");
+	      }
 
+	      //  PARALLEL TODO.
+	      Matrix result = new Matrix(left);
+	      result.operatorPlusEqual(right);
+	      return result;
+      }
+
+      public Matrix operatorMinus(final Matrix left, final Matrix right) {
+	      if(left.columns!=right.columns || left.rows != right.rows){
+		      
+		      //  Errors can be done without throwing exceptions.
+		      //  But for now we will throw an exception.
+		      throw new RuntimeException("right and left matrix must be the same size.");
+	      }
+
+	      //  PARALLEL TODO.
+	      Matrix result = new Matrix(left);
+	      result.operatorMinusEqual(right);
+	      return result;
+      }
+      public Matrix operatorMultiply(double scale, final Matrix right){
+	      Matrix result = new Matrix(right);
+	      result.operatorMultiplyEqual(scale);
+	      return result;
+      }
+      public Matrix operatorMultiply(final Matrix left,double scale){
+	      Matrix result = new Matrix(left);
+	      result.operatorMultiplyEqual(scale);
+	      return result;
+      }
+      public Matrix operatorDivide(final Matrix numerator,double denominator){
+	      Matrix result = new Matrix(numerator);
+	      result.operatorDivideEqual(denominator);
+	      return result;
+      }
+      
+//    // vectorial products
+      public Array operatorMultiply(final Array left, final Matrix right){
+	     if(left.size()!=right.rows){
+		throw new RuntimeException("array size must equal matrix row count for multiplication");
+	     }
+	     Array result = new Array(right.columns);
+	    
+	     //  PARALLLEL CANDIDATE
+	     for (int i = 0; i < right.columns; i++) {
+	          result.set(i,Array.dotProduct(left.getData(), right.data[i]));
+	     }
+	     return result;
+      }
+      public Array operatorMultiply(final Matrix left, final Array right){
+	      //  TODO.  I will have to confirm this works latter...
+	      //  I think that MA is equal to AM(transposed)
+
+	      //  This is only for QUICK TIME TO MARKET.
+	      //  THERE ARE MUCH FASTER WAYS TO DO THIS.
+	      //  AND LESS MEMORY INTENSIVE.
+	      Matrix newLeft = transpose(left);
+	      return operatorMultiply(right,newLeft);
+      }
+
+      public Matrix transpose(final Matrix matrix){
+	      Matrix transposed = new Matrix(matrix.columns, matrix.rows);
+	      for (int i = 0; i < matrix.data.length; i++) {
+		      double[] ds = data[i];
+		      for (int j = 0; j < ds.length; j++) {
+			      transposed.data[j][i] = ds[j];
+		      }
+	      }
+	      return transposed;
+      }
+      public Matrix operatorMultiply(final Matrix left, final Matrix right){
+	      if(right.rows!=left.columns){
+		      throw new RuntimeException("Can't Multiply unless left.columns = right.rows");
+	      }
+	      Matrix result = new Matrix(right.columns,left.rows);
+	      for(int i =0;i<left.rows;++i){
+		      double[] dtemp = new double[left.columns];
+		      for(int k = 0;k<left.columns;++k){
+			      dtemp[k]=left.data[k][i];
+		      }
+		      for(int j=0;j<right.rows;++j){
+			      result.data[i][j]=Array.dotProduct(dtemp, right.data[j]);
+		      }
+	      }
+	      return result;
+      }
+
+      public Matrix outerProduct(final  Array v1, final  Array v2){
+	      if(v1.size()!= v2.size()){
+		      throw new RuntimeException("Arrays must be the same size to do a cross product");
+	      }
+	      Matrix result = new Matrix(v1.size(),v2.size());
+	      for (int i = 0; i < v1.getData().length; i++) {
+		      for(int j=0;j<v2.getData().length;j++){
+			      result.data[i][j]=v1.getData()[i]*v2.getData()[j];
+		      }
+		      
+	      }
+	      return result;
+      }
+//    /*! \relates Matrix */
+//    const Disposable<Matrix> operator*(const Matrix&, const Matrix&);
 }
 //    class Matrix {
  //     public:

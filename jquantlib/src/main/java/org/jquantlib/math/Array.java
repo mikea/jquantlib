@@ -71,6 +71,7 @@ public class Array {
     // public constructors
     //
 
+
     public Array(int s) {
         this.data = new double[s];
         this.size = s;
@@ -83,7 +84,12 @@ public class Array {
         }
     }
 
+    //  Get Access to the underlying Data,   (This package only)
+    double[] getData(){
+	    return data;
+    }
     /**
+     * 
      * Creates the array and fills it according to \f$ a_{0} = value, a_{i}=a_{i-1}+increment \f$
      */
     public Array(int s, double value, double increment) {
