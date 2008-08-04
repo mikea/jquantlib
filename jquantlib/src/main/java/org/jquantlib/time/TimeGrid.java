@@ -127,16 +127,19 @@ public class TimeGrid <T extends List<Double>> {
     	// TODO: (RICHARD::) It's necessary to understand what std::adjacent_difference does !! :(
     	// :::::::::::::::  http://www.sgi.com/tech/stl/adjacent_difference.html :::::::::::::::::::
         // std::adjacent_difference(times_.begin()+1,times_.end(), std::back_inserter(dt_));
-    	for (int i=1; i<times_.size(); i++) {
-    		double curr = times_.get(i);
-    		if (i == 0) {
-    			dt_.add(curr);
-    		}
-    		else {
-    			prev = times_.get(i-1);
-    			dt_.add(curr-prev);
-    		}
-    	}
+    	
+    	dt_ = Std.adjacent_difference(times_, times_.indexOf(begin())+1, dt_);
+        // The line above replaces the code commented out below:
+//    	for (int i=1; i<times_.size(); i++) {
+//    		double curr = times_.get(i);
+//    		if (i == 0) {
+//   			dt_.add(curr);
+//    		}
+//    		else {
+//    			prev = times_.get(i-1);
+//    			dt_.add(curr-prev);
+//    		}
+//    	}
 
     } // end of constructor
 
@@ -176,23 +179,26 @@ public class TimeGrid <T extends List<Double>> {
         if (steps == 0) {
         	List<Double> diff = new DoubleArrayList();
         	  
-        	// TODO: Understand what std::adjacent_difference and std::back_inserter(diff) are doing
+     
 //       	std::adjacent_difference(mandatoryTimes_.begin(), mandatoryTimes_.end(), std::back_inserter(diff));  	  
 //              if (diff.front()==0.0) diff.erase(diff.begin());
 //              dtMax = *(std::min_element(diff.begin(), diff.end()));
 //          } else {
 //          dtMax = last/steps;
 //      }
-        	for (int i=0; i<mandatoryTimes_.size(); i++) {
-        		double curr = mandatoryTimes_.get(i);
-          		if (i == 0) {
-          			diff.add(curr);
-          		}
-          		else {
-          			double prev = mandatoryTimes_.get(i-1);
-          			diff.add(curr-prev);
-          		}
-        	}
+        	
+        	diff = Std.adjacent_difference(mandatoryTimes_, mandatoryTimes_.indexOf(begin()), diff);
+        	// The line above replaces the code commented out below:	
+//        	for (int i=0; i<mandatoryTimes_.size(); i++) {
+//        		double curr = mandatoryTimes_.get(i);
+//          		if (i == 0) {
+//          			diff.add(curr);
+//          		}
+//          		else {
+//          			double prev = mandatoryTimes_.get(i-1);
+//          			diff.add(curr-prev);
+//          		}
+//        	}
         	  
         	if (diff.get(0) == 0.00) diff.remove(begin());
         	dtMax = Collections.min(diff); // QuantLib: dtMax = *(std::min_element(diff.begin(), diff.end()));
@@ -223,20 +229,22 @@ public class TimeGrid <T extends List<Double>> {
         	}
         	periodBegin = periodEnd;
         }
-        // TODO: Understand what adjacent_difference does.
+       
 //	    std::adjacent_difference(times_.begin()+1,times_.end(),
 //      std::back_inserter(dt_));
-        	  
-        for (int i=1; i<mandatoryTimes_.size(); i++) {
-        	double curr = times_.get(i);
-        	if (i == 0) {
-        		dt_.add(curr);
-          	}
-          	else {
-          		double prev = times_.get(i-1);
-          		dt_.add(curr-prev);
-          	}
-         }
+        
+        dt_ = Std.adjacent_difference(times_, times_.indexOf(begin())+1, dt_);
+        // The line above replaces the code commented out below:
+//        for (int i=1; i<mandatoryTimes_.size(); i++) {
+//        	double curr = times_.get(i);
+//        	if (i == 0) {
+//        		dt_.add(curr);
+//          	}
+//          	else {
+//          		double prev = times_.get(i-1);
+//          		dt_.add(curr-prev);
+//          	}
+//         }
     } // end of constructor
     
 
