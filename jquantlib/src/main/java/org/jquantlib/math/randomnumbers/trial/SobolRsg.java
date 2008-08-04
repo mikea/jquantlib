@@ -998,7 +998,7 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<Sample<T>>> implement
         // instantiate a generic holder for Sample values
         T value = null;
         try {
-            value = (T) TypeToken.getClazz(this.getClass(), 1).getConstructor(int.class).newInstance(this.dimensionality_);
+            value = (T) TypeToken.getClazz(this.getClass(), 0).getConstructor(int.class).newInstance(this.dimensionality_);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
