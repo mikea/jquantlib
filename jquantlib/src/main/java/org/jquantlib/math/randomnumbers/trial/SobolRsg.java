@@ -23,13 +23,13 @@
 package org.jquantlib.math.randomnumbers.trial;
 
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.methods.montecarlo.Sample;
+import org.jquantlib.util.reflect.TypeToken;
 
 /**
  *  Sobol low-discrepancy sequence generator
@@ -98,7 +98,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  *
  */
 
-public class SobolRsg<RNG extends RandomNumberGenerator> implements UniformSequenceGenerator<Sample<List<Double>>> {
+public class SobolRsg<T, RNG extends RandomNumberGenerator<Sample<T>>> implements UniformSequenceGenerator<Sample<T>> {
 	
 	// Sobol' Levitan coefficients of the free direction integers as given
     // by Bratley, P., Fox, B.L. (1988)
@@ -968,7 +968,7 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements UniformSeque
 	private int dimensionality_; 							// Size dimensionality_;
 	private long sequenceCounter_; 							// mutable unsigned long sequenceCounter_;
 	private boolean firstDraw_; 							// mutable bool firstDraw_;
-	private Sample<List<Double>> sequence_; 			    // typedef Sample<std::vector<Real> > sample_type; / mutable sample_type sequence_;
+	private Sample<T> sequence_; 			    		// typedef Sample<std::vector<Real> > sample_type; / mutable sample_type sequence_;
 	private List<Long> integerSequence_; 				// mutable std::vector<unsigned long> integerSequence_
 	
 	//FIXME: Is this the correct translation of std::vector<std::vector< long> > directionIntegers_?
@@ -995,10 +995,16 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements UniformSeque
     	this.sequenceCounter_= 0; 				// sequenceCounter_(0)
     	this.firstDraw_ = true;					// firstDraw_(true)
     	
-    	// TODO: sequence_(std::vector<Real> (dimensionality), 1.0)
-       	List<Double> dimDoubleArray = new DoubleArrayList(dimensionality_);
-    	this.sequence_ = new Sample<List<Double>>(dimDoubleArray, 1.0);
-    	
+        // instantiate a generic holder for Sample values
+        T value = null;
+        try {
+            value = (T) TypeToken.getClazz(this.getClass(), 1).getConstructor(int.class).newInstance(this.dimensionality_);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // instantiate a Sample with previously instantiated value holder
+        this.sequence_ = new Sample<T>(value, 1.0);
+
     	
         // TODO: integerSequence_(dimensionality, 0) --> where has the zero gone?
        	this.integerSequence_ = new LongArrayList(dimensionality_);
@@ -1300,7 +1306,7 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements UniformSeque
     
 
     @Override
-    public final Sample<List<Double>> nextSequence() /* @Read-only */ {
+    public final Sample<T> nextSequence() /* @Read-only */ {
         final List<Long> v = nextInt32Sequence();
         // normalize to get a double in (0,1)
         for (int k=0; k<dimensionality_; ++k) {
@@ -1330,7 +1336,7 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements UniformSeque
     }
     
     @Override
-    public final Sample<List<Double>> lastSequence() /* @Read-only*/  { 
+    public final Sample<T> lastSequence() /* @Read-only*/  { 
     	return sequence_; 
     }
     
