@@ -48,14 +48,14 @@ import org.jquantlib.math.randomnumbers.trial.RandomSequenceGenerator;
  * 
  * @author Richard Gomes
  */
-public class SingleVariate<RNG extends RandomNumberGenerator, IC extends InverseCumulative> implements Variate {
+public class SingleVariate<T, RNG extends RandomNumberGenerator<T>, IC extends InverseCumulative> implements Variate {
     
 // FIXME: should not expose fields
 // FIXME: adhere to standards
   public RNG rng_traits;
   public Path path_type;
   public PathPricer<Path> path_pricer_type;
-  public InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC> rsg_type;
+  public InverseCumulativeRsg<T, RandomSequenceGenerator<T, RNG>, IC> rsg_type;
 //TODO: code review
 //  public PathGenerator<rsg_type> path_generator_type;
 //  enum { allowsErrorEstimate = RNG::allowsErrorEstimate };

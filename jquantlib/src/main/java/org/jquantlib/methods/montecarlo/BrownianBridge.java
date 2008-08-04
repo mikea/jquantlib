@@ -192,33 +192,40 @@ public class BrownianBridge {
         }
     }
 
-    public /* @NonNegative */ int size() /* @ReadOnly */{
+    public/* @NonNegative */int size() /* @ReadOnly */{
         return size_;
     }
 
-    public final /* @Time */ double[] times() /* @ReadOnly */{
+    public final/* @Time */double[] times() /* @ReadOnly */{
         return t_;
     }
 
     /**
      * Brownian-bridge constructor
      */
-    public double[] transform(final List<Double> inputList) /* @ReadOnly */{
-        if (inputList == null || inputList.size() == 0)
+    //
+    //TODO: Improve this method.
+    // This method in particular presents a very weak interface which is 
+    // potentially risky for critical systems due to the possibility of failure.
+    // The point is that we have possibilities of NullPointerException and 
+    // ArrayIndexOutOfBoundsException which can be easily avoided.
+    // -- Richard Gomes
+    //
+    public void transform(final double[] input, double[] output) /* @ReadOnly */{
+        if (input == null || input.length == 0)
             throw new IllegalArgumentException("invalid sequence");
-        if (inputList.size() != size_)
+        if (input.length != size_)
             throw new IllegalArgumentException("incompatible sequence size");
         // We use output to store the path...
-        double[] output = new double[size_];
-        output[size_ - 1] = stdDev_[0] * inputList.get(0);
+        output[size_ - 1] = stdDev_[0] * input[0];
         for (int i = 1; i < size_; ++i) {
             int j = leftIndex_[i];
             int k = rightIndex_[i];
             int l = bridgeIndex_[i];
             if (j != 0) {
-                output[l] = leftWeight_[i] * output[j - 1] + rightWeight_[i] * output[k] + stdDev_[i] * inputList.get(i);
+                output[l] = leftWeight_[i] * output[j - 1] + rightWeight_[i] * output[k] + stdDev_[i] * input[i];
             } else {
-                output[l] = rightWeight_[i] * output[k] + stdDev_[i] * inputList.get(i);
+                output[l] = rightWeight_[i] * output[k] + stdDev_[i] * input[i];
             }
         }
         // ...after which, we calculate the variations and
@@ -228,8 +235,6 @@ public class BrownianBridge {
             output[i] /= sqrtdt_[i];
         }
         output[0] /= sqrtdt_[0];
-
-        return output;
     }
 
 }

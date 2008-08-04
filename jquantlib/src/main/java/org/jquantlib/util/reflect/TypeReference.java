@@ -28,8 +28,21 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * References a generic type.
+ * This class provides the ability of querying the run time type information of parametric types.
+ * <p> 
+ * This functionality is specially helpful when you'd like to do something like this (which does not compile!):
+ *  * <pre>
+ * class B<T> {
+ *   public B() {
+ *     T t = new T();
+ *   }
+ * } 
+ * </pre>
  * 
+ * Notice that this class is somewhat "intrusive" to your object model. See also {@link TypeToken} for
+ * a class which provides the same functionality but is less intrusive. 
+ * 
+ * @see TypeToken
  * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">Super Type Tokens</a>
  * 
  * @author crazybob@google.com (Bob Lee)

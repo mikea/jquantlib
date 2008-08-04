@@ -24,9 +24,10 @@ package org.jquantlib.math.randomnumbers.trial;
 
 import org.jquantlib.math.distributions.InverseCumulativeNormal;
 
+
 /**
  * @author Richard Gomes
  */
-public class PseudoRandom extends GenericPseudoRandom<MersenneTwisterUniformRng, InverseCumulativeNormal> {
+public class PseudoRandom extends GenericPseudoRandom<Double, MersenneTwisterUniformRng, InverseCumulativeNormal> {
 
 }

@@ -48,29 +48,27 @@ import org.jquantlib.util.stdlibc.DoubleReference;
 import org.jquantlib.util.stdlibc.DoubleReverseIterator;
 
 /**
- * 
  * Single-factor random walk
  * 
  * @note The path includes the initial asset value as its first point.
  * 
- * 
- * 
  * @author Richard Gomes
  */
 
-
-// FIXME: still working on this mess !!!
 // FIXME: code review: verify if DoubleReference should be used here
-
 
 public class Path {
 
     private TimeGrid<List<Double>> timeGrid_; // FIXME: should use generic type
     private Array values_;
 
+    public Path(final TimeGrid<List<Double>> timeGrid) {
+        this(timeGrid, new Array());
+    }
+    
     public Path(final TimeGrid<List<Double>> timeGrid, final Array values) {
         this.timeGrid_ = timeGrid;
-        this.values_ = values;
+        this.values_   = values;
         if (values_.empty()) {
             values_ = new Array(timeGrid_.size());
         }

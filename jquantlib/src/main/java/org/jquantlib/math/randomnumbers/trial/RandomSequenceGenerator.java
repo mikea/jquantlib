@@ -42,11 +42,10 @@ package org.jquantlib.math.randomnumbers.trial;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 
-import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.jquantlib.methods.montecarlo.Sample;
-import org.jquantlib.util.reflect.TypeReference;
+import org.jquantlib.util.reflect.TypeToken;
 
 
 /**
@@ -56,36 +55,56 @@ import org.jquantlib.util.reflect.TypeReference;
  * 
  * @note do not use with low-discrepancy sequence generator.
  * 
+ * @param <RNG> is a subclass of {@link RandomNumberGenerator}
+ * @param <T> is a parameter to be applied to a {@link Sample}, i.e: <code>Sample&lt;T&gt;</code>
+ * 
  * @author Richard Gomes
  */
-public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> 
-        extends TypeReference
-        implements UniformSequenceGenerator<Sample<List<Double>>> {
+public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>> 
+            implements UniformSequenceGenerator<Sample<T>> {
     
     private /*@NonNegative*/ int dimensionality_;
     private RNG rng_;
-    private Sample<List<Double>> sequence_; // FIXME :: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
-    private List<Long> int32Sequence_; // Richard: In spite it's a Int32, it is made of Longs
+    private Sample<T> sequence_; // FIXME :: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
+    private List<Long> int32Sequence_; // In spite of Int32, it is made of Longs
 
     
     public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final RNG rng) {
         if (dimensionality<1) throw new IllegalArgumentException("dimensionality must be greater than 0");
         this.dimensionality_ = dimensionality;
         this.rng_ = rng;
-        this.sequence_ = new Sample<List<Double>>(new DoubleArrayList(this.dimensionality_), 1.0);
         this.int32Sequence_ = new LongArrayList(this.dimensionality_);
+     
+        // instantiate a generic holder for Sample values
+        T value = null;
+        try {
+            value = (T) TypeToken.getClazz(this.getClass(), 0).getConstructor(int.class).newInstance(this.dimensionality_);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // instantiate a Sample with previously instantiated value holder
+        this.sequence_ = new Sample<T>(value, 1.0);
     }
     
     
     public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final long seed) {
         if (dimensionality<1) throw new IllegalArgumentException("dimensionality must be greater than 0");
         this.dimensionality_ = dimensionality;
-        this.sequence_ = new Sample<List<Double>>(new DoubleArrayList(this.dimensionality_), 1.0);
         this.int32Sequence_ = new LongArrayList(this.dimensionality_);
-        
+
+        // instantiate a generic holder for Sample values
+        T value = null;
         try {
-            Constructor<RNG> c = (Constructor<RNG>) getGenericParameterClass().getConstructor(long.class);
-            this.rng_ = c.newInstance(seed);
+            value = (T) TypeToken.getClazz(this.getClass(), 0).getConstructor(int.class).newInstance(this.dimensionality_);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // instantiate a Sample with previously instantiated value holder
+        this.sequence_ = new Sample<T>(value, 1.0);
+        
+        // instantiate a generic RandomNumberGenerator
+        try {
+            this.rng_ = (RNG) TypeToken.getClazz(this.getClass(), 1).getConstructor(long.class).newInstance(seed);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -103,7 +122,7 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator>
     }
 
     @Override
-    public final Sample<List<Double>> lastSequence() /* @ReadOnly */ {
+    public final Sample<T> lastSequence() /* @ReadOnly */ {
         return sequence_;
     }
     
@@ -113,16 +132,29 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator>
     //
     
     @Override
-    public final Sample<List<Double>> nextSequence() /* @ReadOnly */ {
+    public final Sample<T> nextSequence() /* @ReadOnly */ {
         double weight = 1.0;
         
-        DoubleArrayList array = new DoubleArrayList(dimensionality_);
-        for (int i = 0; i < dimensionality_; i++) {
-            Sample<Double> x = rng_.next(); // FIXME: code review :: not sure it is a Sample<Double>
-            array.add(x.value);
-            weight *= x.weight;
+//
+//FIXME: needs to define an interface which has get/set for indexing elements of a List or array
+//      
+//        DoubleArrayList array = new DoubleArrayList(dimensionality_);
+//        for (int i = 0; i < dimensionality_; i++) {
+//            Sample<T> x = rng_.next();
+//            array.add(x.value);
+//            weight *= x.weight;
+//        }
+//
+        
+        // instantiate a generic holder for Sample values
+        T value = null;
+        try {
+            value = (T) TypeToken.getClazz(this.getClass(), 1).getConstructor(int.class).newInstance(this.dimensionality_);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        sequence_ =  new Sample<List<Double>>(array, weight);
+        // instantiate a Sample with previously instantiated value holder
+        this.sequence_ = new Sample<T>(value, weight);
         return sequence_;
     }
 
@@ -130,7 +162,5 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator>
     public /*@NonNegative*/ int dimension() /* @ReadOnly */ {
         return dimensionality_;
     }
-    
 
 }
-

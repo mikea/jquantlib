@@ -60,8 +60,8 @@ public class TimeGrid <T extends List<Double>> {
 	// 
 	// Constructors
 	//
-	public TimeGrid() {
-	}
+    
+	private TimeGrid() { }
 
 	/**
      * Regularly spaced time-grid
@@ -119,7 +119,7 @@ public class TimeGrid <T extends List<Double>> {
         // resize array, discarding unneeded memory
         ((DoubleArrayList) e).size(size);
     	
-    	if(mandatoryTimes_.get(0) > 0.00){
+    	if (mandatoryTimes_.get(0) > 0.00) {
     		times_.add(0, 0.00);
     	}
     	times_.addAll(mandatoryTimes_);

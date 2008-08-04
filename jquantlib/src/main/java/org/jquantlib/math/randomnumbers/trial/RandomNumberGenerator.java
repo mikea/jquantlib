@@ -25,10 +25,10 @@ import org.jquantlib.methods.montecarlo.Sample;
 /**
  * @author Richard Gomes
  */
-public interface RandomNumberGenerator {
+public interface RandomNumberGenerator<T> {
 
     //FIXME: code review: should use parameterized type instead of Double ??
-    public Sample<Double> next() /* @ReadOnly */;
+    public Sample<T> next() /* @ReadOnly */;
     
     public /*@NonNegative*/ long nextInt32() /* @ReadOnly */;
     

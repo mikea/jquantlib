@@ -43,6 +43,7 @@ package org.jquantlib.methods.montecarlo;
 
 import java.util.List;
 
+import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
 import org.jquantlib.math.randomnumbers.trial.RandomSequenceGenerator;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
@@ -57,19 +58,17 @@ import org.jquantlib.time.TimeGrid;
  * @author Richard Gomes
  */
 //TEST the generated paths are checked against cached results 
-public class PathGenerator<GSG extends RandomSequenceGenerator> { // should be GaussianSequenceGenerator ?
+public class PathGenerator<T, RNG extends RandomNumberGenerator<T>, GSG extends RandomSequenceGenerator<T, RNG>> { // should be GaussianSequenceGenerator ?
 
     private boolean brownianBridge_;
     private GSG generator_;
     private /*@NonNegative*/ int dimension_;
-    private TimeGrid timeGrid_;
+    private TimeGrid<List<Double>> timeGrid_;
     private StochasticProcess1D process_;
     private Sample<Path> next_;
-    private List</* @Real */ Double> temp_;
+    private double[] temp_;
     private BrownianBridge bb_;
 
-
-    
     
     public PathGenerator(
                           final StochasticProcess1D process, // QuantLib/C++ :: StochasticProcess
@@ -80,11 +79,10 @@ public class PathGenerator<GSG extends RandomSequenceGenerator> { // should be G
         this.brownianBridge_ = brownianBridge;
         this.generator_ = generator;
         this.dimension_ = generator.dimension();
-        this.timeGrid_ = new TimeGrid(length, timeSteps);
+        this.timeGrid_ = new TimeGrid<List<Double>>(length, timeSteps);
         this.process_ = process;
-// TODO: code review
-//        this.next_ = new Sample(new Path(timeGrid), 1.0);
-//        this.temp_ = dimension;
+        this.next_ = new Sample<Path>( new Path(this.timeGrid_), 1.0 );
+        this.temp_ = new double[this.dimension_];
         this.bb_ = new BrownianBridge(this.timeGrid_);
         
         if (dimension_!= timeSteps)
@@ -94,7 +92,7 @@ public class PathGenerator<GSG extends RandomSequenceGenerator> { // should be G
 
     public PathGenerator(
                         final StochasticProcess1D process, // QuantLib/C++ :: StochasticProcess
-                        final TimeGrid timeGrid,
+                        final TimeGrid<List<Double>> timeGrid,
                         final GSG generator,
                         final boolean brownianBridge) {
         this.brownianBridge_ = brownianBridge;
@@ -102,9 +100,8 @@ public class PathGenerator<GSG extends RandomSequenceGenerator> { // should be G
         this.dimension_ = generator.dimension();
         this.timeGrid_ = timeGrid;
         this.process_ = process;
-// TODO: code review
-//        this.next_ = new Sample(new Path(timeGrid), 1.0);
-//        this.temp_ = dimension;
+        this.next_ = new Sample<Path>(new Path(timeGrid), 1.0);
+        this.temp_ = new double[this.dimension_];
         this.bb_ = new BrownianBridge(this.timeGrid_);
 
         if (dimension_ != timeGrid_.size()-1)
@@ -125,20 +122,22 @@ public class PathGenerator<GSG extends RandomSequenceGenerator> { // should be G
     public final Sample<Path> // typename PathGenerator<GSG>::sample_type&
     next(final boolean antithetic) /* @ReadOnly */ {
 
-        // typedef typename GSG::sample_type sequence_type; = Sample<Path>
-        final Sample<Path> sequence_ =
-            antithetic ? generator_.lastSequence()
-                       : generator_.nextSequence();
-
-// TODO : code review            
+//        
+//FIXME: needs to define an interface which has get/set for indexing elements of a List or array
+//        
+//        // typedef typename GSG::sample_type sequence_type; = Sample<Path>
+//        final Sample<Path> sequence_ =
+//            antithetic ? generator_.lastSequence()
+//                       : generator_.nextSequence();
+//
 //        if (brownianBridge_) {
-//            double tmp[] = bb_.transform(sequence_.value);
-//            temp_ = new DoubleArrayList(tmp, 0, this.dimension_);
+//            bb_.transform(sequence_.value, this.temp_);
 //        } else {
 //            DoubleArrays.copy(sequence_.value, 0, this.dimension_);
 //        }
 //
 //        next_.weight = sequence_.weight;
+//      
 
         Path path = next_.value;
         path.frontReference().setValue(process_.x0());
@@ -146,14 +145,11 @@ public class PathGenerator<GSG extends RandomSequenceGenerator> { // should be G
         for (int i=1; i<path.length(); i++) {
             /*@Time*/ double  t = timeGrid_.get(i-1);
             /*@Time*/ double  dt = timeGrid_.dt(i-1);
-            double d = process_.evolve(t, path.get(i-1), dt, antithetic ? -temp_.get(i-1) : temp_.get(i-1));
+            double d = process_.evolve(t, path.get(i-1), dt, antithetic ? -temp_[i-1] : temp_[i-1]);
             path.getReference(i).setValue(d);
         }
 
         return next_;
     }
-
-
-
 
 }

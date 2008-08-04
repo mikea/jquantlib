@@ -23,32 +23,32 @@
 package org.jquantlib.methods.montecarlo;
 
 /**
+ * Weighted sample
  * 
  * @author Dominik Holenstein
- * @author Aaron Roth
- *
- * @param <E>
+ * @author Richard Gomes
+ * 
+ * @param <T>
  */
 
 //TODO: Add JavaDocs
 //TODO: Code review
 
 //weighted sample
-public class Sample<T> {
-    /**
-     * Since this class is intended to be immutable, all the relevant fields
-     * are final; we allow them to be set only in the constructor and safely
-     * forgo getters on them in favor of direct access.
-     * 
-     * The fields are redundantly marked with public to make these intentions
-     * explicit.
-     */
+public final class Sample<T> {
+    
+    //
+    // Since this class is intended to be immutable, all the relevant fields are final.
+    // We allow them to be set only in the constructor and safely forget getters on them in favour of direct access.
+    // The fields are redundantly marked with public to make these intentions explicit.
+    //
+    
     public final T value;
     public final double weight;
-
     
     public Sample(final T value, double weight) {
     	this.value=value;
     	this.weight=weight;
     }
+
 }

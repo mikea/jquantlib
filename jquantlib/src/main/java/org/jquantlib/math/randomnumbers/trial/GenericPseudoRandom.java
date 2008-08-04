@@ -41,9 +41,7 @@
 
 package org.jquantlib.math.randomnumbers.trial;
 
-import java.lang.reflect.Constructor;
-
-import org.jquantlib.util.reflect.TypeReference;
+import org.jquantlib.util.reflect.TypeToken;
 
 
 /**
@@ -54,7 +52,7 @@ import org.jquantlib.util.reflect.TypeReference;
  */
 
 //public class GenericPseudoRandom<URSG extends RandomSequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> {
-public class GenericPseudoRandom<RNG extends RandomNumberGenerator, IC extends InverseCumulative> extends TypeReference {
+public class GenericPseudoRandom<T, RNG extends RandomNumberGenerator<T>, IC extends InverseCumulative> {
 
     // FIXME: static :(
     static public boolean allowsErrorEstimate = true;
@@ -65,16 +63,20 @@ public class GenericPseudoRandom<RNG extends RandomNumberGenerator, IC extends I
 
     
     /*static*/    // FIXME: static :( 
-    public InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC> makeSequenceGenerator(
+    public InverseCumulativeRsg<T, RandomSequenceGenerator<T, RNG>, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
 
         try {
             // instantiate a RandomNumberGenerator given its generic type
-            Constructor<RNG> c1 = (Constructor<RNG>) getGenericParameterClass().getConstructor(long.class);
-            RNG rng = c1.newInstance(seed);
+            RNG rng = null;
+            try {
+                rng = (RNG) TypeToken.getClazz(this.getClass(), 1).getConstructor(long.class).newInstance(seed);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
 
             // instantiate a RandomSequenceGenerator given its dimension and a RandonNumberGenerator
-            RandomSequenceGenerator<RNG> rsg = new RandomSequenceGenerator<RNG>(dimension, rng);
+            RandomSequenceGenerator<T, RNG> rsg = new RandomSequenceGenerator<T, RNG>(dimension, rng);
             
             // return an InverseCumulativeRandomSequenceGenerator given a RandomSequenceGenerator and InverseCumulative distribution
             return (icInstance!=null) ? new InverseCumulativeRsg(rsg, icInstance) : new InverseCumulativeRsg(rsg);

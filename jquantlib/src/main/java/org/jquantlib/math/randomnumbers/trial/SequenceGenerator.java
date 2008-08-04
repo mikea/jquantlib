@@ -28,7 +28,7 @@ package org.jquantlib.math.randomnumbers.trial;
  * @author Richard Gomes
  * @param <T>
  */
-public abstract class SequenceGenerator<RNG extends RandomNumberGenerator> extends RandomSequenceGenerator<RNG> {
+public abstract class SequenceGenerator<T, RNG extends RandomNumberGenerator<T>> extends RandomSequenceGenerator<T, RNG> {
 
     public SequenceGenerator(int dimensionality, long seed) {
         super(dimensionality, seed);

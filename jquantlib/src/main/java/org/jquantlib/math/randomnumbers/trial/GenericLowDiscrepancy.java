@@ -40,7 +40,6 @@
 package org.jquantlib.math.randomnumbers.trial;
 
 import java.lang.reflect.Constructor;
-import java.util.List;
 
 import org.jquantlib.methods.montecarlo.Sample;
 import org.jquantlib.util.reflect.TypeReference;
@@ -51,7 +50,7 @@ import org.jquantlib.util.reflect.TypeReference;
  * @param <URSG>
  * @param <IC>
  */
-public class GenericLowDiscrepancy<URSG extends UniformSequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> 
+public class GenericLowDiscrepancy<T, URSG extends UniformSequenceGenerator<Sample<T>>, IC extends InverseCumulative> 
             extends TypeReference {
 
     // FIXME: static :(
@@ -62,7 +61,7 @@ public class GenericLowDiscrepancy<URSG extends UniformSequenceGenerator<Sample<
     private IC icInstance; // FIXME: where it is initialized ???
 
     /*static*/ // FIXME: static :(
-    public InverseCumulativeRsg<URSG, IC> makeSequenceGenerator(
+    public InverseCumulativeRsg<T, URSG, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
 
         try {

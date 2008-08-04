@@ -5,6 +5,8 @@ package org.jquantlib.util.stdlibc;
  * 
  * @author Richard Gomes
  */
+//FIXME: probably this class can be removed unless DoubleReference objects are used as DTO objects
+@Deprecated
 public class DoubleReference {
 
     private final double[] list;

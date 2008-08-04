@@ -26,7 +26,21 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * This class contains helper methods intended to identify the type of generic parameters
+ * This class provides the ability of querying the run time type information of parametric types.
+ * <p> 
+ * This functionality is specially helpful when you'd like to do something like this (which does not compile!):
+ *  * <pre>
+ * class B<T> {
+ *   public B() {
+ *     T t = new T();
+ *   }
+ * } 
+ * </pre>
+ * 
+ * Notice that this class is somewhat "crude". See also {@link TypeReference} for
+ * a class which provides the same functionality but is more "elegant". 
+ * 
+ * @see TypeReference
  * 
  * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">SuperTypeTokens</a>
  * @see <a href="http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf">Generics Tutorial</a>

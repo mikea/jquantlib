@@ -56,7 +56,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  * 
  * @author Richard Gomes
  */
-public class InverseCumulativeRsg<USG extends UniformSequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> 
+public class InverseCumulativeRsg<T, USG extends UniformSequenceGenerator<Sample<T>>, IC extends InverseCumulative> 
             implements UniformSequenceGenerator<Sample<List<Double>>> {
 
     private USG uniformSequenceGenerator_;
@@ -83,14 +83,20 @@ public class InverseCumulativeRsg<USG extends UniformSequenceGenerator<Sample<Li
      */
     @Override
     public Sample<List<Double>> nextSequence() /* @ReadOnly */{
-        Sample<List<Double>> sample = uniformSequenceGenerator_.nextSequence();
-        List<Double> sequence = sample.value;
+        Sample<T> sample = uniformSequenceGenerator_.nextSequence();
+        T sequence = sample.value;
 
-        List<Double> array = new DoubleArrayList(dimension_);
-        for (int i = 0; i < dimension_; i++) {
-            array.add(ICD_.evaluate(sequence.get(i)));
-        }
-        return new Sample<List<Double>>(array, sample.weight);
+        
+//        
+//FIXME: needs to define an interface which has get/set for indexing elements of a List or array
+//        
+//        List<Double> array = new DoubleArrayList(dimension_);
+//        for (int i = 0; i < dimension_; i++) {
+//            array.add(ICD_.evaluate(sequence.get(i)));
+//        }
+//
+        
+        return null; // return new Sample<List<Double>>(array, sample.weight);
     }
 
     @Override
