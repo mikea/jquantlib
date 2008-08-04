@@ -1,44 +1,43 @@
 /*
- Copyright (C) 2008 Q.Boiler
+Copyright (C) 2008 Q.Boiler
 
- This source code is release under the BSD License.
- 
- This file is part of JQuantLib, a free-software/open-source library
- for financial quantitative analysts and developers - http://jquantlib.org/
+This source code is release under the BSD License.
 
- JQuantLib is free software: you can redistribute it and/or modify it
- under the terms of the JQuantLib license.  You should have received a
- copy of the license along with this program; if not, please email
- <jquant-devel@lists.sourceforge.net>. The license is also available online at
- <http://www.jquantlib.org/index.php/LICENSE.TXT>.
+This file is part of JQuantLib, a free-software/open-source library
+for financial quantitative analysts and developers - http://jquantlib.org/
 
- This program is distributed in the hope that it will be useful, but WITHOUT
- ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
- JQuantLib is based on QuantLib. http://quantlib.org/
- When applicable, the original copyright notice follows this notice.
+JQuantLib is free software: you can redistribute it and/or modify it
+under the terms of the JQuantLib license.  You should have received a
+copy of the license along with this program; if not, please email
+<jquant-devel@lists.sourceforge.net>. The license is also available online at
+<http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the license for more details.
+
+JQuantLib is based on QuantLib. http://quantlib.org/
+When applicable, the original copyright notice follows this notice.
  */
 
 /*
- Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
- Copyright (C) 2003, 2004, 2005, 2006 StatPro Italia srl
- Copyright (C) 2003, 2004 Ferdinando Ametrano
+Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+Copyright (C) 2003, 2004, 2005, 2006 StatPro Italia srl
+Copyright (C) 2003, 2004 Ferdinando Ametrano
 
- This file is part of QuantLib, a free-software/open-source library
- for financial quantitative analysts and developers - http://quantlib.org/
+This file is part of QuantLib, a free-software/open-source library
+for financial quantitative analysts and developers - http://quantlib.org/
 
- QuantLib is free software: you can redistribute it and/or modify it
- under the terms of the QuantLib license.  You should have received a
- copy of the license along with this program; if not, please email
- <quantlib-dev@lists.sf.net>. The license is also available online at
- <http://quantlib.org/license.shtml>.
+QuantLib is free software: you can redistribute it and/or modify it
+under the terms of the QuantLib license.  You should have received a
+copy of the license along with this program; if not, please email
+<quantlib-dev@lists.sf.net>. The license is also available online at
+<http://quantlib.org/license.shtml>.
 
- This program is distributed in the hope that it will be useful, but WITHOUT
- ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
-
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the license for more details.
+ */
 package org.jquantlib.math;
 
 /**
@@ -49,35 +48,36 @@ public class Matrix {
 	//  A Matrix will have some data, and some sizes.
 	double[][] data;
 	int columns, rows;
-	
-       public  Matrix(){
-	       data = new double[0][0];
-	       columns = 0;
-	       rows = 0;
-       }
-       public Matrix(int pRows, int pColumns){
-	       columns=pColumns;
-	       rows= pRows;
+
+	public Matrix() {
+		data = new double[0][0];
+		columns = 0;
+		rows = 0;
+	}
+
+	public Matrix(int pRows, int pColumns) {
+		columns = pColumns;
+		rows = pRows;
 		data = new double[columns][rows];
 	}
-        public Matrix(int pRows, int pColumns, double value){
+
+	public Matrix(int pRows, int pColumns, double value) {
 
 		columns = pColumns;
 		rows = pRows;
 		data = new double[columns][rows];
 		for (int i = 0; i < data.length; i++) {
-			if(i==0){
-			for(int j=0;j<data[i].length;++j){
-				data[i][j]=value;
-			}
-			}
-			else{
-				System.arraycopy(data[i-1], 0, data[i], 0, rows);
+			if (i == 0) {
+				for (int j = 0; j < data[i].length; ++j) {
+					data[i][j] = value;
+				}
+			} else {
+				System.arraycopy(data[i - 1], 0, data[i], 0, rows);
 			}
 		}
 	}
 
-        public Matrix(final Matrix m){
+	public Matrix(final Matrix m) {
 		columns = m.columns;
 		rows = m.rows;
 		data = new double[columns][rows];
@@ -86,30 +86,30 @@ public class Matrix {
 		}
 	}
 
-       public double get(int i, int j){
-	       //  Error condition should be set...
-	       //  TODO  it may be appropriate to throw an exception.
-	       //  return Double.NaN;
-	       return data[i][j]; 
-       }
+	public double get(int i, int j) {
+		//  Error condition should be set...
+		//  TODO  it may be appropriate to throw an exception.
+		//  return Double.NaN;
+		return data[i][j];
+	}
 
-       public void set(int i, int j, double value){
-	       //  Error condition should be set...
-	       //  TODO  it may be appropriate to throw an exception.
-	       //  return Double.NaN;
-	       data[i][j] = value; 
-       }
+	public void set(int i, int j, double value) {
+		//  Error condition should be set...
+		//  TODO  it may be appropriate to throw an exception.
+		//  return Double.NaN;
+		data[i][j] = value;
+	}
 
-        public Matrix operatorEquals(final Matrix right){
+	public Matrix operatorEquals(final Matrix right) {
 
 		Matrix left = this;
-		if(left.columns != right.columns || left.rows != right.rows){
+		if (left.columns != right.columns || left.rows != right.rows) {
 			//  Either throw an exception or return an error code.
 			//  expand the left to be big enough...
 			//  Set the error flag and return null.
 			//  Caller much check the error flag prior to assignment.
 			return null;
-		}else{
+		} else {
 			for (int i = 0; i < data.length; i++) {
 				System.arraycopy(right.data[i], 0, left.data[i], 0, rows);
 			}
@@ -118,204 +118,215 @@ public class Matrix {
 	}
 
 	//  @ParallelCandidate
-        public  Matrix operatorPlusEqual(final Matrix right){
-		if(this.columns != right.columns || this.rows != right.rows){
+	public Matrix operatorPlusEqual(final Matrix right) {
+		if (this.columns != right.columns || this.rows != right.rows) {
 			//  We can't go on.
 			throw new RuntimeException("Rows and Columns must be the same for Matrix Addition.");
 		}
-	
+
 		//  PARALLEL CANDIDATE. this is a prime candidate for a massively parallel impl.
 		for (int i = 0; i < columns; i++) {
 			//  Spawn a new thread or task for each.
 			for (int j = 0; j < rows; j++) {
-				data[i][j]+=right.data[i][j];
+				data[i][j] += right.data[i][j];
 			}
 		}
 		return this;
 	}
-	
-        public  Matrix operatorMinusEqual(final Matrix right){
-	
-		if(this.columns != right.columns || this.rows != right.rows){
+
+	public Matrix operatorMinusEqual(final Matrix right) {
+
+		if (this.columns != right.columns || this.rows != right.rows) {
 			//  We can't go on.
 			throw new RuntimeException("Rows and Columns must be the same for Matrix Addition.");
 		}
-	
+
 		//  PARALLEL CANDIDATE. this is a prime candidate for a massively parallel impl.
 		for (int i = 0; i < columns; i++) {
 			//  Spawn a new thread or task for each.
 			for (int j = 0; j < rows; j++) {
-				data[i][j]-=right.data[i][j];
+				data[i][j] -= right.data[i][j];
 			}
 		}
 		return this;
 	}
-        public  Matrix operatorMultiplyEqual(double d){
+
+	public Matrix operatorMultiplyEqual(double d) {
 		//  PARALLEL CANDIDATE. this is a prime candidate for a massively parallel impl.
 		for (int i = 0; i < columns; i++) {
 			//  Spawn a new thread or task for each.
 			for (int j = 0; j < rows; j++) {
-				data[i][j]*=d;
+				data[i][j] *= d;
 			}
 		}
 		return this;
 	}
-        public  Matrix operatorDivideEqual(double d){
+
+	public Matrix operatorDivideEqual(double d) {
 		//  PARALLEL CANDIDATE. this is a prime candidate for a massively parallel impl.
 		for (int i = 0; i < columns; i++) {
 			//  Spawn a new thread or task for each.
 			for (int j = 0; j < rows; j++) {
-				data[i][j]/=d;
+				data[i][j] /= d;
 			}
 		}
 		return this;
 	}
-        public int rows() {
+
+	public int rows() {
 		return rows;
 	}
-        public int columns() {
+
+	public int columns() {
 		return columns;
 	}
-        public boolean empty() {
-		if(rows ==0 || columns==0){
+
+	public boolean empty() {
+		if (rows == 0 || columns == 0) {
 			return true;
 		}
 		return false;
 	}
-        public void swap(Matrix right){
-		
+
+	public void swap(Matrix right) {
+
 		Matrix left = this;
-		if(left.columns != right.columns || left.rows != right.rows){
+		if (left.columns != right.columns || left.rows != right.rows) {
 			//  Either throw an exception or return an error code.
 			//  expand the left to be big enough...
 			//  Set the error flag and return null.
 			//  Caller much check the error flag prior to assignment.
-			return ;
-		}else{
+			return;
+		} else {
 			double[] da = new double[rows];
 			for (int i = 0; i < data.length; i++) {
 				System.arraycopy(right.data[i], 0, da, 0, rows);
 				System.arraycopy(left.data[i], 0, right.data[i], 0, rows);
 				System.arraycopy(da, 0, left.data[i], 0, rows);
 			}
-			return ;
+			return;
 		}
 	}
-      public Matrix operatorPlus(final Matrix left, final Matrix right) {
-	      if(left.columns!=right.columns || left.rows != right.rows){
-		      
-		      //  Errors can be done without throwing exceptions.
-		      //  But for now we will throw an exception.
-		      throw new RuntimeException("right and left matrix must be the same size.");
-	      }
 
-	      //  PARALLEL TODO.
-	      Matrix result = new Matrix(left);
-	      result.operatorPlusEqual(right);
-	      return result;
-      }
+	public Matrix operatorPlus(final Matrix left, final Matrix right) {
+		if (left.columns != right.columns || left.rows != right.rows) {
 
-      public Matrix operatorMinus(final Matrix left, final Matrix right) {
-	      if(left.columns!=right.columns || left.rows != right.rows){
-		      
-		      //  Errors can be done without throwing exceptions.
-		      //  But for now we will throw an exception.
-		      throw new RuntimeException("right and left matrix must be the same size.");
-	      }
+			//  Errors can be done without throwing exceptions.
+			//  But for now we will throw an exception.
+			throw new RuntimeException("right and left matrix must be the same size.");
+		}
 
-	      //  PARALLEL TODO.
-	      Matrix result = new Matrix(left);
-	      result.operatorMinusEqual(right);
-	      return result;
-      }
-      public Matrix operatorMultiply(double scale, final Matrix right){
-	      Matrix result = new Matrix(right);
-	      result.operatorMultiplyEqual(scale);
-	      return result;
-      }
-      public Matrix operatorMultiply(final Matrix left,double scale){
-	      Matrix result = new Matrix(left);
-	      result.operatorMultiplyEqual(scale);
-	      return result;
-      }
-      public Matrix operatorDivide(final Matrix numerator,double denominator){
-	      Matrix result = new Matrix(numerator);
-	      result.operatorDivideEqual(denominator);
-	      return result;
-      }
-      
+		//  PARALLEL TODO.
+		Matrix result = new Matrix(left);
+		result.operatorPlusEqual(right);
+		return result;
+	}
+
+	public Matrix operatorMinus(final Matrix left, final Matrix right) {
+		if (left.columns != right.columns || left.rows != right.rows) {
+
+			//  Errors can be done without throwing exceptions.
+			//  But for now we will throw an exception.
+			throw new RuntimeException("right and left matrix must be the same size.");
+		}
+
+		//  PARALLEL TODO.
+		Matrix result = new Matrix(left);
+		result.operatorMinusEqual(right);
+		return result;
+	}
+
+	public Matrix operatorMultiply(double scale, final Matrix right) {
+		Matrix result = new Matrix(right);
+		result.operatorMultiplyEqual(scale);
+		return result;
+	}
+
+	public Matrix operatorMultiply(final Matrix left, double scale) {
+		Matrix result = new Matrix(left);
+		result.operatorMultiplyEqual(scale);
+		return result;
+	}
+
+	public Matrix operatorDivide(final Matrix numerator, double denominator) {
+		Matrix result = new Matrix(numerator);
+		result.operatorDivideEqual(denominator);
+		return result;
+	}
 //    // vectorial products
-      public Array operatorMultiply(final Array left, final Matrix right){
-	     if(left.size()!=right.rows){
-		throw new RuntimeException("array size must equal matrix row count for multiplication");
-	     }
-	     Array result = new Array(right.columns);
-	    
-	     //  PARALLLEL CANDIDATE
-	     for (int i = 0; i < right.columns; i++) {
-	          result.set(i,Array.dotProduct(left.getData(), right.data[i]));
-	     }
-	     return result;
-      }
-      public Array operatorMultiply(final Matrix left, final Array right){
-	      //  TODO.  I will have to confirm this works latter...
-	      //  I think that MA is equal to AM(transposed)
+	public Array operatorMultiply(final Array left, final Matrix right) {
+		if (left.size() != right.rows) {
+			throw new RuntimeException("array size must equal matrix row count for multiplication");
+		}
+		Array result = new Array(right.columns);
 
-	      //  This is only for QUICK TIME TO MARKET.
-	      //  THERE ARE MUCH FASTER WAYS TO DO THIS.
-	      //  AND LESS MEMORY INTENSIVE.
-	      Matrix newLeft = transpose(left);
-	      return operatorMultiply(right,newLeft);
-      }
+		//  PARALLLEL CANDIDATE
+		for (int i = 0; i < right.columns; i++) {
+			result.set(i, Array.dotProduct(left.getData(), right.data[i]));
+		}
+		return result;
+	}
 
-      public Matrix transpose(final Matrix matrix){
-	      Matrix transposed = new Matrix(matrix.columns, matrix.rows);
-	      for (int i = 0; i < matrix.data.length; i++) {
-		      double[] ds = data[i];
-		      for (int j = 0; j < ds.length; j++) {
-			      transposed.data[j][i] = ds[j];
-		      }
-	      }
-	      return transposed;
-      }
-      public Matrix operatorMultiply(final Matrix left, final Matrix right){
-	      if(right.rows!=left.columns){
-		      throw new RuntimeException("Can't Multiply unless left.columns = right.rows");
-	      }
-	      Matrix result = new Matrix(right.columns,left.rows);
-	      for(int i =0;i<left.rows;++i){
-		      double[] dtemp = new double[left.columns];
-		      for(int k = 0;k<left.columns;++k){
-			      dtemp[k]=left.data[k][i];
-		      }
-		      for(int j=0;j<right.rows;++j){
-			      result.data[i][j]=Array.dotProduct(dtemp, right.data[j]);
-		      }
-	      }
-	      return result;
-      }
+	public Array operatorMultiply(final Matrix left, final Array right) {
+		//  TODO.  I will have to confirm this works latter...
+		//  I think that MA is equal to AM(transposed)
 
-      public Matrix outerProduct(final  Array v1, final  Array v2){
-	      if(v1.size()!= v2.size()){
-		      throw new RuntimeException("Arrays must be the same size to do a cross product");
-	      }
-	      Matrix result = new Matrix(v1.size(),v2.size());
-	      for (int i = 0; i < v1.getData().length; i++) {
-		      for(int j=0;j<v2.getData().length;j++){
-			      result.data[i][j]=v1.getData()[i]*v2.getData()[j];
-		      }
-		      
-	      }
-	      return result;
-      }
+		//  This is only for QUICK TIME TO MARKET.
+		//  THERE ARE MUCH FASTER WAYS TO DO THIS.
+		//  AND LESS MEMORY INTENSIVE.
+		Matrix newLeft = transpose(left);
+		return operatorMultiply(right, newLeft);
+	}
+
+	public Matrix transpose(final Matrix matrix) {
+		Matrix transposed = new Matrix(matrix.columns, matrix.rows);
+		for (int i = 0; i < matrix.data.length; i++) {
+			double[] ds = data[i];
+			for (int j = 0; j < ds.length; j++) {
+				transposed.data[j][i] = ds[j];
+			}
+		}
+		return transposed;
+	}
+
+	public Matrix operatorMultiply(final Matrix left, final Matrix right) {
+		if (right.rows != left.columns) {
+			throw new RuntimeException("Can't Multiply unless left.columns = right.rows");
+		}
+		Matrix result = new Matrix(right.columns, left.rows);
+		for (int i = 0; i < left.rows; ++i) {
+			double[] dtemp = new double[left.columns];
+			for (int k = 0; k < left.columns; ++k) {
+				dtemp[k] = left.data[k][i];
+			}
+			for (int j = 0; j < right.rows; ++j) {
+				result.data[i][j] = Array.dotProduct(dtemp, right.data[j]);
+			}
+		}
+		return result;
+	}
+
+	public Matrix outerProduct(final Array v1, final Array v2) {
+		if (v1.size() != v2.size()) {
+			throw new RuntimeException("Arrays must be the same size to do a cross product");
+		}
+		Matrix result = new Matrix(v1.size(), v2.size());
+		for (int i = 0; i < v1.getData().length; i++) {
+			for (int j = 0; j < v2.getData().length; j++) {
+				result.data[i][j] = v1.getData()[i] * v2.getData()[j];
+			}
+
+		}
+		return result;
+	}
 //    /*! \relates Matrix */
 //    const Disposable<Matrix> operator*(const Matrix&, const Matrix&);
 }
 //    class Matrix {
- //     public:
-        //! \name Constructors, destructor, and assignment
-        //@{
-        //! creates a null matrix
+//     public:
+//! \name Constructors, destructor, and assignment
+//@{
+//! creates a null matrix
 //      Matrix();
 //        //! creates a matrix with the given dimensions
 //        Matrix(Size rows, Size columns);
