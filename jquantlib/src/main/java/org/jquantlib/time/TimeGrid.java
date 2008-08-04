@@ -43,7 +43,7 @@ import cern.colt.Sorting;
  */
 // TODO: Taken over from QuantLib: What was the rationale for limiting the grid to positive times? 
 // Investigate and see whether we can use it for negative ones as well.
-public class TimeGrid <T extends List<Double>> {
+public class TimeGrid {
 	
 	//
 	// private fields
@@ -94,7 +94,7 @@ public class TimeGrid <T extends List<Double>> {
      * No additional points are added.
      * @param list
      */
-    public TimeGrid(final T list) {
+    public TimeGrid(final List<Double> list) {
         mandatoryTimes_.addAll(list);
     	Collections.sort(mandatoryTimes_); // FIXME: performance -> Question from Dominik: Using Colt?
     	   	
@@ -153,7 +153,7 @@ public class TimeGrid <T extends List<Double>> {
      * between pairs of mandatory times in order to reach the
      * desired number of steps.
      */
-    public TimeGrid(final T list, final int steps) {
+    public TimeGrid(final List<Double> list, final int steps) {
     	mandatoryTimes_.addAll(list);
     	Collections.sort(mandatoryTimes_); // FIXME: performance
           

@@ -93,7 +93,7 @@ public class Array {
      * 
      * @note default package protection
      */
-    double[] getData(){
+    public double[] getData(){
 	    return data;
     }
     

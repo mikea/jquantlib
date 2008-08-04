@@ -58,7 +58,7 @@ import org.jquantlib.math.statistics.Statistics;
  * 
  * @author Richard Gomes
  */
-public class MonteCarloModel<MC extends Variate, RNG extends RandomNumberGenerator, S extends Statistics> {
+public class MonteCarloModel<MC extends Variate, T, RNG extends RandomNumberGenerator<T>, S extends Statistics> {
 
 //    private PathGeneratorType pathGenerator_;
 //    private PathPricerType pathPricer_;

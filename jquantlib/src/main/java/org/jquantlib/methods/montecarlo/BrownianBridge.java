@@ -49,7 +49,6 @@
 package org.jquantlib.methods.montecarlo;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.jquantlib.time.TimeGrid;
 
@@ -122,7 +121,7 @@ public class BrownianBridge {
      * 
      * @param timeGrid
      */
-    public BrownianBridge(final TimeGrid<List<Double>> timeGrid) {
+    public BrownianBridge(final TimeGrid timeGrid) {
         this.size_ = timeGrid.size() - 1;
         this.t_ = new double[this.size_];
         this.sqrtdt_ = new double[this.size_];
