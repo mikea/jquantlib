@@ -30,6 +30,13 @@ public interface RandomNumberGenerator<T> {
     //FIXME: code review: should use parameterized type instead of Double ??
     public Sample<T> next() /* @ReadOnly */;
     
+    /**
+     * Return a 32bit, unsigned integer value.
+     * 
+     * @note As Java does not support unsigned integral types, we are obliged to return a long instead
+     * 
+     * @return a long which contains a 32bit, unsigned integer value.
+     */
     public /*@NonNegative*/ long nextInt32() /* @ReadOnly */;
     
     // public boolean allowErrorEstimate(); // FIXME: should declare this method???

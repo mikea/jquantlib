@@ -124,24 +124,24 @@ public class PathGenerator<RNG extends RandomNumberGenerator<Path>, GSG extends 
                        : generator_.nextSequence();
 
         if (brownianBridge_) {
-            bb_.transform(sequence_.value.values_, this.temp_);
+            bb_.transform(sequence_.getValue().getValues_(), this.temp_);
         } else {
-            DoubleArrays.copy(sequence_.value.values_, 0, this.dimension_);
+            DoubleArrays.copy(sequence_.getValue().getValues_(), 0, this.dimension_);
         }
 
         
         // XXX next_.weight = sequence_.weight;
-        Sample<Path> next_ = new Sample<Path>(new Path(timeGrid_), sequence_.weight);
+        Sample<Path> next_ = new Sample<Path>(new Path(timeGrid_), sequence_.getWeight());
       
 
-        Path path = next_.value;
-        path.values_[0] = process_.x0();
+        Path path = next_.getValue();
+        path.setValues_( 0, process_.x0() );
 
         for (int i=1; i<path.length(); i++) {
             /*@Time*/ double  t = timeGrid_.get(i-1);
             /*@Time*/ double  dt = timeGrid_.dt(i-1);
-            double d = process_.evolve(t, path.values_[i-1], dt, antithetic ? -temp_[i-1] : temp_[i-1]);
-            path.values_[i] = d;
+            double d = process_.evolve(t, path.getValues_(i-1), dt, antithetic ? -temp_[i-1] : temp_[i-1]);
+            path.setValues_(i, d);
         }
 
         return next_;

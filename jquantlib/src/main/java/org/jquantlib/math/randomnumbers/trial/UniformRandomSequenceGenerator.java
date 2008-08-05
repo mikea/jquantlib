@@ -20,15 +20,25 @@
 
 package org.jquantlib.math.randomnumbers.trial;
 
+
 /**
  * @author Richard Gomes
  */
-public interface UniformSequenceGenerator<T> {
+public interface UniformRandomSequenceGenerator<T> { //FIXME: verify if generic parameter can be removed
 
     public T nextSequence() /* @ReadOnly */;
 
     public T lastSequence() /* @ReadOnly */;
-
+    
+    /**
+     * Return an array which contains 32bit, unsigned integer values.
+     * 
+     * @note As Java does not support unsigned integral types, we are obliged to return a long instead
+     * 
+     * @return an array of longs which contains 32bit, unsigned integer values.
+     */
+    public long[] nextInt32Sequence() /* @ReadOnly */;
+    
     public /*@NonNegative*/ int dimension() /* @ReadOnly */;
     
 }

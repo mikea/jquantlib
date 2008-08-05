@@ -38,17 +38,60 @@ package org.jquantlib.methods.montecarlo;
 public final class Sample<T> {
     
     //
-    // Since this class is intended to be immutable, all the relevant fields are final.
-    // We allow them to be set only in the constructor and safely forget getters on them in favour of direct access.
-    // The fields are redundantly marked with public to make these intentions explicit.
+    // private fields
+    //
+
+    /**
+     * This field represents the value held by this Sample.
+     * <p>
+     * This field can has public read access via getter 
+     * but can only be written by friend classes (same package)
+     */
+    private T value;
+
+    /**
+     * This field represents the weight held by this Sample.
+     * <p>
+     * This field can has public read access via getter 
+     * but can only be written by friend classes (same package)
+     */
+    private double weight;
+    
+
+    //
+    // public constructors
     //
     
-    public final T value;
-    public final double weight;
-    
     public Sample(final T value, double weight) {
-    	this.value=value;
-    	this.weight=weight;
+        this.value=value;
+        this.weight=weight;
+    }
+
+    
+    //
+    // public getters
+    //
+    
+    public T getValue() {
+        return value;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    
+    //
+    // friend (package protected) setters
+    //
+    
+    
+    /*@friend*/ void setValue(T value) {
+        this.value = value;
+    }
+
+    /*@friend*/ void setWeight(double weight) {
+        this.weight = weight;
     }
 
 }

@@ -73,13 +73,15 @@
  */
 
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.methods.montecarlo;
 
 /**
  * 
  * @author Dominik Holenstein
  */
 
+// TODO: This class was originally defined in /math/randomnumbers (should refactor?)
+// Note: Classes were grouped in the same package due to @friend (package-protection) setters
 
 public class PrimitivePolynomials {
 	

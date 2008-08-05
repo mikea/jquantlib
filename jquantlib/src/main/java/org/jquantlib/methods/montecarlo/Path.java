@@ -53,9 +53,63 @@ import org.jquantlib.time.TimeGrid;
 
 public class Path {
 
-    // TODO: comment these final public variables
-    final public TimeGrid timeGrid_;
-    final public double[] values_;
+    //
+    // private fields
+    //
+
+    /**
+     * This field represents the {@link TimeGrid} held by this Path.
+     * <p>
+     * This field can has public read access via getter 
+     * but can only be written by friend classes (same package)
+     */
+    private TimeGrid timeGrid_;
+
+    /**
+     * This field represents contains a double[] held by this Path.
+     * <p>
+     * This field can has public read access via getter 
+     * but can only be written by friend classes (same package)
+     */
+    private double[] values_;
+    
+    
+    //
+    // public getters
+    //
+
+    public TimeGrid getTimeGrid_() {
+        return timeGrid_;
+    }
+
+    public double[] getValues_() {
+        return values_;
+    }
+
+    public double getValues_(final int i) {
+        return values_[i];
+    }
+
+    //
+    // friend (package protected) setters
+    //
+    
+    /*@friend*/ void setTimeGrid_(TimeGrid timeGrid_) {
+        this.timeGrid_ = timeGrid_;
+    }
+
+    /*@friend*/ void setValues_(final double[] values) {
+        this.values_ = values;
+    }
+
+    /*@friend*/ void setValues_(final int i, final double value) {
+        this.values_[i] = value;
+    }
+    
+    
+    //
+    // public constructors
+    //
 
     public Path(final TimeGrid timeGrid) {
         this(timeGrid, null);
@@ -72,6 +126,11 @@ public class Path {
             throw new IllegalArgumentException("different number of times and asset values"); // FIXME: message
     }
 
+    
+    //
+    // public methods
+    //
+    
     public boolean empty() /* @ReadOnly */{
         return timeGrid_.empty();
     }

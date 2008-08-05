@@ -20,7 +20,7 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.methods.montecarlo;
 
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -28,7 +28,8 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.methods.montecarlo.Sample;
+import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
+import org.jquantlib.math.randomnumbers.trial.UniformRandomSequenceGenerator;
 import org.jquantlib.util.reflect.TypeToken;
 
 /**
@@ -98,7 +99,7 @@ import org.jquantlib.util.reflect.TypeToken;
  *
  */
 
-public class SobolRsg<T, RNG extends RandomNumberGenerator<Sample<T>>> implements UniformSequenceGenerator<Sample<T>> {
+public class SobolRsg<T, RNG extends RandomNumberGenerator<Sample<T>>> implements UniformRandomSequenceGenerator<Sample<T>> {
 	
 	// Sobol' Levitan coefficients of the free direction integers as given
     // by Bratley, P., Fox, B.L. (1988)
@@ -1243,11 +1244,11 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<Sample<T>>> implement
 	
 	
     // @Override
-	public final List<Long> nextInt32Sequence() /* @Read-only */ {
+	public final long[] nextInt32Sequence() /* @Read-only */ {
 		if (firstDraw_) {
             // it was precomputed in the constructor
             firstDraw_ = false;
-            return integerSequence_;
+            return ((LongArrayList)integerSequence_).toLongArray();
         }
         
 		// increment the counter
@@ -1277,7 +1278,7 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<Sample<T>>> implement
         	// FIXME: Correct this line regarding directionIntegers_ .
             // integerSequence_[k] = directionIntegers_[k][j];
         }
-        return integerSequence_;
+        return ((LongArrayList)integerSequence_).toLongArray();
 	}
 	
 	
@@ -1304,31 +1305,17 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<Sample<T>>> implement
         sequenceCounter_ = skip;
     }
     
-
     @Override
     public final Sample<T> nextSequence() /* @Read-only */ {
-        final List<Long> v = nextInt32Sequence();
+        final long[] v = nextInt32Sequence();
         // normalize to get a double in (0,1)
         for (int k=0; k<dimensionality_; ++k) {
-        	// FIXME: Check orignial C++ code: see comment code block below.
-            // sequence_.getWeight() = v.get(k) * normalizationFactor_; 
+
+            // FIXME: (Richard will solve!) Check orignial C++ code: see comment code block below.
+            sequence_.setWeight( v[k] * normalizationFactor_ ); 
         }
         return sequence_; 
     } 
-    
-    
-    /*
-     * C++ code for the method above:
-     * 
-     * const SobolRsg::sample_type& nextSequence() const {
-            const std::vector<unsigned long>& v = nextInt32Sequence();
-            // normalize to get a double in (0,1)
-            for (Size k=0; k<dimensionality_; ++k)
-                sequence_.value[k] = v[k] * normalizationFactor_;
-            return sequence_;
-        }
-     */
-	
     
     @Override
     public int dimension() /* @Read-only */ { 

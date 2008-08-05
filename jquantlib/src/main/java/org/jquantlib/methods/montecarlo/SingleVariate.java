@@ -39,9 +39,7 @@
 package org.jquantlib.methods.montecarlo;
 
 import org.jquantlib.math.randomnumbers.trial.InverseCumulative;
-import org.jquantlib.math.randomnumbers.trial.InverseCumulativeRsg;
 import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
-import org.jquantlib.math.randomnumbers.trial.RandomSequenceGenerator;
 
 /**
  * Default Monte Carlo traits for single-variate models
@@ -53,12 +51,29 @@ public class SingleVariate<T, RNG extends RandomNumberGenerator<T>, IC extends I
 // FIXME: should not expose fields
 // FIXME: adhere to standards
   public RNG rng_traits;
-  public Path path_type;
+  // public Path path_type;
   public PathPricer<Path> path_pricer_type;
-  public InverseCumulativeRsg<T, RandomSequenceGenerator<T, RNG>, IC> rsg_type;
-//TODO: code review
-//  public PathGenerator<rsg_type> path_generator_type;
-//  enum { allowsErrorEstimate = RNG::allowsErrorEstimate };
+//  public InverseCumulativeRsg<T, RNG, IC> rsg_type;
+
+  //TODO: code review
+  //  public PathGenerator<rsg_type> path_generator_type;
+
+//  public class PathGenerator<Double, Sample<Double> RNG extends RandomNumberGenerator<Path>, GSG extends RandomSequenceGenerator<Path, RNG>> { // should be GaussianSequenceGenerator ?
+
+//
+// hints for reference  
+//  
+//  InverseCumulativeRsg<SobolRsg,InverseCumulativeNormal> 
+//  
+//  
+//  public PathGenerator<InverseCumulativeRsg<T, RandomSequenceGenerator<T, RNG>, IC>> path_generator_type;
+//
+//  public class InverseCumulativeRsg<T, USG extends UniformSequenceGenerator<Sample<T>>, IC extends InverseCumulative> 
+//  implements UniformSequenceGenerator<Sample<List<Double>>> {
+//
+//  
+  
+  //  enum { allowsErrorEstimate = RNG::allowsErrorEstimate };
 
 }
 

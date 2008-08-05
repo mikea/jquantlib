@@ -39,7 +39,6 @@
 
 package org.jquantlib.math.randomnumbers.trial;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 
 import java.util.List;
@@ -50,6 +49,8 @@ import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * Random sequence generator based on a pseudo-random number generator
+ * 
+ * @note In original QuantLib (C++) code, this class 
  * <p>
  * Random sequence generator based on a pseudo-random number generator RNG.
  * 
@@ -61,7 +62,7 @@ import org.jquantlib.util.reflect.TypeToken;
  * @author Richard Gomes
  */
 public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>> 
-            implements UniformSequenceGenerator<Sample<T>> {
+            implements UniformRandomSequenceGenerator<Sample<T>> {
     
     private /*@NonNegative*/ int dimensionality_;
     private RNG rng_;
@@ -114,11 +115,12 @@ public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>>
         this(dimensionality, 0);
     }
 
-    public List<Long> nextInt32Sequence() /* @ReadOnly */ { // FIXME: Aaron:: code review  :: int or long????
+    @Override
+    public long[] nextInt32Sequence() /* @ReadOnly */ { // FIXME: Aaron:: code review  :: int or long????
         for (int i=0; i<dimensionality_; i++) {
             int32Sequence_.add(rng_.nextInt32());
         }
-        return int32Sequence_;
+        return ((LongArrayList)int32Sequence_).toLongArray();
     }
 
     @Override

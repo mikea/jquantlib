@@ -56,8 +56,8 @@ import org.jquantlib.methods.montecarlo.Sample;
  * 
  * @author Richard Gomes
  */
-public class InverseCumulativeRsg<T, USG extends UniformSequenceGenerator<Sample<T>>, IC extends InverseCumulative> 
-            implements UniformSequenceGenerator<Sample<List<Double>>> {
+public class InverseCumulativeRsg<T, USG extends UniformRandomSequenceGenerator<Sample<T>>, IC extends InverseCumulative> 
+            implements UniformRandomSequenceGenerator<Sample<List<Double>>> {
 
     private USG uniformSequenceGenerator_;
     private/*@NonNegative*/int dimension_;
@@ -84,7 +84,7 @@ public class InverseCumulativeRsg<T, USG extends UniformSequenceGenerator<Sample
     @Override
     public Sample<List<Double>> nextSequence() /* @ReadOnly */{
         Sample<T> sample = uniformSequenceGenerator_.nextSequence();
-        T sequence = sample.value;
+        T sequence = sample.getValue();
 
         
 //        
@@ -104,6 +104,12 @@ public class InverseCumulativeRsg<T, USG extends UniformSequenceGenerator<Sample
         return x_;
     }
 
+    @Override
+    //FIXME: original QuantLib does not declare this method.
+    public long[] nextInt32Sequence() /* @ReadOnly */ {
+        throw new UnsupportedOperationException(); 
+    }
+    
     @Override
     public/*@NonNegative*/int dimension() /* @ReadOnly */{
         return dimension_;

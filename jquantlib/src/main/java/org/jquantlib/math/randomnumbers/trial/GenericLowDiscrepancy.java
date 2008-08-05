@@ -39,10 +39,8 @@
 
 package org.jquantlib.math.randomnumbers.trial;
 
-import java.lang.reflect.Constructor;
-
 import org.jquantlib.methods.montecarlo.Sample;
-import org.jquantlib.util.reflect.TypeReference;
+import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * 
@@ -50,8 +48,7 @@ import org.jquantlib.util.reflect.TypeReference;
  * @param <URSG>
  * @param <IC>
  */
-public class GenericLowDiscrepancy<T, URSG extends UniformSequenceGenerator<Sample<T>>, IC extends InverseCumulative> 
-            extends TypeReference {
+public class GenericLowDiscrepancy<T, URSG extends UniformRandomSequenceGenerator<Sample<T>>, IC extends InverseCumulative> { 
 
     // FIXME: static :(
     static public boolean allowsErrorEstimate = false;
@@ -65,8 +62,13 @@ public class GenericLowDiscrepancy<T, URSG extends UniformSequenceGenerator<Samp
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
 
         try {
-            Constructor<URSG> c1 = (Constructor<URSG>) getGenericParameterClass().getConstructor(int.class, long.class);
-            URSG g = c1.newInstance(dimension, seed);
+            // instantiate a generic holder for Sample values
+            URSG g = null;
+            try {
+                g = (URSG) TypeToken.getClazz(this.getClass(), 1).getConstructor(int.class, long.class).newInstance(dimension, seed);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             return (icInstance!=null) ? new InverseCumulativeRsg(g, icInstance) : new InverseCumulativeRsg(g);
         } catch (Exception e) {
             throw new RuntimeException(e);
