@@ -23,35 +23,46 @@
 
 package org.jquantlib.testsuite.math;
 
-import org.jquantlib.math.PrimeNumbers;
-import static org.junit.Assert.fail;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
 
 import org.junit.Test;
 
 /**
  * @author <Q. Boiler>
  */
-public class PrimeNumbersTest {
+public class MatrixTest {
 
-	public PrimeNumbersTest() {
+	public MatrixTest() {
 		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@Test
-	public void testPrefetchOneMillion() {
+	public void testPrintMatrix() {
 		
-		PrimeNumbers primes = new PrimeNumbers();
+		Matrix matrix = new Matrix(3,3,42.42);
 		
-		//  From http://primes.utm.edu/lists/small/millions/
-		long expected = 15485863L;
-		// in a 0 indexed array the 1 Millionth element is at 1000000 -1
+		System.out.print(matrix.toString());
+		
+	//	if (expected!=realized)
+	//		fail("1Millionth Prime: Expected: " + expected + " realized: " + realized);
 
-		//  Un-Comment the next line for test to pass
-		//long realized = primes.get(1000000-1);
-		long realized = primes.get(10000-1);
+	}
+	@Test
+	public void testArrayCrosProduct() {
+		try {
+			Array a1 = new Array(6, 1, 5);
+			Array a2 = new Array(6, 23.23, 2.5);
+			Matrix matrix = new Matrix();
+			matrix = matrix.outerProduct(a1, a2);
 
-		if (expected!=realized)
-			fail("(uncomment line 50 for test to pass) 1Millionth Prime: Expected: " + expected + " realized: " + realized);
+			System.out.print(matrix.toString());
+			Thread.sleep(7000);
+		} catch (InterruptedException ex) {
+			Logger.getLogger(MatrixTest.class.getName()).log(Level.SEVERE, null, ex);
+		}
 
 	}
 }
