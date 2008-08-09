@@ -319,6 +319,22 @@ public class Matrix {
 		}
 		return result;
 	}
+
+	public String toString(){
+		StringBuffer sb = new StringBuffer();
+
+		sb.append("[\n");
+		for (int i = 0; i < this.rows; i++) {
+			sb.append("[");
+			for (int j = 0; j < this.columns; j++) {
+				sb.append(this.get(j, i)).append("  , ");
+			}
+			sb.append("]\n");
+		}
+		sb.append("]\n");
+		return sb.toString();
+		
+	}
 //    /*! \relates Matrix */
 //    const Disposable<Matrix> operator*(const Matrix&, const Matrix&);
 }
