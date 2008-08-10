@@ -21,7 +21,6 @@
  */
 package org.jquantlib.methods.lattices;
 
-import org.jquantlib.util.CuriouslyRecurringGeneric;
 
 
 /**
@@ -29,19 +28,19 @@ import org.jquantlib.util.CuriouslyRecurringGeneric;
  * @author Tim Swetonic
  * 
  */
-public abstract class Tree<T extends Tree> implements TreeFactor {
-	private /*@Size*/ int columns_;
+public abstract class Tree implements TreeFactor {
+	private /*@Size*/ int columns;
 	
-	public <T> Tree() {
+	public Tree() {
 		
 	}
 	
 	public Tree(/*@Size*/ int columns) {
-		columns_ = columns;
+		this.columns = columns;
 	}
     
 	public final /*@Size*/ int columns() { 
-		return columns_; 
+		return columns; 
 	}
       
 

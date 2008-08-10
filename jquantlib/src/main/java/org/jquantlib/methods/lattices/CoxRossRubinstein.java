@@ -27,26 +27,27 @@ import org.jquantlib.processes.StochasticProcess1D;
 /**
  * @author Srinivas Hasti
  * @author Tim Swetonic
- *
+ * 
  */
-//concrete impl
-public class CoxRossRubinstein extends EqualJumpsBinomialTree<CoxRossRubinstein> {
+// concrete impl
+public class CoxRossRubinstein extends EqualJumpsBinomialTree {
 
-    public CoxRossRubinstein(final StochasticProcess1D process,
-               /*Time*/ double end, 
-               /*Size*/ int steps, 
-               /*Real*/ double d) {
-        
-        super(process, end, steps); 
+	public CoxRossRubinstein(final StochasticProcess1D process,
+	/* Time */double end,
+	/* Size */int steps,
+	/* Real */double d) {
 
-        dx_ = process.stdDeviation(0.0, x0_, dt_);
-        pu_ = 0.5 + 0.5*driftPerStep_/dx_;;
-        pd_ = 1.0 - pu_;
+		super(process, end, steps);
 
-        if(pu_ > 1.0 || pu_ < 0.0)
-            throw new IllegalStateException("negative probability");
-//        QL_REQUIRE(pu_<=1.0, "negative probability");
-//        QL_REQUIRE(pu_>=0.0, "negative probability");
-    }
+		dx = process.stdDeviation(0.0, x0, dt);
+		pu = 0.5 + 0.5 * driftPerStep / dx;
+		;
+		pd = 1.0 - pu;
+
+		if (pu > 1.0 || pu < 0.0)
+			throw new IllegalStateException("negative probability");
+		// QL_REQUIRE(pu_<=1.0, "negative probability");
+		// QL_REQUIRE(pu_>=0.0, "negative probability");
+	}
 
 }

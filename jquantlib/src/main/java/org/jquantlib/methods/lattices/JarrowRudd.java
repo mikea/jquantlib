@@ -29,7 +29,7 @@ import org.jquantlib.processes.StochasticProcess1D;
  * @author Tim Swetonic
  *
  */
-public class JarrowRudd extends EqualProbabilitiesBinomialTree<JarrowRudd> {
+public class JarrowRudd extends EqualProbabilitiesBinomialTree {
 
     public JarrowRudd(final StochasticProcess1D process,
             /*Time*/ double end, 
@@ -37,7 +37,7 @@ public class JarrowRudd extends EqualProbabilitiesBinomialTree<JarrowRudd> {
             /*Real*/ double d) {
         super(process, end, steps); 
         // drift removed
-        up_ = process.stdDeviation(0.0, x0_, dt_);
+        up = process.stdDeviation(0.0, x0, dt);
     }
 
 }

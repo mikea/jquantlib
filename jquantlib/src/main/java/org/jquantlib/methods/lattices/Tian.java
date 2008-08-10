@@ -21,26 +21,51 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.processes.StochasticProcess1D;
+
 /**
  * @author Srinivas Hasti
- *
+ * 
  */
-public class Tian extends BinomialTree<Tian> {
-	
+public class Tian extends BinomialTree {
+
+	protected double up;
+	protected double down;
+	protected double pu;
+	protected double pd;
+
 	public Tian() {
 		super();
 	}
-	
-	@Override
-	public int descendant(int i, int index, int branch) {
-		// TODO Auto-generated method stub
-		return 0;
+
+	public Tian(StochasticProcess1D process,
+	/* Time */double end, /* Size */int steps) {
+		super(process, end, steps);
+
+		/* Real */double q = Math.exp(process.variance(0.0, x0, dt));
+		/* Real */double r = Math.exp(driftPerStep) * Math.sqrt(q);
+
+		up = 0.5 * r * q * (q + 1 + Math.sqrt(q * q + 2 * q - 3));
+		down = 0.5 * r * q * (q + 1 - Math.sqrt(q * q + 2 * q - 3));
+
+		pu = (r - down) / (up - down);
+		pd = 1.0 - pu;
+
+		// doesn't work
+		// treeCentering_ = (up_+down_)/2.0;
+		// up_ = up_-treeCentering_;
+
+		if (pu >= 1.0)
+			throw new IllegalStateException("negative probablity");
+		if (pu <= 0.0)
+			throw new IllegalStateException("negative probablity");
+		// QL_REQUIRE(pu_ <= 1.0, "negative probability");
+		// QL_REQUIRE(pu_ >= 0.0, "negative probability");
 	}
 
 	@Override
 	public double probability(int i, int index, int branch) {
-		// TODO Auto-generated method stub
-		return 0;
+		return (branch == 1 ? pu : pd);
 	}
 
 	@Override
@@ -51,8 +76,7 @@ public class Tian extends BinomialTree<Tian> {
 
 	@Override
 	public double underlying(int i, int index) {
-		// TODO Auto-generated method stub
-		return 0;
+		return x0 * Math.pow(down, i - index) * Math.pow(up, index);
 	}
 
 }

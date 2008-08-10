@@ -28,36 +28,33 @@ import org.jquantlib.processes.StochasticProcess1D;
 /**
  * @author Srinivas Hasti
  * @author Tim Swetonic
- *
+ * 
  */
-public class EqualJumpsBinomialTree<T extends BinomialTree> extends BinomialTree<T> {
+public class EqualJumpsBinomialTree extends BinomialTree {
 
+	protected double dx, pu, pd;
 
-    protected double dx_, pu_, pd_;
+	public EqualJumpsBinomialTree() {
+	}
 
-    public EqualJumpsBinomialTree() {
-    }
-    
-    public EqualJumpsBinomialTree(
-            final StochasticProcess1D process,
-          /*Time*/ double end,
-          /*Size*/ int steps) {
-        super(process, end, steps);
-    }
-
+	public EqualJumpsBinomialTree(final StochasticProcess1D process,
+	/* Time */double end,
+	/* Size */int steps) {
+		super(process, end, steps);
+	}
 
 	@Override
 	public double probability(int i, int index, int branch) {
-	    return (branch == 1 ? pu_ : pd_);
+		return (branch == 1 ? pu : pd);
 	}
 
 	@Override
 	public double underlying(int i, int index) {
-        BigInteger j = BigInteger.valueOf((long)index)
-        .multiply(new BigInteger("2"))
-            .subtract(new BigInteger(String.valueOf(i)));
+		BigInteger j = BigInteger.valueOf((long) index).multiply(
+				new BigInteger("2"))
+				.subtract(new BigInteger(String.valueOf(i)));
 
-        return this.x0_*Math.exp(j.intValue()*this.dx_);
+		return this.x0 * Math.exp(j.intValue() * this.dx);
 	}
 
 }

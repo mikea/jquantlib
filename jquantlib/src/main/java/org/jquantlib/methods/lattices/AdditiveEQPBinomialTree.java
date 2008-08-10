@@ -28,8 +28,7 @@ import org.jquantlib.processes.StochasticProcess1D;
  * @author Tim Swetonic
  *
  */
-//concrete impl
-public class AdditiveEQPBinomialTree extends EqualProbabilitiesBinomialTree<AdditiveEQPBinomialTree> {
+public class AdditiveEQPBinomialTree extends EqualProbabilitiesBinomialTree {
 
 
     public AdditiveEQPBinomialTree(final StochasticProcess1D process,
@@ -38,9 +37,9 @@ public class AdditiveEQPBinomialTree extends EqualProbabilitiesBinomialTree<Addi
               double d) {
         
         super(process, end, steps);
-        up_ = - 0.5 * driftPerStep_ + 0.5 *
-        Math.sqrt(4.0*process.variance(0.0, x0_, dt_)-
-            3.0*driftPerStep_*driftPerStep_);
+        up = - 0.5 * driftPerStep + 0.5 *
+        Math.sqrt(4.0*process.variance(0.0, x0, dt)-
+            3.0*driftPerStep*driftPerStep);
         
     }
 

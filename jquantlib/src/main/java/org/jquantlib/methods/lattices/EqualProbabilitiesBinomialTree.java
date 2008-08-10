@@ -27,33 +27,32 @@ import org.jquantlib.processes.StochasticProcess1D;
 /**
  * @author Srinivas Hasti
  * @author Tim Swetonic
- *
+ * 
  */
-public class EqualProbabilitiesBinomialTree<T extends BinomialTree> extends BinomialTree<T> {
+public class EqualProbabilitiesBinomialTree extends BinomialTree {
 
-    protected double up_;
-    
-    public  EqualProbabilitiesBinomialTree(final StochasticProcess1D process,
-              /* @Time */double end,
-              /* @Size */int steps) {
-      super(process, end, steps); 
-    }
-      
+	protected double up;
+
+	public EqualProbabilitiesBinomialTree(final StochasticProcess1D process,
+	/* @Time */double end,
+	/* @Size */int steps) {
+		super(process, end, steps);
+	}
 
 	@Override
 	public double probability(int i, int index, int branch) {
 		return 0.5;
 	}
 
-
 	@Override
 	public double underlying(int i, int index) {
-	    BigInteger j = BigInteger.valueOf((long)index)
-	        .multiply(new BigInteger("2"))
-	            .subtract(new BigInteger(String.valueOf(i)));
-	    
-        // exploiting the forward value tree centering
-        return this.x0_*Math.exp(i*this.driftPerStep_ + j.intValue()*this.up_);
+		BigInteger j = BigInteger.valueOf((long) index).multiply(
+				new BigInteger("2"))
+				.subtract(new BigInteger(String.valueOf(i)));
+
+		// exploiting the forward value tree centering
+		return this.x0
+				* Math.exp(i * this.driftPerStep + j.intValue() * this.up);
 	}
 
 }
