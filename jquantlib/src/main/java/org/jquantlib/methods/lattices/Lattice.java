@@ -25,16 +25,58 @@ import org.jquantlib.time.TimeGrid;
 
 /**
  * @author Srinivas Hasti
- *
+ * 
  */
-//ql/numericalmethod.hpp
-public class Lattice {
-	 private TimeGrid t;
+// ql/numericalmethod.hpp
+public abstract class Lattice {
+	private TimeGrid t;
 
 	public Lattice(TimeGrid t) {
-		super();
 		this.t = t;
 	}
-	  
-	 
+
+	public TimeGrid timeGrid() {
+		return t;
+	}
+
+	/*
+	 * ! \name Numerical method interface
+	 * 
+	 * These methods are to be used by discretized assets and must be overridden
+	 * by developers implementing numerical methods. Users are advised to use
+	 * the corresponding methods of DiscretizedAsset instead. @{
+	 */
+
+	// ! initialize an asset at the given time.
+	public abstract void initialize(DiscretizedAsset asset,
+	/* Time */double time);
+
+	/*
+	 * ! Roll back an asset until the given time, performing any needed
+	 * adjustment.
+	 */
+	public abstract void rollback(DiscretizedAsset asset,
+	/* Time */double to);
+
+	/*
+	 * ! Roll back an asset until the given time, but do not perform the final
+	 * adjustment.
+	 * 
+	 * \warning In version 0.3.7 and earlier, this method was called
+	 * rollAlmostBack method and performed pre-adjustment. This is no longer
+	 * true; when migrating your code, you'll have to replace calls such as:
+	 * \code method->rollAlmostBack(asset,t); \endcode with the two statements:
+	 * \code method->partialRollback(asset,t); asset->preAdjustValues();
+	 * \endcode
+	 */
+	public abstract void partialRollback(DiscretizedAsset asset,
+	/* Time */double to);
+
+	// ! computes the present value of an asset.
+	public abstract/* Real */double presentValue(DiscretizedAsset asset);
+
+	// @}
+
+	// this is a smell, but we need it. We'll rethink it later.
+	// virtual Disposable<Array> grid(Time) const = 0;
 }
