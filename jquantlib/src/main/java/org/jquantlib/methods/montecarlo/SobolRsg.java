@@ -99,7 +99,7 @@ import org.jquantlib.util.reflect.TypeToken;
  *
  */
 
-public class SobolRsg<T, RNG extends RandomNumberGenerator<Sample<T>>> implements UniformRandomSequenceGenerator<Sample<T>> {
+public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements UniformRandomSequenceGenerator<Sample<T>> {
 	
 	// Sobol' Levitan coefficients of the free direction integers as given
     // by Bratley, P., Fox, B.L. (1988)
