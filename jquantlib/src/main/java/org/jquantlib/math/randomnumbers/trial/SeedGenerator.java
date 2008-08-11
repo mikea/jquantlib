@@ -45,6 +45,9 @@ public class SeedGenerator {
 	// private static fields
 	//
 	
+    /**
+     * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
+     */
 	private static volatile SeedGenerator instance;
 	
 	

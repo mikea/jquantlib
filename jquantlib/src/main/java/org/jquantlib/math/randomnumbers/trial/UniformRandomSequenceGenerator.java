@@ -20,15 +20,19 @@
 
 package org.jquantlib.math.randomnumbers.trial;
 
+import java.util.List;
+
+import org.jquantlib.methods.montecarlo.Sample;
+
 
 /**
  * @author Richard Gomes
  */
 public interface UniformRandomSequenceGenerator<T> { //FIXME: verify if generic parameter can be removed
 
-    public T nextSequence() /* @ReadOnly */;
+    public Sample<List<T>> nextSequence() /* @ReadOnly */;
 
-    public T lastSequence() /* @ReadOnly */;
+    public Sample<List<T>> lastSequence() /* @ReadOnly */;
     
     /**
      * Return an array which contains 32bit, unsigned integer values.

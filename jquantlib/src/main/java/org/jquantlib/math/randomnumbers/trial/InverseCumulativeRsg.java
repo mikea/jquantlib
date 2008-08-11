@@ -40,8 +40,6 @@
 
 package org.jquantlib.math.randomnumbers.trial;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-
 import java.util.List;
 
 import org.jquantlib.methods.montecarlo.Sample;
@@ -56,20 +54,24 @@ import org.jquantlib.methods.montecarlo.Sample;
  * 
  * @author Richard Gomes
  */
-public class InverseCumulativeRsg<T, USG extends UniformRandomSequenceGenerator<Sample<T>>, IC extends InverseCumulative> 
-            implements UniformRandomSequenceGenerator<Sample<List<Double>>> {
+public class InverseCumulativeRsg<T, USG extends UniformRandomSequenceGenerator<T>, IC extends InverseCumulative> 
+            implements UniformRandomSequenceGenerator<T> {
 
     private USG uniformSequenceGenerator_;
     private/*@NonNegative*/int dimension_;
-    private Sample<List<Double>> x_; // FIXME: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
+    private Sample<List<T>> x_; // FIXME: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
     private InverseCumulative ICD_;
 
     public InverseCumulativeRsg(final USG uniformSequenceGenerator) {
         this.uniformSequenceGenerator_ = uniformSequenceGenerator;
         this.dimension_ = this.uniformSequenceGenerator_.dimension();
-        this.x_ = new Sample<List<Double>>(new DoubleArrayList(), 1.0);
         
-        // FIXME: ICD_ not initialized!!!! Verify if a static is passed by template
+//      
+// TODO :: code review
+//
+//        this.x_ = new Sample<List<Double>>(new DoubleArrayList(), 1.0);
+//        
+// FIXME: ICD_ not initialized!!!! Verify if a static is passed by template
         
     }
 
@@ -82,14 +84,13 @@ public class InverseCumulativeRsg<T, USG extends UniformRandomSequenceGenerator<
      * @return next sample from the Gaussian distribution
      */
     @Override
-    public Sample<List<Double>> nextSequence() /* @ReadOnly */{
-        Sample<T> sample = uniformSequenceGenerator_.nextSequence();
-        T sequence = sample.getValue();
-
+    public Sample<List<T>> nextSequence() /* @ReadOnly */{
+        Sample<List<T>> sample = uniformSequenceGenerator_.nextSequence();
         
 //        
-//FIXME: needs to define an interface which has get/set for indexing elements of a List or array
-//        
+// TODO :: code review
+//
+//        T sequence = sample.getValue();
 //        List<Double> array = new DoubleArrayList(dimension_);
 //        for (int i = 0; i < dimension_; i++) {
 //            array.add(ICD_.evaluate(sequence.get(i)));
@@ -100,7 +101,7 @@ public class InverseCumulativeRsg<T, USG extends UniformRandomSequenceGenerator<
     }
 
     @Override
-    public final Sample<List<Double>> lastSequence() /* @ReadOnly */{
+    public final Sample<List<T>> lastSequence() /* @ReadOnly */{
         return x_;
     }
 

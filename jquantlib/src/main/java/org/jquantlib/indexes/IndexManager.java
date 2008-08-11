@@ -30,7 +30,10 @@ import org.jquantlib.util.TimeSeries;
 //FIXME: code review
 public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> {
 
-	private static volatile IndexManager instance;
+    /**
+     * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
+     */
+    private static volatile IndexManager instance;
 
 	private IndexManager(){}
 	

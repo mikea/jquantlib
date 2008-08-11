@@ -24,16 +24,15 @@ package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Factorial;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.UnaryFunction;
 
 /**
  * Inverse cumulative Poisson distribution function. 
  *
  * @author Dominik Holenstein
  */
-// TODO InverseCumulativePoissonDistribution: Add test case.
 // TEST the correctness of the returned value is tested by checking it against known good results.
-public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble {
+public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
 	
 	//
 	// private fields
@@ -46,12 +45,13 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
 	// public constructors
 	//
 	
-    public InverseCumulativePoissonDistribution() {
-    	this(1.0);
-    }
+//XXX
+//	public InverseCumulativePoisson() {
+//    	this(1.0);
+//    }
     
 	
-    public InverseCumulativePoissonDistribution(double lambda) {
+    public InverseCumulativePoisson(double lambda) {
     	lambda_ = lambda;
     	
     	// FIXME lambda_ is initialized with lambda first and then set equal to 1.0. This doesn't make sense.
@@ -62,7 +62,7 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
     }
 
     //
-    // implements UnaryFunctionDouble
+    // implements UnaryFunction
     //
     
     
@@ -72,7 +72,8 @@ public class InverseCumulativePoissonDistribution implements UnaryFunctionDouble
      * @param x
      * @returns the inverse of the cumulative poisson distribution of input <code>x</code>
      */
-    public double evaluate (double x) /* @Read-only */ {
+    @Override
+    public Double evaluate (Double x) /* @Read-only */ {
         if(x <= 0.0 && x >= 1.0) {
             throw new ArithmeticException("Inverse cumulative Poisson distribution is only defined on the interval [0,1]");
         }

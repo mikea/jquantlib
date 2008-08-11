@@ -41,7 +41,7 @@
 
 package org.jquantlib.methods.montecarlo;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrays;
+import java.util.List;
 
 import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
 import org.jquantlib.math.randomnumbers.trial.RandomSequenceGenerator;
@@ -119,16 +119,19 @@ public class PathGenerator<RNG extends RandomNumberGenerator<Path>, GSG extends 
 
     public final Sample<Path> next(final boolean antithetic) /* @ReadOnly */ {
 
-        final Sample<Path> sequence_ =
+        final Sample<List<Path>> sequence_ =
             antithetic ? generator_.lastSequence()
                        : generator_.nextSequence();
 
-        if (brownianBridge_) {
-            bb_.transform(sequence_.getValue().getValues_(), this.temp_);
-        } else {
-            DoubleArrays.copy(sequence_.getValue().getValues_(), 0, this.dimension_);
-        }
-
+//            
+// TODO :: code review            
+//            
+//        if (brownianBridge_) {
+//            bb_.transform(sequence_.getValue().getValues_(), this.temp_);
+//        } else {
+//            DoubleArrays.copy(sequence_.getValue().getValues_(), 0, this.dimension_);
+//        }
+//
         
         // XXX next_.weight = sequence_.weight;
         Sample<Path> next_ = new Sample<Path>(new Path(timeGrid_), sequence_.getWeight());

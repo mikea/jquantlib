@@ -62,11 +62,11 @@ import org.jquantlib.util.reflect.TypeToken;
  * @author Richard Gomes
  */
 public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>> 
-            implements UniformRandomSequenceGenerator<Sample<T>> {
+            implements UniformRandomSequenceGenerator<T> {
     
     private /*@NonNegative*/ int dimensionality_;
     private RNG rng_;
-    private Sample<T> sequence_; // FIXME :: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
+    private Sample<List<T>> sequence_; // FIXME :: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
     private List<Long> int32Sequence_; // In spite of Int32, it is made of Longs
 
     
@@ -83,8 +83,12 @@ public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>>
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        // instantiate a Sample with previously instantiated value holder
-        this.sequence_ = new Sample<T>(value, 1.0);
+        
+//        
+//TODO :: code review
+//        
+//        // instantiate a Sample with previously instantiated value holder
+//        this.sequence_ = new Sample<T>(value, 1.0);
     }
     
     
@@ -100,8 +104,12 @@ public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>>
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        // instantiate a Sample with previously instantiated value holder
-        this.sequence_ = new Sample<T>(value, 1.0);
+        
+//        
+//TODO :: code review
+//        
+//        // instantiate a Sample with previously instantiated value holder
+//        this.sequence_ = new Sample<T>(value, 1.0);
         
         // instantiate a generic RandomNumberGenerator
         try {
@@ -124,7 +132,7 @@ public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>>
     }
 
     @Override
-    public final Sample<T> lastSequence() /* @ReadOnly */ {
+    public final Sample<List<T>> lastSequence() /* @ReadOnly */ {
         return sequence_;
     }
     
@@ -132,9 +140,11 @@ public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>>
     //
     // implements USG
     //
-    
+    // TODO :: code review
+    //
+
     @Override
-    public final Sample<T> nextSequence() /* @ReadOnly */ {
+    public final Sample<List<T>> nextSequence() /* @ReadOnly */ {
         double weight = 1.0;
         
 //
@@ -155,8 +165,13 @@ public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>>
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        // instantiate a Sample with previously instantiated value holder
-        this.sequence_ = new Sample<T>(value, weight);
+        
+//        
+// TODO :: code review  
+//        
+//        // instantiate a Sample with previously instantiated value holder
+//        this.sequence_ = new Sample<T>(value, weight);
+        
         return sequence_;
     }
 

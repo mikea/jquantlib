@@ -58,7 +58,11 @@ import org.jquantlib.util.Month;
  */
 //TODO: Improve comments
 public class IMM {
+    /**
+     * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
+     */
     private static volatile IMM DEFAULT_IMM;
+
     private Configuration configuration = null;
     private Settings settings = null;
     
@@ -78,7 +82,7 @@ public class IMM {
      * @return
      */
     public static IMM getDefaultIMM(){
-        if(DEFAULT_IMM == null){
+        if (DEFAULT_IMM == null){
             synchronized(IMM.class){
                 if(DEFAULT_IMM == null)
                     DEFAULT_IMM = new IMM(Configuration.getSystemConfiguration(null), Configuration.getSystemConfiguration(null).getGlobalSettings());

@@ -43,27 +43,39 @@ package org.jquantlib.math.randomnumbers.trial;
 
 import org.jquantlib.util.reflect.TypeToken;
 
-
 /**
+ * The original C++ code has a static variable defined more or less like this:
+ * <pre>
+ *     private static volatile IC icInstance; // translated to Java
+ * </pre>
+ * 
+ * C++ Template engine creates multiple "incarnations" of code for every invocation of the template. In particular, when template
+ * parameters are identical to previous invocations, binary code is identical to previous invocations. The link editor is
+ * responsible for removing duplicates which means that all identical invocations will "share" the same commonly declared static
+ * variable.
+ * <p>
+ * Java Generics engine creates multiple, distinct objects for every invocation, but all sharing the same class signature. The Java
+ * compiler does not make any distinction between static variables in these multiple objects because static variables are associated
+ * to the class and not to a certain instance.
+ * <p>
+ * It means that, in order to mimic the behaviour of C++ code, we would be obliged to keep a cache at runtime which returns a
+ * singleton associated to a certain combination of Generic parameters retrieved. This effort does not payoff the benefits obtained
+ * (if any) whilst it imposes additional performance penalties in order to manage the cache.
+ * <p>
+ * For this reason, we are not providing the static variable responsible for keeping a certain generic IC.
  * 
  * @author Richard Gomes
- * @param <URSG>
- * @param <IC>
+ * @param <T> represents the sample type
+ * @param <RNG> represents the RandomNumberGenerator<T>
+ * @param <IC> represents the InverseCumulative
  */
-
-//public class GenericPseudoRandom<URSG extends RandomSequenceGenerator<Sample<List<Double>>>, IC extends InverseCumulative> {
 public class GenericPseudoRandom<T, RNG extends RandomNumberGenerator<T>, IC extends InverseCumulative> {
 
-    // FIXME: static :(
-    static public boolean allowsErrorEstimate = true;
+    // TODO:: code review
+    static public final boolean allowsErrorEstimate = true;
     
-    
-    /*static*/    // FIXME: static :( 
-    private IC icInstance; // FIXME: where it is initialized ???
-
-    
-    /*static*/    // FIXME: static :( 
-    public InverseCumulativeRsg<T, RandomSequenceGenerator<T, RNG>, IC> makeSequenceGenerator(
+    // TODO:: code review
+    /*static*/ public InverseCumulativeRsg<T, RandomSequenceGenerator<T, RNG>, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
 
         try {
@@ -79,7 +91,7 @@ public class GenericPseudoRandom<T, RNG extends RandomNumberGenerator<T>, IC ext
             RandomSequenceGenerator<T, RNG> rsg = new RandomSequenceGenerator<T, RNG>(dimension, rng);
             
             // return an InverseCumulativeRandomSequenceGenerator given a RandomSequenceGenerator and InverseCumulative distribution
-            return (icInstance!=null) ? new InverseCumulativeRsg(rsg, icInstance) : new InverseCumulativeRsg(rsg);
+            return /*(icInstance!=null) ? new InverseCumulativeRsg(rsg, icInstance) :*/ new InverseCumulativeRsg(rsg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

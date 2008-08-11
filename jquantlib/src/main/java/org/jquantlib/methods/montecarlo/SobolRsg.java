@@ -99,7 +99,7 @@ import org.jquantlib.util.reflect.TypeToken;
  *
  */
 
-public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements UniformRandomSequenceGenerator<Sample<T>> {
+public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements UniformRandomSequenceGenerator<T> {
 	
 	// Sobol' Levitan coefficients of the free direction integers as given
     // by Bratley, P., Fox, B.L. (1988)
@@ -969,7 +969,7 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements Unifor
 	private int dimensionality_; 							// Size dimensionality_;
 	private long sequenceCounter_; 							// mutable unsigned long sequenceCounter_;
 	private boolean firstDraw_; 							// mutable bool firstDraw_;
-	private Sample<T> sequence_; 			    		// typedef Sample<std::vector<Real> > sample_type; / mutable sample_type sequence_;
+	private Sample<List<T>> sequence_; 			    		// typedef Sample<std::vector<Real> > sample_type; / mutable sample_type sequence_;
 	private List<Long> integerSequence_; 				// mutable std::vector<unsigned long> integerSequence_
 	
 	//FIXME: Is this the correct translation of std::vector<std::vector< long> > directionIntegers_?
@@ -1003,9 +1003,13 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements Unifor
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        // instantiate a Sample with previously instantiated value holder
-        this.sequence_ = new Sample<T>(value, 1.0);
-
+        
+//        
+// TODO: code review (to be solved by Richard)
+//        
+//        // instantiate a Sample with previously instantiated value holder
+//        this.sequence_ = new Sample<List<T>>(value, 1.0);
+//
     	
         // TODO: integerSequence_(dimensionality, 0) --> where has the zero gone?
        	this.integerSequence_ = new LongArrayList(dimensionality_);
@@ -1306,7 +1310,7 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements Unifor
     }
     
     @Override
-    public final Sample<T> nextSequence() /* @Read-only */ {
+    public final Sample<List<T>> nextSequence() /* @Read-only */ {
         final long[] v = nextInt32Sequence();
         // normalize to get a double in (0,1)
         for (int k=0; k<dimensionality_; ++k) {
@@ -1323,7 +1327,7 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements Unifor
     }
     
     @Override
-    public final Sample<T> lastSequence() /* @Read-only*/  { 
+    public final Sample<List<T>> lastSequence() /* @Read-only*/  { 
     	return sequence_; 
     }
     

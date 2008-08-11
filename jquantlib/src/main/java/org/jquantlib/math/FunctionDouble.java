@@ -27,6 +27,8 @@ package org.jquantlib.math;
  * 
  * @author <Richard Gomes>
  */
+@Deprecated
+// TODO: Remove this interface :: substibute by Function<Double>
 public interface FunctionDouble {
 
 	/**
