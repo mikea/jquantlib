@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Aaron Roth
+ Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -22,31 +22,11 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import org.jquantlib.math.randomnumbers.UniformRng;
-import org.jquantlib.math.randomnumbers.SeedableWithInts;
-import org.jquantlib.methods.montecarlo.Sample;
-
+import org.jquantlib.math.UnaryFunction;
 
 /**
- *
- * @author Aaron Roth
+ * @author Richard Gomes
  */
-public abstract class SampleGenerator<UniformRngNumberType, SampleValueType> implements SeedableWithInts {
-    protected final UniformRng<UniformRngNumberType> uniformRng;
-
-    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng) {
-        this.uniformRng = uniformRng;
-    }
-    
-    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng, int... seeds) {
-        this.uniformRng = uniformRng;
-        seed(seeds);
-    }
-    
-    public abstract Sample<SampleValueType> next();
-    
-    @Override
-    public void seed(int... seeds) {
-        uniformRng.seed(seeds);
-    }
+public interface InverseCumulative extends UnaryFunction<Double, Double> {
+    // tagging interface
 }

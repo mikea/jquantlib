@@ -37,7 +37,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.math.randomnumbers;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 

@@ -38,8 +38,8 @@
 
 package org.jquantlib.methods.montecarlo;
 
-import org.jquantlib.math.randomnumbers.trial.InverseCumulative;
-import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
+import org.jquantlib.math.randomnumbers.InverseCumulative;
+import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 
 /**
  * Default Monte Carlo traits for single-variate models

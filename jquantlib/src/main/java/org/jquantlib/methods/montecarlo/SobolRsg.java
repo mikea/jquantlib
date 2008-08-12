@@ -28,8 +28,8 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
-import org.jquantlib.math.randomnumbers.trial.UniformRandomSequenceGenerator;
+import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
+import org.jquantlib.math.randomnumbers.UniformRandomSequenceGenerator;
 import org.jquantlib.util.reflect.TypeToken;
 
 /**

@@ -38,7 +38,7 @@
 
 package org.jquantlib.methods.montecarlo;
 
-import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
+import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 import org.jquantlib.math.statistics.Statistics;
 
 /**

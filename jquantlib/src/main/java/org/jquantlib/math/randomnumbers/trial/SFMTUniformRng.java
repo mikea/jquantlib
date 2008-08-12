@@ -65,11 +65,11 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </pre>
  */
-package org.jquantlib.math.randomnumbers;
+package org.jquantlib.math.randomnumbers.trial;
 
 
-import org.jquantlib.math.randomnumbers.UniformRng;
-import org.jquantlib.math.randomnumbers.trial.SeedGenerator;
+import org.jquantlib.math.randomnumbers.SeedGenerator;
+import org.jquantlib.math.randomnumbers.trial.UniformRng;
 
 
 /**

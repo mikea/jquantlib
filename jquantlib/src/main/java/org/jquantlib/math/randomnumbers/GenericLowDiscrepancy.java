@@ -1,13 +1,11 @@
 /*
  Copyright (C) 2007 Richard Gomes
 
- This source code is release under the BSD License.
- 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
  JQuantLib is free software: you can redistribute it and/or modify it
- under the terms of the JQuantLib license.  You should have received a
+ under the terms of the QuantLib license.  You should have received a
  copy of the license along with this program; if not, please email
  <jquant-devel@lists.sourceforge.net>. The license is also available online at
  <http://www.jquantlib.org/index.php/LICENSE.TXT>.
@@ -39,7 +37,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.math.randomnumbers;
 
 import org.jquantlib.util.reflect.TypeToken;
 
@@ -66,32 +64,31 @@ import org.jquantlib.util.reflect.TypeToken;
  * 
  * @author Richard Gomes
  * @param <T> represents the sample type
- * @param <RNG> represents the RandomNumberGenerator<T>
+ * @param <URSG> represents the UniformRandomSequenceGenerator<T>
  * @param <IC> represents the InverseCumulative
  */
-public class GenericPseudoRandom<T, RNG extends RandomNumberGenerator<T>, IC extends InverseCumulative> {
+public class GenericLowDiscrepancy<T, URSG extends UniformRandomSequenceGenerator<T>, IC extends InverseCumulative> { 
 
-    // TODO:: code review
-    static public final boolean allowsErrorEstimate = true;
+    // TODO :: code review
+    static public boolean allowsErrorEstimate = false;
     
-    // TODO:: code review
-    /*static*/ public InverseCumulativeRsg<T, RandomSequenceGenerator<T, RNG>, IC> makeSequenceGenerator(
+    
+    // TODO :: code review
+    /*static*/ public InverseCumulativeRsg<T, URSG, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
 
         try {
-            // instantiate a RandomNumberGenerator given its generic type
-            RNG rng = null;
+            // instantiate a generic holder for Sample values
+            URSG g = null;
             try {
-                rng = (RNG) TypeToken.getClazz(this.getClass(), 1).getConstructor(long.class).newInstance(seed);
+                g = (URSG) TypeToken.getClazz(this.getClass(), 1).getConstructor(int.class, long.class).newInstance(dimension, seed);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
-            // instantiate a RandomSequenceGenerator given its dimension and a RandonNumberGenerator
-            RandomSequenceGenerator<T, RNG> rsg = new RandomSequenceGenerator<T, RNG>(dimension, rng);
-            
             // return an InverseCumulativeRandomSequenceGenerator given a RandomSequenceGenerator and InverseCumulative distribution
-            return /*(icInstance!=null) ? new InverseCumulativeRsg(rsg, icInstance) :*/ new InverseCumulativeRsg(rsg);
+            // TODO: decide how InverseCumulativeRsg must be instantiated
+            return /*(icInstance!=null) ? new InverseCumulativeRsg(g, icInstance) :*/ new InverseCumulativeRsg(g);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

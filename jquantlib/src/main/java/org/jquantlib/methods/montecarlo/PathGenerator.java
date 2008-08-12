@@ -43,8 +43,8 @@ package org.jquantlib.methods.montecarlo;
 
 import java.util.List;
 
-import org.jquantlib.math.randomnumbers.trial.RandomNumberGenerator;
-import org.jquantlib.math.randomnumbers.trial.RandomSequenceGenerator;
+import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
+import org.jquantlib.math.randomnumbers.RandomSequenceGenerator;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 

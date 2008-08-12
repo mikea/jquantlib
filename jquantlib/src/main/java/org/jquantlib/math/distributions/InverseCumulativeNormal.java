@@ -23,7 +23,7 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.randomnumbers.trial.InverseCumulative;
+import org.jquantlib.math.randomnumbers.InverseCumulative;
 
 
 /**

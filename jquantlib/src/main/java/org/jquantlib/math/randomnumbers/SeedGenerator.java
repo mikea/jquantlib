@@ -22,7 +22,7 @@
 
 
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.math.randomnumbers;
 
 import java.util.ArrayList; // FIXME: performance
 import java.util.Date;

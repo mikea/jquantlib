@@ -21,7 +21,7 @@
  */
 
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.math.randomnumbers;
 
 import java.util.ArrayList;
 

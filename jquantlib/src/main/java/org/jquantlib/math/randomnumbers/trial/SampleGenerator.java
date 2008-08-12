@@ -20,32 +20,33 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers;
+package org.jquantlib.math.randomnumbers.trial;
 
-import org.jquantlib.math.randomnumbers.UniformRng;
-import org.jquantlib.math.randomnumbers.InverseCdf;
+import org.jquantlib.math.randomnumbers.trial.SeedableWithInts;
+import org.jquantlib.math.randomnumbers.trial.UniformRng;
 import org.jquantlib.methods.montecarlo.Sample;
+
 
 /**
  *
  * @author Aaron Roth
  */
-public class AaronsInverseCumulativeRng<UniformRngNumberType, SampleValueType> extends SampleGenerator<UniformRngNumberType, SampleValueType>  {
-    private final InverseCdf<UniformRngNumberType, SampleValueType> inverseCdf;
+public abstract class SampleGenerator<UniformRngNumberType, SampleValueType> implements SeedableWithInts {
+    protected final UniformRng<UniformRngNumberType> uniformRng;
 
-    public AaronsInverseCumulativeRng( final UniformRng<UniformRngNumberType> uniformRng
-                                     , final InverseCdf<UniformRngNumberType, SampleValueType> inverseCdf)
-    {
-        super(uniformRng);
-        this.inverseCdf = inverseCdf;
+    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng) {
+        this.uniformRng = uniformRng;
     }
-
-    /**
-     * @return a sample from a Gaussian distribution
-     * Huh? why is the distribution necessarily Gaussian?
-     */
+    
+    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng, int... seeds) {
+        this.uniformRng = uniformRng;
+        seed(seeds);
+    }
+    
+    public abstract Sample<SampleValueType> next();
+    
     @Override
-    public Sample<SampleValueType> next() /* @ReadOnly */ {
-        return new Sample(inverseCdf.evaluate(uniformRng.next()), 1.0);
+    public void seed(int... seeds) {
+        uniformRng.seed(seeds);
     }
 }

@@ -20,7 +20,7 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.perf.math;
+package org.jquantlib.performance.math;
 
 import org.jquantlib.math.distributions.BinomialDistribution;
 import org.jquantlib.util.StopClock;

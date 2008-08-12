@@ -80,8 +80,8 @@ public class Array implements PerformanceTest {
 		org.jquantlib.math.PrimeNumbers pn = new org.jquantlib.math.PrimeNumbers();
 
 		long prime = pn.get(7000);
-		org.jquantlib.math.randomnumbers.SFMTUniformRng rng
-			= new org.jquantlib.math.randomnumbers.SFMTUniformRng((int)prime);
+		org.jquantlib.math.randomnumbers.trial.SFMTUniformRng rng
+			= new org.jquantlib.math.randomnumbers.trial.SFMTUniformRng((int)prime);
 
 		org.jquantlib.math.Array a = new org.jquantlib.math.Array(size);
 		for(int i =0;i<size;++i){
