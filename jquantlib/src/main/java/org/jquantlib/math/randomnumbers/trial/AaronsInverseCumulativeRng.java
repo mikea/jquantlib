@@ -22,7 +22,6 @@
 
 package org.jquantlib.math.randomnumbers.trial;
 
-import org.jquantlib.math.randomnumbers.InverseCdf;
 import org.jquantlib.math.randomnumbers.trial.UniformRng;
 import org.jquantlib.methods.montecarlo.Sample;
 
