@@ -47,8 +47,8 @@ public class PrimeNumbersTest {
 		// in a 0 indexed array the 1 Millionth element is at 1000000 -1
 
 		//  Un-Comment the next line for test to pass
-		//long realized = primes.get(1000000-1);
-		long realized = primes.get(10000-1);
+		long realized = primes.get(1000000-1);
+		//long realized = primes.get(10000-1);
 
 		if (expected!=realized)
 			fail("(uncomment line 50 for test to pass) 1Millionth Prime: Expected: " + expected + " realized: " + realized);
