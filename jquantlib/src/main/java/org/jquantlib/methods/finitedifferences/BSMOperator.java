@@ -29,25 +29,27 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 /**
  * 
  * @author Srinivas Hasti
- *
+ * 
  */
 public class BSMOperator extends TridiagonalOperator {
 
-    public BSMOperator(int size, double dx, double r, double q, double sigma) {
-        super(size);
-        double sigma2 = sigma * sigma;
-        double nu = r - q - sigma2 / 2;
-        double pd = -(sigma2 / dx - nu) / (2 * dx);
-        double pu = -(sigma2 / dx + nu) / (2 * dx);
-        double pm = sigma2 / (dx * dx) + r;
-        setMidRows(pd, pm, pu);
-    }
+	public BSMOperator(int size, double dx, double r, double q, double sigma) {
+		super(size);
+		double sigma2 = sigma * sigma;
+		double nu = r - q - sigma2 / 2;
+		double pd = -(sigma2 / dx - nu) / (2 * dx);
+		double pu = -(sigma2 / dx + nu) / (2 * dx);
+		double pm = sigma2 / (dx * dx) + r;
+		setMidRows(pd, pm, pu);
+	}
 
-    public BSMOperator(Array grid, GeneralizedBlackScholesProcess process, double residualTime) {
-        super(grid.size());
-        LogGrid logGrid = null; // TODO: initialize with (grid);
-        PdeConstantCoeff<GeneralizedBlackScholesProcess> cc = new PdeConstantCoeff<GeneralizedBlackScholesProcess>(process,
-                residualTime, process.stateVariable().getLink().doubleValue());
-        cc.generateOperator(residualTime, logGrid, this);
-    }
+	public BSMOperator(Array grid, GeneralizedBlackScholesProcess process,
+			double residualTime) {
+		super(grid.size());
+		LogGrid logGrid = new LogGrid(grid);
+		PdeConstantCoeff<GeneralizedBlackScholesProcess> cc = new PdeConstantCoeff<GeneralizedBlackScholesProcess>(
+				process, residualTime, process.stateVariable().getLink()
+						.doubleValue());
+		cc.generateOperator(residualTime, logGrid, this);
+	}
 }
