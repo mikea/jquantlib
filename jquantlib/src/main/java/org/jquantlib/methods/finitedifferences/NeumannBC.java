@@ -23,6 +23,11 @@ package org.jquantlib.methods.finitedifferences;
 
 import org.jquantlib.math.Array;
 
+/**
+ * 
+ * @author Srinivas Hasti
+ *
+ */
 public class NeumannBC implements
 		BoundaryCondition<TridiagonalOperator> {
 	private/* @Real */double value;

@@ -26,6 +26,11 @@ import org.jquantlib.math.Array;
 import org.jquantlib.math.LogGrid;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
+/**
+ * 
+ * @author Srinivas Hasti
+ *
+ */
 public class BSMOperator extends TridiagonalOperator {
 
     public BSMOperator(int size, double dx, double r, double q, double sigma) {

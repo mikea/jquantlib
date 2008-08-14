@@ -19,27 +19,13 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-
-package org.jquantlib.math;
-
-import org.jquantlib.math.functions.LogFunction;
+package org.jquantlib.math.functions;
 
 /**
- * 
  * @author Srinivas Hasti
  * 
  */
-public class LogGrid extends TransformedGrid {
-	public LogGrid(Array grid) {
-		super(grid, LogFunction.getInstance());
-	}
-
-	public Array logGridArray() {
-		return transformedGridArray();
-	}
-
-	public double logGrid(int i) {
-		return transformedGrid(i);
-	}
-
+public interface DoubleFunction {
+	public double apply(double a);
+	public double apply(double... a);
 }
