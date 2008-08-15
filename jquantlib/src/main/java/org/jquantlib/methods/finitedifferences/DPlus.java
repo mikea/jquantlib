@@ -31,6 +31,7 @@ public class DPlus extends TridiagonalOperator {
         super(gridPoints);
         setFirstRow(-1 / h, 1 / h);
         setMidRows(0.0, -1 / h, 1 / h);
-        setLastRow(-1 / h, 1 / h); // linear extrapolation
+        setLastRow(-1 / h, 1 / h); 
+        // linear extrapolation
     }
 }
