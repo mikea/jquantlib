@@ -29,8 +29,8 @@ import java.util.List;
  */
 public class CrankNicolson extends MixedScheme<Operator> {
 
-    public CrankNicolson(Operator op, double theta, 
+    public CrankNicolson(Operator op,  
                          List<BoundaryCondition> bcs) {
-        super(op, theta, bcs);
+        super(op, 0.5, bcs);
     }
 }
