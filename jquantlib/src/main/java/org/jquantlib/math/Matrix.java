@@ -85,6 +85,11 @@ public class Matrix {
 			System.arraycopy(m.data[i], 0, data[i], 0, rows);
 		}
 	}
+	public Matrix (double[][] A, int m, int n) {
+      this.data = A;
+      this.columns = m;
+      this.rows = n;
+   }
 
 	public double get(int i, int j) {
 		//  Error condition should be set...
@@ -334,6 +339,9 @@ public class Matrix {
 		sb.append("]\n");
 		return sb.toString();
 		
+	}
+	public double[][] getRawData(){
+		return data;
 	}
 //    /*! \relates Matrix */
 //    const Disposable<Matrix> operator*(const Matrix&, const Matrix&);
