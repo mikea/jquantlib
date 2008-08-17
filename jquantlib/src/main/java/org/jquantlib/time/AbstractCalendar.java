@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
  
@@ -22,25 +23,31 @@
 
 package org.jquantlib.time;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 
+import cern.colt.list.ObjectArrayList;
+
+/**
+ * 
+ * @author Srinivas Hasti
+ *
+ */
 public abstract class AbstractCalendar implements Calendar {
 
     /**
      * To store artifically added holidays
      */
-    private List<Date> addedHolidays;
+    private ObjectArrayList addedHolidays;
 
     /**
      * Constructor
      */
     protected AbstractCalendar() {
-        this.addedHolidays = new ObjectArrayList<Date>();
+        this.addedHolidays = new ObjectArrayList();
     }
 
     public void addHoliday(final Date d) {
@@ -52,24 +59,23 @@ public abstract class AbstractCalendar implements Calendar {
 
     public void removeHoliday(final Date d) {
         // if d was an artificially-added holiday, revert the change
-        addedHolidays.remove(d);
+        addedHolidays.delete(d, true);
     }
 
     /**
      * Check whether holiday is artificially added
      * 
      * @param date
-     * @return true if its added holiday
-     *         false if its not added
+     * @return true if its added holiday false if its not added
      */
     protected boolean isAddedHoliday(Date date) {
-        return addedHolidays.contains(date);
+        return addedHolidays.contains(date, true);
     }
 
     /**
      * This base class only checks in list added by addHoliday(Date) call.
      * 
-     * {@inheritDoc}  	
+     * {@inheritDoc}
      */
     public boolean isBusinessDay(final Date date) {
         if (isAddedHoliday(date)) {
@@ -79,8 +85,8 @@ public abstract class AbstractCalendar implements Calendar {
     }
 
     /**
-     * Advances the given date of the given number of business days and returns
-     * the result.
+     * Advances the given date of the given number of business days and returns the result. Returned reference is same as original
+     * date reference passed in
      * 
      * @return Date is date adjusted to next n-th business day
      */
@@ -130,7 +136,7 @@ public abstract class AbstractCalendar implements Calendar {
      * @return
      */
     public final Date advance(final Date d) {
-        return adjust(d, BusinessDayConvention.FOLLOWING);
+        return advance(d, 0, TimeUnit.DAYS);
     }
 
     public final Date advance(final Date d, int n, final TimeUnit unit) {
@@ -149,14 +155,13 @@ public abstract class AbstractCalendar implements Calendar {
         return advance(d, n, unit, c, false);
     }
 
-    public final Date advance(final Date d, int n, final TimeUnit unit, final BusinessDayConvention c,
-            boolean endOfMonth) {
-        if (d == null)
+    public final Date advance(final Date date, int n, final TimeUnit unit, final BusinessDayConvention c, boolean endOfMonth) {
+        if (date == null)
             throw new NullPointerException();
+        Date d1 = DateFactory.getFactory().getDate(date.getDayOfMonth(), date.getMonthEnum(), date.getYear());
         if (n == 0) {
-            return adjust(d, c);
+            return adjust(d1, c);
         } else if (unit == TimeUnit.DAYS) {
-            Date d1 = d;
             if (n > 0) {
                 while (n > 0) {
                     d1.increment();
@@ -174,11 +179,11 @@ public abstract class AbstractCalendar implements Calendar {
             }
             return d1;
         } else if (unit == TimeUnit.WEEKS) {
-            Date d1 = d.adjust(new Period(n, unit));
+            d1 = d1.adjust(new Period(n, unit));
             return adjust(d1, c);
         } else {
-            Date d1 = d.adjust(new Period(n, unit));
-            if (endOfMonth && (unit == TimeUnit.MONTHS || unit == TimeUnit.YEARS) && isEndOfMonth(d)) {
+            d1 = d1.adjust(new Period(n, unit));
+            if (endOfMonth && (unit == TimeUnit.MONTHS || unit == TimeUnit.YEARS) && isEndOfMonth(d1)) {
                 return getEndOfMonth(d1);
             }
             return adjust(d1, c);
