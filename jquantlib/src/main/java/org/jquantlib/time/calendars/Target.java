@@ -35,45 +35,45 @@ import org.jquantlib.util.Month;
  * @author Srinivas Hasti
  */
 public class Target extends DelegateCalendar {
-    private final static Target TARGET_CALENDAR = new Target();
+	private final static Target TARGET_CALENDAR = new Target();
 
-    private Target() {
-        setDelegate(new TargetCalendarImpl());
-    }
+	private Target() {
+		setDelegate(new TargetCalendarImpl());
+	}
 
-    public static Target getCalendar() {
-        return TARGET_CALENDAR;
-    }
+	public static Target getCalendar() {
+		return TARGET_CALENDAR;
+	}
+}
 
-    private final class TargetCalendarImpl extends WesternCalendar {
+final class TargetCalendarImpl extends WesternCalendar {
 
-        public String getName() {
-            return "TARGET";
-        }
+	public String getName() {
+		return "TARGET";
+	}
 
-        public boolean isBusinessDay(Date date) {
-            Weekday w = date.getWeekday();
-            int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            Month m = date.getMonthEnum();
-            int y = date.getYear();
-            int em = easterMonday(y);
-            if (isWeekend(w)
-            		// New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Good Friday
-                    || (dd == em - 3 && y >= 2000)
-                    // Easter Monday
-                    || (dd == em && y >= 2000)
-                    // Labour Day
-                    || (d == 1 && m == MAY && y >= 2000)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Day of Goodwill
-                    || (d == 26 && m == DECEMBER && y >= 2000)
-                    // December 31st, 1998, 1999, and 2001 only
-                    || (d == 31 && m == DECEMBER && (y == 1998 || y == 1999 || y == 2001)))
-                return false;
-            return true;
-        }
-    }
+	public boolean isBusinessDay(Date date) {
+		Weekday w = date.getWeekday();
+		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+		Month m = date.getMonthEnum();
+		int y = date.getYear();
+		int em = easterMonday(y);
+		if (isWeekend(w)
+		// New Year's Day
+				|| (d == 1 && m == JANUARY)
+				// Good Friday
+				|| (dd == em - 3 && y >= 2000)
+				// Easter Monday
+				|| (dd == em && y >= 2000)
+				// Labour Day
+				|| (d == 1 && m == MAY && y >= 2000)
+				// Christmas
+				|| (d == 25 && m == DECEMBER)
+				// Day of Goodwill
+				|| (d == 26 && m == DECEMBER && y >= 2000)
+				// December 31st, 1998, 1999, and 2001 only
+				|| (d == 31 && m == DECEMBER && (y == 1998 || y == 1999 || y == 2001)))
+			return false;
+		return true;
+	}
 }

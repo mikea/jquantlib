@@ -73,115 +73,117 @@ import org.jquantlib.util.Month;
  * 
  */
 public class Italy extends DelegateCalendar {
-    public static enum Market {
-        SETTLEMENT, // generic settlement calendar
-        EXCHANGE    // !< Milan stock-exchange calendar
-    };
+	public static enum Market {
+		SETTLEMENT, // generic settlement calendar
+		EXCHANGE
+		// !< Milan stock-exchange calendar
+	};
 
-    private final static Italy SETTLEMENT_CALENDAR = new Italy(Market.SETTLEMENT);
-    private final static Italy EXCHANGE_CALENDAR   = new Italy(Market.EXCHANGE);
+	private final static Italy SETTLEMENT_CALENDAR = new Italy(
+			Market.SETTLEMENT);
+	private final static Italy EXCHANGE_CALENDAR = new Italy(Market.EXCHANGE);
 
-    private Italy(Market market) {
-        Calendar delegate;
-        switch (market) {
-            case SETTLEMENT:
-                delegate = new SettlementCalendar();
-                break;
-            case EXCHANGE:
-                delegate = new ExchangeCalendar();
-                break;
-            default:
-                throw new IllegalArgumentException("unknown market");
-        }
-        setDelegate(delegate);
-    }
+	private Italy(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case SETTLEMENT:
+			delegate = new ItalySettlementCalendar();
+			break;
+		case EXCHANGE:
+			delegate = new ItalyExchangeCalendar();
+			break;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		setDelegate(delegate);
+	}
 
-    public static Italy getCalendar(Market market) {
-        switch (market) {
-            case SETTLEMENT:
-                return SETTLEMENT_CALENDAR;
-            case EXCHANGE:
-                return EXCHANGE_CALENDAR;
-            default:
-                throw new IllegalArgumentException("unknown market");
-        }
-    }
+	public static Italy getCalendar(Market market) {
+		switch (market) {
+		case SETTLEMENT:
+			return SETTLEMENT_CALENDAR;
+		case EXCHANGE:
+			return EXCHANGE_CALENDAR;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+	}
+}
 
-    private class SettlementCalendar extends WesternCalendar {
+final class ItalySettlementCalendar extends WesternCalendar {
 
-        public String getName() {
-            return "Italian settlement";
-        }
+	public String getName() {
+		return "Italian settlement";
+	}
 
-        public boolean isBusinessDay(Date date) {
-            Weekday w = date.getWeekday();
-            int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            Month m = date.getMonthEnum();
-            int y = date.getYear();
-            int em = easterMonday(y);
-            if (isWeekend(w)
-            // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Epiphany
-                    || (d == 6 && m == JANUARY)
-                    // Easter Monday
-                    || (dd == em)
-                    // Liberation Day
-                    || (d == 25 && m == APRIL)
-                    // Labour Day
-                    || (d == 1 && m == MAY)
-                    // Republic Day
-                    || (d == 2 && m == JUNE && y >= 2000)
-                    // Assumption
-                    || (d == 15 && m == AUGUST)
-                    // All Saints' Day
-                    || (d == 1 && m == NOVEMBER)
-                    // Immaculate Conception
-                    || (d == 8 && m == DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // St. Stephen
-                    || (d == 26 && m == DECEMBER)
-                    // December 31st, 1999 only
-                    || (d == 31 && m == DECEMBER && y == 1999))
-                return false;
-            return true;
-        }
-    }
+	public boolean isBusinessDay(Date date) {
+		Weekday w = date.getWeekday();
+		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+		Month m = date.getMonthEnum();
+		int y = date.getYear();
+		int em = easterMonday(y);
+		if (isWeekend(w)
+		// New Year's Day
+				|| (d == 1 && m == JANUARY)
+				// Epiphany
+				|| (d == 6 && m == JANUARY)
+				// Easter Monday
+				|| (dd == em)
+				// Liberation Day
+				|| (d == 25 && m == APRIL)
+				// Labour Day
+				|| (d == 1 && m == MAY)
+				// Republic Day
+				|| (d == 2 && m == JUNE && y >= 2000)
+				// Assumption
+				|| (d == 15 && m == AUGUST)
+				// All Saints' Day
+				|| (d == 1 && m == NOVEMBER)
+				// Immaculate Conception
+				|| (d == 8 && m == DECEMBER)
+				// Christmas
+				|| (d == 25 && m == DECEMBER)
+				// St. Stephen
+				|| (d == 26 && m == DECEMBER)
+				// December 31st, 1999 only
+				|| (d == 31 && m == DECEMBER && y == 1999))
+			return false;
+		return true;
+	}
+}
 
-    private class ExchangeCalendar extends WesternCalendar {
+final class ItalyExchangeCalendar extends WesternCalendar {
 
-        public String getName() {
-            return "Milan stock exchange";
-        }
+	public String getName() {
+		return "Milan stock exchange";
+	}
 
-        public boolean isBusinessDay(Date date) {
-            Weekday w = date.getWeekday();
-            int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            Month m = date.getMonthEnum();
-            int y = date.getYear();
-            int em = easterMonday(y);
-            if (isWeekend(w)
-            // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Easter Monday
-                    || (dd == em)
-                    // Labour Day
-                    || (d == 1 && m == MAY)
-                    // Assumption
-                    || (d == 15 && m == AUGUST)
-                    // Christmas' Eve
-                    || (d == 24 && m == DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // St. Stephen
-                    || (d == 26 && m == DECEMBER)
-                    // New Year's Eve
-                    || (d == 31 && m == DECEMBER))
-                return false;
-            return true;
-        }
-    }
+	public boolean isBusinessDay(Date date) {
+		Weekday w = date.getWeekday();
+		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+		Month m = date.getMonthEnum();
+		int y = date.getYear();
+		int em = easterMonday(y);
+		if (isWeekend(w)
+		// New Year's Day
+				|| (d == 1 && m == JANUARY)
+				// Good Friday
+				|| (dd == em - 3)
+				// Easter Monday
+				|| (dd == em)
+				// Labour Day
+				|| (d == 1 && m == MAY)
+				// Assumption
+				|| (d == 15 && m == AUGUST)
+				// Christmas' Eve
+				|| (d == 24 && m == DECEMBER)
+				// Christmas
+				|| (d == 25 && m == DECEMBER)
+				// St. Stephen
+				|| (d == 26 && m == DECEMBER)
+				// New Year's Eve
+				|| (d == 31 && m == DECEMBER))
+			return false;
+		return true;
+	}
 }
