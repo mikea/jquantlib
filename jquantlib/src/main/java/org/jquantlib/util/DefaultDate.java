@@ -76,9 +76,7 @@ public class DefaultDate extends BaseDate {
 
     static private final int MinimumSerialNumber = 367; // Jan 1st, 1901
     static private final int MaximumSerialNumber = 73050; // Dec 31st, 2099
-    //static private final JQLibDate maximumSerialNumber = new JQLibDate(MaximumSerialNumber);
-    //static private final JQLibDate minimumSerialNumber = new JQLibDate(MinimumSerialNumber);
-
+    
     static final int monthLength[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
     static private final int monthLeapLength[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -295,7 +293,7 @@ public class DefaultDate extends BaseDate {
         return y;
     }
 
-    public final DefaultDate increment() {
+    public final Date increment() {
         value++;
         notifyObservers();
         return this;
@@ -307,7 +305,7 @@ public class DefaultDate extends BaseDate {
         return this;
     }
 
-    public final DefaultDate increment(final int days) {
+    public final Date increment(final int days) {
         value += days;
         notifyObservers();
         return this;
@@ -375,7 +373,8 @@ public class DefaultDate extends BaseDate {
     public final Date getNextWeekday(final Weekday dayOfWeek) {
         final int wd = this.getWeekday().toInteger();
         final int dow = dayOfWeek.toInteger();
-        return this.increment((wd > dow ? 7 : 0) - wd + dow);
+        
+        return new DefaultDate(this.value+ (wd > dow ? 7 : 0) - wd + dow);
     }
     
     

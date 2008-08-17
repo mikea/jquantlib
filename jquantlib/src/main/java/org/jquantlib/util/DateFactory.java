@@ -34,7 +34,7 @@ import org.jquantlib.time.Weekday;
  */
 //TODO: OSGi
 public abstract class DateFactory {
-    private static DateFactory dateUtil;
+    private static DateFactory dateFactory;
     private static final DateFactory DEFAULT_DATE_UTIL = new DefaultDate.JQLibDateUtil();
 
     /**
@@ -43,9 +43,9 @@ public abstract class DateFactory {
      * @param dateUtil
      */
     public static void setFactory(DateFactory dateUtil) {
-        if (DateFactory.dateUtil != null)
+        if (DateFactory.dateFactory != null)
             throw new IllegalStateException("Dateutil already set ");
-        DateFactory.dateUtil = dateUtil;
+        DateFactory.dateFactory = dateUtil;
     }
 
     /**
@@ -54,9 +54,9 @@ public abstract class DateFactory {
      * @return
      */
     public static DateFactory getFactory() {
-        if (dateUtil == null)
+        if (dateFactory == null)
             return DEFAULT_DATE_UTIL;
-        return dateUtil;
+        return dateFactory;
     }
     /**
      * Returns a instance that is the Maximum date that can be represented by
@@ -65,7 +65,7 @@ public abstract class DateFactory {
      * @return Maximum date represented by the implementation
      */
     public Date getMaxDate(){
-        return dateUtil.getMaxDate();
+        return dateFactory.getMaxDate();
     }
     
     /**
@@ -75,7 +75,7 @@ public abstract class DateFactory {
      * @return Minimum date represented by the implementation
      */
     public Date getMinDate(){
-        return dateUtil.getMinDate();
+        return dateFactory.getMinDate();
     }
     
     /**
@@ -84,7 +84,7 @@ public abstract class DateFactory {
      * @return
      */
     public Date getTodaysDate(){
-        return dateUtil.getTodaysDate();
+        return dateFactory.getTodaysDate();
     }
     
     /**
@@ -96,7 +96,7 @@ public abstract class DateFactory {
      * @return
      */
     public Date getDate(int day, Month month, int year){
-        return dateUtil.getDate(day, month, year);
+        return dateFactory.getDate(day, month, year);
     }
     
     /**
@@ -113,7 +113,7 @@ public abstract class DateFactory {
      * @return a new Date which is the n-th week day of a certain month/year
      */
     public Date getNthWeekday(int nth, Weekday dayOfWeek, Month month, int year){
-        return dateUtil.getNthWeekday(nth, dayOfWeek, month, year);
+        return dateFactory.getNthWeekday(nth, dayOfWeek, month, year);
     }
     
     
@@ -123,7 +123,7 @@ public abstract class DateFactory {
      * @return
      */
     public Date parseISO(String str){
-        return dateUtil.parseISO(str);
+        return dateFactory.parseISO(str);
     }
     
     /**
@@ -133,7 +133,7 @@ public abstract class DateFactory {
      * @return
      */
     public Date parse(String str, String fmt){
-        return dateUtil.parse(str, fmt);
+        return dateFactory.parse(str, fmt);
     }
     
     /**
@@ -143,7 +143,7 @@ public abstract class DateFactory {
      * @return
      */
     public boolean isLeap(int year){
-       return dateUtil.isLeap(year);   
+       return dateFactory.isLeap(year);   
     }
- 
+  
 }

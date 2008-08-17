@@ -22,7 +22,7 @@
 
 package org.jquantlib.util;
 
-import java.util.List; //FIXME: performance
+import java.util.List; 
 
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Weekday;
