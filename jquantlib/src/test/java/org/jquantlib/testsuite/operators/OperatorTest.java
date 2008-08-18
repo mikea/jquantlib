@@ -29,6 +29,7 @@ package org.jquantlib.testsuite.operators;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
+import org.jquantlib.math.TransformedGrid;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.distributions.*;
 import org.jquantlib.methods.finitedifferences.*;
@@ -42,7 +43,7 @@ import org.jquantlib.termstructures.yieldcurves.*;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
-
+import org.jquantlib.processes.*;
 
 
 public class OperatorTest {
@@ -112,7 +113,7 @@ public class OperatorTest {
 	}
 
 	@Test
-	public void testBSMOperatorConsistency() {
+	public void testBSMOperatorConsistency() throws Exception {
 		BOOST_MESSAGE("Testing consistency of BSM operators...");
 
 		Array grid = new Array(10);
@@ -147,57 +148,72 @@ public class OperatorTest {
 		YieldTermStructure rTS = flatRate(today, r, dc);
 		
 //		boost::shared_ptr<BlackVolTermStructure> volTS = flatVol(today, sigma, dc);
-//		BlackVolTermStructure volTS = flatVol(today, sigma, dc);
+		BlackVolTermStructure volTS = flatVol(today, sigma, dc);
 		
-//		boost::shared_ptr<GeneralizedBlackScholesProcess> stochProcess(
-//			new GeneralizedBlackScholesProcess(
-//										   Handle<Quote>(spot),
-//										   Handle<YieldTermStructure>(qTS),
-//										   Handle<YieldTermStructure>(rTS),
-//										   Handle<BlackVolTermStructure>(volTS)));
-//		BSMOperator op1(grid, stochProcess, residualTime);
-//		BSMTermOperator op2(grid, stochProcess, residualTime);
-//
-//		Real tolerance = 1.0e-6;
-//		Array lderror = ref.lowerDiagonal() - op1.lowerDiagonal();
-//		Array derror = ref.diagonal() - op1.diagonal();
-//		Array uderror = ref.upperDiagonal() - op1.upperDiagonal();
-//
-//		for (i=2; i<grid.size()-2; i++) {
-//			if (std::fabs(lderror[i]) > tolerance ||
-//				std::fabs(derror[i]) > tolerance ||
-//				std::fabs(uderror[i]) > tolerance) {
-//				BOOST_FAIL("inconsistency between BSM operators:\n"
-//						   << io::ordinal(i) << " row:\n"
-//						   << "expected:   "
-//						   << ref.lowerDiagonal()[i] << ", "
-//						   << ref.diagonal()[i] << ", "
-//						   << ref.upperDiagonal()[i] << "\n"
-//						   << "calculated: "
-//						   << op1.lowerDiagonal()[i] << ", "
-//						   << op1.diagonal()[i] << ", "
-//						   << op1.upperDiagonal()[i]);
-//			}
-//		}
-//		lderror = ref.lowerDiagonal() - op2.lowerDiagonal();
-//		derror = ref.diagonal() - op2.diagonal();
-//		uderror = ref.upperDiagonal() - op2.upperDiagonal();
-//
-//		for (i=2; i<grid.size()-2; i++) {
-//			if (std::fabs(lderror[i]) > tolerance ||
-//				std::fabs(derror[i]) > tolerance ||
-//				std::fabs(uderror[i]) > tolerance) {
-//				BOOST_FAIL("inconsistency between BSM operators:\n"
-//						   << io::ordinal(i) << " row:\n"
-//						   << "expected:   "
-//						   << ref.lowerDiagonal()[i] << ", "
-//						   << ref.diagonal()[i] << ", "
-//						   << ref.upperDiagonal()[i] << "\n"
-//						   << "calculated: "
-//						   << op2.lowerDiagonal()[i] << ", "
-//						   << op2.diagonal()[i] << ", "
-//						   << op2.upperDiagonal()[i]);
-//			}
+		GeneralizedBlackScholesProcess stochProcess = new GeneralizedBlackScholesProcess(
+										   new Handle<Quote>(spot),
+										   new Handle<YieldTermStructure>(qTS),
+										   new Handle<YieldTermStructure>(rTS),
+										   new Handle<BlackVolTermStructure>(volTS));
+		
+		BSMOperator op1 = new BSMOperator(grid, stochProcess, residualTime);
+		//typedef PdeOperator<PdeBSM> BSMTermOperator;
+		//TODO: translate class TransformedGrid
+		TransformedGrid grid2 = new TransformedGrid(grid);
+		PdeOperator<PdeBSM> op2 = new PdeOperator<PdeBSM>(grid2, new PdeBSM(stochProcess), residualTime);
+
+		double tolerance = 1.0e-6;
+		
+		Array lderror = ref.lowerDiagonal();
+		lderror.operatorSubtract(op1.lowerDiagonal());
+		Array derror = ref.diagonal();
+		derror.operatorSubtract(op1.diagonal());
+		Array uderror = ref.upperDiagonal();
+		uderror.operatorSubtract(op1.upperDiagonal());
+		
+
+		for (i=2; i<grid.size()-2; i++) {
+			if (Math.abs(lderror.get(i)) > tolerance ||
+				Math.abs(derror.get(i)) > tolerance ||
+				Math.abs(uderror.get(i)) > tolerance) {
+			    
+				BOOST_FAIL("inconsistency between BSM operators:\n"  
+				           + Integer.toString(i) +  " row:\n" 
+						   + "expected:   "
+						   + ref.lowerDiagonal().get(i) + ", "
+						   + ref.diagonal().get(i) + ", "
+						   + ref.upperDiagonal().get(i) + "\n"
+						   + "calculated: "
+						   + op1.lowerDiagonal().get(i) + ", "
+						   + op1.diagonal().get(i) + ", "
+						   + op1.upperDiagonal().get(i));
+			}
+		}
+		
+		lderror = ref.lowerDiagonal();
+		lderror.operatorSubtract(op2.lowerDiagonal());
+		derror = ref.diagonal();
+		derror.operatorSubtract(op2.diagonal());
+		uderror = ref.upperDiagonal();
+		uderror.operatorSubtract(op2.upperDiagonal());
+		
+
+		for (i=2; i<grid.size()-2; i++) {
+			if (Math.abs(lderror.get(i)) > tolerance ||
+				Math.abs(derror.get(i)) > tolerance ||
+				Math.abs(uderror.get(i)) > tolerance) {
+				BOOST_FAIL("inconsistency between BSM operators:\n"
+						   + Integer.toString(i) + " row:\n"
+						   + "expected:   "
+						   + ref.lowerDiagonal().get(i) + ", "
+						   + ref.diagonal().get(i) + ", "
+						   + ref.upperDiagonal().get(i) + "\n"
+						   + "calculated: "
+						   + op2.lowerDiagonal().get(i) + ", "
+						   + op2.diagonal().get(i) + ", "
+						   + op2.upperDiagonal().get(i));
+			}
+		}
     }
 
     private void BOOST_MESSAGE(String str) {
@@ -271,12 +287,10 @@ public class OperatorTest {
 	    return new BlackConstantVol(today, new Handle<Quote>(vol), dc);
 	}
 	
-//	boost::shared_ptr<BlackVolTermStructure>
-//	flatVol(const Date& today, Volatility vol,
-//	        const DayCounter& dc) {
-//	    return flatVol(today, boost::shared_ptr<Quote>(new SimpleQuote(vol)),
-//	                   dc);
-//	}
+	BlackVolTermStructure flatVol(final Date today, double /*Volatility*/ vol,
+	        final DayCounter dc) {
+        return flatVol(today, new SimpleQuote(vol), dc);
+	}
 	
 }
 
