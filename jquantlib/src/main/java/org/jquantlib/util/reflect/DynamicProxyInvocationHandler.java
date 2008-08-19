@@ -40,7 +40,7 @@ public class DynamicProxyInvocationHandler<T> implements java.lang.reflect.Invoc
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Object result;
         try {
-            result = method.invoke(delegate, args);
+            result = delegate.getClass().getMethod(method.getName(), method.getParameterTypes()).invoke(delegate, args);
         } catch (InvocationTargetException e) {
             throw e.getTargetException();
         } catch (Exception e) {
