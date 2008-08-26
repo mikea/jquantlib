@@ -96,6 +96,16 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     	volatility.addObserver(this);
     }
 
+	public BlackConstantVol(final Date referenceDate,
+		final Calendar calendar, final /*@Volatility*/ double volatility, 
+		final DayCounter dayCount){
+
+    	super(referenceDate,calendar);
+		
+    	this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
+    	this.dayCounter = dayCounter;
+		
+	}
     @Override
     public final DayCounter getDayCounter() { 
     	return dayCounter; 

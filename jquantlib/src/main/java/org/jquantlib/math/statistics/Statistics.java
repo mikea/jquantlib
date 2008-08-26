@@ -25,6 +25,12 @@ package org.jquantlib.math.statistics;
  */
 public class Statistics {
     
+	public Double mean(){ return 0.0; }
+	public Double standardDeviation(){ return 0.0; }
+
+	public Double  skewness(){ return 0.0;}
+	public Double  kurtosis(){ return 0.0;}
+	
     // FIXME: Decide if it's a class, interface or if we simply get rid of it
 
 }

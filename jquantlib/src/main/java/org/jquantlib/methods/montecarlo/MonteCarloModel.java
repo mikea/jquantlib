@@ -62,12 +62,21 @@ public class MonteCarloModel<MC extends Variate, T, RNG extends RandomNumberGene
 
 //    private PathGeneratorType pathGenerator_;
 //    private PathPricerType pathPricer_;
-//    private StatsType sampleAccumulator_;
+
+      private S sampleAccumulator_;
 //    private boolean isAntitheticVariate_;
 //    private PathPricerType cvPathPricer_;
 //    private ResultType cvOptionValue_;
 //    private boolean isControlVariate_;
     
+	public void addSamples(int size){
+		//  TODO... we have to work on this a bit.
+
+	}
+	
+	public S sampleAccumulator(){
+		return sampleAccumulator_;
+	}
     
     
 }
