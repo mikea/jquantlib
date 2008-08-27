@@ -282,7 +282,7 @@ public abstract class YieldTermStructure extends TermStructure {
 		/*@Time*/ double t1 = time1;
 		/*@Time*/ double t2 = time2;
 		if (t2==t1) t2 = t1+0.0001;
-		if (t1<=t2) throw new IllegalArgumentException("t1 (" + t1 + ") < t2 (" + t2 + ")");
+		if (!(t1<=t2)) throw new IllegalArgumentException("t1 (" + t1 + ") < t2 (" + t2 + ")");
 		/*@DiscountFactor*/ double discount1 = getDiscount(t1, extrapolate);
 		/*@DiscountFactor*/ double discount2 = getDiscount(t2, extrapolate);
 		/*@CompoundFactor*/ double compound = discount1 / discount2;
