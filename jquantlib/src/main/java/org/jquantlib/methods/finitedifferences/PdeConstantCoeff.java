@@ -21,17 +21,20 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
+import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
-// TODO: performance of reflection ? can we assume T is going to be
-// StochasticProcess1D
+
+//
 public class PdeConstantCoeff<T> extends PdeSecondOrderParabolic {
 	/* Real*/private double diffusion;
 	/* Real*/private double drift;
 	/* Real*/private double discount;
 
-	public PdeConstantCoeff(T process,
+	public PdeConstantCoeff(GeneralizedBlackScholesProcess process,
 	/*Time*/double t, /*Real*/double x) {
-	    PdeSecondOrderParabolic pde = DynamicPdeSecondOrderParabolic.getInstance(process);
+	    //TODO: Doesn't reflect exactly what done in c++
+		//In C++, new PdeBSM is determined by T
+		PdeSecondOrderParabolic pde = new PdeBSM(process);
 		diffusion = pde.diffusion(t, x);
 		drift = pde.drift(t, x);
 		discount = pde.discount(t, x);
