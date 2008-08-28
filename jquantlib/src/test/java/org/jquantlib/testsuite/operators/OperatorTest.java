@@ -95,8 +95,7 @@ public class OperatorTest {
     
 
     if (e > 1.0e-6) {
-        BOOST_FAIL("norm of 1st derivative of cum minus Gaussian: " + e
-                   + "\ntolerance exceeded");
+        fail("norm of 1st derivative of cum minus Gaussian: " + e + "\ntolerance exceeded");
     }
     
     // check that the second derivative of cum is normal.derivative
@@ -105,8 +104,7 @@ public class OperatorTest {
     	diff.set(i, yd.get(i) - temp.get(i));
     e = norm(diff, h);
     if (e > 1.0e-4) {
-    	BOOST_FAIL("norm of 2nd derivative of cum minus Gaussian derivative: "
-	             + e + "\ntolerance exceeded");
+    	fail("norm of 2nd derivative of cum minus Gaussian derivative: " + e + "\ntolerance exceeded");
     }
     
       
@@ -114,7 +112,7 @@ public class OperatorTest {
 
 	@Test
 	public void testBSMOperatorConsistency() throws Exception {
-		BOOST_MESSAGE("Testing consistency of BSM operators...");
+	    System.out.println("Testing consistency of BSM operators...");
 
 		Array grid = new Array(10);
 		double price = 20.0;
@@ -177,7 +175,7 @@ public class OperatorTest {
 				Math.abs(derror.get(i)) > tolerance ||
 				Math.abs(uderror.get(i)) > tolerance) {
 			    
-				BOOST_FAIL("inconsistency between BSM operators:\n"  
+				fail("inconsistency between BSM operators:\n"  
 				           + Integer.toString(i) +  " row:\n" 
 						   + "expected:   "
 						   + ref.lowerDiagonal().get(i) + ", "
@@ -202,7 +200,7 @@ public class OperatorTest {
 			if (Math.abs(lderror.get(i)) > tolerance ||
 				Math.abs(derror.get(i)) > tolerance ||
 				Math.abs(uderror.get(i)) > tolerance) {
-				BOOST_FAIL("inconsistency between BSM operators:\n"
+				fail("inconsistency between BSM operators:\n"
 						   + Integer.toString(i) + " row:\n"
 						   + "expected:   "
 						   + ref.lowerDiagonal().get(i) + ", "
@@ -216,14 +214,6 @@ public class OperatorTest {
 		}
     }
 
-    private void BOOST_MESSAGE(String str) {
-    	System.out.println(str);
-    }
-
-    private void BOOST_FAIL(String str) {
-    	fail(str);
-    }
-    
     
     private double norm(Array arr, double h) {
     	//copy arr into f2, and square each value

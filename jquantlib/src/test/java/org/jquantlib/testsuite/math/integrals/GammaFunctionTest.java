@@ -39,30 +39,6 @@ public class GammaFunctionTest {
 	@Test
 	public void testGammaFunction() {
 
-//	    BOOST_MESSAGE("Testing Gamma function...");
-//
-//	    Real expected = 0.0;
-//	    Real calculated = GammaFunction().logValue(1);
-//	    if (std::fabs(calculated) > 1.0e-15)
-//	        BOOST_ERROR("GammaFunction(1)\n"
-//	                    << std::setprecision(16) << QL_SCIENTIFIC
-//	                    << "    calculated: " << calculated << "\n"
-//	                    << "    expected:   " << expected);
-//
-//	    for (Size i=2; i<9000; i++) {
-//	        expected  += std::log(Real(i));
-//	        calculated = GammaFunction().logValue(i+1);
-//	        if (std::fabs(calculated-expected)/expected > 1.0e-9)
-//	            BOOST_ERROR("GammaFunction(" << i << ")\n"
-//	                        << std::setprecision(16) << QL_SCIENTIFIC
-//	                        << "    calculated: " << calculated << "\n"
-//	                        << "    expected:   " << expected << "\n"
-//	                        << "    rel. error: "
-//	                        << std::fabs(calculated-expected)/expected);
-//	    }
-
-	    // System.out.println("Testing Gamma function..."); --> commented out for release 0.02
-
 	    GammaFunction gfn = new GammaFunction();
 	    
 	    double expected = 0.0;

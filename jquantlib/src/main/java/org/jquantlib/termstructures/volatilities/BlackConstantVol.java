@@ -98,7 +98,7 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
 
 	public BlackConstantVol(final Date referenceDate,
 		final Calendar calendar, final /*@Volatility*/ double volatility, 
-		final DayCounter dayCount){
+		final DayCounter dayCounter){
 
     	super(referenceDate,calendar);
 		
@@ -106,6 +106,7 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     	this.dayCounter = dayCounter;
 		
 	}
+	
     @Override
     public final DayCounter getDayCounter() { 
     	return dayCounter; 
