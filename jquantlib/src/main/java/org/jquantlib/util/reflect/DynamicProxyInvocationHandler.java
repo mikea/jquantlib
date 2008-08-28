@@ -21,7 +21,6 @@
  */
 package org.jquantlib.util.reflect;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -38,15 +37,8 @@ public class DynamicProxyInvocationHandler<T> implements java.lang.reflect.Invoc
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Object result;
-        try {
-            result = delegate.getClass().getMethod(method.getName(), method.getParameterTypes()).invoke(delegate, args);
-        } catch (InvocationTargetException e) {
-            throw e.getTargetException();
-        } catch (Exception e) {
-            throw new RuntimeException("unexpected invocation exception: " + e.getMessage());
-        }
-        return result;
+        return  delegate.getClass().getMethod(method.getName(), method.getParameterTypes()).invoke(delegate, args);
+       
     }
 
 }
