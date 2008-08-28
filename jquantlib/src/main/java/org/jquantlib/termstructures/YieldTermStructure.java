@@ -348,7 +348,7 @@ public abstract class YieldTermStructure extends TermStructure {
 			t = 0.0001;
 		}
 		/*@CompoundFactor*/ double compound = 1/getDiscount(t, extrapolate); // 1/discount(t,extrapolate)
-		return InterestRate.getImpliedRate(compound, time, this.getDayCounter(), comp, freq);
+		return InterestRate.getImpliedRate(compound, t, this.getDayCounter(), comp, freq);
 	}
 
 // FIXME: code review: is this method needed ???
