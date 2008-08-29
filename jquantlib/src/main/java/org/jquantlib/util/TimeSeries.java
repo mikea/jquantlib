@@ -24,7 +24,9 @@ package org.jquantlib.util;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeMap;
 
 
 /**
@@ -32,8 +34,9 @@ import java.util.List;
  */
 public class TimeSeries<T> implements Observable {
 
-	private final List<Date> dates = new ObjectArrayList<Date>();
-    private final List<T> values = new ObjectArrayList<T>();
+	private final TreeMap<Date, T> timeBucket = new TreeMap<Date, T>(new DateComparator()) ;
+//	private final List<Date> dates = new ObjectArrayList<Date>();
+//    private final List<T> values = new ObjectArrayList<T>();
 	
 	
     public TimeSeries() {
@@ -43,8 +46,7 @@ public class TimeSeries<T> implements Observable {
     public TimeSeries(final List<Date> dates, final List<T> values) {
     	this();
         for (int i = 0; i < dates.size(); i++) {
-            this.dates.add(dates.get(i));
-            this.values.add(values.get(i));
+        	timeBucket.put(dates.get(i), values.get(i)) ;
         }
     }
 
@@ -52,8 +54,7 @@ public class TimeSeries<T> implements Observable {
     	this();
         Date tmp = startingDate;
         for (int i = 0; i < values.size(); i++) {
-            this.dates.add(tmp);
-            this.values.add(values.get(i));
+        	timeBucket.put(tmp, values.get(i)) ;
             tmp = startingDate.getDateAfter(i);
         }
     }
@@ -62,47 +63,44 @@ public class TimeSeries<T> implements Observable {
      * @return the first date for which a historical datum exists
      */
     public Date firstDate() /* @ReadOnly */ {
-        return dates.get(0);
+    	return timeBucket.firstKey() ;
     }
 
     /**
      * @return the last date for which a historical datum exists
      */
     public Date lastDate() /* @ReadOnly */ {
-        return dates.get(dates.size()-1);
+    	return timeBucket.lastKey() ;
     }
 
     /**
      * @return the number of historical data including null ones
      */
     public int size() /* @ReadOnly */ {
-        return dates.size();
+        return timeBucket.size();
     }
 
     /**
      * @return whether the series contains any data
      */
     public boolean isEmpty() /* @ReadOnly */ {
-        return dates.isEmpty();
+        return timeBucket.isEmpty();
     }
 
     public T find(final Date d) /* @ReadOnly */ {
-        int index = dates.indexOf(d);
-        if (index == -1) return null;
-        return values.get(index);
+    	return timeBucket.get(d);
     }
 
     public void add(final Date date, final T dt) {
-        this.dates.add(date);
-        this.values.add(dt);
+    	timeBucket.put(date, dt) ;
     }
 
     public List<Date> dates() {
-        return this.dates;
+        return new ObjectArrayList<Date>(timeBucket.keySet());
     }
     
     public List<T> values() {
-        return this.values;
+        return new ObjectArrayList<T>(timeBucket.values());
     }
     
     
@@ -163,4 +161,15 @@ public class TimeSeries<T> implements Observable {
         return delegatedObservable.getObservers();
     }
 
+    /**
+     * The comparator
+     */
+    private static class DateComparator implements Comparator<Date> {
+
+		@Override
+        public int compare(Date o1, Date o2) {
+	        return o1.compareTo(o2);
+        }
+    	
+    }
 }
