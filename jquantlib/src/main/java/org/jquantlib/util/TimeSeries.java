@@ -22,31 +22,29 @@
 
 package org.jquantlib.util;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 
 /**
  * @author Srinivas Hasti
  */
-public class TimeSeries<T> implements Observable {
 
-	private final TreeMap<Date, T> timeBucket = new TreeMap<Date, T>(new DateComparator()) ;
-//	private final List<Date> dates = new ObjectArrayList<Date>();
-//    private final List<T> values = new ObjectArrayList<T>();
-	
+//FIXME: PERFORMANCE:: We should use (maybe!) specialized versions of TimeSeries backed by primitive types
+public class TimeSeries<T> {
+
+	private final SortedMap<Date, T> map;
 	
     public TimeSeries() {
-    	// nothing
+        this.map = new Object2ObjectAVLTreeMap<Date, T>();
     }
 
     public TimeSeries(final List<Date> dates, final List<T> values) {
     	this();
         for (int i = 0; i < dates.size(); i++) {
-        	timeBucket.put(dates.get(i), values.get(i)) ;
+        	map.put(dates.get(i), values.get(i)) ;
         }
     }
 
@@ -54,7 +52,7 @@ public class TimeSeries<T> implements Observable {
     	this();
         Date tmp = startingDate;
         for (int i = 0; i < values.size(); i++) {
-        	timeBucket.put(tmp, values.get(i)) ;
+        	map.put(tmp, values.get(i)) ;
             tmp = startingDate.getDateAfter(i);
         }
     }
@@ -63,113 +61,45 @@ public class TimeSeries<T> implements Observable {
      * @return the first date for which a historical datum exists
      */
     public Date firstDate() /* @ReadOnly */ {
-    	return timeBucket.firstKey() ;
+    	return map.firstKey();
     }
 
     /**
      * @return the last date for which a historical datum exists
      */
     public Date lastDate() /* @ReadOnly */ {
-    	return timeBucket.lastKey() ;
+    	return map.lastKey() ;
     }
 
     /**
      * @return the number of historical data including null ones
      */
     public int size() /* @ReadOnly */ {
-        return timeBucket.size();
+        return map.size();
     }
 
     /**
      * @return whether the series contains any data
      */
     public boolean isEmpty() /* @ReadOnly */ {
-        return timeBucket.isEmpty();
+        return map.isEmpty();
     }
 
     public T find(final Date d) /* @ReadOnly */ {
-    	return timeBucket.get(d);
+    	return map.get(d);
     }
 
     public void add(final Date date, final T dt) {
-    	timeBucket.put(date, dt) ;
+    	map.put(date, dt) ;
     }
 
-    public List<Date> dates() {
-        return new ObjectArrayList<Date>(timeBucket.keySet());
-    }
-    
-    public List<T> values() {
-        return new ObjectArrayList<T>(timeBucket.values());
+    public Date[] dates() {
+        return (Date[])map.keySet().toArray();
     }
     
+    @SuppressWarnings("unchecked")
+    public T[] values() {
+        return (T[]) map.entrySet().toArray();
+    }
     
-
-//    @SuppressWarnings("unchecked")
-//    public ObjectForwardIterator<Date> dates() /*@Readonly*/ { 
-//        return Iterators.forwardIterator( ((ObjectArrayList<Date>)dates).elements() );
-//    }
-//    
-//    @SuppressWarnings("unchecked")
-//    public ObjectForwardIterator<T> values() /*@Readonly*/ { 
-//        return Iterators.forwardIterator( ((ObjectArrayList<T>)values).elements() );
-//    }
-    
-
-    
-    //
-    // implements Observable
-    //
-    
-    /**
-     * Implements multiple inheritance via delegate pattern to an inner class
-     */
-    private final Observable delegatedObservable = new DefaultObservable(this);
-
-    @Override
-    public void addObserver(final Observer observer) {
-        delegatedObservable.addObserver(observer);
-    }
-
-    @Override
-    public int countObservers() {
-        return delegatedObservable.countObservers();
-    }
-
-    @Override
-    public void deleteObserver(final Observer observer) {
-        delegatedObservable.deleteObserver(observer);
-    }
-
-    @Override
-    public void notifyObservers() {
-        delegatedObservable.notifyObservers();
-    }
-
-    @Override
-    public void notifyObservers(final Object arg) {
-        delegatedObservable.notifyObservers(arg);
-    }
-
-    @Override
-    public void deleteObservers() {
-        delegatedObservable.deleteObservers();
-    }
-
-    @Override
-    public List<Observer> getObservers() {
-        return delegatedObservable.getObservers();
-    }
-
-    /**
-     * The comparator
-     */
-    private static class DateComparator implements Comparator<Date> {
-
-		@Override
-        public int compare(Date o1, Date o2) {
-	        return o1.compareTo(o2);
-        }
-    	
-    }
 }

@@ -22,8 +22,6 @@
 
 package org.jquantlib.indexes;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
 import java.util.List;
 
 import org.jquantlib.math.Closeness;
@@ -81,13 +79,7 @@ public abstract class Index implements Observable {
 	 * fixing; no settlement days must be used.
 	 */
 	public void addFixing(Date fixingDate, double fixing, boolean forceOverwrite) {
-	    ObjectArrayList<Date> dates = new ObjectArrayList<Date>();
-		dates.add(fixingDate);
-
-		ObjectArrayList<Double> fixings = new ObjectArrayList<Double>();
-		fixings.add(fixing);
-
-		addFixings(dates, fixings, forceOverwrite);
+		addFixings(new Date[] {fixingDate}, new Double[] { fixing }, forceOverwrite);
 	}
 
 	
@@ -108,7 +100,7 @@ public abstract class Index implements Observable {
 	 * the dates passed as arguments must be the actual calendar dates of the
 	 * fixings; no settlement days must be used.
 	 */
-	public void addFixings(List<Date> dates, List<Double> values, boolean forceOverwrite) {
+	public void addFixings(final Date[] dates, final Double[] values, boolean forceOverwrite) {
 		String tag = getName();
 		TimeSeries<Double> h = IndexManager.getInstance().get(tag);
 		boolean missingFixing;
@@ -121,9 +113,9 @@ public abstract class Index implements Observable {
 		Double invalidValue = Double.NaN;
 		Double duplicatedValue = Double.NaN;
 
-		for (int i=0; i<dates.size(); i++) {
-		    Date date = dates.get(i);
-		    Double value = values.get(i);
+		for (int i=0; i<dates.length; i++) {
+		    Date date = dates[i];
+		    Double value = values[i];
             validFixing = isValidFixingDate(date);
             double currentValue = h.find(date);
             missingFixing = forceOverwrite

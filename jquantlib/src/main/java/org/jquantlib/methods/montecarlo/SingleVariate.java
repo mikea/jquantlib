@@ -41,6 +41,7 @@ package org.jquantlib.methods.montecarlo;
 import org.jquantlib.math.randomnumbers.InverseCumulative;
 import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 
+
 /**
  * Default Monte Carlo traits for single-variate models
  * 
@@ -52,11 +53,11 @@ public class SingleVariate<T, RNG extends RandomNumberGenerator<T>, IC extends I
 // FIXME: adhere to standards
   public RNG rng_traits;
   // public Path path_type;
-  public PathPricer<Path> path_pricer_type;
-//  public InverseCumulativeRsg<T, RNG, IC> rsg_type;
+  //public PathPricer<Path> path_pricer_type;
+  //public InverseCumulativeRsg<T, RNG, IC> rsg_type;
 
   //TODO: code review
-  //  public PathGenerator<rsg_type> path_generator_type;
+  //public PathGenerator<T> path_generator_type;
 
 //  public class PathGenerator<Double, Sample<Double> RNG extends RandomNumberGenerator<Path>, GSG extends RandomSequenceGenerator<Path, RNG>> { // should be GaussianSequenceGenerator ?
 

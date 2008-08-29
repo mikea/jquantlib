@@ -1,4 +1,26 @@
 /*
+ Copyright (C) 2008 Rajiv Chauhan
+ 
+ This source code is release under the BSD License.
+ 
+ This file is part of JQuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://jquantlib.org/
+
+ JQuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the JQuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ 
+ JQuantLib is based on QuantLib. http://quantlib.org/
+ When applicable, the original copyright notice follows this notice.
+ */
+
+/*
  Copyright (C) 2006 Joseph Wang
 
  This file is part of QuantLib, a free-software/open-source library
@@ -16,8 +38,6 @@
 */
 
 package org.jquantlib.model.volatility;
-
-import java.util.List;
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
@@ -59,32 +79,32 @@ public class Garch11 implements VolatilityCompositor{
 	protected double costFunction (final TimeSeries< /* @Volatility */ Double> vs, double alpha, double beta, double omega) {
 		double retValue = 0.0;
 		TimeSeries< /* @Volatility */ Double> test = calculate(vs, alpha, beta, omega);
-		final List<Double> testValues = test.values() ;
-		final List<Double> quoteValues = vs.values();
+		final /* @Volatility */ Double[] testValues = test.values();
+		final /* @Volatility */ Double[] quoteValues = vs.values();
 		//assert (testValues.size() == quoteValues.size(), "quote and test values do not match");
 		double v = 0;
 		double u2 = 0 ;
-		for (int i = 0; i < testValues.size(); i++) {
-			v  = testValues.get(i) * testValues.get(i);
-			u2 = quoteValues.get(i) * quoteValues.get(i);
+		for (int i = 0; i < testValues.length; i++) {
+			v  = testValues[i] * testValues[i];
+			u2 = quoteValues[i] * quoteValues[i];
 			retValue += 2.0 * Math.log(v) + u2/(v*v) ;
 		}
 		return retValue ;
 	}
 	
 	private TimeSeries<Double> calculate(final TimeSeries< /* @Volatility */ Double> vs, double alpha, double beta, double omega) {
-        final List<Date> dates = vs.dates();
-        final List</*@Volatility*/ Double> values = vs.values();
+        final Date[] dates = vs.dates();
+        final /* @Volatility */ Double[] values = vs.values();
 		TimeSeries< /* @Volatility */ Double> retValue = new TimeSeries< /* @Volatility */ Double>() ;
-        double zerothDayValue = values.get(0);
-		retValue.add (dates.get(0), zerothDayValue) ;
+        double zerothDayValue = values[0];
+		retValue.add (dates[0], zerothDayValue) ;
 		
 		double u = 0;
         double sigma2 = zerothDayValue * zerothDayValue ;
-        for (int i = 1; i < dates.size(); i++) {
-        	u = values.get (i) ;
+        for (int i = 1; i < dates.length; i++) {
+        	u = values[i];
         	sigma2 = (omega * u * u) + (beta * sigma2) ;
-        	retValue.add(dates.get(i), Math.sqrt(sigma2)) ;
+        	retValue.add(dates[i], Math.sqrt(sigma2)) ;
         }
 		return retValue ;
 	}

@@ -182,6 +182,7 @@
             </goals>
             <configuration>
               <tasks>
+                <echo>user.home=${user.home}</echo>
                 <echo>java.version=${java.version}</echo>
                 <echo>java.vm.version=${java.vm.version}</echo>
                 <echo>java.home=${java.home}</echo>
@@ -190,6 +191,8 @@
                 <echo>java.library.path=${java.library.path}</echo>
                 <echo>java.runtime.version=${java.runtime.version}</echo>
                 <echo>java.specification.version=${java.specification.version}</echo>
+                <echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo>
+                <echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>
               </tasks>
             </configuration>
           </execution>
@@ -336,6 +339,75 @@
   
   
   <profiles>
+    <profile>
+      <id>[mode=debug]</id>
+      <activation>
+        <property>
+          <name>mode</name>
+          <value>debug</value>
+        </property>
+      </activation>
+      <properties>
+        <profile.manifest.app.mode>debug</profile.manifest.app.mode>
+        <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
+        <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
+      </properties>
+    </profile>
+    <profile>
+      <id>[mode=dev]</id>
+      <activation>
+        <property>
+          <name>mode</name>
+          <value>dev</value>
+        </property>
+      </activation>
+      <properties>
+        <profile.manifest.app.mode>dev</profile.manifest.app.mode>
+        <maven.buildNumber.doCheck>true</maven.buildNumber.doCheck>
+        <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
+      </properties>
+    </profile>
+    <profile>
+      <id>[mode=test]</id>
+      <activation>
+        <property>
+          <name>mode</name>
+          <value>test</value>
+        </property>
+      </activation>
+      <properties>
+        <profile.manifest.app.mode>test</profile.manifest.app.mode>
+        <maven.buildNumber.doCheck>true</maven.buildNumber.doCheck>
+        <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
+      </properties>
+    </profile>
+    <profile>
+      <id>[mode=prod]</id>
+      <activation>
+        <property>
+          <name>mode</name>
+          <value>prod</value>
+        </property>
+      </activation>
+      <properties>
+        <profile.manifest.app.mode>prod</profile.manifest.app.mode>
+        <maven.buildNumber.doCheck>true</maven.buildNumber.doCheck>
+        <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>[realm=wallets]</id>
+      <activation>
+        <property>
+          <name>realm</name>
+          <value>wallets</value>
+        </property>
+      </activation>
+      <properties>
+        <profile.manifest.app.realm>wallets</profile.manifest.app.realm>
+      </properties>
+    </profile>
 
     <profile>
       <id>[revision=unchecked]</id>
@@ -347,75 +419,7 @@
       </activation>
       <properties>
         <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
-      </properties>
-    </profile>
-
-
-
-    <profile> <!-- reserved for the future -->
-      <id>[mode=debug]</id>
-      <activation>
-        <property>
-          <name>mode</name>
-          <value>debug</value>
-        </property>
-      </activation>
-      <properties>
-        <profile.manifest.app.mode>debug</profile.manifest.app.mode>
-        <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
-      </properties>
-    </profile>
-
-    <profile> <!-- reserved for the future -->
-      <id>[mode=dev]</id>
-      <activation>
-        <property>
-          <name>mode</name>
-          <value>dev</value>
-        </property>
-      </activation>
-      <properties>
-        <profile.manifest.app.mode>dev</profile.manifest.app.mode>
-      </properties>
-    </profile>
-
-    <profile> <!-- reserved for the future -->
-      <id>[mode=test]</id>
-      <activation>
-        <property>
-          <name>mode</name>
-          <value>test</value>
-        </property>
-      </activation>
-      <properties>
-        <profile.manifest.app.mode>test</profile.manifest.app.mode>
-      </properties>
-    </profile>
-
-    <profile> <!-- reserved for the future -->
-      <id>[mode=prod]</id>
-      <activation>
-        <property>
-          <name>mode</name>
-          <value>prod</value>
-        </property>
-      </activation>
-      <properties>
-        <profile.manifest.app.mode>prod</profile.manifest.app.mode>
-      </properties>
-    </profile>
-
-    <profile> <!-- reserved for the future -->
-      <id>[realm=default]</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>realm</name>
-          <value>default</value>
-        </property>
-      </activation>
-      <properties>
-        <profile.manifest.app.realm>default</profile.manifest.app.realm>
+        <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
       </properties>
     </profile>
 
@@ -701,30 +705,32 @@
   </distributionManagement>
   
   <properties>
-    <!-- Application independent properties -->
-    <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
-    <maven.scm.developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.developerConnection>
-    <maven.scm.connection>scm:svn:http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.connection>
-    <maven.scm.url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</maven.scm.url>
+    <!-- Application dependent properties -->
+    <profile.manifest.app.realm>default</profile.manifest.app.realm>
+    <profile.manifest.app.mode>debug</profile.manifest.app.mode>
+
+    <maven.scm.root>jquant.svn.sourceforge.net/svnroot</maven.scm.root>
+	<maven.scm.project>jquant</maven.scm.project>
+	<maven.scm.branch>trunk</maven.scm.branch>
+
     <maven.compile.jdk>1.6</maven.compile.jdk>
     <maven.compile.encoding>UTF8</maven.compile.encoding>
     <maven.compile.meminitial>128m</maven.compile.meminitial>
     <maven.compile.maxmem>512m</maven.compile.maxmem>
     <maven.compile.fork>false</maven.compile.fork> <!-- Be cautious: may fork a different JVM -->
     <maven.jar.index>false</maven.jar.index>
-    
-    <!-- maven.deploy.repository.url>http://www.jquantlib.org:8080/archiva/repository</maven.deploy.repository.url -->
-    <!-- maven.deploy.repository.id>jquantlib-external_free</maven.deploy.repository.id -->
+    <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
+
     <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
     <maven.deploy.repository.id>external_free</maven.deploy.repository.id>
-
     <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites/${project.artifactId}</maven.deploy.site.url>
     <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
-    
-    <!-- Application dependent properties -->
-    <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
-    <profile.manifest.app.realm>default</profile.manifest.app.realm>
-    <profile.manifest.app.mode>debug</profile.manifest.app.mode>
+
+    <!-- Application independent properties -->
+    <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
+    <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
+    <maven.scm.connection>scm:svn:http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.connection>
+    <maven.scm.url>http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.url>
   </properties>
   
 </project>
