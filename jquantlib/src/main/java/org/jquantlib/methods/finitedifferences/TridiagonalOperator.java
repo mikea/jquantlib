@@ -77,7 +77,8 @@ public class TridiagonalOperator implements Operator {
  	}
 
 	public void setMidRow(int size, double a, double b, double c) {
-		if(size >= 1 && size <= size()-2)
+
+	    if(!(size >= 1 && size <= size()-2))
 			throw new IllegalStateException("out of range in setMidRow");
 		
 		lowerDiagonal.set(size-1, a);
