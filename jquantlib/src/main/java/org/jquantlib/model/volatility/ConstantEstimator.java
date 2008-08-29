@@ -30,7 +30,7 @@ import org.jquantlib.util.TimeSeries;
  * @author Richard Gomes
  */
 //TODO : Test cases
-public class ConstantEstimator {
+public class ConstantEstimator implements VolatilityCompositor {
 
     private /*@NonNegative*/ int size_;
     
