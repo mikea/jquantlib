@@ -34,7 +34,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  *
  */
 
-// TODO: Under construction
+// TODO: Write a test case, add JavaDoc and comments.
 
 
 public class MersenneTwisterUniformRng implements RandomNumberGenerator<Double> {
