@@ -28,6 +28,7 @@ import org.jquantlib.util.TimeSeries;
  * Volatilities are assumed to be expressed on an annual basis.
  * 
  * @author Rajiv Chauhan
+ * @author Anand Mani
  */
 public class SimpleLocalEstimator {
 
@@ -38,9 +39,9 @@ public class SimpleLocalEstimator {
     }
     
     //FIXME: PERFORMANCE:: We should use (maybe!) a specialized TimeSeries backed by a double[] instead of a Double[]
-    public TimeSeries</*@Volatility*/ Double> calculate(final TimeSeries</*@Volatility*/ Double> quoteSeries) {
+    public TimeSeries</*@Volatility*/ Double> calculate(final TimeSeries</*@Real*/ Double> quoteSeries) {
         final List<Date> dates = quoteSeries.dates();
-        final List</*@Volatility*/ Double> values = quoteSeries.values();
+        final List</*@Real*/ Double> values = quoteSeries.values();
     	TimeSeries</*@Volatility*/ Double> retval = new TimeSeries</*@Volatility*/ Double>();
     	Double prev = null ;
     	Double cur  = null;
