@@ -157,8 +157,10 @@ class ReplicationError {
 //        PseudoRandommake_sequence_generator(nTimeSteps, 0);
 
 	RandomSequenceGenerator<Double, MersenneTwisterUniformRng> rsg = new RandomSequenceGenerator<Double, MersenneTwisterUniformRng>(nTimeSteps,0);
-
-
+	
+	// Added for testing (Dominik);
+	System.out.println("rsg: "+rsg);
+	
     boolean brownianBridge = false;
 /*
     typedef SingleVariate<PseudoRandom>::path_generator_type generator_type;
