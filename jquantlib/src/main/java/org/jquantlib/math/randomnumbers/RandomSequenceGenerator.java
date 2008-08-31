@@ -101,6 +101,7 @@ public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>>
         T value = null;
         try {
             value = (T) TypeToken.getClazz(this.getClass(), 0).getConstructor(int.class).newInstance(this.dimensionality_);
+        	// FIXME: Code added for testing purposes. Will be removed later (Dominik)
             System.out.println("Value: "+value);
         } catch (Exception e) {
             throw new RuntimeException(e);

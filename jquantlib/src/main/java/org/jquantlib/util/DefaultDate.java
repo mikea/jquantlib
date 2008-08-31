@@ -703,6 +703,7 @@ public class DefaultDate extends BaseDate {
                 throw new IllegalStateException("not updatable");
             }
             target.value = ((DefaultDate)source).value;
+            target.notifyObservers();
         }
         
     }

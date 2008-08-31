@@ -158,7 +158,7 @@ class ReplicationError {
 
 	RandomSequenceGenerator<Double, MersenneTwisterUniformRng> rsg = new RandomSequenceGenerator<Double, MersenneTwisterUniformRng>(nTimeSteps,0);
 	
-	// Added for testing (Dominik);
+    // FIXME: Code added for testing purposes. Will be removed later (Dominik)
 	System.out.println("rsg: "+rsg);
 	
     boolean brownianBridge = false;
