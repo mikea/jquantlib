@@ -40,47 +40,43 @@
 package org.jquantlib.model.volatility.garmanklass;
 
 import org.jquantlib.math.IntervalPrice;
-import org.jquantlib.model.volatility.LocalVolatilityEstimator;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
 
-/**
- * Garman-Klass volatility model
- * <p>
- * This class implements a concrete volatility model based on high low formulas using the method of
- * Garman and Klass in their paper "On the Estimation of the Security Price from Historical Data" at
- * http://www.fea.com/resources/pdf/a_estimation_of_security_price.pdf
- * <p>
- * Volatilities are assumed to be expressed on an annual basis.
- * 
- * @author Anand Mani
- */
-public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<IntervalPrice> {
+public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> extends GarmanKlassAbstract {
 
-	private final/* @Real */double yearFraction;
+	private/* @Real */Double f;
+	private/* @Real */Double a;
+	private T t;
 
-	public GarmanKlassAbstract(final/* @Real */double y) {
-		this.yearFraction = y;
+	public GarmanKlassOpenClose(T t, /* @Real */Double marketOpenFraction,
+	/* @Real */Double a) {
+		super(t.getYearFraction());
+		this.t = t;
+		this.f = marketOpenFraction;
+		this.a = a;
 	}
 
-	@Override
-	public TimeSeries<Double> calculate(TimeSeries<IntervalPrice> quoteSeries) {
+	public TimeSeries</* @Volatility*/Double> calculate(TimeSeries<IntervalPrice> quoteSeries /* @ReadOnly*/) {
 		final Date[] dates = quoteSeries.dates();
 		final IntervalPrice[] values = quoteSeries.values();
-		TimeSeries</* @Volatility */Double> retval = new TimeSeries</* @Volatility */Double>();
+		TimeSeries</*@Volatility*/Double> retval = new TimeSeries</*@Volatility*/Double>();
+		IntervalPrice prev = null;
 		IntervalPrice cur = null;
 		for (int i = 1; i < values.length; i++) {
 			cur = values[i];
-			double s = calculatePoint(cur) / Math.sqrt(yearFraction);
+			prev = values[i - 1];
+			double c0 = Math.log(prev.getClose());
+			double o1 = Math.log(cur.getOpen());
+			double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * calculatePoint(cur) / (1 - this.f);
+			double s = Math.sqrt(sigma2 / getYearFraction());
 			retval.add(dates[i], s);
 		}
 		return retval;
 	}
 
-	public double getYearFraction() {
-		return yearFraction;
+	@Override
+	protected Double calculatePoint(IntervalPrice p) {
+		return t.calculatePoint(p);
 	}
-
-	protected abstract/* @Real */Double calculatePoint(final IntervalPrice p);
-
 }

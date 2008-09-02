@@ -36,51 +36,12 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
-
 package org.jquantlib.model.volatility.garmanklass;
 
-import org.jquantlib.math.IntervalPrice;
-import org.jquantlib.model.volatility.LocalVolatilityEstimator;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.TimeSeries;
+public class GarmanKlassSigma3 extends GarmanKlassOpenClose<ParkinsonSigma> {
 
-/**
- * Garman-Klass volatility model
- * <p>
- * This class implements a concrete volatility model based on high low formulas using the method of
- * Garman and Klass in their paper "On the Estimation of the Security Price from Historical Data" at
- * http://www.fea.com/resources/pdf/a_estimation_of_security_price.pdf
- * <p>
- * Volatilities are assumed to be expressed on an annual basis.
- * 
- * @author Anand Mani
- */
-public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<IntervalPrice> {
-
-	private final/* @Real */double yearFraction;
-
-	public GarmanKlassAbstract(final/* @Real */double y) {
-		this.yearFraction = y;
+	public GarmanKlassSigma3(ParkinsonSigma t, Double marketOpenFraction) {
+		super(t, marketOpenFraction, 0.17);
 	}
-
-	@Override
-	public TimeSeries<Double> calculate(TimeSeries<IntervalPrice> quoteSeries) {
-		final Date[] dates = quoteSeries.dates();
-		final IntervalPrice[] values = quoteSeries.values();
-		TimeSeries</* @Volatility */Double> retval = new TimeSeries</* @Volatility */Double>();
-		IntervalPrice cur = null;
-		for (int i = 1; i < values.length; i++) {
-			cur = values[i];
-			double s = calculatePoint(cur) / Math.sqrt(yearFraction);
-			retval.add(dates[i], s);
-		}
-		return retval;
-	}
-
-	public double getYearFraction() {
-		return yearFraction;
-	}
-
-	protected abstract/* @Real */Double calculatePoint(final IntervalPrice p);
 
 }
