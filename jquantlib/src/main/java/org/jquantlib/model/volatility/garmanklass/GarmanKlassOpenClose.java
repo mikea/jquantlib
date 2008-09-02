@@ -40,24 +40,49 @@
 package org.jquantlib.model.volatility.garmanklass;
 
 import org.jquantlib.math.IntervalPrice;
+import org.jquantlib.model.volatility.LocalVolatilityEstimator;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.reflect.TypeToken;
 
-public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> extends GarmanKlassAbstract {
+/**
+ * This template factors out common functionality found in classes which rely on the difference between the previous day's close
+ * price and today's open price.
+ * 
+ * @author Anand Mani
+ * @author Richard Gomes
+ */
+public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements LocalVolatilityEstimator<IntervalPrice> {
 
-	private/* @Real */Double f;
-	private/* @Real */Double a;
-	private T t;
+    //
+    // private fields
+    //
+    
+    private double f;
+	private double a;
+	private T delegate;
 
-	public GarmanKlassOpenClose(T t, /* @Real */Double marketOpenFraction,
-	/* @Real */Double a) {
-		super(t.getYearFraction());
-		this.t = t;
+	//
+	// public constructors
+	//
+	
+	public GarmanKlassOpenClose(final double y, final double marketOpenFraction, final double a) {
+		this.delegate = null;
+        try {
+            delegate = (T) TypeToken.getClazz(this.getClass()).getConstructor(double.class).newInstance(y);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 		this.f = marketOpenFraction;
 		this.a = a;
 	}
 
-	public TimeSeries</* @Volatility*/Double> calculate(TimeSeries<IntervalPrice> quoteSeries /* @ReadOnly*/) {
+	//
+	// implements LocalVolatilityEstimator
+	//
+	
+	@Override
+	public TimeSeries</* @Volatility*/Double> calculate(final TimeSeries<IntervalPrice> quoteSeries) {
 		final Date[] dates = quoteSeries.dates();
 		final IntervalPrice[] values = quoteSeries.values();
 		TimeSeries</*@Volatility*/Double> retval = new TimeSeries</*@Volatility*/Double>();
@@ -68,15 +93,11 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> extends GarmanK
 			prev = values[i - 1];
 			double c0 = Math.log(prev.getClose());
 			double o1 = Math.log(cur.getOpen());
-			double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * calculatePoint(cur) / (1 - this.f);
-			double s = Math.sqrt(sigma2 / getYearFraction());
+			double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * delegate.calculatePoint(cur) / (1 - this.f);
+			double s = Math.sqrt(sigma2 / delegate.getYearFraction());
 			retval.add(dates[i], s);
 		}
 		return retval;
 	}
 
-	@Override
-	protected Double calculatePoint(IntervalPrice p) {
-		return t.calculatePoint(p);
-	}
 }
