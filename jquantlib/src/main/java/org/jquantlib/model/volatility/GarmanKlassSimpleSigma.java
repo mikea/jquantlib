@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.model.volatility;
 
@@ -49,13 +49,13 @@ import org.jquantlib.math.IntervalPrice;
  */
 public class GarmanKlassSimpleSigma extends GarmanKlassAbstract {
 
-	public GarmanKlassSimpleSigma(double y) {
+	public GarmanKlassSimpleSigma(final double y) {
 		super(y);
 	}
 
 	@Override
-	protected/* @Real */Double calculatePoint(IntervalPrice p) {
-		/* @Real */Double c = Math.log(p.getClose() / p.getOpen());
+	protected Double calculatePoint(IntervalPrice p) {
+		Double c = Math.log(p.getClose() / p.getOpen());
 		return c * c;
 	}
 

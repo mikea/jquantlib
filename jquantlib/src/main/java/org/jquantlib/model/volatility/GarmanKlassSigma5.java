@@ -43,7 +43,7 @@ import org.jquantlib.math.IntervalPrice;
 
 public class GarmanKlassSigma5 extends GarmanKlassAbstract {
 
-	public GarmanKlassSigma5(double y) {
+	public GarmanKlassSigma5(final double y) {
 		super(y);
 	}
 

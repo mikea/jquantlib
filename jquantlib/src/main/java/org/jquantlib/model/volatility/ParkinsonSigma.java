@@ -43,7 +43,7 @@ import org.jquantlib.math.IntervalPrice;
 
 public class ParkinsonSigma extends GarmanKlassAbstract {
 
-	public ParkinsonSigma(double y) {
+	public ParkinsonSigma(final double y) {
 		super(y);
 	}
 

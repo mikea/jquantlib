@@ -65,6 +65,7 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
 	// public constructors
 	//
 	
+	@SuppressWarnings("unchecked")
 	public GarmanKlassOpenClose(final double y, final double marketOpenFraction, final double a) {
 		this.delegate = null;
         try {

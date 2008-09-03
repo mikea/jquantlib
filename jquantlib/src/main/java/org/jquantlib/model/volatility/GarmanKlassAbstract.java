@@ -56,9 +56,9 @@ import org.jquantlib.util.TimeSeries;
  */
 public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<IntervalPrice> {
 
-	private final/* @Real */double yearFraction;
+	private final double yearFraction;
 
-	public GarmanKlassAbstract(final/* @Real */double y) {
+	public GarmanKlassAbstract(final double y) {
 		this.yearFraction = y;
 	}
 
@@ -80,6 +80,6 @@ public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<In
 		return yearFraction;
 	}
 
-	protected abstract/* @Real */Double calculatePoint(final IntervalPrice p);
+	protected abstract Double calculatePoint(final IntervalPrice p);
 
 }
