@@ -41,6 +41,9 @@ package org.jquantlib.model.volatility;
 
 import org.jquantlib.math.IntervalPrice;
 
+/**
+ * @author Anand Mani
+ */
 public class GarmanKlassSigma5 extends GarmanKlassAbstract {
 
 	public GarmanKlassSigma5(final double y) {
@@ -48,7 +51,7 @@ public class GarmanKlassSigma5 extends GarmanKlassAbstract {
 	}
 
 	@Override
-	protected Double calculatePoint(final IntervalPrice p /* @ReadOnly */) {
+	protected double calculatePoint(final IntervalPrice p) {
 		double u = Math.log(p.getHigh() / p.getOpen());
 		double d = Math.log(p.getLow() / p.getOpen());
 		double c = Math.log(p.getClose() / p.getOpen());

@@ -80,6 +80,6 @@ public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<In
 		return yearFraction;
 	}
 
-	protected abstract Double calculatePoint(final IntervalPrice p);
+	protected abstract double calculatePoint(final IntervalPrice p);
 
 }
