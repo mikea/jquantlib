@@ -35,28 +35,25 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
-package org.jquantlib.model.volatility.garmanklass;
+package org.jquantlib.model.volatility;
 
 import org.jquantlib.math.IntervalPrice;
 
-/**
- * 
- * Volatilities are assumed to be expressed on an annual basis.
- * 
- * @author Anand Mani
- */
-public class GarmanKlassSimpleSigma extends GarmanKlassAbstract {
+public class GarmanKlassSigma5 extends GarmanKlassAbstract {
 
-	public GarmanKlassSimpleSigma(double y) {
+	public GarmanKlassSigma5(double y) {
 		super(y);
 	}
 
 	@Override
-	protected/* @Real */Double calculatePoint(IntervalPrice p) {
-		/* @Real */Double c = Math.log(p.getClose() / p.getOpen());
-		return c * c;
+	protected Double calculatePoint(final IntervalPrice p /* @ReadOnly */) {
+		double u = Math.log(p.getHigh() / p.getOpen());
+		double d = Math.log(p.getLow() / p.getOpen());
+		double c = Math.log(p.getClose() / p.getOpen());
+		double r = 0.5 * (u - d) * (u - d) - (2.0 * Math.log(2.0) - 1.0) * c * c;
+		return r;
 	}
 
 }

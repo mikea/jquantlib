@@ -37,13 +37,13 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 
-package org.jquantlib.model.volatility.garmanklass;
+package org.jquantlib.model.volatility;
 
 import org.jquantlib.math.IntervalPrice;
 
-public class GarmanKlassSigma4 extends GarmanKlassAbstract {
+public class ParkinsonSigma extends GarmanKlassAbstract {
 
-	public GarmanKlassSigma4(double y) {
+	public ParkinsonSigma(double y) {
 		super(y);
 	}
 
@@ -51,8 +51,7 @@ public class GarmanKlassSigma4 extends GarmanKlassAbstract {
 	protected Double calculatePoint(final IntervalPrice p /* @ReadOnly */) {
 		double u = Math.log(p.getHigh() / p.getOpen());
 		double d = Math.log(p.getLow() / p.getOpen());
-		double c = Math.log(p.getClose() / p.getOpen());
-		double r = 0.511 * (u - d) * (u - d) - 0.019 * (c * (u + d) - 2 * u * d) - 0.383 * c * c;
+		double r = (u - d) * (u - d) / 4.0 / Math.log(2.0);
 		return r;
 	}
 

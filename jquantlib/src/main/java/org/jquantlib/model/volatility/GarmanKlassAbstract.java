@@ -37,67 +37,49 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 
-package org.jquantlib.model.volatility.garmanklass;
+package org.jquantlib.model.volatility;
 
 import org.jquantlib.math.IntervalPrice;
-import org.jquantlib.model.volatility.LocalVolatilityEstimator;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
-import org.jquantlib.util.reflect.TypeToken;
 
 /**
- * This template factors out common functionality found in classes which rely on the difference between the previous day's close
- * price and today's open price.
+ * Garman-Klass volatility model
+ * <p>
+ * This class implements a concrete volatility model based on high low formulas using the method of
+ * Garman and Klass in their paper "On the Estimation of the Security Price from Historical Data" at
+ * http://www.fea.com/resources/pdf/a_estimation_of_security_price.pdf
+ * <p>
+ * Volatilities are assumed to be expressed on an annual basis.
  * 
  * @author Anand Mani
- * @author Richard Gomes
  */
-public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements LocalVolatilityEstimator<IntervalPrice> {
+public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<IntervalPrice> {
 
-    //
-    // private fields
-    //
-    
-    private double f;
-	private double a;
-	private T delegate;
+	private final/* @Real */double yearFraction;
 
-	//
-	// public constructors
-	//
-	
-	public GarmanKlassOpenClose(final double y, final double marketOpenFraction, final double a) {
-		this.delegate = null;
-        try {
-            delegate = (T) TypeToken.getClazz(this.getClass()).getConstructor(double.class).newInstance(y);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-		this.f = marketOpenFraction;
-		this.a = a;
+	public GarmanKlassAbstract(final/* @Real */double y) {
+		this.yearFraction = y;
 	}
 
-	//
-	// implements LocalVolatilityEstimator
-	//
-	
 	@Override
-	public TimeSeries</* @Volatility*/Double> calculate(final TimeSeries<IntervalPrice> quoteSeries) {
+	public TimeSeries</* @Volatility */Double> calculate(TimeSeries<IntervalPrice> quoteSeries) {
 		final Date[] dates = quoteSeries.dates();
 		final IntervalPrice[] values = quoteSeries.values();
-		TimeSeries</*@Volatility*/Double> retval = new TimeSeries</*@Volatility*/Double>();
-		IntervalPrice prev = null;
+		TimeSeries</* @Volatility */Double> retval = new TimeSeries</* @Volatility */Double>();
 		IntervalPrice cur = null;
-		for (int i = 1; i < values.length; i++) {
+		for (int i = 0; i < values.length; i++) {
 			cur = values[i];
-			prev = values[i - 1];
-			double c0 = Math.log(prev.getClose());
-			double o1 = Math.log(cur.getOpen());
-			double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * delegate.calculatePoint(cur) / (1 - this.f);
-			double s = Math.sqrt(sigma2 / delegate.getYearFraction());
+			double s = Math.sqrt(Math.abs(calculatePoint(cur) / Math.sqrt(yearFraction)));
 			retval.add(dates[i], s);
 		}
 		return retval;
 	}
+
+	public double getYearFraction() {
+		return yearFraction;
+	}
+
+	protected abstract/* @Real */Double calculatePoint(final IntervalPrice p);
 
 }

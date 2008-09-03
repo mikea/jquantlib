@@ -35,24 +35,28 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- */
+*/
 
-package org.jquantlib.model.volatility.garmanklass;
+package org.jquantlib.model.volatility;
 
 import org.jquantlib.math.IntervalPrice;
 
-public class ParkinsonSigma extends GarmanKlassAbstract {
+/**
+ * 
+ * Volatilities are assumed to be expressed on an annual basis.
+ * 
+ * @author Anand Mani
+ */
+public class GarmanKlassSimpleSigma extends GarmanKlassAbstract {
 
-	public ParkinsonSigma(double y) {
+	public GarmanKlassSimpleSigma(double y) {
 		super(y);
 	}
 
 	@Override
-	protected Double calculatePoint(final IntervalPrice p /* @ReadOnly */) {
-		double u = Math.log(p.getHigh() / p.getOpen());
-		double d = Math.log(p.getLow() / p.getOpen());
-		double r = (u - d) * (u - d) / 4.0 / Math.log(2.0);
-		return r;
+	protected/* @Real */Double calculatePoint(IntervalPrice p) {
+		/* @Real */Double c = Math.log(p.getClose() / p.getOpen());
+		return c * c;
 	}
 
 }

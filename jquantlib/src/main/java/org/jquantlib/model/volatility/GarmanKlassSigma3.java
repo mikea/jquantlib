@@ -36,7 +36,7 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
-package org.jquantlib.model.volatility.garmanklass;
+package org.jquantlib.model.volatility;
 
 public class GarmanKlassSigma3 extends GarmanKlassOpenClose<ParkinsonSigma> {
 
