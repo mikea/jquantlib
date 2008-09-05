@@ -109,7 +109,39 @@ public class OperatorTest {
     
       
 	}
+	public void dumpArray(Array arr) {
+        for(int i = 0; i < arr.size(); i++) {
+            System.out.println("**** arr[" + i + "] = " + arr.get(i) );
+        }
+	}
+	
+	public void outputDiagonals(TridiagonalOperator op) {
+        String str = "[";
+        double[] data = op.lowerDiagonal().getData();
+        for(int i = 0; i < data.length; i++) {
+            str += String.format(" %.4f ", data[i]);
+        }
+        str += "]";
+        System.out.println(str);
 
+        str = "[";
+        data = op.diagonal().getData();
+        for(int i = 0; i < data.length; i++) {
+            str += String.format(" %.4f ", data[i]);
+        }
+        str += "]";
+        System.out.println(str);
+	    
+        str = "[";
+        data = op.upperDiagonal().getData();
+        for(int i = 0; i < data.length; i++) {
+            str += String.format(" %.4f ", data[i]);
+        }
+        str += "]";
+        System.out.println(str);
+	    
+	}
+	
 	@Test
 	public void testBSMOperatorConsistency() throws Exception {
 	    System.out.println("Testing consistency of BSM operators...");
@@ -127,25 +159,21 @@ public class OperatorTest {
 		double r = 0.05;
 		double q = 0.01;
 		double sigma = 0.5;
-
+		
 		BSMOperator ref = new BSMOperator(grid.size(), dx, r, q, sigma);
-
+        System.out.println("BSMOperator reference diagonals: \n");
+        outputDiagonals(ref);
+		
 		DayCounter dc = Actual360.getDayCounter();
 		Date today = DateFactory.getFactory().getTodaysDate();
 
 		Date exercise = today.increment(2*365);
 		double residualTime = dc.getYearFraction(today, exercise);
-//		Time residualTime = dc.yearFraction(today,exercise);
-		
-//		boost::shared_ptr<SimpleQuote> spot(new SimpleQuote(0.0));
-//		boost::shared_ptr<YieldTermStructure> qTS = flatRate(today, q, dc);
-//		boost::shared_ptr<YieldTermStructure> rTS = flatRate(today, r, dc);
 
 		SimpleQuote spot = new SimpleQuote(0.0);
 		YieldTermStructure qTS = flatRate(today, q, dc);
 		YieldTermStructure rTS = flatRate(today, r, dc);
 		
-//		boost::shared_ptr<BlackVolTermStructure> volTS = flatVol(today, sigma, dc);
 		BlackVolTermStructure volTS = flatVol(today, sigma, dc);
 		
 		GeneralizedBlackScholesProcess stochProcess = new GeneralizedBlackScholesProcess(
@@ -156,21 +184,30 @@ public class OperatorTest {
 		
 		BSMOperator op1 = new BSMOperator(grid, stochProcess, residualTime);
 		//typedef PdeOperator<PdeBSM> BSMTermOperator;
-		//TODO: translate class TransformedGrid
+		System.out.println("BSMOperator diagonals: \n");
+		outputDiagonals(op1);
+		
 		TransformedGrid grid2 = new TransformedGrid(grid);
 		PdeOperator<PdeBSM> op2 = new PdeOperator<PdeBSM>(grid2, new PdeBSM(stochProcess), residualTime);
 
+		System.out.println("PdeOperator diagonals: \n");
+		outputDiagonals(op2);
+		
 		double tolerance = 1.0e-6;
-		
-		Array lderror = ref.lowerDiagonal();
-		lderror.operatorSubtract(op1.lowerDiagonal());
-		Array derror = ref.diagonal();
-		derror.operatorSubtract(op1.diagonal());
-		Array uderror = ref.upperDiagonal();
-		uderror.operatorSubtract(op1.upperDiagonal());
-		
 
+		Array lderror = new Array(ref.lowerDiagonal().getData());
+		lderror.operatorSubtract(new Array(op1.lowerDiagonal().getData()));
+		Array derror = new Array(ref.diagonal().getData());
+		derror.operatorSubtract(new Array(op1.diagonal().getData()));
+		Array uderror = new Array(ref.upperDiagonal().getData());
+		uderror.operatorSubtract(new Array(op1.upperDiagonal().getData()));
+
+		
 		for (i=2; i<grid.size()-2; i++) {
+            System.out.println("lderror(" + i + ") = "+ Math.abs(lderror.get(i)) +  " tolerance " + tolerance + " \n");
+            System.out.println("derror(" + i + ") = "+ Math.abs(derror.get(i)) + " tolerance " + tolerance + " \n");
+            System.out.println("uderror(" + i + ") = "+ Math.abs(uderror.get(i)) + " tolerance " + tolerance + " \n");
+		    
 			if (Math.abs(lderror.get(i)) > tolerance ||
 				Math.abs(derror.get(i)) > tolerance ||
 				Math.abs(uderror.get(i)) > tolerance) {
