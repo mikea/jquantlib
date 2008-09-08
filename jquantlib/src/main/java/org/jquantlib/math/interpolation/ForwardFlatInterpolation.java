@@ -82,7 +82,7 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 	@Override
 	public void reload() {
 		super.reload();
-		
+
 		primitive = new double[vx.length];
 		primitive[0] = 0.0;
 		for (int i = 1; i < vx.length; i++) {
@@ -117,7 +117,7 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 	//
 
 	/**
-	 * This class is a factory for LinearInterpolation instances.
+	 * This class is a factory for ForwardFlatInterpolation instances.
 	 * 
 	 * @author Anand Mani
 	 */
