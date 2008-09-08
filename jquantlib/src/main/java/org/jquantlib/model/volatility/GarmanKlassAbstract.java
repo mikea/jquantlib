@@ -70,7 +70,7 @@ public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<In
 		IntervalPrice cur = null;
 		for (int i = 0; i < values.length; i++) {
 			cur = values[i];
-			double s = Math.sqrt(Math.abs(calculatePoint(cur) / Math.sqrt(yearFraction)));
+			double s = Math.sqrt(Math.abs(calculatePoint(cur)) / yearFraction);
 			retval.add(dates[i], s);
 		}
 		return retval;
