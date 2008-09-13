@@ -40,6 +40,8 @@ import org.jquantlib.math.randomnumbers.InverseCumulative;
 // RICHARD: This class uses trial code:
 // org.jquantlib.math.randomnumbers.trial.InverseCumulative;
 
+// TODO: Code review. Remove inheritance from NormalDistribution and use of objects types.
+
 public class InverseCumulativeNormal extends NormalDistribution implements InverseCumulative {
 		
 	//
