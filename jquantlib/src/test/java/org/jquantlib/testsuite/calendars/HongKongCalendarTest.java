@@ -77,38 +77,54 @@ public class HongKongCalendarTest {
 		// 2004 
         testHongKongYear2004(c);
     }
-    // 2008 - current year
+   
+	// 2008 -- current year
+	
 	void testHongKongYear2008(Calendar c) {
       	int year = 2008;
       	System.out.println("Testing Hong Kong's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
-    	//New year's day
-    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-		// Ching Ming Festival, April 5th -- weekend i 2008
-		//expectedHol.add(DateFactory.getFactory().getDate(5,APRIL,year));    	    	
-		//good friday
-		expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));    	    	
-    	//easter monday
-    	expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));
+		//New Year
+		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
+    	//Chinese New Year 7->9 Feb
+    	expectedHol.add(DateFactory.getFactory().getDate(7,FEBRUARY,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(8,FEBRUARY,year)); 
 		
-    	//labour day
-    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-    	// SAR Establishment Day, July 1st (possibly moved to Monday)
+		//Good Friday
+		expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year)); 
+		//Easter Monday
+		expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year)); 
+		//Ching Ming
+		expectedHol.add(DateFactory.getFactory().getDate(4,APRIL,year));    	    	
+		
+		//labour day
+		expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));    	    	
+		
+		//Buddha's Birthday 24 May
+		expectedHol.add(DateFactory.getFactory().getDate(12,MAY,year));    	    	
+		//Tuen NG festival
+		expectedHol.add(DateFactory.getFactory().getDate(9,JUNE,year));    
+		
+		// SAR Establishment Day, July 1st (possibly moved to Monday)
     	expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
-    	// National Day, October 1st (possibly moved to Monday)
-		expectedHol.add(DateFactory.getFactory().getDate(1,OCTOBER,year));
+    	// Mid-autumn festival
+    	expectedHol.add(DateFactory.getFactory().getDate(15,SEPTEMBER,year));
+		
+		// National Day, October 1st (possibly moved to Monday)
+		expectedHol.add(DateFactory.getFactory().getDate(1,OCTOBER,year));		
+    	//Chung Yeung festival
+    	expectedHol.add(DateFactory.getFactory().getDate(7,OCTOBER,year));
 		
 		//christmas 
     	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
 		//boxing day
         expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-        
+    	
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, c, year);
     }
-	
-	// 2007 - current year
+	// 2007 
 	
 	void testHongKongYear2007(Calendar c) {
       	int year = 2007;
