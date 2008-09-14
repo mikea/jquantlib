@@ -97,6 +97,7 @@ public class Singapore extends WesternCalendar {
             || ((d == 9 || d == 10) && m == FEBRUARY && y == 2005)
             || ((d == 30 || d == 31) && m == JANUARY && y == 2006)
             || ((d == 19 || d == 20) && m == FEBRUARY && y == 2007)
+            || ((d == 7 || d == 8) && m == FEBRUARY && y == 2008)
 
             // Hari Raya Haji
             || ((d == 1 || d == 2) && m == FEBRUARY && y == 2004)
@@ -104,16 +105,19 @@ public class Singapore extends WesternCalendar {
             || (d == 10 && m == JANUARY && y == 2006)
             || (d == 2 && m == JANUARY && y == 2007)
             || (d == 20 && m == DECEMBER && y == 2007)
+            || (d == 8 && m == DECEMBER && y == 2008)
 
             // Vesak Poya Day
             || (d == 2 && m == JUNE && y == 2004)
             || (d == 22 && m == MAY && y == 2005)
             || (d == 12 && m == MAY && y == 2006)
             || (d == 31 && m == MAY && y == 2007)
+            || (d == 18 && m == MAY && y == 2008)
 
             // Deepavali
             || (d == 11 && m == NOVEMBER && y == 2004)
             || (d == 8 && m == NOVEMBER && y == 2007)
+            || (d == 28 && m == OCTOBER && y == 2008)
 
             // Diwali
             || (d == 1 && m == NOVEMBER && y == 2005)
@@ -123,6 +127,7 @@ public class Singapore extends WesternCalendar {
             || (d == 3 && m == NOVEMBER && y == 2005)
             || (d == 24 && m == OCTOBER && y == 2006)
             || (d == 13 && m == OCTOBER && y == 2007)
+            || (d == 1 && m == OCTOBER && y == 2008)
             )
             return false;
         return true;
