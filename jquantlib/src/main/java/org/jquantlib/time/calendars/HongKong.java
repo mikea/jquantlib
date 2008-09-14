@@ -164,6 +164,21 @@ public class HongKong extends WesternCalendar {
             return false;
         }
 
+		if (y == 2008) {
+            if (// Lunar New Year
+                ((d >= 7 && d <= 9) && m == FEBRUARY)
+                // Ching Ming Festival
+                || (d == 4 && m == APRIL)
+                // Buddha's birthday
+                || (d == 12 && m == MAY)
+                // Tuen NG festival
+                || (d == 9 && m == JUNE)
+                // Mid-autumn festival
+                || (d == 15 && m == SEPTEMBER)
+                // Chung Yeung festival
+                || (d == 7 && m == OCTOBER))
+            return false;
+        }
         return true;
 	}
     public String getName() {
