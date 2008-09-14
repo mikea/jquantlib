@@ -23,7 +23,7 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.randomnumbers.InverseCumulative;
+import org.jquantlib.math.UnaryFunctionDouble;
 
 
 /**
@@ -42,7 +42,7 @@ import org.jquantlib.math.randomnumbers.InverseCumulative;
 
 // TODO: Code review. Remove inheritance from NormalDistribution and use of objects types.
 
-public class InverseCumulativeNormal extends NormalDistribution implements InverseCumulative {
+public class InverseCumulativeNormal implements UnaryFunctionDouble {
 		
 	//
 	// static final fields (constants)
@@ -74,6 +74,12 @@ public class InverseCumulativeNormal extends NormalDistribution implements Inver
     static final double d4_ =  3.754408661907416e+00;
 
     
+	//
+	// protected fields
+	//
+	
+	protected double average;
+	protected double sigma;
     
       
     /**
@@ -103,7 +109,10 @@ public class InverseCumulativeNormal extends NormalDistribution implements Inver
     }
 
     public InverseCumulativeNormal(double average, double sigma) {
-        super(average, sigma);
+    	if (sigma <= 0.0) throw new IllegalArgumentException("sigma must be greater than 0.0 ("+sigma+" not allowed)");
+
+		this.average = average;
+		this.sigma = sigma;
     }
 
     
@@ -117,7 +126,7 @@ public class InverseCumulativeNormal extends NormalDistribution implements Inver
      * @returns <code>average + z * sigma</code>
      */
     @Override
-    public Double evaluate(Double x)/* @ReadOnly */{
+    public double evaluate(double x)/* @ReadOnly */{
 
     	double z;
     	double r;

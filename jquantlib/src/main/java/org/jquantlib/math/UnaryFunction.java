@@ -27,6 +27,7 @@ package org.jquantlib.math;
  * 
  * @author Aaron Roth
  */
+
 public interface UnaryFunction<ParameterType, ReturnType> {
 
 	/**

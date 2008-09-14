@@ -61,31 +61,50 @@ public class InverseCumulativeNormalTest {
 									
 									
 		InverseCumulativeNormal icn = new InverseCumulativeNormal();
-		TESTICN ticn = new TESTICN();
+		// TESTICN ticn = new TESTICN();
 		
 		
 		for(int i=0;i<testvalues.length;i++){
 			double z = testvalues[i][0];
+			
+			// JQuantLib
 			double expected = testvalues[i][1];
-			//double computed = icn.evaluate(z);
-			//double expected = ticn.getInvCDF(z,true);
-			double computed = ticn.getInvCDF(z,true);
+			double computed = icn.evaluate(z);
+			
+			// TESTICN
+			double expectedTicn = TESTICN.getInvCDF(z,true);
+			double computedTicn = TESTICN.getInvCDF(z,true);
+			
 			//double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
-
 			double tolerance = (Math.abs(z)<3.01) ? 1.0e-8: 1.0e-8;
 			
-			// assertEquals(expected, computed,tolerance); --> not JUnit 4.4 conform
+			// Quantlib/JQuantLib implementation
 			if (Math.abs(expected-computed)>tolerance) {
 				fail("z: " + z + " expected: " + expected + " computed: " + computed);
 			}
 			
-			//assertEquals(0.0, computed + icn.evaluate(z)*(-1.0), tolerance); --> not JUnit 4.4 conform
-			//double realized = computed + ticn.evaluate(z)*(-1.0);
-			double realized = computed + ticn.getInvCDF(z,true)*(-1.0);
+			// TESTICN implementatation
+			if (Math.abs(expectedTicn-computedTicn)>tolerance) {
+				fail("z: " + z + " expected: " + expectedTicn + " computed: " + computedTicn);
+			}
+			
+			// JQuantlib
+			double realized = computed + icn.evaluate(z)*(-1.0);
+			
+			// TESTICN
+			double realizedTicn = computedTicn + TESTICN.getInvCDF(z,true)*(-1.0);
+			
+			// Quantlib/JQuantLib implementation
 			if (Math.abs(realized) > tolerance) {
 				fail("z: " + z + " expected: " + 0.0 + " realized: " + realized);
 			}
-		    System.out.println("***** TEST FAILED *****");
+			
+			// TESTICN
+			if (Math.abs(realizedTicn) > tolerance) {
+				fail("z: " + z + " expected: " + 0.0 + " realized: " + realizedTicn);
+			}
+			
+		    // System.out.println("***** TEST FAILED *****");
 		}
 	}
 	

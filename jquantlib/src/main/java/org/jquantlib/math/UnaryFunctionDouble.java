@@ -27,8 +27,7 @@ package org.jquantlib.math;
  * 
  * @author Richard Gomes
  */
-@Deprecated
-// TODO: Remove this interface :: substitute by UnaryFunction<Double, Double>
+
 public interface UnaryFunctionDouble {
 
 	/**
