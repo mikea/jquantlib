@@ -41,6 +41,7 @@ package org.jquantlib.math.randomnumbers;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 
 import org.jquantlib.methods.montecarlo.Sample;
@@ -100,7 +101,10 @@ public class RandomSequenceGenerator<T, RNG extends RandomNumberGenerator<T>>
         // instantiate a generic holder for Sample values
         T value = null;
         try {
-            value = (T) TypeToken.getClazz(this.getClass(), 0).getConstructor(int.class).newInstance(this.dimensionality_);
+            Class k = TypeToken.getClazz(this.getClass());
+            Constructor c = k.getConstructor(int.class);
+            value = (T) c.newInstance(this.dimensionality_);
+            // value = (T) TypeToken.getClazz(this.getClass()).getConstructor(int.class).newInstance(this.dimensionality_);
         	// FIXME: Code added for testing purposes. Will be removed later (Dominik)
             System.out.println("Value: "+value);
         } catch (Exception e) {

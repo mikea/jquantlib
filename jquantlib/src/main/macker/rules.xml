@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<macker>    
+    <ruleset name="Testing rules">
+        <pattern name="JquantLib" class="org.jquantlib.**" />
+        <access-rule>
+            <message>Use primitive types instead.</message>
+            <deny>
+                <to>
+                	<include class="java.lang.Double" />
+                </to>
+            </deny>
+        </access-rule>
+    </ruleset>
+</macker>

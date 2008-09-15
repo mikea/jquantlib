@@ -64,12 +64,12 @@ public class TypeToken {
             System.out.println("    "+type);
         }
         
-        if (superclass instanceof Class) {
-            throw new IllegalArgumentException("Class should be generic");
-        }
-        Type[] types = ((ParameterizedType) superclass).getActualTypeArguments();
+//        if (superclass instanceof Class) {
+//            throw new IllegalArgumentException("Class should be generic");
+//        }
+        Type[] types = klass.getTypeParameters();
         if (pos >= types.length) {
-            throw new IllegalArgumentException("Missing parameter");
+            throw new IllegalArgumentException("Missing parameter #"+pos);
         }
         return types[pos];
     }
