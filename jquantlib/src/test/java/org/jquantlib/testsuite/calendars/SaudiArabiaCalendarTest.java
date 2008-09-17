@@ -61,7 +61,7 @@ public class SaudiArabiaCalendarTest {
 	@Test
     public void testSaudiArabia() {
                        
-    	Calendar c = SaudiArabia.getCalendar();
+    	Calendar c = SaudiArabia.getCalendar(SaudiArabia.Market.TADAWUL);
     	
         // 2005 
         testSaudiArabiaYear2005(c);
