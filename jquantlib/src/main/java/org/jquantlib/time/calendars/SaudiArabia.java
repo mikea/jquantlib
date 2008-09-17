@@ -54,7 +54,7 @@ Other holidays for which no rule is given (data available for 2004-2005 only:)
 */
 
 // FIXME
-public class SaudiArabia /*extends DelegateCalendar*/{
+public class SaudiArabia extends DelegateCalendar{
 
 	public enum Market { TADAWUL    //!< Tadawul financial market
     };
@@ -72,7 +72,7 @@ public class SaudiArabia /*extends DelegateCalendar*/{
 			throw new IllegalArgumentException("unknown market");
 		}
 		// FIXME
-		// setDelegate(delegate);
+		setDelegate(delegate);
 	}
 
 	public static SaudiArabia getCalendar(Market market) {
