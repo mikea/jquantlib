@@ -211,6 +211,7 @@
         </configuration>
       </plugin>
       
+      <!-- 
 	  <plugin>
     	<groupId>maven-plugins</groupId>
     	<artifactId>maven-macker-plugin</artifactId>
@@ -222,10 +223,6 @@
 	        <anger>error</anger>
 	        <rule>src/main/macker/rules.xml</rule>
 	        <verbose>true</verbose>
-	        <!-- variables>
-	          <key1>value1</key1>
-	          [...]
-	        </variables -->
         </configuration>
         <executions>
           <execution>
@@ -236,7 +233,7 @@
           </execution>
         </executions>      
       </plugin>
-
+	  -->
 
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>

@@ -22,20 +22,15 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.util.Month.DECEMBER;
-import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.FEBRUARY;
-import static org.jquantlib.util.Month.MAY;
-import static org.jquantlib.util.Month.JUNE;
-import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.SEPTEMBER;
-import static org.jquantlib.util.Month.OCTOBER;
-import static org.jquantlib.util.Month.NOVEMBER;
-import static org.jquantlib.time.Weekday.THURSDAY;
 import static org.jquantlib.time.Weekday.FRIDAY;
-
+import static org.jquantlib.time.Weekday.THURSDAY;
+import static org.jquantlib.util.Month.FEBRUARY;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.util.Month.SEPTEMBER;
 
 import org.jquantlib.time.AbstractCalendar;
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
@@ -58,7 +53,8 @@ Other holidays for which no rule is given (data available for 2004-2005 only:)
     @Author 
 */
 
-public class SaudiArabia extends DelegateCalendar{
+// FIXME
+public class SaudiArabia /*extends DelegateCalendar*/{
 
 	public enum Market { TADAWUL    //!< Tadawul financial market
     };
@@ -75,7 +71,8 @@ public class SaudiArabia extends DelegateCalendar{
 		default:
 			throw new IllegalArgumentException("unknown market");
 		}
-		setDelegate(delegate);
+		// FIXME
+		// setDelegate(delegate);
 	}
 
 	public static SaudiArabia getCalendar(Market market) {
