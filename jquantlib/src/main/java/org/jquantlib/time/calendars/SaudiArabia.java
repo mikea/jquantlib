@@ -58,25 +58,49 @@ Other holidays for which no rule is given (data available for 2004-2005 only:)
     @Author 
 */
 
-public class SaudiArabia extends AbstractCalendar{
-	private static SaudiArabia SAUDIARABIA = new SaudiArabia();
+public class SaudiArabia extends DelegateCalendar{
 
-	private SaudiArabia() {
+	public enum Market { TADAWUL    //!< Tadawul financial market
+    };
+		
+	private final static SaudiArabia TADAWUL_CALENDAR = new SaudiArabia(
+			Market.TADAWUL);
+	private SaudiArabia(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case TADAWUL:
+			delegate = new SaudiArabiaSettlementCalendar();
+			break;
+		
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		setDelegate(delegate);
 	}
 
-	public static SaudiArabia getCalendar() {
-		return SAUDIARABIA;
+	public static SaudiArabia getCalendar(Market market) {
+		switch (market) {
+		case TADAWUL:
+			return TADAWUL_CALENDAR;
+		
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
 	}
-	public boolean isWeekend(Weekday w){
-	    return w == THURSDAY || w == FRIDAY;
-	}
-	public boolean isBusinessDay(Date date) {
-        Weekday w = date.getWeekday();
-        int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-        Month m = date.getMonthEnum();
-        int y = date.getYear();
+	
+	
+}	
+	final class SaudiArabiaSettlementCalendar extends AbstractCalendar {
+	    public boolean isWeekend(Weekday w){
+	        return w == THURSDAY || w == FRIDAY;
+	    }
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
         
-        if (isWeekend(w)
+			if (isWeekend(w)
             // National Day
             || (d == 23 && m == SEPTEMBER)
             // Eid Al-Adha
@@ -86,11 +110,12 @@ public class SaudiArabia extends AbstractCalendar{
             || (d >= 25 && d <= 29 && m == NOVEMBER && y==2004)
             || (d >= 14 && d <= 18 && m == NOVEMBER && y==2005)
             )
-            return false;
-        return true;
-	}
-    public String getName() {
-       return "SaudiArabia";
+			return false;
+			
+			return true;
+		}
+		public String getName() {
+			return "SaudiArabia";
+		}
     }
-    
-}
+
