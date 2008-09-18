@@ -82,15 +82,15 @@ public final class Sample<T> {
 
     
     //
-    // friend (package protected) setters
+    // package private setters
     //
     
     
-    /*@friend*/ void setValue(T value) {
+    /*@PackagePrivate*/ void setValue(T value) {
         this.value = value;
     }
 
-    /*@friend*/ void setWeight(double weight) {
+    /*@PackagePrivate*/ void setWeight(double weight) {
         this.weight = weight;
     }
 

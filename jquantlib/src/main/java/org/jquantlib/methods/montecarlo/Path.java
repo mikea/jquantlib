@@ -91,18 +91,18 @@ public class Path {
     }
 
     //
-    // friend (package protected) setters
+    // package private setters
     //
     
-    /*@friend*/ void setTimeGrid_(TimeGrid timeGrid_) {
+    /*@PackagePrivate*/ void setTimeGrid_(TimeGrid timeGrid_) {
         this.timeGrid_ = timeGrid_;
     }
 
-    /*@friend*/ void setValues_(final double[] values) {
+    /*@PackagePrivate*/ void setValues_(final double[] values) {
         this.values_ = values;
     }
 
-    /*@friend*/ void setValues_(final int i, final double value) {
+    /*@PackagePrivate*/ void setValues_(final int i, final double value) {
         this.values_[i] = value;
     }
     

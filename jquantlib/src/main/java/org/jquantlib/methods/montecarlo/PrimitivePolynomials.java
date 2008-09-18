@@ -80,8 +80,10 @@ package org.jquantlib.methods.montecarlo;
  * @author Dominik Holenstein
  */
 
+// FIXME: code review, better documentation
+
 // TODO: This class was originally defined in /math/randomnumbers (should refactor?)
-// Note: Classes were grouped in the same package due to @friend (package-protection) setters
+// Note: Classes were grouped in the same package due to @PackagePrivate setters
 
 public class PrimitivePolynomials {
 	
