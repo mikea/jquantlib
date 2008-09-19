@@ -156,7 +156,7 @@ final class SingaporeSettlementCalendar extends WesternCalendar {
 
 	}
     public String getName() {
-       return "Singapore";
+       return "Singapore exchange";
     }
     
 }
