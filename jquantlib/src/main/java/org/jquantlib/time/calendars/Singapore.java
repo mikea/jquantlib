@@ -33,6 +33,7 @@ import static org.jquantlib.util.Month.NOVEMBER;
 
 
 import org.jquantlib.time.WesternCalendar;
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
@@ -63,16 +64,37 @@ Other holidays for which no rule is given (data available for 2004-2008 only:)
     @Author 
 */
 
-public class Singapore extends WesternCalendar {
-	private static Singapore SINGAPORE = new Singapore();
-
-	private Singapore() {
+public class Singapore extends DelegateCalendar {
+	public enum Market { SGX    //Singapore Stock Exchange
+    };
+		
+	private final static Singapore SGX_CALENDAR = new Singapore(
+			Market.SGX);
+			
+	private Singapore(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case SGX:
+			delegate = new SingaporeSettlementCalendar();
+			break;
+		
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		// FIXME
+		setDelegate(delegate);
 	}
-
-	public static Singapore getCalendar() {
-		return SINGAPORE;
+	public static Singapore getCalendar(Market market) {
+		switch (market) {
+		case SGX:
+			return SGX_CALENDAR;
+		
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
 	}
-
+}
+final class SingaporeSettlementCalendar extends WesternCalendar {
 	public boolean isBusinessDay(Date date) {
         Weekday w = date.getWeekday();
         int d = date.getDayOfMonth(), dd = date.getDayOfYear();
