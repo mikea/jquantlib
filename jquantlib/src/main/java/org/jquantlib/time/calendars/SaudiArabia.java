@@ -110,7 +110,7 @@ public class SaudiArabia extends DelegateCalendar{
 			return true;
 		}
 		public String getName() {
-			return "SaudiArabia";
+			return "Tadawul";
 		}
     }
 
