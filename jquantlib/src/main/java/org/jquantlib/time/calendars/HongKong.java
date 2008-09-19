@@ -69,14 +69,7 @@ Other holidays for which no rule is given (data available for 2004-2007 only:)
 */
 
 public class HongKong extends DelegateCalendar {
-	private static HongKong HONGKONG = new HongKong();
-
-	private HongKong() {
-	}
-
-	public static HongKong getCalendar() {
-		return HONGKONG;
-	}
+	
 	public enum Market { HKEx    //Hong Kong Stock Exchange
     };
 		
@@ -212,7 +205,7 @@ final class HongKongSettlementCalendar extends WesternCalendar {
         return true;
 	}
     public String getName() {
-       return "HongKong";
+       return "Hong Kong stock exchange";
     }
     
 }
