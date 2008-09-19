@@ -19,7 +19,7 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-
+ 
 package org.jquantlib.time.calendars;
 
 import static org.jquantlib.time.Weekday.FRIDAY;
@@ -35,9 +35,7 @@ import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
-
-
-//! Singaporean calendar
+//! Saudi Arabia calendar
 /*! Holidays:
     <ul>
          <li>Thursdays</li>
