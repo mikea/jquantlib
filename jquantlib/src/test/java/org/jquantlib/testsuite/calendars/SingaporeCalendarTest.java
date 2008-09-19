@@ -61,7 +61,7 @@ public class SingaporeCalendarTest {
 	@Test
     public void testSingapore() {
                        
-    	Calendar c = Singapore.getCalendar();
+    	Calendar c = Singapore.getCalendar(Singapore.Market.SGX);
     	// 2008 
         testSingaporeYear2008(c);
         // 2007 
