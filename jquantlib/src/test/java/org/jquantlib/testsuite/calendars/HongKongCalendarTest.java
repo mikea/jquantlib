@@ -60,7 +60,7 @@ public class HongKongCalendarTest {
 	@Test
     public void testHongKong() {
                        
-    	Calendar c = HongKong.getCalendar();
+    	Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
     	
         // 2008 - current year
         testHongKongYear2008(c);
