@@ -88,16 +88,7 @@ public class SaudiArabiaCalendarTest {
         CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, c, year);
     }
-	/*
-	// National Day
-            || (d == 23 && m == SEPTEMBER)
-            // Eid Al-Adha
-            || (d >= 1 && d <= 6 && m == FEBRUARY && y==2004)
-            || (d >= 21 && d <= 25 && m == JANUARY && y==2005)
-            // Eid Al-Fitr
-            || (d >= 25 && d <= 29 && m == NOVEMBER && y==2004)
-            || (d >= 14 && d <= 18 && m == NOVEMBER && y==2005)
-	*/
+	//2004
 	void testSaudiArabiaYear2004(Calendar c) {
       	int year = 2004;
       	System.out.println("Testing SaudiArabia's holiday list for the year " + year + "...");
