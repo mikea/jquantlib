@@ -35,6 +35,7 @@ import static org.jquantlib.util.Month.OCTOBER;
 
 
 import org.jquantlib.time.WesternCalendar;
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
@@ -67,7 +68,7 @@ Other holidays for which no rule is given (data available for 2004-2007 only:)
     @Author 
 */
 
-public class HongKong extends WesternCalendar {
+public class HongKong extends DelegateCalendar {
 	private static HongKong HONGKONG = new HongKong();
 
 	private HongKong() {
@@ -76,7 +77,36 @@ public class HongKong extends WesternCalendar {
 	public static HongKong getCalendar() {
 		return HONGKONG;
 	}
-
+	public enum Market { HKEx    //Hong Kong Stock Exchange
+    };
+		
+	private final static HongKong HKEX_CALENDAR = new HongKong(
+			Market.HKEx);
+			
+	private HongKong(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case HKEx:
+			delegate = new HongKongSettlementCalendar();
+			break;
+		
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		// FIXME
+		setDelegate(delegate);
+	}
+	public static HongKong getCalendar(Market market) {
+		switch (market) {
+		case HKEx:
+			return HKEX_CALENDAR;
+		
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+	}
+}
+final class HongKongSettlementCalendar extends WesternCalendar {
 	public boolean isBusinessDay(Date date) {
         Weekday w = date.getWeekday();
         int d = date.getDayOfMonth(), dd = date.getDayOfYear();
