@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.calendars;
 
 import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.MARCH;
+import static org.jquantlib.util.Month.APRIL;
 import static org.jquantlib.util.Month.JULY;
 import static org.jquantlib.util.Month.AUGUST;
 import static org.jquantlib.util.Month.SEPTEMBER;
@@ -79,9 +80,9 @@ public class SlovakiaCalendarTest {
 		expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year)); 
 		
 		//Good Friday
-		expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year)); 
 		//Easter Monday
-		expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,year)); 
 		
 		//May Day, May 1st -- weekend in yr 2005
 		//expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year)); 
@@ -130,9 +131,9 @@ public class SlovakiaCalendarTest {
 		expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year)); 
 		
 		//Good Friday
-		expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year)); 
 		//Easter Monday
-		expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,year)); 
 		
 		//May Day, May 1st -- weekend in yr 2004
 		//expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year)); 
