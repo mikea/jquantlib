@@ -46,8 +46,6 @@ public class CalendarUtil {
 				Month.JANUARY, year), DateFactory.getFactory().getDate(31,
 				Month.DECEMBER, year), false);
 
-		System.out.println("Year: " + year + "---" + hol);
-		
 		// JIA changed that the size of two list should be tested first
 		if (hol.size() != expectedHol.size())
 			fail("there were " + expectedHol.size()
