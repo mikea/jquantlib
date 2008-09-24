@@ -133,6 +133,7 @@ public class TaiwanCalendarTest {
        	int year = 2005;
     	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
+    	expectedHol.add(DateFactory.getFactory().getDate(4,FEBRUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(7,FEBRUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(8,FEBRUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(9,FEBRUARY,year));

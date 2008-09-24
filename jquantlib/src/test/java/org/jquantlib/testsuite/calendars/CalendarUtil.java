@@ -32,28 +32,34 @@ import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 
 /**
- * This is the general test base class for Calendars including 
- * generic methods.
- *  
- * @author Dominik Holenstein <p>
+ * This is the general test base class for Calendars including generic methods.
+ * 
+ * @author Dominik Holenstein
+ *         <p>
  */
 
 public class CalendarUtil {
-	
-	protected void checkHolidayList(List <Date> expectedHol, Calendar c, int year) {
+
+	protected void checkHolidayList(List<Date> expectedHol, Calendar c, int year) {
+
+		List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,
+				Month.JANUARY, year), DateFactory.getFactory().getDate(31,
+				Month.DECEMBER, year), false);
+
+		System.out.println("Year: " + year + "---" + hol);
 		
-    	List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1, Month.JANUARY, year),
-                DateFactory.getFactory().getDate(31, Month.DECEMBER, year), false);
-    	
-    	for (int i =0;i<Math.min(hol.size(), expectedHol.size()); i++) {
-    		if (!hol.get(i).equals(expectedHol.get(i)))
-    			fail("expected holiday was " + expectedHol.get(i)
-    					+ " while calculated holiday is " + hol.get(i));
-    		}
-    		if (hol.size()!=expectedHol.size())
-    			fail("there were " + expectedHol.size()
-    					+ " expected holidays, while there are " + hol.size()
-    					+ " calculated holidays");
-    }
+		// JIA changed that the size of two list should be tested first
+		if (hol.size() != expectedHol.size())
+			fail("there were " + expectedHol.size()
+					+ " expected holidays, while there are " + hol.size()
+					+ " calculated holidays");
+
+		// JIA changed so that the order of dates in the list is not relevant
+		for (int i = 0; i < hol.size(); i++) {
+			if(!hol.contains(expectedHol.get(i)))
+				fail("expected holiday " + expectedHol.get(i)
+						+ " is not in the caculated holiday list: " + hol);
+		}
+	}
 
 }

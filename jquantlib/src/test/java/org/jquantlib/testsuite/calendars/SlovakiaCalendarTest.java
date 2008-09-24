@@ -30,6 +30,7 @@ import static org.jquantlib.util.Month.AUGUST;
 import static org.jquantlib.util.Month.SEPTEMBER;
 import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.APRIL;
 
 import java.util.List;
 import java.util.Vector;
@@ -38,6 +39,7 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Slovakia;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.Month;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
