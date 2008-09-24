@@ -54,22 +54,12 @@ public class TypeToken {
 
     static public Type getType(final Class<?> klass, final int pos) {
         Type superclass = klass.getGenericSuperclass();
-
-        // FIXME: Code added for testing purposes. Will be removed later (Dominik)
-        System.out.println("Class: "+klass);
-        System.out.println("Generic Superclass: "+superclass);
-        System.out.println("Generic Interfaces: ");
-        Type genInterfaces[] = klass.getGenericInterfaces();
-        for (Type type : genInterfaces) {
-            System.out.println("    "+type);
+        if (superclass instanceof Class) {
+            throw new IllegalArgumentException("Class should be generic");
         }
-        
-//        if (superclass instanceof Class) {
-//            throw new IllegalArgumentException("Class should be generic");
-//        }
-        Type[] types = klass.getTypeParameters();
+        Type[] types = ((ParameterizedType) superclass).getActualTypeArguments();
         if (pos >= types.length) {
-            throw new IllegalArgumentException("Missing parameter #"+pos);
+            throw new IllegalArgumentException("Missing parameter");
         }
         return types[pos];
     }

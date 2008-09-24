@@ -94,11 +94,16 @@ public class TimeSeries<T> {
     }
 
     public Date[] dates() {
-        return (Date[])map.keySet().toArray();
+        return (Date[])map.keySet().toArray(new Date[0]);
     }
     
     @SuppressWarnings("unchecked")
     public T[] values() {
+        
+        // FIXME: dinamically perform something like this:
+        // T[] array = new T[];
+        // return (T[]) map.entrySet().toArray(array);
+        
         return (T[]) map.entrySet().toArray();
     }
     
