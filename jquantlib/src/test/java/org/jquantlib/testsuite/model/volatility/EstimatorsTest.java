@@ -51,6 +51,7 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultDate;
 import org.jquantlib.util.Month;
 import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -59,7 +60,7 @@ import org.junit.Test;
 
 public class EstimatorsTest {
 
-	private static TimeSeries<Double> ts ;
+	private static TimeSeriesDouble ts ;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	    System.out.println("Testing volatility model construction...");
@@ -73,8 +74,8 @@ public class EstimatorsTest {
 		    		                           new DefaultDate(27, Month.MARCH, 2005)
 	                                       }
 	    		                         ); 
-	    List<Double> values = Arrays.asList(1.2, 2.3, 0.3, 2.0, 2.5) ;
-	    ts = new TimeSeries<Double>(dates, values);
+	    double[] values =new double[]{1.2, 2.3, 0.3, 2.0, 2.5} ;
+	    ts = new TimeSeriesDouble(dates, values);
 	}
 
 	@AfterClass
@@ -93,16 +94,16 @@ public class EstimatorsTest {
 	@Test
 	public void testSECalculate() {
 	    SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
-	    TimeSeries</*@Volatility*/ Double> locale = sle.calculate(ts);
+	    TimeSeriesDouble locale = sle.calculate(ts);
 		assertNotNull(locale) ;
 	}
 	
 	@Test
 	public void testCECalculate() {
 	    SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
-	    TimeSeries</*@Volatility*/ Double> locale = sle.calculate(ts);
+	    TimeSeriesDouble locale = sle.calculate(ts);
 		VolatilityCompositor ce = new ConstantEstimator(1);
-		TimeSeries<Double> value = ce.calculate(locale);
+		TimeSeriesDouble value = ce.calculate(locale);
 		assertNotNull(value) ;
 	}
 

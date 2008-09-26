@@ -41,6 +41,7 @@ package org.jquantlib.model.volatility;
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
 
 /**
  * GARCH Volatility Model
@@ -64,23 +65,23 @@ public class Garch11 implements VolatilityCompositor{
 		this.gamma = (1 - alpha - beta) ;
 	}
 	
-	public Garch11(final TimeSeries< /* @Volatility */ Double> qs) {
+	public Garch11(final TimeSeriesDouble qs) {
         calibrate(qs);
     }
 	
 	@Override
-	public TimeSeries<Double> calculate(final TimeSeries<Double> vs) {
+	public TimeSeriesDouble calculate(final TimeSeriesDouble vs) {
 		return calculate(vs, alpha, beta, gamma* v);
 	}
 
 	@Override
-	public void calibrate(final TimeSeries< /* @Volatility */ Double> timeSeries) {}
+	public void calibrate(final TimeSeriesDouble timeSeries) {}
 
-	protected double costFunction (final TimeSeries< /* @Volatility */ Double> vs, double alpha, double beta, double omega) {
+	protected double costFunction (final TimeSeriesDouble vs, double alpha, double beta, double omega) {
 		double retValue = 0.0;
-		TimeSeries< /* @Volatility */ Double> test = calculate(vs, alpha, beta, omega);
-		final /* @Volatility */ Double[] testValues = test.values();
-		final /* @Volatility */ Double[] quoteValues = vs.values();
+		TimeSeriesDouble test = calculate(vs, alpha, beta, omega);
+		final /* @Volatility */ double[] testValues = test.values();
+		final /* @Volatility */ double[] quoteValues = vs.values();
 		//assert (testValues.size() == quoteValues.size(), "quote and test values do not match");
 		double v = 0;
 		double u2 = 0 ;
@@ -92,10 +93,10 @@ public class Garch11 implements VolatilityCompositor{
 		return retValue ;
 	}
 	
-	private TimeSeries<Double> calculate(final TimeSeries< /* @Volatility */ Double> vs, double alpha, double beta, double omega) {
+	private TimeSeriesDouble calculate(final TimeSeriesDouble vs, double alpha, double beta, double omega) {
         final Date[] dates = vs.dates();
-        final /* @Volatility */ Double[] values = vs.values();
-		TimeSeries< /* @Volatility */ Double> retValue = new TimeSeries< /* @Volatility */ Double>() ;
+        final /* @Volatility */ double[] values = vs.values();
+		TimeSeriesDouble retValue = new TimeSeriesDouble() ;
         double zerothDayValue = values[0];
 		retValue.add (dates[0], zerothDayValue) ;
 		

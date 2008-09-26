@@ -35,12 +35,13 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.model.volatility;
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
 
 /**
  * Constant-estimator volatility model
@@ -49,40 +50,39 @@ import org.jquantlib.util.TimeSeries;
  * 
  * @author Richard Gomes
  */
-//TODO : Test cases
+// TODO : Test cases
 public class ConstantEstimator implements VolatilityCompositor {
 
-    private /*@NonNegative*/ int size_;
-    
-    public ConstantEstimator(final /*@NonNegative*/ int size) {
-        this.size_ = size;
-    }
-    
-    @Override
-    public void calibrate(final TimeSeries</*@Volatility*/ Double> timeSeries) {
-        // nothing
-    }
+	private/* @NonNegative */int size_;
 
-    
-    //FIXME: PERFORMANCE:: We should use (maybe!) a specialized TimeSeries backed by a double[] instead of a Double[]
-    @Override
-    public TimeSeries</*@Volatility*/ Double> calculate(final TimeSeries</*@Volatility*/ Double> volatilitySeries) {
-        final Date[] dates = volatilitySeries.dates();
-        final /*@Volatility*/ Double[] values = volatilitySeries.values();
-        TimeSeries</*@Volatility*/ Double> retval = new TimeSeries</*@Volatility*/ Double>();
-        
-        for (int i=size_; i < volatilitySeries.size(); i++) {
-            double sumu2 = 0.0, sumu = 0.0;
-            for (int j = i-size_; j < i; j++) {
-                double uj = values[j];
-                sumu += uj;
-                sumu2 += uj*uj;
-            }
-            double dsize = (double) size_;
-            double s = Math.sqrt(sumu2/dsize - sumu*sumu / dsize / (dsize+1));
-            retval.add(dates[i], s);
-        }
-        return retval;
-    }
+	public ConstantEstimator(final/* @NonNegative */int size) {
+		this.size_ = size;
+	}
+
+	@Override
+	public void calibrate(final TimeSeriesDouble timeSeries) {
+		// nothing
+	}
+
+	@Override
+	public TimeSeriesDouble calculate(final TimeSeriesDouble volatilitySeries) {
+		final Date[] dates = volatilitySeries.dates();
+		final double[] values = volatilitySeries.values();
+		TimeSeriesDouble retval = new TimeSeriesDouble();
+
+		for (int i = size_; i < volatilitySeries.size(); i++) {
+			double sumu2 = 0.0, sumu = 0.0;
+			for (int j = i - size_; j < i; j++) {
+				double uj = values[j];
+				sumu += uj;
+				sumu2 += uj * uj;
+			}
+			double dsize = (double) size_;
+			double s = Math.sqrt(sumu2 / dsize - sumu * sumu / dsize
+					/ (dsize + 1));
+			retval.add(dates[i], s);
+		}
+		return retval;
+	}
 
 }

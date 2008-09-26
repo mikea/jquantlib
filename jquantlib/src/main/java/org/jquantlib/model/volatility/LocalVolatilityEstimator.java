@@ -40,8 +40,9 @@
 package org.jquantlib.model.volatility;
 
 import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
 
 public interface LocalVolatilityEstimator<T> {
 
-	TimeSeries</* @Volatility */ Double> calculate(final TimeSeries<T> quoteSeries) ;
+	TimeSeriesDouble calculate(final TimeSeries<T> quoteSeries) ;
 }

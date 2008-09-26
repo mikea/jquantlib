@@ -35,16 +35,16 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.model.volatility;
 
-import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
 
 public interface VolatilityCompositor {
 
-	public void calibrate(final TimeSeries</*@Volatility*/Double> timeSeries);
+	public void calibrate(final TimeSeriesDouble timeSeries);
 
-	public TimeSeries</*@Volatility*/Double> calculate(final TimeSeries</*@Volatility*/Double> volatilitySeries);
+	public TimeSeriesDouble calculate(final TimeSeriesDouble volatilitySeries);
 
 }

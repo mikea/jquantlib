@@ -24,6 +24,7 @@ package org.jquantlib.util;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -97,14 +98,8 @@ public class TimeSeries<T> {
         return (Date[])map.keySet().toArray(new Date[0]);
     }
     
-    @SuppressWarnings("unchecked")
-    public T[] values() {
-        
-        // FIXME: dinamically perform something like this:
-        // T[] array = new T[];
-        // return (T[]) map.entrySet().toArray(array);
-        
-        return (T[]) map.entrySet().toArray();
+    public Collection<T> values() {
+        return map.values();
     }
     
 }

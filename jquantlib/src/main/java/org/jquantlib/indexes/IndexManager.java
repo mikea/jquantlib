@@ -26,12 +26,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.ObservableValue;
-import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
 
 //FIXME: code review
-public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> {
+public class IndexManager extends ConcurrentHashMap<String, TimeSeriesDouble> {
 
-    /**
+    private static final long serialVersionUID = 1L;
+	/**
      * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
      */
     private static volatile IndexManager instance;
@@ -50,12 +51,12 @@ public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> 
 	}
 	
 	public Observable notifier(String name) {
-		TimeSeries<Double> value = super.get(name);
+		TimeSeriesDouble value = super.get(name);
 		if(value == null){
-			value = new TimeSeries<Double>();
+			value = new TimeSeriesDouble();
 			super.put(name, value);
 		}
-		return new ObservableValue<TimeSeries<Double>>(value);
+		return new ObservableValue<TimeSeriesDouble>(value);
 	}
 
 	public void clearHistory(String name){

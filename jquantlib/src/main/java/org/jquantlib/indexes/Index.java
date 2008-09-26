@@ -31,6 +31,7 @@ import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
 
 /**
  * @author Srinivas Hasti
@@ -67,7 +68,7 @@ public abstract class Index implements Observable {
 	 * 
 	 * Returns the fixing TimeSeries
 	 */
-	public TimeSeries<Double> timeSeries() {
+	public TimeSeriesDouble timeSeries() {
 		return IndexManager.getInstance().get(getName());
 	}
 
@@ -79,7 +80,7 @@ public abstract class Index implements Observable {
 	 * fixing; no settlement days must be used.
 	 */
 	public void addFixing(Date fixingDate, double fixing, boolean forceOverwrite) {
-		addFixings(new Date[] {fixingDate}, new Double[] { fixing }, forceOverwrite);
+		addFixings(new Date[] {fixingDate}, new double[] { fixing }, forceOverwrite);
 	}
 
 	
@@ -89,7 +90,7 @@ public abstract class Index implements Observable {
 	 * The dates in the TimeSeries must be the actual calendar dates of the
 	 * fixings; no settlement days must be used.
 	 */
-	public void addFixings(TimeSeries<Double> t, boolean forceOverwrite) {
+	public void addFixings(TimeSeriesDouble t, boolean forceOverwrite) {
 		addFixings(t.dates(), t.values(), forceOverwrite);
 	}
 
@@ -100,9 +101,9 @@ public abstract class Index implements Observable {
 	 * the dates passed as arguments must be the actual calendar dates of the
 	 * fixings; no settlement days must be used.
 	 */
-	public void addFixings(final Date[] dates, final Double[] values, boolean forceOverwrite) {
+	public void addFixings(final Date[] dates, final double[] values, boolean forceOverwrite) {
 		String tag = getName();
-		TimeSeries<Double> h = IndexManager.getInstance().get(tag);
+		TimeSeriesDouble h = IndexManager.getInstance().get(tag);
 		boolean missingFixing;
 		boolean validFixing;
 		boolean noInvalidFixing = true;

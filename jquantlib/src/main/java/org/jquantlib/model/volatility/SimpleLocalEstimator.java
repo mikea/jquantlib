@@ -41,6 +41,7 @@ package org.jquantlib.model.volatility;
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
 
 /**
  * Simple Local Estimator volatility model
@@ -59,10 +60,10 @@ public class SimpleLocalEstimator {
     }
     
     //FIXME: PERFORMANCE:: We should use (maybe!) a specialized TimeSeries backed by a double[] instead of a Double[]
-    public TimeSeries</*@Volatility*/ Double> calculate(final TimeSeries</*@Real*/ Double> quoteSeries) {
+    public TimeSeriesDouble calculate(final TimeSeriesDouble quoteSeries) {
         final Date[] dates = quoteSeries.dates();
-        final /*@Volatility*/ Double[] values = quoteSeries.values();
-    	TimeSeries</*@Volatility*/ Double> retval = new TimeSeries</*@Volatility*/ Double>();
+        final /*@Volatility*/ double[] values = quoteSeries.values();
+    	TimeSeriesDouble retval = new TimeSeriesDouble();
     	Double prev = null ;
     	Double cur  = null;
     	for (int i = 1; i < values.length; i++) {

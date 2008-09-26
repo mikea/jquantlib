@@ -42,6 +42,7 @@ package org.jquantlib.model.volatility;
 import org.jquantlib.math.IntervalPrice;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
 import org.jquantlib.util.reflect.TypeToken;
 
 /**
@@ -82,10 +83,10 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
 	//
 	
 	@Override
-	public TimeSeries</* @Volatility*/Double> calculate(final TimeSeries<IntervalPrice> quoteSeries) {
+	public TimeSeriesDouble calculate(final TimeSeries<IntervalPrice> quoteSeries) {
 		final Date[] dates = quoteSeries.dates();
-		final IntervalPrice[] values = quoteSeries.values();
-		TimeSeries</*@Volatility*/Double> retval = new TimeSeries</*@Volatility*/Double>();
+		final IntervalPrice[] values = quoteSeries.values().toArray(new IntervalPrice[0]);
+		TimeSeriesDouble retval = new TimeSeriesDouble();
 		IntervalPrice prev = null;
 		IntervalPrice cur = null;
 		for (int i = 1; i < values.length; i++) {
