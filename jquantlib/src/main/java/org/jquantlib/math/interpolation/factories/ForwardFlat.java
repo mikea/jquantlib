@@ -33,24 +33,37 @@ import org.jquantlib.math.interpolation.Interpolator;
  */
 public class ForwardFlat implements Interpolator {
 
+    //
+    // private fields
+    //
+    
 	private Interpolator delegate;
 
+
+	//
+    // public constructors
+    //
+    
 	public ForwardFlat() {
 		delegate = ForwardFlatInterpolation.getInterpolator();
 	}
 
+	
 	//
 	// implements Interpolator
 	//
 
+    @Override
 	public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */{
 		return delegate.interpolate(x, y);
 	}
 
+    @Override
 	public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */{
 		return delegate.interpolate(x, y);
 	}
 
+    @Override
 	public final boolean isGlobal() /* @ReadOnly */{
 		return delegate.isGlobal();
 	}

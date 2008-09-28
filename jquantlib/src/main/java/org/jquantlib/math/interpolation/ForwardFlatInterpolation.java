@@ -31,19 +31,36 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrays;
  */
 public class ForwardFlatInterpolation extends AbstractInterpolation {
 
-	private double[] primitive;
+	//
+    // private fields
+    //
+    
+    private double[] primitive;
 
-	/**
-	 * Private default constructor.
-	 * 
-	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
-	 * 
-	 * @author Anand Mani
-	 */
+
+    //
+    // private constructors
+    //
+    
 	private ForwardFlatInterpolation() {
 		// access denied to default constructor
 	}
 
+
+	//
+    // static public methods
+    //
+
+    static public Interpolator getInterpolator() /* @ReadOnly */{
+        ForwardFlatInterpolation forwardFlatInterpolation = new ForwardFlatInterpolation();
+        return forwardFlatInterpolation.new ForwardFlatInterpolationImpl(forwardFlatInterpolation);
+    }
+
+
+	//
+	// overrides AbstractInterpolation
+	//
+	
 	@Override
 	protected double primitiveImpl(final double x) /* @ReadOnly */{
 		int i = locate(x);
@@ -65,20 +82,20 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 	// implements Interpolation
 	//
 
-	/**
-	 * This method must be avoided due to confusion with
-	 * <code>Observer.update(org.jquantlib.util.Observable, Object)</code>
-	 * <p>
-	 * Use <code>reload()</code> instead.
-	 */
-	@Deprecated
+    /**
+     * {@inheritDoc}
+     */
+    @Deprecated
+    @Override
 	public void update() {
 		reload();
 	}
 
-	/**
-	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
-	 */
+    /**
+     * {@inheritDoc}
+     * 
+     * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>  
+     */
 	@Override
 	public void reload() {
 		super.reload();
@@ -92,7 +109,7 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 	}
 
 	//
-	// concrete implementation of UnaryFunctionDouble.evaluate
+	// implements UnaryFunctionDouble
 	//
 
 	protected double evaluateImpl(final double x) /* @ReadOnly */{
@@ -103,17 +120,9 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 		return vy[i];
 	}
 
-	//
-	// static methods
-	//
-
-	static public Interpolator getInterpolator() /* @ReadOnly */{
-		ForwardFlatInterpolation forwardFlatInterpolation = new ForwardFlatInterpolation();
-		return forwardFlatInterpolation.new ForwardFlatInterpolationImpl(forwardFlatInterpolation);
-	}
 
 	//
-	// inner classes
+	// private inner classes
 	//
 
 	/**

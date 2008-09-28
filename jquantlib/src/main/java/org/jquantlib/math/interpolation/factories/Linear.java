@@ -35,24 +35,37 @@ import org.jquantlib.math.interpolation.LinearInterpolation;
  */
 public class Linear implements Interpolator {
 
+    //
+    // private fields
+    //
+    
 	private Interpolator delegate;
 	
+	
+    //
+    // public constructors
+    //
+    
 	public Linear() {
 		delegate = LinearInterpolation.getInterpolator();
 	}
+	
 	
 	//
 	// implements Interpolator
 	//
 	
+	@Override
 	public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
+    @Override
 	public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
+    @Override
 	public final boolean isGlobal() /* @ReadOnly */ {
 		return delegate.isGlobal();
 	}

@@ -28,7 +28,11 @@ import cern.colt.Sorting;
 
 public abstract class AbstractInterpolation2D implements Interpolation2D {
 
-	/**
+    //
+    // protected fields
+    //
+    
+    /**
 	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
 	 */
 	protected double[] vx;
@@ -41,38 +45,103 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 	protected double[][] mz;
 	
 
+	//
+	// protected abstract methods
+	//
+	
 	protected abstract double evaluateImpl(final double x, final double y);
 	
+
+	//
+	// public methods
+	//
+	
+	/**
+	 * This method intentionally throws UnsupportedOperationException in order to
+	 * oblige derived classes to reimplement it if needed.
+	 * 
+	 * @throws UnsupportedOperationException
+	 */
+	public void calculate() {
+	    throw new UnsupportedOperationException();
+	}
+	
+	
+	//
+    // protected methods
+    //
+    
+    
+	/**
+     * This method verifies if
+     * <li> extrapolation is enabled;</li>
+     * <li> requested <i>x</i> is valid</li>
+     * 
+     * @param x
+     * @param extrapolate
+     * 
+     * @throws IllegalStateException if extrapolation is not enabled.
+     * @throws IllegalArgumentException if <i>x</i> is our of range
+     */
+    // FIXME: code review : verify if parameter 'extrapolate' is really needed
+    protected final void checkRange(final double x, final double y, boolean extrapolate) {
+        if (! (extrapolate || allowsExtrapolation() || isInRange(x, y)) ) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("interpolation range is [");
+            sb.append(xMin()).append(", ").append(xMax());
+            sb.append("] x [");
+            sb.append(yMin()).append(", ").append(yMax());
+            sb.append("]: extrapolation at (");
+            sb.append(x).append(",").append(y);
+            sb.append(") not allowed");
+            throw new IllegalArgumentException(sb.toString());
+        }
+    }
+
+    
+    //
+	// implements Interpolation2D
+	//
+	
+	@Override
 	public double xMin() {
 		return vx[0]; // get first element
 	}
 
+    @Override
 	public double xMax() {
 		return vx[vx.length-1]; // get last element
 	}
 
+    @Override
 	public double yMin() {
 		return  vy[0]; // get first element
 	}
 
+    @Override
 	public double yMax() {
 		return vy[vy.length-1]; // get last element
 	}
 
-	public final double[] xValues() {
+    @Override
+	public double[] xValues() {
     	return vx.clone();
     }
 	
-	public final double[] yValues() {
+    @Override
+	public double[] yValues() {
     	return vy.clone();
     }
 
-	public final double[][] zData() {
+    @Override
+	public double[][] zData() {
         return mz.clone();
-    	// return (double[][])Arrays.trimToCapacity(mz, mz.length);
+    	// FIXME: code review :: return (double[][])Arrays.trimToCapacity(mz, mz.length);
     }
 
-    protected int locateX(double x) /* @ReadOnly */ {
+    @Override
+    // FIXME: code review here: compare against original C++ code
+    public int locateX(double x) /* @ReadOnly */ {
         if (x <= vx[0])
             return 0;
         else if (x > vx[vx.length-1])
@@ -81,7 +150,9 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
             return Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
     }
     
-    protected int locateY(double y) /* @ReadOnly */ {
+    @Override
+    // FIXME: code review here: compare against original C++ code
+    public int locateY(double y) /* @ReadOnly */ {
         if (y <= vy[0])
             return 0;
         else if (y > vy[vy.length-1])
@@ -90,51 +161,23 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
             return Sorting.binarySearchFromTo(vy, y, 0, vy.length-1)-1;
     }
     
-	protected final boolean isInRange(final double x, final double y) {
-		double x1 = xMin(), x2 = xMax();
+    @Override
+    public boolean isInRange(final double x, final double y) {
+        double x1 = xMin(), x2 = xMax();
         boolean xIsInrange = (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
         if (!xIsInrange) return false;
 
         double y1 = yMin(), y2 = yMax();
         return (y >= y1 && y <= y2) || isClose(y,y1) || isClose(y,y2);
     }
+    
+    @Deprecated
+    @Override
+    public void update() {
+        reload();
+    }
 
-	/**
-	 * This method verifies if
-	 * <li> extrapolation is enabled;</li>
-	 * <li> requested <i>x</i> is valid</li>
-	 * 
-	 * @param x
-	 * @param extrapolate
-	 * 
-	 * @throws IllegalStateException if extrapolation is not enabled.
-	 * @throws IllegalArgumentException if <i>x</i> is our of range
-	 */
-	// FIXME: code review : verify if parameter 'extrapolate' is really needed
-	protected final void checkRange(final double x, final double y, boolean extrapolate) {
-		if (! (extrapolate || allowsExtrapolation() || isInRange(x, y)) ) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("interpolation range is [");
-			sb.append(xMin()).append(", ").append(xMax());
-			sb.append("] x [");
-			sb.append(yMin()).append(", ").append(yMax());
-			sb.append("]: extrapolation at (");
-			sb.append(x).append(",").append(y);
-			sb.append(") not allowed");
-			throw new IllegalArgumentException(sb.toString());
-		}
-	}
-
-    
-    
-    
-	//
-	// implements Interpolation2D
-	//
-	
-	/**
-	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
-	 */
+    @Override
 	public void reload() {
 		if (vx.length < 2 || vy.length < 2)
 			throw new IllegalArgumentException("not enough points to interpolate");
@@ -151,7 +194,8 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 	// implements BinaryFunctionDouble
 	//
 	
-	public final double evaluate(final double x, final double y) {
+    @Override
+	public double evaluate(final double x, final double y) {
         checkRange(x, y, this.allowsExtrapolation());
         return evaluateImpl(x, y);
     }
@@ -168,17 +212,19 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 	 */
 	private DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
 	
+    @Override
 	public final boolean allowsExtrapolation() {
 		return delegatedExtrapolator.allowsExtrapolation();
 	}
 
+    @Override
 	public void disableExtrapolation() {
 		delegatedExtrapolator.disableExtrapolation();
 	}
 
+    @Override
 	public void enableExtrapolation() {
 		delegatedExtrapolator.enableExtrapolation();
 	}
-
 
 }

@@ -42,24 +42,46 @@ package org.jquantlib.math.interpolation;
 
 import org.jquantlib.math.BinaryFunctionDouble;
 
-
+/**
+ * Interface for 2-D interpolations.
+ * <p>
+ * Classes which implement this interface will provide interpolated values from two sequences 
+ * of length {@latex$ N } and {@latex$ M }, representing the discretized values of 
+ * the {@latex$ x }and {@latex$ y } variables, and a {@latex$ N \times M } matrix representing the
+ * tabulated function values.
+ * 
+ * @author Richard Gomes
+ */
 public interface Interpolation2D extends Extrapolator, BinaryFunctionDouble {
 	
-	/**
-	 * This method performs the interpolation itself.
-	 * 
-	 * @note This method is deprecated as it causes confusion with
-	 * Observer.update. Concrete implementations must use Interpolation#reload instead.
-	 * 
-	 * @deprecated
-	 */
-	// TODO: change this method name in order to avoid confusion with Obsrver.update 
+    /**
+     * This method performs the interpolation itself.
+     * 
+     * @note This method is deprecated as it causes confusion with
+     * Observer.update. Concrete implementations must use {@link Interpolation2D#reload()} instead.
+     * 
+     * @see reload
+     * 
+     * @deprecated
+     */
 	public void update();
 	
-	/**
-	 * This method performs the interpolation itself and should be called
-	 * just after the construction of a interpolation class.
-	 */
+    /**
+     * This method performs the interpolation itself and should be called
+     * just after the construction of a interpolation class.
+     * 
+     * @see update
+     */
 	public void reload();
 
+    public double xMin();
+    public double xMax();
+    public double yMin();
+    public double yMax();
+    public double[] xValues();
+    public double[] yValues();
+    public double[][] zData();
+    public int locateX(double x);
+    public int locateY(double y);
+    public boolean isInRange(double x, double y);
 }

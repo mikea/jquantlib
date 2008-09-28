@@ -32,18 +32,35 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrays;
  */
 public class BackwardFlatInterpolation extends AbstractInterpolation {
 
+    //
+    // private fields
+    //
+    
     private double[] primitive;
 
-    /**
-     * Private default constructor.
-     * 
-	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
-	 * 
-	 * @author Richard Gomes
-     */
+
+    //
+    // private constructors
+    //
+    
     private BackwardFlatInterpolation() {
     	// access denied to default constructor
     }
+
+    
+    //
+    // static public methods
+    //
+    
+    static public Interpolator getInterpolator() /* @ReadOnly */ {
+        BackwardFlatInterpolation backwardFlatInterpolation = new BackwardFlatInterpolation();
+        return backwardFlatInterpolation. new BackwardFlarInterpolationImpl(backwardFlatInterpolation);
+    }
+    
+    
+    //
+    // overrides AbstractInterpolation
+    //
     
 	@Override
 	protected double primitiveImpl(final double x) /* @ReadOnly */ {
@@ -67,18 +84,18 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
     // implements Interpolation
     //
     
-	/**
-	 * This method must be avoided due to confusion with <code>Observer.update(org.jquantlib.util.Observable, Object)</code>
-	 * <p>
-	 * Use <code>reload()</code> instead.
-	 */
-	@Deprecated
+    /**
+     * {@inheritDoc}
+     */
+    @Deprecated
+    @Override
 	public void update() { reload(); }
 
-	
-	/**
-	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>  
-	 */
+    /**
+     * {@inheritDoc}
+     * 
+     * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>  
+     */
 	@Override
 	public void reload() {
     	super.reload();
@@ -92,9 +109,8 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 	}
 	
 
-
     //
-    // concrete implementation of UnaryFunctionDouble.evaluate
+    // implements UnaryFunctionDouble
     //
     
     protected double evaluateImpl(final double x) /* @ReadOnly */ {
@@ -107,18 +123,9 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
             return vy[i+1];
 	}
 
-    //
-    // static methods
-    //
-    
-    static public Interpolator getInterpolator() /* @ReadOnly */ {
-    	BackwardFlatInterpolation backwardFlatInterpolation = new BackwardFlatInterpolation();
-		return backwardFlatInterpolation. new BackwardFlarInterpolationImpl(backwardFlatInterpolation);
-    }
-    
     
     //
-    // inner classes
+    // private inner classes
     //
     
     /**

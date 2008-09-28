@@ -31,48 +31,91 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrays;
  * @author Dominik Holenstein
  * @author Richard Gomes
  */
-// TODO implement primitive, derivative, and secondDerivative functions.
 public class LogLinearInterpolation extends AbstractInterpolation {
 	
-	private double[] logY;
+    //
+    // private fields
+    //
+    
+    private double[] logY;
 	private Interpolation linearInterpolation;
 	
 	
-	private LogLinearInterpolation() {
-		//access denied to default constructor
-	}
+	//
+	// private constructors
+	//
 	
+	private LogLinearInterpolation() {
+		// access denied to default constructor
+	}
+
+	
+    //
+    // static public methods
+    //
+    
+    static public Interpolator getInterpolator() {
+        LogLinearInterpolation logLinearInterpolation = new LogLinearInterpolation();
+        return logLinearInterpolation. new LogLinearInterpolationImpl(logLinearInterpolation);
+    }
+    
+
+    //
+    // overrides AbstractInterpolation
+    //
+    
+	/**
+	 * This method throws UnsupportedOperationException because the original
+	 * QuantLib/C++ code does not implement this functionality
+	 * 
+	 * @throws UnsupportedOperationException
+	 */
 	@Override
 	protected double primitiveImpl(final double x) /* @ReadOnly */ {
 		throw new UnsupportedOperationException();
 	}
 	
+    /**
+     * This method throws UnsupportedOperationException because the original
+     * QuantLib/C++ code does not implement this functionality
+     * 
+     * @throws UnsupportedOperationException
+     */
 	@Override
 	protected double derivativeImpl(final double x) /* @ReadOnly */ {
 		throw new UnsupportedOperationException();
 	}
 	
+    /**
+     * This method throws UnsupportedOperationException because the original
+     * QuantLib/C++ code does not implement this functionality
+     * 
+     * @throws UnsupportedOperationException
+     */
 	@Override
 	protected double secondDerivativeImpl(final double x) /* @ReadOnly */ {
 		throw new UnsupportedOperationException();
 	}
 	
+
 	//
-	// Implements interpolation
+	// implements interpolation
 	//
 	
     /**
-     * This method must be avoided due to confusion with <code>Observer.update(org.jquantlib.util.Observable, Object)</code>
-     * <p>
-     * Use <code>reload()</code> instead.
+     * {@inheritDoc}
      */
     @Deprecated
-	public void update() { reload(); }
+    @Override
+	public void update() {
+        reload();
+    }
 	
-	/**
-	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
-	 */
-	
+    /**
+     * {@inheritDoc}
+     * 
+     * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>  
+     */
 	@Override
 	public void reload() {
 		super.reload();
@@ -89,25 +132,16 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	
 
 	// 
-	// concrete implementation of UnaryFunctionDouble.evaluate
+	// implements UnaryFunctionDouble
 	//
 	
 	protected double evaluateImpl(final double x) /* @ReadOnly */ {
 		return Math.exp(linearInterpolation.evaluate(x));
 	}
 	
-    //
-    // static methods
-    //
     
-	static public Interpolator getInterpolator() {
-		LogLinearInterpolation logLinearInterpolation = new LogLinearInterpolation();
-		return logLinearInterpolation. new LogLinearInterpolationImpl(logLinearInterpolation);
-	}
-	
-
 	//
-	// inner classes
+	// private inner classes
 	//
 	
 	/**

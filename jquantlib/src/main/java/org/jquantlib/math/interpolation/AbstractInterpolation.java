@@ -95,33 +95,67 @@ public abstract class AbstractInterpolation implements Interpolation {
 	protected double[] vy;
 	
 	
+    //
+    // protected methods
+    //
+    
+    /**
+     * This method verifies if
+     * <li> extrapolation is enabled;</li>
+     * <li> requested <i>x</i> is valid</li>
+     * 
+     * @param x
+     * @param extrapolate
+     * 
+     * @throws IllegalStateException if extrapolation is not enabled.
+     * @throws IllegalArgumentException if <i>x</i> is our of range
+     */
+    protected final void checkRange(final double x, boolean extrapolate) {
+        if (! (extrapolate || allowsExtrapolation() || isInRange(x)) ) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("interpolation range is [");
+            sb.append(xMin()).append(", ").append(xMax());
+            sb.append("]: extrapolation at ");
+            sb.append(x);
+            sb.append(" not allowed");
+            throw new IllegalArgumentException(sb.toString());
+        }
+    }
+
+    // FIXME: code review here: compare against original C++ code
+    protected int locate(double x) /* @ReadOnly */ {
+        if (x <= vx[0])
+            return 0;
+        else if (x > vx[vx.length-1])
+            return vx.length-2;
+        else
+            return Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
+    }   
+
+
 	//
-	// public methods
+	// implements Interpolation
 	//
 	
 	@Override
-	public final double getMinX() /* @ReadOnly */ {
+	public final double xMin() /* @ReadOnly */ {
 		return  vx[0]; // get first element
 	}
 
 	@Override
-	public final double getMaxX() /* @ReadOnly */ {
+	public final double xMax() /* @ReadOnly */ {
 		return vx[vx.length-1]; // get last element
 	}
 
 	@Override
-	public final double[] getValuesX() {
+	public final double[] xValues() {
     	return vx.clone();
     }
 	
 	@Override
-	public final double[] getValuesY() {
+	public final double[] yValues() {
     	return vy.clone();
     }
-	
-	//
-	// public final double evaluate(final double x) ::: is in a separate section
-	//
 	
 	@Override
 	public final double evaluate(final double x, boolean allowExtrapolation) {
@@ -164,105 +198,60 @@ public abstract class AbstractInterpolation implements Interpolation {
 
 	@Override
 	public final boolean isInRange(final double x) {
-        double x1 = getMinX(), x2 = getMaxX();
+        double x1 = xMin(), x2 = xMax();
         return (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
     }
 
-	
-	//
-	// protected methods
-	//
-	
-	/**
-	 * This method verifies if
-	 * <li> extrapolation is enabled;</li>
-	 * <li> requested <i>x</i> is valid</li>
-	 * 
-	 * @param x
-	 * @param extrapolate
-	 * 
-	 * @throws IllegalStateException if extrapolation is not enabled.
-	 * @throws IllegalArgumentException if <i>x</i> is our of range
-	 */
-	protected final void checkRange(final double x, boolean extrapolate) {
-		if (! (extrapolate || allowsExtrapolation() || isInRange(x)) ) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("interpolation range is [");
-			sb.append(getMinX()).append(", ").append(getMaxX());
-			sb.append("]: extrapolation at ");
-			sb.append(x);
-			sb.append(" not allowed");
-			throw new IllegalArgumentException(sb.toString());
-		}
-	}
-
-	// FIXME: code review here: compare against original C++ code
-	protected int locate(double x) /* @ReadOnly */ {
-        if (x <= vx[0])
-            return 0;
-        else if (x > vx[vx.length-1])
-            return vx.length-2;
-        else
-        	return Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
-    }	
-
-
-	//
-	// implements Interpolation
-	//
-	
-	/**
-	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
-	 */
-	public void reload() {
-		if (vx.length < 2)
-			throw new IllegalArgumentException("not enough points to interpolate");
-		if (extraSafetyChecks) {
-			double x1 = vx[0];
-			double x2;
-			for (int i = 1; i < vx.length; i++) {
-				x2 = vx[i];
-				if (x1>x2) throw new IllegalArgumentException("unsorted values on array X");
-				x1=x2;
-			}
-		}
-	}
-	
-	
-	//
-	// implements UnaryFunctionDouble
-	//
-	
 	@Override
-	public final double evaluate(final double x) {
-		return evaluate(x, false);
-	}
+    public void reload() {
+        if (vx.length < 2)
+            throw new IllegalArgumentException("not enough points to interpolate");
+        if (extraSafetyChecks) {
+            double x1 = vx[0];
+            double x2;
+            for (int i = 1; i < vx.length; i++) {
+                x2 = vx[i];
+                if (x1>x2) throw new IllegalArgumentException("unsorted values on array X");
+                x1=x2;
+            }
+        }
+    }
+    
+    
+    //
+    // implements UnaryFunctionDouble
+    //
+    
+    @Override
+    public final double evaluate(final double x) {
+        return evaluate(x, false);
+    }
 
-	
-	//
-	// implements Extrapolator
-	//
+    
+    //
+    // implements Extrapolator
+    //
 
-	/**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
-	 * @see Extrapolator
-	 */
-	private DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
-	
-	@Override
-	public final boolean allowsExtrapolation() {
-		return delegatedExtrapolator.allowsExtrapolation();
-	}
+    /**
+     * Implements multiple inheritance via delegate pattern to an inner class
+     * 
+     * @see Extrapolator
+     */
+    private DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
+    
+    @Override
+    public final boolean allowsExtrapolation() {
+        return delegatedExtrapolator.allowsExtrapolation();
+    }
 
-	@Override
-	public void disableExtrapolation() {
-		delegatedExtrapolator.disableExtrapolation();
-	}
+    @Override
+    public void disableExtrapolation() {
+        delegatedExtrapolator.disableExtrapolation();
+    }
 
-	@Override
-	public void enableExtrapolation() {
-		delegatedExtrapolator.enableExtrapolation();
-	}
+    @Override
+    public void enableExtrapolation() {
+        delegatedExtrapolator.enableExtrapolation();
+    }
 
 }

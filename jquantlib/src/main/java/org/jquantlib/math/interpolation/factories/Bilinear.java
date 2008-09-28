@@ -38,12 +38,27 @@ import org.jquantlib.math.interpolation.Interpolator2D;
  */
 public class Bilinear implements Interpolator2D {
 
-	private Interpolator2D delegate;
+	//
+    // private fields
+    //
+    
+    private Interpolator2D delegate;
 	
-	public Bilinear() {
+	
+    //
+    // public constructors
+    //
+    
+    public Bilinear() {
 		delegate = BilinearInterpolation.getInterpolator();
 	}
 	
+	
+	//
+	// implements Interpolator2D
+	//
+	
+    @Override
 	public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z) {
 		return delegate.interpolate(x, y, z);
 	}

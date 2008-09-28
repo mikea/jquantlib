@@ -34,8 +34,17 @@ import org.jquantlib.math.interpolation.Interpolator;
  */
 public class BackwardFlat implements Interpolator {
 
+    //
+    // private fields
+    //
+    
 	private Interpolator delegate;
+
 	
+	//
+    // public constructors
+    //
+
 	public BackwardFlat() {
 		delegate = BackwardFlatInterpolation.getInterpolator();
 	}
@@ -44,14 +53,17 @@ public class BackwardFlat implements Interpolator {
 	// implements Interpolator
 	//
 	
+    @Override
 	public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
+    @Override
 	public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
+    @Override
 	public final boolean isGlobal() /* @ReadOnly */ {
 		return delegate.isGlobal();
 	}

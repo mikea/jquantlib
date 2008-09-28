@@ -35,24 +35,37 @@ import org.jquantlib.math.interpolation.LogLinearInterpolation;
  */
 public class LogLinear implements Interpolator {
 	
+    //
+    // private fields
+    //
+    
 	private Interpolator delegate;
 	
+	
+    //
+    // public constructors
+    //
+    
 	public LogLinear () {
 		delegate = LogLinearInterpolation.getInterpolator();
 	}
+	
 	
 	//
 	// implements Interpolator
 	//
 	
+    @Override
 	public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
+    @Override
 	public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
+    @Override
 	public final boolean isGlobal() /* @ReadOnly */ {
 		return delegate.isGlobal();
 	}

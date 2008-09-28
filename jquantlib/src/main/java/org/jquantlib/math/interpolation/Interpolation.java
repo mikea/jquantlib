@@ -43,36 +43,40 @@ package org.jquantlib.math.interpolation;
 
 import org.jquantlib.math.UnaryFunctionDouble;
 
-
-
 /**
+ * Interface for 1-D interpolations.
+ * <p>
+ * Classes which implement this interface will provide interpolated values from two sequences of equal length, representing
+ * discretized values of a variable and a function of the former, respectively.
  * 
  * @author Richard Gomes
  */
-// FIXME: comments
 public interface Interpolation extends Extrapolator, UnaryFunctionDouble {
 
 	/**
 	 * This method performs the interpolation itself.
 	 * 
 	 * @note This method is deprecated as it causes confusion with
-	 * Observer.update. Concrete implementations must use Interpolation#reload insted.
+	 * Observer.update. Concrete implementations must use {@link Interpolation#reload()} instead.
+	 * 
+	 * @see reload
 	 * 
 	 * @deprecated
 	 */
-	// TODO: change this method name in order to avoid confusion with Observer.update 
 	public void update();
 	
 	/**
 	 * This method performs the interpolation itself and should be called
 	 * just after the construction of a interpolation class.
+	 * 
+	 * @see update
 	 */
 	public void reload();
 	
-    public double getMinX();
-    public double getMaxX();
-    public double[] getValuesX();
-    public double[] getValuesY();
+    public double xMin();
+    public double xMax();
+    public double[] xValues();
+    public double[] yValues();
     public boolean isInRange(double x);
     public double primitive(double x);
     public double derivative(double x);

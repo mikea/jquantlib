@@ -25,42 +25,30 @@ package org.jquantlib.math.interpolation;
 
 public class BilinearInterpolation extends AbstractInterpolation2D {
 
-    /**
-     * Private default constructor.
-     * 
-	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
-	 * 
-	 * @author Richard Gomes
-     */
-	private BilinearInterpolation() {
-    	// access denied to public default constructor
-
-	}
-
-	
     //
-    // implements Interpolation2D
+    // private constructors
     //
     
-    /**
-     * This method must be avoided due to confusion with <code>Observer.update(org.jquantlib.util.Observable, Object)</code>
-     * <p>
-     * Use <code>reload()</code> instead.
-     */
-    @Deprecated
-	public void update() { reload(); }
-
-	public void reload() {
-		// FIXME: code review
-		
-		// nothing ??????? it's certainly wrong!
+    private BilinearInterpolation() {
+    	// access denied to public default constructor
 	}
 
 	
+    //
+    // static methods
+    //
+    
+    static public Interpolator2D getInterpolator() {
+        BilinearInterpolation bilinearInterpolation = new BilinearInterpolation();
+        return bilinearInterpolation. new BilinearInterpolationImpl(bilinearInterpolation);
+    }
+
+    
 	//
-    // concrete implementation of BinaryFunctionDouble.evaluate
+    // implements BinaryFunctionDouble
     //
 
+	@Override
 	public double evaluateImpl(double x, double y) /* @ReadOnly */{
 		int i = locateX(x);
 		int j = locateY(y);
@@ -76,15 +64,6 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
 		return (1.0 - t) * (1.0 - u) * z1 + t * (1.0 - u) * z2 + (1.0 - t) * u * z3 + t * u * z4;
 	}
 
-    //
-    // static methods
-    //
-    
-    static public Interpolator2D getInterpolator() {
-    	BilinearInterpolation bilinearInterpolation = new BilinearInterpolation();
-		return bilinearInterpolation. new BilinearInterpolationImpl(bilinearInterpolation);
-    }
-    
 	
 	//
     // inner classes

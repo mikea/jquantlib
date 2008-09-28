@@ -19,6 +19,10 @@
 		    </include>
 		</pattern>
 
+        <pattern name="class">
+            <exclude filter="interface" />
+        </pattern>
+        
         <pattern name="concrete-class">
             <exclude filter="interface" />
             <exclude filter="abstract-class" />
@@ -26,11 +30,11 @@
         
         <pattern name="java2-collections-concrete-class">
             <include pattern="java2-collections">
-                <include pattern="concrete-class" />
+                <include pattern="class" />
             </include>
         </pattern>
             
-        <access-rule>
+        <access-rule severity="warning">
             <message>Performance: use fastutil classes instead of standard JCF concrete classes.</message>
             <deny>
                 <to pattern="java2-collections-concrete-class" />
