@@ -170,12 +170,57 @@
           <endDate>YYYY-MM-DD</endDate>
         </configuration>
       </plugin>
-      
-    <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
+
+      <plugin>
+		<artifactId>maven-antrun-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        
+		<dependencies>
+			    <dependency>
+                   <groupId>ant</groupId>
+                   <artifactId>ant-antlr</artifactId>
+                   <version>1.6.5</version>
+                </dependency>
+                <dependency>
+                   <groupId>antlr</groupId>
+                   <artifactId>antlrall</artifactId>
+                   <version>2.7.4</version>
+                </dependency>
+                <dependency>
+                   <artifactId>macker</artifactId>
+                   <groupId>innig</groupId>
+                   <version>0.4.2</version>
+                </dependency>
+                <dependency>
+                   <artifactId>innig-util</artifactId>
+                   <groupId>innig</groupId>
+                   <version>0.4.2</version>
+                </dependency>
+                <dependency>
+                   <artifactId>jakarta-regexp</artifactId>
+                   <groupId>jakarta-regexp</groupId>
+                   <version>1.4</version>
+                </dependency>
+                <dependency>
+                   <artifactId>bcel</artifactId>
+                   <groupId>bcel</groupId>
+                   <version>5.1</version>
+                </dependency>
+                <dependency>
+                   <artifactId>jdom</artifactId>
+                   <groupId>jdom</groupId>
+                   <version>1.0</version>
+                </dependency>
+                <dependency>
+                   <artifactId>commons-lang</artifactId>
+                   <groupId>commons-lang</groupId>
+                   <version>1.0.1</version>
+                </dependency>
+		</dependencies>
+		
+		<executions>
           <execution>
-            <id>show info</id>
+            <id>info</id>
             <phase>generate-resources</phase>
             <goals>
               <goal>run</goal>
@@ -196,6 +241,41 @@
               </tasks>
             </configuration>
           </execution>
+          
+          <execution>
+            <id>macker</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <property name="compile_classpath" refid="maven.compile.classpath"/>
+                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                <property name="test_classpath" refid="maven.test.classpath"/>
+                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+
+                <echo message="maven.compile.classpath=${compile_classpath}"/>
+                <echo message="maven.plugin.classpath=${plugin_classpath}"/>
+              
+				<path id="compile.classpath">
+				    <pathelement path="${compile_classpath}" />
+                    <pathelement path="${plugin_classpath}" />
+				</path>
+				
+				<taskdef name="macker" 
+				         classname="net.innig.macker.ant.MackerAntTask" 
+				         classpathref="maven.plugin.classpath" />
+				<macker>
+                    <classpath refid="compile.classpath" />
+            		<rules dir="src/main/macker" includes="*.xml" />
+            		<classes dir="target/classes">
+			             <include name="**/*.class" />
+		            </classes>
+	            </macker>
+              </tasks>
+            </configuration>
+          </execution>
         </executions>
     </plugin>
     
@@ -211,30 +291,6 @@
         </configuration>
       </plugin>
       
-      <!-- 
-	  <plugin>
-    	<groupId>maven-plugins</groupId>
-    	<artifactId>maven-macker-plugin</artifactId>
-    	<version>0.4.2</version>
-        <configuration>
-	        <outputName>target/macker-out.xml</outputName>
-	        <maxmsg>0</maxmsg>
-	        <print>warning</print>
-	        <anger>error</anger>
-	        <rule>src/main/macker/rules.xml</rule>
-	        <verbose>true</verbose>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <goals>
-              <goal>macker</goal>
-            </goals>
-          </execution>
-        </executions>      
-      </plugin>
-	  -->
-
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
@@ -512,18 +568,26 @@
 
   <dependencies>
   
-    <dependency>
-      <groupId>colt</groupId>
-      <artifactId>colt</artifactId>
-      <version>1.2.0</version>
-    </dependency>
-
     <!-- 'provided' scope dependencies -->
     <dependency>
         <groupId>net.sf.latextaglet</groupId>
         <artifactId>latextaglet</artifactId>
         <version>0.1.0</version>
         <scope>provided</scope>
+    </dependency>
+
+    <!-- 'compile' scope dependencies -->
+    <dependency>
+      <groupId>fastutil</groupId>
+      <artifactId>fastutil</artifactId>     
+      <version>5.1.5</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>colt</groupId>
+      <artifactId>colt</artifactId>
+      <version>1.2.0</version>
+      <scope>compile</scope>
     </dependency>
 
     <!-- 'test' scope dependencies -->
@@ -534,11 +598,7 @@
         <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>fastutil</groupId>
-      <artifactId>fastutil</artifactId>     
-      <version>5.1.5</version>
-    </dependency>
+    <!-- 'runtime' scope dependencies -->
 
   </dependencies>
 
