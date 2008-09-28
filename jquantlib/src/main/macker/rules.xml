@@ -1,14 +1,26 @@
 <?xml version="1.0"?>
-<macker>    
-    <ruleset name="Testing rules">
-        <pattern name="JquantLib" class="org.jquantlib.**" />
+<!DOCTYPE macker PUBLIC
+           "-//innig//DTD Macker 0.4//EN"
+           "http://innig.net/macker/dtd/macker-0.4.dtd">
+
+<macker>
+    <ruleset name="Use fastutil classes instead">
+    
+        <pattern name="concrete-class">
+            <exclude filter="interface" />
+            <exclude filter="abstract-class" />
+        </pattern>
+    
+        <pattern name="jcf-concrete-class" filter="subtype-of" class="java.util.Collection">
+            <include pattern="concrete-class" />
+        </pattern>
+            
         <access-rule>
-            <message>Use primitive types instead.</message>
+            <message>The UI layer may not directly access the DB layer</message>
             <deny>
-                <to>
-                	<include class="java.lang.Double" />
-                </to>
+                <to pattern="jcf-concrete-class" />
             </deny>
         </access-rule>
+        
     </ruleset>
 </macker>
