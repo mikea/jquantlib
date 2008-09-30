@@ -281,3 +281,4 @@ The main source of information is our wiki at http://wiki.jquantlib.org/
 
 
 [[User:RichardGomes|RichardGomes]] 01:51, 5 June 2008 (UTC)
+
