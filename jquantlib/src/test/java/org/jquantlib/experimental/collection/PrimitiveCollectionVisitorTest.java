@@ -20,12 +20,13 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.testsuite.util.collection;
+package org.jquantlib.experimental.collection;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
+import java.util.List;
+
 import org.jquantlib.util.Date;
-import org.jquantlib.util.collection.PrimitiveCollectionAddVisitor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,29 +40,37 @@ public class PrimitiveCollectionVisitorTest {
 
 	@Test
 	public void testPrimitiveDoubleCollection() {
-		long startNano = System.nanoTime();
+		long startNano = System.currentTimeMillis();
 		DoubleArrayList dal = new DoubleArrayList();
 		PrimitiveCollectionAddVisitor v = PrimitiveCollectionAddVisitor.impl;
 		for (double i = 0.0; i < 1000; i = i + .01) {
 			v.visitAddDoubleCollection(dal, i);
 		}
 
-		long totalTime = System.nanoTime() - startNano;
-		System.out.println("      PrimitiveCollectionAddVisitor without  autoboxing : " + totalTime + " nano seconds");
+		long totalTime = System.currentTimeMillis() - startNano;
+		System.out.println("      PrimitiveCollectionAddVisitor without  autoboxing : " + totalTime + " milli seconds");
 	}
 
 	@Test
 	@SuppressWarnings(value = "unchecked")
 	public void testJavaUtilList() {
-		long startNano = System.nanoTime();
+		long startNano = System.currentTimeMillis();
 		DoubleArrayList dal = new DoubleArrayList();
 		java.util.List list = dal;
 		for (double i = 0.0; i < 1000; i = i + .01) {
 			list.add(i);
 		}
 
-		long totalTime = System.nanoTime() - startNano;
-		System.out.println("      java.util.list with  autoboxing : " + totalTime + " nano seconds");
+		long totalTime = System.currentTimeMillis() - startNano;
+		System.out.println("      java.util.list with  autoboxing : " + totalTime + " milli seconds");
 	}
 
+	public static void main(String[] args) {
+		// List l = new org.jquantlib.util.List(new DoubleArrayList());
+		List l = new DoubleArrayList();
+		l.add(77.88);// autoboxing
+		((DoubleArrayList) l).add(6.66);
+		((DoubleArrayList) l).add(11);
+
+	}
 }
