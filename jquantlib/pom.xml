@@ -782,8 +782,8 @@
 
   <distributionManagement>
     <snapshotRepository>
-      <id>jquantlib-external_free</id>
-      <url>dav:${maven.deploy.repository.url}/${maven.deploy.repository.id}/</url>
+      <id>jquantlib-site</id>
+      <url>dav:${maven.deploy.site.url}/</url>
     </snapshotRepository>
   </distributionManagement>
   

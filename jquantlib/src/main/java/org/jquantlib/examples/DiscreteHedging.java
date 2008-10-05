@@ -8,27 +8,18 @@ package org.jquantlib.examples;
 
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import  org.jquantlib.number.Volatility;
-import  org.jquantlib.number.Rate;
-import  org.jquantlib.number.Real;
-import  org.jquantlib.number.Time;
-import  org.jquantlib.instruments.Option;
-import  org.jquantlib.methods.montecarlo.Path;
-import  org.jquantlib.methods.montecarlo.PathPricer;
-import  org.jquantlib.instruments.PlainVanillaPayoff;
-
+import org.jquantlib.instruments.Option;
+import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.math.randomnumbers.MersenneTwisterUniformRng;
 import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 import org.jquantlib.math.randomnumbers.RandomSequenceGenerator;
 import org.jquantlib.math.statistics.Statistics;
 import org.jquantlib.methods.montecarlo.MonteCarloModel;
+import org.jquantlib.methods.montecarlo.Path;
+import org.jquantlib.methods.montecarlo.PathPricer;
 import org.jquantlib.methods.montecarlo.SingleVariate;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess1D;
-import org.jquantlib.time.Calendar;
-import org.jquantlib.time.calendars.Target;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.DefaultDate;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
@@ -36,6 +27,10 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
+import org.jquantlib.time.Calendar;
+import org.jquantlib.time.calendars.Target;
+import org.jquantlib.util.Date;
+import org.jquantlib.util.DefaultDate;
 /**
  *
  * @author  Q. Boiler
@@ -52,11 +47,11 @@ public class DiscreteHedging {
         //boost::timer timer;
 		long startTime = System.currentTimeMillis();
 		
-        @Time Number maturity = new Double(1.0/12.0);   // 1 month
-        @Real Number strike = new Double(100);
-        @Real Number underlying = new Double(100);
-        @Volatility Number volatility = new Double(0.20); // 20%
-        @Rate Number riskFreeRate = new Double(0.05); // 5%
+        /*@Time*/ Number maturity = new Double(1.0/12.0);   // 1 month
+        /*@Price*/ Number strike = new Double(100);
+        /*@Price*/ Number underlying = new Double(100);
+        /*@Volatility*/ Number volatility = new Double(0.20); // 20%
+        /*@Rate*/ Number riskFreeRate = new Double(0.05); // 5%
 		Option.Type Call = Option.Type.CALL;
 		
         ReplicationError rp = new ReplicationError(Call, maturity, strike, underlying, volatility, riskFreeRate);
@@ -98,12 +93,12 @@ public class DiscreteHedging {
 
 class ReplicationError {
 
-    ReplicationError(Option.Type type,
-                     @Time Number maturity,
-                     @Real Number strike,
-                     @Real Number s0,
-                     @Volatility Number sigma,
-                     @Rate Number r) {
+    ReplicationError(final Option.Type type,
+                     final /*@Time*/ Number maturity,
+                     final /*@Price*/ Number strike,
+                     final /*@Price*/ Number s0,
+                     final /*@Volatility*/ Number sigma,
+                     final /*@Rate*/ Number r) {
 		maturity_ = maturity;
 		s0_=s0;
 		sigma_=sigma;
@@ -111,12 +106,12 @@ class ReplicationError {
 	}
 
 
-    private @Time Number maturity_;
+    private /*@Time*/ Number maturity_;
     private PlainVanillaPayoff payoff_;
-    private @Real Number s0_;
-    private @Volatility Number sigma_;
-    private @Rate Number r_;
-    private @Real Number vega_;
+    private /*@Price*/ Number s0_;
+    private /*@Volatility*/ Number sigma_;
+    private /*@Rate*/ Number r_;
+    private /*@Real*/ Number vega_;
 
     void compute(int nTimeSteps, int nSamples){
 		
@@ -198,13 +193,13 @@ MonteCarloModel<SingleVariate, Double, RandomNumberGenerator<Double>, Statistics
     // gives access to all the methods of statisticsAccumulator
 	Statistics s = MCSimulation.sampleAccumulator();
 
-    @Real Number PLMean  = s.mean();
-    @Real Number PLStDev = MCSimulation.sampleAccumulator().standardDeviation();
-    @Real Number PLSkew  = MCSimulation.sampleAccumulator().skewness();
-    @Real Number PLKurt  = MCSimulation.sampleAccumulator().kurtosis();
+    /*@Real*/ double PLMean  = s.mean();
+    /*@Real*/ double PLStDev = MCSimulation.sampleAccumulator().standardDeviation();
+    /*@Real*/ double PLSkew  = MCSimulation.sampleAccumulator().skewness();
+    /*@Real*/ double PLKurt  = MCSimulation.sampleAccumulator().kurtosis();
 
     // Derman and Kamal's formula
-    @Real Number theorStD = Math.sqrt((Math.PI/4/nTimeSteps)*vega_.doubleValue()*sigma_.doubleValue());
+    /*@Real*/ double theorStD = Math.sqrt((Math.PI/4/nTimeSteps)*vega_.doubleValue()*sigma_.doubleValue());
 
 
 	StringBuffer sb = new StringBuffer();
@@ -232,21 +227,22 @@ MonteCarloModel<SingleVariate, Double, RandomNumberGenerator<Double>, Statistics
 
 class ReplicationPathPricer extends PathPricer<Path> {
 
-    ReplicationPathPricer(Option.Type type,
-                          @Real Number strike,
-                          @Rate Number r,
-                          @Time Number maturity,
-                          @Volatility Number sigma){
+    ReplicationPathPricer(final Option.Type type,
+                          double /*@Price @NonNegative*/ strike,
+                          double /*@Rate @NonNegative*/ r,
+                          double /*@Time @NonNegative*/ maturity,
+                          double /*@Volatility @NonNegative*/ sigma){
 		type_=type;
 		strike_=strike;
 		r_=r;
 		maturity_=maturity;
 		sigma_=sigma;
 
-		assert(strike_.doubleValue()>0.0);
-		assert(r_.doubleValue()>0.0);
-		assert(maturity_.doubleValue()>0.0);
-		assert(sigma_.doubleValue()>0.0);
+		// XXX: These tests can be substituted by [future] JSR-308 annotation @NonNegative
+		assert(strike_>0.0);
+		assert(r_>0.0);
+		assert(maturity_>0.0);
+		assert(sigma_>0.0);
 
 
 	}
@@ -260,10 +256,10 @@ class ReplicationPathPricer extends PathPricer<Path> {
 	}
 
   private Option.Type type_;
-  @Real private  Number strike_;
-  @Rate private  Number r_;
-  private   @Time Number maturity_;
-  private   @Volatility Number sigma_;
+  private /*@Price*/ double strike_;
+  private /*@Rate*/ double r_;
+  private   /*@Time*/ double maturity_;
+  private   /*@Volatility*/ double sigma_;
 
 	@Override
 	public Double evaluate(Path path) {

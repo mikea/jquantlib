@@ -30,27 +30,26 @@ public class ShoutCondition extends CurveDependentStepCondition {
 	/* @Rate */private final double rate;
 	/* @DiscountFactor */private double disc;
 
-	public ShoutCondition(Option.Type type, double /* @Real */strike,
-			double /* @Time */resTime, double/* @ Rate */rate) {
+	public ShoutCondition(final Option.Type type, 
+	        final /*@Price*/ double strike, final /*@Time*/ double resTime, final /*@Rate*/ double rate) {
 		super(type, strike);
 		this.resTime = resTime;
 		this.rate = rate;
 	}
 
-	public ShoutCondition(Array intrinsicValues,
-			double/*@Time*/resTime, double /*@Rate*/rate) {
+	public ShoutCondition(final Array intrinsicValues, 
+	        final /*@Time*/double resTime, final /*@Rate*/ double rate) {
 		super(intrinsicValues);
 		this.resTime = resTime;
 		this.rate = rate;
 	}
 
-	public void applyTo(Array a, double/*@Time*/ t) {
+	public void applyTo(final Array a, final /*@Time*/ double t) {
 		disc = Math.exp(-rate * (t - resTime));
 		super.applyTo(a, t);
 	}
 
-	protected /*@Real*/double applyToValue(/*@Real*/double current,
-	/*@Real*/double intrinsic) {
+	protected /*@Real*/double applyToValue(final /*@Price*/double current, final /*@Price*/double intrinsic) {
 		return Math.max(current, disc * intrinsic);
 	}
 }
