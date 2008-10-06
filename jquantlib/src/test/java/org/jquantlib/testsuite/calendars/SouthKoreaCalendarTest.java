@@ -41,7 +41,6 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.SouthKorea;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.jquantlib.util.Month;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
