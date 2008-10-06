@@ -78,6 +78,78 @@ public class UkraineCalendarTest {
    
     }
 	
+	// 2005 - year in the past and leap year
+	@Test
+    public void testUkraineUSEHolidaysYear2005()
+    {    	
+       	int year = 2005;
+    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(3,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(8,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(2,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(16,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,AUGUST,year));
+    	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt= new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2006 - year in the past and leap year
+	@Test
+    public void testUkraineUSEHolidaysYear2006()
+    {    	
+       	int year = 2006;
+    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(9,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(8,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(2,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(5,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,AUGUST,year));
+    	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt= new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2007 - year in the past and leap year
+	@Test
+    public void testUkraineUSEHolidaysYear2007()
+    {    	
+       	int year = 2007;
+    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(8,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(8,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(2,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,AUGUST,year));
+    	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt= new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	
 	 // 2008 - Current Year
 	@Test
     public void testUkraineUSEHolidaysYear2008()
