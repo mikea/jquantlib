@@ -781,10 +781,19 @@
   </reporting>
 
   <distributionManagement>
-    <snapshotRepository>
-      <id>jquantlib-site</id>
+    <repository>
+      <id>${maven.deploy.repository.id}</id>
+      <name>${maven.deploy.repository.name}</name>
+      <url>dav:${maven.deploy.repository.url}</url>
+      <layout>default</layout>
+      <uniqueVersion>false</uniqueVersion>
+    </repository>
+    
+    <site>
+      <id>${maven.deploy.site.id}</id>
+      <name>${maven.deploy.site.name}</name>
       <url>dav:${maven.deploy.site.url}/</url>
-    </snapshotRepository>
+    </site>
   </distributionManagement>
   
   <properties>
@@ -804,9 +813,14 @@
     <maven.jar.index>false</maven.jar.index>
     <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
 
+    <maven.deploy.repository.id>jquantlib-external_free</maven.deploy.repository.id>
+    <maven.deploy.repository.name>JQuantLib External Free Repository</maven.deploy.repository.name>
     <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
-    <maven.deploy.repository.id>external_free</maven.deploy.repository.id>
+
+    <maven.deploy.site.id>jquantlib-site</maven.deploy.site.id>
+    <maven.deploy.site.name>JQuantLib Generated Site</maven.deploy.site.name>
     <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites/${project.artifactId}</maven.deploy.site.url>
+    
     <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
 
     <!-- Application independent properties -->
