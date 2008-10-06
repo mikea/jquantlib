@@ -50,7 +50,7 @@ import org.jquantlib.util.Month;
  * <li>Nossa Sra. Aparecida Day, October 12th</li>
  * <li>All Souls Day, November 2nd</li>
  * <li>Republic Day, November 15th</li>
- * <li>Black Consciousness Day, November 20th</li>
+ * <li>Black Awareness Day, November 20th</li>
  * <li>Christmas, December 25th</li>
  * <li>Passion of Christ</li>
  * <li>Carnival</li>
@@ -70,7 +70,7 @@ import org.jquantlib.util.Month;
  * <li>Nossa Sra. Aparecida Day, October 12th</li>
  * <li>All Souls Day, November 2nd</li>
  * <li>Republic Day, November 15th</li>
- * <li>Black Consciousness Day, November 20th (since 2007)</li>
+ * <li>Black Awareness Day, November 20th (since 2007)</li>
  * <li>Christmas, December 25th</li>
  * <li>Passion of Christ</li>
  * <li>Carnival</li>
@@ -195,7 +195,7 @@ final class BrazilExchangeCalendar extends WesternCalendar {
 				// Republic Day
 				// || (d == 15 && m == NOVEMBER) -> not closed at the 15th
 				// November
-				// Black Consciousness Day
+				// Black Awareness Day
 				|| (d == 20 && m == NOVEMBER && y >= 2007)
 				// Christmas Eve
 				|| (d == 24 && m == DECEMBER)
