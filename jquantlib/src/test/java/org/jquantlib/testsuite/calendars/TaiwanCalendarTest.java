@@ -229,6 +229,71 @@ public class TaiwanCalendarTest {
    
     }
 	
+	// 2009 - Future Year
+	@Test
+    public void testTaiwanTSEHolidaysYear2009()
+    {    	
+       	int year = 2009;
+    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2010 - Future Year
+	@Test
+    public void testTaiwanTSEHolidaysYear2010()
+    {    	
+       	int year = 2010;
+    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2011 - Future Year
+	@Test
+    public void testTaiwanTSEHolidaysYear2011()
+    {    	
+       	int year = 2011;
+    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(28,FEBRUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(10,OCTOBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2012 - Future Year
+	@Test
+    public void testTaiwanTSEHolidaysYear2012()
+    {    	
+       	int year = 2012;
+    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(28,FEBRUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(10,OCTOBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	
     @After
 	public void destroy(){
 		c=null;
