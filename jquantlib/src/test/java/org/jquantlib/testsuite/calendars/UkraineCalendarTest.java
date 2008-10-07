@@ -172,6 +172,98 @@ public class UkraineCalendarTest {
    
     }
 	
+	 // 2009 - Future Year
+	@Test
+    public void testUkraineUSEHolidaysYear2009()
+    {    	
+       	int year = 2009;
+    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(11,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,AUGUST,year));
+    	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt= new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2010 - Future Year
+	@Test
+    public void testUkraineUSEHolidaysYear2010()
+    {    	
+       	int year = 2010;
+    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(8,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(5,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(3,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(10,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,AUGUST,year));
+    	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt= new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2011 - Future Year
+	@Test
+    public void testUkraineUSEHolidaysYear2011()
+    {    	
+       	int year = 2011;
+    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(3,JANUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(8,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(2,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(13,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,AUGUST,year));
+    	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt= new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2012 - Future Year
+	@Test
+    public void testUkraineUSEHolidaysYear2012()
+    {    	
+       	int year = 2012;
+    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(9,JANUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(8,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(2,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,AUGUST,year));
+    	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt= new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
 	 // 2020 - Future Year - Only Testing for general holidays
 	@Test
     public void testUkraineUSEHolidaysYear2020()
