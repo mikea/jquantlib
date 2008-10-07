@@ -180,6 +180,77 @@ public class TurkeyCalendarTest {
    
     }
 	
+	// 2009 - Future Year
+	@Test
+    public void testTurkeyISEHolidaysYear2009()
+    {    	
+       	int year = 2009;
+    	System.out.println("Testing " + Turkey.Market.ISE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(23,APRIL,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(19,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(29,OCTOBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2010 - Future Year
+	@Test
+    public void testTurkeyISEHolidaysYear2010()
+    {    	
+       	int year = 2010;
+    	System.out.println("Testing " + Turkey.Market.ISE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(23,APRIL,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(19,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(30,AUGUST,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(29,OCTOBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2011 - Future Year
+	@Test
+    public void testTurkeyISEHolidaysYear2011()
+    {    	
+       	int year = 2011;
+    	System.out.println("Testing " + Turkey.Market.ISE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(19,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(30,AUGUST,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2012 - Future Year
+	@Test
+    public void testTurkeyISEHolidaysYear2012()
+    {    	
+       	int year = 2012;
+    	System.out.println("Testing " + Turkey.Market.ISE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(23,APRIL,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(30,AUGUST,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(29,OCTOBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	
 	
     @After
 	public void destroy(){
