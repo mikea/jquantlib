@@ -80,6 +80,75 @@ public class SwedenCalendarTest {
    
     }
 	
+	// 2005 - year in the past
+	@Test
+    public void testSwedenSEHolidaysYear2005()
+    {    	
+       	int year = 2005;
+    	System.out.println("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(5,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(16,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2006 - year in the past
+	@Test
+    public void testSwedenSEHolidaysYear2006()
+    {    	
+       	int year = 2006;
+    	System.out.println("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(5,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(23,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2007 - year in the past
+	@Test
+    public void testSwedenSEHolidaysYear2007()
+    {    	
+       	int year = 2007;
+    	System.out.println("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(17,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(22,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
 	// 2008 - Current Year
 	@Test
     public void testSwedenSEHolidaysYear2008()
@@ -104,6 +173,31 @@ public class SwedenCalendarTest {
    
     }
 	
+	// 2009 - Future Year
+	@Test
+    public void testSwedenSEHolidaysYear2009()
+    {    	
+       	int year = 2009;
+    	System.out.println("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(10,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(21,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(19,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
 	// 2010 - Future Year
 	@Test
     public void testSwedenSEHolidaysYear2010()
@@ -119,6 +213,52 @@ public class SwedenCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(24,MAY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(18,JUNE,year));
     	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2011 - Future Year
+	@Test
+    public void testSwedenSEHolidaysYear2011()
+    {    	
+       	int year = 2011;
+    	System.out.println("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(2,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(13,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
+  	    	
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+   
+    }
+	
+	// 2012 - Future Year
+	@Test
+    public void testSwedenSEHolidaysYear2012()
+    {    	
+       	int year = 2012;
+    	System.out.println("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    
+    	expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(17,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(22,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
     	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
   	    	
     	// Call the Holiday Check
