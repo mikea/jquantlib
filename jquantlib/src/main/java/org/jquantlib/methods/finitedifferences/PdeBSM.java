@@ -20,7 +20,7 @@ public class PdeBSM extends PdeSecondOrderParabolic {
 	@Override
 	public double discount(double t, double x) {
 		if (Math.abs(t) < 1e-8) t = 0;
-        return process.riskFreeRate().getLink().getForwardRate(t,t,Compounding.CONTINUOUS,Frequency.NO_FREQUENCY,true).doubleValue();
+        return process.riskFreeRate().getLink().forwardRate(t,t,Compounding.CONTINUOUS,Frequency.NO_FREQUENCY,true).evaluate();
 	}
 
 	@Override

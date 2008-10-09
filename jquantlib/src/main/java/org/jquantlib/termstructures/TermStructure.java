@@ -39,7 +39,7 @@
 
 package org.jquantlib.termstructures;
 
-import java.util.List; // FIXME :: performance
+import java.util.List;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
@@ -67,15 +67,15 @@ import org.jquantlib.util.Observer;
  * <li>such date is based on the reference date of some other structure.</li>
  * 
  * <p>Case 1: The constructor taking a date is to be used.
- * The default implementation of {@link TermStructure#getReferenceDate()} will
+ * The default implementation of {@link TermStructure#referenceDate()} will
  * then return such date.
  * 
  * <p>Case 2: The constructor taking a number of days and a calendar is to be used 
- * so that {@link TermStructure#getReferenceDate()} will return a date calculated based on the
+ * so that {@link TermStructure#referenceDate()} will return a date calculated based on the
  * current evaluation date and the term structure and observers will be notified when the
  * evaluation date changes.
  * 
- * <p>Case 3: The {@link TermStructure#getReferenceDate()} method must
+ * <p>Case 3: The {@link TermStructure#referenceDate()} method must
  * be overridden in derived classes so that it fetches and
  * return the appropriate date.
  *  
@@ -98,36 +98,36 @@ public abstract class TermStructure implements Observer, Observable {
 	
 	/**
 	 * <p>Case 1: The constructor taking a date is to be used.
-	 * The default implementation of {@link TermStructure#getReferenceDate()} will
+	 * The default implementation of {@link TermStructure#referenceDate()} will
 	 * then return such date.
 	 * 
 	 * <p>Case 2: The constructor taking a number of days and a calendar is to be used 
-	 * so that {@link TermStructure#getReferenceDate()} will return a date calculated based on the
+	 * so that {@link TermStructure#referenceDate()} will return a date calculated based on the
 	 * current evaluation date and the term structure and observers will be notified when the
 	 * evaluation date changes.
 	 * 
-	 * <p>Case 3: The {@link TermStructure#getReferenceDate()} method must
+	 * <p>Case 3: The {@link TermStructure#referenceDate()} method must
 	 * be overridden in derived classes so that it fetches and
 	 * return the appropriate date.
 	 */
 	private Date referenceDate;
 	
 	/**
-	 * Beware that this variable must always be accessed via {@link #getCalendar()} method.
+	 * Beware that this variable must always be accessed via {@link #calendar()} method.
 	 * Extended classes have the option to redefine semantics of a calendar by keeping their own private
-	 * calendar variable and providing their own version of {@link #getCalendar()} method. When extended 
-	 * classes fail to provide their version of {@link #getCalendar()} method, <i><b>this</b>.getCalendar</i> 
+	 * calendar variable and providing their own version of {@link #calendar()} method. When extended 
+	 * classes fail to provide their version of {@link #calendar()} method, <i><b>this</b>.getCalendar</i> 
 	 * must throw an {@link IllegalStateException} because the private variable calendar was never initialised.
 	 * 
-	 * @see #getCalendar
+	 * @see #calendar
 	 */
 	private Calendar calendar;
 	
 	/**
-	 * Beware that this variable must always be accessed via {@link #getDayCounter()} method.
+	 * Beware that this variable must always be accessed via {@link #dayCounter()} method.
 	 * Extended classes have the option to redefine semantics of a day counter by keeping their own private
-	 * dayCounter variable and providing their own version of {@link #getDayCounter()} method. When extended 
-	 * classes fail to provide their version of {@link #getDayCounter()} method, <i><b>this</b>.getDayCounter</i> 
+	 * dayCounter variable and providing their own version of {@link #dayCounter()} method. When extended 
+	 * classes fail to provide their version of {@link #dayCounter()} method, <i><b>this</b>.getDayCounter</i> 
 	 * must throw an {@link IllegalStateException} because the private variable dayCounter was never initialised.
 	 * 
 	 * @see #getDayCounter
@@ -163,11 +163,11 @@ public abstract class TermStructure implements Observer, Observable {
 
 	
 	//
-	// constructors
+	// public constructors
 	//
 	
 	/**
-	 * <p>This constructor requires an override of method {@link TermStructure#getReferenceDate()} in 
+	 * <p>This constructor requires an override of method {@link TermStructure#referenceDate()} in 
 	 * derived classes so that it fetches and return the appropriate reference date.
 	 * This is the <i>Case 3</i> described on the top of this class.
 	 * 
@@ -178,7 +178,7 @@ public abstract class TermStructure implements Observer, Observable {
 	}
 
 	/**
-	 * <p>This constructor requires an override of method {@link TermStructure#getReferenceDate()} in 
+	 * <p>This constructor requires an override of method {@link TermStructure#referenceDate()} in 
 	 * derived classes so that it fetches and return the appropriate reference date.
 	 * This is the <i>Case 3</i> described on the top of this class.
 	 * 
@@ -201,7 +201,7 @@ public abstract class TermStructure implements Observer, Observable {
 	 * Initialize with a fixed reference date
 	 * 
 	 * <p>This constructor takes a date to be used. 
-	 * The default implementation of {@link TermStructure#getReferenceDate()} will
+	 * The default implementation of {@link TermStructure#referenceDate()} will
 	 * then return such date.
 	 * This is the <i>Case 1</i> described on the top of this class.
 	 * 
@@ -215,7 +215,7 @@ public abstract class TermStructure implements Observer, Observable {
 	 * Initialize with a fixed reference date
 	 * 
 	 * <p>This constructor takes a date to be used. 
-	 * The default implementation of {@link TermStructure#getReferenceDate()} will
+	 * The default implementation of {@link TermStructure#referenceDate()} will
 	 * then return such date.
 	 * This is the <i>Case 1</i> described on the top of this class.
 	 * 
@@ -241,7 +241,7 @@ public abstract class TermStructure implements Observer, Observable {
 	 * Calculate the reference date based on the global evaluation date
 	 * 
 	 * <p>This constructor takes a number of days and a calendar to be used 
-	 * so that {@link TermStructure#getReferenceDate()} will return a date calculated based on the
+	 * so that {@link TermStructure#referenceDate()} will return a date calculated based on the
 	 * current evaluation date and the term structure. This class will be notified when the
 	 * evaluation date changes.
 	 * This is the <i>Case 2</i> described on the top of this class.
@@ -257,7 +257,7 @@ public abstract class TermStructure implements Observer, Observable {
 	 * Calculate the reference date based on the global evaluation date
 	 * 
 	 * <p>This constructor takes a number of days and a calendar to be used 
-	 * so that {@link TermStructure#getReferenceDate()} will return a date calculated based on the
+	 * so that {@link TermStructure#referenceDate()} will return a date calculated based on the
 	 * current evaluation date and the term structure. This class will be notified when the
 	 * evaluation date changes.
 	 * This is the <i>Case 2</i> described on the top of this class.
@@ -286,7 +286,7 @@ public abstract class TermStructure implements Observer, Observable {
 	/**
 	 * @return the latest date for which the curve can return values
 	 */
-	public abstract Date getMaxDate();
+	public abstract Date maxDate();
 
 	
 	//
@@ -294,23 +294,26 @@ public abstract class TermStructure implements Observer, Observable {
 	//
 	
 	/**
+	 * Return the calendar used for reference date calculation
+	 * 
+     * @category Dates and Time
 	 * @return the calendar used for reference date calculation
 	 */
-	public Calendar getCalendar() /* @ReadOnly */ {
+	public Calendar calendar() /* @ReadOnly */ {
 		if (this.calendar == null) throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);
 		return calendar;
 	}
 
 	/**
 	 * This method performs a date to double conversion which represents
-	 * the fraction of the year between the reference date and 
-	 * the date passed as parameter.
-	 *  type filter text
+	 * the fraction of the year between the reference date and the date passed as parameter.
+	 * 
+	 * @category Dates and Time
 	 * @param date
 	 * @return the fraction of the year as a double
 	 */
-	public final /*@Time*/ double getTimeFromReference(final Date date) {
-		return getDayCounter().getYearFraction(getReferenceDate(), date);
+	public final /*@Time*/ double timeFromReference(final Date date) {
+		return dayCounter().getYearFraction(referenceDate(), date);
 	}
 
 	
@@ -322,7 +325,7 @@ public abstract class TermStructure implements Observer, Observable {
 	 * This method performs date-range check
 	 */ 
 	protected final void checkRange(final Date date, boolean extrapolate) {
-		checkRange(getTimeFromReference(date), extrapolate);
+		checkRange(timeFromReference(date), extrapolate);
 	}
 
 	/**
@@ -331,25 +334,31 @@ public abstract class TermStructure implements Observer, Observable {
 	protected final void checkRange(final /*@Time*/ double time, boolean extrapolate) {
 		/*@Time*/ double t = time;
 		if (t<0.0) throw new IllegalArgumentException("negative double given");
-		if (! (extrapolate || allowsExtrapolation() || (t<=getMaxTime())) ) 
-			throw new IllegalArgumentException("double ("+time+") is past max curve double ("+getMaxTime()+")");
+		if (! (extrapolate || allowsExtrapolation() || (t<=maxTime())) ) 
+			throw new IllegalArgumentException("double ("+time+") is past max curve double ("+maxTime()+")");
 	}
 	
 	/**
-	 * @return the day counter used for date/double conversion
+	 * Return the day counter used for date/double conversion
 	 * 
+	 * @category Dates and Time
+     * @return the day counter used for date/double conversion
+     * 
 	 * @see #dayCounter
 	 */
-	public DayCounter getDayCounter() {
+	public DayCounter dayCounter() {
 		if (this.dayCounter == null) throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);
 		return dayCounter;
 	}
 
 	/**
+	 * Returns the latest double for which the curve can return values
+	 * 
+     * @category Dates and Time
 	 * @return the latest double for which the curve can return values
 	 */
-	public final /*@Time*/ double getMaxTime(){
-		return getTimeFromReference(getMaxDate());
+	public final /*@Time*/ double maxTime(){
+		return timeFromReference(maxDate());
 	}
 
 	/**
@@ -359,12 +368,13 @@ public abstract class TermStructure implements Observer, Observable {
 	 * constructor must manage their own reference date 
 	 * by overriding the getReferenceDate() method.
 	 *  
+     * @category Dates and Time
 	 * @returns the Date at which discount = 1.0 and/or variance = 0.0
 	 */
-	public Date getReferenceDate() {
+	public Date referenceDate() {
 		if (moving) {
 			if (!updated) {
-				referenceDate = getCalendar().advance(today, settlementDays, TimeUnit.DAYS);
+				referenceDate = calendar().advance(today, settlementDays, TimeUnit.DAYS);
 				updated = true;
 			}
 		}

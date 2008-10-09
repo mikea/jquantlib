@@ -79,8 +79,8 @@ public class IborIndex extends InterestRateIndex {
 			throw new IllegalStateException("no forecasting term structure set to " + getName());
 		Date fixingValueDate = valueDate(fixingDate);
 		Date endValueDate = maturityDate(fixingValueDate);
-		double fixingDiscount = termStructure.getLink().getDiscount(fixingValueDate);
-		double endDiscount = termStructure.getLink().getDiscount(endValueDate);
+		double fixingDiscount = termStructure.getLink().discount(fixingValueDate);
+		double endDiscount = termStructure.getLink().discount(endValueDate);
 		double fixingPeriod = getDayCounter().getYearFraction(fixingValueDate, endValueDate);
 		return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
 	}

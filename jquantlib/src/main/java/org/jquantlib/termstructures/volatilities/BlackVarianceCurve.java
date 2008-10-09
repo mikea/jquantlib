@@ -113,7 +113,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
         variances[0] = 0.0;
         times[0] = 0.0;
         for (int j=1; j<=blackVolCurve.length; j++) {
-            times[j] = getTimeFromReference(this.dates[j-1]);
+            times[j] = timeFromReference(this.dates[j-1]);
             if (! (times[j]>times[j-1]) ) throw new IllegalArgumentException("dates must be sorted unique");
             variances[j] = times[j] * blackVolCurve[j-1]*blackVolCurve[j-1];
             if (! (variances[j]>=variances[j-1] || !forceMonotoneVariance) ) throw new IllegalArgumentException("variance must be non-decreasing");
@@ -131,15 +131,15 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 		return dayCounter;
 	}
 
-	public final Date getMaxDate() {
+	public final Date maxDate() {
 		return maxDate;
 	}
 
-	public final /*@Price*/ double getMinStrike() {
+	public final /*@Price*/ double minStrike() {
 		return Double.NEGATIVE_INFINITY;
 	}
 
-	public final /*@Price*/ double getMaxStrike() {
+	public final /*@Price*/ double maxStrike() {
 		return Double.POSITIVE_INFINITY;
 	}
 

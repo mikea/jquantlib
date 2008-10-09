@@ -112,7 +112,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 			variances[i][0] = 0.0;
 		}
 		for (int j = 1; j <= blackVolMatrix[0].length; j++) {
-			times[j] = getTimeFromReference(dates[j - 1]);
+			times[j] = timeFromReference(dates[j - 1]);
 			if (!(times[j] > times[j - 1]))
 				throw new IllegalArgumentException("dates must be sorted unique!");
 			for (int i = 0; i < blackVolMatrix.length; i++) {
@@ -129,15 +129,15 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 		return dayCounter;
 	}
 
-	public final Date getMaxDate() {
+	public final Date maxDate() {
 		return maxDate;
 	}
 
-	public final/* @Price */double getMinStrike() {
+	public final/* @Price */double minStrike() {
 		return strikes[0];
 	}
 
-	public final/* @Price */double getMaxStrike() {
+	public final/* @Price */double maxStrike() {
 		return strikes[strikes.length - 1];
 	}
 

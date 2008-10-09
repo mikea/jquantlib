@@ -137,11 +137,11 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 	}
 
 	public final double getQuoteError() {
-		return quote.getLink().doubleValue() - getImpliedQuote();
+		return quote.getLink().evaluate() - getImpliedQuote();
 	}
 
 	public final double getQuoteValue() {
-		return quote.getLink().doubleValue();
+		return quote.getLink().evaluate();
 	}
 
 //XXX	
@@ -151,7 +151,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 //	}
 
 	public double getReferenceQuote() /* @ReadOnly */ {
-		return quote.getLink().doubleValue();
+		return quote.getLink().evaluate();
 	}
 	
 

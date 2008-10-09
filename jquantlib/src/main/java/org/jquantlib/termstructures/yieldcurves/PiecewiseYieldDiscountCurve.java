@@ -138,9 +138,9 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 	}
 
 	@Override
-	public final Date getMaxDate() /* @ReadOnly */{
+	public final Date maxDate() /* @ReadOnly */{
 		calculator.calculate();
-		return super.getMaxDate();
+		return super.maxDate();
 	}
 
 	@Override
@@ -192,7 +192,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 
 		@Override
 		public final/* @DiscountFactor */double guess(final YieldTermStructure c, final Date d) {
-			return c.getDiscount(d, true);
+			return c.discount(d, true);
 		}
 
 		@Override
@@ -258,12 +258,12 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 				curveData.instruments[i].setTermStructure(yts);
 			}
 
-			dates[0] = getReferenceDate();
+			dates[0] = referenceDate();
 			times[0] = 0.0;
 			data[0] = traits.initialValue();
 			for (int i = 0; i < n; i++) {
 				dates[i + 1] = curveData.instruments[i].getLatestDate();
-				times[i + 1] = getTimeFromReference(dates[i + 1]);
+				times[i + 1] = timeFromReference(dates[i + 1]);
 				data[i + 1] = data[i];
 			}
 

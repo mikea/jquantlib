@@ -31,7 +31,7 @@ import org.jquantlib.util.Pair;
  */
 // TODO: comments
 public interface YieldCurve {
-	public Date getMaxDate() /* @ReadOnly */;
+	public Date maxDate() /* @ReadOnly */;
 	public /*@Time*/ double[] getTimes() /* @ReadOnly */;
 	public Date[] getDates() /* @ReadOnly */;
 	public Pair<Date, Double>[] getNodes() /* @ReadOnly */;

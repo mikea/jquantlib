@@ -96,15 +96,15 @@ public class InterestRate implements FunctionDouble {
         }
     }
 
-    public final DayCounter getDayCounter() {
+    public final DayCounter dayCounter() {
     	return this.dc;
     }
     
-    public final Compounding getCompounding() {
+    public final Compounding compounding() {
     	return this.compound;
     }
     
-    public final Frequency getFrequency() {
+    public final Frequency frequency() {
         return freqMakesSense ? Frequency.valueOf(this.freq) : Frequency.NO_FREQUENCY;
     }
     
@@ -113,18 +113,18 @@ public class InterestRate implements FunctionDouble {
      * 
      * @note Time double must be measured using InterestRate's own day counter.
      */
-    public final /*@DiscountFactor*/ double getDiscountFactor(final /*@Time*/ double t) {
+    public final /*@DiscountFactor*/ double discountFactor(final /*@Time*/ double t) {
     	/*@DiscountFactor*/ double factor = compoundFactor(t);
         return 1/factor;
     }
 
     
-    public final /*@DiscountFactor*/ double getDiscountFactor(final Date d1, final Date d2) {
-    	return getDiscountFactor(d1, d2, Date.NULL_DATE);
+    public final /*@DiscountFactor*/ double discountFactor(final Date d1, final Date d2) {
+    	return discountFactor(d1, d2, Date.NULL_DATE);
     }
 
-    public final /*@DiscountFactor*/ double getDiscountFactor(final Date d1, final Date d2, final Date refStart) {
-    	return getDiscountFactor(d1, d2, refStart, Date.NULL_DATE);
+    public final /*@DiscountFactor*/ double discountFactor(final Date d1, final Date d2, final Date refStart) {
+    	return discountFactor(d1, d2, refStart, Date.NULL_DATE);
     }
 
     /**
@@ -133,13 +133,13 @@ public class InterestRate implements FunctionDouble {
      * @return the compound (a.k.a capitalization) factor
      *         implied by the rate compounded between two dates.
      */
-    public final /*@DiscountFactor*/ double getDiscountFactor(final Date d1, final Date d2, final Date refStart, final Date refEnd) {
+    public final /*@DiscountFactor*/ double discountFactor(final Date d1, final Date d2, final Date refStart, final Date refEnd) {
         /*@Time*/ double t = this.dc.getYearFraction(d1, d2, refStart, refEnd);
-        return getDiscountFactor(t);
+        return discountFactor(t);
     }
 
-    public final InterestRate getEquivalentRate(final /*@Time*/ double t, final Compounding comp) {
-    	return getEquivalentRate(t, comp, Frequency.ANNUAL);
+    public final InterestRate equivalentRate(final /*@Time*/ double t, final Compounding comp) {
+    	return equivalentRate(t, comp, Frequency.ANNUAL);
     }
 
     /**
@@ -151,8 +151,8 @@ public class InterestRate implements FunctionDouble {
      * 
      * @return equivalent interest rate for a compounding period t.
      */
-    public final InterestRate getEquivalentRate(final /*@Time*/ double t, final Compounding comp, final Frequency freq) {
-        return getImpliedRate(compoundFactor(t), t, this.dc, comp, freq);
+    public final InterestRate equivalentRate(final /*@Time*/ double t, final Compounding comp, final Frequency freq) {
+        return impliedRate(compoundFactor(t), t, this.dc, comp, freq);
     }
 
     public final InterestRate equivalentRate(
@@ -160,7 +160,7 @@ public class InterestRate implements FunctionDouble {
 			final Date d2,
 			final DayCounter resultDC,
             final Compounding comp) {
-    	return getEquivalentRate(d1, d2, resultDC, comp, Frequency.ANNUAL);
+    	return equivalentRate(d1, d2, resultDC, comp, Frequency.ANNUAL);
     }
 
     /**
@@ -168,7 +168,7 @@ public class InterestRate implements FunctionDouble {
      * The resulting rate is calculated taking the required
      * day-counting rule into account.
      */
-    public final InterestRate getEquivalentRate(
+    public final InterestRate equivalentRate(
     			final Date d1,
     			final Date d2,
     			final DayCounter resultDC,
@@ -177,7 +177,7 @@ public class InterestRate implements FunctionDouble {
     	if (d1.le(d2)) throw new IllegalArgumentException("d1 ("+d1+") later than or equal to d2 ("+d2+")");
         /*@Time*/ double t1 = this.dc.getYearFraction(d1, d2);
         /*@Time*/ double t2 = resultDC.getYearFraction(d1, d2);
-        return getImpliedRate(compoundFactor(t1), t2, resultDC, comp, freq);
+        return impliedRate(compoundFactor(t1), t2, resultDC, comp, freq);
     }
     
     
@@ -190,7 +190,7 @@ public class InterestRate implements FunctionDouble {
      * 
      * @note Time must be measured using the day-counter provided as input. 
      */
-    static public InterestRate getImpliedRate(
+    static public InterestRate impliedRate(
     			final /*@CompoundFactor*/ double c, 
     			final /*@Time*/ double time,
     			final DayCounter resultDC,
@@ -230,21 +230,21 @@ public class InterestRate implements FunctionDouble {
         return new InterestRate(rate, resultDC, comp, freq);
     }
 
-    static public InterestRate getImpliedRate(
+    static public InterestRate impliedRate(
     			final /*@CompoundFactor*/ double compound,
     			final /*@Time*/ double t,
     			final DayCounter resultDC,
     			final Compounding comp) {
-    	return getImpliedRate(compound, t, resultDC, comp, Frequency.ANNUAL);
+    	return impliedRate(compound, t, resultDC, comp, Frequency.ANNUAL);
     }
     
-    static public InterestRate getImpliedRate(
+    static public InterestRate impliedRate(
     			final /*@CompoundFactor*/ double compound,
     			final Date d1,
     			final Date d2,
     			final DayCounter resultDC,
     			final Compounding comp) {
-    	return getImpliedRate(compound, d1, d2, resultDC, comp, Frequency.ANNUAL);
+    	return impliedRate(compound, d1, d2, resultDC, comp, Frequency.ANNUAL);
     }
 
     /**
@@ -252,7 +252,7 @@ public class InterestRate implements FunctionDouble {
      * The resulting rate is calculated taking the required
      * day-counting rule into account.
      */
-    static public InterestRate getImpliedRate(
+    static public InterestRate impliedRate(
     			final /*@CompoundFactor*/ double compound,
     			final Date d1,
     			final Date d2,
@@ -261,7 +261,7 @@ public class InterestRate implements FunctionDouble {
     			final Frequency freq) {
     	if (d2.le(d1)) throw new IllegalArgumentException("d1 ("+d1+") later than or equal to d2 ("+d2+")");
         /*@Time*/ double t = resultDC.getYearFraction(d1, d2);
-        return getImpliedRate(compound, t, resultDC, comp, freq);
+        return impliedRate(compound, t, resultDC, comp, freq);
     }
     
 
@@ -298,7 +298,8 @@ public class InterestRate implements FunctionDouble {
     // implements FunctionDouble
     //
     
-    public final /*@Rate*/ double doubleValue() {
+    @Override
+    public final /*@Rate*/ double evaluate() {
     	return this.rate;
     }
 

@@ -108,7 +108,7 @@ public final class InterpolatedZeroCurve<T extends Interpolator> extends ZeroYie
 	}
 
 	@Override
-	public final Date getMaxDate() /* @ReadOnly */{
+	public final Date maxDate() /* @ReadOnly */{
 		return dates[dates.length - 1];
 	}
 

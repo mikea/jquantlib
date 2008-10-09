@@ -27,8 +27,6 @@ package org.jquantlib.math;
  * 
  * @author <Richard Gomes>
  */
-@Deprecated
-// TODO: Remove this interface :: substibute by Function<Double>
 public interface FunctionDouble {
 
 	/**
@@ -36,5 +34,5 @@ public interface FunctionDouble {
 	 * 
 	 * @return a double
 	 */
-	public double doubleValue() /* @ReadOnly */;
+	public double evaluate() /* @ReadOnly */;
 }

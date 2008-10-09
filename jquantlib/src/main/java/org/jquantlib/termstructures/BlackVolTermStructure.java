@@ -47,12 +47,12 @@ public abstract class BlackVolTermStructure extends TermStructure implements Typ
 	/**
 	 * The minimum strike for which the term structure can return vols
 	 */
-	public abstract /*@Price*/ double getMinStrike();
+	public abstract /*@Price*/ double minStrike();
 
 	/**
 	 * The maximum strike for which the term structure can return vols
 	 */
-	public abstract /*@Price*/ double getMaxStrike();
+	public abstract /*@Price*/ double maxStrike();
 
 	protected abstract /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike);
 
@@ -85,7 +85,7 @@ public abstract class BlackVolTermStructure extends TermStructure implements Typ
 	 * Present (a.k.a spot) volatility
 	 */
 	public final /*@Volatility*/ double blackVol(final Date maturity, final /*@Price*/ double strike, boolean extrapolate) {
-		/*@Time*/ double t = super.getTimeFromReference(maturity);
+		/*@Time*/ double t = super.timeFromReference(maturity);
 		checkRange(t, strike, extrapolate);
 		return blackVolImpl(t, strike);
 	}
@@ -116,7 +116,7 @@ public abstract class BlackVolTermStructure extends TermStructure implements Typ
 	 * Present (a.k.a spot) variance
 	 */
 	public final /*@Variance*/ double blackVariance(final Date maturity, final /*@Price*/ double strike, boolean extrapolate) {
-		/*@Time*/ double t = super.getTimeFromReference(maturity);
+		/*@Time*/ double t = super.timeFromReference(maturity);
 		checkRange(t, strike, extrapolate);
 		return blackVarianceImpl(t, strike);
 	}
@@ -139,8 +139,8 @@ public abstract class BlackVolTermStructure extends TermStructure implements Typ
 	
 	private final void checkRange(final /*@Time*/ double time, final /*@Price*/ double strike, boolean extrapolate) {
 		super.checkRange(time, extrapolate);
-		if (! (extrapolate || allowsExtrapolation() || (strike >= getMinStrike()) && (strike <= getMaxStrike()) ) )
-			throw new ArithmeticException("strike (" + strike + ") is outside the curve domain [" + getMinStrike() + "," + getMaxStrike() + "]");
+		if (! (extrapolate || allowsExtrapolation() || (strike >= minStrike()) && (strike <= maxStrike()) ) )
+			throw new ArithmeticException("strike (" + strike + ") is outside the curve domain [" + minStrike() + "," + maxStrike() + "]");
 	}
 
 	/**
@@ -155,8 +155,8 @@ public abstract class BlackVolTermStructure extends TermStructure implements Typ
 	public final /*@Volatility*/ double blackForwardVol(final Date date1, final Date date2, final /*@Price*/ double strike, boolean extrapolate) {
 		if (date1.gt(date2))
 			throw new IllegalArgumentException(date1 + " later than " + date2);
-		/*@Time*/ double time1 = getTimeFromReference(date1);
-		/*@Time*/ double time2 = getTimeFromReference(date2);
+		/*@Time*/ double time1 = timeFromReference(date1);
+		/*@Time*/ double time2 = timeFromReference(date2);
 		return blackForwardVol(time1, time2, strike, extrapolate);
 	}
 
@@ -207,8 +207,8 @@ public abstract class BlackVolTermStructure extends TermStructure implements Typ
 	public final /*@Variance*/ double blackForwardVariance(final Date date1, final Date date2, final /*@Price*/ double strike, boolean extrapolate) {
 		if (date1.gt(date2))
 			throw new IllegalArgumentException(date1 + " later than " + date2);
-		/*@Time*/ double time1 = getTimeFromReference(date1);
-		/*@Time*/ double time2 = getTimeFromReference(date2);
+		/*@Time*/ double time1 = timeFromReference(date1);
+		/*@Time*/ double time2 = timeFromReference(date2);
 		return blackForwardVariance(time1, time2, strike, extrapolate);
 	}
 

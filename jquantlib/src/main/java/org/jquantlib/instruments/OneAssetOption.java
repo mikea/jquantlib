@@ -340,9 +340,9 @@ public class OneAssetOption extends Option {
         	// calculate implied volatility
         	Handle<BlackVolTermStructure> volatility = new Handle<BlackVolTermStructure>(
         													new BlackConstantVol(
-        															blackVol.getLink().getReferenceDate(), 
+        															blackVol.getLink().referenceDate(), 
         															vol, 
-        															blackVol.getLink().getDayCounter()));
+        															blackVol.getLink().dayCounter()));
         
         	// build a new stochastic process
         	StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);

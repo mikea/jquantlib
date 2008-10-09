@@ -160,7 +160,7 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 	}
 
 	@Override
-	public Date getMaxDate() /* @ReadOnly */{
+	public Date maxDate() /* @ReadOnly */{
 		return dates[dates.length - 1];
 	}
 

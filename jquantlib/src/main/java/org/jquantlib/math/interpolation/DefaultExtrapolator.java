@@ -40,6 +40,9 @@ public class DefaultExtrapolator implements Extrapolator {
     // public constructors
     //
     
+    /**
+     * @category constructors
+     */
     public DefaultExtrapolator() {
 		this.extrapolate = false;
 	}
@@ -49,23 +52,26 @@ public class DefaultExtrapolator implements Extrapolator {
 	// implements Extrapolator
 	//
 	
-	/**
-	 * enable extrapolation in subsequent calls
-	 */ 
-	public void enableExtrapolation() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void enableExtrapolation() {
 		extrapolate = true;
 	}
 
-	/**
-	 * disable extrapolation in subsequent calls
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public void disableExtrapolation() {
 		extrapolate = false;
 	}
 
-	/**
-	 * tells whether extrapolation is enabled
-	 */
+    /**
+     * {@inheritDoc}
+     */
+    @Override
 	public final boolean allowsExtrapolation() {
 		return extrapolate;
 	}

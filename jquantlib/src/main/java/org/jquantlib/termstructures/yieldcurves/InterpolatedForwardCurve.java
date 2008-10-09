@@ -142,7 +142,7 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 	}
 
 	@Override
-	public final Date getMaxDate() /* @ReadOnly */{
+	public final Date maxDate() /* @ReadOnly */{
 		return dates[dates.length - 1];
 	}
 

@@ -54,30 +54,30 @@ public class LocalVolCurve extends LocalVolTermStructure {
 	private BlackVarianceCurve blackVarianceCurve_;
 
 	public LocalVolCurve(final Handle<BlackVarianceCurve> curve) {
-		super(curve.getLink().getDayCounter());
+		super(curve.getLink().dayCounter());
 		blackVarianceCurve_ = curve.getLink();
 		blackVarianceCurve_.addObserver(this);
 	}
 
 	public final Date referenceDate() {
-		return blackVarianceCurve_.getReferenceDate();
+		return blackVarianceCurve_.referenceDate();
 	}
 
 	public final DayCounter dayCounter() {
-		return blackVarianceCurve_.getDayCounter();
+		return blackVarianceCurve_.dayCounter();
 	}
 
-	public final Date getMaxDate() {
-		return blackVarianceCurve_.getMaxDate();
+	public final Date maxDate() {
+		return blackVarianceCurve_.maxDate();
 	}
 
 	@Override
-	public final /*@Price*/ double getMinStrike() {
+	public final /*@Price*/ double minStrike() {
 		return Double.NEGATIVE_INFINITY;
 	}
 
 	@Override
-	public final /*@Price*/ double getMaxStrike() {
+	public final /*@Price*/ double maxStrike() {
 		return Double.POSITIVE_INFINITY;
 	}
 

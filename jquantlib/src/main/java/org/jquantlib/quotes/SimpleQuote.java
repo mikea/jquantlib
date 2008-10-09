@@ -48,7 +48,7 @@ public class SimpleQuote extends Quote {
 	//
 	// implements FunctionDouble
 	//
-	public final double doubleValue() {
+	public final double evaluate() {
 		if (Double.isNaN(value)) throw new ArithmeticException("invalid simple quote: no value available");
 		return value;
 	}

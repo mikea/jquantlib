@@ -106,23 +106,23 @@ public class LocalConstantVol extends LocalVolTermStructure {
 		return dayCounter_;
 	}
 
-	public final Date getMaxDate() {
+	public final Date maxDate() {
 		return DateFactory.getFactory().getMaxDate();
 	}
 
 	@Override
-	public final /*@Price*/ double getMinStrike() {
+	public final /*@Price*/ double minStrike() {
 		return Double.NEGATIVE_INFINITY;
 	}
 
 	@Override
-	public final /*@Price*/ double getMaxStrike() {
+	public final /*@Price*/ double maxStrike() {
 		return Double.POSITIVE_INFINITY;
 	}
 
 	@Override
 	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-		return this.volatility_.getLink().doubleValue();
+		return this.volatility_.getLink().evaluate();
 	}
 
 }

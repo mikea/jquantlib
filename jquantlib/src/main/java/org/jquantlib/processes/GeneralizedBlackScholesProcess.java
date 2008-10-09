@@ -113,7 +113,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
 	@Override
 	public /*@Price*/ double x0() {
-		return x0_.getLink().doubleValue();
+		return x0_.getLink().evaluate();
 	}
 
 	@Override
@@ -123,8 +123,8 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         // for which the drift will be used
         /*@Time*/ double t1 = t + 0.0001;
         YieldTermStructure yts = riskFreeRate_.getLink();
-        /*@Rate*/ double r = yts.getForwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).doubleValue();
-        double d = yts.getForwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY,true).doubleValue();
+        /*@Rate*/ double r = yts.forwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).evaluate();
+        double d = yts.forwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY,true).evaluate();
         return r-d-0.5*sigma*sigma;
     }
 
@@ -144,7 +144,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     @Override
     public final /*@Time*/ double getTime(final Date d) {
     	YieldTermStructure yts = riskFreeRate_.getLink();
-        return yts.getDayCounter().getYearFraction(yts.getReferenceDate(), d);
+        return yts.dayCounter().getYearFraction(yts.referenceDate(), d);
     }
 
     // FIXME: code review
@@ -179,9 +179,9 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         		BlackConstantVol constVol = (BlackConstantVol)blackVolatility_.getLink();
         		localVolatility_.setLink(
         				new LocalConstantVol(
-        						constVol.getReferenceDate(), 
-        						constVol.blackVol(/*@Time*/ 0.0, /*@Price*/ x0_.getLink().doubleValue()),
-        						constVol.getDayCounter()));
+        						constVol.referenceDate(), 
+        						constVol.blackVol(/*@Time*/ 0.0, /*@Price*/ x0_.getLink().evaluate()),
+        						constVol.dayCounter()));
                 updated_ = true;
         		return localVolatility_;
         	}

@@ -768,7 +768,7 @@ public class EuropeanOptionTest {
                           calculated.put("divRho", option.dividendRho());
                           calculated.put("vega", option.vega());
 
-                          if (value > spot.getLink().doubleValue()*1.0e-5) {
+                          if (value > spot.getLink().evaluate()*1.0e-5) {
                               // perturb spot and get delta and gamma
                               double du = u*1.0e-4;
                               spot.getLink().setValue(u+du);

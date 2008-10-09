@@ -73,7 +73,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
 			final Handle<YieldTermStructure> riskFreeTS, 
 			final Handle<YieldTermStructure> dividendTS, 
 			final Handle<? extends Quote> underlying) {
-		super(blackTS.getLink().getDayCounter());
+		super(blackTS.getLink().dayCounter());
 		this.blackTS_ = blackTS;
 		this.riskFreeTS_ = riskFreeTS;
 		this.dividendTS_ = dividendTS;
@@ -89,7 +89,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
 			final Handle<YieldTermStructure> riskFreeTS, 
 			final Handle<YieldTermStructure> dividendTS, 
 			final /*@Price*/ double underlying) {
-		super(blackTS.getLink().getDayCounter());
+		super(blackTS.getLink().dayCounter());
 		this.blackTS_ = blackTS;
 		this.riskFreeTS_ = riskFreeTS;
 		this.dividendTS_ = dividendTS;
@@ -99,24 +99,24 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		this.dividendTS_.addObserver(this);
 	}
 
-	public final Date getReferenceDate() {
-		return this.blackTS_.getLink().getReferenceDate();
+	public final Date referenceDate() {
+		return this.blackTS_.getLink().referenceDate();
 	}
 
-	public final DayCounter getDayCounter() {
-		return this.blackTS_.getLink().getDayCounter();
+	public final DayCounter dayCounter() {
+		return this.blackTS_.getLink().dayCounter();
 	}
 
-	public final Date getMaxDate() {
-		return blackTS_.getLink().getMaxDate();
+	public final Date maxDate() {
+		return blackTS_.getLink().maxDate();
 	}
 
-	public final /*@Price*/ double getMinStrike() {
-		return blackTS_.getLink().getMinStrike();
+	public final /*@Price*/ double minStrike() {
+		return blackTS_.getLink().minStrike();
 	}
 
-	public final /*@Price*/ double getMaxStrike() {
-		return blackTS_.getLink().getMaxStrike();
+	public final /*@Price*/ double maxStrike() {
+		return blackTS_.getLink().maxStrike();
 	}
 
 	// void LocalVolSurface::accept(AcyclicVisitor& v) {
@@ -136,7 +136,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		YieldTermStructure rTS = riskFreeTS_.getLink();
 		BlackVolTermStructure bTS = blackTS_.getLink();
 		
-		double forwardValue = u.doubleValue() * ( dTS.getDiscount(time, true) / rTS.getDiscount(time, true) );
+		double forwardValue = u.evaluate() * ( dTS.discount(time, true) / rTS.discount(time, true) );
 
 		// strike derivatives
 		/*@Price*/ double strike;

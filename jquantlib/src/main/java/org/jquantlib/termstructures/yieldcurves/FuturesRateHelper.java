@@ -93,10 +93,10 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 	public double getImpliedQuote() {
 		if (termStructure == null)
 			throw new IllegalStateException("term structure not set");
-		double forwardRate = termStructure.getDiscount(earliestDate)
-				/ (termStructure.getDiscount(latestDate) - 1.0) / yearFraction;
+		double forwardRate = termStructure.discount(earliestDate)
+				/ (termStructure.discount(latestDate) - 1.0) / yearFraction;
 		double convA = convAdj.isEmpty() ? 0.0 : convAdj.getLink()
-				.doubleValue();
+				.evaluate();
 		if (convA < 0.0)
 			throw new IllegalStateException("Negative (" + convA
 					+ ") futures convexity adjustment");
@@ -105,7 +105,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 	}
 
 	public double getConvexityAdjustment() {
-		return convAdj.isEmpty() ? 0.0 : convAdj.getLink().doubleValue();
+		return convAdj.isEmpty() ? 0.0 : convAdj.getLink().evaluate();
 	}
 
 	/*

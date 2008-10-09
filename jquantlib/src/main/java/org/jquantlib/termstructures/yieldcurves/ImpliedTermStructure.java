@@ -65,12 +65,12 @@ public class ImpliedTermStructure<T extends YieldTermStructure> extends YieldTer
 	}
 
 	@Override
-	public Calendar getCalendar() /* @ReadOnly */ {
+	public Calendar calendar() /* @ReadOnly */ {
 		return null; // FIXME: originalCurve.getLink().getCalendar();
 	}
 
 	@Override
-	public Date getMaxDate() /* @ReadOnly */ {
+	public Date maxDate() /* @ReadOnly */ {
 		return null; // FIXME: originalCurve.getLink().getMaxDate();
 	}
 
@@ -80,12 +80,12 @@ public class ImpliedTermStructure<T extends YieldTermStructure> extends YieldTer
 		/* t is relative to the current reference date
 		   and needs to be converted to the time relative
 		   to the reference date of the original curve */
-		Date ref = getReferenceDate();
+		Date ref = referenceDate();
 		/*@Time*/double originalTime = 0.0; // FUXME: t + getDayCounter().getYearFraction(yts.getReferenceDate(), ref);
 		/* discount at evaluation date cannot be cached
 		   since the original curve could change between
 		   invocations of this method */
-		return yts.getDiscount(originalTime, true) / yts.getDiscount(ref, true);
+		return yts.discount(originalTime, true) / yts.discount(ref, true);
 	}
 
 }

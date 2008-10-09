@@ -67,7 +67,7 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     
     @Override
     protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-        return volatility.getLink().doubleValue();
+        return volatility.getLink().evaluate();
     }
     
     public BlackConstantVol(final Date referenceDate, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
@@ -108,22 +108,22 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
 	}
 	
     @Override
-    public final DayCounter getDayCounter() { 
+    public final DayCounter dayCounter() { 
     	return dayCounter; 
     }
     
     @Override
-    public final Date getMaxDate() {
+    public final Date maxDate() {
         return DateFactory.getFactory().getMaxDate();
     }
     
     @Override
-    public final /*@Price*/ double getMinStrike() {
+    public final /*@Price*/ double minStrike() {
     	return Double.NEGATIVE_INFINITY;
 	}
     
 	@Override
-    public final /*@Price*/ double getMaxStrike() {
+    public final /*@Price*/ double maxStrike() {
     	return Double.POSITIVE_INFINITY;
 	}
 

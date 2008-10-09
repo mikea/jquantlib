@@ -100,7 +100,7 @@ public abstract class LocalVolTermStructure extends TermStructure implements Typ
         //! \name Local Volatility
         
         public final /*@Volatility*/ double localVol(final Date d, final /*@Price*/ double underlyingLevel, boolean extrapolate) {
-			/*@Time*/ double t = getTimeFromReference(d);
+			/*@Time*/ double t = timeFromReference(d);
 			checkRange(t, underlyingLevel, extrapolate);
 			return localVolImpl(t, underlyingLevel);
 		}
@@ -114,12 +114,12 @@ public abstract class LocalVolTermStructure extends TermStructure implements Typ
         /**
          * @return the minimum strike for which the term structure can return vols
          */
-        public abstract /*@Price*/ double getMinStrike();
+        public abstract /*@Price*/ double minStrike();
         
         /**
          * @return the maximum strike for which the term structure can return vols
          */ 
-        public abstract /*@Price*/ double getMaxStrike();
+        public abstract /*@Price*/ double maxStrike();
 
 
 
@@ -139,8 +139,8 @@ public abstract class LocalVolTermStructure extends TermStructure implements Typ
 
         private final void checkRange(final /*@Time*/ double t, final /*@Price*/ double strike, boolean extrapolate) {
         	super.checkRange(t, extrapolate);
-        	/*@Price*/ double minStrike = getMinStrike();
-        	/*@Price*/ double maxStrike = getMaxStrike();
+        	/*@Price*/ double minStrike = minStrike();
+        	/*@Price*/ double maxStrike = maxStrike();
         	if (! (extrapolate || allowsExtrapolation() || (strike >=  minStrike && strike <= maxStrike)) ) {
         		throw new ArithmeticException("strike (" + strike + ") is outside the curve domain [" + minStrike + "," + maxStrike + "]");
         	}

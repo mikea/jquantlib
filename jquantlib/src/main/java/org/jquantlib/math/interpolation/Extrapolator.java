@@ -43,16 +43,22 @@ public interface Extrapolator {
 
 	/**
 	 * enable extrapolation in subsequent calls
+	 * 
+	 * @category modifiers
 	 */
     public void enableExtrapolation();
 
     /**
      * disable extrapolation in subsequent calls
+     * 
+     * @category modifiers
      */
     public void disableExtrapolation();
     
     /**
      * tells whether extrapolation is enabled
+     * 
+     * @category inspectors
      */
     public boolean allowsExtrapolation();
     
