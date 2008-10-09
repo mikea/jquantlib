@@ -36,6 +36,11 @@
           <address>q.boiler@yahoo.com</address>
         </configuration>
       </notifier>
+      <notifier>
+        <configuration>
+          <address>j.jia169@googlemail.com</address>
+        </configuration>
+      </notifier>
     </notifiers>
   </ciManagement>
   
