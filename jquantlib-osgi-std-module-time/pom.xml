@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>jquantlib-osgi-std-module-time</groupId>
+	<artifactId>jquantlib-osgi-std-module-time</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>jquantlib-osgi-std-module-time</name>
+	<dependencies>
+
+		<!-- 'provided' scope dependencies -->
+		<dependency>
+			<groupId>net.sf.latextaglet</groupId>
+			<artifactId>latextaglet</artifactId>
+			<version>0.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- 'compile' scope dependencies -->
+		<dependency>
+			<groupId>fastutil</groupId>
+			<artifactId>fastutil</artifactId>
+			<version>5.1.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>colt</groupId>
+			<artifactId>colt</artifactId>
+			<version>1.2.0</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- 'test' scope dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- 'runtime' scope dependencies -->
+
+	</dependencies>
+</project>
