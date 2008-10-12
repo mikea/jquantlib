@@ -14,6 +14,7 @@ public class TimeActivator implements BundleActivator {
 		TimeFactory timeFactory = new TimeFactory();
 		timeRegistration = context.registerService(Calendar.class.getName(),
 				timeFactory, null);
+		System.out.println(timeRegistration);
 	}
 
 	public void stop(BundleContext context) throws Exception {
