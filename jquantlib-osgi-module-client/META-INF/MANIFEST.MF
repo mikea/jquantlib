@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Jquantlib_osgi_module_client Plug-in
+Bundle-SymbolicName: jquantlib_osgi_module_client
+Bundle-Version: 1.0.0
+Bundle-Activator: jquantlib.osgi.module.client.ClientActivator
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.jquantlib.time,
+ org.osgi.framework;version="1.3.0"
