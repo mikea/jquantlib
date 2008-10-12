@@ -21,7 +21,7 @@ public class ClientActivator implements BundleActivator {
 		System.out.println(timeReference);
 		Object c = context.getService(timeReference);
 //		Calendar c = (Calendar) context.getService(timeReference);
-		System.out.println(c.getClass());
+		System.out.println(c);
 	}
 
 	/*
