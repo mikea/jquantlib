@@ -511,9 +511,9 @@
 
   <repositories>
     <repository>
-      <id>jquantlib-external_free</id>
-      <name>JQuantLib external_free</name>
-      <url>${maven.deploy.repository.url}/${maven.deploy.repository.id}/</url>
+      <id>${maven.deploy.repository.id}</id>
+      <name>${maven.deploy.repository.name}</name>
+      <url>dav:${maven.deploy.repository.url}</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -820,7 +820,7 @@
 
     <maven.deploy.repository.id>jquantlib-external_free</maven.deploy.repository.id>
     <maven.deploy.repository.name>JQuantLib External Free Repository</maven.deploy.repository.name>
-    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
+    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos/external_free</maven.deploy.repository.url>
 
     <maven.deploy.site.id>jquantlib-site</maven.deploy.site.id>
     <maven.deploy.site.name>JQuantLib Generated Site</maven.deploy.site.name>
