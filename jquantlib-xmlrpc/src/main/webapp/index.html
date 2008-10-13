@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>JQuantLib XmlRPC</title>
+</head>
+<body>
+It works!
+
+<script>
+  var url = "http://localhost:8080/jquantlib-xmlrpc/xmlrpc"; //The path must comply with configuration at server side  
+  var methods = ["org.jquantlib.xmlrpc.services.Daycounter"]; //This is the full qualified name of the method you want to invoke.   
+                      //Note: this must comply with the configuration at service side  
+  var xmlrpc=null;  
+  try{  
+      xmlrpc = imprt("xmlrpc"); //import the needed module  
+  }catch(e){  
+      throw "importing of xmlrpc module failed.";  
+  }  
+        
+  try{  
+      var service = new xmlrpc.ServiceProxy( url, methods );  
+      // var arg0 = "arg0", arg1 = "arg1";  
+      var value = service.org.jquantlib.xmlrpc.services.Daycounter( );
+      alert (value);  
+  }catch(e){  
+      alert( e );  
+  } 
+</script>
+
+</body>
