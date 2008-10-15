@@ -20,60 +20,15 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.interpolation;
+package org.jquantlib.math.interpolations;
 
 /**
- * This class is intended to implement the default behavior of an Extrapolator.
- * 
+ * @see Interpolator
+ *  
  * @author Richard Gomes
  */
-public class DefaultExtrapolator implements Extrapolator {
+public interface Interpolator2D {
 
-	//
-    // private fields
-    //
-    
-    private boolean extrapolate;
+	public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z);
 
-	
-    //
-    // public constructors
-    //
-    
-    /**
-     * @category constructors
-     */
-    public DefaultExtrapolator() {
-		this.extrapolate = false;
-	}
-
-	
-	//
-	// implements Extrapolator
-	//
-	
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void enableExtrapolation() {
-		extrapolate = true;
-	}
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-	public void disableExtrapolation() {
-		extrapolate = false;
-	}
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-	public final boolean allowsExtrapolation() {
-		return extrapolate;
-	}
-	
 }

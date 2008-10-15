@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Anand Mani
+ Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -20,18 +20,19 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.interpolation.factories;
+package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.math.interpolation.ForwardFlatInterpolation;
-import org.jquantlib.math.interpolation.Interpolation;
-import org.jquantlib.math.interpolation.Interpolator;
+import org.jquantlib.math.interpolations.BackwardFlatInterpolation;
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.Interpolator;
+
 
 /**
- * This class provides ForwardFlat interpolation factory and traits
+ * This class provides linear interpolation factory and traits
  * 
- * @author Anand Mani
+ * @author Richard Gomes
  */
-public class ForwardFlat implements Interpolator {
+public class BackwardFlat implements Interpolator {
 
     //
     // private fields
@@ -39,33 +40,33 @@ public class ForwardFlat implements Interpolator {
     
 	private Interpolator delegate;
 
-
+	
 	//
     // public constructors
     //
-    
-	public ForwardFlat() {
-		delegate = ForwardFlatInterpolation.getInterpolator();
-	}
 
+	public BackwardFlat() {
+		delegate = BackwardFlatInterpolation.getInterpolator();
+	}
 	
 	//
 	// implements Interpolator
 	//
-
+	
     @Override
-	public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */{
+	public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
     @Override
-	public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */{
+	public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
     @Override
-	public final boolean isGlobal() /* @ReadOnly */{
+	public final boolean isGlobal() /* @ReadOnly */ {
 		return delegate.isGlobal();
 	}
 
 }
+

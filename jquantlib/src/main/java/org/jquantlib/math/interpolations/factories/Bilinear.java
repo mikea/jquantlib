@@ -20,11 +20,11 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.interpolation.factories;
+package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.math.interpolation.BilinearInterpolation;
-import org.jquantlib.math.interpolation.Interpolation2D;
-import org.jquantlib.math.interpolation.Interpolator2D;
+import org.jquantlib.math.interpolations.BilinearInterpolation;
+import org.jquantlib.math.interpolations.Interpolation2D;
+import org.jquantlib.math.interpolations.Interpolator2D;
 
 /**
  * This class is provided for backwards compatibility only.

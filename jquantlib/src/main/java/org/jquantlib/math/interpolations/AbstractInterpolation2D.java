@@ -20,7 +20,7 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.interpolation;
+package org.jquantlib.math.interpolations;
 
 import static org.jquantlib.math.Closeness.isClose;
 import cern.colt.Sorting;

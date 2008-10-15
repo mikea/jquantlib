@@ -20,55 +20,60 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.interpolation.factories;
-
-import org.jquantlib.math.interpolation.Interpolation;
-import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.LinearInterpolation;
-
+package org.jquantlib.math.interpolations;
 
 /**
- * This class provides linear interpolation factory and traits
+ * This class is intended to implement the default behavior of an Extrapolator.
  * 
- * @author Dominik Holenstein
  * @author Richard Gomes
  */
-public class Linear implements Interpolator {
+public class DefaultExtrapolator implements Extrapolator {
 
-    //
+	//
     // private fields
     //
     
-	private Interpolator delegate;
-	
+    private boolean extrapolate;
+
 	
     //
     // public constructors
     //
     
-	public Linear() {
-		delegate = LinearInterpolation.getInterpolator();
-	}
-	
-	
-	//
-	// implements Interpolator
-	//
-	
-	@Override
-	public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
-		return delegate.interpolate(x, y);
+    /**
+     * @category constructors
+     */
+    public DefaultExtrapolator() {
+		this.extrapolate = false;
 	}
 
+	
+	//
+	// implements Extrapolator
+	//
+	
+    /**
+     * {@inheritDoc}
+     */
     @Override
-	public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
-		return delegate.interpolate(x, y);
+    public void enableExtrapolation() {
+		extrapolate = true;
 	}
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-	public final boolean isGlobal() /* @ReadOnly */ {
-		return delegate.isGlobal();
+	public void disableExtrapolation() {
+		extrapolate = false;
+	}
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+	public final boolean allowsExtrapolation() {
+		return extrapolate;
 	}
 	
 }
-

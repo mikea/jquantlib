@@ -43,9 +43,9 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 import it.unimi.dsi.fastutil.objects.ObjectArrays;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.interpolation.Interpolation;
-import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.factories.BackwardFlat;
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.math.interpolations.factories.BackwardFlat;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;

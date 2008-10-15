@@ -20,11 +20,11 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.interpolation.factories;
+package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.math.interpolation.Interpolation;
-import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.LogLinearInterpolation;
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.math.interpolations.LogLinearInterpolation;
 
 
 /**

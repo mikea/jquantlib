@@ -21,9 +21,7 @@
  */
 
 /*
- Copyright (C) 2002, 2003 Ferdinando Ametrano
- Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
- Copyright (C) 2003, 2004, 2005, 2006 StatPro Italia srl
+ Copyright (C) 2004 StatPro Italia srl
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -37,54 +35,31 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- */
+*/
 
-package org.jquantlib.math.interpolation;
+package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.UnaryFunctionDouble;
-
-/**
- * Interface for 1-D interpolations.
- * <p>
- * Classes which implement this interface will provide interpolated values from two sequences of equal length, representing
- * discretized values of a variable and a function of the former, respectively.
- * 
- * @author Richard Gomes
- */
-public interface Interpolation extends Extrapolator, UnaryFunctionDouble {
+public interface Extrapolator {
 
 	/**
-	 * This method performs the interpolation itself.
+	 * enable extrapolation in subsequent calls
 	 * 
-	 * @note This method is deprecated as it causes confusion with
-	 * Observer.update. Concrete implementations must use {@link Interpolation#reload()} instead.
-	 * 
-	 * @see reload
-	 * 
-	 * @deprecated
+	 * @category modifiers
 	 */
-	public void update();
-	
-	/**
-	 * This method performs the interpolation itself and should be called
-	 * just after the construction of a interpolation class.
-	 * 
-	 * @see update
-	 */
-	public void reload();
-	
-    public double xMin();
-    public double xMax();
-    public double[] xValues();
-    public double[] yValues();
-    public boolean isInRange(double x);
-    public double primitive(double x);
-    public double derivative(double x);
-    public double secondDerivative(double x);
+    public void enableExtrapolation();
 
-    public double evaluate(double x, boolean b);
-    public double primitive(double x, boolean b);
-    public double derivative(double x, boolean b);
-    public double secondDerivative(double x, boolean b);
+    /**
+     * disable extrapolation in subsequent calls
+     * 
+     * @category modifiers
+     */
+    public void disableExtrapolation();
+    
+    /**
+     * tells whether extrapolation is enabled
+     * 
+     * @category inspectors
+     */
+    public boolean allowsExtrapolation();
     
 }

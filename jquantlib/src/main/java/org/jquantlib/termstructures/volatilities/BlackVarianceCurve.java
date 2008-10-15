@@ -43,9 +43,9 @@ package org.jquantlib.termstructures.volatilities;
 import it.unimi.dsi.fastutil.objects.ObjectArrays;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.interpolation.Interpolation;
-import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.LinearInterpolation;
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.math.interpolations.LinearInterpolation;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.util.Date;

@@ -43,10 +43,10 @@ package org.jquantlib.termstructures.volatilities;
 import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.interpolation.BilinearInterpolation;
-import org.jquantlib.math.interpolation.Interpolation2D;
-import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.Interpolator2D;
+import org.jquantlib.math.interpolations.BilinearInterpolation;
+import org.jquantlib.math.interpolations.Interpolation2D;
+import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.math.interpolations.Interpolator2D;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.util.Date;

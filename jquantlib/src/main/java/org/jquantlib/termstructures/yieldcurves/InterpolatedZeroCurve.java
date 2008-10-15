@@ -40,9 +40,9 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.interpolation.Interpolation;
-import org.jquantlib.math.interpolation.Interpolator;
-import org.jquantlib.math.interpolation.factories.BackwardFlat;
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.math.interpolations.factories.BackwardFlat;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;

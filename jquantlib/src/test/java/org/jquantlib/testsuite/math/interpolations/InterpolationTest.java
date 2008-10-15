@@ -38,13 +38,13 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.testsuite.math.interpolation;
+package org.jquantlib.testsuite.math.interpolations;
 
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.math.interpolation.Interpolation;
-import org.jquantlib.math.interpolation.LinearInterpolation;
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.LinearInterpolation;
 import org.junit.Test;
 
 public class InterpolationTest {

@@ -20,15 +20,20 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.interpolation;
+package org.jquantlib.math.interpolations;
+
+
 
 /**
- * @see Interpolator
- *  
+ * @see Interpolator2D
+ * 
  * @author Richard Gomes
  */
-public interface Interpolator2D {
+public interface Interpolator {
 
-	public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z);
+	public Interpolation interpolate(final double[] x, final double[] y);
+	public Interpolation interpolate(final int size, final double[] x, final double[] y);
+	
+	public boolean isGlobal();
 
 }

@@ -21,7 +21,8 @@
  */
 
 /*
- Copyright (C) 2004 StatPro Italia srl
+ Copyright (C) 2002, 2003, 2006 Ferdinando Ametrano
+ Copyright (C) 2004, 2005, 2006, 2007 StatPro Italia srl
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -37,29 +38,50 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.math.interpolation;
+package org.jquantlib.math.interpolations;
 
-public interface Extrapolator {
+import org.jquantlib.math.BinaryFunctionDouble;
 
-	/**
-	 * enable extrapolation in subsequent calls
-	 * 
-	 * @category modifiers
-	 */
-    public void enableExtrapolation();
-
+/**
+ * Interface for 2-D interpolations.
+ * <p>
+ * Classes which implement this interface will provide interpolated values from two sequences 
+ * of length {@latex$ N } and {@latex$ M }, representing the discretized values of 
+ * the {@latex$ x }and {@latex$ y } variables, and a {@latex$ N \times M } matrix representing the
+ * tabulated function values.
+ * 
+ * @author Richard Gomes
+ */
+public interface Interpolation2D extends Extrapolator, BinaryFunctionDouble {
+	
     /**
-     * disable extrapolation in subsequent calls
+     * This method performs the interpolation itself.
      * 
-     * @category modifiers
+     * @note This method is deprecated as it causes confusion with
+     * Observer.update. Concrete implementations must use {@link Interpolation2D#reload()} instead.
+     * 
+     * @see reload
+     * 
+     * @deprecated
      */
-    public void disableExtrapolation();
-    
+	public void update();
+	
     /**
-     * tells whether extrapolation is enabled
+     * This method performs the interpolation itself and should be called
+     * just after the construction of a interpolation class.
      * 
-     * @category inspectors
+     * @see update
      */
-    public boolean allowsExtrapolation();
-    
+	public void reload();
+
+    public double xMin();
+    public double xMax();
+    public double yMin();
+    public double yMax();
+    public double[] xValues();
+    public double[] yValues();
+    public double[][] zData();
+    public int locateX(double x);
+    public int locateY(double y);
+    public boolean isInRange(double x, double y);
 }
