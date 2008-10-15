@@ -20,9 +20,10 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.util;
+package org.jquantlib.experimental.collection;
 
 
+import org.jquantlib.experimental.collection.PrimativeList;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import java.util.Collection;
 import java.util.Iterator;

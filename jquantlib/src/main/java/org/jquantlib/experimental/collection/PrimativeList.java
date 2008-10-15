@@ -20,24 +20,14 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.util;
+package org.jquantlib.experimental.collection;
 
 
 /**
  *
  * @author Q. Boiler
  */
-public class DefaultPrimativeListStrategy implements PrimativeList{
-	java.util.List pwl;
-
-	@Override
-	public boolean add(double d) {
-		return pwl.add(d);
-	}
-
-	@Override
-	public boolean add(int d) {
-		return pwl.add(d);
-	}
-
+public interface PrimativeList {
+	public boolean add(double d);
+	public boolean add(int d);
 }

@@ -20,14 +20,28 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.util;
+package org.jquantlib.experimental.collection;
 
+
+
+import org.jquantlib.experimental.collection.PrimativeList;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
 /**
  *
  * @author Q. Boiler
  */
-public interface PrimativeList {
-	public boolean add(double d);
-	public boolean add(int d);
+public class ListDoubleArrayListStrategy implements PrimativeList{
+	DoubleArrayList dal;
+
+	@Override
+	public boolean add(double d) {
+		return dal.add(d);
+	}
+
+	@Override
+	public boolean add(int d) {
+		return dal.add(d);
+	}
+
 }
