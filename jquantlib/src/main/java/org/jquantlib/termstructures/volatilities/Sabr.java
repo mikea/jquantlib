@@ -24,9 +24,9 @@ package org.jquantlib.termstructures.volatilities;
 
 import static org.jquantlib.math.Closeness.isClose;
 
+import org.jquantlib.lang.annotation.Rate;
+import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.math.Constants;
-import org.jquantlib.number.Rate;
-import org.jquantlib.number.Time;
 
 
 /**

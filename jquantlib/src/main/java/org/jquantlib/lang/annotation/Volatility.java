@@ -20,12 +20,13 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.number;
+package org.jquantlib.lang.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 
 /**
  * This interface is intended to be used as a <i>tagging annotation</i> which is helpful when
@@ -44,6 +45,6 @@ import java.lang.annotation.Target;
 @Typedef
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER })
-public @interface Covariance {
+public @interface Volatility {
 	// No methods - Tagging annotation
 }
