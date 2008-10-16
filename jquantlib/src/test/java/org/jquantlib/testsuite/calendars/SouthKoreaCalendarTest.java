@@ -47,6 +47,7 @@ import org.junit.Test;
 
 /**
  * @author Jia Jia
+ * @author Renjith Nair
  * 
  */
 public class SouthKoreaCalendarTest {
@@ -191,6 +192,82 @@ public class SouthKoreaCalendarTest {
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
+    
+    // 2009 - Future Year
+    @Test
+    public void testSouthKoreaKRXHolidaysYear2009() {
+        int year = 2009;
+        System.out.println("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+
+        expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(17, JULY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+
+        // Call the Holiday Check
+        CalendarUtil cbt = new CalendarUtil();
+        cbt.checkHolidayList(expectedHol, c, year);
+
+    }
+    
+    // 2010 - Future Year
+    @Test
+    public void testSouthKoreaKRXHolidaysYear2010() {
+        int year = 2010;
+        System.out.println("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+
+        expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(1, MARCH, year));
+        expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
+        expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
+
+        // Call the Holiday Check
+        CalendarUtil cbt = new CalendarUtil();
+        cbt.checkHolidayList(expectedHol, c, year);
+
+    }
+    
+    // 2011 - Future Year
+    @Test
+    public void testSouthKoreaKRXHolidaysYear2011() {
+        int year = 2011;
+        System.out.println("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+
+        expectedHol.add(DateFactory.getFactory().getDate(1, MARCH, year));
+        expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
+        expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(6, JUNE, year));
+        expectedHol.add(DateFactory.getFactory().getDate(15, AUGUST, year));
+        expectedHol.add(DateFactory.getFactory().getDate(3, OCTOBER, year));
+
+        // Call the Holiday Check
+        CalendarUtil cbt = new CalendarUtil();
+        cbt.checkHolidayList(expectedHol, c, year);
+
+    }
+    
+    // 2012 - Future Year
+    @Test
+    public void testSouthKoreaKRXHolidaysYear2012() {
+        int year = 2012;
+        System.out.println("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+
+        expectedHol.add(DateFactory.getFactory().getDate(1, MARCH, year));
+        expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
+        expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(6, JUNE, year));
+        expectedHol.add(DateFactory.getFactory().getDate(17, JULY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(15, AUGUST, year));
+        expectedHol.add(DateFactory.getFactory().getDate(3, OCTOBER, year));
+        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+
+        // Call the Holiday Check
+        CalendarUtil cbt = new CalendarUtil();
+        cbt.checkHolidayList(expectedHol, c, year);
+
+    }
+
 
     @After
     public void destroy() {
