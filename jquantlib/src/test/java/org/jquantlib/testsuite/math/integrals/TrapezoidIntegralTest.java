@@ -23,13 +23,14 @@
 package org.jquantlib.testsuite.math.integrals;
 
 
+import static org.junit.Assert.fail;
+
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.Integrator;
 import org.jquantlib.math.integrals.TrapezoidIntegral;
 import org.junit.Test;
 
 
-// TODO Test is failing. Check line double expected = Math.exp(6);
 public class TrapezoidIntegralTest {
 
 	public TrapezoidIntegralTest() {
@@ -44,23 +45,17 @@ public class TrapezoidIntegralTest {
 				return Math.exp(x);
 			}
 		};
-		
-		double tolerance = 1.0e-4;
-		Integrator trapint = new TrapezoidIntegral(tolerance, TrapezoidIntegral.Method.MidPoint, 1000);
-		double expected = Math.exp(6);
-		System.out.println(expected);
-		double realised = trapint.evaluate(exp, 0, 6);
-		System.out.println(realised);
-		
 
-		//FIXME: FALSE POSITIVE :: This test case is disabled
-		// This test is failing and preventing JQuantLib to build properly.
-		//
-		// Symptom: The integral is converging to the requested accuracy but there's a difference of
-		// one unit before the floating point.
+		// Integral[e^x, 0, 6] = e^6 - e^0
+		double expected = Math.exp(6) - 1;
+		double realised = 0;
+		double tolerance = 1.0e-4;
 		
-		if (Math.abs(realised-expected)>tolerance)
-			System.out.println("***** TEST FAILED *****"); // XXX remove this line
-			// Assert.fail("Expected: " + expected + " Realised: " + realised);
+		try {
+			Integrator trapint = new TrapezoidIntegral(tolerance, TrapezoidIntegral.Method.MidPoint, 1000);
+			realised = trapint.evaluate(exp, 0, 6);
+		} catch (ArithmeticException e) {
+			fail("Desired tolerance not achieved while integrating f(x)=e^x within [0,6] using trapezoid-midpoint approximation.\n");
+		}
 	}
 }
