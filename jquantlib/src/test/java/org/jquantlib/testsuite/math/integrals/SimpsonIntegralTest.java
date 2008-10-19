@@ -22,6 +22,11 @@
 
 package org.jquantlib.testsuite.math.integrals;
 
+import static org.junit.Assert.fail;
+
+import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.integrals.Integrator;
+import org.jquantlib.math.integrals.SimpsonIntegral;
 import org.junit.Test;
 
 /**
@@ -42,10 +47,25 @@ public class SimpsonIntegralTest {
 	}
 	
 	@Test
-	public void fakeTest() {
+	public void quickConvergenceTest() {
 		// only intended to avoid failure during unit tests
-		System.out.println("***** TEST FAILED *****");
-	}
+		UnaryFunctionDouble f = new UnaryFunctionDouble() {
+			public double evaluate(double x) {
+				return 1/(1+Math.pow(Math.tan(x),Math.sqrt(2)));
+			}
+		};
+
+		// See Larson, "Problem-Solving Through Problems" pg.33 for solution
+		double expected = Math.PI / 4;
+		double realised = 0;
+		double tolerance = 1.0e-4;
 	
+		try {
+			Integrator simpint = new SimpsonIntegral(tolerance, 10);
+			realised = simpint.evaluate(f, 0, Math.PI/2);
+		} catch (ArithmeticException e) {
+			fail("Desired tolerance not achieved while integrating f(x) = 1 / (1+tan(x)^sqrt(2)) within [0,6] using trapezoid-midpoint approximation.\n");
+		}
+	}
 }
 

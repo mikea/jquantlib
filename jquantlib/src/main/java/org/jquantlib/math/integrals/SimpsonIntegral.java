@@ -85,15 +85,17 @@ public class SimpsonIntegral extends TrapezoidIntegral {
            newI = defaultIteration(f,a,b,I,N);
            N *= 2;
            newAdjI = (4.0*newI-I)/3.0;
+           
            // good enough? Also, don't run away immediately
            if (Math.abs(adjI-newAdjI) <= getAbsoluteAccuracy() && i > 5)
              // ok, exit
              return newAdjI;
-             // oh well. Another step.
-             I = newI;
-             adjI = newAdjI;
-             i++;
-         } while (i < getNumberOfEvaluations());
+           
+           // oh well. Another step.
+           I = newI;
+           adjI = newAdjI;
+           i++;
+         } while (i < getMaxEvaluations());
          throw new ArithmeticException("max number of iterations reached");
     }
 	
