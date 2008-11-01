@@ -22,7 +22,8 @@
 
 package org.jquantlib.math.distributions;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.randomnumbers.InverseCumulative;
 
@@ -45,7 +46,7 @@ import org.jquantlib.math.randomnumbers.InverseCumulative;
 
 public class InverseCumulativeNormal implements InverseCumulative {
 		
-    private final static Logger logger = Logger.getLogger(InverseCumulativeNormal.class);
+    private final static Logger logger = LoggerFactory.getLogger(InverseCumulativeNormal.class);
     
 
 	//

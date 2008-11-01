@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math.solvers1D;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.distributions.Derivative;
 import org.jquantlib.math.solvers1D.Bisection;
 import org.junit.Test;
@@ -38,7 +39,7 @@ import org.junit.Test;
 // TODO Make this test JUnit 4.4 conform.
 public class BisectionTest {
 	
-    private final static Logger logger = Logger.getLogger(BisectionTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(BisectionTest.class);
 
 	public BisectionTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

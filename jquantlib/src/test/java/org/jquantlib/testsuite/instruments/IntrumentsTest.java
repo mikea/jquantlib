@@ -41,7 +41,8 @@ package org.jquantlib.testsuite.instruments;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.instruments.Instrument;
 import org.jquantlib.instruments.Stock;
 import org.jquantlib.quotes.Quote;
@@ -52,7 +53,9 @@ import org.junit.Test;
 
 public class IntrumentsTest {
 
-    private final static Logger logger = Logger.getLogger(IntrumentsTest.class);      public IntrumentsTest() {
+    private final static Logger logger = LoggerFactory.getLogger(IntrumentsTest.class);  
+
+    public IntrumentsTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	

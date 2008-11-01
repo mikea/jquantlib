@@ -28,7 +28,8 @@ package org.jquantlib.testsuite.operators;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Array;
@@ -56,7 +57,7 @@ import org.junit.Test;
 
 public class OperatorTest {
 
-    private final static Logger logger = Logger.getLogger(OperatorTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(OperatorTest.class);
 
 	public OperatorTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
@@ -225,7 +226,7 @@ public class OperatorTest {
 		        //FIXME: FALSE POSITIVE :: This test case is disabled
 		        // This test is failing and preventing JQuantLib to build properly.
 
-		        logger.fatal("***** TEST FAILED *****"); // XXX remove this line
+		        logger.error("***** TEST FAILED *****"); // XXX remove this line
 		        
 //				fail("inconsistency between BSM operators:\n"  
 //				           + Integer.toString(i) +  " row:\n" 
@@ -255,7 +256,7 @@ public class OperatorTest {
                 //FIXME: FALSE POSITIVE :: This test case is disabled
                 // This test is failing and preventing JQuantLib to build properly.
 
-                logger.fatal("***** TEST FAILED *****"); // XXX remove this line
+                logger.error("***** TEST FAILED *****"); // XXX remove this line
                 
 //				fail("inconsistency between BSM operators:\n"
 //						   + Integer.toString(i) + " row:\n"

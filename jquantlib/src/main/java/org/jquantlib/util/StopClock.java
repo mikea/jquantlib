@@ -22,11 +22,12 @@
 
 package org.jquantlib.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class StopClock {
 
-    private final static Logger logger = Logger.getLogger(StopClock.class);
+    private final static Logger logger = LoggerFactory.getLogger(StopClock.class);
 
     public static enum Unit {
         ms, ns;

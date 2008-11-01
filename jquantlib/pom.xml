@@ -593,20 +593,27 @@
       <version>1.2.0</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.5.5</version>
+      <scope>compile</scope>
+    </dependency>
 
     <!-- 'test' scope dependencies -->
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.4</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>log4j</groupId>
-    	<artifactId>log4j</artifactId>
-    	<version>1.2.13</version>
-    </dependency>
-
+	<dependency>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <version>4.4</version>
+	  <scope>test</scope>
+	</dependency>
+	<dependency>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>slf4j-log4j12</artifactId>
+	  <version>1.5.5</version>
+	  <scope>test</scope>
+	</dependency>
+	
     <!-- 'runtime' scope dependencies -->
 
   </dependencies>
@@ -655,9 +662,10 @@
 
                 <links>
                   <link>http://java.sun.com/j2se/${java.src.version}/docs/api/</link>
-                  <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-                  <link>http://logging.apache.org/log4j/docs/api/</link>
-                        <link>http://junit.sourceforge.net/javadoc/</link>
+                  <link>http://fastutil.dsi.unimi.it/docs/</link>
+                  <link>http://acs.lbl.gov/~hoschek/colt/api/cern/colt/package-summary.html</link>
+                  <link>http://www.slf4j.org/apidocs/</link>
+                  <link>http://junit.sourceforge.net/javadoc/</link>
                 </links>
 
                     <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>

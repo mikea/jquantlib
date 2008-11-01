@@ -43,14 +43,15 @@ package org.jquantlib.testsuite.math.interpolations;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.LinearInterpolation;
 import org.junit.Test;
 
 public class InterpolationTest {
 
-    private final static Logger logger = Logger.getLogger(InterpolationTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(InterpolationTest.class);
 
 	public InterpolationTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

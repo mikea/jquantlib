@@ -26,7 +26,8 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.distributions.InverseCumulativeNormal;
 import org.jquantlib.math.distributions.alternativeimpls.TESTICN;
 import org.junit.Test;
@@ -37,7 +38,7 @@ import org.junit.Test;
 
 public class InverseCumulativeNormalTest {
 	
-    private final static Logger logger = Logger.getLogger(InverseCumulativeNormalTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(InverseCumulativeNormalTest.class);
 
 	public InverseCumulativeNormalTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
@@ -107,7 +108,7 @@ public class InverseCumulativeNormalTest {
 				fail("z: " + z + " expected: " + 0.0 + " realized: " + realizedTicn);
 			}
 			
-		    logger.fatal("***** TEST FAILED *****");
+		    logger.error("***** TEST FAILED *****");
 		}
 	}
 	

@@ -26,14 +26,15 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
 public class PrimitiveCollectionVisitorTest {
 
-    private final static Logger logger = Logger.getLogger(PrimitiveCollectionVisitorTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(PrimitiveCollectionVisitorTest.class);
     
     Date startDate = null;
 

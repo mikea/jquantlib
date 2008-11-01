@@ -44,7 +44,8 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.model.volatility.ConstantEstimator;
 import org.jquantlib.model.volatility.SimpleLocalEstimator;
 import org.jquantlib.model.volatility.VolatilityCompositor;
@@ -60,7 +61,7 @@ import org.junit.Test;
 
 public class EstimatorsTest {
 
-    private final static Logger logger = Logger.getLogger(EstimatorsTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(EstimatorsTest.class);
 
 	private static TimeSeriesDouble ts ;
 	@BeforeClass

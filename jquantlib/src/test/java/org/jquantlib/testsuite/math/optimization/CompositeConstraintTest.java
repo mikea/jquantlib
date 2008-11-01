@@ -23,7 +23,8 @@
 package org.jquantlib.testsuite.math.optimization;
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.optimization.BoundaryConstraint;
@@ -41,7 +42,7 @@ import org.junit.Test;
 
 public class CompositeConstraintTest {
 	
-    private final static Logger logger = Logger.getLogger(CompositeConstraintTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(CompositeConstraintTest.class);
 
 	public CompositeConstraintTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

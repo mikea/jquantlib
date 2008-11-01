@@ -22,16 +22,17 @@
 
 package org.jquantlib.performance.math;
 
-import org.apache.log4j.Logger;
 import org.jquantlib.math.distributions.BinomialDistribution;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cern.jet.random.Binomial;
 
 public class BinomialTest {
 
-    private final static Logger logger = Logger.getLogger(BinomialTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(BinomialTest.class);
 
     private StopClock clock;
 
@@ -58,7 +59,7 @@ public class BinomialTest {
 	   v = binomial.pdf(1900);
 	  }
 	  clock.stopClock();
-	  logger.info(v);
+	  logger.info(Double.toString(v));
 	  clock.log();
   }
   
@@ -79,7 +80,7 @@ public class BinomialTest {
 	   v = binomial.evaluate(1900);
 	  }
 	  clock.stopClock();
-	  logger.info(v);
+	  logger.info(Double.toString(v));
 	  clock.log();
   }
 

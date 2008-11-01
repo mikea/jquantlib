@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.quotes;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
@@ -39,7 +40,7 @@ import org.junit.Test;
  */
 public class QuotesTest {
 
-    private final static Logger logger = Logger.getLogger(QuotesTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(QuotesTest.class);
 
 	public QuotesTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

@@ -25,7 +25,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.performance.PerformanceResults;
 import org.jquantlib.performance.PerformanceTest;
 
@@ -35,7 +36,7 @@ import org.jquantlib.performance.PerformanceTest;
  */
 public class Array implements PerformanceTest {
 
-    private final static Logger logger = Logger.getLogger(Array.class);
+    private final static Logger logger = LoggerFactory.getLogger(Array.class);
 
 	private Hashtable<Integer,List<org.jquantlib.math.Array>> ArraysHashTable
 		= new Hashtable<Integer,List<org.jquantlib.math.Array>>();
@@ -104,7 +105,7 @@ public class Array implements PerformanceTest {
 		List<org.jquantlib.math.Array> localLists = ArraysHashTable.get(new Integer(size));
 		if(localLists == null){
 			//  Throw Exception.
-			logger.fatal("***** TEST FAILED ***** ... for size: " +size);
+			logger.error("***** TEST FAILED ***** ... for size: " +size);
 		}
 
 		Iterator iter =localLists.iterator();

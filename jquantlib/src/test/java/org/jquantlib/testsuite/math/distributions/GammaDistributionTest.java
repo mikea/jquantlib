@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.distributions.GammaDistribution;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ import org.junit.Test;
 
 public class GammaDistributionTest {
 	
-    private final static Logger logger = Logger.getLogger(GammaDistributionTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(GammaDistributionTest.class);
 
 	public GammaDistributionTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

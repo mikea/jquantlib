@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math.solvers1D;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.distributions.Derivative;
 import org.jquantlib.math.solvers1D.NewtonSafe;
 import org.junit.Test;
@@ -37,7 +38,7 @@ import org.junit.Test;
 
 public class NewtonSafeTest {
 	
-    private final static Logger logger = Logger.getLogger(NewtonSafeTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(NewtonSafeTest.class);
 
 	public NewtonSafeTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

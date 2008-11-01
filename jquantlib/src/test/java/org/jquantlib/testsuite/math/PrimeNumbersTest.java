@@ -23,7 +23,8 @@
 
 package org.jquantlib.testsuite.math;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.PrimeNumbers;
 import org.jquantlib.testsuite.lang.TypeTokenTest;
 
@@ -36,7 +37,7 @@ import org.junit.Test;
  */
 public class PrimeNumbersTest {
 
-    private final static Logger logger = Logger.getLogger(PrimeNumbersTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(PrimeNumbersTest.class);
 
 	public PrimeNumbersTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

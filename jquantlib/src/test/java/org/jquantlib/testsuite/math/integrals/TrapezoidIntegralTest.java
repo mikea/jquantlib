@@ -25,7 +25,8 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.Integrator;
 import org.jquantlib.math.integrals.TrapezoidIntegral;
@@ -34,7 +35,7 @@ import org.junit.Test;
 
 public class TrapezoidIntegralTest {
 
-    private final static Logger logger = Logger.getLogger(TrapezoidIntegralTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(TrapezoidIntegralTest.class);
 
 	public TrapezoidIntegralTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

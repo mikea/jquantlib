@@ -34,7 +34,8 @@ import static org.jquantlib.util.Month.MAY;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Switzerland;
 import org.jquantlib.time.calendars.Switzerland.Market;
@@ -53,7 +54,7 @@ import org.junit.Test;
 
 public class SwitzerlandCalendarTest {
 	
-    private final static Logger logger = Logger.getLogger(SwitzerlandCalendarTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(SwitzerlandCalendarTest.class);
 
 	public SwitzerlandCalendarTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

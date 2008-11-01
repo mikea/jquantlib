@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.date;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -44,7 +45,7 @@ import org.junit.Test;
  */
 public class DatesTest {
 
-    private final static Logger logger = Logger.getLogger(DatesTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(DatesTest.class);
 
     static private final String IMMcodes[] = { "F0", "G0", "H0", "J0", "K0", "M0", "N0", "Q0", "U0", "V0", "X0", "Z0",
             "F1", "G1", "H1", "J1", "K1", "M1", "N1", "Q1", "U1", "V1", "X1", "Z1", "F2", "G2", "H2", "J2", "K2", "M2",

@@ -36,7 +36,8 @@ import static org.jquantlib.util.Month.OCTOBER;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Singapore;
 import org.jquantlib.util.Date;
@@ -52,7 +53,7 @@ import org.junit.Test;
 
 public class SingaporeCalendarTest {
 	
-    private final static Logger logger = Logger.getLogger(SingaporeCalendarTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(SingaporeCalendarTest.class);
 
 	public SingaporeCalendarTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

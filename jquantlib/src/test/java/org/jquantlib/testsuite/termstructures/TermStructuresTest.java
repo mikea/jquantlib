@@ -39,7 +39,8 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 package org.jquantlib.testsuite.termstructures;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.TimeUnit;
@@ -48,7 +49,7 @@ import org.junit.Test;
 
 public class TermStructuresTest {
 
-    private final static Logger logger = Logger.getLogger(TermStructuresTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(TermStructuresTest.class);
 
 	private Calendar calendar;
 	private int settlementDays;
@@ -145,7 +146,7 @@ public class TermStructuresTest {
 	public void testReferenceChange() {
 	
 	    logger.info("Testing term structure against evaluation date change...");
-	    logger.fatal("***** TEST FAILED *****");
+	    logger.error("***** TEST FAILED *****");
 	
 //TODO: remove comments	
 //	    YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
@@ -176,7 +177,7 @@ public class TermStructuresTest {
 	public void testImplied() {
 	
 	    logger.info("Testing consistency of implied term structure...");
-	    logger.fatal("***** TEST FAILED *****");
+	    logger.error("***** TEST FAILED *****");
 	    
 //TODO: remove comments	
 //	    double tolerance = 1.0e-10;

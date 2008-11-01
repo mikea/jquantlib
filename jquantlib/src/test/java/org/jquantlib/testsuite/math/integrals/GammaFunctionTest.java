@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.distributions.GammaFunction;
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ import org.junit.Test;
  */
 public class GammaFunctionTest {
 
-    private final static Logger logger = Logger.getLogger(GammaFunctionTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(GammaFunctionTest.class);
 
 	public GammaFunctionTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

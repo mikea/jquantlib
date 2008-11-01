@@ -22,7 +22,8 @@
 
 package org.jquantlib.math.distributions;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
@@ -34,7 +35,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
 // TODO Add test case for MoroInverseCumulativeNormal class.
 public class MoroInverseCumulativeNormal extends NormalDistribution implements UnaryFunctionDouble{
 	
-	private final static Logger logger = Logger.getLogger(NormalDistribution.class);
+	private final static Logger logger = LoggerFactory.getLogger(NormalDistribution.class);
     
 
 	// static final fields (constants)

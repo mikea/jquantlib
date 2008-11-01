@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math.solvers1D;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.solvers1D.Brent;
 import org.junit.Test;
@@ -36,7 +37,7 @@ import org.junit.Test;
 // TODO Move this test case to testsuite/math/solvers1D
 public class BrentTest {
 
-    private final static Logger logger = Logger.getLogger(BrentTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(BrentTest.class);
 
 	public BrentTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

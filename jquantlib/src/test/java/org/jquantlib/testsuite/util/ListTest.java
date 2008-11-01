@@ -25,14 +25,15 @@ package org.jquantlib.testsuite.util;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ListTest {
 
-    private final static Logger logger = Logger.getLogger(ListTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(ListTest.class);
 
     Date startDate = null;
 

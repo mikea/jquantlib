@@ -26,7 +26,8 @@
  */
 package org.jquantlib.testsuite.pricers;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.Option;
@@ -40,7 +41,7 @@ import org.jquantlib.util.StopClock;
 //FIXME: Rename to OldPricerTest
 public class OldPricer {
 	
-    private final static Logger logger = Logger.getLogger(OldPricer.class);
+    private final static Logger logger = LoggerFactory.getLogger(OldPricer.class);
 
 	public OldPricer() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

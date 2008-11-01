@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.ErrorFunction;
 import org.jquantlib.testsuite.lang.TypeTokenTest;
 import org.junit.Test;
@@ -34,7 +35,7 @@ import org.junit.Test;
  */
 public class ErrorFunctionTest {
 
-    private final static Logger logger = Logger.getLogger(ErrorFunctionTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(ErrorFunctionTest.class);
 
 	public ErrorFunctionTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

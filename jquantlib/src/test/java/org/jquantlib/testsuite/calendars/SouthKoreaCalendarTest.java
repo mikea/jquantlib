@@ -36,7 +36,8 @@ import static org.jquantlib.util.Month.SEPTEMBER;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.SouthKorea;
 import org.jquantlib.util.Date;
@@ -52,7 +53,7 @@ import org.junit.Test;
  */
 public class SouthKoreaCalendarTest {
     
-    private final static Logger logger = Logger.getLogger(SouthKoreaCalendarTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(SouthKoreaCalendarTest.class);
 
     private Calendar c = null;
     private List<Date> expectedHol = null;

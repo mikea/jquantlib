@@ -5,7 +5,8 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.util.stdlibc.Std;
 
 /**
@@ -17,7 +18,7 @@ import org.jquantlib.util.stdlibc.Std;
 // FIXME: move to test suite
 public class AdjDiff {
 	
-    private final static Logger logger = Logger.getLogger(AdjDiff.class);
+    private final static Logger logger = LoggerFactory.getLogger(AdjDiff.class);
     
     private static List<Double> times_ = new DoubleArrayList();
     private static List<Double> dt_1 = new DoubleArrayList();

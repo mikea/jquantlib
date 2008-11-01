@@ -42,7 +42,8 @@ package org.jquantlib.testsuite.daycounters;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.SimpleDayCounter;
@@ -60,7 +61,7 @@ import org.junit.Test;
  */
 public class DayCountersTest {
 
-    private final static Logger logger = Logger.getLogger(DayCountersTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(DayCountersTest.class);
 
 	public DayCountersTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

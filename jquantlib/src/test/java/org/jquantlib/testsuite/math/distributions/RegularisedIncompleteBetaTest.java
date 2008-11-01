@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.RegularisedIncompleteBeta;
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ import org.junit.Test;
  */
 public class RegularisedIncompleteBetaTest {
 
-    private final static Logger logger = Logger.getLogger(RegularisedIncompleteBetaTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(RegularisedIncompleteBetaTest.class);
 
 	public RegularisedIncompleteBetaTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

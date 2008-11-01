@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.GaussKronrodPatterson;
 import org.jquantlib.math.integrals.Integrator;
@@ -36,7 +37,7 @@ import org.junit.Test;
  */
 public class GaussKonrodPattersonIntegratorTest {
 
-    private final static Logger logger = Logger.getLogger(GaussKonrodPattersonIntegratorTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(GaussKonrodPattersonIntegratorTest.class);
 
 	public GaussKonrodPattersonIntegratorTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
@@ -82,7 +83,7 @@ public class GaussKonrodPattersonIntegratorTest {
 		// Action: Please make sure our classes are based on QuantLib-0.8.1
 		//
 
-		logger.fatal("***** TEST FAILED *****"); // XXX remove this line
+		logger.error("***** TEST FAILED *****"); // XXX remove this line
 
 //		Integrator quad = new GaussKronrodPatterson(0,0);
 //		double realised = quad.evaluate(exp, 0, 6);

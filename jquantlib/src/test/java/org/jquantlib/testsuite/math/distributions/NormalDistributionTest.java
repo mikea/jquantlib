@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ import org.junit.Test;
  */
 public class NormalDistributionTest {
 	
-    private final static Logger logger = Logger.getLogger(NormalDistributionTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(NormalDistributionTest.class);
 
 	public NormalDistributionTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.patterns;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
@@ -32,7 +33,7 @@ import org.junit.Test;
 
 public class VisitorTest {
 
-    private final static Logger logger = Logger.getLogger(VisitorTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(VisitorTest.class);
 
 	public VisitorTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

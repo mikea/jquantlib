@@ -41,7 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -64,7 +65,7 @@ import org.junit.Test;
  */
 public class CalendarsTest {
     
-    private final static Logger logger = Logger.getLogger(CalendarsTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(CalendarsTest.class);
 
 	public CalendarsTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

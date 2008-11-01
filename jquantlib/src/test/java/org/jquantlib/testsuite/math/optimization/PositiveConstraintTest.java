@@ -23,7 +23,8 @@
 package org.jquantlib.testsuite.math.optimization;
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.optimization.Constraint;
@@ -39,7 +40,7 @@ import org.junit.Test;
 
 public class PositiveConstraintTest {
 	
-    private final static Logger logger = Logger.getLogger(PositiveConstraintTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(PositiveConstraintTest.class);
 
 	public PositiveConstraintTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

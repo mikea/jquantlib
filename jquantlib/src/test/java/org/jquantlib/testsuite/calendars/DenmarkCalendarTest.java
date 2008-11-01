@@ -32,7 +32,8 @@ import static org.jquantlib.util.Month.MAY;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Denmark;
 import org.jquantlib.util.Date;
@@ -48,7 +49,7 @@ import org.junit.Test;
 
 
 public class DenmarkCalendarTest {
-    private final static Logger logger = Logger.getLogger(DenmarkCalendarTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(DenmarkCalendarTest.class);
 
 	private Calendar c;
 	private List<Date> expectedHol;

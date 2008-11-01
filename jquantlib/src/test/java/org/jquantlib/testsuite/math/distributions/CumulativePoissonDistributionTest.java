@@ -24,7 +24,8 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.distributions.CumulativePoissonDistribution;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ import org.junit.Test;
 
 public class CumulativePoissonDistributionTest {
 	
-    private final static Logger logger = Logger.getLogger(CumulativePoissonDistributionTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(CumulativePoissonDistributionTest.class);
 
 	public CumulativePoissonDistributionTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");

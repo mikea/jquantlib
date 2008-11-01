@@ -19,7 +19,8 @@
  */
 
 package org.jquantlib.math.optimization;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.Array;
 
 /**
@@ -27,7 +28,7 @@ import org.jquantlib.math.Array;
  */
 public abstract class Constraint { //! Base constraint class
       
-    private final static Logger logger = Logger.getLogger(Constraint.class);
+    private final static Logger logger = LoggerFactory.getLogger(Constraint.class);
     
         public boolean empty() { return false; }
         public abstract boolean test(final Array p) ;

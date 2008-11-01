@@ -22,10 +22,11 @@
 
 package org.jquantlib.testsuite.termstructures.yieldcurves;
 
-import org.apache.log4j.Logger;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeUnit;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Srinivas Hasti
@@ -37,7 +38,7 @@ import org.junit.Test;
 
 public class PiecewiseYieldCurveTest {
 
-    private final static Logger logger = Logger.getLogger(PiecewiseYieldCurveTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(PiecewiseYieldCurveTest.class);
 
 	private class Datum {
 		public int n;
@@ -136,7 +137,7 @@ public class PiecewiseYieldCurveTest {
 	public void fakeTestCase() {
 		// This is not a test case.
 		// Obtain real test cases from QuantLib-0.8.1 sources
-		logger.fatal("***** TEST FAILED *****");
+		logger.error("***** TEST FAILED *****");
 	}
 	
 	

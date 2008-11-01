@@ -22,7 +22,8 @@
 
 package org.jquantlib.testsuite.math.solvers1D;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.junit.Test;
 
 /**
@@ -38,7 +39,7 @@ import org.junit.Test;
 //TODO: Write FalsePosition test case.
 public class FalsePositionTest {
 	
-    private final static Logger logger = Logger.getLogger(FalsePositionTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(FalsePositionTest.class);
 
 	public FalsePositionTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
@@ -47,7 +48,7 @@ public class FalsePositionTest {
 	@Test
 	public void fakeTest() {
 		// only intended to avoid failure during unit tests
-		logger.fatal("***** TEST FAILED *****");
+		logger.error("***** TEST FAILED *****");
 	}
 	
 }

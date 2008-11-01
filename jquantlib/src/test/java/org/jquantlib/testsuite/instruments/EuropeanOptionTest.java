@@ -46,7 +46,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
@@ -72,6 +71,8 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -81,7 +82,7 @@ import org.junit.Test;
  */
 public class EuropeanOptionTest {
 
-    private final static Logger logger = Logger.getLogger(EuropeanOptionTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(EuropeanOptionTest.class);
     
     public EuropeanOptionTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
@@ -340,7 +341,7 @@ public class EuropeanOptionTest {
 
 	    for (int i=0; i<values.length-1; i++) {
 
-	    	logger.debug(values[i]);
+	    	logger.debug(values[i].toString());
 	    	
 	    	StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 	        Date exDate = today.getDateAfter( timeToDays(values[i].t) );

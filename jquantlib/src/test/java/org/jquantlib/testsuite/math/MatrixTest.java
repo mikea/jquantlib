@@ -23,7 +23,8 @@
 
 package org.jquantlib.testsuite.math;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
 import org.junit.Test;
@@ -33,7 +34,7 @@ import org.junit.Test;
  */
 public class MatrixTest {
 
-    private final static Logger logger = Logger.getLogger(MatrixTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(MatrixTest.class);
 
 	public MatrixTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
@@ -63,7 +64,7 @@ public class MatrixTest {
 			logger.debug(matrix.toString());
 			Thread.sleep(7000);
 		} catch (InterruptedException ex) {
-			logger.fatal(null, ex);
+			logger.error(null, ex);
 		}
 
 	}
