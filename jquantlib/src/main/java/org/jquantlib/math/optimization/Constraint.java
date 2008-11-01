@@ -19,17 +19,15 @@
  */
 
 package org.jquantlib.math.optimization;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.math.Array;
 
 /**
+ * Base constraint class
+ * 
  * @author Joon Tiang Heng
  */
-public abstract class Constraint { //! Base constraint class
+public abstract class Constraint { 
       
-    private final static Logger logger = LoggerFactory.getLogger(Constraint.class);
-    
         public boolean empty() { return false; }
         public abstract boolean test(final Array p) ;
 		//take note of precision error when comparing Arrays, only compare difference dot product
@@ -38,31 +36,18 @@ public abstract class Constraint { //! Base constraint class
 
 			double diff=beta;
 						
-			logger.debug("1. params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
-			
 			Array newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(),diff)));
-			
-			logger.debug("1. after operatorAddCopy params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
 			boolean valid = test(newParams);
-			Integer icount = 0;
+			int icount = 0;
 			while (!valid) {
-				if (icount > 200)
-					throw new RuntimeException("can't update parameter vector");
+				if (icount > 200) throw new RuntimeException("can't update parameter vector");
 				diff *= 0.5;
 				icount ++;
-				
 				newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(),diff)));	
-				
-				logger.debug("2. params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
-				
 				valid = test(newParams);
 			}
 			
-			
 			params.operatorAdd(direction.operatorMultiplyCopy(new Array(direction.size(),diff)));
-			
-			logger.debug("3. params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
-			
 			return diff;
 		}
 }

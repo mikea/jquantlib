@@ -22,12 +22,7 @@
 
 package org.jquantlib.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class StopClock {
-
-    private final static Logger logger = LoggerFactory.getLogger(StopClock.class);
 
     public static enum Unit {
         ms, ns;
@@ -78,10 +73,10 @@ public class StopClock {
     }
 
     public void log() {
-        logger.info(toString());
+        System.out.println(toString());
     }
 
     public void log(final String message) {
-        logger.info(message + " :: " + toString());
+        System.out.println(message + " :: " + toString());
     }
 }
