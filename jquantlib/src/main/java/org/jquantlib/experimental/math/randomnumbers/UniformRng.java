@@ -20,14 +20,13 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers.trial;
-
-import org.jquantlib.math.UnaryFunction;
+package org.jquantlib.experimental.math.randomnumbers;
 
 /**
  *
  * @author Aaron Roth
+ *
  */
-public interface InverseCdf<ParameterType, ReturnType> extends UnaryFunction<ParameterType, ReturnType> {
-
+public abstract class UniformRng<NumberType> implements SeedableWithInts {
+    public abstract NumberType next();
 }

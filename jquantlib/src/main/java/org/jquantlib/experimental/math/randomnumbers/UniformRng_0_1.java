@@ -20,11 +20,11 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.experimental.math.randomnumbers;
 
-import org.jquantlib.math.randomnumbers.trial.SFMTUniformRng;
-import org.jquantlib.math.randomnumbers.trial.SeedableWithInts;
-import org.jquantlib.math.randomnumbers.trial.UniformRng;
+import org.jquantlib.experimental.math.randomnumbers.SFMTUniformRng;
+import org.jquantlib.experimental.math.randomnumbers.SeedableWithInts;
+import org.jquantlib.experimental.math.randomnumbers.UniformRng;
 
 
 /**

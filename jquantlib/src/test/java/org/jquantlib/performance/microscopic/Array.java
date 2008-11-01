@@ -84,8 +84,8 @@ public class Array implements PerformanceTest {
 		org.jquantlib.math.PrimeNumbers pn = new org.jquantlib.math.PrimeNumbers();
 
 		long prime = pn.get(7000);
-		org.jquantlib.math.randomnumbers.trial.SFMTUniformRng rng
-			= new org.jquantlib.math.randomnumbers.trial.SFMTUniformRng((int)prime);
+		org.jquantlib.experimental.math.randomnumbers.SFMTUniformRng rng
+			= new org.jquantlib.experimental.math.randomnumbers.SFMTUniformRng((int)prime);
 
 		org.jquantlib.math.Array a = new org.jquantlib.math.Array(size);
 		for(int i =0;i<size;++i){
@@ -104,7 +104,7 @@ public class Array implements PerformanceTest {
 		List<org.jquantlib.math.Array> localLists = ArraysHashTable.get(new Integer(size));
 		if(localLists == null){
 			//  Throw Exception.
-			logger.info("Test Failed... for size: " +size);
+			logger.fatal("***** TEST FAILED ***** ... for size: " +size);
 		}
 
 		Iterator iter =localLists.iterator();

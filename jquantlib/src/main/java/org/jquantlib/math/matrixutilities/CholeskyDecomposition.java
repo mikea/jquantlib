@@ -49,6 +49,7 @@ import org.jquantlib.math.Matrix;
  *  Performs a CholeskyDecomposition.
  * @author Q.Boiler
  */
+// FIXME:: needs code review
 public class CholeskyDecomposition {
 
     //

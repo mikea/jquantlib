@@ -20,12 +20,33 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.experimental.math.randomnumbers;
+
+import org.jquantlib.experimental.math.randomnumbers.SeedableWithInts;
+import org.jquantlib.experimental.math.randomnumbers.UniformRng;
+import org.jquantlib.methods.montecarlo.Sample;
+
 
 /**
  *
  * @author Aaron Roth
  */
-public interface SeedableWithInts {
-    public void seed(int... seeds);
+public abstract class SampleGenerator<UniformRngNumberType, SampleValueType> implements SeedableWithInts {
+    protected final UniformRng<UniformRngNumberType> uniformRng;
+
+    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng) {
+        this.uniformRng = uniformRng;
+    }
+    
+    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng, int... seeds) {
+        this.uniformRng = uniformRng;
+        seed(seeds);
+    }
+    
+    public abstract Sample<SampleValueType> next();
+    
+    @Override
+    public void seed(int... seeds) {
+        uniformRng.seed(seeds);
+    }
 }

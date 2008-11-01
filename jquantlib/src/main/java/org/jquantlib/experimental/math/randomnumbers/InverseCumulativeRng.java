@@ -20,13 +20,31 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.experimental.math.randomnumbers;
+
+import org.jquantlib.experimental.math.randomnumbers.UniformRng;
+import org.jquantlib.methods.montecarlo.Sample;
 
 /**
  *
  * @author Aaron Roth
- *
  */
-public abstract class UniformRng<NumberType> implements SeedableWithInts {
-    public abstract NumberType next();
+public class InverseCumulativeRng<UniformRngNumberType, SampleValueType> extends SampleGenerator<UniformRngNumberType, SampleValueType>  {
+    private final InverseCdf<UniformRngNumberType, SampleValueType> inverseCdf;
+
+    public InverseCumulativeRng( final UniformRng<UniformRngNumberType> uniformRng
+                                     , final InverseCdf<UniformRngNumberType, SampleValueType> inverseCdf)
+    {
+        super(uniformRng);
+        this.inverseCdf = inverseCdf;
+    }
+
+    /**
+     * @return a sample from a Gaussian distribution
+     * Huh? why is the distribution necessarily Gaussian?
+     */
+    @Override
+    public Sample<SampleValueType> next() /* @ReadOnly */ {
+        return new Sample(inverseCdf.evaluate(uniformRng.next()), 1.0);
+    }
 }

@@ -20,33 +20,14 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.randomnumbers.trial;
+package org.jquantlib.experimental.math.randomnumbers;
 
-import org.jquantlib.math.randomnumbers.trial.SeedableWithInts;
-import org.jquantlib.math.randomnumbers.trial.UniformRng;
-import org.jquantlib.methods.montecarlo.Sample;
-
+import org.jquantlib.math.UnaryFunction;
 
 /**
  *
  * @author Aaron Roth
  */
-public abstract class SampleGenerator<UniformRngNumberType, SampleValueType> implements SeedableWithInts {
-    protected final UniformRng<UniformRngNumberType> uniformRng;
+public interface InverseCdf<ParameterType, ReturnType> extends UnaryFunction<ParameterType, ReturnType> {
 
-    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng) {
-        this.uniformRng = uniformRng;
-    }
-    
-    public SampleGenerator(final UniformRng<UniformRngNumberType> uniformRng, int... seeds) {
-        this.uniformRng = uniformRng;
-        seed(seeds);
-    }
-    
-    public abstract Sample<SampleValueType> next();
-    
-    @Override
-    public void seed(int... seeds) {
-        uniformRng.seed(seeds);
-    }
 }
