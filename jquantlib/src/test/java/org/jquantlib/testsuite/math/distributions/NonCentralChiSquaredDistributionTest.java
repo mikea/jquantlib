@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.distributions.NonCentralChiSquaredDistribution;
 import org.junit.Test;
 
@@ -32,8 +33,10 @@ import org.junit.Test;
  */
 public class NonCentralChiSquaredDistributionTest {
 
+    private final static Logger logger = Logger.getLogger(NonCentralChiSquaredDistributionTest.class);
+
 	public NonCentralChiSquaredDistributionTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test

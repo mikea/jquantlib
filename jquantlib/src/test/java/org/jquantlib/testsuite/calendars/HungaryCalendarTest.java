@@ -34,6 +34,7 @@ import static org.jquantlib.util.Month.OCTOBER;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Hungary;
 import org.jquantlib.util.Date;
@@ -48,18 +49,20 @@ import org.junit.Test;
  */
 public class HungaryCalendarTest {
 
-    Calendar c = null;
-    List<Date> expectedHol = null;
+    private final static Logger logger = Logger.getLogger(HungaryCalendarTest.class);
+
+    private Calendar c = null;
+    private List<Date> expectedHol = null;
 
     public HungaryCalendarTest() {
-        System.out.println("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     // 2004 - leap-year in the past
     @Test
     public void testHungaryYear2004() {
         int year = 2004;
-        System.out.println("Testing " + c.getName() + " holiday list for the year " + year + "...");
+        logger.info("Testing " + c.getName() + " holiday list for the year " + year + "...");
         List<Date> expectedHol = new Vector<Date>();
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
@@ -79,7 +82,7 @@ public class HungaryCalendarTest {
     public void testHungaryYear2007() {
 
         int year = 2007;
-        System.out.println("Testing " + c.getName() + " holiday list for the year " + year + "...");
+        logger.info("Testing " + c.getName() + " holiday list for the year " + year + "...");
         List<Date> expectedHol = new Vector<Date>();
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
@@ -101,7 +104,7 @@ public class HungaryCalendarTest {
     @Test
     public void testHungaryYear2008() {
         int year = 2008;
-        System.out.println("Testing " + c.getName() + " holiday list for the year " + year + "...");
+        logger.info("Testing " + c.getName() + " holiday list for the year " + year + "...");
         List<Date> expectedHol = new Vector<Date>();
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
@@ -122,7 +125,7 @@ public class HungaryCalendarTest {
     public void testHungaryYear2009() {
 
         int year = 2009;
-        System.out.println("Testing " + c.getName() + " holiday list for the year " + year + "...");
+        logger.info("Testing " + c.getName() + " holiday list for the year " + year + "...");
         List<Date> expectedHol = new Vector<Date>();
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
@@ -143,7 +146,7 @@ public class HungaryCalendarTest {
     public void testHungaryYear2012() {
 
         int year = 2012;
-        System.out.println("Testing " + c.getName() + " holiday list for the year " + year + "...");
+        logger.info("Testing " + c.getName() + " holiday list for the year " + year + "...");
         List<Date> expectedHol = new Vector<Date>();
 
         expectedHol.add(DateFactory.getFactory().getDate(15, MARCH, year));

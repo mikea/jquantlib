@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.distributions.CumulativePoissonDistribution;
 import org.junit.Test;
 
@@ -36,8 +37,10 @@ import org.junit.Test;
 
 public class CumulativePoissonDistributionTest {
 	
+    private final static Logger logger = Logger.getLogger(CumulativePoissonDistributionTest.class);
+
 	public CumulativePoissonDistributionTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test
@@ -106,7 +109,7 @@ public class CumulativePoissonDistributionTest {
 			int z = i;
 			double expected = testvalues2[i];
 			double computed = cumpoissondist2.evaluate(z);
-			// System.out.println(computed); --> used for testing
+			// logger.info(computed); --> used for testing
 			// double tolerance = (z<6 ) ? 1.0e-15: 1.0e-10;
 			double tolerance = 1.0e-15; // try to to get 1.0e-15 accuracy whenever possible
 			

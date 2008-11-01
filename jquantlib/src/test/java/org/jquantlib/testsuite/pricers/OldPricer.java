@@ -26,6 +26,7 @@
  */
 package org.jquantlib.testsuite.pricers;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.Option;
@@ -39,8 +40,10 @@ import org.jquantlib.util.StopClock;
 //FIXME: Rename to OldPricerTest
 public class OldPricer {
 	
+    private final static Logger logger = Logger.getLogger(OldPricer.class);
+
 	public OldPricer() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	private class BatchData {
@@ -78,7 +81,7 @@ public class OldPricer {
 	    
 	    /* @Test public*/ void testMcSingleFactorPricers() {
 
-	        System.out.println("Testing old-style Monte Carlo single-factor pricers...");
+	        logger.info("Testing old-style Monte Carlo single-factor pricers...");
 
 	        clock.startClock();
 

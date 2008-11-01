@@ -19,6 +19,7 @@
  */
 
 package org.jquantlib.math.optimization;
+import org.apache.log4j.Logger;
 import org.jquantlib.math.Array;
 
 /**
@@ -26,6 +27,8 @@ import org.jquantlib.math.Array;
  */
 public abstract class Constraint { //! Base constraint class
       
+    private final static Logger logger = Logger.getLogger(Constraint.class);
+    
         public boolean empty() { return false; }
         public abstract boolean test(final Array p) ;
 		//take note of precision error when comparing Arrays, only compare difference dot product
@@ -34,11 +37,11 @@ public abstract class Constraint { //! Base constraint class
 
 			double diff=beta;
 						
-			//System.out.println("1. params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
+			logger.debug("1. params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
 			
 			Array newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(),diff)));
 			
-			//System.out.println("1. after operatorAddCopy params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
+			logger.debug("1. after operatorAddCopy params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
 			boolean valid = test(newParams);
 			Integer icount = 0;
 			while (!valid) {
@@ -49,7 +52,7 @@ public abstract class Constraint { //! Base constraint class
 				
 				newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(),diff)));	
 				
-				//System.out.println("2. params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
+				logger.debug("2. params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
 				
 				valid = test(newParams);
 			}
@@ -57,7 +60,7 @@ public abstract class Constraint { //! Base constraint class
 			
 			params.operatorAdd(direction.operatorMultiplyCopy(new Array(direction.size(),diff)));
 			
-			//System.out.println("3. params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
+			logger.debug("3. params Value="+ "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
 			
 			return diff;
 		}

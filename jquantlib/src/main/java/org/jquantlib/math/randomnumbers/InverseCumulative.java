@@ -22,11 +22,11 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import org.jquantlib.math.UnaryFunction;
+import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * @author Richard Gomes
  */
-public interface InverseCumulative extends UnaryFunction<Double, Double> {
+public interface InverseCumulative extends UnaryFunctionDouble {
     // tagging interface
 }

@@ -41,58 +41,90 @@
 
 package org.jquantlib.math.randomnumbers;
 
+import java.lang.reflect.Constructor;
+
 import org.jquantlib.util.reflect.TypeToken;
 
 /**
- * The original C++ code has a static variable defined more or less like this:
- * <pre>
- *     private static volatile IC icInstance; // translated to Java
- * </pre>
- * 
- * C++ Template engine creates multiple "incarnations" of code for every invocation of the template. In particular, when template
- * parameters are identical to previous invocations, binary code is identical to previous invocations. The link editor is
- * responsible for removing duplicates which means that all identical invocations will "share" the same commonly declared static
- * variable.
- * <p>
- * Java Generics engine creates multiple, distinct objects for every invocation, but all sharing the same class signature. The Java
- * compiler does not make any distinction between static variables in these multiple objects because static variables are associated
- * to the class and not to a certain instance.
- * <p>
- * It means that, in order to mimic the behaviour of C++ code, we would be obliged to keep a cache at runtime which returns a
- * singleton associated to a certain combination of Generic parameters retrieved. This effort does not payoff the benefits obtained
- * (if any) whilst it imposes additional performance penalties in order to manage the cache.
- * <p>
- * For this reason, we are not providing the static variable responsible for keeping a certain generic IC.
- * 
- * @author Richard Gomes
- * @param <T> represents the sample type
  * @param <RNG> represents the RandomNumberGenerator<T>
  * @param <IC> represents the InverseCumulative
+ * 
+ * @author Richard Gomes
  */
-public class GenericPseudoRandom<T, RNG extends RandomNumberGenerator<T>, IC extends InverseCumulative> {
+public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC extends InverseCumulative> {
 
-    // TODO:: code review
-    static public final boolean allowsErrorEstimate = true;
+    //
+    // static private fields
+    //
     
-    // TODO:: code review
-    /*static*/ public InverseCumulativeRsg<T, RandomSequenceGenerator<T, RNG>, IC> makeSequenceGenerator(
-            final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
+    //
+    // FIXME:: code review :: it's not clear how should this variable be used.
+    // Declared as private final till we discover what's the trick with it.
+    //
+    static private final boolean allowsErrorEstimate = true; 
+    
+    //
+    // FIXME: QuantLib:: This variable apparently is never initialized!!!
+    //
+    // The following command
+    //
+    //       find . -name '*.*pp' -exec fgrep -H -i 'icInstance' {} \;
+    //
+    // does not return any occurrence of icInstance in the left side of an assignment.
+    // So, we declare this variable as private final and initialize with null.
+    // This can change as soon as we find what's the trick with it.
+    //
+    static final private GenericPseudoRandom icInstance = null; 
 
+    
+    
+    
+    
+    protected InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC> makeSequenceGenerator(
+            final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
+        
         try {
-            // instantiate a RandomNumberGenerator given its generic type
-            RNG rng = null;
+            // instantiate a RandomNumberGenerator given its generic type (first generic parameter)
+            final RNG rng;
             try {
-                rng = (RNG) TypeToken.getClazz(this.getClass(), 1).getConstructor(long.class).newInstance(seed);
+                // obtain RNG Class from first generic parameter
+                final Class<RNG> rngClass = (Class<RNG>) TypeToken.getClazz(GenericPseudoRandom.class, 0);
+                final Constructor<RNG> c = rngClass.getConstructor(long.class);
+                rng = c.newInstance(seed);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
-            // instantiate a RandomSequenceGenerator given its dimension and a RandonNumberGenerator
-            RandomSequenceGenerator<T, RNG> rsg = new RandomSequenceGenerator<T, RNG>(dimension, rng);
+            // instantiate a RandomSequenceGenerator given a RNG type
+            final RandomSequenceGenerator<RNG> rsg;
+            try {
+                // obtain Class from previously created RNG variable
+                final Class<RandomSequenceGenerator<RNG>> rsgClass = (Class<RandomSequenceGenerator<RNG>>) TypeToken.getClazz(rng.getClass());
+                final Constructor<RandomSequenceGenerator<RNG>> c = rsgClass.getConstructor(int.class, rng.getClass());
+                rsg = c.newInstance(dimension, rng);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            // instantiate a InverseCumulative given its generic type (second generic parameter)
+            final IC ic;
+            try {
+                // obtain IC Class from second generic parameter
+                final Class<IC> icClass = (Class<IC>) TypeToken.getClazz(GenericPseudoRandom.class, 1);
+                final Constructor<IC> c;
+                if (icInstance!=null) {
+                    c = icClass.getConstructor(rsg.getClass(), icClass.getClass());
+                    ic = c.newInstance(rsg, icInstance);
+                } else {
+                    c = icClass.getConstructor(rsg.getClass());
+                    ic = c.newInstance(rsg);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            return (InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC>) ic;
             
-            // return an InverseCumulativeRandomSequenceGenerator given a RandomSequenceGenerator and InverseCumulative distribution
-            // TODO: decide how InverseCumulativeRsg must be instantiated
-            return /*(icInstance!=null) ? new InverseCumulativeRsg(rsg, icInstance) :*/ new InverseCumulativeRsg(rsg);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

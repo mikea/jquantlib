@@ -39,59 +39,80 @@
 
 package org.jquantlib.math.randomnumbers;
 
+import java.lang.reflect.Constructor;
+
 import org.jquantlib.util.reflect.TypeToken;
 
 /**
- * The original C++ code has a static variable defined more or less like this:
- * <pre>
- *     private static volatile IC icInstance; // translated to Java
- * </pre>
- * 
- * C++ Template engine creates multiple "incarnations" of code for every invocation of the template. In particular, when template
- * parameters are identical to previous invocations, binary code is identical to previous invocations. The link editor is
- * responsible for removing duplicates which means that all identical invocations will "share" the same commonly declared static
- * variable.
- * <p>
- * Java Generics engine creates multiple, distinct objects for every invocation, but all sharing the same class signature. The Java
- * compiler does not make any distinction between static variables in these multiple objects because static variables are associated
- * to the class and not to a certain instance.
- * <p>
- * It means that, in order to mimic the behaviour of C++ code, we would be obliged to keep a cache at runtime which returns a
- * singleton associated to a certain combination of Generic parameters retrieved. This effort does not payoff the benefits obtained
- * (if any) whilst it imposes additional performance penalties in order to manage the cache.
- * <p>
- * For this reason, we are not providing the static variable responsible for keeping a certain generic IC.
  * 
  * @author Richard Gomes
  * @param <T> represents the sample type
  * @param <URSG> represents the UniformRandomSequenceGenerator<T>
  * @param <IC> represents the InverseCumulative
  */
-public class GenericLowDiscrepancy<T, URSG extends UniformRandomSequenceGenerator<T>, IC extends InverseCumulative> { 
+public class GenericLowDiscrepancy<RSG extends RandomSequenceGeneratorIntf, IC extends InverseCumulative> { 
 
-    // TODO :: code review
-    static public boolean allowsErrorEstimate = false;
+    //
+    // static private fields
+    //
     
+    //
+    // FIXME:: code review :: it's not clear how should this variable be used.
+    // Declared as private final till we discover what's the trick with it.
+    //
+    static private final boolean allowsErrorEstimate = false; 
     
-    // TODO :: code review
-    /*static*/ public InverseCumulativeRsg<T, URSG, IC> makeSequenceGenerator(
+    //
+    // FIXME: QuantLib:: This variable apparently is never initialized!!!
+    //
+    // The following command
+    //
+    //       find . -name '*.*pp' -exec fgrep -H -i 'icInstance' {} \;
+    //
+    // does not return any occurrence of icInstance in the left side of an assignment.
+    // So, we declare this variable as private final and initialize with null.
+    // This can change as soon as we find what's the trick with it.
+    //
+    static final private GenericLowDiscrepancy icInstance = null; 
+    
+
+    protected InverseCumulativeRsg<RSG, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
-
+        
         try {
-            // instantiate a generic holder for Sample values
-            URSG g = null;
+            // instantiate a RandomSequenceGenerator given its generic type (first generic parameter)
+            final RSG rsg;
             try {
-                g = (URSG) TypeToken.getClazz(this.getClass(), 1).getConstructor(int.class, long.class).newInstance(dimension, seed);
+                // obtain RSG Class from first generic parameter
+                final Class<RSG> rsgClass = (Class<RSG>) TypeToken.getClazz(GenericLowDiscrepancy.class, 0);
+                final Constructor<RSG> c = rsgClass.getConstructor(int.class, long.class);
+                rsg = c.newInstance(dimension, seed);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
-            // return an InverseCumulativeRandomSequenceGenerator given a RandomSequenceGenerator and InverseCumulative distribution
-            // TODO: decide how InverseCumulativeRsg must be instantiated
-            return /*(icInstance!=null) ? new InverseCumulativeRsg(g, icInstance) :*/ new InverseCumulativeRsg(g);
+            // instantiate a InverseCumulative given its generic type (second generic parameter)
+            final IC ic;
+            try {
+                // obtain IC Class from second generic parameter
+                final Class<IC> icClass = (Class<IC>) TypeToken.getClazz(GenericPseudoRandom.class, 1);
+                final Constructor<IC> c;
+                if (icInstance!=null) {
+                    c = icClass.getConstructor(rsg.getClass(), icClass.getClass());
+                    ic = c.newInstance(rsg, icInstance);
+                } else {
+                    c = icClass.getConstructor(rsg.getClass());
+                    ic = c.newInstance(rsg);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            return (InverseCumulativeRsg<RSG, IC>) ic;
+            
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    
+
 }

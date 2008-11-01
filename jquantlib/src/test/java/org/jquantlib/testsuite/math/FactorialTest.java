@@ -24,7 +24,9 @@ package org.jquantlib.testsuite.math;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.Factorial;
+import org.jquantlib.testsuite.lang.TypeTokenTest;
 import org.junit.Test;
 
 /**
@@ -32,8 +34,10 @@ import org.junit.Test;
  */
 public class FactorialTest {
 
+    private final static Logger logger = Logger.getLogger(FactorialTest.class);
+
 	public FactorialTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@Test

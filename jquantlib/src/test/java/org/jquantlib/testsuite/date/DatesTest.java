@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.date;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -43,6 +44,8 @@ import org.junit.Test;
  */
 public class DatesTest {
 
+    private final static Logger logger = Logger.getLogger(DatesTest.class);
+
     static private final String IMMcodes[] = { "F0", "G0", "H0", "J0", "K0", "M0", "N0", "Q0", "U0", "V0", "X0", "Z0",
             "F1", "G1", "H1", "J1", "K1", "M1", "N1", "Q1", "U1", "V1", "X1", "Z1", "F2", "G2", "H2", "J2", "K2", "M2",
             "N2", "Q2", "U2", "V2", "X2", "Z2", "F3", "G3", "H3", "J3", "K3", "M3", "N3", "Q3", "U3", "V3", "X3", "Z3",
@@ -52,12 +55,12 @@ public class DatesTest {
             "N8", "Q8", "U8", "V8", "X8", "Z8", "F9", "G9", "H9", "J9", "K9", "M9", "N9", "Q9", "U9", "V9", "X9", "Z9" };
 
     public DatesTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
     
     @Test
     public void immDates() {
-        System.out.println("Testing imm dates. It may take several minutes when Cobertura reports are generated!!!");
+        logger.info("Testing imm dates. It may take several minutes when Cobertura reports are generated!!!");
 
         Date counter = DateFactory.getFactory().getMinDate();
 
@@ -114,7 +117,7 @@ public class DatesTest {
     @Test
     public void consistencyCheck() {
 
-        System.out.println("Testing dates...");
+        logger.info("Testing dates...");
 
         int dyold = DateFactory.getFactory().getMinDate().getDayOfYear();
         int dold = DateFactory.getFactory().getMinDate().getDayOfMonth();
@@ -185,7 +188,7 @@ public class DatesTest {
 
     @Test
     public void isoDates() {
-        System.out.println("Testing ISO dates...");
+        logger.info("Testing ISO dates...");
         StopClock clock = new StopClock();
         clock.startClock();
         String input_date = "2006-01-15";

@@ -140,8 +140,7 @@ public class ActualActual extends AbstractDayCounter {
     @Override
 	public final double getYearFraction(final Date dateStart, final Date dateEnd,
 			final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
-		return delegate.getYearFraction(dateStart, dateEnd, refPeriodStart,
-				refPeriodEnd);
+		return delegate.getYearFraction(dateStart, dateEnd, refPeriodStart, refPeriodEnd);
 	}
 
 
@@ -158,8 +157,7 @@ public class ActualActual extends AbstractDayCounter {
 
         @Override
 		public final double getYearFraction(final Date dateStart, final Date dateEnd) {
-			return getYearFraction(dateStart, dateEnd, Date.NULL_DATE,
-					Date.NULL_DATE);
+			return getYearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
 		}
 
         @Override
@@ -279,8 +277,7 @@ public class ActualActual extends AbstractDayCounter {
 				return 0.0;
 
 			if (dateStart.gt(dateEnd))
-				return -getYearFraction(dateEnd, dateStart, Date.NULL_DATE,
-						Date.NULL_DATE);
+				return -getYearFraction(dateEnd, dateStart, Date.NULL_DATE, Date.NULL_DATE);
 
 			final int y1 = dateStart.getYear();
 			final int y2 = dateEnd.getYear();
@@ -297,8 +294,7 @@ public class ActualActual extends AbstractDayCounter {
 		}
 
         @Override
-		public final double getYearFraction(final Date dateStart, final Date dateEnd,
-				final Date d3, final Date d4) /* @ReadOnly */{
+		public final double getYearFraction(final Date dateStart, final Date dateEnd, final Date d3, final Date d4) /* @ReadOnly */{
 			return this.getYearFraction(dateStart, dateEnd);
 		}
 
@@ -317,8 +313,7 @@ public class ActualActual extends AbstractDayCounter {
 				return 0.0;
 
 			if (dateStart.gt(dateEnd))
-				return -getYearFraction(dateEnd, dateStart, Date.NULL_DATE,
-						Date.NULL_DATE);
+				return -1.0 * getYearFraction(dateEnd, dateStart, Date.NULL_DATE, Date.NULL_DATE);
 
 			Date newD2 = dateEnd;
 			Date temp = dateEnd;

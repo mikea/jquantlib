@@ -42,6 +42,7 @@ package org.jquantlib.testsuite.daycounters;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.SimpleDayCounter;
@@ -59,8 +60,10 @@ import org.junit.Test;
  */
 public class DayCountersTest {
 
+    private final static Logger logger = Logger.getLogger(DayCountersTest.class);
+
 	public DayCountersTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	private class SingleCase {
@@ -121,7 +124,7 @@ public class DayCountersTest {
 	@Test
 	public void testActualActual() {
 
-	    System.out.println("Testing actual/actual day counters...");
+	    logger.info("Testing actual/actual day counters...");
 
 	    SingleCase testCases[] = new SingleCase[] {
 	        // first example
@@ -211,9 +214,9 @@ public class DayCountersTest {
 	        Date rd1 = testCases[i].refStart;
 	        Date rd2 = testCases[i].refEnd;
 	        
-	        System.out.println(testCases[i].toString());
+	        logger.info(testCases[i].toString());
 	        
-	        /*@Time*/ double  calculated = dayCounter.getYearFraction(d1,d2,rd1,rd2);
+	        /*@Time*/ double  calculated = dayCounter.getYearFraction(d1, d2, rd1, rd2);
 
 	        if (Math.abs(calculated-testCases[i].result) > 1.0e-10) {
 	        	String period = "period: " + d1 + " to " + d2;
@@ -234,7 +237,7 @@ public class DayCountersTest {
 	@Test
 	public void testSimple() {
 
-	    System.out.println("Testing simple day counter...");
+	    logger.info("Testing simple day counter...");
 
 	    Period p[] = new Period[] { new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
 	    /*@Time*/ double expected[] = { 0.25, 0.5, 1.0 };
@@ -260,7 +263,7 @@ public class DayCountersTest {
 	@Test
 	public void testOne() {
 
-	    System.out.println("Testing 1/1 day counter...");
+	    logger.info("Testing 1/1 day counter...");
 
 	    Period p[] = new Period[]{ new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
 	    /*@Time*/ double expected[] = new double[] { 1.0, 1.0, 1.0 };
@@ -288,7 +291,7 @@ public class DayCountersTest {
 // TODO: Test
 //	public void testBusiness252() {
 //
-//	    System.out.println("Testing business/252 day counter...");
+//	    logger.info("Testing business/252 day counter...");
 //
 //	    Date testDates[] = {
 //	    DateUtil.getDateUtil().getDate(1,Month.FEBRUARY,2002),

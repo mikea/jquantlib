@@ -11,6 +11,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.math.randomnumbers.MersenneTwisterUniformRng;
+import org.jquantlib.math.randomnumbers.PseudoRandom;
 import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 import org.jquantlib.math.randomnumbers.RandomSequenceGenerator;
 import org.jquantlib.math.statistics.Statistics;
@@ -149,12 +150,16 @@ class ReplicationError {
     // at each step the log of the stock
     // will have drift and sigma^2 variance
 //    PseudoRandom rsg =
-//        PseudoRandommake_sequence_generator(nTimeSteps, 0);
+//        PseudoRandom.make_sequence_generator(nTimeSteps, 0);
 
-	RandomSequenceGenerator<Double, MersenneTwisterUniformRng> rsg = new RandomSequenceGenerator<Double, MersenneTwisterUniformRng>(nTimeSteps,0);
-	
-    // FIXME: Code added for testing purposes. Will be removed later (Dominik)
-	System.out.println("rsg: "+rsg);
+
+    
+//  
+// TODO: code review (to be solved by Richard)
+//               
+         
+//	RandomSequenceGenerator<MersenneTwisterUniformRng> rsg = new PseudoRandom().makeSequenceGenerator(nTimeSteps, 0L); 
+//	System.out.println("rsg: "+rsg);
 	
     boolean brownianBridge = false;
 /*
@@ -183,8 +188,8 @@ class ReplicationError {
                      false);
  */
 	
-MonteCarloModel<SingleVariate, Double, RandomNumberGenerator<Double>, Statistics> MCSimulation
-	= new MonteCarloModel<SingleVariate, Double, RandomNumberGenerator<Double>, Statistics>();
+    MonteCarloModel<SingleVariate, RandomNumberGenerator, Statistics> MCSimulation
+	    = new MonteCarloModel<SingleVariate, RandomNumberGenerator, Statistics>();
 
     // the model simulates nSamples paths
     MCSimulation.addSamples(nSamples);

@@ -39,6 +39,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 package org.jquantlib.testsuite.termstructures;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.TimeUnit;
@@ -46,6 +47,8 @@ import org.junit.Test;
 
 
 public class TermStructuresTest {
+
+    private final static Logger logger = Logger.getLogger(TermStructuresTest.class);
 
 	private Calendar calendar;
 	private int settlementDays;
@@ -68,7 +71,7 @@ public class TermStructuresTest {
 	
 	public TermStructuresTest() {
 
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 		
 //TODO: remove comments		
 //		calendar = org.jquantlib.time.calendars.Target.getCalendar();
@@ -141,8 +144,8 @@ public class TermStructuresTest {
 	@Test
 	public void testReferenceChange() {
 	
-	    System.out.println("Testing term structure against evaluation date change...");
-	    System.out.println("***** TEST FAILED *****");
+	    logger.info("Testing term structure against evaluation date change...");
+	    logger.fatal("***** TEST FAILED *****");
 	
 //TODO: remove comments	
 //	    YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
@@ -172,8 +175,8 @@ public class TermStructuresTest {
 	@Test
 	public void testImplied() {
 	
-	    System.out.println("Testing consistency of implied term structure...");
-	    System.out.println("***** TEST FAILED *****");
+	    logger.info("Testing consistency of implied term structure...");
+	    logger.fatal("***** TEST FAILED *****");
 	    
 //TODO: remove comments	
 //	    double tolerance = 1.0e-10;
@@ -198,7 +201,7 @@ public class TermStructuresTest {
 //	@Test
 //	public void testImpliedObs() {
 //	
-//	    System.out.println("Testing observability of implied term structure...");
+//	    logger.info("Testing observability of implied term structure...");
 //	
 //	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
 //	    Date newToday = today.increment(3 * Period.ONE_YEAR_FORWARD.getLength());
@@ -218,7 +221,7 @@ public class TermStructuresTest {
 //	@Test
 //	public void testFSpreaded() {
 //	
-//	    System.out.println("Testing consistency of forward-spreaded term structure...");
+//	    logger.info("Testing consistency of forward-spreaded term structure...");
 //	
 //	    double tolerance = 1.0e-10;
 //	    Quote me = new SimpleQuote(0.01);
@@ -248,7 +251,7 @@ public class TermStructuresTest {
 //	@Test
 //	public void testFSpreadedObs() {
 //	
-//	    System.out.println("Testing observability of forward-spreaded term structure...");
+//	    logger.info("Testing observability of forward-spreaded term structure...");
 //	
 //	    SimpleQuote me = new SimpleQuote(0.01);
 //	    Handle<Quote> mh = new Handle<Quote>(me);
@@ -269,7 +272,7 @@ public class TermStructuresTest {
 //	@Test
 //	public void testZSpreaded() {
 //	
-//	    System.out.println("Testing consistency of zero-spreaded term structure...");
+//	    logger.info("Testing consistency of zero-spreaded term structure...");
 //	
 //	    double tolerance = 1.0e-10;
 //	    Quote me = new SimpleQuote(0.01);
@@ -295,7 +298,7 @@ public class TermStructuresTest {
 //	@Test
 //	public void testZSpreadedObs() {
 //	
-//	    System.out.println("Testing observability of zero-spreaded term structure...");
+//	    logger.info("Testing observability of zero-spreaded term structure...");
 //	
 //	    SimpleQuote me = new SimpleQuote(0.01);
 //	    Handle<Quote> mh = new Handle<Quote>(me);

@@ -22,10 +22,17 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.util.Month.*;
+import static org.jquantlib.util.Month.APRIL;
+import static org.jquantlib.util.Month.AUGUST;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.JUNE;
+import static org.jquantlib.util.Month.MARCH;
+import static org.jquantlib.util.Month.MAY;
 
 import java.util.List;
 import java.util.Vector;
+
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Ukraine;
 import org.jquantlib.util.Date;
@@ -42,10 +49,13 @@ import org.junit.Test;
 
 public class UkraineCalendarTest {
 
-	Calendar c= null;
-	List<Date> expectedHol = null;
+    private final static Logger logger = Logger.getLogger(UkraineCalendarTest.class);
+
+    private Calendar c= null;
+	private List<Date> expectedHol = null;
+	
 	public UkraineCalendarTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Before
@@ -60,7 +70,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2004()
     {    	
        	int year = 2004;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
@@ -83,7 +93,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2005()
     {    	
        	int year = 2005;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(3,JANUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
@@ -106,7 +116,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2006()
     {    	
        	int year = 2006;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(9,JANUARY,year));
@@ -130,7 +140,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2007()
     {    	
        	int year = 2007;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(8,JANUARY,year));
@@ -155,7 +165,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2008()
     {    	
        	int year = 2008;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
@@ -177,7 +187,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2009()
     {    	
        	int year = 2009;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
@@ -199,7 +209,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2010()
     {    	
        	int year = 2010;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
@@ -222,7 +232,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2011()
     {    	
        	int year = 2011;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(3,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));
@@ -245,7 +255,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2012()
     {    	
        	int year = 2012;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(9,JANUARY,year)); 
@@ -269,7 +279,7 @@ public class UkraineCalendarTest {
     public void testUkraineUSEHolidaysYear2020()
     {    	
        	int year = 2020;
-    	System.out.println("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Ukraine.Market.USE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(7,JANUARY,year));

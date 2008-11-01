@@ -22,22 +22,14 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.FEBRUARY;
-import static org.jquantlib.util.Month.MARCH;
-import static org.jquantlib.util.Month.APRIL;
-import static org.jquantlib.util.Month.MAY;
-import static org.jquantlib.util.Month.JUNE;
-import static org.jquantlib.util.Month.JULY;
-import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.SEPTEMBER;
-import static org.jquantlib.util.Month.OCTOBER;
+import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.NOVEMBER;
-import static org.jquantlib.util.Month.DECEMBER;
 
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.SaudiArabia;
 import org.jquantlib.util.Date;
@@ -53,8 +45,10 @@ import org.junit.Test;
 
 public class SaudiArabiaCalendarTest {
 	
-	public SaudiArabiaCalendarTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    private final static Logger logger = Logger.getLogger(SaudiArabiaCalendarTest.class);
+
+    public SaudiArabiaCalendarTest() {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test
@@ -71,7 +65,7 @@ public class SaudiArabiaCalendarTest {
     // 2005
 	void testSaudiArabiaYear2005(Calendar c) {
       	int year = 2005;
-      	System.out.println("Testing SaudiArabia's holiday list for the year " + year + "...");
+      	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		// Eid Al-Adha -- 21 is on Fri, weekend in yr 2005
 		expectedHol.add(DateFactory.getFactory().getDate(22,JANUARY,year)); 
@@ -91,7 +85,7 @@ public class SaudiArabiaCalendarTest {
 	//2004
 	void testSaudiArabiaYear2004(Calendar c) {
       	int year = 2004;
-      	System.out.println("Testing SaudiArabia's holiday list for the year " + year + "...");
+      	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		// Eid Al-Adha -- 5 is on Thu,6 is on Fri, weekend in yr 2004
 		expectedHol.add(DateFactory.getFactory().getDate(1,FEBRUARY,year)); 

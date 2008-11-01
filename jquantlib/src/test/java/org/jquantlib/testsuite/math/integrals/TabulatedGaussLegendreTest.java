@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.TabulatedGaussLegendre;
 import org.junit.Test;
@@ -33,8 +34,10 @@ import org.junit.Test;
  */
 public class TabulatedGaussLegendreTest {
 
+    private final static Logger logger = Logger.getLogger(TabulatedGaussLegendreTest.class);
+
 	public TabulatedGaussLegendreTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test

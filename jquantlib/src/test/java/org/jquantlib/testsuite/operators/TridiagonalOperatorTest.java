@@ -30,14 +30,17 @@ package org.jquantlib.testsuite.operators;
 
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
-import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
+import org.apache.log4j.Logger;
 import org.jquantlib.math.Array;
+import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
+import org.junit.Test;
 
 public class TridiagonalOperatorTest {
 	
+    private final static Logger logger = Logger.getLogger(TridiagonalOperatorTest.class);
+
 	public TridiagonalOperatorTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
     @Test
@@ -77,7 +80,7 @@ public class TridiagonalOperatorTest {
 	                    + "  " + solved.get(2) );
 			
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				logger.info(e.getMessage());
 		}
 	}
 }

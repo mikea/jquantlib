@@ -34,6 +34,7 @@ import static org.jquantlib.util.Month.MAY;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Switzerland;
 import org.jquantlib.time.calendars.Switzerland.Market;
@@ -52,15 +53,17 @@ import org.junit.Test;
 
 public class SwitzerlandCalendarTest {
 	
+    private final static Logger logger = Logger.getLogger(SwitzerlandCalendarTest.class);
+
 	public SwitzerlandCalendarTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	
 	@Test
 	public void testSwitzerlandSWXCalendar() {
 		
-		System.out.println("\n\n=== Switzerland SWX Calendar ===");
+		logger.info("\n\n=== Switzerland SWX Calendar ===");
 		
 		Market market = Switzerland.Market.SWX;
 		
@@ -72,7 +75,7 @@ public class SwitzerlandCalendarTest {
 	@Test
 	public void testSwitzerlandSettlementCalendar() {
 		
-		System.out.println("\n\n=== Switzerland Settlement Calendar ===");
+		logger.info("\n\n=== Switzerland Settlement Calendar ===");
 		
 		Market market = Switzerland.Market.SETTLEMENT;
 		
@@ -113,7 +116,7 @@ public class SwitzerlandCalendarTest {
 	public void testSwitzerland2004(Calendar c, Market market){
 		
 		int year = 2004;		
-		System.out.println("Testing " + market + " holiday list for the year " + year + "...");
+		logger.info("Testing " + market + " holiday list for the year " + year + "...");
 		
 		List<Date> expectedHol = new Vector<Date>();
 		
@@ -140,7 +143,7 @@ public class SwitzerlandCalendarTest {
 	public void testSwitzerland2005(Calendar c, Market market){
 		
 		int year = 2005;
-		System.out.println("Testing " + market + " holiday list for the year " + year + "...");
+		logger.info("Testing " + market + " holiday list for the year " + year + "...");
 		
 		List<Date> expectedHol = new Vector<Date>();
 		
@@ -159,7 +162,7 @@ public class SwitzerlandCalendarTest {
 	public void testSwitzerland2006(Calendar c, Market market){
 		
 		int year = 2006;
-		System.out.println("Testing " + market + " holiday list for the year " + year + "...");
+		logger.info("Testing " + market + " holiday list for the year " + year + "...");
 		
 		List<Date> expectedHol = new Vector<Date>();
 		
@@ -181,7 +184,7 @@ public class SwitzerlandCalendarTest {
 	public void testSwitzerland2007(Calendar c, Market market) {
 	
 		int year = 2007;
-		System.out.println("Testing " + market + " holiday list for the year " + year + "...");
+		logger.info("Testing " + market + " holiday list for the year " + year + "...");
 		
 		List<Date> expectedHol = new Vector<Date>();
 		
@@ -210,7 +213,7 @@ public class SwitzerlandCalendarTest {
 	public void testSwitzerland2008(Calendar c, Market market){
 		
 		int year = 2008;
-		System.out.println("Testing " + market + " holiday list for the year " + year + "...");
+		logger.info("Testing " + market + " holiday list for the year " + year + "...");
 		
 		List<Date> expectedHol = new Vector<Date>();
 		
@@ -238,7 +241,7 @@ public class SwitzerlandCalendarTest {
 	public void testSwitzerland2009(Calendar c, Market market) {
 		
 		int year = 2009;
-		System.out.println("Testing " + market + " holiday list for the year " + year + "...");
+		logger.info("Testing " + market + " holiday list for the year " + year + "...");
 		
 		List<Date> expectedHol = new Vector<Date>();
 		
@@ -267,7 +270,7 @@ public class SwitzerlandCalendarTest {
 	public void testSwitzerland2010(Calendar c, Market market){
 		
 		int year = 2010;
-		System.out.println("Testing " + market + " holiday list for the year " + year + "...");
+		logger.info("Testing " + market + " holiday list for the year " + year + "...");
 		
 		List<Date> expectedHol = new Vector<Date>();
 		
@@ -291,7 +294,7 @@ public class SwitzerlandCalendarTest {
 	public void testSwitzerland2011(Calendar c, Market market){
 		
 		int year = 2011;
-		System.out.println("Testing " + market + " holiday list for the year " + year + "...");
+		logger.info("Testing " + market + " holiday list for the year " + year + "...");
 		
 		List<Date> expectedHol = new Vector<Date>();
 		
@@ -309,7 +312,7 @@ public class SwitzerlandCalendarTest {
 	
 	public void testSwitzerland2012(Calendar c, Market market) {
 		int year = 2012;
-		System.out.println("Testing " + market + " holiday list for the year " + year + "...");
+		logger.info("Testing " + market + " holiday list for the year " + year + "...");
 		
 		List<Date> expectedHol = new Vector<Date>();
 		

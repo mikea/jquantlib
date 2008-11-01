@@ -22,6 +22,7 @@
 
 package org.jquantlib.testsuite.math.distributions;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 /**
@@ -37,14 +38,16 @@ import org.junit.Test;
 //TODO: Write InverseCumulativePoissonDistribution test case.
 public class InverseCumulativePoissonTest {
 	
+    private final static Logger logger = Logger.getLogger(InverseCumulativePoissonTest.class);
+
 	public InverseCumulativePoissonTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test
 	public void fakeTest() {
 		// only intended to avoid failure during unit tests
-		System.out.println("***** TEST FAILED *****");
+		logger.fatal("***** TEST FAILED *****");
 	}
 	
 }

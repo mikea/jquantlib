@@ -22,16 +22,17 @@
 
 package org.jquantlib.testsuite.calendars;
 
+import static org.jquantlib.util.Month.APRIL;
 import static org.jquantlib.util.Month.DECEMBER;
 import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.MARCH;
-import static org.jquantlib.util.Month.APRIL;
-import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.JUNE;
+import static org.jquantlib.util.Month.MARCH;
+import static org.jquantlib.util.Month.MAY;
 
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Denmark;
 import org.jquantlib.util.Date;
@@ -47,6 +48,8 @@ import org.junit.Test;
 
 
 public class DenmarkCalendarTest {
+    private final static Logger logger = Logger.getLogger(DenmarkCalendarTest.class);
+
 	private Calendar c;
 	private List<Date> expectedHol;
 	
@@ -59,7 +62,7 @@ public class DenmarkCalendarTest {
 	   @Test
 	    public void testDenmarkYear2004() {
 	        int year = 2004;
-	        System.out.println("Testing Denmark holiday list for the year " + year + "...");   
+	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
 	        
 	        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
 	        //maunday thursday
@@ -84,7 +87,7 @@ public class DenmarkCalendarTest {
 	    @Test
 	    public void testDenmarkYear2005() {
 	        int year = 2005;
-	        System.out.println("Testing Denmark holiday list for the year " + year + "...");   
+	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
 	        
 	        expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));               
 	        //good friday
@@ -109,7 +112,7 @@ public class DenmarkCalendarTest {
 	    @Test
 	    public void testDenmarkYear2006() {
 	        int year = 2006;
-	        System.out.println("Testing Denmark holiday list for the year " + year + "...");   
+	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
 	        
 	        expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year)); 
 	        //maunday thursday
@@ -136,7 +139,7 @@ public class DenmarkCalendarTest {
 	    @Test
 	    public void testDenmarkYear2007() {
 	        int year = 2007;
-	        System.out.println("Testing Denmark holiday list for the year " + year + "...");   
+	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
 	        
 	        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
 	        //maunday thursday
@@ -169,7 +172,7 @@ public class DenmarkCalendarTest {
 	@Test
     public void testDenmarkYear2008() {
       	int year = 2008;
-      	System.out.println("Testing Denmark holiday list for the year " + year + "...");   
+      	logger.info("Testing Denmark holiday list for the year " + year + "...");   
     	
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
 		//maunday thursday
@@ -200,7 +203,7 @@ public class DenmarkCalendarTest {
 	   @Test
 	    public void testDenmarkYear2009() {
 	        int year = 2009;
-	        System.out.println("Testing Denmark holiday list for the year " + year + "...");   
+	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
 	        
 	        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
 	        //maunday thursday
@@ -229,7 +232,7 @@ public class DenmarkCalendarTest {
 	    @Test
 	    public void testDenmarkYear2010() {
 	        int year = 2010;
-	        System.out.println("Testing Denmark holiday list for the year " + year + "...");   
+	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
 	        
 	        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
 	        //maunday thursday
@@ -254,7 +257,7 @@ public class DenmarkCalendarTest {
 	    @Test
 	    public void testDenmarkYear2012() {
 	        int year = 2012;
-	        System.out.println("Testing Denmark holiday list for the year " + year + "...");   
+	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
 	        
 	        expectedHol.add(DateFactory.getFactory().getDate(5,APRIL,year)); 
 	        //maunday thursday
@@ -283,7 +286,7 @@ public class DenmarkCalendarTest {
 	    @Test
 	    public void testDenmarkYear2011() {
 	        int year = 2011;
-	        System.out.println("Testing Denmark holiday list for the year " + year + "...");   
+	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
 	        
 	        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year)); 
 	        //maunday thursday

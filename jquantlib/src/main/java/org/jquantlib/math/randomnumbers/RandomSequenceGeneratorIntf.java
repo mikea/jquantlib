@@ -20,18 +20,24 @@
 
 package org.jquantlib.math.randomnumbers;
 
+import it.unimi.dsi.fastutil.doubles.DoubleList;
+
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**
+ * This interface defines the behaviour of all RandomSequenceGenerators, making it easy to pass them as generic parameters.
+ * 
  * @author Richard Gomes
  */
-public interface RandomNumberGenerator {
+@Deprecated
+// FIXME: code review :: possibly rename this interface ???
+// FIXME:: Should this interface be kept or deleted ???
+// This code is a work in progress and needs code review. [Richard Gomes]
+public interface RandomSequenceGeneratorIntf {
 
-    /**
-     * @return another random number
-     */
-    public Sample<Double> next() /*@ReadOnly*/;
+    public Sample<DoubleList> nextSequence() /*@ReadOnly*/;
 
+    public Sample<DoubleList> lastSequence() /*@ReadOnly*/;
 
     /**
      * Once JVM does not support unsigned fixed arithmetic, we use 64bit variables as containers for 32bit values in order to reduce
@@ -45,9 +51,10 @@ public interface RandomNumberGenerator {
      * @see <a href="http://darksleep.com/player/JavaAndUnsignedTypes.html">Java and Unsigned Types</a>
      * @see <a href="http://en.wikipedia.org/wiki/Two%27s_complement">Two's complement</a>
      * 
-     * @return an unsigned 32bit wide number encapsulated in a 64bit container
+     * @return an array of unsigned 32bit wide numbers encapsulated in a 64bit containers
      */
-    public /*@Unsigned*/ long nextInt32() /*@ReadOnly*/;
+    public /*@Unsigned*/ long[] nextInt32Sequence() /*@ReadOnly*/;
 
-    // FIXME: code review:: public boolean allowErrorEstimate(); // FIXME: should declare this method???
+    public /*@NonNegative*/ int dimension() /* @ReadOnly */;
+
 }

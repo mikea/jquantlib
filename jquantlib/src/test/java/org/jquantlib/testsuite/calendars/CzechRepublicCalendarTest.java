@@ -22,11 +22,20 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.util.Month.*;
+import static org.jquantlib.util.Month.APRIL;
+import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.JULY;
+import static org.jquantlib.util.Month.MARCH;
+import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.util.Month.OCTOBER;
+import static org.jquantlib.util.Month.SEPTEMBER;
 
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.CzechRepublic;
 import org.jquantlib.util.Date;
@@ -43,11 +52,13 @@ import org.junit.Test;
 
 public class CzechRepublicCalendarTest {
 
-    Calendar c = null;
-    List<Date> expectedHol = null;
+    private final static Logger logger = Logger.getLogger(CzechRepublicCalendarTest.class);
+
+    private Calendar c = null;
+    private List<Date> expectedHol = null;
 
     public CzechRepublicCalendarTest() {
-        System.out.println("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Before
@@ -60,7 +71,7 @@ public class CzechRepublicCalendarTest {
     @Test
     public void testCzechRepublicPSEHolidaysYear2004() {
         int year = 2004;
-        System.out.println("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
+        logger.info("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(2, JANUARY, year)); // only for year 2004
@@ -83,7 +94,7 @@ public class CzechRepublicCalendarTest {
     @Test
     public void testCzechRepublicPSEHolidaysYear2005() {
         int year = 2005;
-        System.out.println("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
+        logger.info("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(28, MARCH, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, JULY, year));
@@ -102,7 +113,7 @@ public class CzechRepublicCalendarTest {
     @Test
     public void testCzechRepublicPSEHolidaysYear2006() {
         int year = 2006;
-        System.out.println("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
+        logger.info("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(17, APRIL, year));
         expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
@@ -123,7 +134,7 @@ public class CzechRepublicCalendarTest {
     @Test
     public void testCzechRepublicPSEHolidaysYear2007() {
         int year = 2007;
-        System.out.println("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
+        logger.info("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
@@ -147,7 +158,7 @@ public class CzechRepublicCalendarTest {
     @Test
     public void testCzechRepublicPSEHolidaysYear2008() {
         int year = 2008;
-        System.out.println("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
+        logger.info("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(24, MARCH, year));
@@ -169,7 +180,7 @@ public class CzechRepublicCalendarTest {
     @Test
     public void testCzechRepublicPSEHolidaysYear2009() {
         int year = 2009;
-        System.out.println("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
+        logger.info("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(13, APRIL, year));
@@ -191,7 +202,7 @@ public class CzechRepublicCalendarTest {
     @Test
     public void testCzechRepublicPSEHolidaysYear2010() {
         int year = 2010;
-        System.out.println("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
+        logger.info("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
@@ -211,7 +222,7 @@ public class CzechRepublicCalendarTest {
     @Test
     public void testCzechRepublicPSEHolidaysYear2011() {
         int year = 2011;
-        System.out.println("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
+        logger.info("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(25, APRIL, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, JULY, year));
@@ -230,7 +241,7 @@ public class CzechRepublicCalendarTest {
     @Test
     public void testCzechRepublicPSEHolidaysYear2012() {
         int year = 2012;
-        System.out.println("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
+        logger.info("Testing " + CzechRepublic.Market.PSE + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
         expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));

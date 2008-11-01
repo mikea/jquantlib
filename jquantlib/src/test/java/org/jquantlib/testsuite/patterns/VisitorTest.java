@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.patterns;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
@@ -31,8 +32,10 @@ import org.junit.Test;
 
 public class VisitorTest {
 
+    private final static Logger logger = Logger.getLogger(VisitorTest.class);
+
 	public VisitorTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test
@@ -147,7 +150,7 @@ public class VisitorTest {
 		private class NumberVisitor implements Visitor<Number> {
 			@Override
 			public void visit(Number o) {
-				System.out.println("Number :: "+o);
+				logger.info("Number :: "+o);
 			}
 		}
 	}
@@ -169,7 +172,7 @@ public class VisitorTest {
 			@Override
 			public void visit(Number o) {
 				Double obj = (Double)o;
-				System.out.println("Double :: "+obj);
+				logger.info("Double :: "+obj);
 			}
 		}
 	}
@@ -190,7 +193,7 @@ public class VisitorTest {
 			@Override
 			public void visit(Number o) {
 				Integer obj = (Integer)o;
-				System.out.println("Integer :: "+obj);
+				logger.info("Integer :: "+obj);
 			}
 		}
 	}

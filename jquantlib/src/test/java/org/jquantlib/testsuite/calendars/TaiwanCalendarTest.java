@@ -22,12 +22,18 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.util.Month.*;
-
+import static org.jquantlib.util.Month.APRIL;
+import static org.jquantlib.util.Month.FEBRUARY;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.JUNE;
+import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.OCTOBER;
+import static org.jquantlib.util.Month.SEPTEMBER;
 
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Taiwan;
 import org.jquantlib.util.Date;
@@ -44,10 +50,13 @@ import org.junit.Test;
 
 public class TaiwanCalendarTest {
 
-	Calendar c= null;
-	List<Date> expectedHol = null;
+    private final static Logger logger = Logger.getLogger(TaiwanCalendarTest.class);
+
+    private Calendar c= null;
+	private List<Date> expectedHol = null;
+	
 	public TaiwanCalendarTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Before
@@ -62,7 +71,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2002()
     {    	
        	int year = 2002;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(11,FEBRUARY,year));
@@ -86,7 +95,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2003()
     {    	
        	int year = 2003;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(31,JANUARY,year));
@@ -110,7 +119,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2004()
     {    	
        	int year = 2004;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(21,JANUARY,year));
@@ -131,7 +140,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2005()
     {    	
        	int year = 2005;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(4,FEBRUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(7,FEBRUARY,year));
@@ -155,7 +164,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2006()
     {    	
        	int year = 2006;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     	
     	expectedHol.add(DateFactory.getFactory().getDate(30,JANUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(31,JANUARY,year));
@@ -180,7 +189,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2007()
     {    	
        	int year = 2007;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(19,FEBRUARY,year));
@@ -209,7 +218,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2008()
     {    	
        	int year = 2008;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(4,FEBRUARY,year));
@@ -234,7 +243,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2009()
     {    	
        	int year = 2009;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
@@ -250,7 +259,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2010()
     {    	
        	int year = 2010;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
   	    	
@@ -265,7 +274,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2011()
     {    	
        	int year = 2011;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(28,FEBRUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(10,OCTOBER,year));
@@ -281,7 +290,7 @@ public class TaiwanCalendarTest {
     public void testTaiwanTSEHolidaysYear2012()
     {    	
        	int year = 2012;
-    	System.out.println("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + Taiwan.Market.TSE + " holidays list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(28,FEBRUARY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));

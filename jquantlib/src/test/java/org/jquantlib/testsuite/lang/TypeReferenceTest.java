@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.util.reflect.TypeReference;
 import org.junit.Test;
 
@@ -40,8 +41,8 @@ import org.junit.Test;
  */
 public class TypeReferenceTest {
 
-    public TypeReferenceTest() {
-        System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    private final static Logger logger = Logger.getLogger(TypeReferenceTest.class);    public TypeReferenceTest() {
+        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
     
     @Test

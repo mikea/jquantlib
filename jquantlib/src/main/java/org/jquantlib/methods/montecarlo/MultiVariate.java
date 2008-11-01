@@ -43,7 +43,7 @@ import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 /**
  * @author Richard Gomes
  */
-public class MultiVariate<T, RNG extends RandomNumberGenerator<T>> implements Variate {
+public class MultiVariate<RNG extends RandomNumberGenerator> implements Variate {
 
     // FIXME: decide how to implement
     

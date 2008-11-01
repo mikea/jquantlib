@@ -43,14 +43,17 @@ package org.jquantlib.testsuite.math.interpolations;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.LinearInterpolation;
 import org.junit.Test;
 
 public class InterpolationTest {
 
+    private final static Logger logger = Logger.getLogger(InterpolationTest.class);
+
 	public InterpolationTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 
@@ -218,7 +221,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testSplineErrorOnGaussianValues() {
 //
-//	    System.out.println("Testing spline approximation on Gaussian data sets...");
+//	    logger.info("Testing spline approximation on Gaussian data sets...");
 //
 //	    Size points[]                = {      5,      9,     17,     33 };
 //
@@ -283,7 +286,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testSplineOnGaussianValues() {
 //
-//	    System.out.println("Testing spline interpolation on a Gaussian data set...");
+//	    logger.info("Testing spline interpolation on a Gaussian data set...");
 //
 //	    Real interpolated, interpolated2;
 //	    Size n = 5;
@@ -352,7 +355,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testSplineOnRPN15AValues() {
 //
-//	    System.out.println("Testing spline interpolation on RPN15A data set...");
+//	    logger.info("Testing spline interpolation on RPN15A data set...");
 //
 //	    const Real RPN15A_x[] = {
 //	        7.99,       8.09,       8.19,      8.7,
@@ -494,7 +497,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testSplineOnGenericValues() {
 //
-//	    System.out.println("Testing spline interpolation on generic values...");
+//	    logger.info("Testing spline interpolation on generic values...");
 //
 //	    const Real generic_x[] = { 0.0, 1.0, 3.0, 4.0 };
 //	    const Real generic_y[] = { 0.0, 0.0, 2.0, 2.0 };
@@ -572,7 +575,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testSimmetricEndConditions() {
 //
-//	    System.out.println("Testing symmetry of spline interpolation "
+//	    logger.info("Testing symmetry of spline interpolation "
 //	                  "end-conditions...");
 //
 //	    Size n = 9;
@@ -607,7 +610,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testDerivativeEndConditions() {
 //
-//	    System.out.println("Testing derivative end-conditions "
+//	    logger.info("Testing derivative end-conditions "
 //	                  "for spline interpolation...");
 //
 //	    Size n = 4;
@@ -733,7 +736,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testNonRestrictiveHymanFilter() {
 //
-//	    System.out.println("Testing non-restrictive Hyman filter...");
+//	    logger.info("Testing non-restrictive Hyman filter...");
 //
 //	    Size n = 4;
 //
@@ -796,7 +799,7 @@ public class InterpolationTest {
 //
 //	@Test
 //	public void /* InterpolationTest:: */ testMultiSpline() {
-//	    System.out.println("Testing N-dimensional cubic spline...");
+//	    logger.info("Testing N-dimensional cubic spline...");
 //
 //	    std::vector<Size> dim(5);
 //	    dim[0] = 6; dim[1] = 5; dim[2] = 5; dim[3] = 6; dim[4] = 4;
@@ -902,7 +905,7 @@ public class InterpolationTest {
 	@Test
 	public void testAsFunctor() {
 
-	    System.out.println("Testing use of interpolations as functors...");
+	    logger.info("Testing use of interpolations as functors...");
 
 	    final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
 	    final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
@@ -957,7 +960,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testBackwardFlat() {
 //
-//	    System.out.println("Testing backward-flat interpolation...");
+//	    logger.info("Testing backward-flat interpolation...");
 //
 //	    const Real x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
 //	    const Real y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
@@ -1076,7 +1079,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testForwardFlat() {
 //
-//	    System.out.println("Testing forward-flat interpolation...");
+//	    logger.info("Testing forward-flat interpolation...");
 //
 //	    const Real x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
 //	    const Real y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
@@ -1196,7 +1199,7 @@ public class InterpolationTest {
 //	@Test
 //	public void /* InterpolationTest:: */ testSabrInterpolation(){
 //
-//	    System.out.println("Testing Sabr interpolation...");
+//	    logger.info("Testing Sabr interpolation...");
 //
 //	    double tolerance = 2.0e-13;
 //	    double[] strikes      = new double[31];

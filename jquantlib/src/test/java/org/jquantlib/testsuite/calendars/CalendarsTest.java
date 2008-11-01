@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -63,15 +64,17 @@ import org.junit.Test;
  */
 public class CalendarsTest {
     
+    private final static Logger logger = Logger.getLogger(CalendarsTest.class);
+
 	public CalendarsTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	
     @Test
     public void testModifiedCalendars() {
 
-        System.out.println("Testing calendar modification...");
+        logger.info("Testing calendar modification...");
 
         Calendar c1 = Target.getCalendar();
         Calendar c2 = UnitedStates.getCalendar(UnitedStates.Market.NYSE);
@@ -79,14 +82,14 @@ public class CalendarsTest {
         Date d2 = DateFactory.getFactory().getDate(26,Month.APRIL,2004);   // business day
 
         if(!c1.isHoliday(d1))
-            System.out.println("wrong assumption---correct the test");
+            logger.info("wrong assumption---correct the test");
         if(!c1.isBusinessDay(d2))
-            System.out.println("wrong assumption---correct the test");
+            logger.info("wrong assumption---correct the test");
 
         if(!c2.isHoliday(d1))
-            System.out.println("wrong assumption---correct the test");
+            logger.info("wrong assumption---correct the test");
         if(!c2.isBusinessDay(d2))
-            System.out.println("wrong assumption---correct the test");
+            logger.info("wrong assumption---correct the test");
         /*
         // modify the TARGET calendar
         //TODO:        
@@ -126,7 +129,7 @@ public class CalendarsTest {
     @Test
     public void testJointCalendars() {
 
-        System.out.println("Testing joint calendars...");
+        logger.info("Testing joint calendars...");
 
         Calendar c1 = Target.getCalendar(),
                  c2 = UnitedKingdom.getCalendar(UnitedKingdom.Market.SETTLEMENT),
@@ -192,7 +195,7 @@ public class CalendarsTest {
 
     @Test
     public void testUSSettlement() {
-        System.out.println("Testing US settlement holiday list...");
+        logger.info("Testing US settlement holiday list...");
 
         List<Date> expectedHol = new ArrayList<Date>();
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
@@ -233,7 +236,7 @@ public class CalendarsTest {
 
     @Test
     public void testUSGovernmentBondMarket() {
-        System.out.println("Testing US government bond market holiday list...");
+        logger.info("Testing US government bond market holiday list...");
 
         List<Date> expectedHol = new ArrayList<Date>();
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
@@ -265,7 +268,7 @@ public class CalendarsTest {
 
     @Test
     public void testUSNewYorkStockExchange() {
-        System.out.println("Testing New York Stock Exchange holiday list...");
+        logger.info("Testing New York Stock Exchange holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,2004));
@@ -356,7 +359,7 @@ public class CalendarsTest {
 
     @Test
     public void testTARGET() {
-        System.out.println("Testing TARGET holiday list...");
+        logger.info("Testing TARGET holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,1999));
@@ -422,7 +425,7 @@ public class CalendarsTest {
 
     @Test
     public void testGermanyFrankfurt() {
-        System.out.println("Testing Frankfurt Stock Exchange holiday list...");
+        logger.info("Testing Frankfurt Stock Exchange holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
 
@@ -457,7 +460,7 @@ public class CalendarsTest {
 
     @Test
     public void testGermanyEurex() {
-        System.out.println("Testing Eurex holiday list...");
+        logger.info("Testing Eurex holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
 
@@ -492,7 +495,7 @@ public class CalendarsTest {
 
     @Test
     public void testGermanyXetra() {
-        System.out.println("Testing Xetra holiday list...");
+        logger.info("Testing Xetra holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
 
@@ -527,7 +530,7 @@ public class CalendarsTest {
     
     @Test
     public void testUKSettlement() {
-        System.out.println("Testing UK settlement holiday list...");
+        logger.info("Testing UK settlement holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
 
@@ -583,7 +586,7 @@ public class CalendarsTest {
 
     @Test
     public void testUKExchange() {
-        System.out.println("Testing London Stock Exchange holiday list...");
+        logger.info("Testing London Stock Exchange holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
 
@@ -639,7 +642,7 @@ public class CalendarsTest {
 
     @Test
     public void testUKMetals() {
-        System.out.println("Testing London Metals Exchange holiday list...");
+        logger.info("Testing London Metals Exchange holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
 
@@ -695,7 +698,7 @@ public class CalendarsTest {
 
     @Test
     public void testItalyExchange() {
-        System.out.println("Testing Milan Stock Exchange holiday list...");
+        logger.info("Testing Milan Stock Exchange holiday list...");
 
         List<Date> expectedHol = new Vector<Date>();
 
@@ -741,7 +744,7 @@ public class CalendarsTest {
 
     @Test
     public void testBrazil() {
-        System.out.println("Testing Brazil holiday list...");
+        logger.info("Testing Brazil holiday list...");
         
         List<Date> expectedHol = new Vector<Date>();
 
@@ -788,7 +791,7 @@ public class CalendarsTest {
 
     @Test
     public void testEndOfMonth() {
-        System.out.println("Testing end-of-month calculation...");
+        logger.info("Testing end-of-month calculation...");
 
         Calendar c = Target.getCalendar(); // any calendar would be OK
 
@@ -817,7 +820,7 @@ public class CalendarsTest {
     @Test
     public void testBusinessDaysBetween() {
 
-        System.out.println("Testing calculation of business days between dates...");
+        logger.info("Testing calculation of business days between dates...");
 
         List<Date> testDates = new Vector<Date>();
         testDates.add(DateFactory.getFactory().getDate(1,FEBRUARY,2002));

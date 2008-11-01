@@ -38,7 +38,7 @@ import java.lang.reflect.Type;
  * </pre>
  * 
  * Notice that this class is somewhat "crude". See also {@link TypeReference} for
- * a class which provides the same functionality but is more "elegant". 
+ * a class which provides the same functionality but in a more <i>elegant</i> way. 
  * 
  * @see TypeReference
  * 

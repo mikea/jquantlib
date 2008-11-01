@@ -24,21 +24,19 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import java.util.ArrayList; // FIXME: performance
 import java.util.Date;
-import java.util.List;
 
 
 
 /**
+ * Random seed generator
+ * <p>
+ * Random number generator used for automatic generation of initialization seeds.
  * 
  * @author Dominik Holenstein
- *
+ * 
  **/
-
-//TODO: Under construction
-
-
+//TEST: write test cases
 public class SeedGenerator {
 	
 	//
@@ -55,38 +53,44 @@ public class SeedGenerator {
 	// private fields
 	//
 	
-	private MersenneTwisterUniformRng rng_ = new MersenneTwisterUniformRng();
+	private MersenneTwisterUniformRng rng_;
 	
 	
 	//
-	// Constructor
+	// private constructor
 	//
 		
-	public SeedGenerator() {
-		// rng_ = 42;
+	private SeedGenerator() {
+		this.rng_ = new MersenneTwisterUniformRng(42);
+		initialize();
 	}
 
-	public void initialize() {
+	
+	//
+	// private methods
+	//
+	
+	private void initialize() {
 		
 		// firstSeed is chosen based on Date and used for the first rng 
-		Date now = new Date();
-		long firstSeed = now.getTime();
-		MersenneTwisterUniformRng first = new MersenneTwisterUniformRng(firstSeed);
+		final Date now = new Date();
+		final long firstSeed = now.getTime();
+		final MersenneTwisterUniformRng first = new MersenneTwisterUniformRng(firstSeed);
 		
 		// secondSeed is as random as it could be
 		// feel free to suggest improvements
-	 	long secondSeed = first.nextInt32();
-		MersenneTwisterUniformRng second = new MersenneTwisterUniformRng(secondSeed);
+	 	final long secondSeed = first.nextInt32();
+		final MersenneTwisterUniformRng second = new MersenneTwisterUniformRng(secondSeed);
 		
 		// use the second rng to initialize the final one
-		long skip = second.nextInt32() % 1000;
-		List<Long> init = new ArrayList<Long>(4);
-		init.add(second.nextInt32());
-		init.add(second.nextInt32());
-		init.add(second.nextInt32());
-		init.add(second.nextInt32());
+		final long skip = second.nextInt32() % 1000;
+		final long init[] = new long[4];
+		init[0] = second.nextInt32();
+		init[1] = second.nextInt32();
+		init[2] = second.nextInt32();
+		init[3] = second.nextInt32();
 		
-	//	MerseenneTwisterUniformRng rng_ = MersenneTwisterUniformRngByArray(init);  // --> Constructor for long[] not available yet
+		this.rng_ = new MersenneTwisterUniformRng(init);
 		
 		for (long i=0; i<skip; i++ ){
 			rng_.nextInt32();

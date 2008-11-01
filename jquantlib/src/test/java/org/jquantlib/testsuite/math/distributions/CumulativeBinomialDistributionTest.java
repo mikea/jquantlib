@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.distributions.CumulativeBinomialDistribution;
 import org.junit.Test;
 
@@ -31,11 +32,12 @@ import org.junit.Test;
  * @author Dominik Holenstein
  */
 
-public class CumulativeBinomialDistrubutionTest {
+public class CumulativeBinomialDistributionTest {
 	
-	
-	public CumulativeBinomialDistrubutionTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    private final static Logger logger = Logger.getLogger(CumulativeBinomialDistributionTest.class);
+
+	public CumulativeBinomialDistributionTest() {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test

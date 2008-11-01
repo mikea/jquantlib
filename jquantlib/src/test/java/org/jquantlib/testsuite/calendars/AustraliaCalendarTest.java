@@ -23,16 +23,17 @@
 package org.jquantlib.testsuite.calendars;
 
 import static org.jquantlib.util.Month.APRIL;
+import static org.jquantlib.util.Month.AUGUST;
 import static org.jquantlib.util.Month.DECEMBER;
 import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.JUNE;
-import static org.jquantlib.util.Month.AUGUST;
 import static org.jquantlib.util.Month.MARCH;
 import static org.jquantlib.util.Month.OCTOBER;
 
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Australia;
 import org.jquantlib.util.Date;
@@ -48,12 +49,14 @@ import org.junit.Test;
 
 
 public class AustraliaCalendarTest {
+    private final static Logger logger = Logger.getLogger(AustraliaCalendarTest.class);
+
 	private Calendar c;
-	List<Date> expectedHol;
+	private List<Date> expectedHol;
 	
     
     public AustraliaCalendarTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
     @Before
@@ -66,7 +69,7 @@ public class AustraliaCalendarTest {
     @Test
 	public void testAustraliaYear2008() {
       	int year = 2008;
-      	System.out.println("Testing Australia holiday list for the year " + year + "...");
+      	logger.info("Testing Australia holiday list for the year " + year + "...");
     	
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(28,JANUARY,year));
@@ -91,7 +94,7 @@ public class AustraliaCalendarTest {
     @Test
     public void testAustraliaYear2004() {       
         int year = 2004;
-        System.out.println("Testing Australia holiday list for the year " + year + "...");
+        logger.info("Testing Australia holiday list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(26,JANUARY,year));        
@@ -112,7 +115,7 @@ public class AustraliaCalendarTest {
     @Test
     public void testAustraliaYear2005() {       
         int year = 2005;
-        System.out.println("Testing Australia holiday list for the year " + year + "...");
+        logger.info("Testing Australia holiday list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(26,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));
@@ -135,7 +138,7 @@ public class AustraliaCalendarTest {
     @Test
     public void testAustraliaYear2006() {       
         int year = 2006;
-        System.out.println("Testing Australia holiday list for the year " + year + "...");
+        logger.info("Testing Australia holiday list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(26,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
@@ -156,7 +159,7 @@ public class AustraliaCalendarTest {
     @Test
     public void testAustraliaYear2007() {       
         int year = 2007;
-        System.out.println("Testing Australia holiday list for the year " + year + "...");
+        logger.info("Testing Australia holiday list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(26,JANUARY,year));
@@ -180,7 +183,7 @@ public class AustraliaCalendarTest {
     @Test
     public void testAustraliaYear2009() {       
         int year = 2009;
-        System.out.println("Testing Australia holiday list for the year " + year + "...");
+        logger.info("Testing Australia holiday list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(26,JANUARY,year));
@@ -201,7 +204,7 @@ public class AustraliaCalendarTest {
     @Test
     public void testAustraliaYear2010() {       
         int year = 2010;
-        System.out.println("Testing Australia holiday list for the year " + year + "...");
+        logger.info("Testing Australia holiday list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(26,JANUARY,year));
@@ -223,7 +226,7 @@ public class AustraliaCalendarTest {
     @Test
     public void testAustraliaYear2011() {       
         int year = 2011;
-        System.out.println("Testing Australia holiday list for the year " + year + "...");
+        logger.info("Testing Australia holiday list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(26,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));               
@@ -243,7 +246,7 @@ public class AustraliaCalendarTest {
     @Test
     public void testAustraliaYear2012() {       
         int year = 2012;
-        System.out.println("Testing Australia holiday list for the year " + year + "...");
+        logger.info("Testing Australia holiday list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(26,JANUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));

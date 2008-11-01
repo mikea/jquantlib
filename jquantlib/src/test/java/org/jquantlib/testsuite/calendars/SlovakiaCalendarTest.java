@@ -22,19 +22,20 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.MARCH;
 import static org.jquantlib.util.Month.APRIL;
-import static org.jquantlib.util.Month.MAY;
-import static org.jquantlib.util.Month.JULY;
 import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.SEPTEMBER;
-import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.JULY;
+import static org.jquantlib.util.Month.MARCH;
+import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.util.Month.SEPTEMBER;
 
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Slovakia;
 import org.jquantlib.util.Date;
@@ -49,8 +50,10 @@ import org.junit.Test;
 
 public class SlovakiaCalendarTest {
 
+    private final static Logger logger = Logger.getLogger(SlovakiaCalendarTest.class);
+
 	public SlovakiaCalendarTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test
@@ -74,7 +77,7 @@ public class SlovakiaCalendarTest {
 	//2004
 	void testSlovakiaYear2004(Calendar c) {
       	int year = 2004;
-      	System.out.println("Testing Solvakia's holiday list for the year " + year + "...");
+      	logger.info("Testing Solvakia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		//New Year -- 1st Jan 
 		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
@@ -127,7 +130,7 @@ public class SlovakiaCalendarTest {
 	
 	void testSlovakiaYear2005(Calendar c) {
       	int year = 2005;
-      	System.out.println("Testing Solvakia's holiday list for the year " + year + "...");
+      	logger.info("Testing Solvakia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		//New Year -- 1st Jan weekend in yr 2005
 		//expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
@@ -181,7 +184,7 @@ public class SlovakiaCalendarTest {
 	void testSlovakiaYear2006(Calendar c) {
       	
 		int year = 2006;
-      	System.out.println("Testing Solvakia's holiday list for the year " + year + "...");
+      	logger.info("Testing Solvakia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		
 		expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year)); 
@@ -207,7 +210,7 @@ public class SlovakiaCalendarTest {
 	void testSlovakiaYear2007(Calendar c) {
       	
 		int year = 2007;
-      	System.out.println("Testing Solvakia's holiday list for the year " + year + "...");
+      	logger.info("Testing Solvakia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
@@ -231,7 +234,7 @@ public class SlovakiaCalendarTest {
 	void testSlovakiaYear2008(Calendar c) {
       	
 		int year = 2008;
-      	System.out.println("Testing Solvakia's holiday list for the year " + year + "...");
+      	logger.info("Testing Solvakia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
@@ -256,7 +259,7 @@ public class SlovakiaCalendarTest {
 	void testSlovakiaYear2009(Calendar c) {
       	
 		int year = 2009;
-      	System.out.println("Testing Solvakia's holiday list for the year " + year + "...");
+      	logger.info("Testing Solvakia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
@@ -280,7 +283,7 @@ public class SlovakiaCalendarTest {
 	void testSlovakiaYear2010(Calendar c) {
       	
 		int year = 2010;
-      	System.out.println("Testing Solvakia's holiday list for the year " + year + "...");
+      	logger.info("Testing Solvakia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
@@ -303,7 +306,7 @@ public class SlovakiaCalendarTest {
 	void testSlovakiaYear2011(Calendar c) {
       	
 		int year = 2011;
-      	System.out.println("Testing Solvakia's holiday list for the year " + year + "...");
+      	logger.info("Testing Solvakia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		
 		expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year)); 
@@ -326,7 +329,7 @@ public class SlovakiaCalendarTest {
 	void testSlovakiaYear2012(Calendar c) {
       	
 		int year = 2012;
-      	System.out.println("Testing Solvakia's holiday list for the year " + year + "...");
+      	logger.info("Testing Solvakia's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
 		
 		expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year)); 

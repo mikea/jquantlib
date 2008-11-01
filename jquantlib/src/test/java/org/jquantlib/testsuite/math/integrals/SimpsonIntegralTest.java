@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.Integrator;
 import org.jquantlib.math.integrals.SimpsonIntegral;
@@ -42,8 +43,10 @@ import org.junit.Test;
 //TODO: Write SimpsonIntegral test case.
 public class SimpsonIntegralTest {
 	
+    private final static Logger logger = Logger.getLogger(SimpsonIntegralTest.class);
+
 	public SimpsonIntegralTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test

@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.quotes;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
@@ -38,8 +39,10 @@ import org.junit.Test;
  */
 public class QuotesTest {
 
+    private final static Logger logger = Logger.getLogger(QuotesTest.class);
+
 	public QuotesTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 //	private double add10(final double x) { return x+10; }
@@ -53,7 +56,7 @@ public class QuotesTest {
 	@Test
 	public void testObservable() {
 
-	    System.out.println("Testing observability of quotes...");
+	    logger.info("Testing observability of quotes...");
 
 	    SimpleQuote me = new SimpleQuote(0.0);
 	    Flag f = new Flag();
@@ -66,7 +69,7 @@ public class QuotesTest {
 	@Test
 	public void testObservableHandle() {
 
-		System.out.println("Testing observability of quote handles...");
+		logger.info("Testing observability of quote handles...");
 
 	    SimpleQuote me1 = new SimpleQuote(0.0);
 	    RelinkableHandle<Quote> h = new RelinkableHandle(me1);
@@ -89,7 +92,7 @@ public class QuotesTest {
 //	@Test
 //	public void testDerived() {
 //
-//		System.out.println("Testing derived quotes...");
+//		logger.info("Testing derived quotes...");
 //
 //	    typedef Real (*unary_f)(Real);
 //	    unary_f funcs[3] = { add10, mul10, sub10 };
@@ -110,7 +113,7 @@ public class QuotesTest {
 //	@Test
 //	public void testComposite() {
 //
-//		System.out.println("Testing composite quotes...");
+//		logger.info("Testing composite quotes...");
 //
 //	    typedef Real (*binary_f)(Real,Real);
 //	    binary_f funcs[3] = { add, mul, sub };
@@ -134,7 +137,7 @@ public class QuotesTest {
 //	@Test
 //	public void testForwardValueQuoteAndImpliedStdevQuote(){
 //		
-//		System.out.println("Testing forward-value and implied-stdev quotes...");
+//		logger.info("Testing forward-value and implied-stdev quotes...");
 //		
 //	    double forwardRate = .05;
 //	    DayCounter dc = new ActualActual();

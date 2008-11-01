@@ -24,7 +24,9 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.distributions.BinomialDistribution;
+import org.jquantlib.testsuite.lang.TypeTokenTest;
 import org.junit.Test;
 
 /**
@@ -33,8 +35,10 @@ import org.junit.Test;
 
 public class BinomialDistributionTest {
 	
+    private final static Logger logger = Logger.getLogger(BinomialDistributionTest.class);
+
 	public BinomialDistributionTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test

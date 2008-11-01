@@ -22,8 +22,9 @@
 
 package org.jquantlib.math.distributions;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.randomnumbers.InverseCumulative;
 
 
 /**
@@ -42,8 +43,11 @@ import org.jquantlib.math.UnaryFunctionDouble;
 
 // TODO: Code review. Remove inheritance from NormalDistribution and use of objects types.
 
-public class InverseCumulativeNormal implements UnaryFunctionDouble {
+public class InverseCumulativeNormal implements InverseCumulative {
 		
+    private final static Logger logger = Logger.getLogger(InverseCumulativeNormal.class);
+    
+
 	//
 	// static final fields (constants)
 	//
@@ -133,11 +137,11 @@ public class InverseCumulativeNormal implements UnaryFunctionDouble {
     
     	// x has to be between 0.00 and 1.00
     	if (x <= 0.0) {
-    	    // System.out.println("x is " + x + " but has to be 0.0 < x < 1.0");
+    	    logger.debug("x is " + x + " but has to be 0.0 < x < 1.0");
     	    return 0.00;
     	}
     	if (x >= 1.0) {
-    	    // System.out.println("x is " + x + " but has to be 0.0 < x < 1.0");
+    	    logger.debug("x is " + x + " but has to be 0.0 < x < 1.0");
     	    return 1.00;
     	}
     

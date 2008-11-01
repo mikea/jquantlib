@@ -41,10 +41,8 @@
 
 package org.jquantlib.methods.montecarlo;
 
-import java.util.List;
-
 import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
-import org.jquantlib.math.randomnumbers.RandomSequenceGenerator;
+import org.jquantlib.math.randomnumbers.RandomSequenceGeneratorIntf;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 
@@ -58,7 +56,8 @@ import org.jquantlib.time.TimeGrid;
  * @author Richard Gomes
  */
 //TEST the generated paths are checked against cached results 
-public class PathGenerator<RNG extends RandomNumberGenerator<Path>, GSG extends RandomSequenceGenerator<Path, RNG>> { // should be GaussianSequenceGenerator ?
+// public class PathGenerator<RNG extends RandomNumberGenerator<Path>, GSG extends RandomSequenceGenerator<Path, RNG>> { // should be GaussianSequenceGenerator ?
+public class PathGenerator<RNG extends RandomNumberGenerator, GSG extends RandomSequenceGeneratorIntf> { // should be GaussianSequenceGenerator ?
 
     private boolean brownianBridge_;
     private GSG generator_;
@@ -119,35 +118,37 @@ public class PathGenerator<RNG extends RandomNumberGenerator<Path>, GSG extends 
 
     public final Sample<Path> next(final boolean antithetic) /* @ReadOnly */ {
 
-        final Sample<List<Path>> sequence_ =
-            antithetic ? generator_.lastSequence()
-                       : generator_.nextSequence();
-
-//            
+//      
 // TODO :: code review            
-//            
+//                 
+//        final Sample<List<Path>> sequence_ =
+//            antithetic ? generator_.lastSequence()
+//                       : generator_.nextSequence();
+//
 //        if (brownianBridge_) {
 //            bb_.transform(sequence_.getValue().getValues_(), this.temp_);
 //        } else {
 //            DoubleArrays.copy(sequence_.getValue().getValues_(), 0, this.dimension_);
 //        }
 //
+//        
+//        // XXX next_.weight = sequence_.weight;
+//        Sample<Path> next_ = new Sample<Path>(new Path(timeGrid_), sequence_.getWeight());
+//      
+//
+//        Path path = next_.getValue();
+//        path.setValues_( 0, process_.x0() );
+//
+//        for (int i=1; i<path.length(); i++) {
+//            /*@Time*/ double  t = timeGrid_.get(i-1);
+//            /*@Time*/ double  dt = timeGrid_.dt(i-1);
+//            double d = process_.evolve(t, path.getValues_(i-1), dt, antithetic ? -temp_[i-1] : temp_[i-1]);
+//            path.setValues_(i, d);
+//        }
+//
+//        return next_;
         
-        // XXX next_.weight = sequence_.weight;
-        Sample<Path> next_ = new Sample<Path>(new Path(timeGrid_), sequence_.getWeight());
-      
-
-        Path path = next_.getValue();
-        path.setValues_( 0, process_.x0() );
-
-        for (int i=1; i<path.length(); i++) {
-            /*@Time*/ double  t = timeGrid_.get(i-1);
-            /*@Time*/ double  dt = timeGrid_.dt(i-1);
-            double d = process_.evolve(t, path.getValues_(i-1), dt, antithetic ? -temp_[i-1] : temp_[i-1]);
-            path.setValues_(i, d);
-        }
-
-        return next_;
+        return null;  
     }
 
 }

@@ -23,13 +23,14 @@
 package org.jquantlib.methods.montecarlo;
 
 
+import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
-import org.jquantlib.math.randomnumbers.UniformRandomSequenceGenerator;
+import org.jquantlib.math.randomnumbers.RandomSequenceGeneratorIntf;
 import org.jquantlib.util.reflect.TypeToken;
 
 /**
@@ -99,7 +100,7 @@ import org.jquantlib.util.reflect.TypeToken;
  *
  */
 
-public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements UniformRandomSequenceGenerator<T> {
+public class SobolRsg<RNG extends RandomNumberGenerator> implements RandomSequenceGeneratorIntf {
 	
 	// Sobol' Levitan coefficients of the free direction integers as given
     // by Bratley, P., Fox, B.L. (1988)
@@ -969,7 +970,7 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements Unifor
 	private int dimensionality_; 							// Size dimensionality_;
 	private long sequenceCounter_; 							// mutable unsigned long sequenceCounter_;
 	private boolean firstDraw_; 							// mutable bool firstDraw_;
-	private Sample<List<T>> sequence_; 			    		// typedef Sample<std::vector<Real> > sample_type; / mutable sample_type sequence_;
+	private Sample<DoubleList> sequence_; 			    		// typedef Sample<std::vector<Real> > sample_type; / mutable sample_type sequence_;
 	private List<Long> integerSequence_; 				// mutable std::vector<unsigned long> integerSequence_
 	
 	//FIXME: Is this the correct translation of std::vector<std::vector< long> > directionIntegers_?
@@ -995,17 +996,18 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements Unifor
     	this.dimensionality_ = dimensionality; 	// dimensionality_(dimensionality)
     	this.sequenceCounter_= 0; 				// sequenceCounter_(0)
     	this.firstDraw_ = true;					// firstDraw_(true)
-    	
-        // instantiate a generic holder for Sample values
-        T value = null;
-        try {
-            value = (T) TypeToken.getClazz(this.getClass(), 0).getConstructor(int.class).newInstance(this.dimensionality_);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        
-//        
+
+//      
 // TODO: code review (to be solved by Richard)
+//    	        
+    	
+//        // instantiate a generic holder for Sample values
+//        T value = null;
+//        try {
+//            value = (T) TypeToken.getClazz(this.getClass(), 0).getConstructor(int.class).newInstance(this.dimensionality_);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
 //        
 //        // instantiate a Sample with previously instantiated value holder
 //        this.sequence_ = new Sample<List<T>>(value, 1.0);
@@ -1310,7 +1312,7 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements Unifor
     }
     
     @Override
-    public final Sample<List<T>> nextSequence() /* @Read-only */ {
+    public final Sample<DoubleList> nextSequence() /* @Read-only */ {
         final long[] v = nextInt32Sequence();
         // normalize to get a double in (0,1)
         for (int k=0; k<dimensionality_; ++k) {
@@ -1322,15 +1324,13 @@ public class SobolRsg<T, RNG extends RandomNumberGenerator<T>> implements Unifor
     } 
     
     @Override
+    public final Sample<DoubleList> lastSequence() /* @Read-only*/  { 
+        return sequence_; 
+    }
+    
+    @Override
     public int dimension() /* @Read-only */ { 
     	return dimensionality_; 
     }
     
-    @Override
-    public final Sample<List<T>> lastSequence() /* @Read-only*/  { 
-    	return sequence_; 
-    }
-    
 }
-
-

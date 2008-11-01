@@ -153,8 +153,7 @@ public abstract class BlackVolTermStructure extends TermStructure implements Typ
 	 * @return
 	 */
 	public final /*@Volatility*/ double blackForwardVol(final Date date1, final Date date2, final /*@Price*/ double strike, boolean extrapolate) {
-		if (date1.gt(date2))
-			throw new IllegalArgumentException(date1 + " later than " + date2);
+		if (date1.gt(date2)) throw new IllegalArgumentException(date1 + " later than " + date2);
 		/*@Time*/ double time1 = timeFromReference(date1);
 		/*@Time*/ double time2 = timeFromReference(date2);
 		return blackForwardVol(time1, time2, strike, extrapolate);
@@ -205,8 +204,7 @@ public abstract class BlackVolTermStructure extends TermStructure implements Typ
 	 * @return
 	 */
 	public final /*@Variance*/ double blackForwardVariance(final Date date1, final Date date2, final /*@Price*/ double strike, boolean extrapolate) {
-		if (date1.gt(date2))
-			throw new IllegalArgumentException(date1 + " later than " + date2);
+		if (date1.gt(date2)) throw new IllegalArgumentException(date1 + " later than " + date2);
 		/*@Time*/ double time1 = timeFromReference(date1);
 		/*@Time*/ double time2 = timeFromReference(date2);
 		return blackForwardVariance(time1, time2, strike, extrapolate);

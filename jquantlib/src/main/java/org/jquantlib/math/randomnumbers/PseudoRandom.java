@@ -22,11 +22,18 @@
 
 package org.jquantlib.math.randomnumbers;
 
-
+import org.jquantlib.math.distributions.InverseCumulativeNormal;
 
 /**
  * @author Richard Gomes
  */
-public class PseudoRandom extends GenericPseudoRandom<Double, MersenneTwisterUniformRng, InverseCumulativeNormalAdapter> {
+public class PseudoRandom/*<RNG extends MersenneTwisterUniformRng, IC extends InverseCumulativeNormal>*/
+        extends GenericPseudoRandom<MersenneTwisterUniformRng,InverseCumulativeNormal> {
+
+    @Override
+    public InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal> makeSequenceGenerator(
+            final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
+        return super.makeSequenceGenerator(dimension, seed);
+    }
 
 }

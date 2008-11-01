@@ -123,8 +123,8 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         // for which the drift will be used
         /*@Time*/ double t1 = t + 0.0001;
         YieldTermStructure yts = riskFreeRate_.getLink();
-        /*@Rate*/ double r = yts.forwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).evaluate();
-        double d = yts.forwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY,true).evaluate();
+        /*@Rate*/ double r = yts.forwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate();
+        double d = yts.forwardRate(t, t1, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY,true).rate();
         return r-d-0.5*sigma*sigma;
     }
 

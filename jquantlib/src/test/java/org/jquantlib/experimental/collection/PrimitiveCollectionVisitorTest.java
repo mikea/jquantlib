@@ -26,13 +26,16 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
 public class PrimitiveCollectionVisitorTest {
 
-	Date startDate = null;
+    private final static Logger logger = Logger.getLogger(PrimitiveCollectionVisitorTest.class);
+    
+    Date startDate = null;
 
 	@Before
 	public void init() {
@@ -48,7 +51,7 @@ public class PrimitiveCollectionVisitorTest {
 		}
 
 		long totalTime = System.currentTimeMillis() - startNano;
-		System.out.println("      PrimitiveCollectionAddVisitor without  autoboxing : " + totalTime + " milli seconds");
+		logger.info("      PrimitiveCollectionAddVisitor without  autoboxing : " + totalTime + " milli seconds");
 	}
 
 	@Test
@@ -62,7 +65,7 @@ public class PrimitiveCollectionVisitorTest {
 		}
 
 		long totalTime = System.currentTimeMillis() - startNano;
-		System.out.println("      java.util.list with  autoboxing : " + totalTime + " milli seconds");
+		logger.info("      java.util.list with  autoboxing : " + totalTime + " milli seconds");
 	}
 
 	public static void main(String[] args) {

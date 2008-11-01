@@ -41,6 +41,7 @@ package org.jquantlib.testsuite.instruments;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.instruments.Instrument;
 import org.jquantlib.instruments.Stock;
 import org.jquantlib.quotes.Quote;
@@ -51,14 +52,14 @@ import org.junit.Test;
 
 public class IntrumentsTest {
 
-	public IntrumentsTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    private final static Logger logger = Logger.getLogger(IntrumentsTest.class);      public IntrumentsTest() {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test
 	public void testObservable() {
 
-	    System.out.println("Testing observability of instruments...");
+	    logger.info("Testing observability of instruments...");
 
 
 	    SimpleQuote me1 = new SimpleQuote(0.0);

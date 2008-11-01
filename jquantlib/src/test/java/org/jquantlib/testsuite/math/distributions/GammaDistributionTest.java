@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.distributions.GammaDistribution;
 import org.junit.Test;
 
@@ -34,8 +35,10 @@ import org.junit.Test;
 
 public class GammaDistributionTest {
 	
+    private final static Logger logger = Logger.getLogger(GammaDistributionTest.class);
+
 	public GammaDistributionTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	//FIXME Compare the test values to QuantLib
@@ -83,7 +86,7 @@ public class GammaDistributionTest {
 			double expected = testvalues[i][1];
 			double x = testvalues[i][0];
 			double computed = gammDistribution.evaluate(x);
-			// System.out.println(computed); // for testing
+			// logger.info(computed); // for testing
 			double tolerance = 1.0e-15;
 			if (Math.abs(expected-computed)>tolerance) {
 				fail("x: " + x + " expected: " + expected + " realised: " + computed);
@@ -97,7 +100,7 @@ public class GammaDistributionTest {
 			double expected = testvalues2[i][1];
 			double x = testvalues2[i][0];
 			double computed = gammDist.evaluate(x);
-			// System.out.println(computed); // for testing
+			// logger.info(computed); // for testing
 			double tolerance = 1.0e-15;
 			if (Math.abs(expected-computed)>tolerance) {
 				fail("x: " + x + " expected: " + expected + " realised: " + computed);

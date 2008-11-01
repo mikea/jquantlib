@@ -23,30 +23,66 @@
 package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.FunctionDouble;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 
-// FIXME: comment this class
-public class InterestRate implements FunctionDouble {
+/**
+ * This class encapsulate the interest rate compounding algebra. It manages day-counting conventions, compounding conventions,
+ * conversion between different conventions, discount/compound factor calculations, and implied/equivalent rate calculations.
+ * 
+ * @author Richard Gomes
+ */
+// TODO: Converted rates are checked against known good results 
+public class InterestRate {
 
+    //
+    // private fields
+    //
+    
 	private /*@Rate*/ double rate;
     private DayCounter dc;
     private Compounding compound;
     private boolean freqMakesSense;
     private int freq;
 	
+    
+    //
+    // public constructors
+    //
+    
     /**
      * Default constructor returning a null interest rate.
+     * 
+     * @category constructors
      */
     public InterestRate() {
     	this.rate = 0.0;
     }
 
+
+    /**
+     * Standard constructor. Assumes a {@link Frequency}.Annual
+     * 
+     * @param r represents the rate
+     * @param dc is a {@link DayCounter}
+     * @param comp is a {@link Compounding}
+     * 
+     * @category constructors
+     */
     public InterestRate(final /*@Rate*/ double r, final DayCounter dc, final Compounding comp) {
     	this(r, dc, comp, Frequency.ANNUAL);
     }
     
+    /**
+     * Standard constructor.
+     * 
+     * @param r represents the rate
+     * @param dc is a {@link DayCounter}
+     * @param comp is a {@link Compounding}
+     * @param freq represents a {@link Frequency}
+     * 
+     * @category constructors
+     */
     public InterestRate(final /*@Rate*/ double r, final DayCounter dc, final Compounding comp, final Frequency freq) {
     	this.rate = r;
     	this.dc = dc;
@@ -60,13 +96,17 @@ public class InterestRate implements FunctionDouble {
         }
     }
     
+    
+    //
+    // public methods
+    //
+    
     /**
-     * Compound factor implied by the rate compounded at time t.
+     * @return the compound (a.k.a capitalization) factor implied by the rate compounded at time t.
      * 
      * @note Time must be measured using InterestRate's own day counter.
      * 
-     * @return the compound (a.k.a capitalization) factor
-     *         implied by the rate compounded at time t.
+     * @category inspectors
      */
     public final /*@CompoundFactor*/ double compoundFactor(final /*@Time*/ double time) {
     	/*@Time*/ double t = time;
@@ -96,48 +136,92 @@ public class InterestRate implements FunctionDouble {
         }
     }
 
+    
+    // --- inspectors
+    
+    
+    /**
+     * @return the {@link DayCounter} 
+     * 
+     * @category inspectors
+     */
     public final DayCounter dayCounter() {
     	return this.dc;
     }
     
+    /**
+     * @return the {@link Compounding}
+     * 
+     * @category inspectors
+     */
     public final Compounding compounding() {
     	return this.compound;
     }
     
+    /**
+     * @return the {@link Frequency}
+     * 
+     * @category inspectors
+     */
     public final Frequency frequency() {
         return freqMakesSense ? Frequency.valueOf(this.freq) : Frequency.NO_FREQUENCY;
     }
     
+    
+    // --- discount/compound factor calculations
+
+    
     /**
-     * Discount factor implied by the rate compounded at time t.
+     * @return discount factor implied by the rate compounded at time t.
      * 
-     * @note Time double must be measured using InterestRate's own day counter.
+     * @param t time must be measured using InterestRate's own day counter.
+     * 
+     * @category discount/compound factor calculations
      */
     public final /*@DiscountFactor*/ double discountFactor(final /*@Time*/ double t) {
     	/*@DiscountFactor*/ double factor = compoundFactor(t);
         return 1/factor;
     }
 
-    
+    /**
+     * @return discount factor implied by the rate compounded between two dates 
+     *  
+     * @param d1 is the start date
+     * @param d2 is the end date
+     * 
+     * @category discount/compound factor calculations
+     */
     public final /*@DiscountFactor*/ double discountFactor(final Date d1, final Date d2) {
     	return discountFactor(d1, d2, Date.NULL_DATE);
     }
 
+    /**
+     * @return compound factor implied by the rate compounded between two dates
+     *  
+     * @param d1 is the start date
+     * @param d2 is the end date
+     * @param refStart
+     * 
+     * @category discount/compound factor calculations
+     */
     public final /*@DiscountFactor*/ double discountFactor(final Date d1, final Date d2, final Date refStart) {
     	return discountFactor(d1, d2, refStart, Date.NULL_DATE);
     }
 
     /**
-     * Compound factor implied by the rate compounded between two dates
+     * @return the compound (a.k.a capitalization) factor implied by the rate compounded between two dates.
      * 
-     * @return the compound (a.k.a capitalization) factor
-     *         implied by the rate compounded between two dates.
+     * @category discount/compound factor calculations
      */
     public final /*@DiscountFactor*/ double discountFactor(final Date d1, final Date d2, final Date refStart, final Date refEnd) {
         /*@Time*/ double t = this.dc.getYearFraction(d1, d2, refStart, refEnd);
         return discountFactor(t);
     }
 
+    
+    
+    
+    
     public final InterestRate equivalentRate(final /*@Time*/ double t, final Compounding comp) {
     	return equivalentRate(t, comp, Frequency.ANNUAL);
     }
@@ -293,14 +377,9 @@ public class InterestRate implements FunctionDouble {
     	return sb.toString();
     }
 
-
-    //
-    // implements FunctionDouble
-    //
     
-    @Override
-    public final /*@Rate*/ double evaluate() {
-    	return this.rate;
+    public final /*@Rate*/ double rate() {
+        return rate;
     }
 
 }

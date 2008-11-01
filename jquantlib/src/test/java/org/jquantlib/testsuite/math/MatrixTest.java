@@ -23,11 +23,9 @@
 
 package org.jquantlib.testsuite.math;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
-
 import org.junit.Test;
 
 /**
@@ -35,8 +33,10 @@ import org.junit.Test;
  */
 public class MatrixTest {
 
+    private final static Logger logger = Logger.getLogger(MatrixTest.class);
+
 	public MatrixTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@Test
@@ -44,12 +44,14 @@ public class MatrixTest {
 		
 		Matrix matrix = new Matrix(3,3,42.42);
 		
-		System.out.print(matrix.toString());
+		logger.debug(matrix.toString());
 		
 	//	if (expected!=realized)
 	//		fail("1Millionth Prime: Expected: " + expected + " realized: " + realized);
 
 	}
+	
+	
 	@Test
 	public void testArrayCrosProduct() {
 		try {
@@ -58,10 +60,10 @@ public class MatrixTest {
 			Matrix matrix = new Matrix();
 			matrix = matrix.outerProduct(a1, a2);
 
-			System.out.print(matrix.toString());
+			logger.debug(matrix.toString());
 			Thread.sleep(7000);
 		} catch (InterruptedException ex) {
-			Logger.getLogger(MatrixTest.class.getName()).log(Level.SEVERE, null, ex);
+			logger.fatal(null, ex);
 		}
 
 	}

@@ -25,11 +25,14 @@ package org.jquantlib.testsuite.util;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ListTest {
+
+    private final static Logger logger = Logger.getLogger(ListTest.class);
 
     Date startDate = null;
 
@@ -47,7 +50,7 @@ public class ListTest {
 		}
        
 		long totalTime = System.nanoTime() - startNano;
-		System.out.println("      java.util.list with  autoboxing : "+ totalTime +" nano seconds");
+		logger.info("      java.util.list with  autoboxing : "+ totalTime +" nano seconds");
     }
 
 
@@ -61,7 +64,7 @@ public class ListTest {
 		}
 		long totalTime = System.nanoTime() - startNano;
 
-		System.out.println("org.jqauntlib.util.List NO autoboxing : "+ totalTime +" nano seconds");
+		logger.info("org.jqauntlib.util.List NO autoboxing : "+ totalTime +" nano seconds");
     }
 
 }

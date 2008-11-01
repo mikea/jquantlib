@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.termstructures.volatilities;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.termstructures.volatilities.Sabr;
 import org.junit.Test;
 
@@ -33,8 +34,10 @@ import org.junit.Test;
  */
 public class SabrTest {
 
+    private final static Logger logger = Logger.getLogger(SabrTest.class);
+
 	public SabrTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test

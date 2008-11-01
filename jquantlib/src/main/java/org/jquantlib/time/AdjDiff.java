@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.util.stdlibc.Std;
 
 /**
@@ -16,12 +17,14 @@ import org.jquantlib.util.stdlibc.Std;
 // FIXME: move to test suite
 public class AdjDiff {
 	
-	private static List<Double> times_ = new DoubleArrayList();
+    private final static Logger logger = Logger.getLogger(AdjDiff.class);
+    
+    private static List<Double> times_ = new DoubleArrayList();
     private static List<Double> dt_1 = new DoubleArrayList();
     private static List<Double> dt_0 = new DoubleArrayList();
 
 	public static void main(String[] args) {
-		
+	    
 		int steps = 5;
 		double end = 10;
 		
@@ -35,9 +38,9 @@ public class AdjDiff {
 		dt_1 = Std.adjacent_difference(times_, times_.indexOf(begin())+1, dt_1);
 		dt_0 = Std.adjacent_difference(times_, times_.indexOf(begin()), dt_0);
 		
-		System.out.println("time_: " + times_);
-		System.out.println("dt_0: " + dt_0);
-		System.out.println("dt_1: " + dt_1);
+		logger.debug("time_: " + times_);
+		logger.debug("dt_0: " + dt_0);
+		logger.debug("dt_1: " + dt_1);
 		
 /*		for (int i=1; i<times_.size(); i++) {
     		double curr = times_.get(i);

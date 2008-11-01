@@ -22,19 +22,21 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.util.Month.*;
-//import static org.jquantlib.util.Month.APRIL;
-//import static org.jquantlib.util.Month.AUGUST;
-//import static org.jquantlib.util.Month.DECEMBER;
-//import static org.jquantlib.util.Month.JANUARY;
-//import static org.jquantlib.util.Month.JULY;
-//import static org.jquantlib.util.Month.JUNE;
-//import static org.jquantlib.util.Month.MARCH;
-//import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.APRIL;
+import static org.jquantlib.util.Month.AUGUST;
+import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.FEBRUARY;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.MARCH;
+import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.util.Month.OCTOBER;
+import static org.jquantlib.util.Month.SEPTEMBER;
 
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.India;
 import org.jquantlib.util.Date;
@@ -51,9 +53,12 @@ import org.junit.Test;
 
 public class IndiaCalendarTest {
 
-	Calendar c= null;
+    private final static Logger logger = Logger.getLogger(IndiaCalendarTest.class);
+
+    private Calendar c= null;
+	
 	public IndiaCalendarTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Before
@@ -67,7 +72,7 @@ public class IndiaCalendarTest {
     public void testIndiaNseHolidaysYear2005()
     {    	
        	int year = 2005;
-    	System.out.println("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
     
     	expectedHol.add(DateFactory.getFactory().getDate(21,JANUARY,year));
@@ -92,7 +97,7 @@ public class IndiaCalendarTest {
     public void testIndiaNseHolidaysYear2006() {
     	
 		int year = 2006;
-    	System.out.println("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
     	
     	expectedHol.add(DateFactory.getFactory().getDate(11,JANUARY,year));
@@ -118,7 +123,7 @@ public class IndiaCalendarTest {
 	@Test
     public void testIndiaNseHolidaysYear2007() {
 		int year = 2007;
-    	System.out.println("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
           	
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
@@ -145,7 +150,7 @@ public class IndiaCalendarTest {
 	@Test
     public void testIndiaNseHolidaysYear2008() {
 		int year = 2008;
-    	System.out.println("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
         	
     	expectedHol.add(DateFactory.getFactory().getDate(6,MARCH,year));
@@ -178,7 +183,7 @@ public class IndiaCalendarTest {
 	@Test
     public void testIndiaNseHolidaysYear2020() {
 		int year = 2020;
-    	System.out.println("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+    	logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
         	
     	//expectedHol.add(DateFactory.getFactory().getDate(26,JANUARY,year)); //Sunday

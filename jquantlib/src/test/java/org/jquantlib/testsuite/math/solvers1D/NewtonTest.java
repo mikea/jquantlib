@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.math.solvers1D;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.distributions.Derivative;
 import org.jquantlib.math.solvers1D.Newton;
 import org.junit.Test;
@@ -34,8 +35,10 @@ import org.junit.Test;
 
 public class NewtonTest {
 	
+    private final static Logger logger = Logger.getLogger(NewtonTest.class);
+
 	public NewtonTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test

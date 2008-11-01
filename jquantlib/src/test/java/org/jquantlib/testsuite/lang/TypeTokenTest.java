@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.lang;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.util.reflect.TypeToken;
 import org.junit.Test;
 
@@ -32,8 +33,8 @@ import org.junit.Test;
  */
 public class TypeTokenTest {
 
-    public TypeTokenTest() {
-        System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    private final static Logger logger = Logger.getLogger(TypeTokenTest.class);    public TypeTokenTest() {
+        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
     
     @Test

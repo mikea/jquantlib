@@ -32,48 +32,75 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
 /**
+ * TARGET calendar relative to the European Central Bank
+ * <p>
+ * This is a holiday calendar representing  the 
+ * <i>Trans-european Automated Real-time Gross Express-settlement Transfer</i>
+ * system calendar.
+ * <p>
+ * <li>Saturdays</li>
+ * <li>Sundays</li>
+ * <li>New Year's Day, January 1st</li>
+ * <li>Good Friday (since 2000)</li>
+ * <li>Easter Monday (since 2000)</li>
+ * <li>Labour Day, May 1st (since 2000)</li>
+ * <li>Christmas, December 25th</li>
+ * <li>Day of Goodwill, December 26th (since 2000)</li>
+ * <li>December 31st (1998, 1999, and 2001)</li>
+ * 
+ * @see <a href="http://www.ecb.int">European Central Bank</a>
+ * 
  * @author Srinivas Hasti
+ * 
+ * @category calendars
  */
+//TEST the correctness of the returned results is tested against a list of known holidays.
 public class Target extends DelegateCalendar {
 	private final static Target TARGET_CALENDAR = new Target();
 
 	private Target() {
-		setDelegate(new TargetCalendarImpl());
+		setDelegate(new TargetCalendar());
 	}
 
 	public static Target getCalendar() {
 		return TARGET_CALENDAR;
 	}
-}
+	
 
-final class TargetCalendarImpl extends WesternCalendar {
+	//
+	// private inner classes
+	//
+	
+    private final class TargetCalendar extends WesternCalendar {
+    
+    	public String getName() {
+    		return "TARGET";
+    	}
+    
+    	public boolean isBusinessDay(Date date) {
+    		Weekday w = date.getWeekday();
+    		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+    		Month m = date.getMonthEnum();
+    		int y = date.getYear();
+    		int em = easterMonday(y);
+    		if (isWeekend(w)
+    		// New Year's Day
+    				|| (d == 1 && m == JANUARY)
+    				// Good Friday
+    				|| (dd == em - 3 && y >= 2000)
+    				// Easter Monday
+    				|| (dd == em && y >= 2000)
+    				// Labour Day
+    				|| (d == 1 && m == MAY && y >= 2000)
+    				// Christmas
+    				|| (d == 25 && m == DECEMBER)
+    				// Day of Goodwill
+    				|| (d == 26 && m == DECEMBER && y >= 2000)
+    				// December 31st, 1998, 1999, and 2001 only
+    				|| (d == 31 && m == DECEMBER && (y == 1998 || y == 1999 || y == 2001)))
+    			return false;
+    		return true;
+    	}
+    }
 
-	public String getName() {
-		return "TARGET";
-	}
-
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int em = easterMonday(y);
-		if (isWeekend(w)
-		// New Year's Day
-				|| (d == 1 && m == JANUARY)
-				// Good Friday
-				|| (dd == em - 3 && y >= 2000)
-				// Easter Monday
-				|| (dd == em && y >= 2000)
-				// Labour Day
-				|| (d == 1 && m == MAY && y >= 2000)
-				// Christmas
-				|| (d == 25 && m == DECEMBER)
-				// Day of Goodwill
-				|| (d == 26 && m == DECEMBER && y >= 2000)
-				// December 31st, 1998, 1999, and 2001 only
-				|| (d == 31 && m == DECEMBER && (y == 1998 || y == 1999 || y == 2001)))
-			return false;
-		return true;
-	}
 }

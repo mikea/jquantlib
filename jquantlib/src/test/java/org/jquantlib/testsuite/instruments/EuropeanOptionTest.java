@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
@@ -58,13 +59,11 @@ import org.jquantlib.instruments.GapPayoff;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
-import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
-import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -82,8 +81,10 @@ import org.junit.Test;
  */
 public class EuropeanOptionTest {
 
-	public EuropeanOptionTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    private final static Logger logger = Logger.getLogger(EuropeanOptionTest.class);
+    
+    public EuropeanOptionTest() {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	
@@ -266,7 +267,7 @@ public class EuropeanOptionTest {
 	@Test
 	public void testValues() {
 
-	    System.out.println("Testing European option values...");
+	    logger.info("Testing European option values...");
 
 	    /* The data below are from
 	       "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
@@ -339,7 +340,7 @@ public class EuropeanOptionTest {
 
 	    for (int i=0; i<values.length-1; i++) {
 
-	    	System.out.print(values[i]);
+	    	logger.debug(values[i]);
 	    	
 	    	StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 	        Date exDate = today.getDateAfter( timeToDays(values[i].t) );
@@ -372,7 +373,7 @@ public class EuropeanOptionTest {
             sb.append("    tol ").append(values[i].tol); // .append('\n');
             
         	if (error<=tolerance)
-        		System.out.println(" error="+error);
+        		logger.info(" error="+error);
         	else
         		fail(exercise + " " + payoff.getOptionType() + " option with " + payoff + " payoff:\n" 
         	    + "    spot value:       " + values[i].s + "\n"
@@ -672,7 +673,7 @@ public class EuropeanOptionTest {
     @Test
     public void testGreeks() {
 
-        System.out.println("Testing analytic European option greeks...");
+        logger.info("Testing analytic European option greeks...");
 
 
         Map<String,Double> calculated, expected, tolerance;
@@ -850,7 +851,7 @@ public class EuropeanOptionTest {
 //    @Test
 //    public void testImpliedVol() {
 //
-//        System.out.println("Testing European option implied volatility...");
+//        logger.info("Testing European option implied volatility...");
 //
 //        final int maxEvaluations = 100;
 //        final double tolerance = 1.0e-6;

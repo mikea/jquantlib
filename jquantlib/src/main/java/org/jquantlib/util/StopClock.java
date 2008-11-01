@@ -22,60 +22,65 @@
 
 package org.jquantlib.util;
 
+import org.apache.log4j.Logger;
+
 public class StopClock {
-	public static enum Unit {
-		ms, ns;
-	}
 
-	private Unit units;
-	private long startTime;
-	private long stopTime;
+    private final static Logger logger = Logger.getLogger(StopClock.class);
 
-	public StopClock() {
-		this(Unit.ms);
-	}
+    public static enum Unit {
+        ms, ns;
+    }
 
-	public StopClock(Unit unit) {
-		this.units = unit;
-	}
+    private Unit units;
+    private long startTime;
+    private long stopTime;
 
-	public void startClock() {
-		if (units == Unit.ms)
-			startTime = System.currentTimeMillis();
-		else
-			startTime = System.nanoTime();
-		stopTime = startTime;
-	}
+    public StopClock() {
+        this(Unit.ms);
+    }
 
-	public void stopClock() {
-		if (units == Unit.ms)
-			stopTime = System.currentTimeMillis();
-		else
-			stopTime = System.nanoTime();
-	}
+    public StopClock(Unit unit) {
+        this.units = unit;
+    }
 
-	public long getElapsedTime() {
-		return stopTime - startTime;
-	}
+    public void startClock() {
+        if (units == Unit.ms)
+            startTime = System.currentTimeMillis();
+        else
+            startTime = System.nanoTime();
+        stopTime = startTime;
+    }
 
-	public Unit getUnit() {
-		return units;
-	}
+    public void stopClock() {
+        if (units == Unit.ms)
+            stopTime = System.currentTimeMillis();
+        else
+            stopTime = System.nanoTime();
+    }
 
-	public void reset() {
-		startTime = 0;
-		stopTime = 0;
-	}
-	
-	public String toString(){
-		return ("Time taken: "+getElapsedTime()+units);
-	}
-	
-	public void log() {
-		System.out.println(toString());
-	}
+    public long getElapsedTime() {
+        return stopTime - startTime;
+    }
 
-	public void log(final String message) {
-        System.out.println(message+" :: "+toString());
+    public Unit getUnit() {
+        return units;
+    }
+
+    public void reset() {
+        startTime = 0;
+        stopTime = 0;
+    }
+
+    public String toString() {
+        return ("Time taken: " + getElapsedTime() + units);
+    }
+
+    public void log() {
+        logger.info(toString());
+    }
+
+    public void log(final String message) {
+        logger.info(message + " :: " + toString());
     }
 }

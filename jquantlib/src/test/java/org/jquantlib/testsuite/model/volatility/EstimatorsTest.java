@@ -44,13 +44,13 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.model.volatility.ConstantEstimator;
 import org.jquantlib.model.volatility.SimpleLocalEstimator;
 import org.jquantlib.model.volatility.VolatilityCompositor;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultDate;
 import org.jquantlib.util.Month;
-import org.jquantlib.util.TimeSeries;
 import org.jquantlib.util.TimeSeriesDouble;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -60,10 +60,12 @@ import org.junit.Test;
 
 public class EstimatorsTest {
 
+    private final static Logger logger = Logger.getLogger(EstimatorsTest.class);
+
 	private static TimeSeriesDouble ts ;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-	    System.out.println("Testing volatility model construction...");
+	    logger.info("Testing volatility model construction...");
 
 	    List<Date> dates = Arrays.asList (new Date[] 
 	                                       {

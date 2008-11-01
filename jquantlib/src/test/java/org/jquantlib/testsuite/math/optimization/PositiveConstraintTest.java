@@ -22,10 +22,12 @@
 
 package org.jquantlib.testsuite.math.optimization;
 import static org.junit.Assert.fail;
+
+import org.apache.log4j.Logger;
 import org.jquantlib.math.Array;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
-import org.jquantlib.math.Closeness;
 import org.junit.Test;
 
 /**
@@ -37,8 +39,10 @@ import org.junit.Test;
 
 public class PositiveConstraintTest {
 	
+    private final static Logger logger = Logger.getLogger(PositiveConstraintTest.class);
+
 	public PositiveConstraintTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test
@@ -63,7 +67,7 @@ public class PositiveConstraintTest {
 	  Array direction = new Array(new double[]{0.1,0.3,1.1});
 	  double beta = -2.0;
 	  pc.update(params,direction,beta);
-	  System.out.println("params after co.update=" + "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
+	  logger.info("params after co.update=" + "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
 	  //if (!params.operatorEquals(new double[]{0.9,0.8,0.2}))
 	  if (!IsArrayEqual(params,new Array(new double[]{0.9,0.8,0.2}),0.000001))
 		fail("PositiveConstraint update method failed");
@@ -76,7 +80,7 @@ public class PositiveConstraintTest {
     }
 	boolean IsArrayEqual(Array one,Array two,double precision){
 		Array diffArray = one.operatorSubtractCopy(two);
-		System.out.println("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
+		logger.info("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
 		return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );
 		
 	}

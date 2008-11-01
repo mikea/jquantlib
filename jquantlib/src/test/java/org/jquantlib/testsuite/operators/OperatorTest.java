@@ -28,6 +28,7 @@ package org.jquantlib.testsuite.operators;
 
 import static org.junit.Assert.fail;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Array;
@@ -55,14 +56,16 @@ import org.junit.Test;
 
 public class OperatorTest {
 
+    private final static Logger logger = Logger.getLogger(OperatorTest.class);
+
 	public OperatorTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@Test
 	public void testConsistency() {
 
-    System.out.println("Testing differential operators...");
+    logger.info("Testing differential operators...");
     
     double average = 0.0, sigma = 1.0;
 
@@ -118,7 +121,7 @@ public class OperatorTest {
 	}
 	public void dumpArray(Array arr) {
         for(int i = 0; i < arr.size(); i++) {
-            System.out.println("**** arr[" + i + "] = " + arr.get(i) );
+            logger.info("**** arr[" + i + "] = " + arr.get(i) );
         }
 	}
 	
@@ -129,7 +132,7 @@ public class OperatorTest {
             str += String.format(" %.4f ", data[i]);
         }
         str += "]";
-        System.out.println(str);
+        logger.info(str);
 
         str = "[";
         data = op.diagonal().getData();
@@ -137,7 +140,7 @@ public class OperatorTest {
             str += String.format(" %.4f ", data[i]);
         }
         str += "]";
-        System.out.println(str);
+        logger.info(str);
 	    
         str = "[";
         data = op.upperDiagonal().getData();
@@ -145,13 +148,13 @@ public class OperatorTest {
             str += String.format(" %.4f ", data[i]);
         }
         str += "]";
-        System.out.println(str);
+        logger.info(str);
 	    
 	}
 	
 	@Test
 	public void testBSMOperatorConsistency() throws Exception {
-	    System.out.println("Testing consistency of BSM operators...");
+	    logger.info("Testing consistency of BSM operators...");
 
 		Array grid = new Array(10);
 		double price = 20.0;
@@ -168,7 +171,7 @@ public class OperatorTest {
 		double sigma = 0.5;
 		
 		BSMOperator ref = new BSMOperator(grid.size(), dx, r, q, sigma);
-        System.out.println("BSMOperator reference diagonals: \n");
+        logger.info("BSMOperator reference diagonals: \n");
         outputDiagonals(ref);
 		
 		DayCounter dc = Actual360.getDayCounter();
@@ -191,13 +194,13 @@ public class OperatorTest {
 		
 		BSMOperator op1 = new BSMOperator(grid, stochProcess, residualTime);
 		//typedef PdeOperator<PdeBSM> BSMTermOperator;
-		System.out.println("BSMOperator diagonals: \n");
+		logger.info("BSMOperator diagonals: \n");
 		outputDiagonals(op1);
 		
 		TransformedGrid grid2 = new TransformedGrid(grid);
 		PdeOperator<PdeBSM> op2 = new PdeOperator<PdeBSM>(grid2, new PdeBSM(stochProcess), residualTime);
 
-		System.out.println("PdeOperator diagonals: \n");
+		logger.info("PdeOperator diagonals: \n");
 		outputDiagonals(op2);
 		
 		double tolerance = 1.0e-6;
@@ -211,9 +214,9 @@ public class OperatorTest {
 
 		
 		for (i=2; i<grid.size()-2; i++) {
-            System.out.println("lderror(" + i + ") = "+ Math.abs(lderror.get(i)) +  " tolerance " + tolerance + " \n");
-            System.out.println("derror(" + i + ") = "+ Math.abs(derror.get(i)) + " tolerance " + tolerance + " \n");
-            System.out.println("uderror(" + i + ") = "+ Math.abs(uderror.get(i)) + " tolerance " + tolerance + " \n");
+            logger.info("lderror(" + i + ") = "+ Math.abs(lderror.get(i)) +  " tolerance " + tolerance + " \n");
+            logger.info("derror(" + i + ") = "+ Math.abs(derror.get(i)) + " tolerance " + tolerance + " \n");
+            logger.info("uderror(" + i + ") = "+ Math.abs(uderror.get(i)) + " tolerance " + tolerance + " \n");
 		    
 			if (Math.abs(lderror.get(i)) > tolerance ||
 				Math.abs(derror.get(i)) > tolerance ||
@@ -222,7 +225,7 @@ public class OperatorTest {
 		        //FIXME: FALSE POSITIVE :: This test case is disabled
 		        // This test is failing and preventing JQuantLib to build properly.
 
-		        System.out.println("***** TEST FAILED *****"); // XXX remove this line
+		        logger.fatal("***** TEST FAILED *****"); // XXX remove this line
 		        
 //				fail("inconsistency between BSM operators:\n"  
 //				           + Integer.toString(i) +  " row:\n" 
@@ -252,7 +255,7 @@ public class OperatorTest {
                 //FIXME: FALSE POSITIVE :: This test case is disabled
                 // This test is failing and preventing JQuantLib to build properly.
 
-                System.out.println("***** TEST FAILED *****"); // XXX remove this line
+                logger.fatal("***** TEST FAILED *****"); // XXX remove this line
                 
 //				fail("inconsistency between BSM operators:\n"
 //						   + Integer.toString(i) + " row:\n"

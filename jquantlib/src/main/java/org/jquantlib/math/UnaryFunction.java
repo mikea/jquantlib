@@ -27,7 +27,9 @@ package org.jquantlib.math;
  * 
  * @author Aaron Roth
  */
-
+//FIXME: code review :: this interface implies on boxinb/unboxing and ideally should be removed.
+// In particular, this interface is being used by Monte Carlo, which is still in development: It's not clear yet
+// if this class is really needed. [Richard Gomes]
 public interface UnaryFunction<ParameterType, ReturnType> {
 
 	/**

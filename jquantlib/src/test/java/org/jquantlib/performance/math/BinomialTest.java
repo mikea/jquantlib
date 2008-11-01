@@ -22,6 +22,7 @@
 
 package org.jquantlib.performance.math;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.math.distributions.BinomialDistribution;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
@@ -30,16 +31,18 @@ import cern.jet.random.Binomial;
 
 public class BinomialTest {
 
-	private StopClock clock;
-  
-  public BinomialTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	  clock = new StopClock(StopClock.Unit.ns);
-  }
+    private final static Logger logger = Logger.getLogger(BinomialTest.class);
+
+    private StopClock clock;
+
+    public BinomialTest() {
+        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        clock = new StopClock(StopClock.Unit.ns);
+    }
  
   
   @Test public void runColt(){
-	  System.out.println("Run colt");
+	  logger.info("Run colt");
 	  Binomial binomial = new Binomial(2000,0.9,null);
 	  for(int i=0;i<100;i++){
 		  clock.reset();
@@ -55,12 +58,12 @@ public class BinomialTest {
 	   v = binomial.pdf(1900);
 	  }
 	  clock.stopClock();
-	  System.out.println(v);
+	  logger.info(v);
 	  clock.log();
   }
   
   @Test public void runJQ(){
-	  System.out.println("\nRun JQ");
+	  logger.info("\nRun JQ");
 	  BinomialDistribution binomial = new BinomialDistribution(0.9,2000);
 	  for(int i=0;i<100;i++){
 		  clock.reset();
@@ -76,7 +79,7 @@ public class BinomialTest {
 	   v = binomial.evaluate(1900);
 	  }
 	  clock.stopClock();
-	  System.out.println(v);
+	  logger.info(v);
 	  clock.log();
   }
 

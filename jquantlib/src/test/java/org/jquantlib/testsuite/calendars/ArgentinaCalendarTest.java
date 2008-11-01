@@ -31,12 +31,13 @@ import static org.jquantlib.util.Month.JULY;
 import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.MARCH;
 import static org.jquantlib.util.Month.MAY;
-import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.util.Month.OCTOBER;
 
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Argentina;
 import org.jquantlib.util.Date;
@@ -53,12 +54,14 @@ import org.junit.Test;
  */
 
 public class ArgentinaCalendarTest {
+    private final static Logger logger = Logger.getLogger(ArgentinaCalendarTest.class);
+
     private Calendar bcba = null;
     private Calendar settlement = null;
     private List<Date> expectedHol = null;
     
 	public ArgentinaCalendarTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
     @Before
@@ -73,7 +76,7 @@ public class ArgentinaCalendarTest {
     public void testArgentinaBCBAYear2004()
     {
        	int year = 2004;
-    	System.out.println("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
+    	logger.info("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
@@ -96,7 +99,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaBCBAYear2005() {        
         int year = 2005;
-        System.out.println("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
         
         expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));
         expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));
@@ -114,7 +117,7 @@ public class ArgentinaCalendarTest {
     public void testArgentinaBCBAYear2006() {
         
         int year = 2006;
-        System.out.println("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
         
         expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
@@ -134,7 +137,7 @@ public class ArgentinaCalendarTest {
     public void testArgentinaBCBAYear2010() {
         
         int year = 2010;
-        System.out.println("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
         
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,APRIL,year));
@@ -153,7 +156,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaBCBAYear2011() {        
         int year = 2011;
-        System.out.println("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
         
         expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));
@@ -171,7 +174,7 @@ public class ArgentinaCalendarTest {
     public void testArgentinaBCBAYear2007() {
     	
     	int year = 2007;
-    	System.out.println("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
+    	logger.info("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
     	
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
@@ -194,7 +197,7 @@ public class ArgentinaCalendarTest {
     public void testArgentinaBCBAYear2008()
     {
       	int year = 2008;
-    	System.out.println("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
+    	logger.info("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
     	
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(20,MARCH,year));
@@ -217,7 +220,7 @@ public class ArgentinaCalendarTest {
     public void testArgentinaBCBAYear2009() {
     	
     	int year = 2009;
-    	System.out.println("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
+    	logger.info("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
     	
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
@@ -241,7 +244,7 @@ public class ArgentinaCalendarTest {
     public void testArgentinaBCBAYear2012() {
     	
     	int year = 2012;
-    	System.out.println("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
+    	logger.info("Testing " + Argentina.Market.BCBA + " holiday list for the year " + year + "...");
     	
     	// expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,year)); --> Sunday
     	expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
@@ -263,7 +266,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaSettlementYear2004() {
         int year = 2004;        
-        System.out.println("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
         
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
@@ -288,7 +291,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaSettlementYear2005() {
         int year = 2005;        
-        System.out.println("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
     
         expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));
         expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));
@@ -309,7 +312,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaSettlementYear2006() {
         int year = 2006;        
-        System.out.println("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
     
         expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
@@ -331,7 +334,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaSettlementYear2007() {
         int year = 2007;        
-        System.out.println("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
     
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
@@ -357,7 +360,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaSettlementYear2008() {
         int year = 2008;        
-        System.out.println("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
     
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(20,MARCH,year));
@@ -381,7 +384,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaSettlementYear2009() {
         int year = 2009;        
-        System.out.println("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
     
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
@@ -408,7 +411,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaSettlementYear2010() {
         int year = 2010;        
-        System.out.println("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
         
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,APRIL,year));
@@ -432,7 +435,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaSettlementYear2011() {
         int year = 2011;        
-        System.out.println("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
     
         expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));
@@ -453,7 +456,7 @@ public class ArgentinaCalendarTest {
     @Test
     public void testArgentinaSettlementYear2012() {
         int year = 2012;        
-        System.out.println("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        logger.info("Testing " + Argentina.Market.SETTLEMENT + " holiday list for the year " + year + "...");
     
         // expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,year)); --> Sunday
         expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));

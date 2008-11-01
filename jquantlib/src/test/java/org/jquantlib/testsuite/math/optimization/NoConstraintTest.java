@@ -22,10 +22,12 @@
 
 package org.jquantlib.testsuite.math.optimization;
 import static org.junit.Assert.fail;
+
+import org.apache.log4j.Logger;
 import org.jquantlib.math.Array;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.NoConstraint;
-import org.jquantlib.math.Closeness;
 import org.junit.Test;
 
 /**
@@ -37,8 +39,10 @@ import org.junit.Test;
 
 public class NoConstraintTest {
 	
+    private final static Logger logger = Logger.getLogger(NoConstraintTest.class);
+
 	public NoConstraintTest() {
-		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	@Test
@@ -63,8 +67,8 @@ public class NoConstraintTest {
 	  Array direction = new Array(new double[]{0.1d,0.3d,1.1d});
 	  double beta = 2.0;
 	  nc.update(params,direction,beta);
-	  System.out.println("params after co.update=" + "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
-	  System.out.println("Test 1.1 + 2.0 * 0.3 = " +(1.1 + 2.0 * 0.3));
+	  logger.info("params after co.update=" + "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
+	  logger.info("Test 1.1 + 2.0 * 0.3 = " +(1.1 + 2.0 * 0.3));
 	  if (!IsArrayEqual (params, new Array (new double[]{1.2d,1.7d,4.5d}),0.000001))
 	  //if (!params.operatorEquals (new Array (new double[]{1.2d,1.7d,4.5d})))
 		fail("Constraint update method failed");
@@ -77,7 +81,7 @@ public class NoConstraintTest {
     }
 	boolean IsArrayEqual(Array one,Array two,double precision){
 		Array diffArray = one.operatorSubtractCopy(two);
-		System.out.println("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
+		logger.info("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
 		return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );
 		
 	}

@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.jquantlib.performance.PerformanceResults;
 import org.jquantlib.performance.PerformanceTest;
 
@@ -33,7 +35,9 @@ import org.jquantlib.performance.PerformanceTest;
  */
 public class Array implements PerformanceTest {
 
-	Hashtable<Integer,List<org.jquantlib.math.Array>> ArraysHashTable
+    private final static Logger logger = Logger.getLogger(Array.class);
+
+	private Hashtable<Integer,List<org.jquantlib.math.Array>> ArraysHashTable
 		= new Hashtable<Integer,List<org.jquantlib.math.Array>>();
 	
 	@Override
@@ -100,7 +104,7 @@ public class Array implements PerformanceTest {
 		List<org.jquantlib.math.Array> localLists = ArraysHashTable.get(new Integer(size));
 		if(localLists == null){
 			//  Throw Exception.
-			System.out.println("Test Failed... for size: " +size);
+			logger.info("Test Failed... for size: " +size);
 		}
 
 		Iterator iter =localLists.iterator();

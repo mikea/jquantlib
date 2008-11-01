@@ -40,7 +40,8 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import java.util.List;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
 
 import org.jquantlib.methods.montecarlo.Sample;
 
@@ -54,55 +55,49 @@ import org.jquantlib.methods.montecarlo.Sample;
  * 
  * @author Richard Gomes
  */
-public class InverseCumulativeRsg<T, USG extends UniformRandomSequenceGenerator<T>, IC extends InverseCumulative> 
-            implements UniformRandomSequenceGenerator<T> {
 
-    private USG uniformSequenceGenerator_;
-    private/*@NonNegative*/int dimension_;
-    private Sample<List<T>> x_; // FIXME: usage of sample_type :: typedef Sample<std::vector<Real> > sample_type;
-    private InverseCumulative ICD_;
+//TODO: why USG and not RSG? What's the difference between URSG and RSG??
+public class InverseCumulativeRsg<USG extends RandomSequenceGeneratorIntf,IC extends InverseCumulative>
+            implements RandomSequenceGeneratorIntf {
 
-    public InverseCumulativeRsg(final USG uniformSequenceGenerator) {
-        this.uniformSequenceGenerator_ = uniformSequenceGenerator;
-        this.dimension_ = this.uniformSequenceGenerator_.dimension();
-        
-//      
-// TODO :: code review
-//
-//        this.x_ = new Sample<List<Double>>(new DoubleArrayList(), 1.0);
-//        
-// FIXME: ICD_ not initialized!!!! Verify if a static is passed by template
-        
+    private final USG                   ursg;
+    private final /*@NonNegative*/ int  dimension;
+    private double[]                    sequence;
+    private double                      weight;
+    private IC                          ic;
+    
+
+    public InverseCumulativeRsg(final USG ursg) {
+        this.ursg = ursg;
+        this.dimension = this.ursg.dimension();
+        this.sequence = new double[this.dimension];
+        this.weight = 1.0;
+        this.ic = null;
     }
 
-    public InverseCumulativeRsg(final USG uniformSequenceGenerator, final InverseCumulative inverseCum) {
-        this(uniformSequenceGenerator);
-        this.ICD_ = inverseCum;
+    public InverseCumulativeRsg(final USG ursg, final IC ic) {
+        this(ursg);
+        this.ic = ic;
     }
 
     /**
      * @return next sample from the Gaussian distribution
      */
     @Override
-    public Sample<List<T>> nextSequence() /* @ReadOnly */{
-        Sample<List<T>> sample = uniformSequenceGenerator_.nextSequence();
-        
-//        
-// TODO :: code review
-//
-//        T sequence = sample.getValue();
-//        List<Double> array = new DoubleArrayList(dimension_);
-//        for (int i = 0; i < dimension_; i++) {
-//            array.add(ICD_.evaluate(sequence.get(i)));
-//        }
-//
-        
-        return null; // return new Sample<List<Double>>(array, sample.weight);
+    public Sample<DoubleList> nextSequence() /* @ReadOnly */ {
+        Sample<DoubleList> sample = this.ursg.nextSequence();
+        double tmp[] = sample.getValue().toDoubleArray(); //FIXME: should be toArray(new double[size]) ??
+        this.weight = sample.getWeight();
+        for (int i = 0; i < this.dimension; i++) {
+            this.sequence[i] = this.ic.evaluate(tmp[i]);
+        }
+        return new Sample<DoubleList>(new DoubleArrayList(sequence), weight);
     }
 
     @Override
-    public final Sample<List<T>> lastSequence() /* @ReadOnly */{
-        return x_;
+    public final Sample<DoubleList> lastSequence() /* @ReadOnly */ {
+        DoubleList list = new DoubleArrayList(this.sequence);
+        return new Sample<DoubleList>(list, this.weight);
     }
 
     @Override
@@ -113,7 +108,7 @@ public class InverseCumulativeRsg<T, USG extends UniformRandomSequenceGenerator<
     
     @Override
     public/*@NonNegative*/int dimension() /* @ReadOnly */{
-        return dimension_;
+        return this.dimension;
     }
 
 }

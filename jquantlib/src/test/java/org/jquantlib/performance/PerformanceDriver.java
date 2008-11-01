@@ -23,6 +23,8 @@ package org.jquantlib.performance;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.jquantlib.performance.microscopic.Array;
 import org.jquantlib.performance.microscopic.PrimeNumbers;
 
@@ -32,7 +34,9 @@ import org.jquantlib.performance.microscopic.PrimeNumbers;
  */
 public class PerformanceDriver {
 
-	//  Could just scan for all classes in macroscopic and 
+    private final static Logger logger = Logger.getLogger(PerformanceDriver.class);
+
+    //  Could just scan for all classes in macroscopic and 
 	//  microscopic and run the tests.
 	List<PerformanceTest> microscopicTests = new ArrayList<PerformanceTest>();
 	List<PerformanceTest> macroscopicTests = new ArrayList<PerformanceTest>();
@@ -58,29 +62,29 @@ public class PerformanceDriver {
 
 		if(args.length==0){
 			//  Run all tests
-			System.out.println("------Microscopic----------");
-			System.out.println("---------------------------");
+			logger.info("------Microscopic----------");
+			logger.info("---------------------------");
 			execute(instance.microscopicTests,instance.microscopicResults);
 			printResults(instance.microscopicResults);
-			System.out.println("------Macroscopic----------");
-			System.out.println("---------------------------");
+			logger.info("------Macroscopic----------");
+			logger.info("---------------------------");
 			execute(instance.macroscopicTests,instance.macroscopicResults);
 			printResults(instance.macroscopicResults);
 
 		}else if(args[0].equalsIgnoreCase("microscopic")){
 			//  run microscopic tests.
-			System.out.println("------Microscopic----------");
-			System.out.println("---------------------------");
+			logger.info("------Microscopic----------");
+			logger.info("---------------------------");
 			execute(instance.microscopicTests,instance.microscopicResults);
 			printResults(instance.microscopicResults);
 		}else if(args[0].equalsIgnoreCase("macroscopic")){
 			//  run macroscopic tests.
-			System.out.println("------Macroscopic----------");
-			System.out.println("---------------------------");
+			logger.info("------Macroscopic----------");
+			logger.info("---------------------------");
 			execute(instance.macroscopicTests,instance.macroscopicResults);
 			printResults(instance.macroscopicResults);
 		}else{
-			System.out.println("Unrecognized option: "+args[0]);
+			logger.info("Unrecognized option: "+args[0]);
 		}
 	}
 
@@ -94,11 +98,11 @@ public class PerformanceDriver {
 	public static void printResults(List<PerformanceResults> results){
 		for (Iterator<PerformanceResults> it = results.iterator(); it.hasNext();) {
 			PerformanceResults performanceResults = it.next();
-			System.out.println(performanceResults.toString());
+			logger.info(performanceResults.toString());
 			if(performanceResults.compositeResults!=null){
-				System.out.println("\t----------------Composite Tests----------------------------------");
+				logger.info("\t----------------Composite Tests----------------------------------");
 				printResults(performanceResults.compositeResults);
-				System.out.println("\t----------------END Composite Tests----------------------------------");
+				logger.info("\t----------------END Composite Tests----------------------------------");
 			}
 		}
 	}
