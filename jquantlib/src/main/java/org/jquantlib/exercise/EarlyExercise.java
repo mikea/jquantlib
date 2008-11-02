@@ -48,9 +48,18 @@ package org.jquantlib.exercise;
  */
 public abstract class EarlyExercise extends Exercise {
 
-	private boolean payoffAtExpiry;
+    //
+    // protected fields
+    //
+    
+    protected boolean payoffAtExpiry;
 	
-	protected EarlyExercise(Exercise.Type type) {
+	
+    //
+    // protected constructors
+    //
+    
+    protected EarlyExercise(Exercise.Type type) {
 		this(type, false);
 	}
 
@@ -59,23 +68,18 @@ public abstract class EarlyExercise extends Exercise {
 		this.payoffAtExpiry = payoffAtExpiry;
 	}
 
+	
+	//
+	// protected methods
+	//
+	
 	/**
 	 * Returns the payoff at expiry
 	 * 
 	 * @return the payoff at expiry
 	 */
-	protected boolean getPayoffAtExpiry() {
+	protected boolean payoffAtExpiry() {
 		return this.payoffAtExpiry;
 	}
 	
-	/**
-	 * This method is only used by extended classes on the very special cases 
-	 * when the payoff at expiry must be changed.
-	 * 
-	 * @param payoffAtExpiry is the payoff at expiry
-	 */
-	protected void setPayoffAtExpiry(boolean payoffAtExpiry) {
-		this.payoffAtExpiry = payoffAtExpiry;
-	}
-
 }

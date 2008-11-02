@@ -159,7 +159,7 @@ public class Period {
 	 * 
 	 * @return length of the period
 	 */
-	public final int getLength() {
+	public final int length() {
 		return this.length;
 	}
 
@@ -168,7 +168,7 @@ public class Period {
 	 * 
 	 * @return time units of the period
 	 */
-	public final TimeUnit getUnits() {
+	public final TimeUnit units() {
 		return this.units;
 	}
 
@@ -177,7 +177,7 @@ public class Period {
 	 * 
 	 * @return
 	 */
-	public final Frequency getFrequency() {
+	public final Frequency frequency() {
 		// unsigned version
 		int length = Math.abs(this.length);
 
@@ -226,10 +226,10 @@ public class Period {
 	 *            is the multiplier
 	 * @return a new <code>Period</code> with a multiplied length
 	 */
-	public Period multiply(int n) {
+	public Period times(final int n) {
 		return new Period(n * this.length, this.units);
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

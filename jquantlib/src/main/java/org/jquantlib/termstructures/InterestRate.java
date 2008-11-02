@@ -214,7 +214,7 @@ public class InterestRate {
      * @category discount/compound factor calculations
      */
     public final /*@DiscountFactor*/ double discountFactor(final Date d1, final Date d2, final Date refStart, final Date refEnd) {
-        /*@Time*/ double t = this.dc.getYearFraction(d1, d2, refStart, refEnd);
+        /*@Time*/ double t = this.dc.yearFraction(d1, d2, refStart, refEnd);
         return discountFactor(t);
     }
 
@@ -259,8 +259,8 @@ public class InterestRate {
                 final Compounding comp,
                 final Frequency freq) {
     	if (d1.le(d2)) throw new IllegalArgumentException("d1 ("+d1+") later than or equal to d2 ("+d2+")");
-        /*@Time*/ double t1 = this.dc.getYearFraction(d1, d2);
-        /*@Time*/ double t2 = resultDC.getYearFraction(d1, d2);
+        /*@Time*/ double t1 = this.dc.yearFraction(d1, d2);
+        /*@Time*/ double t2 = resultDC.yearFraction(d1, d2);
         return impliedRate(compoundFactor(t1), t2, resultDC, comp, freq);
     }
     
@@ -344,7 +344,7 @@ public class InterestRate {
     			final Compounding comp,
     			final Frequency freq) {
     	if (d2.le(d1)) throw new IllegalArgumentException("d1 ("+d1+") later than or equal to d2 ("+d2+")");
-        /*@Time*/ double t = resultDC.getYearFraction(d1, d2);
+        /*@Time*/ double t = resultDC.yearFraction(d1, d2);
         return impliedRate(compound, t, resultDC, comp, freq);
     }
     

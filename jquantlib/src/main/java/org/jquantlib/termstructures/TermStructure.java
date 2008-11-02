@@ -313,7 +313,7 @@ public abstract class TermStructure implements Observer, Observable {
 	 * @return the fraction of the year as a double
 	 */
 	public final /*@Time*/ double timeFromReference(final Date date) {
-		return dayCounter().getYearFraction(referenceDate(), date);
+		return dayCounter().yearFraction(referenceDate(), date);
 	}
 
 	

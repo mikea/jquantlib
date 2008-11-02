@@ -217,7 +217,7 @@ public class DayCountersTest {
 	        
 	        logger.info(testCases[i].toString());
 	        
-	        /*@Time*/ double  calculated = dayCounter.getYearFraction(d1, d2, rd1, rd2);
+	        /*@Time*/ double  calculated = dayCounter.yearFraction(d1, d2, rd1, rd2);
 
 	        if (Math.abs(calculated-testCases[i].result) > 1.0e-10) {
 	        	String period = "period: " + d1 + " to " + d2;
@@ -225,7 +225,7 @@ public class DayCountersTest {
 	            if (testCases[i].convention == ActualActual.Convention.ISMA) {
 	                refPeriod = "referencePeriod: " + rd1 + " to " + rd2;
 	            }
-	            fail(dayCounter.getName() + ":\n"
+	            fail(dayCounter.name() + ":\n"
 	                       + period + "\n" 
 	                       + refPeriod + "\n"
 	                       + "    calculated: " + calculated + "\n"
@@ -251,7 +251,7 @@ public class DayCountersTest {
 	    for (Date start = first; start.le(last); start.increment()) {
 	        for (int i=0; i<expected.length-1; i++) {
 	            Date end = start.getDateAfter(p[i]);
-	            /*@Time*/ double  calculated = dayCounter.getYearFraction(start, end);
+	            /*@Time*/ double  calculated = dayCounter.yearFraction(start, end);
 
 	        	if (Math.abs(calculated-expected[i]) > 1.0e-12)
 	                fail("from " + start + " to " + end + ":\n"
@@ -277,7 +277,7 @@ public class DayCountersTest {
 	    for (Date start = first; start.le(last); start.increment()) {
 	        for (int i=0; i<expected.length-1; i++) {
 	            Date end = start.getDateAfter(p[i]);
-	            /*@Time*/ double  calculated = dayCounter.getYearFraction(start, end);
+	            /*@Time*/ double  calculated = dayCounter.yearFraction(start, end);
 
 	            if (Math.abs(calculated-expected[i]) <= 1.0e-12) {
 	                fail("from " + start + " to " + end + ":\n"

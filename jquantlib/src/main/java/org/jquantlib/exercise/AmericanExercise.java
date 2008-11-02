@@ -73,8 +73,8 @@ public class AmericanExercise extends EarlyExercise {
 	public AmericanExercise(final Date earliestDate, final Date latestDate, boolean payoffAtExpiry) {
 		super(Exercise.Type.AMERICAN, payoffAtExpiry);
 		if (! (earliestDate.le(latestDate)) ) throw new IllegalArgumentException("earliest > latest exercise date");
-		super.addDate(earliestDate);
-		super.addDate(latestDate);
+		super.dates.add(earliestDate);
+		super.dates.add(latestDate);
     }
 
 // TODO: check that everywhere the American condition is applied from earliestDate and not earlier

@@ -45,15 +45,15 @@ public class SimpleDayCounter extends AbstractDayCounter {
         this.fallback = Thirty360.getDayCounter();
     }
 
-    public final String getName() {
+    public final String name() {
         return "Simple";
     }
 
-    public final int getDayCount(final Date dateStart, final Date dateEnd) {
-        return fallback.getDayCount(dateStart, dateEnd);
+    public final int dayCount(final Date dateStart, final Date dateEnd) {
+        return fallback.dayCount(dateStart, dateEnd);
     }
 
-    public final double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
+    public final double yearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
             final Date refPeriodEnd) {
         int dm1 = dateStart.getDayOfMonth();
         int dm2 = dateEnd.getDayOfMonth();
@@ -69,12 +69,12 @@ public class SimpleDayCounter extends AbstractDayCounter {
                 (dm1 < dm2 && dateStart.isEndOfMonth())) {
             return (yy2 - yy1) + (mm2 - mm1) / 12.0;
         } else {
-            return fallback.getYearFraction(dateStart, dateEnd);
+            return fallback.yearFraction(dateStart, dateEnd);
         }
     }
 
-    public final double getYearFraction(final Date dateStart, final Date dateEnd) {
-        return this.getYearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
+    public final double yearFraction(final Date dateStart, final Date dateEnd) {
+        return this.yearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
     }
 
 }

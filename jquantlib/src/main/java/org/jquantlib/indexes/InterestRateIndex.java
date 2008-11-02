@@ -106,7 +106,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 	@Override
 	public String getName() {
 		StringBuilder builder = new StringBuilder(familyName);
-		if (tenor.getUnits() == TimeUnit.DAYS) {
+		if (tenor.units() == TimeUnit.DAYS) {
 			if (fixingDays == 0)
 				builder.append("ON");
 			else if (fixingDays == 2)
@@ -115,7 +115,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 				builder.append("TN");
 		} else
 			builder.append(tenor.getShortFormat());
-		builder.append(dayCounter.getName());
+		builder.append(dayCounter.name());
 		return builder.toString();
 	}
 

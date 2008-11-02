@@ -144,7 +144,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     @Override
     public final /*@Time*/ double getTime(final Date d) {
     	YieldTermStructure yts = riskFreeRate_.getLink();
-        return yts.dayCounter().getYearFraction(yts.referenceDate(), d);
+        return yts.dayCounter().yearFraction(yts.referenceDate(), d);
     }
 
     // FIXME: code review

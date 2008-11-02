@@ -56,11 +56,11 @@ import org.jquantlib.util.Date;
 public abstract class Exercise {
 
 	//
-	// private fields
+	// protected fields
 	//
 	
-	private Exercise.Type type;
-	private final List<Date> dates;
+    protected Exercise.Type type;
+	protected final List<Date> dates;
 	
 
 	//
@@ -79,23 +79,7 @@ public abstract class Exercise {
 		this.dates = new ObjectArrayList<Date>(5); // some reasonable prime number
 	}
 
-	//
-	// protected final methods
-	//
 	
-	/**
-     * This method is only used by extended classes on the very special cases 
-     * when the type of the exercise must be changed.
-     * 
-     * @param type is the exercise type
-     * 
-     * @see Exercise.Type
-     * @see BermudanExercise
-     */
-    protected final void setType(final Exercise.Type type) {
-        this.type = type;
-    }
-
     //
     // public final methods
     //
@@ -107,7 +91,7 @@ public abstract class Exercise {
 	 * 
 	 * @see Exercise.Type
 	 */
-	public final Exercise.Type getType() {
+	public final Exercise.Type type() {
 		return type;
 	}
 	
@@ -115,16 +99,12 @@ public abstract class Exercise {
 		return dates.size();
 	}
 	
-    public final void addDate(final Date date) {
-    	dates.add(date);
-    }
-	
-	public final Date getDate(final int index) /* @ReadOnly */ {
+	public final Date date(final int index) /* @ReadOnly */ {
 		return (Date)dates.get(index);
 	}
 	
-	public final Date getLastDate() /* @ReadOnly */ {
-		return getDate(dates.size()-1);
+	public final Date lastDate() /* @ReadOnly */ {
+		return date(dates.size()-1);
 	}
 	
     //

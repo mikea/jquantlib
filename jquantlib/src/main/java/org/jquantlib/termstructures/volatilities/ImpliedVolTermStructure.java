@@ -73,7 +73,7 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 	protected double blackVarianceImpl(/* @Time */double t, /* @Price */double strike) /* @ReadOnly */{
 		// timeShift (and/or variance) variance at evaluation date cannot be cached since the original curve could change between
 		// invocations of this method
-		/* @Time */ double timeShift = dayCounter().getYearFraction(originalTS.getLink().referenceDate(), referenceDate());
+		/* @Time */ double timeShift = dayCounter().yearFraction(originalTS.getLink().referenceDate(), referenceDate());
 		
 		// t is relative to the current reference date and needs to be converted to the time relative to the reference date of the
 		// original curve

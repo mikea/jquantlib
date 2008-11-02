@@ -41,7 +41,7 @@
 
 package org.jquantlib.exercise;
 
-import java.util.List; //FIXME: performance
+import java.util.List;
 
 import org.jquantlib.util.Date;
 
@@ -50,6 +50,7 @@ import org.jquantlib.util.Date;
  *
  * @author Richard Gomes
  */
+// FIXME: code review
 // TODO: it would be nice to have a way for making a Bermudan with one exercise date equivalent to an European
 public class BermudanExercise extends EarlyExercise {
 
@@ -137,11 +138,11 @@ public class BermudanExercise extends EarlyExercise {
 		if (dates==null) throw new NullPointerException();
 		if (dates.length==0) throw new IllegalArgumentException("exercise dates is empty");
 		if (dates.length==1) {
-			super.setType(Exercise.Type.EUROPEAN);
-			super.setPayoffAtExpiry(false);
+			super.type = Exercise.Type.EUROPEAN;
+			super.payoffAtExpiry = false;
 		}
 		for (int i=0; i<dates.length; i++) {
-			super.addDate(dates[i]);
+			super.dates.add(dates[i]);
 		}
 	}
 	

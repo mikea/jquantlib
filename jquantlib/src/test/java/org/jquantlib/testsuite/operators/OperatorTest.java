@@ -179,7 +179,7 @@ public class OperatorTest {
 		Date today = DateFactory.getFactory().getTodaysDate();
 
 		Date exercise = today.increment(2*365);
-		double residualTime = dc.getYearFraction(today, exercise);
+		double residualTime = dc.yearFraction(today, exercise);
 
 		SimpleQuote spot = new SimpleQuote(0.0);
 		YieldTermStructure qTS = flatRate(today, q, dc);

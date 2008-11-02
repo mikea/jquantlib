@@ -90,9 +90,9 @@ public class Schedule {
         if (effectiveDate.ge(terminationDate))
             throw new IllegalArgumentException("Effective date later than or equal to termination date ");
 
-        if (tenor.getLength() == 0)
+        if (tenor.length() == 0)
             rule = DateGenerationRule.ZERO;
-        else if (tenor.getLength() < 0)
+        else if (tenor.length() < 0)
             throw new IllegalArgumentException("non positive tenor (" + tenor + ") not allowed");
 
         if (firstDate != Date.NULL_DATE && firstDate != null) {
@@ -156,7 +156,7 @@ public class Schedule {
             if (nextToLastDate != Date.NULL_DATE && nextToLastDate != null) {
                 // Add it after 1'st element
                 dates.add(1, nextToLastDate);
-                Date temp = nullCalendar.advance(seed, new Period(-periods * tenor.getLength(), tenor.getUnits()), convention,
+                Date temp = nullCalendar.advance(seed, new Period(-periods * tenor.length(), tenor.units()), convention,
                         endOfMonth);
                 if (!temp.equals(nextToLastDate))
                     isRegular.add(0, false);
@@ -170,7 +170,7 @@ public class Schedule {
                 exitDate = firstDate;
 
             while (true) {
-                Date temp = nullCalendar.advance(seed, new Period(-periods * tenor.getLength(), tenor.getUnits()), convention,
+                Date temp = nullCalendar.advance(seed, new Period(-periods * tenor.length(), tenor.units()), convention,
                         endOfMonth);
                 if (temp.lt(exitDate))
                     break;
@@ -201,7 +201,7 @@ public class Schedule {
             seed = effectiveDate;
             if (firstDate != Date.NULL_DATE && firstDate != null) {
                 dates.add(firstDate);
-                Date temp = nullCalendar.advance(seed, new Period(periods * tenor.getLength(), tenor.getUnits()), convention,
+                Date temp = nullCalendar.advance(seed, new Period(periods * tenor.length(), tenor.units()), convention,
                         endOfMonth);
                 if (temp != firstDate)
                     isRegular.add(false);
@@ -215,7 +215,7 @@ public class Schedule {
                 exitDate = nextToLastDate;
 
             while (true) {
-                Date temp = nullCalendar.advance(seed, new Period(periods * tenor.getLength(), tenor.getUnits()), convention,
+                Date temp = nullCalendar.advance(seed, new Period(periods * tenor.length(), tenor.units()), convention,
                         endOfMonth);
                 if (temp.gt(exitDate))
                     break;

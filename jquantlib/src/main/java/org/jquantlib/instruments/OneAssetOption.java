@@ -183,7 +183,7 @@ public class OneAssetOption extends Option {
         int n = exercise.size();
         List<Double> arr = new DoubleArrayList(n);
         for (int i=0; i<n; ++i) {
-            arr.add(/*@Time*/ stochasticProcess.getTime(exercise.getDate(i)));
+            arr.add(/*@Time*/ stochasticProcess.getTime(exercise.date(i)));
         }
         optionArguments.stoppingTimes = arr;
     }

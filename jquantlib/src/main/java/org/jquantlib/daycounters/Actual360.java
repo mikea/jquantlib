@@ -75,19 +75,20 @@ public class Actual360 extends AbstractDayCounter {
     //
     
     @Override
-	public final String getName() /* @ReadOnly */{
+	public final String name() /* @ReadOnly */{
 		return "Actual/360";
 	}
 
     @Override
-	public /*@Time*/ final double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
-		return getDayCount(dateStart, dateEnd) / 360.0;
+	public /*@Time*/ final double yearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+		return dayCount(dateStart, dateEnd) / 360.0;
 	}
 
     @Override
-	public /*@Time*/ final double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
+	public /*@Time*/ final double yearFraction(
+	        final Date dateStart, final Date dateEnd, final Date refPeriodStart,
 			final Date refPeriodEnd) /* @ReadOnly */{
-		return getDayCount(dateStart, dateEnd) / 360.0;
+		return dayCount(dateStart, dateEnd) / 360.0;
 	}
 
 }

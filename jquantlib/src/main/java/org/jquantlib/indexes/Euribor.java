@@ -45,7 +45,7 @@ public class Euribor extends IborIndex {
 		public Euribor365(Period tenor, Handle<YieldTermStructure> h) {
 			super("Euribor365", tenor, 2, // settlement days
 					Actual365Fixed.getDayCounter(), h);
-			if (tenor.getUnits() == TimeUnit.DAYS)
+			if (tenor.units() == TimeUnit.DAYS)
 				throw new IllegalArgumentException("for daily tenors (" + tenor
 						+ ") dedicated DailyTenor constructor must be used");
 		}
@@ -83,13 +83,13 @@ public class Euribor extends IborIndex {
 	public Euribor(Period tenor, Handle<YieldTermStructure> h) {
 		this("Euribor", tenor, 2, // settlement days
 				Actual360.getDayCounter(), h);
-		if (tenor.getUnits() == TimeUnit.DAYS)
+		if (tenor.units() == TimeUnit.DAYS)
 			throw new IllegalArgumentException("for daily tenors (" + tenor
 					+ ") dedicated DailyTenor constructor must be used");
 	}
 
 	protected static BusinessDayConvention euriborConvention(Period p) {
-		switch (p.getUnits()) {
+		switch (p.units()) {
 		case DAYS:
 		case WEEKS:
 			return BusinessDayConvention.FOLLOWING;
@@ -102,7 +102,7 @@ public class Euribor extends IborIndex {
 	}
 
 	protected static boolean euriborEOM(Period p) {
-		switch (p.getUnits()) {
+		switch (p.units()) {
 		case DAYS:
 		case WEEKS:
 			return false;

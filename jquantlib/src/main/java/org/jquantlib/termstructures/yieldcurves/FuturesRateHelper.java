@@ -58,7 +58,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 		earliestDate = immDate;
 		latestDate = calendar.advance(immDate, new Period(nMonths,
 				TimeUnit.MONTHS), convention, endOfMonth);
-		yearFraction = dayCounter.getYearFraction(earliestDate, latestDate);
+		yearFraction = dayCounter.yearFraction(earliestDate, latestDate);
 
 		// registerWith(convAdj_);
 	}
@@ -74,7 +74,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 		earliestDate = immDate;
 		latestDate = calendar.advance(immDate, new Period(nMonths,
 				TimeUnit.MONTHS), convention, endOfMonth);
-		yearFraction = dayCounter.getYearFraction(earliestDate, latestDate);
+		yearFraction = dayCounter.yearFraction(earliestDate, latestDate);
 	}
 
 	public FuturesRateHelper(double price, Date immDate, IborIndex i,
@@ -86,7 +86,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 		earliestDate = immDate;
 		Calendar cal = i.getFixingCalendar();
 		latestDate = cal.advance(immDate, i.getTenor(), i.getConvention());
-		yearFraction = i.getDayCounter().getYearFraction(earliestDate,
+		yearFraction = i.getDayCounter().yearFraction(earliestDate,
 				latestDate);
 	}
 

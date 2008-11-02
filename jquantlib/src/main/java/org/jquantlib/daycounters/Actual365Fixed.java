@@ -80,18 +80,18 @@ public class Actual365Fixed extends AbstractDayCounter {
     //
     
     @Override
-	public final String getName() /* @ReadOnly */ {
+	public final String name() /* @ReadOnly */ {
 		return "Actual/365 (fixed)";
 	}
 	
     @Override
-	public /*@Time*/ final double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
-		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
+	public /*@Time*/ final double yearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
+		return /*@Time*/ dayCount(dateStart, dateEnd)/365.0;
 	}
 	
     @Override
-	public /*@Time*/ final double getYearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */ {
-		return /*@Time*/ getDayCount(dateStart, dateEnd)/365.0;
+	public /*@Time*/ final double yearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */ {
+		return /*@Time*/ dayCount(dateStart, dateEnd)/365.0;
 	}
 	
 }

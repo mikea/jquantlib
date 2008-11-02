@@ -318,7 +318,7 @@ public class DefaultDate extends BaseDate {
     }
 
     public final Date adjust(final Period p) {
-        value = getAdvancedDateValue(this, p.getLength(), p.getUnits());
+        value = getAdvancedDateValue(this, p.length(), p.units());
         notifyObservers();
         return this;
     }
@@ -625,7 +625,7 @@ public class DefaultDate extends BaseDate {
     }
 
     public final Date getDateAfter(final Period p) {
-       final int newDateValue = getAdvancedDateValue(this, p.getLength(), p.getUnits());
+       final int newDateValue = getAdvancedDateValue(this, p.length(), p.units());
        return new DefaultDate(newDateValue);
     }
 

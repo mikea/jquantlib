@@ -61,7 +61,7 @@ public abstract class AbstractDayCounter implements DayCounter {
     //
     
     @Override
-	public int getDayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
+	public int dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
 		return dateStart.getDayCount(dateEnd);
 	}
     

@@ -1467,7 +1467,7 @@ public class EuropeanOptionTest {
         sb.append("    dividend yield:   " + q + "\n");
         sb.append("    risk-free rate:   " + r + "\n");
         sb.append("    reference date:   " + today + "\n");
-        sb.append("    maturity:         " + exercise.getLastDate() + "\n");
+        sb.append("    maturity:         " + exercise.lastDate() + "\n");
         sb.append("    volatility:       " + v + "\n\n");
         sb.append("    expected " + greekName + ":   " + expected + "\n" );
         sb.append("    calculated " + greekName + ": " + calculated + "\n");

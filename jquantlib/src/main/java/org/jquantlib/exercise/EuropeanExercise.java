@@ -59,7 +59,7 @@ public class EuropeanExercise extends Exercise {
     public EuropeanExercise(final Date date) {
 		super(Exercise.Type.EUROPEAN);
 		if (date==null) throw new NullPointerException();
-		super.addDate(date);
+		super.dates.add(date);
 	}
 
 }

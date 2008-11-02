@@ -119,7 +119,7 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 			if (dates[i].le(dates[i - 1]))
 				throw new IllegalArgumentException("invalid date (" + dates[i] + ", vs " + dates[i - 1] + ")"); // FIXME: message
 			if (!isNegativeRates && (forwards[i] < 0.0)) throw new IllegalArgumentException("negative forward"); // FIXME: message
-			times[i] = dayCounter.getYearFraction(dates[0], dates[i]);
+			times[i] = dayCounter.yearFraction(dates[0], dates[i]);
 		}
 
 		this.interpolation = this.interpolator.interpolate(times, forwards);

@@ -128,7 +128,7 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 				throw new IllegalArgumentException("invalid date (" + dates[i] + ", vs " + dates[i - 1] + ")"); // FIXME: message
 			if (this.data[i] <= 0.0) throw new IllegalArgumentException("negative discount"); // FIXME: message
 
-			times[i] = dayCounter.getYearFraction(dates[0], dates[i]);
+			times[i] = dayCounter.yearFraction(dates[0], dates[i]);
 		}
 
 		this.interpolation = this.interpolator.interpolate(times, discounts);

@@ -191,11 +191,11 @@ public abstract class AbstractCalendar implements Calendar {
     }
 
     public Date advance(final Date d, final Period p, final BusinessDayConvention c) {
-        return advance(d, p.getLength(), p.getUnits(), c, false);
+        return advance(d, p.length(), p.units(), c, false);
     }
 
     public Date advance(final Date d, final Period p, final BusinessDayConvention c, boolean endOfMonth) {
-        return advance(d, p.getLength(), p.getUnits(), c, endOfMonth);
+        return advance(d, p.length(), p.units(), c, endOfMonth);
     }
 
     public long businessDaysBetween(final Date from, final Date to, boolean includeFirst, boolean includeLast) {

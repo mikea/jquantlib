@@ -143,12 +143,12 @@ public class Thirty360 extends AbstractDayCounter {
     //
     
     @Override
-	public final String getName() /* @ReadOnly */{
+	public final String name() /* @ReadOnly */{
 		return delegate.getName();
 	}
 
     @Override
-	public final int getDayCount(final Date d1, final Date d2) /* @ReadOnly */{ 
+	public final int dayCount(final Date d1, final Date d2) /* @ReadOnly */{ 
 		final int dd1 = d1.getDayOfMonth();
 		final int dd2 = d2.getDayOfMonth();
 		final int mm1 = d1.getMonth();
@@ -160,15 +160,15 @@ public class Thirty360 extends AbstractDayCounter {
 	}
 	
     @Override
-	public final /* @Time */ double getYearFraction(
+	public final /* @Time */ double yearFraction(
 						final Date dateStart, final Date dateEnd, 
 						final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
-		return getDayCount(dateStart, dateEnd) / 360.0;
+		return dayCount(dateStart, dateEnd) / 360.0;
 	}
 
     @Override
-	public final /* @Time */double getYearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
-		return getDayCount(dateStart, dateEnd) / 360.0;
+	public final /* @Time */double yearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+		return dayCount(dateStart, dateEnd) / 360.0;
 	}
 
 	

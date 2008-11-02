@@ -91,7 +91,7 @@ public abstract class Option extends NewInstrument {
 	
 	@Override
 	public boolean isExpired() /* @ReadOnly */ {
-        return exercise.getLastDate().le( evaluationDate );
+        return exercise.lastDate().le( evaluationDate );
     }
 
 	

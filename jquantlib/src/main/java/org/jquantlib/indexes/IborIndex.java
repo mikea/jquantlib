@@ -81,7 +81,7 @@ public class IborIndex extends InterestRateIndex {
 		Date endValueDate = maturityDate(fixingValueDate);
 		double fixingDiscount = termStructure.getLink().discount(fixingValueDate);
 		double endDiscount = termStructure.getLink().discount(endValueDate);
-		double fixingPeriod = getDayCounter().getYearFraction(fixingValueDate, endValueDate);
+		double fixingPeriod = getDayCounter().yearFraction(fixingValueDate, endValueDate);
 		return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
 	}
 
