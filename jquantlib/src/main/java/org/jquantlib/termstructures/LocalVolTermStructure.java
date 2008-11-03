@@ -105,6 +105,10 @@ public abstract class LocalVolTermStructure extends TermStructure implements Typ
 			return localVolImpl(t, underlyingLevel);
 		}
 
+        public final /*@Volatility*/ double localVol(final /*@Time*/ double t, final /*@Price*/ double underlyingLevel) {
+            return localVol(t, underlyingLevel, false);
+        }
+        
         public final /*@Volatility*/ double localVol(final /*@Time*/ double t, final /*@Price*/ double underlyingLevel, boolean extrapolate) {
 			checkRange(t, underlyingLevel, extrapolate);
 			return localVolImpl(t, underlyingLevel);
