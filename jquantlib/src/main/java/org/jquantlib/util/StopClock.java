@@ -22,6 +22,10 @@
 
 package org.jquantlib.util;
 
+// FIXME: Move StopClock out from main library
+// This class is mainly intended to performance tests. So, it must be located in src/test tree.
+// Also, examples which depend on this class must be moved out of main library
+
 public class StopClock {
 
     public static enum Unit {
