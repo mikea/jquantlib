@@ -19,9 +19,14 @@ public class ClientActivator implements BundleActivator {
 		System.out.println("start ClientActivator");
 		timeReference = context.getServiceReference(Calendar.class.getName());
 		System.out.println(timeReference);
-		Object c = context.getService(timeReference);
-//		Calendar c = (Calendar) context.getService(timeReference);
-		System.out.println(c);
+		if (null == timeReference) {
+			System.out
+					.println("timeReference Service may not have been started yet :(");
+		} else {
+			Object c = context.getService(timeReference);
+			// Calendar c = (Calendar) context.getService(timeReference);
+			System.out.println(c);
+		}
 	}
 
 	/*
@@ -32,7 +37,12 @@ public class ClientActivator implements BundleActivator {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		System.out.println("stop ClientActivator");
-		context.ungetService(timeReference);
+		if (null == timeReference) {
+			System.out
+					.println("timeReference Service may not have been started yet :(");
+		} else {
+			context.ungetService(timeReference);
+		}
 	}
 
 }
