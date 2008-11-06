@@ -35,6 +35,27 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
 
 	
     //
+    // overrides AbstractInterpolation2D
+    //
+    
+    @Override
+    public double evaluateImpl(double x, double y) /* @ReadOnly */{
+        int i = locateX(x);
+        int j = locateY(y);
+
+        double z1 = mz[j][i];
+        double z2 = mz[j][i + 1];
+        double z3 = mz[j + 1][i];
+        double z4 = mz[j + 1][i + 1];
+
+        double t = (x - vx[i]) / (vx[i + 1] - vx[i]);
+        double u = (y - vy[j]) / (vy[j + 1] - vy[j]);
+
+        return (1.0 - t) * (1.0 - u) * z1 + t * (1.0 - u) * z2 + (1.0 - t) * u * z3 + t * u * z4;
+    }
+
+    
+    //
     // static methods
     //
     
@@ -44,27 +65,6 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
     }
 
     
-	//
-    // implements BinaryFunctionDouble
-    //
-
-	@Override
-	public double evaluateImpl(double x, double y) /* @ReadOnly */{
-		int i = locateX(x);
-		int j = locateY(y);
-
-		double z1 = mz[j][i];
-		double z2 = mz[j][i + 1];
-		double z3 = mz[j + 1][i];
-		double z4 = mz[j + 1][i + 1];
-
-		double t = (x - vx[i]) / (vx[i + 1] - vx[i]);
-		double u = (y - vy[j]) / (vy[j + 1] - vy[j]);
-
-		return (1.0 - t) * (1.0 - u) * z1 + t * (1.0 - u) * z2 + (1.0 - t) * u * z3 + t * u * z4;
-	}
-
-	
 	//
     // inner classes
     //
