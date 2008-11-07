@@ -51,10 +51,10 @@ public class BicubicSpline implements Interpolator2D {
     private final static Logger logger = LoggerFactory.getLogger(BicubicSpline.class);
 
     //
-    // private fields
+    // private final fields
     //
     
-    private Interpolator2D delegate;
+    private final Interpolator2D delegate;
     
     
     //

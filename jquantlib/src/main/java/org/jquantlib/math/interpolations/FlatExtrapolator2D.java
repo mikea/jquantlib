@@ -34,7 +34,7 @@ package org.jquantlib.math.interpolations;
 public class FlatExtrapolator2D extends AbstractInterpolation2D {
 
     //
-    // private fields
+    // private final fields
     //
     
     private final Interpolation2D decorated;

@@ -35,10 +35,10 @@ import org.jquantlib.math.interpolations.Interpolator;
 public class BackwardFlat implements Interpolator {
 
     //
-    // private fields
+    // private final fields
     //
     
-	private Interpolator delegate;
+	private final Interpolator delegate;
 
 	
 	//

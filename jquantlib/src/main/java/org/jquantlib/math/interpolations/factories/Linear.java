@@ -36,10 +36,10 @@ import org.jquantlib.math.interpolations.LinearInterpolation;
 public class Linear implements Interpolator {
 
     //
-    // private fields
+    // private final fields
     //
     
-	private Interpolator delegate;
+    private final Interpolator delegate;
 	
 	
     //

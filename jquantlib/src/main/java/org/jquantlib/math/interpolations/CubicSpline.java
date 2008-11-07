@@ -69,6 +69,17 @@ public class CubicSpline extends AbstractInterpolation {
 
     
     //
+    // private final fields
+    //
+    
+    private final BoundaryCondition leftType;
+    private final BoundaryCondition rightType;
+    private final double leftValue;
+    private final double rightValue;
+    private final boolean constrained;
+
+    
+    //
     // private fields
     //
     
@@ -77,17 +88,7 @@ public class CubicSpline extends AbstractInterpolation {
     private double[] va;
     private double[] vb;
     private double[] vc;
-    
-
-    // FIXME: must be initialized somewhere else??? ----------
-    private final BoundaryCondition leftType;
-    private final BoundaryCondition rightType;
-    private final double leftValue;
-    private final double rightValue;
-    private       boolean monotone;
-    private final boolean constrained;
-    // -----------------------------------------------------
-    
+    private boolean  monotone;
     
     
     //

@@ -58,10 +58,10 @@ public class Cubic implements Interpolator {
     private final static Logger logger = LoggerFactory.getLogger(Cubic.class);
 
     //
-    // private fields
+    // private final fields
     //
     
-    private Interpolator delegate;
+    private final Interpolator delegate;
     
     
     //

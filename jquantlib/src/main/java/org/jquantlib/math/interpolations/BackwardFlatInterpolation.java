@@ -36,7 +36,7 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
     // private fields
     //
     
-    private double[] primitive;
+    private double[] vp;
 
 
     //
@@ -66,7 +66,7 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 	protected double primitiveImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
         double dx = x - vx[i];
-        return primitive[i] + dx*vy[i+1];
+        return vp[i] + dx*vy[i+1];
 	}
 
 	@Override
@@ -100,11 +100,11 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 	public void reload() {
     	super.reload();
 		
-    	primitive = new double[vx.length];
-        primitive[0] = 0.0;
+    	vp = new double[vx.length];
+        vp[0] = 0.0;
         for (int i=1; i<vx.length; i++) {
             double dx = vx[i] - vx[i-1];
-            primitive[i] = primitive[i-1] + dx*vy[i];
+            vp[i] = vp[i-1] + dx*vy[i];
         }
 	}
 	

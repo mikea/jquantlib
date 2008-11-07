@@ -39,10 +39,10 @@ import org.jquantlib.math.interpolations.Interpolator2D;
 public class Bilinear implements Interpolator2D {
 
 	//
-    // private fields
+    // private final fields
     //
     
-    private Interpolator2D delegate;
+    private final Interpolator2D delegate;
 	
 	
     //
