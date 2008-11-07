@@ -62,7 +62,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  */
 public class TrapezoidIntegral extends Integrator {
 	
-	static public enum Method { Default, MidPoint };
+	static public enum Method { Default, MidPoint };    /** better to make this an inner class!!!!! **/
 	
 	//
 	// protected fields
