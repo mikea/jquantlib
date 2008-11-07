@@ -45,7 +45,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
 /**
  * @author Dominik Holenstein
  */
-public class KronrodIntegral extends Integrator {
+public class GaussKronrodPatterson extends Integrator {
 	
 	//
 	// private fields
@@ -58,17 +58,17 @@ public class KronrodIntegral extends Integrator {
 	// public constructors
 	//
 	
-	public KronrodIntegral(final double absoluteAccuracy, final int maxEvaluations, final double relativeAccuracy) {
+	public GaussKronrodPatterson(final double absoluteAccuracy, final int maxEvaluations, final double relativeAccuracy) {
 		super(absoluteAccuracy, maxEvaluations);
 		this.relativeAccuracy = relativeAccuracy;
 	}
 
 
-	public KronrodIntegral(double relativeAccuracy, double absoluteAccuracy) {
+	public GaussKronrodPatterson(double relativeAccuracy, double absoluteAccuracy) {
 		this(absoluteAccuracy, 100, relativeAccuracy);
 	}
 
-	public KronrodIntegral() {
+	public GaussKronrodPatterson() {
 		this(1.0e-6, 1.0);
 	}
 	
