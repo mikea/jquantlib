@@ -40,13 +40,7 @@
 
 package org.jquantlib.math;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Grid;
 import org.jquantlib.math.interpolations.CubicSpline;
-import org.jquantlib.math.interpolations.factories.Cubic;
-
-import it.unimi.dsi.fastutil.doubles.DoubleArrays;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * @author Dominik Holenstein
  *
  */
-
+//FIXME: work in progress [Dominik]
 public class SampledCurve {
 	
 	
@@ -69,7 +63,7 @@ public class SampledCurve {
 	
 	
 	//
-	// Constuctors
+	// Constructors
 	//
 	public SampledCurve(int gridSize){
 		
@@ -82,7 +76,7 @@ public class SampledCurve {
 	
 	
 	
-	double valueAtCenter() /* @Read-only */ {
+	double valueAtCenter() /* @Readonly */ {
 		if (empty()) throw new ArithmeticException("empty sampled curve");
 		int jmid = size()/2;
 		if (size() % 2 == 1)
@@ -91,14 +85,14 @@ public class SampledCurve {
 			return (values_.at(jmid)+values_.at(jmid-1)/2.0);
 	}
 	
-	double firstDerivativeAtCenter() /* Read-only */ {
+	double firstDerivativeAtCenter() /* @Readonly */ {
 		if(size() >= 3) throw new ArithmeticException("the size of the curve must be at least 3");
 		int jmid = size()/2;
 		if (size() % 2 == 1){
 			return (values_.at(jmid+1)-values_.at(jmid-1)) / (grid_.at(jmid+1)-grid_.at(jmid-1));
 		}
 		else {
-			return (values_.at(jmid)-values_.at(jmid-1))) / (grid_.at(jmid)-grid_.at(jmid-1));
+			return (values_.at(jmid)-values_.at(jmid-1)) / (grid_.at(jmid)-grid_.at(jmid-1));
 		}
 	}
 	
@@ -153,11 +147,11 @@ public class SampledCurve {
 	
 	
 	
-	Array grid() /* @Read-only */{
+	Array grid() /* @Readonly */{
 		return grid_;
 	}
 	
-	Array values() /*@Read-only */ {
+	Array values() /*@Readonly */ {
 		return values_;
 	}
 	
@@ -189,7 +183,7 @@ public class SampledCurve {
 		return grid_.size();
 	}
 	
-	boolean empty() /* Read-only */ {
+	boolean empty() /* @Readonly */ {
 		int sizeOfGrid = grid_.size();
 		if (sizeOfGrid == 0)
 			return true;
