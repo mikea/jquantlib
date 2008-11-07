@@ -52,12 +52,11 @@ import org.slf4j.LoggerFactory;
 //FIXME: work in progress [Dominik]
 public class SampledCurve {
 	
-	
+    private final static Logger logger = LoggerFactory.getLogger(SampledCurve.class);
+    
 	//
 	// private fields
 	//
-	private final static Logger logger = LoggerFactory.getLogger(CubicSpline.class);
-	
 	private Array grid_;
 	private Array values_;
 	
