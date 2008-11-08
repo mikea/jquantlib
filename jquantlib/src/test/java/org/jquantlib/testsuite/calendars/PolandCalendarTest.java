@@ -162,6 +162,7 @@ public class PolandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(22,MAY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(15,AUGUST,year));
     	expectedHol.add(DateFactory.getFactory().getDate(11,NOVEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
     	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
     	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
     	    	
@@ -180,10 +181,13 @@ public class PolandCalendarTest {
     	List<Date> expectedHol = new Vector<Date>();
     
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(10,APRIL,year));
     	expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
     	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(11,JUNE,year));
     	expectedHol.add(DateFactory.getFactory().getDate(11,NOVEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
     	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
     	    	
     	// Call the Holiday Check

@@ -105,10 +105,12 @@ final class PolandWSECalendar extends WesternCalendar {
 		if (isWeekend(w)
 		// Easter Monday
 				|| (dd == em)
+				|| (dd == (em-3) && y == 2009)
 				// Corpus Christi
 				|| (dd == em + 59)
 				// New Year's Day
 				|| (d == 1 && m == JANUARY)
+				|| (d == 2 && m == JANUARY && y == 2009)
 				// May Day
 				|| (d == 1 && m == MAY)
 				// Constitution Day
@@ -120,6 +122,8 @@ final class PolandWSECalendar extends WesternCalendar {
 				// Independence Day
 				|| (d == 11 && m == NOVEMBER)
 				// Christmas
+				// updated the value from http://www.polishworld.com/wse/
+				|| (d == 24 && m == DECEMBER && (y == 2008 || y == 2009))
 				|| (d == 25 && m == DECEMBER)
 				// 2nd Day of Christmas
 				|| (d == 26 && m == DECEMBER))
