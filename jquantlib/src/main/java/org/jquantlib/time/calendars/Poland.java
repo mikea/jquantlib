@@ -28,6 +28,7 @@ import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.NOVEMBER;
 
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
@@ -36,41 +37,65 @@ import org.jquantlib.util.Month;
 /**
  * 
  * @author Anand Mani
+ * @author Renjith Nair
  */
-public class Poland extends WesternCalendar {
 
-	private static final Poland POLAND = new Poland();
+//! Polish calendar
+/*! Holidays:
+    <ul>
+    <li>Saturdays</li>
+    <li>Sundays</li>
+    <li>Easter Monday</li>
+    <li>Corpus Christi</li>
+    <li>New Year's Day, January 1st</li>
+    <li>May Day, May 1st</li>
+    <li>Constitution Day, May 3rd</li>
+    <li>Assumption of the Blessed Virgin Mary, August 15th</li>
+    <li>All Saints Day, November 1st</li>
+    <li>Independence Day, November 11th</li>
+    <li>Christmas, December 25th</li>
+    <li>2nd Day of Christmas, December 26th</li>
+    </ul>
 
-	public static Poland getCalendar() {
-		return POLAND;
+    \ingroup calendars
+*/	
+public class Poland extends DelegateCalendar {
+	public static enum Market {
+		WSE, //  Warsaw Stock Exchange
+	};
+
+	//Warsaw Stock Exchange Calendar
+	private final static Poland WSE_CALENDAR = new Poland(
+			Market.WSE);
+
+	private Poland(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case WSE:
+			delegate = new PolandWSECalendar();
+			break;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		setDelegate(delegate);
 	}
 
-	private Poland() {
+	public static Poland getCalendar(Market market) {
+		switch (market) {
+		case WSE:
+			return WSE_CALENDAR;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
 	}
+}
+
+final class PolandWSECalendar extends WesternCalendar {
 
 	public String getName() {
-		return "Poland";
+		return "Warsaw Stock Exchange";
 	}
-	
-    //! Polish calendar
-    /*! Holidays:
-        <ul>
-        <li>Saturdays</li>
-        <li>Sundays</li>
-        <li>Easter Monday</li>
-        <li>Corpus Christi</li>
-        <li>New Year's Day, January 1st</li>
-        <li>May Day, May 1st</li>
-        <li>Constitution Day, May 3rd</li>
-        <li>Assumption of the Blessed Virgin Mary, August 15th</li>
-        <li>All Saints Day, November 1st</li>
-        <li>Independence Day, November 11th</li>
-        <li>Christmas, December 25th</li>
-        <li>2nd Day of Christmas, December 26th</li>
-        </ul>
-
-        \ingroup calendars
-    */	
+    
 	public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
 		Weekday w = date.getWeekday();
 		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
