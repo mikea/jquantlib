@@ -41,6 +41,7 @@
 package org.jquantlib.math;
 
 import org.jquantlib.math.interpolations.CubicSpline;
+import org.jquantlib.math.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +76,7 @@ public class SampledCurve {
 	
 	
 	
-	double valueAtCenter() /* @Readonly */ {
+	public double valueAtCenter() /* @Readonly */ {
 		if (empty()) throw new ArithmeticException("empty sampled curve");
 		int jmid = size()/2;
 		if (size() % 2 == 1)
@@ -84,7 +85,7 @@ public class SampledCurve {
 			return (values_.at(jmid)+values_.at(jmid-1)/2.0);
 	}
 	
-	double firstDerivativeAtCenter() /* @Readonly */ {
+	public double firstDerivativeAtCenter() /* @Readonly */ {
 		if(size() >= 3) throw new ArithmeticException("the size of the curve must be at least 3");
 		int jmid = size()/2;
 		if (size() % 2 == 1){
@@ -95,33 +96,35 @@ public class SampledCurve {
 		}
 	}
 	
-	/*
-	Real SampledCurve::secondDerivativeAtCenter() const {
-        QL_REQUIRE(size()>=4,
-                   "the size of the curve must be at least 4");
-        Size jmid = size()/2;
+	
+	public double secondDerivativeAtCenter() /* Read-only */ {
+        if(size()>=4) throw new ArithmeticException("the size of the curve must be at least 4");
+        int jmid = size()/2;
         if (size() % 2 == 1) {
-            Real deltaPlus = (values_[jmid+1]-values_[jmid])/
-                (grid_[jmid+1]-grid_[jmid]);
-            Real deltaMinus = (values_[jmid]-values_[jmid-1])/
-                (grid_[jmid]-grid_[jmid-1]);
-            Real dS = (grid_[jmid+1]-grid_[jmid-1])/2.0;
+            double deltaPlus = (values_.at(jmid+1)-values_.at(jmid)/
+                (grid_.at(jmid+1)-grid_.at(jmid)));
+            double deltaMinus = (values_.at(jmid)-values_.at(jmid-1)/
+                (grid_.at(jmid)-grid_.at(jmid-1)));
+            double dS = (grid_.at(jmid+1)-grid_.at(jmid-1))/2.0;
             return (deltaPlus-deltaMinus)/dS;
         } else {
-            Real deltaPlus = (values_[jmid+1]-values_[jmid-1])/
-                (grid_[jmid+1]-grid_[jmid-1]);
-            Real deltaMinus = (values_[jmid]-values_[jmid-2])/
-                (grid_[jmid]-grid_[jmid-2]);
+            double deltaPlus = (values_.at(jmid+1)-values_.at(jmid-1)/
+                (grid_.at(jmid+1)-grid_.at(jmid-1)));
+            double deltaMinus = (values_.at(jmid)-values_.at(jmid-2))/
+                (grid_.at(jmid)-grid_.at(jmid-2));
             return (deltaPlus-deltaMinus)/
-                (grid_[jmid]-grid_[jmid-1]);
+                (grid_.at(jmid)-grid_.at(jmid-1));
         }
     }
-
-    void SampledCurve::regrid(const Array &new_grid) {
-        NaturalCubicSpline priceSpline(grid_.begin(), grid_.end(),
-                                       values_.begin());
+	
+	/*
+    public void regrid(final Array new_grid) {
+        NaturalCubicSpline priceSpline(grid_.at(0), grid_.end(),
+                                       values_.at(0));
         priceSpline.update();
-        Array newValues(new_grid.size());
+     
+        Array newValues = new Array(new_grid.size());
+        
         Array::iterator val;
         Array::const_iterator grid;
         for (val = newValues.begin(), grid = new_grid.begin() ;
@@ -132,25 +135,29 @@ public class SampledCurve {
         values_.swap(newValues);
         grid_ = new_grid;
     }
+   
     */
 	
+    //
+    // inner classes
+    //
 	
-	void shiftGrid(double s){
+	private void shiftGrid(double s){
 		grid_.operatorAdd(s); 
 	}
 	
-	void scaleGrid(double s){
+	private void scaleGrid(double s){
 		grid_.operatorMultiply(s);
 	}
 	
 	
 	
 	
-	Array grid() /* @Readonly */{
+	private Array grid() /* @Readonly */{
 		return grid_;
 	}
 	
-	Array values() /*@Readonly */ {
+	private Array values() /*@Readonly */ {
 		return values_;
 	}
 	
@@ -174,22 +181,20 @@ public class SampledCurve {
 	
 	*/
 	
-	double value(int i){
+	private double value(int i){
 		return values_.at(i);
 	}
 	
-	int size(){
+	private int size(){
 		return grid_.size();
 	}
 	
-	boolean empty() /* @Readonly */ {
+	private boolean empty() /* @Readonly */ {
 		int sizeOfGrid = grid_.size();
 		if (sizeOfGrid == 0)
 			return true;
 		else
 			return false;
 	}
-	
-
 
 }
