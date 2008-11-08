@@ -45,8 +45,8 @@ import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 /**
- * @author
- *
+ * @author Joon Tiang
+ * @author renjith
  *
  */
 
@@ -63,97 +63,105 @@ public class SingaporeCalendarTest {
     public void testSingapore() {
                        
     	Calendar c = Singapore.getCalendar(Singapore.Market.SGX);
-    	// 2008 
-        testSingaporeYear2008(c);
-        // 2007 
-        testSingaporeYear2007(c);
+    	// 2004 
+        testSingaporeYear2004(c);
+        // 2005 
+        testSingaporeYear2005(c);
 		// 2006 
         testSingaporeYear2006(c);
-		// 2005 
-        testSingaporeYear2005(c);
-		// 2004 
-        testSingaporeYear2004(c);
+		// 2007 
+        testSingaporeYear2007(c);
+		// 2008 
+        testSingaporeYear2008(c);
+        // 2009 
+        testSingaporeYear2009(c);
+        // 2010 
+        testSingaporeYear2010(c);
+        // 2011 
+        testSingaporeYear2011(c);
+        // 2012 
+        testSingaporeYear2012(c);
     }
 	
-	// 2008 -- current year
+	// 2004
 	
-	void testSingaporeYear2008(Calendar c) {
-      	int year = 2008;
+	void testSingaporeYear2004(Calendar c) {
+      	int year = 2004;
       	logger.info("Testing Singapore's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
-    	//New year's day
+    	//New year's day 
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-		
-		
 		//Chinese New Year
-    	expectedHol.add(DateFactory.getFactory().getDate(7,FEBRUARY,year)); 
-		expectedHol.add(DateFactory.getFactory().getDate(8,FEBRUARY,year)); 
-		
-		//good friday
-		expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));    	    	
-    	
-    	//labour day
-    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-		
-		//Vesak day -- weekend in yr 2008
-		//expectedHol.add(DateFactory.getFactory().getDate(18,MAY,year));
-		
-    	// National Day -- weekend in yr 2008
-    	//expectedHol.add(DateFactory.getFactory().getDate(9,AUGUST,year));
-    	// Hari Raya Puasa -- weekend in 2007
-		expectedHol.add(DateFactory.getFactory().getDate(1,OCTOBER,year));  
-		// Deepavali
-		expectedHol.add(DateFactory.getFactory().getDate(28,OCTOBER,year));    	    	
-		
-		   	    	
+		expectedHol.add(DateFactory.getFactory().getDate(22,JANUARY,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(23,JANUARY,year)); 
 		// Hari Raya Haji
-		expectedHol.add(DateFactory.getFactory().getDate(8,DECEMBER,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(2,FEBRUARY,year)); 
 		
-		//christmas 
-    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+				
+		//good friday
+		expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));    	    	
+    	
+    	//labour day -- weekend in yr 2004
+    	//expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+		
+		//Vesak day
+		expectedHol.add(DateFactory.getFactory().getDate(2,JUNE,year));
+		
+    	// National Day
+    	expectedHol.add(DateFactory.getFactory().getDate(9,AUGUST,year));
+		
+		//Deepavali
+		expectedHol.add(DateFactory.getFactory().getDate(11,NOVEMBER,year));    	
+		
+    	// Hari Raya Puasa -- 14 is in the weekends of 2004
+		expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,year));  
+			    	
+		//christmas  -- weekend in yr 2004
+    	//expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
 		
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, c, year);
     }
-    // 2007 
 	
-	void testSingaporeYear2007(Calendar c) {
-      	int year = 2007;
+	// 2005 
+	
+	void testSingaporeYear2005(Calendar c) {
+      	int year = 2005;
       	logger.info("Testing Singapore's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
-    	//New year's day
-    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
+    	//New year's day -- weekend in yr 2005
+    	//expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
 		// Hari Raya Haji
-		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(21,JANUARY,year)); 
 		
 		//Chinese New Year
-    	expectedHol.add(DateFactory.getFactory().getDate(19,FEBRUARY,year)); 
-		expectedHol.add(DateFactory.getFactory().getDate(20,FEBRUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(9,FEBRUARY,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(10,FEBRUARY,year)); 
 		
 		//good friday
-		expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));    	    	
+		expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));    	    	
     	
-    	//labour day
-    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	//labour day -- weekend in yr 2005
+    	//expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
 		
-		//Vesak day
-		expectedHol.add(DateFactory.getFactory().getDate(31,MAY,year));
+		//Vesak day -- weekend in yr 2005
+		//expectedHol.add(DateFactory.getFactory().getDate(22,MAY,year));
 		
     	// National Day
     	expectedHol.add(DateFactory.getFactory().getDate(9,AUGUST,year));
-    	// Hari Raya Puasa -- weekend in 2007
-		//expectedHol.add(DateFactory.getFactory().getDate(13,OCTOBER,year));  
-		// Deepavali
-		expectedHol.add(DateFactory.getFactory().getDate(8,NOVEMBER,year));    	    	
-		
+		//Diwali
+		expectedHol.add(DateFactory.getFactory().getDate(1,NOVEMBER,year));    	
+    	// Hari Raya Puasa -- weekend in 2005
+		expectedHol.add(DateFactory.getFactory().getDate(3,NOVEMBER,year));  
+			    	
+		    	
 		   	    	
-		// Hari Raya Haji
-		expectedHol.add(DateFactory.getFactory().getDate(20,DECEMBER,year)); 
 		
-		//christmas 
-    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+		
+		//christmas  -- weekend in yr 2005
+    	//expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
 		
         
         // Call the Holiday Check
@@ -201,88 +209,153 @@ public class SingaporeCalendarTest {
     	cbt.checkHolidayList(expectedHol, c, year);
     }
     
-	// 2005 
+	// 2007 
 	
-	void testSingaporeYear2005(Calendar c) {
-      	int year = 2005;
+	void testSingaporeYear2007(Calendar c) {
+      	int year = 2007;
       	logger.info("Testing Singapore's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
-    	//New year's day -- weekend in yr 2005
-    	//expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
+    	//New year's day
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
 		// Hari Raya Haji
-		expectedHol.add(DateFactory.getFactory().getDate(21,JANUARY,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
 		
 		//Chinese New Year
-    	expectedHol.add(DateFactory.getFactory().getDate(9,FEBRUARY,year)); 
-		expectedHol.add(DateFactory.getFactory().getDate(10,FEBRUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(19,FEBRUARY,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(20,FEBRUARY,year)); 
 		
 		//good friday
-		expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));    	    	
+		expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));    	    	
     	
-    	//labour day -- weekend in yr 2005
-    	//expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	//labour day
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
 		
-		//Vesak day -- weekend in yr 2005
-		//expectedHol.add(DateFactory.getFactory().getDate(22,MAY,year));
+		//Vesak day
+		expectedHol.add(DateFactory.getFactory().getDate(31,MAY,year));
 		
     	// National Day
     	expectedHol.add(DateFactory.getFactory().getDate(9,AUGUST,year));
-		//Diwali
-		expectedHol.add(DateFactory.getFactory().getDate(1,NOVEMBER,year));    	
-    	// Hari Raya Puasa -- weekend in 2005
-		expectedHol.add(DateFactory.getFactory().getDate(3,NOVEMBER,year));  
-			    	
-		    	
+    	// Hari Raya Puasa -- weekend in 2007
+		//expectedHol.add(DateFactory.getFactory().getDate(13,OCTOBER,year));  
+		// Deepavali
+		expectedHol.add(DateFactory.getFactory().getDate(8,NOVEMBER,year));    	    	
+		
 		   	    	
+		// Hari Raya Haji
+		expectedHol.add(DateFactory.getFactory().getDate(20,DECEMBER,year)); 
 		
-		
-		//christmas  -- weekend in yr 2005
-    	//expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+		//christmas 
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
 		
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, c, year);
     }
-	// 2004
 	
-	void testSingaporeYear2004(Calendar c) {
-      	int year = 2004;
+	// 2008 -- current year
+	
+	void testSingaporeYear2008(Calendar c) {
+      	int year = 2008;
       	logger.info("Testing Singapore's holiday list for the year " + year + "...");
     	List<Date> expectedHol = new Vector<Date>();
-    	//New year's day 
+    	//New year's day
     	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
+		
+		
 		//Chinese New Year
-		expectedHol.add(DateFactory.getFactory().getDate(22,JANUARY,year)); 
-		expectedHol.add(DateFactory.getFactory().getDate(23,JANUARY,year)); 
-		// Hari Raya Haji
-		expectedHol.add(DateFactory.getFactory().getDate(2,FEBRUARY,year)); 
+    	expectedHol.add(DateFactory.getFactory().getDate(7,FEBRUARY,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(8,FEBRUARY,year)); 
 		
-				
 		//good friday
-		expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));    	    	
+		expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));    	    	
     	
-    	//labour day -- weekend in yr 2004
-    	//expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	//labour day
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
 		
-		//Vesak day
-		expectedHol.add(DateFactory.getFactory().getDate(2,JUNE,year));
+		//Vesak day -- weekend in yr 2008
+		//expectedHol.add(DateFactory.getFactory().getDate(18,MAY,year));
 		
-    	// National Day
-    	expectedHol.add(DateFactory.getFactory().getDate(9,AUGUST,year));
+    	// National Day -- weekend in yr 2008
+    	//expectedHol.add(DateFactory.getFactory().getDate(9,AUGUST,year));
+    	// Hari Raya Puasa -- weekend in 2007
+		expectedHol.add(DateFactory.getFactory().getDate(1,OCTOBER,year));  
+		// Deepavali
+		expectedHol.add(DateFactory.getFactory().getDate(28,OCTOBER,year));    	    	
 		
-		//Deepavali
-		expectedHol.add(DateFactory.getFactory().getDate(11,NOVEMBER,year));    	
-		
-    	// Hari Raya Puasa -- 14 is in the weekends of 2004
-		expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,year));  
-			    	
-		    	
 		   	    	
+		// Hari Raya Haji
+		expectedHol.add(DateFactory.getFactory().getDate(8,DECEMBER,year)); 
 		
+		//christmas 
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
 		
-		//christmas  -- weekend in yr 2004
-    	//expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+        
+        // Call the Holiday Check
+        CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+    }
+	
+	//2009 - Year in Future
+	void testSingaporeYear2009(Calendar c) {
+      	int year = 2009;
+      	logger.info("Testing Singapore's holiday list for the year " + year + "...");
+    	List<Date> expectedHol = new Vector<Date>();
+    	//New year's day
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(10,APRIL,year));
+		//labour day
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+		//christmas 
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+		
+        
+        // Call the Holiday Check
+        CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+    }
+	
+	void testSingaporeYear2010(Calendar c) {
+      	int year = 2010;
+      	logger.info("Testing Singapore's holiday list for the year " + year + "...");
+    	List<Date> expectedHol = new Vector<Date>();
+    	//New year's day
+    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
+		expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));    	    	
+    	// National Day -- 
+    	expectedHol.add(DateFactory.getFactory().getDate(9,AUGUST,year));
+        
+        // Call the Holiday Check
+        CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+    }
+	
+	// 2011 - Year in Future
+	void testSingaporeYear2011(Calendar c) {
+      	int year = 2011;
+      	logger.info("Testing Singapore's holiday list for the year " + year + "...");
+    	List<Date> expectedHol = new Vector<Date>();
+    	expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year)); 
+    	// National Day -- 
+    	expectedHol.add(DateFactory.getFactory().getDate(9,AUGUST,year));
+        
+        // Call the Holiday Check
+        CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, c, year);
+    }
+	
+	// 2012 - Year in Future
+	void testSingaporeYear2012(Calendar c) {
+      	int year = 2012;
+      	logger.info("Testing Singapore's holiday list for the year " + year + "...");
+    	List<Date> expectedHol = new Vector<Date>();
+    	expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year)); 
+    	//labour day
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	// National Day -- weekend in yr 2008
+    	expectedHol.add(DateFactory.getFactory().getDate(9,AUGUST,year));
+		//christmas 
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
 		
         
         // Call the Holiday Check
