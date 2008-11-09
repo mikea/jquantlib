@@ -40,6 +40,7 @@
 
 package org.jquantlib.math;
 
+import org.jquantlib.instruments.Payoff;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.Array;
 import org.slf4j.Logger;
@@ -153,11 +154,11 @@ public class SampledCurve {
 	
 	
 	
-	private Array grid() /* @Readonly */{
+	public Array grid() /* @Readonly */{
 		return grid_;
 	}
 	
-	private Array values() /*@Readonly */ {
+	public Array values() /*@Readonly */ {
 		return values_;
 	}
 	
@@ -181,11 +182,11 @@ public class SampledCurve {
 	
 	*/
 	
-	private double value(int i){
+	public double value(int i){
 		return values_.at(i);
 	}
 	
-	private int size(){
+	public int size(){
 		return grid_.size();
 	}
 	
@@ -195,6 +196,20 @@ public class SampledCurve {
 			return true;
 		else
 			return false;
+	}
+
+	public void setValues(Array array) {
+		this.values_ = array;
+	}
+
+	public void setLogGrid(double min, double max) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void sample(Payoff payoff) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

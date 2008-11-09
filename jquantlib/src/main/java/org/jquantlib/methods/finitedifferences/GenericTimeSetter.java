@@ -21,21 +21,22 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.TransformedGrid;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator.TimeSetter;
 
 public class GenericTimeSetter<T> implements TimeSetter {
-    private TransformedGrid grid;
+    private Array grid;
     private PdeSecondOrderParabolic pde;
 
-    public GenericTimeSetter(TransformedGrid grid, T process) {
+    public GenericTimeSetter(Array grid, T process) {
         this.grid = grid;
         this.pde = DynamicPdeSecondOrderParabolic.getInstance(process);
     }
 
     @Override
     public void setTime(double t, TridiagonalOperator l) {
-        pde.generateOperator(t, grid, l);
+        pde.generateOperator(t, new TransformedGrid(grid), l);
     }
 
 }

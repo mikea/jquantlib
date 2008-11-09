@@ -198,8 +198,7 @@ public class OperatorTest {
 		logger.info("BSMOperator diagonals: \n");
 		outputDiagonals(op1);
 		
-		TransformedGrid grid2 = new TransformedGrid(grid);
-		PdeOperator<PdeBSM> op2 = new PdeOperator<PdeBSM>(grid2, new PdeBSM(stochProcess), residualTime);
+		PdeOperator<PdeBSM> op2 = new PdeOperator<PdeBSM>(grid, new PdeBSM(stochProcess), residualTime);
 
 		logger.info("PdeOperator diagonals: \n");
 		outputDiagonals(op2);
