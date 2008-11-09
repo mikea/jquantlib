@@ -58,12 +58,12 @@ import org.jquantlib.util.Month;
 public class Mexico extends DelegateCalendar {
 
 	public static enum Market {
-		SETTLEMENT, BVM
+		SETTLEMENT, BMV
 	};
 
 	private final static Mexico SETTLEMENT_CALENDAR = new Mexico(
 			Market.SETTLEMENT);
-	private final static Mexico BVM_CALENDAR = new Mexico(Market.BVM);
+	private final static Mexico BMV_CALENDAR = new Mexico(Market.BMV);
 
 	private Mexico(Market market) {
 		Calendar delegate;
@@ -71,8 +71,8 @@ public class Mexico extends DelegateCalendar {
 		case SETTLEMENT:
 			delegate = new MexicoSettlementCalendar();
 			break;
-		case BVM:
-			delegate = new BVMExchangeCalendar();
+		case BMV:
+			delegate = new BMVExchangeCalendar();
 			break;
 		default:
 			throw new IllegalArgumentException("unknown market");
@@ -84,8 +84,8 @@ public class Mexico extends DelegateCalendar {
 		switch (market) {
 		case SETTLEMENT:
 			return SETTLEMENT_CALENDAR;
-		case BVM:
-			return BVM_CALENDAR;
+		case BMV:
+			return BMV_CALENDAR;
 		default:
 			throw new IllegalArgumentException("unknown market");
 		}
@@ -133,7 +133,7 @@ final class MexicoSettlementCalendar extends WesternCalendar {
 }
 
 // TODO: Tests.
-final class BVMExchangeCalendar extends WesternCalendar {
+final class BMVExchangeCalendar extends WesternCalendar {
 
 	public String getName() {
 		return "Mexican Stock Exchange";
