@@ -38,38 +38,45 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.math.interpolations;
 
+package org.jquantlib.math.interpolations.factories;
+
+import org.jquantlib.math.interpolations.CubicSplineInterpolation;
+import org.jquantlib.math.interpolations.Interpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NaturalMonotonicCubicSpline extends CubicSpline {
-	
-	private final static Logger logger = LoggerFactory.getLogger(NaturalMonotonicCubicSpline.class);
-	
-	// 
-	// constructor
-	//
-	//TODO: Code Review: Is this correct? 
-	//TODO: Review: Where are the xBegin, xEnd, yBegin from the QuantLib code assigned?
-	public NaturalMonotonicCubicSpline() {
-		super(BoundaryCondition.SecondDerivative, 0.0, BoundaryCondition.SecondDerivative,0.0,true);
-	}
-	
-	/* QuantLib Code
-	 * 
-	//! Natural cubic spline with monotonicity constraint
-    class NaturalMonotonicCubicSpline : public CubicSpline {
-      public:
-        //! \pre the \f$ x \f$ values must be sorted. 
-        template <class I1, class I2>
-        NaturalMonotonicCubicSpline(const I1& xBegin, const I1& xEnd,
-                                    const I2& yBegin)
-        : CubicSpline(xBegin,xEnd,yBegin,
-                      SecondDerivative, 0.0,
-                      SecondDerivative, 0.0,
-                      true) {}
-    };
-    */
+/**
+ * Monotonic cubic spline interpolation factory and traits.
+ * <p>
+ * This is not the implementation of a interpolation class, but only its factory.
+ *
+ * @see CubicSplineInterpolation
+ * @see CubicSpline
+ * 
+ * @author Dominik Holenstein
+ */
+public class MonotonicCubicSpline extends CubicSpline implements Interpolator {
+    
+    private final static Logger logger = LoggerFactory.getLogger(MonotonicCubicSpline.class);
+
+    //
+    // public constructors
+    //
+
+    /**
+     * Constructs a interpolation factory.
+     * <p>
+     * This is not the implementation of a interpolation class, but only its factory.
+     * 
+     * @see CubicSplineInterpolation
+     * @see CubicSpline
+     */
+    public MonotonicCubicSpline(final CubicSplineInterpolation.BoundaryCondition leftCondition,
+            final double leftConditionValue,
+            final CubicSplineInterpolation.BoundaryCondition rightCondition,
+            final double rightConditionValue) {
+        super(leftCondition, leftConditionValue, rightCondition, rightConditionValue, true);
+    }
 
 }

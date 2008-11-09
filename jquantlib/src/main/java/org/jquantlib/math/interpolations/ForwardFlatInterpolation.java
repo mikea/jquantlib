@@ -22,10 +22,16 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.math.interpolations.factories.CubicSpline;
+
 import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 
 /**
  * Forward-flat interpolation between discrete points
+ * <p>
+ * Interpolations are not instantiated directly by applications, but via a factory class.
+ *
+ * @see ForwardFlat
  * 
  * @author Anand Mani
  */
@@ -42,6 +48,13 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
     // private constructors
     //
     
+    /**
+     * Constructor for a forward-flat interpolation between discrete points
+     * <p>
+     * Interpolations are not instantiated directly by applications, but via a factory class.
+     * 
+     * @see ForwardFlat
+     */
 	private ForwardFlatInterpolation() {
 		// access denied to default constructor
 	}
@@ -51,6 +64,11 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
     // static public methods
     //
 
+    /**
+     * This is a factory method intended to create this interpolation.
+     * 
+     * @see ForwardFlat
+     */
     static public Interpolator getInterpolator() /* @ReadOnly */{
         ForwardFlatInterpolation forwardFlatInterpolation = new ForwardFlatInterpolation();
         return forwardFlatInterpolation.new ForwardFlatInterpolationImpl(forwardFlatInterpolation);
@@ -126,7 +144,7 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 	//
 
 	/**
-	 * This class is a factory for ForwardFlatInterpolation instances.
+	 * This class is a default implementation for {@link ForwardFlatInterpolation} instances.
 	 * 
 	 * @author Anand Mani
 	 */

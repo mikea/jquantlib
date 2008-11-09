@@ -28,6 +28,10 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 
 /**
  * This class provides linear interpolation between discrete points
+ * <p>
+ * Interpolations are not instantiated directly by applications, but via a factory class.
+ * 
+ * @see Linear
  * 
  * @author Dominik Holenstein
  * @author Richard Gomes
@@ -46,6 +50,13 @@ public class LinearInterpolation extends AbstractInterpolation {
     // private constructors
     //
     
+    /**
+     * Constructor for a backward-flat interpolation between discrete points
+     * <p>
+     * Interpolations are not instantiated directly by applications, but via a factory class.
+     * 
+     * @see Linear
+     */
     private LinearInterpolation() {
     	// access denied to default constructor
     }
@@ -55,6 +66,11 @@ public class LinearInterpolation extends AbstractInterpolation {
     // static public methods
     //
     
+    /**
+     * This is a factory method intended to create this interpolation.
+     * 
+     * @see Linear
+     */
     static public Interpolator getInterpolator() /* @ReadOnly */ {
         LinearInterpolation linearInterpolation = new LinearInterpolation();
         return linearInterpolation. new LinearInterpolationImpl(linearInterpolation);
@@ -134,7 +150,7 @@ public class LinearInterpolation extends AbstractInterpolation {
     //
     
     /**
-	 * This class is a factory for LinearInterpolation instances.
+	 * This class is a default implementation for {@link LinearInterpolation} instances.
 	 * 
 	 * @author Richard Gomes
 	 */

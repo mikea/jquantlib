@@ -40,22 +40,25 @@
 
 package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.math.interpolations.CubicSpline;
+import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Cubic-spline interpolation factory and traits
+ * Cubic spline interpolation factory and traits.
+ * <p>
+ * This is not the implementation of a interpolation class, but only its factory.
  *
+ * @see CubicSplineInterpolation
+ * 
  * @author Richard Gomes
  */
-//FIXME :: work in progress [RICHARD]
 //TEST : needs code review and test classes
-public class Cubic implements Interpolator {
+public class CubicSpline implements Interpolator {
     
-    private final static Logger logger = LoggerFactory.getLogger(Cubic.class);
+    private final static Logger logger = LoggerFactory.getLogger(CubicSpline.class);
 
     //
     // private final fields
@@ -68,18 +71,25 @@ public class Cubic implements Interpolator {
     // public constructors
     //
 
-    public Cubic() {
-        this(CubicSpline.BoundaryCondition.SecondDerivative, 0.0, CubicSpline.BoundaryCondition.SecondDerivative, 0.0, false);
+    /**
+     * Constructs a interpolation factory.
+     * <p>
+     * This is not the implementation of a interpolation class, but only its factory.
+     * 
+     * @see CubicSplineInterpolation
+     */
+    public CubicSpline() {
+        this(CubicSplineInterpolation.BoundaryCondition.SecondDerivative, 0.0, CubicSplineInterpolation.BoundaryCondition.SecondDerivative, 0.0, false);
     }
 
     
-    public Cubic(
-            final CubicSpline.BoundaryCondition leftCondition,
+    public CubicSpline(
+            final CubicSplineInterpolation.BoundaryCondition leftCondition,
             final double leftConditionValue,
-            final CubicSpline.BoundaryCondition rightCondition,
+            final CubicSplineInterpolation.BoundaryCondition rightCondition,
             final double rightConditionValue,
             final boolean monotonicityConstraint) {
-        delegate = CubicSpline.getInterpolator(
+        delegate = CubicSplineInterpolation.getInterpolator(
                 leftCondition, leftConditionValue, rightCondition, rightConditionValue, monotonicityConstraint);
     }
     

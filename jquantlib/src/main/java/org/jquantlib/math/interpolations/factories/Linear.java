@@ -29,6 +29,10 @@ import org.jquantlib.math.interpolations.LinearInterpolation;
 
 /**
  * This class provides linear interpolation factory and traits
+ * <p>
+ * This is not the implementation of a interpolation class, but only its factory.
+ * 
+ * @see LinearInterpolation
  * 
  * @author Dominik Holenstein
  * @author Richard Gomes
@@ -46,6 +50,13 @@ public class Linear implements Interpolator {
     // public constructors
     //
     
+    /**
+     * Constructs a interpolation factory.
+     * <p>
+     * This is not the implementation of a interpolation class, but only its factory.
+     * 
+     * @see LinearInterpolation
+     */
 	public Linear() {
 		delegate = LinearInterpolation.getInterpolator();
 	}

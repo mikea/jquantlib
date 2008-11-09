@@ -40,12 +40,22 @@
 
 package org.jquantlib.math.interpolations.factories;
 
+import org.jquantlib.math.interpolations.BackwardFlatInterpolation;
 import org.jquantlib.math.interpolations.BicubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolation2D;
 import org.jquantlib.math.interpolations.Interpolator2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class provides bilinear interpolation factory and traits
+ * <p>
+ * This is not the implementation of a interpolation class, but only its factory.
+ *
+ * @see BicubicSplineInterpolation
+ * 
+ * @author Richard Gomes
+ */
 public class BicubicSpline implements Interpolator2D {
 
     private final static Logger logger = LoggerFactory.getLogger(BicubicSpline.class);
@@ -61,6 +71,13 @@ public class BicubicSpline implements Interpolator2D {
     // public constructors
     //
     
+    /**
+     * Constructs a interpolation factory.
+     * <p>
+     * This is not the implementation of a interpolation class, but only its factory.
+     * 
+     * @see BicubicSplineInterpolation
+     */
     public BicubicSpline() {
         delegate = BicubicSplineInterpolation.getInterpolator();
     }

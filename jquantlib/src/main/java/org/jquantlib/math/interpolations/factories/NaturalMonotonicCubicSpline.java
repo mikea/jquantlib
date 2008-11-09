@@ -38,43 +38,41 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
+package org.jquantlib.math.interpolations.factories;
 
-package org.jquantlib.math.interpolations;
-
+import org.jquantlib.math.interpolations.CubicSplineInterpolation;
+import org.jquantlib.math.interpolations.Interpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MonotonicCubicSpline extends CubicSpline {
-	
-	private final static Logger logger = LoggerFactory.getLogger(MonotonicCubicSpline.class);
-	
-	// 
-	// constructor
-	//
-	//TODO: Code Review: Is this correct? 
-	//TODO: Review: Where are the xBegin, xEnd, yBegin from the QuantLib code assigned?
-	public MonotonicCubicSpline(final CubicSpline.BoundaryCondition leftCondition,
-            					final double leftConditionValue,
-            					final CubicSpline.BoundaryCondition rightCondition,
-            					final double rightConditionValue){
-		super(leftCondition, leftConditionValue, rightCondition, rightConditionValue, true);
-	}
-	
-	
-	/* QuantLib code:
-	
-        template <class I1, class I2>
-        MonotonicCubicSpline(const I1& xBegin, const I1& xEnd,
-                             const I2& yBegin,
-                             CubicSpline::BoundaryCondition leftCondition,
-                             Real leftConditionValue,
-                             CubicSpline::BoundaryCondition rightCondition,
-                             Real rightConditionValue)
-        : CubicSpline(xBegin,xEnd,yBegin,
-                      leftCondition,leftConditionValue,
-                      rightCondition,rightConditionValue,
-                      true) {}
-    }; 
-	 */
+/**
+ * Natural monotonic cubic spline interpolation factory and traits.
+ * <p>
+ * This is not the implementation of a interpolation class, but only its factory.
+ *
+ * @see CubicSplineInterpolation
+ * @see CubicSpline
+ * 
+ * @author Dominik Holenstein
+ */
+public class NaturalMonotonicCubicSpline extends CubicSpline implements Interpolator {
+    
+    private final static Logger logger = LoggerFactory.getLogger(NaturalMonotonicCubicSpline.class);
+
+    //
+    // public constructors
+    //
+
+    /**
+     * Constructs a interpolation factory.
+     * <p>
+     * This is not the implementation of a interpolation class, but only its factory.
+     * 
+     * @see CubicSplineInterpolation
+     * @see CubicSpline
+     */
+    public NaturalMonotonicCubicSpline() {
+        super(CubicSplineInterpolation.BoundaryCondition.SecondDerivative, 0.0, CubicSplineInterpolation.BoundaryCondition.SecondDerivative, 0.0, true);
+    }
 
 }

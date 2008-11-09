@@ -38,46 +38,41 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.math.interpolations;
+package org.jquantlib.math.interpolations.factories;
 
+import org.jquantlib.math.interpolations.CubicSplineInterpolation;
+import org.jquantlib.math.interpolations.Interpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Natural cubic spline interpolation factory and traits.
+ * <p>
+ * This is not the implementation of a interpolation class, but only its factory.
+ *
+ * @see CubicSplineInterpolation
+ * @see CubicSpline
  * 
  * @author Dominik Holenstein
- *
  */
-
-public class NaturalCubicSpline extends CubicSpline  {
-	
-	private final static Logger logger = LoggerFactory.getLogger(NaturalCubicSpline.class);
-	
-	// 
-	// constructor
-	//
-	//TODO: Code Review: Is this correct? 
-	//TODO: Review: Where are the xBegin, xEnd, yBegin from the QuantLib code assigned?
-	public NaturalCubicSpline(){
-		super(BoundaryCondition.SecondDerivative, 0.0, BoundaryCondition.SecondDerivative,0.0,false);
-	}	
-	
-	
-	/* QuantLib Code
-	 * 
-	//! %Cubic spline with null second derivative at end points
-    class NaturalCubicSpline : public CubicSpline {
-      public:
-        // the \f$ x \f$ values must be sorted. 
-        template <class I1, class I2>
-        NaturalCubicSpline(const I1& xBegin, const I1& xEnd,
-                           const I2& yBegin)
-        : CubicSpline(xBegin,xEnd,yBegin,
-                      SecondDerivative, 0.0,
-                      SecondDerivative, 0.0,
-                      false) {}
-    };
+public class NaturalCubicSpline extends CubicSpline implements Interpolator {
     
-    */
+    private final static Logger logger = LoggerFactory.getLogger(NaturalCubicSpline.class);
+
+    //
+    // public constructors
+    //
+
+    /**
+     * Constructs a interpolation factory.
+     * <p>
+     * This is not the implementation of a interpolation class, but only its factory.
+     * 
+     * @see CubicSplineInterpolation
+     * @see CubicSpline
+     */
+    public NaturalCubicSpline() {
+        super();
+    }
 
 }

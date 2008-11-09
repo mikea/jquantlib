@@ -22,17 +22,17 @@
 
 package org.jquantlib.math.interpolations.factories;
 
+import org.jquantlib.math.interpolations.BicubicSplineInterpolation;
 import org.jquantlib.math.interpolations.BilinearInterpolation;
 import org.jquantlib.math.interpolations.Interpolation2D;
 import org.jquantlib.math.interpolations.Interpolator2D;
 
 /**
- * This class is provided for backwards compatibility only.
- * 
+ * This class provides bilinear interpolation factory and traits
  * <p>
- * Use BilinearInterpolation.Factory instead
+ * This is not the implementation of a interpolation class, but only its factory.
  * 
- * @see BilinearInterpolation.Factory
+ * @see BilinearInterpolation
  * 
  * @author Richard Gomes
  */
@@ -49,6 +49,13 @@ public class Bilinear implements Interpolator2D {
     // public constructors
     //
     
+    /**
+     * Constructs a interpolation factory.
+     * <p>
+     * This is not the implementation of a interpolation class, but only its factory.
+     * 
+     * @see BilinearInterpolation
+     */
     public Bilinear() {
 		delegate = BilinearInterpolation.getInterpolator();
 	}

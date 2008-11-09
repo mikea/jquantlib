@@ -24,9 +24,15 @@ package org.jquantlib.math.interpolations;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 
+import org.jquantlib.math.interpolations.factories.LogLinear;
+
 
 /**
  * This class provides log-linear interpolation between discrete points
+ * <p>
+ * Interpolations are not instantiated directly by applications, but via a factory class.
+ * 
+ * @see LogLinear
  * 
  * @author Dominik Holenstein
  * @author Richard Gomes
@@ -45,6 +51,13 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	// private constructors
 	//
 	
+    /**
+     * Constructor for a backward-flat interpolation between discrete points
+     * <p>
+     * Interpolations are not instantiated directly by applications, but via a factory class.
+     * 
+     * @see LogLinear
+     */
 	private LogLinearInterpolation() {
 		// access denied to default constructor
 	}
@@ -54,6 +67,11 @@ public class LogLinearInterpolation extends AbstractInterpolation {
     // static public methods
     //
     
+    /**
+     * This is a factory method intended to create this interpolation.
+     * 
+     * @see LogLinear
+     */
     static public Interpolator getInterpolator() {
         LogLinearInterpolation logLinearInterpolation = new LogLinearInterpolation();
         return logLinearInterpolation. new LogLinearInterpolationImpl(logLinearInterpolation);
@@ -145,7 +163,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	//
 	
 	/**
-	 * This static class is a factory for LogLinearInterpolation instances.
+	 * This static class is a default implementation for {@link LogLinearInterpolation} instances.
 	 * 
 	 * @author Dominik Holenstein
 	 * @author Richard Gomes

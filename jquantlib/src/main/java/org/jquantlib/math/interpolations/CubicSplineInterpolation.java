@@ -43,12 +43,15 @@ package org.jquantlib.math.interpolations;
 import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 
 import org.jquantlib.math.Array;
+import org.jquantlib.math.interpolations.factories.CubicSpline;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Cubic spline interpolation between discrete points.
+ * <p>
+ * Interpolations are not instantiated directly by applications, but via a factory class.
  * <p>
  * It implements different type of end conditions: not-a-knot, first derivative value, second derivative value.
  * <p>
@@ -59,13 +62,14 @@ import org.slf4j.LoggerFactory;
  * See R. L. Dougherty, A. Edelman, and J. M. Hyman, "Nonnegativity-, Monotonicity-, or Convexity-Preserving Cubic and Quintic
  * Hermite Interpolation" Mathematics Of Computation, v. 52, n. 186, April 1989, pp. 471-494.
  * 
+ * @see CubicSpline
+ * 
  * @author Richard Gomes
  */
-// FIXME :: work in progress [RICHARD]
 // TEST : needs code review and test classes
-public class CubicSpline extends AbstractInterpolation {
+public class CubicSplineInterpolation extends AbstractInterpolation {
     
-    private final static Logger logger = LoggerFactory.getLogger(CubicSpline.class);
+    private final static Logger logger = LoggerFactory.getLogger(CubicSplineInterpolation.class);
 
     
     //
@@ -95,15 +99,22 @@ public class CubicSpline extends AbstractInterpolation {
     // static public methods
     //
     
+    /**
+     * This is a factory method intended to create this interpolation.
+     * <p>
+     * Interpolations are not instantiated directly by applications, but via a factory class.
+     * 
+     * @see CubicSpline
+     */
     static public Interpolator getInterpolator(
-            final CubicSpline.BoundaryCondition leftCondition,
+            final CubicSplineInterpolation.BoundaryCondition leftCondition,
             final double leftConditionValue,
-            final CubicSpline.BoundaryCondition rightCondition,
+            final CubicSplineInterpolation.BoundaryCondition rightCondition,
             final double rightConditionValue,
             final boolean monotonicityConstraint) /* @ReadOnly */ {
-        CubicSpline cubicSpline = new CubicSpline(
+        CubicSplineInterpolation cubicSpline = new CubicSplineInterpolation(
                 leftCondition, leftConditionValue, rightCondition, rightConditionValue, monotonicityConstraint);
-        return cubicSpline. new CubicSplineImpl(cubicSpline);
+        return cubicSpline. new CubicSplineInterpolationImpl(cubicSpline);
     }
     
     
@@ -111,10 +122,17 @@ public class CubicSpline extends AbstractInterpolation {
     // private constructors
     //
     
-    public CubicSpline(
-	            final CubicSpline.BoundaryCondition leftCondition,
+    /**
+     * Constructor for a CubicSpline interpolation.
+     * <p>
+     * Interpolations are not instantiated directly by applications, but via a factory class.
+     * 
+     * @see CubicSpline
+     */
+    private CubicSplineInterpolation(
+	            final CubicSplineInterpolation.BoundaryCondition leftCondition,
 	            final double leftConditionValue,
-	            final CubicSpline.BoundaryCondition rightCondition,
+	            final CubicSplineInterpolation.BoundaryCondition rightCondition,
 	            final double rightConditionValue,
 	            final boolean monotonicityConstraint) {
         
@@ -340,14 +358,14 @@ public class CubicSpline extends AbstractInterpolation {
     
 
     /**
-     * This class is a factory for LinearInterpolation instances.
+     * This class is a default implementation for {@link CubicSplineInterpolation} instances.
      * 
      * @author Richard Gomes
      */
-    private class CubicSplineImpl implements Interpolator {
-        private CubicSpline delegate;
+    private class CubicSplineInterpolationImpl implements Interpolator {
+        private CubicSplineInterpolation delegate;
         
-        public CubicSplineImpl(final CubicSpline delegate) {
+        public CubicSplineInterpolationImpl(final CubicSplineInterpolation delegate) {
             this.delegate = delegate;
         }
         

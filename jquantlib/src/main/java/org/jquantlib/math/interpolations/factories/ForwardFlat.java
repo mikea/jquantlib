@@ -27,7 +27,11 @@ import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 
 /**
- * This class provides ForwardFlat interpolation factory and traits
+ * This class provides linear interpolation factory and traits
+ * <p>
+ * This is not the implementation of a interpolation class, but only its factory.
+ * 
+ * @see ForwardFlatInterpolation
  * 
  * @author Anand Mani
  */
@@ -44,6 +48,13 @@ public class ForwardFlat implements Interpolator {
     // public constructors
     //
     
+    /**
+     * Constructs a interpolation factory.
+     * <p>
+     * This is not the implementation of a interpolation class, but only its factory.
+     * 
+     * @see ForwardFlatInterpolation
+     */
 	public ForwardFlat() {
 		delegate = ForwardFlatInterpolation.getInterpolator();
 	}

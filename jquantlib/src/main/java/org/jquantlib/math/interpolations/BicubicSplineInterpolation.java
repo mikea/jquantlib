@@ -44,9 +44,19 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.List;
 
+import org.jquantlib.math.interpolations.factories.BicubicSpline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Bicubic spline interpolation between discrete points
+ * <p>
+ * Interpolations are not instantiated directly by applications, but via a factory class.
+ *
+ * @see BicubicSpline
+ * 
+ * @author Richard Gomes
+ */
 public class BicubicSplineInterpolation extends AbstractInterpolation2D {
 
     private final static Logger logger = LoggerFactory.getLogger(BicubicSplineInterpolation.class);
@@ -64,11 +74,35 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
     // private constructors
     //
     
+    /**
+     * Constructor for a bicubic spline interpolation between discrete points
+     * <p>
+     * Interpolations are not instantiated directly by applications, but via a factory class.
+     * 
+     * @see BicubicSpline
+     */
     private BicubicSplineInterpolation() {
         splines = new ObjectArrayList<Interpolation>();
     }
 
 
+    //
+    // static methods
+    //
+    
+    /**
+     * This is a factory method intended to create this interpolation.
+     * <p>
+     * Interpolations are not instantiated directly by applications, but via a factory class.
+     * 
+     * @see BicubicSpline
+     */
+    static public Interpolator2D getInterpolator() {
+        BicubicSplineInterpolation bicubicSplineInterpolation = new BicubicSplineInterpolation();
+        return bicubicSplineInterpolation. new BicubicSplineInterpolationImpl(bicubicSplineInterpolation);
+    }
+
+    
     //
     // overrides AbstractInterpolation2D
     //
@@ -102,21 +136,11 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
 
     
     //
-    // static methods
-    //
-    
-    static public Interpolator2D getInterpolator() {
-        BicubicSplineInterpolation bicubicSplineInterpolation = new BicubicSplineInterpolation();
-        return bicubicSplineInterpolation. new BicubicSplineInterpolationImpl(bicubicSplineInterpolation);
-    }
-
-    
-    //
     // inner classes
     //
     
     /**
-     * This class is a factory for BicubicSplineInterpolation instances.
+     * This class is a default implementation for {@link BicubicSplineInterpolation} instances.
      * 
      * @author Richard Gomes
      */

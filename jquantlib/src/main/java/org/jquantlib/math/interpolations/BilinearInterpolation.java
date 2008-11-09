@@ -23,17 +23,48 @@
 package org.jquantlib.math.interpolations;
 
 
+/**
+ * Bilinear interpolation between discrete points
+ * <p>
+ * Interpolations are not instantiated directly by applications, but via a factory class.
+ *
+ * @see Bilinear
+ * 
+ * @author Richard Gomes
+ */
 public class BilinearInterpolation extends AbstractInterpolation2D {
 
     //
     // private constructors
     //
     
+    /**
+     * Constructor for a bilinear interpolation between discrete points
+     * <p>
+     * Interpolations are not instantiated directly by applications, but via a factory class.
+     * 
+     * @see Bilinear
+     */
     private BilinearInterpolation() {
     	// access denied to public default constructor
 	}
 
 	
+    //
+    // static methods
+    //
+    
+    /**
+     * This is a factory method intended to create this interpolation.
+     * 
+     * @see Bilinear
+     */
+    static public Interpolator2D getInterpolator() {
+        BilinearInterpolation bilinearInterpolation = new BilinearInterpolation();
+        return bilinearInterpolation. new BilinearInterpolationImpl(bilinearInterpolation);
+    }
+
+    
     //
     // overrides AbstractInterpolation2D
     //
@@ -55,22 +86,12 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
     }
 
     
-    //
-    // static methods
-    //
-    
-    static public Interpolator2D getInterpolator() {
-        BilinearInterpolation bilinearInterpolation = new BilinearInterpolation();
-        return bilinearInterpolation. new BilinearInterpolationImpl(bilinearInterpolation);
-    }
-
-    
 	//
     // inner classes
     //
     
     /**
-	 * This class is a factory for BilinearInterpolation instances.
+	 * This class is a default implementation for {@link BilinearInterpolation} instances.
 	 * 
 	 * @author Richard Gomes
 	 */
