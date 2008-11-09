@@ -111,12 +111,12 @@ public class CubicSpline extends AbstractInterpolation {
     // private constructors
     //
     
-    private CubicSpline(
-            final CubicSpline.BoundaryCondition leftCondition,
-            final double leftConditionValue,
-            final CubicSpline.BoundaryCondition rightCondition,
-            final double rightConditionValue,
-            final boolean monotonicityConstraint) {
+    public CubicSpline(
+	            final CubicSpline.BoundaryCondition leftCondition,
+	            final double leftConditionValue,
+	            final CubicSpline.BoundaryCondition rightCondition,
+	            final double rightConditionValue,
+	            final boolean monotonicityConstraint) {
         
         n = vx.length;
         vp = new double[n-1];
