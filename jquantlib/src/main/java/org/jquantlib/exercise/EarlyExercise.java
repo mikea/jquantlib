@@ -70,7 +70,7 @@ public abstract class EarlyExercise extends Exercise {
 
 	
 	//
-	// protected methods
+	// public methods
 	//
 	
 	/**
@@ -78,7 +78,8 @@ public abstract class EarlyExercise extends Exercise {
 	 * 
 	 * @return the payoff at expiry
 	 */
-	protected boolean payoffAtExpiry() {
+	// TODO: verify if this method should be protected or public
+	public boolean payoffAtExpiry() {
 		return this.payoffAtExpiry;
 	}
 	
