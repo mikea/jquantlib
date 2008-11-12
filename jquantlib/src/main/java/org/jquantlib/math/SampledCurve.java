@@ -41,8 +41,6 @@
 package org.jquantlib.math;
 
 import org.jquantlib.instruments.Payoff;
-import org.jquantlib.math.interpolations.CubicSplineInterpolation;
-import org.jquantlib.math.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

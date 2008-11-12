@@ -36,8 +36,11 @@ import cern.colt.list.ObjectArrayList;
  * @author Srinivas Hasti
  *
  */
+// TODO: needs comments and code review
 public abstract class AbstractCalendar implements Calendar {
 
+    protected static final String YEAR_OUT_OF_RANGE = "Year out of range";
+    
     /**
      * To store artifically added holidays
      */

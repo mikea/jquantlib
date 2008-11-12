@@ -22,42 +22,55 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.junit.Assert.fail;
-
 import java.util.List;
 
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
+import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the general test base class for Calendars including generic methods.
  * 
  * @author Dominik Holenstein
- *         <p>
  */
 
 public class CalendarUtil {
 
-	protected void checkHolidayList(List<Date> expectedHol, Calendar c, int year) {
+    private final static Logger logger = LoggerFactory.getLogger(CalendarUtil.class);
 
-		List<Date> hol = c.getHolidayList(DateFactory.getFactory().getDate(1,
-				Month.JANUARY, year), DateFactory.getFactory().getDate(31,
-				Month.DECEMBER, year), false);
+    protected void checkHolidayList(final List<Date> expected, final Calendar c, final int year) {
 
-		// JIA changed that the size of two list should be tested first
-		if (hol.size() != expectedHol.size())
-			fail("there were " + expectedHol.size()
-					+ " expected holidays, while there are " + hol.size()
-					+ " calculated holidays");
+        final List<Date> calculated = c.getHolidayList(
+                DateFactory.getFactory().getDate(1, Month.JANUARY, year), 
+                DateFactory.getFactory().getDate(31, Month.DECEMBER, year), 
+                false);
 
-		// JIA changed so that the order of dates in the list is not relevant
-		for (int i = 0; i < hol.size(); i++) {
-			if(!hol.contains(expectedHol.get(i)))
-				fail("expected holiday " + expectedHol.get(i)
-						+ " is not in the caculated holiday list: " + hol);
-		}
-	}
+        final StringBuilder sb = new StringBuilder();
+        int error = 0;
+        
+        for (Date date : expected) {
+            if (!calculated.contains(date)) {
+                sb.append("Expected but not calculated holiday ").append(date).append('\n');
+                error++;
+            }
+        }
+
+        for (Date date : calculated) {
+            if (!expected.contains(date)) {
+                sb.append("Calculated but not expected holiday ").append(date).append('\n');
+                error++;
+            }
+        }
+        
+        if (error>0) {
+            logger.error(sb.toString(), new Exception());
+            Assert.fail(sb.toString());
+        }
+
+    }
 
 }

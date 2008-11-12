@@ -814,19 +814,21 @@
     <site>
       <id>${maven.deploy.site.id}</id>
       <name>${maven.deploy.site.name}</name>
-      <url>dav:${maven.deploy.site.url}/</url>
+      <url>dav:${maven.deploy.site.url}/${project.artifactId}/</url>
     </site>
   </distributionManagement>
   
   <properties>
-    <!-- Application dependent properties -->
+    <!-- profile defaults -->
     <profile.manifest.app.realm>default</profile.manifest.app.realm>
     <profile.manifest.app.mode>debug</profile.manifest.app.mode>
 
-    <maven.scm.root>jquant.svn.sourceforge.net/svnroot</maven.scm.root>
-	<maven.scm.project>jquant</maven.scm.project>
-	<maven.scm.branch>trunk</maven.scm.branch>
+    <!-- SCM parameters -->
+    <maven.scm.project>jquant</maven.scm.project>
+    <maven.scm.branch>trunk</maven.scm.branch>
 
+    <!-- plugin defaults -->
+    <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
     <maven.compile.jdk>1.6</maven.compile.jdk>
     <maven.compile.encoding>UTF8</maven.compile.encoding>
     <maven.compile.meminitial>128m</maven.compile.meminitial>
@@ -835,21 +837,20 @@
     <maven.jar.index>false</maven.jar.index>
     <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
 
+    <!-- deployment defaults -->
     <maven.deploy.repository.id>jquantlib-external_free</maven.deploy.repository.id>
     <maven.deploy.repository.name>JQuantLib External Free Repository</maven.deploy.repository.name>
-    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos/external_free</maven.deploy.repository.url>
-
     <maven.deploy.site.id>jquantlib-site</maven.deploy.site.id>
     <maven.deploy.site.name>JQuantLib Generated Site</maven.deploy.site.name>
-    <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites/${project.artifactId}</maven.deploy.site.url>
-    
-    <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
 
-    <!-- Application independent properties -->
-    <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
+    <!-- application independent properties -->
+    <maven.scm.root>jquant.svn.sourceforge.net/svnroot</maven.scm.root>
     <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
     <maven.scm.connection>scm:svn:http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.connection>
     <maven.scm.url>http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.url>
+    <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
+    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos/external_free</maven.deploy.repository.url>
+    <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites</maven.deploy.site.url>
   </properties>
   
 </project>
