@@ -49,19 +49,21 @@ public class CalendarUtil {
                 DateFactory.getFactory().getDate(31, Month.DECEMBER, year), 
                 false);
 
-        final StringBuilder sb = new StringBuilder();
         int error = 0;
+        
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Holidays to not match\n");
         
         for (Date date : expected) {
             if (!calculated.contains(date)) {
-                sb.append("Expected but not calculated holiday ").append(date).append('\n');
+                sb.append("Expected but not calculated holiday: ").append(date).append('\n');
                 error++;
             }
         }
 
         for (Date date : calculated) {
             if (!expected.contains(date)) {
-                sb.append("Calculated but not expected holiday ").append(date).append('\n');
+                sb.append("Calculated but not expected holiday: ").append(date).append('\n');
                 error++;
             }
         }
