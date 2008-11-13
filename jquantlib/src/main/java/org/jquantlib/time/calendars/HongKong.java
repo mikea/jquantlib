@@ -122,7 +122,7 @@ final class HongKongSettlementCalendar extends WesternCalendar {
             // Christmas Day
             || (d == 25 && m == DECEMBER)
             // Boxing Day
-            || ((d == 26 || ((d == 27 || d == 28) && w == MONDAY)) && m == DECEMBER))
+            || ((d == 26 || ((d == 27 || d == 28) && w == MONDAY)) && m == DECEMBER && y<2009))
             return false;
 
         if (y == 2004) {
@@ -212,7 +212,7 @@ final class HongKongSettlementCalendar extends WesternCalendar {
                 ((d >= 26 && d <= 28) && m == JANUARY)       // Lunar New Year
 //---           || (d == 4 && m == APRIL)       // Ching Ming Festival
 //---           || (d == 12 && m == MAY)        // Buddha's birthday
-                || (d == 26 && m == MAY)        // Tuen NG festival
+                || (d == 28 && m == MAY)        // Tuen NG festival
                 || (d == 26 && m == OCTOBER));  // Chung Yeung Festival
         }
     

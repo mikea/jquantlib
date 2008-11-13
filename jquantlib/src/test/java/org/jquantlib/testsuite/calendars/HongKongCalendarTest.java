@@ -55,7 +55,7 @@ public class HongKongCalendarTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(HongKongCalendarTest.class);
 
-	public HongKongCalendarTest() {
+    public HongKongCalendarTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
@@ -92,6 +92,7 @@ public class HongKongCalendarTest {
         expectedHol.add(df.getDate(1,JULY,year));       // Hong Kong Special Administrative Region Establishment Day
         expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
         expectedHol.add(df.getDate(26,OCTOBER,year));   // Chung Yeung festival
+        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }
