@@ -21,6 +21,7 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.time.TimeGrid;
 
 /**
@@ -29,7 +30,7 @@ import org.jquantlib.time.TimeGrid;
  */
 // ql/numericalmethod.hpp
 public abstract class Lattice {
-	private TimeGrid t;
+	protected TimeGrid t;
 
 	public Lattice(TimeGrid t) {
 		this.t = t;
@@ -78,5 +79,5 @@ public abstract class Lattice {
 	// @}
 
 	// this is a smell, but we need it. We'll rethink it later.
-	// virtual Disposable<Array> grid(Time) const = 0;
+	protected abstract Array grid(double t);
 }

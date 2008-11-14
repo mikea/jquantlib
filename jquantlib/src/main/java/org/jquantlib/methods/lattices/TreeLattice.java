@@ -21,76 +21,115 @@
  */
 package org.jquantlib.methods.lattices;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 import org.jquantlib.math.Array;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.time.TimeGrid;
 
 /**
  * @author Srinivas Hasti
  */
-public class TreeLattice extends Lattice {
+public abstract class TreeLattice extends Lattice {
 
 	private int n;
 	private int statePricesLimit;
-	protected List<Array> statePrices;
+	protected Vector<Array> statePrices;
 
 	public TreeLattice(TimeGrid t, int n) {
 		super(t);
 		this.n = n;
 		if (n <= 0)
 			throw new IllegalStateException("there is no zeronomial lattice!");
-		statePrices = new ArrayList<Array>();
+		statePrices = new Vector<Array>();
 		statePrices.add(new Array(1, 1.0));
 		statePricesLimit = 0;
 	}
+	
+	 public abstract double discount(int i, int index);
+	 
+     public abstract int descendant(int i, int index, int branch);
+     
+     public abstract double probability(int i, int index, int branch);
+     
+     public abstract int size(int i);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jquantlib.methods.lattices.Lattice#initialize(org.jquantlib.methods.lattices.DiscretizedAsset,
-	 *      double)
-	 */
-	@Override
-	public void initialize(DiscretizedAsset asset, double time) {
-		// TODO Auto-generated method stub
+	 protected void computeStatePrices(int until)  {
+	        for (int i=statePricesLimit; i<until; i++) {
+	            statePrices.add(new Array(size(i+1), 0.0));
+	            for (int j=0; j<size(i); j++) {
+	                double disc = discount(i,j);
+	                double statePrice = statePrices.get(i).get(j);
+	                for (int l=0; l<n; l++) {
+	                	Array array = statePrices.get(i+1);
+	                	int index = descendant(i,j,l);
+	                	double oldValue = array.get(index);
+	                	array.set(index,oldValue+(statePrice*disc*probability(i,j,l)));	                   
+	                }
+	            }
+	        }
+	        statePricesLimit = until;
+	    }
 
-	}
+	    public Array statePrices(int i)  {
+	        if (i>statePricesLimit)
+	            computeStatePrices(i);
+	        return statePrices.get(i);
+	    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jquantlib.methods.lattices.Lattice#partialRollback(org.jquantlib.methods.lattices.DiscretizedAsset,
-	 *      double)
-	 */
-	@Override
-	public void partialRollback(DiscretizedAsset asset, double to) {
-		// TODO Auto-generated method stub
+	    public double presentValue(DiscretizedAsset asset)  {
+	        int i = t.index(asset.time());
+	        return Array.dotProduct(asset.values(), statePrices(i));
+	    }
 
-	}
+	    public void initialize(DiscretizedAsset asset, double dt)  {
+	        int i = t.index(dt);
+	        asset.setTime(dt);
+	        asset.reset(size(i));
+	    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jquantlib.methods.lattices.Lattice#presentValue(org.jquantlib.methods.lattices.DiscretizedAsset)
-	 */
-	@Override
-	public double presentValue(DiscretizedAsset asset) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	    
+	    public void rollback(DiscretizedAsset asset, double to)  {
+	        partialRollback(asset,to);
+	        asset.adjustValues();
+	    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jquantlib.methods.lattices.Lattice#rollback(org.jquantlib.methods.lattices.DiscretizedAsset,
-	 *      double)
-	 */
-	@Override
-	public void rollback(DiscretizedAsset asset, double to) {
-		// TODO Auto-generated method stub
+	    public void partialRollback(DiscretizedAsset asset,
+	                                            double to)  {
 
-	}
+	        double from = asset.time();
 
+	        if (Closeness.isClose(from,to))
+	            return;
+
+	        if(from <= to)
+	                throw new RuntimeException("cannot roll the asset back to " + to
+	                   + " (it is already at t = " + from + ")");
+
+	        Integer iFrom = t.index(from);
+	        Integer iTo = t.index(to);
+
+	        for (Integer i=iFrom-1; i>=iTo; --i) {
+	            Array newValues = new Array(size(i));
+	            stepback(i, asset.values(), newValues);
+	            asset.setTime(t.get(i));
+	            asset.setValues(newValues);
+	            // skip the very last adjustment
+	            if (i != iTo)
+	                asset.adjustValues();
+	        }
+	    }
+
+	   public void stepback(int i, Array values,
+	                                     Array newValues)  {
+	        for (int j=0; j<size(i); j++) {
+	            double value = 0.0;
+	            for (int l=0; l<n; l++) {
+	                value += probability(i,j,l) *
+	                         values.get(descendant(i,j,l));
+	            }
+	            value *= discount(i,j);
+	            newValues.set(j,value);
+	        }
+	    }
 }

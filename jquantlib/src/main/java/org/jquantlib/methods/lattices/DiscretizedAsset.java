@@ -50,6 +50,10 @@ public abstract class DiscretizedAsset {
 	public/* Time */double time() {
 		return time;
 	}
+	
+	public void setTime(double t){
+		this.time = t;
+	}
 
 	public Array values() {
 		return values;
@@ -160,6 +164,10 @@ public abstract class DiscretizedAsset {
 
 	/* ! This method performs the actual post-adjustment */
 	protected void postAdjustValuesImpl() {
+	}
+
+	public void setValues(Array newValues) {
+		this.values = newValues;
 	}
 
 }

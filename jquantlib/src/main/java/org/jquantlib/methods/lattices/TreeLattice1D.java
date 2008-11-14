@@ -21,17 +21,26 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.time.TimeGrid;
 
 /**
  * @author Srinivas Hasti
- *
+ * 
  */
-public class TreeLattice1D extends TreeLattice {
+public abstract class TreeLattice1D extends TreeLattice {
 
-	public TreeLattice1D(TimeGrid t, int n) {
-		super(t, n);
-		// TODO Auto-generated constructor stub
+	public TreeLattice1D(TimeGrid timeGrid, int n) {
+		super(timeGrid, n);
 	}
 
+	public Array grid(double t) {
+		int i = timeGrid().index(t);
+		Array grid = new Array(size(i));
+		for (int j = 0; j < grid.size(); j++)
+			grid.set(j, underlying(i, j));
+		return grid;
+	}
+
+	public abstract double underlying(int i, int index);
 }

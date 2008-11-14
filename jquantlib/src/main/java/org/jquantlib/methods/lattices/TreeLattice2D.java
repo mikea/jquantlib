@@ -21,17 +21,85 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
+
 /**
  * @author Srinivas Hasti
- *
+ * 
  */
-//TODO:
-public class TreeLattice2D<T extends TrinomialTree> extends TreeLattice {
+public abstract class TreeLattice2D<T extends TrinomialTree> extends
+		TreeLattice {
+	private Matrix m;
+	private double rho;
 
-	public TreeLattice2D(T tree1,
-            T tree2,
-            /*Real*/ double correlation){
-		super(tree1.timeGrid(), T.branches.getValue()*T.branches.getValue());
-		//TODO: 
+	protected T tree1, tree2;
+
+	public TreeLattice2D(T tree1, T tree2, double correlation) {
+
+		super(tree1.timeGrid(), T.branches.getValue() * T.branches.getValue());
+		this.tree1 = tree1;
+		this.tree2 = tree2;
+		this.m = new Matrix(T.branches.getValue(), T.branches.getValue());
+		rho = Math.abs(correlation);
+		// what happens here?
+		if (correlation < 0.0 && T.branches.getValue() == 3) {
+			m.set(0, 0, -1.0);
+			m.set(0, 1, -4.0);
+			m.set(0, 2, 5.0);
+			m.set(1, 0, -4.0);
+			m.set(1, 1, 8.0);
+			m.set(1, 2, -4.0);
+			m.set(2, 0, 5.0);
+			m.set(2, 1, -4.0);
+			m.set(2, 2, -1.0);
+		} else {
+			m.set(0, 0, 5.0);
+			m.set(0, 1, -4.0);
+			m.set(0, 2, -1.0);
+			m.set(1, 0, -4.0);
+			m.set(1, 1, 8.0);
+			m.set(1, 2, -4.0);
+			m.set(2, 0, -1.0);
+			m.set(2, 1, -4.0);
+			m.set(2, 2, 5.0);
+		}
 	}
+
+	// smelly
+	protected Array grid(double t) {
+		throw new RuntimeException("not implemented");
+	}
+
+	public int size(int i) {
+		return tree1.size(i) * tree2.size(i);
+	}
+
+	public int descendant(int i, int index, int branch) {
+		int modulo = tree1.size(i);
+
+		int index1 = index % modulo;
+		int index2 = index / modulo;
+		int branch1 = branch % T.branches.getValue();
+		int branch2 = branch / T.branches.getValue();
+
+		modulo = tree1.size(i + 1);
+		return tree1.descendant(i, index1, branch1)
+				+ tree2.descendant(i, index2, branch2) * modulo;
+	}
+
+	public double probability(int i, int index, int branch) {
+		int modulo = tree1.size(i);
+
+		int index1 = index % modulo;
+		int index2 = index / modulo;
+		int branch1 = branch % T.branches.getValue();
+		int branch2 = branch / T.branches.getValue();
+
+		double prob1 = tree1.probability(i, index1, branch1);
+		double prob2 = tree2.probability(i, index2, branch2);
+		// does the 36 below depend on T::branches?
+		return prob1 * prob2 + rho * (m.get(branch1, branch2)) / 36.0;
+	}
+
 }
