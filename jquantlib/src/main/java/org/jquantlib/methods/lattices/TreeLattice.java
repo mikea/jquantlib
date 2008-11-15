@@ -23,6 +23,7 @@ package org.jquantlib.methods.lattices;
 
 import java.util.Vector;
 
+import org.jquantlib.assets.DiscretizedAsset;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.time.TimeGrid;

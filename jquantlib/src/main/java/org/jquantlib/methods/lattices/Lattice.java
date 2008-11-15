@@ -21,6 +21,7 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.assets.DiscretizedAsset;
 import org.jquantlib.math.Array;
 import org.jquantlib.time.TimeGrid;
 

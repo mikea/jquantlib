@@ -20,12 +20,13 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.methods.lattices;
+package org.jquantlib.assets;
 
 import java.util.List;
 
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
+import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.time.TimeGrid;
 
 /**
@@ -139,7 +140,7 @@ public abstract class DiscretizedAsset {
 	}
 
 	/* ! This method performs both pre- and post-adjustment */
-	void adjustValues() {
+	public void adjustValues() {
 		preAdjustValues();
 		postAdjustValues();
 	}

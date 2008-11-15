@@ -19,7 +19,7 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.methods.lattices;
+package org.jquantlib.assets;
 
 import java.util.List;
 
