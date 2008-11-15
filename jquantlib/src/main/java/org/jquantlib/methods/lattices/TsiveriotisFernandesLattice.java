@@ -22,9 +22,9 @@
 package org.jquantlib.methods.lattices;
 
 import org.jquantlib.assets.DiscretizedAsset;
-import org.jquantlib.assets.DiscretizedConvertible;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
+import org.jquantlib.pricingengines.hybrid.DiscretizedConvertible;
 
 /**
  * @author Srinivas Hasti
@@ -97,7 +97,6 @@ public class TsiveriotisFernandesLattice<T extends Tree> extends
 			throw new IllegalStateException("cannot roll the asset back to "
 					+ to + " (it is already at t = " + from + ")");
 
-		//TODO
 		DiscretizedConvertible convertible = (DiscretizedConvertible) (asset);
 		
 		Integer iFrom = t.index(from);

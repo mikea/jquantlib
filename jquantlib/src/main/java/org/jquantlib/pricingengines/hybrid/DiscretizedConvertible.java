@@ -17,10 +17,11 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.assets;
+package org.jquantlib.pricingengines.hybrid;
 
 import java.util.List;
 
+import org.jquantlib.assets.DiscretizedAsset;
 import org.jquantlib.math.Array;
 
 /**
