@@ -41,6 +41,8 @@
 package org.jquantlib.math;
 
 import org.jquantlib.instruments.Payoff;
+import org.jquantlib.math.interpolations.CubicSplineInterpolation;
+import org.jquantlib.math.interpolations.factories.CubicSpline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,14 +118,35 @@ public class SampledCurve {
         }
     }
 	
+	// Translation by Dominik
 	/*
     public void regrid(final Array new_grid) {
-        NaturalCubicSpline priceSpline(grid_.at(0), grid_.end(),
-                                       values_.at(0));
-        priceSpline.update();
-     
+    	CubicSpline priceSpline = new CubicSpline(); // this line is definitely wrong
+
+        priceSpline.reload(); // class cubicSplineImpl ?
         Array newValues = new Array(new_grid.size());
         
+        double val;
+        double grid;
+        
+        for (val = newValues.at(0), grid = new_grid.at(new_grid.size()-1) ;
+             grid != new_grid.at(new_grid.size()-1);
+             val++, grid++) {
+             val = priceSpline(grid, true);
+        }
+        
+        values_.swap(newValues);
+        grid_ = new_grid;
+    }
+    /* 
+   
+   // QuantLib:
+   /*
+    * void SampledCurve::regrid(const Array &new_grid) {
+        NaturalCubicSpline priceSpline(grid_.begin(), grid_.end(),
+                                       values_.begin());
+        priceSpline.update();
+        Array newValues(new_grid.size());
         Array::iterator val;
         Array::const_iterator grid;
         for (val = newValues.begin(), grid = new_grid.begin() ;
@@ -134,8 +157,8 @@ public class SampledCurve {
         values_.swap(newValues);
         grid_ = new_grid;
     }
-   
     */
+    
 	
     //
     // inner classes
