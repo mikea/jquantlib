@@ -33,7 +33,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author Daniel Kong
  **/
@@ -41,16 +40,16 @@ import org.slf4j.LoggerFactory;
 public class BackwardInterpolationTest {
 	
 	private final static Logger logger = LoggerFactory.getLogger(BackwardInterpolationTest.class);
-
-	public BackwardInterpolationTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	}
 	
 	private static final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
 	private static final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
 	private static Interpolation interpolation;
 	private static int length;
 	private static double tolerance;
+	
+	public BackwardInterpolationTest() {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
 	
 	@BeforeClass
 	public static void setUpBackwardInterpolation(){
@@ -76,6 +75,8 @@ public class BackwardInterpolationTest {
 		}
 	}
 	
+	
+	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
 //	@Test
 //	public void checkAtMiddlePoints(){
 //		for(int i=0; i<length-1; i++){
@@ -135,6 +136,7 @@ public class BackwardInterpolationTest {
 		}
 	}
 	
+	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
 //	@Test
 //	public void checkPrimitiveAtMiddlePoints(){
 //		double sum = 0.0;
@@ -151,7 +153,5 @@ public class BackwardInterpolationTest {
 //			            Math.abs(expected-calculated) > tolerance);
 //		}
 //	}
-	
-		
 		
 }

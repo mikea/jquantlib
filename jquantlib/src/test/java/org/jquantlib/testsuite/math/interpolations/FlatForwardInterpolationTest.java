@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author Daniel Kong
  **/
@@ -40,16 +39,15 @@ public class FlatForwardInterpolationTest  {
 	
 	private final static Logger logger = LoggerFactory.getLogger(FlatForwardInterpolationTest.class);
 
-	public FlatForwardInterpolationTest () {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	}
-		
-
 	private static final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
 	private static final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
 	private static Interpolation interpolation;
 	private static int length;
 	private static double tolerance;
+	
+	public FlatForwardInterpolationTest () {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
 	
 	@BeforeClass
 	public static void setUpFlatForwardInterpolation(){
@@ -61,11 +59,13 @@ public class FlatForwardInterpolationTest  {
 	    tolerance = 1.0e-12;
 	}
 	
+	//TODO: Failed. Check FlatForwardInterpolation 
 //	@Test
 //	public void checkAtOriginalPoints(){
 //		for(int i=0; i<length; i++){
 //			double d = x[i];
 //			double calculated = interpolation.evaluate(d);
+//			System.out.println(calculated);
 //			double expected = y[i];
 //			assertFalse("failed to reproduce "+i+" datum"
 //						+"\n expected:     "+expected
@@ -75,6 +75,7 @@ public class FlatForwardInterpolationTest  {
 //		}
 //	}
 	
+	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
 //	@Test
 //	public void checkAtMiddlePoints(){
 //		for(int i=0; i<length-1; i++){
@@ -133,9 +134,8 @@ public class FlatForwardInterpolationTest  {
 			            Math.abs(expected-calculated) > tolerance);
 		}
 	}
-
 	
-	
+	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
 //	@Test
 //	public void checkPrimitiveAtMiddlePoints(){
 //		double sum = 0.0;
@@ -151,7 +151,6 @@ public class FlatForwardInterpolationTest  {
 //			            +"\n error:        "+Math.abs(expected-calculated),
 //			            Math.abs(expected-calculated) > tolerance);
 //		}
-//	}
-	
+//	}	
 			
 }
