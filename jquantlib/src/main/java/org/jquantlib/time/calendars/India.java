@@ -214,6 +214,8 @@ final class IndiaNSECalendar extends WesternCalendar {
                 || (d == 13 && m == Month.NOVEMBER.toInteger())
                 // Bakri Id
                 || (d == 9 && m == Month.DECEMBER.toInteger())
+                // Mumbai Terror attack
+                || (d == 27 && m == Month.NOVEMBER.toInteger())
                 )
                 return false;
         }

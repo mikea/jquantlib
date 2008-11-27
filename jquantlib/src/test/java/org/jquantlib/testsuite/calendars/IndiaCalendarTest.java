@@ -168,6 +168,7 @@ public class IndiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(13, NOVEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(9, DECEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(DateFactory.getFactory().getDate(27, NOVEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
