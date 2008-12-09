@@ -1,0 +1,103 @@
+/*
+ Copyright (C) 2008 Daniel Kong, Richard Gomes
+ 
+ This source code is release under the BSD License.
+ 
+ This file is part of JQuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://jquantlib.org/
+
+ JQuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the JQuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ 
+ JQuantLib is based on QuantLib. http://quantlib.org/
+ When applicable, the original copyright notice follows this notice.
+ */
+
+package org.jquantlib.testsuite.math.interpolations;
+
+import static java.lang.Math.abs;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
+
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.factories.BackwardFlat;
+import org.jquantlib.math.interpolations.factories.Linear;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Daniel Kong
+ * @author Richard Gomes
+ **/
+
+public class LinearInterpolationTest {
+	
+	private final static Logger logger = LoggerFactory.getLogger(LinearInterpolationTest.class);
+	
+	private static final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
+	private static final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
+	private static final double x2[] = { -2.0, -1.0, 0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0 };
+	private static double y2[];
+	private static Interpolation interpolation;
+	private static int length;
+	private static double tolerance;
+	
+	public LinearInterpolationTest() {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	}
+	
+	@BeforeClass
+	public static void setUpLinearInterpolation(){
+		logger.info("\n\n::::: Testing use of interpolations as functors... :::::");
+
+		interpolation = new Linear().interpolate(x, y);
+		interpolation.reload();		  
+	    length = x2.length;
+	    y2 = new double[length];
+	    tolerance = 1.0e-12;
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowIllegalArgumentExceptionWithoutEnableExtrapolation(){
+		for (int i=0; i<length; i++) {
+	    	y2[i] = interpolation.evaluate(x2[i]);
+    	}
+	}
+	
+	@Test
+	public void testEnableExtrapolation(){
+		interpolation.enableExtrapolation();
+    	for (int i=0; i<length; i++) {
+    		y2[i] = interpolation.evaluate(x2[i]);
+    	}
+	    for (int i=0; i<length; i++) {
+	        double expected = 5.0-x2[i];
+	        if (abs(y2[i]-expected) > tolerance) {
+	            StringBuilder sb = new StringBuilder();
+	            sb.append("failed to reproduce ").append(i+1).append("o. expected datum");
+	            sb.append("\n    expected:   ").append(expected);
+	            sb.append("\n    calculated: ").append(y2[i]);
+	            sb.append("\n    error:      ").append(abs(y2[i]-expected));
+	            
+	            if (abs(y2[i]-expected) > tolerance)
+	            	fail("failed to reproduce " + (i+1) + "o. expected datum\n"
+	            			+ "    expected:   " + expected + "\n"
+	            			+ "    calculated: " + y2[i] + "\n"
+		                    + "    error:      " + abs(y2[i]-expected) );
+	        }
+	    }
+	}
+	
+	
+	
+		
+}

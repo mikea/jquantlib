@@ -26,6 +26,7 @@ import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.factories.BackwardFlat;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author Daniel Kong
  **/
 
-public class CubicSplineInterpolationTest {
+public class CubicSplineInterpolationTest extends InterpolationTestBase{
 
 private final static Logger logger = LoggerFactory.getLogger(CubicSplineInterpolationTest.class);
 	
@@ -42,26 +43,23 @@ private final static Logger logger = LoggerFactory.getLogger(CubicSplineInterpol
 	private static final double generic_y[] = { 0.0, 0.0, 2.0, 2.0 };
 	private static final double generic_natural_y2[] = { 0.0, 1.5, -1.5, 0.0 };
 	private static Interpolation interpolation;
-	private static int length;
-	private static double tolerance;
+
 	
 	public CubicSplineInterpolationTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: Testing spline interpolation on generic values... :::::");
 	}
 	
-	@BeforeClass
-	public static void setUpBackwardInterpolation(){
-		logger.info("\n\n::::: Testing spline interpolation on generic values... :::::");
-
-		interpolation = new CubicSpline().interpolate(generic_x, generic_y);
-		interpolation.reload();		  
-	    length = generic_x.length;
-	    
-	}	
+	
 	
 	//TODO
+	@Test
+	public void testNaturalSpline(){
+		
+	}
 	
 	
+//	void InterpolationTest::testSplineOnGenericValues() {
 //	BOOST_MESSAGE("Testing spline interpolation on generic values...");
 //
 //    const Real generic_x[] = { 0.0, 1.0, 3.0, 4.0 };

@@ -22,6 +22,7 @@
 
 package org.jquantlib.testsuite.math.interpolations;
 
+import static java.lang.Math.abs;
 import static org.junit.Assert.assertFalse;
 
 import org.jquantlib.math.interpolations.Interpolation;
@@ -70,8 +71,8 @@ public class FlatForwardInterpolationTest  {
 //			assertFalse("failed to reproduce "+i+" datum"
 //						+"\n expected:     "+expected
 //						+"\n calculated:   "+calculated
-//						+"\n error:        "+Math.abs(expected-calculated),
-//						Math.abs(expected-calculated) > tolerance);
+//						+"\n error:        "+abs(expected-calculated),
+//						abs(expected-calculated) > tolerance);
 //		}
 //	}
 	
@@ -86,8 +87,8 @@ public class FlatForwardInterpolationTest  {
 //			assertFalse("failed to interpolate correctly at "+d
 //						+"\n expected:     "+expected
 //						+"\n calculated:   "+calculated
-//						+"\n error:        "+Math.abs(expected-calculated),
-//						Math.abs(expected-calculated) > tolerance);
+//						+"\n error:        "+abs(expected-calculated),
+//						abs(expected-calculated) > tolerance);
 //		}
 //	}
 	
@@ -100,16 +101,16 @@ public class FlatForwardInterpolationTest  {
 		assertFalse("failed to extrapolate correctly at "+d
 					+"\n expected:     "+expected
 					+"\n calculated:   "+calculated
-					+"\n error:        "+Math.abs(expected-calculated),
-					Math.abs(expected-calculated) > tolerance);
+					+"\n error:        "+abs(expected-calculated),
+					abs(expected-calculated) > tolerance);
 		d= x[length-1]+0.5;
 		calculated = interpolation.evaluate(d);
 		expected = y[length-1];
 		assertFalse("failed to extrapolate correctly at "+d
 				    +"\n expected:     "+expected
 			    	+"\n calculated:   "+calculated
-			    	+"\n error:        "+Math.abs(expected-calculated),
-			    	Math.abs(expected-calculated) > tolerance);
+			    	+"\n error:        "+abs(expected-calculated),
+			    	abs(expected-calculated) > tolerance);
 		
 	}
 
@@ -120,8 +121,8 @@ public class FlatForwardInterpolationTest  {
 		assertFalse("failed to calculate primitive at "+x[0]
 				    +"\n expected:     "+expected
 			    	+"\n calculated:   "+calculated
-			    	+"\n error:        "+Math.abs(expected-calculated),
-			    	Math.abs(expected-calculated) > tolerance);
+			    	+"\n error:        "+abs(expected-calculated),
+			    	abs(expected-calculated) > tolerance);
 		double sum = 0.0;
 		for(int i=1; i<length; i++){
 			sum += (x[i]-x[i-1])*y[i-1];
@@ -130,8 +131,8 @@ public class FlatForwardInterpolationTest  {
 			assertFalse("failed to calculate primitive at "+x[i]
 			            +"\n expected:     "+expected
 			            +"\n calculated:   "+calculated
-			            +"\n error:        "+Math.abs(expected-calculated),
-			            Math.abs(expected-calculated) > tolerance);
+			            +"\n error:        "+abs(expected-calculated),
+			            abs(expected-calculated) > tolerance);
 		}
 	}
 	
@@ -148,8 +149,8 @@ public class FlatForwardInterpolationTest  {
 //			assertFalse("failed to calculate primitive at "+d
 //			            +"\n expected:     "+expected
 //			            +"\n calculated:   "+calculated
-//			            +"\n error:        "+Math.abs(expected-calculated),
-//			            Math.abs(expected-calculated) > tolerance);
+//			            +"\n error:        "+abs(expected-calculated),
+//			            abs(expected-calculated) > tolerance);
 //		}
 //	}	
 			
