@@ -164,7 +164,7 @@ final class ItalyExchangeCalendar extends WesternCalendar {
 		Month m = date.getMonthEnum();
 		int y = date.getYear();
 		int em = easterMonday(y);
-		//testing
+
 		if (isWeekend(w)
 		        // New Year's Day
 				|| (d == 1 && m == JANUARY)
