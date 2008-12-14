@@ -23,11 +23,14 @@
 package org.jquantlib.testsuite.math.interpolations;
 
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
+import static java.lang.Math.abs;
 import static java.lang.Math.exp;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.LinearInterpolation;
 import org.junit.Test;
@@ -67,67 +70,151 @@ public abstract class InterpolationTestBase {
 			y[i] = -x[i]*x[i];
 		return y;
 	}
-
-
 	
-	
-	
-	
-	
-	
-	@Test
-	public void testAsFunctor() {
-
-	    logger.info("Testing use of interpolations as functors...");
-
-	    final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
-	    final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
-
-	    Interpolation f = LinearInterpolation.getInterpolator().interpolate(x, y);
-	    f.reload();
-
-	    final double x2[] = { -2.0, -1.0, 0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0 };
-	    int len = x2.length;
-	    double[] y2 = new double[len];
-	    double tolerance = 1.0e-12;
-
-	    // case 1: extrapolation not allowed
-	    
-	    try {
-	    	for (int i=0; i<len; i++) {
-		    	y2[i] = f.evaluate(x2[i]);
-	    	}
-	    	fail("failed to throw exception when trying to extrapolate");
-	    } catch (IllegalArgumentException e1) {
-	        // This exception was expected. It's OK! Do nothing.
-	    } catch (Exception e2) {
-	    	fail("Unexpected exception");
-	    	e2.printStackTrace();
-	    }
-	    
-
-	    // case 2: enable extrapolation
-	    f.enableExtrapolation();
-    	for (int i=0; i<len; i++) {
-    		y2[i] = f.evaluate(x2[i]);
-    	}
-	    for (int i=0; i<len; i++) {
-	        double expected = 5.0-x2[i];
-	        if (Math.abs(y2[i]-expected) > tolerance) {
-	            StringBuilder sb = new StringBuilder();
-	            sb.append("failed to reproduce ").append(i+1).append("o. expected datum");
-	            sb.append("\n    expected:   ").append(expected);
-	            sb.append("\n    calculated: ").append(y2[i]);
-	            sb.append("\n    error:      ").append(Math.abs(y2[i]-expected));
-	            
-	            if (Math.abs(y2[i]-expected) > tolerance)
-	            	fail("failed to reproduce " + (i+1) + "o. expected datum\n"
-	            			+ "    expected:   " + expected + "\n"
-	            			+ "    calculated: " + y2[i] + "\n"
-		                    + "    error:      " + Math.abs(y2[i]-expected) );
-	        }
-	    }
+	protected void checkValues(
+			final String type, 
+			final CubicSplineInterpolation spline,
+			double[] x, double[] y){
+		double tolerance = 2.0e-15;
+		for(int i=0; i<x.length; i++){
+			double interpolated = spline.evaluate(x[i]);
+			assertFalse(type+" interpolation failed at x = "+x[i]
+					+"\n interpolated value: "+interpolated
+					+"\n expected value:     "+y[i]
+					+"\n error:        "+abs(interpolated-y[i]),
+					abs(interpolated-y[i]) > tolerance);
+		}		
 	}
+	
+//	template <class I, class J>
+//	void checkValues(const char* type,
+//	                 const CubicSpline& spline,
+//	                 I xBegin, I xEnd, J yBegin) {
+//	    Real tolerance = 2.0e-15;
+//	    while (xBegin != xEnd) {
+//	        Real interpolated = spline(*xBegin);
+//	        if (std::fabs(interpolated-*yBegin) > tolerance) {
+//	            BOOST_ERROR(type << " interpolation failed at x = " << *xBegin
+//	                        << QL_SCIENTIFIC
+//	                        << "\n    interpolated value: " << interpolated
+//	                        << "\n    expected value:     " << *yBegin
+//	                        << "\n    error:              "
+//	                        << std::fabs(interpolated-*yBegin));
+//	        }
+//	        ++xBegin; ++yBegin;
+//	    }
+//	}
+	
+	protected void check1stDerivativeValue(
+			final String type,
+			final CubicSplineInterpolation spline,
+            double x,
+            double value) {
+		double tolerance = 1.0e-14;
+		double interpolated = spline.derivative(x);
+		assertFalse(type+" interpolation first derivative failure at x = "+x
+   					+"\n interpolated value: "+interpolated
+   					+"\n expected value:     "+value
+   					+"\n error:        "+abs(interpolated-value),
+   					abs(interpolated-value) > tolerance);
+	}
+		
+//		void check1stDerivativeValue(const char* type,
+//	            const CubicSpline& spline,
+//	            Real x,
+//	            Real value) {
+//	Real tolerance = 1.0e-14;
+//	Real interpolated = spline.derivative(x);
+//	Real error = std::fabs(interpolated-value);
+//	if (error > tolerance) {
+//	BOOST_ERROR(type << " interpolation first derivative failure\n"
+//	   << "at x = " << x
+//	   << "\n    interpolated value: " << interpolated
+//	   << "\n    expected value:     " << value
+//	   << QL_SCIENTIFIC
+//	   << "\n    error:              " << error);
+//	}
+//	}
+
+	protected void check2ndDerivativeValue(
+			final String type,
+			final CubicSplineInterpolation spline,
+            double x,
+            double value) {
+		double tolerance = 1.0e-14;
+		double interpolated = spline.secondDerivative(x);
+		assertFalse(type+" interpolation first derivative failure at x = "+x
+   					+"\n interpolated value: "+interpolated
+   					+"\n expected value:     "+value
+   					+"\n error:        "+abs(interpolated-value),
+   					abs(interpolated-value) > tolerance);
+	}
+	
+//	void check2ndDerivativeValue(const char* type,
+//	            const CubicSpline& spline,
+//	            Real x,
+//	            Real value) {
+//	Real tolerance = 1.0e-13;
+//	Real interpolated = spline.secondDerivative(x);
+//	Real error = std::fabs(interpolated-value);
+//	if (error > tolerance) {
+//	BOOST_ERROR(type << " interpolation second derivative failure\n"
+//	   << "at x = " << x
+//	   << "\n    interpolated value: " << interpolated
+//	   << "\n    expected value:     " << value
+//	   << QL_SCIENTIFIC
+//	   << "\n    error:              " << error);
+//	}
+//	}
+
+	void checkNotAKnotCondition(
+			final String type,
+			final CubicSplineInterpolation spline) {
+		double tolerance = 1.0e-14;
+		
+		//TODO where is the spline.cCoefficients()?
+//		final double [] c = spline.
+		
+	}
+	
+	
+//	void checkNotAKnotCondition(const char* type,
+//	           const CubicSpline& spline) {
+//	Real tolerance = 1.0e-14;
+//	const std::vector<Real>& c = spline.cCoefficients();
+//	if (std::fabs(c[0]-c[1]) > tolerance) {
+//	BOOST_ERROR(type << " interpolation failure"
+//	   << "\n    cubic coefficient of the first"
+//	   << " polinomial is " << c[0]
+//	   << "\n    cubic coefficient of the second"
+//	   << " polinomial is " << c[1]);
+//	}
+//	Size n = c.size();
+//	if (std::fabs(c[n-2]-c[n-1]) > tolerance) {
+//	BOOST_ERROR(type << " interpolation failure"
+//	   << "\n    cubic coefficient of the 2nd to last"
+//	   << " polinomial is " << c[n-2]
+//	   << "\n    cubic coefficient of the last"
+//	   << " polinomial is " << c[n-1]);
+//	}
+//	}
+//	
+//	void checkSymmetry(const char* type,
+//	  const CubicSpline& spline,
+//	  Real xMin) {
+//	Real tolerance = 1.0e-15;
+//	for (Real x = xMin; x < 0.0; x += 0.1) {
+//	Real y1 = spline(x), y2 = spline(-x);
+//	if (std::fabs(y1-y2) > tolerance) {
+//	BOOST_ERROR(type << " interpolation not symmetric"
+//	       << "\n    x = " << x
+//	       << "\n    g(x)  = " << y1
+//	       << "\n    g(-x) = " << y2
+//	       << "\n    error:  " << std::fabs(y1-y2));
+//	}
+//	}
+//	}	
+	
 
 
 }

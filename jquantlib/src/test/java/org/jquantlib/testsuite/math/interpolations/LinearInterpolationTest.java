@@ -23,11 +23,9 @@
 package org.jquantlib.testsuite.math.interpolations;
 
 import static java.lang.Math.abs;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.math.interpolations.Interpolation;
-import org.jquantlib.math.interpolations.factories.BackwardFlat;
 import org.jquantlib.math.interpolations.factories.Linear;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -89,10 +87,7 @@ public class LinearInterpolationTest {
 	            sb.append("\n    error:      ").append(abs(y2[i]-expected));
 	            
 	            if (abs(y2[i]-expected) > tolerance)
-	            	fail("failed to reproduce " + (i+1) + "o. expected datum\n"
-	            			+ "    expected:   " + expected + "\n"
-	            			+ "    calculated: " + y2[i] + "\n"
-		                    + "    error:      " + abs(y2[i]-expected) );
+	            	fail(sb.toString());
 	        }
 	    }
 	}

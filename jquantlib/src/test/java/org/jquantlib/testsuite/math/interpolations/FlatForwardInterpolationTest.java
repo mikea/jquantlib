@@ -28,6 +28,7 @@ import static org.junit.Assert.assertFalse;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.factories.ForwardFlat;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,36 +62,38 @@ public class FlatForwardInterpolationTest  {
 	}
 	
 	//TODO: Failed. Check FlatForwardInterpolation 
-//	@Test
-//	public void checkAtOriginalPoints(){
-//		for(int i=0; i<length; i++){
-//			double d = x[i];
-//			double calculated = interpolation.evaluate(d);
-//			System.out.println(calculated);
-//			double expected = y[i];
-//			assertFalse("failed to reproduce "+i+" datum"
-//						+"\n expected:     "+expected
-//						+"\n calculated:   "+calculated
-//						+"\n error:        "+abs(expected-calculated),
-//						abs(expected-calculated) > tolerance);
-//		}
-//	}
+	@Ignore("Not Ready to Run")
+	@Test
+	public void checkAtOriginalPoints(){
+		for(int i=0; i<length; i++){
+			double d = x[i];
+			double calculated = interpolation.evaluate(d);
+			System.out.println(calculated);
+			double expected = y[i];
+			assertFalse("failed to reproduce "+i+" datum"
+						+"\n expected:     "+expected
+						+"\n calculated:   "+calculated
+						+"\n error:        "+abs(expected-calculated),
+						abs(expected-calculated) > tolerance);
+		}
+	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-//	@Test
-//	public void checkAtMiddlePoints(){
-//		for(int i=0; i<length-1; i++){
-//			double d = (x[i]+x[i+1])/2;
-//			double calculated = interpolation.evaluate(d);
-//			double expected = y[i];
-//			
-//			assertFalse("failed to interpolate correctly at "+d
-//						+"\n expected:     "+expected
-//						+"\n calculated:   "+calculated
-//						+"\n error:        "+abs(expected-calculated),
-//						abs(expected-calculated) > tolerance);
-//		}
-//	}
+	@Ignore("Not Ready to Run")
+	@Test
+	public void checkAtMiddlePoints(){
+		for(int i=0; i<length-1; i++){
+			double d = (x[i]+x[i+1])/2;
+			double calculated = interpolation.evaluate(d);
+			double expected = y[i];
+			
+			assertFalse("failed to interpolate correctly at "+d
+						+"\n expected:     "+expected
+						+"\n calculated:   "+calculated
+						+"\n error:        "+abs(expected-calculated),
+						abs(expected-calculated) > tolerance);
+		}
+	}
 	
 	@Test
 	public void checkOutsideOriginalRange(){
@@ -137,21 +140,22 @@ public class FlatForwardInterpolationTest  {
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-//	@Test
-//	public void checkPrimitiveAtMiddlePoints(){
-//		double sum = 0.0;
-//		for(int i=0; i<length-1; i++){
-//			double d = (x[i]+x[i+1])/2;
-//			sum += (x[i+1]-x[i])*y[i]/2;
-//			double calculated = interpolation.primitive(d);
-//			double expected=sum;
-//			sum += (x[i+1]-x[i])*y[i]/2;
-//			assertFalse("failed to calculate primitive at "+d
-//			            +"\n expected:     "+expected
-//			            +"\n calculated:   "+calculated
-//			            +"\n error:        "+abs(expected-calculated),
-//			            abs(expected-calculated) > tolerance);
-//		}
-//	}	
+	@Ignore("Not Ready to Run")
+	@Test
+	public void checkPrimitiveAtMiddlePoints(){
+		double sum = 0.0;
+		for(int i=0; i<length-1; i++){
+			double d = (x[i]+x[i+1])/2;
+			sum += (x[i+1]-x[i])*y[i]/2;
+			double calculated = interpolation.primitive(d);
+			double expected=sum;
+			sum += (x[i+1]-x[i])*y[i]/2;
+			assertFalse("failed to calculate primitive at "+d
+			            +"\n expected:     "+expected
+			            +"\n calculated:   "+calculated
+			            +"\n error:        "+abs(expected-calculated),
+			            abs(expected-calculated) > tolerance);
+		}
+	}	
 			
 }

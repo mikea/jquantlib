@@ -22,6 +22,7 @@
 
 package org.jquantlib.testsuite.math.interpolations;
 
+import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.factories.BackwardFlat;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
@@ -55,6 +56,18 @@ private final static Logger logger = LoggerFactory.getLogger(CubicSplineInterpol
 	//TODO
 	@Test
 	public void testNaturalSpline(){
+		Interpolation interpolation = new CubicSpline(
+				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
+				generic_natural_y2[0],
+				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
+				generic_natural_y2[generic_x.length-1],
+				false)
+				.interpolate(generic_x, generic_y);
+		interpolation.reload();
+		
+//		TODO need to directly instantiate CubicSplineInterpolation?
+//			 need CubicSplineInterpolation type?
+//		checkValues("Natural spline", interpolation, generic_x, generic_y);
 		
 	}
 	
