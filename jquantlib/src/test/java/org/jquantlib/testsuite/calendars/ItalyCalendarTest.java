@@ -4,7 +4,9 @@ package org.jquantlib.testsuite.calendars;
 import static org.jquantlib.util.Month.MARCH;
 import static org.jquantlib.util.Month.APRIL;
 import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.AUGUST;
+import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.DECEMBER;
 import static org.jquantlib.util.Month.JANUARY;
 
@@ -43,75 +45,57 @@ public class ItalyCalendarTest {
 		int year = 2004;
 		logger.info("Testing Italy holiday list for the year " + year);   
 
-		//new years day 
 		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
 		
-		//Good Friday
-		expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
-		
-		//Easter Monday
+		Date goodFriday = DateFactory.getFactory().getDate(9,APRIL,year);
+		expectedHol.add(goodFriday);
 		expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,year));
-		
-		//labor day - no testing since it is a weekend day
-		//expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-		
-		//Assumption day - - no testing since it is a weekend day
-		//expectedHol.add(DateFactory.getFactory().getDate(15,AUGUST,year));
-		
-		//christmas
-		expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-		
-        //No testing since it is a weekend day
-		//expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-		
-		//St. Stephen - - no testing since it is a weekend day
-		//expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-		
-		//New Year's Eve
-		expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+		Date christmasEve = DateFactory.getFactory().getDate(24,DECEMBER,year);
+		expectedHol.add(christmasEve);
+		Date newYearEve = DateFactory.getFactory().getDate(31,DECEMBER,year); 
+		expectedHol.add(newYearEve);
 		
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cExchange, year);
 		
+		expectedHol.remove(goodFriday);
+		expectedHol.remove(christmasEve);
+		expectedHol.remove(newYearEve);
+		
+		expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JUNE,year));
+		expectedHol.add(DateFactory.getFactory().getDate(1,NOVEMBER,year));
+		expectedHol.add(DateFactory.getFactory().getDate(8,DECEMBER,year));
+		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
 
 	@Test
 	public void testItalyYear2006() {
 		int year = 2006;
 		logger.info("Testing Italy holiday list for the year " + year);   
-
-		//new years day - no testing since it is a weekend day
-		//expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
-		
-		//Good Friday 
-		expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
-		
-		//Easter Monday 
+ 
+		Date goodFriday = DateFactory.getFactory().getDate(14,APRIL,year);
+		expectedHol.add(goodFriday);
 		expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,year));
-		
-		//labor day 
 		expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-		
-		//Assumption day 
 		expectedHol.add(DateFactory.getFactory().getDate(15,AUGUST,year));
-		
-		//christmas - no testing since it is a weekend day
-		//expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-		
-        //Christmas day
 		expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-		
-		//St. Stephen 
 		expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-		
-		//New Year's Eve - no testing since it is a weekend day
-		//expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
 		
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cExchange, year);
 		
+		expectedHol.remove(goodFriday);
+		
+		expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year));
+		expectedHol.add(DateFactory.getFactory().getDate(25,APRIL,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JUNE,year));
+		expectedHol.add(DateFactory.getFactory().getDate(1,NOVEMBER,year));
+		expectedHol.add(DateFactory.getFactory().getDate(8,DECEMBER,year));
+		
+		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
 
 	@Test
@@ -119,37 +103,31 @@ public class ItalyCalendarTest {
 		int year = 2007;
 		logger.info("Testing Italy holiday list for the year " + year);   
 
-		//new years day 
 		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
-		
-		//Good Friday 
-		expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
-		
-		//Easter Monday 
+		Date goodFriday = DateFactory.getFactory().getDate(6,APRIL,year);
+		expectedHol.add(goodFriday);
 		expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
-		
-		//labor day 
 		expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-		
-		//Assumption day 
 		expectedHol.add(DateFactory.getFactory().getDate(15,AUGUST,year));
-		
-		//christmas 
-		expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-		
-        
+		Date christmasEve = DateFactory.getFactory().getDate(24,DECEMBER,year);
+		expectedHol.add(christmasEve);
 		expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-		
-		//St. Stephen 
 		expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-		
-		//New Year's Eve 
-		expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+		Date newYearEve = DateFactory.getFactory().getDate(31,DECEMBER,year);
+		expectedHol.add(newYearEve);
 		
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cExchange, year);
+				
+		expectedHol.remove(goodFriday);
+		expectedHol.remove(christmasEve);
+		expectedHol.remove(newYearEve);
 		
+		expectedHol.add(DateFactory.getFactory().getDate(25,APRIL,year));
+		expectedHol.add(DateFactory.getFactory().getDate(1,NOVEMBER,year));
+		
+		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
 	
 	@Test
@@ -157,36 +135,62 @@ public class ItalyCalendarTest {
 		int year = 2008;
 		logger.info("Testing Italy holiday list for the year " + year);   
 
-		//new years day 
 		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
-		
-		//Good Friday 
-		expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));
-		
-		//Easter Monday 
+		Date goodFriday = DateFactory.getFactory().getDate(21,MARCH,year); 
+		expectedHol.add(goodFriday);
 		expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));
-		
-		//labor day 
 		expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-		
-		//Assumption day 
 		expectedHol.add(DateFactory.getFactory().getDate(15,AUGUST,year));
-		
-		//christmas 
-		expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-		
-        
+		Date christmasEve = DateFactory.getFactory().getDate(24,DECEMBER,year);
+		expectedHol.add(christmasEve); 
 		expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-		
-		//St. Stephen 
 		expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-		
-		//New Year's Eve 
-		expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+		Date newYearEve = DateFactory.getFactory().getDate(31,DECEMBER,year);
+		expectedHol.add(newYearEve);
 		
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cExchange, year);
 		
+		expectedHol.remove(goodFriday);
+		expectedHol.remove(christmasEve);
+		expectedHol.remove(newYearEve);
+		
+		expectedHol.add(DateFactory.getFactory().getDate(25,APRIL,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JUNE,year));
+		expectedHol.add(DateFactory.getFactory().getDate(8,DECEMBER,year));
+		
+		cbt.checkHolidayList(expectedHol, cSettlement, year);
+	}
+	
+	@Test
+	public void testItalyYear2009() {
+		int year = 2009;
+		logger.info("Testing Italy holiday list for the year " + year);   
+
+		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+		Date goodFriday = DateFactory.getFactory().getDate(10,APRIL,year);
+		expectedHol.add(goodFriday);
+		expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
+		expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+		Date christmasEve = DateFactory.getFactory().getDate(24,DECEMBER,year); 
+		expectedHol.add(christmasEve);
+		expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+		Date newYearEve = DateFactory.getFactory().getDate(31,DECEMBER,year);
+		expectedHol.add(newYearEve);
+		
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cExchange, year);
+		
+		expectedHol.remove(goodFriday);
+		expectedHol.remove(christmasEve);
+		expectedHol.remove(newYearEve);
+		
+		expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JUNE,year));
+		expectedHol.add(DateFactory.getFactory().getDate(8,DECEMBER,year));
+		
+		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
 }
