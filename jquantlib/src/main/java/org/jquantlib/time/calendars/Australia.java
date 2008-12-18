@@ -36,26 +36,24 @@ import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
-//! Australian calendar
-/*! Holidays:
-    <ul>
-    <li>Saturdays</li>
-    <li>Sundays</li>
-    <li>New Year's Day, January 1st</li>
-    <li>Australia Day, January 26th (possibly moved to MONDAY)</li>
-    <li>Good Friday</li>
-    <li>Easter MONDAY</li>
-    <li>ANZAC Day. April 25th (possibly moved to MONDAY)</li>
-    <li>Queen's Birthday, second MONDAY in June</li>
-    <li>Bank Holiday, first MONDAY in August</li>
-    <li>Labour Day, first MONDAY in October</li>
-    <li>Christmas, December 25th (possibly moved to MONDAY or TUESDAY)</li>
-    <li>Boxing Day, December 26th (possibly moved to MONDAY or
-        TUESDAY)</li>
-    </ul>
-
-    @Author Tim Swetonic
-*/
+// Australian calendar
+/** Holidays:
+ *  <ul>
+ *  <li>Saturdays</li>
+ *  <li>Sundays</li>
+ *  <li>New Year's Day, January 1st</li>
+ *  <li>Australia Day, January 26th (possibly moved to MONDAY)</li>
+ *  <li>Good Friday</li>
+ *  <li>Easter MONDAY</li>
+ *  <li>ANZAC Day. April 25th (possibly moved to MONDAY)</li>
+ *  <li>Queen's Birthday, second MONDAY in June</li>
+ *  <li>Bank Holiday, first MONDAY in August</li>
+ *  <li>Labour Day, first MONDAY in October</li>
+ *  <li>Christmas, December 25th (possibly moved to MONDAY or TUESDAY)</li>
+ *  <li>Boxing Day, December 26th (possibly moved to MONDAY or TUESDAY)</li>
+ *  </ul>
+ *  @Author Tim Swetonic
+**/
 
 public class Australia extends WesternCalendar {
 	private static Australia AUSTRALIA = new Australia();
