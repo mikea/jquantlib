@@ -26,7 +26,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.SortedMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,7 @@ public class TimeSeries<T> {
     // private fields
     //
     
-    private final SortedMap<Date, T> map;
+    private final Object2ObjectAVLTreeMap<Date, T> map;
 	
     
     //
@@ -93,32 +92,32 @@ public class TimeSeries<T> {
     /**
      * @return the first date for which a historical datum exists
      */
-    public Date firstDate() /* @ReadOnly */ {
+    public Date firstDate() /*@ReadOnly*/ {
     	return map.firstKey();
     }
 
     /**
      * @return the last date for which a historical datum exists
      */
-    public Date lastDate() /* @ReadOnly */ {
+    public Date lastDate() /*@ReadOnly*/ {
     	return map.lastKey() ;
     }
 
     /**
      * @return the number of historical data including null ones
      */
-    public int size() /* @ReadOnly */ {
+    public int size() /*@ReadOnly*/ {
         return map.size();
     }
 
     /**
      * @return whether the series contains any data
      */
-    public boolean isEmpty() /* @ReadOnly */ {
+    public boolean isEmpty() /*@ReadOnly*/ {
         return map.isEmpty();
     }
 
-    public T find(final Date d) /* @ReadOnly */ {
+    public T find(final Date d) /*@ReadOnly*/ {
     	return map.get(d);
     }
 

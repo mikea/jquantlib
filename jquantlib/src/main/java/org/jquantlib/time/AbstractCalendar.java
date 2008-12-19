@@ -23,13 +23,14 @@
 
 package org.jquantlib.time;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 
-import cern.colt.list.ObjectArrayList;
 
 /**
  * 
@@ -42,15 +43,15 @@ public abstract class AbstractCalendar implements Calendar {
     protected static final String YEAR_OUT_OF_RANGE = "Year out of range";
     
     /**
-     * To store artifically added holidays
+     * To store artifially added holidays
      */
-    private ObjectArrayList addedHolidays;
+    private ObjectArrayList<Date> addedHolidays;
 
     /**
      * Constructor
      */
     protected AbstractCalendar() {
-        this.addedHolidays = new ObjectArrayList();
+        this.addedHolidays = new ObjectArrayList<Date>();
     }
 
     public void addHoliday(final Date d) {
@@ -62,7 +63,7 @@ public abstract class AbstractCalendar implements Calendar {
 
     public void removeHoliday(final Date d) {
         // if d was an artificially-added holiday, revert the change
-        addedHolidays.delete(d, true);
+        addedHolidays.remove(d);
     }
 
     /**
@@ -72,7 +73,7 @@ public abstract class AbstractCalendar implements Calendar {
      * @return true if its added holiday false if its not added
      */
     protected boolean isAddedHoliday(Date date) {
-        return addedHolidays.contains(date, true);
+        return addedHolidays.contains(date);
     }
 
     /**

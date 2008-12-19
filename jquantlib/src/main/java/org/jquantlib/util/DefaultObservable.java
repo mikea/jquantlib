@@ -22,9 +22,12 @@
 
 package org.jquantlib.util;
 
-import java.util.Collections; //FIXME: performance
-import java.util.List; //FIXME: performance
-import java.util.concurrent.CopyOnWriteArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectCollections;
+
+import java.util.List;
+
+import net.jcip.annotations.NotThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +40,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Default implementation of an {@link Observable}.
  * <p>
- * This implementation notifies the observers in a synchronous fashion. Note that this can cause trouble if you notify the observers
- * while in a transactional context because once the notification is done it cannot be rolled back.
+ * This implementation notifies the observers in a synchronous fashion. Note that this can cause trouble if you notify observers
+ * whilst in a transactional context because once a notification is done it cannot be rolled back.
+ * 
+ * @note This class is not thread safe
  * 
  * @see <a href="http://www.jroller.com/martin_fischer/entry/a_generic_java_observer_pattern"> Martin Fischer: Observer and
  *      Observable interfaces</a>
@@ -51,18 +56,16 @@ import org.slf4j.LoggerFactory;
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
+@NotThreadSafe
 public class DefaultObservable implements Observable {
 	
-	//
-	// logger
-	//
 	private final static Logger logger = LoggerFactory.getLogger(DefaultObservable.class);
 
     //
     // private final fields
     //
 
-    private final List<Observer> observers = new CopyOnWriteArrayList<Observer>();
+    private final ObjectArrayList<Observer> observers;
     private final Observable observable;
 
     //
@@ -70,6 +73,7 @@ public class DefaultObservable implements Observable {
     //
 
     public DefaultObservable(Observable observable) {
+        this.observers = new ObjectArrayList<Observer>();
         if (observable == null)
             throw new NullPointerException("observable is null");
         this.observable = observable;
@@ -80,8 +84,7 @@ public class DefaultObservable implements Observable {
     //
 
     public void addObserver(final Observer observer) {
-        if (observer == null)
-            throw new NullPointerException("observer is null");
+        if (observer == null) throw new NullPointerException("observer is null");
         observers.add(observer);
     }
 
@@ -90,7 +93,7 @@ public class DefaultObservable implements Observable {
     }
 
     public List<Observer> getObservers() {
-        return Collections.unmodifiableList(this.observers);
+        return (List<Observer>) ObjectCollections.unmodifiable(this.observers);
     }
 
     public void deleteObserver(final Observer observer) {

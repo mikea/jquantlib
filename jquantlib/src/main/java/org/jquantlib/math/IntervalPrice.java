@@ -149,7 +149,7 @@ public class IntervalPrice implements Serializable {
     public static TimeSeries<IntervalPrice> makeSeries(
             final Date[] d, final double[] open, final double[] close, final double[] high, final double[] low) {
 
-        int dsize = d.length;
+        final int dsize = d.length;
         if (open.length != dsize || close.length != dsize || high.length != dsize || low.length != dsize) {
             String msg = MessageFormatter.arrayFormat("size mismatch({}, {}, {}, {}, {})", 
                     new Object[] { dsize, open.length, close.length, high.length, low.length } );
@@ -157,7 +157,7 @@ public class IntervalPrice implements Serializable {
             throw new IllegalArgumentException(msg);
         }
         
-        TimeSeries<IntervalPrice> retval = new TimeSeries();
+        final TimeSeries<IntervalPrice> retval = new TimeSeries();
         for (int i=0; i< dsize; i++) {
             retval.add(d[i], new IntervalPrice(open[i], close[i], high[i], low[i]));
         }
@@ -166,18 +166,18 @@ public class IntervalPrice implements Serializable {
     }
 
     public static double[] extractValues(final TimeSeries<IntervalPrice> ts, IntervalPrice.Type type)  {
-        double[] returnval = new double[ts.size()];
-        Iterator<IntervalPrice> it = ts.values().iterator();
+        final double[] result = new double[ts.size()];
+        final Iterator<IntervalPrice> it = ts.values().iterator();
         
         for (int i=0; i<ts.size(); i++) {
-            returnval[i] = it.next().value(type);
+            result[i] = it.next().value(type);
         }
-        return returnval;
+        return result;
     }
 
     public static TimeSeriesDouble extractComponent(final TimeSeries<IntervalPrice> ts, IntervalPrice.Type type) {
-        Date[] dates = ts.dates();
-        double[] values = extractValues(ts, type);
+        final Date[] dates = ts.dates();
+        final double[] values = extractValues(ts, type);
         return new TimeSeriesDouble(dates, values);
     }
 
