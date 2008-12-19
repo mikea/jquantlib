@@ -171,13 +171,13 @@ final class IndonesiaBEJCalendar extends WesternCalendar {
                     || (d == 7 && m == FEBRUARY)
                     // Trading Holiday
                     || (d == 8 && m == FEBRUARY)
-                    // Saka’s New Year
+                    // Saka's New Year
                     || (d == 7 && m == MARCH)
                     // Birthday of the prophet Muhammad
                     || (d == 20 && m == MARCH)
                     // Vesak Day
                     || (d == 20 && m == MAY)
-                    // Isra’ Mi’raj of the prophet Muhammad
+                    // Isra' Mi'raj of the prophet Muhammad
                     || (d == 30 && m == JULY)
                     // National Leave
                     || (d == 18 && m == AUGUST) || (d == 30 && m == SEPTEMBER)
@@ -199,11 +199,11 @@ final class IndonesiaBEJCalendar extends WesternCalendar {
             (d == 2 && m == JANUARY)
             // Chinese New Year
                     || (d == 26 && m == JANUARY)
-                    // Saka’s New Year
+                    // Saka's New Year
                     || (d == 26 && m == MARCH)
                     // Birthday of the prophet Muhammad
                     || (d == 9 && m == MARCH)
-                    // Isra’ Mi’raj of the prophet Muhammad
+                    // Isra' Mi'raj of the prophet Muhammad
                     || (d == 20 && m == JULY)
                     // Public Holiday
                     || (d == 18 && m == SEPTEMBER) || (d == 23 && m == SEPTEMBER)

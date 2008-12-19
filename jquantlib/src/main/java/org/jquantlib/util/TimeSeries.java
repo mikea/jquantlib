@@ -28,24 +28,52 @@ import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.MessageFormatter;
 
 /**
+ * Container for historical data
+ * <p>
+ * This class acts as a generic repository for a set of historical data. 
+ * Any single datum can be accessed through its date, while
+ * sets of consecutive data can be accessed through iterators.
+ * 
+ * @see TimeSeriesDouble
+ * 
  * @author Srinivas Hasti
  */
-
-//FIXME: PERFORMANCE:: We should use (maybe!) specialized versions of TimeSeries backed by primitive types
 public class TimeSeries<T> {
 
-	private final SortedMap<Date, T> map;
+    private final static Logger logger = LoggerFactory.getLogger(TimeSeries.class);
+
+    //
+    // private fields
+    //
+    
+    private final SortedMap<Date, T> map;
 	
+    
+    //
+    // public constructors
+    //
+    
     public TimeSeries() {
         this.map = new Object2ObjectAVLTreeMap<Date, T>();
     }
 
-    public TimeSeries(final List<Date> dates, final List<T> values) {
+    public TimeSeries(final Date[] dates, final T[] values) {
     	this();
-        for (int i = 0; i < dates.size(); i++) {
-        	map.put(dates.get(i), values.get(i)) ;
+
+    	if ( dates.length != values.length) {
+            String msg = MessageFormatter.arrayFormat("size mismatch({}, {})", 
+                    new Object[] { dates.length, values.length } );
+            logger.debug(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        
+        for (int i = 0; i < dates.length; i++) {
+        	map.put(dates[i], values[i]) ;
         }
     }
 
@@ -58,6 +86,10 @@ public class TimeSeries<T> {
         }
     }
 
+    //
+    // public methods
+    //
+    
     /**
      * @return the first date for which a historical datum exists
      */

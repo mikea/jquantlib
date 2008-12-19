@@ -39,87 +39,156 @@
 
 package org.jquantlib.math;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.Iterator;
+
+import org.jquantlib.util.Date;
+import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.TimeSeriesDouble;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.MessageFormatter;
 
 /**
  * Interval Price
  * 
  * @author Anand Mani
  */
-
-// TODO: This class is incomplete.
-// Need to fully translate from prices.hpp-->IntervalPrice
-public class IntervalPrice {
+public class IntervalPrice implements Serializable {
 	
-	public static enum Type {
-		Open, Close, High, Low
+    private final static Logger logger = LoggerFactory.getLogger(IntervalPrice.class);
+    
+    
+    //
+    // private fields
+    //
+    
+    private double open;
+    private double close;
+    private double high;
+    private double low;
+    
+    
+    //
+    // public constructors
+    //
+    
+	public IntervalPrice(
+	        final /*@Real*/ double open, final /*@Real*/ double close, 
+	        final /*@Real*/ double high, final /*@Real*/ double low) {
+	    setValues(open, close, high, low);
 	}
 
-	@SuppressWarnings("serial") // FIXME: should solve the issue and not suppress the warning
-	private Map<Type, /* @Real */Double> typeValues = new HashMap<Type, /* @Real */Double>() {
-		{
-			put(Type.Open, null);
-			put(Type.Close, null);
-			put(Type.High, null);
-			put(Type.Low, null);
-		}
-	};
+    
+	//
+	// public methods
+	//
+	
+	public /*@Real*/ double open() /*@ReadOnly*/ {
+        return this.open();
+    }
 
-	public IntervalPrice(/* @Real */Double open, /* @Real */Double close, /* @Real */Double high, /* @Real */
-	Double low) {
-		typeValues.put(Type.Open, open);
-		typeValues.put(Type.Close, close);
-		typeValues.put(Type.High, high);
-		typeValues.put(Type.Low, low);
+	public /*@Real*/ double close() /*@ReadOnly*/ {
+		return this.close;
 	}
 
-	public/*@Real*/Double getClose() {
-		return getValue(Type.Close);
+	public /*@Real*/ double high() /*@ReadOnly*/ {
+		return this.high;
 	}
 
-	public/*@Real*/Double getHigh() {
-		return getValue(Type.High);
+	public /*@Real*/ double low() /*@ReadOnly*/ {
+		return this.low;
 	}
 
-	public/*@Real*/Double getLow() {
-		return getValue(Type.Low);
+	public /*@Real*/ double value(final IntervalPrice.Type type) /*@ReadOnly*/ {
+        switch (type) {
+            case Open:
+                return this.open;
+            case Close:
+                return this.close;
+            case High:
+                return this.high;
+            case Low:
+                return this.low;
+            default:
+                throw new IllegalArgumentException("Unknown price type");
+        }
+    }
+
+	public void setValue(final Type type, final /*@Real*/ double value) {
+        switch (type) {
+            case Open:
+                this.open = value;
+            case Close:
+                this.close = value;
+            case High:
+                this.high = value;
+            case Low:
+                this.low = value;
+            default:
+                throw new IllegalArgumentException("Unknown price type");
+        }
 	}
 
-	public/*@Real*/Double getOpen() {
-		return getValue(Type.Open);
+	public void setValues(
+	        final /*@Real*/ double open, final /*@Real*/ double close, 
+	        final /*@Real*/ double high, final /*@Real*/ double low) {
+        this.open  = open;
+        this.close = close;
+        this.high  = high;
+        this.low   = low;
 	}
 
-	public/*@Real*/Double getValue(Type type) {
-		return typeValues.get(type);
-	}
 
-	public void setClose(/*@Real*/Double close) {
-		setValue(Type.Close, close);
-	}
 
-	public void setHigh(/*@Real*/Double high) {
-		setValue(Type.High, high);
-	}
+	//
+	// public static methods
+	//
+	
+	
+    public static TimeSeries<IntervalPrice> makeSeries(
+            final Date[] d, final double[] open, final double[] close, final double[] high, final double[] low) {
 
-	public void setLow(/*@Real*/Double low) {
-		setValue(Type.Low, low);
-	}
+        int dsize = d.length;
+        if (open.length != dsize || close.length != dsize || high.length != dsize || low.length != dsize) {
+            String msg = MessageFormatter.arrayFormat("size mismatch({}, {}, {}, {}, {})", 
+                    new Object[] { dsize, open.length, close.length, high.length, low.length } );
+            logger.debug(msg);
+            throw new IllegalArgumentException(msg);
+        }
+        
+        TimeSeries<IntervalPrice> retval = new TimeSeries();
+        for (int i=0; i< dsize; i++) {
+            retval.add(d[i], new IntervalPrice(open[i], close[i], high[i], low[i]));
+        }
+        
+        return retval;
+    }
 
-	public void setOpen(/*@Real*/Double open) {
-		setValue(Type.Open, open);
-	}
+    public static double[] extractValues(final TimeSeries<IntervalPrice> ts, IntervalPrice.Type type)  {
+        double[] returnval = new double[ts.size()];
+        Iterator<IntervalPrice> it = ts.values().iterator();
+        
+        for (int i=0; i<ts.size(); i++) {
+            returnval[i] = it.next().value(type);
+        }
+        return returnval;
+    }
 
-	public void setValue(Type type, /*@Real*/Double value) {
-		typeValues.put(type, value);
-	}
+    public static TimeSeriesDouble extractComponent(final TimeSeries<IntervalPrice> ts, IntervalPrice.Type type) {
+        Date[] dates = ts.dates();
+        double[] values = extractValues(ts, type);
+        return new TimeSeriesDouble(dates, values);
+    }
 
-	public void setValues(/* @Real */Double open, /* @Real */Double close, /* @Real */Double high, /* @Real */
-	Double low) {
-		typeValues.put(Type.Open, open);
-		typeValues.put(Type.Close, close);
-		typeValues.put(Type.High, high);
-		typeValues.put(Type.Low, low);
-	}
+	
+	
+	//
+	// public inner classes
+	//
+
+    public enum Type {
+        Open, Close, High, Low
+    }
 
 }

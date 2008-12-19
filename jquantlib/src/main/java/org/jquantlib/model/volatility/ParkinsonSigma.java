@@ -49,8 +49,8 @@ public class ParkinsonSigma extends GarmanKlassAbstract {
 
 	@Override
 	protected double calculatePoint(final IntervalPrice p /* @ReadOnly */) {
-		double u = Math.log(p.getHigh() / p.getOpen());
-		double d = Math.log(p.getLow() / p.getOpen());
+		double u = Math.log(p.high() / p.open());
+		double d = Math.log(p.low() / p.open());
 		double r = (u - d) * (u - d) / 4.0 / Math.log(2.0);
 		return r;
 	}

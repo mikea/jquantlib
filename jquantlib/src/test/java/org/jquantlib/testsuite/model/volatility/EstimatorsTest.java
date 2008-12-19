@@ -41,11 +41,6 @@ package org.jquantlib.testsuite.model.volatility;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.model.volatility.ConstantEstimator;
 import org.jquantlib.model.volatility.SimpleLocalEstimator;
 import org.jquantlib.model.volatility.VolatilityCompositor;
@@ -58,6 +53,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EstimatorsTest {
 
@@ -68,16 +65,15 @@ public class EstimatorsTest {
 	public static void setUpBeforeClass() throws Exception {
 	    logger.info("Testing volatility model construction...");
 
-	    List<Date> dates = Arrays.asList (new Date[] 
-	                                       {
-		    		                           new DefaultDate(25, Month.MARCH, 2005),
-		    		                           new DefaultDate(29, Month.MARCH, 2005),
-		    		                           new DefaultDate(15, Month.MARCH, 2005),
-		    		                           new DefaultDate(21, Month.MARCH, 2005),
-		    		                           new DefaultDate(27, Month.MARCH, 2005)
-	                                       }
-	    		                         ); 
-	    double[] values =new double[]{1.2, 2.3, 0.3, 2.0, 2.5} ;
+	    Date[] dates = new Date[] {
+                           new DefaultDate(25, Month.MARCH, 2005),
+                           new DefaultDate(29, Month.MARCH, 2005),
+                           new DefaultDate(15, Month.MARCH, 2005),
+                           new DefaultDate(21, Month.MARCH, 2005),
+                           new DefaultDate(27, Month.MARCH, 2005) };
+	    
+	    double[] values =new double[]{1.2, 2.3, 0.3, 2.0, 2.5};
+	    
 	    ts = new TimeSeriesDouble(dates, values);
 	}
 

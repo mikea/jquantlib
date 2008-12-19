@@ -46,7 +46,7 @@
   
   <issueManagement>
     <system>SourceForge</system>
-    <url>http://sourceforge.net/tracker/?group_id=205911</url>
+    <url>${maven.bugs.url}</url>
   </issueManagement>
   
   <mailingLists>
@@ -145,6 +145,11 @@
       <groupId>org.apache.maven.wagon</groupId>
       <artifactId>wagon-webdav</artifactId>
       <version>1.0-beta-2</version>
+      </extension>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-ftp</artifactId>
+         <version>1.0-beta-4</version>
       </extension>
     </extensions>
     
@@ -513,7 +518,7 @@
     <repository>
       <id>${maven.deploy.repository.id}</id>
       <name>${maven.deploy.repository.name}</name>
-      <url>dav:${maven.deploy.repository.url}</url>
+      <url>${maven.deploy.repository.url}</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -717,7 +722,18 @@
             </reportSet>
           </reportSets>
         </plugin>
-            
+
+        <!--            
+		<plugin>
+		  <groupId>org.codehaus.mojo</groupId>
+		  <artifactId>clirr-maven-plugin</artifactId>
+		  <version>2.2.1</version>
+		  <configuration>
+		    <comparisonVersion>0.1.0-RC1</comparisonVersion>
+		  </configuration>
+		</plugin>
+		-->
+
         <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>javancss-maven-plugin</artifactId>
@@ -806,7 +822,7 @@
     <repository>
       <id>${maven.deploy.repository.id}</id>
       <name>${maven.deploy.repository.name}</name>
-      <url>dav:${maven.deploy.repository.url}</url>
+      <url>${maven.deploy.repository.url}</url>
       <layout>default</layout>
       <uniqueVersion>false</uniqueVersion>
     </repository>
@@ -814,7 +830,7 @@
     <site>
       <id>${maven.deploy.site.id}</id>
       <name>${maven.deploy.site.name}</name>
-      <url>dav:${maven.deploy.site.url}/${project.artifactId}/</url>
+      <url>${maven.deploy.site.url}/${project.artifactId}/</url>
     </site>
   </distributionManagement>
   
@@ -837,20 +853,31 @@
     <maven.jar.index>false</maven.jar.index>
     <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
 
-    <!-- deployment defaults -->
-    <maven.deploy.repository.id>jquantlib-external_free</maven.deploy.repository.id>
-    <maven.deploy.repository.name>JQuantLib External Free Repository</maven.deploy.repository.name>
-    <maven.deploy.site.id>jquantlib-site</maven.deploy.site.id>
-    <maven.deploy.site.name>JQuantLib Generated Site</maven.deploy.site.name>
-
-    <!-- application independent properties -->
+    <!-- application independent properties :: Source Code Management -->
     <maven.scm.root>jquant.svn.sourceforge.net/svnroot</maven.scm.root>
     <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
     <maven.scm.connection>scm:svn:http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.connection>
     <maven.scm.url>http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.url>
+    
+    <!-- application independent properties :: Issue Management -->
+    <maven.bugs.url>http://bugs.jquantlib.org/</maven.bugs.url>
+    <!-- 
+    <maven.bugs.url>http://sourceforge.net/tracker/?group_id=205911</maven.bugs.url>
+    -->
+    
+    <!-- application independent properties :: Continuous Integration -->
     <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
-    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos/external_free</maven.deploy.repository.url>
-    <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites</maven.deploy.site.url>
+    
+    <!-- application independent properties :: Distribution Management -->
+    <maven.deploy.repository.id>jquantlib-external_free</maven.deploy.repository.id>
+    <maven.deploy.repository.name>JQuantLib External Free Repository</maven.deploy.repository.name>
+    <maven.deploy.repository.url>ftp://ftp.jquantlib.org/maven2/repos/external_free</maven.deploy.repository.url>
+
+    <!-- application independent properties :: Generated Site -->
+    <maven.deploy.site.id>jquantlib-site</maven.deploy.site.id>
+    <maven.deploy.site.name>JQuantLib Generated Site</maven.deploy.site.name>
+    <maven.deploy.site.url>ftp://ftp.jquantlib.org/maven2/sites</maven.deploy.site.url>
+    
   </properties>
   
 </project>

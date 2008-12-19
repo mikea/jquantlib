@@ -52,9 +52,9 @@ public class GarmanKlassSigma5 extends GarmanKlassAbstract {
 
 	@Override
 	protected double calculatePoint(final IntervalPrice p) {
-		double u = Math.log(p.getHigh() / p.getOpen());
-		double d = Math.log(p.getLow() / p.getOpen());
-		double c = Math.log(p.getClose() / p.getOpen());
+		double u = Math.log(p.high() / p.open());
+		double d = Math.log(p.low() / p.open());
+		double c = Math.log(p.close() / p.open());
 		double r = 0.5 * (u - d) * (u - d) - (2.0 * Math.log(2.0) - 1.0) * c * c;
 		return r;
 	}

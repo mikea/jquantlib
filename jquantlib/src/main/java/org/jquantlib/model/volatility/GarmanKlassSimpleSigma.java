@@ -55,7 +55,7 @@ public class GarmanKlassSimpleSigma extends GarmanKlassAbstract {
 
 	@Override
 	protected double calculatePoint(final IntervalPrice p) {
-		double c = Math.log(p.getClose() / p.getOpen());
+		double c = Math.log(p.close() / p.open());
 		return c * c;
 	}
 

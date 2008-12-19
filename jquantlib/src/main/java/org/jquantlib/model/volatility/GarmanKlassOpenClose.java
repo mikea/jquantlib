@@ -92,8 +92,8 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
 		for (int i = 1; i < values.length; i++) {
 			cur = values[i];
 			prev = values[i - 1];
-			double c0 = Math.log(prev.getClose());
-			double o1 = Math.log(cur.getOpen());
+			double c0 = Math.log(prev.close());
+			double o1 = Math.log(cur.open());
 			double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * delegate.calculatePoint(cur) / (1 - this.f);
 			double s = Math.sqrt(sigma2 / delegate.getYearFraction());
 			retval.add(dates[i], s);

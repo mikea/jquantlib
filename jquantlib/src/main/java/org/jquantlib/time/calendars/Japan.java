@@ -42,9 +42,10 @@ import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
-//! Japanese calendar
 /**
- * ! Holidays:
+ * Japanese calendar
+ * <p>
+ * Holidays:
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
