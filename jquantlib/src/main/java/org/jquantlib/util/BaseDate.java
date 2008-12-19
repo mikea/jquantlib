@@ -24,6 +24,9 @@ package org.jquantlib.util;
 
 import java.util.List; //FIXME: performance
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Base implementation that can be shared by Date implementations.
  * 
@@ -31,6 +34,8 @@ import java.util.List; //FIXME: performance
  * 
  */
 public abstract class BaseDate implements Date, FunctionDate {
+	
+	private final static Logger logger = LoggerFactory.getLogger(BaseDate.class);
     
     public final int compareTo(final Date o) {
 		if (this.equals(o))

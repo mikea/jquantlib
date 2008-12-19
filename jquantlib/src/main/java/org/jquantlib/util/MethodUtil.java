@@ -24,6 +24,9 @@ package org.jquantlib.util;
 
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Srinivas Hasti
  * 
@@ -32,6 +35,8 @@ import java.lang.reflect.Method;
 // Richard: see my comments in PdeProxy
 @Deprecated
 public class MethodUtil { 
+	
+	private final static Logger logger = LoggerFactory.getLogger(MethodUtil.class);
 	
 	public static <T> T invoke(Object object, String method, Object... args) {
 		try {

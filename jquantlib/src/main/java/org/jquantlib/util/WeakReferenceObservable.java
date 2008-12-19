@@ -24,6 +24,9 @@ package org.jquantlib.util;
 
 import java.lang.ref.WeakReference;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Implementation of Observable that holds references to Observers as
  * WeakReferences.
@@ -50,6 +53,11 @@ import java.lang.ref.WeakReference;
  * @author Srinivas Hasti
  */
 public class WeakReferenceObservable extends DefaultObservable {
+	
+	//
+	// logger
+	//
+	private final static Logger logger = LoggerFactory.getLogger(WeakReferenceObservable.class);
 
     public WeakReferenceObservable(Observable observable) {
         super(observable);

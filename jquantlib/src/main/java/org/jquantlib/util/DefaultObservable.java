@@ -26,6 +26,9 @@ import java.util.Collections; //FIXME: performance
 import java.util.List; //FIXME: performance
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // --------------------------------------------------------
 // This class is based on the work done by Martin Fischer.
 // See references in JavaDoc
@@ -49,6 +52,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Srinivas Hasti
  */
 public class DefaultObservable implements Observable {
+	
+	//
+	// logger
+	//
+	private final static Logger logger = LoggerFactory.getLogger(DefaultObservable.class);
 
     //
     // private final fields

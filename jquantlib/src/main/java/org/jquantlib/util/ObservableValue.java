@@ -1,8 +1,18 @@
 package org.jquantlib.util;
 
-import java.util.List;
+import java.util.List; //FIXME: Performance -> fastutil
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class ObservableValue<T> implements Observable {
+	
+	//
+	// logger
+	//
+	
+	private final static Logger logger = LoggerFactory.getLogger(ObservableValue.class);
 
     //
     // private fields

@@ -22,7 +22,13 @@
 
 package org.jquantlib.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Pair<T1, T2> {
+	
+	private final static Logger logger = LoggerFactory.getLogger(Pair.class);
+	
 	private T1 first;
 	private T2 second;
 	

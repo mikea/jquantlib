@@ -50,6 +50,9 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Date and time related classes, typedefs and enumerations
  * 
@@ -71,6 +74,8 @@ import org.jquantlib.time.Weekday;
  */
 //TODO: OSGi
 public class DefaultDate extends BaseDate {
+	
+	private final static Logger logger = LoggerFactory.getLogger(DefaultDate.class);
 
     private/* @NonNegative */int value;
 

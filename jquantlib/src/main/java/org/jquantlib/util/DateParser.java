@@ -22,6 +22,9 @@
 
 package org.jquantlib.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Helper class to parse Strings to Date
@@ -30,6 +33,8 @@ package org.jquantlib.util;
  * 
  */
 public class DateParser {
+	
+	private final static Logger logger = LoggerFactory.getLogger(DateParser.class);
 
     /**
      * Convert ISO format strings to Date. Ex: 2008-03-31
