@@ -88,6 +88,7 @@ import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
+import org.jquantlib.pricingengines.vanilla.IntegralEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
@@ -203,9 +204,8 @@ public class EquityOptions {
 
         // Integral
         method = "Integral";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(new IntegralEngine());
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), inline Double.NaN, Double.NaN } );
+        europeanOption.setPricingEngine(new IntegralEngine());
+		System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, Double.NaN });
 
         // Finite differences
         method = "Finite differences";
