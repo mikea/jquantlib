@@ -137,8 +137,8 @@ final class CanadaSettlementCalendar extends WesternCalendar {
 				|| ((d >= 15 && d <= 21) && w == MONDAY && m == FEBRUARY && y >= 2008)
 				// Good Friday
 				|| (dd == em - 3)
-				// Easter Monday
-				|| (dd == em)
+				// Easter Monday Not listed as a closure day in Canada
+				//|| (dd == em)
 				// The Monday on or preceding 24 May (Victoria Day)
 				|| (d > 17 && d <= 24 && w == MONDAY && m == MAY)
 				// July 1st, possibly moved to Monday (Canada Day)
@@ -179,8 +179,8 @@ final class TsxCalendar extends WesternCalendar {
 				|| ((d >= 15 && d <= 21) && w == MONDAY && m == FEBRUARY && y >= 2008)
 				// Good Friday
 				|| (dd == em - 3)
-				// Easter Monday
-				|| (dd == em)
+				// Easter Monday Not listed as a closure day in Canada
+				//|| (dd == em)
 				// The Monday on or preceding 24 May (Victoria Day)
 				|| (d > 17 && d <= 24 && w == MONDAY && m == MAY)
 				// July 1st, possibly moved to Monday (Canada Day)

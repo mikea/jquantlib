@@ -73,7 +73,6 @@ public class CanadaCalendarTest {
         
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(24,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,AUGUST,year));
@@ -94,7 +93,6 @@ public class CanadaCalendarTest {
         logger.info("Testing " + Canada.Market.SETTLEMENT + " holiday list for the year " + year + "...");
         
         expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,year));
         expectedHol.add(DateFactory.getFactory().getDate(23,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
@@ -116,7 +114,6 @@ public class CanadaCalendarTest {
         
         expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(22,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(3,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(7,AUGUST,year));
@@ -138,7 +135,6 @@ public class CanadaCalendarTest {
         
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(21,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(6,AUGUST,year));
@@ -161,7 +157,6 @@ public class CanadaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(18,FEBRUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));
         expectedHol.add(DateFactory.getFactory().getDate(19,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(4,AUGUST,year));
@@ -184,7 +179,6 @@ public class CanadaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(16,FEBRUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(10,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(18,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(3,AUGUST,year));
@@ -207,7 +201,6 @@ public class CanadaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(15,FEBRUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(5,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(24,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,AUGUST,year));
@@ -229,7 +222,6 @@ public class CanadaCalendarTest {
         
         expectedHol.add(DateFactory.getFactory().getDate(21,FEBRUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(23,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
@@ -252,7 +244,6 @@ public class CanadaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(20,FEBRUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(21,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(6,AUGUST,year));
@@ -274,7 +265,6 @@ public class CanadaCalendarTest {
 
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(24,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,AUGUST,year));
@@ -295,7 +285,6 @@ public class CanadaCalendarTest {
         logger.info("Testing " + Canada.Market.TSX + " holiday list for the year " + year + "...");
  
         expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,year));
         expectedHol.add(DateFactory.getFactory().getDate(23,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
@@ -317,7 +306,6 @@ public class CanadaCalendarTest {
 
         expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(22,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(3,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(7,AUGUST,year));
@@ -339,7 +327,6 @@ public class CanadaCalendarTest {
 
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(21,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(6,AUGUST,year));
@@ -362,7 +349,6 @@ public class CanadaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(18,FEBRUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));
         expectedHol.add(DateFactory.getFactory().getDate(19,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(4,AUGUST,year));
@@ -385,7 +371,6 @@ public class CanadaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(16,FEBRUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(10,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(18,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(3,AUGUST,year));
@@ -408,7 +393,6 @@ public class CanadaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(15,FEBRUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(5,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(24,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,AUGUST,year));
@@ -430,7 +414,6 @@ public class CanadaCalendarTest {
 
         expectedHol.add(DateFactory.getFactory().getDate(21,FEBRUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(23,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
@@ -453,7 +436,6 @@ public class CanadaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year)); 
         expectedHol.add(DateFactory.getFactory().getDate(20,FEBRUARY,year));
         expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
         expectedHol.add(DateFactory.getFactory().getDate(21,MAY,year));
         expectedHol.add(DateFactory.getFactory().getDate(2,JULY,year));
         expectedHol.add(DateFactory.getFactory().getDate(6,AUGUST,year));
