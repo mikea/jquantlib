@@ -55,7 +55,7 @@
  */
 
 
-package org.jquantlib.testsuite.pricingengines.vanilla;
+package org.jquantlib.testsuite.instruments;
 
 import junit.framework.TestCase;
 

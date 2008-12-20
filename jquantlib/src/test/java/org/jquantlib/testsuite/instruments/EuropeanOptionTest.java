@@ -46,7 +46,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.EuropeanExercise;
@@ -58,8 +57,10 @@ import org.jquantlib.instruments.GapPayoff;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
+import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.pricingengines.vanilla.IntegralEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
@@ -146,26 +147,23 @@ public class EuropeanOptionTest {
 
 	
 	
-//	
-//	private VanillaOption makeOption(
-//							final StrikedTypePayoff payoff,
-//							final Exercise exercise,
-//							final Quote u,
-//							final YieldTermStructure q,
-//							final YieldTermStructure r,
-//							final BlackVolTermStructure vol,
-//							final EngineType engineType,
-//							int  binomialSteps,
-//							int samples) {
-//
-//	    PricingEngine engine = null;
-//	    
-//	    switch (engineType) {
-//	      case Analytic:
-//	        engine = new AnalyticEuropeanEngine();
-//	        break;
-	        
-	        
+	
+	private VanillaOption makeOption(
+							final StrikedTypePayoff payoff,
+							final Exercise exercise,
+							final Handle<SimpleQuote> u,
+							final Handle<YieldTermStructure> q,
+							final Handle<YieldTermStructure> r,
+							final Handle<BlackVolTermStructure> vol,
+							final EngineType engineType
+							/* , final int  binomialSteps, final int samples */ ) {
+
+	    PricingEngine engine = null;
+	    
+	    switch (engineType) {
+	      case Analytic:
+	        engine = new AnalyticEuropeanEngine();
+	        break;
 //	      case JR:
 //	        engine = boost::shared_ptr<PricingEngine>(
 //	                new BinomialVanillaEngine<JarrowRudd>(binomialSteps));
@@ -198,10 +196,9 @@ public class EuropeanOptionTest {
 //	        engine = boost::shared_ptr<PricingEngine>(
 //	                new FDEuropeanEngine(binomialSteps,samples));
 //	        break;
-//	      case Integral:
-//	          engine = boost::shared_ptr<PricingEngine>(
-//	                new IntegralEngine());
-//	          break;
+	      case Integral:
+	          engine = new IntegralEngine();
+	          break;
 //	      case PseudoMonteCarlo:
 //	        engine = MakeMCEuropeanEngine<PseudoRandom>().withSteps(1)
 //	                                                     .withSamples(samples)
@@ -211,20 +208,18 @@ public class EuropeanOptionTest {
 //	        engine = MakeMCEuropeanEngine<LowDiscrepancy>().withSteps(1)
 //	                                                       .withSamples(samples);
 //	        break;
-	
-	
-//	      default:
-//	        throw new UnsupportedOperationException("unknown engine type: "+engineType);
-//	    }
-//
-//	    StochasticProcess stochProcess = new BlackScholesMertonProcess(
-//	    										/*Quote*/ u,
-//	    										/*YieldTermStructure*/ q,
-//	    										/*YieldTermStructure*/ r,
-//	    										/*BlackVolTermStructure*/ vol);
-//
-//	    return new EuropeanOption(stochProcess, payoff, exercise, engine);
-//	}
+	      default:
+	        throw new UnsupportedOperationException("unknown engine type: "+engineType);
+	    }
+
+	    StochasticProcess stochProcess = new BlackScholesMertonProcess(
+	    										/*Quote*/ u,
+	    										/*YieldTermStructure*/ q,
+	    										/*YieldTermStructure*/ r,
+	    										/*BlackVolTermStructure*/ vol);
+
+	    return new EuropeanOption(stochProcess, payoff, exercise, engine);
+	}
 
 	
 	
@@ -677,8 +672,7 @@ public class EuropeanOptionTest {
         logger.info("Testing analytic European option greeks...");
 
 
-        Map<String,Double> calculated, expected, tolerance;
-        tolerance = new HashMap<String, Double>();
+        final Map<String,Double> tolerance = new HashMap<String, Double>();
         tolerance.put("delta", 1.0e-5);
         tolerance.put("gamma", 1.0e-5);
 //      tolerance.put("theta", 1.0e-5);
@@ -686,21 +680,21 @@ public class EuropeanOptionTest {
         tolerance.put("divRho", 1.0e-5);
         tolerance.put("vega",  1.0e-5);
 
-        expected = new HashMap<String, Double>();
-        calculated = new HashMap<String, Double>();
+        final Map<String,Double> expected = new HashMap<String, Double>();
+        final Map<String,Double> calculated = new HashMap<String, Double>();
         
-        Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
-        double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
-        double underlyings[] = { 100.0 };
-        double qRates[] = { 0.04, 0.05, 0.06 };
-        double rRates[] = { 0.01, 0.05, 0.15 };
-        double residualTimes[] = { 1.0, 2.0 };
-        double vols[] = { 0.11, 0.50, 1.20 };
+        final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        final double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
+        final double underlyings[] = { 100.0 };
+        final double qRates[] = { 0.04, 0.05, 0.06 };
+        final double rRates[] = { 0.01, 0.05, 0.15 };
+        final double residualTimes[] = { 1.0, 2.0 };
+        final double vols[] = { 0.11, 0.50, 1.20 };
 
-        DayCounter dc = Actual360.getDayCounter();
-        Date today = DateFactory.getFactory().getTodaysDate();
+        final DayCounter dc = Actual360.getDayCounter();
+        final Date today = DateFactory.getFactory().getTodaysDate();
         //Settings::instance().evaluationDate() = today;
-        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);//FIXME is this correct?
+        //Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today); //FIXME is this correct?
         
 //      boost::shared_ptr<SimpleQuote> spot(new SimpleQuote(0.0));
 //      boost::shared_ptr<SimpleQuote> qRate(new SimpleQuote(0.0));
@@ -710,13 +704,13 @@ public class EuropeanOptionTest {
 //      boost::shared_ptr<SimpleQuote> vol(new SimpleQuote(0.0));
 //      Handle<BlackVolTermStructure> volTS(flatVol(vol, dc));
 
-        Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
-        Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
-        Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
+        final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
+        final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+        final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
 
 
         StrikedTypePayoff payoff=null;
@@ -1062,141 +1056,143 @@ public class EuropeanOptionTest {
 //
 //	QL_BEGIN_TEST_LOCALS(EuropeanOptionTest)
 //
-//	void testEngineConsistency(EngineType engine,
-//	                           Size binomialSteps,
-//	                           Size samples,
-//	                           std::map<std::string,Real> tolerance,
-//	                           bool testGreeks = false) {
-//
-//	    QL_TEST_START_TIMING
-//
-//	    std::map<std::string,Real> calculated, expected;
-//
-//	    // test options
-//	    Option.Type.Type types[] = { Option.Type.Call, Option.Type.Put };
-//	    Real strikes[] = { 75.0, 100.0, 125.0 };
-//	    Integer lengths[] = { 1 };
-//
-//	    // test data
-//	    Real underlyings[] = { 100.0 };
-//	    Rate qRates[] = { 0.00, 0.05 };
-//	    Rate rRates[] = { 0.01, 0.05, 0.15 };
-//	    Volatility vols[] = { 0.11, 0.50, 1.20 };
-//
-//	    DayCounter dc = Actual360();
-//	    Date today = Date::todaysDate();
-//
-//	    boost::shared_ptr<SimpleQuote> spot(new SimpleQuote(0.0));
-//	    boost::shared_ptr<SimpleQuote> vol(new SimpleQuote(0.0));
-//	    boost::shared_ptr<BlackVolTermStructure> volTS = flatVol(today,vol,dc);
-//	    boost::shared_ptr<SimpleQuote> qRate(new SimpleQuote(0.0));
-//	    boost::shared_ptr<YieldTermStructure> qTS = flatRate(today,qRate,dc);
-//	    boost::shared_ptr<SimpleQuote> rRate(new SimpleQuote(0.0));
-//	    boost::shared_ptr<YieldTermStructure> rTS = flatRate(today,rRate,dc);
-//
-//	    for (Size i=0; i<LENGTH(types); i++) {
-//	        for (Size j=0; j<LENGTH(strikes); j++) {
-//	            for (Size k=0; k<LENGTH(lengths); k++) {
-//	              Date exDate = today + lengths[k]*360;
-//	              boost::shared_ptr<Exercise> exercise(
-//	                                                new EuropeanExercise(exDate));
-//	              boost::shared_ptr<StrikedTypePayoff> payoff(new
-//	                  PlainVanillaPayoff(types[i], strikes[j]));
-//	              // reference option
-//	              boost::shared_ptr<VanillaOption> refOption =
-//	                  makeOption(payoff, exercise, spot, qTS, rTS, volTS,
-//	                             Analytic, Null<Size>(), Null<Size>());
-//	              // option to check
-//	              boost::shared_ptr<VanillaOption> option =
-//	                  makeOption(payoff, exercise, spot, qTS, rTS, volTS,
-//	                             engine, binomialSteps, samples);
-//
-//	              for (Size l=0; l<LENGTH(underlyings); l++) {
-//	                for (Size m=0; m<LENGTH(qRates); m++) {
-//	                  for (Size n=0; n<LENGTH(rRates); n++) {
-//	                    for (Size p=0; p<LENGTH(vols); p++) {
-//	                      Real u = underlyings[l];
-//	                      Rate q = qRates[m],
-//	                           r = rRates[n];
-//	                      Volatility v = vols[p];
-//	                      spot->setValue(u);
-//	                      qRate->setValue(q);
-//	                      rRate->setValue(r);
-//	                      vol->setValue(v);
-//
-//	                      expected.clear();
-//	                      calculated.clear();
-//
-//	                      expected["value"] = refOption->NPV();
-//	                      calculated["value"] = option->NPV();
-//
-//	                      if (testGreeks && option->NPV() > spot->value()*1.0e-5) {
-//	                           expected["delta"] = refOption->delta();
-//	                           expected["gamma"] = refOption->gamma();
-//	                           expected["theta"] = refOption->theta();
-//	                           calculated["delta"] = option->delta();
-//	                           calculated["gamma"] = option->gamma();
-//	                           calculated["theta"] = option->theta();
-//	                      }
-//	                      std::map<std::string,Real>::iterator it;
-//	                      for (it = calculated.begin();
-//	                           it != calculated.end(); ++it) {
-//	                          std::string greek = it->first;
-//	                          Real expct = expected  [greek],
-//	                               calcl = calculated[greek],
-//	                               tol   = tolerance [greek];
-//	                          Real error = relativeError(expct,calcl,u);
-//	                          if (error > tol) {
-//	                              REPORT_FAILURE(greek, payoff, exercise,
-//	                                             u, q, r, today, v,
-//	                                             expct, calcl, error, tol);
-//	                          }
-//	                      }
-//	                    }
-//	                  }
-//	                }
-//	              }
-//	            }
-//	        }
-//	    }
-//	}
-//
-//	QL_END_TEST_LOCALS(EuropeanOptionTest)
+
+	private void testEngineConsistency(final EngineType engine,
+			final int binomialSteps, final int samples,
+			final Map<String, Double> tolerance) {
+
+		testEngineConsistency(engine, binomialSteps, samples, tolerance, false);
+	}
+
+	private void testEngineConsistency(final EngineType engine,
+			final int binomialSteps, final int samples,
+			final Map<String, Double> tolerance, final boolean testGreeks) {
+
+		// QL_TEST_START_TIMING
+
+		final Map<String, Double> calculated = new HashMap<String, Double>();
+		final Map<String, Double> expected = new HashMap<String, Double>();
+
+		// test options
+		final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+		final double strikes[] = { 75.0, 100.0, 125.0 };
+		final int lengths[] = { 1 };
+
+		// test data
+		final double underlyings[] = { 100.0 };
+		final double /* @Rate */qRates[] = { 0.00, 0.05 };
+		final double /* @Rate */rRates[] = { 0.01, 0.05, 0.15 };
+		final double /* @Volatility */vols[] = { 0.11, 0.50, 1.20 };
+
+		final DayCounter dc = Actual360.getDayCounter();
+
+		final Date today = DateFactory.getFactory().getTodaysDate();
+
+		final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+		final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+		final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
+		final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+		final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+		final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+		final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
+
+		for (int i = 0; i < types.length; i++) {
+			for (int j = 0; j < strikes.length; j++) {
+				for (int k = 0; k < lengths.length; k++) {
+
+					Date exDate = today.getDateAfter(timeToDays(lengths[k]));
+					Exercise exercise = new EuropeanExercise(exDate);
+
+					StrikedTypePayoff payoff = new PlainVanillaPayoff(types[i], strikes[j]);
+
+					// reference option
+					VanillaOption refOption = makeOption(payoff, exercise, spot, qTS, rTS, volTS, EngineType.Analytic
+					/* , Constants.QL_NULL_INTEGER, Constants.QL_NULL_INTEGER */);
+					// option to check
+					VanillaOption option = makeOption(payoff, exercise, spot, qTS, rTS, volTS, engine
+					/* , binomialSteps, samples */);
+
+					for (int l = 0; l < underlyings.length; l++) {
+						for (int m = 0; m < qRates.length; m++) {
+							for (int n = 0; n < rRates.length; n++) {
+								for (int p = 0; p < vols.length; p++) {
+									double u = underlyings[l];
+									double /* @Rate */q = qRates[m], r = rRates[n];
+									double /* @Volatility */v = vols[p];
+									spot.getLink().setValue(u);
+									qRate.getLink().setValue(q);
+									rRate.getLink().setValue(r);
+									vol.getLink().setValue(v);
+
+									expected.clear();
+									calculated.clear();
+
+									expected.put("value", refOption.getNPV());
+									calculated.put("value", option.getNPV());
+
+									if (testGreeks && option.getNPV() > spot.getLink().evaluate() * 1.0e-5) {
+										expected.put("delta", refOption.delta());
+										expected.put("gamma", refOption.gamma());
+										expected.put("theta", refOption.theta());
+										calculated.put("delta", option.delta());
+										calculated.put("gamma", option.gamma());
+										calculated.put("theta", option.theta());
+									}
+
+									for (Entry<String, Double> entry : calculated.entrySet()) {
+										String greek = entry.getKey();
+										double expct = expected.get(greek), calcl = calculated.get(greek), tol = tolerance.get(greek);
+										double error = Utilities.relativeError(expct, calcl, u);
+										if (error > tol) {
+											REPORT_FAILURE(greek, payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//
+// QL_END_TEST_LOCALS(EuropeanOptionTest)
 //
 //
 //	
 //	
-//	//
-//	//
-//	//
+// //
+// //
+// //
 //	
 //	
 //	
-//	void EuropeanOptionTest::testJRBinomialEngines() {
+// void EuropeanOptionTest::testJRBinomialEngines() {
 //
-//	    BOOST_MESSAGE("Testing JR binomial European engines "
-//	                  "against analytic results...");
+// BOOST_MESSAGE("Testing JR binomial European engines "
+// "against analytic results...");
 //
-//	    EngineType engine = JR;
-//	    Size steps = 251;
-//	    Size samples = Null<Size>();
-//	    std::map<std::string,Real> relativeTol;
-//	    relativeTol["value"] = 0.002;
-//	    relativeTol["delta"] = 1.0e-3;
-//	    relativeTol["gamma"] = 1.0e-4;
-//	    relativeTol["theta"] = 0.03;
-//	    testEngineConsistency(engine,steps,samples,relativeTol,true);
-//	}
+// EngineType engine = JR;
+// Size steps = 251;
+// Size samples = Null<Size>();
+// std::map<std::string,Real> relativeTol;
+// relativeTol["value"] = 0.002;
+// relativeTol["delta"] = 1.0e-3;
+// relativeTol["gamma"] = 1.0e-4;
+// relativeTol["theta"] = 0.03;
+// testEngineConsistency(engine,steps,samples,relativeTol,true);
+// }
 //
-//	void EuropeanOptionTest::testCRRBinomialEngines() {
+// void EuropeanOptionTest::testCRRBinomialEngines() {
 //
-//	    BOOST_MESSAGE("Testing CRR binomial European engines "
-//	                  "against analytic results...");
+// BOOST_MESSAGE("Testing CRR binomial European engines "
+// "against analytic results...");
 //
-//	    EngineType engine = CRR;
-//	    Size steps = 501;
-//	    Size samples = Null<Size>();
-//	    std::map<std::string,Real> relativeTol;
+// EngineType engine = CRR;
+// Size steps = 501;
+// Size samples = Null<Size>();
+// std::map<std::string,Real> relativeTol;
 //	    relativeTol["value"] = 0.02;
 //	    relativeTol["delta"] = 1.0e-3;
 //	    relativeTol["gamma"] = 1.0e-4;
@@ -1299,19 +1295,22 @@ public class EuropeanOptionTest {
 //	    relativeTol["theta"] = 1.0e-4;
 //	    testEngineConsistency(engine,timeSteps,gridPoints,relativeTol,true);
 //	}
-//
-//	void EuropeanOptionTest::testIntegralEngines() {
-//
-//	    BOOST_MESSAGE("Testing integral engines "
-//	                  "against analytic results...");
-//
-//	    EngineType engine = Integral;
-//	    Size timeSteps = 300;
-//	    Size gridPoints = 300;
-//	    std::map<std::string,Real> relativeTol;
-//	    relativeTol["value"] = 0.0001;
-//	    testEngineConsistency(engine,timeSteps,gridPoints,relativeTol);
-//	}
+
+    @Test
+	public void testIntegralEngines() {
+
+    	logger.info("Testing integral engines against analytic results...");
+	        
+
+	    final EngineType engine = EngineType.Integral;
+	    final int timeSteps = 300;
+	    final int gridPoints = 300;
+	    final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
+	    relativeTol.put("value", 0.0001);
+	    testEngineConsistency(engine, timeSteps, gridPoints, relativeTol);
+	}
+    
+    
 //
 //	void EuropeanOptionTest::testMcEngines() {
 //

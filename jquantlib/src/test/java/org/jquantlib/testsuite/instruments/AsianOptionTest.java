@@ -38,7 +38,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.testsuite.pricingengines.asian;
+package org.jquantlib.testsuite.instruments;
 
 import java.util.ArrayList;
 import java.util.HashMap;
