@@ -38,10 +38,18 @@ public abstract class BaseDate implements Date, FunctionDate {
 	private final static Logger logger = LoggerFactory.getLogger(BaseDate.class);
     
     public final int compareTo(final Date o) {
-		if (this.equals(o))
+		if (this.equals(o)){
+			logger.debug(o.toString());
+			logger.debug(this.toString());
 			return 0;
-		if (this.le(o))
+		}
+		if (this.le(o)) {
+			logger.debug(o.toString());
+			logger.debug(this.toString());
 			return -1;
+		}
+		logger.debug(o.toString());
+		logger.debug(this.toString());
 		return 1;
 	}
 

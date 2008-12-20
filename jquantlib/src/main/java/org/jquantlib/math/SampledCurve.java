@@ -43,6 +43,7 @@ package org.jquantlib.math;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,26 +120,25 @@ public class SampledCurve {
     }
 	
 	// Translation by Dominik
-	/*
     public void regrid(final Array new_grid) {
     	CubicSpline priceSpline = new CubicSpline(); // this line is definitely wrong
 
-        priceSpline.reload(); // class cubicSplineImpl ?
+        // priceSpline.reload(); // class cubicSplineImpl ?
         Array newValues = new Array(new_grid.size());
         
         double val;
         double grid;
         
-        for (val = newValues.at(0), grid = new_grid.at(new_grid.size()-1) ;
+        for (val = newValues.at(0), grid = new_grid.at(0);
              grid != new_grid.at(new_grid.size()-1);
              val++, grid++) {
-             val = priceSpline(grid, true);
+            // val = priceSpline(grid, true);
         }
         
         values_.swap(newValues);
         grid_ = new_grid;
     }
-    /* 
+    
    
    // QuantLib:
    /*

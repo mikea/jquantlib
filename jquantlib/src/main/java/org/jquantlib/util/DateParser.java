@@ -47,6 +47,7 @@ public class DateParser {
             int year = Integer.parseInt(str.substring(0, 4));
             int month = Integer.parseInt(str.substring(5, 7));
             int day = Integer.parseInt(str.substring(8, 10));
+            logger.debug(DateFactory.getFactory().getDate(day, Month.valueOf(month), year).toString());
             return DateFactory.getFactory().getDate(day, Month.valueOf(month), year);
         } else {
         	throw new IllegalArgumentException("Invalid format " + str);	
@@ -86,6 +87,7 @@ public class DateParser {
                     y += 2000;
             }
         }
+        logger.debug(DateFactory.getFactory().getDate(d, Month.valueOf(m), y).toString());
         return DateFactory.getFactory().getDate(d, Month.valueOf(m), y);
     }
 }

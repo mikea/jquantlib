@@ -261,6 +261,7 @@ public class DefaultDate extends BaseDate {
         if (!(d > 0 && d <= len))
             throw new ArithmeticException("day outside month (" + m + ") day-range [1," + len + "]");
         final int result = d + offset + getYearOffset(y);
+        logger.debug(String.valueOf(result));
         return result;
     }
 
