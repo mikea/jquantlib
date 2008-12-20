@@ -23,10 +23,12 @@
 
 package org.jquantlib.time;
 
-import java.util.ArrayList; // FIXME: performance
-import java.util.Collections; // FIXME: performance
-import java.util.Iterator; // FIXME: performance
-import java.util.List; // FIXME: performance
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
@@ -37,22 +39,22 @@ import org.jquantlib.util.DateFactory;
  * 
  */
 public class Schedule {
-    private boolean fullInterface;
-    private Period tenor;
-    private Calendar calendar;
-    private BusinessDayConvention convention;
-    private BusinessDayConvention terminationDateConvention;
-    private DateGenerationRule rule;
-    private boolean endOfMonth;
-    private Date firstDate;
-    private Date nextToLastDate;
-    private boolean finalIsRegular;
-    private List<Date> dates;
-    private List<Boolean> isRegular;
+    private final boolean fullInterface;
+    private final Period tenor;
+    private final Calendar calendar;
+    private final BusinessDayConvention convention;
+    private final BusinessDayConvention terminationDateConvention;
+    private final DateGenerationRule rule;
+    private final boolean endOfMonth;
+    private final Date firstDate;
+    private final Date nextToLastDate;
+    private final boolean finalIsRegular;
+    private final List<Date> dates;
+    private final List<Boolean> isRegular;
 
-    private Schedule(Period tenor, Calendar calendar, BusinessDayConvention convention,
-            BusinessDayConvention terminationDateConvention, DateGenerationRule rule, boolean endOfMonth, Date firstDate,
-            Date nextToLastDate, List<Date> dates, boolean finalIsRegular, boolean fullInterface) {
+    private Schedule(final Period tenor, final Calendar calendar, final BusinessDayConvention convention,
+            final BusinessDayConvention terminationDateConvention, final DateGenerationRule rule, final boolean endOfMonth, final Date firstDate,
+            final Date nextToLastDate, final List<Date> dates, final boolean finalIsRegular, final boolean fullInterface) {
         this.tenor = tenor;
         this.calendar = calendar;
         this.convention = convention;
@@ -61,35 +63,36 @@ public class Schedule {
         this.endOfMonth = endOfMonth;
         this.firstDate = firstDate;
         this.nextToLastDate = nextToLastDate;
-        this.dates = dates;
         this.finalIsRegular = finalIsRegular;
         this.fullInterface = fullInterface;
-        if (this.dates == null) {
-            this.dates = new ArrayList<Date>();
+        if (dates == null) {
+            this.dates = new ObjectArrayList<Date>();
+        } else {
+            this.dates = dates;
         }
-        if (this.isRegular == null) {
-            this.isRegular = new ArrayList<Boolean>();
-        }
+        this.isRegular = new BooleanArrayList();
     }
 
-    public Schedule(List<Date> dates, Calendar calendar, BusinessDayConvention convention) {
-        this(new Period(), calendar, convention, convention, DateGenerationRule.FORWARD, false, DateFactory.getFactory()
-                .getTodaysDate(), DateFactory.getFactory().getTodaysDate(), dates, true, false);
+    public Schedule(final List<Date> dates, final Calendar calendar, final BusinessDayConvention convention) {
+        this(new Period(), calendar, convention, convention, DateGenerationRule.FORWARD, false, 
+        		DateFactory.getFactory().getTodaysDate(), DateFactory.getFactory().getTodaysDate(), dates, true, false);
 
     }
 
-    public Schedule(Date effectiveDate, Date terminationDate, Period tenor, Calendar calendar, BusinessDayConvention convention,
-            BusinessDayConvention terminationDateConvention, DateGenerationRule rule, boolean endOfMonth, Date firstDate,
-            Date nextToLastDate) {
-        this(tenor, calendar, convention, terminationDateConvention, rule, endOfMonth, firstDate, nextToLastDate, null, true, true);
-        if (effectiveDate == Date.NULL_DATE || effectiveDate == null)
-            throw new IllegalArgumentException("Effective date is null");
-        if (terminationDate == Date.NULL_DATE || terminationDate == null)
-            throw new IllegalArgumentException("TerminationDate date is null");
+    public Schedule(final Date effectiveDate, final Date terminationDate, final Period periodTenor, final Calendar calendar, final BusinessDayConvention businessDayConvention,
+            final BusinessDayConvention terminationDateConvention, final DateGenerationRule dateGenerationRule, final boolean endOfMonth, final Date firstDate,
+            final Date nextToLastDate) {
+    	
+        this(periodTenor, calendar, businessDayConvention, terminationDateConvention, dateGenerationRule, endOfMonth, firstDate, nextToLastDate, null, true, true);
+        
+        if (effectiveDate == Date.NULL_DATE || effectiveDate == null) throw new IllegalArgumentException("Effective date is null");
+        if (terminationDate == Date.NULL_DATE || terminationDate == null) throw new IllegalArgumentException("TerminationDate date is null");
+        if (effectiveDate.ge(terminationDate)) throw new IllegalArgumentException("Effective date later than or equal to termination date ");
 
-        if (effectiveDate.ge(terminationDate))
-            throw new IllegalArgumentException("Effective date later than or equal to termination date ");
-
+        DateGenerationRule rule = dateGenerationRule;
+        Period tenor = periodTenor;
+        BusinessDayConvention convention = businessDayConvention;
+        
         if (tenor.length() == 0)
             rule = DateGenerationRule.ZERO;
         else if (tenor.length() < 0)
@@ -262,12 +265,9 @@ public class Schedule {
 
     }
 
-    public Schedule() {
-    }
-
     public Iterator<Date> getDatesAfter(Date date) {
         if (dates.size() > 0) {
-            List<Date> ldates = new ArrayList<Date>();
+            List<Date> ldates = new ObjectArrayList<Date>();
             int index = -1;
             for (int i = 0; i < dates.size(); i++) {
                 Date d = dates.get(i);

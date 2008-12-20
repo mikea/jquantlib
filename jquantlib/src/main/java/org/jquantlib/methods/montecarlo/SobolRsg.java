@@ -24,14 +24,13 @@ package org.jquantlib.methods.montecarlo;
 
 
 import it.unimi.dsi.fastutil.doubles.DoubleList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 import org.jquantlib.math.randomnumbers.RandomSequenceGeneratorIntf;
-import org.jquantlib.util.reflect.TypeToken;
 
 /**
  *  Sobol low-discrepancy sequence generator
@@ -1017,8 +1016,8 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements RandomSequen
        	this.integerSequence_ = new LongArrayList(dimensionality_);
     	
         // TODO: directionIntegers_(dimensionality,std::vector<unsigned long>(bits_))
-    	ArrayList<Long> bits = new ArrayList<Long>(bits_);
-    	ArrayList<Long> dimLongArray = new ArrayList<Long>(dimensionality_);
+    	List<Long> bits = new LongArrayList(bits_);
+    	List<Long> dimLongArray = new LongArrayList(dimensionality_);
     
 
     
@@ -1036,10 +1035,10 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements RandomSequen
         // and degree of the k-th primitive polynomial
         
         // std::vector<unsigned int> degree(dimensionality_);
-       ArrayList<Integer> degree = new ArrayList(dimensionality_);
+        List<Integer> degree = new IntArrayList(dimensionality_);
         
         // std::vector<long> ppmt(dimensionality_);
-        ArrayList<Long> ppmt = new ArrayList(dimensionality_);
+        List<Long> ppmt = new LongArrayList(dimensionality_);
         
         // degree 0 is not used
         ppmt.add(new Long(0));

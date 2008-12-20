@@ -21,9 +21,10 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import java.util.ArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleOpenHashSet;
+
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,23 +36,23 @@ import org.jquantlib.util.reflect.TypeToken;
  * 
  */
 public class FiniteDifferenceModel<T extends MixedScheme<Operator>> {
-    private T evolver;
-    private List<Double> stoppingTimes;
+    private final T evolver;
+    private final List<Double> stoppingTimes;
 
-    public FiniteDifferenceModel(Operator L, List<BoundaryCondition> bcs, List<Double> stoppingTimes) {
+    public FiniteDifferenceModel(final Operator L, final List<BoundaryCondition> bcs, final List<Double> stoppingTimes) {
         this.evolver = getEvolver(L, bcs);
         // This takes care of removing duplicates
-        Set<Double> times = new HashSet<Double>(stoppingTimes);
-        stoppingTimes = new ArrayList<Double>(times);
+        Set<Double> times = new DoubleOpenHashSet(stoppingTimes);
+        this.stoppingTimes = new DoubleArrayList(times);
         // Now sort
         Collections.sort(stoppingTimes);
     }
 
-    public FiniteDifferenceModel(T evolver, List<Double> stoppingTimes) {
+    public FiniteDifferenceModel(final T evolver, final List<Double> stoppingTimes) {
         this.evolver = evolver;
         // This takes care of removing duplicates
-        Set<Double> times = new HashSet<Double>(stoppingTimes);
-        stoppingTimes = new ArrayList<Double>(times);
+        Set<Double> times = new DoubleOpenHashSet(stoppingTimes);
+        this.stoppingTimes = new DoubleArrayList(times);
         // Now sort
         Collections.sort(stoppingTimes);
     }
@@ -60,9 +61,7 @@ public class FiniteDifferenceModel<T extends MixedScheme<Operator>> {
         return evolver;
     }
 
-    public void rollback(Array a,
-    /* Time */double from,
-    /* Time */double to, int steps) {
+    public void rollback(final Array a, final /*@Time*/ double from, final /*@Time*/double to, final int steps) {
         rollbackImpl(a, from, to, steps, null);
     }
 
@@ -70,16 +69,11 @@ public class FiniteDifferenceModel<T extends MixedScheme<Operator>> {
      * ! solves the problem between the given times, applying a condition at every step. \warning being this a rollback, <tt>from</tt>
      * must be a later time than <tt>to</tt>.
      */
-    void rollback(Array a,
-    /* Time */double from,
-    /* Time */double to, int steps, StepCondition condition) {
+    void rollback(final Array a, final /*@Time*/double from, final /*@Time*/double to, final int steps, final StepCondition condition) {
         rollbackImpl(a, from, to, steps, condition);
     }
 
-    private void rollbackImpl(Array a,
-    /* @Time */double from,
-    /* @Time */double to, int steps, StepCondition condition) {
-
+    private void rollbackImpl(final Array a, final /*@Time*/double from, final /*@Time*/double to, final int steps, final StepCondition condition) {
         if (from <= to)
             throw new IllegalStateException("trying to roll back from " + from + " to " + to);
 
@@ -127,7 +121,7 @@ public class FiniteDifferenceModel<T extends MixedScheme<Operator>> {
         }
     }
 
-    protected T getEvolver(Operator l, List<BoundaryCondition> bcs) {
+    protected T getEvolver(final Operator l, final List<BoundaryCondition> bcs) {
         try {
             return (T) TypeToken.getClazz(this.getClass()).getConstructor(l.getClass(), bcs.getClass()).newInstance(l, bcs);
         } catch (Exception e) {
