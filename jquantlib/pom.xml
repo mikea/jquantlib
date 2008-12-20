@@ -140,18 +140,38 @@
   </organization>
 
   <build>
-    <extensions>
-      <extension>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-webdav</artifactId>
-      <version>1.0-beta-2</version>
-      </extension>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-         <artifactId>wagon-ftp</artifactId>
-         <version>1.0-beta-4</version>
-      </extension>
-    </extensions>
+	<extensions>
+        <!-- Deprecated :: about to be removed-->
+		<!-- 
+		<extension>
+			<groupId>org.apache.maven.wagon</groupId>
+			<artifactId>wagon-webdav</artifactId>
+			<version>1.0-beta-2</version>
+		</extension>
+		-->
+		
+		<!-- Needs maven 2.0.10 or above -->
+        <!-- 
+		<extension>
+			<groupId>org.apache.maven.wagon</groupId>
+			<artifactId>wagon-ftp</artifactId>
+			<version>1.0-beta-2</version>
+		</extension>
+        -->
+
+        <!-- Dirty trick for the time being :( -->
+		<extension>
+			<groupId>org.apache.maven.wagon</groupId>
+			<artifactId>wagon-http</artifactId>
+			<version>1.0-beta-2</version>
+	    </extension>
+		<extension>
+			<groupId>org.apache.maven.wagon</groupId>
+			<artifactId>wagon-ssh</artifactId>
+			<version>1.0-beta-2</version>
+	    </extension>
+		
+	</extensions>
     
     <plugins>
     
@@ -515,10 +535,11 @@
   </profiles>
 
   <repositories>
+
     <repository>
-      <id>${maven.deploy.repository.id}</id>
-      <name>${maven.deploy.repository.name}</name>
-      <url>${maven.deploy.repository.url}</url>
+      <id>${maven.anonymous.repository.id}</id>
+      <name>${maven.anonymous.repository.name}</name>
+      <url>${maven.anonymous.repository.url}</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -534,6 +555,16 @@
       <name>Central Maven2 repository</name>
       <url>http://repo1.maven.org/maven2</url>
     </repository>
+
+    <repository>
+      <releases/>
+      <snapshots/>
+      <id>sonatype</id>
+      <name>Sonatype Maven2 repository</name>
+      <url>http://repository.sonatype.org/</url>
+    </repository>
+
+    <!--
     <repository>
       <releases/>
       <snapshots/>
@@ -541,7 +572,8 @@
       <name>Ibiblio Maven2 repository</name>
       <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
     </repository>
-    
+    -->
+
   </repositories>
 
 
@@ -598,6 +630,12 @@
       <version>1.2.0</version>
       <scope>compile</scope>
     </dependency>
+	<dependency>
+		<groupId>net.jcip</groupId>
+		<artifactId>jcip-annotations</artifactId>
+		<version>1.0</version>
+		<scope>compile</scope>
+	</dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -820,17 +858,17 @@
 
   <distributionManagement>
     <repository>
-      <id>${maven.deploy.repository.id}</id>
-      <name>${maven.deploy.repository.name}</name>
-      <url>${maven.deploy.repository.url}</url>
+      <id>${maven.developer.repository.id}</id>
+      <name>${maven.developer.repository.name}</name>
+      <url>${maven.developer.repository.url}</url>
       <layout>default</layout>
       <uniqueVersion>false</uniqueVersion>
     </repository>
     
     <site>
-      <id>${maven.deploy.site.id}</id>
-      <name>${maven.deploy.site.name}</name>
-      <url>${maven.deploy.site.url}/${project.artifactId}/</url>
+      <id>${maven.developer.site.id}</id>
+      <name>${maven.developer.site.name}</name>
+      <url>${maven.developer.site.url}/${project.artifactId}/</url>
     </site>
   </distributionManagement>
   
@@ -855,28 +893,30 @@
 
     <!-- application independent properties :: Source Code Management -->
     <maven.scm.root>jquant.svn.sourceforge.net/svnroot</maven.scm.root>
-    <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
     <maven.scm.connection>scm:svn:http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.connection>
+    <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
     <maven.scm.url>http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.url>
     
     <!-- application independent properties :: Issue Management -->
     <maven.bugs.url>http://bugs.jquantlib.org/</maven.bugs.url>
-    <!-- 
-    <maven.bugs.url>http://sourceforge.net/tracker/?group_id=205911</maven.bugs.url>
-    -->
     
     <!-- application independent properties :: Continuous Integration -->
     <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
     
-    <!-- application independent properties :: Distribution Management -->
-    <maven.deploy.repository.id>jquantlib-external_free</maven.deploy.repository.id>
-    <maven.deploy.repository.name>JQuantLib External Free Repository</maven.deploy.repository.name>
-    <maven.deploy.repository.url>ftp://ftp.jquantlib.org/maven2/repos/external_free</maven.deploy.repository.url>
+    <!-- Anonymouns access to artifact repository -->
+    <maven.anonymous.repository.id>jquantlib-external_free</maven.anonymous.repository.id>
+    <maven.anonymous.repository.name>JQuantLib External Free Repository</maven.anonymous.repository.name>
+    <maven.anonymous.repository.url>http://www.jquantlib.org/maven2/repos/external_free</maven.anonymous.repository.url>
+
+    <!-- Developer access to artifact repository -->
+    <maven.developer.repository.id>jquantlib-external_free</maven.developer.repository.id>
+    <maven.developer.repository.name>JQuantLib External Free Repository</maven.developer.repository.name>
+    <maven.developer.repository.url>sftp://ftp.jquantlib.org/maven2/repos/external_free</maven.developer.repository.url>
 
     <!-- application independent properties :: Generated Site -->
-    <maven.deploy.site.id>jquantlib-site</maven.deploy.site.id>
-    <maven.deploy.site.name>JQuantLib Generated Site</maven.deploy.site.name>
-    <maven.deploy.site.url>ftp://ftp.jquantlib.org/maven2/sites</maven.deploy.site.url>
+    <maven.developer.site.id>jquantlib-site</maven.developer.site.id>
+    <maven.developer.site.name>JQuantLib Generated Site</maven.developer.site.name>
+    <maven.developer.site.url>sftp://ftp.jquantlib.org/maven2/sites</maven.developer.site.url>
     
   </properties>
   

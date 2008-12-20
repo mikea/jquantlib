@@ -49,7 +49,6 @@ import java.util.Locale;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -261,13 +260,12 @@ public class DefaultDate extends BaseDate {
         if (!(d > 0 && d <= len))
             throw new ArithmeticException("day outside month (" + m + ") day-range [1," + len + "]");
         final int result = d + offset + getYearOffset(y);
-        logger.debug(String.valueOf(result));
         return result;
     }
 
     @Override
     public final int hashCode() {
-    	return ((Object)this).hashCode();
+    	return this.value;
     }
     
     @Override

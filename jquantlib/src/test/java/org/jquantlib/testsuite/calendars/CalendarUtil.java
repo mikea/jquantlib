@@ -52,7 +52,7 @@ public class CalendarUtil {
         int error = 0;
         
         final StringBuilder sb = new StringBuilder();
-        sb.append("Holidays to not match\n");
+        sb.append("Holidays do not match\n");
         
         for (Date date : expected) {
             if (!calculated.contains(date)) {

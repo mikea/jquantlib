@@ -40,7 +40,10 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 package org.jquantlib.math.matrixutilities;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import java.util.List;
+
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
 
@@ -48,11 +51,17 @@ import org.jquantlib.math.Matrix;
  *
  * @author Q. Boiler
  */
+//TODO : complete this class
 public class BasisIncompleteOrdered {
 
-	private int euclideanDimension;
-	private List<double[]> currentBasis = new java.util.ArrayList<double[]>();
+	private final int euclideanDimension;
+	private final List<double[]> currentBasis;
 
+	public BasisIncompleteOrdered(final int euclideanDimension) {
+	    this.euclideanDimension = euclideanDimension;
+	    this.currentBasis = new ObjectArrayList<double[]>();
+	}
+	
 	public boolean addVector(final Array newVector1) {
 		if (newVector1.size() != euclideanDimension) {
 			//  TODO  set the error condition.
@@ -97,15 +106,15 @@ public class BasisIncompleteOrdered {
 		return true;
 	}
 
-	int basisSize() {
+	private int basisSize() {
 		return currentBasis.size();
 	}
 
-	int euclideanDimension() {
+	private int euclideanDimension() {
 		return euclideanDimension;
 	}
 
-	Matrix getBasisAsRowsInMatrix() {
+	private Matrix getBasisAsRowsInMatrix() {
 		Matrix basis = new Matrix(currentBasis.size(), euclideanDimension);
 		for (int i = 0; i < basis.rows(); ++i) {
 			double[] currentBasisRow = currentBasis.get(i);

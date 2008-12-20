@@ -25,11 +25,11 @@ package org.jquantlib.time;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
+import org.slf4j.helpers.MessageFormatter;
 
 
 /**
@@ -45,7 +45,7 @@ public abstract class AbstractCalendar implements Calendar {
     /**
      * To store artifially added holidays
      */
-    private ObjectArrayList<Date> addedHolidays;
+    private final ObjectArrayList<Date> addedHolidays;
 
     /**
      * Constructor
@@ -72,7 +72,7 @@ public abstract class AbstractCalendar implements Calendar {
      * @param date
      * @return true if its added holiday false if its not added
      */
-    protected boolean isAddedHoliday(Date date) {
+    protected boolean isAddedHoliday(final Date date) {
         return addedHolidays.contains(date);
     }
 
@@ -143,8 +143,8 @@ public abstract class AbstractCalendar implements Calendar {
         return advance(d, 0, TimeUnit.DAYS);
     }
 
-    public final Date advance(final Date d, int n, final TimeUnit unit) {
-        return advance(d, n, unit, BusinessDayConvention.FOLLOWING);
+    public final Date advance(final Date d, final int units, final TimeUnit unit) {
+        return advance(d, units, unit, BusinessDayConvention.FOLLOWING);
     }
 
     /**
@@ -155,14 +155,15 @@ public abstract class AbstractCalendar implements Calendar {
      * @param c
      * @return
      */
-    public final Date advance(final Date d, int n, final TimeUnit unit, final BusinessDayConvention c) {
-        return advance(d, n, unit, c, false);
+    public final Date advance(final Date d, final int units, final TimeUnit unit, final BusinessDayConvention c) {
+        return advance(d, units, unit, c, false);
     }
 
-    public final Date advance(final Date date, int n, final TimeUnit unit, final BusinessDayConvention c, boolean endOfMonth) {
+    public final Date advance(final Date date, final int units, final TimeUnit unit, final BusinessDayConvention c, boolean endOfMonth) {
         if (date == null)
             throw new NullPointerException();
         Date d1 = DateFactory.getFactory().getDate(date.getDayOfMonth(), date.getMonthEnum(), date.getYear());
+        int n = units;
         if (n == 0) {
             return adjust(d1, c);
         } else if (unit == TimeUnit.DAYS) {
@@ -237,9 +238,11 @@ public abstract class AbstractCalendar implements Calendar {
     }
 
     public List<Date> getHolidayList(final Date from, final Date to, boolean includeWeekEnds) {
-        List<Date> holidays = new ArrayList<Date>();
-        if (from.ge(to))
-            throw new IllegalStateException("To date  must be after from date ");
+        List<Date> holidays = new ObjectArrayList<Date>();
+        if (from.ge(to)) {
+        	String msg = MessageFormatter.format("{} should be after {}", new Object[] { to, from });
+            throw new IllegalStateException(msg);
+        }
         Date startDate = from.getDateAfter(0);
         for (Date d = startDate; d.le(to); d = d.getDateAfter(1)) {
             if (isHoliday(d) && (includeWeekEnds || !isWeekend(d.getWeekday())))

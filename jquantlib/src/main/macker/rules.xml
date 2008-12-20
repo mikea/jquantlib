@@ -9,6 +9,7 @@
 	    <pattern name="java2-collections">
 		    <include class="java.util.*">
 		        <include class="**Collection*" />
+		            <exclude class="**.Collections" />
 		        <include class="**List*" />
 		        <include class="**Map**" />
 		        <include class="**Set*">

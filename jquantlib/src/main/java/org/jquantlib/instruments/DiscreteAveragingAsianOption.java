@@ -46,17 +46,15 @@
 
 package org.jquantlib.instruments;
 
-import java.util.ArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import java.util.Collections;
 import java.util.List;
 
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.DiscreteAveragingAsianOptionArguments;
-import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
-import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.util.Date;
 
@@ -70,21 +68,24 @@ import org.jquantlib.util.Date;
  * <li>ql/instruments/asianoption.hpp</li>
  * <li>ql/instruments/asianoption.cpp</li>
  * </ul>
- * @author gary_kennedy
+ * @author <Richard Gomes>
  *
  */
 public class DiscreteAveragingAsianOption extends OneAssetStrikedOption{
 
-	public DiscreteAveragingAsianOption(StochasticProcess process,
-			Payoff payoff, Exercise exercise, PricingEngine engine) {
+	public DiscreteAveragingAsianOption(
+	        final StochasticProcess process,
+			final Payoff payoff,
+			final Exercise exercise, 
+			final PricingEngine engine) {
 		super(process, payoff, exercise, engine);
 	}
 	
     public DiscreteAveragingAsianOption(
-            AverageType averageType,
-            /*@Real*/ double runningAccumulator,
-            /*@Size*/ int pastFixings,
-            List<Date> fixingDates,
+            final AverageType averageType,
+            final /*@Real*/ double runningAccumulator,
+            final /*@Size*/ int pastFixings,
+            final List<Date> fixingDates,
             final StochasticProcess process,
             final StrikedTypePayoff payoff,
             final Exercise exercise,
@@ -92,7 +93,7 @@ public class DiscreteAveragingAsianOption extends OneAssetStrikedOption{
     	super(process,payoff,exercise,engine);
     	this.averageType_ = averageType;
     	this.runningAccumulator_ = runningAccumulator;
-    	this.fixingDates_ = new ArrayList<Date>(fixingDates);
+    	this.fixingDates_ = new ObjectArrayList<Date>(fixingDates);
     	Collections.sort(this.fixingDates_);
     }
     
