@@ -23,17 +23,14 @@
 package org.jquantlib.testsuite.math.interpolations;
 
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 import static java.lang.Math.abs;
 import static java.lang.Math.exp;
+import static org.junit.Assert.assertFalse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolation;
-import org.jquantlib.math.interpolations.LinearInterpolation;
-import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Daniel Kong
@@ -73,7 +70,7 @@ public abstract class InterpolationTestBase {
 	
 	protected void checkValues(
 			final String type, 
-			final CubicSplineInterpolation spline,
+			final Interpolation spline,
 			double[] x, double[] y){
 		double tolerance = 2.0e-15;
 		for(int i=0; i<x.length; i++){
@@ -86,28 +83,9 @@ public abstract class InterpolationTestBase {
 		}		
 	}
 	
-//	template <class I, class J>
-//	void checkValues(const char* type,
-//	                 const CubicSpline& spline,
-//	                 I xBegin, I xEnd, J yBegin) {
-//	    Real tolerance = 2.0e-15;
-//	    while (xBegin != xEnd) {
-//	        Real interpolated = spline(*xBegin);
-//	        if (std::fabs(interpolated-*yBegin) > tolerance) {
-//	            BOOST_ERROR(type << " interpolation failed at x = " << *xBegin
-//	                        << QL_SCIENTIFIC
-//	                        << "\n    interpolated value: " << interpolated
-//	                        << "\n    expected value:     " << *yBegin
-//	                        << "\n    error:              "
-//	                        << std::fabs(interpolated-*yBegin));
-//	        }
-//	        ++xBegin; ++yBegin;
-//	    }
-//	}
-	
 	protected void check1stDerivativeValue(
 			final String type,
-			final CubicSplineInterpolation spline,
+			final Interpolation spline,
             double x,
             double value) {
 		double tolerance = 1.0e-14;
@@ -118,27 +96,10 @@ public abstract class InterpolationTestBase {
    					+"\n error:        "+abs(interpolated-value),
    					abs(interpolated-value) > tolerance);
 	}
-		
-//		void check1stDerivativeValue(const char* type,
-//	            const CubicSpline& spline,
-//	            Real x,
-//	            Real value) {
-//	Real tolerance = 1.0e-14;
-//	Real interpolated = spline.derivative(x);
-//	Real error = std::fabs(interpolated-value);
-//	if (error > tolerance) {
-//	BOOST_ERROR(type << " interpolation first derivative failure\n"
-//	   << "at x = " << x
-//	   << "\n    interpolated value: " << interpolated
-//	   << "\n    expected value:     " << value
-//	   << QL_SCIENTIFIC
-//	   << "\n    error:              " << error);
-//	}
-//	}
 
 	protected void check2ndDerivativeValue(
 			final String type,
-			final CubicSplineInterpolation spline,
+			final Interpolation spline,
             double x,
             double value) {
 		double tolerance = 1.0e-14;
@@ -149,23 +110,6 @@ public abstract class InterpolationTestBase {
    					+"\n error:        "+abs(interpolated-value),
    					abs(interpolated-value) > tolerance);
 	}
-	
-//	void check2ndDerivativeValue(const char* type,
-//	            const CubicSpline& spline,
-//	            Real x,
-//	            Real value) {
-//	Real tolerance = 1.0e-13;
-//	Real interpolated = spline.secondDerivative(x);
-//	Real error = std::fabs(interpolated-value);
-//	if (error > tolerance) {
-//	BOOST_ERROR(type << " interpolation second derivative failure\n"
-//	   << "at x = " << x
-//	   << "\n    interpolated value: " << interpolated
-//	   << "\n    expected value:     " << value
-//	   << QL_SCIENTIFIC
-//	   << "\n    error:              " << error);
-//	}
-//	}
 
 	void checkNotAKnotCondition(
 			final String type,

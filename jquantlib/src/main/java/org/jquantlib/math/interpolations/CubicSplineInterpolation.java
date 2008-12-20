@@ -136,11 +136,15 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
 	            final double rightConditionValue,
 	            final boolean monotonicityConstraint) {
         
-        n = vx.length;
-        vp = new double[n-1];
-        va = new double[n-1];
-        vb = new double[n-1];
-        vc = new double[n-1];
+/*    	NullPointerException, moving into method: 
+   		public final Interpolation interpolate(final int size, final double[] x, final double[] y)
+  		Daniel 19 Dec 2008
+ */
+//        n = vx.length;
+//        vp = new double[n-1];
+//        va = new double[n-1];
+//        vb = new double[n-1];
+//        vc = new double[n-1];
         
         this.leftType  = leftCondition;
         this.rightType = rightCondition;
@@ -376,6 +380,11 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
         public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
             delegate.vx = DoubleArrays.copy(x, 0, size);
             delegate.vy = DoubleArrays.copy(y, 0, size);
+            n = vx.length;
+	        vp = new double[n-1];
+	        va = new double[n-1];
+	        vb = new double[n-1];
+	        vc = new double[n-1];
             delegate.reload();
             return delegate;
         }

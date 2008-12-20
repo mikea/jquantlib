@@ -55,8 +55,7 @@ public class BackwardInterpolationTest {
 	public static void setUpBackwardInterpolation(){
 		logger.info("\n\n::::: Testing backward-flat interpolation... :::::");
 
-		interpolation = new BackwardFlat().interpolate(x, y);
-		interpolation.reload();		  
+		interpolation = new BackwardFlat().interpolate(x, y);	  
 	    length = x.length;
 	    tolerance = 1.0e-12;
 	}

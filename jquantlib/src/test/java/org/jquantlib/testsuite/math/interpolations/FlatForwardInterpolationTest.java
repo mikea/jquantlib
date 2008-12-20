@@ -55,8 +55,7 @@ public class FlatForwardInterpolationTest  {
 	public static void setUpFlatForwardInterpolation(){
 		logger.info("\n\n::::: Testing backward-flat interpolation... :::::");
 
-		interpolation = new ForwardFlat().interpolate(x, y);
-		interpolation.reload();		  
+		interpolation = new ForwardFlat().interpolate(x, y);	  
 	    length = x.length;
 	    tolerance = 1.0e-12;
 	}

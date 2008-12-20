@@ -22,7 +22,14 @@
 
 package org.jquantlib.testsuite.math.interpolations;
 
+import static java.lang.Math.abs;
+import static org.junit.Assert.assertFalse;
+
+import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.factories.BackwardFlat;
+import org.jquantlib.math.interpolations.factories.CubicSpline;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,90 +46,62 @@ private final static Logger logger = LoggerFactory.getLogger(CubicSplineInterpol
 	private static final double generic_x[] = { 0.0, 1.0, 3.0, 4.0 };
 	private static final double generic_y[] = { 0.0, 0.0, 2.0, 2.0 };
 	private static final double generic_natural_y2[] = { 0.0, 1.5, -1.5, 0.0 };
-	private static Interpolation interpolation;
+	private static double x35[]= new double[3];
 
 	
 	public CubicSplineInterpolationTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 		logger.info("\n\n::::: Testing spline interpolation on generic values... :::::");
 	}
-	
-	
-	
-	//TODO
+
 	@Test
 	public void testNaturalSpline(){
-
-	    logger.error("***** TEST FAILED *****"); // XXX remove this line
-
-//	    Interpolation interpolation = new CubicSpline(
-//				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
-//				generic_natural_y2[0],
-//				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
-//				generic_natural_y2[generic_x.length-1],
-//				false)
-//				.interpolate(generic_x, generic_y);
-//		interpolation.reload();
+		Interpolation interpolation = new CubicSpline(
+				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
+				generic_natural_y2[0],
+				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
+				generic_natural_y2[generic_x.length-1],
+				false)
+				.interpolate(generic_x, generic_y);
 		
-//		TODO need to directly instantiate CubicSplineInterpolation?
-//			 need CubicSplineInterpolation type?
-//		checkValues("Natural spline", interpolation, generic_x, generic_y);
+		checkValues("Natural spline", interpolation, generic_x, generic_y);
+		int n=generic_x.length;
+		for (int i=0; i<n; i++) {
+	        double interpolated = interpolation.secondDerivative(generic_x[i]);
+	        double error = interpolated - generic_natural_y2[i];
+	        assertFalse("Natural spline interpolation "
+       					+"second derivative failed at x="+generic_x[i]
+       					+"\n interpolated value: "+interpolated
+       					+"\n expected value:     "+generic_natural_y2[i]
+                        +"\n error:              "+error,
+       					abs(error) > 3e-16);
+	    }
 		
+		//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
+//	    x35[1] = interpolation.evaluate(3.5);
+	}
+	
+	@Test
+	public void testClampedSpline(){
+		double y1a=0.0, y1b=0.0;
+		Interpolation interpolation = new CubicSpline(
+				CubicSplineInterpolation.BoundaryCondition.FirstDerivative,
+				y1a,
+				CubicSplineInterpolation.BoundaryCondition.FirstDerivative,
+				y1b,
+				false)
+				.interpolate(generic_x, generic_y);
+		
+		checkValues("Clamped spline", interpolation, generic_x, generic_y);
+		check1stDerivativeValue("Clamped spline", interpolation, generic_x[0],0.0);
+		check1stDerivativeValue("Clamped spline", interpolation, generic_x[generic_x.length-1],0.0);
+			
+		//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
+//	    x35[0] = interpolation.evaluate(3.5);
 	}
 	
 	
-//	void InterpolationTest::testSplineOnGenericValues() {
-//	BOOST_MESSAGE("Testing spline interpolation on generic values...");
-//
-//    const Real generic_x[] = { 0.0, 1.0, 3.0, 4.0 };
-//    const Real generic_y[] = { 0.0, 0.0, 2.0, 2.0 };
-//    const Real generic_natural_y2[] = { 0.0, 1.5, -1.5, 0.0 };
-//
-//    Real interpolated, error;
-//    Size i, n = LENGTH(generic_x);
-//    std::vector<Real> x35(3);
-//
-//    // Natural spline
-//    CubicSpline f(BEGIN(generic_x), END(generic_x),
-//                  BEGIN(generic_y),
-//                  CubicSpline::SecondDerivative,
-//                  generic_natural_y2[0],
-//                  CubicSpline::SecondDerivative,
-//                  generic_natural_y2[n-1],
-//                  false);
-//    f.update();
-//    checkValues("Natural spline", f,
-//                BEGIN(generic_x), END(generic_x), BEGIN(generic_y));
-//    // cached second derivative
-//    for (i=0; i<n; i++) {
-//        interpolated = f.secondDerivative(generic_x[i]);
-//        error = interpolated - generic_natural_y2[i];
-//        if (std::fabs(error)>3e-16) {
-//            BOOST_ERROR("Natural spline interpolation "
-//                        << "second derivative failed at x=" << generic_x[i]
-//                        << "\ninterpolated value: " << interpolated
-//                        << "\nexpected value:     " << generic_natural_y2[i]
-//                        << "\nerror:              " << error);
-//        }
-//    }
-//    x35[1] = f(3.5);
-//
-//
-//    // Clamped spline
-//    Real y1a = 0.0, y1b = 0.0;
-//    f = CubicSpline(BEGIN(generic_x), END(generic_x), BEGIN(generic_y),
-//                    CubicSpline::FirstDerivative, y1a,
-//                    CubicSpline::FirstDerivative, y1b,
-//                    false);
-//    f.update();
-//    checkValues("Clamped spline", f,
-//                BEGIN(generic_x), END(generic_x), BEGIN(generic_y));
-//    check1stDerivativeValue("Clamped spline", f,
-//                            *BEGIN(generic_x), 0.0);
-//    check1stDerivativeValue("Clamped spline", f,
-//                            *(END(generic_x)-1), 0.0);
-//    x35[0] = f(3.5);
-//
+
 //
 //    // Not-a-knot spline
 //    f = CubicSpline(BEGIN(generic_x), END(generic_x), BEGIN(generic_y),
