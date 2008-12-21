@@ -38,7 +38,7 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
 /**
- * ! Chinese calendar ! Holidays:
+ * Chinese calendar Holidays:
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
@@ -56,6 +56,7 @@ import org.jquantlib.util.Month;
  * 
  * @author Tim Swetonic
  * @author Jia Jia
+ * @author Renjith Nair
  */
 
 public class China extends DelegateCalendar {
@@ -113,13 +114,13 @@ public class China extends DelegateCalendar {
                     || (((d >= 26 && m == JANUARY) || (d <= 3 && m == FEBRUARY)) && y == 2006)
                     || (d >= 17 && d <= 25 && m == FEBRUARY && y == 2007) || (d >= 6 && d <= 12 && m == FEBRUARY && y == 2008)
                     // Ching Ming Festival
-                    || (d == 4 && m == APRIL && y <= 2008)
+                    || (d == 4 && m == APRIL && y == 2008)
                     // Labor Day
                     || (d >= 1 && d <= 7 && m == MAY && y <= 2007) || (d >= 1 && d <= 2 && m == MAY && y == 2008)
                     // Tuen Ng Festival
-                    || (d == 9 && m == JUNE && y <= 2008)
+                    || (d == 9 && m == JUNE && y == 2008)
                     // Mid-Autumn Festival
-                    || (d == 15 && m == SEPTEMBER && y <= 2008)
+                    || (d == 15 && m == SEPTEMBER && y == 2008)
                     // National Day
                     || (d >= 1 && d <= 7 && m == OCTOBER && y <= 2007) || (d >= 29 && m == SEPTEMBER && y == 2008)
                     || (d <= 3 && m == OCTOBER && y == 2008))

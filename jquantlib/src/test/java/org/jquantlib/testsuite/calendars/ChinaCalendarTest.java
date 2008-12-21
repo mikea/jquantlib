@@ -46,6 +46,7 @@ import org.junit.Test;
 /**
  * @author Tim Swetonic
  * @author Jia Jia
+ * @author Renjith Nair
  * 
  */
 
@@ -80,8 +81,6 @@ public class ChinaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(6, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(7, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(9, JUNE, year));
-        expectedHol.add(DateFactory.getFactory().getDate(15, SEPTEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(1, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(4, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, OCTOBER, year));
@@ -106,14 +105,11 @@ public class ChinaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(11, FEBRUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(14, FEBRUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(15, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(4, APRIL, year));
         expectedHol.add(DateFactory.getFactory().getDate(2, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(3, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(4, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(6, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(9, JUNE, year));
-        expectedHol.add(DateFactory.getFactory().getDate(15, SEPTEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(3, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(4, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, OCTOBER, year));
@@ -139,14 +135,11 @@ public class ChinaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(1, FEBRUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(2, FEBRUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(3, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(4, APRIL, year));
         expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(2, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(3, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(4, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(9, JUNE, year));
-        expectedHol.add(DateFactory.getFactory().getDate(15, SEPTEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(2, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(3, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(4, OCTOBER, year));
@@ -171,7 +164,6 @@ public class ChinaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(21, FEBRUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(22, FEBRUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(23, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(4, APRIL, year));
         expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(2, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(3, MAY, year));
@@ -182,7 +174,10 @@ public class ChinaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(3, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(4, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, OCTOBER, year));
+        // Interesting Fact
+        //31 Dec 2007 is included as holiday in 2008 list of holidays :)
         expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
+        
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
