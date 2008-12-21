@@ -39,17 +39,11 @@ public abstract class BaseDate implements Date, FunctionDate {
     
     public final int compareTo(final Date o) {
 		if (this.equals(o)){
-			logger.debug(o.toString());
-			logger.debug(this.toString());
 			return 0;
 		}
 		if (this.le(o)) {
-			logger.debug(o.toString());
-			logger.debug(this.toString());
 			return -1;
 		}
-		logger.debug(o.toString());
-		logger.debug(this.toString());
 		return 1;
 	}
 
