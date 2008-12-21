@@ -37,9 +37,9 @@ import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
-// ! Brazilian calendar
+//  Brazilian calendar
 /**
- * ! Banking holidays:
+ * Banking holidays:
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
