@@ -151,7 +151,9 @@ public class Japan extends AbstractCalendar {
 				|| ((d == 23 || (d == 24 && w == MONDAY)) && m == DECEMBER && y >= 1989)
 				// Bank Holiday
 				|| (d == 31 && m == DECEMBER)
+				
 				// one-shot holidays
+				
 				// Marriage of Prince Akihito
 				|| (d == 10 && m == APRIL && y == 1959)
 				// Rites of Imperial Funeral
@@ -159,7 +161,10 @@ public class Japan extends AbstractCalendar {
 				// Enthronement Ceremony
 				|| (d == 12 && m == NOVEMBER && y == 1990)
 				// Marriage of Prince Naruhito
-				|| (d == 9 && m == JUNE && y == 1993))
+				|| (d == 9 && m == JUNE && y == 1993)
+				// Holidays observed (moved) to 6-MAY
+				|| ((d == 6) && (m == MAY) && (y == 2008 || y == 2009))
+				)
 			return false;
 		return true;
 	}

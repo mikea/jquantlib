@@ -46,11 +46,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author
- *
- *
+ * @author Richard Gomes
  */
-//FIXME :: work in progress [RICHARD]
 public class HongKongCalendarTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(HongKongCalendarTest.class);

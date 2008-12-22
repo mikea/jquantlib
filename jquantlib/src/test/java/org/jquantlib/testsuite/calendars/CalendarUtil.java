@@ -56,14 +56,14 @@ public class CalendarUtil {
         
         for (Date date : expected) {
             if (!calculated.contains(date)) {
-                sb.append("Expected but not calculated holiday: ").append(date).append('\n');
+                sb.append("  >> Holiday expected but not calculated: ").append(date.getWeekday()).append(", ").append(date).append('\n');
                 error++;
             }
         }
 
         for (Date date : calculated) {
             if (!expected.contains(date)) {
-                sb.append("Calculated but not expected holiday: ").append(date).append('\n');
+                sb.append("  >> Holiday calculated but not expected: ").append(date.getWeekday()).append(", ").append(date).append('\n');
                 error++;
             }
         }
