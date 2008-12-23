@@ -40,7 +40,6 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Japan;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.jquantlib.util.Month;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,24 +88,24 @@ public class JapanCalendarTest {
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
-		// Sunday: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
+		// Sun: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
 		expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
 		expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
     	expectedHol.add(df.getDate( 9,JANUARY,year));   // Coming of Age Day
-		// Saturday: expectedHol.add(df.getDate(11,FEBRUARY,year));  // National Foundation Day
+		// Sat: expectedHol.add(df.getDate(11,FEBRUARY,year));  // National Foundation Day
 		expectedHol.add(df.getDate(20,MARCH,year));     // Spring Equinox observed
-		// Sunday: expectedHol.add(df.getDate(29,APRIL,year));     // Showa Day
+		// Sun: expectedHol.add(df.getDate(29,APRIL,year));     // Showa Day
 		expectedHol.add(df.getDate(30,APRIL,year));     // Showa Day observed
 		expectedHol.add(df.getDate( 3,MAY,year));       // Constitution Memorial Day    	
 		expectedHol.add(df.getDate( 4,MAY,year));       // Greenery Day   	
-        // Saturday: expectedHol.add(df.getDate( 5,MAY,year));       // Children's Day        
+        // Sat: expectedHol.add(df.getDate( 5,MAY,year));       // Children's Day        
 		expectedHol.add(df.getDate(16,JULY,year));      // Sea Day
         expectedHol.add(df.getDate(17,SEPTEMBER,year)); // Respect for the Aged Day
-    	// Saturday: expectedHol.add(df.getDate(22,SEPTEMBER,year)); // Autumn Equinox
+    	// Sat: expectedHol.add(df.getDate(22,SEPTEMBER,year)); // Autumn Equinox
         expectedHol.add(df.getDate( 8,OCTOBER,year));   // Sports Day
-        // Saturday: expectedHol.add(df.getDate( 3,NOVEMBER,year));  // Culture Day
+        // Sat: expectedHol.add(df.getDate( 3,NOVEMBER,year));  // Culture Day
         expectedHol.add(df.getDate(23,NOVEMBER,year));  // Labor Thanksgiving Day
-        // Sunday: expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
+        // Sun: expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
         expectedHol.add(df.getDate(24,DECEMBER,year));  // Emperor's Birthday observed
 		expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
@@ -146,8 +145,8 @@ public class JapanCalendarTest {
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
-		// Saturday: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		// Sunday: expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
+		// Sat: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
+		// Sun: expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
 		expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
     	expectedHol.add(df.getDate(10,JANUARY,year));   // Coming of Age Day
 		expectedHol.add(df.getDate(11,FEBRUARY,year));  // National Foundation Day
@@ -163,7 +162,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate( 3,NOVEMBER,year));  // Culture Day
         expectedHol.add(df.getDate(23,NOVEMBER,year));  // Labor Thanksgiving Day
         expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
-		// Saturday: expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
+		// Sat: expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }
@@ -202,8 +201,8 @@ public class JapanCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
 		expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		// Saturday: expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
-		// Sunday: expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
+		// Sat: expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
+		// Sun: expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
     	expectedHol.add(df.getDate(11,JANUARY,year));   // Coming of Age Day
 		expectedHol.add(df.getDate(11,FEBRUARY,year));  // National Foundation Day
 		expectedHol.add(df.getDate(22,MARCH,year));     // Spring Equinox observed
@@ -258,7 +257,7 @@ public class JapanCalendarTest {
     	
 		expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
 		expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
-		//. Saturday: expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
+		//. Sat: expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
     	expectedHol.add(df.getDate(12,JANUARY,year));   // Coming of Age Day
 		expectedHol.add(df.getDate(11,FEBRUARY,year));  // National Foundation Day
 		expectedHol.add(df.getDate(20,MARCH,year));     // Spring Equinox
@@ -377,12 +376,12 @@ public class JapanCalendarTest {
 		expectedHol.add(df.getDate(30,APRIL,year));     // Greenery Day
 		expectedHol.add(df.getDate( 3,MAY,year));       // Constitution Memorial Day    	
 		expectedHol.add(df.getDate( 4,MAY,year));       // Between Day   	
-        // Saturday: expectedHol.add(df.getDate( 5,MAY,year));       // Children's Day        
+        // Sat: expectedHol.add(df.getDate( 5,MAY,year));       // Children's Day        
 		expectedHol.add(df.getDate(16,JULY,year));      // Sea Day
         expectedHol.add(df.getDate(17,SEPTEMBER,year)); // Respect for the Aged Day
     	expectedHol.add(df.getDate(24,SEPTEMBER,year)); // Autumn Equinox
         expectedHol.add(df.getDate( 8,OCTOBER,year));   // Sports Day
-        // Saturday: expectedHol.add(df.getDate( 3,NOVEMBER,year));  // Culture Day
+        // Sat: expectedHol.add(df.getDate( 3,NOVEMBER,year));  // Culture Day
         expectedHol.add(df.getDate(23,NOVEMBER,year));  // Labor Thanksgiving Day
         expectedHol.add(df.getDate(24,DECEMBER,year));  // Emperor's Birthday
 		expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
@@ -422,24 +421,24 @@ public class JapanCalendarTest {
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
-		// Sunday: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
+		// Sun: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
 		expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
 		expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
     	expectedHol.add(df.getDate( 9,JANUARY,year));   // Coming of Age Day
-		// Saturday: expectedHol.add(df.getDate(11,FEBRUARY,year));  // National Foundation Day
+		// Sat: expectedHol.add(df.getDate(11,FEBRUARY,year));  // National Foundation Day
 		expectedHol.add(df.getDate(21,MARCH,year));     // Spring Equinox
-		// Saturday: expectedHol.add(df.getDate(29,APRIL,year));     // Greenery Day
+		// Sat: expectedHol.add(df.getDate(29,APRIL,year));     // Greenery Day
 		expectedHol.add(df.getDate( 3,MAY,year));       // Constitution Memorial Day    	
 		expectedHol.add(df.getDate( 4,MAY,year));       // Between Day   	
         expectedHol.add(df.getDate( 5,MAY,year));       // Children's Day        
 		expectedHol.add(df.getDate(17,JULY,year));      // Sea Day
         expectedHol.add(df.getDate(18,SEPTEMBER,year)); // Respect for the Aged Day
-    	// Saturday: expectedHol.add(df.getDate(23,SEPTEMBER,year)); // Autumn Equinox
+    	// Sat: expectedHol.add(df.getDate(23,SEPTEMBER,year)); // Autumn Equinox
         expectedHol.add(df.getDate( 9,OCTOBER,year));   // Sports Day
         expectedHol.add(df.getDate( 3,NOVEMBER,year));  // Culture Day
         expectedHol.add(df.getDate(23,NOVEMBER,year));  // Labor Thanksgiving Day
-        // Saturday: expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
-		// Sunday: expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
+        // Sat: expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
+		// Sun: expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }
@@ -475,8 +474,8 @@ public class JapanCalendarTest {
         
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-		// Saturday: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		// Sunday:   expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
+		// Sat: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
+		// Sun: expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
 		expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
     	expectedHol.add(df.getDate(10,JANUARY,year));   // Coming of Age Day
 		expectedHol.add(df.getDate(11,FEBRUARY,year));  // National Foundation Day
@@ -492,7 +491,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate( 3,NOVEMBER,year));  // Culture Day
         expectedHol.add(df.getDate(23,NOVEMBER,year));  // Labor Thanksgiving Day
         expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
-		// Saturday: expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
+		// Sat: expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }
@@ -530,10 +529,10 @@ public class JapanCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 		expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
 		expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
-		// Saturday: expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
+		// Sat: expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
     	expectedHol.add(df.getDate(12,JANUARY,year));   // Coming of Age Day
 		expectedHol.add(df.getDate(11,FEBRUARY,year));  // National Foundation Day
-		// Saturday: expectedHol.add(df.getDate(20,MARCH,year));     // Spring Equinox
+		// Sat: expectedHol.add(df.getDate(20,MARCH,year));     // Spring Equinox
 		expectedHol.add(df.getDate(29,APRIL,year));     // Greenery Day
 		expectedHol.add(df.getDate( 3,MAY,year));       // Constitution Memorial Day    	
 		expectedHol.add(df.getDate( 4,MAY,year));       // Between Day   	

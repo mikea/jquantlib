@@ -37,6 +37,26 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
 /**
+ * New Zealand calendar
+ * <p>
+ * Holidays:
+ * <ul>
+ * <li>Saturdays</li>
+ * <li>Sundays</li>
+ * <li>New Year's Day, January 1st (possibly moved to Monday or Tuesday)</li>
+ * <li>Day after New Year's Day, January 2st (possibly moved to Monday or Tuesday)</li>
+ * <li>Anniversary Day, Monday nearest January 22nd</li>
+ * <li>Waitangi Day. February 6th</li>
+ * <li>Good Friday</li>
+ * <li>Easter Monday</li>
+ * <li>ANZAC Day. April 25th</li>
+ * <li>Queen's Birthday, first Monday in June</li>
+ * <li>Labour Day, fourth Monday in October</li>
+ * <li>Christmas, December 25th (possibly moved to Monday or Tuesday)</li>
+ * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
+ * </ul>
+ * 
+ * @category calendars
  * 
  * @author Anand Mani
  */
@@ -54,31 +74,6 @@ public class NewZealand extends WesternCalendar {
 		return "New Zealand";
 	}
 
-    //! New Zealand calendar
-    /*! Holidays:
-        <ul>
-        <li>Saturdays</li>
-        <li>Sundays</li>
-        <li>New Year's Day, January 1st (possibly moved to Monday or
-            Tuesday)</li>
-        <li>Day after New Year's Day, January 2st (possibly moved to
-            Monday or Tuesday)</li>
-        <li>Anniversary Day, Monday nearest January 22nd</li>
-        <li>Waitangi Day. February 6th</li>
-        <li>Good Friday</li>
-        <li>Easter Monday</li>
-        <li>ANZAC Day. April 25th</li>
-        <li>Queen's Birthday, first Monday in June</li>
-        <li>Labour Day, fourth Monday in October</li>
-        <li>Christmas, December 25th (possibly moved to Monday or Tuesday)</li>
-        <li>Boxing Day, December 26th (possibly moved to Monday or
-            Tuesday)</li>
-        </ul>
-        \note The holiday rules for New Zealand were documented by
-              David Gilbert for IDB (http://www.jrefinery.com/ibd/)
-
-        \ingroup calendars
-    */	
 	public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
 		Weekday w = date.getWeekday();
 		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -90,8 +85,11 @@ public class NewZealand extends WesternCalendar {
 				|| ((d == 1 || (d == 3 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
 				// Day after New Year's Day (possibly moved to Mon or Tuesday)
 				|| ((d == 2 || (d == 4 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
-				// Anniversary Day, Monday nearest January 22nd
+
+// Do not seem to be observed by NZX :: see http://bugs.jquantlib.org/view.php?id=72 				
+//				// Anniversary Day, Monday nearest January 22nd
 				|| ((d >= 19 && d <= 25) && w == MONDAY && m == JANUARY)
+
 				// Waitangi Day. February 6th
 				|| (d == 6 && m == FEBRUARY)
 				// Good Friday
