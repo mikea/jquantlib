@@ -32,6 +32,25 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
 /**
+ * Norwegian calendar
+ * <p>
+ * Holidays:
+ * <ul>
+ * <li>Saturdays</li>
+ * <li>Sundays</li>
+ * <li>Holy Thursday</li>
+ * <li>Good Friday</li>
+ * <li>Easter Monday</li>
+ * <li>Ascension</li>
+ * <li>Whit(Pentecost) Monday</li>
+ * <li>New Year's Day, January 1st</li>
+ * <li>May Day, May 1st</li>
+ * <li>National Independence Day, May 17st</li>
+ * <li>Christmas, December 25th</li>
+ * <li>Boxing Day, December 26th</li>
+ * </ul>
+ * 
+ * @category calendars
  * 
  * @author Anand Mani
  */
@@ -50,25 +69,6 @@ public class Norway extends WesternCalendar {
 		return "Norway";
 	}
 
-    //! Norwegian calendar
-    /*! Holidays:
-        <ul>
-        <li>Saturdays</li>
-        <li>Sundays</li>
-        <li>Holy Thursday</li>
-        <li>Good Friday</li>
-        <li>Easter Monday</li>
-        <li>Ascension</li>
-        <li>Whit(Pentecost) Monday </li>
-        <li>New Year's Day, January 1st</li>
-        <li>May Day, May 1st</li>
-        <li>National Independence Day, May 17st</li>
-        <li>Christmas, December 25th</li>
-        <li>Boxing Day, December 26th</li>
-        </ul>
-
-        \ingroup calendars
-    */	
 	public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
 		Weekday w = date.getWeekday();
 		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
@@ -92,10 +92,20 @@ public class Norway extends WesternCalendar {
 				|| (d == 1 && m == MAY)
 				// National Independence Day
 				|| (d == 17 && m == MAY)
+
+// Christmas Eve is only observed by Oslo Bors :: see http://bugs.jquantlib.org/view.php?id=73
+//				|| (d == 24 && m == DECEMBER)
+				
 				// Christmas
 				|| (d == 25 && m == DECEMBER)
 				// Boxing Day
-				|| (d == 26 && m == DECEMBER))
+				|| (d == 26 && m == DECEMBER)
+			
+// 31-DEC only observed by Oslo Bors :: see http://bugs.jquantlib.org/view.php?id=73
+//			|| (d == 31 && m == DECEMBER)
+
+				)
+			
 			return false;
 		return true;
 
