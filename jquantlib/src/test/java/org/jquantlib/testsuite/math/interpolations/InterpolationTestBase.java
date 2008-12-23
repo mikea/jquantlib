@@ -39,10 +39,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class InterpolationTestBase {
 
-    private final static Logger logger = LoggerFactory.getLogger(InterpolationTestBase.class);
-
 	public InterpolationTestBase() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
 	protected double[] xRange(double start, double finish, int size){
@@ -70,7 +67,7 @@ public abstract class InterpolationTestBase {
 	
 	protected void checkValues(
 			final String type, 
-			final Interpolation spline,
+			final CubicSplineInterpolation spline,
 			double[] x, double[] y){
 		double tolerance = 2.0e-15;
 		for(int i=0; i<x.length; i++){
@@ -85,7 +82,7 @@ public abstract class InterpolationTestBase {
 	
 	protected void check1stDerivativeValue(
 			final String type,
-			final Interpolation spline,
+			final CubicSplineInterpolation spline,
             double x,
             double value) {
 		double tolerance = 1.0e-14;
@@ -99,66 +96,53 @@ public abstract class InterpolationTestBase {
 
 	protected void check2ndDerivativeValue(
 			final String type,
-			final Interpolation spline,
+			final CubicSplineInterpolation spline,
             double x,
             double value) {
 		double tolerance = 1.0e-14;
 		double interpolated = spline.secondDerivative(x);
-		assertFalse(type+" interpolation first derivative failure at x = "+x
+		assertFalse(type+" interpolation second derivative failure at x = "+x
    					+"\n interpolated value: "+interpolated
    					+"\n expected value:     "+value
    					+"\n error:        "+abs(interpolated-value),
    					abs(interpolated-value) > tolerance);
 	}
 
-	void checkNotAKnotCondition(
+	protected void checkNotAKnotCondition(
 			final String type,
 			final CubicSplineInterpolation spline) {
 		double tolerance = 1.0e-14;
-		
-		//TODO where is the spline.cCoefficients()?
-//		final double [] c = spline.
+
+		final double [] c = spline.getVc();
+		assertFalse(type+" interpolation failure"
+					+"\n    cubic coefficient of the first polinomial is "+c[0]
+					+"\n    cubic coefficient of the second polinomial is "+c[1],
+					abs(c[0]-c[1]) > tolerance);
+		int n=c.length;
+		assertFalse(type+" interpolation failure"
+				+"\n    cubic coefficient of the 2nd to last polinomial is "+c[n-2]
+				+"\n    cubic coefficient of the last polinomial is "+c[n-1],
+				abs(c[n-2]-c[n-1]) > tolerance);
 		
 	}
 	
+	protected void checkSymmetry(
+			final String type,
+			final CubicSplineInterpolation spline,
+			double xMin) {
+		double tolerance = 1.0e-15;
+		for (double x = xMin; x < 0.0; x += 0.1){
+			double y1=spline.evaluate(x);
+			double y2=spline.evaluate(-x);
+			assertFalse(type+" interpolation not symmetric"
+   					+"\n    x = "+x
+   					+"\n    g(x)  = "+y1
+   					+"\n    g(-x) = "+y2
+   					+"\n    error:  "+abs(y1-y2),
+   					abs(y1-y2) > tolerance);
+		}
+		
+		
+	}
 	
-//	void checkNotAKnotCondition(const char* type,
-//	           const CubicSpline& spline) {
-//	Real tolerance = 1.0e-14;
-//	const std::vector<Real>& c = spline.cCoefficients();
-//	if (std::fabs(c[0]-c[1]) > tolerance) {
-//	BOOST_ERROR(type << " interpolation failure"
-//	   << "\n    cubic coefficient of the first"
-//	   << " polinomial is " << c[0]
-//	   << "\n    cubic coefficient of the second"
-//	   << " polinomial is " << c[1]);
-//	}
-//	Size n = c.size();
-//	if (std::fabs(c[n-2]-c[n-1]) > tolerance) {
-//	BOOST_ERROR(type << " interpolation failure"
-//	   << "\n    cubic coefficient of the 2nd to last"
-//	   << " polinomial is " << c[n-2]
-//	   << "\n    cubic coefficient of the last"
-//	   << " polinomial is " << c[n-1]);
-//	}
-//	}
-//	
-//	void checkSymmetry(const char* type,
-//	  const CubicSpline& spline,
-//	  Real xMin) {
-//	Real tolerance = 1.0e-15;
-//	for (Real x = xMin; x < 0.0; x += 0.1) {
-//	Real y1 = spline(x), y2 = spline(-x);
-//	if (std::fabs(y1-y2) > tolerance) {
-//	BOOST_ERROR(type << " interpolation not symmetric"
-//	       << "\n    x = " << x
-//	       << "\n    g(x)  = " << y1
-//	       << "\n    g(-x) = " << y2
-//	       << "\n    error:  " << std::fabs(y1-y2));
-//	}
-//	}
-//	}	
-	
-
-
 }

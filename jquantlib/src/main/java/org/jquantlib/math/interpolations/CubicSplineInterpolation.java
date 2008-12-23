@@ -65,6 +65,8 @@ import org.slf4j.LoggerFactory;
  * @see CubicSpline
  * 
  * @author Richard Gomes
+ * @author Daniel Kong
+ * 
  */
 // TEST : needs code review and test classes
 public class CubicSplineInterpolation extends AbstractInterpolation {
@@ -134,18 +136,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
 	            final double leftConditionValue,
 	            final CubicSplineInterpolation.BoundaryCondition rightCondition,
 	            final double rightConditionValue,
-	            final boolean monotonicityConstraint) {
-        
-/*    	NullPointerException, moving into method: 
-   		public final Interpolation interpolate(final int size, final double[] x, final double[] y)
-  		Daniel 19 Dec 2008
- */
-//        n = vx.length;
-//        vp = new double[n-1];
-//        va = new double[n-1];
-//        vb = new double[n-1];
-//        vc = new double[n-1];
-        
+	            final boolean monotonicityConstraint) {        
         this.leftType  = leftCondition;
         this.rightType = rightCondition;
         this.leftValue  = leftConditionValue;
@@ -354,7 +345,18 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
         return 2.0*vb[j] + 6.0*vc[j]*dx;
     }
     
-    
+
+	public double[] getVa() {
+		return va;
+	}
+
+	public double[] getVb() {
+		return vb;
+	}
+
+	public double[] getVc() {
+		return vc;
+	}   
     
     //
     // inner classes
@@ -365,6 +367,8 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
      * This class is a default implementation for {@link CubicSplineInterpolation} instances.
      * 
      * @author Richard Gomes
+     * @author Daniel Kong
+     * 
      */
     private class CubicSplineInterpolationImpl implements Interpolator {
         private CubicSplineInterpolation delegate;
@@ -423,6 +427,6 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
          */
         Lagrange;
     }
-    
+
 }
 

@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
  * @see CubicSplineInterpolation
  * 
  * @author Richard Gomes
+ * @author Daniel Kong
  */
 //TEST : needs code review and test classes
 public class CubicSpline implements Interpolator {
@@ -99,13 +100,13 @@ public class CubicSpline implements Interpolator {
     //
     
     @Override
-    public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
-        return delegate.interpolate(x, y);
+    public final CubicSplineInterpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
+        return interpolate(x, y);
     }
 
     @Override
-    public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
-        return delegate.interpolate(x, y);
+    public final CubicSplineInterpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
+        return (CubicSplineInterpolation)delegate.interpolate(x, y);
     }
 
     @Override
