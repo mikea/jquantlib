@@ -175,7 +175,11 @@ final class USSettlementCalendar extends WesternCalendar {
 	public boolean isBusinessDay(Date date) {
 		Weekday w = date.getWeekday();
 		int d = date.getDayOfMonth();
+		int dd = date.getDayOfYear();
 		int m = date.getMonth();
+		int y = date.getYear();
+		int em = easterMonday(y);
+		
 		if (isWeekend(w)
 		// New Year's Day (possibly moved to Monday if on Sunday)
 				|| ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
@@ -189,6 +193,8 @@ final class USSettlementCalendar extends WesternCalendar {
 				// Washington's birthday (third Monday in February)
 				|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
 						.toInteger())
+				// Good Friday
+				|| ((dd == em - 3) && (y == 2008 || y == 2009))
 				// Memorial Day (last Monday in May)
 				|| (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
 						.toInteger())
