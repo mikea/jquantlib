@@ -48,14 +48,15 @@ import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
 
 /**
- *
+ * @author M. Do
  * @author Q. Boiler
  */
-//TODO : complete this class
+
 public class BasisIncompleteOrdered {
 
 	private final int euclideanDimension;
 	private final List<double[]> currentBasis;
+	//private final double[] newVector;
 
 	public BasisIncompleteOrdered(final int euclideanDimension) {
 	    this.euclideanDimension = euclideanDimension;
@@ -64,10 +65,7 @@ public class BasisIncompleteOrdered {
 	
 	public boolean addVector(final Array newVector1) {
 		if (newVector1.size() != euclideanDimension) {
-			//  TODO  set the error condition.
-			return true;
-		//  Either Raise an exception, or set an Error Flag.
-		//throw new RuntimeException("");
+			throw new RuntimeException("BasisIncompleteOrdered : missized vector passed");
 		}
 
 		if (currentBasis.size() == euclideanDimension) {
@@ -75,9 +73,8 @@ public class BasisIncompleteOrdered {
 		}
 		for (int j = 0; j < currentBasis.size(); ++j) {
 
-			double innerProd = newVector1.dotProduct(
-				newVector1.getData(),
-				currentBasis.get(j));
+			double innerProd = Array.dotProduct(newVector1.getData(),
+				                                currentBasis.get(j));
 
 			double[] data = newVector1.getData();
 
@@ -87,11 +84,8 @@ public class BasisIncompleteOrdered {
 			}
 		}
 
-		double norm = Math.sqrt(newVector1.dotProduct(newVector1.getData(),
-			newVector1.getData()));
-		//                newVector_.begin(),
-		//                newVector_.end(),
-		//                newVector_.begin(), 0.0));
+		double norm = Math.sqrt(Array.dotProduct(newVector1.getData(),
+			                                          newVector1.getData()));
 
 		if (norm < 1e-12) // maybe this should be a tolerance
 		{
@@ -106,15 +100,15 @@ public class BasisIncompleteOrdered {
 		return true;
 	}
 
-	private int basisSize() {
+	public int basisSize() {
 		return currentBasis.size();
 	}
 
-	private int euclideanDimension() {
+	public int euclideanDimension() {
 		return euclideanDimension;
 	}
 
-	private Matrix getBasisAsRowsInMatrix() {
+	public Matrix getBasisAsRowsInMatrix() {
 		Matrix basis = new Matrix(currentBasis.size(), euclideanDimension);
 		for (int i = 0; i < basis.rows(); ++i) {
 			double[] currentBasisRow = currentBasis.get(i);
@@ -125,65 +119,3 @@ public class BasisIncompleteOrdered {
 		return basis;
 	}
 }
-
-/*
-namespace QuantLib {
-
-BasisIncompleteOrdered::BasisIncompleteOrdered(Size euclideanDimension)
-: euclideanDimension_(euclideanDimension) {}
-
-bool BasisIncompleteOrdered::addVector(const Array& newVector1) {
-
-QL_REQUIRE(newVector1.size() == euclideanDimension_,
-"missized vector passed to "
-"BasisIncompleteOrdered::addVector");
-
-newVector_ = newVector1;
-
-if (currentBasis_.size()==euclideanDimension_)
-return false;
-
-for (Size j=0; j<currentBasis_.size(); ++j) {
-Real innerProd = std::inner_product(newVector_.begin(),
-newVector_.end(),
-currentBasis_[j].begin(), 0.0);
-
-for (Size k=0; k<euclideanDimension_; ++k)
-newVector_[k] -=innerProd*currentBasis_[j][k];
-}
-
-Real norm = sqrt(std::inner_product(newVector_.begin(),
-newVector_.end(),
-newVector_.begin(), 0.0));
-
-if (norm<1e-12) // maybe this should be a tolerance
-return false;
-
-for (Size l=0; l<euclideanDimension_; ++l)
-newVector_[l]/=norm;
-
-currentBasis_.push_back(newVector_);
-
-return true;
-}
-
-Size BasisIncompleteOrdered::basisSize() const {
-return currentBasis_.size();
-}
-
-Size BasisIncompleteOrdered::euclideanDimension() const {
-return euclideanDimension_;
-}
-
-
-Matrix BasisIncompleteOrdered::getBasisAsRowsInMatrix() const {
-Matrix basis(currentBasis_.size(), euclideanDimension_);
-for (Size i=0; i<basis.rows(); ++i)
-for (Size j=0; j<basis.columns(); ++j)
-basis[i][j] = currentBasis_[i][j];
-
-return basis;
-}
-
-}
- */
