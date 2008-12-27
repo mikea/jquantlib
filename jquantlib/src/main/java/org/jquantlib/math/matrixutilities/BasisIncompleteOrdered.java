@@ -56,8 +56,7 @@ public class BasisIncompleteOrdered {
 
 	private final int euclideanDimension;
 	private final List<double[]> currentBasis;
-	//private final double[] newVector;
-
+	
 	public BasisIncompleteOrdered(final int euclideanDimension) {
 	    this.euclideanDimension = euclideanDimension;
 	    this.currentBasis = new ObjectArrayList<double[]>();
