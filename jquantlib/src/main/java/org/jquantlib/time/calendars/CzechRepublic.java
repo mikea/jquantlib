@@ -38,7 +38,7 @@ import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
-/**! Holidays for the Prague stock exchange (see http://www.pse.cz/):
+/** Holidays for the Prague stock exchange (see http://www.pse.cz/):
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
@@ -55,7 +55,7 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th</li>
  * <li>St. Stephen, December 26th</li>
  * </ul>
- * \ingroup calendars
+ * ingroup calendars
 */
 public class CzechRepublic extends DelegateCalendar {
 	public static enum Market {
