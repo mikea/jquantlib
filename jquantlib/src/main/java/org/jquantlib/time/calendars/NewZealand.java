@@ -58,9 +58,12 @@ import org.jquantlib.util.Month;
  * 
  * @category calendars
  * 
+ * @see <a href="http://www.nzx.com">New Zealand Stock Exchange</a>
+ * 
  * @author Anand Mani
  */
 public class NewZealand extends WesternCalendar {
+	
 	private static final NewZealand NEW_ZEALAND = new NewZealand();
 
 	public static NewZealand getCalendar() {
@@ -75,13 +78,14 @@ public class NewZealand extends WesternCalendar {
 	}
 
 	public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int em = easterMonday(y);
+		final Weekday w = date.getWeekday();
+		final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+		final Month m = date.getMonthEnum();
+		final int y = date.getYear();
+		final int em = easterMonday(y);
+		
 		if (isWeekend(w)
-		// New Year's Day (possibly moved to Monday or Tuesday)
+				// New Year's Day (possibly moved to Monday or Tuesday)
 				|| ((d == 1 || (d == 3 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
 				// Day after New Year's Day (possibly moved to Mon or Tuesday)
 				|| ((d == 2 || (d == 4 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
@@ -107,8 +111,8 @@ public class NewZealand extends WesternCalendar {
 				// Boxing Day, December 26th (possibly Monday or Tuesday)
 				|| ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
 			return false;
+		
 		return true;
-
 	}
 
 }

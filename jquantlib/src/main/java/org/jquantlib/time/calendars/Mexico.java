@@ -30,16 +30,15 @@ import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
-// ! Mexican calendar
-// 
 /**
- * 
- * <strong>Banking holidays:</strong> ?? TODO: List the banking holidays and
- * fill in that section.
- * 
- * 
- * %Mexican calendars Holidays for the Mexican stock exchange (data from
- * <http://www.bmv.com.mx/>):
+ * Mexican calendar
+ * <p>
+ * Banking holidays:
+ * <ul>
+ * <li>TODO: List the banking holidays must be filled in here
+ * </ul>
+ * <p>
+ * Mexican calendars Holidays for the Mexican stock exchange:
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
@@ -54,16 +53,16 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th</li>
  * </ul>
  * 
+ * @category calendars
+ * 
+ * @see <a href="http://www.bmv.com.mx/">Bolsa Mexicana de Valores</a>
+ * 
+ * @author Q Boiler
  */
 public class Mexico extends DelegateCalendar {
 
-	public static enum Market {
-		SETTLEMENT, BMV
-	};
-
-	private final static Mexico SETTLEMENT_CALENDAR = new Mexico(
-			Market.SETTLEMENT);
-	private final static Mexico BMV_CALENDAR = new Mexico(Market.BMV);
+	private final static Mexico SETTLEMENT_CALENDAR = new Mexico(Market.SETTLEMENT);
+	private final static Mexico BMV_CALENDAR        = new Mexico(Market.BMV);
 
 	private Mexico(Market market) {
 		Calendar delegate;
@@ -90,83 +89,99 @@ public class Mexico extends DelegateCalendar {
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-}
 
-// TODO: DON'T KNOW HOW TO GET BANK HOLIDAYS, SO USING MARKET HOLIDAYS.
-final class MexicoSettlementCalendar extends WesternCalendar {
 
-	public String getName() {
-		return "Mexico stock Market";
+	//
+	// public enums
+	//
+	
+	public enum Market {
+		SETTLEMENT, BMV
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int dd = date.getDayOfYear();
-		int em = easterMonday(y);
+	
+    //
+    // private inner classes
+    //
+    
+	final private class MexicoSettlementCalendar extends WesternCalendar {
 
-		if (isWeekend(w)
-		// New Year's Day
-				|| (d == 1 && m == Month.JANUARY)
-				// Constitution Day
-				|| (d == 5 && m == Month.FEBRUARY)
-				// Birthday of Benito Juarez
-				|| (d == 21 && m == Month.MARCH)
-				// Holy Thursday
-				|| (dd == em - 4)
-				// Good Friday
-				|| (dd == em - 3)
-				// Labour Day
-				|| (d == 1 && m == Month.MAY)
-				// National Day
-				|| (d == 16 && m == Month.SEPTEMBER)
-				// Our Lady of Guadalupe
-				|| (d == 12 && m == Month.DECEMBER)
-				// Christmas
-				|| (d == 25 && m == Month.DECEMBER))
-			return false;
-		return true;
+		public String getName() {
+			return "Mexico stock Market";
+		}
+
+		public boolean isBusinessDay(Date date) {
+			final Weekday w = date.getWeekday();
+			final int d = date.getDayOfMonth();
+			final Month m = date.getMonthEnum();
+			final int y = date.getYear();
+			final int dd = date.getDayOfYear();
+			final int em = easterMonday(y);
+
+			if (isWeekend(w)
+					// New Year's Day
+					|| (d == 1 && m == Month.JANUARY)
+					// Constitution Day
+					|| (d == 5 && m == Month.FEBRUARY)
+					// Birthday of Benito Juarez
+					|| (d == 21 && m == Month.MARCH)
+					// Holy Thursday
+					|| (dd == em - 4)
+					// Good Friday
+					|| (dd == em - 3)
+					// Labour Day
+					|| (d == 1 && m == Month.MAY)
+					// National Day
+					|| (d == 16 && m == Month.SEPTEMBER)
+					// Our Lady of Guadalupe
+					|| (d == 12 && m == Month.DECEMBER)
+					// Christmas
+					|| (d == 25 && m == Month.DECEMBER))
+				return false;
+			
+			return true;
+		}
+
 	}
 
-}
 
-// TODO: Tests.
-final class BMVExchangeCalendar extends WesternCalendar {
+	final private class BMVExchangeCalendar extends WesternCalendar {
 
-	public String getName() {
-		return "Mexican Stock Exchange";
+		public String getName() {
+			return "Mexican Stock Exchange";
+		}
+
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
+			int dd = date.getDayOfYear();
+			int em = easterMonday(y);
+
+			if (isWeekend(w)
+					// New Year's Day
+					|| (d == 1 && m == Month.JANUARY)
+					// Constitution Day
+					|| (d == 5 && m == Month.FEBRUARY)
+					// Birthday of Benito Juarez
+					|| (d == 21 && m == Month.MARCH)
+					// Holy Thursday
+					|| (dd == em - 4)
+					// Good Friday
+					|| (dd == em - 3)
+					// Labour Day
+					|| (d == 1 && m == Month.MAY)
+					// National Day
+					|| (d == 16 && m == Month.SEPTEMBER)
+					// Our Lady of Guadalupe
+					|| (d == 12 && m == Month.DECEMBER)
+					// Christmas
+					|| (d == 25 && m == Month.DECEMBER))
+				return false;
+			
+			return true;
+		}
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int dd = date.getDayOfYear();
-		int em = easterMonday(y);
-
-		if (isWeekend(w)
-		// New Year's Day
-				|| (d == 1 && m == Month.JANUARY)
-				// Constitution Day
-				|| (d == 5 && m == Month.FEBRUARY)
-				// Birthday of Benito Juarez
-				|| (d == 21 && m == Month.MARCH)
-				// Holy Thursday
-				|| (dd == em - 4)
-				// Good Friday
-				|| (dd == em - 3)
-				// Labour Day
-				|| (d == 1 && m == Month.MAY)
-				// National Day
-				|| (d == 16 && m == Month.SEPTEMBER)
-				// Our Lady of Guadalupe
-				|| (d == 12 && m == Month.DECEMBER)
-				// Christmas
-				|| (d == 25 && m == Month.DECEMBER))
-			return false;
-		return true;
-	}
 }

@@ -42,6 +42,7 @@ import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
+
 /**
  * Japanese calendar
  * <p>
@@ -71,10 +72,15 @@ import org.jquantlib.util.Month;
  * </ul>
  * Holidays falling on a Sunday are observed on the Monday following except for
  * the bank holidays associated with the new year.
+ *
+ * @category calendars
+ * 
+ * @see <a href="http://www.tse.or.jp">Tokyo Stock Exchange</a>
  * 
  * @author Srinivas Hasti
  */
 public class Japan extends AbstractCalendar {
+	
 	private static Japan JAPAN = new Japan();
 
 	private Japan() {
@@ -85,21 +91,23 @@ public class Japan extends AbstractCalendar {
 	}
 
 	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
+		final Weekday w = date.getWeekday();
+		final int d = date.getDayOfMonth();
+		final Month m = date.getMonthEnum();
+		final int y = date.getYear();
+		
 		// equinox calculation : TODO: is double usage the right type ???
 		final double exact_vernal_equinox_time = 20.69115;
 		final double exact_autumnal_equinox_time = 23.09;
 		final double diff_per_year = 0.242194;
 		final double moving_amount = (y - 2000) * diff_per_year;
-		Integer number_of_leap_years = (y - 2000) / 4 + (y - 2000) / 100
-				- (y - 2000) / 400;
-		int ve = // vernal equinox day
-		(int) (exact_vernal_equinox_time + moving_amount - number_of_leap_years);
-		int ae = // autumnal equinox day
-		(int) (exact_autumnal_equinox_time + moving_amount - number_of_leap_years);
+		final int number_of_leap_years = (y - 2000) / 4 + (y - 2000) / 100 - (y - 2000) / 400;
+
+		// vernal equinox day
+		final int ve = (int) (exact_vernal_equinox_time + moving_amount - number_of_leap_years);
+		// autumnal equinox day
+		final int ae = (int) (exact_autumnal_equinox_time + moving_amount - number_of_leap_years);
+		
 		// checks
 		if (isWeekend(w)
 				// New Year's Day
@@ -127,16 +135,14 @@ public class Japan extends AbstractCalendar {
 				// Marine Day (3rd Monday in JULY),
 				// was JULY 20th until 2003, not a holiday before 1996
 				|| (w == MONDAY && (d >= 15 && d <= 21) && m == JULY && y >= 2003)
-				|| ((d == 20 || (d == 21 && w == MONDAY)) && m == JULY
-						&& y >= 1996 && y < 2003)
+				|| ((d == 20 || (d == 21 && w == MONDAY)) && m == JULY && y >= 1996 && y < 2003)
 				// Respect for the Aged Day (3rd Monday in SEPTEMBER),
 				// was SEPTEMBER 15th until 2003
 				|| (w == MONDAY && (d >= 15 && d <= 21) && m == SEPTEMBER && y >= 2003)
 				|| ((d == 15 || (d == 16 && w == MONDAY)) && m == SEPTEMBER && y < 2003)
 				// If a single day falls between Respect for the Aged Day
 				// and the Autumnal Equinox, it is holiday
-				|| (w == TUESDAY && d + 1 == ae && d >= 16 && d <= 22
-						&& m == SEPTEMBER && y >= 2003)
+				|| (w == TUESDAY && d + 1 == ae && d >= 16 && d <= 22 && m == SEPTEMBER && y >= 2003)
 				// Autumnal Equinox
 				|| ((d == ae || (d == ae + 1 && w == MONDAY)) && m == SEPTEMBER)
 				// Health and Sports Day (2nd Monday in OCTOBER),
@@ -166,6 +172,7 @@ public class Japan extends AbstractCalendar {
 				|| ((d == 6) && (m == MAY) && (y == 2008 || y == 2009))
 				)
 			return false;
+		
 		return true;
 	}
 
