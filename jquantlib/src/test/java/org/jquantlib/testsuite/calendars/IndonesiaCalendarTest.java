@@ -49,9 +49,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author
- * 
- * 
+ * @author Jia Jia
  */
 
 public class IndonesiaCalendarTest {
