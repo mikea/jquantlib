@@ -105,7 +105,7 @@ public class UnitedStatesCalendarTest {
 	@Test
 	public void testUnitedStatesYear2005() {
 		int year = 2005;
-		logger.info("Testing Germany holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");   
+		logger.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");   
 
 		//new years day (following monday)
 		//expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
@@ -150,7 +150,7 @@ public class UnitedStatesCalendarTest {
 	@Test
 	public void testUnitedStatesYear2006() {
 		int year = 2006;
-		logger.info("Testing Germany holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");   
+		logger.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");   
 
 		//new years day (following monday)
 		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year));
@@ -195,7 +195,7 @@ public class UnitedStatesCalendarTest {
 	@Test
 	public void testUnitedStatesYear2007() {
 		int year = 2007;
-		logger.info("Testing Germany holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");   
+		logger.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");   
 
 		//new years day
 		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
@@ -247,7 +247,7 @@ public class UnitedStatesCalendarTest {
 	@Test
 	public void testUnitedStatesYear2008() {
 		int year = 2008;
-		logger.info("Testing Germany holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");  
+		logger.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");  
 
 		//new years day
 		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
@@ -284,7 +284,7 @@ public class UnitedStatesCalendarTest {
 		
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 		
-		expectedHol.remove(good_friday);
+		//expectedHol.remove(good_friday);
 		
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -292,7 +292,7 @@ public class UnitedStatesCalendarTest {
 	@Test
 	public void testUnitedStatesYear2009() {
 		int year = 2009;
-		logger.info("Testing Germany holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
+		logger.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
 
 		//new years day
 		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
@@ -331,7 +331,7 @@ public class UnitedStatesCalendarTest {
 		
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 		
-		expectedHol.remove(good_friday);
+		//expectedHol.remove(good_friday);
 		
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -339,7 +339,7 @@ public class UnitedStatesCalendarTest {
 	@Test
 	public void testUnitedStatesYear2010() {
 		int year = 2010;
-		logger.info("Testing Germany holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
+		logger.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
 
 		//new years day
 		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
@@ -388,7 +388,7 @@ public class UnitedStatesCalendarTest {
 	@Test
 	public void testUnitedStatesYear2011() {
 		int year = 2011;
-		logger.info("Testing Germany holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ..."); 
+		logger.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ..."); 
 
 		//new years day
 		//expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
@@ -433,7 +433,7 @@ public class UnitedStatesCalendarTest {
 	@Test
 	public void testUnitedStatesYear2012() {
 		int year = 2012;
-		logger.info("Testing Germany holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ..."); 
+		logger.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ..."); 
 
 		//new years day (following monday)
 		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year));
