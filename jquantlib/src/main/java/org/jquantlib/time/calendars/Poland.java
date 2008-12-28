@@ -40,24 +40,23 @@ import org.jquantlib.util.Month;
  * @author Renjith Nair
  */
 
-//! Polish calendar
-/*! Holidays:
-    <ul>
-    <li>Saturdays</li>
-    <li>Sundays</li>
-    <li>Easter Monday</li>
-    <li>Corpus Christi</li>
-    <li>New Year's Day, January 1st</li>
-    <li>May Day, May 1st</li>
-    <li>Constitution Day, May 3rd</li>
-    <li>Assumption of the Blessed Virgin Mary, August 15th</li>
-    <li>All Saints Day, November 1st</li>
-    <li>Independence Day, November 11th</li>
-    <li>Christmas, December 25th</li>
-    <li>2nd Day of Christmas, December 26th</li>
-    </ul>
-
-    \ingroup calendars
+// Polish calendar
+/** Holidays:
+ *  <ul>
+ *  <li>Saturdays</li>
+ *  <li>Sundays</li>
+ *  <li>Easter Monday</li>
+ *  <li>Corpus Christi</li>
+ *  <li>New Year's Day, January 1st</li>
+ *  <li>May Day, May 1st</li>
+ *  <li>Constitution Day, May 3rd</li>
+ *  <li>Assumption of the Blessed Virgin Mary, August 15th</li>
+ *  <li>All Saints Day, November 1st</li>
+ *  <li>Independence Day, November 11th</li>
+ *  <li>Christmas, December 25th</li>
+ *  <li>2nd Day of Christmas, December 26th</li>
+ *  </ul>
+ *  ingroup calendars
 */	
 public class Poland extends DelegateCalendar {
 	public static enum Market {
@@ -105,7 +104,7 @@ final class PolandWSECalendar extends WesternCalendar {
 		if (isWeekend(w)
 		// Easter Monday
 				|| (dd == em)
-				|| (dd == (em-3) && y == 2009)
+				|| (dd == (em-3))
 				// Corpus Christi
 				|| (dd == em + 59)
 				// New Year's Day
@@ -123,7 +122,7 @@ final class PolandWSECalendar extends WesternCalendar {
 				|| (d == 11 && m == NOVEMBER)
 				// Christmas
 				// updated the value from http://www.polishworld.com/wse/
-				|| (d == 24 && m == DECEMBER && (y == 2008 || y == 2009))
+				|| (d == 24 && m == DECEMBER)
 				|| (d == 25 && m == DECEMBER)
 				// 2nd Day of Christmas
 				|| (d == 26 && m == DECEMBER))
