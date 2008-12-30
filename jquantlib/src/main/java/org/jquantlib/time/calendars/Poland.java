@@ -59,14 +59,19 @@ import org.jquantlib.util.Month;
  * 
  * @author Anand Mani
  * @author Renjith Nair
+ * @author Richard Gomes
  */
 public class Poland extends DelegateCalendar {
 
+	private final static Poland SETTLEMENT_CALENDAR = new Poland(Market.Settlement);
 	private final static Poland WSE_CALENDAR        = new Poland(Market.WSE);
 
 	private Poland(Market market) {
 		Calendar delegate;
 		switch (market) {
+		case Settlement:
+			delegate = new PolandSettlementCalendar();
+			break;
 		case WSE:
 			delegate = new PolandWSECalendar();
 			break;
@@ -78,6 +83,8 @@ public class Poland extends DelegateCalendar {
 
 	public static Poland getCalendar(Market market) {
 		switch (market) {
+		case Settlement:
+			return SETTLEMENT_CALENDAR;
 		case WSE:
 			return WSE_CALENDAR;
 		default:
@@ -91,7 +98,7 @@ public class Poland extends DelegateCalendar {
 	//
 	
 	public enum Market {
-		
+
 		/**
 		 * Poland settlement
 		 */
@@ -107,6 +114,48 @@ public class Poland extends DelegateCalendar {
 	//
 	// private inner classes
 	//
+
+	final private class PolandSettlementCalendar extends WesternCalendar {
+
+		public String getName() {
+			return "Poland settlement";
+		}
+	    
+		public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
+			final Weekday w = date.getWeekday();
+			final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			final Month m = date.getMonthEnum();
+			final int y = date.getYear();
+			final int em = easterMonday(y);
+			
+			if (isWeekend(w)
+					// Easter Monday
+					|| (dd == em)
+					// Corpus Christi
+					|| (dd == em + 59)
+					// New Year's Day
+					|| (d == 1 && m == JANUARY)
+					// May Day
+					|| (d == 1 && m == MAY)
+					// Constitution Day
+					|| (d == 3 && m == MAY)
+					// Assumption of the Blessed Virgin Mary
+					|| (d == 15 && m == AUGUST)
+					// All Saints Day
+					|| (d == 1 && m == NOVEMBER)
+					// Independence Day
+					|| (d == 11 && m == NOVEMBER)
+					// Christmas
+					|| (d == 25 && m == DECEMBER)
+					// Boxing Day
+					|| (d == 26 && m == DECEMBER)
+					)
+				return false;
+			return true;
+		}
+
+	}
+
 
 	final private class PolandWSECalendar extends WesternCalendar {
 
@@ -124,20 +173,10 @@ public class Poland extends DelegateCalendar {
 			if (isWeekend(w)
 					// Easter Monday
 					|| (dd == em)
-					
-	// Suspicious code
-	// See issue http://bugs.jquantlib.org/view.php?id=85
-					|| (dd == (em-3) && y == 2009)
-					
 					// Corpus Christi
 					|| (dd == em + 59)
 					// New Year's Day
 					|| (d == 1 && m == JANUARY)
-					
-	// Suspicious code
-	// See issue http://bugs.jquantlib.org/view.php?id=85
-					|| (d == 2 && m == JANUARY && y == 2009)
-
 					// May Day
 					|| (d == 1 && m == MAY)
 					// Constitution Day
@@ -149,15 +188,17 @@ public class Poland extends DelegateCalendar {
 					// Independence Day
 					|| (d == 11 && m == NOVEMBER)
 					// Christmas
-					// updated the value from http://www.polishworld.com/wse/
-					
-	// Suspicious code
-	// See issue http://bugs.jquantlib.org/view.php?id=85
-					|| (d == 24 && m == DECEMBER && (y == 2008 || y == 2009))
-
 					|| (d == 25 && m == DECEMBER)
 					// 2nd Day of Christmas
-					|| (d == 26 && m == DECEMBER))
+					|| (d == 26 && m == DECEMBER)
+
+					// Good Friday
+					|| (dd == (em-3))
+					// Christmas Eve
+					|| (d == 24 && m == DECEMBER)
+					// gap days
+					|| (d == 2 && m == JANUARY && w.equals(Weekday.FRIDAY))
+					)
 				return false;
 			return true;
 		}
@@ -165,4 +206,3 @@ public class Poland extends DelegateCalendar {
 	}
 
 }
-
