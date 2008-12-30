@@ -532,7 +532,7 @@ public class PolandCalendarTest {
 	//	Jan  1	New Year's Day
 	//	Apr 14	Good Friday
 	//	Apr 16	Easter Day
-	//	Apr 17	testPolandWSEHolidaysYear2006Easter Monday
+	//	Apr 17	Easter Monday
 	//	May  1	State Holiday
 	//	May  3	Constitution Day
 	//	Jun  4	Whit Sunday
