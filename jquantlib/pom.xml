@@ -153,6 +153,13 @@
 				<artifactId>wagon-ssh</artifactId>
 				<version>1.0-beta-2</version>
 			</extension>
+			
+			<!-- requires maven2.1.0 -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-2</version>
+			</extension>
 
 		</extensions>
 
@@ -410,11 +417,11 @@
 			</plugin>
 
 			<!-- 
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.1</version>
-      </plugin>
-      -->
+	        <plugin>
+	          <artifactId>maven-checkstyle-plugin</artifactId>
+	          <version>2.1</version>
+	        </plugin>
+	        -->
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -637,33 +644,27 @@
 					<windowtitle>JQuantLib v${project.version} API Javadocs</windowtitle>
 
 					<header>
-                        
                           &lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font>
-                        
                     </header>
                     
                     <bottom><![CDATA[
-                        
-                          <font size="-1">
-                <a href="http://sourceforge.net/tracker/?group_id=205911">
-                Submit a bug or feature</a>
-                <br/><br/>
-                JQuantLib is free software: you can redistribute it and/or modify it
-                under the terms of the QuantLib license.  You should have received a
-                copy of the license along with this program; if not, please email
-                mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
-                <a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
-                </font>
-              
-          ]]></bottom>
+						<font size="-1">
+						<a href="http://bugs.jquantlib.org/">Submit a bug or feature</a><br/><br/>
+						JQuantLib is free software: you can redistribute it and/or modify it
+						under the terms of the QuantLib license.  You should have received a
+						copy of the license along with this program; if not, please email
+						mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
+						<a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
+						</font>
+          			]]></bottom>
 
-                <links>
-                  <link>http://java.sun.com/j2se/${java.src.version}/docs/api/</link>
-                  <link>http://fastutil.dsi.unimi.it/docs/</link>
-                  <link>http://acs.lbl.gov/~hoschek/colt/api/cern/colt/package-summary.html</link>
-                  <link>http://www.slf4j.org/apidocs/</link>
-                  <link>http://junit.sourceforge.net/javadoc/</link>
-                </links>
+	                <links>
+	                  <link>http://java.sun.com/j2se/${java.src.version}/docs/api/</link>
+	                  <link>http://fastutil.dsi.unimi.it/docs/</link>
+	                  <link>http://acs.lbl.gov/~hoschek/colt/api/cern/colt/package-summary.html</link>
+	                  <link>http://www.slf4j.org/apidocs/</link>
+	                  <link>http://junit.sourceforge.net/javadoc/</link>
+	                </links>
 
                     <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
                     <docletArtifact>
@@ -784,23 +785,23 @@
         <plugin> 
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>findbugs-maven-plugin</artifactId>
-                <configuration>
-                    <report>maven-findbugs-plugin</report>
-                </configuration> 
-            </plugin>
+            <configuration>
+                <report>maven-findbugs-plugin</report>
+            </configuration> 
+        </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>surefire-report-maven-plugin</artifactId>
-            </plugin>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>surefire-report-maven-plugin</artifactId>
+        </plugin>
         
         <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <configuration>
-                    <report>maven-cobertura-plugin</report>
-        </configuration>
-            </plugin>
+	        <groupId>org.codehaus.mojo</groupId>
+	        <artifactId>cobertura-maven-plugin</artifactId>
+	        <configuration>
+	            <report>maven-cobertura-plugin</report>
+	        </configuration>
+        </plugin>
         
       </plugins>
   </reporting>
@@ -857,12 +858,12 @@
     <maven.anonymous.repository.name>JQuantLib External Free Repository</maven.anonymous.repository.name>
     <maven.anonymous.repository.url>http://www.jquantlib.org/maven2/repos/external_free</maven.anonymous.repository.url>
 
-    <!-- Developer access to artifact repository -->
+    <!-- Developer access (privileged) to artifact repository -->
     <maven.developer.repository.id>jquantlib-external_free</maven.developer.repository.id>
     <maven.developer.repository.name>JQuantLib External Free Repository</maven.developer.repository.name>
     <maven.developer.repository.url>sftp://ftp.jquantlib.org/maven2/repos/external_free</maven.developer.repository.url>
 
-    <!-- application independent properties :: Generated Site -->
+    <!-- Developer access (privileged) to generated site -->
     <maven.developer.site.id>jquantlib-site</maven.developer.site.id>
     <maven.developer.site.name>JQuantLib Generated Site</maven.developer.site.name>
     <maven.developer.site.url>sftp://ftp.jquantlib.org/maven2/sites</maven.developer.site.url>

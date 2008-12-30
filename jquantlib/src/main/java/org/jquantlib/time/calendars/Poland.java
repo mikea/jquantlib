@@ -35,37 +35,34 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
 /**
+ * Polish calendar
+ * <p>
+ * Holidays:
+ * <ul>
+ * <li>Saturdays</li>
+ * <li>Sundays</li>
+ * <li>Easter Monday</li>
+ * <li>Corpus Christi</li>
+ * <li>New Year's Day, January 1st</li>
+ * <li>May Day, May 1st</li>
+ * <li>Constitution Day, May 3rd</li>
+ * <li>Assumption of the Blessed Virgin Mary, August 15th</li>
+ * <li>All Saints Day, November 1st</li>
+ * <li>Independence Day, November 11th</li>
+ * <li>Christmas, December 25th</li>
+ * <li>2nd Day of Christmas, December 26th</li>
+ * </ul>
+ * 
+ * @category calendars
+ * 
+ * @see <a href="http://www.gpw.pl/">Warsaw Stock Exchange</a>
  * 
  * @author Anand Mani
  * @author Renjith Nair
  */
-
-// Polish calendar
-/** Holidays:
- *  <ul>
- *  <li>Saturdays</li>
- *  <li>Sundays</li>
- *  <li>Easter Monday</li>
- *  <li>Corpus Christi</li>
- *  <li>New Year's Day, January 1st</li>
- *  <li>May Day, May 1st</li>
- *  <li>Constitution Day, May 3rd</li>
- *  <li>Assumption of the Blessed Virgin Mary, August 15th</li>
- *  <li>All Saints Day, November 1st</li>
- *  <li>Independence Day, November 11th</li>
- *  <li>Christmas, December 25th</li>
- *  <li>2nd Day of Christmas, December 26th</li>
- *  </ul>
- *  ingroup calendars
-*/	
 public class Poland extends DelegateCalendar {
-	public static enum Market {
-		WSE, //  Warsaw Stock Exchange
-	};
 
-	//Warsaw Stock Exchange Calendar
-	private final static Poland WSE_CALENDAR = new Poland(
-			Market.WSE);
+	private final static Poland WSE_CALENDAR        = new Poland(Market.WSE);
 
 	private Poland(Market market) {
 		Calendar delegate;
@@ -87,47 +84,85 @@ public class Poland extends DelegateCalendar {
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-}
 
-final class PolandWSECalendar extends WesternCalendar {
 
-	public String getName() {
-		return "Warsaw Stock Exchange";
-	}
-    
-	public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int em = easterMonday(y);
-		if (isWeekend(w)
-		// Easter Monday
-				|| (dd == em)
-				|| (dd == (em-3))
-				// Corpus Christi
-				|| (dd == em + 59)
-				// New Year's Day
-				|| (d == 1 && m == JANUARY)
-				|| (d == 2 && m == JANUARY && y == 2009)
-				// May Day
-				|| (d == 1 && m == MAY)
-				// Constitution Day
-				|| (d == 3 && m == MAY)
-				// Assumption of the Blessed Virgin Mary
-				|| (d == 15 && m == AUGUST)
-				// All Saints Day
-				|| (d == 1 && m == NOVEMBER)
-				// Independence Day
-				|| (d == 11 && m == NOVEMBER)
-				// Christmas
-				// updated the value from http://www.polishworld.com/wse/
-				|| (d == 24 && m == DECEMBER)
-				|| (d == 25 && m == DECEMBER)
-				// 2nd Day of Christmas
-				|| (d == 26 && m == DECEMBER))
-			return false;
-		return true;
+	//
+	// public enums
+	//
+	
+	public enum Market {
+		
+		/**
+		 * Poland settlement
+		 */
+		Settlement,
+		
+		/**
+		 * Warsaw Stock Exchange
+		 */
+		WSE
 	}
 
+	
+	//
+	// private inner classes
+	//
+
+	final private class PolandWSECalendar extends WesternCalendar {
+
+		public String getName() {
+			return "Warsaw Stock Exchange";
+		}
+	    
+		public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
+			final Weekday w = date.getWeekday();
+			final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			final Month m = date.getMonthEnum();
+			final int y = date.getYear();
+			final int em = easterMonday(y);
+			
+			if (isWeekend(w)
+					// Easter Monday
+					|| (dd == em)
+					
+	// Suspicious code
+	// See issue http://bugs.jquantlib.org/view.php?id=85
+					|| (dd == (em-3) && y == 2009)
+					
+					// Corpus Christi
+					|| (dd == em + 59)
+					// New Year's Day
+					|| (d == 1 && m == JANUARY)
+					
+	// Suspicious code
+	// See issue http://bugs.jquantlib.org/view.php?id=85
+					|| (d == 2 && m == JANUARY && y == 2009)
+
+					// May Day
+					|| (d == 1 && m == MAY)
+					// Constitution Day
+					|| (d == 3 && m == MAY)
+					// Assumption of the Blessed Virgin Mary
+					|| (d == 15 && m == AUGUST)
+					// All Saints Day
+					|| (d == 1 && m == NOVEMBER)
+					// Independence Day
+					|| (d == 11 && m == NOVEMBER)
+					// Christmas
+					// updated the value from http://www.polishworld.com/wse/
+					
+	// Suspicious code
+	// See issue http://bugs.jquantlib.org/view.php?id=85
+					|| (d == 24 && m == DECEMBER && (y == 2008 || y == 2009))
+
+					|| (d == 25 && m == DECEMBER)
+					// 2nd Day of Christmas
+					|| (d == 26 && m == DECEMBER))
+				return false;
+			return true;
+		}
+
+	}
+
 }
+
