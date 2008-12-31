@@ -71,7 +71,7 @@
 			<id>fgomes</id>
 			<name>Richard Gomes</name>
 			<email>rgomes1997@yahoo.co.uk</email>
-			<url>http://www.linkedin.com/in/rgomes</url>
+			<url>http://www.jquantlib.org/index.php/User:RichardGomes</url>
 			<organization>JQuantLib.org</organization>
 			<organizationUrl>http://www.jquantlib.org/</organizationUrl>
 			<roles>
@@ -107,19 +107,6 @@
 			</roles>
 			<timezone>+1</timezone>
 		</developer>
-		<developer>
-			<id>aaron_k_roth</id>
-			<name>Aaron Roth</name>
-			<email />
-			<url />
-			<organization>JQuantLib.org</organization>
-			<organizationUrl>http://www.jquantlib.org/</organizationUrl>
-			<roles>
-				<role>developer</role>
-				<role>tester</role>
-			</roles>
-			<timezone>0</timezone>
-		</developer>
 	</developers>
 	<licenses>
 		<license>
@@ -148,17 +135,19 @@
 				<version>1.0-beta-2</version>
 			</extension>
 
+			<!-- Requires maven2.1.0 -->
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh</artifactId>
-				<version>1.0-beta-2</version>
+				<version>1.0-beta-4</version>
 			</extension>
-			
-			<!-- requires maven2.1.0 -->
+
+			<!-- Requires maven2.1.0 -->
+			<!-- Does not work! See: http://jira.codehaus.org/browse/WAGON-254 -->
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ftp</artifactId>
-				<version>1.0-beta-2</version>
+				<version>1.0-beta-4</version>
 			</extension>
 
 		</extensions>
@@ -545,23 +534,24 @@
 			<id>tlc</id>
 			<name>TLC Repository</name>
 			<url>http://commons.ucalgary.ca/pub/m2</url>
+			<releases>  <enabled>true</enabled> </releases>
+			<snapshots> <enabled>true</enabled> </snapshots>
 		</pluginRepository>
 
 		<pluginRepository>
-			<releases />
 			<id>sourceforge</id>
 			<name>SourceForge maven2-plugins</name>
 			<url>http://maven-plugins.sourceforge.net/repository</url>
+			<releases>  <enabled>true</enabled> </releases>
+			<snapshots> <enabled>true</enabled> </snapshots>
 		</pluginRepository>
 
 		<pluginRepository>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots />
 			<id>apache.org</id>
 			<name>Maven Plugin Snapshots</name>
 			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
+			<releases>  <enabled>true</enabled> </releases>
+			<snapshots> <enabled>true</enabled> </snapshots>
 		</pluginRepository>
 
 	</pluginRepositories>
@@ -861,12 +851,15 @@
     <!-- Developer access (privileged) to artifact repository -->
     <maven.developer.repository.id>jquantlib-external_free</maven.developer.repository.id>
     <maven.developer.repository.name>JQuantLib External Free Repository</maven.developer.repository.name>
-    <maven.developer.repository.url>sftp://ftp.jquantlib.org/maven2/repos/external_free</maven.developer.repository.url>
+    <!-- maven.developer.repository.url>ftp://ftp.jquantlib.org/maven2/repos/external_free</maven.developer.repository.url -->
+    <maven.developer.repository.url>sftp://ftp.jquantlib.org/srv/users/continuum/maven2/repos/external_free</maven.developer.repository.url>
 
     <!-- Developer access (privileged) to generated site -->
     <maven.developer.site.id>jquantlib-site</maven.developer.site.id>
     <maven.developer.site.name>JQuantLib Generated Site</maven.developer.site.name>
-    <maven.developer.site.url>sftp://ftp.jquantlib.org/maven2/sites</maven.developer.site.url>
+    <!-- maven.developer.site.url>ftp://ftp.jquantlib.org/maven2/sites</maven.developer.site.url -->
+    <maven.developer.site.url>sftp://www.jquantlib.org/srv/users/continuum/maven2/sites</maven.developer.site.url>
+    
     
   </properties>
   
