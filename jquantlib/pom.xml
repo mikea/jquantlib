@@ -1,4 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Due to bugs in wagon providers, release managers and continuous integration servers
+    need to use a special profile in order to make sure the correct version of Maven is
+	being used and correct versions of wagon providers are being activated. This is how
+	it can be used from command line:
+
+		mvn -Drole=manager validate
+
+	Observe that role=manager activates requires maven2.1.0 and versions of wagon
+	providers which depend on maven2.1.0:
+	
+	    [echo] maven.required.version=2.1.0-M1
+        [echo] extension.wagon-ftp.version=1.0-beta-5-SNAPSHOT
+        [echo] extension.wagon-ssh.version=1.0-beta-4
+	
+	M2Eclipse plugin for Eclipse always use an Embedded maven runtime which does not
+	conform to maven2.1.0 requirement. For this reason, realm=manager should never be
+	used inside Eclipse environment.
+-->
+
 <project>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jquantlib</groupId>
@@ -9,12 +30,12 @@
 	<url>http://www.jquantlib.org/</url>
 
 	<prerequisites>
-		<maven>2.0.9</maven>
+		<maven>${maven.required.version}</maven>
 	</prerequisites>
 
 	<ciManagement>
 		<system>Continuum</system>
-		<url>${maven.ci.url}</url>
+		<url>http://www.jquantlib.org:8080/continuum/</url>
 		<notifiers>
 			<notifier>
 				<configuration>
@@ -45,8 +66,8 @@
 	</ciManagement>
 
 	<issueManagement>
-		<system>SourceForge</system>
-		<url>${maven.bugs.url}</url>
+		<system>Mantis</system>
+		<url>http://bugs.jquantlib.org/</url>
 	</issueManagement>
 
 	<mailingLists>
@@ -127,8 +148,10 @@
 	</organization>
 
 	<build>
+	
 		<extensions>
 
+			<!-- Requires maven2.0.9 -->
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-http</artifactId>
@@ -139,24 +162,26 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh</artifactId>
-				<version>1.0-beta-4</version>
+				<version>${extension.wagon-ssh.version}</version>
 			</extension>
 
 			<!-- Requires maven2.1.0 -->
-			<!-- Does not work! See: http://jira.codehaus.org/browse/WAGON-254 -->
+			<!-- Unfortunately, it cannot be used at the moment because http://jira.codehaus.org/browse/MNGECLIPSE-684 -->
+			<!-- 
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ftp</artifactId>
-				<version>1.0-beta-4</version>
+				<version>${extension.wagon-ftp.version}</version>
 			</extension>
-
+			-->
 		</extensions>
-
+		
 		<plugins>
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>maven-buildnumber-plugin</artifactId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.0-beta-1</version>
 				<executions>
 					<execution>
 						<phase>validate</phase>
@@ -183,7 +208,6 @@
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<groupId>org.apache.maven.plugins</groupId>
-
 				<dependencies>
 					<dependency>
 						<groupId>ant</groupId>
@@ -230,7 +254,7 @@
 				<executions>
 					<execution>
 						<id>info</id>
-						<phase>generate-resources</phase>
+						<phase>validate</phase>
 						<goals>
 							<goal>run</goal>
 						</goals>
@@ -244,10 +268,11 @@
 								<echo>java.ext.dirs=${java.ext.dirs}</echo>
 								<echo>java.library.path=${java.library.path}</echo>
 								<echo>java.runtime.version=${java.runtime.version}</echo>
-								<echo>java.specification.version=${java.specification.version}
-                                </echo>
-								<echo>profile.manifest.app.realm=${profile.manifest.app.realm}
-                                </echo>
+								<echo>java.specification.version=${java.specification.version}</echo>
+								<echo>maven.required.version=${maven.required.version}</echo>
+								<echo>extension.wagon-ftp.version=${extension.wagon-ftp.version}</echo>
+								<echo>extension.wagon-ssh.version=${extension.wagon-ssh.version}</echo>
+								<echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo>
 								<echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>
 							</tasks>
 						</configuration>
@@ -463,13 +488,18 @@
 		</profile>
 
 		<profile>
-			<id>[realm=wallets]</id>
+			<id>[role=manager]</id>
 			<activation>
 				<property>
-					<name>realm</name>
-					<value>wallets</value>
+					<name>role</name>
+					<value>manager</value>
 				</property>
 			</activation>
+			<properties>
+				<maven.required.version>2.1.0-M1</maven.required.version>
+				<extension.wagon-ftp.version>1.0-beta-5-SNAPSHOT</extension.wagon-ftp.version>
+				<extension.wagon-ssh.version>1.0-beta-4</extension.wagon-ssh.version>
+			</properties>
 		</profile>
 
 		<profile>
@@ -487,72 +517,102 @@
 	<repositories>
 
 		<repository>
-			<id>${maven.anonymous.repository.id}</id>
-			<name>${maven.anonymous.repository.name}</name>
-			<url>${maven.anonymous.repository.url}</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
+			<id>jquantlib-external_free</id>
+			<name>JQuantLib External Free Repository</name>
+			<url>http://www.jquantlib.org/maven2/repos/external_free</url>
+			<releases>  <enabled>true</enabled> </releases>
+			<snapshots> <enabled>true</enabled> </snapshots>
 		</repository>
 
 		<repository>
-			<releases />
-			<snapshots />
 			<id>central</id>
 			<name>Central Maven2 repository</name>
 			<url>http://repo1.maven.org/maven2</url>
+			<releases>  <enabled>true</enabled>  </releases>
+			<snapshots> <enabled>false</enabled> </snapshots>
 		</repository>
 
 		<repository>
-			<releases />
-			<snapshots />
+			<id>maven2-snapshots</id>
+			<name>Maven2 Snapshots</name>
+			<url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+			<releases>  <enabled>false</enabled> </releases>
+			<snapshots> <enabled>true</enabled> </snapshots>
+		</repository>
+		
+		<repository>
+		    <id>mojo</id>
+		    <name>Mojo</name>
+		    <url>http://repository.codehaus.org/</url>
+		    <releases>  <enabled>true</enabled> </releases>
+		    <snapshots> <enabled>true</enabled>  </snapshots>
+		</repository>
+		
+		<!--
+		<repository>
 			<id>sonatype</id>
 			<name>Sonatype Maven2 repository</name>
 			<url>http://repository.sonatype.org/</url>
+			<releases>  <enabled>true</enabled>  </releases>
+			<snapshots> <enabled>false</enabled> </snapshots>
 		</repository>
 
-		<!--
 		<repository>
-			<releases/> 
-			<snapshots/> 
-			<id>ibiblio</id> 
-			<name>Ibiblio Maven2 repository</name> 
-			<url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+			<id>tlc</id>
+			<name>TLC Repository</name>
+			<url>http://commons.ucalgary.ca/pub/m2</url>
+			<releases>  <enabled>true</enabled>  </releases>
+			<snapshots> <enabled>false</enabled> </snapshots>
 		</repository>
+
 		-->
 
 	</repositories>
 
-
-
 	<pluginRepositories>
+
+		<pluginRepository>
+			<id>central</id>
+			<name>Central Maven2 repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>  <enabled>true</enabled>  </releases>
+			<snapshots> <enabled>false</enabled> </snapshots>
+		</pluginRepository>
+
+		<pluginRepository>
+			<id>maven2-snapshots</id>
+			<name>Maven2 Snapshots</name>
+			<url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+			<releases>  <enabled>false</enabled> </releases>
+			<snapshots> <enabled>true</enabled>  </snapshots>
+		</pluginRepository>
+		
+		<pluginRepository>
+		    <id>mojo</id>
+		    <name>Mojo</name>
+		    <url>http://repository.codehaus.org/</url>
+		    <releases>  <enabled>true</enabled> </releases>
+		    <snapshots> <enabled>true</enabled>  </snapshots>
+		</pluginRepository>
+		
+		<!--
+		<pluginRepository>
+			<id>sourceforge</id>
+			<name>SourceForge maven2-plugins</name>
+			<url>http://maven-plugins.sourceforge.net/repository</url>
+			<releases>  <enabled>true</enabled>  </releases>
+			<snapshots> <enabled>false</enabled> </snapshots>
+		</pluginRepository>
 
 		<pluginRepository>
 			<id>tlc</id>
 			<name>TLC Repository</name>
 			<url>http://commons.ucalgary.ca/pub/m2</url>
-			<releases>  <enabled>true</enabled> </releases>
-			<snapshots> <enabled>true</enabled> </snapshots>
+			<releases>  <enabled>true</enabled>  </releases>
+			<snapshots> <enabled>false</enabled> </snapshots>
 		</pluginRepository>
 
-		<pluginRepository>
-			<id>sourceforge</id>
-			<name>SourceForge maven2-plugins</name>
-			<url>http://maven-plugins.sourceforge.net/repository</url>
-			<releases>  <enabled>true</enabled> </releases>
-			<snapshots> <enabled>true</enabled> </snapshots>
-		</pluginRepository>
-
-		<pluginRepository>
-			<id>apache.org</id>
-			<name>Maven Plugin Snapshots</name>
-			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
-			<releases>  <enabled>true</enabled> </releases>
-			<snapshots> <enabled>true</enabled> </snapshots>
-		</pluginRepository>
+		-->
 
 	</pluginRepositories>
 
@@ -797,25 +857,40 @@
   </reporting>
 
   <distributionManagement>
+
+    <!-- Developer access (privileged) to artifact repository -->
     <repository>
-      <id>${maven.developer.repository.id}</id>
-      <name>${maven.developer.repository.name}</name>
-      <url>${maven.developer.repository.url}</url>
+      <id>jquantlib-external_free</id>
+      <name>JQuantLib External Free Repository</name>
+      <url>sftp://ftp.jquantlib.org/srv/users/continuum/maven2/repos/external_free</url>
+      <!-- url>ftp://ftp.jquantlib.org/maven2/repos/external_free</url -->
       <layout>default</layout>
       <uniqueVersion>false</uniqueVersion>
     </repository>
     
+    <!-- Developer access (privileged) to generated site -->
     <site>
-      <id>${maven.developer.site.id}</id>
-      <name>${maven.developer.site.name}</name>
-      <url>${maven.developer.site.url}/${project.artifactId}/</url>
+      <id>jquantlib-site</id>
+      <name>JQuantLib Generated Site</name>
+      <url>sftp://www.jquantlib.org/srv/users/continuum/maven2/sites</url>
+      <!-- url>ftp://ftp.jquantlib.org/maven2/sites</url -->
     </site>
+
   </distributionManagement>
+
   
   <properties>
     <!-- profile defaults -->
     <profile.manifest.app.realm>default</profile.manifest.app.realm>
     <profile.manifest.app.mode>debug</profile.manifest.app.mode>
+
+    <!-- These settings are only needed by Continuum and release managers      -->
+    <!-- Defaults used here are intended to avoid problems with maven2.0.9 but -->
+    <!-- are not values Continuum and release managers need.                   -->
+    <role>default</role>
+    <maven.required.version>2.0.9</maven.required.version>
+    <extension.wagon-ssh.version>1.0-beta-1</extension.wagon-ssh.version>
+    <extension.wagon-ftp.version>1.0-beta-1</extension.wagon-ftp.version>
 
     <!-- SCM parameters -->
     <maven.scm.project>jquant</maven.scm.project>
@@ -837,30 +912,6 @@
     <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
     <maven.scm.url>http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.url>
     
-    <!-- application independent properties :: Issue Management -->
-    <maven.bugs.url>http://bugs.jquantlib.org/</maven.bugs.url>
-    
-    <!-- application independent properties :: Continuous Integration -->
-    <maven.ci.url>http://www.jquantlib.org:8080/continuum/</maven.ci.url>
-    
-    <!-- Anonymouns access to artifact repository -->
-    <maven.anonymous.repository.id>jquantlib-external_free</maven.anonymous.repository.id>
-    <maven.anonymous.repository.name>JQuantLib External Free Repository</maven.anonymous.repository.name>
-    <maven.anonymous.repository.url>http://www.jquantlib.org/maven2/repos/external_free</maven.anonymous.repository.url>
-
-    <!-- Developer access (privileged) to artifact repository -->
-    <maven.developer.repository.id>jquantlib-external_free</maven.developer.repository.id>
-    <maven.developer.repository.name>JQuantLib External Free Repository</maven.developer.repository.name>
-    <!-- maven.developer.repository.url>ftp://ftp.jquantlib.org/maven2/repos/external_free</maven.developer.repository.url -->
-    <maven.developer.repository.url>sftp://ftp.jquantlib.org/srv/users/continuum/maven2/repos/external_free</maven.developer.repository.url>
-
-    <!-- Developer access (privileged) to generated site -->
-    <maven.developer.site.id>jquantlib-site</maven.developer.site.id>
-    <maven.developer.site.name>JQuantLib Generated Site</maven.developer.site.name>
-    <!-- maven.developer.site.url>ftp://ftp.jquantlib.org/maven2/sites</maven.developer.site.url -->
-    <maven.developer.site.url>sftp://www.jquantlib.org/srv/users/continuum/maven2/sites</maven.developer.site.url>
-    
-    
-  </properties>
-  
+  </properties>>
+ 
 </project>
