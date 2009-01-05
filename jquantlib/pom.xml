@@ -26,8 +26,22 @@
 	<artifactId>jquantlib</artifactId>
 	<name>JQuantLib</name>
 	<version>0.1.2-SNAPSHOT</version>
-	<description>JQuantLib aims to provide a free, open-source and comprehensive framework for quantitative finance, written in Java.</description>
 	<url>http://www.jquantlib.org/</url>
+	<description><![CDATA[
+		JQuantLib is a free, open-source and comprehensive framework for quantitative finance, such as
+		several mathematical and statistical tools needed for financial instrument valuation, calculation
+		of VaR, portfolio valuation, etc.
+		<p>
+		JQuantLib is written in Java and is based on QuantLib, which is written in C++ and can be considered
+		a stable, reliable reference implementation for C++ world. Following the steps of its predecessor,
+		JQuantLib aims to become a reference implementation for Java world.
+		<p>
+		JQuantLib does its best efforts to mimic as close as possible the API exposed by QuantLib,
+		offering a smooth transition path for organizations considering high performance, low latency
+		Java appliances and JVMs.
+		<p>
+		For more information, please visit <a href="http://www.jquantlib.org">JQuantLib Website</a>
+	]]></description>
 
 	<prerequisites>
 		<maven>${maven.required.version}</maven>
