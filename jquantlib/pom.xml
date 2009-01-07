@@ -873,8 +873,8 @@
     <repository>
       <id>jquantlib-external_free</id>
       <name>JQuantLib External Free Repository</name>
-      <!-- url>sftp://ftp.jquantlib.org/srv/users/continuum/maven2/repos/external_free</url -->
-      <url>ftp://ftp.jquantlib.org/maven2/repos/external_free</url>
+      <url>sftp://ftp.jquantlib.org/srv/users/continuum/maven2/repos/external_free</url>
+      <!-- url>ftp://ftp.jquantlib.org/maven2/repos/external_free</url -->
       <layout>default</layout>
       <uniqueVersion>false</uniqueVersion>
     </repository>
@@ -883,8 +883,8 @@
     <site>
       <id>jquantlib-site</id>
       <name>JQuantLib Generated Site</name>
-      <!-- url>sftp://www.jquantlib.org/srv/users/continuum/maven2/sites</url -->
-      <url>ftp://ftp.jquantlib.org/maven2/sites</url>
+      <url>sftp://www.jquantlib.org/srv/users/continuum/maven2/sites</url>
+      <!-- url>ftp://ftp.jquantlib.org/maven2/sites</url -->
     </site>
 
   </distributionManagement>
