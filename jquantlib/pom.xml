@@ -180,14 +180,11 @@
 			</extension>
 
 			<!-- Requires maven2.1.0 -->
-			<!-- Unfortunately, it cannot be used at the moment because http://jira.codehaus.org/browse/MNGECLIPSE-684 -->
-			<!-- 
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ftp</artifactId>
 				<version>${extension.wagon-ftp.version}</version>
 			</extension>
-			-->
 		</extensions>
 		
 		<plugins>
