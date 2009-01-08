@@ -520,7 +520,7 @@
 				<extension.wagon-file.version>1.0-beta-4</extension.wagon-file.version>
 				<extension.wagon-ftp.urlbase>ftp://ftp.jquantlib.org</extension.wagon-ftp.urlbase>
 				<extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/continuum</extension.wagon-ssh.urlbase>
-				<extension.wagon-file.urlbase>file://~/tmp/builds/${project.name}/${project.version}</extension.wagon-file.urlbase>
+				<extension.wagon-file.urlbase>file://target</extension.wagon-file.urlbase>
 			</properties>
 		</profile>
 
@@ -539,7 +539,7 @@
 				<extension.wagon-file.version>1.0-beta-4</extension.wagon-file.version>
 				<extension.wagon-ftp.urlbase>ftp://localhost</extension.wagon-ftp.urlbase>
 				<extension.wagon-ssh.urlbase>sftp://localhost/srv/users/continuum</extension.wagon-ssh.urlbase>
-				<extension.wagon-file.urlbase>file:///srv/users/continuum/${project.name}/${project.version}</extension.wagon-file.urlbase>
+				<extension.wagon-file.urlbase>file:///srv/users/continuum</extension.wagon-file.urlbase>
 			</properties>
 		</profile>
 
@@ -975,8 +975,8 @@
     <extension.wagon-file.version>1.0-beta-1</extension.wagon-file.version>
     <extension.wagon-ftp.urlbase>ftp://ftp.jquantlib.org</extension.wagon-ftp.urlbase>
     <extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/continuum</extension.wagon-ssh.urlbase>
-    <extension.wagon-file.urlbase>file://~/tmp/builds/${project.name}/${project.version}</extension.wagon-file.urlbase>
-    <extension.protocol.urlbase>${extension.wagon-ssh.urlbase}</extension.protocol.urlbase>
+    <extension.wagon-file.urlbase>file://target</extension.wagon-file.urlbase>
+    <extension.protocol.urlbase>${extension.wagon-file.urlbase}</extension.protocol.urlbase>
 
 
     <!-- SCM parameters -->
