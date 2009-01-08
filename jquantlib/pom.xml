@@ -7,8 +7,9 @@
 	it can be used from command line:
 
 		mvn -Drole=manager validate
+		mvn -Drole=continuum validate
 
-	Observe that role=manager activates requires maven2.1.0 and versions of wagon
+	Observe that role=manager or role=continuum requires maven2.1.0 and versions of wagon
 	providers which depend on maven2.1.0:
 	
 	    [echo] maven.required.version=2.1.0-M1
@@ -16,8 +17,8 @@
         [echo] extension.wagon-ssh.version=1.0-beta-4
 	
 	M2Eclipse plugin for Eclipse always use an Embedded maven runtime which does not
-	conform to maven2.1.0 requirement. For this reason, realm=manager should never be
-	used inside Eclipse environment.
+	conform to maven2.1.0 requirement. For this reason, role=manager or role=continuum
+	should never be used inside Eclipse environment.
 -->
 
 <project>
@@ -175,15 +176,18 @@
 			<!-- Requires maven2.1.0 -->
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>${extension.wagon-ftp.version}</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh</artifactId>
 				<version>${extension.wagon-ssh.version}</version>
 			</extension>
-
-			<!-- Requires maven2.1.0 -->
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ftp</artifactId>
-				<version>${extension.wagon-ftp.version}</version>
+				<artifactId>wagon-file</artifactId>
+				<version>${extension.wagon-file.version}</version>
 			</extension>
 		</extensions>
 		
@@ -283,8 +287,10 @@
 								<echo>maven.required.version=${maven.required.version}</echo>
 								<echo>extension.wagon-ftp.version=${extension.wagon-ftp.version}</echo>
 								<echo>extension.wagon-ssh.version=${extension.wagon-ssh.version}</echo>
+								<echo>extension.wagon-file.version=${extension.wagon-file.version}</echo>
 								<echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo>
 								<echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>
+								<echo>extension.protocol.urlbase=${extension.protocol.urlbase}</echo>
 							</tasks>
 						</configuration>
 					</execution>
@@ -498,6 +504,7 @@
 			</activation>
 		</profile>
 
+
 		<profile>
 			<id>[role=manager]</id>
 			<activation>
@@ -510,8 +517,72 @@
 				<maven.required.version>2.1.0-M1</maven.required.version>
 				<extension.wagon-ftp.version>1.0-beta-5-SNAPSHOT</extension.wagon-ftp.version>
 				<extension.wagon-ssh.version>1.0-beta-4</extension.wagon-ssh.version>
+				<extension.wagon-file.version>1.0-beta-4</extension.wagon-file.version>
+				<extension.wagon-ftp.urlbase>ftp://ftp.jquantlib.org</extension.wagon-ftp.urlbase>
+				<extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/continuum</extension.wagon-ssh.urlbase>
+				<extension.wagon-file.urlbase>file://~/tmp/builds/${project.name}/${project.version}</extension.wagon-file.urlbase>
 			</properties>
 		</profile>
+
+		<profile>
+			<id>[role=continuum]</id>
+			<activation>
+				<property>
+					<name>role</name>
+					<value>continuum</value>
+				</property>
+			</activation>
+			<properties>
+				<maven.required.version>2.1.0-M1</maven.required.version>
+				<extension.wagon-ftp.version>1.0-beta-5-SNAPSHOT</extension.wagon-ftp.version>
+				<extension.wagon-ssh.version>1.0-beta-4</extension.wagon-ssh.version>
+				<extension.wagon-file.version>1.0-beta-4</extension.wagon-file.version>
+				<extension.wagon-ftp.urlbase>ftp://localhost</extension.wagon-ftp.urlbase>
+				<extension.wagon-ssh.urlbase>sftp://localhost/srv/users/continuum</extension.wagon-ssh.urlbase>
+				<extension.wagon-file.urlbase>file:///srv/users/continuum/${project.name}/${project.version}</extension.wagon-file.urlbase>
+			</properties>
+		</profile>
+
+
+		<profile>
+			<id>[protocol=ftp]</id>
+			<activation>
+				<property>
+					<name>protocol</name>
+					<value>ftp</value>
+				</property>
+			</activation>
+			<properties>
+				<extension.protocol.urlbase>${extension.wagon-ftp.urlbase}</extension.protocol.urlbase>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>[protocol=ssh]</id>
+			<activation>
+				<property>
+					<name>protocol</name>
+					<value>ssh</value>
+				</property>
+			</activation>
+			<properties>
+				<extension.protocol.urlbase>${extension.wagon-ssh.urlbase}</extension.protocol.urlbase>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>[protocol=file]</id>
+			<activation>
+				<property>
+					<name>protocol</name>
+					<value>file</value>
+				</property>
+			</activation>
+			<properties>
+				<extension.protocol.urlbase>${extension.wagon-file.urlbase}</extension.protocol.urlbase>
+			</properties>
+		</profile>
+
 
 		<profile>
 			<id>[revision=unchecked]</id>
@@ -873,8 +944,7 @@
     <repository>
       <id>jquantlib-external_free</id>
       <name>JQuantLib External Free Repository</name>
-      <url>sftp://ftp.jquantlib.org/srv/users/continuum/maven2/repos/external_free</url>
-      <!-- url>ftp://ftp.jquantlib.org/maven2/repos/external_free</url -->
+      <url>${extension.protocol.urlbase}/maven2/repos/external_free</url>
       <layout>default</layout>
       <uniqueVersion>false</uniqueVersion>
     </repository>
@@ -883,8 +953,7 @@
     <site>
       <id>jquantlib-site</id>
       <name>JQuantLib Generated Site</name>
-      <url>sftp://www.jquantlib.org/srv/users/continuum/maven2/sites</url>
-      <!-- url>ftp://ftp.jquantlib.org/maven2/sites</url -->
+      <url>${extension.protocol.urlbase}/maven2/sites</url>
     </site>
 
   </distributionManagement>
@@ -898,10 +967,17 @@
     <!-- These settings are only needed by Continuum and release managers      -->
     <!-- Defaults used here are intended to avoid problems with maven2.0.9 but -->
     <!-- are not values Continuum and release managers need.                   -->
-    <role>default</role>
+    <!--  role>default</role>
+    <protocol>ssh</protocol -->
     <maven.required.version>2.0.9</maven.required.version>
     <extension.wagon-ssh.version>1.0-beta-1</extension.wagon-ssh.version>
     <extension.wagon-ftp.version>1.0-beta-1</extension.wagon-ftp.version>
+    <extension.wagon-file.version>1.0-beta-1</extension.wagon-file.version>
+    <extension.wagon-ftp.urlbase>ftp://ftp.jquantlib.org</extension.wagon-ftp.urlbase>
+    <extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/continuum</extension.wagon-ssh.urlbase>
+    <extension.wagon-file.urlbase>file://~/tmp/builds/${project.name}/${project.version}</extension.wagon-file.urlbase>
+    <extension.protocol.urlbase>${extension.wagon-ssh.urlbase}</extension.protocol.urlbase>
+
 
     <!-- SCM parameters -->
     <maven.scm.project>jquant</maven.scm.project>
