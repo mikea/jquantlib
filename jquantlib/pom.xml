@@ -953,7 +953,7 @@
     <site>
       <id>jquantlib-site</id>
       <name>JQuantLib Generated Site</name>
-      <url>${extension.protocol.urlbase}/maven2/sites</url>
+      <url>${extension.protocol.urlbase}/maven2/sites/${project.artifactId}</url>
     </site>
 
   </distributionManagement>
