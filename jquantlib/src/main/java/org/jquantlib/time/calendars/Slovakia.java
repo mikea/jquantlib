@@ -26,13 +26,13 @@ package org.jquantlib.time.calendars;
 
 
 
-import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.MAY;
-import static org.jquantlib.util.Month.JULY;
 import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.SEPTEMBER;
-import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.JULY;
+import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.util.Month.SEPTEMBER;
 
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
@@ -64,13 +64,8 @@ import org.jquantlib.util.Month;
         </ul>
 	*/
 public class Slovakia extends DelegateCalendar {
-	public static enum Market {
-		BSSE //  Bratislava stock exchange of Slovakia
-	};
-
 	
-	private final static Slovakia BSSE_CALENDAR = new Slovakia(
-			Market.BSSE);
+	private final static Slovakia BSSE_CALENDAR = new Slovakia(Market.BSSE);
 
 	private Slovakia(Market market) {
 		Calendar delegate;
@@ -92,56 +87,72 @@ public class Slovakia extends DelegateCalendar {
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-}
 
-final class SlovakiaBSSECalendar extends WesternCalendar {
 
-	public String getName() {
-		return "Bratislava stock exchange";
+	//
+	// public enums
+	//
+
+	public enum Market {
+		BSSE //  Bratislava stock exchange of Slovakia
+	};
+
+
+	//
+	// private inner classes
+	//
+
+	private class SlovakiaBSSECalendar extends WesternCalendar {
+
+		public String getName() {
+			return "Bratislava stock exchange";
+		}
+
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+	        int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+	        Month m = date.getMonthEnum();
+	        int y = date.getYear();
+	        int em = easterMonday(y);
+			
+			if (isWeekend(w)
+		        // New Year's Day
+	            || (d == 1 && m == JANUARY)
+	            // Epiphany
+	            || (d == 6 && m == JANUARY)
+	            // Good Friday
+	            || (dd == em-3)
+	            // Easter Monday
+	            || (dd == em)
+	            // May Day
+	            || (d == 1 && m == MAY)
+	            // Liberation of the Republic
+	            || (d == 8 && m == MAY)
+	            // SS. Cyril and Methodius
+	            || (d == 5 && m == JULY)
+	            // Slovak National Uprising
+	            || (d == 29 && m == AUGUST)
+	            // Constitution of the Slovak Republic
+	            || (d == 1 && m == SEPTEMBER)
+	            // Our Lady of the Seven Sorrows
+	            || (d == 15 && m == SEPTEMBER)
+	            // All Saints Day
+	            || (d == 1 && m == NOVEMBER)
+	            // Freedom and Democracy of the Slovak Republic
+	            || (d == 17 && m == NOVEMBER)
+	            // Christmas Eve
+	            || (d == 24 && m == DECEMBER)
+	            // Christmas
+	            || (d == 25 && m == DECEMBER)
+	            // St. Stephen
+	            || (d == 26 && m == DECEMBER)
+	            
+	            // unidentified closing days for stock exchange
+	            || (y >= 2004 && ((d >= 24 && d <= 31 && m == DECEMBER) || (d >= 1 && d <= 6 && m == JANUARY)))
+	            )
+		            return false;
+		        return true;
+		}
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-        int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-        Month m = date.getMonthEnum();
-        int y = date.getYear();
-        int em = easterMonday(y);
-		
-		if (isWeekend(w)
-	        // New Year's Day
-            || (d == 1 && m == JANUARY)
-            // Epiphany
-            || (d == 6 && m == JANUARY)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // May Day
-            || (d == 1 && m == MAY)
-            // Liberation of the Republic
-            || (d == 8 && m == MAY)
-            // SS. Cyril and Methodius
-            || (d == 5 && m == JULY)
-            // Slovak National Uprising
-            || (d == 29 && m == AUGUST)
-            // Constitution of the Slovak Republic
-            || (d == 1 && m == SEPTEMBER)
-            // Our Lady of the Seven Sorrows
-            || (d == 15 && m == SEPTEMBER)
-            // All Saints Day
-            || (d == 1 && m == NOVEMBER)
-            // Freedom and Democracy of the Slovak Republic
-            || (d == 17 && m == NOVEMBER)
-            // Christmas Eve
-            || (d == 24 && m == DECEMBER)
-            // Christmas
-            || (d == 25 && m == DECEMBER)
-            // St. Stephen
-            || (d == 26 && m == DECEMBER)
-            // unidentified closing days for stock exchange
-            || (d >= 24 && d <= 31 && m == DECEMBER && y == 2004)
-            || (d >= 24 && d <= 31 && m == DECEMBER && y == 2005))
-	            return false;
-	        return true;
-	}
 }
