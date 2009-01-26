@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2009 Richard Gomes
+ Copyright (C) 2009 Jose Coll
 
  This source code is release under the BSD License.
  
@@ -57,16 +57,15 @@ public class AmericanPayoffAtHit {
     private final /* @Price */ double spot;
     private final /* @Variance */ double variance;
     
-    double /* @Volatility */ stdDev;
-    double strike, K, DKDstrike;
-    double mu, lambda, muPlusLambda, muMinusLambda, log_H_S;
-    double D1, D2, cum_d1, cum_d2, n_d1, n_d2;
-    double alpha, beta, DalphaDd1, DbetaDd2;
-    boolean inTheMoney;
-    double forward, X, DXDstrike;
+    private final double /* @Volatility */ stdDev;
+    private       double strike, K, DKDstrike; // TODO RICHARD :: add "final" here and see what happens! :)
+    private final double mu, lambda, muPlusLambda, muMinusLambda, log_H_S;
+    private       double D1, D2, cum_d1, cum_d2, n_d1, n_d2; // TODO RICHARD :: add "final" here and see what happens! :)
+    private final double alpha, beta, DalphaDd1, DbetaDd2;
+    private final boolean inTheMoney;
+    private       double forward, X, DXDstrike; // TODO RICHARD :: add "final" here and see what happens! :)
     
-    public AmericanPayoffAtHit(double spot, double discount, double dividendDiscount, double variance,
-            StrikedTypePayoff strikedTypePayoff) {
+    public AmericanPayoffAtHit(final double spot, final double discount, final double dividendDiscount, final double variance, final StrikedTypePayoff strikedTypePayoff) {
         super();
         this.spot = spot;
         this.variance = variance;

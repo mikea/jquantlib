@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2009 Richard Gomes
+ Copyright (C) 2009 Jose Coll
 
  This source code is release under the BSD License.
  
@@ -52,20 +52,25 @@ import org.jquantlib.math.distributions.CumulativeNormalDistribution;
  * @author Jose Coll
  */
 
+//TODO: finish this class
+//-- When your code is not complete, please add "TODO" so that it becomes easy to track what is needed to be done
+
 public class AmericanPayoffAtExpiry {
 
     private final /* @DiscountFactor */ double discount;
     
-    double forward;
-    double /* @Volatility */ stdDev;
-    double strike, K, DKDstrike;
-    double mu, log_H_S;
-    double D1, D2, cum_d1, cum_d2, n_d1, n_d2;
-    double alpha, beta, DalphaDd1, DbetaDd2;
-    boolean inTheMoney;
-    double Y, DYDstrike, X, DXDstrike;    
+    private       double forward; // TODO RICHARD :: add "final" here and see what happens! :)
     
-    public AmericanPayoffAtExpiry(double spot, double discount, double dividendDiscount, double variance, StrikedTypePayoff strikedTypePayoff) {
+    private final double /* @Volatility */ stdDev;
+    private final double strike;
+    private final double log_H_S;
+    private final double cum_d1, cum_d2, n_d1, n_d2;
+    private final double alpha, beta, DalphaDd1, DbetaDd2;
+    private final boolean inTheMoney;
+    private final double Y, X;
+    private double mu, K, D1, D2, DKDstrike, DXDstrike, DYDstrike;
+    
+    public AmericanPayoffAtExpiry(final double spot, final double discount, final double dividendDiscount, final double variance, final StrikedTypePayoff strikedTypePayoff) {
         super();
         this.discount = discount;
         
@@ -171,8 +176,9 @@ public class AmericanPayoffAtExpiry {
         } else {
             Y = 1.0;
             X = Math.pow(strike / spot, 2.0 * mu);
-//            DXDstrike_ = ......;
-        }                        
+//TODO::            DXDstrike_ = ......;
+        }
+        
     }
     
     public /* @Price */ double value() /* @ReadOnly */ {

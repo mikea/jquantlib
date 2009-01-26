@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007 Srinivas Hasti
+ Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -19,12 +19,21 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.instruments.american;
+package org.jquantlib.instruments;
 
-//Comments from quantlib
-//! Analytic formula for American exercise payoff at-hit options
-/*! \todo calculate greeks */
-//TODO: complete impl
-public abstract class AmericanPayoffAtExpiry {
-	/* Real */abstract double value();
+
+/**
+ * 
+ * Ported from 
+ * <ul>
+ * <li>ql/instruments/barrieroption.hpp</li>
+ * </ul>
+ * 
+ * @author <Richard Gomes>
+ *
+ */
+
+public enum BarrierType {
+
+	DownIn, UpIn, DownOut, UpOut ;
 }

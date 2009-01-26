@@ -88,6 +88,7 @@ import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
+import org.jquantlib.pricingengines.vanilla.BaroneAdesiWhaleyApproximationEngine;
 import org.jquantlib.pricingengines.vanilla.IntegralEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
@@ -193,8 +194,9 @@ public class EquityOptions {
         // Barone-Adesi and Whaley approximation for American
         method = "Barone-Adesi/Whaley";
         System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        americanOption.setPricingEngine(new BaroneAdesiWhaleyEngine());
-//        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
+        //-- UNCOMMENT AS SOON AMERICAN OPTIONS IS READY
+        //americanOption.setPricingEngine(new BaroneAdesiWhaleyApproximationEngine());
+        //System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
 
         // Bjerksund and Stensland approximation for American
         method = "Bjerksund/Stensland";
