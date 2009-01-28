@@ -22,8 +22,6 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.util.Month.JULY;
-
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -122,7 +120,7 @@ public class Mexico extends DelegateCalendar {
 					// New Year's Day
 					|| (d == 1 && m == Month.JANUARY)
 					// Constitution Day
-					|| (d == 5 && m == Month.FEBRUARY)
+					|| (d <= 7 && w.equals(Weekday.MONDAY) && m == Month.FEBRUARY)
 					// Birthday of Benito Juarez
 					|| (d == 21 && m == Month.MARCH)
 					// Holy Thursday
@@ -133,6 +131,10 @@ public class Mexico extends DelegateCalendar {
 					|| (d == 1 && m == Month.MAY)
 					// National Day
 					|| (d == 16 && m == Month.SEPTEMBER)
+					// All Soul's Day
+					|| (d == 2 && m == Month.NOVEMBER)
+					// Mexican Revolution - 3rd Monday of November
+					|| (d >= 14 && d < 21 && w.equals(Weekday.MONDAY) && m == Month.NOVEMBER)
 					// Our Lady of Guadalupe
 					|| (d == 12 && m == Month.DECEMBER)
 					// Christmas
@@ -162,8 +164,8 @@ public class Mexico extends DelegateCalendar {
 			if (isWeekend(w)
 					// New Year's Day
 					|| (d == 1 && m == Month.JANUARY)
-					// Constitution Day
-					|| (d == 5 && m == Month.FEBRUARY)
+					// Constitution Day - 1st Monday of November
+					|| (d <= 7 && w.equals(Weekday.MONDAY) && m == Month.FEBRUARY)
 					// Birthday of Benito Juarez
 					|| (d == 21 && m == Month.MARCH)
 					// Holy Thursday
@@ -174,6 +176,10 @@ public class Mexico extends DelegateCalendar {
 					|| (d == 1 && m == Month.MAY)
 					// National Day
 					|| (d == 16 && m == Month.SEPTEMBER)
+					// All Soul's Day
+					|| (d == 2 && m == Month.NOVEMBER)
+					// Mexican Revolution - 3rd Monday of November
+					|| (d >= 14 && d < 21 && w.equals(Weekday.MONDAY) && m == Month.NOVEMBER)
 					// Our Lady of Guadalupe
 					|| (d == 12 && m == Month.DECEMBER)
 					// Christmas
