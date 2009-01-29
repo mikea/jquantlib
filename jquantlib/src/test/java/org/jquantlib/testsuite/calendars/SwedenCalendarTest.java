@@ -31,15 +31,11 @@ import static org.jquantlib.util.Month.MAY;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.jquantlib.time.Calendar;
-import org.jquantlib.time.calendars.Norway;
 import org.jquantlib.time.calendars.Sweden;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +53,7 @@ public class SwedenCalendarTest {
 	
 	public SwedenCalendarTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	    //TODO: this.settlement = Sweden.getCalendar(Poland.Market.Settlement);
+	    //TODO: this.settlement = Sweden.getCalendar(Sweden.Market.Settlement);
 	    this.exchange   = Sweden.getCalendar(Sweden.Market.SSE);
 	}
 

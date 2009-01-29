@@ -22,73 +22,97 @@
 
 package org.jquantlib.time.calendars;
 
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
 /**
- * 
  * @author Siju Odeyemi
- *
  */
-public class Iceland extends WesternCalendar {
-	
-	private static Iceland ICELAND = new Iceland();
+public class Iceland extends DelegateCalendar {
 
-	private Iceland() {
+	private final static Iceland ICEX_CALENDAR = new Iceland(Market.ICEX);
+
+	private Iceland(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case ICEX:
+			delegate = new IcelandICEXCalendar();
+			break;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		setDelegate(delegate);
 	}
 
-	public static Iceland getCalendar() {
-		return ICELAND;
+	public static Iceland getCalendar(Market market) {
+		switch (market) {
+		case ICEX:
+			return ICEX_CALENDAR;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
 	}
-	@Override
-	public String getName() {
-		return "Iceland";
+
+
+	//
+	// public enums
+	//
+	
+	public enum Market {
+		ICEX, // Iceland Stock Exchange 
 	}
+
 	
-	public boolean isBusinessDay(final Date date){
-        Weekday w = date.getWeekday();
-         
-        int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-        int m = date.getMonth();
-        int y = date.getYear();
-        int em = easterMonday(y);
-        if(isWeekend(w)
-            // New Year's Day (possibly moved to Monday)
-            || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
-            // Holy Thursday
-            || (dd == em-4)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // First day of Summer
-            || (d >= 19 && d <= 25 && w == Weekday.THURSDAY && m == Month.APRIL.toInteger())
-            // Ascension Thursday
-            || (dd == em+38)
-            // Pentecost Monday
-            || (dd == em+49)
-            // Labour Day
-            || (d == 1 && m == Month.MAY.toInteger())
-            // Independence Day
-            || (d == 17 && m == Month.JUNE.toInteger())
-            // Commerce Day
-            || (d <= 7 && w == Weekday.MONDAY && m == Month.AUGUST.toInteger())
-            // Christmas
-            || (d == 25 && m == Month.DECEMBER.toInteger())
-            // Boxing Day
-            || (d == 26 && m == Month.DECEMBER.toInteger()))
-        {    	
-        	return false;      
-	    }
-	
-	    else{
-		   return true;  
-	    }
-        	
-       
+	//
+	// private inner classes
+	//
+
+	final private class IcelandICEXCalendar extends WesternCalendar {
+
+		public String getName() {
+			return "ICEX";
+		}
+
+		public boolean isBusinessDay(Date date) {
+	        Weekday w = date.getWeekday();
+	         
+	        int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+	        int m = date.getMonth();
+	        int y = date.getYear();
+	        int em = easterMonday(y);
+	        if(isWeekend(w)
+	            // New Year's Day (possibly moved to Monday)
+	            || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
+	            // Holy Thursday
+	            || (dd == em-4)
+	            // Good Friday
+	            || (dd == em-3)
+	            // Easter Monday
+	            || (dd == em)
+	            // First day of Summer
+	            || (d >= 19 && d <= 25 && w == Weekday.THURSDAY && m == Month.APRIL.toInteger())
+	            // Ascension Thursday
+	            || (dd == em+38)
+	            // Pentecost Monday
+	            || (dd == em+49)
+	            // Labour Day
+	            || (d == 1 && m == Month.MAY.toInteger())
+	            // Independence Day
+	            || (d == 17 && m == Month.JUNE.toInteger())
+	            // Commerce Day
+	            || (d <= 7 && w == Weekday.MONDAY && m == Month.AUGUST.toInteger())
+	            // Christmas
+	            || (d == 25 && m == Month.DECEMBER.toInteger())
+	            // Boxing Day
+	            || (d == 26 && m == Month.DECEMBER.toInteger()))
+
+	        	return false;      
+		
+			return true;  
+		}
 	}
-	
 
 }
