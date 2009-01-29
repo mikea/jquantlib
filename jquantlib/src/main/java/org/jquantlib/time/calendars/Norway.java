@@ -26,6 +26,7 @@ import static org.jquantlib.util.Month.DECEMBER;
 import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.MAY;
 
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
@@ -54,61 +55,92 @@ import org.jquantlib.util.Month;
  * 
  * @author Anand Mani
  */
-public class Norway extends WesternCalendar {
+public class Norway extends DelegateCalendar {
 
-	private static final Norway NORWAY = new Norway();
+	private static final Norway OSLOBORS_CALENDAR = new Norway(Market.OsloBors);
 
-	public static Norway getCalendar() {
-		return NORWAY;
+
+	private Norway(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case OsloBors:
+			delegate = new OsloBorsCalendar();
+			break;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		setDelegate(delegate);
 	}
 
-	private Norway() {
+	public static Norway getCalendar(Market market) {
+		switch (market) {
+		case OsloBors:
+			return OSLOBORS_CALENDAR;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
 	}
 
-	public String getName() {
-		return "Norway";
+
+	//
+	// public enums
+	//
+	
+	public enum Market {
+		OsloBors
 	}
 
-	public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int em = easterMonday(y);
-		if (isWeekend(w)
-		// Holy Thursday
-				|| (dd == em - 4)
-				// Good Friday
-				|| (dd == em - 3)
-				// Easter Monday
-				|| (dd == em)
-				// Ascension Thursday
-				|| (dd == em + 38)
-				// Whit Monday
-				|| (dd == em + 49)
-				// New Year's Day
-				|| (d == 1 && m == JANUARY)
-				// May Day
-				|| (d == 1 && m == MAY)
-				// National Independence Day
-				|| (d == 17 && m == MAY)
+	
+	//
+	// private inner classes
+	//
 
-// Christmas Eve is only observed by Oslo Bors :: see http://bugs.jquantlib.org/view.php?id=73
-//				|| (d == 24 && m == DECEMBER)
+	final private class OsloBorsCalendar extends WesternCalendar {
+
+		public String getName() {
+			return "OsloBors";
+		}
+
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
+			int em = easterMonday(y);
+			if (isWeekend(w)
+			// Holy Thursday
+					|| (dd == em - 4)
+					// Good Friday
+					|| (dd == em - 3)
+					// Easter Monday
+					|| (dd == em)
+					// Ascension Thursday
+					|| (dd == em + 38)
+					// Whit Monday
+					|| (dd == em + 49)
+					// New Year's Day
+					|| (d == 1 && m == JANUARY)
+					// May Day
+					|| (d == 1 && m == MAY)
+					// National Independence Day
+					|| (d == 17 && m == MAY)
+
+	// Christmas Eve is only observed by Oslo Bors :: see http://bugs.jquantlib.org/view.php?id=73
+//					|| (d == 24 && m == DECEMBER)
+					
+					// Christmas
+					|| (d == 25 && m == DECEMBER)
+					// Boxing Day
+					|| (d == 26 && m == DECEMBER)
 				
-				// Christmas
-				|| (d == 25 && m == DECEMBER)
-				// Boxing Day
-				|| (d == 26 && m == DECEMBER)
-			
-// 31-DEC only observed by Oslo Bors :: see http://bugs.jquantlib.org/view.php?id=73
-//			|| (d == 31 && m == DECEMBER)
+	// 31-DEC only observed by Oslo Bors :: see http://bugs.jquantlib.org/view.php?id=73
+//				|| (d == 31 && m == DECEMBER)
 
-				)
-			
-			return false;
-		return true;
-
+					)
+				
+		            return false;
+		    return true;
+		}
 	}
 
 }

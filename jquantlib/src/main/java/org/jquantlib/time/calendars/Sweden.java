@@ -35,6 +35,7 @@ package org.jquantlib.time.calendars;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
+import org.jquantlib.time.calendars.Poland.Market;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
@@ -60,13 +61,8 @@ import org.jquantlib.util.Month;
 */
 
 public class Sweden extends DelegateCalendar {
-	public static enum Market {
-		SSE, // Sweden Stock Exchange 
-	};
 
-	//Sweden Stock Exchange Calendar
-	private final static Sweden SSE_CALENDAR = new Sweden(
-			Market.SSE);
+	private final static Sweden SSE_CALENDAR = new Sweden(Market.SSE);
 
 	private Sweden(Market market) {
 		Calendar delegate;
@@ -88,51 +84,66 @@ public class Sweden extends DelegateCalendar {
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-}
 
-final class SwedenSECalendar extends WesternCalendar {
 
-	public String getName() {
-		return "Sweden Stock Exchange";
+	//
+	// public enums
+	//
+	
+	public enum Market {
+		SSE, // Sweden Stock Exchange 
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(),dd = date.getDayOfYear();;
-		int m = date.getMonth();
-		int y = date.getYear();
-		int em = easterMonday(y);
-		if (isWeekend(w)
-	            // Good Friday
-	            || (dd == em-3)
-	            // Easter Monday
-	            || (dd == em)
-	            // Ascension Thursday
-	            || (dd == em+38)
-	            // Whit Monday
-	            || (dd == em+49)
-	            // New Year's Day
-	            || (d == 1  && m == Month.JANUARY.toInteger())
-	            // Epiphany
-	            || (d == 6  && m == Month.JANUARY.toInteger())
-	            // May Day
-	            || (d == 1  && m == Month.MAY.toInteger())
-	            // June 6 id National Day but is not a holiday.
-	            // It has been debated wheter or not this day should be
-	            // declared as a holiday.
-	            // As of 2002 the Stockholmborsen is open that day
-	            // || (d == 6  && m == June)
-	            // Midsummer Eve (Friday between June 18-24)
-	            || (w == Weekday.FRIDAY && (d >= 18 && d <= 24) && m == Month.JUNE.toInteger())
-	            // Christmas Eve
-	            || (d == 24 && m == Month.DECEMBER.toInteger())
-	            // Christmas Day
-	            || (d == 25 && m == Month.DECEMBER.toInteger())
-	            // Boxing Day
-	            || (d == 26 && m == Month.DECEMBER.toInteger())
-	            // New Year's Eve
-	            || (d == 31 && m == Month.DECEMBER.toInteger()))
-	            return false;
-	    return true;
+	
+	//
+	// private inner classes
+	//
+
+	final private class SwedenSECalendar extends WesternCalendar {
+
+		public String getName() {
+			return "Sweden Stock Exchange";
+		}
+
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth(),dd = date.getDayOfYear();;
+			int m = date.getMonth();
+			int y = date.getYear();
+			int em = easterMonday(y);
+			if (isWeekend(w)
+		            // Good Friday
+		            || (dd == em-3)
+		            // Easter Monday
+		            || (dd == em)
+		            // Ascension Thursday
+		            || (dd == em+38)
+		            // Whit Monday
+		            || (dd == em+49)
+		            // New Year's Day
+		            || (d == 1  && m == Month.JANUARY.toInteger())
+		            // Epiphany
+		            || (d == 6  && m == Month.JANUARY.toInteger())
+		            // May Day
+		            || (d == 1  && m == Month.MAY.toInteger())
+		            // June 6 id National Day but is not a holiday.
+		            // It has been debated wheter or not this day should be
+		            // declared as a holiday.
+		            // As of 2002 the Stockholmborsen is open that day
+		            // || (d == 6  && m == June)
+		            // Midsummer Eve (Friday between June 18-24)
+		            || (w == Weekday.FRIDAY && (d >= 18 && d <= 24) && m == Month.JUNE.toInteger())
+		            // Christmas Eve
+		            || (d == 24 && m == Month.DECEMBER.toInteger())
+		            // Christmas Day
+		            || (d == 25 && m == Month.DECEMBER.toInteger())
+		            // Boxing Day
+		            || (d == 26 && m == Month.DECEMBER.toInteger())
+		            // New Year's Eve
+		            || (d == 31 && m == Month.DECEMBER.toInteger()))
+		            return false;
+		    return true;
+		}
 	}
+
 }

@@ -47,10 +47,16 @@ public class NorwayCalendarTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(NorwayCalendarTest.class);
 
-    public NorwayCalendarTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	}
+    //TODO: private final Calendar settlement;
+    private final Calendar exchange;
 	
+	public NorwayCalendarTest() {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	    //TODO: this.settlement = Norway.getCalendar(Poland.Market.Settlement);
+	    this.exchange   = Norway.getCalendar(Norway.Market.OsloBors);
+	}
+
+
 	// 2012 -- simply taken from rules
     // Comparing with http://www.timeanddate.com/calendar/custom.html?year=2012&country=18&lang=en&hol=9&moon=on
     //
@@ -70,12 +76,10 @@ public class NorwayCalendarTest {
 	//    Dec 25	Christmas Day
 	//    Dec 26	Boxing Day
 
-	@Test public void testNorwayYear2012() {
-        final int year = 2012;
-        logger.info("Testing Norway's holiday list for the year " + year + "...");
-
-        final Calendar c = Norway.getCalendar();
-        
+	@Test
+	public void testNorwayYear2012() {
+       	int year = 2012;
+    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -93,7 +97,9 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
     
@@ -116,14 +122,13 @@ public class NorwayCalendarTest {
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
 	
-	@Test public void testNorwayYear2011() {
+	@Test
+	public void testNorwayYear2011() {
         final int year = 2011;
-        logger.info("Testing Norway's holiday list for the year " + year + "...");
-
-        final Calendar c = Norway.getCalendar();
-        
+    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
+    	
     	
 		// Sat: expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate(17,APRIL,year));		// Palm Sunday
@@ -139,7 +144,9 @@ public class NorwayCalendarTest {
         // Sun: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
     
@@ -162,14 +169,13 @@ public class NorwayCalendarTest {
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
 	
-	@Test public void testNorwayYear2010() {
+	@Test
+	public void testNorwayYear2010() {
         final int year = 2010;
-        logger.info("Testing Norway's holiday list for the year " + year + "...");
-
-        final Calendar c = Norway.getCalendar();
-        
+    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
+    	
     	
 		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate(28,MARCH,year));		// Palm Sunday
@@ -185,7 +191,9 @@ public class NorwayCalendarTest {
         // Sat: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         // Sun: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
     
@@ -210,13 +218,13 @@ public class NorwayCalendarTest {
 	//	Dec 31	New Year Eve :: see http://bugs.jquantlib.org/view.php?id=73
 	
 	
-	@Test public void testNorwayYear2009() {
+	@Test
+	public void testNorwayYear2009() {
       	final int year = 2009;
-        logger.info("Testing New Zealand's holiday list for the year " + year + "...");
-
-        final Calendar c = Norway.getCalendar();
+    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
+    	
     	
 		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate( 5,APRIL,year));		// Palm Sunday
@@ -232,7 +240,9 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         // Sat: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
     
@@ -256,13 +266,13 @@ public class NorwayCalendarTest {
 	//	Dec 26	Boxing Day
 	//	Dec 31	New Year Eve :: see http://bugs.jquantlib.org/view.php?id=73
 	
-	@Test public void testNorwayYear2008() {
+	@Test
+	public void testNorwayYear2008() {
       	final int year = 2008;
-        logger.info("Testing New Zealand's holiday list for the year " + year + "...");
-
-        final Calendar c = Norway.getCalendar();
+    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
+    	
     	
 		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate(16,MARCH,year));		// Palm Sunday
@@ -278,7 +288,9 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
 	
@@ -301,12 +313,10 @@ public class NorwayCalendarTest {
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
 	
-	@Test public void testNorwayYear2007() {
+	@Test
+	public void testNorwayYear2007() {
         final int year = 2007;
-        logger.info("Testing Norway's holiday list for the year " + year + "...");
-
-        final Calendar c = Norway.getCalendar();
-        
+    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -324,7 +334,9 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
     
@@ -349,12 +361,10 @@ public class NorwayCalendarTest {
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
 	
-	@Test public void testNorwayYear2006() {
+	@Test
+	public void testNorwayYear2006() {
         final int year = 2006;
-        logger.info("Testing Norway's holiday list for the year " + year + "...");
-
-        final Calendar c = Norway.getCalendar();
-        
+    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -372,7 +382,9 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
     
@@ -395,12 +407,10 @@ public class NorwayCalendarTest {
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
     
-    @Test public void testNorwayYear2005() {
+    @Test
+    public void testNorwayYear2005() {
         final int year = 2005;
-        logger.info("Testing Norway's holiday list for the year " + year + "...");
-
-        final Calendar c = Norway.getCalendar();
-        
+    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -418,7 +428,9 @@ public class NorwayCalendarTest {
         // Sun: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
     
@@ -441,12 +453,10 @@ public class NorwayCalendarTest {
 	//    Dec 25	Christmas Day
 	//    Dec 26	Boxing Day
     
-    @Test public void testNorwayYear2004() {
+    @Test
+    public void testNorwayYear2004() {
         final int year = 2004;
-        logger.info("Testing Norway's holiday list for the year " + year + "...");
-
-        final Calendar c = Norway.getCalendar();
-
+    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -464,7 +474,9 @@ public class NorwayCalendarTest {
         // Sat: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
         // Sun: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+    	// Call the Holiday Check
+    	CalendarUtil cbt = new CalendarUtil();
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
     
 }
