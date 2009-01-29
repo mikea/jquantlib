@@ -31,6 +31,7 @@ import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.OCTOBER;
 
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
@@ -62,57 +63,89 @@ import org.jquantlib.util.Month;
  * 
  * @author Anand Mani
  */
-public class NewZealand extends WesternCalendar {
+public class NewZealand extends DelegateCalendar {
+
+	private static final NewZealand NZX_CALENDAR = new NewZealand(Market.NZX);
+
+
+	private NewZealand(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case NZX:
+			delegate = new NewZealandNZXCalendar();
+			break;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		setDelegate(delegate);
+	}
+
+	public static NewZealand getCalendar(Market market) {
+		switch (market) {
+		case NZX:
+			return NZX_CALENDAR;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+	}
+
+
+	//
+	// public enums
+	//
 	
-	private static final NewZealand NEW_ZEALAND = new NewZealand();
-
-	public static NewZealand getCalendar() {
-		return NEW_ZEALAND;
+	public enum Market {
+		NZX
 	}
 
-	private NewZealand() {
-	}
+	
+	//
+	// private inner classes
+	//
 
-	public String getName() {
-		return "New Zealand";
-	}
+	final private class NewZealandNZXCalendar extends WesternCalendar {
 
-	public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-		final Weekday w = date.getWeekday();
-		final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		final Month m = date.getMonthEnum();
-		final int y = date.getYear();
-		final int em = easterMonday(y);
-		
-		if (isWeekend(w)
-				// New Year's Day (possibly moved to Monday or Tuesday)
-				|| ((d == 1 || (d == 3 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
-				// Day after New Year's Day (possibly moved to Mon or Tuesday)
-				|| ((d == 2 || (d == 4 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
+		public String getName() {
+			return "OsloBors";
+		}
 
-// Do not seem to be observed by NZX :: see http://bugs.jquantlib.org/view.php?id=72 				
-//				// Anniversary Day, Monday nearest January 22nd
-				|| ((d >= 19 && d <= 25) && w == MONDAY && m == JANUARY)
+		public boolean isBusinessDay(Date date) {
+			final Weekday w = date.getWeekday();
+			final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			final Month m = date.getMonthEnum();
+			final int y = date.getYear();
+			final int em = easterMonday(y);
+			
+			if (isWeekend(w)
+					// New Year's Day (possibly moved to Monday or Tuesday)
+					|| ((d == 1 || (d == 3 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
+					// Day after New Year's Day (possibly moved to Mon or Tuesday)
+					|| ((d == 2 || (d == 4 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
 
-				// Waitangi Day. February 6th
-				|| (d == 6 && m == FEBRUARY)
-				// Good Friday
-				|| (dd == em - 3)
-				// Easter Monday
-				|| (dd == em)
-				// ANZAC Day. April 25th
-				|| (d == 25 && m == APRIL)
-				// Queen's Birthday, first Monday in June
-				|| (d <= 7 && w == MONDAY && m == JUNE)
-				// Labour Day, fourth Monday in October
-				|| ((d >= 22 && d <= 28) && w == MONDAY && m == OCTOBER)
-				// Christmas, December 25th (possibly Monday or Tuesday)
-				|| ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
-				// Boxing Day, December 26th (possibly Monday or Tuesday)
-				|| ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
-			return false;
-		
-		return true;
+	// Do not seem to be observed by NZX :: see http://bugs.jquantlib.org/view.php?id=72 				
+//					// Anniversary Day, Monday nearest January 22nd
+					|| ((d >= 19 && d <= 25) && w == MONDAY && m == JANUARY)
+
+					// Waitangi Day. February 6th
+					|| (d == 6 && m == FEBRUARY)
+					// Good Friday
+					|| (dd == em - 3)
+					// Easter Monday
+					|| (dd == em)
+					// ANZAC Day. April 25th
+					|| (d == 25 && m == APRIL)
+					// Queen's Birthday, first Monday in June
+					|| (d <= 7 && w == MONDAY && m == JUNE)
+					// Labour Day, fourth Monday in October
+					|| ((d >= 22 && d <= 28) && w == MONDAY && m == OCTOBER)
+					// Christmas, December 25th (possibly Monday or Tuesday)
+					|| ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+					// Boxing Day, December 26th (possibly Monday or Tuesday)
+					|| ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
+				return false;
+			
+			return true;
+		}
 	}
 
 }
