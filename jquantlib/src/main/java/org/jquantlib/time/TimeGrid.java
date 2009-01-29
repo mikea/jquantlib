@@ -51,6 +51,9 @@ public class TimeGrid {
     private List<Double> times_ = new DoubleArrayList();
     private List<Double> dt_ = new DoubleArrayList();
     private List<Double> mandatoryTimes_ = new DoubleArrayList();
+    private DoubleArrayList test = new DoubleArrayList(); // FIXME: temporary code by Dominik - will be romoved
+    
+    
 
 // XXX    
 //	private double end_;

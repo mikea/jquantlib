@@ -41,6 +41,11 @@ package org.jquantlib.util;
 
 import java.util.List; //FIXME: performance
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+
 /**
  * Framework for calculation on demand and result caching.
  * 
@@ -51,6 +56,11 @@ import java.util.List; //FIXME: performance
  * @author Richard Gomes
  */
 public abstract class LazyObject implements Observer, Observable {
+	
+	//
+	// logger
+	//
+	private final static Logger logger = LoggerFactory.getLogger(LazyObject.class);
 
     //
     // protected fields

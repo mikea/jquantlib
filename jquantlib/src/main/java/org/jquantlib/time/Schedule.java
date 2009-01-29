@@ -28,7 +28,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
+import java.util.List; // FIXME: Performance
 
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
@@ -51,6 +51,7 @@ public class Schedule {
     private final boolean finalIsRegular;
     private final List<Date> dates;
     private final List<Boolean> isRegular;
+    
 
     private Schedule(final Period tenor, final Calendar calendar, final BusinessDayConvention convention,
             final BusinessDayConvention terminationDateConvention, final DateGenerationRule rule, final boolean endOfMonth, final Date firstDate,

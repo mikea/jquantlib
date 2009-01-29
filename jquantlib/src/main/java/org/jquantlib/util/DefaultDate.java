@@ -49,6 +49,7 @@ import java.util.Locale;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -544,6 +545,7 @@ public class DefaultDate extends BaseDate {
             final StringBuilder sb = new StringBuilder();
             final Formatter formatter = new Formatter(sb, Locale.US);
             formatter.format("%s %d, %d", this.getMonthEnum(), this.getDayOfMonth(), this.getYear());
+            logger.debug(sb.toString());
             return sb.toString();
         }
     }
@@ -555,6 +557,7 @@ public class DefaultDate extends BaseDate {
             final StringBuilder sb = new StringBuilder();
             final Formatter formatter = new Formatter(sb, Locale.US);
             formatter.format("%s %d, %d", this.getMonthEnum(), this.getDayOfMonth(), this.getYear());
+            logger.debug(sb.toString());
             return sb.toString();
         }
     }
@@ -566,6 +569,7 @@ public class DefaultDate extends BaseDate {
             final StringBuilder sb = new StringBuilder();
             final Formatter formatter = new Formatter(sb, Locale.US);
             formatter.format("%04d-%02d-%02d", this.getYear(), this.getMonth(), this.getDayOfMonth());
+            logger.debug(sb.toString());
             return sb.toString();
         }
     }
@@ -602,7 +606,7 @@ public class DefaultDate extends BaseDate {
             final int length = getMonthLength(m, isLeap(y));
             if (d > length)
                 d = length;
-
+            logger.debug(Integer.toString(fromDMY(d, m, y)));
             return fromDMY(d, m, y);
         }
         case YEARS: {
@@ -615,7 +619,8 @@ public class DefaultDate extends BaseDate {
 
             if (d == 29 && m == Month.FEBRUARY.toInteger() && !isLeap(y))
                 d = 28;
-
+            
+            logger.debug(Integer.toString(fromDMY(d, m, y)));
             return fromDMY(d, m, y);
         }
         default:
@@ -800,6 +805,7 @@ public class DefaultDate extends BaseDate {
     //
 
     public final int dateValue() /* @ReadOnly */{
+    	logger.debug(Integer.toString(value));
         return value;
     }
 

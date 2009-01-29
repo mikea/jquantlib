@@ -33,7 +33,7 @@ import org.jquantlib.math.Constants;
  * rises from "near-zero" to "near-unity" in a range of x centered on about a-1 and of 
  * width about sqr(a).
  * 
- * @see <a href="http://en.wikipedia.org/wiki/Incomplete_gamma_function">Incomplete Gamma Function"</a>
+ * @see <a href="http://en.wikipedia.org/wiki/Incomplete_gamma_function">Incomplete Gamma Function</a>
  * @see <a href="http://www.nrbook.com/a/bookcpdf/c6-2.pdf">Incomplete Gamma Function, Numerical Recipes in C, p. 216.</a>
  * 
  * @author Richard Gomes
@@ -117,22 +117,26 @@ public class IncompleteGamma {
 	c = 1.0 / Constants.QL_EPSILON;
 	d = 1.0 / b;
 	h = d;
+	
 	for (i = 1; i <= maxIteration; i++) {
 	    an = -i * (i - a);
 	    b += 2.0;
 	    d = an * d + b;
 	    if (Math.abs(d) < Constants.QL_EPSILON) {
-		d = Constants.QL_EPSILON;
+	    	d = Constants.QL_EPSILON;
 	    }
 	    c = b + an / c;
+	    
 	    if (Math.abs(c) < Constants.QL_EPSILON) {
-		c = Constants.QL_EPSILON;
+	    	c = Constants.QL_EPSILON;
 	    }
+	    
 	    d = 1.0 / d;
 	    del = d * c;
 	    h *= del;
+	    
 	    if (Math.abs(del - 1.0) < accuracy) {
-		return Math.exp(-x + a * Math.log(x) - gln) * h;
+	    	return Math.exp(-x + a * Math.log(x) - gln) * h;
 	    }
 	}
 	throw new ArithmeticException("accuracy not reached");
