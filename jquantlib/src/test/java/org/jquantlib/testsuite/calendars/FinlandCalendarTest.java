@@ -51,12 +51,12 @@ public class FinlandCalendarTest {
 
     private final static Logger logger = LoggerFactory.getLogger(FinlandCalendarTest.class);
 
-    private Calendar c;
+    private Calendar hse;
     private List<Date> expectedHol;
 
     @Before
     public void setUp() {
-        c = Finland.getCalendar();
+        hse = Finland.getCalendar(Finland.Market.HSE);
         expectedHol = new Vector<Date>();
     }
 
@@ -76,7 +76,7 @@ public class FinlandCalendarTest {
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, c, year);
+        cbt.checkHolidayList(expectedHol, hse, year);
 
     }
 
@@ -96,7 +96,7 @@ public class FinlandCalendarTest {
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, c, year);
+        cbt.checkHolidayList(expectedHol, hse, year);
 
     }
 
@@ -115,7 +115,7 @@ public class FinlandCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, c, year);
+        cbt.checkHolidayList(expectedHol, hse, year);
 
     }
 
@@ -134,10 +134,11 @@ public class FinlandCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+        expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, c, year);
+        cbt.checkHolidayList(expectedHol, hse, year);
 
     }
 
@@ -149,8 +150,6 @@ public class FinlandCalendarTest {
 
         // New year's day
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
-        // Epiphany --weekend in 2008
-        // expectedHol.add(DateFactory.getFactory().getDate(6,JANUARY,year));
         // good friday
         expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
         // easter monday
@@ -169,9 +168,12 @@ public class FinlandCalendarTest {
         // boxing day
         expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
 
+        // new year's eve
+        expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
+
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, c, year);
+        cbt.checkHolidayList(expectedHol, hse, year);
     }
 
     @Test
@@ -188,10 +190,11 @@ public class FinlandCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(19, JUNE, year));       
         expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, c, year);
+        cbt.checkHolidayList(expectedHol, hse, year);
 
     }
 
@@ -211,7 +214,7 @@ public class FinlandCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, c, year);
+        cbt.checkHolidayList(expectedHol, hse, year);
 
     }
 
@@ -230,7 +233,7 @@ public class FinlandCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, c, year);
+        cbt.checkHolidayList(expectedHol, hse, year);
 
     }
 
@@ -252,7 +255,7 @@ public class FinlandCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, c, year);
+        cbt.checkHolidayList(expectedHol, hse, year);
 
     }
 

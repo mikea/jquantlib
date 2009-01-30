@@ -43,271 +43,302 @@ import org.junit.Test;
 
 /**
  * @author Jia Jia
- *
- *
+ * 
+ * 
  */
 
-
 public class DenmarkCalendarTest {
-    private final static Logger logger = LoggerFactory.getLogger(DenmarkCalendarTest.class);
+	private final static Logger logger = LoggerFactory
+			.getLogger(DenmarkCalendarTest.class);
 
-	private Calendar c;
+	private Calendar cse;
 	private List<Date> expectedHol;
-	
+
 	@Before
 	public void setUp() {
-	    c =  Denmark.getCalendar();
-	    expectedHol = new Vector<Date>();
+		cse = Denmark.getCalendar(Denmark.Market.CSE);
+		expectedHol = new Vector<Date>();
 	}
 
-	   @Test
-	    public void testDenmarkYear2004() {
-	        int year = 2004;
-	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
-	        
-	        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-	        //maunday thursday
-	        expectedHol.add(DateFactory.getFactory().getDate(8,APRIL,year));               
-	        //good friday
-	        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));               
-	        //easter monday
-	        expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,year));
-	        
-	        //great prayer day
-	        expectedHol.add(DateFactory.getFactory().getDate(7,MAY,year));
-	        //ascension
-	        expectedHol.add(DateFactory.getFactory().getDate(20,MAY,year));
-	        //whit monday
-	        expectedHol.add(DateFactory.getFactory().getDate(31,MAY,year));
-	        
-	        // Call the Holiday Check
-	        CalendarUtil cbt = new CalendarUtil();
-	        cbt.checkHolidayList(expectedHol, c, year);
-	    }
+	@Test
+	public void testCSEYear2004() {
+		int year = 2004;
+		logger
+				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
+						+ "...");
 
-	    @Test
-	    public void testDenmarkYear2005() {
-	        int year = 2005;
-	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
-	        
-	        expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));               
-	        //good friday
-	        expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));               
-	        //easter monday
-	        expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,year));
-	        
-	        //great prayer day
-	        expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));
-	        //ascension
-	        expectedHol.add(DateFactory.getFactory().getDate(5,MAY,year));
-	        //whit monday
-	        expectedHol.add(DateFactory.getFactory().getDate(16,MAY,year));
-	        //boxing day
-	        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-	        
-	        // Call the Holiday Check
-	        CalendarUtil cbt = new CalendarUtil();
-	        cbt.checkHolidayList(expectedHol, c, year);
-	    }
+		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+		// maunday thursday
+		expectedHol.add(DateFactory.getFactory().getDate(8, APRIL, year));
+		// good friday
+		expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
+		// easter monday
+		expectedHol.add(DateFactory.getFactory().getDate(12, APRIL, year));
 
-	    @Test
-	    public void testDenmarkYear2006() {
-	        int year = 2006;
-	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
-	        
-	        expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year)); 
-	        //maunday thursday
-	        expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));               
-	        //good friday
-	        expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,year));               
-	        //easter monday
-	        expectedHol.add(DateFactory.getFactory().getDate(12,MAY,year));
-	        
-	        //great prayer day
-	        expectedHol.add(DateFactory.getFactory().getDate(25,MAY,year));
-	        //ascension
-	        expectedHol.add(DateFactory.getFactory().getDate(5,JUNE,year));
-	        //christmas
-	        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-	        //boxing day
-	        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-	        
-	        // Call the Holiday Check
-	        CalendarUtil cbt = new CalendarUtil();
-	        cbt.checkHolidayList(expectedHol, c, year);
-	    }
+		// great prayer day
+		expectedHol.add(DateFactory.getFactory().getDate(7, MAY, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(20, MAY, year));
+		// whit monday
+		expectedHol.add(DateFactory.getFactory().getDate(31, MAY, year));
 
-	    @Test
-	    public void testDenmarkYear2007() {
-	        int year = 2007;
-	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
-	        
-	        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-	        //maunday thursday
-	        expectedHol.add(DateFactory.getFactory().getDate(5,APRIL,year));               
-	        //good friday
-	        expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));               
-	        //easter monday
-	        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
-	        
-	        //great prayer day
-	        expectedHol.add(DateFactory.getFactory().getDate(4,MAY,year));
-	        //ascension
-	        expectedHol.add(DateFactory.getFactory().getDate(17,MAY,year));
-	        //whit monday
-	        expectedHol.add(DateFactory.getFactory().getDate(28,MAY,year));
-	        //constitution day
-	        expectedHol.add(DateFactory.getFactory().getDate(5,JUNE,year));
-	        //christmas
-	        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-	        //boxing day
-	        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-	        
-	        // Call the Holiday Check
-	        CalendarUtil cbt = new CalendarUtil();
-	        cbt.checkHolidayList(expectedHol, c, year);
-	    }
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cse, year);
+	}
 
-	
+	@Test
+	public void testCSEYear2005() {
+		int year = 2005;
+		logger
+				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
+						+ "...");
+
+		expectedHol.add(DateFactory.getFactory().getDate(24, MARCH, year));
+		// good friday
+		expectedHol.add(DateFactory.getFactory().getDate(25, MARCH, year));
+		// easter monday
+		expectedHol.add(DateFactory.getFactory().getDate(28, MARCH, year));
+
+		// great prayer day
+		expectedHol.add(DateFactory.getFactory().getDate(22, APRIL, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
+		// whit monday
+		expectedHol.add(DateFactory.getFactory().getDate(16, MAY, year));
+		// boxing day
+		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cse, year);
+	}
+
+	@Test
+	public void testCSEYear2006() {
+		int year = 2006;
+		logger
+				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
+						+ "...");
+
+		expectedHol.add(DateFactory.getFactory().getDate(13, APRIL, year));
+		// maunday thursday
+		expectedHol.add(DateFactory.getFactory().getDate(14, APRIL, year));
+		// good friday
+		expectedHol.add(DateFactory.getFactory().getDate(17, APRIL, year));
+		// easter monday
+		expectedHol.add(DateFactory.getFactory().getDate(12, MAY, year));
+
+		// great prayer day
+		expectedHol.add(DateFactory.getFactory().getDate(25, MAY, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		// christmas
+		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+		// boxing day
+		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cse, year);
+	}
+
+	@Test
+	public void testCSEYear2007() {
+		int year = 2007;
+		logger
+				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
+						+ "...");
+
+		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+		// maunday thursday
+		expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
+		// good friday
+		expectedHol.add(DateFactory.getFactory().getDate(6, APRIL, year));
+		// easter monday
+		expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
+
+		// great prayer day
+		expectedHol.add(DateFactory.getFactory().getDate(4, MAY, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(17, MAY, year));
+		// whit monday
+		expectedHol.add(DateFactory.getFactory().getDate(28, MAY, year));
+		// constitution day
+		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		// christmas eve
+		expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
+		// christmas
+		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+		// boxing day
+		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+		// new year's eve
+		expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
+
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cse, year);
+	}
+
 	// 2008 - current year
 	@Test
-    public void testDenmarkYear2008() {
-      	int year = 2008;
-      	logger.info("Testing Denmark holiday list for the year " + year + "...");   
-    	
-    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-		//maunday thursday
-		expectedHol.add(DateFactory.getFactory().getDate(20,MARCH,year));    	    	
-		//good friday
-		expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));    	    	
-    	//easter monday
-    	expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));
+	public void testCSEYear2008() {
+		int year = 2008;
+		logger
+				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
+						+ "...");
+
+		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+		// maunday thursday
+		expectedHol.add(DateFactory.getFactory().getDate(20, MARCH, year));
+		// good friday
+		expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
+		// easter monday
+		expectedHol.add(DateFactory.getFactory().getDate(24, MARCH, year));
+
+		// great prayer day
+		expectedHol.add(DateFactory.getFactory().getDate(18, APRIL, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
+		// whit monday
+		expectedHol.add(DateFactory.getFactory().getDate(12, MAY, year));
+		// constitution day
+		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		// christmas eve
+		expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
+		// christmas
+		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+		// boxing day		
+		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));		
+		// boxing day		
+		expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
+
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cse, year);
+	}
+
+	@Test
+	public void testCSEYear2009() {
+		int year = 2009;
+		logger
+				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
+						+ "...");
+
+		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+		// maunday thursday
+		expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
+		// good friday
+		expectedHol.add(DateFactory.getFactory().getDate(10, APRIL, year));
+		// easter monday
+		expectedHol.add(DateFactory.getFactory().getDate(13, APRIL, year));
+
+		// great prayer day
+		expectedHol.add(DateFactory.getFactory().getDate(8, MAY, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(21, MAY, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(22, MAY, year));
+		// whit monday
+		expectedHol.add(DateFactory.getFactory().getDate(1, JUNE, year));
+		// constitution day
+		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		// christmas eve
+		expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
+		// christmas
+		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+		expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
+
 		
-		//great prayer day
-    	expectedHol.add(DateFactory.getFactory().getDate(18,APRIL,year));
-    	//ascension
-    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-    	//whit monday
-    	expectedHol.add(DateFactory.getFactory().getDate(12,MAY,year));
-    	//constitution day
-		expectedHol.add(DateFactory.getFactory().getDate(5,JUNE,year));
-		//christmas
-    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-		//boxing day
-        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-        
-        // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
-    }
 
-	   @Test
-	    public void testDenmarkYear2009() {
-	        int year = 2009;
-	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
-	        
-	        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-	        //maunday thursday
-	        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));               
-	        //good friday
-	        expectedHol.add(DateFactory.getFactory().getDate(10,APRIL,year));               
-	        //easter monday
-	        expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
-	        
-	        //great prayer day
-	        expectedHol.add(DateFactory.getFactory().getDate(8,MAY,year));
-	        //ascension
-	        expectedHol.add(DateFactory.getFactory().getDate(21,MAY,year));
-	        //whit monday
-	        expectedHol.add(DateFactory.getFactory().getDate(1,JUNE,year));
-	        //constitution day
-	        expectedHol.add(DateFactory.getFactory().getDate(5,JUNE,year));
-	        //christmas
-	        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-	        
-	        // Call the Holiday Check
-	        CalendarUtil cbt = new CalendarUtil();
-	        cbt.checkHolidayList(expectedHol, c, year);
-	    }
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cse, year);
+	}
 
-	    @Test
-	    public void testDenmarkYear2010() {
-	        int year = 2010;
-	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
-	        
-	        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-	        //maunday thursday
-	        expectedHol.add(DateFactory.getFactory().getDate(1,APRIL,year));               
-	        //good friday
-	        expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));               
-	        //easter monday
-	        expectedHol.add(DateFactory.getFactory().getDate(5,APRIL,year));
-	        
-	        //great prayer day
-	        expectedHol.add(DateFactory.getFactory().getDate(30,APRIL,year));
-	        //ascension
-	        expectedHol.add(DateFactory.getFactory().getDate(13,MAY,year));
-	        //whit monday
-	        expectedHol.add(DateFactory.getFactory().getDate(24,MAY,year));
-	        
-	        // Call the Holiday Check
-	        CalendarUtil cbt = new CalendarUtil();
-	        cbt.checkHolidayList(expectedHol, c, year);
-	    }
+	@Test
+	public void testCSEYear2010() {
+		int year = 2010;
+		logger
+				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
+						+ "...");
 
-	    @Test
-	    public void testDenmarkYear2012() {
-	        int year = 2012;
-	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
-	        
-	        expectedHol.add(DateFactory.getFactory().getDate(5,APRIL,year)); 
-	        //maunday thursday
-	        expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));               
-	        //good friday
-	        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));               
-	        //easter monday
-	        expectedHol.add(DateFactory.getFactory().getDate(4,MAY,year));
-	        
-	        //great prayer day
-	        expectedHol.add(DateFactory.getFactory().getDate(17,MAY,year));
-	        //ascension
-	        expectedHol.add(DateFactory.getFactory().getDate(28,MAY,year));
-	        //whit monday
-	        expectedHol.add(DateFactory.getFactory().getDate(5,JUNE,year));
-	        //christmas
-	        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-	        //boxing day
-	        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-	        
-	        // Call the Holiday Check
-	        CalendarUtil cbt = new CalendarUtil();
-	        cbt.checkHolidayList(expectedHol, c, year);
-	    }
+		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+		// maunday thursday
+		expectedHol.add(DateFactory.getFactory().getDate(1, APRIL, year));
+		// good friday
+		expectedHol.add(DateFactory.getFactory().getDate(2, APRIL, year));
+		// easter monday
+		expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
 
-	    @Test
-	    public void testDenmarkYear2011() {
-	        int year = 2011;
-	        logger.info("Testing Denmark holiday list for the year " + year + "...");   
-	        
-	        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year)); 
-	        //maunday thursday
-	        expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));               
-	        //good friday
-	        expectedHol.add(DateFactory.getFactory().getDate(25,APRIL,year));               
-	        //easter monday
-	        expectedHol.add(DateFactory.getFactory().getDate(20,MAY,year));
-	        
-	        //great prayer day
-	        expectedHol.add(DateFactory.getFactory().getDate(2,JUNE,year));
-	        //ascension
-	        expectedHol.add(DateFactory.getFactory().getDate(13,JUNE,year));
-	        //boxing day
-	        expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
-	        
-	        // Call the Holiday Check
-	        CalendarUtil cbt = new CalendarUtil();
-	        cbt.checkHolidayList(expectedHol, c, year);
-	    }
+		// great prayer day
+		expectedHol.add(DateFactory.getFactory().getDate(30, APRIL, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(13, MAY, year));
+		// whit monday
+		expectedHol.add(DateFactory.getFactory().getDate(24, MAY, year));
+
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cse, year);
+	}
+
+	@Test
+	public void testCSEYear2012() {
+		int year = 2012;
+		logger
+				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
+						+ "...");
+
+		expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
+		// maunday thursday
+		expectedHol.add(DateFactory.getFactory().getDate(6, APRIL, year));
+		// good friday
+		expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
+		// easter monday
+		expectedHol.add(DateFactory.getFactory().getDate(4, MAY, year));
+
+		// great prayer day
+		expectedHol.add(DateFactory.getFactory().getDate(17, MAY, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(28, MAY, year));
+		// whit monday
+		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		// christmas
+		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+		// boxing day
+		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cse, year);
+	}
+
+	@Test
+	public void testCSEYear2011() {
+		int year = 2011;
+		logger
+				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
+						+ "...");
+
+		expectedHol.add(DateFactory.getFactory().getDate(21, APRIL, year));
+		// maunday thursday
+		expectedHol.add(DateFactory.getFactory().getDate(22, APRIL, year));
+		// good friday
+		expectedHol.add(DateFactory.getFactory().getDate(25, APRIL, year));
+		// easter monday
+		expectedHol.add(DateFactory.getFactory().getDate(20, MAY, year));
+
+		// great prayer day
+		expectedHol.add(DateFactory.getFactory().getDate(2, JUNE, year));
+		// ascension
+		expectedHol.add(DateFactory.getFactory().getDate(13, JUNE, year));
+		// boxing day
+		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+
+		// Call the Holiday Check
+		CalendarUtil cbt = new CalendarUtil();
+		cbt.checkHolidayList(expectedHol, cse, year);
+	}
 
 }
-
