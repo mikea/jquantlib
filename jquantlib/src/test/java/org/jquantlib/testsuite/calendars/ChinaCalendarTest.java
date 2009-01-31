@@ -218,7 +218,24 @@ public class ChinaCalendarTest {
         logger.info("Testing China holiday list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
-
+        expectedHol.add(DateFactory.getFactory().getDate(2, JANUARY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(26, JANUARY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(27, JANUARY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(28, JANUARY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(29, JANUARY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(30, JANUARY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(6, APRIL, year));
+        expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(28, MAY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(29, MAY, year));
+        expectedHol.add(DateFactory.getFactory().getDate(1, OCTOBER, year));
+        expectedHol.add(DateFactory.getFactory().getDate(2, OCTOBER, year));
+        expectedHol.add(DateFactory.getFactory().getDate(5, OCTOBER, year));
+        expectedHol.add(DateFactory.getFactory().getDate(6, OCTOBER, year));
+        expectedHol.add(DateFactory.getFactory().getDate(7, OCTOBER, year));
+        expectedHol.add(DateFactory.getFactory().getDate(8, OCTOBER, year));
+        
+        
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, ssh, year);

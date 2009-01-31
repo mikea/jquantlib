@@ -38,7 +38,11 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
 /**
- * Chinese calendar Holidays:
+ * Chinese calendar
+ * 
+ * Source: <a href="http://www.sse.com.cn/sseportal/webapp/cm/keyWordSearchEn?KeyWord=holiday&page=1&x=0&y=0">SSE Holidays</a>
+ * <p>
+ * Holidays:
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
@@ -61,72 +65,84 @@ import org.jquantlib.util.Month;
 
 public class China extends DelegateCalendar {
 
-    public enum Market {
-        SSE
-        // Shanghai stock exchange
-    }
+	public enum Market {
+		SSE
+		// Shanghai stock exchange
+	}
 
-    private static final China SSE_Calendar = new China(Market.SSE);
+	private static final China SSE_Calendar = new China(Market.SSE);
 
-    private China(Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SSE:
-            delegate = new ChinaSSECalendar();
-            break;
-        default:
-            throw new IllegalArgumentException("unknown market");
-        }
-        setDelegate(delegate);
-    }
+	private China(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case SSE:
+			delegate = new ChinaSSECalendar();
+			break;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		setDelegate(delegate);
+	}
 
-    public static China getCalendar(Market market) {
-        switch (market) {
-        case SSE:
-            return SSE_Calendar;
-        default:
-            throw new IllegalArgumentException("unknown market");
-        }
-    }
+	public static China getCalendar(Market market) {
+		switch (market) {
+		case SSE:
+			return SSE_Calendar;
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+	}
 
-    final class ChinaSSECalendar extends WesternCalendar {
+	final class ChinaSSECalendar extends WesternCalendar {
 
-        @Override
-        public String getName() {
-            return "Shanghai stock exchange";
-        }
+		@Override
+		public String getName() {
+			return "Shanghai stock exchange";
+		}
 
-        public final boolean isBusinessDay(Date date) {
-            Weekday w = date.getWeekday();
-            int d = date.getDayOfMonth();
-            Month m = date.getMonthEnum();
-            int y = date.getYear();
+		public final boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
 
-            if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY) || (d == 3 && m == JANUARY && y == 2005)
-                    || ((d == 2 || d == 3) && m == JANUARY && y == 2006)
-                    || (d <= 3 && m == JANUARY && y == 2007)
-                    || (d == 31 && m == DECEMBER && y == 2007)
-                    || (d == 1 && m == JANUARY && y == 2008)
-                    // Chinese New Year
-                    || (d >= 19 && d <= 28 && m == JANUARY && y == 2004) || (d >= 7 && d <= 15 && m == FEBRUARY && y == 2005)
-                    || (((d >= 26 && m == JANUARY) || (d <= 3 && m == FEBRUARY)) && y == 2006)
-                    || (d >= 17 && d <= 25 && m == FEBRUARY && y == 2007) || (d >= 6 && d <= 12 && m == FEBRUARY && y == 2008)
-                    // Ching Ming Festival
-                    || (d == 4 && m == APRIL && y == 2008)
-                    // Labor Day
-                    || (d >= 1 && d <= 7 && m == MAY && y <= 2007) || (d >= 1 && d <= 2 && m == MAY && y == 2008)
-                    // Tuen Ng Festival
-                    || (d == 9 && m == JUNE && y == 2008)
-                    // Mid-Autumn Festival
-                    || (d == 15 && m == SEPTEMBER && y == 2008)
-                    // National Day
-                    || (d >= 1 && d <= 7 && m == OCTOBER && y <= 2007) || (d >= 29 && m == SEPTEMBER && y == 2008)
-                    || (d <= 3 && m == OCTOBER && y == 2008))
-                return false;
-            return true;
-        }
+			if (isWeekend(w)
+					// New Year's Day
+					|| (d == 1 && m == JANUARY)
+					|| (d == 3 && m == JANUARY && y == 2005)
+					|| ((d == 2 || d == 3) && m == JANUARY && y == 2006)
+					|| (d <= 3 && m == JANUARY && y == 2007)
+					|| (d == 31 && m == DECEMBER && y == 2007)
+					|| (d == 1 && m == JANUARY && y == 2008)
+					|| (d == 1 && m == JANUARY && y == 2009)
+					|| (d == 2 && m == JANUARY && y == 2009)
+					// Chinese New Year
+					|| (d >= 19 && d <= 28 && m == JANUARY && y == 2004)
+					|| (d >= 7 && d <= 15 && m == FEBRUARY && y == 2005)
+					|| (((d >= 26 && m == JANUARY) || (d <= 3 && m == FEBRUARY)) && y == 2006)
+					|| (d >= 17 && d <= 25 && m == FEBRUARY && y == 2007)
+					|| (d >= 6 && d <= 12 && m == FEBRUARY && y == 2008)
+					|| (d >= 26 && d <= 30 && m == JANUARY && y == 2009)
+					// Ching Ming Festival
+					|| (d == 4 && m == APRIL && y == 2008)
+					|| (d == 6 && m == APRIL && y == 2009)
+					// Labor Day
+					|| (d >= 1 && d <= 7 && m == MAY && y <= 2007)
+					|| (d >= 1 && d <= 2 && m == MAY && y == 2008)
+					|| (d == 1 && m == MAY && y == 2009)
+					// Tuen Ng Festival
+					|| (d == 9 && m == JUNE && y == 2008)
+					|| (d >= 28 && d <= 29 && m == MAY && y == 2009)
+					// Mid-Autumn Festival
+					|| (d == 15 && m == SEPTEMBER && y == 2008)
+					// National Day
+					|| (d >= 1 && d <= 7 && m == OCTOBER && y <= 2007)
+					|| (d >= 29 && m == SEPTEMBER && y == 2008)
+					|| (d <= 3 && m == OCTOBER && y == 2008)
+					|| (d >=1 && d <= 8 && m == OCTOBER && y == 2009))
+				return false;
+			return true;
+		}
 
-    }
+	}
 }
