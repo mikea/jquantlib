@@ -27,8 +27,7 @@
  copy of the license along with this program; if not, please email
  <quantlib-dev@lists.sf.net>. The license is also available online at
  <http://quantlib.org/license.shtml>.
-*/
-
+ */
 
 package org.jquantlib.time.calendars;
 
@@ -37,39 +36,41 @@ import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
+import static org.jquantlib.util.Month.*;
 
-
-/** 
+/**
+ * Indian Calendar
+ * <p>
  * Holidays for the National Stock Exchange of India
- * 	<ul>
- * 	<li>Saturdays</li>
- * 	<li>Sundays</li>
- * 	<li>Republic Day, January 26th</li>
- * 	<li>Good Friday</li>
- * 	<li>Ambedkar Jayanti, April 14th</li>
- * 	<li>Independence Day, August 15th</li>
- * 	<li>Gandhi Jayanti, October 2nd</li>
- * 	<li>Christmas, December 25th</li>
- * 	</ul>
- * 	Other holidays for which no rule is given (data available for 2005-2008 only:)
- *  2008 data taken from QuantLib 0.9.6
- * 	<ul>
- * 	<li>Bakri Id</li>
- * 	<li>Moharram</li>
- * 	<li>Mahashivratri</li>
- * 	<li>Holi</li>
- * 	<li>Ram Navami</li>
- * 	<li>Mahavir Jayanti</li>
- * 	<li>Id-E-Milad</li>
- * 	<li>Maharashtra Day</li>
- * 	<li>Buddha Pournima</li>
- * 	<li>Ganesh Chaturthi</li>
- * 	<li>Dasara</li>
- * 	<li>Laxmi Puja</li>
- * 	<li>Bhaubeej</li>
- * 	<li>Ramzan Id</li>
- * 	<li>Guru Nanak Jayanti</li>
- * 	</ul>
+ * <ul>
+ * <li>Saturdays</li>
+ * <li>Sundays</li>
+ * <li>Republic Day, January 26th</li>
+ * <li>Good Friday</li>
+ * <li>Ambedkar Jayanti, April 14th</li>
+ * <li>Independence Day, August 15th</li>
+ * <li>Gandhi Jayanti, October 2nd</li>
+ * <li>Christmas, December 25th</li>
+ * </ul>
+ * Other holidays for which no rule is given (data available for 2005-2008
+ * only:) 2008 data taken from QuantLib 0.9.6
+ * <ul>
+ * <li>Bakri Id</li>
+ * <li>Moharram</li>
+ * <li>Mahashivratri</li>
+ * <li>Holi</li>
+ * <li>Ram Navami</li>
+ * <li>Mahavir Jayanti</li>
+ * <li>Id-E-Milad</li>
+ * <li>Maharashtra Day</li>
+ * <li>Buddha Pournima</li>
+ * <li>Ganesh Chaturthi</li>
+ * <li>Dasara</li>
+ * <li>Laxmi Puja</li>
+ * <li>Bhaubeej</li>
+ * <li>Ramzan Id</li>
+ * <li>Guru Nanak Jayanti</li>
+ * </ul>
  * 
  * @category calendars
  * 
@@ -79,7 +80,7 @@ import org.jquantlib.util.Month;
  */
 
 public class India extends DelegateCalendar {
-	
+
 	// National stock-exchange of India Calendar
 	private final static India NSE_CALENDAR = new India(Market.NSE);
 
@@ -103,12 +104,11 @@ public class India extends DelegateCalendar {
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-	
-	
+
 	//
 	// public enums
 	//
-	
+
 	public enum Market {
 		/*
 		 * National stock-exchange of India
@@ -116,11 +116,10 @@ public class India extends DelegateCalendar {
 		NSE,
 	};
 
-	
 	//
 	// private inner classes
 	//
-	
+
 	final private class IndiaNSECalendar extends WesternCalendar {
 
 		public String getName() {
@@ -130,126 +129,159 @@ public class India extends DelegateCalendar {
 		public boolean isBusinessDay(Date date) {
 			Weekday w = date.getWeekday();
 			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-			int m = date.getMonth();
+			Month m = date.getMonthEnum();
 			int y = date.getYear();
 			int em = easterMonday(y);
-			
+
 			if (isWeekend(w)
-				 // Republic Day
-	            || (d == 26 && m == Month.JANUARY.toInteger())
-	            // Good Friday
-	            || (dd == em-3)
-	            // Ambedkar Jayanti
-	            || (d == 14 && m == Month.APRIL.toInteger())
-	            // Independence Day
-	            || (d == 15 && m == Month.AUGUST.toInteger())
-	            // Gandhi Jayanti
-	            || (d == 2 && m == Month.OCTOBER.toInteger())
-	            // Christmas
-	            || (d == 25 && m == Month.DECEMBER.toInteger())
-	            )
+			// Republic Day
+					|| (d == 26 && m == JANUARY)
+					// Good Friday
+					|| (dd == em - 3)
+					// Ambedkar Jayanti
+					|| (d == 14 && m == APRIL)
+					// Independence Day
+					|| (d == 15 && m == AUGUST)
+					// Gandhi Jayanti
+					|| (d == 2 && m == OCTOBER)
+					// Christmas
+					|| (d == 25 && m == DECEMBER))
 				return false;
-			
+
 			if (y == 2005) {
-	            // Moharram, Holi, Maharashtra Day, and Ramzan Id fall
-	            // on Saturday or Sunday in 2005		
-	            if (
-	            	// Bakri Id
-	                (d == 21 && m == Month.JANUARY.toInteger())
-	                // Ganesh Chaturthi
-	                || (d == 7 && m == Month.SEPTEMBER.toInteger())
-	                // Dasara
-	                || (d == 12 && m == Month.OCTOBER.toInteger())
-	                // Laxmi Puja
-	                || (d == 1 && m == Month.NOVEMBER.toInteger())
-	                // Bhaubeej
-	                || (d == 3 && m == Month.NOVEMBER.toInteger())
-	                // Guru Nanak Jayanti
-	                || (d == 15 && m == Month.NOVEMBER.toInteger())
-	                )
-	                return false;
+				// Moharram, Holi, Maharashtra Day, and Ramzan Id fall
+				// on Saturday or Sunday in 2005
+				if (
+				// Bakri Id
+				(d == 21 && m == JANUARY)
+				// Ganesh Chaturthi
+						|| (d == 7 && m == SEPTEMBER)
+						// Dasara
+						|| (d == 12 && m == OCTOBER)
+						// Laxmi Puja
+						|| (d == 1 && m == NOVEMBER)
+						// Bhaubeej
+						|| (d == 3 && m == NOVEMBER)
+						// Guru Nanak Jayanti
+						|| (d == 15 && m == NOVEMBER))
+					return false;
 			}
-			
+
 			if (y == 2006) {
-	            if (
-	            	// Bakri Id
-	                (d == 11 && m == Month.JANUARY.toInteger())
-	                // Moharram
-	                || (d == 9 && m == Month.FEBRUARY.toInteger())
-	                // Holi
-	                || (d == 15 && m == Month.MARCH.toInteger())
-	                // Ram Navami
-	                || (d == 6 && m == Month.APRIL.toInteger())
-	                // Mahavir Jayanti
-	                || (d == 11 && m == Month.APRIL.toInteger())
-	                // Maharashtra Day
-	                || (d == 1 && m == Month.MAY.toInteger())
-	                // Bhaubeej
-	                || (d == 24 && m == Month.OCTOBER.toInteger())
-	                // Ramzan Id
-	                || (d == 25 && m == Month.OCTOBER.toInteger())
-	                )
-	                return false;
-	        }
-			
-	        if (y == 2007) {
-	            if (
-	            	// Bakri Id
-	                (d == 1 && m == Month.JANUARY.toInteger())
-	                // Moharram
-	                || (d == 30 && m == Month.JANUARY.toInteger())
-	                // Mahashivratri
-	                || (d == 16 && m == Month.FEBRUARY.toInteger())
-	                // Ram Navami
-	                || (d == 27 && m == Month.MARCH.toInteger())
-	                // Maharashtra Day
-	                || (d == 1 && m == Month.MAY.toInteger())
-	                // Buddha Pournima 
-	                || (d == 2 && m == Month.MAY.toInteger())
-	                // Laxmi Puja
-	                || (d == 9 && m == Month.NOVEMBER.toInteger())
-	                // Bakri Id (again)
-	                || (d == 21 && m == Month.DECEMBER.toInteger())
-	                )
-	                return false;
-	        }
-	        
-	        //2008 data taken from QuantLib 0.9.6
-	        if (y == 2008) {
-	            if (
-	            	// Mahashivratri
-	                (d == 6 && m == Month.MARCH.toInteger())
-	                // Id-E-Milad
-	                || (d == 20 && m == Month.MARCH.toInteger())
-	                // Mahavir Jayanti
-	                || (d == 18 && m == Month.APRIL.toInteger())
-	                // Maharashtra Day
-	                || (d == 1 && m == Month.MAY.toInteger())
-	                // Buddha Pournima
-	                || (d == 19 && m == Month.MAY.toInteger())
-	                // Ganesh Chaturthi
-	                || (d == 3 && m == Month.SEPTEMBER.toInteger())
-	                // Ramzan Id
-	                || (d == 2 && m == Month.OCTOBER.toInteger())
-	                // Dasara
-	                || (d == 9 && m == Month.OCTOBER.toInteger())
-	                // Laxmi Puja
-	                || (d == 28 && m == Month.OCTOBER.toInteger())
-	                // Bhau bhij
-	                || (d == 30 && m == Month.OCTOBER.toInteger())
-	                // Gurunanak Jayanti
-	                || (d == 13 && m == Month.NOVEMBER.toInteger())
-	                // Bakri Id
-	                || (d == 9 && m == Month.DECEMBER.toInteger())
-	                // Mumbai Terror attack
-	                || (d == 27 && m == Month.NOVEMBER.toInteger())
-	                )
-	                return false;
-	        }
-	        
+				if (
+				// Bakri Id
+				(d == 11 && m == JANUARY)
+				// Moharram
+						|| (d == 9 && m == FEBRUARY)
+						// Holi
+						|| (d == 15 && m == MARCH)
+						// Ram Navami
+						|| (d == 6 && m == APRIL)
+						// Mahavir Jayanti
+						|| (d == 11 && m == APRIL)
+						// Maharashtra Day
+						|| (d == 1 && m == MAY)
+						// Bhaubeej
+						|| (d == 24 && m == OCTOBER)
+						// Ramzan Id
+						|| (d == 25 && m == OCTOBER))
+					return false;
+			}
+
+			if (y == 2007) {
+				if (
+				// Bakri Id
+				(d == 1 && m == JANUARY)
+				// Moharram
+						|| (d == 30 && m == JANUARY)
+						// Mahashivratri
+						|| (d == 16 && m == FEBRUARY)
+						// Ram Navami
+						|| (d == 27 && m == MARCH)
+						// Maharashtra Day
+						|| (d == 1 && m == MAY)
+						// Buddha Pournima
+						|| (d == 2 && m == MAY)
+						// Laxmi Puja
+						|| (d == 9 && m == NOVEMBER)
+						// Bakri Id (again)
+						|| (d == 21 && m == DECEMBER))
+					return false;
+			}
+
+			// 2008 data taken from QuantLib 0.9.6
+			if (y == 2008) {
+				if (
+				// Mahashivratri
+				(d == 6 && m == MARCH)
+				// Id-E-Milad
+						|| (d == 20 && m == MARCH)
+						// Mahavir Jayanti
+						|| (d == 18 && m == APRIL)
+						// Maharashtra Day
+						|| (d == 1 && m == MAY)
+						// Buddha Pournima
+						|| (d == 19 && m == MAY)
+						// Ganesh Chaturthi
+						|| (d == 3 && m == SEPTEMBER)
+						// Ramzan Id
+						|| (d == 2 && m == OCTOBER)
+						// Dasara
+						|| (d == 9 && m == OCTOBER)
+						// Laxmi Puja
+						|| (d == 28 && m == OCTOBER)
+						// Bhau bhij
+						|| (d == 30 && m == OCTOBER)
+						// Gurunanak Jayanti
+						|| (d == 13 && m == NOVEMBER)
+						// Bakri Id
+						|| (d == 9 && m == DECEMBER)
+						// Mumbai Terror attack
+						|| (d == 27 && m == NOVEMBER))
+					return false;
+			}
+			// data take from
+			// http://www.chittorgarh.com/stockmarket/stock-trading-holidays.asp
+			if (y == 2009) {
+				//Moharram
+				if ((d == 8 && m == JANUARY) ||
+						//Republic Day
+						(d == 26 && m == JANUARY) ||
+						// Mahashivratri
+						(d == 23 && m == FEBRUARY)
+						// Id-E-Milad
+						|| (d == 10 && m == MARCH)
+						// Holi
+						|| (d == 11 && m == MARCH)
+						// Ram Navmi
+						|| (d == 3 && m == APRIL)
+						// Mahavir Jayanti
+						|| (d == 7 && m == APRIL)
+						// Good FRiday
+						|| (d == 10 && m == APRIL)
+						// Dr. Ambedkar Jayanti
+						|| (d == 14 && m == APRIL)
+						// Maharashtra Day
+						|| (d == 1 && m == MAY)
+						// Ramzan Id
+						|| (d == 21 && m == SEPTEMBER)
+						// Dasara
+						|| (d == 28 && m == SEPTEMBER)
+						// Gandhi Jayanti
+						|| (d == 2 && m == OCTOBER)
+						// Diwali ( Bhaubeez)
+						|| (d == 19 && m == OCTOBER)
+						// Gurunanak Jayanti
+						|| (d == 2 && m == NOVEMBER)
+						// Christmas
+						|| (d == 25 && m == DECEMBER)
+						// Moharram
+						|| (d == 28 && m == DECEMBER))
+					return false;
+			}
+
 			return true;
 		}
 	}
-	
-}
 
+}
