@@ -29,19 +29,19 @@
 	<version>0.1.2-SNAPSHOT</version>
 	<url>http://www.jquantlib.org/</url>
 	<description>
-		JQuantLib is a free, open-source and comprehensive framework for quantitative finance, such as
+		JQuantLib is a free, open-source and comprehensive framework for quantitative finance, offering
 		several mathematical and statistical tools needed for financial instrument valuation, calculation
 		of VaR, portfolio valuation, etc.
 		
-		JQuantLib is written in Java and is based on QuantLib, which is written in C++ and can be considered
-		a stable, reliable reference implementation for C++ world. Following the steps of its predecessor,
-		JQuantLib aims to become a reference implementation for Java world.
+		JQuantLib is written in Java and is based on QuantLib, which is written in C++. QuantLib is a de-facto
+		reference implementation for C++ world. Following the steps of its predecessor, JQuantLib aims to
+		become a reference implementation for Java world.
 		
 		JQuantLib does its best efforts to mimic as close as possible the API exposed by QuantLib,
-		offering a smooth transition path for organizations considering high performance, low latency
-		Java appliances and JVMs.
+		offering a smooth transition path for developers and organizations aiming to adopt Java for
+		high performance, low latency applications.
 		
-		For more information, please visit [http://www.jquantlib.org JQuantLib Website]
+		For more information, please visit http://www.jquantlib.org
 	</description>
 
 	<prerequisites>
@@ -276,6 +276,7 @@
 						<configuration>
 							<tasks>
 								<echo>user.home=${user.home}</echo>
+								<echo>basedir=${basedir}</echo>
 								<echo>java.version=${java.version}</echo>
 								<echo>java.vm.version=${java.vm.version}</echo>
 								<echo>java.home=${java.home}</echo>
@@ -896,6 +897,8 @@
               <ruleset>/rulesets/braces.xml</ruleset>
               <ruleset>/rulesets/naming.xml</ruleset>
               <ruleset>/rulesets/controversial.xml</ruleset>
+              <ruleset>${basedir}/src/main/pmd/colt.xml</ruleset>
+              <ruleset>${basedir}/src/main/pmd/fastutil.xml</ruleset>
             </rulesets>
           </configuration>
           <reportSets>

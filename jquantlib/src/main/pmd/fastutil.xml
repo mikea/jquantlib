@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ruleset name="Colt library rules">
+	<description>Checks usage of Colt library</description>
+
+	<rule name="ColtListsAndMaps" 
+		  message="Avoid fastutil classes in method signatures. Use JCF interfaces instead." 
+		  class="net.sourceforge.pmd.rules.XPathRule">
+		<description>Avoid fastutil classes in method signatures.</description>
+		<properties>
+			<property name="xpath">
+				<value>
+					<![CDATA[
+						//ClassOrInterfaceBodyDeclaration[
+							MethodDeclaration[@Public='true'] and 
+							MethodDeclaration/ResultType/Type/ReferenceType/ClassOrInterfaceType[@Image='DoubleArrayList']]
+					]]>
+				</value>
+			</property>
+		</properties>
+		<example>
+<![CDATA[
+  // 
+  // Fastutil classes should not be exposed directly on method signatures.
+  // JCF interfaces should be used instead.
+  // Doing so, users of JQuantLib are not obliged to adop fastutil but they are free to
+  // to use whatever JCF implementation they need to.
+  //
+  public calc1(DoubleArrayList list) { ... } // avoid!
+  public calc2(List list) { ... } // expose JCF interfaces instead
+]]>
+		</example>
+	</rule>
+
+	<!-- More rules can be added
+	<rule> ... </rule> 
+	 -->
+
+</ruleset>
