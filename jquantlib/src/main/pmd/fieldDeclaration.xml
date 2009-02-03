@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ruleset name="Field type rules">
+	<description>Checks field type rules</description>
+	<rule name="ListPrivateNonFinalFields" message="Non-final method parameter"
+		class="net.sourceforge.pmd.rules.XPathRule">
+		<description>Detect uses of non final method parameter.
+		</description>
+		<properties>
+			<property name="xpath">
+				<value><![CDATA[
+          //FieldDeclaration[@Private='true' and @Final='false']
+      ]]></value>
+			</property>
+		</properties>
+		<example><![CDATA[
+      	 //Private fields in general are initialized by constructors, so they should be final. Unless for a good reason, a field must be left non-final, because it is probably used as a variable, not as an object holder.
+		//This verification helps developers to review their code and find objects left not initialized by constructors. 
+  ]]></example>
+	</rule>
+</ruleset>
