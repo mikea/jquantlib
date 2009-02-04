@@ -31,14 +31,19 @@ import org.jquantlib.methods.finitedifferences.OperatorFactory;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
+import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.util.Date;
 
+//! Finite-differences pricing engine for BSM one asset options
+/*! The name is a misnomer as this is a base class for any finite
+    difference scheme.  Its main job is to handle grid layout.
+ */
 /**
  * @author Srinivas Hasti
  * 
  */
-public class FDVanillaEngine {
+public abstract class FDVanillaEngine {
 	protected GeneralizedBlackScholesProcess process;
 	protected/* Size */int timeSteps, gridPoints;
 	protected boolean timeDependent;
@@ -155,4 +160,7 @@ public class FDVanillaEngine {
 								* minGridPointsPerYear))
 								: minGridPoints);
 	}
+	
+	protected abstract void calculate(Results r);
+	
 }

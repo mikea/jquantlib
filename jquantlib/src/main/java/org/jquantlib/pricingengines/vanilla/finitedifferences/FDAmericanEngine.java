@@ -19,39 +19,21 @@
  */
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
-import org.jquantlib.methods.finitedifferences.AmericanCondition;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
  * @author Srinivas Hasti
  * 
  */
-public class FDAmericanCondition extends FDStepConditionEngine {
+public class FDAmericanEngine extends FDEngineAdapter<FDAmericanCondition> {
 
-	public FDAmericanCondition(GeneralizedBlackScholesProcess process) {
-		this(process, 100, 100);
+	public FDAmericanEngine(GeneralizedBlackScholesProcess process,
+			int timeSteps, int gridPoints, boolean timeDependent) {
+		super(process, timeSteps, gridPoints, timeDependent);
 	}
 
-	public FDAmericanCondition(GeneralizedBlackScholesProcess process,
+	public FDAmericanEngine(GeneralizedBlackScholesProcess process,
 			int timeSteps, int gridPoints) {
 		this(process, timeSteps, gridPoints, false);
 	}
-
-	public FDAmericanCondition(GeneralizedBlackScholesProcess process,
-			int timeSteps, int gridPoints, boolean value) {
-		super(process, timeSteps, gridPoints, value);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.jquantlib.pricingengines.vanilla.finitedifferences.FDStepConditionEngine
-	 * #initializeStepCondition()
-	 */
-	@Override
-	protected void initializeStepCondition() {
-		stepCondition = new AmericanCondition(intrinsicValues.values());
-	}
-
 }

@@ -19,39 +19,44 @@
  */
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
-import org.jquantlib.methods.finitedifferences.AmericanCondition;
+import java.lang.reflect.Constructor;
+
+import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
+import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * @author Srinivas Hasti
  * 
  */
-public class FDAmericanCondition extends FDStepConditionEngine {
+public class FDEngineAdapter<T extends FDVanillaEngine> extends
+		VanillaOptionEngine {
 
-	public FDAmericanCondition(GeneralizedBlackScholesProcess process) {
-		this(process, 100, 100);
-	}
+	private final FDVanillaEngine fdVanillaEngine;
 
-	public FDAmericanCondition(GeneralizedBlackScholesProcess process,
-			int timeSteps, int gridPoints) {
-		this(process, timeSteps, gridPoints, false);
-	}
-
-	public FDAmericanCondition(GeneralizedBlackScholesProcess process,
-			int timeSteps, int gridPoints, boolean value) {
-		super(process, timeSteps, gridPoints, value);
+	public FDEngineAdapter(GeneralizedBlackScholesProcess process,
+			int timeSteps, int gridPoints, boolean timeDependent) {
+		try {
+			final Class<T> rsgClass = (Class<T>) TypeToken.getClazz(this
+					.getClass());
+			final Constructor<T> c = rsgClass.getConstructor(
+					GeneralizedBlackScholesProcess.class, int.class, int.class,
+					boolean.class);
+			fdVanillaEngine = c.newInstance(process, timeSteps, gridPoints,
+					timeDependent);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jquantlib.pricingengines.vanilla.finitedifferences.FDStepConditionEngine
-	 * #initializeStepCondition()
+	 * @see org.jquantlib.pricingengines.PricingEngine#calculate()
 	 */
 	@Override
-	protected void initializeStepCondition() {
-		stepCondition = new AmericanCondition(intrinsicValues.values());
+	public void calculate() {
+		fdVanillaEngine.setupArguments(arguments);
+		fdVanillaEngine.calculate(results);
 	}
-
 }
