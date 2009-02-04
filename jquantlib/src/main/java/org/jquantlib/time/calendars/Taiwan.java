@@ -36,8 +36,7 @@ import static org.jquantlib.util.Month.SEPTEMBER;
 import static org.jquantlib.util.Month.OCTOBER;
 
 /**
- * %Taiwanese calendars Holidays for the Taiwan stock exchange (data from
- * <http://www.tse.com.tw/en/trading/trading_days.php>):
+ * Taiwanese calendars Holidays for the Taiwan stock exchange
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
@@ -56,7 +55,9 @@ import static org.jquantlib.util.Month.OCTOBER;
  * <li>Moon Festival</li>
  * </ul>
  * 
- * \ingroup calendars
+ * @category calendars
+ * 
+ * @see <a href="http://www.tse.com.tw/en/trading/trading_days.php">Taiwan Stock Exchange</a>
  * 
  * @author Renjith Nair
  * @author Jia Jia
