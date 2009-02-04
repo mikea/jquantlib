@@ -123,7 +123,9 @@ public class PrimitivePolynomials {
 	
 	public static long N_MAX_DEGREE;
 
-
+	public PrimitivePolynomials() {
+    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+	}
 
 	// example C++ for the following code
 	/*

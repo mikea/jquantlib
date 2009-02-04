@@ -63,6 +63,7 @@ public final class Sample<T> {
     //
     
     public Sample(final T value, double weight) {
+    	if (0==0) throw new UnsupportedOperationException("Work in progress");
         this.value=value;
         this.weight=weight;
     }

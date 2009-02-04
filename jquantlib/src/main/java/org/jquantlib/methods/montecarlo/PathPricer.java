@@ -55,6 +55,10 @@ import org.jquantlib.math.UnaryFunction;
 //FIXME: study how to solve warning on usage of type Double
 public abstract class PathPricer<PathType> implements UnaryFunction<PathType, Double> {
 
-    public abstract Double evaluate(final PathType path);
+	public PathPricer() {
+    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+	}
+	
+	public abstract Double evaluate(final PathType path);
 
 }

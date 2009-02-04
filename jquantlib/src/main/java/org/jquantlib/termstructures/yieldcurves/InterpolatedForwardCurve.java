@@ -83,16 +83,25 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
     protected InterpolatedForwardCurve(final DayCounter dayCounter, final T interpolator) {
     	super(dayCounter);
 		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
     }
 
     protected InterpolatedForwardCurve(final Date referenceDate, final DayCounter dayCounter, final T interpolator) {
         super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review:: default calendar
 		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
     }
 
     protected InterpolatedForwardCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter, final T interpolator) {
         super(settlementDays, calendar, dayCounter);
 		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
     }
 
 	
@@ -105,6 +114,9 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 		// FIXME: code review: calendar
 		// FIXME: must check dates
 		super(dates[0], Target.getCalendar(), dayCounter);
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
     	this.dates = dates.clone();
 		this.data = forwards.clone();
 		this.isNegativeRates = settings.isNegativeRates();

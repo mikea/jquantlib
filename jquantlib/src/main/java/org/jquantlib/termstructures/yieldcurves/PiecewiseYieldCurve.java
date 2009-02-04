@@ -41,4 +41,11 @@ package org.jquantlib.termstructures.yieldcurves;
 
 //TODO: Finish (Richard)
 
-public class PiecewiseYieldCurve { }
+public class PiecewiseYieldCurve { 
+	
+	public PiecewiseYieldCurve() {
+    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+	}
+	
+	
+}

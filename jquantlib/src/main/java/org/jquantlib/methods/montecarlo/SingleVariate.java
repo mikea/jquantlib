@@ -49,7 +49,11 @@ import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
  */
 public class SingleVariate<T, RNG extends RandomNumberGenerator, IC extends InverseCumulative> implements Variate {
     
-// FIXME: should not expose fields
+	public SingleVariate() {
+    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+	}
+	
+	// FIXME: should not expose fields
 // FIXME: adhere to standards
   public RNG rng_traits;
   // public Path path_type;

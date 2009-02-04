@@ -989,6 +989,8 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements RandomSequen
 	
     public SobolRsg(int dimensionality, long seed, DirectionIntegers directionIntegers) {
     	
+    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+
     	seed = 0;
     	directionIntegers = DirectionIntegers.Jaeckel;
     	   	

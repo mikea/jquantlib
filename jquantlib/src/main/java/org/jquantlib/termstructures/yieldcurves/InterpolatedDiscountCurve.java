@@ -88,12 +88,18 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 		super(dayCounter);
 		this.isNegativeRates = settings.isNegativeRates();
 		this.interpolator = (interpolator!=null) ? interpolator : new LogLinear();
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
 	}
 
 	protected InterpolatedDiscountCurve(final Date referenceDate, final DayCounter dayCounter, final T interpolator) {
 		super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review :: default calendar
 		this.isNegativeRates = settings.isNegativeRates();
 		this.interpolator = (interpolator!=null) ? interpolator : new LogLinear();
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
 	}
 
 	protected InterpolatedDiscountCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter,
@@ -101,6 +107,9 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 		super(settlementDays, calendar, dayCounter);
 		this.isNegativeRates = settings.isNegativeRates();
 		this.interpolator = (interpolator!=null) ? interpolator : new LogLinear();
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
 	}
 
 	//
@@ -110,6 +119,9 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 	public InterpolatedDiscountCurve(final Date[] dates, final/* @DiscountFactor */double[] discounts,
 			final DayCounter dayCounter, final Calendar cal, final T interpolator) {
 		super(dates[0], cal, dayCounter);
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
     	this.dates = dates.clone();
 		this.data = discounts.clone();
 		this.isNegativeRates = settings.isNegativeRates();

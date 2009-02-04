@@ -59,6 +59,10 @@ import org.jquantlib.math.statistics.Statistics;
  * @author Richard Gomes
  */
 public class MonteCarloModel<MC extends Variate, RNG extends RandomNumberGenerator, S extends Statistics> {
+	
+	public MonteCarloModel() {
+    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+	}
 
 //    private PathGeneratorType pathGenerator_;
 //    private PathPricerType pathPricer_;

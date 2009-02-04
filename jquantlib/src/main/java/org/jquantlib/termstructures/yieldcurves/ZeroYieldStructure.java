@@ -83,6 +83,9 @@ public abstract class ZeroYieldStructure extends YieldTermStructure {
 	 */
 	public ZeroYieldStructure(final DayCounter dc) {
 		super(dc);
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
 	}
 
 	// ---
@@ -130,6 +133,9 @@ public abstract class ZeroYieldStructure extends YieldTermStructure {
 	 */
 	public ZeroYieldStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
 		super(refDate, cal, dc);
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
 	}
 
 	// ---
@@ -155,6 +161,9 @@ public abstract class ZeroYieldStructure extends YieldTermStructure {
 	 */
 	public ZeroYieldStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
 		super(settlementDays, cal, dc);
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
 	}
 
 	

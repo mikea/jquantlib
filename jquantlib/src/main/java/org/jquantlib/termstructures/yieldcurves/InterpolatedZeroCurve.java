@@ -80,16 +80,25 @@ public final class InterpolatedZeroCurve<T extends Interpolator> extends ZeroYie
     protected InterpolatedZeroCurve(final DayCounter dayCounter, final T interpolator) {
     	super(dayCounter);
 		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
     }
 
     protected InterpolatedZeroCurve(final Date referenceDate, final DayCounter dayCounter, final T interpolator) {
         super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review : default calendar?
 		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
     }
 
     protected InterpolatedZeroCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter, final T interpolator) {
         super(settlementDays,calendar, dayCounter);
 		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
     }
 
 	

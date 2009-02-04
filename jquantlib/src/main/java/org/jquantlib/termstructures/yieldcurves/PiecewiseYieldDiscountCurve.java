@@ -74,6 +74,9 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 	public PiecewiseYieldDiscountCurve(final Date referenceDate, final RateHelper<YieldTermStructure>[] instruments,
 			final DayCounter dayCounter, final double accuracy, final T interpolator) {
 		super(referenceDate, dayCounter, interpolator);
+
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		
 		this.curveData = new CurveData();
 		this.curveData.instruments = instruments;
 		this.curveData.accuracy = accuracy;
