@@ -52,8 +52,13 @@
 
 package org.jquantlib.testsuite.instruments;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import junit.framework.TestCase;
 
+import org.jquantlib.Configuration;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
@@ -75,6 +80,8 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.testsuite.util.Utilities;
+import org.jquantlib.time.Period;
+import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.junit.Ignore;
@@ -478,8 +485,8 @@ public class AmericanOptionTest {
 		}
 	}
 
-	//@Ignore("OOPS, Test is failing, need to fix ")
-	@Test	
+	// @Ignore("OOPS, Test is failing, need to fix ")
+	@Test
 	public void testFdValues() {
 		logger.info("Testing finite-difference engine for American options...");
 
@@ -656,10 +663,136 @@ public class AmericanOptionTest {
 		}
 	}
 
-	@Ignore("Pricer Engine implementation not completed yet.")
+	@Ignore(" test case fails")
 	@Test
 	public void testFdAmericanGreeks() {
+		// SavedSettings backup;
 
+		Map<String, Double> calculated = new HashMap<String, Double>();
+		Map<String, Double> expected = new HashMap<String, Double>();
+		Map<String, Double> tolerance = new HashMap<String, Double>();
+		tolerance.put("delta", 7.0e-4);
+		tolerance.put("gamma", 2.0e-4);
+		// tolerance["theta"] = 1.0e-4;
+
+		Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+		double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
+		double underlyings[] = { 100.0 };
+		double qRates[] = { 0.04, 0.05, 0.06 };
+		double rRates[] = { 0.01, 0.05, 0.15 };
+		int years[] = { 1, 2 };
+		double vols[] = { 0.11, 0.50, 1.20 };
+
+		Date today = DateFactory.getFactory().getTodaysDate();
+		DayCounter dc = Actual360.getDayCounter();
+		Settings settings = Configuration.getSystemConfiguration(null)
+				.getGlobalSettings();
+		settings.setEvaluationDate(today);
+
+		final SimpleQuote spot = new SimpleQuote(0.0);
+		final SimpleQuote qRate = new SimpleQuote(0.0);
+		final YieldTermStructure qTS = Utilities.flatRate(today,
+				new Handle<Quote>(qRate), dc);
+		final SimpleQuote rRate = new SimpleQuote(0.0);
+		final YieldTermStructure rTS = Utilities.flatRate(today,
+				new Handle<Quote>(rRate), dc);
+		final SimpleQuote vol = new SimpleQuote(0.0);
+		final BlackVolTermStructure volTS = Utilities.flatVol(today,
+				new Handle<Quote>(vol), dc);
+
+		StrikedTypePayoff payoff = null;
+
+		for (int i = 0; i < types.length; i++) {
+			for (int j = 0; j < strikes.length; j++) {
+				for (int k = 0; k < years.length; k++) {
+
+					Date exDate = today.getDateAfter(new Period(years[k],
+							TimeUnit.YEARS));
+
+					Exercise exercise = new AmericanExercise(today, exDate);
+					payoff = new PlainVanillaPayoff(types[i], strikes[j]);
+
+					final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
+							new Handle<Quote>(spot),
+							new Handle<YieldTermStructure>(qTS),
+							new Handle<YieldTermStructure>(rTS),
+							new Handle<BlackVolTermStructure>(volTS));
+
+					final PricingEngine engine = new FDAmericanEngine(
+							stochProcess);
+					final VanillaOption option = new VanillaOption(
+							stochProcess, payoff, exercise, engine);
+
+					for (int l = 0; l < underlyings.length; l++) {
+						for (int m = 0; m < qRates.length; m++) {
+							for (int n = 0; n < rRates.length; n++) {
+								for (int p = 0; p < vols.length; p++) {
+									double u = underlyings[l];
+									double q = qRates[m], r = rRates[n];
+									double v = vols[p];
+									spot.setValue(u);
+									qRate.setValue(q);
+									rRate.setValue(r);
+									vol.setValue(v);
+									// FLOATING_POINT_EXCEPTION
+									double value = option.getNPV();
+									calculated.put("delta", option.delta());
+									calculated.put("gamma", option.gamma());
+									// calculated["theta"] = option.theta();
+
+									if (value > spot.evaluate() * 1.0e-5) {
+										// perturb spot and get delta and gamma
+										double du = u * 1.0e-4;
+										spot.setValue(u + du);
+										double value_p = option.getNPV(), delta_p = option
+												.delta();
+										spot.setValue(u - du);
+										double value_m = option.getNPV(), delta_m = option
+												.delta();
+										spot.setValue(u);
+										expected.put("delta",
+												(value_p - value_m) / (2 * du));
+										expected.put("gamma",
+												(delta_p - delta_m) / (2 * du));
+
+										/*
+										 * // perturb date and get theta Time dT
+										 * = dc.yearFraction(today-1, today+1);
+										 * Settings
+										 * ::instance().setEvaluationDate
+										 * (today-1); value_m = option.NPV();
+										 * Settings
+										 * ::instance().setEvaluationDate
+										 * (today+1); value_p = option.NPV();
+										 * Settings
+										 * ::instance().setEvaluationDate
+										 * (today); expected["theta"] = (value_p
+										 * - value_m)/dT;
+										 */
+
+										// compare
+										for (String greek : calculated.keySet()) {
+											double expct = expected.get(greek), calcl = calculated
+													.get(greek), tol = tolerance
+													.get(greek);
+											double error = Utilities
+													.relativeError(expct,
+															calcl, u);
+											if (error > tol) {
+												REPORT_FAILURE(greek, payoff,
+														exercise, u, q, r,
+														today, v, expct, calcl,
+														error, tol);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	@Ignore("Pricer Engine implementation not completed yet.")
