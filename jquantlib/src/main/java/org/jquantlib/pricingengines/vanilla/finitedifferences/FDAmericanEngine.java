@@ -19,6 +19,7 @@
  */
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
+import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
@@ -35,5 +36,9 @@ public class FDAmericanEngine extends FDEngineAdapter<FDAmericanCondition> {
 	public FDAmericanEngine(GeneralizedBlackScholesProcess process,
 			int timeSteps, int gridPoints) {
 		this(process, timeSteps, gridPoints, false);
+	}
+
+	public FDAmericanEngine(BlackScholesMertonProcess process) {
+		this(process, 100, 100, false);
 	}
 }
