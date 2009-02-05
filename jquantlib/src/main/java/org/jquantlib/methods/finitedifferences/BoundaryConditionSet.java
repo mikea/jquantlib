@@ -26,7 +26,7 @@ import java.util.Vector;
  * 
  */
 public class BoundaryConditionSet<T extends Vector<BoundaryCondition>> {
-	private Vector<T> bcSet;
+	private Vector<T> bcSet = new Vector<T>();
 
 	public void push_back(T a) {
 		bcSet.add(a);

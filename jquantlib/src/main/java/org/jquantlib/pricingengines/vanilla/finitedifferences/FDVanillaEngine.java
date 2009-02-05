@@ -37,7 +37,7 @@ import org.jquantlib.util.Date;
 
 //! Finite-differences pricing engine for BSM one asset options
 /*! The name is a misnomer as this is a base class for any finite
-    difference scheme.  Its main job is to handle grid layout.
+ difference scheme.  Its main job is to handle grid layout.
  */
 /**
  * @author Srinivas Hasti
@@ -64,6 +64,7 @@ public abstract class FDVanillaEngine {
 		this.timeSteps = timeSteps;
 		this.gridPoints = gridPoints;
 		this.timeDependent = timeDependent;
+		this.intrinsicValues = new SampledCurve(gridPoints);
 		bcS = new Vector<BoundaryCondition<TridiagonalOperator>>();
 	}
 
@@ -137,8 +138,7 @@ public abstract class FDVanillaEngine {
 		bcS.add(new NeumannBC(intrinsicValues.value(1)
 				- intrinsicValues.value(0), NeumannBC.Side.LOWER));
 
-		bcS.add(new NeumannBC(intrinsicValues
-				.value(intrinsicValues.size() - 1)
+		bcS.add(new NeumannBC(intrinsicValues.value(intrinsicValues.size() - 1)
 				- intrinsicValues.value(intrinsicValues.size() - 2),
 				NeumannBC.Side.UPPER));
 
@@ -160,7 +160,7 @@ public abstract class FDVanillaEngine {
 								* minGridPointsPerYear))
 								: minGridPoints);
 	}
-	
+
 	protected abstract void calculate(Results r);
-	
+
 }

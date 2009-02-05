@@ -68,11 +68,13 @@ public class SampledCurve {
 	// Constructors
 	//
 	public SampledCurve(int gridSize){
-		
+		grid_ = new Array(gridSize);
+		values_=new Array(gridSize);
 	}
 	
 	public SampledCurve(final Array grid){
-		
+		grid_ = grid;
+		values_ = new Array(grid.size());
 	}
 	
 	
@@ -88,7 +90,7 @@ public class SampledCurve {
 	}
 	
 	public double firstDerivativeAtCenter() /* @Readonly */ {
-		if(size() >= 3) throw new ArithmeticException("the size of the curve must be at least 3");
+		if(size() < 3) throw new ArithmeticException("the size of the curve must be at least 3");
 		int jmid = size()/2;
 		if (size() % 2 == 1){
 			return (values_.at(jmid+1)-values_.at(jmid-1)) / (grid_.at(jmid+1)-grid_.at(jmid-1));
@@ -100,7 +102,7 @@ public class SampledCurve {
 	
 	
 	public double secondDerivativeAtCenter() /* Read-only */ {
-        if(size()>=4) throw new ArithmeticException("the size of the curve must be at least 4");
+        if(size() < 4) throw new ArithmeticException("the size of the curve must be at least 4");
         int jmid = size()/2;
         if (size() % 2 == 1) {
             double deltaPlus = (values_.at(jmid+1)-values_.at(jmid)/
