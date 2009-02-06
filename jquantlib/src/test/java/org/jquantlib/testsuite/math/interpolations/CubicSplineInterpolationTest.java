@@ -108,7 +108,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
+	//@Ignore("Not Ready to Run")
 	@Test
 	public void testNotAKnotSplineOnGaussianValues(){
 
@@ -152,7 +152,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
+	//@Ignore("Not Ready to Run")
 	@Test
 	public void testClampedSplineOnRPN15AValues(){
 		
@@ -188,7 +188,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
+	//@Ignore("Not Ready to Run")
 	@Test
 	public void testNotAKnotSplineOnRPN15AValues(){
 		
@@ -292,7 +292,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
+	//@Ignore("Not Ready to Run")
 	@Test
 	public void testNotAKnotSimmetricEndConditions(){
 		int n = 9;
@@ -317,7 +317,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	}
 	
 	//TODO: check the test failure. 
-	@Ignore("interpolation second derivative failure")
+	//@Ignore("interpolation second derivative failure")
 	@Test
 	public void testNotAKnotSpineOnDerivativeEndConditions(){
 		int n = 4;
