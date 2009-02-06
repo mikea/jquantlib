@@ -329,5 +329,47 @@ public class Std {
         	array.set(i, f.apply(array.at(i)));
         }
 	}
+	
+	/**
+	 * Java implementation of std::upper_bound
+	 * @param list
+	 * @param fromIndex
+	 * @param toIndex
+	 * @param val
+	 * @return see upper_bound doc
+	 */
+	public static /*_ForwardIterator*/ int upper_bound(final double[] list, /*_ForwardIterator _first*/ int first, /*_ForwardIterator _last*/int last , final double val){
+		//_DistanceType __len = std::distance(__first, __last);
+		int len = last - first;
+		//_DistanceType __half;
+		int half;
+		//_ForwardIterator __middle;
+		int middle;
+		
+		while(len > 0){
+			//__half = __len >> 1;
+			half = len >>> 1;
+			//__middle = __first;
+			//std::advance(__middle, __half);
+			middle = first;
+			middle = middle + half;
+			
+			//if(val < *__middle)
+			if (val < list[middle]){
+			    //__len = __half;     
+				len = half;
+			}
+			else{
+			    //__first = __middle;
+				first = middle;
+			    //++__first;
+				first++;
+			    //__len = __len - __half - 1;
+				len = len - half -1;
+			}
+		}
+		//return __first;
+		return first;
+	}
 
 }
