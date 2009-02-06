@@ -139,7 +139,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
+	//@Ignore("Not Ready to Run")
 	@Test
 	public void testMCClampedSplineOnRPN15AValues(){
 		
@@ -173,7 +173,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
+	//@Ignore("Not Ready to Run")
 	@Test
 	public void testMCNotAKnotSplineOnRPN15AValues(){
 		
@@ -206,7 +206,6 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
 	@Test
 	public void testMCNotAKnotSplineOnSimmetricEndConditions(){
 		int n = 9;
@@ -228,7 +227,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	
 
 	//TODO: check the test failure. 
-	@Ignore("interpolation second derivative failure")
+	//@Ignore("interpolation second derivative failure")
 	@Test
 	public void testMCNotAKnotSplineOnDerivativeEndConditions(){
 		int n = 4;
@@ -304,7 +303,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	}
 
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
+	//@Ignore("Not Ready to Run")
 	@Test
 	public void testMCNotAKnotSplineNonRestrictiveHymanFilter(){
 	    int n = 4;
@@ -332,7 +331,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
+	//@Ignore("Not Ready to Run")
 	@Test
 	public void testMCClampedSplineNonRestrictiveHymanFilter(){
 		int n = 4;
@@ -360,7 +359,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	}
 	
 	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	@Ignore("Not Ready to Run")
+	//@Ignore("Not Ready to Run")
 	@Test
 	public void testMCSecondDerivativeSplineNonRestrictiveHymanFilter(){
 		int n = 4;		
