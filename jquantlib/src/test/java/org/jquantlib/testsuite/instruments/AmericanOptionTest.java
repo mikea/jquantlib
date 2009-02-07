@@ -673,7 +673,7 @@ public class AmericanOptionTest {
 		Map<String, Double> tolerance = new HashMap<String, Double>();
 		tolerance.put("delta", 7.0e-4);
 		tolerance.put("gamma", 2.0e-4);
-		// tolerance["theta"] = 1.0e-4;
+		tolerance.put("theta", 1.0e-4);
 
 		Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
 		double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
@@ -738,7 +738,7 @@ public class AmericanOptionTest {
 									double value = option.getNPV();
 									calculated.put("delta", option.delta());
 									calculated.put("gamma", option.gamma());
-									// calculated["theta"] = option.theta();
+									calculated.put("theta", option.theta());
 
 									if (value > spot.evaluate() * 1.0e-5) {
 										// perturb spot and get delta and gamma
@@ -769,6 +769,13 @@ public class AmericanOptionTest {
 										 * (today); expected["theta"] = (value_p
 										 * - value_m)/dT;
 										 */
+										double dT = dc.yearFraction(today.getPreviousDay(), today.getNextDay());
+										settings.setEvaluationDate(today.getPreviousDay());
+										value_m = option.getNPV();
+										settings.setEvaluationDate(today.getNextDay());
+										value_p = option.getNPV();
+										settings.setEvaluationDate(today);
+										expected.put("theta",(value_p - value_m) / dT);
 
 										// compare
 										for (String greek : calculated.keySet()) {
