@@ -28,12 +28,9 @@ package org.jquantlib.testsuite.operators;
 
 import static org.junit.Assert.fail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Array;
-import org.jquantlib.math.TransformedGrid;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.jquantlib.methods.finitedifferences.BSMOperator;
@@ -50,9 +47,13 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
+import org.jquantlib.time.Period;
+import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class OperatorTest {
@@ -176,9 +177,14 @@ public class OperatorTest {
         outputDiagonals(ref);
 		
 		DayCounter dc = Actual360.getDayCounter();
+		
 		Date today = DateFactory.getFactory().getTodaysDate();
 
-		Date exercise = today.increment(2*365);
+		Date exercise = DateFactory.getFactory().getDate(today.getDayOfMonth(),
+				today.getMonth(), today.getYear());
+				        exercise.adjust(new Period(2,TimeUnit.YEARS));
+
+
 		double residualTime = dc.yearFraction(today, exercise);
 
 		SimpleQuote spot = new SimpleQuote(0.0);
