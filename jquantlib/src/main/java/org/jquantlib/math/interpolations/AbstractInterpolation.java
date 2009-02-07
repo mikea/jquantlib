@@ -45,6 +45,7 @@ import static org.jquantlib.math.Closeness.isClose;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
+import org.jquantlib.util.stdlibc.Std;
 
 import cern.colt.Sorting;
 
@@ -129,7 +130,7 @@ public abstract class AbstractInterpolation implements Interpolation {
         else if (x > vx[vx.length-1])
             return vx.length-2;
         else
-            return Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
+            return Std.upper_bound(vx, 0, vx.length-1, x) - 1;//Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
     }   
 
 
