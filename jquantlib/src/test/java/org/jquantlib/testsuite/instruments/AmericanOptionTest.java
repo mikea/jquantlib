@@ -663,11 +663,14 @@ public class AmericanOptionTest {
 		}
 	}
 
-	@Ignore(" test case fails")
+	
 	@Test
 	public void testFdAmericanGreeks() {
 		// SavedSettings backup;
-
+		
+		logger.info("Testing Greeks (delta, gamma, theta "
+				+ "for American options...");
+		
 		Map<String, Double> calculated = new HashMap<String, Double>();
 		Map<String, Double> expected = new HashMap<String, Double>();
 		Map<String, Double> tolerance = new HashMap<String, Double>();
