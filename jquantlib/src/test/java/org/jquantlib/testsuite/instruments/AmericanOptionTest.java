@@ -91,8 +91,7 @@ import org.slf4j.LoggerFactory;
 
 public class AmericanOptionTest {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(AmericanOptionTest.class);
+	private final static Logger logger = LoggerFactory.getLogger(AmericanOptionTest.class);
 
 	public AmericanOptionTest() {
 		logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
@@ -101,8 +100,7 @@ public class AmericanOptionTest {
 	@Test
 	public void testBjerksundStenslandValues() {
 
-		logger.info("Testing Bjerksund and Stensland approximation "
-				+ "for American options...");
+		logger.info("Testing Bjerksund and Stensland approximation for American options...");
 
 		final AmericanOptionData values[] = {
 		// type, strike, spot, q, r, t, vol, value, tol
@@ -171,8 +169,7 @@ public class AmericanOptionTest {
 
 	@Test
 	public void testBaroneAdesiWhaley() {
-		logger.info("Testing Barone-Adesi and Whaley approximation "
-				+ "for American options...");
+		logger.info("Testing Barone-Adesi and Whaley approximation for American options...");
 
 		// /* The data below are from
 		// "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
@@ -485,8 +482,7 @@ public class AmericanOptionTest {
 		}
 	}
 
-    @Ignore("OOPS, Test is failing, need to fix ")
-	@Test
+	//FIXME @Test
 	public void testFdValues() {
 		logger.info("Testing finite-difference engine for American options...");
 
@@ -668,8 +664,7 @@ public class AmericanOptionTest {
 	public void testFdAmericanGreeks() {
 		// SavedSettings backup;
 		
-		logger.info("Testing Greeks (delta, gamma, theta "
-				+ "for American options...");
+		logger.info("Testing Greeks (delta, gamma, theta for American options...");
 		
 		Map<String, Double> calculated = new HashMap<String, Double>();
 		Map<String, Double> expected = new HashMap<String, Double>();
@@ -805,8 +800,8 @@ public class AmericanOptionTest {
 		}
 	}
 
-	@Ignore("Pricer Engine implementation not completed yet.")
-	@Test
+	// @Ignore("Pricer Engine implementation not completed yet.")
+	//FIXME @Test
 	public void testFdShoutGreeks() {
 
 	}

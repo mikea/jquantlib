@@ -48,18 +48,32 @@ public class FlatExtrapolation2DTest {
 	
 	private final static Logger logger = LoggerFactory.getLogger(FlatExtrapolation2DTest.class);
 
-	private static final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
-	private static final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
-	private static Interpolation interpolation;
-	private static int length;
-	private static double tolerance;
+	private final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
+	private final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
+	private final Interpolation interpolation;
+	private final int length;
+	private final double tolerance;
 	
 	public FlatExtrapolation2DTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		
+		//FIXME values
+		interpolation = null;
+		length = 0;
+		tolerance = 0;
 	}
 	
 	
-	
+	@Test
+	public void yourTestCaseHere() {
+		//
+		// It was failing because a *Test.java file is triggered automatically as a JUnit test file, which
+		// must contain at least one @Test.
+		// Also, static variables may cause failure to initialize test cases. This is another reason why
+		// we need to avoid static data/code. 
+		//
+		System.out.println("*** TEST FAILED***");
+	}
 	
 	
 	
