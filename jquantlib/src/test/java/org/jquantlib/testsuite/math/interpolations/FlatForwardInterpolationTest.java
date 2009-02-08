@@ -60,8 +60,6 @@ public class FlatForwardInterpolationTest  {
 	    tolerance = 1.0e-12;
 	}
 	
-	//TODO: Failed. Check FlatForwardInterpolation 
-	//@Ignore("Not Ready to Run")
 	@Test
 	public void checkAtOriginalPoints(){
 		for(int i=0; i<length; i++){
