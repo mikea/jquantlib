@@ -845,6 +845,8 @@
               <ruleset>${basedir}/src/main/pmd/fieldDeclaration.xml</ruleset>
               <ruleset>${basedir}/src/main/pmd/colt.xml</ruleset>
               <ruleset>${basedir}/src/main/pmd/fastutil.xml</ruleset>
+              <ruleset>${basedir}/src/main/pmd/packageprivateclasses.xml</ruleset>
+
             </rulesets>
           </configuration>
           <reportSets>
