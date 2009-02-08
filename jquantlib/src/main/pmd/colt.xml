@@ -9,21 +9,21 @@
 		<properties>
 			<property name="xpath">
 				<value>
-					<![CDATA[
-						//ImportDeclaration[Name[starts-with(@Image, 'cern.colt.list')] or Name[starts-with(@Image, 'cern.colt.map')]]
-					]]>
+				<![CDATA[
+					//ImportDeclaration[Name[starts-with(@Image, 'cern.colt.list')] or Name[starts-with(@Image, 'cern.colt.map')]]
+				]]>
 				</value>
 			</property>
 		</properties>
 		<example>
-<![CDATA[
-  // 
-  // Colt classes are only used in certain specific situations.
-  // Fastutil provides implementations for lists and maps that should be used instead of Colt implementations.
-  //
-  cern.colt.list.DoubleArrayList list1 = new cern.colt.list.DoubleArrayList(); // don't do this!
-  it.unimi.dsi.fastutil.doubles.DoubleArrayList list2 = it.unimi.dsi.fastutil.doubles.DoubleArrayList(); // use fastutil instead
-]]>
+		<![CDATA[
+// 
+// Colt classes are only used in certain specific situations.
+// Fastutil provides implementations for lists and maps that should be used instead of Colt implementations.
+//
+cern.colt.list.DoubleArrayList list1 = new cern.colt.list.DoubleArrayList(); // don't do this!
+it.unimi.dsi.fastutil.doubles.DoubleArrayList list2 = it.unimi.dsi.fastutil.doubles.DoubleArrayList(); // use fastutil instead
+		]]>
 		</example>
 	</rule>
 	
