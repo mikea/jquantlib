@@ -7,17 +7,22 @@
 		</description>
 		<properties>
 			<property name="xpath">
-				<value><![CDATA[
-          //FormalParameter[@Final='false']
-      ]]></value>
+				<value>
+				<![CDATA[
+		            //FormalParameter[@Final='false']
+                ]]></value>
 			</property>
 		</properties>
-		<example><![CDATA[
-      //
-      // Consider using final method parameter
-      //
-      void method(String arg) { ... } // Don't do this
-      void method(final String arg) { ... } // Do this instead
-  ]]></example>
+		<example>
+		<![CDATA[
+//
+// Received parameter values should not be changed inside the method, otherwise
+// the received passed parameter is lost and/or cannot be used safely
+// inside the method.
+//
+void method(String arg) { ... } // Don't do this
+void method(final String arg) { ... } // Do this instead
+        ]]>
+        </example>
 	</rule>
 </ruleset>
