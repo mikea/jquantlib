@@ -9,22 +9,22 @@
 		<properties>
 			<property name="xpath">
 				<value>
-					<![CDATA[
-						//ClassOrInterfaceDeclaration[@PackagePrivate = 'true']
-					]]>
+<![CDATA[
+//ClassOrInterfaceDeclaration[@PackagePrivate = 'true']
+]]>
 				</value>
 			</property>
 		</properties>
 		<example>
 <![CDATA[
-  // 
-  // Classes without a explicit visibility declaration are package private.
-  //
-  instead of class PackagePrivat{} use "visibility specifier" class XY
-  
+// 
+// Classes without a explicit visibility declaration are package private.
+//
+class Example // avoid this construct because it is "package private" or "default visibility"
+private   class Example // it is OK
+protected class Example // it is OK
+public    class Example // it is OK
 ]]>
 		</example>
 	</rule>
-	
-
 </ruleset>
