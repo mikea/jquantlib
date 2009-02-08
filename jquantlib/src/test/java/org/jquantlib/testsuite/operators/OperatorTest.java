@@ -211,12 +211,12 @@ public class OperatorTest {
 		
 		double tolerance = 1.0e-6;
 
-		Array lderror = new Array(ref.lowerDiagonal().getData());
-		lderror.operatorSubtract(new Array(op1.lowerDiagonal().getData()));
-		Array derror = new Array(ref.diagonal().getData());
-		derror.operatorSubtract(new Array(op1.diagonal().getData()));
-		Array uderror = new Array(ref.upperDiagonal().getData());
-		uderror.operatorSubtract(new Array(op1.upperDiagonal().getData()));
+		Array lderror = new Array(ref.lowerDiagonal().getData().clone());
+        lderror.operatorSubtract(new Array(op1.lowerDiagonal().getData()));
+        Array derror = new Array(ref.diagonal().getData().clone());
+        derror.operatorSubtract(new Array(op1.diagonal().getData()));
+        Array uderror = new Array(ref.upperDiagonal().getData().clone());
+        uderror.operatorSubtract(new Array(op1.upperDiagonal().getData()));
 
 		
 		for (i=2; i<grid.size()-2; i++) {
