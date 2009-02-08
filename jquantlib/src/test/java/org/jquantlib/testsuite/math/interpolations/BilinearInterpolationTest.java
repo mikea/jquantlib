@@ -38,18 +38,19 @@ private final static Logger logger = LoggerFactory.getLogger(BilinearInterpolati
 	private final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
 	private final double y[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
 	
-	private final double zz[][] = new double[x.length][y.length];
-	
 	private final double x_test[] = { -0.5 ,0, 0.5, 1.5, 2.5, 3.5, 4.5 };
 	private final double y_test[] = { -0.5 ,0, 0.5, 1.5, 2.5, 3.5, 4.5 };
 	
+	private final double zz[][];
 	private final Interpolation2D interpolation2d;
 	private final double tolerance;
 	
 	public BilinearInterpolationTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 		logger.info("\n\n::::: Testing use of interpolations as functors... :::::");
-		//fill zz using f(x,y) =  x + y;
+
+		// fill zz using f(x,y) =  x + y;
+		zz = new double[x.length][y.length];
 		for(int i = 0; i<x.length; i++){
 			for(int ii = 0; ii<y.length; ii++){
 				zz[i][ii] = x[i] + y[ii]; 
@@ -83,8 +84,3 @@ private final static Logger logger = LoggerFactory.getLogger(BilinearInterpolati
     	}
     }
 }
-	
-	
-	
-
-
