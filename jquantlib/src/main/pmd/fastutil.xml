@@ -9,24 +9,24 @@
 		<properties>
 			<property name="xpath">
 				<value>
-					<![CDATA[
-						//ClassOrInterfaceBodyDeclaration[
-							MethodDeclaration[@Public='true'] and 
-							MethodDeclaration/ResultType/Type/ReferenceType/ClassOrInterfaceType[@Image='DoubleArrayList']]
-					]]>
+<![CDATA[
+//ClassOrInterfaceBodyDeclaration[
+	MethodDeclaration[@Public='true'] and 
+	MethodDeclaration/ResultType/Type/ReferenceType/ClassOrInterfaceType[@Image='DoubleArrayList']]
+]]>
 				</value>
 			</property>
 		</properties>
 		<example>
 <![CDATA[
-  // 
-  // Fastutil classes should not be exposed directly on method signatures.
-  // JCF interfaces should be used instead.
-  // Doing so, users of JQuantLib are not obliged to adop fastutil but they are free to
-  // to use whatever JCF implementation they need to.
-  //
-  public calc1(DoubleArrayList list) { ... } // avoid!
-  public calc2(List list) { ... } // expose JCF interfaces instead
+// 
+// Fastutil classes should not be exposed directly on method signatures.
+// JCF interfaces should be used instead.
+// Doing so, users of JQuantLib are not obliged to adop fastutil but they are free to
+// to use whatever JCF implementation they need to.
+//
+public calc1(DoubleArrayList list) { ... } // avoid!
+public calc2(List list) { ... } // expose JCF interfaces instead
 ]]>
 		</example>
 	</rule>

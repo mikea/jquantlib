@@ -606,8 +606,9 @@ public class DefaultDate extends BaseDate {
             final int length = getMonthLength(m, isLeap(y));
             if (d > length)
                 d = length;
-            logger.debug(Integer.toString(fromDMY(d, m, y)));
-            return fromDMY(d, m, y);
+            int result = fromDMY(d, m, y);
+            logger.debug("{}", result);
+            return result;
         }
         case YEARS: {
             int d = date.getDayOfMonth();
@@ -620,8 +621,9 @@ public class DefaultDate extends BaseDate {
             if (d == 29 && m == Month.FEBRUARY.toInteger() && !isLeap(y))
                 d = 28;
             
-            logger.debug(Integer.toString(fromDMY(d, m, y)));
-            return fromDMY(d, m, y);
+            int result = fromDMY(d, m, y);
+            logger.debug("{}", result);
+            return result;
         }
         default:
             throw new IllegalArgumentException("undefined time units");
@@ -805,7 +807,7 @@ public class DefaultDate extends BaseDate {
     //
 
     public final int dateValue() /* @ReadOnly */{
-    	logger.debug(Integer.toString(value));
+    	logger.debug("{}", value);
         return value;
     }
 

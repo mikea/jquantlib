@@ -15,7 +15,7 @@
 			</property>
 		</properties>
 		<example>
-		<![CDATA[
+<![CDATA[
 //
 // Private fields in general are initialized by constructors.
 // So they should be made final.
@@ -39,6 +39,7 @@ public run() {
     // ... do something here... 
     count += 1;
 }
-        ]]></example>
+]]>
+	    </example>
 	</rule>
 </ruleset>

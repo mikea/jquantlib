@@ -843,7 +843,6 @@
               <ruleset>/rulesets/controversial.xml</ruleset>
               <ruleset>${basedir}/src/main/pmd/methodParameter.xml</ruleset>
               <ruleset>${basedir}/src/main/pmd/fieldDeclaration.xml</ruleset>
-              <ruleset>${basedir}/src/main/pmd/vector.xml</ruleset>
               <ruleset>${basedir}/src/main/pmd/colt.xml</ruleset>
               <ruleset>${basedir}/src/main/pmd/fastutil.xml</ruleset>
             </rulesets>
