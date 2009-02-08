@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ruleset name="Colt library rules">
+	<description>Checks usage of package private classes</description>
+
+	<rule name="Package private classes" 
+		  message="Don't use package private classes" 
+		  class="net.sourceforge.pmd.rules.XPathRule">
+		<description>Detect declaration of package private classes</description>
+		<properties>
+			<property name="xpath">
+				<value>
+					<![CDATA[
+						//ClassOrInterfaceDeclaration[@PackagePrivate = 'true']
+					]]>
+				</value>
+			</property>
+		</properties>
+		<example>
+<![CDATA[
+  // 
+  // Classes without a explicit visibility declaration are package private.
+  //
+  instead of class PackagePrivat{} use "visibility specifier" class XY
+  
+]]>
+		</example>
+	</rule>
+	
+
+</ruleset>
