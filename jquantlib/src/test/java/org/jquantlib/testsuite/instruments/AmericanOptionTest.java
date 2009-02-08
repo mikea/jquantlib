@@ -659,7 +659,7 @@ public class AmericanOptionTest {
 		}
 	}
 
-	
+	@Ignore
 	@Test
 	public void testFdAmericanGreeks() {
 		// SavedSettings backup;
