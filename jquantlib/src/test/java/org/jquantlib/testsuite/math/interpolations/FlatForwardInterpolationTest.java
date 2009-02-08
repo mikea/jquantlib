@@ -41,20 +41,14 @@ public class FlatForwardInterpolationTest  {
 	
 	private final static Logger logger = LoggerFactory.getLogger(FlatForwardInterpolationTest.class);
 
-	private static final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
-	private static final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
-	private static Interpolation interpolation;
-	private static int length;
-	private static double tolerance;
+	private final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
+	private final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
+	private final Interpolation interpolation;
+	private final int length;
+	private final double tolerance;
 	
 	public FlatForwardInterpolationTest () {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	}
-	
-	@BeforeClass
-	public static void setUpFlatForwardInterpolation(){
-		logger.info("\n\n::::: Testing backward-flat interpolation... :::::");
-
 		interpolation = new ForwardFlat().interpolate(x, y);	  
 	    length = x.length;
 	    tolerance = 1.0e-12;
