@@ -52,6 +52,14 @@ import org.jquantlib.math.Matrix;
  * @author Q. Boiler
  */
 
+//
+// TODO: code review
+//
+// This class belongs to QuantLib0.9.x and should not be translated whilst we still work on QuantLib 0.8.1.
+// This note can be removed when JQuantLib evolves and the original (C++) class BasisIncompleteOrdered
+// becomes completely translated an integrated to all dependencies.
+// 
+//
 public class BasisIncompleteOrdered {
 
 	private final int euclideanDimension;
