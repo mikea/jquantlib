@@ -1,5 +1,5 @@
 
-package org.jquantlib.util.stdlib;
+package org.jquantlib.testsuite.util.stdlibc;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
@@ -53,9 +53,6 @@ public class AdjDiff {
     			dt_.add(curr-prev);
     		}
     	} */
-		
-		
-		
 
 	}
 	
