@@ -42,7 +42,16 @@ public class Std {
 	//
 	// static public methods ::: several std methods
 	//
-
+	/**
+	 * Java implementation of std::adjacent_difference
+	 * @param inputList
+	 * @param begin
+	 * @param diffList
+	 * @return diffList
+	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/namespacestd.html#a558">Functional description: std::adjacent_difference</a> 
+	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__numeric_8h-source.html#l00268">Source code: std::adjacent_difference</a> 
+	 *
+	 */
 	static public List<Double> adjacent_difference(List<Double> inputList,
 			int begin, List<Double> diffList) {
 		for (int i = begin; i < inputList.size(); i++) {
