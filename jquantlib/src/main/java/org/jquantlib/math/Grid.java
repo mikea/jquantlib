@@ -69,7 +69,8 @@ public class Grid {
 		
 		return result;
 	}
-
+	
+	// FIXME: Should this method be static?
 	Array BoundedLogGrid(double xMin, double xMax, int steps) {
 		Array result = new Array(steps+1);
 		double gridLogSpacing = (Math.log(xMax) - Math.log(xMin)) / (steps);

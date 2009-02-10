@@ -42,6 +42,7 @@ package org.jquantlib.math;
 
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
+import org.jquantlib.math.Grid;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
 
 import org.slf4j.Logger;
@@ -170,12 +171,14 @@ public class SampledCurve {
 		grid_.operatorAdd(s); 
 	}
 	
-	private void scaleGrid(double s){
+	private void scaleGrid(final double s){
 		grid_.operatorMultiply(s);
 	}
 	
 	
-	
+	private void setGrid(final Array g){
+		grid_ = g;
+	}
 	
 	public Array grid() /* @Readonly */{
 		return grid_;
@@ -225,14 +228,18 @@ public class SampledCurve {
 		this.values_ = array;
 	}
 
-	public void setLogGrid(double min, double max) {
-		// TODO Auto-generated method stub
-		
+	public void setLogGrid(final double min, final double max) {
+		Grid logGrid = new Grid();
+		setGrid(logGrid.BoundedLogGrid(min, max, size()-1));
 	}
 
-	public void sample(Payoff payoff) {
-		// TODO Auto-generated method stub
+	public void sample(final Payoff payoff) {
+		double i = 0.0;
+		double j = 0.0;
 		
+		for (i=grid_.get(0), j = values_.get(0); i!= grid_.get(grid_.size());i++, j++) {
+			j = payoff.valueOf(i);
+		}
 	}
-
+	
 }

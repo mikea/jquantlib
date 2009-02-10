@@ -607,7 +607,7 @@ public class DefaultDate extends BaseDate {
             if (d > length)
                 d = length;
             int result = fromDMY(d, m, y);
-            logger.debug("{}", result);
+            //logger.debug("{}", result);
             return result;
         }
         case YEARS: {
