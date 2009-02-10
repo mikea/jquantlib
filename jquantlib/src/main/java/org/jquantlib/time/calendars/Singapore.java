@@ -68,8 +68,6 @@ import org.jquantlib.util.Month;
  * 
  * @author Joon Tiang
  */
-
-
 public class Singapore extends DelegateCalendar {
 		
 	private final static Singapore SGX_CALENDAR = new Singapore(Market.SGX);
@@ -103,6 +101,7 @@ public class Singapore extends DelegateCalendar {
 	// public enums
 	//
 
+	// FIXME: Settlement calendar is missing
 	public enum Market {
 		/**
 		 * Singapore Stock Exchange
@@ -115,7 +114,7 @@ public class Singapore extends DelegateCalendar {
 	// private inner classes
 	//
 
-	final private class SingaporeSettlementCalendar extends WesternCalendar {
+	private final class SingaporeSettlementCalendar extends WesternCalendar {
 		
 		public boolean isBusinessDay(Date date) {
 	        final Weekday w = date.getWeekday();

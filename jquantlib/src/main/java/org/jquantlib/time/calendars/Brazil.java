@@ -83,14 +83,8 @@ import org.jquantlib.util.Month;
  */
 public class Brazil extends DelegateCalendar {
 
-	public static enum Market {
-		SETTLEMENT, BOVESPA
-		// BOVESPA calendar
-	};
-
-	private final static Brazil SETTLEMENT_CALENDAR = new Brazil(
-			Market.SETTLEMENT);
-	private final static Brazil EXCHANGE_CALENDAR = new Brazil(Market.BOVESPA);
+	private final static Brazil SETTLEMENT_CALENDAR = new Brazil(Market.SETTLEMENT);
+	private final static Brazil EXCHANGE_CALENDAR   = new Brazil(Market.BOVESPA);
 
 	private Brazil(Market market) {
 		Calendar delegate;
@@ -117,99 +111,122 @@ public class Brazil extends DelegateCalendar {
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-}
 
-final class BrazilSettlementCalendar extends WesternCalendar {
 
-	public String getName() {
-		return "Brazil";
+	//
+	// public enums
+	//
+	
+	public static enum Market {
+		/**
+		 * Brazilian settlement calendar
+		 */
+		SETTLEMENT,
+		
+		/**
+		 * BOVESPA
+		 */
+		BOVESPA
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int dd = date.getDayOfYear();
-		int em = easterMonday(y);
+	
+	//
+	// private inner classes
+	//
 
-		if (isWeekend(w)
-		// New Year's Day
-				|| (d == 1 && m == Month.JANUARY)
-				// Tiradentes Day
-				|| (d == 21 && m == Month.APRIL)
-				// Labor Day
-				|| (d == 1 && m == Month.MAY)
-				// Independence Day
-				|| (d == 7 && m == Month.SEPTEMBER)
-				// Nossa Sra. Aparecida Day
-				|| (d == 12 && m == Month.OCTOBER)
-				// All Souls Day
-				|| (d == 2 && m == Month.NOVEMBER)
-				// Republic Day
-				|| (d == 15 && m == Month.NOVEMBER)
-				// Christmas
-				|| (d == 25 && m == Month.DECEMBER)
-				// Passion of Christ
-				|| (dd == em - 3)
-				// Carnival
-				|| (dd == em - 49 || dd == em - 48)
-				// Corpus Christi
-				|| (dd == em + 59))
-			return false;
-		return true;
+	private final class BrazilSettlementCalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "Brazil";
+		}
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
+			int dd = date.getDayOfYear();
+			int em = easterMonday(y);
+	
+			if (isWeekend(w)
+			// New Year's Day
+					|| (d == 1 && m == Month.JANUARY)
+					// Tiradentes Day
+					|| (d == 21 && m == Month.APRIL)
+					// Labor Day
+					|| (d == 1 && m == Month.MAY)
+					// Independence Day
+					|| (d == 7 && m == Month.SEPTEMBER)
+					// Nossa Sra. Aparecida Day
+					|| (d == 12 && m == Month.OCTOBER)
+					// All Souls Day
+					|| (d == 2 && m == Month.NOVEMBER)
+					// Republic Day
+					|| (d == 15 && m == Month.NOVEMBER)
+					// Christmas
+					|| (d == 25 && m == Month.DECEMBER)
+					// Passion of Christ
+					|| (dd == em - 3)
+					// Carnival
+					|| (dd == em - 49 || dd == em - 48)
+					// Corpus Christi
+					|| (dd == em + 59))
+				return false;
+			return true;
+		}
+	
+	}
+	
+	private final class BrazilExchangeCalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "BOVESPA";
+		}
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
+			int dd = date.getDayOfYear();
+			int em = easterMonday(y);
+	
+			if (isWeekend(w)
+			// New Year's Day
+					|| (d == 1 && m == JANUARY)
+					// Sao Paulo City Day
+					|| (d == 25 && m == JANUARY)
+					// Tiradentes Day
+					|| (d == 21 && m == APRIL)
+					// Labor Day
+					|| (d == 1 && m == MAY)
+					// Revolution Day
+					|| (d == 9 && m == JULY)
+					// Nossa Sra. Aparecida Day
+					// || (d == 12 && m == OCTOBER)-> not closed at the 12th October
+					// All Souls Day
+					// || (d == 2 && m == NOVEMBER) -> not closed at the 2nd
+					// November
+					// Republic Day
+					// || (d == 15 && m == NOVEMBER) -> not closed at the 15th
+					// November
+					// Black Awareness Day
+					|| (d == 20 && m == NOVEMBER && y >= 2007)
+					// Christmas Eve
+					|| (d == 24 && m == DECEMBER)
+					// Christmas
+					|| (d == 25 && m == DECEMBER)
+					// Passion of Christ / Good Friday
+					|| (dd == em - 3)
+					// Carnival
+					|| (dd == em - 49 || dd == em - 48)
+					// Corpus Christi
+					|| (dd == em + 59)
+					// last business day of the year
+					|| (m == DECEMBER && (d == 31 || (d >= 29 && w == FRIDAY))))
+				return false;
+			return true;
+		}
 	}
 
-}
-
-final class BrazilExchangeCalendar extends WesternCalendar {
-
-	public String getName() {
-		return "BOVESPA";
-	}
-
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int dd = date.getDayOfYear();
-		int em = easterMonday(y);
-
-		if (isWeekend(w)
-		// New Year's Day
-				|| (d == 1 && m == JANUARY)
-				// Sao Paulo City Day
-				|| (d == 25 && m == JANUARY)
-				// Tiradentes Day
-				|| (d == 21 && m == APRIL)
-				// Labor Day
-				|| (d == 1 && m == MAY)
-				// Revolution Day
-				|| (d == 9 && m == JULY)
-				// Nossa Sra. Aparecida Day
-				// || (d == 12 && m == OCTOBER)-> not closed at the 12th October
-				// All Souls Day
-				// || (d == 2 && m == NOVEMBER) -> not closed at the 2nd
-				// November
-				// Republic Day
-				// || (d == 15 && m == NOVEMBER) -> not closed at the 15th
-				// November
-				// Black Awareness Day
-				|| (d == 20 && m == NOVEMBER && y >= 2007)
-				// Christmas Eve
-				|| (d == 24 && m == DECEMBER)
-				// Christmas
-				|| (d == 25 && m == DECEMBER)
-				// Passion of Christ / Good Friday
-				|| (dd == em - 3)
-				// Carnival
-				|| (dd == em - 49 || dd == em - 48)
-				// Corpus Christi
-				|| (dd == em + 59)
-				// last business day of the year
-				|| (m == DECEMBER && (d == 31 || (d >= 29 && w == FRIDAY))))
-			return false;
-		return true;
-	}
 }

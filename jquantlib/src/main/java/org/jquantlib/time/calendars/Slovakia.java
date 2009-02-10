@@ -40,29 +40,32 @@ import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
-	//! Slovak calendars
-    /*! Holidays for the Bratislava stock exchange
-        (data from <http://www.bsse.sk/>):
-        <ul>
-        <li>Saturdays</li>
-        <li>Sundays</li>
-        <li>New Year's Day, January 1st</li>
-        <li>Epiphany, January 6th</li>
-        <li>Good Friday</li>
-        <li>Easter Monday</li>
-        <li>May Day, May 1st</li>
-        <li>Liberation of the Republic, May 8th</li>
-        <li>SS. Cyril and Methodius, July 5th</li>
-        <li>Slovak National Uprising, August 29th</li>
-        <li>Constitution of the Slovak Republic, September 1st</li>
-        <li>Our Lady of the Seven Sorrows, September 15th</li>
-        <li>All Saints Day, November 1st</li>
-        <li>Freedom and Democracy of the Slovak Republic, November 17th</li>
-        <li>Christmas Eve, December 24th</li>
-        <li>Christmas, December 25th</li>
-        <li>St. Stephen, December 26th</li>
-        </ul>
-	*/
+/**
+ * Slovak calendars
+ * <p>
+ * Holidays for the Bratislava stock exchange (data from <http://www.bsse.sk/>):
+ * <ul>
+ * <li>Saturdays</li>
+ * <li>Sundays</li>
+ * <li>New Year's Day, January 1st</li>
+ * <li>Epiphany, January 6th</li>
+ * <li>Good Friday</li>
+ * <li>Easter Monday</li>
+ * <li>May Day, May 1st</li>
+ * <li>Liberation of the Republic, May 8th</li>
+ * <li>SS. Cyril and Methodius, July 5th</li>
+ * <li>Slovak National Uprising, August 29th</li>
+ * <li>Constitution of the Slovak Republic, September 1st</li>
+ * <li>Our Lady of the Seven Sorrows, September 15th</li>
+ * <li>All Saints Day, November 1st</li>
+ * <li>Freedom and Democracy of the Slovak Republic, November 17th</li>
+ * <li>Christmas Eve, December 24th</li>
+ * <li>Christmas, December 25th</li>
+ * <li>St. Stephen, December 26th</li>
+ * </ul>
+ * 
+ * @author Richard Gomes
+ */
 public class Slovakia extends DelegateCalendar {
 	
 	private final static Slovakia BSSE_CALENDAR = new Slovakia(Market.BSSE);
@@ -93,8 +96,12 @@ public class Slovakia extends DelegateCalendar {
 	// public enums
 	//
 
+	//FIXME: Settlement calendar is missing
 	public enum Market {
-		BSSE //  Bratislava stock exchange of Slovakia
+		/**
+		 * Bratislava stock exchange of Slovakia
+		 */
+		BSSE
 	};
 
 
@@ -102,7 +109,7 @@ public class Slovakia extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private class SlovakiaBSSECalendar extends WesternCalendar {
+	private final class SlovakiaBSSECalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Bratislava stock exchange";

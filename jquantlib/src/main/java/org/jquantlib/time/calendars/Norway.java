@@ -86,7 +86,11 @@ public class Norway extends DelegateCalendar {
 	// public enums
 	//
 	
+	// FIXME: Settlement calendar is missing
 	public enum Market {
+		/**
+		 * OsloBors
+		 */
 		OsloBors
 	}
 
@@ -95,7 +99,7 @@ public class Norway extends DelegateCalendar {
 	// private inner classes
 	//
 
-	final private class OsloBorsCalendar extends WesternCalendar {
+	private final class OsloBorsCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "OsloBors";

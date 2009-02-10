@@ -29,12 +29,14 @@ import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.MARCH;
 import static org.jquantlib.util.Month.MAY;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.time.calendars.Denmark;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
@@ -48,39 +50,36 @@ import org.junit.Test;
  */
 
 public class DenmarkCalendarTest {
-	private final static Logger logger = LoggerFactory
-			.getLogger(DenmarkCalendarTest.class);
+	private final static Logger logger = LoggerFactory.getLogger(DenmarkCalendarTest.class);
 
 	private Calendar cse;
-	private List<Date> expectedHol;
 
-	@Before
-	public void setUp() {
+	public DenmarkCalendarTest() {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 		cse = Denmark.getCalendar(Denmark.Market.CSE);
-		expectedHol = new Vector<Date>();
 	}
-
+        	
 	@Test
 	public void testCSEYear2004() {
 		int year = 2004;
-		logger
-				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
-						+ "...");
-
-		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+    	logger.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+		expectedHol.add(df.getDate(1, JANUARY, year));
 		// maunday thursday
-		expectedHol.add(DateFactory.getFactory().getDate(8, APRIL, year));
+		expectedHol.add(df.getDate(8, APRIL, year));
 		// good friday
-		expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
+		expectedHol.add(df.getDate(9, APRIL, year));
 		// easter monday
-		expectedHol.add(DateFactory.getFactory().getDate(12, APRIL, year));
+		expectedHol.add(df.getDate(12, APRIL, year));
 
 		// great prayer day
-		expectedHol.add(DateFactory.getFactory().getDate(7, MAY, year));
+		expectedHol.add(df.getDate(7, MAY, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(20, MAY, year));
+		expectedHol.add(df.getDate(20, MAY, year));
 		// whit monday
-		expectedHol.add(DateFactory.getFactory().getDate(31, MAY, year));
+		expectedHol.add(df.getDate(31, MAY, year));
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
@@ -90,24 +89,24 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2005() {
 		int year = 2005;
-		logger
-				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
-						+ "...");
-
-		expectedHol.add(DateFactory.getFactory().getDate(24, MARCH, year));
+    	logger.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+		expectedHol.add(df.getDate(24, MARCH, year));
 		// good friday
-		expectedHol.add(DateFactory.getFactory().getDate(25, MARCH, year));
+		expectedHol.add(df.getDate(25, MARCH, year));
 		// easter monday
-		expectedHol.add(DateFactory.getFactory().getDate(28, MARCH, year));
+		expectedHol.add(df.getDate(28, MARCH, year));
 
 		// great prayer day
-		expectedHol.add(DateFactory.getFactory().getDate(22, APRIL, year));
+		expectedHol.add(df.getDate(22, APRIL, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
+		expectedHol.add(df.getDate(5, MAY, year));
 		// whit monday
-		expectedHol.add(DateFactory.getFactory().getDate(16, MAY, year));
+		expectedHol.add(df.getDate(16, MAY, year));
 		// boxing day
-		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+		expectedHol.add(df.getDate(26, DECEMBER, year));
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
@@ -117,26 +116,26 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2006() {
 		int year = 2006;
-		logger
-				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
-						+ "...");
-
-		expectedHol.add(DateFactory.getFactory().getDate(13, APRIL, year));
+    	logger.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+		expectedHol.add(df.getDate(13, APRIL, year));
 		// maunday thursday
-		expectedHol.add(DateFactory.getFactory().getDate(14, APRIL, year));
+		expectedHol.add(df.getDate(14, APRIL, year));
 		// good friday
-		expectedHol.add(DateFactory.getFactory().getDate(17, APRIL, year));
+		expectedHol.add(df.getDate(17, APRIL, year));
 		// easter monday
-		expectedHol.add(DateFactory.getFactory().getDate(12, MAY, year));
+		expectedHol.add(df.getDate(12, MAY, year));
 
 		// great prayer day
-		expectedHol.add(DateFactory.getFactory().getDate(25, MAY, year));
+		expectedHol.add(df.getDate(25, MAY, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		expectedHol.add(df.getDate(5, JUNE, year));
 		// christmas
-		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+		expectedHol.add(df.getDate(25, DECEMBER, year));
 		// boxing day
-		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+		expectedHol.add(df.getDate(26, DECEMBER, year));
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
@@ -146,34 +145,34 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2007() {
 		int year = 2007;
-		logger
-				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
-						+ "...");
-
-		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+    	logger.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+		expectedHol.add(df.getDate(1, JANUARY, year));
 		// maunday thursday
-		expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
+		expectedHol.add(df.getDate(5, APRIL, year));
 		// good friday
-		expectedHol.add(DateFactory.getFactory().getDate(6, APRIL, year));
+		expectedHol.add(df.getDate(6, APRIL, year));
 		// easter monday
-		expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
+		expectedHol.add(df.getDate(9, APRIL, year));
 
 		// great prayer day
-		expectedHol.add(DateFactory.getFactory().getDate(4, MAY, year));
+		expectedHol.add(df.getDate(4, MAY, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(17, MAY, year));
+		expectedHol.add(df.getDate(17, MAY, year));
 		// whit monday
-		expectedHol.add(DateFactory.getFactory().getDate(28, MAY, year));
+		expectedHol.add(df.getDate(28, MAY, year));
 		// constitution day
-		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		expectedHol.add(df.getDate(5, JUNE, year));
 		// christmas eve
-		expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
+		expectedHol.add(df.getDate(24, DECEMBER, year));
 		// christmas
-		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+		expectedHol.add(df.getDate(25, DECEMBER, year));
 		// boxing day
-		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+		expectedHol.add(df.getDate(26, DECEMBER, year));
 		// new year's eve
-		expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
+		expectedHol.add(df.getDate(31, DECEMBER, year));
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
@@ -184,34 +183,34 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2008() {
 		int year = 2008;
-		logger
-				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
-						+ "...");
-
-		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+    	logger.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+		expectedHol.add(df.getDate(1, JANUARY, year));
 		// maunday thursday
-		expectedHol.add(DateFactory.getFactory().getDate(20, MARCH, year));
+		expectedHol.add(df.getDate(20, MARCH, year));
 		// good friday
-		expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
+		expectedHol.add(df.getDate(21, MARCH, year));
 		// easter monday
-		expectedHol.add(DateFactory.getFactory().getDate(24, MARCH, year));
+		expectedHol.add(df.getDate(24, MARCH, year));
 
 		// great prayer day
-		expectedHol.add(DateFactory.getFactory().getDate(18, APRIL, year));
+		expectedHol.add(df.getDate(18, APRIL, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
+		expectedHol.add(df.getDate(1, MAY, year));
 		// whit monday
-		expectedHol.add(DateFactory.getFactory().getDate(12, MAY, year));
+		expectedHol.add(df.getDate(12, MAY, year));
 		// constitution day
-		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		expectedHol.add(df.getDate(5, JUNE, year));
 		// christmas eve
-		expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
+		expectedHol.add(df.getDate(24, DECEMBER, year));
 		// christmas
-		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+		expectedHol.add(df.getDate(25, DECEMBER, year));
 		// boxing day		
-		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));		
+		expectedHol.add(df.getDate(26, DECEMBER, year));		
 		// boxing day		
-		expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
+		expectedHol.add(df.getDate(31, DECEMBER, year));
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
@@ -221,35 +220,33 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2009() {
 		int year = 2009;
-		logger
-				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
-						+ "...");
-
-		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+    	logger.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+		expectedHol.add(df.getDate(1, JANUARY, year));
 		// maunday thursday
-		expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
+		expectedHol.add(df.getDate(9, APRIL, year));
 		// good friday
-		expectedHol.add(DateFactory.getFactory().getDate(10, APRIL, year));
+		expectedHol.add(df.getDate(10, APRIL, year));
 		// easter monday
-		expectedHol.add(DateFactory.getFactory().getDate(13, APRIL, year));
+		expectedHol.add(df.getDate(13, APRIL, year));
 
 		// great prayer day
-		expectedHol.add(DateFactory.getFactory().getDate(8, MAY, year));
+		expectedHol.add(df.getDate(8, MAY, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(21, MAY, year));
+		expectedHol.add(df.getDate(21, MAY, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(22, MAY, year));
+		expectedHol.add(df.getDate(22, MAY, year));
 		// whit monday
-		expectedHol.add(DateFactory.getFactory().getDate(1, JUNE, year));
+		expectedHol.add(df.getDate(1, JUNE, year));
 		// constitution day
-		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		expectedHol.add(df.getDate(5, JUNE, year));
 		// christmas eve
-		expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
+		expectedHol.add(df.getDate(24, DECEMBER, year));
 		// christmas
-		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
-		expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
-
-		
+		expectedHol.add(df.getDate(25, DECEMBER, year));
+		expectedHol.add(df.getDate(31, DECEMBER, year));
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
@@ -259,24 +256,24 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2010() {
 		int year = 2010;
-		logger
-				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
-						+ "...");
-
-		expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+    	logger.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+		expectedHol.add(df.getDate(1, JANUARY, year));
 		// maunday thursday
-		expectedHol.add(DateFactory.getFactory().getDate(1, APRIL, year));
+		expectedHol.add(df.getDate(1, APRIL, year));
 		// good friday
-		expectedHol.add(DateFactory.getFactory().getDate(2, APRIL, year));
+		expectedHol.add(df.getDate(2, APRIL, year));
 		// easter monday
-		expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
+		expectedHol.add(df.getDate(5, APRIL, year));
 
 		// great prayer day
-		expectedHol.add(DateFactory.getFactory().getDate(30, APRIL, year));
+		expectedHol.add(df.getDate(30, APRIL, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(13, MAY, year));
+		expectedHol.add(df.getDate(13, MAY, year));
 		// whit monday
-		expectedHol.add(DateFactory.getFactory().getDate(24, MAY, year));
+		expectedHol.add(df.getDate(24, MAY, year));
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
@@ -286,28 +283,28 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2012() {
 		int year = 2012;
-		logger
-				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
-						+ "...");
-
-		expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
+    	logger.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+		expectedHol.add(df.getDate(5, APRIL, year));
 		// maunday thursday
-		expectedHol.add(DateFactory.getFactory().getDate(6, APRIL, year));
+		expectedHol.add(df.getDate(6, APRIL, year));
 		// good friday
-		expectedHol.add(DateFactory.getFactory().getDate(9, APRIL, year));
+		expectedHol.add(df.getDate(9, APRIL, year));
 		// easter monday
-		expectedHol.add(DateFactory.getFactory().getDate(4, MAY, year));
+		expectedHol.add(df.getDate(4, MAY, year));
 
 		// great prayer day
-		expectedHol.add(DateFactory.getFactory().getDate(17, MAY, year));
+		expectedHol.add(df.getDate(17, MAY, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(28, MAY, year));
+		expectedHol.add(df.getDate(28, MAY, year));
 		// whit monday
-		expectedHol.add(DateFactory.getFactory().getDate(5, JUNE, year));
+		expectedHol.add(df.getDate(5, JUNE, year));
 		// christmas
-		expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+		expectedHol.add(df.getDate(25, DECEMBER, year));
 		// boxing day
-		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+		expectedHol.add(df.getDate(26, DECEMBER, year));
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
@@ -317,24 +314,24 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2011() {
 		int year = 2011;
-		logger
-				.info("Testing Denmark Copenhagen exchange holiday list for the year " + year
-						+ "...");
-
-		expectedHol.add(DateFactory.getFactory().getDate(21, APRIL, year));
+    	logger.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+		expectedHol.add(df.getDate(21, APRIL, year));
 		// maunday thursday
-		expectedHol.add(DateFactory.getFactory().getDate(22, APRIL, year));
+		expectedHol.add(df.getDate(22, APRIL, year));
 		// good friday
-		expectedHol.add(DateFactory.getFactory().getDate(25, APRIL, year));
+		expectedHol.add(df.getDate(25, APRIL, year));
 		// easter monday
-		expectedHol.add(DateFactory.getFactory().getDate(20, MAY, year));
+		expectedHol.add(df.getDate(20, MAY, year));
 
 		// great prayer day
-		expectedHol.add(DateFactory.getFactory().getDate(2, JUNE, year));
+		expectedHol.add(df.getDate(2, JUNE, year));
 		// ascension
-		expectedHol.add(DateFactory.getFactory().getDate(13, JUNE, year));
+		expectedHol.add(df.getDate(13, JUNE, year));
 		// boxing day
-		expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+		expectedHol.add(df.getDate(26, DECEMBER, year));
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();

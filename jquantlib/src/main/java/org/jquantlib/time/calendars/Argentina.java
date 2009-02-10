@@ -31,13 +31,8 @@ import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
-// ! Argentinian calendar
-// 
 /**
- * Source: <a
- * href="http://www.merval.sba.com.ar/merval/html/mv_feriados_burstiles.htm">BCBA
- * Holidays</a>
- * <p>
+ * Argentinian calendar
  * 
  * <strong>Banking holidays:</strong>
  * <ul>
@@ -64,7 +59,7 @@ import org.jquantlib.util.Month;
  * <li>Corpus Christi</li>
  * </ul>
  * 
- * Holidays for the BCBA stock exchange
+ * Holidays for the MERVAL stock exchange
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
@@ -77,23 +72,21 @@ import org.jquantlib.util.Month;
  * <li>Death of General Manuel Belgrano, third Monday of June</li>
  * <li>Independence Day, July 9th</li>
  * <li>Death of General Jose de San Martin, third Monday of August</li>
+ * <li></li>
  * <li>Immaculate Conception, December 8th</li>
+ * <li>Christmas Eve, December 24th</li>
  * <li>Christmas, December 25th</li>
+ * <li>New Year's Eve, December 31th</li>
  * </ul>
  * 
  * @author Srinivas Hasti
  * @author Dominik Holenstein
+ * @author Richard Gomes
  */
 public class Argentina extends DelegateCalendar {
 
-	public static enum Market {
-		SETTLEMENT, BCBA
-	};
-
-	private final static Argentina SETTLEMENT_CALENDAR = new Argentina(
-			Market.SETTLEMENT);
-	private final static Argentina EXCHANGE_CALENDAR = new Argentina(
-			Market.BCBA);
+	private final static Argentina SETTLEMENT_CALENDAR = new Argentina(Market.SETTLEMENT);
+	private final static Argentina MERVAL_CALENDAR     = new Argentina(Market.MERVAL);
 
 	private Argentina(Market market) {
 		Calendar delegate;
@@ -101,8 +94,8 @@ public class Argentina extends DelegateCalendar {
 		case SETTLEMENT:
 			delegate = new ArgentinaSettlementCalendar();
 			break;
-		case BCBA:
-			delegate = new BCBAExchangeCalendar();
+		case MERVAL:
+			delegate = new ArgentinaMervalExchangeCalendar();
 			break;
 		default:
 			throw new IllegalArgumentException("unknown market");
@@ -114,110 +107,142 @@ public class Argentina extends DelegateCalendar {
 		switch (market) {
 		case SETTLEMENT:
 			return SETTLEMENT_CALENDAR;
-		case BCBA:
-			return EXCHANGE_CALENDAR;
+		case MERVAL:
+			return MERVAL_CALENDAR;
 		default:
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-}
 
-// TODO: Tests.
-final class ArgentinaSettlementCalendar extends WesternCalendar {
 
-	public String getName() {
-		return "Argentina";
+	//
+	// public enums
+	//
+	
+	public enum Market {
+
+		/**
+		 * Argentina settlement
+		 */
+		SETTLEMENT,
+		
+		/**
+		 * MERVAL
+		 */
+		MERVAL
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int dd = date.getDayOfYear();
-		int em = easterMonday(y);
+	
+	//
+	// private inner classes
+	//
 
-		if (isWeekend(w)
-		// New Year's Day
-				|| (d == 1 && m == Month.JANUARY)
-				// D�a del Veterano y de los Ca�dos en la Guerra de Malvinas
-				|| (d == 2 && m == Month.APRIL)
-				// Labor Day
-				|| (d == 1 && m == Month.MAY)
-				// Revolution, May 25th
-				|| (d == 25 && m == Month.MAY)
-				// Death of General Manuel Belgrano
-				|| (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.JUNE)
-				// Independence Day
-				|| (d == 9 && m == Month.JULY)
-				// Death of General Jos� de San Martin
-				|| (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.AUGUST)
-				// Columbus Day
-				|| ((d == 10 || d == 11 || d == 12 || d == 15 || d == 16)
-						&& w == Weekday.MONDAY && m == Month.OCTOBER)
-				// Holy Thursday
-				|| (dd == em - 4)
-				// Good Friday
-				|| (dd == em - 3)
-				// Easter Monday
-				|| (dd == em)
-				// Corpus Christi
-				// || (dd == em + 59)
-				// All Souls Day
-				|| (d == 2 && m == Month.NOVEMBER)
-				// Immaculate Conception
-				|| (d == 8 && m == Month.DECEMBER)
-				// Christmas Eve
-				|| (d == 24 && m == Month.DECEMBER)
-				// Christmas Day
-				|| (d == 25 && m == Month.DECEMBER)
-				// New Year's Eve
-				|| ((d == 31 || (d == 30 && w == Weekday.FRIDAY)) && m == Month.DECEMBER))
-			return false;
-		return true;
+	private final class ArgentinaSettlementCalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "Argentina";
+		}
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
+			int dd = date.getDayOfYear();
+			int em = easterMonday(y);
+	
+			if (isWeekend(w)
+					// New Year's Day
+					|| (d == 1 && m == Month.JANUARY)
+					// D�a del Veterano y de los Ca�dos en la Guerra de Malvinas
+					|| (d == 2 && m == Month.APRIL)
+					// Labor Day
+					|| (d == 1 && m == Month.MAY)
+					// Revolution, May 25th
+					|| (d == 25 && m == Month.MAY)
+					// Death of General Manuel Belgrano
+					|| (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.JUNE)
+					// Independence Day
+					|| (d == 9 && m == Month.JULY)
+					// Death of General Jos� de San Martin
+					|| (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.AUGUST)
+					// Columbus Day
+					|| ((d == 10 || d == 11 || d == 12 || d == 15 || d == 16) && w == Weekday.MONDAY && m == Month.OCTOBER)
+					// Holy Thursday
+					|| (dd == em - 4)
+					// Good Friday
+					|| (dd == em - 3)
+					// Easter Monday
+					|| (dd == em)
+					// Corpus Christi
+					// || (dd == em + 59)
+					// All Souls Day
+					|| (d == 2 && m == Month.NOVEMBER)
+					// Immaculate Conception
+					|| (d == 8 && m == Month.DECEMBER)
+					// Christmas Eve
+					|| (d == 24 && m == Month.DECEMBER)
+					// Christmas Day
+					|| (d == 25 && m == Month.DECEMBER)
+					// New Year's Eve
+					|| ((d == 31 || (d == 30 && w == Weekday.FRIDAY)) && m == Month.DECEMBER))
+				return false;
+			return true;
+		}
+	
+	}
+	
+	private final class ArgentinaMervalExchangeCalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "MERVAL";
+		}
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
+			int dd = date.getDayOfYear();
+			int em = easterMonday(y);
+	
+			if (isWeekend(w)
+					//	01 Jan    New Year's Day
+					|| (d == 1 && m == Month.JANUARY)
+					// Holy Thursday
+					|| (dd == em - 4)
+					//	Good Friday
+					|| (dd == em - 3)
+					// Easter Monday
+					|| (dd == em)
+					//	24 Mar    Truth and Justice Day
+					|| (d == 24 && m == Month.MARCH)
+					//	02 Apr    Malvinas Islands Memorial
+					|| (d == 2 && m == Month.APRIL)
+					//	01 May    Workers' Day
+					|| (d == 1 && m == Month.MAY)
+					//	25 May    National Holiday
+					|| (d == 25 && m == Month.MAY)
+					//	Death of General Manuel Belgrano
+					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JUNE)
+					//	09 Jul    Independence Day
+					|| (d == 9 && m == Month.JULY)
+					//	Anniversary of the Death of General San Martin
+					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.AUGUST)
+					//	Columbus Day (OBS)
+					|| ((d == 10 || d == 11 || d == 12 || d == 15 || d == 16) && w == Weekday.MONDAY && m == Month.OCTOBER)
+					//	06 Nov    Bank Holiday
+					|| (d == 6 && m == Month.NOVEMBER)
+					//	08 Dec    Immaculate Conception
+					|| (d == 8 && m == Month.DECEMBER)
+					//	24 Dec    Christmas Eve
+					//	25 Dec    Christmas Day
+					|| ((d == 24 || d == 25) && m == Month.DECEMBER)
+					//	31 Dec    Last business day of year
+					|| (d == 31 && m == Month.DECEMBER))
+				return false;
+			return true;
+		}
 	}
 
-}
-
-// TODO: Tests.
-final class BCBAExchangeCalendar extends WesternCalendar {
-
-	public String getName() {
-		return "BCBA";
-	}
-
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int dd = date.getDayOfYear();
-		int em = easterMonday(y);
-
-		if (isWeekend(w)
-		// New Year's Day / Ano Nuevo
-				|| (d == 1 && m == Month.JANUARY)
-				// Holy Thursday
-				|| (dd == em - 4)
-				// Good Friday
-				|| (dd == em - 3)
-				// Easter Monday
-				|| (dd == em)
-				// D�a del Veterano y de los Ca�dos en la Guerra de Malvinas
-				|| (d == 2 && m == Month.APRIL)
-				// Labor Day
-				|| (d == 1 && m == Month.MAY)
-				// Death of General Manuel Belgrano
-				|| (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.JUNE)
-				// Independence Day
-				|| (d == 9 && m == JULY)
-				// Death of General Jos� de San Martin
-				|| (d >= 15 && d <= 21 && w == Weekday.MONDAY && m == Month.AUGUST)
-				// Immaculate Conception
-				|| (d == 8 && m == Month.DECEMBER)
-				// Christmas Day
-				|| (d == 25 && m == Month.DECEMBER))
-			return false;
-		return true;
-	}
 }

@@ -129,7 +129,7 @@ public class Italy extends DelegateCalendar {
     // private inner classes
     //
     
-	final private class ItalySettlementCalendar extends WesternCalendar {
+	private final class ItalySettlementCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Italian settlement";
@@ -173,7 +173,7 @@ public class Italy extends DelegateCalendar {
 	}
 
 
-	final private class ItalyExchangeCalendar extends WesternCalendar {
+	private final class ItalyExchangeCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Milan stock exchange";

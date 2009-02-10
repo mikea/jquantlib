@@ -74,7 +74,11 @@ public class Denmark extends DelegateCalendar {
 	// public enums
 	//
 
+	// FIXME: Settlement calendar is missing
 	public enum Market {
+		/**
+		 * Copenhagen Stock Exchange
+		 */
 		CSE
 	}
 
@@ -87,7 +91,7 @@ public class Denmark extends DelegateCalendar {
 		}
 	}
 
-	final private class CSECalendar extends WesternCalendar {
+	private final class CSECalendar extends WesternCalendar {
 
 		@Override
 		public String getName() {

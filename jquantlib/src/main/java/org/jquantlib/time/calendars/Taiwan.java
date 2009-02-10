@@ -65,11 +65,6 @@ import static org.jquantlib.util.Month.OCTOBER;
  */
 public class Taiwan extends DelegateCalendar {
 
-	public enum Market {
-		TSE
-		// TaiWan Stock Exchange
-	}
-
 	private final static Taiwan TSE_Calendar = new Taiwan(Market.TSE);
 
 	private Taiwan(Market market) {
@@ -93,7 +88,24 @@ public class Taiwan extends DelegateCalendar {
 		}
 	}
 
-	final class TaiwanTSECalendar extends WesternCalendar {
+	//
+	// public enums
+	//
+	
+	//FIXME: Settlement calendar is missing
+	public enum Market {
+		/**
+		 * TaiWan Stock Exchange
+		 */
+		TSE
+	}
+
+
+	//
+	// private final classes
+	//
+	
+	private final class TaiwanTSECalendar extends WesternCalendar {
 	    @Override
 		public String getName() {
 			return "Taiwan stock exchange";

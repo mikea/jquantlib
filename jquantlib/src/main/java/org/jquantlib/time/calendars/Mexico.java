@@ -94,7 +94,16 @@ public class Mexico extends DelegateCalendar {
 	//
 	
 	public enum Market {
-		SETTLEMENT, BMV
+		
+		/**
+		 * Generic settlement calendar
+		 */
+		SETTLEMENT,
+		
+		/**
+		 * Bolsa Mexicana de Valores
+		 */
+		BMV
 	}
 
 	
@@ -102,7 +111,7 @@ public class Mexico extends DelegateCalendar {
     // private inner classes
     //
     
-	final private class MexicoSettlementCalendar extends WesternCalendar {
+	private final class MexicoSettlementCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Mexico stock Market";

@@ -58,7 +58,7 @@ public class UnitedKingdomCalendarTest {
     public void setup() {
         metals = UnitedKingdom.getCalendar(UnitedKingdom.Market.METALS);
         settlement = UnitedKingdom.getCalendar(UnitedKingdom.Market.SETTLEMENT);
-        exchange = UnitedKingdom.getCalendar(UnitedKingdom.Market.EXCHANGE);
+        exchange = UnitedKingdom.getCalendar(UnitedKingdom.Market.LSE);
         expectedHol = new Vector<Date>();
     }
     // 2004 - leap-year in the past
@@ -455,7 +455,7 @@ public class UnitedKingdomCalendarTest {
     //test exchange dates...
     public void testUnitedKingdomExchangeYear2004() {
         int year = 2004;
-        System.out.println("Testing " + UnitedKingdom.Market.EXCHANGE + " holiday list for the year " + year + "...");
+        System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
 
         // First January was a Thursday
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
@@ -488,7 +488,7 @@ public class UnitedKingdomCalendarTest {
     @Test
     public void testUnitedKingdomExchangeYear2005() {
         int year = 2005;
-        System.out.println("Testing " + UnitedKingdom.Market.EXCHANGE + " holiday list for the year " + year + "...");
+        System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
 
         // First January was a Saturday
         expectedHol.add(DateFactory.getFactory().getDate(3, JANUARY, year));
@@ -516,7 +516,7 @@ public class UnitedKingdomCalendarTest {
     @Test
     public void testUnitedKingdomExchangeYear2006() {
         int year = 2006;
-        System.out.println("Testing " + UnitedKingdom.Market.EXCHANGE + " holiday list for the year " + year + "...");
+        System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
 
         // First January was a Sunday
         expectedHol.add(DateFactory.getFactory().getDate(2, JANUARY, year));
@@ -544,7 +544,7 @@ public class UnitedKingdomCalendarTest {
     @Test
     public void testUnitedKingdomExchangeYear2007() {
         int year = 2007;
-        System.out.println("Testing " + UnitedKingdom.Market.EXCHANGE + " holiday list for the year " + year + "...");
+        System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
 
         // First January was a Monday
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
@@ -572,7 +572,7 @@ public class UnitedKingdomCalendarTest {
     @Test
     public void testUnitedKingdomExchangeYear2008() {
         int year = 2008;
-        System.out.println("Testing " + UnitedKingdom.Market.EXCHANGE + " holiday list for the year " + year + "...");
+        System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
 
         // First January was a Tuesday
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
@@ -600,7 +600,7 @@ public class UnitedKingdomCalendarTest {
     @Test
     public void testUnitedKingdomExchangeYear2009() {
         int year = 2009;
-        System.out.println("Testing " + UnitedKingdom.Market.EXCHANGE + " holiday list for the year " + year + "...");
+        System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
 
         // First January will be a Thursday
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
@@ -628,7 +628,7 @@ public class UnitedKingdomCalendarTest {
     @Test
     public void testUnitedKingdomExchangeYear2010() {
         int year = 2010;
-        System.out.println("Testing " + UnitedKingdom.Market.EXCHANGE + " holiday list for the year " + year + "...");
+        System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
 
         // First January will be a Friday
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));

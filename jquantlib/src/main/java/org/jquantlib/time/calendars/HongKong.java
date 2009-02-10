@@ -94,6 +94,7 @@ public class HongKong extends DelegateCalendar {
 	// public enums
 	//
 	
+	// FIXME: settlement calendar is missing
 	public enum Market {
 	    /**
 	     * Hong Kong Stock Exchange
@@ -106,7 +107,7 @@ public class HongKong extends DelegateCalendar {
 	// private inner classes
 	//
 	
-	final private class HongKongSettlementCalendar extends WesternCalendar {
+	private final class HongKongSettlementCalendar extends WesternCalendar {
 	    
 		public boolean isBusinessDay(Date date) {
 	        Weekday w = date.getWeekday();

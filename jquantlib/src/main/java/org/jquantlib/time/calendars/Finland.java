@@ -85,8 +85,13 @@ public class Finland extends DelegateCalendar {
 	// public enums
 	//
 	
+	// FIXME: Settlement calendar is missing
+
 	public enum Market {
-		HSE, // Iceland Stock Exchange 
+		/**
+		 * Helsinki Stock Exchange
+		 */
+		HSE 
 	}
 
 	
@@ -94,10 +99,10 @@ public class Finland extends DelegateCalendar {
 	// private inner classes
 	//
 
-	final private class FinlandHSECalendar extends WesternCalendar {
+	private final class FinlandHSECalendar extends WesternCalendar {
 
 		public String getName() {
-			return "HSE"; // Helsinki Stock Exchange
+			return "HSE";
 		}
 
 		public boolean isBusinessDay(Date date) {

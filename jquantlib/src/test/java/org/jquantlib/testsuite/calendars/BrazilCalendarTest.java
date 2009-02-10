@@ -35,17 +35,18 @@ import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Srinivas Hasti
@@ -57,15 +58,13 @@ import org.junit.Test;
 public class BrazilCalendarTest {
     private final static Logger logger = LoggerFactory.getLogger(BrazilCalendarTest.class);
 
-	private Calendar bovespa;
-	private Calendar settlement;
-	private List<Date> expectedHol;
+	private final Calendar bovespa;
+	private final Calendar settlement;
     
-	@Before
-	public void setUp() {
+	public BrazilCalendarTest() {
+		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	    bovespa = Brazil.getCalendar(Brazil.Market.BOVESPA);
 	    settlement = Brazil.getCalendar(Brazil.Market.SETTLEMENT);
-	    expectedHol = new Vector<Date>();
 	}
         	
     // 2004 - leap-year in the past
@@ -74,17 +73,18 @@ public class BrazilCalendarTest {
     {
        	int year = 2004;
     	logger.info("Testing " + Brazil.Market.BOVESPA + " holiday list for the year " + year + "...");
-    	List<Date> expectedHol = new Vector<Date>();
-    
-    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-    	expectedHol.add(DateFactory.getFactory().getDate(23,FEBRUARY,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(24,FEBRUARY,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(10,JUNE,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(9,JULY,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+    	expectedHol.add(df.getDate(1,JANUARY,year)); 
+    	expectedHol.add(df.getDate(23,FEBRUARY,year));
+    	expectedHol.add(df.getDate(24,FEBRUARY,year));
+    	expectedHol.add(df.getDate(9,APRIL,year));
+    	expectedHol.add(df.getDate(21,APRIL,year));
+    	expectedHol.add(df.getDate(10,JUNE,year));
+    	expectedHol.add(df.getDate(9,JULY,year));
+    	expectedHol.add(df.getDate(24,DECEMBER,year));
+    	expectedHol.add(df.getDate(31,DECEMBER,year)); 
     
     	// Call the Holiday Check
     	CalendarUtil cbt = new CalendarUtil();
@@ -98,15 +98,16 @@ public class BrazilCalendarTest {
     {
         int year = 2005;
         logger.info("Testing " + Brazil.Market.BOVESPA + " holiday list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
-    
-        expectedHol.add(DateFactory.getFactory().getDate(25,JANUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(7,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(8,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(26,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(30,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(25,JANUARY,year)); 
+        expectedHol.add(df.getDate(7,FEBRUARY,year));
+        expectedHol.add(df.getDate(8,FEBRUARY,year));
+        expectedHol.add(df.getDate(25,MARCH,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(26,MAY,year));
+        expectedHol.add(df.getDate(30,DECEMBER,year)); 
     
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -120,17 +121,18 @@ public class BrazilCalendarTest {
     {
         int year = 2006;
         logger.info("Testing " + Brazil.Market.BOVESPA + " holiday list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
-    
-        expectedHol.add(DateFactory.getFactory().getDate(25,JANUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(27,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(28,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(15,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(29,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(25,JANUARY,year)); 
+        expectedHol.add(df.getDate(27,FEBRUARY,year));
+        expectedHol.add(df.getDate(28,FEBRUARY,year));
+        expectedHol.add(df.getDate(14,APRIL,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(15,JUNE,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year));
+        expectedHol.add(df.getDate(29,DECEMBER,year)); 
     
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -144,20 +146,21 @@ public class BrazilCalendarTest {
     	
     	int year = 2007;
     	logger.info("Testing " + Brazil.Market.BOVESPA + " holiday list for the year " + year + "...");
-    	List<Date> expectedHol = new Vector<Date>();
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
     	
-    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-    	expectedHol.add(DateFactory.getFactory().getDate(25,JANUARY,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(19,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(20,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,JULY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(20,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+    	expectedHol.add(df.getDate(1,JANUARY,year)); 
+    	expectedHol.add(df.getDate(25,JANUARY,year));
+    	expectedHol.add(df.getDate(19,FEBRUARY,year));
+        expectedHol.add(df.getDate(20,FEBRUARY,year));
+        expectedHol.add(df.getDate(6,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(7,JUNE,year));
+        expectedHol.add(df.getDate(9,JULY,year));
+        expectedHol.add(df.getDate(20,NOVEMBER,year));
+        expectedHol.add(df.getDate(24,DECEMBER,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year));
+        expectedHol.add(df.getDate(31,DECEMBER,year));
         
         // Call the Holiday Check
     	CalendarUtil cbt = new CalendarUtil();
@@ -169,21 +172,22 @@ public class BrazilCalendarTest {
     public void testBrazilBovespaYear2008(){
       	int year = 2008;
       	logger.info("Testing " + Brazil.Market.BOVESPA + " holiday list for the year " + year + "...");
-    	List<Date> expectedHol = new Vector<Date>();
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
     	
-    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-    	expectedHol.add(DateFactory.getFactory().getDate(25,JANUARY,year)); 
-    	expectedHol.add(DateFactory.getFactory().getDate(4,FEBRUARY,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(5,FEBRUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(22,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,JULY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(20,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+    	expectedHol.add(df.getDate(1,JANUARY,year)); 
+    	expectedHol.add(df.getDate(25,JANUARY,year)); 
+    	expectedHol.add(df.getDate(4,FEBRUARY,year));
+    	expectedHol.add(df.getDate(5,FEBRUARY,year)); 
+        expectedHol.add(df.getDate(21,MARCH,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(22,MAY,year));
+        expectedHol.add(df.getDate(9,JULY,year));
+        expectedHol.add(df.getDate(20,NOVEMBER,year));
+        expectedHol.add(df.getDate(24,DECEMBER,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year));
+        expectedHol.add(df.getDate(31,DECEMBER,year));
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -197,20 +201,21 @@ public class BrazilCalendarTest {
     	
     	int year = 2009;
     	logger.info("Testing " + Brazil.Market.BOVESPA + " holiday list for the year " + year + "...");
-    	List<Date> expectedHol = new Vector<Date>();
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
     	
-    	expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-    	expectedHol.add(DateFactory.getFactory().getDate(23,FEBRUARY,year));
-    	expectedHol.add(DateFactory.getFactory().getDate(24,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(10,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(11,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,JULY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(20,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+    	expectedHol.add(df.getDate(1,JANUARY,year)); 
+    	expectedHol.add(df.getDate(23,FEBRUARY,year));
+    	expectedHol.add(df.getDate(24,FEBRUARY,year));
+        expectedHol.add(df.getDate(10,APRIL,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(11,JUNE,year));
+        expectedHol.add(df.getDate(9,JULY,year));
+        expectedHol.add(df.getDate(20,NOVEMBER,year));
+        expectedHol.add(df.getDate(24,DECEMBER,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year));
+        expectedHol.add(df.getDate(31,DECEMBER,year));
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -224,18 +229,19 @@ public class BrazilCalendarTest {
     {
         int year = 2010;
         logger.info("Testing " + Brazil.Market.BOVESPA + " holiday list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
-    
-        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,JANUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(15,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(16,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(3,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,JULY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(1,JANUARY,year));
+        expectedHol.add(df.getDate(25,JANUARY,year)); 
+        expectedHol.add(df.getDate(15,FEBRUARY,year));
+        expectedHol.add(df.getDate(16,FEBRUARY,year));
+        expectedHol.add(df.getDate(2,APRIL,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(3,JUNE,year));
+        expectedHol.add(df.getDate(9,JULY,year));
+        expectedHol.add(df.getDate(24,DECEMBER,year));
+        expectedHol.add(df.getDate(31,DECEMBER,year)); 
     
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -249,15 +255,16 @@ public class BrazilCalendarTest {
     {
         int year = 2011;
         logger.info("Testing " + Brazil.Market.BOVESPA + " holiday list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
-    
-        expectedHol.add(DateFactory.getFactory().getDate(25,JANUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(7,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(8,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(23,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(30,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(25,JANUARY,year)); 
+        expectedHol.add(df.getDate(7,MARCH,year));
+        expectedHol.add(df.getDate(8,MARCH,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(22,APRIL,year));
+        expectedHol.add(df.getDate(23,JUNE,year));
+        expectedHol.add(df.getDate(30,DECEMBER,year)); 
     
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -269,19 +276,20 @@ public class BrazilCalendarTest {
     public void testBrazilBovespaYear2012() {
     	int year = 2012;
     	logger.info("Testing " + Brazil.Market.BOVESPA + " holiday list for the year " + year + "...");
-    	expectedHol = new Vector<Date>();
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
     	
-    	expectedHol.add(DateFactory.getFactory().getDate(25,JANUARY,year)); 
-    	expectedHol.add(DateFactory.getFactory().getDate(20,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,JULY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(20,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
+    	expectedHol.add(df.getDate(25,JANUARY,year)); 
+    	expectedHol.add(df.getDate(20,FEBRUARY,year));
+        expectedHol.add(df.getDate(21,FEBRUARY,year));
+        expectedHol.add(df.getDate(6,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(7,JUNE,year));
+        expectedHol.add(df.getDate(9,JULY,year));
+        expectedHol.add(df.getDate(20,NOVEMBER,year));
+        expectedHol.add(df.getDate(24,DECEMBER,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year));
+        expectedHol.add(df.getDate(31,DECEMBER,year));
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -292,17 +300,19 @@ public class BrazilCalendarTest {
     public void testBrazilSettlementYear2004() {
         int year = 2004;
         logger.info("Testing " + Brazil.Market.SETTLEMENT + " holiday list for the year " + year + "...");
-        
-        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(23,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(24,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(10,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(1,JANUARY,year)); 
+        expectedHol.add(df.getDate(23,FEBRUARY,year));
+        expectedHol.add(df.getDate(24,FEBRUARY,year));
+        expectedHol.add(df.getDate(9,APRIL,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(10,JUNE,year));
+        expectedHol.add(df.getDate(7,SEPTEMBER,year));
+        expectedHol.add(df.getDate(12,OCTOBER,year));
+        expectedHol.add(df.getDate(2,NOVEMBER,year));
+        expectedHol.add(df.getDate(15,NOVEMBER,year)); 
 
         
         // Call the Holiday Check
@@ -314,16 +324,18 @@ public class BrazilCalendarTest {
     public void testBrazilSettlementYear2005() {
         int year = 2005;
         logger.info("Testing " + Brazil.Market.SETTLEMENT + " holiday list for the year " + year + "...");
-
-        expectedHol.add(DateFactory.getFactory().getDate(7,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(8,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(26,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(7,FEBRUARY,year));
+        expectedHol.add(df.getDate(8,FEBRUARY,year));
+        expectedHol.add(df.getDate(25,MARCH,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(26,MAY,year));
+        expectedHol.add(df.getDate(7,SEPTEMBER,year));
+        expectedHol.add(df.getDate(12,OCTOBER,year));
+        expectedHol.add(df.getDate(2,NOVEMBER,year));
+        expectedHol.add(df.getDate(15,NOVEMBER,year)); 
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -334,18 +346,20 @@ public class BrazilCalendarTest {
     public void testBrazilSettlementYear2006() {
         int year = 2006;
         logger.info("Testing " + Brazil.Market.SETTLEMENT + " holiday list for the year " + year + "...");
-        
-        expectedHol.add(DateFactory.getFactory().getDate(27,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(28,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(15,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(27,FEBRUARY,year));
+        expectedHol.add(df.getDate(28,FEBRUARY,year));
+        expectedHol.add(df.getDate(14,APRIL,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(15,JUNE,year));
+        expectedHol.add(df.getDate(7,SEPTEMBER,year));
+        expectedHol.add(df.getDate(12,OCTOBER,year));
+        expectedHol.add(df.getDate(2,NOVEMBER,year));
+        expectedHol.add(df.getDate(15,NOVEMBER,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year)); 
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -356,18 +370,20 @@ public class BrazilCalendarTest {
     public void testBrazilSettlementYear2007() {
         int year = 2007;
         logger.info("Testing " + Brazil.Market.SETTLEMENT + " holiday list for the year " + year + "...");
-        
-        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(19,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(20,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(1,JANUARY,year)); 
+        expectedHol.add(df.getDate(19,FEBRUARY,year));
+        expectedHol.add(df.getDate(20,FEBRUARY,year));
+        expectedHol.add(df.getDate(6,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(7,JUNE,year));
+        expectedHol.add(df.getDate(7,SEPTEMBER,year));
+        expectedHol.add(df.getDate(12,OCTOBER,year));
+        expectedHol.add(df.getDate(2,NOVEMBER,year));
+        expectedHol.add(df.getDate(15,NOVEMBER,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year)); 
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -378,15 +394,17 @@ public class BrazilCalendarTest {
     public void testBrazilSettlementYear2008() {
         int year = 2008;
         logger.info("Testing " + Brazil.Market.SETTLEMENT + " holiday list for the year " + year + "...");
-        
-        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(4,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(5,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(22,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(1,JANUARY,year)); 
+        expectedHol.add(df.getDate(4,FEBRUARY,year));
+        expectedHol.add(df.getDate(5,FEBRUARY,year));
+        expectedHol.add(df.getDate(21,MARCH,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(22,MAY,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year)); 
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -397,18 +415,20 @@ public class BrazilCalendarTest {
     public void testBrazilSettlementYear2009() {
         int year = 2009;
         logger.info("Testing " + Brazil.Market.SETTLEMENT + " holiday list for the year " + year + "...");
-        
-        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(23,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(24,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(10,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(11,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(1,JANUARY,year)); 
+        expectedHol.add(df.getDate(23,FEBRUARY,year));
+        expectedHol.add(df.getDate(24,FEBRUARY,year));
+        expectedHol.add(df.getDate(10,APRIL,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(11,JUNE,year));
+        expectedHol.add(df.getDate(7,SEPTEMBER,year));
+        expectedHol.add(df.getDate(12,OCTOBER,year));
+        expectedHol.add(df.getDate(2,NOVEMBER,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year)); 
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -419,17 +439,19 @@ public class BrazilCalendarTest {
     public void testBrazilSettlementYear2010() {
         int year = 2010;
         logger.info("Testing " + Brazil.Market.SETTLEMENT + " holiday list for the year " + year + "...");
-        
-        expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year)); 
-        expectedHol.add(DateFactory.getFactory().getDate(15,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(16,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(3,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(1,JANUARY,year)); 
+        expectedHol.add(df.getDate(15,FEBRUARY,year));
+        expectedHol.add(df.getDate(16,FEBRUARY,year));
+        expectedHol.add(df.getDate(2,APRIL,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(3,JUNE,year));
+        expectedHol.add(df.getDate(7,SEPTEMBER,year));
+        expectedHol.add(df.getDate(12,OCTOBER,year));
+        expectedHol.add(df.getDate(2,NOVEMBER,year));
+        expectedHol.add(df.getDate(15,NOVEMBER,year)); 
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -440,16 +462,18 @@ public class BrazilCalendarTest {
     public void testBrazilSettlementYear2011() {
         int year = 2011;
         logger.info("Testing " + Brazil.Market.SETTLEMENT + " holiday list for the year " + year + "...");
-     
-        expectedHol.add(DateFactory.getFactory().getDate(7,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(8,MARCH,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(23,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(7,MARCH,year));
+        expectedHol.add(df.getDate(8,MARCH,year));
+        expectedHol.add(df.getDate(21,APRIL,year));
+        expectedHol.add(df.getDate(22,APRIL,year));
+        expectedHol.add(df.getDate(23,JUNE,year));
+        expectedHol.add(df.getDate(7,SEPTEMBER,year));
+        expectedHol.add(df.getDate(12,OCTOBER,year));
+        expectedHol.add(df.getDate(2,NOVEMBER,year));
+        expectedHol.add(df.getDate(15,NOVEMBER,year)); 
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -460,17 +484,19 @@ public class BrazilCalendarTest {
     public void testBrazilSettlementYear2012() {
         int year = 2012;
         logger.info("Testing " + Brazil.Market.SETTLEMENT + " holiday list for the year " + year + "...");
-         
-        expectedHol.add(DateFactory.getFactory().getDate(20,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(21,FEBRUARY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
-        expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,JUNE,year));
-        expectedHol.add(DateFactory.getFactory().getDate(7,SEPTEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(12,OCTOBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(2,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(15,NOVEMBER,year));
-        expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year)); 
+        final DateFactory df = DateFactory.getFactory();
+    	final List<Date> expectedHol = new ArrayList<Date>();
+    	
+        expectedHol.add(df.getDate(20,FEBRUARY,year));
+        expectedHol.add(df.getDate(21,FEBRUARY,year));
+        expectedHol.add(df.getDate(6,APRIL,year));
+        expectedHol.add(df.getDate(1,MAY,year));
+        expectedHol.add(df.getDate(7,JUNE,year));
+        expectedHol.add(df.getDate(7,SEPTEMBER,year));
+        expectedHol.add(df.getDate(12,OCTOBER,year));
+        expectedHol.add(df.getDate(2,NOVEMBER,year));
+        expectedHol.add(df.getDate(15,NOVEMBER,year));
+        expectedHol.add(df.getDate(25,DECEMBER,year)); 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, settlement, year);       

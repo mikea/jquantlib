@@ -94,7 +94,11 @@ public class NewZealand extends DelegateCalendar {
 	// public enums
 	//
 	
+	//FIXME: Settlement calendar is missing
 	public enum Market {
+		/**
+		 * New Zealand Stock Exchange
+		 */
 		NZX
 	}
 
@@ -103,7 +107,7 @@ public class NewZealand extends DelegateCalendar {
 	// private inner classes
 	//
 
-	final private class NewZealandNZXCalendar extends WesternCalendar {
+	private final class NewZealandNZXCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "OsloBors";

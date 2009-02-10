@@ -105,22 +105,25 @@ public class India extends DelegateCalendar {
 		}
 	}
 
+	
 	//
 	// public enums
 	//
 
+	//FIXME: settlement calendar is missing
 	public enum Market {
-		/*
+		/**
 		 * National stock-exchange of India
 		 */
-		NSE,
-	};
+		NSE
+	}
+	
 
 	//
 	// private inner classes
 	//
 
-	final private class IndiaNSECalendar extends WesternCalendar {
+	private final class IndiaNSECalendar extends WesternCalendar {
 
 		public String getName() {
 			return "National Stock Exchange of India";

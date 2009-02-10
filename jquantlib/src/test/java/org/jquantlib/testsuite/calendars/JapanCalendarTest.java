@@ -51,8 +51,11 @@ public class JapanCalendarTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(JapanCalendarTest.class);
 
+    private final Calendar settlement;
+
     public JapanCalendarTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+	    this.settlement = Japan.getCalendar(Japan.Market.SETTLEMENT);
 	}
 	
     // 2012 -- simply taken from rules
@@ -82,9 +85,6 @@ public class JapanCalendarTest {
     @Test public void testJapanYear2012() {
         final int year = 2012;
         logger.info("Testing Japan's holiday list for the year " + year + "...");
-
-        final Calendar c = Japan.getCalendar();
-        
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -109,7 +109,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate(24,DECEMBER,year));  // Emperor's Birthday observed
 		expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+        new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
     
     // 2011 -- simply taken from rules
@@ -139,9 +139,6 @@ public class JapanCalendarTest {
     @Test public void testJapanYear2011() {
         final int year = 2011;
         logger.info("Testing Japan's holiday list for the year " + year + "...");
-
-        final Calendar c = Japan.getCalendar();
-        
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -164,7 +161,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
 		// Sat: expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+        new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
     
     // 2010 -- simply taken from rules
@@ -194,9 +191,6 @@ public class JapanCalendarTest {
     @Test public void testJapanYear2010() {
         final int year = 2010;
         logger.info("Testing Japan's holiday list for the year " + year + "...");
-
-        final Calendar c = Japan.getCalendar();
-        
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -219,7 +213,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
 		expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+        new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
     
 	// 2009 -- simply taken from rules
@@ -249,9 +243,6 @@ public class JapanCalendarTest {
 	@Test public void testJapanYear2009() {
         final int year = 2009;
         logger.info("Testing Japan's holiday list for the year " + year + "...");
-
-        final Calendar c = Japan.getCalendar();
-        
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -276,7 +267,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
 		expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+        new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
 
     
@@ -306,9 +297,6 @@ public class JapanCalendarTest {
 	@Test public void testJapanYear2008() {
         final int year = 2008;
         logger.info("Testing Japan's holiday list for the year " + year + "...");
-
-        final Calendar c = Japan.getCalendar();
-        
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -332,7 +320,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
 		expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+        new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
 
 	
@@ -361,9 +349,6 @@ public class JapanCalendarTest {
 	@Test public void testJapanYear2007() {
         final int year = 2007;
         logger.info("Testing Japan's holiday list for the year " + year + "...");
-
-        final Calendar c = Japan.getCalendar();
-        
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -386,7 +371,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate(24,DECEMBER,year));  // Emperor's Birthday
 		expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+        new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
 
     
@@ -415,9 +400,6 @@ public class JapanCalendarTest {
 	@Test public void testJapanYear2006() {
         final int year = 2006;
         logger.info("Testing Japan's holiday list for the year " + year + "...");
-
-        final Calendar c = Japan.getCalendar();
-        
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
     	
@@ -440,7 +422,7 @@ public class JapanCalendarTest {
         // Sat: expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
 		// Sun: expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+        new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
 
     
@@ -469,11 +451,9 @@ public class JapanCalendarTest {
     @Test public void testJapanYear2005() {
         final int year = 2005;
         logger.info("Testing Japan's holiday list for the year " + year + "...");
-
-        final Calendar c = Japan.getCalendar();
-        
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
+    	
 		// Sat: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
 		// Sun: expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
 		expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
@@ -493,7 +473,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
 		// Sat: expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+        new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
 
     
@@ -522,11 +502,9 @@ public class JapanCalendarTest {
     @Test public void testJapanYear2004() {
         final int year = 2004;
         logger.info("Testing Japan's holiday list for the year " + year + "...");
-
-        final Calendar c = Japan.getCalendar();
-
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
+    	
 		expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
 		expectedHol.add(df.getDate( 2,JANUARY,year));   // Bank Holiday
 		// Sat: expectedHol.add(df.getDate( 3,JANUARY,year));   // Bank Holiday
@@ -546,7 +524,7 @@ public class JapanCalendarTest {
         expectedHol.add(df.getDate(23,DECEMBER,year));  // Emperor's Birthday
 		expectedHol.add(df.getDate(31,DECEMBER,year));  // Bank Holiday
 
-        new CalendarUtil().checkHolidayList(expectedHol, c, year);
+        new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
     
 }

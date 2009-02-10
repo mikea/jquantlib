@@ -39,8 +39,6 @@ import org.jquantlib.util.Month;
 
 /**
  * Chinese calendar
- * 
- * Source: <a href="http://www.sse.com.cn/sseportal/webapp/cm/keyWordSearchEn?KeyWord=holiday&page=1&x=0&y=0">SSE Holidays</a>
  * <p>
  * Holidays:
  * <ul>
@@ -58,17 +56,14 @@ import org.jquantlib.util.Month;
  * <li>Last day of Lunar Year</li>
  * </ul>
  * 
+ * @see <a href="http://www.sse.com.cn/sseportal/webapp/cm/keyWordSearchEn?KeyWord=holiday&page=1&x=0&y=0">SSE Holidays</a>
+ * 
  * @author Tim Swetonic
  * @author Jia Jia
  * @author Renjith Nair
  */
 
 public class China extends DelegateCalendar {
-
-	public enum Market {
-		SSE
-		// Shanghai stock exchange
-	}
 
 	private static final China SSE_Calendar = new China(Market.SSE);
 
@@ -93,7 +88,25 @@ public class China extends DelegateCalendar {
 		}
 	}
 
-	final class ChinaSSECalendar extends WesternCalendar {
+
+	//
+	// public enums
+	//
+	
+	// FIXME: Settlement calendar is missing
+	public enum Market {
+		/**
+		 * Shanghai stock exchange
+		 */
+		SSE
+	}
+
+
+	//
+	// private inner classes
+	//
+	
+	private final class ChinaSSECalendar extends WesternCalendar {
 
 		@Override
 		public String getName() {
@@ -143,6 +156,6 @@ public class China extends DelegateCalendar {
 				return false;
 			return true;
 		}
-
 	}
+	
 }

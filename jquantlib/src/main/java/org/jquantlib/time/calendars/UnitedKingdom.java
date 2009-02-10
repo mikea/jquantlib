@@ -76,19 +76,9 @@ import org.jquantlib.util.Month;
  */
 
 public class UnitedKingdom extends DelegateCalendar {
-	public static enum Market {
-		SETTLEMENT, // generic settlement calendar
-		EXCHANGE, // London stock-exchange calendar
-		METALS
-		// London metals-exchange calendar
-	};
-
-	private final static UnitedKingdom SETTLEMENT_CALENDAR = new UnitedKingdom(
-			Market.SETTLEMENT);
-	private final static UnitedKingdom EXCHANGE_CALENDAR = new UnitedKingdom(
-			Market.EXCHANGE);
-	private final static UnitedKingdom METALS_CALENDAR = new UnitedKingdom(
-			Market.METALS);
+	private final static UnitedKingdom SETTLEMENT_CALENDAR = new UnitedKingdom(Market.SETTLEMENT);
+	private final static UnitedKingdom EXCHANGE_CALENDAR   = new UnitedKingdom(Market.LSE);
+	private final static UnitedKingdom METALS_CALENDAR     = new UnitedKingdom(Market.METALS);
 
 	private UnitedKingdom(Market market) {
 		Calendar delegate;
@@ -96,7 +86,7 @@ public class UnitedKingdom extends DelegateCalendar {
 		case SETTLEMENT:
 			delegate = new UKSettlementCalendar();
 			break;
-		case EXCHANGE:
+		case LSE:
 			delegate = new UKExchangeCalendar();
 			break;
 		case METALS:
@@ -112,7 +102,7 @@ public class UnitedKingdom extends DelegateCalendar {
 		switch (market) {
 		case SETTLEMENT:
 			return SETTLEMENT_CALENDAR;
-		case EXCHANGE:
+		case LSE:
 			return EXCHANGE_CALENDAR;
 		case METALS:
 			return METALS_CALENDAR;
@@ -120,136 +110,164 @@ public class UnitedKingdom extends DelegateCalendar {
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-}
 
-final class UKSettlementCalendar extends WesternCalendar {
-
-	public String getName() {
-		return "UK settlement";
+	
+	//
+	// public enums
+	//
+	
+	public static enum Market {
+		/**
+		 * generic settlement calendar
+		 */
+		SETTLEMENT,
+		
+		/**
+		 * London stock-exchange calendar
+		 */
+		LSE, 
+		
+		/**
+		 * London metals-exchange calendar
+		 */
+		METALS
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		int m = date.getMonth();
-		int y = date.getYear();
-		int em = easterMonday(y);
-		if (isWeekend(w)
-		// New Year's Day (possibly moved to Monday)
-				|| ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
-						.toInteger())
-				// Good Friday
-				|| (dd == em - 3)
-				// Easter Monday
-				|| (dd == em)
-				// first Monday of May (Early May Bank Holiday)
-				|| (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
-				// last Monday of May (Spring Bank Holiday)
-				|| (d >= 25 && w == Weekday.MONDAY
-						&& m == Month.MAY.toInteger() && y != 2002)
-				// last Monday of August (Summer Bank Holiday)
-				|| (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
-						.toInteger())
-				// Christmas (possibly moved to Monday or Tuesday)
-				|| ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-						.toInteger())
-				// Boxing Day (possibly moved to Monday or Tuesday)
-				|| ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-						.toInteger())
-				// June 3rd, 2002 only (Golden Jubilee Bank Holiday)
-				// June 4rd, 2002 only (special Spring Bank Holiday)
-				|| ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
-				// December 31st, 1999 only
-				|| (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
-			return false;
-		return true;
+
+	//
+	// private inner classes
+	//
+	
+	private final class UKSettlementCalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "UK settlement";
+		}
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			int m = date.getMonth();
+			int y = date.getYear();
+			int em = easterMonday(y);
+			if (isWeekend(w)
+			// New Year's Day (possibly moved to Monday)
+					|| ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
+							.toInteger())
+					// Good Friday
+					|| (dd == em - 3)
+					// Easter Monday
+					|| (dd == em)
+					// first Monday of May (Early May Bank Holiday)
+					|| (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
+					// last Monday of May (Spring Bank Holiday)
+					|| (d >= 25 && w == Weekday.MONDAY
+							&& m == Month.MAY.toInteger() && y != 2002)
+					// last Monday of August (Summer Bank Holiday)
+					|| (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
+							.toInteger())
+					// Christmas (possibly moved to Monday or Tuesday)
+					|| ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
+							.toInteger())
+					// Boxing Day (possibly moved to Monday or Tuesday)
+					|| ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
+							.toInteger())
+					// June 3rd, 2002 only (Golden Jubilee Bank Holiday)
+					// June 4rd, 2002 only (special Spring Bank Holiday)
+					|| ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
+					// December 31st, 1999 only
+					|| (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
+				return false;
+			return true;
+		}
 	}
-}
-
-final class UKExchangeCalendar extends WesternCalendar {
-
-	public String getName() {
-		return "London stock exchange";
+	
+	private final class UKExchangeCalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "London stock exchange";
+		}
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			int m = date.getMonth();
+			int y = date.getYear();
+			int em = easterMonday(y);
+			if (isWeekend(w)
+			// New Year's Day (possibly moved to Monday)
+					|| ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
+							.toInteger())
+					// Good Friday
+					|| (dd == em - 3)
+					// Easter Monday
+					|| (dd == em)
+					// first Monday of May (Early May Bank Holiday)
+					|| (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
+					// last Monday of May (Spring Bank Holiday)
+					|| (d >= 25 && w == Weekday.MONDAY
+							&& m == Month.MAY.toInteger() && y != 2002)
+					// last Monday of August (Summer Bank Holiday)
+					|| (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
+							.toInteger())
+					// Christmas (possibly moved to Monday or Tuesday)
+					|| ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
+							.toInteger())
+					// Boxing Day (possibly moved to Monday or Tuesday)
+					|| ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
+							.toInteger())
+					// June 3rd, 2002 only (Golden Jubilee Bank Holiday)
+					// June 4rd, 2002 only (special Spring Bank Holiday)
+					|| ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
+					// December 31st, 1999 only
+					|| (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
+				return false;
+			return true;
+		}
+	}
+	
+	private final class UKMetalsCalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "London metals exchange";
+		}
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			int m = date.getMonth();
+			int y = date.getYear();
+			int em = easterMonday(y);
+			if (isWeekend(w)
+			// New Year's Day (possibly moved to Monday)
+					|| ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
+							.toInteger())
+					// Good Friday
+					|| (dd == em - 3)
+					// Easter Monday
+					|| (dd == em)
+					// first Monday of May (Early May Bank Holiday)
+					|| (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
+					// last Monday of May (Spring Bank Holiday)
+					|| (d >= 25 && w == Weekday.MONDAY
+							&& m == Month.MAY.toInteger() && y != 2002)
+					// last Monday of August (Summer Bank Holiday)
+					|| (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
+							.toInteger())
+					// Christmas (possibly moved to Monday or Tuesday)
+					|| ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
+							.toInteger())
+					// Boxing Day (possibly moved to Monday or Tuesday)
+					|| ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
+							.toInteger())
+					// June 3rd, 2002 only (Golden Jubilee Bank Holiday)
+					// June 4rd, 2002 only (special Spring Bank Holiday)
+					|| ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
+					// December 31st, 1999 only
+					|| (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
+				return false;
+			return true;
+		}
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		int m = date.getMonth();
-		int y = date.getYear();
-		int em = easterMonday(y);
-		if (isWeekend(w)
-		// New Year's Day (possibly moved to Monday)
-				|| ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
-						.toInteger())
-				// Good Friday
-				|| (dd == em - 3)
-				// Easter Monday
-				|| (dd == em)
-				// first Monday of May (Early May Bank Holiday)
-				|| (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
-				// last Monday of May (Spring Bank Holiday)
-				|| (d >= 25 && w == Weekday.MONDAY
-						&& m == Month.MAY.toInteger() && y != 2002)
-				// last Monday of August (Summer Bank Holiday)
-				|| (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
-						.toInteger())
-				// Christmas (possibly moved to Monday or Tuesday)
-				|| ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-						.toInteger())
-				// Boxing Day (possibly moved to Monday or Tuesday)
-				|| ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-						.toInteger())
-				// June 3rd, 2002 only (Golden Jubilee Bank Holiday)
-				// June 4rd, 2002 only (special Spring Bank Holiday)
-				|| ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
-				// December 31st, 1999 only
-				|| (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
-			return false;
-		return true;
-	}
-}
-
-final class UKMetalsCalendar extends WesternCalendar {
-
-	public String getName() {
-		return "London metals exchange";
-	}
-
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		int m = date.getMonth();
-		int y = date.getYear();
-		int em = easterMonday(y);
-		if (isWeekend(w)
-		// New Year's Day (possibly moved to Monday)
-				|| ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
-						.toInteger())
-				// Good Friday
-				|| (dd == em - 3)
-				// Easter Monday
-				|| (dd == em)
-				// first Monday of May (Early May Bank Holiday)
-				|| (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
-				// last Monday of May (Spring Bank Holiday)
-				|| (d >= 25 && w == Weekday.MONDAY
-						&& m == Month.MAY.toInteger() && y != 2002)
-				// last Monday of August (Summer Bank Holiday)
-				|| (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
-						.toInteger())
-				// Christmas (possibly moved to Monday or Tuesday)
-				|| ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-						.toInteger())
-				// Boxing Day (possibly moved to Monday or Tuesday)
-				|| ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-						.toInteger())
-				// June 3rd, 2002 only (Golden Jubilee Bank Holiday)
-				// June 4rd, 2002 only (special Spring Bank Holiday)
-				|| ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
-				// December 31st, 1999 only
-				|| (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
-			return false;
-		return true;
-	}
 }

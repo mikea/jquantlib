@@ -50,13 +50,7 @@ import org.jquantlib.util.Month;
 */
 
 public class Turkey extends DelegateCalendar {
-	public static enum Market {
-		ISE, // Istanbul Stock Exchange Turkey
-	};
-
-	//Istanbul Stock Exchange Turkey Calendar
-	private final static Turkey ISE_CALENDAR = new Turkey(
-			Market.ISE);
+	private final static Turkey ISE_CALENDAR = new Turkey(Market.ISE);
 
 	private Turkey(Market market) {
 		Calendar delegate;
@@ -78,69 +72,88 @@ public class Turkey extends DelegateCalendar {
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-}
+	
 
-final class TurkeyISECalendar extends WesternCalendar {
-
-	public String getName() {
-		return "Istanbul Stock Exchange Turkey";
+	//
+	// public enums
+	//
+	
+	//FIXME: Settlement calendar is missing
+	public static enum Market {
+		/**
+		 * Istanbul Stock Exchange Turkey
+		 */
+		ISE
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth();
-		int m = date.getMonth();
-		int y = date.getYear();
-		if (isWeekend(w)
-            // New Year's Day
-            || (d == 1 && m == Month.JANUARY.toInteger())
-            // 23 nisan / National Holiday
-            || (d == 23 && m == Month.APRIL.toInteger())
-            // 19 may/ National Holiday
-            || (d == 19 && m == Month.MAY.toInteger())
-            // 30 aug/ National Holiday
-            || (d == 30 && m == Month.AUGUST.toInteger())
-            ///29 ekim  National Holiday
-            || (d == 29 && m == Month.OCTOBER.toInteger()))
-            return false;
 
-        // Local Holidays
-        if (y == 2004) {
-            // kurban
-            if ((m == Month.FEBRUARY.toInteger() && d <= 4)
-            // ramazan
-                || (m == Month.NOVEMBER.toInteger() && d >= 14 && d <= 16))
-                return false;
-        } else if (y == 2005) {
-            // kurban
-            if ((m == Month.JANUARY.toInteger() && d >= 19 && d <= 21)
-            // ramazan
-                || (m ==  Month.NOVEMBER.toInteger() && d >= 2 && d <= 5))
-                return false;
-        } else if (y == 2006) {
-            // kurban
-            if ((m == Month.JANUARY.toInteger() && d >= 9 && d <= 13)
-            // ramazan
-                || (m == Month.OCTOBER.toInteger() && d >= 23 && d <= 25)
-            // kurban
-                || (m == Month.DECEMBER.toInteger() && d >= 30))
-                return false;
-        } else if (y == 2007) {
-            // kurban
-            if ((m == Month.JANUARY.toInteger() && d <= 4)
-            // ramazan
-                || (m == Month.OCTOBER.toInteger() && d >= 11 && d <= 14)
-            // kurban
-                || (m == Month.DECEMBER.toInteger() && d >= 19 && d <= 23))
-                return false;
-        } else if (y == 2008) {
-            // ramazan
-            if ((m == Month.SEPTEMBER.toInteger() && d >= 29)
-                || (m == Month.OCTOBER.toInteger() && d <= 2)
-                // kurban
-                || (m == Month.DECEMBER.toInteger() && d >= 7 && d <= 11))
-                return false;
+	//
+	// private final classes
+	//
+	
+	private final class TurkeyISECalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "Istanbul Stock Exchange Turkey";
 		}
-		return true;
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth();
+			int m = date.getMonth();
+			int y = date.getYear();
+			if (isWeekend(w)
+	            // New Year's Day
+	            || (d == 1 && m == Month.JANUARY.toInteger())
+	            // 23 nisan / National Holiday
+	            || (d == 23 && m == Month.APRIL.toInteger())
+	            // 19 may/ National Holiday
+	            || (d == 19 && m == Month.MAY.toInteger())
+	            // 30 aug/ National Holiday
+	            || (d == 30 && m == Month.AUGUST.toInteger())
+	            ///29 ekim  National Holiday
+	            || (d == 29 && m == Month.OCTOBER.toInteger()))
+	            return false;
+	
+	        // Local Holidays
+	        if (y == 2004) {
+	            // kurban
+	            if ((m == Month.FEBRUARY.toInteger() && d <= 4)
+	            // ramazan
+	                || (m == Month.NOVEMBER.toInteger() && d >= 14 && d <= 16))
+	                return false;
+	        } else if (y == 2005) {
+	            // kurban
+	            if ((m == Month.JANUARY.toInteger() && d >= 19 && d <= 21)
+	            // ramazan
+	                || (m ==  Month.NOVEMBER.toInteger() && d >= 2 && d <= 5))
+	                return false;
+	        } else if (y == 2006) {
+	            // kurban
+	            if ((m == Month.JANUARY.toInteger() && d >= 9 && d <= 13)
+	            // ramazan
+	                || (m == Month.OCTOBER.toInteger() && d >= 23 && d <= 25)
+	            // kurban
+	                || (m == Month.DECEMBER.toInteger() && d >= 30))
+	                return false;
+	        } else if (y == 2007) {
+	            // kurban
+	            if ((m == Month.JANUARY.toInteger() && d <= 4)
+	            // ramazan
+	                || (m == Month.OCTOBER.toInteger() && d >= 11 && d <= 14)
+	            // kurban
+	                || (m == Month.DECEMBER.toInteger() && d >= 19 && d <= 23))
+	                return false;
+	        } else if (y == 2008) {
+	            // ramazan
+	            if ((m == Month.SEPTEMBER.toInteger() && d >= 29)
+	                || (m == Month.OCTOBER.toInteger() && d <= 2)
+	                // kurban
+	                || (m == Month.DECEMBER.toInteger() && d >= 7 && d <= 11))
+	                return false;
+			}
+			return true;
+		}
 	}
+	
 }

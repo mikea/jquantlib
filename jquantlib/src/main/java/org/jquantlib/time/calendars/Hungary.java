@@ -21,14 +21,15 @@
  */
 package org.jquantlib.time.calendars;
 
+import static org.jquantlib.util.Month.AUGUST;
 import static org.jquantlib.util.Month.DECEMBER;
-import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.MARCH;
 import static org.jquantlib.util.Month.MAY;
-import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.OCTOBER;
 
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
@@ -54,50 +55,90 @@ import org.jquantlib.util.Month;
  * @author Jia Jia
  * 
  */
-public class Hungary extends WesternCalendar {
-	private static final Hungary HUNGARY = new Hungary();
-
-	public static Hungary getCalendar() {
-		return HUNGARY;
-	}
-
-	private Hungary() {
-	}
-
-	public String getName() {
-		return "Hungary";
+public class Hungary extends DelegateCalendar {
+	
+	private final static Hungary SETTLEMENT_CALENDAR = new Hungary(Market.SETTLEMENT);
+			
+	private Hungary(Market market) {
+		Calendar delegate;
+		switch (market) {
+		case SETTLEMENT:
+			delegate = new SettlementCalendar();
+			break;
+		
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
+		setDelegate(delegate);
 	}
 	
-	public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int em = easterMonday(y);
-        if (isWeekend(w)
-            // Easter Monday
-            || (dd == em)
-            // Whit Monday
-            || (dd == em+49)
-            // New Year's Day
-            || (d == 1  && m == JANUARY)
-            // National Day
-            || (d == 15  && m == MARCH)
-            // Labour Day
-            || (d == 1  && m == MAY)
-            // Constitution Day
-            || (d == 20  && m == AUGUST)
-            // Republic Day
-            || (d == 23  && m == OCTOBER)
-            // All Saints Day
-            || (d == 1  && m == NOVEMBER)
-            // Christmas
-            || (d == 25 && m == DECEMBER)
-            // 2nd Day of Christmas
-            || (d == 26 && m == DECEMBER))
-            return false;
-        return true;
-
+	public static Hungary getCalendar(Market market) {
+		switch (market) {
+		case SETTLEMENT:
+			return SETTLEMENT_CALENDAR;
+		
+		default:
+			throw new IllegalArgumentException("unknown market");
+		}
 	}
+
 	
+	//
+	// public enums
+	//
+	
+	// FIXME: exchange calendar is missing
+	public enum Market {
+	    /**
+	     * Hungary settlement calendar
+	     */
+		SETTLEMENT
+	}
+		
+	
+	//
+	// private inner classes
+	//
+	
+
+	private final class SettlementCalendar extends WesternCalendar {
+	    
+		public boolean isBusinessDay(Date date) {
+	        Weekday w = date.getWeekday();
+	        int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+	        Month m = date.getMonthEnum();
+	        int y = date.getYear();
+	        int em = easterMonday(y);
+
+	        if (isWeekend(w)
+	                // Easter Monday
+	                || (dd == em)
+	                // Whit Monday
+	                || (dd == em+49)
+	                // New Year's Day
+	                || (d == 1  && m == JANUARY)
+	                // National Day
+	                || (d == 15  && m == MARCH)
+	                // Labour Day
+	                || (d == 1  && m == MAY)
+	                // Constitution Day
+	                || (d == 20  && m == AUGUST)
+	                // Republic Day
+	                || (d == 23  && m == OCTOBER)
+	                // All Saints Day
+	                || (d == 1  && m == NOVEMBER)
+	                // Christmas
+	                || (d == 25 && m == DECEMBER)
+	                // 2nd Day of Christmas
+	                || (d == 26 && m == DECEMBER))
+	                return false;
+	            return true;
+		}
+		
+	    public String getName() {
+	       return "Hungary";
+	    }
+	    
+	}
+
 }

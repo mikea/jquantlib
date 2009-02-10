@@ -81,15 +81,8 @@ import org.jquantlib.util.Month;
  */
 public class Canada extends DelegateCalendar {
 
-	public enum Market {
-		SETTLEMENT, // !< generic settlement calendar
-		TSX
-		// !< Toronto stock exchange calendar
-	};
-
-	private final static Canada SETTLEMENT_CALENDAR = new Canada(
-			Market.SETTLEMENT);
-	private final static Canada TSX_CALENDAR = new Canada(Market.TSX);
+	private final static Canada SETTLEMENT_CALENDAR = new Canada(Market.SETTLEMENT);
+	private final static Canada TSX_CALENDAR        = new Canada(Market.TSX);
 
 	private Canada(Market market) {
 		Calendar delegate;
@@ -116,86 +109,109 @@ public class Canada extends DelegateCalendar {
 			throw new IllegalArgumentException("unknown market");
 		}
 	}
-}
-
-final class CanadaSettlementCalendar extends WesternCalendar {
-
-	public String getName() {
-		return "Canada";
+	
+	
+	//
+	// public enums
+	//
+	
+	public enum Market {
+		/**
+		 * Generic settlement calendar
+		 */
+		SETTLEMENT,
+		
+		/**
+		 * Toronto stock exchange calendar
+		 */
+		TSX
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int em = easterMonday(y);
-		if (isWeekend(w)
-		// New Year's Day (possibly moved to Monday)
-				|| ((d == 1 || (d == 2 && w == MONDAY)) && m == JANUARY)
-				// Family Day (third Monday in February, since 2008)
-				|| ((d >= 15 && d <= 21) && w == MONDAY && m == FEBRUARY && y >= 2008)
-				// Good Friday
-				|| (dd == em - 3)
-				// Easter Monday Not listed as a closure day in Canada
-				//|| (dd == em)
-				// The Monday on or preceding 24 May (Victoria Day)
-				|| (d > 17 && d <= 24 && w == MONDAY && m == MAY)
-				// July 1st, possibly moved to Monday (Canada Day)
-				|| ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == JULY)
-				// first Monday of August (Provincial Holiday)
-				|| (d <= 7 && w == MONDAY && m == AUGUST)
-				// first Monday of September (Labor Day)
-				|| (d <= 7 && w == MONDAY && m == SEPTEMBER)
-				// second Monday of October (Thanksgiving Day)
-				|| (d > 7 && d <= 14 && w == MONDAY && m == OCTOBER)
-				// November 11th (possibly moved to Monday)
-				|| ((d == 11 || ((d == 12 || d == 13) && w == MONDAY)) && m == NOVEMBER)
-				// Christmas (possibly moved to Monday or Tuesday)
-				|| ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
-				// Boxing Day (possibly moved to Monday or Tuesday)
-				|| ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
-			return false;
-		return true;
-	}
-}
 
-final class TsxCalendar extends WesternCalendar {
-
-	public String getName() {
-		return "TSX";
+	//
+	// private inner classes
+	//
+	
+	private final class CanadaSettlementCalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "Canada";
+		}
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
+			int em = easterMonday(y);
+			if (isWeekend(w)
+			// New Year's Day (possibly moved to Monday)
+					|| ((d == 1 || (d == 2 && w == MONDAY)) && m == JANUARY)
+					// Family Day (third Monday in February, since 2008)
+					|| ((d >= 15 && d <= 21) && w == MONDAY && m == FEBRUARY && y >= 2008)
+					// Good Friday
+					|| (dd == em - 3)
+					// Easter Monday Not listed as a closure day in Canada
+					//|| (dd == em)
+					// The Monday on or preceding 24 May (Victoria Day)
+					|| (d > 17 && d <= 24 && w == MONDAY && m == MAY)
+					// July 1st, possibly moved to Monday (Canada Day)
+					|| ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == JULY)
+					// first Monday of August (Provincial Holiday)
+					|| (d <= 7 && w == MONDAY && m == AUGUST)
+					// first Monday of September (Labor Day)
+					|| (d <= 7 && w == MONDAY && m == SEPTEMBER)
+					// second Monday of October (Thanksgiving Day)
+					|| (d > 7 && d <= 14 && w == MONDAY && m == OCTOBER)
+					// November 11th (possibly moved to Monday)
+					|| ((d == 11 || ((d == 12 || d == 13) && w == MONDAY)) && m == NOVEMBER)
+					// Christmas (possibly moved to Monday or Tuesday)
+					|| ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+					// Boxing Day (possibly moved to Monday or Tuesday)
+					|| ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
+				return false;
+			return true;
+		}
+	}
+	
+	private final class TsxCalendar extends WesternCalendar {
+	
+		public String getName() {
+			return "TSX";
+		}
+	
+		public boolean isBusinessDay(Date date) {
+			Weekday w = date.getWeekday();
+			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+			Month m = date.getMonthEnum();
+			int y = date.getYear();
+			int em = easterMonday(y);
+			if (isWeekend(w)
+			// New Year's Day (possibly moved to Monday)
+					|| ((d == 1 || (d == 2 && w == MONDAY)) && m == JANUARY)
+					// Family Day (third Monday in February, since 2008)
+					|| ((d >= 15 && d <= 21) && w == MONDAY && m == FEBRUARY && y >= 2008)
+					// Good Friday
+					|| (dd == em - 3)
+					// Easter Monday Not listed as a closure day in Canada
+					//|| (dd == em)
+					// The Monday on or preceding 24 May (Victoria Day)
+					|| (d > 17 && d <= 24 && w == MONDAY && m == MAY)
+					// July 1st, possibly moved to Monday (Canada Day)
+					|| ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == JULY)
+					// first Monday of August (Provincial Holiday)
+					|| (d <= 7 && w == MONDAY && m == AUGUST)
+					// first Monday of September (Labor Day)
+					|| (d <= 7 && w == MONDAY && m == SEPTEMBER)
+					// second Monday of October (Thanksgiving Day)
+					|| (d > 7 && d <= 14 && w == MONDAY && m == OCTOBER)
+					// Christmas (possibly moved to Monday or Tuesday)
+					|| ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+					// Boxing Day (possibly moved to Monday or Tuesday)
+					|| ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
+				return false;
+			return true;
+		}
 	}
 
-	public boolean isBusinessDay(Date date) {
-		Weekday w = date.getWeekday();
-		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-		Month m = date.getMonthEnum();
-		int y = date.getYear();
-		int em = easterMonday(y);
-		if (isWeekend(w)
-		// New Year's Day (possibly moved to Monday)
-				|| ((d == 1 || (d == 2 && w == MONDAY)) && m == JANUARY)
-				// Family Day (third Monday in February, since 2008)
-				|| ((d >= 15 && d <= 21) && w == MONDAY && m == FEBRUARY && y >= 2008)
-				// Good Friday
-				|| (dd == em - 3)
-				// Easter Monday Not listed as a closure day in Canada
-				//|| (dd == em)
-				// The Monday on or preceding 24 May (Victoria Day)
-				|| (d > 17 && d <= 24 && w == MONDAY && m == MAY)
-				// July 1st, possibly moved to Monday (Canada Day)
-				|| ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == JULY)
-				// first Monday of August (Provincial Holiday)
-				|| (d <= 7 && w == MONDAY && m == AUGUST)
-				// first Monday of September (Labor Day)
-				|| (d <= 7 && w == MONDAY && m == SEPTEMBER)
-				// second Monday of October (Thanksgiving Day)
-				|| (d > 7 && d <= 14 && w == MONDAY && m == OCTOBER)
-				// Christmas (possibly moved to Monday or Tuesday)
-				|| ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
-				// Boxing Day (possibly moved to Monday or Tuesday)
-				|| ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
-			return false;
-		return true;
-	}
 }

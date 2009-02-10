@@ -116,7 +116,7 @@ public class Poland extends DelegateCalendar {
 	//
 
 	//FIXME: Reliable years: 2007, 2008, 2009
-	final private class PolandSettlementCalendar extends WesternCalendar {
+	private final class PolandSettlementCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Poland settlement";

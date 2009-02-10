@@ -56,6 +56,7 @@ import org.jquantlib.util.Month;
  */
 //TEST the correctness of the returned results is tested against a list of known holidays.
 public class Target extends DelegateCalendar {
+	
 	private final static Target TARGET_CALENDAR = new Target();
 
 	private Target() {

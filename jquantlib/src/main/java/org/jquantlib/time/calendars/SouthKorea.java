@@ -22,22 +22,20 @@
 package org.jquantlib.time.calendars;
 
 import static org.jquantlib.util.Month.APRIL;
+import static org.jquantlib.util.Month.AUGUST;
+import static org.jquantlib.util.Month.DECEMBER;
 import static org.jquantlib.util.Month.FEBRUARY;
 import static org.jquantlib.util.Month.JANUARY;
+import static org.jquantlib.util.Month.JULY;
 import static org.jquantlib.util.Month.JUNE;
+import static org.jquantlib.util.Month.MARCH;
 import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
-import static org.jquantlib.util.Month.DECEMBER;
-import static org.jquantlib.util.Month.MARCH;
-import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.JULY;
 
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
-import org.jquantlib.time.calendars.Taiwan.Market;
-import org.jquantlib.time.calendars.Taiwan.TaiwanTSECalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 
@@ -70,11 +68,7 @@ import org.jquantlib.util.Month;
  * 
  */
 public class SouthKorea extends DelegateCalendar {
-    public enum Market {
-        KRX
-        // Korea Exchange
-    }
-
+	
     private final static SouthKorea KRX_Calendar = new SouthKorea(Market.KRX);
 
     private SouthKorea(Market market) {
@@ -98,7 +92,25 @@ public class SouthKorea extends DelegateCalendar {
         }
     }
 
-    final class SouthKoreaKRXCalendar extends WesternCalendar {
+    
+    //
+    // public enums
+    //
+    
+	//FIXME: Settlement calendar is missing
+    public enum Market {
+    	/**
+    	 * Korea Exchange
+    	 */
+        KRX
+    }
+
+
+    //
+    // private inner classes
+    //
+    
+    private final class SouthKoreaKRXCalendar extends WesternCalendar {
         public String getName() {
             return "Korea exchange";
         }

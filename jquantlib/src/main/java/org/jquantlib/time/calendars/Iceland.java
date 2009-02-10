@@ -62,7 +62,10 @@ public class Iceland extends DelegateCalendar {
 	//
 	
 	public enum Market {
-		ICEX, // Iceland Stock Exchange 
+		/**
+		 * Iceland Stock Exchange 
+		 */
+		ICEX 
 	}
 
 	
@@ -70,7 +73,7 @@ public class Iceland extends DelegateCalendar {
 	// private inner classes
 	//
 
-	final private class IcelandICEXCalendar extends WesternCalendar {
+	private final class IcelandICEXCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "ICEX";

@@ -78,7 +78,7 @@ public class SwitzerlandCalendarTest {
 		
 		logger.info("\n\n=== Switzerland Settlement Calendar ===");
 		
-		Market market = Switzerland.Market.SETTLEMENT;
+		Market market = Switzerland.Market.Settlement;
 		
 		Calendar c = Switzerland.getCalendar(market);		
 		
@@ -129,7 +129,7 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(20,MAY,year));
     	expectedHol.add(DateFactory.getFactory().getDate(31,MAY,year));
     	
-    	if(market == Switzerland.Market.SETTLEMENT)
+    	if(market == Switzerland.Market.Settlement)
     	{
 	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year)); 
 	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
@@ -200,7 +200,7 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
     	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
     	
-    	if(market == Switzerland.Market.SETTLEMENT)
+    	if(market == Switzerland.Market.Settlement)
     	{
 	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year)); 
 	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
@@ -228,7 +228,7 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
     	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
     	
-    	if(market == Switzerland.Market.SETTLEMENT)
+    	if(market == Switzerland.Market.Settlement)
     	{
 	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year)); 
 	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
@@ -257,7 +257,7 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
     	// expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,year)); --> Saturday
     	
-    	if(market == Switzerland.Market.SETTLEMENT)
+    	if(market == Switzerland.Market.Settlement)
     	{
 	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year)); 
 	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
@@ -281,7 +281,7 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(13,MAY,year)); 
     	expectedHol.add(DateFactory.getFactory().getDate(24,MAY,year));
     	
-    	if(market == Switzerland.Market.SETTLEMENT)
+    	if(market == Switzerland.Market.Settlement)
     	{
 	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year)); 
 	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
@@ -328,7 +328,7 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
     	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year)); 
     	
-    	if(market == Switzerland.Market.SETTLEMENT)
+    	if(market == Switzerland.Market.Settlement)
     	{
 	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year)); 
 	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
