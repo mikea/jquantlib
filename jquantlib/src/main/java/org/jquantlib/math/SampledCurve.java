@@ -132,6 +132,21 @@ public class SampledCurve {
         double val;
         double grid;
         
+
+        
+        // NOTE: Use Closeness.isClose [Richard]
+        /**
+		 * [H D FE] Test for floating point equality
+		 * 
+		 * [FE_FLOATING_POINT_EQUALITY] This operation compares two floating
+		 * point values for equality. Because floating point calculations may
+		 * involve rounding, calculated float and double values may not be
+		 * accurate. For values that must be precise, such as monetary values,
+		 * consider using a fixed-precision type such as BigDecimal. For values
+		 * that need not be precise, consider comparing for equality within some
+		 * range, for example: if ( Math.abs(x - y) < .0000001 ). See the Java
+		 * Language Specification, section 4.2.4.
+		 */
         for (val = newValues.at(0), grid = new_grid.at(0);
              grid != new_grid.at(new_grid.size()-1);
              val++, grid++) {

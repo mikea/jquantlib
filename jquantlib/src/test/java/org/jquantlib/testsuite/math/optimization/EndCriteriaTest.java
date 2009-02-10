@@ -323,7 +323,7 @@ public class EndCriteriaTest {
 		
 	}
 	
-	public boolean IsArrayEqual(Array one,Array two,double precision){
+	public boolean isArrayEqual(Array one,Array two,double precision){
 		Array diffArray = one.operatorSubtractCopy(two);
 		System.out.println("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
 		return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );

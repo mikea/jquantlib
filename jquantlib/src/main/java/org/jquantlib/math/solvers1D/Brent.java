@@ -23,6 +23,7 @@
 package org.jquantlib.math.solvers1D;
 
 import org.jquantlib.math.AbstractSolver1D;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 
@@ -77,7 +78,8 @@ public class Brent extends AbstractSolver1D<UnaryFunctionDouble> {
 
                 // Attempt inverse quadratic interpolation
                 s=froot/fxMin_;
-                if (xMin_ == xMax_) {
+
+                if (Closeness.isClose(xMin_, xMax_)) {
                     p=2.0*xMid*s;
                     q=1.0-s;
                 } else {

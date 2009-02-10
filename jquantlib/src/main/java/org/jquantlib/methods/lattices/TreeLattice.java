@@ -95,22 +95,21 @@ public abstract class TreeLattice extends Lattice {
 	        asset.adjustValues();
 	    }
 
-	    public void partialRollback(DiscretizedAsset asset,
-	                                            double to)  {
+	    public void partialRollback(DiscretizedAsset asset, double to)  {
 
 	        double from = asset.time();
 
 	        if (Closeness.isClose(from,to))
 	            return;
 
-	        if(from <= to)
+	        if (from <= to)
 	                throw new RuntimeException("cannot roll the asset back to " + to
 	                   + " (it is already at t = " + from + ")");
 
-	        Integer iFrom = t.index(from);
-	        Integer iTo = t.index(to);
+	        int iFrom = t.index(from);
+	        int iTo = t.index(to);
 
-	        for (Integer i=iFrom-1; i>=iTo; --i) {
+	        for (int i=iFrom-1; i>=iTo; --i) {
 	            Array newValues = new Array(size(i));
 	            stepback(i, asset.values(), newValues);
 	            asset.setTime(t.get(i));

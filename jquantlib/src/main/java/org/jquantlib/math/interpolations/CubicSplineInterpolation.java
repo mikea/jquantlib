@@ -43,6 +43,7 @@ package org.jquantlib.math.interpolations;
 import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 
 import org.jquantlib.math.Array;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
 import org.slf4j.Logger;
@@ -246,7 +247,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
                     } else {
                         correction = 0.0;
                     }
-                    if (correction!=tmp.get(i)) {
+                    if (!Closeness.isClose(correction, tmp.get(i))) {
                         tmp.set(i, correction);
                         monotone = true;
                     }

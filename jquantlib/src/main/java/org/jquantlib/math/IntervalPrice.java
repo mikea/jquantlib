@@ -85,7 +85,7 @@ public class IntervalPrice implements Serializable {
 	//
 	
 	public /*@Real*/ double open() /*@ReadOnly*/ {
-        return this.open();
+        return this.open;
     }
 
 	public /*@Real*/ double close() /*@ReadOnly*/ {

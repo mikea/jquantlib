@@ -46,6 +46,7 @@ package org.jquantlib.pricingengines;
 
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.Derivative;
 import org.jquantlib.math.solvers1D.NewtonSafe;
@@ -281,7 +282,7 @@ public class BlackFormula {
 		double stdDev;
 		forward = forward + displacement;
 		strike = strike + displacement;
-		if (strike == forward)
+		if (Closeness.isClose(strike, forward))
 			// Brenner-Subrahmanyan (1988) and Feinstein (1988) ATM approx.
 			stdDev = blackPrice / discount * Math.sqrt(2.0 * Math.PI) / forward;
 		else {
@@ -468,8 +469,7 @@ public class BlackFormula {
 
 		strike = strike + displacement;
 		forward = forward + displacement;
-		if (guess == Double.NaN)// if (guess== Null<Real>) //TODO: IS THIS THE
-			// CORRECT WAY
+		if (Double.isNaN(guess))
 			guess = blackFormulaImpliedStdDevApproximation(optionType, strike,
 					forward, blackPrice, discount, displacement);
 		else if (guess < 0.0)
@@ -824,7 +824,9 @@ public class BlackFormula {
 			final Option.Type optionType, final double /* @Price */strike,
 			double /* @Price */forward, final double /* @StdDev */stdDev,
 			final double /* @DiscountFactor */discount) {
-		return bachelierBlackFormula(optionType, strike, forward, stdDev, 0.0);
+		// TODO : complete
+		throw new UnsupportedOperationException();
+		// FIXME:  ???? return bachelierBlackFormula(optionType, strike, forward, stdDev, 0.0);
 
 	}
 

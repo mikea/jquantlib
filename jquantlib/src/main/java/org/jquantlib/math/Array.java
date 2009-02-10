@@ -39,6 +39,8 @@
 
 package org.jquantlib.math;
 
+import java.util.Arrays;
+
 import org.jquantlib.util.stdlibc.DoubleForwardIterator;
 import org.jquantlib.util.stdlibc.DoubleReference;
 import org.jquantlib.util.stdlibc.DoubleReverseIterator;
@@ -124,7 +126,7 @@ public class Array {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append(data.toString());
+        sb.append(Arrays.toString(data));
         return sb.toString();
     }
 

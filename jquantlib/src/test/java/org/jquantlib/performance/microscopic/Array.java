@@ -25,10 +25,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.performance.PerformanceResults;
 import org.jquantlib.performance.PerformanceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -106,6 +106,7 @@ public class Array implements PerformanceTest {
 		if(localLists == null){
 			//  Throw Exception.
 			logger.error("***** TEST FAILED ***** ... for size: " +size);
+			throw new NullPointerException();
 		}
 
 		Iterator iter =localLists.iterator();
