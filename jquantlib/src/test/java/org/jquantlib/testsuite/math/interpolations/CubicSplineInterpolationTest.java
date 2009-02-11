@@ -106,9 +106,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	    }
 		
 	}
-	
-	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	//@Ignore("Not Ready to Run")
+
 	@Test
 	public void testNotAKnotSplineOnGaussianValues(){
 
@@ -151,8 +149,6 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	    }
 	}
 	
-	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	//@Ignore("Not Ready to Run")
 	@Test
 	public void testClampedSplineOnRPN15AValues(){
 		
@@ -187,8 +183,6 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		
 	}
 	
-	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	//@Ignore("Not Ready to Run")
 	@Test
 	public void testNotAKnotSplineOnRPN15AValues(){
 		
@@ -243,9 +237,8 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
                         +"\n error:              "+error,
        					abs(error) > 3e-16);
 	    }
-		
-		//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-//	    x35[1] = interpolation.evaluate(3.5);
+ 
+	    x35[1] = interpolation.evaluate(3.5);
 	}
 	
 	@Test
@@ -262,9 +255,8 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		checkValues("Clamped spline", interpolation, generic_x, generic_y);
 		check1stDerivativeValue("Clamped spline", interpolation, generic_x[0],0.0);
 		check1stDerivativeValue("Clamped spline", interpolation, generic_x[generic_x.length-1],0.0);
-			
-		//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-//	    x35[0] = interpolation.evaluate(3.5);
+
+	    x35[0] = interpolation.evaluate(3.5);
 	}
 	
 	@Test
@@ -279,20 +271,17 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		
 		checkValues("Not-a-knot spline", interpolation, generic_x, generic_y);
 		checkNotAKnotCondition("Not-a-knot spline", interpolation);
-		
-		//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-//	    x35[2] = interpolation.evaluate(3.5);
-//		assertFalse("Spline interpolation failure"
-//					+"\n at x = "+3.5
-//					+"\n clamped spline    "+x35[0]
-//					+"\n natural spline    "+x35[1]
-//					+"\n not-a-knot spline "+x35[2]
-//					+"\n values should be in increasing order",
-//					x35[0]>x35[1] || x35[1]>x35[2]);
+
+	    x35[2] = interpolation.evaluate(3.5);
+		assertFalse("Spline interpolation failure"
+					+"\n at x = "+3.5
+					+"\n clamped spline    "+x35[0]
+					+"\n natural spline    "+x35[1]
+					+"\n not-a-knot spline "+x35[2]
+					+"\n values should be in increasing order",
+					x35[0]>x35[1] || x35[1]>x35[2]);
 	}
 	
-	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	//@Ignore("Not Ready to Run")
 	@Test
 	public void testNotAKnotSimmetricEndConditions(){
 		int n = 9;
@@ -316,8 +305,6 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	    
 	}
 	
-	//TODO: check the test failure. 
-	//@Ignore("interpolation second derivative failure")
 	@Test
 	public void testNotAKnotSpineOnDerivativeEndConditions(){
 		int n = 4;
@@ -344,8 +331,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 //	    check2ndDerivativeValue("Not-a-knot spline", interpolation, x[n-1], -2.0);
 
 	}
-	
-	//TODO: check the test failure. 
+
 	@Test
 	public void testClampedSpineOnDerivativeEndConditions(){
 		int n = 4;
@@ -370,8 +356,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		check2ndDerivativeValue("Clamped spline", interpolation, x[n-1], -2.0);
 		
 	}
-	
-	//TODO: check the test failure. 
+
 	@Test
 	public void testSecondDerivativeOnDerivativeEndConditions(){
 		int n = 4;

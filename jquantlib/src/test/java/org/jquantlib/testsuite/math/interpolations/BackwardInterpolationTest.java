@@ -74,9 +74,6 @@ public class BackwardInterpolationTest {
 		}
 	}
 	
-	
-	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	//@Ignore("Not Ready to Run")
 	@Test
 	public void checkAtMiddlePoints(){
 		for(int i=0; i<length-1; i++){
@@ -136,8 +133,6 @@ public class BackwardInterpolationTest {
 		}
 	}
 	
-	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	//@Ignore("Not Ready to Run")
 	@Test
 	public void checkPrimitiveAtMiddlePoints(){
 		double sum = 0.0;

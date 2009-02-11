@@ -27,8 +27,6 @@ import static org.junit.Assert.assertFalse;
 
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.factories.ForwardFlat;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,8 +67,6 @@ public class FlatForwardInterpolationTest  {
 		}
 	}
 	
-	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	//@Ignore("Not Ready to Run")
 	@Test
 	public void checkAtMiddlePoints(){
 		for(int i=0; i<length-1; i++){
@@ -130,8 +126,6 @@ public class FlatForwardInterpolationTest  {
 		}
 	}
 	
-	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	//@Ignore("Not Ready to Run")
 	@Test
 	public void checkPrimitiveAtMiddlePoints(){
 		double sum = 0.0;

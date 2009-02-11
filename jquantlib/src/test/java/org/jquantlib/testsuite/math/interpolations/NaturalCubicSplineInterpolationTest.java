@@ -43,10 +43,7 @@ public class NaturalCubicSplineInterpolationTest extends InterpolationTestBase {
 	public NaturalCubicSplineInterpolationTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
 
-	//TODO: check the locate() method in AbstractInterpolation which leads to java.lang.ArrayIndexOutOfBoundsException. 
-	//@Ignore("Not Ready to Run")
 	@Test
 	public void testNaturalSplineOnRPN15AValues(){
 		
@@ -75,6 +72,5 @@ public class NaturalCubicSplineInterpolationTest extends InterpolationTestBase {
 				interpolated<1.0);
 
 	}
-	
-	
+
 }
