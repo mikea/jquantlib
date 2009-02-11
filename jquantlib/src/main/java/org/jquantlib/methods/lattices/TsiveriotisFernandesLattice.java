@@ -99,10 +99,10 @@ public class TsiveriotisFernandesLattice<T extends Tree> extends
 
 		DiscretizedConvertible convertible = (DiscretizedConvertible) (asset);
 		
-		Integer iFrom = t.index(from);
-		Integer iTo = t.index(to);
+		int iFrom = t.index(from);
+		int iTo = t.index(to);
 
-		for (Integer i = iFrom - 1; i >= iTo; --i) {
+		for (int i = iFrom - 1; i >= iTo; --i) {
 
 			Array newValues = new Array(size(i));
 			Array newSpreadAdjustedRate = new Array(size(i));

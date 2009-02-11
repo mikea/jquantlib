@@ -354,7 +354,7 @@ public class TimeGrid {
         }
         
         public double end() /*@Readonly*/ {
-        	return times_.lastIndexOf(mandatoryTimes_); 
+        	return times_.get(times_.size()-1); 
         }
 
         public DoubleForwardIterator forwardIterator() /*@Readonly*/ { 

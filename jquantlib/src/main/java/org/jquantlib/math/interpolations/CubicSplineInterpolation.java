@@ -257,7 +257,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
                     } else {
                         correction = 0.0;
                     }
-                    if (correction!=tmp.get(i)) {
+                    if (!Closeness.isClose(correction, tmp.get(i))) {
                         tmp.set(i, correction);
                         monotone = true;
                     }

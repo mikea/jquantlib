@@ -22,9 +22,11 @@
 
 package org.jquantlib.testsuite.math.optimization;
 import static org.junit.Assert.fail;
+
 import org.jquantlib.math.Array;
-import org.jquantlib.math.optimization.EndCriteria;
 import org.jquantlib.math.Closeness;
+import org.jquantlib.math.optimization.EndCriteria;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +46,7 @@ public class EndCriteriaTest {
 		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
+	@Ignore("End Criteria needs code review")
 	@Test
     public void testEndCriteria() {
 
@@ -69,6 +72,11 @@ public class EndCriteriaTest {
 		testCheckStationaryFunctionAccuracy(ec);
 		testCheckZeroGradientNorm(ec);
     }
+
+	
+	
+	@Ignore("End Criteria needs code review")
+	@Test
 	//maxIterations = 100
 	//iteration >= maxIterations_
 	public void testCheckMaxIterations(EndCriteria ec){
@@ -102,6 +110,10 @@ public class EndCriteriaTest {
 		}
 		logger.info("testCheckMaxIterations -- SUCCESS : Case iteration  < maxIterations_");
 	}
+	
+	
+	@Ignore("End Criteria needs code review")
+	@Test
 	//maxStationaryStateIterations = 30
 	//rootEpsilon = 0.05
 	//Math.abs( xNew-xOld) < rootEpsilon_ 
@@ -171,6 +183,11 @@ public class EndCriteriaTest {
 		}
 	    logger.info("testCheckStationaryPoint -- SUCCESS : Math.abs( xNew-xOld) >= rootEpsilon_  ;statStateIterations > maxStationaryStateIterations_   return FALSE");	
     }
+	
+	
+	
+	@Ignore("End Criteria needs code review")
+	@Test
     //maxStationaryStateIterations_ = 30
 	//functionEpsilon = 0.08			
 	public void testCheckStationaryFunctionValue(EndCriteria ec) {
@@ -241,6 +258,11 @@ public class EndCriteriaTest {
 		}
 		logger.info("testCheckStationaryFunctionValue -- SUCCESS : Math.abs(fxNew-fxOld) >= functionEpsilon_ ;statStateIterations <= maxStationaryStateIterations_   return FALSE");	
 	}
+	
+	
+	
+	@Ignore("End Criteria needs code review")
+	@Test
 	//functionEpsilon_ = 0.08
 	public void testCheckStationaryFunctionAccuracy(EndCriteria ec) {
 	
@@ -290,6 +312,9 @@ public class EndCriteriaTest {
 		logger.info("testCheckStationaryFunctionAccuracy -- SUCCESS : positiveOptimization=false ;0.07 < functionEpsilon_   return FALSE");	
 	}
 	
+
+	@Ignore("End Criteria needs code review")
+	@Test
 	//gradientNormEpsilon = 0.2
 	public void testCheckZeroGradientNorm(EndCriteria ec) {
 	
@@ -323,7 +348,7 @@ public class EndCriteriaTest {
 		
 	}
 	
-	public boolean isArrayEqual(Array one,Array two,double precision){
+	private boolean isArrayEqual(Array one,Array two,double precision){
 		Array diffArray = one.operatorSubtractCopy(two);
 		System.out.println("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
 		return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );
