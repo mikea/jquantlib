@@ -71,11 +71,14 @@ public class MixedScheme<T extends Operator> {
                 bcs.get(i).applyAfterSolving(a);
         }
     }
+    /*
+     * work in progress!!!!!
+     */
 
     public void setStep(/* Time */double dt) {
         this.dt = dt;
         if (theta != 1.0) // there is an explicit part
-            explicitPart = null;// I_ - ((1.0 - theta_) * dt_) * L_;
+            explicitPart = null;//I - ((1.0 - theta) * dt) * L;
         if (theta != 0.0) // there is an implicit part
             implicitPart = null;// I_ + (theta_ * dt_) * L_;
     }
