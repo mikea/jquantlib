@@ -37,13 +37,15 @@ import org.jquantlib.math.functions.DoubleFunction;
  * @author Srinivas Hasti
  */
 
-public class Std {
+public final class Std {
 
 	//
-	// static public methods ::: several std methods
+	// static public methods
 	//
+
 	/**
 	 * Java implementation of std::adjacent_difference
+	 * <p>
 	 * @param inputList
 	 * @param begin
 	 * @param diffList
@@ -52,6 +54,7 @@ public class Std {
 	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__numeric_8h-source.html#l00268">Source code: std::adjacent_difference</a> 
 	 *
 	 */
+	// FIXME: this method needs code review
 	static public List<Double> adjacent_difference(List<Double> inputList,
 			int begin, List<Double> diffList) {
 		for (int i = begin; i < inputList.size(); i++) {
@@ -66,6 +69,66 @@ public class Std {
 		return diffList;
 	}
 
+
+	public static void apply(final Array array, final DoubleFunction f) {
+		apply(array, 0, array.size(), f);
+	}
+
+	public static void apply(final Array array, final int startIndex, final int endIndex, final DoubleFunction f) {
+		for(int i=0; i<array.size(); i++){
+        	array.set(i, f.apply(array.at(i)));
+        }
+	}
+
+	
+	/**
+	 * Java implementation of std::upper_bound
+	 * <p>
+	 * This method signature is specific for <i>int</i> values.
+	 * Other method signatures may be available for other types.
+	 * <p> 
+	 * The original function signature is
+	 * <pre>
+	 * template<typename _ForwardIterator, typename _Tp>
+     *  _ForwardIterator upper_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __val)
+	 * </pre>
+	 * <p>
+	 * In this implementation we provide as many as needed type-specific method signatures. In particular
+	 * we use an array intended to mimic the semantic of <i>elements located between __first and __last</i>.
+	 *  
+	 * @param list is an array of values which implicitly defines it's begin (zero) and end (it's own size)
+	 * @param val is the value to be located
+	 * @return see upper_bound doc
+	 * 
+	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__algo_8h-source.html#l02712">Source code: std::upper_bound</a> 
+	 */
+	public static int upper_bound(final double[] list, final double val) {
+		return upper_bound(list, 0, list.length-1, val);
+	}
+
+	private static int upper_bound(final double[] list, int first, int last, final double val) {
+		int len = last - first;
+		int half;
+		int middle;
+		
+		while (len > 0) {
+			half = len >>> 1;
+			middle = first;
+			middle = middle + half;
+			
+			if (val < list[middle]){
+				len = half;
+			} else {
+				first = middle;
+				first++;
+				len = len - half -1;
+			}
+		}
+		return first;
+	}
+
+	
+	
 	//
 	// static public methods ::: unmutable iterators
 	//
@@ -78,51 +141,45 @@ public class Std {
 		return new IntReverseIteratorImpl(list);
 	}
 
-	static public final DoubleForwardIterator forwardIterator(
-			final double[] list) {
+	static public final DoubleForwardIterator forwardIterator(final double[] list) {
 		return new DoubleForwardIteratorImpl(list);
 	}
 
-	static public final DoubleReverseIterator reverseIterator(
-			final double[] list) {
+	static public final DoubleReverseIterator reverseIterator(final double[] list) {
 		return new DoubleReverseIteratorImpl(list);
 	}
 
-	static public final ObjectForwardIterator forwardIterator(
-			final Object[] list) {
+	static public final ObjectForwardIterator forwardIterator(final Object[] list) {
 		return new ObjectForwardIteratorImpl(list);
 	}
 
+	
 	//
 	// static public methods ::: mutable iterators
 	//
 
-	static public final MutableIntForwardIterator mutableForwardIterator(
-			final int[] list) {
+	static public final MutableIntForwardIterator mutableForwardIterator(final int[] list) {
 		return new MutableIntForwardIteratorImpl(list);
 	}
 
-	static public final MutableIntReverseIterator mutableReverseIterator(
-			final int[] list) {
+	static public final MutableIntReverseIterator mutableReverseIterator(final int[] list) {
 		return new MutableIntReverseIteratorImpl(list);
 	}
 
-	static public final MutableDoubleForwardIterator mutableForwardIterator(
-			final double[] list) {
+	static public final MutableDoubleForwardIterator mutableForwardIterator(final double[] list) {
 		return new MutableDoubleForwardIteratorImpl(list);
 	}
 
-	static public final MutableDoubleReverseIterator mutableReverseIterator(
-			final double[] list) {
+	static public final MutableDoubleReverseIterator mutableReverseIterator(final double[] list) {
 		return new MutableDoubleReverseIteratorImpl(list);
 	}
 
+	
 	// 
 	// static private abstract inner classes
 	//
 
-	static private abstract class ForwardIteratorImpl implements
-			ForwardIterator {
+	static private abstract class ForwardIteratorImpl implements ForwardIterator {
 		private final int size;
 		protected int index;
 
@@ -142,11 +199,9 @@ public class Std {
 			index += jump;
 			return jump;
 		}
-
 	}
 
-	static private abstract class ReverseIteratorImpl implements
-			ReverseIterator {
+	static private abstract class ReverseIteratorImpl implements ReverseIterator {
 		protected int index;
 
 		protected ReverseIteratorImpl(final int size) {
@@ -164,15 +219,16 @@ public class Std {
 			index -= jump;
 			return jump;
 		}
-
 	}
 
+	
 	// 
-	// static private inner classes ::: These classes implement unmutable
-	// iterators
+	// static private inner classes
+	//
+	// These classes implement unmutable iterators
 	//
 
-	static private class IntForwardIteratorImpl extends ForwardIteratorImpl
+	static private class IntForwardIteratorImpl extends ForwardIteratorImpl 
 			implements IntForwardIterator {
 
 		protected int[] list;
@@ -188,7 +244,6 @@ public class Std {
 				return list[index++];
 			throw new NoSuchElementException();
 		}
-
 	}
 
 	static private class IntReverseIteratorImpl extends ReverseIteratorImpl
@@ -207,7 +262,6 @@ public class Std {
 				return list[index++];
 			throw new NoSuchElementException();
 		}
-
 	}
 
 	static private class DoubleForwardIteratorImpl extends ForwardIteratorImpl
@@ -267,12 +321,14 @@ public class Std {
 
 	}
 
+	
 	// 
-	// static private inner classes ::: These classes implement mutable
-	// iterators
+	// static private inner classes
+	//
+	// These classes implement mutable iterators
 	//
 
-	static private class MutableIntForwardIteratorImpl extends
+	static private class MutableIntForwardIteratorImpl extends 
 			IntForwardIteratorImpl implements MutableIntForwardIterator {
 
 		public MutableIntForwardIteratorImpl(final int[] list) {
@@ -326,48 +382,6 @@ public class Std {
 				throws NoSuchElementException {
 			return new DoubleReference(list, index);
 		}
-	}
-
-	public static void apply(Array array, DoubleFunction f) {
-		apply(array,0,array.size(),f);
-	}
-
-	public static void apply(Array array, int startIndex, int endIndex,
-			DoubleFunction f) {
-		for(int i=0;i<array.size();i++){
-        	array.set(i, f.apply(array.at(i)));
-        }
-	}
-
-	/**
-	 * Java implementation of std::upper_bound
-	 * @param list
-	 * @param fromIndex
-	 * @param toIndex
-	 * @param val
-	 * @return see upper_bound doc
-	 * 
-	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__algo_8h-source.html#l02712">Source code: std::upper_bound</a> 
-	 */
-	public static int upper_bound(final double[] list, int first, final int last, final double val) {
-		int len = last - first;
-		int half;
-		int middle;
-		
-		while (len > 0) {
-			half = len >>> 1;
-			middle = first;
-			middle = middle + half;
-			
-			if (val < list[middle]){
-				len = half;
-			} else {
-				first = middle;
-				first++;
-				len = len - half -1;
-			}
-		}
-		return first;
 	}
 
 }

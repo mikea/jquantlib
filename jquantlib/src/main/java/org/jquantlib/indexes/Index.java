@@ -102,17 +102,17 @@ public abstract class Index implements Observable {
 	 * fixings; no settlement days must be used.
 	 */
 	public void addFixings(final Date[] dates, final double[] values, boolean forceOverwrite) {
-		String tag = getName();
-		TimeSeriesDouble h = IndexManager.getInstance().get(tag);
+		final String tag = getName();
+		final TimeSeriesDouble h = IndexManager.getInstance().get(tag);
 		boolean missingFixing;
 		boolean validFixing;
 		boolean noInvalidFixing = true;
 		boolean noDuplicatedFixing = true;
 		Date invalidDate = null;
 		Date duplicatedDate = null;
-		Double nullValue = null;
-		Double invalidValue = Double.NaN;
-		Double duplicatedValue = Double.NaN;
+		final Double nullValue = null;
+		double invalidValue = Double.NaN;
+		double duplicatedValue = Double.NaN;
 
 		for (int i=0; i<dates.length; i++) {
 		    Date date = dates[i];

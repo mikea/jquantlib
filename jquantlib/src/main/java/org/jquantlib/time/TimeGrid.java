@@ -131,7 +131,10 @@ public class TimeGrid {
     	// :::::::::::::::  http://www.sgi.com/tech/stl/adjacent_difference.html :::::::::::::::::::
         // std::adjacent_difference(times_.begin()+1,times_.end(), std::back_inserter(dt_));
     	
-    	dt_ = Std.adjacent_difference(times_, times_.indexOf(begin())+1, dt_);
+    	// FIXME: needs code review         	
+    	//dt_ = Std.adjacent_difference(times_, times_.indexOf(begin())+1, dt_);
+    	
+    	
         // The line above replaces the code commented out below:
 //    	for (int i=1; i<times_.size(); i++) {
 //    		double curr = times_.get(i);
@@ -144,6 +147,9 @@ public class TimeGrid {
 //    		}
 //    	}
 
+
+        throw new UnsupportedOperationException("needs to be completed");
+        
     } // end of constructor
 
 
@@ -189,8 +195,13 @@ public class TimeGrid {
 //          } else {
 //          dtMax = last/steps;
 //      }
+
+
         	
-        	diff = Std.adjacent_difference(mandatoryTimes_, mandatoryTimes_.indexOf(begin()), diff);
+        	// FIXME: needs code review         	
+        	// diff = Std.adjacent_difference(mandatoryTimes_, mandatoryTimes_.indexOf(begin()), diff);
+        	
+        	
         	// The line above replaces the code commented out below:	
 //        	for (int i=0; i<mandatoryTimes_.size(); i++) {
 //        		double curr = mandatoryTimes_.get(i);
@@ -236,7 +247,10 @@ public class TimeGrid {
 //	    std::adjacent_difference(times_.begin()+1,times_.end(),
 //      std::back_inserter(dt_));
         
-        dt_ = Std.adjacent_difference(times_, times_.indexOf(begin())+1, dt_);
+    	// FIXME: needs code review         	
+        //dt_ = Std.adjacent_difference(times_, times_.indexOf(begin())+1, dt_);
+        
+        
         // The line above replaces the code commented out below:
 //        for (int i=1; i<mandatoryTimes_.size(); i++) {
 //        	double curr = times_.get(i);
@@ -248,6 +262,9 @@ public class TimeGrid {
 //          		dt_.add(curr-prev);
 //          	}
 //         }
+
+    throw new UnsupportedOperationException("needs to be completed");
+    
     } // end of constructor
     
 

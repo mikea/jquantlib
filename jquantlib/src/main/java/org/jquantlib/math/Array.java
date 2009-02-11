@@ -67,8 +67,8 @@ public class Array {
     //
     
     private double[] data;
-    private int size;
 
+    
     //  
     // public constructors
     //
@@ -78,14 +78,13 @@ public class Array {
     }
 
     
-    public Array(int s) {
-        this.data = new double[s];
-        this.size = s;
+    public Array(final int size) {
+        this.data = new double[size];
     }
 
-    public Array(int s, double value) {
-        this(s);
-        for (int i = 0; i < s; ++i) {
+    public Array(final int size, final double value) {
+        this(size);
+        for (int i = 0; i < size; ++i) {
             data[i] = value;
         }
     }
@@ -102,8 +101,8 @@ public class Array {
     /**
      * Creates the array and fills it according to \f$ a_{0} = value, a_{i}=a_{i-1}+increment \f$
      */
-    public Array(int s, double value, double increment) {
-        this(s);
+    public Array(int size, double value, double increment) {
+        this(size);
 		
 		if (size > 0) {
 			data[0]=value;
@@ -115,7 +114,6 @@ public class Array {
 
     public Array(double[] d) {
         this.data = d;
-        this.size = d.length;
     }
 
     //
@@ -256,7 +254,7 @@ public class Array {
     }
 
     public boolean empty() /* @ReadOnly */{
-        return size == 0;
+        return (data.length == 0);
     }
 
     public int size() /* @ReadOnly */ {
@@ -388,7 +386,7 @@ public class Array {
     }
 
     public double back() {
-        return get(size);
+        return get(data.length-1);
     }
 
     //
@@ -411,8 +409,8 @@ public class Array {
     }
 
     public DoubleReference backReference() {
-        validateData(size);
-        return new DoubleReference(data, size);
+        validateData(data.length-1);
+        return new DoubleReference(data, data.length-1);
     }
 
     
@@ -653,8 +651,8 @@ public class Array {
 
     private static void quickSwap(final Array vectorA, final Array vectorB) {
         double[] swapArray = new double[vectorA.data.length];
-        System.arraycopy(vectorA.data, 0, swapArray, 0, vectorA.size);
-        System.arraycopy(vectorB.data, 0, vectorA.data, 0, vectorB.size);
+        System.arraycopy(vectorA.data, 0, swapArray, 0, vectorA.data.length);
+        System.arraycopy(vectorB.data, 0, vectorA.data, 0, vectorB.data.length);
         System.arraycopy(swapArray, 0, vectorB.data, 0, swapArray.length);
     }
 

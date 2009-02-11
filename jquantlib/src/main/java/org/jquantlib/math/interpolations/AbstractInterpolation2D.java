@@ -150,7 +150,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         else if (x > vx[vx.length-1])
             return vx.length-2;
         else
-            return Std.upper_bound(vx, 0, vx.length-1, x) - 1;//Sorting.binarySearchFromTo(vx, x, 0, vx.length-1)-1;
+            return Std.upper_bound(vx, x) - 1;
     }
     
     @Override
@@ -161,7 +161,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         else if (y > vy[vy.length-1])
             return vy.length-2;
         else
-            return Std.upper_bound(vy, 0, vy.length-1, y) - 1;//Sorting.binarySearchFromTo(vy, y, 0, vy.length-1)-1;
+            return Std.upper_bound(vy, y) - 1;
     }
     
     @Override

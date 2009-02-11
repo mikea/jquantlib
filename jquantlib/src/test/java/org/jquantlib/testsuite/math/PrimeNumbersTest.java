@@ -23,18 +23,18 @@
 
 package org.jquantlib.testsuite.math;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jquantlib.math.PrimeNumbers;
-import org.jquantlib.testsuite.lang.TypeTokenTest;
-
 import static org.junit.Assert.fail;
 
+import org.jquantlib.math.PrimeNumbers;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <Q. Boiler>
  */
+// FIXME: move performance tests to a separate project
 public class PrimeNumbersTest {
 
     private final static Logger logger = LoggerFactory.getLogger(PrimeNumbersTest.class);
@@ -43,6 +43,7 @@ public class PrimeNumbersTest {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
+	@Ignore("Move performance tests to a separate project")
 	@Test
 	public void testPrefetchOneMillion() {
 		
