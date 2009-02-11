@@ -47,9 +47,11 @@ import org.jquantlib.math.Array;
  */
 
 
-public class Grid {
+final class Grid {
 	
-	Array CenteredGrid(double center, double dx, int steps) {
+	private Grid(){}
+	
+    final static Array CenteredGrid(double center, double dx, int steps) {
 		Array result = new Array(steps+1);
 		
 		for (int i=0; i<steps+1; i++)
@@ -60,7 +62,7 @@ public class Grid {
 	
 	
 	
-	Array BoundedGrid(double xMin, double xMax, int steps) {
+	final static Array BoundedGrid(double xMin, double xMax, int steps) {
 		Array result = new Array(steps+1);
 		
 		double x=xMin, dx=(xMax-xMin)/steps;
@@ -70,8 +72,7 @@ public class Grid {
 		return result;
 	}
 	
-	// FIXME: Should this method be static?
-	Array BoundedLogGrid(double xMin, double xMax, int steps) {
+   final static Array BoundedLogGrid(double xMin, double xMax, int steps) {
 		Array result = new Array(steps+1);
 		double gridLogSpacing = (Math.log(xMax) - Math.log(xMin)) / (steps);
 		double edx = Math.exp(gridLogSpacing);
@@ -79,8 +80,7 @@ public class Grid {
 		
 		for (int j=1; j < steps+1; j++) {
 			result.set(j ,result.get(j-1)*edx);
-		}
-		
+		}		
 		return result;
 	}
 }
