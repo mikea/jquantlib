@@ -84,10 +84,6 @@ public class RidderTest {
 			fail("expected: 1.0" + " but root is: " + root);
 		}
 		
-		if(ridder.getNumEvaluations() != 100){
-			fail("expected: 10" + " but was: " + ridder.getNumEvaluations());
-		}
-		
 	}
 	
 }
