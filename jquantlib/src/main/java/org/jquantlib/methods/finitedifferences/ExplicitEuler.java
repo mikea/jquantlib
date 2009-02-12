@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class ExplicitEuler extends MixedScheme<Operator> {
 
-    public ExplicitEuler(Operator L, List<BoundaryCondition> bcs) {
-        super(L, 0.0, bcs);
-    }
+	public ExplicitEuler(Operator L, List<BoundaryCondition<Operator>> bcs) {
+		super(L, 0.0, bcs);
+	}
 }

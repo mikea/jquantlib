@@ -29,10 +29,11 @@ import org.jquantlib.util.reflect.TypeToken;
  * @author Srinivas Hasti
  * 
  */
+//TODO: Code review
 public class ParallelEvolver<T extends MixedScheme> {
 	private Vector<T> evolvers;
 
-	public ParallelEvolver(Vector<Operator> L, BoundaryConditionSet bcs) {
+	public ParallelEvolver(Vector<? extends Operator> L, BoundaryConditionSet bcs) {
 		evolvers = new Vector<T>(L.size());
 		for (int i = 0; i < L.size(); i++) {
 			evolvers.add(getEvolver(L.get(i), bcs.get(i)));

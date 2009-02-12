@@ -27,10 +27,10 @@ import java.util.List;
  * @author Srinivas Hasti
  * 
  */
-public class CrankNicolson extends MixedScheme<Operator> {
+public class CrankNicolson<T extends Operator> extends MixedScheme<T> {
 
-    public CrankNicolson(Operator op,  
-                         List<BoundaryCondition> bcs) {
+    public CrankNicolson(T op,  
+                         List<BoundaryCondition<T>> bcs) {
         super(op, 0.5, bcs);
     }
 }
