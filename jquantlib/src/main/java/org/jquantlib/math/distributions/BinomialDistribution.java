@@ -156,7 +156,7 @@ public class BinomialDistribution implements UnaryFunctionInteger {
 	 *            Number of successful trials
 	 * @return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)))
 	 */
-	private static double binomialCoefficient(final int n, final int k) {
-		return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)));
-	}
+	//private static double binomialCoefficient(final int n, final int k) {
+	//	return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)));
+	//}
 }
