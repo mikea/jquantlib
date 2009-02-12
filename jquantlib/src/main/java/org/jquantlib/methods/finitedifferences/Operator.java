@@ -27,17 +27,38 @@ import org.jquantlib.math.Array;
  * @author Srinivas Hasti
  * 
  */
+// CODE REVIEW: Do we really need this interface.
 public interface Operator {
 
-    int size();
+	int size();
 
-    boolean isTimeDependent();
+	boolean isTimeDependent();
 
-    void setTime(double t);
+	void setTime(double t);
 
-    Operator identity(int size);
+	Operator identity(int size);
 
-    Array applyTo(Array a);
+	Array applyTo(Array a);
 
-    Array solveFor(Array a);
+	Array solveFor(Array a);
+
+	Array SOR(Array rhs, int tol);
+
+	void swap(Operator from);
+
+	void swap(Operator op1, Operator op2);
+
+	Operator add(Operator d); // for + with current instance
+
+	Operator subtract(Operator d); // for - with current instance
+
+	Operator add(Operator a, Operator b);
+
+	Operator subtract(Operator a, Operator b);
+
+	Operator multiply(double a, final Operator d);
+
+	Operator multiply(Operator d, double a);
+
+	Operator divide(Operator d, double a);
 }
