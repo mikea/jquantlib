@@ -27,7 +27,7 @@ import org.jquantlib.math.Array;
  * @author Srinivas Hasti
  * 
  */
-// CODE REVIEW: Do we really need this interface.
+// CODE REVIEW: Do we really need this interface. Helps to easily replaces Tridiaginal implementations
 public interface Operator {
 
 	int size();
