@@ -59,7 +59,7 @@ public class ListTest {
     public void testJQuantList() { 
 		long startNano = System.nanoTime();
 		DoubleArrayList dal = new DoubleArrayList();
-		org.jquantlib.experimental.collection.List list = new org.jquantlib.experimental.collection.List(dal);
+		org.jquantlib.experimental.collection.StrategyLoadingList list = new org.jquantlib.experimental.collection.StrategyLoadingList(dal);
 		for(double i = 0.0; i<1000 ; i=i+.01){
 			list.add(i);
 		}

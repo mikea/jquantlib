@@ -33,13 +33,13 @@ import java.util.ListIterator;
  *
  * @author Q. Boiler
  */
-public class List implements java.util.List {
+public class StrategyLoadingList implements java.util.List {
 	private java.util.List wrappedList;
 	enum TYPE { LIST, DOUBLE_ARRAY_LIST};
 	private TYPE type = TYPE.LIST;
 	PrimativeList strategy = new DefaultPrimativeListStrategy();
 	
-	public List(java.util.List list){
+	public StrategyLoadingList(java.util.List list){
 		if(list instanceof DoubleArrayList){
 			type=TYPE.DOUBLE_ARRAY_LIST;
 			strategy = new ListDoubleArrayListStrategy();
