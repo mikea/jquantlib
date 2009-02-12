@@ -22,22 +22,23 @@
 
 package org.jquantlib.testsuite.math.solvers1D;
 
+import static org.junit.Assert.fail;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jquantlib.math.distributions.Derivative;
+import org.jquantlib.math.solvers1D.Newton;
+import org.jquantlib.math.solvers1D.Ridder;
 import org.junit.Test;
 
 /**
- * 
  * @author Dominik Holenstein
- *
+ * @author Ueli Hofstetter
  */
 
-/* 
- * Test not implemented yet.
- */
-
-//TODO: Write Ridder test case.
 public class RidderTest {
+	
+	//TODO: may we should think about combining all solver test in a single testclass?
 	
     private final static Logger logger = LoggerFactory.getLogger(RidderTest.class);
 
@@ -46,9 +47,47 @@ public class RidderTest {
 	}
 	
 	@Test
-	public void fakeTest() {
-		// only intended to avoid failure during unit tests
-		logger.error("***** TEST FAILED *****");
+	public void ridderTest() {
+		double accuracy = 1.0e-15;
+		double guess = 1.5;
+		double xMin = 0.0;
+		double xMax = 3.0;
+		
+		final Derivative f = new Derivative() {
+
+			@Override
+			public double evaluate(double x) {
+				return x*x-1;
+			}
+			
+			@Override
+			public double derivative (double x) {
+				return 2*x;
+			}
+		};
+		
+		Ridder ridder = new Ridder();
+		
+		double root = ridder.solve(f, accuracy, guess, xMin, xMax);
+		
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
+		
+		if(ridder.getMaxEvaluations() != 100){
+			fail("expected: 100" + " but was: " + ridder.getMaxEvaluations());
+		}
+		
+		root = ridder.solve(f, accuracy, 0.01, 0.1);
+
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
+		
+		if(ridder.getNumEvaluations() != 100){
+			fail("expected: 10" + " but was: " + ridder.getNumEvaluations());
+		}
+		
 	}
 	
 }
