@@ -22,21 +22,19 @@
 
 package org.jquantlib.testsuite.math.solvers1D;
 
+import static org.junit.Assert.fail;
+
+import org.jquantlib.math.distributions.Derivative;
+import org.jquantlib.math.solvers1D.FalsePosition;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.junit.Test;
 
 /**
- * 
  * @author Dominik Holenstein
- *
+ * @author Ueli Hofstetter
  */
 
-/* 
- * Test not implemented yet.
- */
-
-//TODO: Write FalsePosition test case.
 public class FalsePositionTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(FalsePositionTest.class);
@@ -46,9 +44,42 @@ public class FalsePositionTest {
 	}
 	
 	@Test
-	public void fakeTest() {
-		// only intended to avoid failure during unit tests
-		logger.error("***** TEST FAILED *****");
+	public void falsePositionTest() {
+		double accuracy = 1.0e-15;
+		double guess = 1.5;
+		double xMin = 0.0;
+		double xMax = 3.0;
+		
+		final Derivative f = new Derivative() {
+
+			@Override
+			public double evaluate(double x) {
+				return x*x-1;
+			}
+			
+			@Override
+			public double derivative (double x) {
+				return 2*x;
+			}
+		};
+		
+		FalsePosition falsePosition = new FalsePosition();
+		
+		double root = falsePosition.solve(f, accuracy, guess, xMin, xMax);
+		
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
+		
+		if(falsePosition.getMaxEvaluations() != 100){
+			fail("expected: 100" + " but was: " + falsePosition.getMaxEvaluations());
+		}
+		
+		root = falsePosition.solve(f, accuracy, 0.01, 0.1);
+
+		if (Math.abs(1.0-root)> accuracy) {
+			fail("expected: 1.0" + " but root is: " + root);
+		}
 	}
 	
 }
