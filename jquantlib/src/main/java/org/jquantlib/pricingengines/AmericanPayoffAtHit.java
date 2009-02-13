@@ -71,7 +71,7 @@ public class AmericanPayoffAtHit {
         this.variance = variance;
         
         if (spot <= 0.0)
-            throw new IllegalArgumentException("positive spot value required: " + forward + " not allowed");
+            throw new IllegalArgumentException("positive spot value required: " + spot + " not allowed");
                 
         if (discount <= 0.0)
             throw new IllegalArgumentException("positive discount required: " + discount + " not allowed");
