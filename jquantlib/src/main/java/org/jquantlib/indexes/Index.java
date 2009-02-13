@@ -110,7 +110,8 @@ public abstract class Index implements Observable {
 		boolean noDuplicatedFixing = true;
 		Date invalidDate = null;
 		Date duplicatedDate = null;
-		final Double nullValue = null;
+		//final Double nullValue = null; TODO: do we need our own null implementation (see null.hpp)
+		final double nullValue = 0;
 		double invalidValue = Double.NaN;
 		double duplicatedValue = Double.NaN;
 
