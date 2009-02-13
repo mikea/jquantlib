@@ -40,15 +40,19 @@
 
 package org.jquantlib.testsuite.daycounters;
 
+import static java.lang.Math.abs;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jquantlib.daycounters.ActualActual;
+import org.jquantlib.daycounters.Business252;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.SimpleDayCounter;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
@@ -58,6 +62,8 @@ import org.junit.Test;
  * Test Day Counters
  * 
  * @author Richard Gomes
+ * @author Daniel Kong
+ * 
  */
 public class DayCountersTest {
 
@@ -219,7 +225,7 @@ public class DayCountersTest {
 	        
 	        /*@Time*/ double  calculated = dayCounter.yearFraction(d1, d2, rd1, rd2);
 
-	        if (Math.abs(calculated-testCases[i].result) > 1.0e-10) {
+	        if (abs(calculated-testCases[i].result) > 1.0e-10) {
 	        	String period = "period: " + d1 + " to " + d2;
 	        	String refPeriod = "";
 	            if (testCases[i].convention == ActualActual.Convention.ISMA) {
@@ -253,7 +259,7 @@ public class DayCountersTest {
 	            Date end = start.getDateAfter(p[i]);
 	            /*@Time*/ double  calculated = dayCounter.yearFraction(start, end);
 
-	        	if (Math.abs(calculated-expected[i]) > 1.0e-12)
+	        	if (abs(calculated-expected[i]) > 1.0e-12)
 	                fail("from " + start + " to " + end + ":\n"
 	                        + "    calculated: " + calculated + "\n"
 	                        + "    expected:   " + expected[i]);
@@ -279,7 +285,7 @@ public class DayCountersTest {
 	            Date end = start.getDateAfter(p[i]);
 	            /*@Time*/ double  calculated = dayCounter.yearFraction(start, end);
 
-	            if (Math.abs(calculated-expected[i]) <= 1.0e-12) {
+	            if (abs(calculated-expected[i]) <= 1.0e-12) {
 	                fail("from " + start + " to " + end + ":\n"
 	                           + "    calculated: " + calculated + "\n"
 	                           + "    expected:   " + expected[i]);
@@ -288,55 +294,56 @@ public class DayCountersTest {
 	    }
 	}
 
+	//TODO: Sounds like this test method from the C++ codes actually test nothing! 
+	//abs(calculated - expected[i]) <= 1.0e-12? making sense? could always pass. Daniel 
+	@Test
+	public void testBusiness252() {
+
+	    logger.info("Testing business/252 day counter...");
+
+	    Date testDates[] = {
+	    DateFactory.getFactory().getDate(1,Month.FEBRUARY,2002),
+	    DateFactory.getFactory().getDate(4,Month.FEBRUARY,2002),
+	    DateFactory.getFactory().getDate(16,Month.MAY,2003),
+	    DateFactory.getFactory().getDate(17,Month.DECEMBER,2003),
+	    DateFactory.getFactory().getDate(17,Month.DECEMBER,2004),
+	    DateFactory.getFactory().getDate(19,Month.DECEMBER,2005),
+	    DateFactory.getFactory().getDate(2,Month.JANUARY,2006),
+	    DateFactory.getFactory().getDate(13,Month.MARCH,2006),
+	    DateFactory.getFactory().getDate(15,Month.MAY,2006),
+	    DateFactory.getFactory().getDate(17,Month.MARCH,2006),
+	    DateFactory.getFactory().getDate(15,Month.MAY,2006),
+	    DateFactory.getFactory().getDate(26,Month.JULY,2006) };
+
+	    /*@Time*/ double expected[] = {
+	        0.0039682539683,
+	        1.2738095238095,
+	        0.6031746031746,
+	        0.9960317460317,
+	        1.0000000000000,
+	        0.0396825396825,
+	        0.1904761904762,
+	        0.1666666666667,
+	        -0.1507936507937,
+	        0.1507936507937,
+	        0.2023809523810
+	        };
+
+	    DayCounter dayCounter = new Business252(Brazil.getCalendar(Brazil.Market.SETTLEMENT));
+
+	    for (int i=1; i<testDates.length-1; i++) {
+	    	Date start = testDates[i-1];
+	    	Date end = testDates[i];
+	    	/*@Time*/ double  calculated = dayCounter.yearFraction(start, end);
+	        System.out.println(calculated);
+	    	assertFalse(dayCounter.getClass().getName()
+					+"\n from "+start
+					+"\n to "+end
+					+"\n calculated: "+calculated
+					+"\n expected:   "+expected[i],
+					abs(calculated - expected[i]) <= 1.0e-12);
+	    }
+	}
 	
-// TODO: Test
-//	public void testBusiness252() {
-//
-//	    logger.info("Testing business/252 day counter...");
-//
-//	    Date testDates[] = {
-//	    DateUtil.getDateUtil().getDate(1,Month.FEBRUARY,2002),
-//	    DateUtil.getDateUtil().getDate(4,Month.FEBRUARY,2002),
-//	    DateUtil.getDateUtil().getDate(16,Month.MAY,2003),
-//	    DateUtil.getDateUtil().getDate(17,Month.DECEMBER,2003),
-//	    DateUtil.getDateUtil().getDate(17,Month.DECEMBER,2004),
-//	    DateUtil.getDateUtil().getDate(19,Month.DECEMBER,2005),
-//	    DateUtil.getDateUtil().getDate(2,Month.JANUARY,2006),
-//	    DateUtil.getDateUtil().getDate(13,Month.MARCH,2006),
-//	    DateUtil.getDateUtil().getDate(15,Month.MAY,2006),
-//	    DateUtil.getDateUtil().getDate(17,Month.MARCH,2006),
-//	    DateUtil.getDateUtil().getDate(15,Month.MAY,2006),
-//	    DateUtil.getDateUtil().getDate(26,Month.JULY,2006) };
-//
-//	    /*@Time*/ double expected[] = {
-//	        0.0039682539683,
-//	        1.2738095238095,
-//	        0.6031746031746,
-//	        0.9960317460317,
-//	        1.0000000000000,
-//	        0.0396825396825,
-//	        0.1904761904762,
-//	        0.1666666666667,
-//	        -0.1507936507937,
-//	        0.1507936507937,
-//	        0.2023809523810
-//	        };
-//
-//	    DayCounter dayCounter = Business252(Brazil.getCalendar(Brazil.Market.SETTLEMENT));
-//
-//	    for (int i=1; i<testDates.length-1; i++) {
-//	    	Date start = testDates[i-1];
-//	    	Date end = testDates[i];
-//	    	/*@Time*/ double  calculated = dayCounter.getYearFraction(start, end);
-//	        
-//	        StringBuilder sb = new StringBuilder();
-//        	sb.append(dayCounter.getClass().getName()).append('\n');
-//        	sb.append("  from ").append(start).append(" to ").append(end).append('\n');
-//        	sb.append("    calculated: ").append(calculated).append('\n');
-//        	sb.append("    expected:   ").append(expected[i]);
-//            
-//        	fail(sb.toString(), Math.abs(calculated-expected[i]) <= 1.0e-12);
-//	    }
-//	}
 
 }
