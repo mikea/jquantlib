@@ -93,12 +93,22 @@ public class EndCriteria {
 	}
 	
 	/*! Test if the number of iteration is below MaxIterations */
+	/* TODO: Review this was implementation was probably incorrect since the c++ implementation was pass by reference, so we have to 
+	 * modify the parameter itself.
     public boolean checkMaxIterations(
     		final int iteration, 
     		final CriteriaType ecType) {
         if (iteration < maxIterations_)
             return false;
         this.ecType = CriteriaType.MaxIterations;
+        return true;
+    }*/
+    public boolean checkMaxIterations(
+    		final int iteration, 
+    	    CriteriaType ecType) {
+        if (iteration < maxIterations_)
+            return false;
+        ecType = CriteriaType.MaxIterations;
         return true;
     }
     
