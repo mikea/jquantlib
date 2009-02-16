@@ -194,7 +194,7 @@ public class BivariateNormalDistribution {
      * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">Genz 2004, The Transformed BVN Problem</a>
      */
 
-    private class eqn3 implements UnaryFunctionDouble {
+    private static class eqn3 implements UnaryFunctionDouble {
 
     	private double hk_, asr_, hs_;
     
@@ -235,7 +235,7 @@ public class BivariateNormalDistribution {
      * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Genz 2004, Numerical Integration Results</a>
      * 
      */
-    private class eqn6 implements UnaryFunctionDouble {
+    private static class eqn6 implements UnaryFunctionDouble {
 
 	private double a_, c_, d_, bs_, hk_;
 
