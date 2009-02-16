@@ -37,6 +37,7 @@ import org.jquantlib.math.functions.DoubleFunction;
  * @author Srinivas Hasti
  */
 
+@SuppressWarnings("PMD.TooManyMethods")
 public final class Std {
 
 	//
@@ -55,14 +56,15 @@ public final class Std {
 	 *
 	 */
 	// FIXME: this method needs code review
-	static public List<Double> adjacent_difference(List<Double> inputList,
-			int begin, List<Double> diffList) {
+	@SuppressWarnings("PMD")
+	static public List<Double> adjacent_difference(final List<Double> inputList,
+			final int begin, List<Double> diffList) {
 		for (int i = begin; i < inputList.size(); i++) {
-			double curr = inputList.get(i);
+			final double curr = inputList.get(i); // NOPMD
 			if (i == 0) {
 				diffList.add(inputList.get(i));
 			} else {
-				double prev = inputList.get(i - 1);
+				final double prev = inputList.get(i - 1);
 				diffList.add(curr - prev);
 			}
 		}
@@ -70,13 +72,13 @@ public final class Std {
 	}
 
 
-	public static void apply(final Array array, final DoubleFunction f) {
-		apply(array, 0, array.size(), f);
+	public static void apply(final Array array, final DoubleFunction func) {
+		apply(array, 0, array.size(), func);
 	}
 
-	public static void apply(final Array array, final int startIndex, final int endIndex, final DoubleFunction f) {
+	public static void apply(final Array array, final int startIndex, final int endIndex, final DoubleFunction func) {
 		for(int i=0; i<array.size(); i++){
-        	array.set(i, f.apply(array.at(i)));
+        	array.set(i, func.apply(array.at(i)));
         }
 	}
 
@@ -102,10 +104,12 @@ public final class Std {
 	 * 
 	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__algo_8h-source.html#l02712">Source code: std::upper_bound</a> 
 	 */
+	@SuppressWarnings("PMD.MethodNamingConventions")
 	public static int upper_bound(final double[] list, final double val) {
 		return upper_bound(list, 0, list.length-1, val);
 	}
 
+	@SuppressWarnings("PMD")
 	private static int upper_bound(final double[] list, int first, int last, final double val) {
 		int len = last - first;
 		int half;
@@ -133,23 +137,23 @@ public final class Std {
 	// static public methods ::: unmutable iterators
 	//
 
-	static public final IntForwardIterator forwardIterator(final int[] list) {
+	static public IntForwardIterator forwardIterator(final int[] list) {
 		return new IntForwardIteratorImpl(list);
 	}
 
-	static public final IntReverseIterator reverseIterator(final int[] list) {
+	static public IntReverseIterator reverseIterator(final int[] list) {
 		return new IntReverseIteratorImpl(list);
 	}
 
-	static public final DoubleForwardIterator forwardIterator(final double[] list) {
+	static public DoubleForwardIterator forwardIterator(final double[] list) {
 		return new DoubleForwardIteratorImpl(list);
 	}
 
-	static public final DoubleReverseIterator reverseIterator(final double[] list) {
+	static public DoubleReverseIterator reverseIterator(final double[] list) {
 		return new DoubleReverseIteratorImpl(list);
 	}
 
-	static public final ObjectForwardIterator forwardIterator(final Object[] list) {
+	static public ObjectForwardIterator forwardIterator(final Object[] list) {
 		return new ObjectForwardIteratorImpl(list);
 	}
 
@@ -158,19 +162,19 @@ public final class Std {
 	// static public methods ::: mutable iterators
 	//
 
-	static public final MutableIntForwardIterator mutableForwardIterator(final int[] list) {
+	static public MutableIntForwardIterator mutableForwardIterator(final int[] list) {
 		return new MutableIntForwardIteratorImpl(list);
 	}
 
-	static public final MutableIntReverseIterator mutableReverseIterator(final int[] list) {
+	static public MutableIntReverseIterator mutableReverseIterator(final int[] list) {
 		return new MutableIntReverseIteratorImpl(list);
 	}
 
-	static public final MutableDoubleForwardIterator mutableForwardIterator(final double[] list) {
+	static public MutableDoubleForwardIterator mutableForwardIterator(final double[] list) {
 		return new MutableDoubleForwardIteratorImpl(list);
 	}
 
-	static public final MutableDoubleReverseIterator mutableReverseIterator(final double[] list) {
+	static public MutableDoubleReverseIterator mutableReverseIterator(final double[] list) {
 		return new MutableDoubleReverseIteratorImpl(list);
 	}
 
@@ -178,7 +182,7 @@ public final class Std {
 	// 
 	// static private abstract inner classes
 	//
-
+	@SuppressWarnings("PMD.AbstractNaming")
 	static private abstract class ForwardIteratorImpl implements ForwardIterator {
 		private final int size;
 		protected int index;
@@ -194,13 +198,15 @@ public final class Std {
 		}
 
 		@Override
-		public int skip(final int n) {
-			final int jump = (index + n < size) ? n : (size - index - 1);
+		@SuppressWarnings("PMD.AvoidFinalLocalVariable")
+		public int skip(final int skipsize) {
+			final int jump = (index + skipsize < size) ? skipsize : (size - index - 1);
 			index += jump;
 			return jump;
 		}
 	}
 
+	@SuppressWarnings("PMD.AbstractNaming")
 	static private abstract class ReverseIteratorImpl implements ReverseIterator {
 		protected int index;
 
@@ -214,8 +220,9 @@ public final class Std {
 		}
 
 		@Override
-		public int back(final int n) {
-			final int jump = (index - n >= 0) ? n : index;
+		@SuppressWarnings("PMD.AvoidFinalLocalVariable")
+		public int back(final int backstep) {
+			final int jump = (index - backstep >= 0) ? backstep : index;
 			index -= jump;
 			return jump;
 		}
