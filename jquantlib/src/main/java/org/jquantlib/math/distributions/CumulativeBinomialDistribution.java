@@ -114,14 +114,14 @@ public class CumulativeBinomialDistribution implements UnaryFunctionInteger {
 	 * @return result
 	 */
     // TODO: code review :: visibility
-	static private double PeizerPrattMethod2Inversion(double z, int n) {
-		if (n%2 != 0) throw new ArithmeticException("n must be an odd number: " + n + " not allowed");
-		
-		double result = (z/(n+1.0/3.0+0.1/(n+1.0)));
-		result *= result;
-		result = Math.exp(-result*(n+1.0/6.0));
-		result = 0.5 + (z>0 ? 1 : -1) * Math.sqrt((0.25*(1.0-result)));
-		
-		return result;	
-	}
+	//static private double PeizerPrattMethod2Inversion(double z, int n) {
+	//	if (n%2 != 0) throw new ArithmeticException("n must be an odd number: " + n + " not allowed");
+	//	
+	//	double result = (z/(n+1.0/3.0+0.1/(n+1.0)));
+	//	result *= result;
+	//	result = Math.exp(-result*(n+1.0/6.0));
+	//	result = 0.5 + (z>0 ? 1 : -1) * Math.sqrt((0.25*(1.0-result)));
+	//	
+	//	return result;	
+	//}
 }
