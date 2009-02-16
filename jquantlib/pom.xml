@@ -846,7 +846,7 @@
               <ruleset>${basedir}/src/main/pmd/colt.xml</ruleset>
               <ruleset>${basedir}/src/main/pmd/fastutil.xml</ruleset>
               <ruleset>${basedir}/src/main/pmd/packageprivateclasses.xml</ruleset>
-
+              <ruleset>${basedir}/src/main/pmd/multipletopleveltypes.xml</ruleset>
             </rulesets>
           </configuration>
           <reportSets>
