@@ -2,7 +2,7 @@
 <ruleset name="Multiple Top Level Types Rule">
     <description>Checks usage of multiple top level types</description>
 
-    <rule name="Multiple Top Level Types" 
+    <rule name="MultipleTopLevelTypes" 
           message="Don't use package multiple top level types" 
           class="net.sourceforge.pmd.rules.XPathRule">
         <description>Detect declaration of multiple top level types</description>
