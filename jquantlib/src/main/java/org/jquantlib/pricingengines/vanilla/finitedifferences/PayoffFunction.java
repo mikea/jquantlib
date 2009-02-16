@@ -17,17 +17,31 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.methods.finitedifferences;
+package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.instruments.Payoff;
+import org.jquantlib.math.functions.DoubleFunction;
 
 /**
  * @author Srinivas Hasti
- *
+ * 
  */
-public class NullCondition<T extends Array> implements StepCondition<T> {
+public class PayoffFunction implements DoubleFunction {
+	private Payoff payOff;
+
+	public PayoffFunction(Payoff payOff) {
+		super();
+		this.payOff = payOff;
+	}
 
 	@Override
-	public void applyTo(T a, double t) {
+	public double apply(double a) {
+		return payOff.valueOf(a);
 	}
+
+	@Override
+	public double apply(double... a) {
+		throw new IllegalStateException("Not supported ");
+	}
+
 }

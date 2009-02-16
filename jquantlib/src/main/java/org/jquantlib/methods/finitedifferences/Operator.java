@@ -36,7 +36,7 @@ public interface Operator {
 
 	void setTime(double t);
 
-	Operator identity(int size);
+	<T extends Operator> T identity(int size);
 
 	Array applyTo(Array a);
 
@@ -44,21 +44,22 @@ public interface Operator {
 
 	Array SOR(Array rhs, int tol);
 
-	void swap(Operator from);
+	<T extends Operator> void swap(T from);
 
-	void swap(Operator op1, Operator op2);
+	<T extends Operator> void swap(T op1, T op2);
 
-	Operator add(Operator d); // for + with current instance
+	<T extends Operator> T add(T d); // for + with current instance
 
-	Operator subtract(Operator d); // for - with current instance
+	<T extends Operator> T subtract(T d); // for - with current instance
 
-	Operator add(Operator a, Operator b);
+	<T extends Operator> T add(T a, T b);
 
-	Operator subtract(Operator a, Operator b);
+	<T extends Operator> T subtract(T a, T b);
 
-	Operator multiply(double a, final Operator d);
+	<T extends Operator> T multiply(double a, final T d);
 
-	Operator multiply(Operator d, double a);
+	<T extends Operator> T multiply(T d, double a);
 
-	Operator divide(Operator d, double a);
+	<T extends Operator> T divide(T d, double a);
+	 
 }

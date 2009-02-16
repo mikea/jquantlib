@@ -80,5 +80,5 @@ public abstract class Lattice {
 	// @}
 
 	// this is a smell, but we need it. We'll rethink it later.
-	protected abstract Array grid(double t);
+	public abstract Array grid(double t);
 }

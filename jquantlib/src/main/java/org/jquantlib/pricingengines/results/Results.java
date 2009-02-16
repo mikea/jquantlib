@@ -39,6 +39,9 @@
 
 package org.jquantlib.pricingengines.results;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jquantlib.instruments.Instrument;
 import org.jquantlib.instruments.NewInstrument;
 import org.jquantlib.pricingengines.PricingEngine;
@@ -76,6 +79,9 @@ public class Results {
      * Contains the estimated error due to floating point error
      */
 	public /*@Real*/ double errorEstimate;
+	
+	//TODO: Code review
+	private Map<String,Object> additionalResults = new HashMap<String,Object>();
 
 
 	//
@@ -89,6 +95,15 @@ public class Results {
 	 */
 	public void reset() {
 		value = errorEstimate = Double.NaN;
+		additionalResults.clear();
+	}
+	
+	public void addAdditionalResult(String key, Object result){
+		this.additionalResults.put(key,result);
+	}
+	
+	public Object getAdditionalResult(String key){
+		return this.additionalResults.get(key);
 	}
 
 }

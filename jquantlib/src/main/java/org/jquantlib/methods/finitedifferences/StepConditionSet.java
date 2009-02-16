@@ -19,7 +19,8 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Srinivas Hasti
@@ -27,9 +28,9 @@ import java.util.Vector;
  */
 public class StepConditionSet<T> {
 
-	private Vector<StepCondition<T>> stepConditions;
+	private List<StepCondition<T>> stepConditions = new ArrayList<StepCondition<T>>();
 
-	public void applyTo(Vector<T> a, /* Time */double t) {
+	public void applyTo(List<T> a, /* Time */double t) {
 		for (int i = 0; i < stepConditions.size(); i++) {
 			stepConditions.get(i).applyTo(a.get(i), t);
 		}

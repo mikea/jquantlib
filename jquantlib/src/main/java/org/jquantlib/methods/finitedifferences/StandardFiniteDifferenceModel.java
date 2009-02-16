@@ -19,15 +19,17 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import org.jquantlib.math.Array;
+import java.util.List;
 
 /**
  * @author Srinivas Hasti
- *
+ * 
  */
-public class NullCondition<T extends Array> implements StepCondition<T> {
+public class StandardFiniteDifferenceModel extends
+		CrankNicolson<TridiagonalOperator> {
 
-	@Override
-	public void applyTo(T a, double t) {
+	public StandardFiniteDifferenceModel(TridiagonalOperator op,
+			List<BoundaryCondition<TridiagonalOperator>> bcs) {
+		super(op, bcs);
 	}
 }

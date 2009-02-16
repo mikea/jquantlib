@@ -40,11 +40,8 @@
 
 package org.jquantlib.math;
 
-import org.jquantlib.instruments.Payoff;
-import org.jquantlib.math.interpolations.CubicSplineInterpolation;
-import org.jquantlib.math.Grid;
+import org.jquantlib.math.functions.DoubleFunction;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -225,10 +222,9 @@ public class SampledCurve {
 		setGrid(Grid.BoundedLogGrid(min, max, size() - 1));
 	}
 
-	// FIXME: Use templates for PayOff
-	public void sample(final Payoff payoff) {
+	public <T extends DoubleFunction> void sample(final T value) {
 		for (int i = 0; i < this.grid_.size(); i++) {
-			values_.set(i, payoff.valueOf(grid_.at(i)));
+			values_.set(i, value.apply(grid_.at(i)));
 		}
 	}
 }

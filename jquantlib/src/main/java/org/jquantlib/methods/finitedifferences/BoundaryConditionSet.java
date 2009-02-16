@@ -19,20 +19,21 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Srinivas Hasti
  * 
  */
-public class BoundaryConditionSet<T extends Vector<BoundaryCondition>> {
-	private Vector<T> bcSet = new Vector<T>();
+public class BoundaryConditionSet<T extends BoundaryCondition<? extends Operator>> {
+	private List<List<T>> bcSet = new ArrayList<List<T>>();
 
-	public void push_back(T a) {
+	public void push_back(List<T> a) {
 		bcSet.add(a);
 	}
 
-	public T get(int i) {
+	public List<T> get(int i) {
 		return bcSet.get(i);
 	}
 }

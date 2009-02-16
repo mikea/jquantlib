@@ -67,7 +67,7 @@ public abstract class TreeLattice2D<T extends TrinomialTree> extends
 	}
 
 	// smelly
-	protected Array grid(double t) {
+	public Array grid(double t) {
 		throw new RuntimeException("not implemented");
 	}
 

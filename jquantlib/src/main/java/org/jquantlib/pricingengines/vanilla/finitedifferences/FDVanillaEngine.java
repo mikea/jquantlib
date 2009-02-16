@@ -56,6 +56,7 @@ public abstract class FDVanillaEngine {
 	// temporaries
 	protected/* Real */double sMin, center, sMax;
 
+	//private double gridLogSpacing; //Not used
 	public final static/* Real */double safetyZoneFactor = 1.1;
 
 	public FDVanillaEngine(GeneralizedBlackScholesProcess process,
@@ -125,7 +126,8 @@ public abstract class FDVanillaEngine {
 
 	protected void initializeInitialCondition() {
 		intrinsicValues.setLogGrid(sMin, sMax);
-		intrinsicValues.sample(payoff);
+		PayoffFunction function = new PayoffFunction(payoff);
+		intrinsicValues.sample(function);
 	}
 
 	protected void initializeOperator() {

@@ -227,7 +227,7 @@ public class TridiagonalOperator implements Operator {
 	}
 
 	// ! identity instance
-	public Operator identity(int size) {
+	public TridiagonalOperator identity(int size) {
 		TridiagonalOperator I = new TridiagonalOperator(
 				new Array(size - 1, 0.0), // lower diagonal
 				new Array(size, 1.0), // diagonal
@@ -332,4 +332,10 @@ public class TridiagonalOperator implements Operator {
 		result.set(0, result.get(0) - (tmp.get(1) * result.get(1)));
 		return result;
 	}
+
+	/*public Operator assign(Operator d) {
+		swap(d);
+		return this;
+	}*/
+
 }

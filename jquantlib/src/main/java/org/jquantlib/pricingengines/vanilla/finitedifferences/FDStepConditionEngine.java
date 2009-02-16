@@ -19,7 +19,8 @@
  */
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.math.Array;
@@ -27,8 +28,9 @@ import org.jquantlib.math.SampledCurve;
 import org.jquantlib.methods.finitedifferences.BoundaryCondition;
 import org.jquantlib.methods.finitedifferences.BoundaryConditionSet;
 import org.jquantlib.methods.finitedifferences.NullCondition;
-import org.jquantlib.methods.finitedifferences.Operator;
+import org.jquantlib.methods.finitedifferences.StandardSystemFiniteDifferenceModel;
 import org.jquantlib.methods.finitedifferences.StepCondition;
+import org.jquantlib.methods.finitedifferences.StepConditionSet;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
 import org.jquantlib.pricingengines.BlackCalculator;
 import org.jquantlib.pricingengines.results.OneAssetOptionResults;
@@ -43,13 +45,13 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 	protected StepCondition<Array> stepCondition;
 	protected SampledCurve prices;
 	protected TridiagonalOperator controlOperator;
-	protected Vector<BoundaryCondition<TridiagonalOperator>> controlBCs;
+	protected List<BoundaryCondition<TridiagonalOperator>> controlBCs;
 	protected SampledCurve controlPrices;
 
 	public FDStepConditionEngine(GeneralizedBlackScholesProcess process,
 			int timeSteps, int gridPoints, boolean timeDependent) {
 		super(process, timeSteps, gridPoints, timeDependent);
-		this.controlBCs = new Vector<BoundaryCondition<TridiagonalOperator>>();
+		this.controlBCs = new ArrayList<BoundaryCondition<TridiagonalOperator>>();
 		this.controlPrices = new SampledCurve(gridPoints);
 	}
 
@@ -63,16 +65,10 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 		initializeBoundaryConditions();
 		initializeStepCondition();
 
-		// typedef StandardSystemFiniteDifferenceModel model_type;
-
-		// model_type::operator_type operatorSet;
-		// model_type::array_type arraySet;
-		// model_type::bc_set bcSet;
-		// model_type::condition_type conditionSet;
-		Vector<Operator> operatorSet = new Vector<Operator>();
-		Vector<Array> arraySet = new Vector<Array>();
-		BoundaryConditionSet bcSet = new BoundaryConditionSet();
-		Vector conditionSet = new Vector();
+		List<TridiagonalOperator> operatorSet = new ArrayList<TridiagonalOperator>();
+		List<Array> arraySet = new ArrayList<Array>();
+		BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>> bcSet = new BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>>();
+		StepConditionSet<Array> conditionSet = new StepConditionSet<Array>();
 
 		prices = intrinsicValues;
 		controlPrices = intrinsicValues;
@@ -89,15 +85,11 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 		bcSet.push_back(bcS);
 		bcSet.push_back(controlBCs);
 
-		conditionSet.add(stepCondition);
-		conditionSet.add(new NullCondition());
+		conditionSet.push_back(stepCondition);
+		conditionSet.push_back(new NullCondition<Array>());
 
-		// TODO::
-		// StandardSystemFiniteDifferenceModel model(operatorSet, bcSet);
-		// ParallelEvolver<CrankNicolson> model = new
-		// ParallelEvolver<CrankNicolson>(operatorSet,bcSet);
-		// model.rollback(arraySet, getResidualTime(),
-		// 0.0, timeSteps, conditionSet);
+		StandardSystemFiniteDifferenceModel model = new StandardSystemFiniteDifferenceModel(operatorSet, bcSet);
+		model.rollback(arraySet, getResidualTime(),0.0, timeSteps, conditionSet);
 
 		prices.setValues(arraySet.get(0));
 		controlPrices.setValues(arraySet.get(1));
@@ -123,8 +115,9 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 		results.delta = prices.firstDerivativeAtCenter()
 				- controlPrices.firstDerivativeAtCenter() + black.delta(spot);
 		results.gamma = prices.secondDerivativeAtCenter()
-				- controlPrices.secondDerivativeAtCenter() + black.gamma(spot);
+				- controlPrices.secondDerivativeAtCenter() + black.gamma(spot);		
 		// TODO:
 		// results.additionalResults["priceCurve"] = prices;
+		results.addAdditionalResult("priceCurve",prices);
 	}
 }
