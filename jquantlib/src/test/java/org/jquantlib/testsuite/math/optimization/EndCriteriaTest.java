@@ -76,10 +76,9 @@ public class EndCriteriaTest {
 	
 	
 	@Ignore("End Criteria needs code review")
-	@Test
 	//maxIterations = 100
 	//iteration >= maxIterations_
-	public void testCheckMaxIterations(EndCriteria ec){
+	void testCheckMaxIterations(EndCriteria ec){
 		//create the matching constraint type -- MaxIterations
 		org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.None;
 		//checkMaxIterations(int iteration, CriteriaType ecType)
@@ -113,12 +112,11 @@ public class EndCriteriaTest {
 	
 	
 	@Ignore("End Criteria needs code review")
-	@Test
 	//maxStationaryStateIterations = 30
 	//rootEpsilon = 0.05
 	//Math.abs( xNew-xOld) < rootEpsilon_ 
 	//statStateIterations > maxStationaryStateIterations_
-	public void testCheckStationaryPoint(EndCriteria ec) {
+	void testCheckStationaryPoint(EndCriteria ec) {
 		//create the matching constraint type -- StationaryPoint
 	    org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.None;
 		//checkStationaryPoint(double xOld, double xNew,  int statStateIterations,  CriteriaType ecType)
@@ -187,10 +185,9 @@ public class EndCriteriaTest {
 	
 	
 	@Ignore("End Criteria needs code review")
-	@Test
     //maxStationaryStateIterations_ = 30
 	//functionEpsilon = 0.08			
-	public void testCheckStationaryFunctionValue(EndCriteria ec) {
+	void testCheckStationaryFunctionValue(EndCriteria ec) {
 		//create the matching constraint type -- StationaryFunctionValue
 	    org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.StationaryFunctionValue;
 		//checkStationaryFunctionValue(   double fxOld,  double fxNew,   int statStateIterations,  CriteriaType ecType)
@@ -262,9 +259,8 @@ public class EndCriteriaTest {
 	
 	
 	@Ignore("End Criteria needs code review")
-	@Test
 	//functionEpsilon_ = 0.08
-	public void testCheckStationaryFunctionAccuracy(EndCriteria ec) {
+	void testCheckStationaryFunctionAccuracy(EndCriteria ec) {
 	
 		//create the matching constraint type -- StationaryFunctionAccuracy
 	    org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.StationaryFunctionAccuracy;
@@ -314,9 +310,8 @@ public class EndCriteriaTest {
 	
 
 	@Ignore("End Criteria needs code review")
-	@Test
 	//gradientNormEpsilon = 0.2
-	public void testCheckZeroGradientNorm(EndCriteria ec) {
+	void testCheckZeroGradientNorm(EndCriteria ec) {
 	
 		//create the matching constraint type -- ZeroGradientNorm
 	    org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.StationaryFunctionAccuracy;
@@ -348,11 +343,12 @@ public class EndCriteriaTest {
 		
 	}
 	
-	private boolean isArrayEqual(Array one,Array two,double precision){
-		Array diffArray = one.operatorSubtractCopy(two);
-		System.out.println("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
-		return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );
-		
-	}
+	//TO DO - Verify this should be removed
+	//private boolean isArrayEqual(Array one,Array two,double precision){
+	//	Array diffArray = one.operatorSubtractCopy(two);
+	//	System.out.println("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
+	//	return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );
+	//	
+	//}
 }
 
