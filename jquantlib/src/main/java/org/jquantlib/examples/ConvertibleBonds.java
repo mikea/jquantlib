@@ -22,7 +22,18 @@
 
 package org.jquantlib.examples;
 
+import org.jquantlib.Configuration;
 import org.jquantlib.instruments.Option;
+import org.jquantlib.time.BusinessDayConvention;
+import org.jquantlib.time.Calendar;
+import org.jquantlib.time.DateGenerationRule;
+import org.jquantlib.time.Frequency;
+import org.jquantlib.time.Period;
+import org.jquantlib.time.Schedule;
+import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.calendars.NullCalendar;
+import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
 
 /**
@@ -57,8 +68,25 @@ public class ConvertibleBonds {
         double redemption = 100.0;
         double conversionRatio = redemption/underlying; 
         
+        Calendar calendar = new NullCalendar();
+        Date today = calendar.adjust(DateFactory.getFactory().getTodaysDate(), BusinessDayConvention.FOLLOWING);
         
-        //TODO: working
+        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
+        Date settlementDate = calendar.advance(today, settlementDays, TimeUnit.DAYS);
+        Date exerciseDate = calendar.advance(settlementDate, length, TimeUnit.YEARS);
+        Date issueDate = calendar.advance(exerciseDate, -length, TimeUnit.YEARS);
+        
+        BusinessDayConvention convention = BusinessDayConvention.MODIFIED_FOLLOWING;
+        
+        Frequency frequency = Frequency.ANNUAL;
+        
+//  ??      Schedule schedule = new Schedule(issueDate, exerciseDate,new Period(frequency),calendar, convention, convention, true, false);
+        Schedule schedule = new Schedule(issueDate, exerciseDate,new Period(frequency),calendar, 
+        									convention, convention, DateGenerationRule.BACKWARD, false, 
+        									Date.NULL_DATE, Date.NULL_DATE);
+
+        
+//TODO: working
         
         
         
@@ -69,7 +97,7 @@ public class ConvertibleBonds {
 	}
 	
 	public static void main (String [] args){
-		new BermudanSwaption().run();
+		new ConvertibleBonds().run();
 	}
 	
 }
