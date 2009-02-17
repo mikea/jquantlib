@@ -75,7 +75,7 @@ public class PathGenerator<RNG extends RandomNumberGenerator, GSG extends Random
                           final /*@NonNegative*/ int timeSteps,
                           final GSG generator,
                           final boolean brownianBridge) {
-    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+    	if (0==0) {throw new UnsupportedOperationException("Work in progress")};
         this.brownianBridge_ = brownianBridge;
         this.generator_ = generator;
         this.dimension_ = generator.dimension();
@@ -85,9 +85,9 @@ public class PathGenerator<RNG extends RandomNumberGenerator, GSG extends Random
         this.temp_ = new double[this.dimension_];
         this.bb_ = new BrownianBridge(this.timeGrid_);
         
-        if (dimension_!= timeSteps)
+        if (dimension_!= timeSteps){
             throw new IllegalArgumentException(
-                    "sequence generator dimensionality (" + dimension_ + ") != timeSteps (" + timeSteps + ")");
+                    "sequence generator dimensionality (" + dimension_ + ") != timeSteps (" + timeSteps + ")");}
     }
 
     public PathGenerator(
@@ -95,7 +95,7 @@ public class PathGenerator<RNG extends RandomNumberGenerator, GSG extends Random
                         final TimeGrid timeGrid,
                         final GSG generator,
                         final boolean brownianBridge) {
-    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+    	if (0==0) {throw new UnsupportedOperationException("Work in progress");}
         this.brownianBridge_ = brownianBridge;
         this.generator_ = generator;
         this.dimension_ = generator.dimension();
@@ -105,9 +105,9 @@ public class PathGenerator<RNG extends RandomNumberGenerator, GSG extends Random
         this.temp_ = new double[this.dimension_];
         this.bb_ = new BrownianBridge(this.timeGrid_);
 
-        if (dimension_ != timeGrid_.size()-1)
+        if (dimension_ != timeGrid_.size()-1){
             throw new IllegalArgumentException(
-                    "sequence generator dimensionality (" + dimension_ + ") != timeSteps (" + (timeGrid_.size()-1) + ")");
+                    "sequence generator dimensionality (" + dimension_ + ") != timeSteps (" + (timeGrid_.size()-1) + ")");}
     }
 
     private final Sample<Path> next() /* @ReadOnly */ {
