@@ -67,7 +67,7 @@ public class MixedScheme<T extends Operator> {
 	public MixedScheme(T op,
 	/* Real */double theta, List<BoundaryCondition<T>> bcs2) {
 		L = op;
-		I = op.identity(op.size());
+		I = (T)op.identity(op.size());
 		this.theta = theta;
 		this.bcs = bcs2;
 	}
