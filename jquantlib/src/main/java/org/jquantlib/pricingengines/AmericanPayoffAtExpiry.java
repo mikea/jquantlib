@@ -59,23 +59,23 @@ public class AmericanPayoffAtExpiry {
 
     private final /* @DiscountFactor */ double discount;
     
-    private       double forward; // TODO RICHARD :: add "final" here and see what happens! :)
-    
+    private final double /*@Price*/ forward;
     private final double /* @Volatility */ stdDev;
-    private final double strike;
+    private final double /*@Price*/ strike;
     private final double log_H_S;
     private final double cum_d1, cum_d2, n_d1, n_d2;
     private final double alpha, beta, DalphaDd1, DbetaDd2;
     private final boolean inTheMoney;
     private final double Y, X;
-    private double mu, K, D1, D2, DKDstrike, DXDstrike, DYDstrike;
+    private double mu, K, D1, D2;
+    private double DKDstrike, DXDstrike, DYDstrike;
     
     public AmericanPayoffAtExpiry(final double spot, final double discount, final double dividendDiscount, final double variance, final StrikedTypePayoff strikedTypePayoff) {
         super();
         this.discount = discount;
         
         if (spot <= 0.0)
-            throw new IllegalArgumentException("positive spot value required: " + forward + " not allowed");
+            throw new IllegalArgumentException("positive spot value required");
                 
         if (discount <= 0.0)
             throw new IllegalArgumentException("positive discount required: " + discount + " not allowed");
@@ -89,7 +89,7 @@ public class AmericanPayoffAtExpiry {
         forward = spot * dividendDiscount / discount;
         stdDev = Math.sqrt(variance);
 
-        Option.Type optionType = strikedTypePayoff.getOptionType();
+        final Option.Type optionType = strikedTypePayoff.getOptionType();
         strike = strikedTypePayoff.getStrike();
         
         mu = Math.log(dividendDiscount / discount) / variance - 0.5;
@@ -100,9 +100,8 @@ public class AmericanPayoffAtExpiry {
             K = coo.getCashPayoff();
             DKDstrike = 0.0;
         }
-        
         // binary asset-or-nothing payoff ?
-        if (strikedTypePayoff instanceof AssetOrNothingPayoff) {
+        else if (strikedTypePayoff instanceof AssetOrNothingPayoff) {
             K = forward;
             DKDstrike = 0.0;
             mu += 1.0;
@@ -118,8 +117,7 @@ public class AmericanPayoffAtExpiry {
             cum_d2 = f.evaluate(D2);
             n_d1 = f.derivative(D1);
             n_d2 = f.derivative(D2);
-        }
-        else {
+        } else {
             if (log_H_S > 0) {
                 cum_d1 = 1.0;
                 cum_d2 = 1.0;
@@ -176,7 +174,7 @@ public class AmericanPayoffAtExpiry {
         } else {
             Y = 1.0;
             X = Math.pow(strike / spot, 2.0 * mu);
-//TODO::            DXDstrike_ = ......;
+// Commented out in original C++ code :: DXDstrike_ = ......;
         }
         
     }

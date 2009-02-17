@@ -42,43 +42,31 @@ public class EndCriteriaTest {
 	
 	private final static Logger logger = LoggerFactory.getLogger(EndCriteriaTest.class);
 	
+	private final EndCriteria ec;
+	
 	public EndCriteriaTest() {
 		System.out.println("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	}
-	
-	@Ignore("End Criteria needs code review")
-	@Test
-    public void testEndCriteria() {
 
 		/*
 		   Set the parameters of EndCriteria -- will determine the corresponding test parameters
 		   Integer maxIterations,
-                       Integer maxStationaryStateIterations,
-                       Double rootEpsilon,
-                       Double functionEpsilon,
-                       Double gradientNormEpsilon
+                    Integer maxStationaryStateIterations,
+                    Double rootEpsilon,
+                    Double functionEpsilon,
+                    Double gradientNormEpsilon
 		*/
-    	EndCriteria ec = new EndCriteria(
-					   100,
-                       30,
-                       0.05,
-                       0.08,
-                       0.2);
-    	
 		
-        testCheckMaxIterations(ec);
-		testCheckStationaryPoint(ec);
-		testCheckStationaryFunctionValue(ec);
-		testCheckStationaryFunctionAccuracy(ec);
-		testCheckZeroGradientNorm(ec);
-    }
-
+		//FIXME: this initialization fails!
+		ec = new EndCriteria(100, 30, 0.05, 0.08, 0.2);
+		// ec=null; // TODO: remove this line after EndCriteria is ready
+	}
 	
+
 	
 	@Ignore("End Criteria needs code review")
 	//maxIterations = 100
 	//iteration >= maxIterations_
-	void testCheckMaxIterations(EndCriteria ec){
+	public void testCheckMaxIterations() {
 		//create the matching constraint type -- MaxIterations
 		org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.None;
 		//checkMaxIterations(int iteration, CriteriaType ecType)
@@ -116,7 +104,7 @@ public class EndCriteriaTest {
 	//rootEpsilon = 0.05
 	//Math.abs( xNew-xOld) < rootEpsilon_ 
 	//statStateIterations > maxStationaryStateIterations_
-	void testCheckStationaryPoint(EndCriteria ec) {
+	public void testCheckStationaryPoint() {
 		//create the matching constraint type -- StationaryPoint
 	    org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.None;
 		//checkStationaryPoint(double xOld, double xNew,  int statStateIterations,  CriteriaType ecType)
@@ -187,7 +175,7 @@ public class EndCriteriaTest {
 	@Ignore("End Criteria needs code review")
     //maxStationaryStateIterations_ = 30
 	//functionEpsilon = 0.08			
-	void testCheckStationaryFunctionValue(EndCriteria ec) {
+	public void testCheckStationaryFunctionValue() {
 		//create the matching constraint type -- StationaryFunctionValue
 	    org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.StationaryFunctionValue;
 		//checkStationaryFunctionValue(   double fxOld,  double fxNew,   int statStateIterations,  CriteriaType ecType)
@@ -260,8 +248,7 @@ public class EndCriteriaTest {
 	
 	@Ignore("End Criteria needs code review")
 	//functionEpsilon_ = 0.08
-	void testCheckStationaryFunctionAccuracy(EndCriteria ec) {
-	
+	public void testCheckStationaryFunctionAccuracy() {
 		//create the matching constraint type -- StationaryFunctionAccuracy
 	    org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.StationaryFunctionAccuracy;
 		//checkStationaryFunctionAccuracy(   double f,  boolean positiveOptimization,  CriteriaType ecType) 
@@ -311,8 +298,7 @@ public class EndCriteriaTest {
 
 	@Ignore("End Criteria needs code review")
 	//gradientNormEpsilon = 0.2
-	void testCheckZeroGradientNorm(EndCriteria ec) {
-	
+	public void testCheckZeroGradientNorm() {
 		//create the matching constraint type -- ZeroGradientNorm
 	    org.jquantlib.math.optimization.EndCriteria.CriteriaType cType = org.jquantlib.math.optimization.EndCriteria.CriteriaType.StationaryFunctionAccuracy;
 		//checkZeroGradientNorm(double gradientNorm,  CriteriaType ecType) 

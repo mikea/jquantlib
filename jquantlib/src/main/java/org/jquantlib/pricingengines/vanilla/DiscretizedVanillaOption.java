@@ -19,6 +19,8 @@
  */
 package org.jquantlib.pricingengines.vanilla;
 
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+
 import java.util.List;
 
 import org.jquantlib.assets.DiscretizedAsset;
@@ -34,13 +36,13 @@ import org.jquantlib.time.TimeGrid;
 public class DiscretizedVanillaOption extends DiscretizedAsset {
 
 	// private VanillaOption.Arguments arguments_;
-	private OneAssetOptionArguments arguments;
-	private List<Double> stoppingTimes;
+	private final OneAssetOptionArguments arguments;
+	private final List<Double> stoppingTimes;
 
-	public DiscretizedVanillaOption(OneAssetOptionArguments args,
-			StochasticProcess process, TimeGrid grid) {
+	public DiscretizedVanillaOption(final OneAssetOptionArguments args, final StochasticProcess process, final TimeGrid grid) {
 		this.arguments = args;
-		int size = args.exercise.size();
+		final int size = args.exercise.size();
+		this.stoppingTimes = new DoubleArrayList();
 		for (int i = 0; i < size; ++i) {
 			stoppingTimes.add(i, process.getTime(args.exercise.date(i)));
 			if (!grid.empty()) {
@@ -50,7 +52,7 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
 		}
 	}
 
-	public void reset(int size) {
+	public void reset(final int size) {
 		values = new Array(size, 0.0);
 		adjustValues();
 	}

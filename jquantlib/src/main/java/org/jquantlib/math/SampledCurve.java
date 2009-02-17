@@ -41,7 +41,9 @@
 package org.jquantlib.math;
 
 import org.jquantlib.math.functions.DoubleFunction;
-import org.jquantlib.math.interpolations.factories.CubicSpline;
+import org.jquantlib.math.interpolations.CubicSplineInterpolation;
+import org.jquantlib.math.interpolations.factories.NaturalCubicSpline;
+import org.jquantlib.util.stdlibc.Std;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +55,7 @@ import org.slf4j.LoggerFactory;
 // FIXME: work in progress [Dominik]
 public class SampledCurve {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(SampledCurve.class);
+	private final static Logger logger = LoggerFactory.getLogger(SampledCurve.class);
 
 	//
 	// private fields
@@ -76,97 +77,86 @@ public class SampledCurve {
 	}
 
 	public double valueAtCenter() /* @Readonly */{
-		if (empty())
-			throw new ArithmeticException("empty sampled curve");
+		if (empty()) throw new ArithmeticException("empty sampled curve");
 		int jmid = size() / 2;
-		if (size() % 2 == 1)
+		if (size() % 2 != 0)
 			return values_.at(jmid);
 		else
 			return (values_.at(jmid) + values_.at(jmid - 1) / 2.0);
 	}
 
 	public double firstDerivativeAtCenter() /* @Readonly */{
-		if (size() < 3)
-			throw new ArithmeticException(
-					"the size of the curve must be at least 3");
+		if (size() < 3) throw new ArithmeticException("the size of the curve must be at least 3");
 		int jmid = size() / 2;
-		if (size() % 2 == 1) {
-			return (values_.at(jmid + 1) - values_.at(jmid - 1))
-					/ (grid_.at(jmid + 1) - grid_.at(jmid - 1));
+		if (size() % 2 != 0) {
+			return (values_.at(jmid + 1) - values_.at(jmid - 1)) / (grid_.at(jmid + 1) - grid_.at(jmid - 1));
 		} else {
-			return (values_.at(jmid) - values_.at(jmid - 1))
-					/ (grid_.at(jmid) - grid_.at(jmid - 1));
+			return (values_.at(jmid) - values_.at(jmid - 1)) / (grid_.at(jmid) - grid_.at(jmid - 1));
 		}
 	}
 
 	public double secondDerivativeAtCenter() /* Read-only */{
-		if (size() < 4)
-			throw new ArithmeticException(
-					"the size of the curve must be at least 4");
+		if (size() < 4) throw new ArithmeticException("the size of the curve must be at least 4");
 		int jmid = size() / 2;
-		if (size() % 2 == 1) {
-			double deltaPlus = (values_.at(jmid + 1) - values_.at(jmid)
-					/ (grid_.at(jmid + 1) - grid_.at(jmid)));
-			double deltaMinus = (values_.at(jmid) - values_.at(jmid - 1)
-					/ (grid_.at(jmid) - grid_.at(jmid - 1)));
+		if (size() % 2 != 0) {
+			double deltaPlus = (values_.at(jmid + 1) - values_.at(jmid) / (grid_.at(jmid + 1) - grid_.at(jmid)));
+			double deltaMinus = (values_.at(jmid) - values_.at(jmid - 1) / (grid_.at(jmid) - grid_.at(jmid - 1)));
 			double dS = (grid_.at(jmid + 1) - grid_.at(jmid - 1)) / 2.0;
 			return (deltaPlus - deltaMinus) / dS;
 		} else {
-			double deltaPlus = (values_.at(jmid + 1) - values_.at(jmid - 1)
-					/ (grid_.at(jmid + 1) - grid_.at(jmid - 1)));
-			double deltaMinus = (values_.at(jmid) - values_.at(jmid - 2))
-					/ (grid_.at(jmid) - grid_.at(jmid - 2));
-			return (deltaPlus - deltaMinus)
-					/ (grid_.at(jmid) - grid_.at(jmid - 1));
+			double deltaPlus = (values_.at(jmid + 1) - values_.at(jmid - 1) / (grid_.at(jmid + 1) - grid_.at(jmid - 1)));
+			double deltaMinus = (values_.at(jmid) - values_.at(jmid - 2)) / (grid_.at(jmid) - grid_.at(jmid - 2));
+			return (deltaPlus - deltaMinus) / (grid_.at(jmid) - grid_.at(jmid - 1));
 		}
 	}
 
-	// Translation by Dominik
-	public void regrid(final Array new_grid) {
-		CubicSpline priceSpline = new CubicSpline(); // this line is definitely
-		// wrong
 
-		// priceSpline.reload(); // class cubicSplineImpl ?
-		Array newValues = new Array(new_grid.size());
+	
+	// TODO: needs code review
+    public void regrid(final Array newGrid) {
+    	double[] gridData  = grid_.getData();
+    	double[] valueData = values_.getData(); 
+        CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(gridData, valueData);
+        priceSpline.reload();
 
-		double val;
-		double grid;
+        final Array newValues = new Array(newGrid.size());
+        for (int i=0; i<newGrid.size(); i++) {
+        	newValues.set(i, priceSpline.evaluate(gridData[i],true) );
+        }
+        
+        values_.swap(newValues);
+        grid_ = newGrid;
+    }
 
-		// NOTE: Use Closeness.isClose [Richard]
-		/**
-		 * [H D FE] Test for floating point equality
-		 * 
-		 * [FE_FLOATING_POINT_EQUALITY] This operation compares two floating
-		 * point values for equality. Because floating point calculations may
-		 * involve rounding, calculated float and double values may not be
-		 * accurate. For values that must be precise, such as monetary values,
-		 * consider using a fixed-precision type such as BigDecimal. For values
-		 * that need not be precise, consider comparing for equality within some
-		 * range, for example: if ( Math.abs(x - y) < .0000001 ). See the Java
-		 * Language Specification, section 4.2.4.
-		 */
-		for (val = newValues.at(0), grid = new_grid.at(0); grid != new_grid
-				.at(new_grid.size() - 1); val++, grid++) {
-			// val = priceSpline(grid, true);
-		}
+    
+	// TODO: needs code review
+    public void regrid(final Array newGrid, final UnaryFunctionDouble func) {
+        final Array transformedGrid = new Array(grid_.size());
+        Std.transform(grid_, transformedGrid, func);
+        
+        
+    	double[] gridData  = transformedGrid.getData();
+    	double[] valueData = values_.getData(); 
+        CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(gridData, valueData);
+        priceSpline.reload();
 
-		values_.swap(newValues);
-		grid_ = new_grid;
-	}
-
-	// QuantLib:
-	/*
-	 * void SampledCurve::regrid(const Array &new_grid) { NaturalCubicSpline
-	 * priceSpline(grid_.begin(), grid_.end(), values_.begin());
-	 * priceSpline.update(); Array newValues(new_grid.size()); Array::iterator
-	 * val; Array::const_iterator grid; for (val = newValues.begin(), grid =
-	 * new_grid.begin() ; grid != new_grid.end(); val++, grid++) {val =
-	 * priceSpline(grid, true); } values_.swap(newValues); grid_ = new_grid; }
-	 */
-
+        final Array newValues = newGrid;
+        Std.transform(newValues, newValues, func);
+        
+        
+        for (int i=0; i<newValues.size(); i++) {
+        	newValues.set(i, priceSpline.evaluate(newValues.get(i), true) );
+        }
+        
+        values_.swap(newValues);
+        grid_ = newGrid;
+    }
+    
+    
 	//
 	// inner classes
 	//
+    
 	private void shiftGrid(double s) {
 		grid_.operatorAdd(s);
 	}

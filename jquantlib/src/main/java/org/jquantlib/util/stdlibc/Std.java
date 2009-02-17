@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.jquantlib.math.Array;
+import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.functions.DoubleFunction;
 
 /**
@@ -131,6 +132,18 @@ public final class Std {
 		return first;
 	}
 
+	
+	//TODO: needs code review
+	public static final void transform(final Array array, final Array result, final UnaryFunctionDouble func) {
+		double[] a = array.getData();
+		double[] r = result.getData();
+		
+		for (int i=0; i<a.length; i++) {
+			r[i] = func.evaluate(a[i]);
+		}
+	}
+	
+	
 	
 	
 	//
