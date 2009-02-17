@@ -38,17 +38,17 @@ public class MethodUtil {
 	
 	private final static Logger logger = LoggerFactory.getLogger(MethodUtil.class);
 	
-	public static <T> T invoke(Object object, String method, Object... args) {
+	public static <T> T invoke(final Object object, final String method, final Object... args) {
 		try {
 			Class clazz = object.getClass();
-			Method m = clazz.getMethod(method, getClassTypes(args));
-			return  (T) m.invoke(object, args);
+			Method tmethod = clazz.getMethod(method, getClassTypes(args));
+			return  (T) tmethod.invoke(object, args);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private static Class[] getClassTypes(Object[] args) {
+	private static Class[] getClassTypes(final Object[] args) {
 		Class[] clzzes = new Class[args.length];
 		for (int i = 0; i < args.length; i++) {
 			clzzes[i] = args[i].getClass();
