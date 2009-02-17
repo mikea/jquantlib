@@ -61,7 +61,9 @@ public class EndCriteriaTest {
 		// ec=null; // TODO: remove this line after EndCriteria is ready
 	}
 	
-
+	@Test
+	public void dummyTest(){
+	}
 	
 	@Ignore("End Criteria needs code review")
 	//maxIterations = 100
