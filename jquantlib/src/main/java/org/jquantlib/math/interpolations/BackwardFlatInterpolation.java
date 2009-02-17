@@ -72,7 +72,7 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
      */
     static public Interpolator getInterpolator() /* @ReadOnly */ {
         BackwardFlatInterpolation backwardFlatInterpolation = new BackwardFlatInterpolation();
-        return backwardFlatInterpolation. new BackwardFlarInterpolationImpl(backwardFlatInterpolation);
+        return new BackwardFlarInterpolationImpl(backwardFlatInterpolation);
     }
     
     
@@ -152,7 +152,7 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 	 * @author Richard Gomes
 	 */
     
-	private class BackwardFlarInterpolationImpl implements Interpolator {
+	private static class BackwardFlarInterpolationImpl implements Interpolator {
 		private BackwardFlatInterpolation delegate;
 		
 		public BackwardFlarInterpolationImpl(final BackwardFlatInterpolation delegate) {
