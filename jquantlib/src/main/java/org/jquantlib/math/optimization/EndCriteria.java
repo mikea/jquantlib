@@ -83,11 +83,11 @@ public class EndCriteria {
 		
 		gradientNormEpsilon_ = (Double.isNaN(gradientNormEpsilon)) ? functionEpsilon_ : gradientNormEpsilon;  
 		
-        if (maxStationaryStateIterations_ > 1) {
+        if (maxStationaryStateIterations_ < 1) {
         	throw new IllegalArgumentException("maxStationaryStateIterations_ must be greater than one");
         }
         
-        if (maxStationaryStateIterations_ < maxIterations_) {
+        if (maxStationaryStateIterations_ > maxIterations_) {
         	throw new IllegalArgumentException("maxStationaryStateIterations_ must be less than maxIterations_");
         }
 	}
