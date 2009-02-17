@@ -43,7 +43,7 @@ public enum Month {
 
 	private final int enumValue;
 	
-	private Month(int month) {
+	private Month(final int month) {
 		this.enumValue = month;
 	}
 	
@@ -62,35 +62,49 @@ public enum Month {
 	 * @param month is the ordinal number
 	 * @return a new Month given it's ordinal number
 	 */
-	static public Month valueOf(int month) {
+	static public Month valueOf(final int month) {
+		final Month returnMonth;
 		switch (month) {
 		case 1:
-			return Month.JANUARY;
+			returnMonth = Month.JANUARY;
+			break;
 		case 2:
-			return Month.FEBRUARY;
+			returnMonth = Month.FEBRUARY;
+			break;
 		case 3:
-			return Month.MARCH;
+			returnMonth = Month.MARCH;
+			break;
 		case 4:
-			return Month.APRIL;
+			returnMonth = Month.APRIL;
+			break;
 		case 5:
-			return Month.MAY;
+			returnMonth = Month.MAY;
+			break;
 		case 6:
-			return Month.JUNE;
+			returnMonth = Month.JUNE;
+			break;
 		case 7:
-			return Month.JULY;
+			returnMonth = Month.JULY;
+			break;
 		case 8:
-			return Month.AUGUST;
+			returnMonth = Month.AUGUST;
+			break;
 		case 9:
-			return Month.SEPTEMBER;
+			returnMonth = Month.SEPTEMBER;
+			break;
 		case 10:
-			return Month.OCTOBER;
+			returnMonth = Month.OCTOBER;
+			break;
 		case 11:
-			return Month.NOVEMBER;
+			returnMonth = Month.NOVEMBER;
+			break;
 		case 12:
-			return Month.DECEMBER;
+			returnMonth =  Month.DECEMBER;
+			break;
 		default:
 			throw new IllegalArgumentException();
 		}
+		return returnMonth;
 	}
 	
     /**
@@ -100,31 +114,44 @@ public enum Month {
      * @see IMM
      */
 	public char getImmChar() {
+		final char retunChar;
 		switch (enumValue) {
 		case 1:
-			return 'F';
+			retunChar =  'F';
+			break;
 		case 2:
-			return 'G';
+			retunChar =  'G';
+			break;
 		case 3:
-			return 'H';
+			retunChar =  'H';
+			break;
 		case 4:
-			return 'J';
+			retunChar =  'J';
+			break;
 		case 5:
-			return 'K';
+			retunChar =  'K';
+			break;
 		case 6:
-			return 'M';
+			retunChar =  'M';
+			break;
 		case 7:
-			return 'N';
+			retunChar =  'N';
+			break;
 		case 8:
-			return 'Q';
+			retunChar =  'Q';
+			break;
 		case 9:
-			return 'U';
+			retunChar =  'U';
+			break;
 		case 10:
-			return 'V';
+			retunChar =  'V';
+			break;
 		case 11:
-			return 'X';
+			retunChar =  'X';
+			break;
 		case 12:
-			return 'Z';
+			retunChar =  'Z';
+			break;
 		default:
 			throw new IllegalArgumentException();
 		}
@@ -136,53 +163,69 @@ public enum Month {
 	 * @param immCode is the IMM code 
 	 * @return a new month given it's IMM code
 	 */
-	static public Month valueOf(char immCode) {
+	static public Month valueOf(final char immCode) {
+		final Month returnMonth;
 		switch (immCode) {
-		case 'F': return Month.JANUARY;
-		case 'G': return Month.FEBRUARY;
-		case 'H': return Month.MARCH;
-		case 'J': return Month.APRIL;
-		case 'K': return Month.MAY;
-		case 'M': return Month.JUNE;
-		case 'N': return Month.JULY;
-		case 'Q': return Month.AUGUST;
-		case 'U': return Month.SEPTEMBER;
-		case 'V': return Month.OCTOBER;
-		case 'X': return Month.NOVEMBER;
-		case 'Z': return Month.DECEMBER;
+		case 'F': returnMonth = Month.JANUARY;break;
+		case 'G': returnMonth = Month.FEBRUARY;break;
+		case 'H': returnMonth = Month.MARCH;break;
+		case 'J': returnMonth = Month.APRIL;break;
+		case 'K': returnMonth = Month.MAY;break;
+		case 'M': returnMonth = Month.JUNE;break;
+		case 'N': returnMonth = Month.JULY;break;
+		case 'Q': returnMonth = Month.AUGUST;break;
+		case 'U': returnMonth = Month.SEPTEMBER;break;
+		case 'V': returnMonth = Month.OCTOBER;break;
+		case 'X': returnMonth = Month.NOVEMBER;break;
+		case 'Z': returnMonth = Month.DECEMBER;break;
 		default:
 			throw new IllegalArgumentException();
 		}
+		return returnMonth;
 	}
 	
 	public String toString() {
+		final String returnString;
 		switch (enumValue) {
 		case 1:
-			return "January";
+			returnString = "January";
+			break;
 		case 2:
-			return "February";
+			returnString = "February";
+			break;
 		case 3:
-			return "March";
+			returnString = "March";
+			break;
 		case 4:
-			return "April";
+			returnString = "April";
+			break;
 		case 5:
-			return "May";
+			returnString = "May";
+			break;
 		case 6:
-			return "June";
+			returnString = "June";
+			break;
 		case 7:
-			return "July";
+			returnString = "July";
+			break;
 		case 8:
-			return "August";
+			returnString = "August";
+			break;
 		case 9:
-			return "September";
+			returnString = "September";
+			break;
 		case 10:
-			return "October";
+			returnString = "October";
+			break;
 		case 11:
-			return "November";
+			returnString = "November";
+			break;
 		case 12:
-			return "December";
+			returnString = "December";
+			break;
 		default:
 			throw new IllegalArgumentException();
 		}
+		return returnString;
 	}
 }
