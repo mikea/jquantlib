@@ -55,7 +55,7 @@ import org.jquantlib.pricingengines.results.OneAssetOptionResults;
  * @author <Richard Gomes>
  *
  */
-
+@SuppressWarnings("PMD.AbstractNaming")
 public abstract class BarrierOptionEngine  extends GenericEngine<BarrierOptionArguments, OneAssetOptionResults>{
 
 	
