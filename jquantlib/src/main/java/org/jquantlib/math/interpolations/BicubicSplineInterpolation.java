@@ -99,7 +99,7 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
      */
     static public Interpolator2D getInterpolator() {
         BicubicSplineInterpolation bicubicSplineInterpolation = new BicubicSplineInterpolation();
-        return bicubicSplineInterpolation. new BicubicSplineInterpolationImpl(bicubicSplineInterpolation);
+        return new BicubicSplineInterpolationImpl(bicubicSplineInterpolation);
     }
 
     
@@ -144,7 +144,7 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
      * 
      * @author Richard Gomes
      */
-    private class BicubicSplineInterpolationImpl implements Interpolator2D {
+    private static class BicubicSplineInterpolationImpl implements Interpolator2D {
         private BicubicSplineInterpolation delegate;
         
         public BicubicSplineInterpolationImpl(final BicubicSplineInterpolation delegate) {
