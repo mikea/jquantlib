@@ -151,7 +151,7 @@ public class ActualActual extends AbstractDayCounter {
     // inner classes
     //
     
-    private final class ISMA extends AbstractDayCounter {
+    private static final class ISMA extends AbstractDayCounter {
 
         @Override
         public final String name() /* @ReadOnly */{
@@ -267,7 +267,7 @@ public class ActualActual extends AbstractDayCounter {
 		}
 	}
 
-	private final class ISDA extends AbstractDayCounter {
+	private static final class ISDA extends AbstractDayCounter {
 
         @Override
 		public final String name() /* @ReadOnly */{
@@ -303,7 +303,7 @@ public class ActualActual extends AbstractDayCounter {
 
 	}
 
-	private final class AFB extends AbstractDayCounter {
+	private static final class AFB extends AbstractDayCounter {
 
         @Override
 		public final String name() {
