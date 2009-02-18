@@ -114,47 +114,48 @@ public enum Month {
      * @see IMM
      */
 	public char getImmChar() {
-		final char retunChar;
+		final char returnChar;
 		switch (enumValue) {
 		case 1:
-			retunChar =  'F';
+			returnChar =  'F';
 			break;
 		case 2:
-			retunChar =  'G';
+			returnChar =  'G';
 			break;
 		case 3:
-			retunChar =  'H';
+			returnChar =  'H';
 			break;
 		case 4:
-			retunChar =  'J';
+			returnChar =  'J';
 			break;
 		case 5:
-			retunChar =  'K';
+			returnChar =  'K';
 			break;
 		case 6:
-			retunChar =  'M';
+			returnChar =  'M';
 			break;
 		case 7:
-			retunChar =  'N';
+			returnChar =  'N';
 			break;
 		case 8:
-			retunChar =  'Q';
+			returnChar =  'Q';
 			break;
 		case 9:
-			retunChar =  'U';
+			returnChar =  'U';
 			break;
 		case 10:
-			retunChar =  'V';
+			returnChar =  'V';
 			break;
 		case 11:
-			retunChar =  'X';
+			returnChar =  'X';
 			break;
 		case 12:
-			retunChar =  'Z';
+			returnChar =  'Z';
 			break;
 		default:
 			throw new IllegalArgumentException();
 		}
+		return returnChar;
 	}
 
 	/**

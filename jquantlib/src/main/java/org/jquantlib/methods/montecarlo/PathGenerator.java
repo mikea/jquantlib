@@ -75,7 +75,7 @@ public class PathGenerator<RNG extends RandomNumberGenerator, GSG extends Random
                           final /*@NonNegative*/ int timeSteps,
                           final GSG generator,
                           final boolean brownianBridge) {
-    	if (0==0) {throw new UnsupportedOperationException("Work in progress")};
+    	if (0==0) {throw new UnsupportedOperationException("Work in progress"); }
         this.brownianBridge_ = brownianBridge;
         this.generator_ = generator;
         this.dimension_ = generator.dimension();
