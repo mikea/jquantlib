@@ -138,7 +138,7 @@ public class UnitedKingdom extends DelegateCalendar {
 	// private inner classes
 	//
 	
-	private final class UKSettlementCalendar extends WesternCalendar {
+	private static final class UKSettlementCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "UK settlement";
@@ -182,7 +182,7 @@ public class UnitedKingdom extends DelegateCalendar {
 		}
 	}
 	
-	private final class UKExchangeCalendar extends WesternCalendar {
+	private static final class UKExchangeCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "London stock exchange";
@@ -226,7 +226,7 @@ public class UnitedKingdom extends DelegateCalendar {
 		}
 	}
 	
-	private final class UKMetalsCalendar extends WesternCalendar {
+	private static final class UKMetalsCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "London metals exchange";

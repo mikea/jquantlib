@@ -95,7 +95,7 @@ public class Ukraine extends DelegateCalendar {
 	}
 
 
-	private final class UkraineUSECalendar extends WesternCalendar {
+	private static final class UkraineUSECalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Ukraine stock-exchange";

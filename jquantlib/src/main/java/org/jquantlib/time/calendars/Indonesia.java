@@ -127,7 +127,7 @@ public class Indonesia extends DelegateCalendar {
     // private inner classes
     //
     
-    private final class IndonesiaBEJCalendar extends WesternCalendar {
+    private static final class IndonesiaBEJCalendar extends WesternCalendar {
 
         public String getName() {
             return "Jakarta stock exchange";

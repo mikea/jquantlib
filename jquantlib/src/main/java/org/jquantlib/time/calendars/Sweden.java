@@ -99,7 +99,7 @@ public class Sweden extends DelegateCalendar {
 	// private inner classes
 	//
 
-	 private final class SwedenSECalendar extends WesternCalendar {
+	 private static final class SwedenSECalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Sweden Stock Exchange";

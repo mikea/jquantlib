@@ -111,7 +111,7 @@ public class Mexico extends DelegateCalendar {
     // private inner classes
     //
     
-	private final class MexicoSettlementCalendar extends WesternCalendar {
+	private static final class MexicoSettlementCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Mexico stock Market";
@@ -156,7 +156,7 @@ public class Mexico extends DelegateCalendar {
 	}
 
 
-	final private class BMVExchangeCalendar extends WesternCalendar {
+	final static private class BMVExchangeCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Mexican Stock Exchange";

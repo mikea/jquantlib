@@ -134,7 +134,7 @@ public class Brazil extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class BrazilSettlementCalendar extends WesternCalendar {
+	private static final class BrazilSettlementCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Brazil";
@@ -177,7 +177,7 @@ public class Brazil extends DelegateCalendar {
 	
 	}
 	
-	private final class BrazilExchangeCalendar extends WesternCalendar {
+	private static final class BrazilExchangeCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "BOVESPA";

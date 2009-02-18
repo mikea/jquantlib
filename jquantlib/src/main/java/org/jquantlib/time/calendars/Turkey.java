@@ -91,7 +91,7 @@ public class Turkey extends DelegateCalendar {
 	// private final classes
 	//
 	
-	private final class TurkeyISECalendar extends WesternCalendar {
+	private static final class TurkeyISECalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Istanbul Stock Exchange Turkey";

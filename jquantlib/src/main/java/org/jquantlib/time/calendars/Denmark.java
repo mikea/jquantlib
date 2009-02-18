@@ -91,7 +91,7 @@ public class Denmark extends DelegateCalendar {
 		}
 	}
 
-	private final class CSECalendar extends WesternCalendar {
+	private static final class CSECalendar extends WesternCalendar {
 
 		@Override
 		public String getName() {

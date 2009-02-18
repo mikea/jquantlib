@@ -101,7 +101,7 @@ public class Hungary extends DelegateCalendar {
 	//
 	
 
-	private final class SettlementCalendar extends WesternCalendar {
+	private static final class SettlementCalendar extends WesternCalendar {
 	    
 		public boolean isBusinessDay(Date date) {
 	        Weekday w = date.getWeekday();

@@ -72,7 +72,7 @@ public class Target extends DelegateCalendar {
 	// private inner classes
 	//
 	
-    private final class TargetCalendar extends WesternCalendar {
+    private static final class TargetCalendar extends WesternCalendar {
     
     	public String getName() {
     		return "TARGET";

@@ -116,7 +116,7 @@ public class Poland extends DelegateCalendar {
 	//
 
 	//FIXME: Reliable years: 2007, 2008, 2009
-	private final class PolandSettlementCalendar extends WesternCalendar {
+	private static final class PolandSettlementCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Poland settlement";
@@ -159,7 +159,7 @@ public class Poland extends DelegateCalendar {
 
 
 	//FIXME: Reliable years: 2007, 2008, 2009
-	final private class PolandWSECalendar extends WesternCalendar {
+	final static private class PolandWSECalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Warsaw Stock Exchange";

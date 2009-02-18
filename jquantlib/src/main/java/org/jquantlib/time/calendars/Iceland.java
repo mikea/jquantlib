@@ -73,7 +73,7 @@ public class Iceland extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class IcelandICEXCalendar extends WesternCalendar {
+	private static final class IcelandICEXCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "ICEX";

@@ -110,7 +110,7 @@ public class Germany extends DelegateCalendar {
 	// private inner classes
 	//
 	
-	private final class GermanySettlementCalendar extends WesternCalendar {
+	private static final class GermanySettlementCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "German settlement";
@@ -152,7 +152,7 @@ public class Germany extends DelegateCalendar {
 		}
 	}
 	
-	private final class FWBCalendar extends WesternCalendar {
+	private static final class FWBCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Frankfurt stock exchange";
@@ -186,7 +186,7 @@ public class Germany extends DelegateCalendar {
 		}
 	}
 	
-	private final class XetraCalendar extends WesternCalendar {
+	private static final class XetraCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Xetra";
@@ -220,7 +220,7 @@ public class Germany extends DelegateCalendar {
 		}
 	}
 	
-	private final class EurexCalendar extends WesternCalendar {
+	private static final class EurexCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Eurex";

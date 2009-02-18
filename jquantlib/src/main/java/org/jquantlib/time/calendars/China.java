@@ -106,7 +106,7 @@ public class China extends DelegateCalendar {
 	// private inner classes
 	//
 	
-	private final class ChinaSSECalendar extends WesternCalendar {
+	private static final class ChinaSSECalendar extends WesternCalendar {
 
 		@Override
 		public String getName() {

@@ -111,7 +111,7 @@ public class Australia extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class AustraliaSettlementCalendar extends WesternCalendar {
+	private static final class AustraliaSettlementCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Australia";
@@ -152,7 +152,7 @@ public class Australia extends DelegateCalendar {
 	
 	}
 	
-	private final class AustraliaExchangeCalendar extends WesternCalendar {
+	private static final class AustraliaExchangeCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "ASX";

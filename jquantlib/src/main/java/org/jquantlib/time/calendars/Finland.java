@@ -99,7 +99,7 @@ public class Finland extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class FinlandHSECalendar extends WesternCalendar {
+	private static final class FinlandHSECalendar extends WesternCalendar {
 
 		public String getName() {
 			return "HSE";

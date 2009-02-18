@@ -107,7 +107,7 @@ public class NewZealand extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class NewZealandNZXCalendar extends WesternCalendar {
+	private static final class NewZealandNZXCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "OsloBors";

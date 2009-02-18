@@ -123,7 +123,7 @@ public class Japan extends DelegateCalendar {
     // private inner classes
     //
     
-	private final class JapanSettlementCalendar extends WesternCalendar {
+	private static final class JapanSettlementCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Japan";

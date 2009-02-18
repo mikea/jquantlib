@@ -107,7 +107,7 @@ public class HongKong extends DelegateCalendar {
 	// private inner classes
 	//
 	
-	private final class HongKongSettlementCalendar extends WesternCalendar {
+	private static final class HongKongSettlementCalendar extends WesternCalendar {
 	    
 		public boolean isBusinessDay(Date date) {
 	        Weekday w = date.getWeekday();

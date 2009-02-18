@@ -123,7 +123,7 @@ public class India extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class IndiaNSECalendar extends WesternCalendar {
+	private static final class IndiaNSECalendar extends WesternCalendar {
 
 		public String getName() {
 			return "National Stock Exchange of India";

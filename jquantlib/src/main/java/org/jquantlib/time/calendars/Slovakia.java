@@ -109,7 +109,7 @@ public class Slovakia extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class SlovakiaBSSECalendar extends WesternCalendar {
+	private static final class SlovakiaBSSECalendar extends WesternCalendar {
 
 		public String getName() {
 			return "Bratislava stock exchange";

@@ -185,7 +185,7 @@ public class UnitedStates extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class USSettlementCalendar extends WesternCalendar {
+	private static final class USSettlementCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "US settlement";
@@ -240,7 +240,7 @@ public class UnitedStates extends DelegateCalendar {
 		}
 	}
 	
-	private final class NyseCalendar extends WesternCalendar {
+	private static final class NyseCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "New York stock exchange";
@@ -321,7 +321,7 @@ public class UnitedStates extends DelegateCalendar {
 		}
 	}
 	
-	private final class USGovernmentBondCalendar extends WesternCalendar {
+	private static final class USGovernmentBondCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "US government bond market";
@@ -371,7 +371,7 @@ public class UnitedStates extends DelegateCalendar {
 		}
 	}
 	
-	private final class USNercCalendar extends WesternCalendar {
+	private static final class USNercCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "North American Energy Reliability Council";

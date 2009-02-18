@@ -137,7 +137,7 @@ public class Argentina extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class ArgentinaSettlementCalendar extends WesternCalendar {
+	private static final class ArgentinaSettlementCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Argentina";
@@ -192,7 +192,7 @@ public class Argentina extends DelegateCalendar {
 	
 	}
 	
-	private final class ArgentinaMervalExchangeCalendar extends WesternCalendar {
+	private static final class ArgentinaMervalExchangeCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "MERVAL";

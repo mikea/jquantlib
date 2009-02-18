@@ -132,7 +132,7 @@ public class Canada extends DelegateCalendar {
 	// private inner classes
 	//
 	
-	private final class CanadaSettlementCalendar extends WesternCalendar {
+	private static final class CanadaSettlementCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Canada";
@@ -174,7 +174,7 @@ public class Canada extends DelegateCalendar {
 		}
 	}
 	
-	private final class TsxCalendar extends WesternCalendar {
+	private static final class TsxCalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "TSX";

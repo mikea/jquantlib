@@ -105,7 +105,7 @@ public class Taiwan extends DelegateCalendar {
 	// private final classes
 	//
 	
-	private final class TaiwanTSECalendar extends WesternCalendar {
+	private static final class TaiwanTSECalendar extends WesternCalendar {
 	    @Override
 		public String getName() {
 			return "Taiwan stock exchange";

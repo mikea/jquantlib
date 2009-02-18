@@ -99,7 +99,7 @@ public class CzechRepublic extends DelegateCalendar {
 	// private inner classes
 	//
 	
-	private final class CzechRepublicPSECalendar extends WesternCalendar {
+	private static final class CzechRepublicPSECalendar extends WesternCalendar {
 	
 		public String getName() {
 			return "Prague stock exchange of CzechRepublic";

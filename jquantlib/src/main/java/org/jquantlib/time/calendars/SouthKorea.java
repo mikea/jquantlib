@@ -110,7 +110,7 @@ public class SouthKorea extends DelegateCalendar {
     // private inner classes
     //
     
-    private final class SouthKoreaKRXCalendar extends WesternCalendar {
+    private static final class SouthKoreaKRXCalendar extends WesternCalendar {
         public String getName() {
             return "Korea exchange";
         }

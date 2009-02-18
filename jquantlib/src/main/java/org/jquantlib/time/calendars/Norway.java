@@ -99,7 +99,7 @@ public class Norway extends DelegateCalendar {
 	// private inner classes
 	//
 
-	private final class OsloBorsCalendar extends WesternCalendar {
+	private static final class OsloBorsCalendar extends WesternCalendar {
 
 		public String getName() {
 			return "OsloBors";
