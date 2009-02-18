@@ -699,7 +699,7 @@ public class DefaultDate extends BaseDate {
      * 
      * @author Richard Gomes
      */
-    private final class UpdatableDate implements Updatable<Date> {
+    private static final class UpdatableDate implements Updatable<Date> {
         
         private final DefaultDate target;
         

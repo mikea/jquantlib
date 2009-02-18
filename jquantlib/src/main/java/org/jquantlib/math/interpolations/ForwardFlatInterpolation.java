@@ -71,7 +71,7 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
      */
     static public Interpolator getInterpolator() /* @ReadOnly */{
         ForwardFlatInterpolation forwardFlatInterpolation = new ForwardFlatInterpolation();
-        return forwardFlatInterpolation.new ForwardFlatInterpolationImpl(forwardFlatInterpolation);
+        return new ForwardFlatInterpolationImpl(forwardFlatInterpolation);
     }
 
 
@@ -149,7 +149,7 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 	 * @author Anand Mani
 	 */
 
-	private class ForwardFlatInterpolationImpl implements Interpolator {
+	private static class ForwardFlatInterpolationImpl implements Interpolator {
 		private ForwardFlatInterpolation delegate;
 
 		public ForwardFlatInterpolationImpl(final ForwardFlatInterpolation delegate) {

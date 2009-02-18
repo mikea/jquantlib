@@ -61,7 +61,7 @@ public class CurveDependentStepCondition implements StepCondition<Array> {
         return curveItem.getValue(a, index);
     }
 
-    class ArrayWrapper implements CurveWrapper {
+    static class ArrayWrapper implements CurveWrapper {
         private Array values;
 
         public ArrayWrapper(Array values) {
@@ -73,7 +73,7 @@ public class CurveDependentStepCondition implements StepCondition<Array> {
         }
     };
 
-    class PayoffWrapper implements CurveWrapper {
+    static class PayoffWrapper implements CurveWrapper {
         private Payoff payoff;
 
         public PayoffWrapper(Payoff p) {

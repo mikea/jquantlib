@@ -398,7 +398,7 @@ public class BlackCalculator {
 	// inner classes
 	//
 	
-	private class Calculator implements TypedVisitor<Payoff> {
+	private static class Calculator implements TypedVisitor<Payoff> {
 
 	    private static final String INVALID_OPTION_TYPE = "invalid option type";
 		private static final String INVALID_PAYOFF_TYPE = "invalid payoff type";
@@ -442,7 +442,7 @@ public class BlackCalculator {
 		
 		private final PlainVanillaPayoffVisitor plainVanillaPayoffVisitor = new PlainVanillaPayoffVisitor();
 		
-		private final class PlainVanillaPayoffVisitor implements Visitor<Payoff> {
+		private static final class PlainVanillaPayoffVisitor implements Visitor<Payoff> {
 			
 		    @Override
 			public final void visit(final Payoff o) {

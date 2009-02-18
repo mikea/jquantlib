@@ -300,7 +300,7 @@ public class OneAssetOption extends Option {
     /**
      * Helper class for implied volatility calculation
      */
-    private class ImpliedVolatilityHelper implements UnaryFunctionDouble {
+    private static class ImpliedVolatilityHelper implements UnaryFunctionDouble {
     	
         private final OneAssetOptionResults impliedResults;
 

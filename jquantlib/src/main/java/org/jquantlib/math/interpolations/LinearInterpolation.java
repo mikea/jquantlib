@@ -73,7 +73,7 @@ public class LinearInterpolation extends AbstractInterpolation {
      */
     static public Interpolator getInterpolator() /* @ReadOnly */ {
         LinearInterpolation linearInterpolation = new LinearInterpolation();
-        return linearInterpolation. new LinearInterpolationImpl(linearInterpolation);
+        return new LinearInterpolationImpl(linearInterpolation);
     }
     
     
@@ -154,7 +154,7 @@ public class LinearInterpolation extends AbstractInterpolation {
 	 * 
 	 * @author Richard Gomes
 	 */
-	private class LinearInterpolationImpl implements Interpolator {
+	private static class LinearInterpolationImpl implements Interpolator {
 		private LinearInterpolation delegate;
 		
 		public LinearInterpolationImpl(final LinearInterpolation delegate) {

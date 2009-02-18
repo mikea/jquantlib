@@ -74,7 +74,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
      */
     static public Interpolator getInterpolator() {
         LogLinearInterpolation logLinearInterpolation = new LogLinearInterpolation();
-        return logLinearInterpolation. new LogLinearInterpolationImpl(logLinearInterpolation);
+        return new LogLinearInterpolationImpl(logLinearInterpolation);
     }
     
 
@@ -169,7 +169,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	 * @author Richard Gomes
 	 */	
 	
-	private class LogLinearInterpolationImpl implements Interpolator {
+	private static class LogLinearInterpolationImpl implements Interpolator {
 		private LogLinearInterpolation delegate;
 		
 		public LogLinearInterpolationImpl(final LogLinearInterpolation delegate) {
