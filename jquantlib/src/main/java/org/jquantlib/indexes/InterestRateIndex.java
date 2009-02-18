@@ -69,6 +69,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 	}
 
 	@Override
+	//FIXME: a detailed code review is needed here!
 	public double fixing(Date fixingDate, boolean forecastTodaysFixing) {
 		if (isValidFixingDate(fixingDate))
 			throw new IllegalStateException("Fixing date " + fixingDate

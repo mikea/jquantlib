@@ -119,12 +119,16 @@ public class IntervalPrice implements Serializable {
         switch (type) {
             case Open:
                 this.open = value;
+                break;
             case Close:
                 this.close = value;
+                break;
             case High:
                 this.high = value;
+                break;
             case Low:
                 this.low = value;
+                break;
             default:
                 throw new IllegalArgumentException("Unknown price type");
         }

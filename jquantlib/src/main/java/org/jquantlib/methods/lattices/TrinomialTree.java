@@ -30,7 +30,7 @@ import org.jquantlib.time.TimeGrid;
 
 public class TrinomialTree extends Tree {
 
-	public static Branches branches = Branches.TRINOMIAL;
+	public static final Branches branches = Branches.TRINOMIAL;
 
 	protected Vector<Branching> branchings_ = new Vector<Branching>();
 	protected double x0_;

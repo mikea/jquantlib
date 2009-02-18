@@ -41,7 +41,7 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  * 
  */
-// TODO:
+// FIXME:: This class needs detailed code review
 public class DepositRateHelper<T extends TermStructure> extends
 		RelativeDateRateHelper<T> {
 
@@ -63,6 +63,9 @@ public class DepositRateHelper<T extends TermStructure> extends
 			Calendar calendar, BusinessDayConvention convention,
 			boolean endOfMonth, DayCounter dayCounter) {
 		super(rate, null, null, null);
+		
+		if (0==0) throw new UnsupportedOperationException("not implemented yet");
+		
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
 				tenor, fixingDays, calendar, null, convention, endOfMonth,
