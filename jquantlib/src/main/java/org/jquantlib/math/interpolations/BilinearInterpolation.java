@@ -61,7 +61,7 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
      */
     static public Interpolator2D getInterpolator() {
         BilinearInterpolation bilinearInterpolation = new BilinearInterpolation();
-        return bilinearInterpolation. new BilinearInterpolationImpl(bilinearInterpolation);
+        return new BilinearInterpolationImpl(bilinearInterpolation);
     }
 
     
@@ -95,7 +95,7 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
 	 * 
 	 * @author Richard Gomes
 	 */
-	private class BilinearInterpolationImpl implements Interpolator2D {
+	private static class BilinearInterpolationImpl implements Interpolator2D {
 		private BilinearInterpolation delegate;
 		
 		public BilinearInterpolationImpl(final BilinearInterpolation delegate) {
