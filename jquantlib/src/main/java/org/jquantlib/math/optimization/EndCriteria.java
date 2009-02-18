@@ -93,24 +93,19 @@ public class EndCriteria {
 	}
 	
 	/*! Test if the number of iteration is below MaxIterations */
-	/* TODO: Review this was implementation was probably incorrect since the c++ implementation was pass by reference, so we have to 
-	 * modify the parameter itself.
+	/* TODO: The intention was to modify the passed reference ecType and not this.ecType. however, the question is how 
+	 * this should be done without changing the method signature?
+	 */
     public boolean checkMaxIterations(
     		final int iteration, 
     		final CriteriaType ecType) {
         if (iteration < maxIterations_)
             return false;
+        //this is wrong!!!!!!!!!!!!!!!
         this.ecType = CriteriaType.MaxIterations;
         return true;
-    }*/
-    public boolean checkMaxIterations(
-    		final int iteration, 
-    	    CriteriaType ecType) {
-        if (iteration < maxIterations_)
-            return false;
-        ecType = CriteriaType.MaxIterations;
-        return true;
     }
+
     
 	/*! Test if the root variation is below rootEpsilon */
     public boolean checkStationaryPoint(
