@@ -136,7 +136,7 @@ public class VisitorTest {
 	// declare TypedVisitors and corresponding Visitors
 	//
 	
-	private class NumberTypedVisitor implements TypedVisitor<Number> {
+	private static class NumberTypedVisitor implements TypedVisitor<Number> {
 		@Override
 		public Visitor<Number> getVisitor(Class<? extends Number> klass) {
 			return (klass==Number.class) ? visitor : null;
@@ -148,7 +148,7 @@ public class VisitorTest {
 		
 		private NumberVisitor visitor = new NumberVisitor();
 		
-		private class NumberVisitor implements Visitor<Number> {
+		private static class NumberVisitor implements Visitor<Number> {
 			@Override
 			public void visit(Number o) {
 				logger.info("Number :: "+o);
@@ -157,7 +157,7 @@ public class VisitorTest {
 	}
 	
 	
-	private class DoubleTypedVisitor extends NumberTypedVisitor {
+	private static class DoubleTypedVisitor extends NumberTypedVisitor {
 		@Override
 		public Visitor<Number> getVisitor(Class<? extends Number> klass) {
 			return (klass==Double.class) ? visitor : null;
@@ -169,7 +169,7 @@ public class VisitorTest {
 		
 		private DoubleVisitor visitor = new DoubleVisitor();
 		
-		private class DoubleVisitor implements Visitor<Number> {
+		private static class DoubleVisitor implements Visitor<Number> {
 			@Override
 			public void visit(Number o) {
 				Double obj = (Double)o;
@@ -178,7 +178,7 @@ public class VisitorTest {
 		}
 	}
 	
-	private class IntegerTypedVisitor extends NumberTypedVisitor {
+	private static class IntegerTypedVisitor extends NumberTypedVisitor {
 		@Override
 		public Visitor<Number> getVisitor(Class<? extends Number> klass) {
 			return (klass==Integer.class) ? visitor : null;
@@ -190,7 +190,7 @@ public class VisitorTest {
 		
 		private IntegerVisitor visitor = new IntegerVisitor();
 		
-		private class IntegerVisitor implements Visitor<Number> {
+		private static class IntegerVisitor implements Visitor<Number> {
 			@Override
 			public void visit(Number o) {
 				Integer obj = (Integer)o;

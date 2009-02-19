@@ -47,7 +47,7 @@ public class OldPricer {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
-	private class BatchData {
+	private static class BatchData {
 	        Option.Type type;
 	        double underlying;
 	        double strike;

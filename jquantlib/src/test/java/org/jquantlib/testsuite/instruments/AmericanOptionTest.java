@@ -54,6 +54,7 @@ package org.jquantlib.testsuite.instruments;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 
@@ -788,15 +789,15 @@ public class AmericanOptionTest {
 												(value_p - value_m) / dT);
 
 										// compare
-										for (String greek : calculated.keySet()) {
-											double expct = expected.get(greek), calcl = calculated
-													.get(greek), tol = tolerance
-													.get(greek);
+										for (Entry<String, Double> greek : calculated.entrySet()) {
+											double expct = expected.get(greek.getKey()), calcl = calculated
+													.get(greek.getKey()), tol = tolerance
+													.get(greek.getKey());
 											double error = Utilities
 													.relativeError(expct,
 															calcl, u);
 											if (error > tol) {
-												REPORT_FAILURE(greek, payoff,
+												REPORT_FAILURE(greek.getKey(), payoff,
 														exercise, u, q, r,
 														today, v, expct, calcl,
 														error, tol);
@@ -931,15 +932,15 @@ public class AmericanOptionTest {
 												(value_p - value_m) / dT);
 
 										// compare
-										for (String greek : calculated.keySet()) {
-											double expct = expected.get(greek), calcl = calculated
-													.get(greek), tol = tolerance
-													.get(greek);
+										for (Entry<String, Double> greek : calculated.entrySet()) {
+											double expct = expected.get(greek.getKey()), calcl = calculated
+													.get(greek.getKey()), tol = tolerance
+													.get(greek.getKey());
 											double error = Utilities
 													.relativeError(expct,
 															calcl, u);
 											if (error > tol) {
-												REPORT_FAILURE(greek, payoff,
+												REPORT_FAILURE(greek.getKey(), payoff,
 														exercise, u, q, r,
 														today, v, expct, calcl,
 														error, tol);
@@ -983,7 +984,7 @@ public class AmericanOptionTest {
 	// private inner classes
 	//
 
-	private class AmericanOptionData {
+	private static class AmericanOptionData {
 
 		private final Option.Type type;
 		private final double /* @Real */strike;

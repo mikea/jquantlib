@@ -40,7 +40,7 @@ public class PiecewiseYieldCurveTest {
 
     private final static Logger logger = LoggerFactory.getLogger(PiecewiseYieldCurveTest.class);
 
-	private class Datum {
+	private static class Datum {
 		public int n;
 		public TimeUnit units;
 		public double rate;
@@ -53,7 +53,7 @@ public class PiecewiseYieldCurveTest {
 		}
 	}
 
-	private class BondDatum {
+	private static class BondDatum {
 		public int n;
 		public TimeUnit units;
 		public int length;

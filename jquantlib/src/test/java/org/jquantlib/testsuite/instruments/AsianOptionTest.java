@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import junit.framework.TestCase;
 
@@ -128,7 +129,7 @@ public class AsianOptionTest {
 	    logger.info("DivDf: "+ qTS.discount(exerciseDate));
 	    
 	    List<Date> fixingDates = new ArrayList<Date>(futureFixings);
-	    int dt = (int)(360/futureFixings+0.5);
+	    int dt = (int)(360.0/((double) futureFixings)+0.5);
 	    fixingDates.add(DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(dt));
 	    for (int j=1; j<futureFixings; j++){
 	    	Date prevDate = fixingDates.get(j-1);
@@ -314,13 +315,13 @@ public class AsianOptionTest {
 	                          expected.put("theta", (value_p - value_m)/dT);
 
 	                          // compare
-	                          for (String greek: calculated.keySet()) {
-	                              double expct = expected.get(greek);
-	                              double calcl = calculated.get(greek);
-	                              double tol   = tolerance.get(greek);
+	                          for (Entry<String, Double> greek: calculated.entrySet()) {
+	                              double expct = expected.get(greek.getKey());
+	                              double calcl = calculated.get(greek.getKey());
+	                              double tol   = tolerance.get(greek.getKey());
 	                              double error = Utilities.relativeError(expct,calcl,u);
 	                              if (error>tol) {
-	                                  reportFailure(greek, AverageType.Geometric,
+	                                  reportFailure(greek.getKey(), AverageType.Geometric,
 	                                                 runningAverage, pastFixings,
 	                                                 new ArrayList<Date>(),
 	                                                 payoff, maturity,

@@ -73,7 +73,7 @@ public class DayCountersTest {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
-	private class SingleCase {
+	private static class SingleCase {
 	    private ActualActual.Convention convention;
 	    private Date start;
 	    private Date end;

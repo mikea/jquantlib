@@ -57,7 +57,7 @@ public class TermStructuresTest {
 	private YieldTermStructure dummyTermStructure;
 
 
-	private class Datum {
+	private static class Datum {
 	    public int n;
 	    public TimeUnit units;
 	    public double rate;

@@ -80,7 +80,7 @@ public class BarrierOptionTest {
 	}
 	
 	
-	private class NewBarrierOptionData {
+	private static class NewBarrierOptionData {
 		
 		NewBarrierOptionData(	BarrierType barrierType,
 								double barrier,

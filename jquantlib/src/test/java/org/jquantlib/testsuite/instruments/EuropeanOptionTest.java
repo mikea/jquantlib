@@ -90,7 +90,7 @@ public class EuropeanOptionTest {
 	}
 	
 	
-	private class EuropeanOptionData {
+	private static class EuropeanOptionData {
 	    private Option.Type type;            // option type
 	    private /*@Price*/ double strike;    // option strike price
 	    private double s;                    // spot // FIXME: any specific @annotation?
