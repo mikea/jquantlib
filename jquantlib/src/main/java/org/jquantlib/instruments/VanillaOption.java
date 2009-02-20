@@ -53,7 +53,7 @@ public class VanillaOption extends OneAssetStrikedOption {
 
     public VanillaOption(
             final StochasticProcess process,
-            final Payoff payoff,
+            final Payoff payoff, // FIXME: see http://bugs.jquantlib.org/view.php?id=202
             final Exercise exercise,
             final PricingEngine engine) {
     	super(process, payoff, exercise, engine);

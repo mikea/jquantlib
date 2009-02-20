@@ -103,45 +103,35 @@ public class AmericanOptionTest {
 	@Test
 	public void testBjerksundStenslandValues() {
 
-		logger
-				.info("Testing Bjerksund and Stensland approximation for American options...");
+		logger.info("Testing Bjerksund and Stensland approximation for American options...");
 
-		final AmericanOptionData values[] = {
 		// type, strike, spot, q, r, t, vol, value, tol
-				// from "Option pricing formulas", Haug, McGraw-Hill 1998, pag
-				// 27
-				new AmericanOptionData(Option.Type.CALL, 40.00, 42.00, 0.08,
-						0.04, 0.75, 0.35, 5.2704),
-				// from "Option pricing formulas", Haug, McGraw-Hill 1998, VBA
-				// code
-				new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00,
-						0.06, 1.00, 0.20, 4.4531) };
+		final AmericanOptionData values[] = {
+    		// From "Option pricing formulas", Haug, McGraw-Hill 1998, pag 27
+            new AmericanOptionData(Option.Type.CALL, 40.00, 42.00, 0.08, 0.04, 0.75, 0.35, 5.2704),
+            // From "Option pricing formulas", Haug, McGraw-Hill 1998, VBA
+            new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
 
 		final Date today = DateFactory.getFactory().getTodaysDate();
-		final DayCounter dc = Actual360.getDayCounter();
-		final SimpleQuote spot = new SimpleQuote(0.0);
-		final SimpleQuote qRate = new SimpleQuote(0.0);
-		final YieldTermStructure qTS = Utilities.flatRate(today,
-				new Handle<Quote>(qRate), dc);
-		final SimpleQuote rRate = new SimpleQuote(0.0);
-		final YieldTermStructure rTS = Utilities.flatRate(today,
-				new Handle<Quote>(rRate), dc);
-		final SimpleQuote vol = new SimpleQuote(0.0);
-		final BlackVolTermStructure volTS = Utilities.flatVol(today,
-				new Handle<Quote>(vol), dc);
-		final PricingEngine engine = new BjerksundStenslandApproximationEngine();
+        final DayCounter dc = Actual360.getDayCounter();
+        final SimpleQuote spot = new SimpleQuote(0.0);
+        final SimpleQuote qRate = new SimpleQuote(0.0);
+        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
+        final SimpleQuote rRate = new SimpleQuote(0.0);
+        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
+        final SimpleQuote vol = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
+        final PricingEngine engine = new BjerksundStenslandApproximationEngine();
 
 		double /* @Real */tolerance = 1.0e-4;
 
 		for (int i = 0; i < values.length; i++) {
 
-			final StrikedTypePayoff payoff = new PlainVanillaPayoff(
-					values[i].type, values[i].strike);
+			final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 
-			final int daysToExpiry = (int) (values[i].t * 360 + 0.5);
-			final Date exDate = DateFactory.getFactory().getDate(
-					today.getDayOfMonth(), today.getMonthEnum(),
-					today.getYear()).increment(daysToExpiry);
+            final int daysToExpiry = (int) (values[i].t * 360 + 0.5);
+            final Date exDate = DateFactory.getFactory().getDate(
+                    today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(daysToExpiry);
 
 			final Exercise exercise = new AmericanExercise(today, exDate);
 
@@ -176,120 +166,80 @@ public class AmericanOptionTest {
 		logger
 				.info("Testing Barone-Adesi and Whaley approximation for American options...");
 
-		// /* The data below are from
-		// "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
-		// pag 24
-		//
-		// The following values were replicated only up to the second digit
-		// by the VB code provided by Haug, which was used as base for the
-		// C++ implementation
-		//
-		// */
+		
+		
+		
+		/**
+         * The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag 24
+         * <p>
+         * The following values were replicated only up to the second digit by the VB code provided by Haug, which was used as base
+         * for the C++ implementation
+         */
 		final AmericanOptionData values[] = {
-				// type, strike, spot, q, r, t, vol, value
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10,
-						0.10, 0.10, 0.15, 0.0206),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10,
-						0.10, 0.10, 0.15, 1.8771),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10,
-						0.10, 0.10, 0.15, 10.0089),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10,
-						0.10, 0.10, 0.25, 0.3159),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10,
-						0.10, 0.10, 0.25, 3.1280),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10,
-						0.10, 0.10, 0.25, 10.3919),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10,
-						0.10, 0.10, 0.35, 0.9495),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10,
-						0.10, 0.10, 0.35, 4.3777),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10,
-						0.10, 0.10, 0.35, 11.1679),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10,
-						0.10, 0.50, 0.15, 0.8208),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10,
-						0.10, 0.50, 0.15, 4.0842),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10,
-						0.10, 0.50, 0.15, 10.8087),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10,
-						0.10, 0.50, 0.25, 2.7437),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10,
-						0.10, 0.50, 0.25, 6.8015),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10,
-						0.10, 0.50, 0.25, 13.0170),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10,
-						0.10, 0.50, 0.35, 5.0063),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10,
-						0.10, 0.50, 0.35, 9.5106),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10,
-						0.10, 0.50, 0.35, 15.5689),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10,
-						0.10, 0.10, 0.15, 10.0000),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10,
-						0.10, 0.10, 0.15, 1.8770),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10,
-						0.10, 0.10, 0.15, 0.0410),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10,
-						0.10, 0.10, 0.25, 10.2533),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10,
-						0.10, 0.10, 0.25, 3.1277),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10,
-						0.10, 0.10, 0.25, 0.4562),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10,
-						0.10, 0.10, 0.35, 10.8787),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10,
-						0.10, 0.10, 0.35, 4.3777),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10,
-						0.10, 0.10, 0.35, 1.2402),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10,
-						0.10, 0.50, 0.15, 10.5595),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10,
-						0.10, 0.50, 0.15, 4.0842),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10,
-						0.10, 0.50, 0.15, 1.0822),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10,
-						0.10, 0.50, 0.25, 12.4419),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10,
-						0.10, 0.50, 0.25, 6.8014),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10,
-						0.10, 0.50, 0.25, 3.3226),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10,
-						0.10, 0.50, 0.35, 14.6945),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10,
-						0.10, 0.50, 0.35, 9.5104),
-				new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10,
-						0.10, 0.50, 0.35, 5.8823) };
+		        // type, strike, spot, q, r, t, vol, value
+				new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  0.0206),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8771),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 10.0089),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.25,  0.3159),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1280),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3919),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.35,  0.9495),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3777),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1679),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.15,  0.8208),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0842),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.8087),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.25,  2.7437),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.8015),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 13.0170),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.35,  5.0063),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.5106),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.5689),
+                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.15, 10.0000),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8770),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  0.0410),
+                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.25, 10.2533),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1277),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.25,  0.4562),
+                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.35, 10.8787),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3777),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.35,  1.2402),
+                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.15, 10.5595),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0842),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.15,  1.0822),
+                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.25, 12.4419),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.8014),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.25,  3.3226),
+                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.35, 14.6945),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.5104),
+                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.35,  5.8823) };
 
 		final Date today = DateFactory.getFactory().getTodaysDate();
-		final DayCounter dc = Actual360.getDayCounter();
-		final SimpleQuote spot = new SimpleQuote(0.0);
-		final SimpleQuote qRate = new SimpleQuote(0.0);
-		final YieldTermStructure qTS = Utilities.flatRate(today,
-				new Handle<Quote>(qRate), dc);
-		final SimpleQuote rRate = new SimpleQuote(0.0);
-		final YieldTermStructure rTS = Utilities.flatRate(today,
-				new Handle<Quote>(rRate), dc);
-		final SimpleQuote vol = new SimpleQuote(0.0);
-		final BlackVolTermStructure volTS = Utilities.flatVol(today,
-				new Handle<Quote>(vol), dc);
+        final DayCounter dc = Actual360.getDayCounter();
+        final SimpleQuote spot = new SimpleQuote(0.0);
+        final SimpleQuote qRate = new SimpleQuote(0.0);
+        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
+        final SimpleQuote rRate = new SimpleQuote(0.0);
+        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
+        final SimpleQuote vol = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
-		final PricingEngine engine = new BaroneAdesiWhaleyApproximationEngine();
+        final PricingEngine engine = new BaroneAdesiWhaleyApproximationEngine();
 
-		final double /* @Real */tolerance = 3.0e-3;
+        final double /* @Real */tolerance = 3.0e-3;
 
 		for (int i = 0; i < values.length; i++) {
 
-			final StrikedTypePayoff payoff = new PlainVanillaPayoff(
-					values[i].type, values[i].strike);
+			final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 
-			final Date exDate = today.getDateAfter(timeToDays(values[i].t));
+            final Date exDate = today.getDateAfter(timeToDays(values[i].t));
 
-			final Exercise exercise = new AmericanExercise(today, exDate);
+            final Exercise exercise = new AmericanExercise(today, exDate);
 
-			spot.setValue(values[i].s);
-			qRate.setValue(values[i].q);
-			rRate.setValue(values[i].r);
-			vol.setValue(values[i].v);
+            spot.setValue(values[i].s);
+            qRate.setValue(values[i].q);
+            rRate.setValue(values[i].r);
+            vol.setValue(values[i].v);
 
 			final StochasticProcess stochProcess = new BlackScholesMertonProcess(
 					new Handle<Quote>(spot),
@@ -297,12 +247,10 @@ public class AmericanOptionTest {
 					new Handle<YieldTermStructure>(rTS),
 					new Handle<BlackVolTermStructure>(volTS));
 
-			final VanillaOption option = new VanillaOption(stochProcess,
-					payoff, exercise, engine);
+			final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
-			final double /* @Real */calculated = option.getNPV();
-			final double /* @Real */error = Math.abs(calculated
-					- values[i].result);
+            final double /* @Real */calculated = option.getNPV();
+            final double /* @Real */error = Math.abs(calculated - values[i].result);
 			if (error > tolerance) {
 				REPORT_FAILURE("value", payoff, exercise, values[i].s,
 						values[i].q, values[i].r, today, values[i].v,
@@ -321,95 +269,58 @@ public class AmericanOptionTest {
 		final AmericanOptionData juValues[] = {
 				// type, strike, spot, q, r, t, vol, value, tol
 				// These values are from Exhibit 3 - Short dated Put Options
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.2, 0.006),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.2, 0.201),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.2, 0.433),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
 
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.2, 0.851),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.2, 1.576),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.2, 1.984),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.851),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 1.576),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 1.984),
 
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.2, 5.000),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.2, 5.084),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.2, 5.260),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 5.000),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 5.084),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 5.260),
 
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.3, 0.078),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.3, 0.697),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.3, 1.218),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 0.078),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 0.697),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 1.218),
 
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.3, 1.309),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.3, 2.477),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.3, 3.161),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 1.309),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 2.477),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 3.161),
 
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.3, 5.059),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.3, 5.699),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.3, 6.231),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 5.059),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 5.699),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 6.231),
 
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.4, 0.247),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.4, 1.344),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.4, 2.150),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 0.247),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 1.344),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 2.150),
 
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.4, 1.767),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.4, 3.381),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.4, 4.342),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 1.767),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 3.381),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 4.342),
 
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.4, 5.288),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.4, 6.501),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.4, 7.367),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 5.288),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
 
 				// Type in Exhibits 4 and 5 if you have some spare time ;-)
 
 				// type, strike, spot, q, r, t, vol, value, tol
 				// These values are from Exhibit 6 - Long dated Call Options
 				// with dividends
-				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07,
-						0.03, 3.0, 0.2, 2.605),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07,
-						0.03, 3.0, 0.2, 5.182),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07,
-						0.03, 3.0, 0.2, 9.065),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07,
-						0.03, 3.0, 0.2, 14.430),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07,
-						0.03, 3.0, 0.2, 21.398),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.2, 14.430),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.2, 21.398),
 
-				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07,
-						0.03, 3.0, 0.4, 11.336),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07,
-						0.03, 3.0, 0.4, 15.711),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07,
-						0.03, 3.0, 0.4, 20.760),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07,
-						0.03, 3.0, 0.4, 26.440),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07,
-						0.03, 3.0, 0.4, 32.709),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.4, 20.760),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.4, 26.440),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
 
 				// FIXME case of zero interest rates not handled
 				// new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07,
@@ -423,31 +334,23 @@ public class AmericanOptionTest {
 				// new AmericanOptionData(Option.Type.CALL, 100.00, 120.00,
 				// 0.07, 0.0, 3.0, 0.3, 24.786 ),
 
-				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03,
-						0.07, 3.0, 0.3, 12.177),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03,
-						0.07, 3.0, 0.3, 17.411),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.03,
-						0.07, 3.0, 0.3, 23.402),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03,
-						0.07, 3.0, 0.3, 30.028),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03,
-						0.07, 3.0, 0.3, 37.177) };
+				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.03, 0.07, 3.0, 0.3, 23.402),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
 		logger.info("Testing Ju approximation for American options...");
 
 		final Date today = DateFactory.getFactory().getTodaysDate();
-		final DayCounter dc = Actual360.getDayCounter();
-		final SimpleQuote spot = new SimpleQuote(0.0);
-		final SimpleQuote qRate = new SimpleQuote(0.0);
-		final YieldTermStructure qTS = Utilities.flatRate(today,
-				new Handle<Quote>(qRate), dc);
-		final SimpleQuote rRate = new SimpleQuote(0.0);
-		final YieldTermStructure rTS = Utilities.flatRate(today,
-				new Handle<Quote>(rRate), dc);
-		final SimpleQuote vol = new SimpleQuote(0.0);
-		final BlackVolTermStructure volTS = Utilities.flatVol(today,
-				new Handle<Quote>(vol), dc);
+        final DayCounter dc = Actual360.getDayCounter();
+        final SimpleQuote spot = new SimpleQuote(0.0);
+        final SimpleQuote qRate = new SimpleQuote(0.0);
+        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
+        final SimpleQuote rRate = new SimpleQuote(0.0);
+        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
+        final SimpleQuote vol = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
 		final PricingEngine engine = new JuQuadraticApproximationEngine();
 
@@ -455,17 +358,16 @@ public class AmericanOptionTest {
 
 		for (int i = 0; i < juValues.length; i++) {
 
-			final StrikedTypePayoff payoff = new PlainVanillaPayoff(
-					juValues[i].type, juValues[i].strike);
+			final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValues[i].type, juValues[i].strike);
 
-			final Date exDate = today.getDateAfter(timeToDays(juValues[i].t));
+            final Date exDate = today.getDateAfter(timeToDays(juValues[i].t));
 
-			final Exercise exercise = new AmericanExercise(today, exDate);
+            final Exercise exercise = new AmericanExercise(today, exDate);
 
-			spot.setValue(juValues[i].s);
-			qRate.setValue(juValues[i].q);
-			rRate.setValue(juValues[i].r);
-			vol.setValue(juValues[i].v);
+            spot.setValue(juValues[i].s);
+            qRate.setValue(juValues[i].q);
+            rRate.setValue(juValues[i].r);
+            vol.setValue(juValues[i].v);
 
 			final StochasticProcess stochProcess = new BlackScholesMertonProcess(
 					new Handle<Quote>(spot),
@@ -473,12 +375,11 @@ public class AmericanOptionTest {
 					new Handle<YieldTermStructure>(rTS),
 					new Handle<BlackVolTermStructure>(volTS));
 
-			final VanillaOption option = new VanillaOption(stochProcess,
-					payoff, exercise, engine);
+			final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
-			final double calculated = option.getNPV();
+            final double calculated = option.getNPV();
 
-			final double error = Math.abs(calculated - juValues[i].result);
+            final double error = Math.abs(calculated - juValues[i].result);
 			if (error > tolerance) {
 				REPORT_FAILURE("value", payoff, exercise, juValues[i].s,
 						juValues[i].q, juValues[i].r, today, juValues[i].v,
@@ -492,102 +393,65 @@ public class AmericanOptionTest {
 	public void testFdValues() {
 		logger.info("Testing finite-difference engine for American options...");
 
-		/*
+		/**
 		 * The data below are from An Approximate Formula for Pricing American
 		 * Options Journal of Derivatives Winter 1999 Ju, N.
 		 */
 		final AmericanOptionData juValues[] = {
 				// type, strike, spot, q, r, t, vol, value, tol
 				// These values are from Exhibit 3 - Short dated Put Options
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.2, 0.006),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.2, 0.201),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.2, 0.433),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
 
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.2, 0.851),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.2, 1.576),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.2, 1.984),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.851),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 1.576),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 1.984),
 
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.2, 5.000),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.2, 5.084),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.2, 5.260),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 5.000),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 5.084),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 5.260),
 
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.3, 0.078),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.3, 0.697),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.3, 1.218),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 0.078),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 0.697),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 1.218),
 
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.3, 1.309),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.3, 2.477),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.3, 3.161),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 1.309),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 2.477),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 3.161),
 
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.3, 5.059),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.3, 5.699),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.3, 6.231),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 5.059),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 5.699),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 6.231),
 
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.4, 0.247),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.4, 1.344),
-				new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.4, 2.150),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 0.247),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 1.344),
+                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 2.150),
 
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.4, 1.767),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.4, 3.381),
-				new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.4, 4.342),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 1.767),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 3.381),
+                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 4.342),
 
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.0833, 0.4, 5.288),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.3333, 0.4, 6.501),
-				new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0,
-						0.0488, 0.5833, 0.4, 7.367),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 5.288),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
+                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
 
 				// Type in Exhibits 4 and 5 if you have some spare time ;-)
 
 				// type, strike, spot, q, r, t, vol, value, tol
 				// These values are from Exhibit 6 - Long dated Call Options
 				// with dividends
-				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07,
-						0.03, 3.0, 0.2, 2.605),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07,
-						0.03, 3.0, 0.2, 5.182),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07,
-						0.03, 3.0, 0.2, 9.065),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07,
-						0.03, 3.0, 0.2, 14.430),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07,
-						0.03, 3.0, 0.2, 21.398),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.2, 14.430),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.2, 21.398),
 
-				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07,
-						0.03, 3.0, 0.4, 11.336),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07,
-						0.03, 3.0, 0.4, 15.711),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07,
-						0.03, 3.0, 0.4, 20.760),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07,
-						0.03, 3.0, 0.4, 26.440),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07,
-						0.03, 3.0, 0.4, 32.709),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.4, 20.760),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.4, 26.440),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
 
 				// FIXME case of zero interest rates not handled
 				// new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07,
@@ -601,16 +465,11 @@ public class AmericanOptionTest {
 				// new AmericanOptionData(Option.Type.CALL, 100.00, 120.00,
 				// 0.07, 0.0, 3.0, 0.3, 24.786 ),
 
-				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03,
-						0.07, 3.0, 0.3, 12.177),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03,
-						0.07, 3.0, 0.3, 17.411),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.03,
-						0.07, 3.0, 0.3, 23.402),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03,
-						0.07, 3.0, 0.3, 30.028),
-				new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03,
-						0.07, 3.0, 0.3, 37.177) };
+				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.03, 0.07, 3.0, 0.3, 23.402),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
 		
 
@@ -622,15 +481,12 @@ public class AmericanOptionTest {
 			DayCounter dc = Actual360.getDayCounter();
 
 			final SimpleQuote spot = new SimpleQuote(0.0);
-			final SimpleQuote qRate = new SimpleQuote(0.0);
-			final YieldTermStructure qTS = Utilities.flatRate(today,
-					new Handle<Quote>(qRate), dc);
-			final SimpleQuote rRate = new SimpleQuote(0.0);
-			final YieldTermStructure rTS = Utilities.flatRate(today,
-					new Handle<Quote>(rRate), dc);
-			final SimpleQuote vol = new SimpleQuote(0.0);
-			final BlackVolTermStructure volTS = Utilities.flatVol(today,
-					new Handle<Quote>(vol), dc);
+            final SimpleQuote qRate = new SimpleQuote(0.0);
+            final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
+            final SimpleQuote rRate = new SimpleQuote(0.0);
+            final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
+            final SimpleQuote vol = new SimpleQuote(0.0);
+            final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 			
 			final StrikedTypePayoff payoff = new PlainVanillaPayoff(
 					juValues[i].type, juValues[i].strike);
@@ -690,21 +546,17 @@ public class AmericanOptionTest {
 		double vols[] = { 0.11, 0.50, 1.20 };
 
 		Date today = DateFactory.getFactory().getTodaysDate();
-		DayCounter dc = Actual360.getDayCounter();
-		Settings settings = Configuration.getSystemConfiguration(null)
-				.getGlobalSettings();
-		settings.setEvaluationDate(today);
+        DayCounter dc = Actual360.getDayCounter();
+        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        settings.setEvaluationDate(today);
 
-		final SimpleQuote spot = new SimpleQuote(0.0);
-		final SimpleQuote qRate = new SimpleQuote(0.0);
-		final YieldTermStructure qTS = Utilities.flatRate(today,
-				new Handle<Quote>(qRate), dc);
-		final SimpleQuote rRate = new SimpleQuote(0.0);
-		final YieldTermStructure rTS = Utilities.flatRate(today,
-				new Handle<Quote>(rRate), dc);
-		final SimpleQuote vol = new SimpleQuote(0.0);
-		final BlackVolTermStructure volTS = Utilities.flatVol(today,
-				new Handle<Quote>(vol), dc);
+        final SimpleQuote spot = new SimpleQuote(0.0);
+        final SimpleQuote qRate = new SimpleQuote(0.0);
+        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
+        final SimpleQuote rRate = new SimpleQuote(0.0);
+        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
+        final SimpleQuote vol = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
 		StrikedTypePayoff payoff = null;
 
@@ -748,18 +600,14 @@ public class AmericanOptionTest {
 
 									if (value > spot.evaluate() * 1.0e-5) {
 										// perturb spot and get delta and gamma
-										double du = u * 1.0e-4;
-										spot.setValue(u + du);
-										double value_p = option.getNPV(), delta_p = option
-												.delta();
-										spot.setValue(u - du);
-										double value_m = option.getNPV(), delta_m = option
-												.delta();
-										spot.setValue(u);
-										expected.put("delta",
-												(value_p - value_m) / (2 * du));
-										expected.put("gamma",
-												(delta_p - delta_m) / (2 * du));
+                                        double du = u * 1.0e-4;
+                                        spot.setValue(u + du);
+                                        double value_p = option.getNPV(), delta_p = option.delta();
+                                        spot.setValue(u - du);
+                                        double value_m = option.getNPV(), delta_m = option.delta();
+                                        spot.setValue(u);
+                                        expected.put("delta", (value_p - value_m) / (2 * du));
+                                        expected.put("gamma", (delta_p - delta_m) / (2 * du));
 
 										/*
 										 * // perturb date and get theta Time dT
@@ -775,32 +623,22 @@ public class AmericanOptionTest {
 										 * (today); expected["theta"] = (value_p
 										 * - value_m)/dT;
 										 */
-										double dT = dc.yearFraction(today
-												.getPreviousDay(), today
-												.getNextDay());
-										settings.setEvaluationDate(today
-												.getPreviousDay());
-										value_m = option.getNPV();
-										settings.setEvaluationDate(today
-												.getNextDay());
-										value_p = option.getNPV();
-										settings.setEvaluationDate(today);
-										expected.put("theta",
-												(value_p - value_m) / dT);
+										double dT = dc.yearFraction(today.getPreviousDay(), today.getNextDay());
+                                        settings.setEvaluationDate(today.getPreviousDay());
+                                        value_m = option.getNPV();
+                                        settings.setEvaluationDate(today.getNextDay());
+                                        value_p = option.getNPV();
+                                        settings.setEvaluationDate(today);
+                                        expected.put("theta", (value_p - value_m) / dT);
 
 										// compare
 										for (Entry<String, Double> greek : calculated.entrySet()) {
-											double expct = expected.get(greek.getKey()), calcl = calculated
-													.get(greek.getKey()), tol = tolerance
-													.get(greek.getKey());
-											double error = Utilities
-													.relativeError(expct,
-															calcl, u);
+											double expct = expected.get(greek.getKey());
+                                            double calcl = calculated.get(greek.getKey());
+                                            double tol = tolerance.get(greek.getKey());
+                                            double error = Utilities.relativeError(expct, calcl, u);
 											if (error > tol) {
-												REPORT_FAILURE(greek.getKey(), payoff,
-														exercise, u, q, r,
-														today, v, expct, calcl,
-														error, tol);
+												REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
 											}
 										}
 									}
@@ -834,23 +672,19 @@ public class AmericanOptionTest {
 		double vols[] = { 0.11, 0.50, 1.20 };
 
 		Date today = DateFactory.getFactory().getTodaysDate();
-		DayCounter dc = Actual360.getDayCounter();
-		Settings settings = Configuration.getSystemConfiguration(null)
-				.getGlobalSettings();
-		settings.setEvaluationDate(today);
+        DayCounter dc = Actual360.getDayCounter();
+        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        settings.setEvaluationDate(today);
 
-		final SimpleQuote spot = new SimpleQuote(0.0);
-		final SimpleQuote qRate = new SimpleQuote(0.0);
-		final YieldTermStructure qTS = Utilities.flatRate(today,
-				new Handle<Quote>(qRate), dc);
-		final SimpleQuote rRate = new SimpleQuote(0.0);
-		final YieldTermStructure rTS = Utilities.flatRate(today,
-				new Handle<Quote>(rRate), dc);
-		final SimpleQuote vol = new SimpleQuote(0.0);
-		final BlackVolTermStructure volTS = Utilities.flatVol(today,
-				new Handle<Quote>(vol), dc);
+        final SimpleQuote spot = new SimpleQuote(0.0);
+        final SimpleQuote qRate = new SimpleQuote(0.0);
+        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
+        final SimpleQuote rRate = new SimpleQuote(0.0);
+        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
+        final SimpleQuote vol = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
-		StrikedTypePayoff payoff = null;
+        StrikedTypePayoff payoff = null;
 
 		for (int i = 0; i < types.length; i++) {
 			for (int j = 0; j < strikes.length; j++) {
@@ -891,18 +725,14 @@ public class AmericanOptionTest {
 
 									if (value > spot.evaluate() * 1.0e-5) {
 										// perturb spot and get delta and gamma
-										double du = u * 1.0e-4;
-										spot.setValue(u + du);
-										double value_p = option.getNPV(), delta_p = option
-												.delta();
-										spot.setValue(u - du);
-										double value_m = option.getNPV(), delta_m = option
-												.delta();
-										spot.setValue(u);
-										expected.put("delta",
-												(value_p - value_m) / (2 * du));
-										expected.put("gamma",
-												(delta_p - delta_m) / (2 * du));
+                                        double du = u * 1.0e-4;
+                                        spot.setValue(u + du);
+                                        double value_p = option.getNPV(), delta_p = option.delta();
+                                        spot.setValue(u - du);
+                                        double value_m = option.getNPV(), delta_m = option.delta();
+                                        spot.setValue(u);
+                                        expected.put("delta", (value_p - value_m) / (2 * du));
+                                        expected.put("gamma", (delta_p - delta_m) / (2 * du));
 
 										/*
 										 * // perturb date and get theta Time dT
@@ -918,33 +748,23 @@ public class AmericanOptionTest {
 										 * (today); expected["theta"] = (value_p
 										 * - value_m)/dT;
 										 */
-										double dT = dc.yearFraction(today
-												.getPreviousDay(), today
-												.getNextDay());
-										settings.setEvaluationDate(today
-												.getPreviousDay());
-										value_m = option.getNPV();
-										settings.setEvaluationDate(today
-												.getNextDay());
-										value_p = option.getNPV();
-										settings.setEvaluationDate(today);
-										expected.put("theta",
-												(value_p - value_m) / dT);
+										double dT = dc.yearFraction(today.getPreviousDay(), today.getNextDay());
+                                        settings.setEvaluationDate(today.getPreviousDay());
+                                        value_m = option.getNPV();
+                                        settings.setEvaluationDate(today.getNextDay());
+                                        value_p = option.getNPV();
+                                        settings.setEvaluationDate(today);
+                                        expected.put("theta", (value_p - value_m) / dT);
 
 										// compare
 										for (Entry<String, Double> greek : calculated.entrySet()) {
-											double expct = expected.get(greek.getKey()), calcl = calculated
-													.get(greek.getKey()), tol = tolerance
-													.get(greek.getKey());
-											double error = Utilities
-													.relativeError(expct,
-															calcl, u);
-											if (error > tol) {
-												REPORT_FAILURE(greek.getKey(), payoff,
-														exercise, u, q, r,
-														today, v, expct, calcl,
-														error, tol);
-											}
+											double expct = expected.get(greek.getKey());
+                                            double calcl = calculated.get(greek.getKey());
+                                            double tol = tolerance.get(greek.getKey());
+                                            double error = Utilities.relativeError(expct, calcl, u);
+                                            if (error > tol) {
+                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
+                                            }
 										}
 									}
 								}
@@ -984,7 +804,7 @@ public class AmericanOptionTest {
 	// private inner classes
 	//
 
-	private static class AmericanOptionData {
+	private class AmericanOptionData {
 
 		private final Option.Type type;
 		private final double /* @Real */strike;

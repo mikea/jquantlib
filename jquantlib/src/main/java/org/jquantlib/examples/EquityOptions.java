@@ -80,6 +80,7 @@ package org.jquantlib.examples;
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.EuropeanOption;
@@ -89,7 +90,9 @@ import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.vanilla.BaroneAdesiWhaleyApproximationEngine;
+import org.jquantlib.pricingengines.vanilla.BjerksundStenslandApproximationEngine;
 import org.jquantlib.pricingengines.vanilla.IntegralEngine;
+import org.jquantlib.pricingengines.vanilla.JuQuadraticApproximationEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
@@ -155,26 +158,27 @@ public class EquityOptions {
 		//    }
 		//    Exercise bermudanExercise = new BermudanExercise(exerciseDates);
 
-		//    // Define exercise for American Options
-		//    Exercise americanExercise = new AmericanExercise(settlementDate, maturity);
+		// Define exercise for American Options
+		Exercise americanExercise = new AmericanExercise(settlementDate, maturity);
 
 		// bootstrap the yield/dividend/volatility curves
-		Handle<Quote> underlyingH = new Handle<Quote>(new SimpleQuote(underlying));
-		Handle<YieldTermStructure> flatDividendTS = new Handle<YieldTermStructure>(new FlatForward(settlementDate, dividendYield,
-				dayCounter));
-		Handle<YieldTermStructure> flatTermStructure = new Handle<YieldTermStructure>(new FlatForward(settlementDate, riskFreeRate,
-				dayCounter));
-		Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate,
-				volatility, dayCounter));
+        Handle<Quote> underlyingH = new Handle<Quote>(new SimpleQuote(underlying));
+        Handle<YieldTermStructure> flatDividendTS = new Handle<YieldTermStructure>(new FlatForward(settlementDate, dividendYield, dayCounter));
+        Handle<YieldTermStructure> flatTermStructure = new Handle<YieldTermStructure>(new FlatForward(settlementDate, riskFreeRate, dayCounter));
+        Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, volatility, dayCounter));
 
 		Payoff payoff = new PlainVanillaPayoff(type, strike);
-		StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure,
-				flatVolTS);
+		StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
 
-		// options
+		// European Options
 		VanillaOption europeanOption = new EuropeanOption(stochasticProcess, payoff, europeanExercise);
+		
+        // Bermundan options (can be thought as a collection of European Options)
 		// VanillaOption bermudanOption = new BermudanOption(stochasticProcess, payoff, bermudanExercise);
-		// VanillaOption americanOption = new AmericanOption(stochasticProcess, payoff, americanExercise);
+		
+		// American Options
+		// FIXME: see http://bugs.jquantlib.org/view.php?id=202
+		VanillaOption americanOption = new VanillaOption(stochasticProcess, payoff, americanExercise, null);
 
 		// define line formatting
 		//              "         0         1         2         3         4         5         6         7         8"
@@ -193,17 +197,19 @@ public class EquityOptions {
 
         // Barone-Adesi and Whaley approximation for American
         method = "Barone-Adesi/Whaley";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-        //-- UNCOMMENT AS SOON AMERICAN OPTIONS IS READY
-        //americanOption.setPricingEngine(new BaroneAdesiWhaleyApproximationEngine());
-        //System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
+        americanOption.setPricingEngine(new BaroneAdesiWhaleyApproximationEngine());
+        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.getNPV() } );
 
         // Bjerksund and Stensland approximation for American
         method = "Bjerksund/Stensland";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        americanOption.setPricingEngine(new BjerksundStenslandEngine());
-//        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.NPV() } );
+        americanOption.setPricingEngine(new BjerksundStenslandApproximationEngine());
+        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.getNPV() } );
 
+        // Ju Quadratic approximation for American
+        method = "Ju Quadratic";
+        americanOption.setPricingEngine(new JuQuadraticApproximationEngine());
+        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.getNPV() } );
+        
         // Integral
         method = "Integral";
         europeanOption.setPricingEngine(new IntegralEngine());
