@@ -86,7 +86,8 @@ public class TimeGrid {
         this.mandatoryTimes_ = new DoubleArrayList(1);
         this.mandatoryTimes_.add(end);
         this.dt_ = new DoubleArrayList(steps);
-        this.dt_.set(steps, dt);
+        for (int i=0; i<steps; i++)
+            dt_.add(dt);        
     }
 
     
