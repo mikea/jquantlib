@@ -55,7 +55,7 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 	/**
 	 * Keeps the date at which the event occurs
 	 */
-	protected abstract Date date() /* @ReadOnly */;
+	protected abstract Date getDate() /* @ReadOnly */;
 
 	/**
 	 * Returns true if an event has already occurred before a date where the
@@ -83,9 +83,9 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 	 */
 	public boolean hasOccurred(final Date d, final boolean includeToday) /* @ReadOnly */{
 		if (includeToday) {
-			return date().compareTo(d) < 0;
+			return getDate().compareTo(d) < 0;
 		} else {
-			return date().compareTo(d) <= 0;
+			return getDate().compareTo(d) <= 0;
 		}
 	}
 

@@ -28,17 +28,17 @@ import org.jquantlib.util.Date;
  * @author Daniel Kong
  */
 
-public class FixedDividend extends Dividend {
+public class FixedDividend extends AbstractDividend {
 
 	protected double amount;
 	
-	public FixedDividend(Date date, double amount){
+	public FixedDividend(final Date date, final double amount){
 		super(date);
 		this.amount = amount;
 	}
 	
 	@Override
-	public double getAmount(double underlying) {
+	public double getAmount(final double underlying) {
 		return amount;
 	}
 

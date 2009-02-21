@@ -22,6 +22,7 @@
 
 package org.jquantlib.cashflow;
 
+import org.jquantlib.examples.ConvertibleBonds;
 import org.jquantlib.util.Date;
 
 /**
@@ -30,10 +31,13 @@ import org.jquantlib.util.Date;
 
 public class Callability extends Event {
 
-	//TODO: working
+	//TODO: Work in progress
+	public Callability(){
+		if (0==0) throw new UnsupportedOperationException("Work in progress");	
+	}
 	
 	@Override
-	protected Date date() {
+	protected Date getDate() {
 		// TODO Auto-generated method stub
 		return null;
 	}

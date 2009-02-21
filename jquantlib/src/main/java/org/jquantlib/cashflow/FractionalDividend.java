@@ -28,33 +28,33 @@ import org.jquantlib.util.Date;
  * @author Daniel Kong
  */
 
-public class FractionalDividend extends Dividend {
+public class FractionalDividend extends AbstractDividend {
 
 	protected double rate;
 	protected double nominal;
 	
-	public FractionalDividend(double rate, Date date){
+	public FractionalDividend(final double rate, final Date date){
 		super(date);
 		this.rate=rate;
 //		nominal=0.0; need? Daniel
 	}
 	
-	public FractionalDividend(double rate, double nominal, Date date){
+	public FractionalDividend(final double rate, final double nominal, final Date date){
 		super(date);
 		this.rate=rate;
 		this.nominal=nominal;
 	}
 	
 	@Override
-	public double getAmount(double underlying) {
+	public double getAmount(final double underlying) {
 		return rate*underlying;
 	}
 
 	@Override
 	public double getAmount() {
-//		QL_REQUIRE(nominal_ != Null<Real>(), "no nominal given");
-		if(nominal==0.0)
-			throw new IllegalStateException("No nominal given!");
+		if(nominal==0.0){
+			throw new IllegalStateException("No nominal given!");			
+		}
 		return rate*nominal;
 	}
 

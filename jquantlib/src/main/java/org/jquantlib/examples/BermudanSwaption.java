@@ -23,6 +23,8 @@
 package org.jquantlib.examples;
 
 import org.jquantlib.util.StopClock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This example prices a few bermudan swaptions using different short-rate models calibrated to market swaptions.
@@ -33,15 +35,18 @@ import org.jquantlib.util.StopClock;
  */
 public class BermudanSwaption {
 	
+	private final static Logger logger = LoggerFactory.getLogger(BermudanSwaption.class);
+	
 	public BermudanSwaption(){
-		System.out.println("\n\n::::: "+BermudanSwaption.class.getSimpleName()+" :::::");		
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		logger.info("\n\n::::: "+BermudanSwaption.class.getSimpleName()+" :::::");		
 	}
 	
 	public void run(){
 		StopClock clock = new StopClock();
 		clock.startClock();
 		
-		//TODO: working..
+		//TODO: Work in progress
 		
 		
 		

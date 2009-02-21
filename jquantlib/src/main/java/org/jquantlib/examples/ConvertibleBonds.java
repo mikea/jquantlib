@@ -35,6 +35,8 @@ import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This example evaluates convertible bond prices.
@@ -45,9 +47,12 @@ import org.jquantlib.util.StopClock;
  */
 
 public class ConvertibleBonds {
+
+	private final static Logger logger = LoggerFactory.getLogger(ConvertibleBonds.class);
 	
 	public ConvertibleBonds(){
-		System.out.println("\n\n::::: "+ConvertibleBonds.class.getSimpleName()+" :::::");		
+		if (0==0) throw new UnsupportedOperationException("Work in progress");
+		logger.info("\n\n::::: "+ConvertibleBonds.class.getSimpleName()+" :::::");		
 	}
 
 	public void run(){
@@ -85,12 +90,7 @@ public class ConvertibleBonds {
         									convention, convention, DateGenerationRule.BACKWARD, false, 
         									Date.NULL_DATE, Date.NULL_DATE);
 
-        
-//TODO: working
-        
-        
-        
-        
+      //TODO: Work in progress 
 		
 		clock.stopClock();
 		clock.log();

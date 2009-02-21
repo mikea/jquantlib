@@ -30,28 +30,29 @@ import org.jquantlib.util.Visitor;
  * @author Daniel Kong
  */
 
-public abstract class Dividend extends CashFlow {
+public abstract class AbstractDividend extends CashFlow {
 	
 	protected Date date;
 	
-	public Dividend (Date date){
+	public AbstractDividend (final Date date){
+		super();
 		this.date = date;
 	}
 
 	@Override
-	protected Date date() {
+	protected Date getDate() {
 		return date;
 	}
 	
-	public abstract double getAmount(double underlying);
+	public abstract double getAmount(final double underlying);
 	
 	@Override
-	public void accept(final TypedVisitor<Event> v) {
-		Visitor<Event> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
+	public void accept(final TypedVisitor<Event> event) {
+		Visitor<Event> event1 = (event!=null) ? event.getVisitor(this.getClass()) : null;
+		if (event1 != null) {
+			event1.visit(this);
 		} else {
-			super.accept(v);
+			super.accept(event);
 		}
 	}
 

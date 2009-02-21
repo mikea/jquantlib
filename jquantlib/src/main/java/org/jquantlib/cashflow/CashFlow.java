@@ -42,10 +42,10 @@ public abstract class CashFlow extends Event implements Comparable<CashFlow> {
 
 	@Override
 	public int compareTo(CashFlow c2) {
-		   if (date().lt(c2.date()))
+		   if (getDate().lt(c2.getDate()))
                return -1;
 
-           if (date().equals(c2.date())) {
+           if (getDate().equals(c2.getDate())) {
                try {
                    if (getAmount()<c2.getAmount())
                        return -1;
