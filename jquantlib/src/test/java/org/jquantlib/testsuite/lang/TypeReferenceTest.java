@@ -55,10 +55,15 @@ public class TypeReferenceTest {
         check(b);
     }
         
-    @Ignore("This test case will not pass because Java reifies types :(  :: Maybe in the future when we adopt Guice or similar")
+    /**
+     * It's very important to notice that we need to create anonymous classes in order to make these tests pass.
+     * <p>
+     * The reason is that TypeToken and TypeReference make use of Class.getGenericSuperClass() which will
+     * retrieve type information from the current caller instance.
+     */
     @Test
     public void testTypeReference2() {
-        C c = new C<ArrayList, TreeMap, HashSet>();
+        C c = new C<ArrayList, TreeMap, HashSet>() {}; // ANONYMOUS INSTANCE!
         check(c);
     }
 

@@ -61,13 +61,13 @@ import org.jquantlib.util.reflect.TypeToken;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
-public final class BinomialVanillaEngine extends VanillaOptionEngine {
+public class BinomialVanillaEngine<T extends BinomialTree> extends VanillaOptionEngine {
 
     //
     // private fields
     //
     
-    private final Class<?> clazz;
+    private final Class<T> clazz;
     private final int timeSteps_;
 	
 	
@@ -75,13 +75,10 @@ public final class BinomialVanillaEngine extends VanillaOptionEngine {
 	// public constructors
 	//
 	
-    // TODO: Add support for TypeLiterals :: http://bugs.jquantlib.org/view.php?id=208
-    public <T extends BinomialTree> BinomialVanillaEngine(final Class<T> clazz, final int timeSteps) {
+    public BinomialVanillaEngine(final int timeSteps) {
 
         // obtain a BinomialTree concrete implementation from a generic type (first generic parameter)
-        this.clazz = clazz;
-        if (this.clazz==null || (this.clazz.getModifiers() & Modifier.ABSTRACT) != 0)
-            throw new IllegalArgumentException("generic parameter must be a concrete class");    
+        this.clazz = (Class<T>) TypeToken.getClazz(this.getClass());
 	    
         this.timeSteps_ = timeSteps;
         if (timeSteps_ <= 0) throw new IllegalArgumentException("timeSteps must be positive");

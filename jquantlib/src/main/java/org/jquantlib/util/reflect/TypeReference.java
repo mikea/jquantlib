@@ -24,28 +24,50 @@ package org.jquantlib.util.reflect;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * This class provides the ability of querying the run time type information of parametric types.
- * <p> 
- * This functionality is specially helpful when you'd like to do something like this (which does not compile!):
- *  * <pre>
- * class B<T> {
- *   public B() {
- *     T t = new T();
- *   }
- * } 
+ * This class provides derived classes the ability to retrieve runtime type information
+ * from generic parametric types specified at creation time.
+ * <p>
+ * A typical use case would be an instance which is interested on a generic parameter which directs it
+ * which type of data can be accepted. Below you can see a typical creation use case:
+ * <pre>
+ * MyClass<String,Data> smap = new MyClass<String,Data>() {};
+ * MyClass<Double,Data> dmap = new MyClass<Double,Data>() {};
+ * </pre> 
+ * ... and below you can see a typical retrieval of type information inside the class of our interest:
+ * <pre>
+ * class Myclass<K,V> extends TypeReference {
+ * 
+ *    Class<?> final keyClass;
+ *    Class<?> final valClass;
+ * 
+ *    MyClass() {
+ *        // retrieves first actual generic parameter
+ *        keyClass = getGenericParameterClass();
+ *        // retrieves second actual generic parameter
+ *        valClass = getGenericParameterClass(1);
+ *    }
+ *    
+ *    public put(K key, V val) {
+ *        if (!keyClass.isAssignableFrom(key)) throw new ClassCastException("invalid key");
+ *        if (!valClass.isAssignableFrom(val)) throw new ClassCastException("invalid value");
+ *    }
  * </pre>
  * 
- * Notice that this class is somewhat "intrusive" to your object model. See also {@link TypeToken} for
- * a class which provides the same functionality but is less intrusive. 
+ * @note It's very important to notice that we <b>it is required</b> to create anonymous instances
+ *       or at least instances of an extended class of the class you are interested to parameterize.
+ *       The reason is that TypeToken and TypeReference uses the tricky Class.getGenericSuperClass(),
+ *       which retrieves type information from the super class of the current caller instance.
+ *       
+ * @see TypeReference
  * 
- * @see TypeToken
- * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">Super Type Tokens</a>
- * 
- * @author crazybob@google.com (Bob Lee)
+ * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">SuperTypeTokens</a>
+ * @see <a href="http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf">Generics Tutorial</a>
+ * @author Richard Gomes
  */
 public abstract class TypeReference<T> {
 
@@ -55,7 +77,7 @@ public abstract class TypeReference<T> {
     protected TypeReference() {
         Type superclass = getClass().getGenericSuperclass();
         if (superclass instanceof Class) {
-            throw new RuntimeException("Missing type parameter.");
+            throw new IllegalArgumentException("Class should be anonymous or extended from a generic class");
         }
         this.types = ((ParameterizedType) superclass).getActualTypeArguments();
     }
@@ -85,8 +107,14 @@ public abstract class TypeReference<T> {
      * Gets the referenced Class of the n-th generic parameter
      */
     public Class<?> getGenericParameterClass(final int n) {
+        if (n >= types.length) {
+            throw new IllegalArgumentException("Missing parameter");
+        }
         Type type = types[n];
-        return ( type instanceof Class<?> ) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
+        Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
+        if ((clazz.getModifiers() & Modifier.ABSTRACT) != 0)
+            throw new IllegalArgumentException("generic parameter must be a concrete class");
+        return clazz;
     }
     
     /**

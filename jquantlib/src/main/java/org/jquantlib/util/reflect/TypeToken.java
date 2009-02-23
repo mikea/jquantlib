@@ -22,24 +22,46 @@
 
 package org.jquantlib.util.reflect;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * This class provides the ability of querying the run time type information of parametric types.
- * <p> 
- * This functionality is specially helpful when you'd like to do something like this (which does not compile!):
- *  * <pre>
- * class B<T> {
- *   public B() {
- *     T t = new T();
- *   }
- * } 
+ * This class provides other classes the ability to retrieve runtime type information
+ * from generic parametric types specified at creation time.
+ * <p>
+ * A typical use case would be an instance which is interested on a generic parameter which directs it
+ * which type of data can be accepted. Below you can see a typical creation use case:
+ * <pre>
+ * // Please read note below regarding usage of anonymous classes and derived classes.
+ * Map<String,Data> smap = new MyHashMap<String,Data>() {}; // anonymous instance!
+ * Map<Double,Data> dmap = new MyHashMap<Double,Data>() {}; // anonymous instance!
+ * </pre> 
+ * ... and below you can see a typical retrieval of type information inside the class of our interest:
+ * <pre>
+ * class MyHashMap<K,V> extends HashMap<K,V> {
+ * 
+ *    Class<?> final keyClass;
+ *    Class<?> final valClass;
+ * 
+ *    MyHashMap() {
+ *        // retrieves first generic parameter
+ *        keyClass = TypeToken.getClazz(this.getClass());
+ *        // retrieves second generic parameter
+ *        valClass = TypeToken.getClazz(this.getClass(), 1);
+ *    }
+ *    
+ *    public put(K key, V val) {
+ *        if (!keyClass.isAssignableFrom(key)) throw new ClassCastException("invalid key");
+ *        if (!valClass.isAssignableFrom(val)) throw new ClassCastException("invalid value");
+ *    }
  * </pre>
  * 
- * Notice that this class is somewhat "crude". See also {@link TypeReference} for
- * a class which provides the same functionality but in a more <i>elegant</i> way. 
- * 
+ * @note It's very important to notice that we it is required to create <b>anonymous instances
+ *       or instances of extended class of the class you are interested</b> to parameterise.
+ *       The reason is that TypeToken and TypeReference use the tricky Class.getGenericSuperClass(),
+ *       which retrieves type information from the super class of the current caller instance.
+ *       
  * @see TypeReference
  * 
  * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">SuperTypeTokens</a>
@@ -55,7 +77,7 @@ public class TypeToken {
     static public Type getType(final Class<?> klass, final int pos) {
         Type superclass = klass.getGenericSuperclass();
         if (superclass instanceof Class) {
-            throw new IllegalArgumentException("Class should be generic");
+            throw new IllegalArgumentException("Class should be anonymous or extended from a generic class");
         }
         Type[] types = ((ParameterizedType) superclass).getActualTypeArguments();
         if (pos >= types.length) {
@@ -70,7 +92,10 @@ public class TypeToken {
 
     static public Class<?> getClazz(final Class<?> klass, final int pos) {
         Type type = getType(klass, pos);
-        return (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
+        Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
+        if ((clazz.getModifiers() & Modifier.ABSTRACT) != 0)
+            throw new IllegalArgumentException("generic parameter must be a concrete class");
+        return clazz;
     }
 
 }

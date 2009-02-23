@@ -176,25 +176,25 @@ public class EuropeanOptionTest {
 	        engine = new AnalyticEuropeanEngine();
 	        break;
 	      case JR:
-	        engine = new BinomialVanillaEngine(JarrowRudd.class, binomialSteps);
+	        engine = new BinomialVanillaEngine<JarrowRudd>(binomialSteps) {};
 	        break;
 	      case CRR:
-	        engine = new BinomialVanillaEngine(CoxRossRubinstein.class, binomialSteps);
+	        engine = new BinomialVanillaEngine<CoxRossRubinstein>(binomialSteps) {};
 	        break;
 	      case EQP:
-	        engine = new BinomialVanillaEngine(AdditiveEQPBinomialTree.class, binomialSteps);
+	        engine = new BinomialVanillaEngine<AdditiveEQPBinomialTree>(binomialSteps) {};
 	        break;
 	      case TGEO:
-	        engine = new BinomialVanillaEngine(Trigeorgis.class, binomialSteps);
+	        engine = new BinomialVanillaEngine<Trigeorgis>(binomialSteps) {};
 	        break;
 	      case TIAN:
-	        engine = new BinomialVanillaEngine(Tian.class, binomialSteps);
+	        engine = new BinomialVanillaEngine<Tian>(binomialSteps) {};
 	        break;
 	      case LR:
-	        engine = new BinomialVanillaEngine(LeisenReimer.class, binomialSteps);
+	        engine = new BinomialVanillaEngine<LeisenReimer>(binomialSteps) {};
 	        break;
 	      case JOSHI:
-	        engine = new BinomialVanillaEngine(Joshi4.class, binomialSteps);
+	        engine = new BinomialVanillaEngine<Joshi4>(binomialSteps) {};
 	        break;
 //	      case FiniteDifferences:
 //	        engine = new FDEuropeanEngine(binomialSteps,samples);
