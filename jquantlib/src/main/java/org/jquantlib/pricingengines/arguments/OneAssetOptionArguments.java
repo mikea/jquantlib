@@ -42,6 +42,7 @@ public class OneAssetOptionArguments extends OptionArguments {
 	//
 
 	// FIXME: assign JSR-308 annotations
+    // FIXME: public field is a bad design technique :(
 	public StochasticProcess stochasticProcess; // FIXME: should use Generics
 
 	public OneAssetOptionArguments() {

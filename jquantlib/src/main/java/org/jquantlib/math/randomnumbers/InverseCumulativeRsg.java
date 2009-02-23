@@ -68,6 +68,7 @@ public class InverseCumulativeRsg<USG extends RandomSequenceGeneratorIntf,IC ext
     
 
     public InverseCumulativeRsg(final USG ursg) {
+        if (0==0) throw new UnsupportedOperationException("Work in progress");
         this.ursg = ursg;
         this.dimension = this.ursg.dimension();
         this.sequence = new double[this.dimension];
@@ -85,6 +86,7 @@ public class InverseCumulativeRsg<USG extends RandomSequenceGeneratorIntf,IC ext
      */
     @Override
     public Sample<DoubleList> nextSequence() /* @ReadOnly */ {
+        if (0==0) throw new UnsupportedOperationException("Work in progress");
         Sample<DoubleList> sample = this.ursg.nextSequence();
         double tmp[] = sample.getValue().toDoubleArray(); //FIXME: should be toArray(new double[size]) ??
         this.weight = sample.getWeight();

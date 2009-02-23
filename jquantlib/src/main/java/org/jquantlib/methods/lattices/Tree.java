@@ -22,44 +22,49 @@
 package org.jquantlib.methods.lattices;
 
 /**
+ * Tree approximating a single-factor diffusion
+ * 
+ * @category lattices
+ * 
  * @author Srinivas Hasti
  * @author Tim Swetonic
- * 
  */
 public abstract class Tree {
-
-	public static enum Branches {
-		BINOMIAL(2), TRINOMIAL(3);
-
-		private int value;
-
-		private Branches(int i) {
-			this.value = i;
-		}
-
-		public int getValue() {
-			return value;
-		}
-	}
 
 	private int columns;
 
 	abstract public double underlying(int i, int index);
-
 	abstract public int size(int i);
-
 	abstract public int descendant(int i, int index, int branch);
-
 	abstract public double probability(int i, int index, int branch);
 
-	public Tree() {
-	}
-
-	public Tree(int columns) {
+	protected Tree(int columns) {
 		this.columns = columns;
 	}
 
-	public final int columns() {
+	protected final int columns() {
 		return columns;
 	}
+	
+	
+	//
+	// protected enums
+	//
+	
+    protected enum Branches {
+        BINOMIAL(2),
+        TRINOMIAL(3);
+
+        private int value;
+
+        private Branches(int i) {
+            this.value = i;
+        }
+
+        // TODO: possibly remove this method? (Could ordinal() be used?)
+        public int getValue() {
+            return value;
+        }
+    }
+
 }

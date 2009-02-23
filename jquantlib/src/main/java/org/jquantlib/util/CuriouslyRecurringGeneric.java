@@ -21,10 +21,16 @@
  */
 package org.jquantlib.util;
 
+
 /**
  * @author Srinivas Hasti
  * 
  */
+//
+// FIXME: [Richard] Could this class be removed?
+// Seems like it is only necessary in C++ because there's no instance associated to a template.
+// Our translation to Java uses Generics which always has a class (and an instance) associated to it.
+//
 public abstract class CuriouslyRecurringGeneric<T extends CuriouslyRecurringGeneric<T>> {
 
     public T impl() {

@@ -22,60 +22,56 @@
  */
 package org.jquantlib.methods.lattices;
 
-import java.math.BigInteger;
-
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
+ * Leisen & Reimer tree: multiplicative approach
+ * 
+ * @category lattices
+ * 
  * @author Srinivas Hasti
  * @author Tim Swetonic
- * 
  */
 public class LeisenReimer extends BinomialTree {
 
 	protected double up, down, pu, pd;
 
-	public LeisenReimer(final StochasticProcess1D process,
-	/* Time */double end,
-	/* Size */int steps,
-	/* Real */double strike) {
-		if (strike <= 0.0)
-			throw new IllegalArgumentException("strike must be positive");
+	public LeisenReimer(final StochasticProcess1D process, final/* @Time */double end, final int steps, final/* @Price */double strike) {
+	    super(process, end, steps);
+	    
+        if (strike <= 0.0) throw new IllegalArgumentException("strike must be positive");
 
-		int oddSteps = (steps % 2 > 0 ? steps : steps + 1);
-		double variance = process.variance(0.0, x0, end);
-		double ermqdt = Math.exp(driftPerStep + 0.5 * variance / oddSteps);
-		double d2 = (Math.log(x0 / strike) + driftPerStep * oddSteps)
-				/ Math.sqrt(variance);
-		pu = PeizerPrattMethod2Inversion(d2, oddSteps);
-		pd = 1.0 - pu;
-		double pdash = PeizerPrattMethod2Inversion(d2 + Math.sqrt(variance),
-				oddSteps);
-		up = ermqdt * pdash / pu;
-		down = (ermqdt - pu * up) / (1.0 - pu);
-	}
+        int oddSteps = (steps % 2 > 0 ? steps : steps + 1);
+        double variance = process.variance(0.0, x0, end);
+        double ermqdt = Math.exp(driftPerStep + 0.5 * variance / oddSteps);
+        double d2 = (Math.log(x0 / strike) + driftPerStep * oddSteps) / Math.sqrt(variance);
+        pu = PeizerPrattMethod2Inversion(d2, oddSteps);
+        pd = 1.0 - pu;
+        double pdash = PeizerPrattMethod2Inversion(d2 + Math.sqrt(variance), oddSteps);
+        up = ermqdt * pdash / pu;
+        down = (ermqdt - pu * up) / (1.0 - pu);
+    }
 
 	public double underlying(int i, int index) {
-		double d = BigInteger.valueOf((long) i).subtract(
-				BigInteger.valueOf((long) index)).doubleValue();
-
-		return x0 * Math.pow(down, d) * Math.pow(up, (index));
-	}
+        long j = (long) i - (long) index;
+        double d = (double) j;
+        return x0 * Math.pow(down, d) * Math.pow(up, (index));
+    }
 
 	public double probability(int n, int m, int branch) {
 		return (branch == 1 ? pu : pd);
 	}
 
-	/*
-	 * ! Given an odd integer n and a real number z it returns p such that: 1 -
-	 * CumulativeBinomialDistribution((n-1)/2, n, p) =
-	 * CumulativeNormalDistribution(z)
-	 * 
-	 * \pre n must be odd
+	/**
+	 * Given an odd integer n and a real number z it returns p such that:
+	 * <pre>
+	 * 1 - CumulativeBinomialDistribution((n-1)/2, n, p) = CumulativeNormalDistribution(z)
+	 * </pre>
+	 * where n must be odd
 	 */
 	private double PeizerPrattMethod2Inversion(double z, int n) {
 
-		if (! (n % 2 != 0) ) throw new IllegalArgumentException("n must be an odd number: " + n + " not allowed");
+		if (! (n % 2 != 0) ) throw new IllegalArgumentException("n must be an odd number");
 
 		double result = (z / (n + 1.0 / 3.0 + 0.1 / (n + 1.0)));
 		result *= result;

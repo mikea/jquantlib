@@ -84,6 +84,7 @@ public class MersenneTwisterUniformRng implements RandomNumberGenerator {
      * @param seed the initial seed (64 bits integer)
      */
     public MersenneTwisterUniformRng(final /*@Unsigned*/ long seed) {
+        if (0==0) throw new UnsupportedOperationException("Work in progress");
         seedInitialization(seed);
     }
 
@@ -96,6 +97,7 @@ public class MersenneTwisterUniformRng implements RandomNumberGenerator {
      * @param seed the initial seed (64 bits integer)
      */
     public MersenneTwisterUniformRng(final /*@Unsigned*/ long[] seeds) {
+        if (0==0) throw new UnsupportedOperationException("Work in progress");
         seedInitialization(19650218);
         int i=1;
         int j=0;

@@ -72,6 +72,7 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
     //
 
     public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final RNG rng) {
+        if (0==0) throw new UnsupportedOperationException("Work in progress");
         if (dimensionality < 1)
             throw new IllegalArgumentException("dimensionality must be greater than 0");
         this.dimension = dimensionality;

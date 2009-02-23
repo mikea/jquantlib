@@ -24,10 +24,11 @@ package org.jquantlib.testsuite.lang;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.util.reflect.TypeToken;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jquantlib.util.reflect.TypeToken;
-import org.junit.Test;
 
 /**
  * @author Richard Gomes
@@ -41,7 +42,7 @@ public class TypeTokenTest {
     }
     
     @Test
-    public void testTypes() {
+    public void testTypeToken() {
         C c = new C();
         if (c.getClazz() != Double.class) {
             fail("C should be java.lang.Double");
@@ -51,6 +52,22 @@ public class TypeTokenTest {
         if (d.getClazz() != Integer.class) {
             fail("D should be java.lang.Integer");
         }
+    }
+        
+    
+    @Ignore("This test case will not pass because Java reifies types :(  :: Maybe in the future when we adopt Guice or similar")
+    @Test
+    public void testTypeToken2() {
+        K k1 = new K<java.lang.Double>();
+        if (k1.getClazz() != Double.class) {
+            fail("C should be java.lang.Double");
+        }
+        
+        K k2 = new K<java.lang.Integer>();
+        if (k2.getClazz() != Integer.class) {
+            fail("D should be java.lang.Integer");
+        }
+        
     }
     
     //
@@ -63,8 +80,10 @@ public class TypeTokenTest {
         }
     }
 
-    private class C extends B< java.lang.Double >{}
+    private class C extends B<java.lang.Double> {  }
 
-    private class D extends B< java.lang.Integer >{}
+    private class D extends B<java.lang.Integer> {  }
+
+    private class K<T extends Number> extends B<T> {  }
 
 }

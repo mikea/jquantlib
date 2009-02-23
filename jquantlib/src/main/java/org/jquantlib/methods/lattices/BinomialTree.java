@@ -24,44 +24,34 @@ package org.jquantlib.methods.lattices;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
+ * Binomial tree base class
+ * 
+ * @category lattices
+ * 
  * @author Srinivas Hasti
  * @author Tim Swetonic
- * 
  */
 public abstract class BinomialTree extends Tree {
-	// protected:
-	// Real x0_, driftPerStep_;
-	// Time dt_;
 
-	protected/* @Real */double x0;
-	protected/* @Real */double driftPerStep;
-	protected/* @Time */double dt;
+    public static final Branches branches = Branches.BINOMIAL;
 
-	public static Branches branches = Branches.BINOMIAL;
+	protected/* @Price */double x0;
+    protected/* @Price */double driftPerStep;
+    protected/* @Time */double dt;
 
-	public BinomialTree() {
-	}
+	protected BinomialTree(final StochasticProcess1D process, final/* @Time */double end, final int steps) {
+        super(steps + 1);
 
-	public BinomialTree(final StochasticProcess1D process,
-	/* @Time */double end,
-	/* @Size */int steps) {
+        x0 = process.x0();
+        dt = end / steps;
+        driftPerStep = process.drift(0.0, x0) * dt;
+    }
 
-		super(steps + 1);
-
-		x0 = process.x0();
-		dt = end / steps;
-		driftPerStep = process.drift(0.0, x0) * dt;
-	}
-
-	public/* @Size */int size(/* @Size */int i) {
+	public final int size(final int i) {
 		return i + 1;
 	}
 
-	public/* @Size */int descendant(/* @Size */int unused, /* @Size */
-	int index, /*
-				 * @Size
-				 */
-	int branch) {
+	public final int descendant(final int unused, final int index, final int branch) {
 		return index + branch;
 	}
 

@@ -79,6 +79,7 @@ public class GenericLowDiscrepancy<RSG extends RandomSequenceGeneratorIntf, IC e
     protected InverseCumulativeRsg<RSG, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
         
+        if (0==0) throw new UnsupportedOperationException("Work in progress");
         try {
             // instantiate a RandomSequenceGenerator given its generic type (first generic parameter)
             final RSG rsg;

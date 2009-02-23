@@ -24,8 +24,11 @@ package org.jquantlib.methods.lattices;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
- * @author Srinivas Hasti
+ * Tian tree: third moment matching, multiplicative approach
  * 
+ * @category lattices
+ * 
+ * @author Srinivas Hasti
  */
 public class Tian extends BinomialTree {
 
@@ -34,16 +37,11 @@ public class Tian extends BinomialTree {
 	protected double pu;
 	protected double pd;
 
-	public Tian() {
-		super();
-	}
-
-	public Tian(StochasticProcess1D process,
-	/* Time */double end, /* Size */int steps) {
+	public Tian(StochasticProcess1D process, final /* @Time */double end, int steps) {
 		super(process, end, steps);
 
-		/* Real */double q = Math.exp(process.variance(0.0, x0, dt));
-		/* Real */double r = Math.exp(driftPerStep) * Math.sqrt(q);
+		/* @Price */double q = Math.exp(process.variance(0.0, x0, dt));
+		/* @Price */double r = Math.exp(driftPerStep) * Math.sqrt(q);
 
 		up = 0.5 * r * q * (q + 1 + Math.sqrt(q * q + 2 * q - 3));
 		down = 0.5 * r * q * (q + 1 - Math.sqrt(q * q + 2 * q - 3));
@@ -55,23 +53,12 @@ public class Tian extends BinomialTree {
 		// treeCentering_ = (up_+down_)/2.0;
 		// up_ = up_-treeCentering_;
 
-		if (pu >= 1.0)
-			throw new IllegalStateException("negative probablity");
-		if (pu <= 0.0)
-			throw new IllegalStateException("negative probablity");
-		// QL_REQUIRE(pu_ <= 1.0, "negative probability");
-		// QL_REQUIRE(pu_ >= 0.0, "negative probability");
+		if (pu < 0.0 || pu > 1.0) throw new IllegalStateException("negative probablity");
 	}
 
 	@Override
 	public double probability(int i, int index, int branch) {
 		return (branch == 1 ? pu : pd);
-	}
-
-	@Override
-	public int size(int i) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override

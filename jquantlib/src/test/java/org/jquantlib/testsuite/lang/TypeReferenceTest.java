@@ -32,10 +32,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.jquantlib.util.reflect.TypeReference;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jquantlib.util.reflect.TypeReference;
-import org.junit.Test;
 
 /**
  * @author Richard Gomes
@@ -51,8 +52,19 @@ public class TypeReferenceTest {
     @Test
     public void testTypeReference() {
         B b = new B();
+        check(b);
+    }
         
-        Object[] objs = b.getGenericClasses();
+    @Ignore("This test case will not pass because Java reifies types :(  :: Maybe in the future when we adopt Guice or similar")
+    @Test
+    public void testTypeReference2() {
+        C c = new C<ArrayList, TreeMap, HashSet>();
+        check(c);
+    }
+
+
+    private void check(A a) {
+        Object[] objs = a.getGenericClasses();
         if (objs[0].getClass() != ArrayList.class) {
             fail("Generic parameter should be " + ArrayList.class.getName());
         }
@@ -62,7 +74,10 @@ public class TypeReferenceTest {
         if (objs[2].getClass() != HashSet.class) {
             fail("Generic parameter should be " + HashSet.class.getName());
         }
+        
     }
+
+    
     
     //
     // inner classes
@@ -84,6 +99,8 @@ public class TypeReferenceTest {
         }
     }
 
-    private class B extends A< ArrayList, TreeMap, HashSet > { /* nothing */ }
+    private class B extends A<ArrayList, TreeMap, HashSet> { /* nothing */ }
+
+    private class C<L extends List, M extends Map, S extends Set> extends A<L, M, S> { /* nothing */ }
 
 }

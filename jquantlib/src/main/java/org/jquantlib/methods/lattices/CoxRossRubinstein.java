@@ -25,29 +25,24 @@ package org.jquantlib.methods.lattices;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
+ * Cox-Ross-Rubinstein (multiplicative) equal jumps binomial tree
+ * 
+ * @category lattices
+ * 
  * @author Srinivas Hasti
  * @author Tim Swetonic
- * 
  */
-// concrete impl
 public class CoxRossRubinstein extends EqualJumpsBinomialTree {
 
-	public CoxRossRubinstein(final StochasticProcess1D process,
-	/* Time */double end,
-	/* Size */int steps,
-	/* Real */double d) {
+	public CoxRossRubinstein(final StochasticProcess1D process, final/* 'Time */double end, final int steps, final/* @Price */double d) {
 
-		super(process, end, steps);
+        super(process, end, steps);
 
-		dx = process.stdDeviation(0.0, x0, dt);
-		pu = 0.5 + 0.5 * driftPerStep / dx;
-		;
-		pd = 1.0 - pu;
+        dx = process.stdDeviation(0.0, x0, dt);
+        pu = 0.5 + 0.5 * driftPerStep / dx;
+        pd = 1.0 - pu;
 
-		if (pu > 1.0 || pu < 0.0)
-			throw new IllegalStateException("negative probability");
-		// QL_REQUIRE(pu_<=1.0, "negative probability");
-		// QL_REQUIRE(pu_>=0.0, "negative probability");
-	}
+        if (pu < 0.0 || pu > 1.0) throw new IllegalStateException("negative probability");
+    }
 
 }

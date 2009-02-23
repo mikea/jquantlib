@@ -24,6 +24,7 @@ package org.jquantlib;
 
 import java.util.prefs.Preferences;
 
+import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 
@@ -85,7 +86,7 @@ public class Settings {
      * @see defaultEnforcesTodaysHistoricFixings
      * @see defaultTodaysPayments
      */
-    Settings() {
+    @PackagePrivate Settings() {
         setDefaults();
     }
 
@@ -96,7 +97,7 @@ public class Settings {
      * @param prefs
      *            is a Preferences object
      */
-    Settings(final Preferences prefs) {
+    @PackagePrivate Settings(final Preferences prefs) {
         if (prefs != null) {
             this.todaysPayments = prefs.getBoolean("TodaysPayments", defaultTodaysPayments);
             this.evaluationDate = DateFactory.getFactory().getTodaysDate();

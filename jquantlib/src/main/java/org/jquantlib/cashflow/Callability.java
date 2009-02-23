@@ -37,7 +37,7 @@ public class Callability extends Event {
 	}
 	
 	@Override
-	protected Date getDate() {
+	protected Date date() { 
 		// TODO Auto-generated method stub
 		return null;
 	}

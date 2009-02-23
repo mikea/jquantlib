@@ -61,6 +61,7 @@ public class SeedGenerator {
 	//
 		
 	private SeedGenerator() {
+        if (0==0) throw new UnsupportedOperationException("Work in progress");
 		this.rng_ = new MersenneTwisterUniformRng(42);
 		initialize();
 	}

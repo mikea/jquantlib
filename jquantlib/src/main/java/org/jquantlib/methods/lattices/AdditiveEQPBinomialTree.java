@@ -24,23 +24,18 @@ package org.jquantlib.methods.lattices;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
+ * Additive equal probabilities binomial tree
+ * 
+ * @category lattices
+ * 
  * @author Srinivas Hasti
  * @author Tim Swetonic
- *
  */
 public class AdditiveEQPBinomialTree extends EqualProbabilitiesBinomialTree {
 
-
-    public AdditiveEQPBinomialTree(final StochasticProcess1D process,
-              /*Time*/ double end, 
-              int steps, 
-              double d) {
-        
+    public AdditiveEQPBinomialTree(final StochasticProcess1D process, final/* Time */double end, int steps, /* @Price */double d) {
         super(process, end, steps);
-        up = - 0.5 * driftPerStep + 0.5 *
-        Math.sqrt(4.0*process.variance(0.0, x0, dt)-
-            3.0*driftPerStep*driftPerStep);
-        
+        up = -0.5 * driftPerStep + 0.5 * Math.sqrt(4.0 * process.variance(0.0, x0, dt) - 3.0 * driftPerStep * driftPerStep);
     }
 
 }
