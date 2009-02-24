@@ -710,7 +710,7 @@ public class DefaultDate extends BaseDate {
         public final void update(final Date source) {
             if (source==null) throw new NullPointerException();
             
-            if (this.target==NULL_DATE) {
+            if (this.target.equals(NULL_DATE)) {
                 throw new IllegalStateException("not updatable");
             }
             target.value = ((DefaultDate)source).value;
