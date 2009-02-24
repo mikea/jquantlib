@@ -374,9 +374,9 @@ public class EuropeanOptionTest {
         	if (error<=tolerance)
         		logger.info(" error="+error);
         	else
-        		fail(exercise + " " + payoff.getOptionType() + " option with " + payoff + " payoff:\n" 
+        		fail(exercise + " " + payoff.optionType() + " option with " + payoff + " payoff:\n" 
         	    + "    spot value:       " + values[i].s + "\n"
-        	    + "    strike:           " + payoff.getStrike() + "\n" 
+        	    + "    strike:           " + payoff.strike() + "\n" 
         	    + "    dividend yield:   " + values[i].q + "\n" 
         	    + "    risk-free rate:   " + values[i].r + "\n" 
         	    + "    reference date:   " + today + "\n" 
@@ -1452,11 +1452,11 @@ public class EuropeanOptionTest {
 
         StringBuilder sb = new StringBuilder();
         sb.append(exercise).append(" ");
-        sb.append(payoff.getOptionType()).append(" option with ");
+        sb.append(payoff.optionType()).append(" option with ");
         sb.append(payoff.getClass().getName() + " payoff:\n");
         sb.append("    spot value:       " + s + "\n");
         
-        sb.append("    strike:           " + payoff.getStrike() + "\n");
+        sb.append("    strike:           " + payoff.strike() + "\n");
         sb.append("    dividend yield:   " + q + "\n");
         sb.append("    risk-free rate:   " + r + "\n");
         sb.append("    reference date:   " + today + "\n");

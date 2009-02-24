@@ -84,7 +84,7 @@ public class BlackCalculator {
 
 	public BlackCalculator(final StrikedTypePayoff payoff, final double forward, final double stdDev, final double discount) {
 
-		this.strike = payoff.getStrike();
+		this.strike = payoff.strike();
 		this.forward = forward;
 		this.stdDev = stdDev;
 		this.discount = discount;
@@ -134,7 +134,7 @@ public class BlackCalculator {
 		// this part is always executed.
 		// in case of plain-vanilla payoffs, it is also the only part
 		// which is executed.
-		final Option.Type optionType = payoff.getOptionType();
+		final Option.Type optionType = payoff.optionType();
 		if (optionType == Option.Type.CALL) {
 			alpha = cum_d1;// N(d1)
 			dAlpha_dD1 = n_d1;// n(d1)
@@ -465,7 +465,7 @@ public class BlackCalculator {
 				black.alpha = black.dAlpha_dD1 = 0.0;
 				black.x = payoff.getCashPayoff();
 				black.dx_dStrike = 0.0;
-				final Option.Type optionType = payoff.getOptionType();
+				final Option.Type optionType = payoff.optionType();
 				if (optionType == Option.Type.CALL) {
 					black.beta = black.cum_d2;
 					black.dBeta_dD2 = black.n_d2;
@@ -491,7 +491,7 @@ public class BlackCalculator {
 			public void visit(final Payoff o) {
 				final AssetOrNothingPayoff payoff = (AssetOrNothingPayoff)o;
 				black.beta = black.dBeta_dD2 = 0.0;
-				final Option.Type optionType = payoff.getOptionType();
+				final Option.Type optionType = payoff.optionType();
 				if (optionType == Option.Type.CALL) {
 					black.alpha = black.cum_d1;
 					black.dAlpha_dD1 = black.n_d1;

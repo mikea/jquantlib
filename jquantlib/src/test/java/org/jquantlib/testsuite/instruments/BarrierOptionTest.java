@@ -62,10 +62,10 @@ public class BarrierOptionTest {
             double v, double expected, double calculated, 
             double error, double tolerance) {
 		TestCase.fail("\n" + barrierType + " " + exercise +  
-				payoff.getOptionType() + " option with " 
+				payoff.optionType() + " option with " 
 				+ payoff.getClass().getSimpleName() + " payoff:\n" +
 				"    underlying value: " +  s + "\n" 
-    + "    strike:           " + payoff.getStrike() + "\n" 
+    + "    strike:           " + payoff.strike() + "\n" 
     + "    barrier:          " + barrier + "\n" 
     + "    rebate:           " + rebate + "\n" 
     + "    dividend yield:   " + q + "\n" 

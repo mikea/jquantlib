@@ -63,8 +63,8 @@ public class IMM {
      */
     private static volatile IMM DEFAULT_IMM;
 
-    private Configuration configuration = null;
-    private Settings settings = null;
+    private final Configuration configuration;
+    private final Settings settings;
     
     /**
      * To create a IMM with user Settings and Configuration
@@ -72,6 +72,7 @@ public class IMM {
      * @param config
      * @param settings
      */
+    // TODO: code review
     public IMM(Configuration config, Settings settings){
         this.configuration = config;
         this.settings = settings;
@@ -82,10 +83,12 @@ public class IMM {
      * @return
      */
     public static IMM getDefaultIMM(){
-        if (DEFAULT_IMM == null){
-            synchronized(IMM.class){
-                if(DEFAULT_IMM == null)
-                    DEFAULT_IMM = new IMM(Configuration.getSystemConfiguration(null), Configuration.getSystemConfiguration(null).getGlobalSettings());
+        if (DEFAULT_IMM == null) {
+            synchronized (IMM.class) {
+                if (DEFAULT_IMM == null)
+                    DEFAULT_IMM = new IMM(
+                            Configuration.getSystemConfiguration(null), 
+                            Configuration.getSystemConfiguration(null).getGlobalSettings());
             }
         }
         return DEFAULT_IMM;
@@ -400,10 +403,14 @@ public class IMM {
         StringBuilder sb = new StringBuilder();
         sb.append(code).append(y);
         
+        final String imm = sb.toString(); 
+        
+        // TODO: review usage of QL_EXTRA_SAFETY_CHECKS
         if (configuration.isExtraSafetyChecks()) {
-        	if (! isIMMcode(sb.toString(), false) ) throw new IllegalArgumentException("the result "+sb.toString()+" is an invalid IMM code");
+            if (! isIMMcode(imm, false) ) 
+                throw new RuntimeException("the result is an invalid IMM code");
         }
-        return sb.toString();
+        return imm;
     }
 
 }

@@ -78,7 +78,7 @@ public abstract class StrikedTypePayoff extends TypePayoff {
     /**
      * @return the strike value
      */
-    public final /*@Price*/ double getStrike() {
+    public final /*@Price*/ double strike() {
 		return strike;
 	}
 

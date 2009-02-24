@@ -84,8 +84,8 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
 		}
 
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
-		/*@Volatility*/ double volatility = process.blackVolatility().getLink().blackVol(exercise, payoff.getStrike());
-		/*@Real*/ double variance = process.blackVolatility().getLink().blackVariance(exercise, payoff.getStrike());
+		/*@Volatility*/ double volatility = process.blackVolatility().getLink().blackVol(exercise, payoff.strike());
+		/*@Real*/ double variance = process.blackVolatility().getLink().blackVariance(exercise, payoff.strike());
 		/*@DiscountFactor*/ double  riskFreeDiscount = process.riskFreeRate().getLink().discount(exercise);
 		DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
 		DayCounter divdc = process.dividendYield().getLink().dayCounter();

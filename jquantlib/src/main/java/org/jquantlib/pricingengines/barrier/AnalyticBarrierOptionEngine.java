@@ -72,7 +72,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
         	throw new ArithmeticException("non-plain payoff given");
         }
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)getArguments().payoff;
-        if(!(payoff.getStrike()>0.0)){
+        if(!(payoff.strike()>0.0)){
         	throw new ArithmeticException("strike must be positive");
         }
 
@@ -83,11 +83,11 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
         //GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
 
-        final double strike = payoff.getStrike();
+        final double strike = payoff.strike();
 
         final BarrierType barrierType = arguments.barrierType;
 
-        switch (payoff.getOptionType()) {
+        switch (payoff.optionType()) {
           case CALL:
             switch (barrierType) {
               case DownIn:
@@ -160,7 +160,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
         	throw new ArithmeticException("non-plain payoff given");
         }
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)getArguments().payoff;
-        return payoff.getStrike();
+        return payoff.strike();
     }
 
     double /*@Time*/  residualTime()  {

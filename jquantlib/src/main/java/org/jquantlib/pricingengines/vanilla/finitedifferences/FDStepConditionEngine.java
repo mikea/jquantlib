@@ -99,7 +99,7 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 			throw new IllegalStateException("non-striked payoff given");
 
 		double variance = process.blackVolatility().getLink().blackVariance(
-				exerciseDate, striked_payoff.getStrike());
+				exerciseDate, striked_payoff.strike());
 		double dividendDiscount = process.dividendYield().getLink().discount(
 				exerciseDate);
 		double riskFreeDiscount = process.riskFreeRate().getLink().discount(

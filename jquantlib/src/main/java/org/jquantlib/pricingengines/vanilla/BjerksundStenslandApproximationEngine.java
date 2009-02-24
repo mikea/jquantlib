@@ -90,15 +90,15 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
 
 		double /*@Real*/ variance =
 			process.blackVolatility().getLink().blackVariance(ex.lastDate(),
-                                           payoff.getStrike());
+                                           payoff.strike());
 		double /*@DiscountFactor*/ dividendDiscount =
 			process.dividendYield().getLink().discount(ex.lastDate());
 		double /*@DiscountFactor*/ riskFreeDiscount =
 			process.riskFreeRate().getLink().discount(ex.lastDate());
 		double /*@Real*/ spot = process.stateVariable().getLink().evaluate();
-		double /*@Real*/ strike = payoff.getStrike();
+		double /*@Real*/ strike = payoff.strike();
 
-		if (payoff.getOptionType()==Option.Type.PUT) {
+		if (payoff.optionType()==Option.Type.PUT) {
 			// use put-call simmetry
 			//std::swap(spot, strike);
 			///argh!!! cant swap primtives, do it by hand

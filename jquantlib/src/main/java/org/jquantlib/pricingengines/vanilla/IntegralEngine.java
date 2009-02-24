@@ -85,7 +85,7 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
 
 		double variance =
 			process.blackVolatility().getLink().blackVariance(
-                arguments.exercise.lastDate(), payoff.getStrike());
+                arguments.exercise.lastDate(), payoff.strike());
 
 		double /*@DiscountFactor*/ dividendDiscount =
 			process.dividendYield().getLink().discount(arguments.exercise.lastDate());

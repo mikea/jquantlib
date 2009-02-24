@@ -85,7 +85,7 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 		if (process == null)
 			throw new NullPointerException("Black-Scholes process required");
 
-		/* @Variance */double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.getStrike());
+		/* @Variance */double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
 
 		/* @DiscountFactor */double dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
 		/* @DiscountFactor */double riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());

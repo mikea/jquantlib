@@ -83,7 +83,7 @@ public abstract class FDVanillaEngine {
 		OneAssetOptionArguments args = (OneAssetOptionArguments) a;
 		exerciseDate = args.exercise.lastDate();
 		payoff = args.payoff;
-		requiredGridValue = ((StrikedTypePayoff) (payoff)).getStrike();
+		requiredGridValue = ((StrikedTypePayoff) (payoff)).strike();
 	}
 
 	protected void setGridLimits(/* Real */double center, /* Time */double t) {
@@ -110,7 +110,7 @@ public abstract class FDVanillaEngine {
 		StrikedTypePayoff striked_payoff = (StrikedTypePayoff) (payoff);
 		if (striked_payoff == null)
 			return;
-		/* Real */double requiredGridValue = striked_payoff.getStrike();
+		/* Real */double requiredGridValue = striked_payoff.strike();
 
 		if (sMin > requiredGridValue / safetyZoneFactor) {
 			sMin = requiredGridValue / safetyZoneFactor;

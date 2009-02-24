@@ -89,8 +89,8 @@ public class AmericanPayoffAtExpiry {
         forward = spot * dividendDiscount / discount;
         stdDev = Math.sqrt(variance);
 
-        final Option.Type optionType = strikedTypePayoff.getOptionType();
-        strike = strikedTypePayoff.getStrike();
+        final Option.Type optionType = strikedTypePayoff.optionType();
+        strike = strikedTypePayoff.strike();
         
         mu = Math.log(dividendDiscount / discount) / variance - 0.5;
         

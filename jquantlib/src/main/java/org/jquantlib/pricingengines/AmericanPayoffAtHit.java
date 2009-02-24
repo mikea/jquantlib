@@ -84,8 +84,8 @@ public class AmericanPayoffAtHit {
         
         stdDev = Math.sqrt(variance);
 
-        Option.Type optionType = strikedTypePayoff.getOptionType();
-        strike = strikedTypePayoff.getStrike();
+        Option.Type optionType = strikedTypePayoff.optionType();
+        strike = strikedTypePayoff.strike();
 
         log_H_S = Math.log(strike / spot);
         
@@ -188,7 +188,7 @@ public class AmericanPayoffAtHit {
                 DKDstrike = 0.0;                
             }
             else {
-                K = aoo.getStrike();
+                K = aoo.strike();
                 DKDstrike = 1.0;
             }
         }

@@ -86,7 +86,7 @@ public abstract class TypePayoff extends Payoff {
      * 
      * @see Option.Type
      */
-    public final Option.Type getOptionType() {
+    public final Option.Type optionType() {
 		return this.type;
 	}
 

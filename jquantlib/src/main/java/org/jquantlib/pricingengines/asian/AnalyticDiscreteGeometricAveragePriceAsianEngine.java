@@ -148,7 +148,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends
 	    
 	    /*@Volatility*/ double vola = process.blackVolatility().getLink().blackVol(
                                            arguments.exercise.lastDate(),
-                                           payoff.getStrike());
+                                           payoff.strike());
 	    /*@Real*/ double temp = 0.0;
 	    for (i=pastFixings+1; i<numberOfFixings; i++) {
 	    	temp += fixingTimes.get(i-pastFixings-1)*(N-i);
@@ -189,17 +189,17 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends
 		NormalDistribution ND = new NormalDistribution();
 		
 		if (sigG > Constants.QL_EPSILON) {
-			/*@Real*/ double x_1  = (muG-Math.log(payoff.getStrike())+variance)/sigG;
+			/*@Real*/ double x_1  = (muG-Math.log(payoff.strike())+variance)/sigG;
 			Nx_1 = CND.evaluate(x_1);
 			nx_1 = ND.evaluate(x_1);
 		} else {
-			Nx_1 = (muG > Math.log(payoff.getStrike()) ? 1.0 : 0.0);
+			Nx_1 = (muG > Math.log(payoff.strike()) ? 1.0 : 0.0);
 			nx_1 = 0.0;
 		}
 		results.vega = forwardPrice * riskFreeDiscount *
                 ( (dmuG_dsig + sigG * dsigG_dsig)*Nx_1 + nx_1*dsigG_dsig );
 
-		if (payoff.getOptionType() == Option.Type.PUT)
+		if (payoff.optionType() == Option.Type.PUT)
 			results.vega -= riskFreeDiscount * forwardPrice *
                                            (dmuG_dsig + sigG * dsigG_dsig);
 

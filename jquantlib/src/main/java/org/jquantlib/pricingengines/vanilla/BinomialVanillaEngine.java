@@ -136,7 +136,7 @@ public class BinomialVanillaEngine<T extends BinomialTree> extends VanillaOption
 
         TimeGrid grid = new TimeGrid(maturity, timeSteps_);
 
-        Tree tree = (Tree)getTreeInstance(bs, maturity, timeSteps_, payoff.getStrike());
+        Tree tree = (Tree)getTreeInstance(bs, maturity, timeSteps_, payoff.strike());
 
         BlackScholesLattice<Tree> lattice = new BlackScholesLattice<Tree>(tree, r, maturity, timeSteps_);
 

@@ -97,7 +97,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 
 
 		double /*@Real*/ variance = process.blackVolatility().getLink().blackVariance(
-				ex.lastDate(), payoff.getStrike());
+				ex.lastDate(), payoff.strike());
 		double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().getLink().discount(
 				ex.lastDate());
 		double /*@DiscountFactor*/ riskFreeDiscount = process.riskFreeRate().getLink().discount(
@@ -106,7 +106,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 		double /*@Real*/ forwardPrice = spot * dividendDiscount / riskFreeDiscount;
 		BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-		if (dividendDiscount>=1.0 && payoff.getOptionType()==Option.Type.CALL) {
+		if (dividendDiscount>=1.0 && payoff.optionType()==Option.Type.CALL) {
 			// early exercise never optimal
 			results.value        = black.value();
 			results.delta        = black.delta(spot);
@@ -151,7 +151,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 			double /*@Real*/ h = 1 - riskFreeDiscount;
 			double /*@Real*/ phi;
 			
-			switch (payoff.getOptionType()) {
+			switch (payoff.optionType()) {
 			case CALL:
 				phi = 1;
 				break;
@@ -167,18 +167,18 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 			double /*@Real*/ lambda = (-(beta-1) + phi * temp_root) / 2;
 			double /*@Real*/ lambda_prime = - phi * alpha / (h*h * temp_root);
 
-			double /*@Real*/ black_Sk = BlackFormula.blackFormula(payoff.getOptionType(), payoff.getStrike(),
+			double /*@Real*/ black_Sk = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(),
                               forwardSk, Math.sqrt(variance)) * riskFreeDiscount;
-			double /*@Real*/ hA = phi * (Sk - payoff.getStrike()) - black_Sk;
+			double /*@Real*/ hA = phi * (Sk - payoff.strike()) - black_Sk;
 
-			double /*@Real*/ d1_Sk = (Math.log(forwardSk/payoff.getStrike()) + 0.5*variance)
+			double /*@Real*/ d1_Sk = (Math.log(forwardSk/payoff.strike()) + 0.5*variance)
 											/Math.sqrt(variance);
 			double /*@Real*/ d2_Sk = d1_Sk - Math.sqrt(variance);
 			double /*@Real*/ part1 = forwardSk * normalDist.evaluate(d1_Sk) /
                              (alpha * Math.sqrt(variance));
 			double /*@Real*/ part2 = - phi * forwardSk * cumNormalDist.evaluate(phi * d1_Sk) *
 									Math.log(dividendDiscount) / Math.log(riskFreeDiscount);
-			double /*@Real*/ part3 = + phi * payoff.getStrike() * cumNormalDist.evaluate(phi * d2_Sk);
+			double /*@Real*/ part3 = + phi * payoff.strike() * cumNormalDist.evaluate(phi * d2_Sk);
 			double /*@Real*/ V_E_h = part1 + part2 + part3;
 
 			double /*@Real*/ b = (1-h) * alpha * lambda_prime / (2*(2*lambda + beta - 1));
@@ -191,7 +191,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 				results.value = black.value() +
 				hA * Math.pow((spot/Sk), lambda) / (1 - chi);
 			} else {
-				results.value = phi * (spot - payoff.getStrike());
+				results.value = phi * (spot - payoff.strike());
 			}
 
 			if (Double.isNaN(results.value)){
@@ -205,7 +205,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 													- c / (spot*spot);
 			results.delta = phi * dividendDiscount * cumNormalDist.evaluate(phi * d1_Sk)
 							+ (lambda / (spot * (1 - chi)) + chi_prime / ((1 - chi)*(1 - chi))) *
-							(phi * (Sk - payoff.getStrike()) - black_Sk) * Math.pow((spot/Sk), lambda);
+							(phi * (Sk - payoff.strike()) - black_Sk) * Math.pow((spot/Sk), lambda);
 
 			results.gamma = phi * dividendDiscount * normalDist.evaluate(phi*d1_Sk) /
                              (spot * Math.sqrt(variance))
@@ -213,7 +213,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
                             		 + 2 * chi_prime * chi_prime / ((1 - chi) * (1 - chi) * (1 - chi))
                             		 + chi_double_prime / ((1 - chi) * (1 - chi))
                             		 + lambda * (1 - lambda) / (spot * spot * (1 - chi)))
-                            		 * (phi * (Sk - payoff.getStrike()) - black_Sk)
+                            		 * (phi * (Sk - payoff.strike()) - black_Sk)
                             		 * Math.pow((spot/Sk), lambda);
 
 		} // end of "early exercise can be optimal"

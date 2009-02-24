@@ -355,7 +355,7 @@ public class AsianOptionTest {
 				+ pastFixings + "\n" 
 				+ "    future fixings:   " + fixingDates.size() + "\n" 
 				+ "    underlying value: " + s + "\n" 
-				+ "    strike:           " + payoff.getStrike() + "\n" 
+				+ "    strike:           " + payoff.strike() + "\n" 
 				+ "    dividend yield:   " + q + "\n" 
 				+ "    risk-free rate:   " + r + "\n" 
 				+ "    reference date:   " + today + "\n" 

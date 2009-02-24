@@ -781,10 +781,10 @@ public class AmericanOptionTest {
 			double v, double expected, double calculated, double error,
 			double tolerance) {
 
-		throw new RuntimeException(exercise.type() + " " + payoff.getOptionType()
+		throw new RuntimeException(exercise.type() + " " + payoff.optionType()
 				+ " option with " + payoff.getClass().getSimpleName()
 				+ " payoff:\n" + "    spot value:        " + s + "\n"
-				+ "    strike:           " + payoff.getStrike() + "\n"
+				+ "    strike:           " + payoff.strike() + "\n"
 				+ "    dividend yield:   " + q + "\n"
 				+ "    risk-free rate:   " + r + "\n"
 				+ "    reference date:   " + today + "\n"
