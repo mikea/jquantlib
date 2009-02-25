@@ -88,8 +88,16 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
+import org.jquantlib.methods.lattices.AdditiveEQPBinomialTree;
+import org.jquantlib.methods.lattices.CoxRossRubinstein;
+import org.jquantlib.methods.lattices.JarrowRudd;
+import org.jquantlib.methods.lattices.Joshi4;
+import org.jquantlib.methods.lattices.LeisenReimer;
+import org.jquantlib.methods.lattices.Tian;
+import org.jquantlib.methods.lattices.Trigeorgis;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.vanilla.BaroneAdesiWhaleyApproximationEngine;
+import org.jquantlib.pricingengines.vanilla.BinomialVanillaEngine;
 import org.jquantlib.pricingengines.vanilla.BjerksundStenslandApproximationEngine;
 import org.jquantlib.pricingengines.vanilla.IntegralEngine;
 import org.jquantlib.pricingengines.vanilla.JuQuadraticApproximationEngine;
@@ -226,55 +234,67 @@ public class EquityOptions {
         
         // Binomial method
         method = "Binomial Jarrow-Rudd";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(new BinomialVanillaEngine("JarrowRudd", timeSteps));
-//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("JarrowRudd", timeSteps));
-//        americanOption.setPricingEngine(new BinomialVanillaEngine("JarrowRudd", timeSteps));
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+        //XXX System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        europeanOption.setPricingEngine(new BinomialVanillaEngine<JarrowRudd>(timeSteps){} );
+        // TODO: bermudanOption.setPricingEngine(new BinomialVanillaEngine<JarrowRudd>(timeSteps){} );
+        americanOption.setPricingEngine(new BinomialVanillaEngine<JarrowRudd>(timeSteps){} );
+        // TODO: System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), bermudanOption.getNPV(), americanOption.getNPV() } );
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() } );
 
         method = "Binomial Cox-Ross-Rubinstein";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(new BinomialVanillaEngine("CoxRossRubinstein", timeSteps));
-//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("CoxRossRubinstein", timeSteps));
-//        americanOption.setPricingEngine(new BinomialVanillaEngine("CoxRossRubinstein", timeSteps));
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+        //XXX System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        europeanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(timeSteps){} );
+        // TODO: bermudanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(timeSteps){} );
+        americanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(timeSteps){} );
+        // TODO: System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), bermudanOption.getNPV(), americanOption.getNPV() } );
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() } );
 
         method = "Additive equiprobabilities";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(new BinomialVanillaEngine("AdditiveEQPBinomialTree", timeSteps));
-//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("AdditiveEQPBinomialTree", timeSteps));
-//        americanOption.setPricingEngine(new BinomialVanillaEngine("AdditiveEQPBinomialTree", timeSteps));
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+        //XXX System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        europeanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(timeSteps){} );
+        // TODO: bermudanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(timeSteps){} );
+        americanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(timeSteps){} );
+        //TODO: System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), bermudanOption.getNPV(), americanOption.getNPV() } );
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() } );
 
         method = "Binomial Trigeorgis";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(new BinomialVanillaEngine("Trigeorgis", timeSteps));
-//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("Trigeorgis", timeSteps));
-//        americanOption.setPricingEngine(new BinomialVanillaEngine("Trigeorgis", timeSteps));
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+        //XXX System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        europeanOption.setPricingEngine(new BinomialVanillaEngine<Trigeorgis>(timeSteps){} );
+        //TODO: bermudanOption.setPricingEngine(new BinomialVanillaEngine<Trigeorgis>(timeSteps){} );
+        americanOption.setPricingEngine(new BinomialVanillaEngine<Trigeorgis>(timeSteps){} );
+        //TODO: System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() } );
 
         method = "Binomial Tian";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(new BinomialVanillaEngine("Tian", timeSteps));
-//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("Tian", timeSteps));
-//        americanOption.setPricingEngine(new BinomialVanillaEngine("Tian", timeSteps));
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+        //XXX System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        europeanOption.setPricingEngine(new BinomialVanillaEngine<Tian>(timeSteps){} );
+        //TODO: bermudanOption.setPricingEngine(new BinomialVanillaEngine<Tian>(timeSteps){} );
+        americanOption.setPricingEngine(new BinomialVanillaEngine<Tian>(timeSteps){} );
+        //TODO: System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), bermudanOption.getNPV(), americanOption.getNPV() } );
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() } );
 
         method = "Binomial Leisen-Reimer";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(new BinomialVanillaEngine("LeisenReimer", timeSteps));
-//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("LeisenReimer", timeSteps));
-//        americanOption.setPricingEngine(new BinomialVanillaEngine("LeisenReimer", timeSteps));
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+        //XXX System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        europeanOption.setPricingEngine(new BinomialVanillaEngine<LeisenReimer>(timeSteps){} );
+        //TODO: bermudanOption.setPricingEngine(new BinomialVanillaEngine<LeisenReimer>(timeSteps){} );
+        americanOption.setPricingEngine(new BinomialVanillaEngine<LeisenReimer>(timeSteps){} );
+        //TODO: System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), bermudanOption.getNPV(), americanOption.getNPV() } );
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() } );
 
         method = "Binomial Joshi";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(new BinomialVanillaEngine("Joshi4", timeSteps));
-//        bermudanOption.setPricingEngine(new BinomialVanillaEngine("Joshi4", timeSteps));
-//        americanOption.setPricingEngine(new BinomialVanillaEngine("Joshi4", timeSteps));
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
-//
-//
+        //XXX System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        europeanOption.setPricingEngine(new BinomialVanillaEngine<Joshi4>(timeSteps){} );
+        //TODO: bermudanOption.setPricingEngine(new BinomialVanillaEngine<Joshi4>(timeSteps){} );
+        americanOption.setPricingEngine(new BinomialVanillaEngine<Joshi4>(timeSteps){} );
+        //TODO: System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), bermudanOption.getNPV(), americanOption.getNPV() } );
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() } );
+
+
+        //
+        //
+        //
+        
+        
         // Monte Carlo Method
         timeSteps = 1;
         int mcSeed = 42;

@@ -21,6 +21,9 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.lang.annotation.NonNegative;
+import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
@@ -35,11 +38,11 @@ public abstract class BinomialTree extends Tree {
 
     public static final Branches branches = Branches.BINOMIAL;
 
-	protected/* @Price */double x0;
-    protected/* @Price */double driftPerStep;
-    protected/* @Time */double dt;
+	protected @Price double x0;
+    protected @Price double driftPerStep;
+    protected @Time double dt;
 
-	protected BinomialTree(final StochasticProcess1D process, final/* @Time */double end, final int steps) {
+	protected BinomialTree(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps) {
         super(steps + 1);
 
         x0 = process.x0();

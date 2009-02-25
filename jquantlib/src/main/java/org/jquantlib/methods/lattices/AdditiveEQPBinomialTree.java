@@ -21,6 +21,10 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.lang.annotation.NonNegative;
+import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Time;
+import org.jquantlib.lang.annotation.Unused;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
@@ -33,7 +37,7 @@ import org.jquantlib.processes.StochasticProcess1D;
  */
 public class AdditiveEQPBinomialTree extends EqualProbabilitiesBinomialTree {
 
-    public AdditiveEQPBinomialTree(final StochasticProcess1D process, final/* Time */double end, int steps, /* @Price */double d) {
+    public AdditiveEQPBinomialTree(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps, @Unused @Price final double strike) {
         super(process, end, steps);
         up = -0.5 * driftPerStep + 0.5 * Math.sqrt(4.0 * process.variance(0.0, x0, dt) - 3.0 * driftPerStep * driftPerStep);
     }

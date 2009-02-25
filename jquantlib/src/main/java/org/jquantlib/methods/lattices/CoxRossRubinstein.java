@@ -22,6 +22,10 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.lang.annotation.NonNegative;
+import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Time;
+import org.jquantlib.lang.annotation.Unused;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
@@ -34,8 +38,8 @@ import org.jquantlib.processes.StochasticProcess1D;
  */
 public class CoxRossRubinstein extends EqualJumpsBinomialTree {
 
-	public CoxRossRubinstein(final StochasticProcess1D process, final/* 'Time */double end, final int steps, final/* @Price */double d) {
-
+	
+    public CoxRossRubinstein(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps, @Unused @Price final double strike) {
         super(process, end, steps);
 
         dx = process.stdDeviation(0.0, x0, dt);

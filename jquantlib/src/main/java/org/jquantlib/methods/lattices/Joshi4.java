@@ -22,6 +22,9 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.lang.annotation.NonNegative;
+import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
@@ -36,7 +39,7 @@ public class Joshi4 extends BinomialTree {
 
 	protected double up, down, pu, pd;
 
-	public Joshi4(final StochasticProcess1D process, final /* @Time */double end, final int steps, final /* @Price */double strike) {
+	public Joshi4(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps, final @Price double strike) {
         super(process, end, ((steps % 2) > 0 ? steps : steps + 1));
         
         if (strike <= 0.0) throw new IllegalStateException("strike must be positive");

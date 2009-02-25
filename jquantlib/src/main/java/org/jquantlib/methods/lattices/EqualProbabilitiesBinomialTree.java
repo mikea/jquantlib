@@ -21,6 +21,8 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.lang.annotation.NonNegative;
+import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
@@ -35,7 +37,7 @@ public abstract class EqualProbabilitiesBinomialTree extends BinomialTree {
 
 	protected double up;
 
-	public EqualProbabilitiesBinomialTree(final StochasticProcess1D process, final /* @Time */double end, final int steps) {
+	public EqualProbabilitiesBinomialTree(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps) {
 		super(process, end, steps);
 	}
 

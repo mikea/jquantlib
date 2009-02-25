@@ -20,7 +20,6 @@
 package org.jquantlib.pricingengines.vanilla;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.PlainVanillaPayoff;
@@ -28,6 +27,7 @@ import org.jquantlib.math.Array;
 import org.jquantlib.methods.lattices.BinomialTree;
 import org.jquantlib.methods.lattices.BlackScholesLattice;
 import org.jquantlib.methods.lattices.Tree;
+import org.jquantlib.methods.lattices.Trigeorgis;
 import org.jquantlib.pricingengines.Greeks;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
@@ -46,6 +46,13 @@ import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * Pricing engine for vanilla options using binomial trees
+ * <p>
+ * This class was designed to be called with parametric types, typically 
+ * using anonymous instantiation. Below you can see an example:
+ * <pre>
+ * // instantiate an anonymous class :: notice '{ braces }' below
+ * PricingEngine engine = new BinomialVanillaEngine<Trigeorgis>(timeSteps) {} ;
+ * </pre>
  *  
  * @category vanillaengines
  *  
@@ -61,7 +68,7 @@ import org.jquantlib.util.reflect.TypeToken;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
-public class BinomialVanillaEngine<T extends BinomialTree> extends VanillaOptionEngine {
+public abstract class BinomialVanillaEngine<T extends BinomialTree> extends VanillaOptionEngine {
 
     //
     // private fields

@@ -21,6 +21,8 @@
  */
 package org.jquantlib.methods.lattices;
 
+import org.jquantlib.lang.annotation.NonNegative;
+import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
@@ -35,7 +37,7 @@ public abstract class EqualJumpsBinomialTree extends BinomialTree {
 
 	protected double dx, pu, pd;
 
-	protected EqualJumpsBinomialTree(final StochasticProcess1D process, /* @Time */double end, final int steps) {
+	protected EqualJumpsBinomialTree(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps) {
         super(process, end, steps);
     }
 
