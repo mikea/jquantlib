@@ -36,7 +36,6 @@ public class FractionalDividend extends AbstractDividend {
 	public FractionalDividend(final double rate, final Date date){
 		super(date);
 		this.rate=rate;
-//		nominal=0.0; need? Daniel
 	}
 	
 	public FractionalDividend(final double rate, final double nominal, final Date date){
