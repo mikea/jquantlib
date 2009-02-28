@@ -41,7 +41,7 @@ public class BlackScholesLattice<T extends Tree> extends TreeLattice1D {
 		this.tree = tree;
 		this.discount = Math.exp(-riskFreeRate * (end / steps));
 		this.pd = tree.probability(0, 0, 0);
-		this.pu = tree.probability(0, 0, 0);
+		this.pu = tree.probability(0, 0, 1);
 	}
 
 	public int size(int i) {

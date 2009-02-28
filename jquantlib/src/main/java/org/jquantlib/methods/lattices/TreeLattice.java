@@ -83,9 +83,9 @@ public abstract class TreeLattice extends Lattice {
 	        return Array.dotProduct(asset.values(), statePrices(i));
 	    }
 
-	    public void initialize(DiscretizedAsset asset, double dt)  {
-	        int i = t.index(dt);
-	        asset.setTime(dt);
+	    public void initialize(DiscretizedAsset asset, double ti)  {
+	        int i = t.index(ti);
+	        asset.setTime(ti);
 	        asset.reset(size(i));
 	    }
 
