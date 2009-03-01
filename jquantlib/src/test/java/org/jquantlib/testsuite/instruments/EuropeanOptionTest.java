@@ -1147,7 +1147,6 @@ public class EuropeanOptionTest {
 	}
 
 	
-	@Ignore("********* THIS TEST IS FAILING :( ")
 	@Test
     public void testJRBinomialEngines() {
 
@@ -1201,7 +1200,6 @@ public class EuropeanOptionTest {
     }
     
     
-	@Ignore("********* THIS TEST IS FAILING :( ")
     @Test
     public void testTGEOBinomialEngines() {
 
@@ -1219,7 +1217,6 @@ public class EuropeanOptionTest {
     }
     
     
-	@Ignore("********* THIS TEST IS FAILING :( ")
     @Test
     public void testTIANBinomialEngines() {
 
@@ -1237,7 +1234,6 @@ public class EuropeanOptionTest {
     }
     
     
-	@Ignore("********* THIS TEST IS FAILING :( ")
     @Test
     public void testLRBinomialEngines() {
 
@@ -1255,7 +1251,6 @@ public class EuropeanOptionTest {
     }
     
     
-	@Ignore("********* THIS TEST IS FAILING :( ")
     @Test
     public void testJOSHIBinomialEngines() {
 
