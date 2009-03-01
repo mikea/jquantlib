@@ -101,6 +101,7 @@ import org.jquantlib.pricingengines.vanilla.BinomialVanillaEngine;
 import org.jquantlib.pricingengines.vanilla.BjerksundStenslandApproximationEngine;
 import org.jquantlib.pricingengines.vanilla.IntegralEngine;
 import org.jquantlib.pricingengines.vanilla.JuQuadraticApproximationEngine;
+import org.jquantlib.pricingengines.vanilla.finitedifferences.FDAmericanEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
@@ -223,14 +224,16 @@ public class EquityOptions {
         europeanOption.setPricingEngine(new IntegralEngine());
 		System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, Double.NaN });
 
+        int timeSteps = 801;
+        
         // Finite differences
         method = "Finite differences";
         System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-        int timeSteps = 801;
 //        europeanOption.setPricingEngine(new FDEuropeanEngine(timeSteps,timeSteps-1));
-//        bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
+//        //TODO: bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
 //        americanOption.setPricingEngine(new FDAmericanEngine(timeSteps,timeSteps-1));
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() });
+//        //TODO: System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() });
+//        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() });
         
         // Binomial method
         method = "Binomial Jarrow-Rudd";

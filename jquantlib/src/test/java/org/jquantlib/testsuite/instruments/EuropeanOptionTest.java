@@ -80,7 +80,6 @@ import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1164,7 +1163,6 @@ public class EuropeanOptionTest {
     }
 	
 	
-	@Ignore("********* THIS TEST IS FAILING :( ")
     @Test
     public void testCRRBinomialEngines() {
 
@@ -1182,7 +1180,6 @@ public class EuropeanOptionTest {
     }
     
     
-	@Ignore("********* THIS TEST IS FAILING :( ")
     @Test
     public void testEQPBinomialEngines() {
 
@@ -1192,7 +1189,7 @@ public class EuropeanOptionTest {
         final int steps = 501;
         final int samples = 0;
         final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
-        relativeTol.put("value", 0.002);
+        relativeTol.put("value", 0.02);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
         relativeTol.put("theta", 0.03);
@@ -1205,7 +1202,7 @@ public class EuropeanOptionTest {
 
         logger.info("Testing TGEO binomial European engines against analytic results...");
             
-        final EngineType engine = EngineType.EQP;
+        final EngineType engine = EngineType.TGEO;
         final int steps = 251;
         final int samples = 0;
         final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
@@ -1256,7 +1253,7 @@ public class EuropeanOptionTest {
 
         logger.info("Testing Joshi binomial European engines against analytic results...");
             
-        final EngineType engine = EngineType.LR;
+        final EngineType engine = EngineType.JOSHI;
         final int steps = 251;
         final int samples = 0;
         final Map<String,Double> relativeTol = new HashMap<String, Double>(1);

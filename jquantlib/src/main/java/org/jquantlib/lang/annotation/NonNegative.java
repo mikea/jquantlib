@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * 
  * @author Richard Gomes
  */
-@Target({ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER})
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER})
 public @interface NonNegative {
     // tagging annotation
 }

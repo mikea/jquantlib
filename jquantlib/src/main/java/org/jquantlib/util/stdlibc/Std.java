@@ -84,6 +84,55 @@ public final class Std {
 	}
 
 	
+    /**
+     * Java implementation of std::lower_bound
+     * <p>
+     * This method signature is specific for <i>int</i> values.
+     * Other method signatures may be available for other types.
+     * <p> 
+     * The original function signature is
+     * <pre>
+     * template<typename _ForwardIterator, typename _Tp>
+     *  _ForwardIterator lower_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __val)
+     * </pre>
+     * <p>
+     * In this implementation we provide as many as needed type-specific method signatures. In particular
+     * we use an array intended to mimic the semantic of <i>elements located between __first and __last</i>.
+     *  
+     * @param list is an array of values which implicitly defines it's begin (zero) and end (it's own size)
+     * @param val is the value to be located
+     * @return see upper_bound doc
+     * 
+     * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__algo_8h-source.html#l02597">Source code: std::lower_bound</a> 
+     */
+    @SuppressWarnings("PMD.MethodNamingConventions")
+    public static int lower_bound(final double[] list, final double val) {
+        return lower_bound(list, 0, list.length-1, val);
+    }
+
+    @SuppressWarnings("PMD")
+    private static int lower_bound(final double[] list, int first, int last, final double val) {
+        int len = last - first;
+        int half;
+        int middle;
+        
+        while (len > 0) {
+            half = len >> 1;
+            middle = first;
+            middle = middle + half;
+            
+            if (list[middle] < val) {
+                first = middle;
+                first++;
+                len = len - half -1;
+            } else {
+                len = half;
+            }
+        }
+        return first;
+    }
+
+    
 	/**
 	 * Java implementation of std::upper_bound
 	 * <p>
@@ -103,7 +152,7 @@ public final class Std {
 	 * @param val is the value to be located
 	 * @return see upper_bound doc
 	 * 
-	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__algo_8h-source.html#l02712">Source code: std::upper_bound</a> 
+	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__algo_8h-source.html#l02699">Source code: std::upper_bound</a> 
 	 */
 	@SuppressWarnings("PMD.MethodNamingConventions")
 	public static int upper_bound(final double[] list, final double val) {
@@ -117,7 +166,7 @@ public final class Std {
 		int middle;
 		
 		while (len > 0) {
-			half = len >>> 1;
+			half = len >> 1;
 			middle = first;
 			middle = middle + half;
 			

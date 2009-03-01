@@ -44,7 +44,7 @@ import java.lang.annotation.Target;
  */
 @Typedef
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER })
+@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER })
 public @interface Time {
 	// No methods - Tagging annotation
 }
