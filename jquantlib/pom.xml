@@ -805,6 +805,7 @@
               <tag>@Deprecated</tag>
               <tag>@SupressWarnings</tag>
               <tag>@Ignore</tag>
+              <tag>@Unused</tag>
               <tag>@note</tag>
             </tags>
           </configuration>
