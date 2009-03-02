@@ -28,14 +28,6 @@ public class DoubleComparatorImpl implements DoubleComparator {
 
     @Override
     public int compare(double o1, double o2) {
-        int result = 0;
-        if(o1<o2){
-            result = -1;
-        }
-        else if(o1>o2){
-            result = 1;
-        }
-        return result;
+        return (o1==o2) ? 0 : (o1<o2) ? -1 : 1;
     }
-
 }
