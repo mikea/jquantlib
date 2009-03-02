@@ -38,7 +38,9 @@ public class BermudanSwaption {
 	private final static Logger logger = LoggerFactory.getLogger(BermudanSwaption.class);
 	
 	public BermudanSwaption(){
-		if (0==0) throw new UnsupportedOperationException("Work in progress");
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
 		logger.info("\n\n::::: "+BermudanSwaption.class.getSimpleName()+" :::::");		
 	}
 	

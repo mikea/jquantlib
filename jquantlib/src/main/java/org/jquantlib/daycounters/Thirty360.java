@@ -92,7 +92,7 @@ public class Thirty360 extends AbstractDayCounter {
         case ITALIAN:
            return THIRTY360_IT;
         default:
-            throw new UnsupportedOperationException();
+            throw new IllegalArgumentException(); //TODO: message
         }
     }
 
@@ -124,7 +124,7 @@ public class Thirty360 extends AbstractDayCounter {
 			delegate = new IT();
 			break;
 		default:
-			throw new UnsupportedOperationException();
+			throw new IllegalArgumentException(); // TODO: message
 		}
 	}
 	

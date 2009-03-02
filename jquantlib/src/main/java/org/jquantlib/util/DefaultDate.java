@@ -622,7 +622,7 @@ public class DefaultDate extends BaseDate {
                 d = 28;
             
             int result = fromDMY(d, m, y);
-            logger.debug("{}", result);
+            //logger.debug("{}", result);
             return result;
         }
         default:

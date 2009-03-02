@@ -80,7 +80,7 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
 		if (v1 != null) {
 			v1.visit(this);
 		} else {
-			throw new UnsupportedOperationException("null payoff visitor");
+			throw new IllegalArgumentException("null payoff visitor"); //TODO: message
 		}
 	}
 

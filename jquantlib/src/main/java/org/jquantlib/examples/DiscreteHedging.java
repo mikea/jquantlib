@@ -42,6 +42,10 @@ public class DiscreteHedging {
 
 	public static void main(String args[]){
 
+	    if (System.getProperty("EXPERIMENTAL")==null) {
+	        throw new UnsupportedOperationException("Work in progress");
+	      }
+
 
     try {
 
@@ -254,10 +258,11 @@ class ReplicationPathPricer extends PathPricer<Path> {
 
     // The value() method encapsulates the pricing code
 
-    Number operator(Path path){
-		throw new UnsupportedOperationException("Not  supported Yet");
-
-
+    private Number operator(Path path){
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+        return null;
 	}
 
   private Option.Type type_;
@@ -268,7 +273,10 @@ class ReplicationPathPricer extends PathPricer<Path> {
 
 	@Override
 	public Double evaluate(Path path) {
-		throw new UnsupportedOperationException("Not supported yet.");
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+        return null;
 	}
 }
 

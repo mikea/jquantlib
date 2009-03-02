@@ -56,7 +56,9 @@ import org.jquantlib.math.UnaryFunction;
 public abstract class PathPricer<PathType> implements UnaryFunction<PathType, Double> {
 
 	public PathPricer() {
-    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 	
 	public abstract Double evaluate(final PathType path);

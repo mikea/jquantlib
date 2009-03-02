@@ -116,7 +116,9 @@ public class Path {
     }
     
     public Path(final TimeGrid timeGrid, final double[] values) {
-    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
         this.timeGrid_ = timeGrid;
         if (values == null || values.length == 0) {
             values_ = new double[timeGrid_.size()];

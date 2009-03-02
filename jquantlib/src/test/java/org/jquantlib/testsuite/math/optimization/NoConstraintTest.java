@@ -21,6 +21,7 @@
  */
 
 package org.jquantlib.testsuite.math.optimization;
+
 import static org.junit.Assert.fail;
 
 import org.slf4j.Logger;
@@ -41,29 +42,26 @@ import org.junit.Test;
 public class NoConstraintTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(NoConstraintTest.class);
-
+    
+    private final NoConstraint nc;
+    
+    
 	public NoConstraintTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+
+		this.nc = new NoConstraint();
 	}
 	
+
 	@Test
-    public void testConstraint() {
-                       
-    	NoConstraint nc = new NoConstraint();
-    	
-        
-        testTest(nc);
-		testUpdate(nc);
-		testEmpty(nc);
-    }
-    
-	void testTest(NoConstraint nc) {
+	public void testTest() {
 	  
       if (!nc.test(new Array()))
 		fail("NoConstraint test method failed");
-	  
     }
-	void testUpdate(Constraint nc) {
+	
+	@Test
+    public void testUpdate() {
 	  Array params = new Array(new double[]{1.0d,1.1d,2.3d});
 	  Array direction = new Array(new double[]{0.1d,0.3d,1.1d});
 	  double beta = 2.0;
@@ -73,14 +71,16 @@ public class NoConstraintTest {
 	  if (!IsArrayEqual (params, new Array (new double[]{1.2d,1.7d,4.5d}),0.000001))
 	  //if (!params.operatorEquals (new Array (new double[]{1.2d,1.7d,4.5d})))
 		fail("Constraint update method failed");
-	  
     }
-	void testEmpty(Constraint nc) {
+	
+	@Test
+    public void testEmpty() {
       if (nc.empty())
 		fail("Constraint empty method failed");
 	  
     }
-	boolean IsArrayEqual(Array one,Array two,double precision){
+	
+	private boolean IsArrayEqual(Array one,Array two,double precision){
 		Array diffArray = one.operatorSubtractCopy(two);
 		logger.info("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
 		return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );

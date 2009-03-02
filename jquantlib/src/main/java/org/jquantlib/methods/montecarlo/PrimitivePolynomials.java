@@ -253,9 +253,9 @@ public class PrimitivePolynomials {
 	public PrimitivePolynomials() {
 		initDegree();
         initPrimitivePolynomialsArray();
-		if (0 == 0) {
-			throw new UnsupportedOperationException("Work in progress");
-		}
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
 	// example C++ for the following code

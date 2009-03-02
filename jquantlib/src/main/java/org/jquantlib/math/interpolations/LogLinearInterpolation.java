@@ -90,7 +90,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	 */
 	@Override
 	protected double primitiveImpl(final double x) /* @ReadOnly */ {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); //TODO: message
 	}
 	
     /**
@@ -101,7 +101,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
      */
 	@Override
 	protected double derivativeImpl(final double x) /* @ReadOnly */ {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); //TODO: message
 	}
 	
     /**
@@ -112,7 +112,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
      */
 	@Override
 	protected double secondDerivativeImpl(final double x) /* @ReadOnly */ {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); //TODO: message
 	}
 	
 

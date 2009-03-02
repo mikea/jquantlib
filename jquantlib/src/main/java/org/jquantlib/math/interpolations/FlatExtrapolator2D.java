@@ -150,7 +150,7 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
      */
     @Override
     protected double evaluateImpl(double x, double y) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(); //TODO: message
     }
 
 

@@ -83,7 +83,9 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
     protected InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
         
-        if (0==0) throw new UnsupportedOperationException("Work in progress");
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
 
         try {
             // instantiate a RandomNumberGenerator given its generic type (first generic parameter)

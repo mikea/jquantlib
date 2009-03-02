@@ -207,7 +207,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
                 // ignoring end condition value
                 throw new UnsupportedOperationException("this end condition is not implemented yet");
             default:
-                throw new UnsupportedOperationException("unknown end condition");
+                throw new UnsupportedOperationException("unknown end condition"); //TODO: message
         }
         
         // right condition
@@ -231,7 +231,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
                 // ignoring end condition value
                 throw new UnsupportedOperationException("this end condition is not implemented yet");
             default:
-                  throw new UnsupportedOperationException("unknown end condition");
+                  throw new UnsupportedOperationException("unknown end condition"); //TODO: message
         }
 
         // solve the system

@@ -42,28 +42,24 @@ public class PositiveConstraintTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(PositiveConstraintTest.class);
 
+    private final PositiveConstraint pc;
+    
 	public PositiveConstraintTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        
+		this.pc = new PositiveConstraint();
 	}
 	
 	@Test
-    public void testConstraint() {
-                       
-    	PositiveConstraint pc = new PositiveConstraint();
-    	
-        
-        testTest(pc);
-		testUpdate(pc);
-		testEmpty(pc);
-    }
-    
-	void testTest(PositiveConstraint pc) {
+	public void testTest() {
 	  
       if (!pc.test(new Array()))
 		fail("PositiveConstraint test method failed");
 	  
     }
-	void testUpdate(PositiveConstraint pc) {
+	
+	@Test
+    public void testUpdate() {
 	  Array params = new Array(new double[]{1.0,1.1,1.3});
 	  Array direction = new Array(new double[]{0.1,0.3,1.1});
 	  double beta = -2.0;
@@ -74,12 +70,15 @@ public class PositiveConstraintTest {
 		fail("PositiveConstraint update method failed");
 	  
     }
-	void testEmpty(Constraint pc) {
+	
+	@Test
+    public void testEmpty() {
       if (pc.empty())
 		fail("Constraint empty method failed");
 	  
     }
-	boolean IsArrayEqual(Array one,Array two,double precision){
+	
+	private boolean IsArrayEqual(Array one,Array two,double precision){
 		Array diffArray = one.operatorSubtractCopy(two);
 		logger.info("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
 		return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );

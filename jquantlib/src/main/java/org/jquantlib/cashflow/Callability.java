@@ -33,7 +33,9 @@ public class Callability extends Event {
 
 	//TODO: Work in progress
 	public Callability(){
-		if (0==0) throw new UnsupportedOperationException("Work in progress");	
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 	
 	@Override

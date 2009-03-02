@@ -66,7 +66,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 	 * @throws UnsupportedOperationException
 	 */
 	public void calculate() {
-	    throw new UnsupportedOperationException();
+	    throw new UnsupportedOperationException(); //FIXME: message :: maybe a 'global' static final String ?
 	}
 	
 	

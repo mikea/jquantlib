@@ -57,6 +57,10 @@ public class SimpsonIntegral extends TrapezoidIntegral {
 	
 	public SimpsonIntegral (final double accuracy, final int maxIterations) {
 		super(accuracy, Method.Default, maxIterations);
+		if (System.getProperty("EXPERIMENTAL")==null) {
+		    throw new UnsupportedOperationException("Work in progress");
+		  }
+
 	}
 	
 	//

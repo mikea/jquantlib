@@ -148,7 +148,7 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 		if (v1 != null) {
 			v1.visit(this);
 		} else {
-			throw new UnsupportedOperationException("null event visitor");
+			throw new IllegalArgumentException("null event visitor"); //TODO: message
 		}
 	}
 	

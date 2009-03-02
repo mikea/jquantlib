@@ -388,7 +388,6 @@ public class AmericanOptionTest {
 		}
 	}
 
-	@Ignore("This test is BROKEN. Ignoring it for the time being :/")
 	@Test
 	public void testFdValues() {
 		logger.info("Testing finite-difference engine for American options...");
@@ -441,32 +440,27 @@ public class AmericanOptionTest {
 				// type, strike, spot, q, r, t, vol, value, tol
 				// These values are from Exhibit 6 - Long dated Call Options
 				// with dividends
-                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.07, 0.03, 3.0, 0.2,  2.605),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.07, 0.03, 3.0, 0.2,  5.182),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2,  9.065),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.2, 14.430),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.2, 21.398),
 
-                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.4, 20.760),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.4, 26.440),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
 
 				// FIXME case of zero interest rates not handled
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07,
-				// 0.0, 3.0, 0.3, 5.552 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07,
-				// 0.0, 3.0, 0.3, 8.868 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 100.00,
-				// 0.07, 0.0, 3.0, 0.3, 13.158 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 110.00,
-				// 0.07, 0.0, 3.0, 0.3, 18.458 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 120.00,
-				// 0.07, 0.0, 3.0, 0.3, 24.786 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.07, 0.0, 3.0, 0.3,  5.552 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.07, 0.0, 3.0, 0.3,  8.868 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.0, 3.0, 0.3, 13.158 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.0, 3.0, 0.3, 18.458 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.0, 3.0, 0.3, 24.786 ),
 
-				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
+				new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
+                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.03, 0.07, 3.0, 0.3, 23.402),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
