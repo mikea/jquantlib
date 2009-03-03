@@ -43,7 +43,7 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  * 
  */
-public abstract class FDVanillaEngine {
+public class FDVanillaEngine {
 	protected GeneralizedBlackScholesProcess process;
 	protected/* Size */int timeSteps, gridPoints;
 	protected boolean timeDependent;
@@ -163,6 +163,5 @@ public abstract class FDVanillaEngine {
 								: minGridPoints);
 	}
 
-	protected abstract void calculate(Results r);
-
+	protected void calculate(Results r){}
 }

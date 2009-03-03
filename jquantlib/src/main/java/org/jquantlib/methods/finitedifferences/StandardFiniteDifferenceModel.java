@@ -25,9 +25,8 @@ import java.util.List;
  * @author Srinivas Hasti
  * 
  */
-public class StandardFiniteDifferenceModel extends
-		CrankNicolson<TridiagonalOperator> {
-
+public class StandardFiniteDifferenceModel extends FiniteDifferenceModel<TridiagonalOperator, CrankNicolson<TridiagonalOperator>> {
+    
 	public StandardFiniteDifferenceModel(TridiagonalOperator op,
 			List<BoundaryCondition<TridiagonalOperator>> bcs) {
 		super(op, bcs);
