@@ -27,7 +27,7 @@ import cern.colt.function.DoubleComparator;
 public class DoubleComparatorImpl implements DoubleComparator {
 
     @Override
-    public int compare(double o1, double o2) {
+    public int compare(final double o1, final double o2) {
         return (o1==o2) ? 0 : (o1<o2) ? -1 : 1;
     }
 }

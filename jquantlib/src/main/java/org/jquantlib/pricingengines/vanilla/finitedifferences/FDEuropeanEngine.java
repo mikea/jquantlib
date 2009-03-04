@@ -26,8 +26,11 @@ import org.jquantlib.pricingengines.OneAssetOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
- * @author Srinivas Hasti
+ * Pricing engine for European options using finite-differences
  * 
+ * @category vanillaengines
+ * 
+ * @author Srinivas Hasti
  */
 public class FDEuropeanEngine extends OneAssetOptionEngine {
     private final FDVanillaEngine fdVanillaEngine;
@@ -36,7 +39,6 @@ public class FDEuropeanEngine extends OneAssetOptionEngine {
     public FDEuropeanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
         fdVanillaEngine = new FDVanillaEngine(process, timeSteps, gridPoints, timeDependent);
         prices = new SampledCurve(gridPoints);
-        // registerWith(process);
     }
 
     @Override
@@ -51,16 +53,12 @@ public class FDEuropeanEngine extends OneAssetOptionEngine {
 
         prices = fdVanillaEngine.intrinsicValues;
 
-        model.rollback(prices.values(), fdVanillaEngine.getResidualTime(),
-                       0, fdVanillaEngine.timeSteps);
+        model.rollback(prices.values(), fdVanillaEngine.getResidualTime(), 0, fdVanillaEngine.timeSteps);
 
         results.value = prices.valueAtCenter();
         results.delta = prices.firstDerivativeAtCenter();
         results.gamma = prices.secondDerivativeAtCenter();
-        results.theta = Greeks.blackScholesTheta(fdVanillaEngine.process,
-                                           results.value,
-                                           results.delta,
-                                           results.gamma);
+        results.theta = Greeks.blackScholesTheta(fdVanillaEngine.process, results.value, results.delta, results.gamma);
         results.addAdditionalResult("priceCurve",prices);
     }
 

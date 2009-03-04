@@ -23,8 +23,11 @@ import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
- * @author Srinivas Hasti
+ * Pricing engine for American options using finite-differences
  * 
+ * @category vanillaengines
+ * 
+ * @author Srinivas Hasti
  */
 public class FDAmericanEngine extends FDEngineAdapter<FDAmericanCondition> {
 

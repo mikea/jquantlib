@@ -296,23 +296,15 @@ public class AsianOptionTest {
 	                          vol.setValue(v);
 	                          expected.put("vega", (value_p - value_m)/(2*dv));
 
-	                          // perturb date and get theta
-	                          Date prevday = DateFactory.getFactory().getDate(today.getDayOfMonth(), 
-	            						today.getMonthEnum(), today.getYear()).decrement();
-
-	                          Date nextday = DateFactory.getFactory().getDate(today.getDayOfMonth(), 
-	            						today.getMonthEnum(), today.getYear()).increment();
-	                          
-	                          double dT = dc.yearFraction(prevday, nextday);
-	                          // logger.info("Change date to rtheta");
-	                          Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(prevday);
-	                          value_m = option.getNPV();
-	                          // logger.info("Change date to rtheta");
-	                          Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(nextday);
-	                          value_p = option.getNPV();
-	                          // logger.info("Change date to rtheta");
-	                          Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
-	                          expected.put("theta", (value_p - value_m)/dT);
+                              // perturb date and get theta
+                              final Date yesterday = today.getPreviousDay();
+                              final Date tomorrow  = today.getNextDay();
+                              double dT = dc.yearFraction(yesterday, tomorrow);
+                              Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
+                              value_m = option.getNPV();
+                              Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
+                              value_p = option.getNPV();
+                              expected.put("theta", (value_p - value_m)/dT);
 
 	                          // compare
 	                          for (Entry<String, Double> greek: calculated.entrySet()) {

@@ -521,8 +521,7 @@ public class AmericanOptionTest {
 	public void testFdAmericanGreeks() {
 		// SavedSettings backup;
 
-		logger
-				.info("Testing Greeks (delta, gamma, theta for American options...");
+		logger.info("Testing Greeks (delta, gamma, theta for American options...");
 
 		Map<String, Double> calculated = new HashMap<String, Double>();
 		Map<String, Double> expected = new HashMap<String, Double>();
@@ -590,7 +589,7 @@ public class AmericanOptionTest {
 									double value = option.getNPV();
 									calculated.put("delta", option.delta());
 									calculated.put("gamma", option.gamma());
-									// calculated.put("theta", option.theta());
+									calculated.put("theta", option.theta());
 
 									if (value > spot.evaluate() * 1.0e-5) {
 										// perturb spot and get delta and gamma
@@ -603,27 +602,15 @@ public class AmericanOptionTest {
                                         expected.put("delta", (value_p - value_m) / (2 * du));
                                         expected.put("gamma", (delta_p - delta_m) / (2 * du));
 
-										/*
-										 * // perturb date and get theta Time dT
-										 * = dc.yearFraction(today-1, today+1);
-										 * Settings
-										 * ::instance().setEvaluationDate
-										 * (today-1); value_m = option.NPV();
-										 * Settings
-										 * ::instance().setEvaluationDate
-										 * (today+1); value_p = option.NPV();
-										 * Settings
-										 * ::instance().setEvaluationDate
-										 * (today); expected["theta"] = (value_p
-										 * - value_m)/dT;
-										 */
-										double dT = dc.yearFraction(today.getPreviousDay(), today.getNextDay());
-                                        settings.setEvaluationDate(today.getPreviousDay());
+                                        // perturb date and get theta
+                                        final Date yesterday = today.getPreviousDay();
+                                        final Date tomorrow  = today.getNextDay();
+                                        double dT = dc.yearFraction(yesterday, tomorrow);
+                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
                                         value_m = option.getNPV();
-                                        settings.setEvaluationDate(today.getNextDay());
+                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
                                         value_p = option.getNPV();
-                                        settings.setEvaluationDate(today);
-                                        expected.put("theta", (value_p - value_m) / dT);
+                                        expected.put("theta", (value_p - value_m)/dT);
 
 										// compare
 										for (Entry<String, Double> greek : calculated.entrySet()) {
