@@ -128,7 +128,7 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
 
     protected T getEvolver(final S l, final List<BoundaryCondition<S>> bcs) {
         try {
-            return (T) TypeToken.getClazz(this.getClass(),1).getConstructor(l.getClass(), bcs.getClass()).newInstance(l, bcs);
+            return (T) TypeToken.getClazz(this.getClass(),1).getConstructor(Operator.class, List.class).newInstance(l, bcs);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
