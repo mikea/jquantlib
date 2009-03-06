@@ -70,7 +70,9 @@ import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.vanilla.BinomialVanillaEngine;
 import org.jquantlib.pricingengines.vanilla.IntegralEngine;
+import org.jquantlib.pricingengines.vanilla.finitedifferences.FDEuropeanEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
+import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.SimpleQuote;
@@ -169,6 +171,11 @@ public class EuropeanOptionTest {
 							final int samples) {
 
 	    PricingEngine engine = null;
+	    GeneralizedBlackScholesProcess stochProcess = new BlackScholesMertonProcess(
+                /*Quote*/ u,
+                /*YieldTermStructure*/ q,
+                /*YieldTermStructure*/ r,
+                /*BlackVolTermStructure*/ vol);
 	    
 	    switch (engineType) {
 	      case Analytic:
@@ -195,9 +202,9 @@ public class EuropeanOptionTest {
 	      case JOSHI:
 	        engine = new BinomialVanillaEngine<Joshi4>(binomialSteps) {};
 	        break;
-//	      case FiniteDifferences:
-//	        engine = new FDEuropeanEngine(binomialSteps,samples);
-//	        break;
+	      case FiniteDifferences:
+	        engine = new FDEuropeanEngine(stochProcess, binomialSteps,samples);
+	        break;
 	      case Integral:
 	          engine = new IntegralEngine();
 	          break;
@@ -212,13 +219,7 @@ public class EuropeanOptionTest {
 //	        break;
 	      default:
 	        throw new UnsupportedOperationException("unknown engine type: "+engineType);
-	    }
-
-	    StochasticProcess stochProcess = new BlackScholesMertonProcess(
-	    										/*Quote*/ u,
-	    										/*YieldTermStructure*/ q,
-	    										/*YieldTermStructure*/ r,
-	    										/*BlackVolTermStructure*/ vol);
+	    }	   
 
 	    return new EuropeanOption(stochProcess, payoff, exercise, engine);
 	}
@@ -1264,22 +1265,21 @@ public class EuropeanOptionTest {
         testEngineConsistency(engine, steps, samples, relativeTol, true);
     }
     
-    
-//	void EuropeanOptionTest::testFdEngines() {
-//
-//	    BOOST_MESSAGE("Testing finite-difference European engines "
-//	                  "against analytic results...");
-//
-//	    EngineType engine = FiniteDifferences;
-//	    Size timeSteps = 300;
-//	    Size gridPoints = 300;
-//	    std::map<std::string,Real> relativeTol;
-//	    relativeTol["value"] = 1.0e-4;
-//	    relativeTol["delta"] = 1.0e-6;
-//	    relativeTol["gamma"] = 1.0e-6;
-//	    relativeTol["theta"] = 1.0e-4;
-//	    testEngineConsistency(engine,timeSteps,gridPoints,relativeTol,true);
-//	}
+    //@Test
+	public void testFdEngines() {
+
+	    logger.info("Testing finite-difference European engines against analytic results...");
+
+	    EngineType engine = EngineType.FiniteDifferences;
+	    final int timeSteps = 300;
+	    final int gridPoints = 300;
+	    final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
+	    relativeTol.put("value", 1.0e-4);
+	    relativeTol.put("delta", 1.0e-6);
+	    relativeTol.put("gamma", 1.0e-6);
+	    relativeTol.put("theta", 1.0e-4);
+	    testEngineConsistency(engine,timeSteps,gridPoints,relativeTol,true);
+	}
 
 
     @Test

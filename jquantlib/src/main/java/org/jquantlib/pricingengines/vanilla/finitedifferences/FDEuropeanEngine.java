@@ -41,6 +41,10 @@ public class FDEuropeanEngine extends OneAssetOptionEngine {
         prices = new SampledCurve(gridPoints);
     }
 
+    public FDEuropeanEngine(GeneralizedBlackScholesProcess stochProcess, int binomialSteps, int samples) {
+        this(stochProcess,binomialSteps,samples,false);
+    }
+
     @Override
     public void calculate() {
         fdVanillaEngine.setupArguments(arguments);
