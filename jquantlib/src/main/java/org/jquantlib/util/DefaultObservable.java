@@ -31,6 +31,7 @@ import net.jcip.annotations.NotThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 // --------------------------------------------------------
 // This class is based on the work done by Martin Fischer.
 // See references in JavaDoc
@@ -75,9 +76,12 @@ public class DefaultObservable implements Observable {
     //
 
     public DefaultObservable(Observable observable) {
-    	// this.observers = new ObjectArrayList<Observer>(); // EuropeanOptionTest fails !!!
+    	//this.observers = new ObjectArrayList<Observer>(); // EuropeanOptionTest fails !!!
+    	//this.observers = new LinkedList<Observer>(); // EuropeanOptionTest fails !!!
+    	//this.observers = new ArrayList<Observer>(); // EuropeanOptionTest fails !!!
+    	//this.observers = Collections.synchronizedList(new ArrayList<Observer>());
+    	//this.observers = Collections.synchronizedList(new ObjectArrayList<Observer>()); // EuropeanOptionTest fails !!!
     	this.observers = new CopyOnWriteArrayList<Observer>();
-    	
         if (observable == null)
             throw new NullPointerException("observable is null");
         this.observable = observable;
