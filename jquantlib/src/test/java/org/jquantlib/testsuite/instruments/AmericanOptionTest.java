@@ -323,16 +323,11 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
 
 				// FIXME case of zero interest rates not handled
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07,
-				// 0.0, 3.0, 0.3, 5.552 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07,
-				// 0.0, 3.0, 0.3, 8.868 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 100.00,
-				// 0.07, 0.0, 3.0, 0.3, 13.158 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 110.00,
-				// 0.07, 0.0, 3.0, 0.3, 18.458 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 120.00,
-				// 0.07, 0.0, 3.0, 0.3, 24.786 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.07, 0.0, 3.0, 0.3,  5.552 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.07, 0.0, 3.0, 0.3,  8.868 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.0, 3.0, 0.3, 13.158 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.0, 3.0, 0.3, 18.458 ),
+				// new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.0, 3.0, 0.3, 24.786 ),
 
 				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),

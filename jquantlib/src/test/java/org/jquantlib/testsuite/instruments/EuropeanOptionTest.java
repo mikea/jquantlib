@@ -59,6 +59,7 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.instruments.VanillaOption;
+import org.jquantlib.lang.annotation.NonNegative;
 import org.jquantlib.methods.lattices.AdditiveEQPBinomialTree;
 import org.jquantlib.methods.lattices.CoxRossRubinstein;
 import org.jquantlib.methods.lattices.JarrowRudd;
@@ -171,11 +172,7 @@ public class EuropeanOptionTest {
 							final int samples) {
 
 	    PricingEngine engine = null;
-	    GeneralizedBlackScholesProcess stochProcess = new BlackScholesMertonProcess(
-                /*Quote*/ u,
-                /*YieldTermStructure*/ q,
-                /*YieldTermStructure*/ r,
-                /*BlackVolTermStructure*/ vol);
+	    GeneralizedBlackScholesProcess stochProcess = new BlackScholesMertonProcess(u, q, r, vol);
 	    
 	    switch (engineType) {
 	      case Analytic:
@@ -676,12 +673,12 @@ public class EuropeanOptionTest {
 
 
         final Map<String,Double> tolerance = new HashMap<String, Double>();
-        tolerance.put("delta", 1.0e-5);
-        tolerance.put("gamma", 1.0e-5);
-        tolerance.put("theta", 1.0e-5);
-        tolerance.put("rho",1.0e-5);
+        tolerance.put("delta",  1.0e-5);
+        tolerance.put("gamma",  1.0e-5);
+        tolerance.put("theta",  1.0e-5);
+        tolerance.put("rho",    1.0e-5);
         tolerance.put("divRho", 1.0e-5);
-        tolerance.put("vega",  1.0e-5);
+        tolerance.put("vega",   1.0e-5);
 
         final Map<String,Double> expected = new HashMap<String, Double>();
         final Map<String,Double> calculated = new HashMap<String, Double>();
@@ -753,7 +750,7 @@ public class EuropeanOptionTest {
                           double value = option.getNPV();
                           calculated.put("delta", option.delta());
                           calculated.put("gamma", option.gamma());
-                          //FIXME: calculated.put("theta", option.theta());
+                          calculated.put("theta", option.theta());
                           calculated.put("rho", option.rho());
                           calculated.put("divRho", option.dividendRho());
                           calculated.put("vega", option.vega());
@@ -799,14 +796,14 @@ public class EuropeanOptionTest {
                               expected.put("vega",(value_p - value_m)/(2*dv));
 
                             // perturb date and get theta
-                            Date yesterday = today.getPreviousDay();
-                            Date tomorrow  = today.getNextDay();
+                            final Date yesterday = today.getPreviousDay();
+                            final Date tomorrow  = today.getNextDay();
                             double dT = dc.yearFraction(yesterday, tomorrow);
                             Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
                             value_m = option.getNPV();
                             Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
                             value_p = option.getNPV();
-                            //FIXME: expected.put("theta", (value_p - value_m)/dT);
+                            expected.put("theta", (value_p - value_m)/dT);
 
                             Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
 
@@ -1123,10 +1120,10 @@ public class EuropeanOptionTest {
 									if (testGreeks && option.getNPV() > spot.getLink().evaluate() * 1.0e-5) {
 										expected.put("delta", refOption.delta());
 										expected.put("gamma", refOption.gamma());
-										//FIXME: expected.put("theta", refOption.theta());
+										expected.put("theta", refOption.theta());
 										calculated.put("delta", option.delta());
 										calculated.put("gamma", option.gamma());
-										//FIXME: calculated.put("theta", option.theta());
+										calculated.put("theta", option.theta());
 									}
 
 									for (Entry<String, Double> entry : calculated.entrySet()) {
@@ -1153,14 +1150,14 @@ public class EuropeanOptionTest {
         logger.info("Testing JR binomial European engines against analytic results...");
             
         final EngineType engine = EngineType.JR;
-        final int steps = 251;
+        final int timeSteps = 251;
         final int samples = 0;
-        final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
+        final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
         relativeTol.put("value", 0.002);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
         relativeTol.put("theta", 0.03);
-        testEngineConsistency(engine, steps, samples, relativeTol, true);
+        testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
 	
 	
@@ -1170,14 +1167,14 @@ public class EuropeanOptionTest {
         logger.info("Testing CRR binomial European engines against analytic results...");
             
         final EngineType engine = EngineType.CRR;
-        final int steps = 501;
+        final int timeSteps = 501;
         final int samples = 0;
-        final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
+        final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
         relativeTol.put("value", 0.002);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
         relativeTol.put("theta", 0.03);
-        testEngineConsistency(engine, steps, samples, relativeTol, true);
+        testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
     
     
@@ -1187,14 +1184,14 @@ public class EuropeanOptionTest {
         logger.info("Testing EQP binomial European engines against analytic results...");
             
         final EngineType engine = EngineType.EQP;
-        final int steps = 501;
+        final int timeSteps = 501;
         final int samples = 0;
-        final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
+        final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
         relativeTol.put("value", 0.02);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
         relativeTol.put("theta", 0.03);
-        testEngineConsistency(engine, steps, samples, relativeTol, true);
+        testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
     
     
@@ -1204,14 +1201,14 @@ public class EuropeanOptionTest {
         logger.info("Testing TGEO binomial European engines against analytic results...");
             
         final EngineType engine = EngineType.TGEO;
-        final int steps = 251;
+        final int timeSteps = 251;
         final int samples = 0;
-        final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
+        final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
         relativeTol.put("value", 0.002);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
         relativeTol.put("theta", 0.03);
-        testEngineConsistency(engine, steps, samples, relativeTol, true);
+        testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
     
     
@@ -1221,14 +1218,14 @@ public class EuropeanOptionTest {
         logger.info("Testing TIAN binomial European engines against analytic results...");
             
         final EngineType engine = EngineType.TIAN;
-        final int steps = 251;
+        final int timeSteps = 251;
         final int samples = 0;
-        final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
+        final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
         relativeTol.put("value", 0.002);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
         relativeTol.put("theta", 0.03);
-        testEngineConsistency(engine, steps, samples, relativeTol, true);
+        testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
     
     
@@ -1238,14 +1235,14 @@ public class EuropeanOptionTest {
         logger.info("Testing LR binomial European engines against analytic results...");
             
         final EngineType engine = EngineType.LR;
-        final int steps = 251;
+        final int timeSteps = 251;
         final int samples = 0;
-        final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
+        final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
         relativeTol.put("value", 1.0e-6);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
         relativeTol.put("theta", 0.03);
-        testEngineConsistency(engine, steps, samples, relativeTol, true);
+        testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
     
     
@@ -1255,30 +1252,31 @@ public class EuropeanOptionTest {
         logger.info("Testing Joshi binomial European engines against analytic results...");
             
         final EngineType engine = EngineType.JOSHI;
-        final int steps = 251;
+        final int timeSteps = 251;
         final int samples = 0;
-        final Map<String,Double> relativeTol = new HashMap<String, Double>(1);
+        final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
         relativeTol.put("value", 1.0e-7);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
         relativeTol.put("theta", 0.03);
-        testEngineConsistency(engine, steps, samples, relativeTol, true);
+        testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
     
-    //@Test
+    
+	@Test
 	public void testFdEngines() {
 
-	    logger.info("Testing finite-difference European engines against analytic results...");
-
-	    EngineType engine = EngineType.FiniteDifferences;
-	    final int timeSteps = 300;
-	    final int gridPoints = 300;
-	    final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
-	    relativeTol.put("value", 1.0e-4);
-	    relativeTol.put("delta", 1.0e-6);
-	    relativeTol.put("gamma", 1.0e-6);
-	    relativeTol.put("theta", 1.0e-4);
-	    testEngineConsistency(engine,timeSteps,gridPoints,relativeTol,true);
+        logger.info("Testing finite-differences European engines against analytic results...");
+        
+	    final EngineType engine = EngineType.FiniteDifferences;
+	    final @NonNegative int timeSteps = 300;
+	    final @NonNegative int gridPoints = 300;
+        final Map<String,Double> relativeTol = new HashMap<String, Double>(4);
+        relativeTol.put("value", 1.0e-4);
+        relativeTol.put("delta", 1.0e-6);
+        relativeTol.put("gamma", 1.0e-6);
+        relativeTol.put("theta", 1.0e-4);
+	    testEngineConsistency(engine, timeSteps, gridPoints, relativeTol, true);
 	}
 
 
@@ -1409,32 +1407,6 @@ public class EuropeanOptionTest {
 //	        }
 //	    }
 //
-//	}
-
-
-//	test_suite* EuropeanOptionTest::suite() {
-//	    test_suite* suite = BOOST_TEST_SUITE("European option tests");
-//
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testValues));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testGreekValues));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testGreeks));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testImpliedVol));
-//	    suite->add(BOOST_TEST_CASE(
-//	                           &EuropeanOptionTest::testImpliedVolContainment));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testJRBinomialEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testCRRBinomialEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testEQPBinomialEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testTGEOBinomialEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testTIANBinomialEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testLRBinomialEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testJOSHIBinomialEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testFdEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testIntegralEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testMcEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testQmcEngines));
-//	    suite->add(BOOST_TEST_CASE(&EuropeanOptionTest::testPriceCurve));
-//
-//	    return suite;
 //	}
 
 

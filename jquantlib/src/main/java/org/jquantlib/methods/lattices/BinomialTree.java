@@ -38,9 +38,9 @@ public abstract class BinomialTree extends Tree {
 
     public static final Branches branches = Branches.BINOMIAL;
 
-	protected @Price double x0;
-    protected @Price double driftPerStep;
-    protected @Time double dt;
+	protected @Price final double x0;
+    protected @Price final double driftPerStep;
+    protected @Time  final double dt;
 
 	protected BinomialTree(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps) {
         super(steps + 1);
