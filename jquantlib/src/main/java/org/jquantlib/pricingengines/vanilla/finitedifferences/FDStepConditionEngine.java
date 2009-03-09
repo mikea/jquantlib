@@ -70,8 +70,8 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 		BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>> bcSet = new BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>>();
 		StepConditionSet<Array> conditionSet = new StepConditionSet<Array>();
 
-		prices = intrinsicValues;
-		controlPrices = intrinsicValues;
+		prices =  new SampledCurve(intrinsicValues);
+		controlPrices = new SampledCurve(intrinsicValues);
 		controlOperator = finiteDifferenceOperator;
 		controlBCs.add(bcS.get(0));
 		controlBCs.add(bcS.get(1));
@@ -89,7 +89,7 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 		conditionSet.push_back(new NullCondition<Array>());
 
 		StandardSystemFiniteDifferenceModel model = new StandardSystemFiniteDifferenceModel(operatorSet, bcSet);
-		model.rollback(arraySet, getResidualTime(),0.0, timeSteps, conditionSet);
+		arraySet = model.rollback(arraySet, getResidualTime(),0.0, timeSteps, conditionSet);
 
 		prices.setValues(arraySet.get(0));
 		controlPrices.setValues(arraySet.get(1));
