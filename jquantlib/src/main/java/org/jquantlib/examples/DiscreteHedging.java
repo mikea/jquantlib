@@ -36,6 +36,8 @@ import org.jquantlib.util.DefaultDate;
  *
  * @author  Q. Boiler
  */
+
+// FIXME :: This class needs code review :: http://bugs.jquantlib.org/view.php?id=221
 public class DiscreteHedging {
 
 

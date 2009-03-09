@@ -48,11 +48,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * This class contains a sampled curve.
+ * <p>
+ * Initially the class will contain one indexed curve
  * 
  * @author Dominik Holenstein
- * 
  */
-// FIXME: work in progress [Dominik]
 public class SampledCurve {
 
 	private final static Logger logger = LoggerFactory.getLogger(SampledCurve.class);
@@ -60,12 +61,14 @@ public class SampledCurve {
 	//
 	// private fields
 	//
+	
 	private Array grid_;
 	private Array values_;
 
 	//
 	// Constructors
 	//
+	
 	public SampledCurve(int gridSize) {
 		grid_ = new Array(gridSize);
 		values_ = new Array(gridSize);
@@ -76,6 +79,11 @@ public class SampledCurve {
 		values_ = new Array(grid.size());
 	}
 
+	
+	//
+	// public methods
+	//
+	
 	public double valueAtCenter() /* @Readonly */{
 		if (empty()) throw new ArithmeticException("empty sampled curve");
 		int jmid = size() / 2;
@@ -95,7 +103,7 @@ public class SampledCurve {
 		}
 	}
 
-	public double secondDerivativeAtCenter() /* Read-only */{
+	public double secondDerivativeAtCenter() /* @Readonly */{
 		if (size() < 4) throw new ArithmeticException("the size of the curve must be at least 4");
 		int jmid = size() / 2;
 		if (size() % 2 != 0) {
@@ -134,7 +142,6 @@ public class SampledCurve {
         final Array transformedGrid = new Array(grid_.size());
         Std.transform(grid_, transformedGrid, func);
         
-        
     	double[] gridData  = transformedGrid.getData();
     	double[] valueData = values_.getData(); 
         CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(gridData, valueData);
@@ -153,22 +160,6 @@ public class SampledCurve {
     }
     
     
-	//
-	// inner classes
-	//
-    
-	private void shiftGrid(double s) {
-		grid_.operatorAdd(s);
-	}
-
-	private void scaleGrid(final double s) {
-		grid_.operatorMultiply(s);
-	}
-
-	private void setGrid(final Array g) {
-		grid_ = g;
-	}
-
 	public Array grid() /* @Readonly */{
 		return grid_;
 	}
@@ -217,4 +208,22 @@ public class SampledCurve {
 			values_.set(i, value.apply(grid_.at(i)));
 		}
 	}
+
+
+	//
+    // private methods
+    //
+    
+    private void shiftGrid(double s) {
+        grid_.operatorAdd(s);
+    }
+
+    private void scaleGrid(final double s) {
+        grid_.operatorMultiply(s);
+    }
+
+    private void setGrid(final Array g) {
+        grid_ = g;
+    }
+
 }

@@ -704,15 +704,15 @@ public class EuropeanOptionTest {
         final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
 
 
-        StrikedTypePayoff payoff=null;
+        StrikedTypePayoff payoff = null;
 
         for (int i=0; i<types.length; i++) {
           for (int j=0; j<strikes.length; j++) {
             for (int k=0; k<residualTimes.length; k++) {
             
             
-                Date exDate = today.getDateAfter( timeToDays(residualTimes[i]) );
-                Exercise exercise = new EuropeanExercise(exDate);
+                final Date exDate = today.getDateAfter( timeToDays(residualTimes[i]) );
+                final Exercise exercise = new EuropeanExercise(exDate);
 
 
                 for (int kk=0; kk<4; kk++) {

@@ -832,12 +832,8 @@
               <ruleset>/rulesets/logging-java.xml</ruleset>
               <ruleset>/rulesets/migrating.xml</ruleset>
               <ruleset>/rulesets/controversial.xml</ruleset>
-              <ruleset>${basedir}/src/main/pmd/methodParameter.xml</ruleset>
-              <ruleset>${basedir}/src/main/pmd/fieldDeclaration.xml</ruleset>
-              <ruleset>${basedir}/src/main/pmd/colt.xml</ruleset>
-              <ruleset>${basedir}/src/main/pmd/fastutil.xml</ruleset>
-              <ruleset>${basedir}/src/main/pmd/packageprivateclasses.xml</ruleset>
-              <ruleset>${basedir}/src/main/pmd/multipletopleveltypes.xml</ruleset>
+              <ruleset>${basedir}/src/main/pmd/architectural.xml</ruleset>
+              <!-- ruleset>${basedir}/src/main/pmd/fastutil.xml</ruleset -->
             </rulesets>
           </configuration>
           <reportSets>

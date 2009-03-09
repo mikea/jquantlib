@@ -82,6 +82,7 @@ public class DefaultObservable implements Observable {
     	//this.observers = Collections.synchronizedList(new ArrayList<Observer>());
     	//this.observers = Collections.synchronizedList(new ObjectArrayList<Observer>()); // EuropeanOptionTest fails !!!
     	this.observers = new CopyOnWriteArrayList<Observer>();
+    	
         if (observable == null)
             throw new NullPointerException("observable is null");
         this.observable = observable;

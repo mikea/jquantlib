@@ -51,6 +51,9 @@ public abstract class InterestRateIndex extends Index implements Observer {
 
 	public InterestRateIndex(String familyName, Period tenor, int fixingDays,
 			Calendar fixingCalendar, Currency currency, DayCounter dayCounter) {
+        
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("not implemented yet");
+        
 		this.familyName = familyName;
 		this.tenor = tenor;
 		this.fixingDays = fixingDays;

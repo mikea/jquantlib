@@ -5,6 +5,7 @@ package org.jquantlib.util.stdlibc;
  * 
  * @author Richard Gomes
  */
+@Deprecated
 public class IntReference {
 
     private final int[] list;

@@ -38,6 +38,7 @@ import org.jquantlib.util.DateFactory;
  * @author Srinivas Hasti
  * 
  */
+// FIXME: this class needs code review :: http://bugs.jquantlib.org/view.php?id=59
 public class Schedule {
     private final boolean fullInterface;
     private final Period tenor;
@@ -90,6 +91,13 @@ public class Schedule {
         if (terminationDate == Date.NULL_DATE || terminationDate == null) throw new IllegalArgumentException("TerminationDate date is null");
         if (effectiveDate.ge(terminationDate)) throw new IllegalArgumentException("Effective date later than or equal to termination date ");
 
+        //
+        // Suspicious code
+        //
+        // If you put "final" in front of rule, tenor and convention, you will see that new valus are assigned to these variables.
+        // It's necessary to understand if it is intentional or an error and how the eventually new value is used.
+        // -- Richard
+        //
         DateGenerationRule rule = dateGenerationRule;
         Period tenor = periodTenor;
         BusinessDayConvention convention = businessDayConvention;

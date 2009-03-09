@@ -50,9 +50,9 @@ public class TimeGrid {
 	//
 	// private fields
 	//	
-    private final double[] times_;
-    private final double[] dt_;
-    private final double[] mandatoryTimes_;
+    private final double[] times;
+    private final double[] dt;
+    private final double[] mandatoryTimes;
     
 
 	// 
@@ -65,23 +65,23 @@ public class TimeGrid {
      * @param end
      * @param steps
      */
-    public TimeGrid(@Time final double end, @NonNegative final int steps) {
+    public TimeGrid(@Time @NonNegative final double end, @NonNegative final int steps) {
         // We seem to assume that the grid begins at 0.
         // Let's enforce the assumption for the time being
         // (even though I'm not sure that I agree.)
         if (end <= 0.0) throw new IllegalArgumentException("negative times not allowed"); // FIXME: message
         
         /*@Time*/ double dt = end/steps;
-        this.times_ = new double[steps+1];
+        this.times = new double[steps+1];
         for (int i=0; i<=steps; i++)
-            times_[i] = dt*i;
+            times[i] = dt*i;
 
-        this.mandatoryTimes_ = new double[1];
-        this.mandatoryTimes_[0] = end;
+        this.mandatoryTimes = new double[1];
+        this.mandatoryTimes[0] = end;
         
-        this.dt_ = new double[steps];
+        this.dt = new double[steps];
         for (int i=0; i<steps; i++)
-            dt_[i] = dt;
+            this.dt[i] = dt;
     }
 
     
@@ -96,23 +96,23 @@ public class TimeGrid {
      * @param list
      */
     //TODO: needs code review when integrated to callers.
-    public TimeGrid(@Time final double[] array) {
+    public TimeGrid(@Time @NonNegative final double[] array) {
         
-        if (0==0) throw new UnsupportedOperationException("This constructor is not available yet");
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("This constructor is not available yet");
         
-        mandatoryTimes_ = Arrays.copyOf(array, array.length);
-    	Sorting.quickSort(mandatoryTimes_, 0, array.length, null); // should use a 'default' comparator
+        mandatoryTimes = Arrays.copyOf(array, array.length);
+    	Sorting.quickSort(mandatoryTimes, 0, array.length, null); // should use a 'default' comparator
     	   	
     	// We seem to assume that the grid begins at 0.
         // Let's enforce the assumption for the time being
         // (even though I'm not sure that I agree.)
-        if (mandatoryTimes_[0] < 0.0) throw new ArithmeticException("negative times not allowed");
+        if (mandatoryTimes[0] < 0.0) throw new ArithmeticException("negative times not allowed");
     	
-        List<Double> e = new DoubleArrayList(mandatoryTimes_);
-        double prev = mandatoryTimes_[0];
+        List<Double> e = new DoubleArrayList(mandatoryTimes);
+        double prev = mandatoryTimes[0];
         e.add(prev);
-        for (int i=1; i<mandatoryTimes_.length; i++) {
-        	double curr = mandatoryTimes_[i];
+        for (int i=1; i<mandatoryTimes.length; i++) {
+        	double curr = mandatoryTimes[i];
         	if (! Closeness.isCloseEnough(prev, curr)) {
         		e.add(curr);
         	}
@@ -120,15 +120,15 @@ public class TimeGrid {
         }
         
         DoubleArrayList tmp = new DoubleArrayList();
-        if (mandatoryTimes_[0] > 0.00) {
+        if (mandatoryTimes[0] > 0.00) {
             tmp.add(0.0);
     	}
-        tmp.addElements(0, mandatoryTimes_);
-        times_ = tmp.toDoubleArray();
+        tmp.addElements(0, mandatoryTimes);
+        times = tmp.toDoubleArray();
           
         
         // TODO: Check the translation.
-        dt_ = null;
+        dt = null;
         
         
 //        std::adjacent_difference(times_.begin()+1,times_.end(), std::back_inserter(dt_));
@@ -165,21 +165,21 @@ public class TimeGrid {
     //TODO: needs code review when integrated to callers.
     public TimeGrid(@Time final double[] array, final int steps) {
         
-        if (0==0) throw new UnsupportedOperationException("This constructor is not available yet");
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("This constructor is not available yet");
         
-        mandatoryTimes_ = Arrays.copyOf(array, array.length);
-        Sorting.quickSort(mandatoryTimes_, 0, array.length, null); // should use a 'default' comparator
+        mandatoryTimes = Arrays.copyOf(array, array.length);
+        Sorting.quickSort(mandatoryTimes, 0, array.length, null); // should use a 'default' comparator
           
     	// We seem to assume that the grid begins at 0.
     	// Let's enforce the assumption for the time being
     	// (even though I'm not sure that I agree.)
-        if (mandatoryTimes_[0] < 0.0) throw new ArithmeticException("negative times not allowed");
+        if (mandatoryTimes[0] < 0.0) throw new ArithmeticException("negative times not allowed");
           
         
         // TODO: Check the translation.
         // There's a complete mess from here. Please check against original C++ sources
-        times_ = null;
-        dt_ = null;
+        times = null;
+        dt = null;
         
         
 //    	List<Double> e = new DoubleArrayList(mandatoryTimes_.size());
@@ -268,22 +268,22 @@ public class TimeGrid {
     
 
     
-	    public @NonNegative int index(@Time final double t) /* @ReadOnly */ {
+	    public @NonNegative int index(@Time @NonNegative final double t) /* @ReadOnly */ {
 	        @NonNegative int i = closestIndex(t);
-	        if (Closeness.isCloseEnough(t, times_[i])) {
+	        if (Closeness.isCloseEnough(t, times[i])) {
 	            return i;
 	        } else {
 	            if (t < front()) {
 	                throw new IllegalArgumentException(
 	                        "using inadequate time grid: all nodes are later than the required time t = "
-	                        + t + " (earliest node is t1 = " + times_[0] + ")" );
+	                        + t + " (earliest node is t1 = " + times[0] + ")" );
 	            } else if (t > back()) {
 	                throw new IllegalArgumentException(
 	                        "using inadequate time grid: all nodes are earlier than the required time t = "
 	                        + t + " (latest node is t1 = " + back() + ")" );
 	            } else {
 	                /*@NonNegative*/ int j, k;
-	                if (t > times_[i]) {
+	                if (t > times[i]) {
 	                    j = i;
 	                    k = i+1;
 	                } else {
@@ -292,23 +292,23 @@ public class TimeGrid {
 	                }
 	                throw new IllegalArgumentException(
 	                        "using inadequate time grid: the nodes closest to the required time t = "
-	                        + t + " are t1 = " + times_[j] + " and t2 = " + times_[k] );
+	                        + t + " are t1 = " + times[j] + " and t2 = " + times[k] );
 	            }
 	        }
 	    }
 
         
-	    public @NonNegative int closestIndex(@Time final double t) /* @ReadOnly */ {
-	        int size = times_.length;
-	        int result = Std.lower_bound(times_, t);
+	    public @NonNegative int closestIndex(@Time @NonNegative final double t) /* @ReadOnly */ {
+	        int size = times.length;
+	        int result = Std.lower_bound(times, t);
 
 	        if (result == 0) {
 	            return 0;
 	        } else if (result == size) {
 	            return size-1;
 	        } else {
-	            @Time double dt1 = times_[result] - t;
-	            @Time double dt2 = t - times_[result-1];
+	            @Time double dt1 = times[result] - t;
+	            @Time double dt2 = t - times[result-1];
 	            if (dt1 < dt2)
 	                return result;
 	            else
@@ -319,57 +319,57 @@ public class TimeGrid {
 	    /**
 	     * @return the time on the grid closest to the given t
 	     */
-        public @Time double closestTime (@Time final double t) /*@Readonly*/ {
-            return times_[closestIndex(t)];
+        public @Time double closestTime (@Time @NonNegative final double t) /*@Readonly*/ {
+            return times[closestIndex(t)];
         }
         
         public final double[] mandatoryTimes() /*@Readonly*/ {
-            return mandatoryTimes_;
+            return mandatoryTimes;
         }
         
         public double dt (final int i) /*@Readonly*/ { 
-           return dt_[i];
+           return dt[i];
         }
        
         public double get(final int i) /*@Readonly*/ { 
-        	return times_[i]; 
+        	return times[i]; 
         }
         
         public double at(final int i) /*@Readonly*/ { 
-        	return times_[i]; 
+        	return times[i]; 
         }
         
         
         public int size() /*@Readonly*/ { 
-        	return times_.length; 
+        	return times.length; 
         }
         
         public boolean empty() /*@Readonly*/ { 
-        	return times_.length == 0; 
+        	return times.length == 0; 
         }
         
         public double begin() /*@Readonly*/ { 
-        	return times_[0]; 
+        	return times[0]; 
         }
         
         public double end() /*@Readonly*/ {
-        	return times_[times_.length-1]; 
+        	return times[times.length-1]; 
         }
 
         public DoubleForwardIterator forwardIterator() /*@Readonly*/ { 
-            return Std.forwardIterator(times_);
+            return Std.forwardIterator(times);
         }
         
         public DoubleReverseIterator reverseIterator() /*@Readonly*/ { 
-            return Std.reverseIterator(times_);
+            return Std.reverseIterator(times);
         }
         
         public double front() /*@Readonly*/ { 
-         	return times_[0];
+         	return times[0];
         }
         
         public double back() /*@Readonly*/ { 
-        	return times_[times_.length-1]; 
+        	return times[times.length-1]; 
         }
 
 }

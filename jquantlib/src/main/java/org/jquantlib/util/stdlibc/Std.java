@@ -61,7 +61,7 @@ public final class Std {
 	static public List<Double> adjacent_difference(final List<Double> inputList,
 			final int begin, List<Double> diffList) {
 		for (int i = begin; i < inputList.size(); i++) {
-			final double curr = inputList.get(i); // NOPMD
+			final double curr = inputList.get(i); 
 			if (i == 0) {
 				diffList.add(inputList.get(i));
 			} else {
