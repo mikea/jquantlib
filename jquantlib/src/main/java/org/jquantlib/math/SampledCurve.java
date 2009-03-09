@@ -75,22 +75,33 @@ public class SampledCurve {
 	}
 
 	public SampledCurve(final Array grid) {
-		grid_ = grid;
+		grid_ = new Array(grid);
 		values_ = new Array(grid.size());
 	}
 
+	/**
+	 * Copy constructor
+	 * 
+	 * @param that
+	 */
+	public SampledCurve(SampledCurve that)
+	{
+		this.grid_ = new Array(that.grid_);
+		this.values_ = new Array(that.values_);
+	}
+	
 	
 	//
 	// public methods
 	//
 	
 	public double valueAtCenter() /* @Readonly */{
-		if (empty()) throw new ArithmeticException("empty sampled curve");
+			if (empty()) throw new ArithmeticException("empty sampled curve");
 		int jmid = size() / 2;
 		if (size() % 2 != 0)
 			return values_.at(jmid);
 		else
-			return (values_.at(jmid) + values_.at(jmid - 1) / 2.0);
+			return (values_.at(jmid) + values_.at(jmid - 1)) / 2.0;
 	}
 
 	public double firstDerivativeAtCenter() /* @Readonly */{
@@ -196,7 +207,7 @@ public class SampledCurve {
 	}
 
 	public void setValues(Array array) {
-		this.values_ = array;
+		this.values_ = new Array(array);
 	}
 
 	public void setLogGrid(final double min, final double max) {

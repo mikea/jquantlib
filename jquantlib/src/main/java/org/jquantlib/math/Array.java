@@ -121,7 +121,18 @@ public class Array {
     // overridden public methods
     //
     
-    @Override
+    /**
+     * A copy constructor
+     */
+    public Array(Array oldArray)
+    {
+        double [] copy = new double[oldArray.getData().length];
+        System.arraycopy(oldArray.getData(), 0, copy, 0, oldArray.getData().length);
+        this.data = copy;
+    }
+
+
+	@Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append(Arrays.toString(data));
