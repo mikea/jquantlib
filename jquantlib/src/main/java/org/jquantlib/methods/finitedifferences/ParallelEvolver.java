@@ -43,10 +43,12 @@ public abstract class ParallelEvolver<S extends Operator, T extends MixedScheme<
 		}
 	}
 
-	public void step(List<Array> a, double t) {
+	public List<Array> step(List<Array> a, double t) {
 		for (int i = 0; i < evolvers.size(); i++) {
-			evolvers.get(i).step(a.get(i), t);
+			a.set(i, evolvers.get(i).step(a.get(i), t));
 		}
+		
+		return a;
 	}
 
 	public void setStep(double dt) {

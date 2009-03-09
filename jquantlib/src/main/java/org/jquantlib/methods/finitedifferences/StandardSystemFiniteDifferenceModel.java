@@ -85,13 +85,13 @@ public class StandardSystemFiniteDifferenceModel {
 	 * every step. \warning being this a rollback, <tt>from</tt> must be a later
 	 * time than <tt>to</tt>.
 	 */
-	public void rollback(final List<Array> a, final/* @Time */double from,
+	public List<Array> rollback(final List<Array> a, final/* @Time */double from,
 			final/* @Time */double to, final int steps,
 			final StepConditionSet<Array> condition) {
-		rollbackImpl(a, from, to, steps, condition);
+		return rollbackImpl(a, from, to, steps, condition);
 	}
 
-	private void rollbackImpl(final List<Array> a, final/* @Time */double from,
+	private List<Array> rollbackImpl(List<Array> a, final/* @Time */double from,
 			final/* @Time */double to, final int steps,
 			final StepConditionSet<Array> condition) {
 		if (from <= to)
@@ -112,7 +112,7 @@ public class StandardSystemFiniteDifferenceModel {
 
 					// perform a small step to stoppingTimes_[j]...
 					evolver.setStep(now - stoppingTimes.get(j));
-					evolver.step(a, now);
+					a = evolver.step(a, now);
 					if (condition != null)
 						condition.applyTo(a, stoppingTimes.get(j));
 					// ...and continue the cycle
@@ -125,7 +125,7 @@ public class StandardSystemFiniteDifferenceModel {
 				// complete the big one...
 				if (now > next) {
 					evolver.setStep(now - next);
-					evolver.step(a, now);
+					a = evolver.step(a, now);
 					if (condition != null)
 						condition.applyTo(a, next);
 				}
@@ -135,10 +135,12 @@ public class StandardSystemFiniteDifferenceModel {
 			} else {
 				// if we didn't, the evolver is already set to the
 				// default step, which is ok for us.
-				evolver.step(a, now);
+				a = evolver.step(a, now);
 				if (condition != null)
 					condition.applyTo(a, next);
 			}
 		}
+		
+		return a;
 	}
 }

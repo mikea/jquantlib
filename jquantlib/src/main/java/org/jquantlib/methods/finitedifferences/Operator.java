@@ -59,6 +59,8 @@ public interface Operator {
 	<T extends Operator> T multiply(double a, final T d);
 
 	<T extends Operator> T multiply(T d, double a);
+	
+	<T extends Operator> T multiply(double a);
 
 	<T extends Operator> T divide(T d, double a);
 	 

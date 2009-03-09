@@ -72,7 +72,7 @@ public class MixedScheme<T extends Operator> {
 		this.bcs = bcs2;
 	}
 
-	public void step(Array a,
+	public Array step(Array a,
 	/* Time */double t) {
 		int i;
 		for (i = 0; i < bcs.size(); i++)
@@ -80,7 +80,7 @@ public class MixedScheme<T extends Operator> {
 		if (theta != 1.0) { // there is an explicit part
 			if (L.isTimeDependent()) {
 				L.setTime(t);
-				explicitPart = I.subtract(L.multiply((1.0 - theta) * dt, L));// I-((1.0-theta)
+				explicitPart = (T) I.subtract(L.multiply((1.0 - theta) * dt));// I-((1.0-theta)
 																				// *
 																				// dt)*L_;
 			}
@@ -93,7 +93,7 @@ public class MixedScheme<T extends Operator> {
 		if (theta != 0.0) { // there is an implicit part
 			if (L.isTimeDependent()) {
 				L.setTime(t - dt);
-				implicitPart = I.add(L.multiply(theta * dt, L));// I_+(theta_ *
+				implicitPart = (T) I.add(L.multiply(theta * dt));// I_+(theta_ *
 																// dt_)*L_;
 			}
 			for (i = 0; i < bcs.size(); i++)
@@ -102,12 +102,14 @@ public class MixedScheme<T extends Operator> {
 			for (i = 0; i < bcs.size(); i++)
 				bcs.get(i).applyAfterSolving(a);
 		}
+		
+		return a;
 	}
 
 	public void setStep(/* Time */double dt) {
 		this.dt = dt;
 		if (theta != 1.0) // there is an explicit part
-			explicitPart = I.subtract(L.multiply((1.0 - theta) * dt, L)); // I -
+			explicitPart = (T) I.subtract(L.multiply((1.0 - theta) * dt)); // I -
 																			// ((1.0
 																			// -
 																			// theta)
@@ -116,7 +118,7 @@ public class MixedScheme<T extends Operator> {
 																			// *
 																			// L;
 		if (theta != 0.0) // there is an implicit part
-			implicitPart = I.add(L.multiply(theta * dt, L));// I + (theta * dt)
+			implicitPart = (T) I.add(L.multiply(theta * dt));// I + (theta * dt)
 															// * L;
 	}
 }

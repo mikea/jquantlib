@@ -65,9 +65,9 @@ public class TridiagonalOperator implements Operator {
 	}
 
 	public TridiagonalOperator(TridiagonalOperator t) {
-		this.diagonal = t.diagonal();
-		this.upperDiagonal = t.upperDiagonal();
-		this.lowerDiagonal = t.lowerDiagonal();
+		this.diagonal = new Array(t.diagonal());
+		this.upperDiagonal = new Array(t.upperDiagonal());
+		this.lowerDiagonal = new Array(t.lowerDiagonal());
 		this.timeSetter = t.getTimeSetter();
 	}
 
@@ -114,7 +114,11 @@ public class TridiagonalOperator implements Operator {
 	// unary operators
 	public Operator add(final Operator op) {
 		TridiagonalOperator D1 = (TridiagonalOperator) op;
-		return D1;
+		TridiagonalOperator D2 = this;
+		Array low = D1.lowerDiagonal.operatorAddCopy(D2.lowerDiagonal());
+		Array mid = D1.diagonal.operatorAddCopy(D2.diagonal());
+		Array high = D1.upperDiagonal.operatorAddCopy(D2.upperDiagonal());
+		return new TridiagonalOperator(low, mid, high);
 	}
 
 	public Operator subtract(final Operator op) {
@@ -158,6 +162,19 @@ public class TridiagonalOperator implements Operator {
 	public Operator multiply(final Operator D, double a) {
 		return multiply(a, D);
 	}
+	
+	@Override
+    public Operator multiply(double a)
+    {
+		Array low = new Array(lowerDiagonal);
+		low.operatorMultiply(a);
+		Array mid = new Array(diagonal);
+		mid.operatorMultiply(a);
+		Array high = new Array(upperDiagonal);
+		high.operatorMultiply(a);
+		return new TridiagonalOperator(low, mid, high);
+    }
+
 
 	public Operator divide(final Operator op, double a) {
 		TridiagonalOperator D = (TridiagonalOperator) op;
@@ -284,7 +301,7 @@ public class TridiagonalOperator implements Operator {
 			throw new IllegalStateException("vector of the wrong size ("
 					+ v.size() + "instead of " + size() + ")");
 
-		Array result = this.diagonal;
+		Array result = new Array(this.diagonal);
 		// multiply result values by (diagonal * v)
 		result.operatorMultiply(v);
 
