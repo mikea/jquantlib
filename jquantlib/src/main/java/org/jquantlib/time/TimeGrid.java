@@ -138,6 +138,7 @@ public class TimeGrid {
         times = tmp.toDoubleArray();
         //FIXME: Review when adjacent_difference is fixed. null is wrong.
         //dt = Std.adjacent_difference(times, 1, null);
+        dt = null; /* Added to remove compile error - final fields must be initialised */
     }
 
 
@@ -208,6 +209,7 @@ public class TimeGrid {
         
         //FIXME: Review when adjacent_difference is fixed. null is wrong
         //dt = Std.adjacent_difference(times, 1, null);
+        dt = null; /* Added to remove compile error - final fields must be initialised */
     }
         
         /* NO IDEA WHAT THIS IS ! */
