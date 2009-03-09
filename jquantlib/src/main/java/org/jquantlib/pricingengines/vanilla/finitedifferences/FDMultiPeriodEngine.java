@@ -1,6 +1,59 @@
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
-public class FDMultiPeriodEngine {
+import org.jquantlib.cashflow.Event;
+import org.jquantlib.math.SampledCurve;
+import org.jquantlib.methods.finitedifferences.StandardFiniteDifferenceModel;
+import org.jquantlib.methods.finitedifferences.StepCondition;
+import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
+import org.jquantlib.processes.GeneralizedBlackScholesProcess;
+
+public class FDMultiPeriodEngine extends FDVanillaEngine {
+    
+    Event [] events_;
+    Double[] stoppingTimes_;
+    int timeStepPerPeriod_;
+    SampledCurve prices_;
+    StepCondition stepCondition_;
+    StandardFiniteDifferenceModel model_;
+
+    public FDMultiPeriodEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
+        super(process, timeSteps, gridPoints, timeDependent);
+        // TODO Auto-generated constructor stub
+    }
+    
+    public FDMultiPeriodEngine(int gridPoints, int timeSteps, boolean timeDependent){
+        //where to get the process from?
+        super(null, timeSteps, gridPoints, timeDependent);
+    }
+    
+    public void setupArguments(final Arguments args, final Event[] schedule){
+        super.setupArguments(args);
+        events_ = schedule;
+        //necessary?
+        //stoppingTimes_.clear();
+        int n = schedule.length;
+        for(int i = 0; i<n; i++){
+            //TODO: why is ther no date field in Event.java ??????
+            //stoppingTimes_[i]=process.getTime(events_[i].getDate());
+        }
+    }
+    
+    public void setupArguments(final Arguments a){
+        super.setupArguments(a);
+        /* check this!!!!!!!!!!!
+        const OneAssetOption::arguments *args =
+            dynamic_cast<const OneAssetOption::arguments*>(a);
+        QL_REQUIRE(args, "incorrect argument type");
+        */
+        //necessary?
+        //events_.clear();        
+        stoppingTimes_ = ((OneAssetOptionArguments)a).stoppingTimes.toArray(new Double[0]);
+    }
+    
+    double getDividendTime(int i){
+        return stoppingTimes_[i];
+    }
 
 }
 
