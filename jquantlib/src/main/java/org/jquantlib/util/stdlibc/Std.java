@@ -82,6 +82,24 @@ public final class Std {
         	array.set(i, func.apply(array.at(i)));
         }
 	}
+	
+	   /**
+     * Implements std::min_element
+     * @param from
+     * @param to
+     * @param list
+     * @return
+     */
+    
+    public static double min_element(int from, int to, List<Double>  list){
+        double value = Double.POSITIVE_INFINITY;
+        for(double temp: list){
+            if(temp<value){
+                value = temp;
+            }
+        }
+        return value;
+    }
 
 	
     /**
