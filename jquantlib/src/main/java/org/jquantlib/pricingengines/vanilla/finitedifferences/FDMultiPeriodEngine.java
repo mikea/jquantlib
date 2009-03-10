@@ -49,12 +49,12 @@ public class FDMultiPeriodEngine extends FDVanillaEngine {
 
     public FDMultiPeriodEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);
-        // TODO Auto-generated constructor stub
-    }
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("not implemented yet!");    }
     
     public FDMultiPeriodEngine(int gridPoints, int timeSteps, boolean timeDependent){
         //where to get the process from?
         super(null, timeSteps, gridPoints, timeDependent);
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("not implemented yet!");
     }
     
     public void setupArguments(final Arguments args, final Event[] schedule){
