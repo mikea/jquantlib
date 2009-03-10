@@ -33,12 +33,14 @@ public class FDBermudianEngine extends FDMultiPeriodEngine{
 	
 	public FDBermudianEngine(GeneralizedBlackScholesProcess process,
 			int timeSteps, int gridPoints, boolean timeDependent) {
+		super(process, timeSteps, gridPoints, timeDependent);
+		if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("not implemented yet!");
 		/* default values. where to set them?
 		timeSteps = 100;
 		gridPoints = 100;
 		timeDependent = false;
 		*/
-		super(process, timeSteps, gridPoints, timeDependent);
+		
 	}
 
 	@Override
