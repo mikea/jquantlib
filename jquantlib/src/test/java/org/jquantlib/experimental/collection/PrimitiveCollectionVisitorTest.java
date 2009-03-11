@@ -22,15 +22,14 @@
 
 package org.jquantlib.experimental.collection;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.util.Date;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PrimitiveCollectionVisitorTest {
 
@@ -45,7 +44,7 @@ public class PrimitiveCollectionVisitorTest {
 	@Test
 	public void testPrimitiveDoubleCollection() {
 		long startNano = System.currentTimeMillis();
-		DoubleArrayList dal = new DoubleArrayList();
+		ArrayDoubleList dal = new ArrayDoubleList();
 		PrimitiveCollectionAddVisitor v = PrimitiveCollectionAddVisitor.impl;
 		for (double i = 0.0; i < 1000; i = i + .01) {
 			v.visitAddDoubleCollection(dal, i);
@@ -59,7 +58,7 @@ public class PrimitiveCollectionVisitorTest {
 	@SuppressWarnings(value = "unchecked")
 	public void testJavaUtilList() {
 		long startNano = System.currentTimeMillis();
-		DoubleArrayList dal = new DoubleArrayList();
+		ArrayDoubleList dal = new ArrayDoubleList();
 		java.util.List list = dal;
 		for (double i = 0.0; i < 1000; i = i + .01) {
 			list.add(i);
@@ -70,11 +69,11 @@ public class PrimitiveCollectionVisitorTest {
 	}
 
 	public static void main(String[] args) {
-		// List l = new org.jquantlib.util.List(new DoubleArrayList());
-		List l = new DoubleArrayList();
+		// List l = new org.jquantlib.util.List(new ArrayDoubleList());
+		List l = new ArrayDoubleList();
 		l.add(77.88);// autoboxing
-		((DoubleArrayList) l).add(6.66);
-		((DoubleArrayList) l).add(11);
+		((ArrayDoubleList) l).add(6.66);
+		((ArrayDoubleList) l).add(11);
 
 	}
 }
