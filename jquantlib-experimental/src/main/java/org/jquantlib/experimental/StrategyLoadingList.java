@@ -42,8 +42,8 @@ public class StrategyLoadingList implements java.util.List {
 	public StrategyLoadingList(java.util.List list){
 		if(list instanceof ArrayDoubleList){
 			type=TYPE.DOUBLE_ARRAY_LIST;
-			strategy = new ListArrayDoubleListStrategy();
-			((ListArrayDoubleListStrategy)strategy).dal
+			strategy = new ListDoubleArrayListStrategy();
+			((ListDoubleArrayListStrategy)strategy).dal
 				=(ArrayDoubleList)list;
 			
 		}else{

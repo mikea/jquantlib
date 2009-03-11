@@ -22,8 +22,8 @@
 
 package org.jquantlib.experimental;
 
-import it.unimi.dsi.fastutil.doubles.DoubleCollection;
-import it.unimi.dsi.fastutil.floats.FloatCollection;
+import org.joda.primitives.collection.DoubleCollection;
+import org.joda.primitives.collection.FloatCollection;
 
 public interface PrimitiveCollectionAddVisitor {
 

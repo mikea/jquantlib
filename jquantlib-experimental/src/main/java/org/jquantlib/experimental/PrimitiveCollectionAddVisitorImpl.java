@@ -22,10 +22,11 @@
 
 package org.jquantlib.experimental;
 
-import it.unimi.dsi.fastutil.doubles.ArrayDoubleList;
-import it.unimi.dsi.fastutil.doubles.DoubleCollection;
-import it.unimi.dsi.fastutil.floats.FloatArrayList;
-import it.unimi.dsi.fastutil.floats.FloatCollection;
+import org.joda.primitives.collection.DoubleCollection;
+import org.joda.primitives.collection.FloatCollection;
+import org.joda.primitives.list.impl.ArrayDoubleList;
+
+import cern.colt.list.FloatArrayList;
 
 public class PrimitiveCollectionAddVisitorImpl implements PrimitiveCollectionAddVisitor {
 

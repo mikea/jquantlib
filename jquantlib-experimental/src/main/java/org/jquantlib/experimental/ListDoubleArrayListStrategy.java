@@ -24,15 +24,13 @@ package org.jquantlib.experimental;
 
 
 
-import org.jquantlib.experimental.PrimativeList;
-
-import it.unimi.dsi.fastutil.doubles.ArrayDoubleList;
+import org.joda.primitives.list.impl.ArrayDoubleList;
 
 /**
  *
  * @author Q. Boiler
  */
-public class ListArrayDoubleListStrategy implements PrimativeList{
+public class ListDoubleArrayListStrategy implements PrimativeList{
 	ArrayDoubleList dal;
 
 	@Override

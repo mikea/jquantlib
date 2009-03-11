@@ -22,7 +22,6 @@
 
 package org.jquantlib.experimental;
 
-import org.jquantlib.experimental.PrimativeList;
 
 
 /**
