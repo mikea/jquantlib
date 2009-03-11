@@ -41,10 +41,9 @@
 
 package org.jquantlib.instruments;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-
 import java.util.List;
 
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
@@ -181,7 +180,7 @@ public class OneAssetOption extends Option {
         optionArguments.exercise = exercise;
         // set up stopping times
         int n = exercise.size();
-        List<Double> arr = new DoubleArrayList(n);
+        List<Double> arr = new ArrayDoubleList(n);
         for (int i=0; i<n; ++i) {
             arr.add(/*@Time*/ stochasticProcess.getTime(exercise.date(i)));
         }

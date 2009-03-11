@@ -20,8 +20,7 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import it.unimi.dsi.fastutil.doubles.DoubleList;
-
+import org.joda.primitives.list.DoubleList;
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**

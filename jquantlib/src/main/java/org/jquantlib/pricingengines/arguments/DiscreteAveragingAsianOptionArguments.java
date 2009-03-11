@@ -40,8 +40,7 @@
 
 package org.jquantlib.pricingengines.arguments;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.instruments.AverageType;
@@ -62,7 +61,7 @@ public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArgumen
 		averageType = AverageType.Arithmetic;//FIXME check this default...
         runningAccumulator = NULLREAL;//FIXME is there central values?
         pastFixings = NULLSIZE;//FIXME is there central values?
-        fixingDates = new ObjectArrayList<Date>();
+        fixingDates = new ArrayList<Date>();
 		
 	}
 	

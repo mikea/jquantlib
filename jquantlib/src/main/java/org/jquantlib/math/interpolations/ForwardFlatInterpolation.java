@@ -22,9 +22,9 @@
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.interpolations.factories.CubicSpline;
+import java.util.Arrays;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrays;
+import org.jquantlib.math.interpolations.factories.ForwardFlat;
 
 /**
  * Forward-flat interpolation between discrete points
@@ -161,8 +161,8 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 		}
 
 		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */{
-			delegate.vx = DoubleArrays.copy(x, 0, size);
-			delegate.vy = DoubleArrays.copy(y, 0, size);
+			delegate.vx = Arrays.copyOfRange(x, 0, size);
+			delegate.vy = Arrays.copyOfRange(y, 0, size);
 			delegate.reload();
 			return delegate;
 		}

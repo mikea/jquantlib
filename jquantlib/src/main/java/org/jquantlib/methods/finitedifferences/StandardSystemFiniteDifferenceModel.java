@@ -19,14 +19,13 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import it.unimi.dsi.fastutil.doubles.DoubleOpenHashSet;
-
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.math.Array;
 
 /**
@@ -58,8 +57,8 @@ public class StandardSystemFiniteDifferenceModel {
 		this.evolver = new StandardSystemFiniteDifferenceModelParallelEvolver(
 				L, bcs);
 		// This takes care of removing duplicates
-		Set<Double> times = new DoubleOpenHashSet(stoppingTimes);
-		this.stoppingTimes = new DoubleArrayList(times);
+		Set<Double> times = new HashSet(stoppingTimes);
+		this.stoppingTimes = new ArrayDoubleList(times);
 		// Now sort
 		Collections.sort(stoppingTimes);
 	}

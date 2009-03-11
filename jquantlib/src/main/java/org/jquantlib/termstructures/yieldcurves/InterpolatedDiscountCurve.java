@@ -40,9 +40,6 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrays;
-import it.unimi.dsi.fastutil.objects.ObjectArrays;
-
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;

@@ -40,10 +40,9 @@
 
 package org.jquantlib.pricingengines.asian;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-
 import java.util.List;
 
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.AverageType;
@@ -121,7 +120,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends
 		DayCounter voldc = process.blackVolatility().getLink().dayCounter();
 	     
 
-	    List<Double> fixingTimes = new DoubleArrayList();
+	    List<Double> fixingTimes = new ArrayDoubleList();
 	    /*@Size*/ int i;
 	    for (i=0; i<arguments.fixingDates.size(); i++) {
 	    	if (arguments.fixingDates.get(i).ge(referenceDate)) {

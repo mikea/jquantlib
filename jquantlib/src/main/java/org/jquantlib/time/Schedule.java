@@ -23,13 +23,12 @@
 
 package org.jquantlib.time;
 
-import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List; // FIXME: Performance
+import java.util.List;
 
+import org.joda.primitives.list.impl.ArrayBooleanList;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
@@ -68,11 +67,11 @@ public class Schedule {
         this.finalIsRegular = finalIsRegular;
         this.fullInterface = fullInterface;
         if (dates == null) {
-            this.dates = new ObjectArrayList<Date>();
+            this.dates = new ArrayList<Date>();
         } else {
             this.dates = dates;
         }
-        this.isRegular = new BooleanArrayList();
+        this.isRegular = new ArrayBooleanList();
     }
 
     public Schedule(final List<Date> dates, final Calendar calendar, final BusinessDayConvention convention) {
@@ -276,7 +275,7 @@ public class Schedule {
 
     public Iterator<Date> getDatesAfter(Date date) {
         if (dates.size() > 0) {
-            List<Date> ldates = new ObjectArrayList<Date>();
+            List<Date> ldates = new ArrayList<Date>();
             int index = -1;
             for (int i = 0; i < dates.size(); i++) {
                 Date d = dates.get(i);

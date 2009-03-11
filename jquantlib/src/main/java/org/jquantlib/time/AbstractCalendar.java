@@ -23,8 +23,7 @@
 
 package org.jquantlib.time;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.util.Date;
@@ -45,13 +44,13 @@ public abstract class AbstractCalendar implements Calendar {
     /**
      * To store artifially added holidays
      */
-    private final ObjectArrayList<Date> addedHolidays;
+    private final ArrayList<Date> addedHolidays;
 
     /**
      * Constructor
      */
     protected AbstractCalendar() {
-        this.addedHolidays = new ObjectArrayList<Date>();
+        this.addedHolidays = new ArrayList<Date>();
     }
 
     public void addHoliday(final Date d) {
@@ -238,7 +237,7 @@ public abstract class AbstractCalendar implements Calendar {
     }
 
     public List<Date> getHolidayList(final Date from, final Date to, boolean includeWeekEnds) {
-        List<Date> holidays = new ObjectArrayList<Date>();
+        List<Date> holidays = new ArrayList<Date>();
         if (from.ge(to)) {
         	String msg = MessageFormatter.format("{} should be after {}", new Object[] { to, from });
             throw new IllegalStateException(msg);

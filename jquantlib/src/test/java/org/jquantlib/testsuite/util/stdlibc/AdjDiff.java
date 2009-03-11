@@ -1,13 +1,12 @@
 
 package org.jquantlib.testsuite.util.stdlibc;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-
 import java.util.List;
 
+import org.joda.primitives.list.impl.ArrayDoubleList;
+import org.jquantlib.util.stdlibc.Std;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jquantlib.util.stdlibc.Std;
 
 /**
  * This class is just for testing the adjcent_difference implementation in the class TimeGrid and 
@@ -20,9 +19,9 @@ public class AdjDiff {
 	
     private final static Logger logger = LoggerFactory.getLogger(AdjDiff.class);
     
-    private static List<Double> times_ = new DoubleArrayList();
-    private static List<Double> dt_1 = new DoubleArrayList();
-    private static List<Double> dt_0 = new DoubleArrayList();
+    private static List<Double> times_ = new ArrayDoubleList();
+    private static List<Double> dt_1 = new ArrayDoubleList();
+    private static List<Double> dt_0 = new ArrayDoubleList();
 
 	public static void main(String[] args) {
 	    
@@ -31,7 +30,7 @@ public class AdjDiff {
 		
 		double dt = end/steps;
 		
-		times_ = new DoubleArrayList(steps);
+		times_ = new ArrayDoubleList(steps);
 		
 		for (int i=0; i<=steps; i++)
 			times_.add(dt*i);

@@ -23,13 +23,11 @@
 
 package org.jquantlib.time;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.lang.annotation.NonNegative;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.math.Closeness;
@@ -116,7 +114,7 @@ public class TimeGrid {
             throw new ArithmeticException("negative times not allowed");
         }
 
-        List<Double> e = new DoubleArrayList(mandatoryTimes);
+        List<Double> e = new ArrayDoubleList(mandatoryTimes);
         double prev = mandatoryTimes[0];
         e.add(prev);
         for (int i=1; i<mandatoryTimes.length; i++) {
@@ -127,13 +125,13 @@ public class TimeGrid {
             prev = curr;
         }
         
-        DoubleArrayList tmp = new DoubleArrayList();
+        ArrayDoubleList tmp = new ArrayDoubleList();
         if (mandatoryTimes[0] > 0.00) {
             tmp.add(0.0);
-            tmp.addElements(1, mandatoryTimes);
+            tmp.addAll(1, mandatoryTimes);
         }
         else{
-            tmp.addElements(0, mandatoryTimes);
+            tmp.addAll(0, mandatoryTimes);
         }
         times = tmp.toDoubleArray();
         //FIXME: Review when adjacent_difference is fixed. null is wrong.
@@ -188,7 +186,7 @@ public class TimeGrid {
         
         double periodBegin = 0.0;
        
-        DoubleArrayList temp_times_ = new DoubleArrayList();
+        ArrayDoubleList temp_times_ = new ArrayDoubleList();
         temp_times_.add(periodBegin);
         int m_length = mandatoryTimes.length;
         for(int i = 0; i<m_length; i++){
@@ -218,7 +216,7 @@ public class TimeGrid {
 //        // list. Between these points, there are inner-points which are
 //        // regularly spaced.
 //        if (steps == 0) {
-//          List<Double> diff = new DoubleArrayList();
+//          List<Double> diff = new ArrayDoubleList();
 //            
 //     
 //          std::adjacent_difference(mandatoryTimes_.begin(), mandatoryTimes_.end(), std::back_inserter(diff));       

@@ -22,10 +22,10 @@
 
 package org.jquantlib.util;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
-
 import java.util.Collection;
 import java.util.List;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public class TimeSeries<T> {
     // private fields
     //
     
-    private final Object2ObjectAVLTreeMap<Date, T> map;
+    private final NavigableMap<Date, T> map;
 	
     
     //
@@ -58,7 +58,7 @@ public class TimeSeries<T> {
     //
     
     public TimeSeries() {
-        this.map = new Object2ObjectAVLTreeMap<Date, T>();
+        this.map = new TreeMap<Date, T>();
     }
 
     public TimeSeries(final Date[] dates, final T[] values) {
@@ -93,14 +93,14 @@ public class TimeSeries<T> {
      * @return the first date for which a historical datum exists
      */
     public Date firstDate() /*@ReadOnly*/ {
-    	return map.firstKey();
+        return map.firstKey();
     }
 
     /**
      * @return the last date for which a historical datum exists
      */
     public Date lastDate() /*@ReadOnly*/ {
-    	return map.lastKey() ;
+        return map.lastKey();
     }
 
     /**

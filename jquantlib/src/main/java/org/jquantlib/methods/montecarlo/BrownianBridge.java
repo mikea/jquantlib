@@ -48,8 +48,7 @@
 // ===========================================================================
 package org.jquantlib.methods.montecarlo;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrays;
-import it.unimi.dsi.fastutil.ints.IntArrays;
+import java.util.Arrays;
 
 import org.jquantlib.time.TimeGrid;
 
@@ -106,7 +105,7 @@ public class BrownianBridge {
      */
     public BrownianBridge(final/* @Time */double[] times) {
         this.size_ = times.length;
-        this.t_ = DoubleArrays.copy(times, 0, this.size_);
+        this.t_ = Arrays.copyOfRange(times, 0, this.size_);
         this.sqrtdt_ = new double[this.size_];
 
         this.bridgeIndex_ = new int[this.size_];
@@ -155,7 +154,7 @@ public class BrownianBridge {
         // map[i]-1 is the index of the variate that constructs
         // the path point # i.
         int[] map = new int[size_];
-        IntArrays.fill(map, 0);
+        Arrays.fill(map, 0);
 
         // The first point in the construction is the global step.
         map[size_ - 1] = 1;

@@ -22,12 +22,11 @@
 
 package org.jquantlib.util;
 
-import it.unimi.dsi.fastutil.objects.Object2DoubleAVLTreeMap;
-import it.unimi.dsi.fastutil.objects.Object2DoubleSortedMap;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.MessageFormatter;
 
 /**
  * Container for historical data
@@ -48,7 +47,7 @@ public class TimeSeriesDouble {
     // private fields
     //
     
-    private final Object2DoubleSortedMap<Date> map;
+    private final NavigableMap<Date, Double> map;
 
 	
     //
@@ -56,17 +55,14 @@ public class TimeSeriesDouble {
     //
     
     public TimeSeriesDouble() {
-		this.map = new Object2DoubleAVLTreeMap<Date>();
+		this.map = new TreeMap<Date, Double>();
 	}
 
 	public TimeSeriesDouble(final Date[] dates, final double[] values) {
 		this();
 		
-		if ( dates.length != values.length) {
-	        String msg = MessageFormatter.arrayFormat("size mismatch({}, {})", 
-	                new Object[] { dates.length, values.length } );
-	        logger.debug(msg);
-	        throw new IllegalArgumentException(msg);
+		if (dates.length != values.length) {
+	        throw new IllegalArgumentException("sizes mismatch"); // TODO: message
 		}
 		
         for (int i = 0; i < dates.length; i++) {
@@ -129,7 +125,12 @@ public class TimeSeriesDouble {
 	}
 
 	public double[] values() {
-		return map.values().toDoubleArray();
+		Double[] tmp = (Double[]) map.values().toArray(new Double[0]);
+		final double[] values = new double[tmp.length];
+		for (int i=0; i<tmp.length; i++) {
+		    values[i] = tmp[i];
+		}
+		return values;
 	}
 
 }

@@ -24,7 +24,7 @@
 
 package org.jquantlib.math;
 
-import it.unimi.dsi.fastutil.longs.LongArrayList;
+import org.joda.primitives.list.impl.ArrayLongList;
 
 /**
  * This class creates an ArrayList of prime numbers,
@@ -62,7 +62,7 @@ public class PrimeNumbers {
             31, 37, 41, 43, 47 };
 
     
-    private LongArrayList primeNumbers = new LongArrayList();
+    private ArrayLongList primeNumbers = new ArrayLongList();
     
 
     //  int was chosen because as a parameter if we are calculating.
@@ -70,7 +70,7 @@ public class PrimeNumbers {
     //  we are going to run for a long time.
     public long get(int absoluteIndex) {
         if (primeNumbers.isEmpty()) {
-	    primeNumbers.addElements(0, firstPrimes);
+	    primeNumbers.addAll(0, firstPrimes);
         }
         while (primeNumbers.size()<=absoluteIndex)
             nextPrimeNumber();

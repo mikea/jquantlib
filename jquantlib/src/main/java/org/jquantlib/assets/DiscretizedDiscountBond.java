@@ -21,10 +21,9 @@
  */
 package org.jquantlib.assets;
 
-import it.unimi.dsi.fastutil.doubles.DoubleLists;
-
 import java.util.List;
 
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.math.Array;
 import org.jquantlib.methods.lattices.Lattice;
 
@@ -64,7 +63,7 @@ public class DiscretizedDiscountBond extends DiscretizedAsset {
 	 */
 	@Override
 	public List<Double> mandatoryTimes() {
-		return DoubleLists.EMPTY_LIST;
+		return new ArrayDoubleList();
 	}
 
 	/*

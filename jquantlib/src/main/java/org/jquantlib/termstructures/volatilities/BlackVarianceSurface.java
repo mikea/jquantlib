@@ -40,8 +40,6 @@
 
 package org.jquantlib.termstructures.volatilities;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrays;
-
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolations.BilinearInterpolation;
 import org.jquantlib.math.interpolations.Interpolation2D;

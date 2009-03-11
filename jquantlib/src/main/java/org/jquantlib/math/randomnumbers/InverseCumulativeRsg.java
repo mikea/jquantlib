@@ -40,9 +40,8 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import it.unimi.dsi.fastutil.doubles.DoubleList;
-
+import org.joda.primitives.list.DoubleList;
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**
@@ -97,12 +96,12 @@ public class InverseCumulativeRsg<USG extends RandomSequenceGeneratorIntf,IC ext
         for (int i = 0; i < this.dimension; i++) {
             this.sequence[i] = this.ic.evaluate(tmp[i]);
         }
-        return new Sample<DoubleList>(new DoubleArrayList(sequence), weight);
+        return new Sample<DoubleList>(new ArrayDoubleList(sequence), weight);
     }
 
     @Override
     public final Sample<DoubleList> lastSequence() /* @ReadOnly */ {
-        DoubleList list = new DoubleArrayList(this.sequence);
+        DoubleList list = new ArrayDoubleList(this.sequence);
         return new Sample<DoubleList>(list, this.weight);
     }
 

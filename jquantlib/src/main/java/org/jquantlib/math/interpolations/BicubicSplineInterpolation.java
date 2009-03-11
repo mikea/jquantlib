@@ -40,8 +40,7 @@
 
 package org.jquantlib.math.interpolations;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.math.interpolations.factories.BicubicSpline;
@@ -82,7 +81,7 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
      * @see BicubicSpline
      */
     private BicubicSplineInterpolation() {
-        splines = new ObjectArrayList<Interpolation>();
+        splines = new ArrayList<Interpolation>();
     }
 
 

@@ -22,7 +22,9 @@
 
 package org.jquantlib.math.interpolations;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrays;
+import java.util.Arrays;
+
+import org.jquantlib.math.interpolations.factories.Linear;
 
 
 
@@ -166,8 +168,8 @@ public class LinearInterpolation extends AbstractInterpolation {
 		}
 
 		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
-			delegate.vx = DoubleArrays.copy(x, 0, size);
-			delegate.vy = DoubleArrays.copy(y, 0, size);
+			delegate.vx = Arrays.copyOfRange(x, 0, size);
+			delegate.vy = Arrays.copyOfRange(y, 0, size);
 			delegate.reload();
 			return delegate;
 		}

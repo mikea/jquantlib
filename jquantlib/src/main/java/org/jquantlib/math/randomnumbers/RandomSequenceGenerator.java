@@ -39,9 +39,8 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
-import it.unimi.dsi.fastutil.doubles.DoubleList;
-
+import org.joda.primitives.list.DoubleList;
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.methods.montecarlo.Sample;
 import org.jquantlib.util.reflect.TypeToken;
 
@@ -109,7 +108,7 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
 
     @Override
     public final Sample<DoubleList> lastSequence() /* @ReadOnly */{
-        return new Sample<DoubleList>(new DoubleArrayList(sequence), 1.0);
+        return new Sample<DoubleList>(new ArrayDoubleList(sequence), 1.0);
     }
 
     @Override
@@ -120,7 +119,7 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
             this.sequence[i] = sample.getValue();
             weight *= sample.getWeight();
         }
-        return new Sample<DoubleList>(new DoubleArrayList(sequence), weight);
+        return new Sample<DoubleList>(new ArrayDoubleList(sequence), weight);
     }
 
     @Override

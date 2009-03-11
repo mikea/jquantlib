@@ -46,8 +46,7 @@
 
 package org.jquantlib.instruments;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -93,7 +92,7 @@ public class DiscreteAveragingAsianOption extends OneAssetStrikedOption{
     	super(process,payoff,exercise,engine);
     	this.averageType_ = averageType;
     	this.runningAccumulator_ = runningAccumulator;
-    	this.fixingDates_ = new ObjectArrayList<Date>(fixingDates);
+    	this.fixingDates_ = new ArrayList<Date>(fixingDates);
     	Collections.sort(this.fixingDates_);
     }
     

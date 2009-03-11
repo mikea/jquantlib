@@ -40,7 +40,7 @@
 
 package org.jquantlib.math.interpolations;
 
-import it.unimi.dsi.fastutil.doubles.DoubleArrays;
+import java.util.Arrays;
 
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
@@ -383,8 +383,8 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
         }
 
         public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
-            delegate.vx = DoubleArrays.copy(x, 0, size);
-            delegate.vy = DoubleArrays.copy(y, 0, size);
+            delegate.vx = Arrays.copyOfRange(x, 0, size);
+            delegate.vy = Arrays.copyOfRange(y, 0, size);
             n = vx.length;
 	        vp = new double[n-1];
 	        va = new double[n-1];

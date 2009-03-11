@@ -21,17 +21,16 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.methods.montecarlo;
 
-import it.unimi.dsi.fastutil.doubles.DoubleList;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.joda.primitives.list.DoubleList;
+import org.joda.primitives.list.impl.ArrayLongList;
 import org.jquantlib.math.randomnumbers.MersenneTwisterUniformRng;
 import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 import org.jquantlib.math.randomnumbers.RandomSequenceGeneratorIntf;
@@ -990,12 +989,12 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements RandomSequen
 //
 
 		// TODO: integerSequence_(dimensionality, 0) --> where has the zero gone?
-		this.integerSequence_ = new LongArrayList(dimensionality_);
+		this.integerSequence_ = new ArrayLongList(dimensionality_);
 
 		// TODO: directionIntegers_(dimensionality,std::vector<unsigned long>(bits_))
 		directionIntegers_ = new long[dimensionality][bits_];
-		List<Long> bits = new LongArrayList(bits_);
-		List<Long> dimLongArray = new LongArrayList(dimensionality_);
+		List<Long> bits = new ArrayLongList(bits_);
+		List<Long> dimLongArray = new ArrayLongList(dimensionality_);
 
 
 
@@ -1017,7 +1016,7 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements RandomSequen
 		long[] degree = new long[dimensionality_];
 
 		// std::vector<long> ppmt(dimensionality_);
-		long[] ppmt = null;// = new LongArrayList(dimensionality_);
+		long[] ppmt = null;// = new ArrayLongList(dimensionality_);
 
 		// degree 0 is not used
 		//ppmt.add(new Long(0));
@@ -1272,7 +1271,7 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements RandomSequen
 		if (firstDraw_) {
 			// it was precomputed in the constructor
 			firstDraw_ = false;
-			return ((LongArrayList) integerSequence_).toLongArray();
+			return ((ArrayLongList) integerSequence_).toLongArray();
 		}
 
 		// increment the counter
@@ -1303,7 +1302,7 @@ public class SobolRsg<RNG extends RandomNumberGenerator> implements RandomSequen
 			// FIXME: Correct this line regarding directionIntegers_ .
 			integerSequence_.add(k, directionIntegers_[k][j]);
 		}
-		return ((LongArrayList) integerSequence_).toLongArray();
+		return ((ArrayLongList) integerSequence_).toLongArray();
 	}
 	// skip to the n-th sample in the low-discrepancy sequence 
 	public void skipTo(/*@NonNegative*/long skip) {

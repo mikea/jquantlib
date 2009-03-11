@@ -561,6 +561,14 @@
 		    <snapshots> <enabled>true</enabled>  </snapshots>
 		</repository>
 		
+		<repository>
+		    <id>joda</id>
+		    <name>Joda</name>
+		    <url>http://joda-primitives.sourceforge.net/repo/</url>
+		    <releases>  <enabled>true</enabled> </releases>
+		    <snapshots> <enabled>true</enabled>  </snapshots>
+		</repository>
+		
 		<!--
 		<repository>
 			<id>sonatype</id>
@@ -642,12 +650,20 @@
 		</dependency>
 
 		<!-- 'compile' scope dependencies -->
-		<dependency>
+		<!-- dependency>
 			<groupId>fastutil</groupId>
 			<artifactId>fastutil</artifactId>
 			<version>5.1.5</version>
 			<scope>compile</scope>
+		</dependency-->
+		<dependency>
+		    <groupId>org.joda</groupId>
+		    <artifactId>joda-primitives</artifactId>
+		    <version>0.6</version>
+			<scope>compile</scope>
 		</dependency>
+		
+		
 		<dependency>
 			<groupId>colt</groupId>
 			<artifactId>colt</artifactId>
