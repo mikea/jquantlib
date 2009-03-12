@@ -51,9 +51,17 @@ import org.jquantlib.math.UnaryFunctionDouble;
 //TEST the correctness of the result is tested by checking it against known good values.
 public class SimpsonIntegral extends TrapezoidIntegral {
 	
+	
 	//
 	// public constructors
 	//
+	
+	public SimpsonIntegral(double accuracy) {
+		super(accuracy); // FIXME: code review :: what's the default "maxEvaluations" value???
+		if (System.getProperty("EXPERIMENTAL")==null) {
+		    throw new UnsupportedOperationException("Work in progress");
+		 }
+	}
 	
 	public SimpsonIntegral (final double accuracy, final int maxIterations) {
 		super(accuracy, Method.Default, maxIterations);
