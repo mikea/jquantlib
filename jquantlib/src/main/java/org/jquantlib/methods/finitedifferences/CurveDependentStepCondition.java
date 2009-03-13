@@ -65,7 +65,7 @@ public class CurveDependentStepCondition implements StepCondition<Array> {
         private Array values;
 
         public ArrayWrapper(Array values) {
-            this.values = values;
+            this.values = new Array(values);
         }
 
         public double getValue(Array a, int i) {

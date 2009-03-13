@@ -72,7 +72,7 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 
 		prices =  new SampledCurve(intrinsicValues);
 		controlPrices = new SampledCurve(intrinsicValues);
-		controlOperator = finiteDifferenceOperator;
+		controlOperator =  new TridiagonalOperator(finiteDifferenceOperator);
 		controlBCs.add(bcS.get(0));
 		controlBCs.add(bcS.get(1));
 
@@ -91,8 +91,8 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 		StandardSystemFiniteDifferenceModel model = new StandardSystemFiniteDifferenceModel(operatorSet, bcSet);
 		arraySet = model.rollback(arraySet, getResidualTime(),0.0, timeSteps, conditionSet);
 
-		prices.setValues(arraySet.get(0));
-		controlPrices.setValues(arraySet.get(1));
+		prices.setValues(new Array(arraySet.get(0)));
+		controlPrices.setValues(new Array(arraySet.get(1)));
 
 		StrikedTypePayoff striked_payoff = (StrikedTypePayoff) (payoff);
 		if (striked_payoff == null)

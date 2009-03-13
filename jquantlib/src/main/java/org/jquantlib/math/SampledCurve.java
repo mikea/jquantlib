@@ -118,12 +118,12 @@ public class SampledCurve {
 		if (size() < 4) throw new ArithmeticException("the size of the curve must be at least 4");
 		int jmid = size() / 2;
 		if (size() % 2 != 0) {
-			double deltaPlus = (values_.at(jmid + 1) - values_.at(jmid) / (grid_.at(jmid + 1) - grid_.at(jmid)));
-			double deltaMinus = (values_.at(jmid) - values_.at(jmid - 1) / (grid_.at(jmid) - grid_.at(jmid - 1)));
+			double deltaPlus = (values_.at(jmid + 1) - values_.at(jmid)) / ((grid_.at(jmid + 1) - grid_.at(jmid)));
+			double deltaMinus = (values_.at(jmid) - values_.at(jmid - 1)) / ((grid_.at(jmid) - grid_.at(jmid - 1)));
 			double dS = (grid_.at(jmid + 1) - grid_.at(jmid - 1)) / 2.0;
 			return (deltaPlus - deltaMinus) / dS;
 		} else {
-			double deltaPlus = (values_.at(jmid + 1) - values_.at(jmid - 1) / (grid_.at(jmid + 1) - grid_.at(jmid - 1)));
+			double deltaPlus = (values_.at(jmid + 1) - values_.at(jmid - 1)) / ((grid_.at(jmid + 1) - grid_.at(jmid - 1)));
 			double deltaMinus = (values_.at(jmid) - values_.at(jmid - 2)) / (grid_.at(jmid) - grid_.at(jmid - 2));
 			return (deltaPlus - deltaMinus) / (grid_.at(jmid) - grid_.at(jmid - 1));
 		}

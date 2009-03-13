@@ -38,8 +38,8 @@ public class TransformedGrid {
 	protected Array dx_;
 
 	public TransformedGrid(Array grid) {
-		this.grid_ = grid;
-		this.transformedGrid_ = grid;
+		this.grid_ = new Array(grid);
+		this.transformedGrid_ = new Array(grid);
 		this.dxm_ = new Array(grid.size());
 		this.dxp_ = new Array(grid.size());
 		this.dx_ = new Array(grid.size());
@@ -51,12 +51,12 @@ public class TransformedGrid {
 	}
 
 	public TransformedGrid(Array grid, DoubleFunction f) {
-		this.grid_ = grid;
-		this.transformedGrid_ = grid;
+		this.grid_ = new Array(grid);
+		this.transformedGrid_ = new Array(grid);
 		this.dxm_ = new Array(grid.size());
 		this.dxp_ = new Array(grid.size());
 		this.dx_ = new Array(grid.size());
-		Std.apply(grid_, f);
+		Std.apply(transformedGrid_, f);
 		for (int i = 1; i < transformedGrid_.size() - 1; i++) {
 			dxm_.set(i, transformedGrid_.at(i) - transformedGrid_.at(i - 1));
 			dxp_.set(i, transformedGrid_.at(i + 1) - transformedGrid_.at(i));

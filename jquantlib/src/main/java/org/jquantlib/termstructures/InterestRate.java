@@ -180,7 +180,7 @@ public class InterestRate {
      */
     public final /*@DiscountFactor*/ double discountFactor(final /*@Time*/ double t) {
     	/*@DiscountFactor*/ double factor = compoundFactor(t);
-        return 1/factor;
+        return 1.0d/factor;
     }
 
     /**

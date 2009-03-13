@@ -19,6 +19,7 @@
  */
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.jquantlib.instruments.Payoff;
@@ -52,7 +53,7 @@ public class FDVanillaEngine {
 	protected Payoff payoff;
 	protected TridiagonalOperator finiteDifferenceOperator;
 	protected SampledCurve intrinsicValues;
-	protected Vector<BoundaryCondition<TridiagonalOperator>> bcS;
+	protected List<BoundaryCondition<TridiagonalOperator>> bcS;
 	// temporaries
 	protected/* Real */double sMin, center, sMax;
 
