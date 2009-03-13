@@ -14,6 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.jquantlib.math.IntervalPrice;
+import org.jquantlib.util.TimeSeries;
+import org.jquantlib.util.reflect.TypeReference;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +59,14 @@ public class TypeTokenRecursiveTest {
     @Test
 	public void MyClassTest() {
         Object o = new MyClass<HashMap<String,Double>, TreeMap<String, LinkedList<List<Double>>>, List<Integer>>() {};
+        
+        
+        MyClass<HashMap<String,Double>, TreeMap<String, LinkedList<List<Double>>>, List<Integer>> b = new MyClass<HashMap<String,Double>, TreeMap<String, LinkedList<List<Double>>>, List<Integer>>(){};
+        System.out.println(b.getClass().getGenericSuperclass());
+        HashMap<String,Double> hmsd = new HashMap<String,Double>();
+        System.out.println(hmsd.getClass());
+        System.out.println(hmsd.getClass().getGenericSuperclass());
+        b.PrintMe();
 	}
 	
 
@@ -71,14 +82,6 @@ public class TypeTokenRecursiveTest {
     private class MyClass<X, Y, Z> {
         
         public MyClass() {
-            Type superclass = this.getClass().getGenericSuperclass();
-            if (superclass instanceof Class) {
-                throw new IllegalArgumentException("Class should be anonymous or extended from a generic class");
-            }
-            
-            for (Type t : ((ParameterizedType) superclass).getActualTypeArguments() ) {
-                printType("", t);
-            }
         }
         
         private void printType(String indent, Type t) {
@@ -96,6 +99,12 @@ public class TypeTokenRecursiveTest {
                 }
             }
         }
+        
+        public void PrintMe()
+        {
+        	printType("", this.getClass().getGenericSuperclass());
+        }
+        
     }
     
 
@@ -123,6 +132,12 @@ public class TypeTokenRecursiveTest {
 		logger.info(" Class: "+clazz.getCanonicalName());
         tp.printClass(clazz);
  	}
+    
+    private void typeType(Type type)
+    {
+    	TypePrinter tp = new TypePrinter();
+    	tp.printType(type);
+    }
 
 //	public static void try1(String... args) {
 //    	try {
@@ -329,5 +344,21 @@ public class TypeTokenRecursiveTest {
     
     private class QuadIntIn extends HashMap<OneMoreInt, TripleIntIn>{}
     
+    @Test
+    public void testParamsCheck()
+    {
+    	TypeReference<TimeSeries<IntervalPrice> > trtsip = new TypeReference<TimeSeries<IntervalPrice> > (){};
+    	System.out.println(getActualTypeParameters(trtsip,0,0));    	
+    	System.out.println(Double.class.getCanonicalName());
+    	//typeType(getActualTypeParameters(trtsip,0,0));
+    	System.out.println((""+getActualTypeParameters(trtsip,0,0)).endsWith(".Double"));
+    	TypeReference<TimeSeries<Double> > trtsd = new TypeReference<TimeSeries<Double> > (){};
+    	System.out.println((""+getActualTypeParameters(trtsd,0,0)).endsWith(".Double"));
+    }
+    
+    protected Type getActualTypeParameters(TypeReference<? > typeRef,  int paramNum, int typeNum)
+    {
+    	return ((ParameterizedType)typeRef.getGenericType(paramNum)).getActualTypeArguments()[typeNum];   	
+    }
     
 }
