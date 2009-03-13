@@ -153,7 +153,18 @@ public abstract class TypeReference<T> {
         return (T) constructor.newInstance(objects);
     }
 
+    /**
+     * function identifies type of the typeNum -th generics in the paramNum parameter 
+     * @param paramNum parameter number
+     * @param typeNum generics type in the paramNum parameter
+     * @return Type of the 
+     */
+    public Type getActualTypeParameters(int paramNum, int typeNum)
+    {
+    	return ((ParameterizedType)getGenericType(paramNum)).getActualTypeArguments()[typeNum];   	
+    }
 
+    
     public boolean equals(Object o) {
         if (o instanceof TypeReference) {
             int len = ((TypeReference)o).types.length;
