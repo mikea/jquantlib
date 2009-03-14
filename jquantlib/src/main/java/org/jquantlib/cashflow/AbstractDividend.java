@@ -40,7 +40,7 @@ public abstract class AbstractDividend extends CashFlow {
 	}
 
 	@Override
-	protected Date date() {
+	public Date date() {
 		return date;
 	}
 	
