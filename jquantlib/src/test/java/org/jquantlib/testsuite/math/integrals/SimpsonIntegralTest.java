@@ -38,9 +38,6 @@ import org.junit.Test;
  *
  */
 
-/* 
- * Test not implemented yet.
- */
 
 //TODO: Write SimpsonIntegral test case.
 public class SimpsonIntegralTest {
