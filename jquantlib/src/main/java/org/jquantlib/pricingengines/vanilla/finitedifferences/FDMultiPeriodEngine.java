@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2009 Srinivas Hasti
 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
@@ -20,6 +21,8 @@
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 
+import java.util.List;
+
 import org.jquantlib.cashflow.Event;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.SampledCurve;
@@ -28,7 +31,7 @@ import org.jquantlib.methods.finitedifferences.StandardFiniteDifferenceModel;
 import org.jquantlib.methods.finitedifferences.StepCondition;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
-import org.jquantlib.pricingengines.results.OptionResults;
+import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
@@ -38,56 +41,50 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  *
  */
 
-public class FDMultiPeriodEngine extends FDVanillaEngine {
+public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
     
-    Event [] events_;
-    Double[] stoppingTimes_;
-    int timeStepPerPeriod_;
-    SampledCurve prices_;
-    StepCondition stepCondition_;
-    StandardFiniteDifferenceModel model_;
+    private List<Event> events_;
+    private List<Double> stoppingTimes_;
+    private int timeStepPerPeriod_;
+    protected SampledCurve prices_;
+    protected StepCondition<Array> stepCondition_;
+    private StandardFiniteDifferenceModel model_;
 
     public FDMultiPeriodEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);
-        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("not implemented yet!");    }
-    
-    public FDMultiPeriodEngine(int gridPoints, int timeSteps, boolean timeDependent){
-        //where to get the process from?
-        super(null, timeSteps, gridPoints, timeDependent);
-        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("not implemented yet!");
     }
     
-    public void setupArguments(final Arguments args, final Event[] schedule){
+    public FDMultiPeriodEngine(GeneralizedBlackScholesProcess process) {
+        super(process, 100, 100, false);
+    }
+    
+    public void setupArguments(final Arguments args, final List<Event> schedule){
         super.setupArguments(args);
         events_ = schedule;
-        //necessary?
-        //stoppingTimes_.clear();
-        int n = schedule.length;
+        stoppingTimes_.clear();
+        int n = schedule.size();
         for(int i = 0; i<n; i++){
-            //TODO: why is ther no date field in Event.java ??????
-            //stoppingTimes_[i]=process.getTime(events_[i].getDate());
+            stoppingTimes_.add(process.getTime(events_.get(i).date()));
         }
     }
     
     public void setupArguments(final Arguments a){
         super.setupArguments(a);
-        /* check this!!!!!!!!!!!
-        const OneAssetOption::arguments *args =
-            dynamic_cast<const OneAssetOption::arguments*>(a);
-        QL_REQUIRE(args, "incorrect argument type");
-        */
-        //necessary?
-        //events_.clear();        
-        stoppingTimes_ = ((OneAssetOptionArguments)a).stoppingTimes.toArray(new Double[0]);
+        OneAssetOptionArguments args = (OneAssetOptionArguments) a;     
+        events_.clear();        
+        int n = args.exercise.size();
+        for (int i=0; i<n; ++i)
+            stoppingTimes_.add(process.getTime(args.exercise.date(i)));
     }
     
     double getDividendTime(int i){
-        return stoppingTimes_[i];
+        return stoppingTimes_.get(i);
     }
     
     public void calculate(Results r){
+        OneAssetOptionResults results = (OneAssetOptionResults) r;
         double beginDate, endDate;
-        int dateNumber = stoppingTimes_.length;
+        int dateNumber = stoppingTimes_.size();
         boolean lastDateIsResTime = false;
         int firstIndex = -1;
         int lastIndex = dateNumber - 1;
@@ -140,8 +137,7 @@ public class FDMultiPeriodEngine extends FDVanillaEngine {
 
         prices_ = intrinsicValues;
         if(lastDateIsResTime){
-            //FIXME:not implementd yet
-            //executeIntermediateStep(dateNumber - 1);
+            executeIntermediateStep(dateNumber - 1);
         }
 
         Integer j = lastIndex;
@@ -160,28 +156,28 @@ public class FDMultiPeriodEngine extends FDVanillaEngine {
                 endDate = dt;
             }
 
-            model_.rollback(prices_.values(),beginDate, endDate,timeStepPerPeriod_, stepCondition_);
+            prices_.setValues(model_.rollback(prices_.values(),beginDate, endDate,timeStepPerPeriod_, stepCondition_));
             
             if (j >= 0){
-                //FIXME: not implementd yet
-                //executeIntermediateStep(j);
+               executeIntermediateStep(j);
             }
         } while (--j >= firstIndex);
 
-        model_.rollback(prices_.values(),dt, 0, 1, stepCondition_);
+        prices_.setValues(model_.rollback(prices_.values(),dt, 0, 1, stepCondition_));
         
 
         if(firstDateIsZero){
-            //FIXME: not implementd yet
-            //executeIntermediateStep(0);
+            executeIntermediateStep(0);
         }
 
-        ((OptionResults)r).value = prices_.valueAtCenter();
-        ((OptionResults)r).delta = prices_.firstDerivativeAtCenter();
-        ((OptionResults)r).gamma = prices_.secondDerivativeAtCenter();
-        ((OptionResults)r).addAdditionalResult("priceCurve", prices_);
+        results.value = prices_.valueAtCenter();
+        results.delta = prices_.firstDerivativeAtCenter();
+        results.gamma = prices_.secondDerivativeAtCenter();
+        results.addAdditionalResult("priceCurve", prices_);
     }
     
+    protected abstract void executeIntermediateStep(int step);
+
     void initializeStepCondition() {
         stepCondition_ = new NullCondition<Array>();
     }
