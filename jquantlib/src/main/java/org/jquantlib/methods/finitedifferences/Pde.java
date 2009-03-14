@@ -22,13 +22,13 @@
 package org.jquantlib.methods.finitedifferences;
 
 /**
- * The process objects passed into Pde classes
+ * The objects passed into Pde classes
  * must implement the methods defined by this.
  * 
  * @author Srinivas Hasti
  * 
  */
-public interface PdeParabolic {
+public interface Pde {
 
     public abstract /*Real*/ double diffusion(/*Time*/double t, /*Real*/
     double x);

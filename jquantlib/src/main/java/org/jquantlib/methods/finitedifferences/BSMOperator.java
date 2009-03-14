@@ -47,9 +47,9 @@ public class BSMOperator extends TridiagonalOperator {
 			double residualTime) {
 		super(grid.size());
 		LogGrid logGrid = new LogGrid(grid);
-		PdeConstantCoeff<GeneralizedBlackScholesProcess> cc = new PdeConstantCoeff<GeneralizedBlackScholesProcess>(
+		PdeConstantCoeff<PdeBSM> cc = new PdeConstantCoeff<PdeBSM>(
 				process, residualTime, process.stateVariable().getLink()
-						.evaluate());
+						.evaluate()){};
 		cc.generateOperator(residualTime, logGrid, this);
 	}
 }

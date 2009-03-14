@@ -25,14 +25,29 @@ import org.jquantlib.math.Array;
 import org.jquantlib.math.TransformedGrid;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator.TimeSetter;
 
-public class GenericTimeSetter<T> implements TimeSetter {
+public class GenericTimeSetter<T extends PdeSecondOrderParabolic> implements TimeSetter {
     private Array grid;
-    private PdeSecondOrderParabolic pde;
-
-    public GenericTimeSetter(Array grid, T process) {
+    private T pde;
+   
+    /**
+     * Signature of this method is different because
+     * TypeTokens doesn't work when type token is
+     * specifed by another type token upstream.
+     * For example,
+     *   class A<T>{
+     *      void method(){
+     *         B<T> b = new B<T>(): //Its not possible to determine T inside B class
+     *      }
+     *   }
+     * 
+     * @param grid
+     * @param process
+     */
+    public GenericTimeSetter(Array grid, T pde) {
         this.grid = grid;
-        this.pde = DynamicPdeSecondOrderParabolic.getInstance(process);
+        this.pde = pde;
     }
+    
 
     @Override
     public void setTime(double t, TridiagonalOperator l) {

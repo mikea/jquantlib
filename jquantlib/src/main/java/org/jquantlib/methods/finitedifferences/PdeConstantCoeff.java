@@ -22,19 +22,19 @@
 package org.jquantlib.methods.finitedifferences;
 
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
+import org.jquantlib.util.reflect.TypeToken;
 
 
 //
-public class PdeConstantCoeff<T> extends PdeSecondOrderParabolic {
+public abstract class PdeConstantCoeff<T extends Pde> extends PdeSecondOrderParabolic {
 	/* Real*/private double diffusion;
 	/* Real*/private double drift;
 	/* Real*/private double discount;
 
 	public PdeConstantCoeff(GeneralizedBlackScholesProcess process,
 	/*Time*/double t, /*Real*/double x) {
-	    //TODO: Doesn't reflect exactly what done in c++
-		//In C++, new PdeBSM is determined by T
-		PdeSecondOrderParabolic pde = new PdeBSM(process);
+	    Class<T> clazz = (Class<T>) TypeToken.getClazz(this.getClass());
+	    T pde = getInstance(clazz, process);
 		diffusion = pde.diffusion(t, x);
 		drift = pde.drift(t, x);
 		discount = pde.discount(t, x);
@@ -54,4 +54,12 @@ public class PdeConstantCoeff<T> extends PdeSecondOrderParabolic {
 	public double drift(double t, double x) {
 		return drift;
 	}
+	
+	 protected T getInstance(Class<T> clazz, GeneralizedBlackScholesProcess process) {
+	        try {
+	            return (T) clazz.getConstructor(GeneralizedBlackScholesProcess.class).newInstance(process);
+	        } catch (Exception e) {
+	            throw new RuntimeException(e);
+	        }
+	    }
 }

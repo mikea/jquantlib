@@ -23,13 +23,17 @@
 package org.jquantlib.methods.finitedifferences;
 
 import org.jquantlib.math.Array;
+import org.jquantlib.processes.GeneralizedBlackScholesProcess;
+import org.jquantlib.util.reflect.TypeToken;
 
-public class PdeOperator<T> extends TridiagonalOperator {
-
-	public PdeOperator(Array grid, T process,
+public abstract class PdeOperator<T extends PdeSecondOrderParabolic> extends TridiagonalOperator {
+   
+	public PdeOperator(Array grid, GeneralizedBlackScholesProcess process,
 			double residualTime) {
 		super(grid.size());
-		timeSetter = new GenericTimeSetter<T>(grid, process);
+		Class<T> clazz = (Class<T>)TypeToken.getClazz(this.getClass());
+		PdeSecondOrderParabolic pde = PdeTypeTokenUtil.getPdeInstance(clazz, process);
+		timeSetter = new GenericTimeSetter<PdeSecondOrderParabolic>(grid, pde){};
 		setTime(residualTime);
 	}
 

@@ -30,9 +30,9 @@ import org.jquantlib.util.reflect.DynamicProxyInvocationHandler;
 
 public class DynamicPdeSecondOrderParabolic extends PdeSecondOrderParabolic {
 
-	private PdeParabolic pde;
+	private Pde pde;
 
-	private DynamicPdeSecondOrderParabolic(PdeParabolic pde) {
+	private DynamicPdeSecondOrderParabolic(Pde pde) {
 		this.pde = pde;
 	}
 
@@ -52,9 +52,9 @@ public class DynamicPdeSecondOrderParabolic extends PdeSecondOrderParabolic {
 	}
 
 	public static <T> DynamicPdeSecondOrderParabolic getInstance(T process) {
-		PdeParabolic parabolic = (PdeParabolic) Proxy.newProxyInstance(
-				PdeParabolic.class.getClassLoader(),
-				new Class[] { PdeParabolic.class },
+		Pde parabolic = (Pde) Proxy.newProxyInstance(
+				Pde.class.getClassLoader(),
+				new Class[] { Pde.class },
 				new DynamicProxyInvocationHandler<T>(process));
 		return new DynamicPdeSecondOrderParabolic(parabolic);
 	}

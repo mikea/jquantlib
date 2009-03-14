@@ -28,28 +28,19 @@ import org.jquantlib.math.TransformedGrid;
  * @author Srinivas Hasti
  * 
  */
-public abstract class PdeSecondOrderParabolic {
-	public abstract/*Real*/double diffusion(/*Time*/double t, /*Real*/
-			double x);
+public abstract class PdeSecondOrderParabolic implements Pde {
+    
+    public void generateOperator(/* Time */double t, TransformedGrid tg, TridiagonalOperator L) {
+        for (int i = 1; i < tg.size() - 1; i++) {
+            double sigma = diffusion(t, tg.grid(i));
+            double nu = drift(t, tg.grid(i));
+            double r = discount(t, tg.grid(i));
+            double sigma2 = sigma * sigma;
 
-	public abstract/*Real*/double drift(/*Time*/double t, /*Real*/
-	double x);
-
-	public abstract/*Real*/double discount(/*Time*/double t, /*Real*/
-	double x);
-
-	public void generateOperator(/*Time*/double t, TransformedGrid tg,
-			TridiagonalOperator L) {
-		for (int i = 1; i < tg.size() - 1; i++) {
-			double sigma = diffusion(t, tg.grid(i));
-			double nu = drift(t, tg.grid(i));
-			double r = discount(t, tg.grid(i));
-			double sigma2 = sigma * sigma;
-
-			double pd = -(sigma2 / tg.dxm(i) - nu) / tg.dx(i);
-			double pu = -(sigma2 / tg.dxp(i) + nu) / tg.dx(i);
-			double pm = sigma2 / (tg.dxm(i) * tg.dxp(i)) + r;
-			L.setMidRow(i, pd, pm, pu);
-		}
-	}
+            double pd = -(sigma2 / tg.dxm(i) - nu) / tg.dx(i);
+            double pu = -(sigma2 / tg.dxp(i) + nu) / tg.dx(i);
+            double pm = sigma2 / (tg.dxm(i) * tg.dxp(i)) + r;
+            L.setMidRow(i, pd, pm, pu);
+        }
+    }
 }

@@ -204,7 +204,7 @@ public class OperatorTest {
 		logger.info("BSMOperator diagonals: \n");
 		outputDiagonals(op1);
 		
-		PdeOperator<PdeBSM> op2 = new PdeOperator<PdeBSM>(grid, new PdeBSM(stochProcess), residualTime);
+		PdeOperator<PdeBSM> op2 = new PdeOperator<PdeBSM>(grid, stochProcess, residualTime){};
 
 		logger.info("PdeOperator diagonals: \n");
 		outputDiagonals(op2);
