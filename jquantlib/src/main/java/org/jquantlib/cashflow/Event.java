@@ -55,7 +55,7 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 	/**
 	 * Keeps the date at which the event occurs
 	 */
-	protected abstract Date date() /* @ReadOnly */; 
+	public abstract Date date() /* @ReadOnly */; 
 
 	/**
 	 * Returns true if an event has already occurred before a date where the
