@@ -77,6 +77,7 @@
 
 package org.jquantlib.examples;
 
+
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
@@ -102,6 +103,7 @@ import org.jquantlib.pricingengines.vanilla.BjerksundStenslandApproximationEngin
 import org.jquantlib.pricingengines.vanilla.IntegralEngine;
 import org.jquantlib.pricingengines.vanilla.JuQuadraticApproximationEngine;
 import org.jquantlib.pricingengines.vanilla.finitedifferences.FDAmericanEngine;
+import org.jquantlib.pricingengines.vanilla.finitedifferences.FDEuropeanEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
@@ -158,14 +160,16 @@ public class EquityOptions {
 		// Define exercise for European Options
 		Exercise europeanExercise = new EuropeanExercise(maturity);
 
-		//    // Define exercise for Bermudan Options
-		//    int bermudanForwards = 4;
-		//    Date[] exerciseDates = new Date[bermudanForwards];
-		//    for (int i = 1; i <= bermudanForwards; i++) {
-		//        Date forward = settlementDate.add(new Period(3 * i, TimeUnit.Months));
-		//        exerciseDates[i] = forward;
-		//    }
-		//    Exercise bermudanExercise = new BermudanExercise(exerciseDates);
+		// Define exercise for Bermudan Options
+		/*
+		int bermudanForwards = 4;
+		Date[] exerciseDates = new Date[bermudanForwards];
+		for (int i = 1; i < bermudanForwards; i++) {
+		        Date forward = settlementDate.adjust(new Period(3 * i, TimeUnit.MONTHS));
+		        exerciseDates[i] = forward;
+		    }
+	    Exercise bermudanExercise = new BermudanExercise(exerciseDates);
+	    */
 
 		// Define exercise for American Options
 		Exercise americanExercise = new AmericanExercise(settlementDate, maturity);
@@ -183,7 +187,7 @@ public class EquityOptions {
 		VanillaOption europeanOption = new EuropeanOption(stochasticProcess, payoff, europeanExercise);
 		
         // Bermundan options (can be thought as a collection of European Options)
-		// VanillaOption bermudanOption = new BermudanOption(stochasticProcess, payoff, bermudanExercise);
+		//VanillaOption bermudanOption = new VanillaOption(stochasticProcess,payoff, bermudanExercise, null);
 		
 		// American Options
 		// FIXME: see http://bugs.jquantlib.org/view.php?id=202
@@ -228,12 +232,10 @@ public class EquityOptions {
         
         // Finite differences
         method = "Finite differences";
-        System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(new FDEuropeanEngine(timeSteps,timeSteps-1));
-//        //TODO: bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
-//        americanOption.setPricingEngine(new FDAmericanEngine(timeSteps,timeSteps-1));
-//        //TODO: System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() });
-//        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() });
+        europeanOption.setPricingEngine(new FDEuropeanEngine((BlackScholesMertonProcess)stochasticProcess, timeSteps, timeSteps-1, false));
+       //TODO: bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
+        americanOption.setPricingEngine(new FDAmericanEngine((BlackScholesMertonProcess)stochasticProcess,timeSteps,timeSteps-1, false));
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() });
         
         // Binomial method
         method = "Binomial Jarrow-Rudd";
