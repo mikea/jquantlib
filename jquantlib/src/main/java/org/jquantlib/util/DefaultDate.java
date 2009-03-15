@@ -316,9 +316,19 @@ public class DefaultDate extends BaseDate {
         return this;
     }
 
+    public final Date increment(final Period p) {
+        value = getAdvancedDateValue(this, p.length(), p.units());
+        return this;
+    }
+
     public final Date decrement(final int days) {
         value -= days;
         notifyObservers();
+        return this;
+    }
+
+    public final Date decrement(final Period p) {
+        value = getAdvancedDateValue(this, -1*p.length(), p.units());
         return this;
     }
 

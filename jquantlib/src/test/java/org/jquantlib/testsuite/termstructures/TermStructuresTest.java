@@ -57,6 +57,7 @@ import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,10 +67,11 @@ public class TermStructuresTest {
 
     private final static Logger logger = LoggerFactory.getLogger(TermStructuresTest.class);
 
-	private Calendar calendar;
-	private int settlementDays;
-	private YieldTermStructure termStructure;
-	private YieldTermStructure dummyTermStructure;
+    private final Settings settings;
+    private final Calendar calendar;
+	private final int settlementDays;
+	private final YieldTermStructure termStructure;
+	private final YieldTermStructure dummyTermStructure;
 
 
 	private static class Datum {
@@ -88,7 +90,14 @@ public class TermStructuresTest {
 	public TermStructuresTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
         logger.error("***** TEST FAILED :: waiting for implementation of Swaps and PiecewiseYieldTermStructure *****");
-		
+
+        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        this.calendar = Target.getCalendar();
+        this.settlementDays = 2;
+        this.termStructure = null;
+        this.dummyTermStructure = null;
+
+        
 //TODO: remove comments		
 //		calendar = org.jquantlib.time.calendars.Target.getCalendar();
 //        settlementDays = 2;
@@ -221,10 +230,8 @@ public class TermStructuresTest {
 	public void testImpliedObs() {
 	    logger.info("Testing observability of implied term structure...");
 	
-        final Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        
-	    final Date today = settings.getEvaluationDate();
-	    final Date newToday = today.increment(3 * Period.ONE_YEAR_FORWARD.length());
+        final Date today = calendar.advance(DateFactory.getFactory().getTodaysDate());
+	    final Date newToday = today.increment(Period.ONE_YEAR_FORWARD.times(3));
 	    final Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
 	    
 	    final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(); 

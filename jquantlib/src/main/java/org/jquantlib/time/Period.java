@@ -155,8 +155,6 @@ public class Period {
 	}
 
 	/**
-	 * Length of the period represented as number of days
-	 * 
 	 * @return length of the period
 	 */
 	public final int length() {
