@@ -228,21 +228,10 @@ public class OperatorTest {
 				Math.abs(derror.get(i)) > tolerance ||
 				Math.abs(uderror.get(i)) > tolerance) {
 			    
-		        //FIXME: FALSE POSITIVE :: This test case is disabled
-		        // This test is failing and preventing JQuantLib to build properly.
-
-		        logger.error("***** TEST FAILED *****"); // XXX remove this line
-		        
-//				fail("inconsistency between BSM operators:\n"  
-//				           + Integer.toString(i) +  " row:\n" 
-//						   + "expected:   "
-//						   + ref.lowerDiagonal().get(i) + ", "
-//						   + ref.diagonal().get(i) + ", "
-//						   + ref.upperDiagonal().get(i) + "\n"
-//						   + "calculated: "
-//						   + op1.lowerDiagonal().get(i) + ", "
-//						   + op1.diagonal().get(i) + ", "
-//						   + op1.upperDiagonal().get(i));
+				fail("inconsistency between BSM operators:\n"  
+				           + Integer.toString(i) +  " row:\n" 
+						   + "expected:   " + ref.lowerDiagonal().get(i) + ", " + ref.diagonal().get(i) + ", " + ref.upperDiagonal().get(i) + "\n"
+						   + "calculated: " + op1.lowerDiagonal().get(i) + ", " + op1.diagonal().get(i) + ", " + op1.upperDiagonal().get(i));
 			}
 		}
 		
@@ -258,21 +247,11 @@ public class OperatorTest {
 			if (Math.abs(lderror.get(i)) > tolerance ||
 				Math.abs(derror.get(i)) > tolerance ||
 				Math.abs(uderror.get(i)) > tolerance) {
-                //FIXME: FALSE POSITIVE :: This test case is disabled
-                // This test is failing and preventing JQuantLib to build properly.
-
-                logger.error("***** TEST FAILED *****"); // XXX remove this line
-                
-//				fail("inconsistency between BSM operators:\n"
-//						   + Integer.toString(i) + " row:\n"
-//						   + "expected:   "
-//						   + ref.lowerDiagonal().get(i) + ", "
-//						   + ref.diagonal().get(i) + ", "
-//						   + ref.upperDiagonal().get(i) + "\n"
-//						   + "calculated: "
-//						   + op2.lowerDiagonal().get(i) + ", "
-//						   + op2.diagonal().get(i) + ", "
-//						   + op2.upperDiagonal().get(i));
+			    
+				fail("inconsistency between BSM operators:\n"
+						   + Integer.toString(i) + " row:\n"
+						   + "expected:   " + ref.lowerDiagonal().get(i) + ", " + ref.diagonal().get(i) + ", " + ref.upperDiagonal().get(i) + "\n"
+						   + "calculated: " + op2.lowerDiagonal().get(i) + ", " + op2.diagonal().get(i) + ", " + op2.upperDiagonal().get(i));
 			}
 		}
     }
