@@ -21,6 +21,9 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.LogGrid;
+import org.jquantlib.math.TransformedGrid;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.time.Frequency;
@@ -48,5 +51,12 @@ public class PdeBSM extends PdeSecondOrderParabolic {
 	public double drift(double t, double x) {
 		return process.drift(t, x);
 	}
+
+    @Override
+    public TransformedGrid applyGridType(Array grid) {
+        return new LogGrid(grid);
+    }
+	
+	
 
 }

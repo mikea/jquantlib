@@ -26,7 +26,7 @@ import org.jquantlib.math.TransformedGrid;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator.TimeSetter;
 
 public class GenericTimeSetter<T extends PdeSecondOrderParabolic> implements TimeSetter {
-    private Array grid;
+    private TransformedGrid grid;
     private T pde;
    
     /**
@@ -44,14 +44,14 @@ public class GenericTimeSetter<T extends PdeSecondOrderParabolic> implements Tim
      * @param process
      */
     public GenericTimeSetter(Array grid, T pde) {
-        this.grid = grid;
+        this.grid = pde.applyGridType(grid);
         this.pde = pde;
     }
     
 
     @Override
     public void setTime(double t, TridiagonalOperator l) {
-        pde.generateOperator(t, new TransformedGrid(grid), l);
+        pde.generateOperator(t, grid, l);
     }
 
 }

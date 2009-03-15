@@ -22,6 +22,7 @@
 
 package org.jquantlib.methods.finitedifferences;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.TransformedGrid;
 
 /**
@@ -43,4 +44,7 @@ public abstract class PdeSecondOrderParabolic implements Pde {
             L.setMidRow(i, pd, pm, pu);
         }
     }
+    
+    public TransformedGrid applyGridType(Array a){ return null;}
+        
 }

@@ -34,6 +34,7 @@ import org.jquantlib.math.Array;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.jquantlib.methods.finitedifferences.BSMOperator;
+import org.jquantlib.methods.finitedifferences.BSMTermOperator;
 import org.jquantlib.methods.finitedifferences.DPlusMinus;
 import org.jquantlib.methods.finitedifferences.DZero;
 import org.jquantlib.methods.finitedifferences.PdeBSM;
@@ -128,6 +129,7 @@ public class OperatorTest {
 	}
 	
 	public void outputDiagonals(TridiagonalOperator op) {
+	    logger.info("\n");
         String str = "[";
         double[] data = op.lowerDiagonal().getData();
         for(int i = 0; i < data.length; i++) {
@@ -182,7 +184,7 @@ public class OperatorTest {
 
 		Date exercise = DateFactory.getFactory().getDate(today.getDayOfMonth(),
 				today.getMonth(), today.getYear());
-				        exercise.adjust(new Period(2,TimeUnit.YEARS));
+		exercise = exercise.adjust(new Period(2,TimeUnit.YEARS));
 
 
 		double residualTime = dc.yearFraction(today, exercise);
@@ -199,30 +201,29 @@ public class OperatorTest {
 										   new Handle<YieldTermStructure>(rTS),
 										   new Handle<BlackVolTermStructure>(volTS));
 		
-		BSMOperator op1 = new BSMOperator(grid, stochProcess, residualTime);
-		//typedef PdeOperator<PdeBSM> BSMTermOperator;
+		BSMOperator op1 = new BSMOperator(grid, stochProcess, residualTime);		
 		logger.info("BSMOperator diagonals: \n");
 		outputDiagonals(op1);
 		
-		PdeOperator<PdeBSM> op2 = new PdeOperator<PdeBSM>(grid, stochProcess, residualTime){};
-
+		BSMTermOperator op2 = new BSMTermOperator(grid, stochProcess, residualTime);
+	
 		logger.info("PdeOperator diagonals: \n");
 		outputDiagonals(op2);
 		
 		double tolerance = 1.0e-6;
-
-		Array lderror = new Array(ref.lowerDiagonal().getData().clone());
-        lderror.operatorSubtract(new Array(op1.lowerDiagonal().getData()));
-        Array derror = new Array(ref.diagonal().getData().clone());
-        derror.operatorSubtract(new Array(op1.diagonal().getData()));
-        Array uderror = new Array(ref.upperDiagonal().getData().clone());
-        uderror.operatorSubtract(new Array(op1.upperDiagonal().getData()));
+		
+		Array lderror = new Array(createCopy(ref.lowerDiagonal().getData()));
+        lderror.operatorSubtract(op1.lowerDiagonal());
+        Array derror = new Array(createCopy(ref.diagonal().getData()));
+        derror.operatorSubtract(op1.diagonal());
+        Array uderror = new Array(createCopy(ref.upperDiagonal().getData()));
+        uderror.operatorSubtract(op1.upperDiagonal());
 
 		
 		for (i=2; i<grid.size()-2; i++) {
-            logger.info("lderror(" + i + ") = "+ Math.abs(lderror.get(i)) +  " tolerance " + tolerance + " \n");
-            logger.info("derror(" + i + ") = "+ Math.abs(derror.get(i)) + " tolerance " + tolerance + " \n");
-            logger.info("uderror(" + i + ") = "+ Math.abs(uderror.get(i)) + " tolerance " + tolerance + " \n");
+		    logger.info("lderror(" + i + ") = "+ Math.abs(lderror.get(i)) +  " tolerance " + tolerance + " \n");
+		    logger.info("derror(" + i + ") = "+ Math.abs(derror.get(i)) + " tolerance " + tolerance + " \n");
+		    logger.info("uderror(" + i + ") = "+ Math.abs(uderror.get(i)) + " tolerance " + tolerance + " \n");
 		    
 			if (Math.abs(lderror.get(i)) > tolerance ||
 				Math.abs(derror.get(i)) > tolerance ||
@@ -257,6 +258,12 @@ public class OperatorTest {
     }
 
     
+    private double[] createCopy(double[] ref) {
+        double [] copy = new double[ref.length];
+        System.arraycopy(ref, 0, copy, 0, ref.length);
+        return copy;
+    }
+
     private double norm(Array arr, double h) {
     	//copy arr into f2, and square each value
     	Array f2 = new Array(arr.size()); 
