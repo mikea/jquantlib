@@ -24,12 +24,13 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.GaussKronrodPatterson;
 import org.jquantlib.math.integrals.Integrator;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Dominik Holenstein
@@ -68,29 +69,20 @@ public class GaussKonrodPattersonIntegratorTest {
 	@Test
 	public void testExp() {
 		UnaryFunctionDouble exp = new UnaryFunctionDouble() {
-
 			public double evaluate(double x) {
-				
 				return Math.exp(x);
 			}
-			
 		};
 		
-		//FIXME: FALSE POSITIVE :: This test case is disabled
-		// This test is failing and preventing JQuantLib to build properly.
-		//
-		// Symptom: Seems we have a mix of classes from QuantLib-0.8.1 and QuantLib-0.9.0
-		// Action: Please make sure our classes are based on QuantLib-0.8.1
-		//
-
-		logger.error("***** TEST FAILED *****"); // XXX remove this line
-
-//		Integrator quad = new GaussKronrodPatterson(0,0);
-//		double realised = quad.evaluate(exp, 0, 6);
-//		double expected = Math.exp(6) - 1.0;
-//		double tolerance = 1.0e-10;
-//		
-//		if (Math.abs(realised-expected)>tolerance)
-//			fail("Expected: " + expected + " Realised: " + realised);
+		Integrator quad = new GaussKronrodPatterson(0, 1.1*Constants.QL_EPSILON);
+		
+		double realised = quad.evaluate(exp, 0, 6);
+		double expected = Math.exp(6) - 1.0;
+		double tolerance = 1.0e-10;
+		
+		if (Math.abs(realised-expected)>tolerance) {
+			fail("Expected: " + expected + " Realised: " + realised);
+		}
 	}
+
 }
