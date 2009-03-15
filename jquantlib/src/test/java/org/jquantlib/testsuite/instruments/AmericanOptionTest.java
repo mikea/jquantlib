@@ -160,11 +160,7 @@ public class AmericanOptionTest {
 
 	@Test
 	public void testBaroneAdesiWhaley() {
-		logger
-				.info("Testing Barone-Adesi and Whaley approximation for American options...");
-
-		
-		
+		logger.info("Testing Barone-Adesi and Whaley approximation for American options...");
 		
 		/**
          * The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag 24

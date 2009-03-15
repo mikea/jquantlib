@@ -668,9 +668,7 @@ public class EuropeanOptionTest {
 //	
     @Test
     public void testGreeks() {
-
         logger.info("Testing analytic European option greeks...");
-
 
         final Map<String,Double> tolerance = new HashMap<String, Double>();
         tolerance.put("delta",  1.0e-5);
