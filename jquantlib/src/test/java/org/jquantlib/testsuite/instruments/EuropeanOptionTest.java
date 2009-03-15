@@ -740,6 +740,7 @@ public class EuropeanOptionTest {
                           double q = qRates[m];
                           double r = rRates[n];
                           double v = vols[p];
+                          //something wrong here for vanilla payoff?
                           spot.getLink().setValue(u);
                           qRate.getLink().setValue(q);
                           rRate.getLink().setValue(r);
