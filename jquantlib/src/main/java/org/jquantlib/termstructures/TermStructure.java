@@ -121,7 +121,7 @@ public abstract class TermStructure implements Observer, Observable {
 	 * 
 	 * @see #calendar
 	 */
-	private Calendar calendar;
+	private final Calendar calendar;
 	
 	/**
 	 * Beware that this variable must always be accessed via {@link #dayCounter()} method.
@@ -159,7 +159,7 @@ public abstract class TermStructure implements Observer, Observable {
 	 * heavily multi-threaded environments. In this specific case this class
 	 * observes date changes in order to update this variable.
 	 */
-	private Date today;
+	private final Date today;
 
 	
 	//
@@ -184,8 +184,10 @@ public abstract class TermStructure implements Observer, Observable {
 	 * 
      * @see TermStructure documentation for more details about constructors.
 	 */
+	//TODO : What's the calendar in this case?
 	public TermStructure(final DayCounter dc) {
 		if (dc==null) throw new NullPointerException(); // TODO: message
+		this.calendar = null;
 		this.referenceDate = null;
 		this.settlementDays = 0;
 		this.dayCounter = dc;

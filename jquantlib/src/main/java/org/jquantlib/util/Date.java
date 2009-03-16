@@ -108,6 +108,34 @@ public interface Date extends Observable, Comparable<Date> {
     public Date decrement(final Period period);
 
     /**
+     * @param days
+     * @return a date which represents <code>this</code> date plus a given number of days.
+     */
+    public Date plus(final int days);
+
+    /**
+     * @param days
+     * @return a date which represents <code>this</code> date minus a given number of days.
+     */
+    public Date minus(final int days);
+
+    /**
+     * @param period
+     * @return a date which represents <code>this</code> date plus a given Period.
+     * 
+     * @see Period
+     */
+    public Date plus(final Period period);
+
+    /**
+     * @param period
+     * @return a date which represents <code>this</code> date minus a given Period.
+     * 
+     * @see Period
+     */
+    public Date minus(final Period period);
+
+    /**
      * Move the date by a given <code>Period</code>
      * 
      * @param p
@@ -389,6 +417,26 @@ public interface Date extends Observable, Comparable<Date> {
 
         @Override
         public Date decrement(Period period) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date plus(int days) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date plus(Period period) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date minus(int days) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Date minus(Period period) {
             throw new UnsupportedOperationException();
         }
 

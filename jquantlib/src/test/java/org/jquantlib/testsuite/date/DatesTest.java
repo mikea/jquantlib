@@ -127,7 +127,7 @@ public class DatesTest {
         Weekday wdold = DateFactory.getFactory().getMinDate().getWeekday();
 
         Date minDate = DateFactory.getFactory().getMinDate().increment(1);
-        Date maxDate = DateFactory.getFactory().getMaxDate();
+        Date maxDate = DateFactory.getFactory().getMaxDate().decrement(1);
 
         StopClock clock = new StopClock();
         clock.startClock();

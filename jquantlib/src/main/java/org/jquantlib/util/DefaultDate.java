@@ -49,7 +49,6 @@ import java.util.Locale;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -257,7 +256,8 @@ public class DefaultDate extends BaseDate {
             throw new IllegalArgumentException("month " + m + " outside January-December range [1,12]");
 
         final boolean leap = isLeap(y);
-        final int len = getMonthLength(m, leap), offset = getMonthOffset(m, leap);
+        final int len = getMonthLength(m, leap);
+        final int offset = getMonthOffset(m, leap);
         if (!(d > 0 && d <= len))
             throw new ArithmeticException("day outside month (" + m + ") day-range [1," + len + "]");
         final int result = d + offset + getYearOffset(y);
@@ -300,41 +300,59 @@ public class DefaultDate extends BaseDate {
 
     public final Date increment() {
         value++;
-        notifyObservers();
+        checkSerialNumber();
         return this;
     }
 
     public final Date decrement() {
         value--;
-        notifyObservers();
+        checkSerialNumber();
         return this;
     }
 
     public final Date increment(final int days) {
         value += days;
-        notifyObservers();
+        checkSerialNumber();
         return this;
     }
 
     public final Date increment(final Period p) {
         value = getAdvancedDateValue(this, p.length(), p.units());
+        checkSerialNumber();
         return this;
     }
 
     public final Date decrement(final int days) {
         value -= days;
-        notifyObservers();
+        checkSerialNumber();
         return this;
     }
 
     public final Date decrement(final Period p) {
         value = getAdvancedDateValue(this, -1*p.length(), p.units());
+        checkSerialNumber();
         return this;
     }
 
+    public Date plus(final int days) {
+        return new DefaultDate(this.value + days);
+    }
+
+    public Date minus(final int days) {
+        return new DefaultDate(this.value - days);
+    }
+
+    public Date plus(final Period p) {
+        return new DefaultDate( getAdvancedDateValue(this, p.length(), p.units()) );
+    }
+
+    public Date minus(final Period p) {
+        return new DefaultDate( getAdvancedDateValue(this, -1 * p.length(), p.units()) );
+    }
+    
     public final Date adjust(final Period p) {
         value = getAdvancedDateValue(this, p.length(), p.units());
-        notifyObservers();
+        checkSerialNumber();
         return this;
     }
 
@@ -584,11 +602,9 @@ public class DefaultDate extends BaseDate {
         }
     }
 
-    private final void checkSerialNumber(final int value) {
+    private final void checkSerialNumber() {
         if (!(value >= MinimumSerialNumber && value <= MaximumSerialNumber))
-            throw new IllegalArgumentException("Date's serial number (" + value + ") outside allowed range ["
-                    + MinimumSerialNumber + "-" + MaximumSerialNumber + "], i.e. [" + getMinDate() + "-" + getMaxDate()
-                    + "]");
+            throw new IllegalArgumentException("Date's serial number is outside allowed range");
     }
 
     private final int getAdvancedDateValue(final DefaultDate date, final int n, final TimeUnit units) {
