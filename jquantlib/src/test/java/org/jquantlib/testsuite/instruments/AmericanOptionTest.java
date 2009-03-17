@@ -90,26 +90,25 @@ import org.slf4j.LoggerFactory;
 
 public class AmericanOptionTest {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(AmericanOptionTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(AmericanOptionTest.class);
 
-	public AmericanOptionTest() {
-		logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-	}
+    public AmericanOptionTest() {
+        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+    }
 
-	@Test
-	public void testBjerksundStenslandValues() {
+    @Test
+    public void testBjerksundStenslandValues() {
 
-		logger.info("Testing Bjerksund and Stensland approximation for American options...");
+        logger.info("Testing Bjerksund and Stensland approximation for American options...");
 
-		// type, strike, spot, q, r, t, vol, value, tol
-		final AmericanOptionData values[] = {
-    		// From "Option pricing formulas", Haug, McGraw-Hill 1998, pag 27
-            new AmericanOptionData(Option.Type.CALL, 40.00, 42.00, 0.08, 0.04, 0.75, 0.35, 5.2704),
-            // From "Option pricing formulas", Haug, McGraw-Hill 1998, VBA
-            new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
+        // type, strike, spot, q, r, t, vol, value, tol
+        final AmericanOptionData values[] = {
+        // From "Option pricing formulas", Haug, McGraw-Hill 1998, pag 27
+                new AmericanOptionData(Option.Type.CALL, 40.00, 42.00, 0.08, 0.04, 0.75, 0.35, 5.2704),
+                // From "Option pricing formulas", Haug, McGraw-Hill 1998, VBA
+                new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
 
-		final Date today = DateFactory.getFactory().getTodaysDate();
+        final Date today = DateFactory.getFactory().getTodaysDate();
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -120,94 +119,89 @@ public class AmericanOptionTest {
         final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
         final PricingEngine engine = new BjerksundStenslandApproximationEngine();
 
-		double /* @Real */tolerance = 1.0e-4;
+        double /* @Real */tolerance = 1.0e-4;
 
-		for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < values.length; i++) {
 
-			final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+            final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 
             final int daysToExpiry = (int) (values[i].t * 360 + 0.5);
-            final Date exDate = DateFactory.getFactory().getDate(
-                    today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(daysToExpiry);
+            final Date exDate = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear())
+                    .increment(daysToExpiry);
 
-			final Exercise exercise = new AmericanExercise(today, exDate);
+            final Exercise exercise = new AmericanExercise(today, exDate);
 
-			spot.setValue(values[i].s);
-			qRate.setValue(values[i].q);
-			rRate.setValue(values[i].r);
-			vol.setValue(values[i].v);
+            spot.setValue(values[i].s);
+            qRate.setValue(values[i].q);
+            rRate.setValue(values[i].r);
+            vol.setValue(values[i].v);
 
-			final StochasticProcess stochProcess = new BlackScholesMertonProcess(
-					new Handle<Quote>(spot),
-					new Handle<YieldTermStructure>(qTS),
-					new Handle<YieldTermStructure>(rTS),
-					new Handle<BlackVolTermStructure>(volTS));
+            final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
+                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
+                            volTS));
 
-			final VanillaOption option = new VanillaOption(stochProcess,
-					payoff, exercise, engine);
+            final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
-			final double /* @Real */calculated = option.getNPV();
-			final double /* @Real */error = Math.abs(calculated
-					- values[i].result);
-			if (error > tolerance) {
-				REPORT_FAILURE("value", payoff, exercise, values[i].s,
-						values[i].q, values[i].r, today, values[i].v,
-						values[i].result, calculated, error, tolerance);
-			}
-		}
+            final double /* @Real */calculated = option.getNPV();
+            final double /* @Real */error = Math.abs(calculated - values[i].result);
+            if (error > tolerance) {
+                REPORT_FAILURE("value", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                        values[i].result, calculated, error, tolerance);
+            }
+        }
 
-	}
+    }
 
-	@Test
-	public void testBaroneAdesiWhaley() {
-		logger.info("Testing Barone-Adesi and Whaley approximation for American options...");
-		
-		/**
+    @Test
+    public void testBaroneAdesiWhaley() {
+        logger.info("Testing Barone-Adesi and Whaley approximation for American options...");
+
+        /**
          * The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag 24
          * <p>
          * The following values were replicated only up to the second digit by the VB code provided by Haug, which was used as base
          * for the C++ implementation
          */
-		final AmericanOptionData values[] = {
-		        // type, strike, spot, q, r, t, vol, value
-				new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  0.0206),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8771),
+        final AmericanOptionData values[] = {
+                // type, strike, spot, q, r, t, vol, value
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.10, 0.15, 0.0206),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15, 1.8771),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 10.0089),
-                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.25,  0.3159),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1280),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.10, 0.25, 0.3159),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25, 3.1280),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3919),
-                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.35,  0.9495),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3777),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.10, 0.35, 0.9495),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35, 4.3777),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1679),
-                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.15,  0.8208),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0842),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.50, 0.15, 0.8208),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15, 4.0842),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.8087),
-                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.25,  2.7437),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.8015),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.50, 0.25, 2.7437),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25, 6.8015),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 13.0170),
-                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.35,  5.0063),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.5106),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.50, 0.35, 5.0063),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.5106),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.5689),
-                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.15, 10.0000),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8770),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  0.0410),
-                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.25, 10.2533),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1277),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.25,  0.4562),
-                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.35, 10.8787),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3777),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.35,  1.2402),
-                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.15, 10.5595),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0842),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.15,  1.0822),
-                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.25, 12.4419),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.8014),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.25,  3.3226),
-                new AmericanOptionData(Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.35, 14.6945),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.5104),
-                new AmericanOptionData(Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.35,  5.8823) };
+                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.10, 0.15, 10.0000),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15, 1.8770),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 0.0410),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.10, 0.25, 10.2533),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25, 3.1277),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 0.4562),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.10, 0.35, 10.8787),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35, 4.3777),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 1.2402),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.50, 0.15, 10.5595),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15, 4.0842),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 1.0822),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.50, 0.25, 12.4419),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25, 6.8014),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 3.3226),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.50, 0.35, 14.6945),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.5104),
+                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 5.8823) };
 
-		final Date today = DateFactory.getFactory().getTodaysDate();
+        final Date today = DateFactory.getFactory().getTodaysDate();
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -221,9 +215,9 @@ public class AmericanOptionTest {
 
         final double /* @Real */tolerance = 3.0e-3;
 
-		for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < values.length; i++) {
 
-			final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+            final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 
             final Date exDate = today.getDateAfter(timeToDays(values[i].t));
 
@@ -234,34 +228,30 @@ public class AmericanOptionTest {
             rRate.setValue(values[i].r);
             vol.setValue(values[i].v);
 
-			final StochasticProcess stochProcess = new BlackScholesMertonProcess(
-					new Handle<Quote>(spot),
-					new Handle<YieldTermStructure>(qTS),
-					new Handle<YieldTermStructure>(rTS),
-					new Handle<BlackVolTermStructure>(volTS));
+            final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
+                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
+                            volTS));
 
-			final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
+            final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
             final double /* @Real */calculated = option.getNPV();
             final double /* @Real */error = Math.abs(calculated - values[i].result);
-			if (error > tolerance) {
-				REPORT_FAILURE("value", payoff, exercise, values[i].s,
-						values[i].q, values[i].r, today, values[i].v,
-						values[i].result, calculated, error, tolerance);
-			}
-		}
-	}
+            if (error > tolerance) {
+                REPORT_FAILURE("value", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                        values[i].result, calculated, error, tolerance);
+            }
+        }
+    }
 
-	@Test
-	public void testJu() {
+    @Test
+    public void testJu() {
 
-		/*
-		 * The data below are from An Approximate Formula for Pricing American
-		 * Options Journal of Derivatives Winter 1999 Ju, N.
-		 */
-		final AmericanOptionData juValues[] = {
-				// type, strike, spot, q, r, t, vol, value, tol
-				// These values are from Exhibit 3 - Short dated Put Options
+        /*
+         * The data below are from An Approximate Formula for Pricing American Options Journal of Derivatives Winter 1999 Ju, N.
+         */
+        final AmericanOptionData juValues[] = {
+                // type, strike, spot, q, r, t, vol, value, tol
+                // These values are from Exhibit 3 - Short dated Put Options
                 new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
                 new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
                 new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
@@ -298,11 +288,11 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
                 new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
 
-				// Type in Exhibits 4 and 5 if you have some spare time ;-)
+                // Type in Exhibits 4 and 5 if you have some spare time ;-)
 
-				// type, strike, spot, q, r, t, vol, value, tol
-				// These values are from Exhibit 6 - Long dated Call Options
-				// with dividends
+                // type, strike, spot, q, r, t, vol, value, tol
+                // These values are from Exhibit 6 - Long dated Call Options
+                // with dividends
                 new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
@@ -315,22 +305,25 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.4, 26.440),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
 
-				// FIXME case of zero interest rates not handled
-				// new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.07, 0.0, 3.0, 0.3,  5.552 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.07, 0.0, 3.0, 0.3,  8.868 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.0, 3.0, 0.3, 13.158 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.0, 3.0, 0.3, 18.458 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.0, 3.0, 0.3, 24.786 ),
+                // FIXME case of zero interest rates not handled
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.0, 3.0, 0.3, 5.552 ),
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.0, 3.0, 0.3, 8.868 ),
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.0, 3.0, 0.3, 13.158 ),
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.0, 3.0, 0.3, 18.458 ),
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.0, 3.0, 0.3, 24.786 ),
 
-				new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.03, 0.07, 3.0, 0.3, 23.402),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
-		logger.info("Testing Ju approximation for American options...");
+        logger.info("Testing Ju approximation for American options...");
 
-		final Date today = DateFactory.getFactory().getTodaysDate();
+        final Date today = DateFactory.getFactory().getTodaysDate();
+        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        settings.setEvaluationDate(today);
+
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -340,13 +333,13 @@ public class AmericanOptionTest {
         final SimpleQuote vol = new SimpleQuote(0.0);
         final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
-		final PricingEngine engine = new JuQuadraticApproximationEngine();
+        final PricingEngine engine = new JuQuadraticApproximationEngine();
 
-		final double tolerance = 1.0e-3;
+        final double tolerance = 1.0e-3;
 
-		for (int i = 0; i < juValues.length; i++) {
+        for (int i = 0; i < juValues.length; i++) {
 
-			final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValues[i].type, juValues[i].strike);
+            final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValues[i].type, juValues[i].strike);
 
             final Date exDate = today.getDateAfter(timeToDays(juValues[i].t));
 
@@ -357,36 +350,32 @@ public class AmericanOptionTest {
             rRate.setValue(juValues[i].r);
             vol.setValue(juValues[i].v);
 
-			final StochasticProcess stochProcess = new BlackScholesMertonProcess(
-					new Handle<Quote>(spot),
-					new Handle<YieldTermStructure>(qTS),
-					new Handle<YieldTermStructure>(rTS),
-					new Handle<BlackVolTermStructure>(volTS));
+            final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
+                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
+                            volTS));
 
-			final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
+            final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
             final double calculated = option.getNPV();
 
             final double error = Math.abs(calculated - juValues[i].result);
-			if (error > tolerance) {
-				REPORT_FAILURE("value", payoff, exercise, juValues[i].s,
-						juValues[i].q, juValues[i].r, today, juValues[i].v,
-						juValues[i].result, calculated, error, tolerance);
-			}
-		}
-	}
+            if (error > tolerance) {
+                REPORT_FAILURE("value", payoff, exercise, juValues[i].s, juValues[i].q, juValues[i].r, today, juValues[i].v,
+                        juValues[i].result, calculated, error, tolerance);
+            }
+        }
+    }
 
-	@Test
-	public void testFdValues() {
-		logger.info("Testing finite-difference engine for American options...");
+    @Test
+    public void testFdValues() {
+        logger.info("Testing finite-difference engine for American options...");
 
-		/**
-		 * The data below are from An Approximate Formula for Pricing American
-		 * Options Journal of Derivatives Winter 1999 Ju, N.
-		 */
-		final AmericanOptionData juValues[] = {
-				// type, strike, spot, q, r, t, vol, value, tol
-				// These values are from Exhibit 3 - Short dated Put Options
+        /**
+         * The data below are from An Approximate Formula for Pricing American Options Journal of Derivatives Winter 1999 Ju, N.
+         */
+        final AmericanOptionData juValues[] = {
+                // type, strike, spot, q, r, t, vol, value, tol
+                // These values are from Exhibit 3 - Short dated Put Options
                 new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
                 new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
                 new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
@@ -423,223 +412,105 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
                 new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
 
-				// Type in Exhibits 4 and 5 if you have some spare time ;-)
+                // Type in Exhibits 4 and 5 if you have some spare time ;-)
 
-				// type, strike, spot, q, r, t, vol, value, tol
-				// These values are from Exhibit 6 - Long dated Call Options
-				// with dividends
-                new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.07, 0.03, 3.0, 0.2,  2.605),
-                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.07, 0.03, 3.0, 0.2,  5.182),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2,  9.065),
+                // type, strike, spot, q, r, t, vol, value, tol
+                // These values are from Exhibit 6 - Long dated Call Options
+                // with dividends
+                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.2, 14.430),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.2, 21.398),
 
-                new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
-                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.4, 20.760),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.4, 26.440),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
 
-				// FIXME case of zero interest rates not handled
-				// new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.07, 0.0, 3.0, 0.3,  5.552 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.07, 0.0, 3.0, 0.3,  8.868 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.0, 3.0, 0.3, 13.158 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.0, 3.0, 0.3, 18.458 ),
-				// new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.0, 3.0, 0.3, 24.786 ),
+                // FIXME case of zero interest rates not handled
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.0, 3.0, 0.3, 5.552 ),
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.0, 3.0, 0.3, 8.868 ),
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.0, 3.0, 0.3, 13.158 ),
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.0, 3.0, 0.3, 18.458 ),
+                // new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.0, 3.0, 0.3, 24.786 ),
 
-				new AmericanOptionData(Option.Type.CALL, 100.00,  80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
-                new AmericanOptionData(Option.Type.CALL, 100.00,  90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
+                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.03, 0.07, 3.0, 0.3, 23.402),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
-		
+        Date today = DateFactory.getFactory().getTodaysDate();
+        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        settings.setEvaluationDate(today);
 
-		double tolerance = 8.0e-2;
+        double tolerance = 8.0e-2;
 
-		for (int i = 0; i < juValues.length; i++) {
+        for (int i = 0; i < juValues.length; i++) {
 
-			Date today = DateFactory.getFactory().getTodaysDate();
-			DayCounter dc = Actual360.getDayCounter();
+            DayCounter dc = Actual360.getDayCounter();
 
-			final SimpleQuote spot = new SimpleQuote(0.0);
+            final SimpleQuote spot = new SimpleQuote(0.0);
             final SimpleQuote qRate = new SimpleQuote(0.0);
             final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
             final SimpleQuote rRate = new SimpleQuote(0.0);
             final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
             final SimpleQuote vol = new SimpleQuote(0.0);
             final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
-			
-			final StrikedTypePayoff payoff = new PlainVanillaPayoff(
-					juValues[i].type, juValues[i].strike);
 
-			final Date exDate = today.getDateAfter(timeToDays(juValues[i].t));
+            final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValues[i].type, juValues[i].strike);
 
-			final Exercise exercise = new AmericanExercise(today, exDate);
+            final Date exDate = today.getDateAfter(timeToDays(juValues[i].t));
 
-			spot.setValue(juValues[i].s);
-			qRate.setValue(juValues[i].q);
-			rRate.setValue(juValues[i].r);
-			vol.setValue(juValues[i].v);
+            final Exercise exercise = new AmericanExercise(today, exDate);
 
-			final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
-					new Handle<Quote>(spot),
-					new Handle<YieldTermStructure>(qTS),
-					new Handle<YieldTermStructure>(rTS),
-					new Handle<BlackVolTermStructure>(volTS));
+            spot.setValue(juValues[i].s);
+            qRate.setValue(juValues[i].q);
+            rRate.setValue(juValues[i].r);
+            vol.setValue(juValues[i].v);
 
-			final PricingEngine engine = new FDAmericanEngine(stochProcess,
-					100, 100);
-			final VanillaOption option = new VanillaOption(stochProcess,
-					payoff, exercise, engine);
+            final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
+                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
+                            volTS));
 
-			final double calculated = option.getNPV();
+            final PricingEngine engine = new FDAmericanEngine(stochProcess, 100, 100);
+            final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
-			final double error = Math.abs(calculated - juValues[i].result);
-			if (error > tolerance) {
-				REPORT_FAILURE("value", payoff, exercise, juValues[i].s,
-						juValues[i].q, juValues[i].r, today, juValues[i].v,
-						juValues[i].result, calculated, error, tolerance);
-			}
+            final double calculated = option.getNPV();
 
-		}
-	}
+            final double error = Math.abs(calculated - juValues[i].result);
+            if (error > tolerance) {
+                REPORT_FAILURE("value", payoff, exercise, juValues[i].s, juValues[i].q, juValues[i].r, today, juValues[i].v,
+                        juValues[i].result, calculated, error, tolerance);
+            }
 
-	@Test
-	public void testFdAmericanGreeks() {
-		// SavedSettings backup;
+        }
+    }
 
-		logger.info("Testing Greeks (delta, gamma, theta for American options...");
+    @Test
+    public void testFdAmericanGreeks() {
+        // SavedSettings backup;
 
-		Map<String, Double> calculated = new HashMap<String, Double>();
-		Map<String, Double> expected = new HashMap<String, Double>();
-		Map<String, Double> tolerance = new HashMap<String, Double>();
-		tolerance.put("delta", 7.0e-4);
-		tolerance.put("gamma", 2.0e-4);
-		tolerance.put("theta", 1.0e-4);
+        logger.info("Testing Greeks (delta, gamma, theta for American options...");
 
-		Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
-		double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
-		double underlyings[] = { 100.0 };
-		double qRates[] = { 0.04, 0.05, 0.06 };
-		double rRates[] = { 0.01, 0.05, 0.15 };
-		int years[] = { 1, 2 };
-		double vols[] = { 0.11, 0.50, 1.20 };
+        Map<String, Double> calculated = new HashMap<String, Double>();
+        Map<String, Double> expected = new HashMap<String, Double>();
+        Map<String, Double> tolerance = new HashMap<String, Double>();
+        tolerance.put("delta", 7.0e-4);
+        tolerance.put("gamma", 2.0e-4);
+        tolerance.put("theta", 1.0e-4);
 
-		Date today = DateFactory.getFactory().getTodaysDate();
-        DayCounter dc = Actual360.getDayCounter();
-        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        settings.setEvaluationDate(today);
+        Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
+        double underlyings[] = { 100.0 };
+        double qRates[] = { 0.04, 0.05, 0.06 };
+        double rRates[] = { 0.01, 0.05, 0.15 };
+        int years[] = { 1, 2 };
+        double vols[] = { 0.11, 0.50, 1.20 };
 
-        final SimpleQuote spot = new SimpleQuote(0.0);
-        final SimpleQuote qRate = new SimpleQuote(0.0);
-        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
-        final SimpleQuote rRate = new SimpleQuote(0.0);
-        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
-        final SimpleQuote vol = new SimpleQuote(0.0);
-        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
-
-		StrikedTypePayoff payoff = null;
-
-		for (int i = 0; i < types.length; i++) {
-			for (int j = 0; j < strikes.length; j++) {
-				for (int k = 0; k < years.length; k++) {
-
-					Date exDate = today.getDateAfter(new Period(years[k],
-							TimeUnit.YEARS));
-
-					Exercise exercise = new AmericanExercise(today, exDate);
-					payoff = new PlainVanillaPayoff(types[i], strikes[j]);
-
-					final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
-							new Handle<Quote>(spot),
-							new Handle<YieldTermStructure>(qTS),
-							new Handle<YieldTermStructure>(rTS),
-							new Handle<BlackVolTermStructure>(volTS));
-
-					final PricingEngine engine = new FDAmericanEngine(
-							stochProcess);
-					final VanillaOption option = new VanillaOption(
-							stochProcess, payoff, exercise, engine);
-
-					for (int l = 0; l < underlyings.length; l++) {
-						for (int m = 0; m < qRates.length; m++) {
-							for (int n = 0; n < rRates.length; n++) {
-								for (int p = 0; p < vols.length; p++) {
-									double u = underlyings[l];
-									double q = qRates[m], r = rRates[n];
-									double v = vols[p];
-									spot.setValue(u);
-									qRate.setValue(q);
-									rRate.setValue(r);
-									vol.setValue(v);
-									// FLOATING_POINT_EXCEPTION
-									double value = option.getNPV();
-									calculated.put("delta", option.delta());
-									calculated.put("gamma", option.gamma());
-									calculated.put("theta", option.theta());
-
-									if (value > spot.evaluate() * 1.0e-5) {
-										// perturb spot and get delta and gamma
-                                        double du = u * 1.0e-4;
-                                        spot.setValue(u + du);
-                                        double value_p = option.getNPV(), delta_p = option.delta();
-                                        spot.setValue(u - du);
-                                        double value_m = option.getNPV(), delta_m = option.delta();
-                                        spot.setValue(u);
-                                        expected.put("delta", (value_p - value_m) / (2 * du));
-                                        expected.put("gamma", (delta_p - delta_m) / (2 * du));
-
-                                        // perturb date and get theta
-                                        final Date yesterday = today.getPreviousDay();
-                                        final Date tomorrow  = today.getNextDay();
-                                        double dT = dc.yearFraction(yesterday, tomorrow);
-                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
-                                        value_m = option.getNPV();
-                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
-                                        value_p = option.getNPV();
-                                        expected.put("theta", (value_p - value_m)/dT);
-
-										// compare
-										for (Entry<String, Double> greek : calculated.entrySet()) {
-											double expct = expected.get(greek.getKey());
-                                            double calcl = calculated.get(greek.getKey());
-                                            double tol = tolerance.get(greek.getKey());
-                                            double error = Utilities.relativeError(expct, calcl, u);
-											if (error > tol) {
-												REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	@Test
-	public void testFdShoutGreeks() {
-		logger.info("Testing Greeks (delta, gamma, theta for American options...");
-
-		Map<String, Double> calculated = new HashMap<String, Double>();
-		Map<String, Double> expected = new HashMap<String, Double>();
-		Map<String, Double> tolerance = new HashMap<String, Double>();
-		tolerance.put("delta", 7.0e-4);
-		tolerance.put("gamma", 2.0e-4);
-		tolerance.put("theta", 1.0e-4);
-
-		Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
-		double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
-		double underlyings[] = { 100.0 };
-		double qRates[] = { 0.04, 0.05, 0.06 };
-		double rRates[] = { 0.01, 0.05, 0.15 };
-		int years[] = { 1, 2 };
-		double vols[] = { 0.11, 0.50, 1.20 };
-
-		Date today = DateFactory.getFactory().getTodaysDate();
+        Date today = DateFactory.getFactory().getTodaysDate();
         DayCounter dc = Actual360.getDayCounter();
         Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         settings.setEvaluationDate(today);
@@ -654,45 +525,41 @@ public class AmericanOptionTest {
 
         StrikedTypePayoff payoff = null;
 
-		for (int i = 0; i < types.length; i++) {
-			for (int j = 0; j < strikes.length; j++) {
-				for (int k = 0; k < years.length; k++) {
+        for (int i = 0; i < types.length; i++) {
+            for (int j = 0; j < strikes.length; j++) {
+                for (int k = 0; k < years.length; k++) {
 
-					Date exDate = today.getDateAfter(new Period(years[k],
-							TimeUnit.YEARS));
+                    Date exDate = today.getDateAfter(new Period(years[k], TimeUnit.YEARS));
 
-					Exercise exercise = new AmericanExercise(today, exDate);
-					payoff = new PlainVanillaPayoff(types[i], strikes[j]);
+                    Exercise exercise = new AmericanExercise(today, exDate);
+                    payoff = new PlainVanillaPayoff(types[i], strikes[j]);
 
-					final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
-							new Handle<Quote>(spot),
-							new Handle<YieldTermStructure>(qTS),
-							new Handle<YieldTermStructure>(rTS),
-							new Handle<BlackVolTermStructure>(volTS));
+                    final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
+                            new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS),
+                            new Handle<BlackVolTermStructure>(volTS));
 
-					final PricingEngine engine = new FDShoutEngine(stochProcess);
-					final VanillaOption option = new VanillaOption(
-							stochProcess, payoff, exercise, engine);
+                    final PricingEngine engine = new FDAmericanEngine(stochProcess);
+                    final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
-					for (int l = 0; l < underlyings.length; l++) {
-						for (int m = 0; m < qRates.length; m++) {
-							for (int n = 0; n < rRates.length; n++) {
-								for (int p = 0; p < vols.length; p++) {
-									double u = underlyings[l];
-									double q = qRates[m], r = rRates[n];
-									double v = vols[p];
-									spot.setValue(u);
-									qRate.setValue(q);
-									rRate.setValue(r);
-									vol.setValue(v);
-									// FLOATING_POINT_EXCEPTION
-									double value = option.getNPV();
-									calculated.put("delta", option.delta());
-									calculated.put("gamma", option.gamma());
-									calculated.put("theta", option.theta());
+                    for (int l = 0; l < underlyings.length; l++) {
+                        for (int m = 0; m < qRates.length; m++) {
+                            for (int n = 0; n < rRates.length; n++) {
+                                for (int p = 0; p < vols.length; p++) {
+                                    double u = underlyings[l];
+                                    double q = qRates[m], r = rRates[n];
+                                    double v = vols[p];
+                                    spot.setValue(u);
+                                    qRate.setValue(q);
+                                    rRate.setValue(r);
+                                    vol.setValue(v);
+                                    // FLOATING_POINT_EXCEPTION
+                                    double value = option.getNPV();
+                                    calculated.put("delta", option.delta());
+                                    calculated.put("gamma", option.gamma());
+                                    // calculated.put("theta", option.theta());
 
-									if (value > spot.evaluate() * 1.0e-5) {
-										// perturb spot and get delta and gamma
+                                    if (value > spot.evaluate() * 1.0e-5) {
+                                        // perturb spot and get delta and gamma
                                         double du = u * 1.0e-4;
                                         spot.setValue(u + du);
                                         double value_p = option.getNPV(), delta_p = option.delta();
@@ -704,99 +571,200 @@ public class AmericanOptionTest {
 
                                         // perturb date and get theta
                                         final Date yesterday = today.getPreviousDay();
-                                        final Date tomorrow  = today.getNextDay();
+                                        final Date tomorrow = today.getNextDay();
                                         double dT = dc.yearFraction(yesterday, tomorrow);
                                         Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
                                         value_m = option.getNPV();
                                         Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
                                         value_p = option.getNPV();
-                                        expected.put("theta", (value_p - value_m)/dT);
+                                        expected.put("theta", (value_p - value_m) / dT);
 
-										// compare
-										for (Entry<String, Double> greek : calculated.entrySet()) {
-											double expct = expected.get(greek.getKey());
+                                        // compare
+                                        for (Entry<String, Double> greek : calculated.entrySet()) {
+                                            double expct = expected.get(greek.getKey());
                                             double calcl = calculated.get(greek.getKey());
                                             double tol = tolerance.get(greek.getKey());
                                             double error = Utilities.relativeError(expct, calcl, u);
                                             if (error > tol) {
-                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
+                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl,
+                                                        error, tol);
                                             }
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-	private void REPORT_FAILURE(String greekName, StrikedTypePayoff payoff,
-			Exercise exercise, double s, double q, double r, Date today,
-			double v, double expected, double calculated, double error,
-			double tolerance) {
+    @Test
+    public void testFdShoutGreeks() {
+        logger.info("Testing Greeks (delta, gamma, theta for American options...");
 
-		throw new RuntimeException(exercise.type() + " " + payoff.optionType()
-				+ " option with " + payoff.getClass().getSimpleName()
-				+ " payoff:\n" + "    spot value:        " + s + "\n"
-				+ "    strike:           " + payoff.strike() + "\n"
-				+ "    dividend yield:   " + q + "\n"
-				+ "    risk-free rate:   " + r + "\n"
-				+ "    reference date:   " + today + "\n"
-				+ "    maturity:         " + exercise.lastDate() + "\n"
-				+ "    volatility:       " + v + "\n\n" + "    expected   "
-				+ greekName + ": " + expected + "\n" + "    calculated "
-				+ greekName + ": " + calculated + "\n"
-				+ "    error:            " + error + "\n"
-				+ "    tolerance:        " + tolerance);
-	}
+        Map<String, Double> calculated = new HashMap<String, Double>();
+        Map<String, Double> expected = new HashMap<String, Double>();
+        Map<String, Double> tolerance = new HashMap<String, Double>();
+        tolerance.put("delta", 7.0e-4);
+        tolerance.put("gamma", 2.0e-4);
+        tolerance.put("theta", 1.0e-4);
 
-	private int timeToDays(/* @Time */double t) {
-		return (int) (t * 360 + 0.5);
-	}
+        Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
+        double underlyings[] = { 100.0 };
+        double qRates[] = { 0.04, 0.05, 0.06 };
+        double rRates[] = { 0.01, 0.05, 0.15 };
+        int years[] = { 1, 2 };
+        double vols[] = { 0.11, 0.50, 1.20 };
 
-	//
-	// private inner classes
-	//
+        Date today = DateFactory.getFactory().getTodaysDate();
+        DayCounter dc = Actual360.getDayCounter();
+        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        settings.setEvaluationDate(today);
 
-	private class AmericanOptionData {
+        final SimpleQuote spot = new SimpleQuote(0.0);
+        final SimpleQuote qRate = new SimpleQuote(0.0);
+        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
+        final SimpleQuote rRate = new SimpleQuote(0.0);
+        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
+        final SimpleQuote vol = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
-		private final Option.Type type;
-		private final double /* @Real */strike;
-		private final double /* @Real */s; // spot
-		private final double /* @Rate */q; // dividend
-		private final double /* @Rate */r; // risk-free rate
-		private final double /* @Time */t; // time to maturity
-		private final double /* @Volatility */v; // volatility
-		private final double /* @Real */result; // expected result
+        StrikedTypePayoff payoff = null;
 
-		public AmericanOptionData(Option.Type type, double strike, double s,
-				double q, double r, double t, double v, double result) {
-			this.type = type;
-			this.strike = strike;
-			this.s = s;
-			this.q = q;
-			this.r = r;
-			this.t = t;
-			this.v = v;
-			this.result = result;
-		}
+        for (int i = 0; i < types.length; i++) {
+            for (int j = 0; j < strikes.length; j++) {
+                for (int k = 0; k < years.length; k++) {
 
-		@Override
-		public String toString() {
-			StringBuilder builder = new StringBuilder();
-			builder.append("Type: " + type);
-			builder.append(" Strike: " + strike);
-			builder.append(" Spot: " + s);
-			builder.append(" DividendYield: " + q);
-			builder.append(" Riskfree: " + r);
-			builder.append(" TTm: " + t);
-			builder.append(" Vol: " + v);
-			builder.append(" result: " + result);
+                    Date exDate = today.getDateAfter(new Period(years[k], TimeUnit.YEARS));
 
-			return builder.toString();
-		}
-	}
+                    Exercise exercise = new AmericanExercise(today, exDate);
+                    payoff = new PlainVanillaPayoff(types[i], strikes[j]);
+
+                    final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
+                            new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS),
+                            new Handle<BlackVolTermStructure>(volTS));
+
+                    final PricingEngine engine = new FDShoutEngine(stochProcess);
+                    final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
+
+                    for (int l = 0; l < underlyings.length; l++) {
+                        for (int m = 0; m < qRates.length; m++) {
+                            for (int n = 0; n < rRates.length; n++) {
+                                for (int p = 0; p < vols.length; p++) {
+                                    double u = underlyings[l];
+                                    double q = qRates[m], r = rRates[n];
+                                    double v = vols[p];
+                                    spot.setValue(u);
+                                    qRate.setValue(q);
+                                    rRate.setValue(r);
+                                    vol.setValue(v);
+                                    // FLOATING_POINT_EXCEPTION
+                                    double value = option.getNPV();
+                                    calculated.put("delta", option.delta());
+                                    calculated.put("gamma", option.gamma());
+                                    // calculated.put("theta", option.theta());
+
+                                    if (value > spot.evaluate() * 1.0e-5) {
+                                        // perturb spot and get delta and gamma
+                                        double du = u * 1.0e-4;
+                                        spot.setValue(u + du);
+                                        double value_p = option.getNPV(), delta_p = option.delta();
+                                        spot.setValue(u - du);
+                                        double value_m = option.getNPV(), delta_m = option.delta();
+                                        spot.setValue(u);
+                                        expected.put("delta", (value_p - value_m) / (2 * du));
+                                        expected.put("gamma", (delta_p - delta_m) / (2 * du));
+
+                                        // perturb date and get theta
+                                        final Date yesterday = today.getPreviousDay();
+                                        final Date tomorrow = today.getNextDay();
+                                        double dT = dc.yearFraction(yesterday, tomorrow);
+                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
+                                        value_m = option.getNPV();
+                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
+                                        value_p = option.getNPV();
+                                        expected.put("theta", (value_p - value_m) / dT);
+
+                                        // compare
+                                        for (Entry<String, Double> greek : calculated.entrySet()) {
+                                            double expct = expected.get(greek.getKey());
+                                            double calcl = calculated.get(greek.getKey());
+                                            double tol = tolerance.get(greek.getKey());
+                                            double error = Utilities.relativeError(expct, calcl, u);
+                                            if (error > tol) {
+                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl,
+                                                        error, tol);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void REPORT_FAILURE(String greekName, StrikedTypePayoff payoff, Exercise exercise, double s, double q, double r,
+            Date today, double v, double expected, double calculated, double error, double tolerance) {
+
+        throw new RuntimeException(exercise.type() + " " + payoff.optionType() + " option with "
+                + payoff.getClass().getSimpleName() + " payoff:\n" + "    spot value:        " + s + "\n"
+                + "    strike:           " + payoff.strike() + "\n" + "    dividend yield:   " + q + "\n"
+                + "    risk-free rate:   " + r + "\n" + "    reference date:   " + today + "\n" + "    maturity:         "
+                + exercise.lastDate() + "\n" + "    volatility:       " + v + "\n\n" + "    expected   " + greekName + ": "
+                + expected + "\n" + "    calculated " + greekName + ": " + calculated + "\n" + "    error:            " + error
+                + "\n" + "    tolerance:        " + tolerance);
+    }
+
+    private int timeToDays(/* @Time */double t) {
+        return (int) (t * 360 + 0.5);
+    }
+
+    //
+    // private inner classes
+    //
+
+    private class AmericanOptionData {
+
+        private final Option.Type type;
+        private final double /* @Real */strike;
+        private final double /* @Real */s; // spot
+        private final double /* @Rate */q; // dividend
+        private final double /* @Rate */r; // risk-free rate
+        private final double /* @Time */t; // time to maturity
+        private final double /* @Volatility */v; // volatility
+        private final double /* @Real */result; // expected result
+
+        public AmericanOptionData(Option.Type type, double strike, double s, double q, double r, double t, double v, double result) {
+            this.type = type;
+            this.strike = strike;
+            this.s = s;
+            this.q = q;
+            this.r = r;
+            this.t = t;
+            this.v = v;
+            this.result = result;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Type: " + type);
+            builder.append(" Strike: " + strike);
+            builder.append(" Spot: " + s);
+            builder.append(" DividendYield: " + q);
+            builder.append(" Riskfree: " + r);
+            builder.append(" TTm: " + t);
+            builder.append(" Vol: " + v);
+            builder.append(" result: " + result);
+
+            return builder.toString();
+        }
+    }
 
 }
