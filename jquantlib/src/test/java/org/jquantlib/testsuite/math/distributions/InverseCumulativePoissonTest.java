@@ -24,31 +24,40 @@ package org.jquantlib.testsuite.math.distributions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jquantlib.math.Closeness;
+import org.jquantlib.math.distributions.InverseCumulativePoisson;
 import org.junit.Test;
+import static org.junit.Assert.fail;
 
 /**
  * 
  * @author Dominik Holenstein
- *
+ * 
  */
 
-/* 
- * Test not implemented yet.
- */
-
-//TODO: Write InverseCumulativePoissonDistribution test case.
 public class InverseCumulativePoissonTest {
-	
-    private final static Logger logger = LoggerFactory.getLogger(InverseCumulativePoissonTest.class);
+
+	private final static Logger logger = LoggerFactory
+			.getLogger(InverseCumulativePoissonTest.class);
 
 	public InverseCumulativePoissonTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 	}
-	
+
 	@Test
-	public void fakeTest() {
-		// only intended to avoid failure during unit tests
-		logger.error("***** TEST FAILED *****");
+	public void testInverseCumulativePoissonDistribution() {
+		logger.info("running InverseCumulativePoissonDistribution test ....");
+		InverseCumulativePoisson icp = new InverseCumulativePoisson(1.0);
+		double data[] = { 0.2, 0.5, 0.9, 0.98, 0.99, 0.999, 0.9999, 0.99995,
+				0.99999, 0.999999, 0.9999999, 0.99999999 };
+
+		for (int i = 0; i < data.length; i++) {
+			if (!Closeness.isClose(icp.evaluate(data[i]), i)) {
+				fail("failed to reproduce known value for x = " + data[i]
+						+ "\n" + "calculated: " + data[i] + "\n" + "expected: "
+						+ i);
+			}
+		}
+		logger.info("... test finished.");
 	}
-	
 }
