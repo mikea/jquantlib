@@ -359,7 +359,7 @@ public abstract class TermStructure implements Observer, Observable {
      * @category Dates and Time
 	 * @return the latest double for which the curve can return values
 	 */
-	public final /*@Time*/ double maxTime(){
+	public /*@Time*/ double maxTime(){
 		return timeFromReference(maxDate());
 	}
 
