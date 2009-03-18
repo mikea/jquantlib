@@ -22,8 +22,14 @@
 
 package org.jquantlib.testsuite.math.integrals;
 
+import static org.junit.Assert.fail;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.distributions.NormalDistribution;
+import org.jquantlib.math.integrals.Integrator;
+import org.jquantlib.math.integrals.SegmentIntegral;
 import org.junit.Test;
 
 /**
@@ -32,11 +38,6 @@ import org.junit.Test;
  *
  */
 
-/* 
- * Test not implemented yet.
- */
-
-//TODO: Write SegmentIntegral test case.
 public class SegmentIntegralTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(SegmentIntegralTest.class);
@@ -46,9 +47,99 @@ public class SegmentIntegralTest {
 	}
 	
 	@Test
-	public void fakeTest() {
-		// only intended to avoid failure during unit tests
-		logger.error("***** TEST FAILED *****");
+	public void testSegmentIntegral() {
+		
+			double tolerance = 1.0e-6;
+			//f(x) = 1
+			testSingle(new SegmentIntegral(10000), new UnaryFunctionDouble(){
+				public double evaluate(double x) {
+					return 1;
+				}
+			}, 0.0, 1.0, 1.0, tolerance, "f(x) = 1" );
+			
+			//f(x) = x
+			testSingle(new SegmentIntegral(10000), new UnaryFunctionDouble(){
+				public double evaluate(double x) {
+					return x;
+				}
+			}, 0.0, 1.0, 0.5, tolerance, "f(x) = x" );
+			
+			//f(x) = x^2
+			testSingle(new SegmentIntegral(10000), new UnaryFunctionDouble(){
+				public double evaluate(double x) {
+					return Math.pow(x, 2);
+				}
+			}, 0.0, 1.0, 1.0/3.0, tolerance, "f(x) = x^2" );
+			
+			//f(x) = sin(x)
+			testSingle(new SegmentIntegral(10000), new UnaryFunctionDouble(){
+				public double evaluate(double x) {
+					return Math.sin(x);
+				}
+			}, 0.0, Math.PI, 2.0, tolerance, "f(x) = sin(x)" );
+			
+			//f(x) = cos(x)
+			testSingle(new SegmentIntegral(10000), new UnaryFunctionDouble(){
+				public double evaluate(double x) {
+					return Math.cos(x);
+				}
+			}, 0.0, Math.PI, 0.0, tolerance, "f(x) = cos(x)" );
+			
+			//f(x) = Gaussian(x)
+			testSingle(new SegmentIntegral(10000), new UnaryFunctionDouble(){
+				public double evaluate(double x) {
+					return new NormalDistribution(0.0, 1.0).evaluate(x);
+				}
+			}, -10.0, 10.0, 1.0, tolerance, "f(x) = Gaussian(x)" );
+			
+			//f(x) = Abcd2(x)
+			/* FIXME: Method not implemented yet.
+			testSingle(new SegmentIntegral(10000), new UnaryFunctionDouble(){
+				public double evaluate(double x) {
+					return new (0.0, 1.0).evaluate(x);
+				}
+			}, -10.0, 10.0, 1.0, tolerance, "f(x) = Abcd2(x)" );
+			
+			testSingle(I, "f(x) = Gaussian(x)",
+			           NormalDistribution(), -10.0, 10.0, 1.0);
+			testSingle(I, "f(x) = Abcd2(x)",
+			           AbcdSquared(0.07, 0.07, 0.5, 0.1, 8.0, 10.0), 5.0, 6.0,
+			           Abcd(0.07, 0.07, 0.5, 0.1).covariance(5.0, 6.0, 8.0, 10.0));
+			
+			*/		
+		}
+		
+		//Additional Test!
+		@Test
+		public void quickConvergenceTest() {
+			// only intended to avoid failure during unit tests
+			UnaryFunctionDouble f = new UnaryFunctionDouble() {
+				public double evaluate(double x) {
+					return 1/(1+Math.pow(Math.tan(x),Math.sqrt(2)));
+				}
+			};
+
+			// See Larson, "Problem-Solving Through Problems" pg.33 for solution
+			double expected = Math.PI / 4;
+			double realised = 0;
+			double tolerance = 1.0e-4;
+		
+			try {
+				Integrator simpint = new SegmentIntegral(10000);
+				realised = simpint.evaluate(f, 0, Math.PI/2);
+			} catch (ArithmeticException e) {
+				fail("Desired tolerance not achieved while integrating f(x) = 1 / (1+tan(x)^sqrt(2)) within [0,6] using trapezoid-midpoint approximation.\n");
+			}
+		}
+		
+		
+		
+		private void testSingle(Integrator integrator, UnaryFunctionDouble function, double min, double max, double desired, double precision, String tag){
+			double realised = integrator.evaluate(function, min, max);
+			if(Math.abs(realised - desired) > precision){
+				fail("Integration failed for " + tag);
+			}
+		}
 	}
 	
-}
+
