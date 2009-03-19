@@ -22,8 +22,8 @@ package org.jquantlib.methods.finitedifferences;
 import java.util.List;
 import java.util.Vector;
 
+import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.Array;
-import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * @author Srinivas Hasti

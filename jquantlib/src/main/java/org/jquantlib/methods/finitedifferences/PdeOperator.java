@@ -22,9 +22,9 @@
 
 package org.jquantlib.methods.finitedifferences;
 
+import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.Array;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.util.reflect.TypeToken;
 
 public abstract class PdeOperator<T extends PdeSecondOrderParabolic> extends TridiagonalOperator {
    

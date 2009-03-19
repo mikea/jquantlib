@@ -10,7 +10,6 @@ public class BoundaryConstraint extends Constraint {
     public BoundaryConstraint(double low, double high) {
         low_ = low;
         high_ = high;
-        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("work in progress");
     }
 
     public boolean test(Array bndArray) {

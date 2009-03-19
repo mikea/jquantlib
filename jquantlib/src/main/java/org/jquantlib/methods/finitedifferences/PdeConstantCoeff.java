@@ -21,8 +21,8 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
+import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.util.reflect.TypeToken;
 
 
 //

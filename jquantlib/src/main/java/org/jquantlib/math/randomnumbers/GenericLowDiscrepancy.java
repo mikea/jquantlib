@@ -41,7 +41,7 @@ package org.jquantlib.math.randomnumbers;
 
 import java.lang.reflect.Constructor;
 
-import org.jquantlib.util.reflect.TypeToken;
+import org.jquantlib.lang.reflect.TypeToken;
 
 /**
  * 

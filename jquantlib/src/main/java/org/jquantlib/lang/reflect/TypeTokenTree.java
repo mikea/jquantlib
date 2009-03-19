@@ -5,6 +5,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 
+/**
+ * @author Richard Gomes 
+ */
+//TODO: add comments and explain what this class is about
 public class TypeTokenTree {
 
     private final TypeNode root;

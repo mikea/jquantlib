@@ -29,6 +29,10 @@ import org.jquantlib.math.Array;
 //TODO: comments, license, code review
 public abstract class Constraint {
 
+    protected Constraint() {
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("work in progress");
+    }
+    
     public boolean empty() {
         return false;
     }
@@ -37,7 +41,7 @@ public abstract class Constraint {
 
     // take note of precision error when comparing Arrays, only compare difference dot product
     // this is due to representation of numbers such as 0.1 in binary
-    public double update(Array params, final Array direction, double beta) {
+    public double update(final Array params, final Array direction, final double beta) {
 
         double diff = beta;
 

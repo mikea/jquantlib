@@ -23,6 +23,7 @@ import java.lang.reflect.Constructor;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.Array;
 import org.jquantlib.methods.lattices.BinomialTree;
 import org.jquantlib.methods.lattices.BlackScholesLattice;
@@ -42,7 +43,6 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeGrid;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * Pricing engine for vanilla options using binomial trees

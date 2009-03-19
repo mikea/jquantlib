@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
+import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.Array;
-import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * @author Srinivas Hasti

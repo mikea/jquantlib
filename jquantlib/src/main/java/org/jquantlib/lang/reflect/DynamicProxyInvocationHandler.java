@@ -19,7 +19,7 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.util.reflect;
+package org.jquantlib.lang.reflect;
 
 import java.lang.reflect.Method;
 
@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
  * @author Srinivas Hasti
  * 
  */
+//TODO: add comments and explain what this class is about
 public class DynamicProxyInvocationHandler<T> implements java.lang.reflect.InvocationHandler {
 
     private final T delegate;

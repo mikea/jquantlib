@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.jquantlib.util.reflect.TypeReference;
+import org.jquantlib.lang.reflect.TypeReference;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;

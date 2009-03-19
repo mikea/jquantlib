@@ -1,5 +1,9 @@
 package org.jquantlib.lang.reflect;
 
+/**
+ * @author Richard Gomes 
+ */
+//TODO: add comments and explain what this class is about
 public class ReflectConstants {
 
     public static final String SHOULD_NOT_EXTEND_FROM_THIS_CLASS = "Should not extend from this class";

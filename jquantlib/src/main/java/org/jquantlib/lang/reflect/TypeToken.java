@@ -20,13 +20,12 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.util.reflect;
+package org.jquantlib.lang.reflect;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import org.jquantlib.lang.reflect.ReflectConstants;
 
 /**
  * This class provides other classes the ability to retrieve runtime type information

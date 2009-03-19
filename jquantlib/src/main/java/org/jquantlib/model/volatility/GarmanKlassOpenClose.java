@@ -39,11 +39,11 @@
 
 package org.jquantlib.model.volatility;
 
+import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.IntervalPrice;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
 import org.jquantlib.util.TimeSeriesDouble;
-import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * This template factors out common functionality found in classes which rely on the difference between the previous day's close

@@ -41,8 +41,8 @@ package org.jquantlib.math.randomnumbers;
 
 import org.joda.primitives.list.DoubleList;
 import org.joda.primitives.list.impl.ArrayDoubleList;
+import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.methods.montecarlo.Sample;
-import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * Random sequence generator based on a pseudo-random number generator

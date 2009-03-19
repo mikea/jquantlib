@@ -21,9 +21,9 @@ package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import java.lang.reflect.Constructor;
 
+import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.util.reflect.TypeToken;
 
 /**
  * @author Srinivas Hasti

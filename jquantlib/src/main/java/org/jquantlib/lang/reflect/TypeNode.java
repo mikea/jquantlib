@@ -3,6 +3,10 @@ package org.jquantlib.lang.reflect;
 import java.util.AbstractSequentialList;
 import java.util.LinkedList;
 
+/**
+ * @author Richard Gomes 
+ */
+//TODO: add comments and explain what this class is about
 public class TypeNode {
 
     private final Class<?> klass;
