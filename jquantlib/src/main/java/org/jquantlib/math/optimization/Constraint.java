@@ -26,28 +26,34 @@ import org.jquantlib.math.Array;
  * 
  * @author Joon Tiang Heng
  */
-public abstract class Constraint { 
-      
-        public boolean empty() { return false; }
-        public abstract boolean test(final Array p) ;
-		//take note of precision error when comparing Arrays, only compare difference dot product
-		//this is due to representation of numbers such as 0.1 in binary
-        public double update(Array params,final Array direction,double beta) {
+//TODO: comments, license, code review
+public abstract class Constraint {
 
-			double diff=beta;
-						
-			Array newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(),diff)));
-			boolean valid = test(newParams);
-			int icount = 0;
-			while (!valid) {
-				if (icount > 200) throw new RuntimeException("can't update parameter vector");
-				diff *= 0.5;
-				icount ++;
-				newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(),diff)));	
-				valid = test(newParams);
-			}
-			
-			params.operatorAdd(direction.operatorMultiplyCopy(new Array(direction.size(),diff)));
-			return diff;
-		}
+    public boolean empty() {
+        return false;
+    }
+
+    public abstract boolean test(final Array p);
+
+    // take note of precision error when comparing Arrays, only compare difference dot product
+    // this is due to representation of numbers such as 0.1 in binary
+    public double update(Array params, final Array direction, double beta) {
+
+        double diff = beta;
+
+        Array newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(), diff)));
+        boolean valid = test(newParams);
+        int icount = 0;
+        while (!valid) {
+            if (icount > 200)
+                throw new RuntimeException("can't update parameter vector");
+            diff *= 0.5;
+            icount++;
+            newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(), diff)));
+            valid = test(newParams);
+        }
+
+        params.operatorAdd(direction.operatorMultiplyCopy(new Array(direction.size(), diff)));
+        return diff;
+    }
 }

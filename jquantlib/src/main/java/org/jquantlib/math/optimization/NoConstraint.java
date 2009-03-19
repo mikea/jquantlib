@@ -2,11 +2,14 @@ package org.jquantlib.math.optimization;
 
 import org.jquantlib.math.Array;
 
+//TODO: comments, license, code review
 public class NoConstraint extends Constraint {
-      
-      public  NoConstraint(){}
-	  public boolean test(Array nocArray) {
-                return true;
-      }
-	
- };
+
+    public NoConstraint() {
+    }
+
+    public boolean test(Array nocArray) {
+        return true;
+    }
+
+}

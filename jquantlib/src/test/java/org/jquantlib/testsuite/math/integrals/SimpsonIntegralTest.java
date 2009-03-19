@@ -24,13 +24,14 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.jquantlib.math.integrals.Integrator;
 import org.jquantlib.math.integrals.SimpsonIntegral;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -48,6 +49,7 @@ public class SimpsonIntegralTest {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 		
+    @Ignore
 	@Test
 	public void testSimpsonIntegral(){
 		double tolerance = 1.0e-6;
@@ -110,7 +112,7 @@ public class SimpsonIntegralTest {
 		*/		
 	}
 	
-	//Additional Test!
+	@Ignore
 	@Test
 	public void quickConvergenceTest() {
 		// only intended to avoid failure during unit tests

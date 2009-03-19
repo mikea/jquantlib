@@ -23,18 +23,11 @@
 package org.jquantlib.testsuite.math.interpolations;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
 import static org.junit.Assert.assertFalse;
 
 import org.jquantlib.math.integrals.SimpsonIntegral;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
-import org.jquantlib.math.interpolations.Interpolation;
-import org.jquantlib.math.interpolations.factories.BackwardFlat;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
-import org.jquantlib.math.interpolations.factories.MonotonicCubicSpline;
-import org.jquantlib.math.interpolations.factories.NaturalCubicSpline;
-import org.jquantlib.math.interpolations.factories.NaturalMonotonicCubicSpline;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -62,6 +55,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 					+"MultiSpline ... :::::");
 	}
 	
+    @Ignore
 	@Test
 	public void testSplineErrorOnGaussianValues(){
 

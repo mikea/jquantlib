@@ -104,7 +104,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 		riskFreeRate_ = riskFreeTS;
 		dividendYield_ = dividendTS;
 		blackVolatility_ = blackVolTS;
-		localVolatility_ = new RelinkableHandle<LocalVolTermStructure>();
+		localVolatility_ = new RelinkableHandle<LocalVolTermStructure>(LocalVolTermStructure.class);
 		updated_ = false;
 		x0_.addObserver(this);
 		riskFreeRate_.addObserver(this);

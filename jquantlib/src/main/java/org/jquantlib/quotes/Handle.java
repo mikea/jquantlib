@@ -40,7 +40,7 @@
 
 package org.jquantlib.quotes;
 
-import java.util.List; // FIXME :: performance
+import java.util.List;
 
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
@@ -55,21 +55,21 @@ import org.jquantlib.util.WeakReferenceObservable;
  * 
  * @author Richard Gomes
  */
-// TODO: better explain hot Handle and Link work together
+// TODO: explain how Handle and Link work together
 public class Handle<T extends Observable> implements Observable {
 
 	protected Link link;
 
-    public Handle() {
-    	this(null, true);
+    public Handle(Class<T> klass) {
+        this.link = new Link(null, true);
     }
     
     public Handle(final T observable) {
-    	this(observable, true);
+        this.link = new Link(observable, true);
     }
     
-    public Handle(final T observable, boolean isObserver) {
-    	this.link = new Link(observable, isObserver);
+    public Handle(final T observable, boolean registerAsObserver) {
+    	this.link = new Link(observable, registerAsObserver);
     }
     
     public Handle(final Handle<T> another) {
@@ -88,8 +88,8 @@ public class Handle<T extends Observable> implements Observable {
     	this.setLink(observable, true);
     }
     
-    public void setLink(final T observable, boolean isObserver) {
-    	link.setLink(observable, isObserver);
+    public void setLink(final T observable, boolean registerAsObserver) {
+    	link.setLink(observable, registerAsObserver);
     }
     
 
@@ -147,8 +147,8 @@ public class Handle<T extends Observable> implements Observable {
 //			setLink(observable);
 //		}
 
-		public Link(T observable, boolean isObserver) {
-			setLink(observable, isObserver);
+		public Link(T observable, boolean registerAsObserver) {
+			setLink(observable, registerAsObserver);
 		}
 
 		public final boolean isEmpty() /* @ReadOnly */ {
@@ -164,14 +164,14 @@ public class Handle<T extends Observable> implements Observable {
 //			setLink(observable, true);
 //		}
 		
-		public final void setLink(final T observable, boolean isObserver) {
+		public final void setLink(final T observable, boolean registerAsObserver) {
 			// remove this from observable
-			if ((this.observable!=observable) || (this.isObserver!=isObserver)) {
+			if ((this.observable!=observable) || (this.isObserver!=registerAsObserver)) {
 				if (this.observable!=null && this.isObserver) {
 					this.observable.deleteObserver(this);
 				}
 				this.observable = observable;
-				this.isObserver = isObserver;
+				this.isObserver = registerAsObserver;
 				if (this.observable!=null && this.isObserver) {
 					this.observable.addObserver(this);
 				}

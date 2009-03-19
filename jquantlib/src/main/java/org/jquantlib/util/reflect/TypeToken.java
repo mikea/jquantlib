@@ -26,6 +26,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import org.jquantlib.lang.reflect.ReflectConstants;
+
 /**
  * This class provides other classes the ability to retrieve runtime type information
  * from generic parametric types specified at creation time.
@@ -66,8 +68,10 @@ import java.lang.reflect.Type;
  * 
  * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">SuperTypeTokens</a>
  * @see <a href="http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf">Generics Tutorial</a>
+ * 
  * @author Richard Gomes
  */
+//FIXME :: rename to SuperTypeToken
 public class TypeToken {
 
     static public Type getType(final Class<?> klass) {
@@ -77,11 +81,11 @@ public class TypeToken {
     static public Type getType(final Class<?> klass, final int pos) {
         Type superclass = klass.getGenericSuperclass();
         if (superclass instanceof Class) {
-            throw new IllegalArgumentException("Class should be anonymous or extended from a generic class");
+            throw new IllegalArgumentException(ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED);
         }
         Type[] types = ((ParameterizedType) superclass).getActualTypeArguments();
         if (pos >= types.length) {
-            throw new IllegalArgumentException("Missing parameter");
+            throw new IllegalArgumentException(ReflectConstants.MISSING_GENERIC_PARAMETER_TYPE);
         }
         return types[pos];
     }
@@ -94,7 +98,7 @@ public class TypeToken {
         Type type = getType(klass, pos);
         Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
         if ((clazz.getModifiers() & Modifier.ABSTRACT) != 0)
-            throw new IllegalArgumentException("generic parameter must be a concrete class");
+            throw new IllegalArgumentException(ReflectConstants.GENERIC_PARAMETER_MUST_BE_CONCRETE_CLASS);
         return clazz;
     }
 

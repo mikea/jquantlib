@@ -46,6 +46,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 	
+    @Ignore
 	@Test
 	public void testMCSplineErrorOnGaussianValues(){
 

@@ -40,6 +40,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.lang.reflect.ReflectConstants;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.results.Results;
@@ -64,14 +65,7 @@ public abstract class OldInstrument extends Instrument {
     // private static final fields
     //
     
-    private static final String SHOULD_NOT_EXTEND_FROM_THIS_CLASS = "Should not extend from this class";
-	private static final String SHOULD_OVERRIDE_THIS_METHOD = "Should override this method";
-	
-    //
-	// protected *virtual* methods overridden from Instrument
-	//
-	
-	/**
+    /**
      * This method performs the actual calculations and set any needed results.
      * <p>
      * When an {@link OldInstrument} is used, derived classes are <i>required</i> to
@@ -81,7 +75,7 @@ public abstract class OldInstrument extends Instrument {
      */
 	@Override
     protected void performCalculations() {
-        throw new UnsupportedOperationException(SHOULD_OVERRIDE_THIS_METHOD);
+        throw new UnsupportedOperationException(ReflectConstants.SHOULD_OVERRIDE_THIS_METHOD);
     }
 
     
@@ -99,7 +93,7 @@ public abstract class OldInstrument extends Instrument {
      * @see PricingEngine
      */
     protected final void setupArguments(final Arguments arguments) {
-        throw new UnsupportedOperationException(SHOULD_NOT_EXTEND_FROM_THIS_CLASS);
+        throw new UnsupportedOperationException(ReflectConstants.SHOULD_NOT_EXTEND_FROM_THIS_CLASS);
     }
     
     /**
@@ -112,7 +106,7 @@ public abstract class OldInstrument extends Instrument {
      * @see PricingEngine
      */
     protected final void fetchResults(final Results results) /* @ReadOnly */ {
-        throw new UnsupportedOperationException(SHOULD_NOT_EXTEND_FROM_THIS_CLASS);
+        throw new UnsupportedOperationException(ReflectConstants.SHOULD_NOT_EXTEND_FROM_THIS_CLASS);
     }
     
     /**
@@ -125,7 +119,7 @@ public abstract class OldInstrument extends Instrument {
      * @see PricingEngine
      */
 	protected final void setPricingEngine(final PricingEngine engine) {
-        throw new UnsupportedOperationException(SHOULD_NOT_EXTEND_FROM_THIS_CLASS);
+        throw new UnsupportedOperationException(ReflectConstants.SHOULD_NOT_EXTEND_FROM_THIS_CLASS);
 	}
     
 }
