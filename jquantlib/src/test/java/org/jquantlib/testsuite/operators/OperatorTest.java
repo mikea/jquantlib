@@ -301,8 +301,7 @@ public class OperatorTest {
     }
 
     private YieldTermStructure  flatRate(final Date today, double forward, final DayCounter dc) {
-        return flatRate(
-               today, new SimpleQuote(forward), dc);
+        return flatRate(today, new SimpleQuote(forward), dc);
     }
 
 //    boost::shared_ptr<YieldTermStructure>
@@ -314,8 +313,7 @@ public class OperatorTest {
 //
 //    boost::shared_ptr<YieldTermStructure>
 //    flatRate(Rate forward, const DayCounter& dc) {
-//        return flatRate(boost::shared_ptr<Quote>(new SimpleQuote(forward)),
-//                        dc);
+//        return flatRate(boost::shared_ptr<Quote>(new SimpleQuote(forward)), dc);
 //    }
 
 

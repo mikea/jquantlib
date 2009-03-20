@@ -85,15 +85,11 @@ public class ReplicationError {
 		Date today = DefaultDate.getTodaysDate();
 		DayCounter dayCount = Actual365Fixed.getDayCounter();
 		Handle<Quote> stateVariable = new Handle(new SimpleQuote(s0_.doubleValue()));
-		Handle<YieldTermStructure> riskFreeRate = new Handle(new FlatForward(
-				today, r_.doubleValue(), dayCount));
+		Handle<YieldTermStructure> riskFreeRate = new Handle(new FlatForward(today, r_.doubleValue(), dayCount));
 
-		Handle<YieldTermStructure> dividendYield = new Handle(new FlatForward(
-				today, 0.0, dayCount));
+		Handle<YieldTermStructure> dividendYield = new Handle(new FlatForward(today, 0.0, dayCount));
 
-		Handle<BlackVolTermStructure> volatility = new Handle(
-				new BlackConstantVol(today,calendar , sigma_.doubleValue(),
-						dayCount));
+		Handle<BlackVolTermStructure> volatility = new Handle(new BlackConstantVol(today, calendar, sigma_.doubleValue(),dayCount));
 
 		StochasticProcess1D diffusion = new BlackScholesMertonProcess(
 				stateVariable, dividendYield, riskFreeRate, volatility);

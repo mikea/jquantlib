@@ -197,11 +197,6 @@ public class FlatForward extends YieldTermStructure {
         rate = new InterestRate(forward.getLink().evaluate(), this.dayCounter(), this.compounding, this.frequency);
     }
 
-    @Override
-	protected final /*@DiscountFactor*/ double discountImpl(final /*@Time*/ double t) {
-        return rate.discountFactor(t);
-    }
-    
     public final Compounding compounding() {
     	return compounding;
     }
@@ -210,13 +205,28 @@ public class FlatForward extends YieldTermStructure {
     	return frequency;
     }
 
+    
+    //
+    // overrides YieldTermStructure
+    //
+    
+    @Override
+    protected final /*@DiscountFactor*/ double discountImpl(final /*@Time*/ double t) {
+        return rate.discountFactor(t);
+    }
+    
+    //
+    // overrides TermStructure
+    //
+    
+    @Override
     public final Date maxDate() {
         return DateFactory.getFactory().getMaxDate();
     }
 
 
     //
-    // Implements Observer interface
+    // implements Observer interface
     //
     
     /**
