@@ -180,11 +180,11 @@ public class AsianOptionTest {
 	    /*@Volatility*/ double vols[] = { 0.11, 0.50, 1.20 };
 
 	    DayCounter dc = Actual360.getDayCounter();
-	    Date today = DateFactory.getFactory().getTodaysDate();
+	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
 	    //FIXME check how to use settings...
 	    //Settings settings = new Settings().setEvaluationDate(today);
 
-        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
+        //Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
 
 	    SimpleQuote spot = new SimpleQuote(0.0);
 	    
