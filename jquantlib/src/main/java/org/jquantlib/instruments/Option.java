@@ -83,6 +83,7 @@ public abstract class Option extends NewInstrument {
 		this.payoff = payoff;
 		this.exercise = exercise;
 		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+		this.evaluationDate.addObserver(this);
 	}
 
 	//
