@@ -55,12 +55,12 @@ public class CanadaCalendarTest {
     private final static Logger logger = LoggerFactory.getLogger(CanadaCalendarTest.class);
 
     private final Calendar settlement;
-    private final Calendar tsx;
+    private final Calendar exchange;
     
 	public CanadaCalendarTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
         settlement = Canada.getCalendar(Canada.Market.SETTLEMENT);
-        tsx = Canada.getCalendar(Canada.Market.TSX);
+        exchange = Canada.getCalendar(Canada.Market.TSX);
 	}
         	
     @Test
@@ -292,7 +292,7 @@ public class CanadaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, tsx, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
 
     }
     
@@ -314,7 +314,7 @@ public class CanadaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, tsx, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
 
     }
 
@@ -337,7 +337,7 @@ public class CanadaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, tsx, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
 
     }
 
@@ -360,7 +360,7 @@ public class CanadaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, tsx, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
 
     }
 
@@ -384,7 +384,7 @@ public class CanadaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, tsx, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
 
     }
 
@@ -408,7 +408,7 @@ public class CanadaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, tsx, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
 
     }
 
@@ -432,7 +432,7 @@ public class CanadaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, tsx, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
 
     }
 
@@ -455,7 +455,7 @@ public class CanadaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, tsx, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
 
     }
 
@@ -479,7 +479,7 @@ public class CanadaCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, tsx, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
 
     }
 

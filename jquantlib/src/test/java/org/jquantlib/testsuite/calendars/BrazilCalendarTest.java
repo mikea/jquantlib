@@ -58,12 +58,12 @@ import org.slf4j.LoggerFactory;
 public class BrazilCalendarTest {
     private final static Logger logger = LoggerFactory.getLogger(BrazilCalendarTest.class);
 
-	private final Calendar bovespa;
+	private final Calendar exchange;
 	private final Calendar settlement;
     
 	public BrazilCalendarTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	    bovespa = Brazil.getCalendar(Brazil.Market.BOVESPA);
+	    exchange = Brazil.getCalendar(Brazil.Market.BOVESPA);
 	    settlement = Brazil.getCalendar(Brazil.Market.SETTLEMENT);
 	}
         	
@@ -88,7 +88,7 @@ public class BrazilCalendarTest {
     
     	// Call the Holiday Check
     	CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, bovespa, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
    
     }
     
@@ -111,7 +111,7 @@ public class BrazilCalendarTest {
     
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, bovespa, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
    
     }
     
@@ -136,7 +136,7 @@ public class BrazilCalendarTest {
     
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, bovespa, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
    
     }
 	
@@ -164,7 +164,7 @@ public class BrazilCalendarTest {
         
         // Call the Holiday Check
     	CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, bovespa, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }    
     
     // 2008 - current year
@@ -191,7 +191,7 @@ public class BrazilCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, bovespa, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
     
 
@@ -219,7 +219,7 @@ public class BrazilCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, bovespa, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     	
     }
 
@@ -245,7 +245,7 @@ public class BrazilCalendarTest {
     
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, bovespa, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
    
     }
     
@@ -268,7 +268,7 @@ public class BrazilCalendarTest {
     
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-        cbt.checkHolidayList(expectedHol, bovespa, year);
+        cbt.checkHolidayList(expectedHol, exchange, year);
    
     }
     // 2012 - next leap-year in the future
@@ -293,7 +293,7 @@ public class BrazilCalendarTest {
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, bovespa, year);    	
+    	cbt.checkHolidayList(expectedHol, exchange, year);    	
     }
     
     @Test

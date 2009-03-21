@@ -49,14 +49,11 @@ import org.slf4j.LoggerFactory;
  * @author Srinivas Hasti
  * @author Dominik Holenstein
  * @author Jia Jia
- * 
- * 
  */
 
 public class ArgentinaCalendarTest {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(ArgentinaCalendarTest.class);
+	private final static Logger logger = LoggerFactory.getLogger(ArgentinaCalendarTest.class);
 	private final Calendar merval;
 	private final Calendar settlement;
 
