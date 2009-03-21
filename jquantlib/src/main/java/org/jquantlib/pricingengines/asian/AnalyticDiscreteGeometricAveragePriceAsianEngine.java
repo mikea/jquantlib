@@ -63,8 +63,8 @@ import org.jquantlib.util.Date;
 /**
  * @author <Richard Gomes>
  */
-public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends
-							DiscreteAveragingAsianOptionEngine {
+//TODO: this class needs code review, better documentation, etc.
+public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAveragingAsianOptionEngine {
 
 	
 //	public AnalyticDiscreteGeometricAveragePriceAsianEngine(
@@ -137,8 +137,8 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends
 	    /*@Real*/ double pastWeight = pastFixings/N;
 	    /*@Real*/ double futureWeight = 1.0-pastWeight;
 
-//	    Time timeSum = std::accumulate(fixingTimes.begin(),
-//                                    fixingTimes.end(), 0.0);
+//	    Time timeSum = std::accumulate(fixingTimes.begin(), fixingTimes.end(), 0.0);
+	    
 	    //TODO add accumulate to std
 	    double timeSum = 0.0;
 	    for(int j=0;j<fixingTimes.size();j++){

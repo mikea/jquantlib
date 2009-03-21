@@ -34,6 +34,7 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.SaudiArabia;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,19 +44,20 @@ import org.slf4j.LoggerFactory;
  *
  */
 
-
+// TODO: This class needs code review againt reliable sources of data
 public class SaudiArabiaCalendarTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(SaudiArabiaCalendarTest.class);
-    private final Calendar c;
+    private final Calendar exchange;
 
     public SaudiArabiaCalendarTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-        this.c = SaudiArabia.getCalendar(SaudiArabia.Market.TADAWUL);
+        this.exchange = SaudiArabia.getCalendar(SaudiArabia.Market.TADAWUL);
 	}
 	
 	//2004
-	void testSaudiArabiaYear2004() {
+    @Test
+	public void testSaudiArabiaYear2004() {
       	int year = 2004;
       	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
@@ -74,11 +76,12 @@ public class SaudiArabiaCalendarTest {
 		expectedHol.add(df.getDate(29,NOVEMBER,year)); 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 	
 	// 2005
-	void testSaudiArabiaYear2005(Calendar c) {
+    @Test
+    public void testSaudiArabiaYear2005() {
       	int year = 2005;
       	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
@@ -97,11 +100,12 @@ public class SaudiArabiaCalendarTest {
 		expectedHol.add(df.getDate(16,NOVEMBER,year)); 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 	
 	// 2006
-	void testSaudiArabiaYear2006(Calendar c) {
+    @Test
+    public void testSaudiArabiaYear2006() {
       	int year = 2006;
       	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
@@ -112,11 +116,12 @@ public class SaudiArabiaCalendarTest {
         
       	// Call the Holiday Check        
       	CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 	
 	// 2007
-	void testSaudiArabiaYear2007(Calendar c) {
+    @Test
+    public void testSaudiArabiaYear2007() {
       	int year = 2007;
       	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
@@ -127,11 +132,12 @@ public class SaudiArabiaCalendarTest {
         
       	// Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 	
 	// 2008
-	void testSaudiArabiaYear2008(Calendar c) {
+    @Test
+    public void testSaudiArabiaYear2008() {
       	int year = 2008;
       	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
@@ -142,11 +148,12 @@ public class SaudiArabiaCalendarTest {
         
       	// Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 	
 	// 2009
-	void testSaudiArabiaYear2009(Calendar c) {
+    @Test
+    public void testSaudiArabiaYear2009() {
       	int year = 2009;
       	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
@@ -157,11 +164,12 @@ public class SaudiArabiaCalendarTest {
         
       	// Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 	
 	// 2010
-	void testSaudiArabiaYear2010(Calendar c) {
+    @Test
+    public void testSaudiArabiaYear2010() {
       	int year = 2010;
       	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
@@ -172,11 +180,12 @@ public class SaudiArabiaCalendarTest {
         
       	// Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 	
 	// 2011
-	void testSaudiArabiaYear2011(Calendar c) {
+    @Test
+    public void testSaudiArabiaYear2011() {
       	int year = 2011;
       	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
@@ -187,11 +196,12 @@ public class SaudiArabiaCalendarTest {
         
       	// Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 	
 	// 2012
-	void testSaudiArabiaYear2012(Calendar c) {
+    @Test
+    public void testSaudiArabiaYear2012() {
       	int year = 2012;
       	logger.info("Testing SaudiArabia's holiday list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
@@ -202,7 +212,7 @@ public class SaudiArabiaCalendarTest {
         
       	// Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, c, year);
+    	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 	
 }

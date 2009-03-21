@@ -74,30 +74,19 @@ public class TermStructuresTest {
 	private final int settlementDays;
 	private final YieldTermStructure termStructure;
 	private final YieldTermStructure dummyTermStructure;
+    private final Date today;      
+    
 
-
-	private static class Datum {
-	    public int n;
-	    public TimeUnit units;
-	    public double rate;
-	    
-		public Datum(int n, TimeUnit units, double rate) {
-			this.n = n;
-			this.units = units;
-			this.rate = rate;
-		}
-	}
-	
-	
 	public TermStructuresTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-        logger.error("***** TEST FAILED :: waiting for implementation of Swaps and PiecewiseYieldTermStructure *****");
+        logger.error("***** INITIALIZATION INCOMPLETE :: waiting for implementation of Swaps and PiecewiseYieldTermStructure *****");
 
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         this.calendar = Target.getCalendar();
         this.settlementDays = 2;
         this.termStructure = null;
         this.dummyTermStructure = null;
+        this.today = settings.getEvaluationDate();      
 
         
 //TODO: remove comments		
@@ -173,7 +162,6 @@ public class TermStructuresTest {
 	    logger.info("Testing term structure against evaluation date change...");
 	
 	    final YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
-        final Date today = calendar.advance(DateFactory.getFactory().getTodaysDate());
 	    
 	    final int days[] = { 10, 30, 60, 120, 360, 720 };
 	    /*@DiscountFactor*/ double[] expected = new /*@DiscountFactor*/ double[days.length];
@@ -374,5 +362,22 @@ public class TermStructuresTest {
 //	    }
 	}
 
+	
+	
+	//
+	// private inner classes
+	//
+
+	private static class Datum {
+        public int n;
+        public TimeUnit units;
+        public double rate;
+
+        public Datum(int n, TimeUnit units, double rate) {
+            this.n = n;
+            this.units = units;
+            this.rate = rate;
+        }
+    }
 
 }

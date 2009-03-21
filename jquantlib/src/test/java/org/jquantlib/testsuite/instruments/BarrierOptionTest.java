@@ -22,18 +22,16 @@
 
 package org.jquantlib.testsuite.instruments;
 
-import javax.swing.SingleSelectionModel;
-
 import junit.framework.TestCase;
 
+import org.jquantlib.Configuration;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.BarrierOption;
 import org.jquantlib.instruments.BarrierType;
-import org.jquantlib.instruments.OneAssetStrikedOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
@@ -47,7 +45,6 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,75 +53,18 @@ public class BarrierOptionTest {
 
 	private final static Logger logger = LoggerFactory.getLogger(BarrierOptionTest.class);
 
-	private void REPORT_FAILURE(String greekName, BarrierType barrierType, 
-			double barrier, double rebate, StrikedTypePayoff payoff, 
-            Exercise exercise, double s, double q, double r, Date today, 
-            double v, double expected, double calculated, 
-            double error, double tolerance) {
-		TestCase.fail("\n" + barrierType + " " + exercise +  
-				payoff.optionType() + " option with " 
-				+ payoff.getClass().getSimpleName() + " payoff:\n" +
-				"    underlying value: " +  s + "\n" 
-    + "    strike:           " + payoff.strike() + "\n" 
-    + "    barrier:          " + barrier + "\n" 
-    + "    rebate:           " + rebate + "\n" 
-    + "    dividend yield:   " + q + "\n" 
-    + "    risk-free rate:   " + r + "\n" 
-    + "    reference date:   " + today + "\n" 
-    + "    maturity:         " + exercise.lastDate() + "\n" 
-    + "    volatility:       " + v  + "\n\n" 
-    + "    expected   " + greekName + ": " + expected + "\n" 
-    + "    calculated " + greekName + ": " + calculated + "\n"
-    + "    error:            " + error + "\n" 
-    + "    tolerance:        " + tolerance);
-	}
-	
-	
-	private static class NewBarrierOptionData {
-		
-		NewBarrierOptionData(	BarrierType barrierType,
-								double barrier,
-								double rebate,
-								Option.Type type,
-								double strike,
-								double s,        // spot
-								double q,        // dividend
-								double r,        // risk-free rate
-								double t,        // time to maturity
-								double v,  // volatility
-								double result,   // result
-								double tol      // tolerance
-		) {
-			this.barrierType = barrierType;
-			this.barrier = barrier;
-			this.rebate = rebate;
-			this.type = type;
-			this.strike = strike;
-			this.s = s;
-			this.q = q;
-			this.r = r;
-			this.t = t;
-			this.v = v;
-			this.result = result;
-			this.tol = tol;
-		}
-	    BarrierType barrierType;
-	    double barrier;
-	    double rebate;
-	    Option.Type type;
-	    double strike;
-	    double s;        // spot
-	    double q;        // dividend
-	    double r;        // risk-free rate
-	    double t;        // time to maturity
-	    double v;  // volatility
-	    double result;   // result
-	    double tol;      // tolerance
-	};
+    private final Settings settings;
+    private final Date today;      
+    
 
-	
-	
-	@Test
+    public BarrierOptionTest() {
+        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        this.today = settings.getEvaluationDate();      
+    }
+
+    
+    @Test
 	public void testHaugValues() {
 
 	    logger.info("Testing barrier options against Haug's values...");
@@ -217,8 +157,7 @@ public class BarrierOptionTest {
 	        new NewBarrierOptionData( BarrierType.UpIn,      105.0,    3.0,  Option.Type.PUT,   110, 100.0, 0.04, 0.08, 0.50, 0.30,  8.3686, 1.0e-4 )
 
 	        /*
-	            Data from "Going to Extreme: Correcting Simulation Bias in Exotic
-	            Option Valuation"
+	            Data from "Going to Extreme: Correcting Simulation Bias in Exotic Option Valuation"
 	            D.R. Beaglehole, P.H. Dybvig and G. Zhou
 	            Financial Analysts Journal; Jan / Feb 1997; 53, 1
 	        */
@@ -229,7 +168,6 @@ public class BarrierOptionTest {
 	    };
 
 
-	    Date today = DateFactory.getFactory().getTodaysDate();
 	    DayCounter dc = Actual360.getDayCounter();
 	    SimpleQuote spot = new SimpleQuote(0.0);
 	    SimpleQuote qRate = new SimpleQuote(0.0);
@@ -250,23 +188,23 @@ public class BarrierOptionTest {
 	        rRate.setValue(values[i].r);
 	        vol.setValue(values[i].v);
 
-	        StrikedTypePayoff payoff = new
-	            PlainVanillaPayoff(values[i].type, values[i].strike);
+	        StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 
-	        StochasticProcess stochProcess = new
+	        StochasticProcess stochProcess = new 
 	            BlackScholesMertonProcess(new Handle<Quote>(spot),
 	                                      new Handle<YieldTermStructure>(qTS),
 	                                      new Handle<YieldTermStructure>(rTS),
 	                                      new Handle<BlackVolTermStructure>(volTS));
 
-	        BarrierOption barrierOption = new BarrierOption(
-	                values[i].barrierType,
-	                values[i].barrier,
-	                values[i].rebate,
-	                stochProcess,
-	                payoff,
-	                exercise,
-	                new AnalyticBarrierOptionEngine());
+	        BarrierOption barrierOption = new 
+	            BarrierOption(values[i].barrierType,
+	                          values[i].barrier,
+	                          values[i].rebate,
+	                          stochProcess,
+	                          payoff,
+	                          exercise,
+	                          new AnalyticBarrierOptionEngine());
+	        
 	        double calculated = barrierOption.getNPV();
 	        double expected = values[i].result;
 	        double error = Math.abs(calculated-expected);
@@ -283,5 +221,73 @@ public class BarrierOptionTest {
 	private int timeToDays(/*@Time*/ double t) {
 	    return (int) (t*360+0.5);
 	}
+
+
+    private void REPORT_FAILURE(String greekName, BarrierType barrierType, 
+            double barrier, double rebate, StrikedTypePayoff payoff, 
+            Exercise exercise, double s, double q, double r, Date today, 
+            double v, double expected, double calculated, 
+            double error, double tolerance) {
+        TestCase.fail("\n" + barrierType + " " + exercise  
+                + payoff.optionType() + " option with " 
+                + payoff.getClass().getSimpleName() + " payoff:\n"
+                + "    underlying value: " +  s + "\n" 
+                + "    strike:           " + payoff.strike() + "\n" 
+                + "    barrier:          " + barrier + "\n" 
+                + "    rebate:           " + rebate + "\n" 
+                + "    dividend yield:   " + q + "\n" 
+                + "    risk-free rate:   " + r + "\n" 
+                + "    reference date:   " + today + "\n" 
+                + "    maturity:         " + exercise.lastDate() + "\n" 
+                + "    volatility:       " + v  + "\n\n" 
+                + "    expected   " + greekName + ": " + expected + "\n" 
+                + "    calculated " + greekName + ": " + calculated + "\n"
+                + "    error:            " + error + "\n" 
+                + "    tolerance:        " + tolerance);
+    }
+    
+    
+    private static class NewBarrierOptionData {
+        
+        private BarrierType barrierType;
+        private double barrier;
+        private double rebate;
+        private Option.Type type;
+        private double strike;
+        private double s;        // spot
+        private double q;        // dividend
+        private double r;        // risk-free rate
+        private double t;        // time to maturity
+        private double v;  // volatility
+        private double result;   // result
+        private double tol;      // tolerance
+
+        NewBarrierOptionData(   BarrierType barrierType,
+                                double barrier,
+                                double rebate,
+                                Option.Type type,
+                                double strike,
+                                double s,        // spot
+                                double q,        // dividend
+                                double r,        // risk-free rate
+                                double t,        // time to maturity
+                                double v,  // volatility
+                                double result,   // result
+                                double tol      // tolerance
+        ) {
+            this.barrierType = barrierType;
+            this.barrier = barrier;
+            this.rebate = rebate;
+            this.type = type;
+            this.strike = strike;
+            this.s = s;
+            this.q = q;
+            this.r = r;
+            this.t = t;
+            this.v = v;
+            this.result = result;
+            this.tol = tol;
+        }
+    }
 
 }

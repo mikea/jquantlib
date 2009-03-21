@@ -91,9 +91,15 @@ import org.slf4j.LoggerFactory;
 public class AmericanOptionTest {
 
     private final static Logger logger = LoggerFactory.getLogger(AmericanOptionTest.class);
+    
+    private final Settings settings;
+    private final Date today;
+    
 
     public AmericanOptionTest() {
         logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        this.today = DateFactory.getFactory().getTodaysDate();
     }
 
     @Test
@@ -108,8 +114,6 @@ public class AmericanOptionTest {
                 // From "Option pricing formulas", Haug, McGraw-Hill 1998, VBA
                 new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
 
-        final Date today = DateFactory.getFactory().getTodaysDate();
-        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         settings.setEvaluationDate(today);
         
         final DayCounter dc = Actual360.getDayCounter();
@@ -129,9 +133,7 @@ public class AmericanOptionTest {
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 
             final int daysToExpiry = (int) (values[i].t * 360 + 0.5);
-            final Date exDate = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear())
-                    .increment(daysToExpiry);
-
+            final Date exDate = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(daysToExpiry);
             final Exercise exercise = new AmericanExercise(today, exDate);
 
             spot.setValue(values[i].s);
@@ -140,8 +142,7 @@ public class AmericanOptionTest {
             vol.setValue(values[i].v);
 
             final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
-                            volTS));
+                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
 
             final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
@@ -204,7 +205,7 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.5104),
                 new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 5.8823) };
 
-        final Date today = DateFactory.getFactory().getTodaysDate();
+        // final Date today = DateFactory.getFactory().getTodaysDate();
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -323,8 +324,8 @@ public class AmericanOptionTest {
 
         logger.info("Testing Ju approximation for American options...");
 
-        final Date today = DateFactory.getFactory().getTodaysDate();
-        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        //XXX final Date today = DateFactory.getFactory().getTodaysDate();
+        //XXX Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         settings.setEvaluationDate(today);
 
         final DayCounter dc = Actual360.getDayCounter();
@@ -343,9 +344,7 @@ public class AmericanOptionTest {
         for (int i = 0; i < juValues.length; i++) {
 
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValues[i].type, juValues[i].strike);
-
             final Date exDate = today.getDateAfter(timeToDays(juValues[i].t));
-
             final Exercise exercise = new AmericanExercise(today, exDate);
 
             spot.setValue(juValues[i].s);
@@ -445,8 +444,8 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
-        Date today = DateFactory.getFactory().getTodaysDate();
-        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        //XXX Date today = DateFactory.getFactory().getTodaysDate();
+        //XXX Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         settings.setEvaluationDate(today);
 
         double tolerance = 8.0e-2;
@@ -462,11 +461,8 @@ public class AmericanOptionTest {
             final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
             final SimpleQuote vol = new SimpleQuote(0.0);
             final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
-
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValues[i].type, juValues[i].strike);
-
             final Date exDate = today.getDateAfter(timeToDays(juValues[i].t));
-
             final Exercise exercise = new AmericanExercise(today, exDate);
 
             spot.setValue(juValues[i].s);
@@ -513,9 +509,9 @@ public class AmericanOptionTest {
         int years[] = { 1, 2 };
         double vols[] = { 0.11, 0.50, 1.20 };
 
-        Date today = DateFactory.getFactory().getTodaysDate();
+        //XXX Date today = DateFactory.getFactory().getTodaysDate();
         DayCounter dc = Actual360.getDayCounter();
-        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        //XXX Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         settings.setEvaluationDate(today);
 
         final SimpleQuote spot = new SimpleQuote(0.0);
@@ -533,7 +529,6 @@ public class AmericanOptionTest {
                 for (int k = 0; k < years.length; k++) {
 
                     Date exDate = today.getDateAfter(new Period(years[k], TimeUnit.YEARS));
-
                     Exercise exercise = new AmericanExercise(today, exDate);
                     payoff = new PlainVanillaPayoff(types[i], strikes[j]);
 
@@ -589,8 +584,7 @@ public class AmericanOptionTest {
                                             double tol = tolerance.get(greek.getKey());
                                             double error = Utilities.relativeError(expct, calcl, u);
                                             if (error > tol) {
-                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl,
-                                                        error, tol);
+                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
                                             }
                                         }
                                     }
@@ -622,9 +616,9 @@ public class AmericanOptionTest {
         int years[] = { 1, 2 };
         double vols[] = { 0.11, 0.50, 1.20 };
 
-        Date today = DateFactory.getFactory().getTodaysDate();
+        //XXX Date today = DateFactory.getFactory().getTodaysDate();
         DayCounter dc = Actual360.getDayCounter();
-        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        //XXX Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         settings.setEvaluationDate(today);
 
         final SimpleQuote spot = new SimpleQuote(0.0);
@@ -698,8 +692,7 @@ public class AmericanOptionTest {
                                             double tol = tolerance.get(greek.getKey());
                                             double error = Utilities.relativeError(expct, calcl, u);
                                             if (error > tol) {
-                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl,
-                                                        error, tol);
+                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
                                             }
                                         }
                                     }

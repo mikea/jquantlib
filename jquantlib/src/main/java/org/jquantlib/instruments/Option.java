@@ -69,7 +69,8 @@ public abstract class Option extends NewInstrument {
 	 * caches values from the singleton, intending to avoid contention in
 	 * heavily multi-threaded environments.
 	 */
-	private Date evaluationDate = null;
+	private final Date evaluationDate;
+	
 
 	//
 	// public constructors

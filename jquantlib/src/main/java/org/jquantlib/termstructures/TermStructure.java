@@ -188,7 +188,6 @@ public abstract class TermStructure implements Observer, Observable {
 	public TermStructure(final DayCounter dc) {
 		if (dc==null) throw new NullPointerException(); // TODO: message
 		this.calendar = null;
-		this.referenceDate = null;
 		this.settlementDays = 0;
 		this.dayCounter = dc;
 		this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
@@ -197,6 +196,9 @@ public abstract class TermStructure implements Observer, Observable {
 		this.moving = false;
 		this.updated = true;
 		this.today = null;
+
+		// initialize reference date without any observers
+		this.referenceDate = null;
 	}
 
 	/**
@@ -227,7 +229,6 @@ public abstract class TermStructure implements Observer, Observable {
 		if (referenceDate==null) throw new NullPointerException(); // TODO: message
 		if (calendar==null) throw new NullPointerException(); // TODO: message
 		if (dc==null) throw new NullPointerException(); // TODO: message
-		this.referenceDate = referenceDate;
 		this.settlementDays = 0;
 		this.calendar = calendar;
 		this.dayCounter = dc;
@@ -237,6 +238,10 @@ public abstract class TermStructure implements Observer, Observable {
 		this.moving = false;
 		this.updated = true;
 		this.today = null;
+		
+        // initialize reference date with this class as observer
+        this.referenceDate = referenceDate;
+		this.referenceDate.addObserver(this);
 	}
 	
 	/**
@@ -267,7 +272,6 @@ public abstract class TermStructure implements Observer, Observable {
      * @see TermStructure documentation for more details about constructors.
 	 */ 
 	public TermStructure(final int settlementDays, final Calendar calendar, final DayCounter dc) {
-		this.referenceDate = null;
 		this.settlementDays = settlementDays;
 		this.calendar = calendar;
 		this.dayCounter = dc;
@@ -278,6 +282,9 @@ public abstract class TermStructure implements Observer, Observable {
 		this.updated = false;
 		this.today = settings.getEvaluationDate();
 		today.addObserver(this);
+
+        // initialize reference date without any observers
+        this.referenceDate = null;
 	}
 	
 	

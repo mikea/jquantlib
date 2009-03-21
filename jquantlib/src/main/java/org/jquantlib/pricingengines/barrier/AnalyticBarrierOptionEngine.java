@@ -60,25 +60,33 @@ import org.jquantlib.time.Frequency;
  * @author <Richard Gomes>
  *
  */
+//TODO: this class needs code review
 @SuppressWarnings("PMD.TooManyMethods")
 public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 	
 	private static final String bsprocessrequired = "Black-Scholes process required";
 
+    private final CumulativeNormalDistribution f_;
+
+    public AnalyticBarrierOptionEngine() {
+        this.f_ = new CumulativeNormalDistribution();
+    }
+    
 	@Override
 	public void calculate() {
 
         if (!(getArguments().payoff instanceof PlainVanillaPayoff)){
-        	throw new ArithmeticException("non-plain payoff given");
+        	throw new ArithmeticException("non-plain payoff given"); // TODO: message
         }
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)getArguments().payoff;
         if(!(payoff.strike()>0.0)){
-        	throw new ArithmeticException("strike must be positive");
+        	throw new ArithmeticException("strike must be positive"); // TODO: message
         }
 
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
         	throw new ArithmeticException(bsprocessrequired);
         }
+        
         //not needed
         //GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
@@ -145,30 +153,29 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
             }
             break;
           default:
-            throw new ArithmeticException("unknown type");
+            throw new ArithmeticException("unknown type"); // TODO: message
         }
 		
 	}
 
 	
-    double  underlying()  {
+    private double  underlying()  {
         return arguments.stochasticProcess.initialValues()[0];
     }
 
-    double strike()  {
+    private double strike()  {
         if (!(getArguments().payoff instanceof PlainVanillaPayoff)){
-        	throw new ArithmeticException("non-plain payoff given");
+        	throw new ArithmeticException("non-plain payoff given"); // TODO: message
         }
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)getArguments().payoff;
         return payoff.strike();
     }
 
-    double /*@Time*/  residualTime()  {
-        return arguments.stochasticProcess.getTime(
-                                             arguments.exercise.lastDate());
+    private double /*@Time*/  residualTime()  {
+        return arguments.stochasticProcess.getTime(arguments.exercise.lastDate());
     }
 
-    double /*@Volatility*/  volatility()  {
+    private double /*@Volatility*/  volatility()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
         	throw new ArithmeticException(bsprocessrequired);
         }
@@ -176,30 +183,30 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
         return process.blackVolatility().getLink().blackVol(residualTime(), strike());
     }
 
-    double  stdDeviation()  {
+    private double  stdDeviation()  {
         return volatility() * Math.sqrt(residualTime());
     }
 
-    double  barrier()  {
+    private double  barrier()  {
         return arguments.barrier;
     }
 
-    double  rebate()  {
+    private double  rebate()  {
         return arguments.rebate;
     }
 
-    double /*@Rate*/  riskFreeRate()  {
+    private double /*@Rate*/  riskFreeRate()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
         	throw new ArithmeticException(bsprocessrequired);
         }
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         
         InterestRate rate =  process.riskFreeRate().getLink().zeroRate(residualTime(), Compounding.CONTINUOUS,
-                                                 Frequency.NO_FREQUENCY, false);//TODO add zeroRate method with extrpalote set to false
+                                                 Frequency.NO_FREQUENCY, false); //TODO add zeroRate method with extrpalote set to false
         return rate.rate();
     }
 
-    double /*@DiscountFactor*/  riskFreeDiscount()  {
+    private double /*@DiscountFactor*/  riskFreeDiscount()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
         	throw new ArithmeticException(bsprocessrequired);
         }
@@ -207,7 +214,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
         return process.riskFreeRate().getLink().discount(residualTime());
     }
 
-    double /*@Rate*/  dividendYield()  {
+    private double /*@Rate*/  dividendYield()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
         	throw new ArithmeticException(bsprocessrequired);
         }
@@ -218,25 +225,25 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
         return yield.rate();
     }
 
-    double /*@DiscountFactor*/  dividendDiscount()  {
+    private double /*@DiscountFactor*/  dividendDiscount()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-        	throw new ArithmeticException("Black-Scholes process required");
+        	throw new ArithmeticException("Black-Scholes process required"); // TODO: message
         }
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         return process.dividendYield().getLink().discount(residualTime());
     }
 
-    double /*@Rate*/  mu()  {
+    private double /*@Rate*/  mu()  {
         double /*@Volatility*/ vol = volatility();
         return (riskFreeRate() - dividendYield())/(vol * vol) - 0.5;
     }
 
-    double  muSigma()  {
+    private double  muSigma()  {
         return (1 + mu()) * stdDeviation();
     }
 
     @SuppressWarnings("PMD")
-    double  A(double phi)  {
+    private double  A(double phi)  {
         double x1 =
             Math.log(underlying()/strike())/stdDeviation() + muSigma();
         double N1 = f_.evaluate(phi*x1);
@@ -246,7 +253,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
     }
 
     @SuppressWarnings("PMD")
-    double  B(final double phi)  {
+    private double  B(final double phi)  {
         double x2 =
             Math.log(underlying()/barrier())/stdDeviation() + muSigma();
         double N1 = f_.evaluate(phi*x2);
@@ -256,7 +263,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
     }
 
     @SuppressWarnings("PMD.MethodNamingConventions")
-    double  C(double eta, final double phi)  {
+    private double  C(double eta, final double phi)  {
         double HS = barrier()/underlying();
         double powHS0 = Math.pow(HS, 2 * mu());
         double powHS1 = powHS0 * HS * HS;
@@ -268,7 +275,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
     }
     
     @SuppressWarnings("PMD.MethodNamingConventions")
-    double  D(double eta, double phi)  {
+    private double  D(double eta, double phi)  {
         double HS = barrier()/underlying();
         double powHS0 = Math.pow(HS, 2 * mu());
         double powHS1 = powHS0 * HS * HS;
@@ -280,7 +287,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
     }
     
     @SuppressWarnings("PMD.MethodNamingConventions")
-    double  E(double eta)  {
+    private double  E(double eta)  {
         if (rebate() > 0) {
             double powHS0 = Math.pow(barrier()/underlying(), 2 * mu());
             double x2 =
@@ -295,7 +302,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
         }
     }
 
-    double  F(double eta)  {
+    private double  F(double eta)  {
         if (rebate() > 0) {
             double /*@Rate*/ m = mu();
             double /*@Volatility*/ vol = volatility();
@@ -305,8 +312,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
             double powHSminus = Math.pow(HS, m - lambda);
 
             double sigmaSqrtT = stdDeviation();
-            double z = Math.log(barrier()/underlying())/sigmaSqrtT
-                + lambda * sigmaSqrtT;
+            double z = Math.log(barrier()/underlying())/sigmaSqrtT + lambda*sigmaSqrtT;
 
             double N1 = f_.evaluate(eta * z);
             double N2 = f_.evaluate(eta * (z - 2.0 * lambda * sigmaSqrtT));
@@ -315,7 +321,5 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
             return 0.0;
         }
     }
-
-    CumulativeNormalDistribution f_ = new CumulativeNormalDistribution();
 
 }

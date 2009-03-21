@@ -338,9 +338,6 @@ public class UnitedStatesCalendarTest {
 		expectedHol.add(df.getDate(11,NOVEMBER,year));
 		
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
-		
-		//expectedHol.remove(good_friday);
-		
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
 
@@ -388,7 +385,6 @@ public class UnitedStatesCalendarTest {
 		
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 		
-		expectedHol.remove(good_friday);
 		//New Year's Eve falls on Friday
 		expectedHol.add(df.getDate(31,DECEMBER,year));
 		
@@ -437,8 +433,6 @@ public class UnitedStatesCalendarTest {
 		
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 		
-		expectedHol.remove(good_friday);
-		
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
 	
@@ -483,8 +477,6 @@ public class UnitedStatesCalendarTest {
 		expectedHol.add(df.getDate(12,NOVEMBER,year));
 		
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
-		
-		expectedHol.remove(good_friday);
 		
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}

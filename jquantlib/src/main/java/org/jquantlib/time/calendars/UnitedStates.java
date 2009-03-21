@@ -207,13 +207,11 @@ public class UnitedStates extends DelegateCalendar {
 					|| (d == 31 && w == Weekday.FRIDAY && m == Month.DECEMBER
 							.toInteger())
 					// Martin Luther King's birthday (third Monday in January)
-					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY
-							.toInteger())
+					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY.toInteger())
 					// Washington's birthday (third Monday in February)
-					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
-							.toInteger())
+					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY.toInteger())
 					// Good Friday
-					|| ((dd == em - 3) && (y == 2008 || y == 2009))
+					|| ((dd == em - 3) && (y >= 2008))
 					// Memorial Day (last Monday in May)
 					|| (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
 							.toInteger())

@@ -50,12 +50,14 @@ public class NoConstraintTest {
 		this.nc = new NoConstraint();
 	}
 	
+    @Ignore
 	@Test
 	public void testTest() {
       if (!nc.test(new Array()))
 		fail("NoConstraint test method failed");
     }
 	
+    @Ignore
     @Test
     public void testUpdate() {
 	  Array params = new Array(new double[]{1.0d,1.1d,2.3d});
@@ -69,6 +71,7 @@ public class NoConstraintTest {
 		fail("Constraint update method failed");
     }
 	
+    @Ignore
     @Test
     public void testEmpty() {
       if (nc.empty())

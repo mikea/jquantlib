@@ -49,6 +49,7 @@ import java.util.Map.Entry;
 import junit.framework.TestCase;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.EuropeanExercise;
@@ -84,6 +85,17 @@ public class AsianOptionTest {
 
     private final static Logger logger = LoggerFactory.getLogger(AsianOptionTest.class);
 
+    private final Settings settings;
+    private final Date today;
+    
+    
+    public AsianOptionTest() {
+        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        this.today = settings.getEvaluationDate();
+    }
+    
+    
 	@Test
 	public void reportFailure() {
 
@@ -180,14 +192,8 @@ public class AsianOptionTest {
 	    /*@Volatility*/ double vols[] = { 0.11, 0.50, 1.20 };
 
 	    DayCounter dc = Actual360.getDayCounter();
-	    Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-	    //FIXME check how to use settings...
-	    //Settings settings = new Settings().setEvaluationDate(today);
-
-        //Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
 
 	    SimpleQuote spot = new SimpleQuote(0.0);
-	    
 	    SimpleQuote qRate = new SimpleQuote(0.0);
 	    YieldTermStructure qTS = Utilities.flatRate(new Handle<SimpleQuote>(qRate), dc);
 	    SimpleQuote rRate = new SimpleQuote(0.0);
@@ -300,9 +306,9 @@ public class AsianOptionTest {
                               final Date yesterday = today.getPreviousDay();
                               final Date tomorrow  = today.getNextDay();
                               double dT = dc.yearFraction(yesterday, tomorrow);
-                              Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
+                              settings.setEvaluationDate(yesterday);
                               value_m = option.getNPV();
-                              Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
+                              settings.setEvaluationDate(tomorrow);
                               value_p = option.getNPV();
                               expected.put("theta", (value_p - value_m)/dT);
 
