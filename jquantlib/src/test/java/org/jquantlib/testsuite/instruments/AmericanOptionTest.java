@@ -109,6 +109,9 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
 
         final Date today = DateFactory.getFactory().getTodaysDate();
+        Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        settings.setEvaluationDate(today);
+        
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
