@@ -60,11 +60,27 @@ import org.jquantlib.time.Frequency;
  * @author <Richard Gomes>
  *
  */
-//TODO: this class needs code review
+
+//! Pricing engine for barrier options using analytical formulae
+/*! The formulas are taken from "Option pricing formulas",
+     E.G. Haug, McGraw-Hill, p.69 and following.
+
+    \ingroup barrierengines
+
+    \test the correctness of the returned value is tested by
+          reproducing results available in literature.
+
+    \todo rework to avoid repeated casts inside utility methods
+*/
+
 @SuppressWarnings("PMD.TooManyMethods")
 public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 	
+    //messages
 	private static final String bsprocessrequired = "Black-Scholes process required";
+	private static final String non_plain_payoff_given = "non-plain payoff given";
+	private static final String strike_must_be_positiv = "strike must be positiv";
+	private static final String unknown_type = "unknown type";
 
     private final CumulativeNormalDistribution f_;
 
@@ -76,11 +92,11 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 	public void calculate() {
 
         if (!(getArguments().payoff instanceof PlainVanillaPayoff)){
-        	throw new ArithmeticException("non-plain payoff given"); // TODO: message
+        	throw new ArithmeticException(non_plain_payoff_given);
         }
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)getArguments().payoff;
         if(!(payoff.strike()>0.0)){
-        	throw new ArithmeticException("strike must be positive"); // TODO: message
+        	throw new ArithmeticException(strike_must_be_positiv);
         }
 
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
@@ -153,7 +169,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
             }
             break;
           default:
-            throw new ArithmeticException("unknown type"); // TODO: message
+            throw new ArithmeticException(unknown_type); 
         }
 		
 	}
@@ -165,7 +181,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 
     private double strike()  {
         if (!(getArguments().payoff instanceof PlainVanillaPayoff)){
-        	throw new ArithmeticException("non-plain payoff given"); // TODO: message
+        	throw new ArithmeticException(non_plain_payoff_given);
         }
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)getArguments().payoff;
         return payoff.strike();
@@ -202,7 +218,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         
         InterestRate rate =  process.riskFreeRate().getLink().zeroRate(residualTime(), Compounding.CONTINUOUS,
-                                                 Frequency.NO_FREQUENCY, false); //TODO add zeroRate method with extrpalote set to false
+                                                 Frequency.NO_FREQUENCY, false);
         return rate.rate();
     }
 
@@ -227,7 +243,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 
     private double /*@DiscountFactor*/  dividendDiscount()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-        	throw new ArithmeticException("Black-Scholes process required"); // TODO: message
+        	throw new ArithmeticException(bsprocessrequired);
         }
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         return process.dividendYield().getLink().discount(residualTime());
