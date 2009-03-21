@@ -52,11 +52,11 @@ import org.junit.Test;
 public class DenmarkCalendarTest {
 	private final static Logger logger = LoggerFactory.getLogger(DenmarkCalendarTest.class);
 
-	private Calendar cse;
+	private final Calendar exchange;
 
 	public DenmarkCalendarTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-		cse = Denmark.getCalendar(Denmark.Market.CSE);
+		exchange = Denmark.getCalendar(Denmark.Market.CSE);
 	}
         	
 	@Test
@@ -83,7 +83,7 @@ public class DenmarkCalendarTest {
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
-		cbt.checkHolidayList(expectedHol, cse, year);
+		cbt.checkHolidayList(expectedHol, exchange, year);
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class DenmarkCalendarTest {
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
-		cbt.checkHolidayList(expectedHol, cse, year);
+		cbt.checkHolidayList(expectedHol, exchange, year);
 	}
 
 	@Test
@@ -139,7 +139,7 @@ public class DenmarkCalendarTest {
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
-		cbt.checkHolidayList(expectedHol, cse, year);
+		cbt.checkHolidayList(expectedHol, exchange, year);
 	}
 
 	@Test
@@ -176,7 +176,7 @@ public class DenmarkCalendarTest {
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
-		cbt.checkHolidayList(expectedHol, cse, year);
+		cbt.checkHolidayList(expectedHol, exchange, year);
 	}
 
 	// 2008 - current year
@@ -214,7 +214,7 @@ public class DenmarkCalendarTest {
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
-		cbt.checkHolidayList(expectedHol, cse, year);
+		cbt.checkHolidayList(expectedHol, exchange, year);
 	}
 
 	@Test
@@ -250,7 +250,7 @@ public class DenmarkCalendarTest {
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
-		cbt.checkHolidayList(expectedHol, cse, year);
+		cbt.checkHolidayList(expectedHol, exchange, year);
 	}
 
 	@Test
@@ -277,7 +277,7 @@ public class DenmarkCalendarTest {
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
-		cbt.checkHolidayList(expectedHol, cse, year);
+		cbt.checkHolidayList(expectedHol, exchange, year);
 	}
 
 	@Test
@@ -308,7 +308,7 @@ public class DenmarkCalendarTest {
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
-		cbt.checkHolidayList(expectedHol, cse, year);
+		cbt.checkHolidayList(expectedHol, exchange, year);
 	}
 
 	@Test
@@ -335,7 +335,7 @@ public class DenmarkCalendarTest {
 
 		// Call the Holiday Check
 		CalendarUtil cbt = new CalendarUtil();
-		cbt.checkHolidayList(expectedHol, cse, year);
+		cbt.checkHolidayList(expectedHol, exchange, year);
 	}
 
 }

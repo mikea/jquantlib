@@ -78,6 +78,7 @@ public class HongKongCalendarTest {
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
         final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
+        
         expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January 
         expectedHol.add(df.getDate(26,JANUARY,year));   // Lunar New Year's Day 
         expectedHol.add(df.getDate(27,JANUARY,year));   // The second day of Lunar New Year 
@@ -120,6 +121,7 @@ public class HongKongCalendarTest {
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
+    	
 		expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January 
     	expectedHol.add(df.getDate(7,FEBRUARY,year));   // Lunar New Year's Day 
 		expectedHol.add(df.getDate(8,FEBRUARY,year));   // The second day of Lunar New Year
@@ -164,7 +166,13 @@ public class HongKongCalendarTest {
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
         final DateFactory df = DateFactory.getFactory();
-        final List<Date> expectedHol = generateRuledHongKongHolidays(year);
+        final List<Date> expectedHol = new ArrayList<Date>();
+
+        expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January 
+        expectedHol.add(df.getDate(1,MAY,year));        // Labour Day               
+        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
 
     	expectedHol.add(df.getDate(19,FEBRUARY,year));   // 2 Lunar New Year's Day 
 		expectedHol.add(df.getDate(20,FEBRUARY,year));   // The 3 day of Lunar New Year
@@ -206,10 +214,17 @@ public class HongKongCalendarTest {
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
         final DateFactory df = DateFactory.getFactory();
-        final List<Date> expectedHol = generateRuledHongKongHolidays(year);
+        final List<Date> expectedHol = new ArrayList<Date>();
+
+        expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January 
+        expectedHol.add(df.getDate(1,MAY,year));        // Labour Day               
+        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
 
         expectedHol.remove(df.getDate(1,JANUARY,year)); 
-        expectedHol.remove(df.getDate(1,OCTOBER,year)); 
+        expectedHol.remove(df.getDate(1,OCTOBER,year));
+        
     	expectedHol.add(df.getDate(2,JANUARY,year));   // 2 of the New Year's Day 
     	expectedHol.add(df.getDate(30,JANUARY,year));   // 2 Lunar New Year's Day 
 		expectedHol.add(df.getDate(31,JANUARY,year));   // The 3 day of Lunar New Year
@@ -252,12 +267,19 @@ public class HongKongCalendarTest {
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
         final DateFactory df = DateFactory.getFactory();
-        final List<Date> expectedHol = generateRuledHongKongHolidays(year);
+        final List<Date> expectedHol = new ArrayList<Date>();
+
+        expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January 
+        expectedHol.add(df.getDate(1,MAY,year));        // Labour Day               
+        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
 
         expectedHol.remove(df.getDate(1,JANUARY,year)); 
         expectedHol.remove(df.getDate(1,MAY,year)); 
         expectedHol.remove(df.getDate(1,OCTOBER,year)); 
-        expectedHol.remove(df.getDate(25,DECEMBER,year)); 
+        expectedHol.remove(df.getDate(25,DECEMBER,year));
+        
     	expectedHol.add(df.getDate(3,JANUARY,year));   // 3 of the New Year's Day 
     	expectedHol.add(df.getDate(9,FEBRUARY,year));   // Lunar New Year's Day 
     	expectedHol.add(df.getDate(10,FEBRUARY,year));   // 2 Lunar New Year's Day 
@@ -303,9 +325,16 @@ public class HongKongCalendarTest {
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
         final DateFactory df = DateFactory.getFactory();
-        final List<Date> expectedHol = generateRuledHongKongHolidays(year);
+        final List<Date> expectedHol = new ArrayList<Date>();
 
-    	expectedHol.remove(df.getDate(1,MAY,year));        // Labour Day    	    	
+        expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January 
+        expectedHol.add(df.getDate(1,MAY,year));        // Labour Day               
+        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
+
+        expectedHol.remove(df.getDate(1,MAY,year));        // Labour Day    	  
+        
     	expectedHol.add(df.getDate(22,JANUARY,year));   // Lunar New Year's Day 
     	expectedHol.add(df.getDate(23,JANUARY,year));   // 2 Lunar New Year's Day 
 //		expectedHol.add(df.getDate(24,JANUARY,year));   // The 3 day of Lunar New Year
@@ -323,20 +352,5 @@ public class HongKongCalendarTest {
         
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }
-    
-    public  List<Date> generateRuledHongKongHolidays(final int year)
-    {
-        List<Date> expectedHol = new ArrayList<Date>();
-        final DateFactory df = DateFactory.getFactory();
-    	expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January 
-    	expectedHol.add(df.getDate(1,MAY,year));        // Labour Day    	    	
-        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
-        return expectedHol;
-    }
-    
-    
-
     
 }
