@@ -357,7 +357,7 @@ public class EuropeanOptionTest {
 	        
             StringBuilder sb = new StringBuilder();
             sb.append("error ").append(error).append(" .gt. tolerance ").append(tolerance).append('\n');
-            sb.append("  calculated ").append(calculated).append('\n');
+            sb.append("    calculated ").append(calculated).append('\n');
             sb.append("    type ").append(values[i].type).append('\n');
             sb.append("    strike ").append(values[i].strike).append('\n');
             sb.append("    s ").append(values[i].s).append('\n');
@@ -690,8 +690,7 @@ public class EuropeanOptionTest {
         final double vols[] = { 0.11, 0.50, 1.20 };
 
         final DayCounter dc = Actual360.getDayCounter();
-        final Date today = DateFactory.getFactory().getTodaysDate();
-        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
+        final Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();      
         
         final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
         final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
@@ -701,6 +700,7 @@ public class EuropeanOptionTest {
         final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
         final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
 
+        
 
         StrikedTypePayoff payoff = null;
 
@@ -801,6 +801,7 @@ public class EuropeanOptionTest {
                             Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
                             value_m = option.getNPV();
                             Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
+                            //Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().increment(1);
                             value_p = option.getNPV();
                             expected.put("theta", (value_p - value_m)/dT);
 
