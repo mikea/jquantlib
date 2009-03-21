@@ -181,7 +181,30 @@ it.unimi.dsi.fastutil.doubles.DoubleArrayList list2 = it.unimi.dsi.fastutil.doub
 ]]>
 		</example>
 	</rule>
-
+	
+	
+	
+	
+    <rule name="UsePrimitivesInsteadOfObjects" 
+		  message="Use primitive types instead of Objects" 
+		  class="net.sourceforge.pmd.rules.XPathRule">
+		<description>Use primitive types instead of Objects.</description>
+		<properties>
+			<property name="xpath">
+				<value>
+<![CDATA[
+//ClassOrInterfaceType[
+  @Image='Double' or @Image='java.lang.Double' or
+  @Image='Integer' or @Image='java.lang.Integer' or
+  @Image='Long' or @Image='java.lang.Long' or
+  @Image='Short' or @Image='java.lang.Short' or
+  @Image='Byte' or @Image='java.lang.Byte' or
+  @Image='Character' or @Image='java.lang.Character']
+]]>
+				</value>
+			</property>
+		</properties>
+	</rule>
 
 
 </ruleset>
