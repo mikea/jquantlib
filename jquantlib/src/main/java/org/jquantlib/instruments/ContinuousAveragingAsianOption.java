@@ -72,8 +72,8 @@ import org.jquantlib.processes.StochasticProcess;
 
 public class ContinuousAveragingAsianOption extends OneAssetStrikedOption{
 
-
-
+    public static final String wrong_argument_type = "wrong argument type";
+    
 	public ContinuousAveragingAsianOption(
             AverageType averageType,
             final StochasticProcess process,
@@ -94,7 +94,7 @@ public class ContinuousAveragingAsianOption extends OneAssetStrikedOption{
         super.setupArguments(arguments);
 
         if (!(arguments instanceof ContinuousAveragingAsianOptionArguments)){
-        	throw new IllegalArgumentException("wrong argument type");
+        	throw new IllegalArgumentException(wrong_argument_type);
         }
         ContinuousAveragingAsianOptionArguments moreArgs = (ContinuousAveragingAsianOptionArguments)arguments;
         moreArgs.averageType = averageType_;
