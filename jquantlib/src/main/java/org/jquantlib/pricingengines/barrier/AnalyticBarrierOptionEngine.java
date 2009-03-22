@@ -51,36 +51,24 @@ import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.time.Frequency;
 
 /**
+ * Pricing engine for barrier options using analytical formulae
  * <p>
- * Ported from 
- * <ul>
- * <li>ql/pricingengines/barrier/analyticbarrierengine.hpp</li>
- * <li>ql/pricingengines/barrier/analyticbarrierengine.cpp</li>
- * </ul>
+ * The formulas are taken from "Option pricing formulas", E.G. Haug, McGraw-Hill, p.69 and following.
+ * 
+ * @category barrierengines
+ * 
  * @author <Richard Gomes>
- *
  */
-
-//! Pricing engine for barrier options using analytical formulae
-/*! The formulas are taken from "Option pricing formulas",
-     E.G. Haug, McGraw-Hill, p.69 and following.
-
-    \ingroup barrierengines
-
-    \test the correctness of the returned value is tested by
-          reproducing results available in literature.
-
-    \todo rework to avoid repeated casts inside utility methods
-*/
-
+//TODO the correctness of the returned value is tested by reproducing results available in literature.
+//TODO rework to avoid repeated casts inside utility methods
 @SuppressWarnings("PMD.TooManyMethods")
 public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 	
     //messages
-	private static final String bsprocessrequired = "Black-Scholes process required";
-	private static final String non_plain_payoff_given = "non-plain payoff given";
-	private static final String strike_must_be_positiv = "strike must be positiv";
-	private static final String unknown_type = "unknown type";
+	private static final String BS_PROCESS_REQUIRED = "Black-Scholes process required";
+	private static final String NON_PLAIN_PAYOFF_GIVEN = "non-plain payoff given";
+	private static final String STRIKE_MUST_BE_POSITIVE = "strike must be positive";
+	private static final String UNKNOWN_TYPE = "unknown type";
 
     private final CumulativeNormalDistribution f_;
 
@@ -92,15 +80,15 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 	public void calculate() {
 
         if (!(getArguments().payoff instanceof PlainVanillaPayoff)){
-        	throw new ArithmeticException(non_plain_payoff_given);
+        	throw new ArithmeticException(NON_PLAIN_PAYOFF_GIVEN);
         }
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)getArguments().payoff;
         if(!(payoff.strike()>0.0)){
-        	throw new ArithmeticException(strike_must_be_positiv);
+        	throw new ArithmeticException(STRIKE_MUST_BE_POSITIVE);
         }
 
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-        	throw new ArithmeticException(bsprocessrequired);
+        	throw new ArithmeticException(BS_PROCESS_REQUIRED);
         }
         
         //not needed
@@ -169,7 +157,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
             }
             break;
           default:
-            throw new ArithmeticException(unknown_type); 
+            throw new ArithmeticException(UNKNOWN_TYPE); 
         }
 		
 	}
@@ -181,7 +169,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 
     private double strike()  {
         if (!(getArguments().payoff instanceof PlainVanillaPayoff)){
-        	throw new ArithmeticException(non_plain_payoff_given);
+        	throw new ArithmeticException(NON_PLAIN_PAYOFF_GIVEN);
         }
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)getArguments().payoff;
         return payoff.strike();
@@ -193,7 +181,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 
     private double /*@Volatility*/  volatility()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-        	throw new ArithmeticException(bsprocessrequired);
+        	throw new ArithmeticException(BS_PROCESS_REQUIRED);
         }
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         return process.blackVolatility().getLink().blackVol(residualTime(), strike());
@@ -213,7 +201,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 
     private double /*@Rate*/  riskFreeRate()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-        	throw new ArithmeticException(bsprocessrequired);
+        	throw new ArithmeticException(BS_PROCESS_REQUIRED);
         }
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         
@@ -224,7 +212,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 
     private double /*@DiscountFactor*/  riskFreeDiscount()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-        	throw new ArithmeticException(bsprocessrequired);
+        	throw new ArithmeticException(BS_PROCESS_REQUIRED);
         }
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         return process.riskFreeRate().getLink().discount(residualTime());
@@ -232,7 +220,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 
     private double /*@Rate*/  dividendYield()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-        	throw new ArithmeticException(bsprocessrequired);
+        	throw new ArithmeticException(BS_PROCESS_REQUIRED);
         }
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         
@@ -243,7 +231,7 @@ public class AnalyticBarrierOptionEngine extends BarrierOptionEngine {
 
     private double /*@DiscountFactor*/  dividendDiscount()  {
         if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-        	throw new ArithmeticException(bsprocessrequired);
+        	throw new ArithmeticException(BS_PROCESS_REQUIRED);
         }
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         return process.dividendYield().getLink().discount(residualTime());
