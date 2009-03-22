@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
-<project name="jquantlib" default="initialize" basedir="."
-	xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
-
+<project name="jquantlib" default="package" basedir="."
+	 xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
+	
 	<!-- TODO :: pending implementation
-	1. remove username/password
-	2. Make integration-test work with JUnit
-	3. generate reports: findbugs, taglist, surefire, pmd, jdepend 
-	-->
-
+	     1. remove username/password
+	     2. Make integration-test work with JUnit
+	     3. generate reports: findbugs, taglist, surefire, pmd, jdepend 
+	     -->
+	
 	<target name="_module">
-
 		<property name="project.organisation" value="JQuantLib.org"/>
 		<property name="project.module"       value="jquantlib"/>
 		<property name="project.branch"       value="trunk"/>
@@ -19,6 +18,7 @@
 		<property name="project.version"      value="0.1.2-SNAPSHOT" />
 		
 		<property name="project.name"         value="JQuantLib" />
+	    <property name="project.description"  value="JQuantLib is a free, open-source and comprehensive framework for quantitative finance." />
 		<property name="project.url"          value="http://www.jquantlib.org/" />
 		
 		<property name="project.spec.title"   value="QuantLib" />
@@ -29,24 +29,41 @@
 		<property name="project.impl.version" value="${project.version}" />
 		<property name="project.impl.vendor"  value="JQuantLib.org" />
 	</target>
-
-
+	
+	
 	<!-- options -->
 	
 	<target name="_options">
 		<!-- components managed by hand -->
-		<property name="options.ivy.version"        value="2.0.0"/>
-		<property name="options.svnkit.version"     value="1.2.1"/>
-		<property name="options.proguard.version"   value="4.3"/>
-		<!-- components managed by Ivy -->
-		<property name="options.antcontrib.version" value="1.0b3"/>
-		<property name="options.findbugs.version"   value="1.3.2"/>
+		<property name="download.tools"              value="(does not matter)"/> 
+		<property name="options.ivy.version"         value="2.0.0"/>
+		<property name="options.antcontrib.version"  value="1.0b3"/>
+		<property name="options.jarjar.version"      value="1.0"/>
+		<property name="options.svnkit.version"      value="1.2.1"/>
+		<property name="options.proguard.version"    value="4.3"/>
 		
+		<property name="options.javac.compiler"      value="javac1.6" />
+		<property name="options.javac.excludes.main" value=""/>
+		<property name="options.javac.excludes.test" value=""/>
+		
+		<property name="options.javadoc.maxmemory"   value="512m"/>
+		<property name="options.proguard.maxmemory"  value="512m"/>
+		
+		<!-- components managed by a dependency manager -->
 		<property name="options.dependencies.resolver" value="ivy"/>
+		<property name="options.findbugs.version"      value="1.3.2"/>
 	</target>
-
 	
-	<!-- obtain command line arguments and defines user profile -->
+	
+	
+	<!-- ======================================================= -->
+	<!--                                                         -->
+	<!-- Probably you will not need to touch anything below here -->
+	<!--                                                         -->
+	<!-- ======================================================= -->
+	
+	
+	<!-- profiles -->
 	
 	<!-- mode -->
 	<target name="_profile-mode-default" unless="mode">
@@ -59,7 +76,7 @@
 	
 	<!-- realm -->
 	<target name="_profile-realm-default" unless="realm">
-		<property name="profile.app.realm"   value="wallets" />
+		<property name="profile.app.realm"   value="default" />
 	</target>
 	<target name="_profile-realm-specified" if="realm">
 		<property name="profile.app.realm"   value="${realm}" />
@@ -68,53 +85,53 @@
 	
 	<!-- relax -->
 	<target name="_profile-relax-default" unless="relax">
-		<!-- do not define the property -->
+		<property name="profile.app.relax" value="false" />
 	</target>
 	<target name="_profile-relax-specified" if="relax">
-		<property name="profile.app.relax" value="(does-not-matter)" />
+		<property name="profile.app.relax" value="true" />
 	</target>
 	<target name="_profile-relax" depends="_profile-relax-default,_profile-relax-specified"/>
 	
 	<target name="_profile" depends="_profile-mode,_profile-realm,_profile-relax">
-		<property name="profile.main.class" value="com.sangha.util.Relauncher"/>
+		<property name="profile.main.class" value="org.jquantlib.examples.EquityOptions"/>
 		
-		<property name="profile.scm.svn.username" value="fgomes"/>
-		<property name="profile.scm.svn.password" value="secret"/>
+		<property name="profile.scm.svn.username" value="rg"/>
+		<property name="profile.scm.svn.password" value="spock2000"/>
 	</target>
 	
 	<!-- properties -->
 	
 	<target name="_properties-default">
-		<property name="default.scm.project" value="${project.module}" />
-		<property name="default.scm.branch"  value="${project.branch}" />
+		<property name="default.scm.project" value="jquantlib" />
+		<property name="default.scm.branch"  value="trunk" />
 	</target>
-
+	
 	<target name="_properties-organization">
-		<property name="project.organization.name" value="${project.name}" />
-		<property name="project.organization.url"  value="${project.url}" />
+		<property name="project.organization.name" value="JQuantLib.org" />
+		<property name="project.organization.url"  value="http://www.jquantlib.org/" />
 	</target>
-
+	
 	<target name="_properties-issueManagement">
 		<property name="project.issueManagement.system" value="Mantis" />
 		<property name="project.issueManagement.url"    value="http://bugs.jquantlib.org/" />
 	</target>
-
+	
 	<target name="_properties-ciManagement">
 		<property name="project.ciManagement.system" value="Continuum" />
-		<property name="project.ciManagement.url"    value="http://www.jquantlib.org:8080/continuum/" />
+		<property name="project.ciManagement.url"    value="http://www.jquantlib.org/continuum/" />
 	</target>
-
+	
 	<target name="_properties-project-buildNumber">
 		<property name="project.buildNumber.doCheck"  value="false" />
 		<property name="project.buildNumber.doUpdate" value="false" />
 	</target>
-
+	
 	<target name="_properties-project-scm">
 		<property name="project.scm.url" value="http://jquant.svn.sourceforge.net/svnroot/${default.scm.project}/${default.scm.branch}" />
 	</target>
-
+	
 	<target name="_properties-project-compile">
-		<property name="project.compile.jdk"        value="1.5" />
+		<property name="project.compile.jdk"        value="1.6" />
 		<property name="project.compile.fork"       value="true" />
 		<property name="project.compile.meminitial" value="128m" />
 		<property name="project.compile.maxmem"     value="512m" />
@@ -122,22 +139,22 @@
 		<property name="project.compile.verbose"    value="false" />
 		<property name="project.compile.lint"       value="-Xlint:unchecked -Xlint:deprecation" />
 	</target>
-
+	
 	<target name="_properties-project-package">
 		<property name="project.jar.index" value="false" />
 	</target>
-
+	
 	<target name="_properties-project-assembly">
-		<property name="project.assembly.gui.manifest.classStart"  value="org.jquantlib.examples.EquityOptions" />
+		<property name="project.assembly.manifest.classStart"  value="org.jquantlib.examples.EquityOptions" />
 	</target>
-
+	
 	<target name="_properties-project-deploy">
-		<property name="project.deploy.site.url" value="http://maven2.london.coalitiondev.com/maven2/site" />
-		<property name="project.deploy.repository.url" value="http://maven2.london.coalitiondev.com/maven2/repos" />
+		<property name="project.deploy.site.url"       value="http://www.jquantlib.org/maven2/sites/jquantlib/" />
+		<property name="project.deploy.repository.url" value="http://www.jquantlib.org/maven2/repos/" />
 	</target>
-
+	
 	<target name="_properties" depends="_properties-default,_properties-organization,_properties-issueManagement,_properties-ciManagement,_properties-project-buildNumber,_properties-project-scm,_properties-project-compile,_properties-project-package,_properties-project-assembly,_properties-project-deploy" />
-
+	
 	
 	<!-- bootstrap tools -->
 	
@@ -147,38 +164,58 @@
 		<property name="ivy.jar.file"     value="${ivy.jar.dir}/ivy.jar"/>
 		<property name="ivy.download.url" value="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${options.ivy.version}/ivy-${options.ivy.version}.jar"/>
 	</target>
-
-	<target name="_tools-download-ivy" depends="_tools-properties-ivy">
+	
+	<target name="_tools-download-ivy" depends="_tools-properties-ivy" if="download.tools">
 		<echo message="installing ivy..."/>
 		<mkdir dir="${ivy.jar.dir}"/>
 		<get verbose="false" src="${ivy.download.url}" dest="${ivy.jar.file}" usetimestamp="true"/>
 	</target>
-
+	
 	<target name="_tools-install-ivy" depends="_tools-download-ivy">
 		<path id="ivy.lib.path">
-			<fileset dir="${ivy.jar.dir}" includes="**/*.jar" />
+			<fileset casesensitive="true" dir="${ivy.jar.dir}" includes="**/*.jar" />
 		</path>
 		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
 	</target>
-
+	
 	<!-- antcontrib -->
 	<target name="_tools-properties-antcontrib" depends="_options">
 		<property name="antcontrib.jar.dir"      value="${user.home}/.antcontrib"/>
 		<property name="antcontrib.jar.file"     value="${antcontrib.jar.dir}/antcontrib-${options.antcontrib.version}.jar"/>
 		<property name="antcontrib.download.url" value="http://mirrors.ibiblio.org/pub/mirrors/maven2/ant-contrib/ant-contrib/${options.antcontrib.version}/ant-contrib-${options.antcontrib.version}.jar"/>
 	</target>
-
-	<target name="_tools-download-antcontrib" depends="_tools-properties-antcontrib">
+	
+	<target name="_tools-download-antcontrib" depends="_tools-properties-antcontrib" if="download.tools">
 		<echo message="installing ant-contrib..."/>
 		<mkdir dir="${antcontrib.jar.dir}"/>
 		<get verbose="false" src="${antcontrib.download.url}" dest="${antcontrib.jar.file}" usetimestamp="true"/>
 	</target>
-
+	
 	<target name="_tools-install-antcontrib" depends="_tools-download-antcontrib">
 		<path id="antcontrib.lib.path">
-			<fileset dir="${antcontrib.jar.dir}" includes="**/*.jar" />
+			<fileset casesensitive="true" dir="${antcontrib.jar.dir}" includes="**/*.jar" />
 		</path>
 		<taskdef resource="net/sf/antcontrib/antlib.xml" uri="antlib:net.sf.antcontrib" classpathref="antcontrib.lib.path"/>
+	</target>
+	
+	<!-- jarjar -->
+	<target name="_tools-properties-jarjar" depends="_options">
+		<property name="jarjar.jar.dir"      value="${user.home}/.jarjar"/>
+		<property name="jarjar.jar.file"     value="${jarjar.jar.dir}/jarjar-${options.jarjar.version}.jar"/>
+		<property name="jarjar.download.url" value="http://jarjar.googlecode.com/files/jarjar-${options.jarjar.version}.jar"/>
+	</target>
+	
+	<target name="_tools-download-jarjar" depends="_tools-properties-jarjar" if="download.tools">
+		<echo message="installing jarjar..."/>
+		<mkdir dir="${jarjar.jar.dir}"/>
+		<get verbose="false" src="${jarjar.download.url}" dest="${jarjar.jar.file}" usetimestamp="true"/>
+	</target>
+	
+	<target name="_tools-install-jarjar" depends="_tools-download-jarjar">
+		<path id="jarjar.lib.path">
+			<fileset casesensitive="true" dir="${jarjar.jar.dir}" includes="**/*.jar" />
+		</path>
+		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpathref="jarjar.lib.path"/>
 	</target>
 	
 	<!-- svnkit -->
@@ -188,25 +225,25 @@
 		<property name="svnkit.jar.zip"      value="${svnkit.jar.dir}/svnkit.zip"/>
 		<property name="svnkit.download.url" value="http://subclipse.tigris.org/files/documents/906/43359/svnant-${options.svnkit.version}.zip"/>
 	</target>
-
-	<target name="_tools-download-svnkit" depends="_tools-properties-svnkit">
+	
+	<target name="_tools-download-svnkit" depends="_tools-properties-svnkit" if="download.tools">
 		<echo message="installing svnkit..."/>
 		<mkdir dir="${svnkit.jar.dir}"/>
 		<get verbose="false" src="${svnkit.download.url}" dest="${svnkit.jar.zip}" usetimestamp="true"/>
 	</target>
-
+	
 	<target name="_tools-install-svnkit" depends="_tools-download-svnkit">
 		<unzip src="${svnkit.jar.zip}" dest="${svnkit.jar.dir}">
 			<patternset includes="**/*.jar"/>
 		</unzip>
 		<path id="svnkit.lib.path" >
-			<fileset dir="${svnkit.jar.dir}">
+			<fileset casesensitive="true" dir="${svnkit.jar.dir}">
 				<include name="**/*.jar"/>
 			</fileset>
 		</path>
 		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnkit.lib.path"/>
 	</target>
-
+	
 	
 	<!-- proguard -->
 	<target name="_tools-properties-proguard" depends="_options">
@@ -214,436 +251,500 @@
 		<property name="proguard.jar.file"     value="${proguard.jar.dir}/proguard.jar"/>
 		<property name="proguard.download.url" value="http://mirrors.ibiblio.org/pub/mirrors/maven2/net/sf/proguard/proguard/${options.proguard.version}/proguard-${options.proguard.version}.jar"/>
 	</target>
-
-	<target name="_tools-download-proguard" depends="_tools-properties-proguard">
+	
+	<target name="_tools-download-proguard" depends="_tools-properties-proguard" if="download.tools">
 		<echo message="installing proguard..."/>
 		<mkdir dir="${proguard.jar.dir}"/>
 		<get verbose="false" src="${proguard.download.url}" dest="${proguard.jar.file}" usetimestamp="true"/>
 	</target>
-
+	
 	<target name="_tools-install-proguard" depends="_tools-download-proguard">
 		<!-- We dont install a task definition because ProGuard ant task is not very convenient :( -->
 		<!--
-		<path id="proguard.lib.path" >
-			<fileset dir="${proguard.jar.dir}">
-				<include name="**/*.jar"/>
-			</fileset>
-		</path>
-		<taskdef resource="proguard/ant/task.properties" classpathref="proguard.lib.path"/>
-		-->
-	</target>
-	
-	<target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-svnkit,_tools-install-proguard"/>
-
-
-	<!-- bootstrap -->
-	
-	<target name="_bootstrap-environment" depends="_profile,_module,_options,_properties">
-		<property name="project.description" value="Wallets is an application which calculates the total amount of financial resources available for a certain kind of business under certain conditions, such as: the product being traded, the geographical region of sales, the geographical region of a distribution headquarters, etc. The application enables the analysis of the wallet under these already mentioned conditions and also enables additional filters like the name of the company, the kind of business, the period under analysis, etc." />
-		<property name="project.url" value="${project.deploy.site.url}/${project.artifactId}" />
-
-		<property name="project.build.lib" value="${basedir}/lib" />
-		<property name="project.build.target" value="${basedir}/target" />
-		<property name="project.build.classes" value="${project.build.target}/classes" />
-		<property name="project.build.javadocs" value="${project.build.target}/site/api" />
-		<property name="project.build.src.main.java" value="${basedir}/src/main/java" />
-		<property name="project.build.src.test.java" value="${basedir}/src/test/java" />
-		<property name="project.build.src.main.res" value="${basedir}/src/main/resources" />
-		<property name="project.build.src.test.res" value="${basedir}/src/test/resources" />
-
-		<property name="project.scm.connection" value="${project.scm.connection}" />
-		<property name="project.scm.developerConnection" value="${project.scm.developerConnection}" />
-		<property name="project.scm.url" value="${project.scm.url}" />
-
-		<property name="project.installation.base" value="${project.artifactId}_${project.version}"/>
-		<property name="project.installation.home" value="${user.home}/installations/tmp.${profile.app.mode}_${project.groupId}_${project.installation.base}/client" />
-	</target>
-
-	<target name="_bootstrap-tools" depends="_tools-install"/>
-	
-	
-	<!-- pre-clean -->
-	
-	<target name="pre-clean" depends="_bootstrap-environment" description="executes processes needed prior to the actual project cleaning">
-	</target>
-
-	
-	<!-- clean -->
-	
-	<target name="clean" depends="pre-clean" description="remove all files generated by the previous build">
-		<delete dir="${project.build.target}" />
-	</target>
-
-	
-	<!-- post-clean -->
-	
-	<target name="post-clean" depends="clean" description="executes processes needed to finalize the project cleaning">
-	</target>
-
-	
-	<!-- validate -->
-	
-	<target name="validate" depends="_bootstrap-tools" description="validate the project is correct and all necessary information is available">
-	</target>
-
-	
-	<!-- initialize -->
-	
-	<target name="_initialize-scm-version" unless="default.app.fresh">
-		<svn username="${profile.scm.svn.username}" password="${profile.scm.svn.password}">
-			<wcVersion path="." processUnversioned="true" prefix="project.scm."/>
-		</svn>
-	</target>
-	
-	<target name="_initialize-scm-modified" depends="_initialize-scm-version" unless="default.app.fresh,profile.app.relax">
-		<echo>repository.url=${project.scm.repository.url}</echo>
-		<echo>repository.path=${project.scm.repository.path}</echo>
-		<echo>revision.max=${project.scm.revision.max}</echo>
-		<echo>revision.max-with-flags=${project.scm.revision.max-with-flags}</echo>
-		<echo>revision.range=${project.scm.revision.range}</echo>
-		<echo>committed.max=${project.scm.committed.max}</echo>
-		<echo>committed.max-with-flags=${project.scm.committed.max-with-flags}</echo>
-		<echo>modified=${project.scm.modified}</echo>
-	</target>
-
-	<target name="_initialize-scm-checkout" if="default.app.fresh">
-		<svn username="XXX.${profile.scm.svn.username}" password="XXX.${profile.scm.svn.password}">
-			<checkout url="${project.scm.url}" destPath="."/>
-		</svn>
-	</target>
-
-	<target name="_initialize-scm" depends="_initialize-scm-modified,_initialize-scm-checkout">
-		<svn>
-		    <status path="." revisionProperty="buildNumber"/>
-		</svn>
-	</target>
-	
-	<target name="_initialize-show-info">
-		<echo>java.version=${java.version}</echo>
-		<echo>java.vm.version=${java.vm.version}</echo>
-		<echo>java.home=${java.home}</echo>
-		<echo>java.endorsed.dirs=${java.endorsed.dirs}</echo>
-		<echo>java.ext.dirs=${java.ext.dirs}</echo>
-		<echo>java.library.path=${java.library.path}</echo>
-		<echo>java.runtime.version=${java.runtime.version}</echo>
-		<echo>java.specification.version=${java.specification.version}</echo>
-		<echo>project.build.src.main.java=${project.build.src.main.java}</echo>
-		<echo>project.build.lib=${project.build.lib}</echo>
-		<echo>project.build.target=${project.build.target}</echo>
-		<echo>project.build.classes=${project.build.classes}</echo>
-		<echo>project.build.javadocs=${project.build.javadocs}</echo>
-		<echo>project.build.src.main.java=${project.build.src.main.java}</echo>
-		<echo>project.build.src.test.java=${project.build.src.test.java}</echo>
-		<echo>project.build.src.main.res=${project.build.src.main.res}</echo>
-		<echo>project.build.src.test.res=${project.build.src.test.res}</echo>
-		<echo>profile.app.realm=${profile.app.realm}</echo>
-		<echo>profile.app.mode=${profile.app.mode}</echo>
-		<echo>profile.app.relax=${profile.app.relax}</echo>
-		<echo>project.assembly.gui.manifest.classStart=${project.assembly.gui.manifest.classStart}</echo>
-		<echo>project.assembly.gui.manifest.classMemory=${project.assembly.gui.manifest.classMemory}</echo>
-		<echo>project.assembly.gui.manifest.classArg0=${project.assembly.gui.manifest.classArg0}</echo>
-		<echo>project.assembly.gui.manifest.classArg1=${project.assembly.gui.manifest.classArg1}</echo>
-		<echo>project.installation.base=${project.installation.base}</echo>
-		<echo>project.installation.home=${project.installation.home}</echo>
-	</target>
-	
-	<target name="initialize" depends="validate,_bootstrap-environment,_initialize-show-info,_initialize-scm" description="initialize build state, e.g. set properties or create directories">
-		<echo>VERSION: ${project.version}-${buildNumber}</echo>
-		<mkdir dir="${project.build.classes}" />
-	</target>
-	
-
-	<!-- dependencies -->
-
-	<property name="project.groupId"      value="org.jquantlib" />
-	<property name="project.artifactId"   value="jquantlib" />
-	<property name="project.version"      value="0.1.2-SNAPSHOT" />
-
-	
-	<target name="_dependencies-ivy-configure">
-		<ivy:info organisation="${project.organisation}" module="${project.module}" branch="${project.branch}" revision="${buildNumber}"/>
-	</target>
-	
-	<target name="_dependencies-ivy-resolve" depends="_dependencies-ivy-configure">
-		<echo message="Dependency resolver: Ivy"/>
-		<ivy:cachepath organisation="fastutil"  module="fastutil"         revision="5.1.5" inline="true" conf="*->*,!sources,!javadoc" />
-		<ivy:cachepath organisation="colt"      module="colt"             revision="1.2.0" inline="true" conf="*->*,!sources,!javadoc" />
-		<ivy:cachepath organisation="net.jcip"  module="jcip-annotations" revision="1.0"   inline="true" conf="*->*,!sources,!javadoc" />
-		<ivy:cachepath organisation="org.slf4j" module="slf4j-api"        revision="1.5.5" inline="true" conf="*->*,!sources,!javadoc" />
-		<ivy:cachepath organisation="org.slf4j" module="slf4j-log4j12"    revision="1.5.5" inline="true" conf="*->*,!sources,!javadoc" />
-		<!--  ivy:cachepath organisation="junit"     module="junit"       revision="4.4"   inline="true" conf="*->*,!sources,!javadoc" / -->
-		<ivy:retrieve pattern="http://www.jquantlib.org/maven2/repos/external_free/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-	</target>
-
-	<target name="_dependencies-ivy" if="options.dependencies.resolver">
-		<antcall target="_dependencies-ivy-resolve" />
-	</target>
-
-	<target name="_dependencies-none" unless="options.dependencies.resolver">
-		<echo message="Dependency resolver: (none)"/>
-	</target>
-
-	<target name="dependencies" depends="initialize,_initialize-scm,_dependencies-none,_dependencies-ivy" description="dependencies">
-		<fileset id="dependencies.fileset.id" dir="${project.build.lib}">
-			<include name="**/*.jar" />
-		</fileset>
-		<path id="classes.path.id">
-			<fileset refid="dependencies.fileset.id"/>
-			<pathelement path="${project.build.classes}"/>
-		</path>
-	</target>
-
-
-	<!-- generate-sources -->
-	
-	<target name="generate-sources" depends="validate" description="generate any source code for inclusion in compilation">
-	</target>
-
-	
-	<!-- process-sources -->
-	
-	<target name="process-sources" depends="generate-sources" description="process the source code, for example to filter any values">
-	</target>
-
-	
-	<!-- generate-resources -->
-	
-	<target name="generate-resources" depends="process-sources" description="generate resources for inclusion in the package">
-		<!-- create properties folder -->
-		<mkdir dir="${project.build.classes}" />
-		<!-- create log4j.properties -->
-		<property name="file" value="${project.build.classes}/log4j.properties" />
-	</target>
-	
-
-	<!-- compile -->
-
-	<target name="compile" depends="dependencies,generate-resources" description="compile the source code of the project">
-		<javac
-			srcdir="${project.build.src.main.java}" 
-			destdir="${project.build.classes}" 
-			source="${project.compile.jdk}" target="${project.compile.jdk}" 
-			fork="${project.compile.fork}" memoryinitialsize="${project.compile.meminitial}" 
-			memorymaximumsize="${project.compile.maxmem}" 
-			debug="${project.compile.debug}" 
-			verbose="${project.compile.verbose}" 
-			classpathref="classes.path.id">
-			<compilerarg value="${project.compile.lint}" />
-		</javac>
-	</target>
-	
-	
-	<!-- process-classes -->
-	
-	<target name="process-classes" depends="compile" description="post-process the generated files from compilation, for example to do bytecode enhancement on Java classes">
-	</target>
-
-	
-	<!-- generate-test-sources -->
-	
-	<target name="generate-test-sources" depends="process-classes" if="reactor.compile.testcases" description="create resources for testing">
-	</target>
-	
-	
-	<!-- process-test-resources -->
-	
-	<target name="process-test-resources" depends="generate-test-sources" if="reactor.compile.testcases" description="copy and process the resources into the test destination directory">
-	</target>
-
-	
-	<!-- test-compile -->
-	
-	<target name="test-compile" depends="process-test-resources" if="reactor.compile.testcases" description="compile the test source code into the test destination directory">
-		<javac
-			srcdir="${project.build.src.test.java}"
-			destdir="${project.build.classes}" 
-			source="${project.compile.jdk}" target="${project.compile.jdk}" 
-			fork="${project.compile.fork}" memoryinitialsize="${project.compile.meminitial}" 
-			memorymaximumsize="${project.compile.maxmem}" 
-			debug="${project.compile.debug}" 
-			verbose="${project.compile.verbose}" 
-			classpathref="classes.path.id">
-			<compilerarg value="${project.compile.lint}" />
-		</javac>
-	</target>
-
-
-	<!-- process-test-classes -->
-	
-	<target name="process-test-classes" depends="test-compile" if="reactor.test.testcases" description="post-process the generated files from test compilation, for example to do bytecode enhancement on Java classes">
-	</target>
-
-	
-	<!-- test -->
-
-	<target name="test" depends="process-test-classes" if="reactor.test.testcases" description="run tests using a suitable unit testing framework. These tests should not require the code be packaged or deployed">
-		<junit printsummary="yes" showoutput="yes" haltonfailure="no" fork="yes" dir="${project.build.classes}">
-			<classpath>
-				<path refid="classes.path.id" />
-			</classpath>
-			<formatter type="xml" />
-		</junit>
-	</target>
-
-
-	<!-- prepare-package -->
-	
-	<target name="_prepare-package-main" depends="test">
-		<delete file="${project.build.target}/${project.installation.base}.jar" />
-		<jar index="true" destfile="${project.build.target}/${project.installation.base}.jar"> 
-			<fileset dir="${project.build.classes}">
-				<exclude name="**/*Test*" />
-			</fileset>
-			<fileset dir="${project.build.src.main.res}"/>
-			<manifest>
-				<!-- Some standard information -->
-				<attribute name="Manifest-Version" value="1.0" />
-				<attribute name="Created-By" value="${ant.version}" />
-				<attribute name="Built-By" value="${user.name}" />
-				<attribute name="Build-Jdk" value="${java.version}" />
-				<attribute name="Main-Class" value="${profile.main.class}" />
-				<!-- Application information -->
-				<attribute name="Specification-Title"    value="${project.spec.title}" />
-				<attribute name="Specification-Vendor"   value="${project.spec.vendor}" />
-				<attribute name="Specification-Version"  value="${project.spec.version}" />
-				<attribute name="Implementation-Vendor"  value="${project.impl.vendor}" />
-				<attribute name="Implementation-Title"   value="${project.impl.title}" />
-				<attribute name="Implementation-Version" value="${project.impl.version}" />
-				<attribute name="Implementation-Build"   value="${buildNumber}" />
-				<attribute name="App-Realm"              value="${profile.app.realm}" />
-				<attribute name="App-Mode"               value="${profile.app.mode}" />
-				<attribute name="App-URL"                value="${project.url}" />
-			</manifest>
-		</jar>
-	</target>
-	
-	<target name="_prepare-package-test" if="reactor.test.testcases">
-		<jar update="true" filesetmanifest="skip" index="true" destfile="${project.build.target}/${project.installation.base}.jar"> 
-			<fileset dir="${project.build.classes}">
-				<include name="**/*Test*" />
-			</fileset>
-			<fileset dir="${project.build.src.test.res}"/>
-		</jar>
-	</target>
-	
-	
-	<target name="prepare-package" depends="_prepare-package-main,_prepare-package-test" description="perform any operations necessary to prepare a package before the actual packaging. This often results in an unpacked, processed version of the package"/>
-	
-	
-	<!-- package -->
-
-	<target name="_package-appender">
-		<echo message="${dependency.jar.file}"/>
-		<jar update="true" filesetmanifest="skip" index="true" destfile="${project.package.jar}"> 
-			<zipfileset src="${dependency.jar.file}">
-				<exclude name="META-INF/MANIFEST.MF"/>
-				<exclude name="META-INF/INDEX.LIST"/>
-			</zipfileset>
-		</jar>
-	</target>
-
-	<target name="_package-obfuscator">
-        <delete file="project.package.obf.jar"/>
-        <delete file="project.package.obf.map"/>
-        <delete file="project.package.obf.seeds"/>
-	    <delete file="project.package.obf.conf"/>
-		<java fork="true" failonerror="true" maxmemory="512m" jar="${proguard.jar.file}" >
-			<arg value="@${project.package.obf.conf}"/>
-			<arg value="-injars  ${project.package.jar}"/>
-			<arg value="-outjars ${project.package.obf.jar}"/>
-			<arg value="-printmapping ${project.package.obf.map}"/>
-			<arg value="-printseeds   ${project.package.obf.seeds}"/>
-			<arg value="-verbose"/>
-		</java>
-	</target>
-
-	<target name="package" depends="prepare-package" description="take the compiled code and package it in its distributable format, such as a JAR">
-		<sequential>
-			<!-- assembly -->
-		    <antcontrib:for param="file">
-				<fileset refid="dependencies.fileset.id"/>
-		        	<sequential>
-					    <antcall target="_package-appender">
-					        <param name="project.package.jar" value="${project.build.target}/${project.installation.base}.jar"/>
-					        <param name="dependency.jar.file" value="@{file}"/>
-					    </antcall>
-			     	</sequential>
-		    </antcontrib:for>
-			<!-- obfuscate -->
-			<antcall target="_package-obfuscator">
-		        <param name="project.package.jar"       value="${project.build.target}/${project.installation.base}.jar"/>
-		        <param name="project.package.obf.jar"   value="${project.build.target}/${project.installation.base}-obf.jar"/>
-		        <param name="project.package.obf.map"   value="${project.build.target}/${project.installation.base}-obf-map.txt"/>
-		        <param name="project.package.obf.seeds" value="${project.build.target}/${project.installation.base}-obf-seeds.txt"/>
-			    <param name="project.package.obf.conf"  value="${basedir}/scripts/pyx4me/obfuscator_shrinker.pro"/>
-			</antcall>
-		</sequential>
-	</target>
-	
-
-	<!-- pre-integration-test -->
-	
-	<target name="pre-integration-test" depends="package" description="perform actions required before integration tests are executed. This may involve things such as setting up the required environment">
-	</target>
-
-	
-	<!-- integration-test -->
-	
-	<target name="integration-test" depends="pre-integration-test" description="process and deploy the package if necessary into an environment where integration tests can be run">
-	</target>
-
-	
-	<!-- post-integration-test -->
-	
-	<target name="post-integration-test" depends="integration-test" description="perform actions required after integration tests have been executed. This may including cleaning up the environment">
-	</target>
-
-	
-	<!-- verify -->
-	
-	<target name="verify" depends="post-integration-test" description="run any checks to verify the package is valid and meets quality criteria">
-		<target name="javadocs">
-			<!--
-			<javadoc defaultexcludes="yes" author="true" version="true" use="true" 
-				sourcepath="${project.build.src.main.java}" 
-				destdir="${project.build.javadocs}" 
-				windowtitle="DNA Wallets">
-			</javadoc>
+		    <path id="proguard.lib.path" >
+			    <fileset casesensitive="true" dir="${proguard.jar.dir}">
+				    <include name="**/*.jar"/>
+			    </fileset>
+		    </path>
+		    <taskdef resource="proguard/ant/task.properties" classpathref="proguard.lib.path"/>
 		    -->
+	    </target>
+	    
+	    <target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-jarjar,_tools-install-svnkit,_tools-install-proguard"/>
+	    
+	    
+	    <!-- bootstrap -->
+	    
+	    <target name="_bootstrap-environment" depends="_profile,_module,_options,_properties">
+		    <property name="project.build.lib"           value="${basedir}/lib" />
+		    <property name="project.build.target"        value="${basedir}/target" />
+		    <property name="project.build.classes"       value="${project.build.target}/classes" />
+		    <property name="project.build.work"          value="${project.build.target}/work" />
+		    <property name="project.build.resources"     value="${basedir}/resources" />
+		    <property name="project.build.scripts"       value="${basedir}/scripts" />
+		    <property name="project.build.proguard.conf" value="${basedir}/scripts/pyx4me/obfuscator_shrinker.pro" />
+		    <property name="project.build.javadocs"      value="${project.build.target}/site/api" />
+		    <property name="project.build.src.main.java" value="${basedir}/src" />
+		    <property name="project.build.src.main.res"  value="${basedir}/resources" />
+		    <!--
+			<property name="project.build.src.test.java" value="${basedir}/src/test/java" />
+			<property name="project.build.src.test.res"  value="${basedir}/src/test/resources" />
+			-->
 			
-			<!-- TODO :: Implement more reports -->
-			<!--
-			<findbugs home="${findbugs.home}"
-		              output="xml"
-		              outputFile="bcel-fb.xml" >
-		      <auxClasspath path="${basedir}/lib/Regex.jar" />
-		      <sourcePath path="${basedir}/src/java" />
-		      <class location="${basedir}/bin/bcel.jar" />
-		    </findbugs>
-		    -->
+			<property name="project.scm.connection" value="${project.scm.connection}" />
+			<property name="project.scm.developerConnection" value="${project.scm.developerConnection}" />
+			<property name="project.scm.url" value="${project.scm.url}" />
+			
+			<property name="project.installation.base" value="${project.artifactId}_${project.version}"/>
+			<property name="project.installation.home" value="${user.home}/installations/${profile.app.mode}_${project.groupId}_${project.installation.base}" />
 		</target>
-	</target>
+		
+		<target name="_bootstrap-tools" depends="_tools-install"/>
+		
+		
+		<!-- pre-clean -->
+		
+		<target name="pre-clean" depends="_bootstrap-environment" description="executes processes needed prior to the actual project cleaning">
+		</target>
+		
+		
+		<!-- clean -->
+		
+		<target name="clean" depends="pre-clean" description="remove all files generated by the previous build">
+			<delete dir="${project.build.target}" />
+		</target>
+		
+		
+		<!-- post-clean -->
+		
+		<target name="post-clean" depends="clean" description="executes processes needed to finalize the project cleaning">
+		</target>
+		
+		
+		<!-- validate -->
+		
+		<target name="validate" depends="_bootstrap-tools" description="validate the project is correct and all necessary information is available">
+		</target>
+		
+		
+		<!-- initialize -->
+		
+		<target name="_initialize-scm-version" unless="default.app.fresh">
+			<svn username="${profile.scm.svn.username}" password="${profile.scm.svn.password}">
+				<wcVersion path="." processUnversioned="true" prefix="project.scm."/>
+			</svn>
+		</target>
+		
+		<target name="_initialize-scm-modified" depends="_initialize-scm-version" unless="default.app.fresh,relax">
+			<echo>repository.url=${project.scm.repository.url}</echo>
+			<echo>repository.path=${project.scm.repository.path}</echo>
+			<echo>revision.max=${project.scm.revision.max}</echo>
+			<echo>revision.max-with-flags=${project.scm.revision.max-with-flags}</echo>
+			<echo>revision.range=${project.scm.revision.range}</echo>
+			<echo>committed.max=${project.scm.committed.max}</echo>
+			<echo>committed.max-with-flags=${project.scm.committed.max-with-flags}</echo>
+			<echo>modified=${project.scm.modified}</echo>
+		</target>
+		
+		<target name="_initialize-scm-checkout" if="default.app.fresh">
+			<svn username="XXX.${profile.scm.svn.username}" password="XXX.${profile.scm.svn.password}">
+				<checkout url="${project.scm.url}" destPath="."/>
+			</svn>
+		</target>
+		
+		<target name="_initialize-scm" depends="_initialize-scm-modified,_initialize-scm-checkout">
+			<svn>
+				<status path="." revisionProperty="buildNumber"/>
+			</svn>
+		</target>
+		
+		<target name="_initialize-show-info">
+			<echo>java.version=${java.version}</echo>
+			<echo>java.vm.version=${java.vm.version}</echo>
+			<echo>java.home=${java.home}</echo>
+			<echo>java.endorsed.dirs=${java.endorsed.dirs}</echo>
+			<echo>java.ext.dirs=${java.ext.dirs}</echo>
+			<echo>java.library.path=${java.library.path}</echo>
+			<echo>java.runtime.version=${java.runtime.version}</echo>
+			<echo>java.specification.version=${java.specification.version}</echo>
+			
+			<echo>os.name=${os.name}</echo>
+			
+			<echo>project.build.src.main.java=${project.build.src.main.java}</echo>
+			<echo>project.build.lib=${project.build.lib}</echo>
+			<echo>project.build.target=${project.build.target}</echo>
+			<echo>project.build.classes=${project.build.classes}</echo>
+			<echo>project.build.javadocs=${project.build.javadocs}</echo>
+			<echo>project.build.src.main.java=${project.build.src.main.java}</echo>
+			<echo>project.build.src.main.res=${project.build.src.main.res}</echo>
+			<echo>project.build.src.test.java=${project.build.src.test.java}</echo>
+			<echo>project.build.src.test.res=${project.build.src.test.res}</echo>
+			
+			<echo>profile.app.realm=${profile.app.realm}</echo>
+			<echo>profile.app.mode=${profile.app.mode}</echo>
+			<echo>profile.app.relax=${profile.app.relax}</echo>
 
-	
-	<!-- install -->
-	
-	<target name="install" depends="verify" description="install the package into the local repository, for use as a dependency in other projects locally">
-		<!--
-		<mkdir dir="${project.installation.home}" />
-		<copy todir="${project.installation.home}">
-			<fileset dir="target" casesensitive="yes">
-				<include name="*.tar.bz2" />
-				<include name="*.jar" />
-				<include name="*.txt" />
-			</fileset>
-		</copy>
-		-->
-	</target>
-
-	
-	<!-- deploy -->
-	
-	<target name="deploy" depends="install" description="done in an integration or release environment, copies the final package to the remote repository for sharing with other developers and projects">
-	</target>
-
-</project>
+			<echo>project.installation.base=${project.installation.base}</echo>
+			<echo>project.installation.home=${project.installation.home}</echo>
+		    </target>
+		    
+		    <target name="initialize" depends="validate,_bootstrap-environment,_initialize-show-info,_initialize-scm" description="initialize build state, e.g. set properties or create directories">
+			    <echo>VERSION: ${project.version}-${buildNumber}</echo>
+			    <mkdir dir="${project.build.classes}" />
+		    </target>
+		    
+		    
+		    <!-- dependencies -->
+		    
+		    
+		    <target name="_dependencies-ivy-resolve">
+			    <echo message="Dependency resolver: Ivy"/>
+			    <!-- ivy:cachepath organisation="org.joda"    module="joda-primitives"   revision="0.6"    inline="true"  conf="*->*,!sources,!javadoc" /-->
+			    <ivy:cachepath organisation="colt"        module="colt"              revision="1.2.0"  inline="true"  conf="*->*,!sources,!javadoc" />
+			    <ivy:cachepath organisation="net.jcip"    module="jcip-annotations"  revision="1.0"    inline="true"  conf="*->*,!sources,!javadoc" />
+			    <ivy:cachepath organisation="org.slf4j"   module="slf4j-api"         revision="1.5.5"  inline="true"  conf="*->*,!sources,!javadoc" />
+			    <ivy:cachepath organisation="org.slf4j"   module="slf4j-log4j12"     revision="1.5.5"  inline="true"  conf="*->*,!sources,!javadoc" />
+			    <!-- ivy:cachepath organisation="junit"   module="junit"             revision="4.4"    inline="true"  conf="*->*,!sources,!javadoc" / -->
+			    <ivy:retrieve pattern="http://www.jquantlib.org/maven2/repos/external_free/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+		    </target>
+		    
+		    <target name="_dependencies-ivy" if="options.dependencies.resolver">
+			    <antcall target="_dependencies-ivy-resolve" />
+		    </target>
+		    
+		    <target name="_dependencies-none" unless="options.dependencies.resolver">
+			    <echo message="Dependency resolver: (none)"/>
+		    </target>
+		    
+		    <target name="dependencies" depends="initialize,_initialize-scm,_dependencies-none,_dependencies-ivy" description="dependencies">
+			    <fileset casesensitive="true" id="dependencies.fileset.id" dir="${project.build.lib}">
+				    <include name="**/*.jar" />
+			    </fileset>
+			    <path id="classes.path.id">
+				    <fileset refid="dependencies.fileset.id"/>
+				    <pathelement path="${project.build.classes}"/>
+			    </path>
+		    </target>
+		    
+		    
+		    <!-- generate-sources -->
+		    
+		    <target name="generate-sources" depends="validate" description="generate any source code for inclusion in compilation">
+			    <!-- schema -->
+			    <echo>copy SCHEMA configuration files (copy all)</echo>
+			    <copy todir=".">
+				    <fileset casesensitive="true" dir="configs/dna/schema/${profile.app.realm}" />
+			    </copy>
+		    </target>
+		    
+		    
+		    <!-- process-sources -->
+		    
+		    <target name="process-sources" depends="generate-sources" description="process the source code, for example to filter any values">
+		    </target>
+		    
+		    
+		    <!-- generate-resources -->
+		    
+		    <target name="generate-resources" depends="process-sources" description="generate resources for inclusion in the package">
+		    </target>
+		    
+		    
+		    <!-- compile -->
+		    
+		    <target name="compile" depends="dependencies,generate-resources" description="compile the source code of the project">
+			    <javac compiler="${options.javac.compiler}"
+				   srcdir="${project.build.src.main.java}" 
+				   excludes="${options.javac.excludes.main}"
+				   destdir="${project.build.classes}" 
+				   source="${project.compile.jdk}" target="${project.compile.jdk}" 
+				   fork="${project.compile.fork}" memoryinitialsize="${project.compile.meminitial}" 
+				   memorymaximumsize="${project.compile.maxmem}" 
+				   debug="${project.compile.debug}" 
+				   verbose="${project.compile.verbose}" 
+				   classpathref="classes.path.id">
+				    <compilerarg value="${project.compile.lint}" />
+			    </javac>
+		    </target>
+		    
+		    
+		    <!-- process-classes -->
+		    
+		    <target name="process-classes" depends="compile" description="post-process the generated files from compilation, for example to do bytecode enhancement on Java classes"/>
+		    
+		    
+		    <!-- generate-test-sources -->
+		    
+		    <target name="generate-test-sources" depends="process-classes" if="reactor.compile.testcases" description="create resources for testing">
+		    </target>
+		    
+		    
+		    <!-- process-test-resources -->
+		    
+		    <target name="process-test-resources" depends="generate-test-sources" if="reactor.compile.testcases" description="copy and process the resources into the test destination directory">
+		    </target>
+		    
+		    
+		    <!-- test-compile -->
+		    
+		    <target name="test-compile" depends="process-test-resources" if="reactor.compile.testcases" description="compile the test source code into the test destination directory">
+			<javac compiler="${options.javac.compiler}"
+			       srcdir="${project.build.src.test.java}" 
+			       excludes="${options.javac.excludes.test}"
+			       destdir="${project.build.classes}" 
+			       source="${project.compile.jdk}" target="${project.compile.jdk}" 
+			       fork="${project.compile.fork}" memoryinitialsize="${project.compile.meminitial}" 
+			       memorymaximumsize="${project.compile.maxmem}" 
+			       debug="${project.compile.debug}" 
+			       verbose="${project.compile.verbose}" 
+			       classpathref="classes.path.id">
+				<compilerarg value="${project.compile.lint}" />
+			</javac>
+			</target>
+			
+			
+			<!-- process-test-classes -->
+			
+			<target name="process-test-classes" depends="test-compile" if="reactor.test.testcases" description="post-process the generated files from test compilation, for example to do bytecode enhancement on Java classes">
+			</target>
+			
+			
+			<!-- test -->
+			
+			<target name="test" depends="process-test-classes" if="reactor.test.testcases" description="run tests using a suitable unit testing framework. These tests should not require the code be packaged or deployed">
+				<junit printsummary="yes" showoutput="yes" haltonfailure="no" fork="yes" dir="${project.build.classes}">
+					<classpath>
+						<path refid="classes.path.id" />
+					</classpath>
+					<formatter type="xml" />
+				</junit>
+			</target>
+			
+			
+			<!-- prepare-package -->
+			
+			<target name="_prepare-package-manifest">
+				<delete file="${param.manifest}" />
+				<manifest file="${param.manifest}">
+					<!-- Some standard information -->
+					<attribute name="Manifest-Version"       value="1.0" />
+					<attribute name="Created-By"             value="${ant.version}" />
+					<attribute name="Built-By"               value="${user.name}" />
+					<attribute name="Build-Jdk"              value="${java.version}" />
+					<attribute name="Main-Class"             value="${profile.main.class}" />
+					<!-- Application information -->
+					<attribute name="Specification-Title"    value="${project.spec.title}" />
+					<attribute name="Specification-Vendor"   value="${project.spec.vendor}" />
+					<attribute name="Specification-Version"  value="${project.spec.version}" />
+					<attribute name="Implementation-Vendor"  value="${project.impl.vendor}" />
+					<attribute name="Implementation-Title"   value="${project.impl.title}" />
+					<attribute name="Implementation-Version" value="${project.impl.version}" />
+					<attribute name="Implementation-Build"   value="${buildNumber}" />
+					<attribute name="App-Realm"              value="${profile.app.realm}" />
+					<attribute name="App-Mode"               value="${profile.app.mode}" />
+					<attribute name="App-URL"                value="${project.url}" />
+				</manifest>
+			</target>
+			
+			<target name="prepare-package" depends="test" description="perform any operations necessary to prepare a package before the actual packaging. This often results in an unpacked, processed version of the package">
+				<!-- create MANIFEST.MF -->
+				<mkdir dir="${project.build.work}/META-INF"/>
+				<antcall target="_prepare-package-manifest">
+					<param name="param.manifest" value="${project.build.work}/META-INF/MANIFEST.MF"/>
+				</antcall>
+				
+				<!-- ===== Defining filesets ===== -->		
+				<property name="work"     value="${project.build.work}"/>
+				<property name="jar"      value="${project.build.target}/${project.installation.base}.jar"/>
+				<property name="ubberjar" value="${project.build.target}/${project.installation.base}-ubber.jar"/>
+				<fileset casesensitive="true" id="fileset.classes" dir="${project.build.classes}" />
+				<fileset casesensitive="true" id="fileset.resources" dir="${project.build.resources}" />
+				<fileset casesensitive="true" id="fileset.misc" dir="${basedir}" />
+				<fileset casesensitive="true" id="fileset.libs" dir="${project.build.lib}" />
+				<fileset casesensitive="true" id="fileset.config" dir="${work}"/>
+			</target>
+			
+			
+			
+			<!-- package -->
+			
+			<target name="_package-appender">
+				<echo message="${param.classifier} :: appending ${param.file} to ${param.jar}"/>
+				<jar casesensitive="true" update="${param.update}" index="${param.index}" filesetmanifest="${param.filesetmanifest}" destfile="${param.jar}">
+					<zipfileset casesensitive="true" src="${param.file}">
+						<exclude name="META-INF/MANIFEST.MF"/>
+						<exclude name="META-INF/INDEX.LIST"/>
+						<exclude name="META-INF/*.DSA"/>
+						<exclude name="META-INF/*.RSA"/>
+						<exclude name="META-INF/*.SF"/>
+					</zipfileset>
+				</jar>
+			</target>
+			
+			<target name="_package-gui" depends="prepare-package">
+				<echo>Packaging gui</echo>
+				
+				<delete file="${jar}" />
+				<jar casesensitive="true" update="false" index="true" filesetmanifest="merge" destfile="${jar}">
+					<!-- manifest="${manifest}" -->
+					<fileset refid="fileset.classes"/>
+					<fileset refid="fileset.config"/>
+					<fileset refid="fileset.resources"/>
+					<fileset refid="fileset.misc"/>
+				</jar>
+				
+				<echo>Creating a single JAR file for gui</echo>
+				
+				<delete file="${ubberjar}" />
+				<copy file="${jar}" tofile="${ubberjar}"/>
+				
+				<antcontrib:for param="file">
+					<fileset refid="fileset.libs"/>
+					<sequential>
+						<antcall target="_package-appender">
+							<param name="param.classifier"		value="gui" />
+							<param name="param.jar"				value="${ubberjar}" />
+							<param name="param.file"			value="@{file}" />
+							<param name="param.update"			value="true" />	
+							<param name="param.index"			value="true" />	
+							<param name="param.filesetmanifest"	value="skip" />
+						</antcall>
+					</sequential>
+				</antcontrib:for>
+			</target>
+			
+			<target name="_package-proguard-runner">
+				<delete file="param.in.jar"/>
+				<delete file="param.out.jar"/>
+				<delete file="param.map"/>
+				<delete file="param.seeds"/>
+				<delete file="param.conf"/>
+				<java fork="true" failonerror="true" maxmemory="${options.proguard.maxmemory}" jar="${proguard.jar.file}" >
+					<arg value="@${param.conf}"/>
+					<arg value="-injars  ${param.in.jar}"/>
+					<arg value="-outjars ${param.out.jar}"/>
+					<arg value="-printmapping ${param.map}"/>
+					<arg value="-printseeds   ${param.seeds}"/>
+					<arg value="${param.options}"/>
+				</java>
+			</target>
+			
+			<target name="package" depends="_package-gui" description="take the compiled code and package it in its distributable format, such as a JAR">
+				<echo>Shrinking and obfuscating GUI ( This will take a while... )</echo>
+				<antcall target="_package-proguard-runner">
+					<param name="param.in.jar"		value="${ubberjar}" />
+					<param name="param.out.jar"		value="${project.build.target}/${project.installation.base}-gui-obf.jar" />
+					<param name="param.map"			value="${project.build.target}/${project.installation.base}-gui-map.txt" />	
+					<param name="param.seeds"		value="${project.build.target}/${project.installation.base}-gui-seeds.txt" />	
+					<param name="param.conf"		value="${project.build.proguard.conf}/" />
+					<param name="param.options"		value="-verbose" />
+				</antcall>
+			</target>
+			
+			
+			<!-- pre-integration-test -->
+			
+			<target name="pre-integration-test" depends="package" description="perform actions required before integration tests are executed. This may involve things such as setting up the required environment">
+			</target>
+			
+			
+			<!-- integration-test -->
+			
+			<target name="_integration-test-runjar">
+				<java fork="true" failonerror="true" maxmemory="${param.memory}" jar="${param.jar}" >
+					<arg line="${param.args}"/>
+				</java>
+			</target>
+			
+			<target name="_integration-test-runclass">
+				<java fork="true" failonerror="true" maxmemory="${param.memory}" classname="${param.classname}" >
+					<classpath>
+						<pathelement path="${param.path}"/>
+					</classpath>
+					<arg line="${param.args}"/>
+				</java>
+			</target>
+			
+			
+			
+			<target name="integration-test" depends="pre-integration-test" description="process and deploy the package if necessary into an environment where integration tests can be run">
+				<parallel>
+					<!-- run server side -->
+					<echo>Running server side on ${os.name}</echo>
+					<exec executable="${server.work}/runserver.bat" spawn="true" os="Windows XP"/>
+					<exec executable="${server.work}/runserver.sh"  spawn="true" os="Linux"/>
+					
+					<!-- run client side -->
+					<echo>Running client side on ${os.name}</echo>
+					<java fork="true" failonerror="true" maxmemory="${project.assembly.manifest.classMemory}" jar="${ubberjar}" />
+				</parallel>
+			</target>
+			
+			
+			<!-- post-integration-test -->
+			
+			<target name="post-integration-test" depends="integration-test" description="perform actions required after integration tests have been executed. This may including cleaning up the environment">
+			</target>
+			
+			
+			<!-- verify -->
+			
+			<target name="verify" depends="package" description="run any checks to verify the package is valid and meets quality criteria">
+			</target>
+			
+			
+			<!-- install -->
+			
+			<target name="install" depends="verify" description="install the package into the local repository, for use as a dependency in other projects locally">
+				<mkdir dir="${project.installation.home.server}" />
+				<copy todir="${project.installation.home.server}">
+					<fileset casesensitive="true" dir="target">
+						<include name="*.zip" />
+					</fileset>
+				</copy>
+				
+				<mkdir dir="${project.installation.home.client}" />
+				<copy todir="${project.installation.home.client}">
+					<fileset casesensitive="true" dir="target">
+						<include name="*.jar" />
+						<include name="*.txt" />
+					</fileset>
+				</copy>
+			</target>
+			
+			
+			<!-- deploy -->
+			
+			<target name="deploy" depends="install" description="done in an integration or release environment, copies the final package to the remote repository for sharing with other developers and projects">
+			</target>
+			
+			
+			<!-- site -->
+			
+			<target name="_site-javadocs">
+				<javadoc maxmemory="${options.javadoc.maxmemory}" defaultexcludes="yes" author="true" version="true" use="true"
+					 destdir="${param.api}"
+					 windowtitle="${param.title}">
+					<packageset dir="${param.src}" defaultexcludes="yes"/>
+				</javadoc>
+			</target>
+			
+			<target name="_site-findbugs">
+				<!--findbugs home="${findbugs.home}"
+					     output="xml"
+					     outputFile="bcel-fb.xml" >
+				<auxClasspath path="${basedir}/lib/Regex.jar" />
+				<sourcePath path="${basedir}/src/java" />
+				<class location="${basedir}/bin/bcel.jar" />
+			</findbugs-->
+		</target>
+		
+		<target name="site" depends="compile" description="generates documentation">
+			<antcall target="_site-javadocs">
+				<param name="param.title"			value="DNA" />
+				<param name="param.src"				value="${project.build.src.main.java}" />
+				<param name="param.api"				value="${project.build.javadocs}" />
+			</antcall>
+		</target>
+		
+	</project>
