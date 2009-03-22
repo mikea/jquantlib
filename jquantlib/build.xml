@@ -1,9 +1,58 @@
 <?xml version="1.0"?>
+
+<!--
+ Copyright (C) 2008 Richard Gomes
+
+ This source code is release under the BSD License.
+ 
+ This file is part of JQuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://jquantlib.org/
+
+ JQuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the JQuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ 
+ JQuantLib is based on QuantLib. http://quantlib.org/
+-->
+
+<!--
+**
+** This Ant build file mimics in a certain way the lifecycle defined by Maven2.
+**
+** We dont aim to provide a full emulation of what Maven2 does, but a miminal set of
+** actions which are probably helpful for those who prefer Ant instead of Maven.
+**
+** As result of this build file, you will obtain 2 jar files:
+**   . a library .jar file, which is intended to be included by applications;
+**   . a ubber .jar file, which contains all dependencies, enabling it to demonstrate
+**     how JQuantLib works. When you run this .jar file, you will obtain some calculations
+**     as a result of sample programs.
+**
+** This build file does not implement at the moment:
+**     . checkout of source files;
+**     . shrink/obfuscation;
+**     . generation of javadocs and other kinds of documentation;
+**     . deployment of finished .jar files.
+**
+** Notes:
+**   . In order to build JQuantLib, please first checkout all sources from SVN.
+**     This build file does not checks out sources from SVN at the moment.
+**
+** @author Richard Gomes
+**
+-->
+	
 <project name="jquantlib" default="package" basedir="."
 	 xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
 	
 	<!-- TODO :: pending implementation
-	     1. remove username/password
+	     1. automatic svn checkout
 	     2. Make integration-test work with JUnit
 	     3. generate reports: findbugs, taglist, surefire, pmd, jdepend 
 	     -->
@@ -38,7 +87,6 @@
 		<property name="download.tools"              value="(does not matter)"/> 
 		<property name="options.ivy.version"         value="2.0.0"/>
 		<property name="options.antcontrib.version"  value="1.0b3"/>
-		<property name="options.jarjar.version"      value="1.0"/>
 		<property name="options.svnkit.version"      value="1.2.1"/>
 		<property name="options.proguard.version"    value="4.3"/>
 		
@@ -96,8 +144,8 @@
 		<property name="profile.dummy.class"   value="org.jquantlib.examples.Dummy"/>
 		<property name="profile.samples.class" value="org.jquantlib.examples.EquityOptions"/>
 		
-		<property name="profile.scm.svn.username" value="rg"/>
-		<property name="profile.scm.svn.password" value="spock2000"/>
+		<property name="profile.scm.svn.username" value=""/>
+		<property name="profile.scm.svn.password" value=""/>
 	</target>
 	
 	<!-- properties -->
@@ -199,26 +247,6 @@
 		<taskdef resource="net/sf/antcontrib/antlib.xml" uri="antlib:net.sf.antcontrib" classpathref="antcontrib.lib.path"/>
 	</target>
 	
-	<!-- jarjar -->
-	<target name="_tools-properties-jarjar" depends="_options">
-		<property name="jarjar.jar.dir"      value="${user.home}/.jarjar"/>
-		<property name="jarjar.jar.file"     value="${jarjar.jar.dir}/jarjar-${options.jarjar.version}.jar"/>
-		<property name="jarjar.download.url" value="http://jarjar.googlecode.com/files/jarjar-${options.jarjar.version}.jar"/>
-	</target>
-	
-	<target name="_tools-download-jarjar" depends="_tools-properties-jarjar" if="download.tools">
-		<echo message="installing jarjar..."/>
-		<mkdir dir="${jarjar.jar.dir}"/>
-		<get verbose="false" src="${jarjar.download.url}" dest="${jarjar.jar.file}" usetimestamp="true"/>
-	</target>
-	
-	<target name="_tools-install-jarjar" depends="_tools-download-jarjar">
-		<path id="jarjar.lib.path">
-			<fileset casesensitive="true" dir="${jarjar.jar.dir}" includes="**/*.jar" />
-		</path>
-		<taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpathref="jarjar.lib.path"/>
-	</target>
-	
 	<!-- svnkit -->
 	<target name="_tools-properties-svnkit" depends="_options">
 		<property name="svnkit.jar.dir"      value="${user.home}/.svnkit"/>
@@ -271,7 +299,7 @@
 		    -->
 	    </target>
 	    
-	    <target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-jarjar,_tools-install-svnkit,_tools-install-proguard"/>
+	    <target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-svnkit,_tools-install-proguard"/>
 	    
 	    
 	    <!-- bootstrap -->
@@ -345,7 +373,7 @@
 		</target>
 		
 		<target name="_initialize-scm-checkout" if="default.app.fresh">
-			<svn username="XXX.${profile.scm.svn.username}" password="XXX.${profile.scm.svn.password}">
+			<svn username="${profile.scm.svn.username}" password="${profile.scm.svn.password}">
 				<checkout url="${project.scm.url}" destPath="."/>
 			</svn>
 		</target>
