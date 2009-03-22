@@ -162,19 +162,19 @@ public class Calendars {
         
         // Advance the current date using calendars's advance(date,period-->lenth=1,Unit=Days,BusinessDayConvention=FOLLOWING)
         advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.DAYS), BusinessDayConvention.FOLLOWING);
-        System.out.println("Next business date when today's date is advanced = "+ advancedDate);
+        System.out.println("Next business date when today's date is advanced 1 day = "+ advancedDate);
         
         // Advance the current date using calendars's advance(date,period-->lenth=1,Unit=WEEKS,BusinessDayConvention=MODIFIED_FOLLOWING)
         advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.WEEKS),BusinessDayConvention.MODIFIED_FOLLOWING);
-        System.out.println("Next business date when today's date is advanced = "+ advancedDate);
+        System.out.println("Next business date when today's date is advanced 1 week = "+ advancedDate);
         
         // Advance the current date using calendars's advance(date,period-->lenth=1,Unit=MONTHS,BusinessDayConvention=MODIFIED_PRECEDING)
         advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.MONTHS),BusinessDayConvention.MODIFIED_PRECEDING);
-        System.out.println("Next business date when today's date is advanced = "+ advancedDate);
+        System.out.println("Next business date when today's date is advanced 1 month = "+ advancedDate);
         
         // Advance the current date using calendars's advance(date,period-->lenth=1,Unit=YEARS,BusinessDayConvention=PRECEDING)
         advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.YEARS), BusinessDayConvention.PRECEDING);
-        System.out.println("Next business date when today's date is advanced = "+ advancedDate);
+        System.out.println("Next business date when today's date is advanced 1 year = "+ advancedDate);
         
         //<==================Joining Calendars===============================> 
         Calendar unitedStatesCalendarGvtBondCalendar = UnitedStates.getCalendar(Market.GOVERNMENTBOND);

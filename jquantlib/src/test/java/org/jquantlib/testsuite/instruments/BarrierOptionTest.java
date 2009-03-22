@@ -73,7 +73,7 @@ public class BarrierOptionTest {
 
 	    logger.info("Testing barrier options against Haug's values...");
 
-	    NewBarrierOptionData values[] = {
+	    final NewBarrierOptionData values[] = {
 	        /* The data below are from
 	          "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag. 72
 	        */
@@ -238,7 +238,7 @@ public class BarrierOptionTest {
             Journal of Derivatives; Winter 1998; 6, 2
         */
         
-    BarrierOptionData values[] = {
+    final BarrierOptionData values[] = {
         new BarrierOptionData( BarrierType.DownIn,   0.10,   100,  90,   0.07187,  0.0),
         new BarrierOptionData( BarrierType.DownIn,   0.15,   100,  90,   0.60638,  0.0),
         new BarrierOptionData( BarrierType.DownIn,   0.20,   100,  90,   1.64005,  0.0),
@@ -436,7 +436,7 @@ public class BarrierOptionTest {
         private double result;   // result
         private double tol;      // tolerance
 
-        NewBarrierOptionData(   BarrierType barrierType,
+        public NewBarrierOptionData(   BarrierType barrierType,
                                 double barrier,
                                 double rebate,
                                 Option.Type type,
@@ -466,7 +466,7 @@ public class BarrierOptionTest {
     
     private static class BarrierOptionData {
 
-        BarrierOptionData(      BarrierType barrierType,
+        public BarrierOptionData(      BarrierType barrierType,
                                 double volatility,   
                                 double strike,        
                                 double barrier,        

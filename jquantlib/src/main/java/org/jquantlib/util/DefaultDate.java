@@ -573,7 +573,6 @@ public class DefaultDate extends BaseDate {
             final StringBuilder sb = new StringBuilder();
             final Formatter formatter = new Formatter(sb, Locale.US);
             formatter.format("%s %d, %d", this.getMonthEnum(), this.getDayOfMonth(), this.getYear());
-            logger.debug(sb.toString());
             return sb.toString();
         }
     }
@@ -585,7 +584,6 @@ public class DefaultDate extends BaseDate {
             final StringBuilder sb = new StringBuilder();
             final Formatter formatter = new Formatter(sb, Locale.US);
             formatter.format("%s %d, %d", this.getMonthEnum(), this.getDayOfMonth(), this.getYear());
-            logger.debug(sb.toString());
             return sb.toString();
         }
     }
@@ -597,7 +595,6 @@ public class DefaultDate extends BaseDate {
             final StringBuilder sb = new StringBuilder();
             final Formatter formatter = new Formatter(sb, Locale.US);
             formatter.format("%04d-%02d-%02d", this.getYear(), this.getMonth(), this.getDayOfMonth());
-            logger.debug(sb.toString());
             return sb.toString();
         }
     }

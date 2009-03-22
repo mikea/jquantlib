@@ -26,7 +26,7 @@
 	<groupId>org.jquantlib</groupId>
 	<artifactId>jquantlib</artifactId>
 	<name>JQuantLib</name>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.1.2</version>
 	<url>http://www.jquantlib.org/</url>
 	<description>
 		JQuantLib is a free, open-source and comprehensive framework for quantitative finance, offering
@@ -293,12 +293,11 @@
 					<archive>
 						<index>${maven.jar.index}</index>
 						<manifest>
-							<mainClass>${maven.jar.manifest.mainClass}</mainClass>
+							<mainClass>${maven.jar.manifest.dummy.class}</mainClass>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							<addExtensions>true</addExtensions>
 						</manifest>
 						<manifestEntries>
-
 							<Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes -->
 							<Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
 							<Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
@@ -338,7 +337,7 @@
 					<archive>
 						<index>${maven.jar.index}</index>
 						<manifest>
-							<mainClass>${maven.jar.manifest.mainClass}</mainClass>
+							<mainClass>${maven.jar.manifest.samples.class}</mainClass>
 						</manifest>
 						<manifestEntries>
 
@@ -939,7 +938,8 @@
     <maven.compile.maxmem>512m</maven.compile.maxmem>
     <maven.compile.fork>false</maven.compile.fork> <!-- Be cautious: may fork a different JVM -->
     <maven.jar.index>false</maven.jar.index>
-    <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
+    <maven.jar.manifest.dummy.class>org.jquantlib.examples.Dummy</maven.jar.manifest.dummy.class>
+    <maven.jar.manifest.samples.class>org.jquantlib.examples.EquityOptions</maven.jar.manifest.samples.class>
 
     <!-- application independent properties :: Source Code Management -->
     <maven.scm.root>jquant.svn.sourceforge.net/svnroot</maven.scm.root>
