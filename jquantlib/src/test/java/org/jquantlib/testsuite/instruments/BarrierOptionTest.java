@@ -226,8 +226,6 @@ public class BarrierOptionTest {
 	    return (int) (t*360+0.5);
 	}
 	
-	//TODO: fix barrier option - getNPV() gets 0
-    @Ignore
     @Test
     public void testBabsiriValues(){
         logger.info("Testing barrier options against Babsiri's values...");
@@ -272,7 +270,7 @@ public class BarrierOptionTest {
         
         PricingEngine engine = new AnalyticBarrierOptionEngine();
         
-        Date exDate = today.increment(Period.ONE_YEAR_FORWARD);
+        Date exDate = today.getDateAfter(360);
         
         Exercise exercise = new EuropeanExercise(exDate);
         
@@ -299,7 +297,7 @@ public class BarrierOptionTest {
            }
     }
         
-    //TODO: fix barrier option - getNPV() gets 0
+    //TODO: fix missing implementation
     @Ignore
     @Test
     public void testBeagleholeValues() {
@@ -336,7 +334,7 @@ public class BarrierOptionTest {
         
         PricingEngine engine = new AnalyticBarrierOptionEngine();
         
-        Date exDate = today.increment(Period.ONE_YEAR_FORWARD);
+        Date exDate = today.getDateAfter(360);
         
         Exercise exercise = new EuropeanExercise(exDate);
         
