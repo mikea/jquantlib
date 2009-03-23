@@ -1,23 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
+ Copyright (C) 2008 Richard Gomes
+
+ This source code is release under the BSD License.
+ 
+ This file is part of JQuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://jquantlib.org/
+
+ JQuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the JQuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ 
+ JQuantLib is based on QuantLib. http://quantlib.org/
+-->
+
+<!--
+**
+** This Maven2 build file is the preferred way to build JQuantLib
+**
+** @author Richard Gomes
+**
+-->
+
+
+<!--
 	Due to bugs in wagon providers, release managers and continuous integration servers
     need to use a special profile in order to make sure the correct version of Maven is
-	being used and correct versions of wagon providers are being activated. This is how
+	being used and correct versions of Wagon providers are being activated. This is how
 	it can be used from command line:
 
-		mvn -Drole=manager validate
-		mvn -Drole=continuum validate
+		mvn -Drole=manager   -Dprotocol=ssh clean deploy
+		mvn -Drole=continuum -Dprotocol=ssh clean deploy
 
-	Observe that role=manager or role=continuum requires maven2.1.0 and versions of wagon
-	providers which depend on maven2.1.0:
+	Observe that role=manager or role=continuum requires Maven-2.1.0 and versions of wagon
+	providers which depend on Maven-2.1.0:
 	
 	    [echo] maven.required.version=2.1.0-M1
         [echo] extension.wagon-ftp.version=1.0-beta-5-SNAPSHOT
         [echo] extension.wagon-ssh.version=1.0-beta-4
 	
 	M2Eclipse plugin for Eclipse always use an Embedded maven runtime which does not
-	conform to maven2.1.0 requirement. For this reason, role=manager or role=continuum
+	conform to maven-2.1.0 requirement. For this reason, role=manager or role=continuum
 	should never be used inside Eclipse environment.
 -->
 
@@ -446,10 +476,10 @@
 			<properties>
 				<maven.required.version>2.1.0-M1</maven.required.version>
 				<extension.wagon-ftp.version>1.0-beta-5-SNAPSHOT</extension.wagon-ftp.version>
-				<extension.wagon-ssh.version>1.0-beta-4</extension.wagon-ssh.version>
+				<extension.wagon-ssh.version>1.0-beta-5</extension.wagon-ssh.version>
 				<extension.wagon-file.version>1.0-beta-4</extension.wagon-file.version>
 				<extension.wagon-ftp.urlbase>ftp://ftp.jquantlib.org</extension.wagon-ftp.urlbase>
-				<extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/continuum</extension.wagon-ssh.urlbase>
+				<extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/www-data/maven2/jquantlib.org</extension.wagon-ssh.urlbase>
 				<extension.wagon-file.urlbase>file://target</extension.wagon-file.urlbase>
 			</properties>
 		</profile>
@@ -560,6 +590,7 @@
 		    <snapshots> <enabled>true</enabled>  </snapshots>
 		</repository>
 		
+		<!--
 		<repository>
 		    <id>joda</id>
 		    <name>Joda</name>
@@ -567,6 +598,7 @@
 		    <releases>  <enabled>true</enabled> </releases>
 		    <snapshots> <enabled>true</enabled>  </snapshots>
 		</repository>
+		-->
 		
 		<!--
 		<repository>
@@ -921,7 +953,7 @@
     <extension.wagon-ftp.version>1.0-beta-1</extension.wagon-ftp.version>
     <extension.wagon-file.version>1.0-beta-1</extension.wagon-file.version>
     <extension.wagon-ftp.urlbase>ftp://ftp.jquantlib.org</extension.wagon-ftp.urlbase>
-    <extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/continuum</extension.wagon-ssh.urlbase>
+    <extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/www-data/maven2/jquantlib.org</extension.wagon-ssh.urlbase>
     <extension.wagon-file.urlbase>file://target</extension.wagon-file.urlbase>
     <extension.protocol.urlbase>${extension.wagon-file.urlbase}</extension.protocol.urlbase>
 

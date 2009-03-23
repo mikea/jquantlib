@@ -57,14 +57,7 @@ import org.jquantlib.processes.StochasticProcess;
  * Description of the terms and conditions of a discrete average out fixed strike
  * option.
  * 
- * <p>
- * Ported from 
- * <ul>
- * <li>ql/instruments/asianoption.hpp</li>
- * <li>ql/instruments/asianoption.cpp</li>
- * </ul>
  * @author gary_kennedy
- *
  */
 
 
@@ -72,9 +65,11 @@ import org.jquantlib.processes.StochasticProcess;
 
 public class ContinuousAveragingAsianOption extends OneAssetStrikedOption{
 
-    public static final String wrong_argument_type = "wrong argument type";
+    private static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
     
-	public ContinuousAveragingAsianOption(
+    protected AverageType averageType_;
+
+    public ContinuousAveragingAsianOption(
             AverageType averageType,
             final StochasticProcess process,
             final StrikedTypePayoff payoff,
@@ -94,12 +89,11 @@ public class ContinuousAveragingAsianOption extends OneAssetStrikedOption{
         super.setupArguments(arguments);
 
         if (!(arguments instanceof ContinuousAveragingAsianOptionArguments)){
-        	throw new IllegalArgumentException(wrong_argument_type);
+        	throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
         }
         ContinuousAveragingAsianOptionArguments moreArgs = (ContinuousAveragingAsianOptionArguments)arguments;
         moreArgs.averageType = averageType_;
 	
     }
     
-    protected AverageType averageType_;
 }

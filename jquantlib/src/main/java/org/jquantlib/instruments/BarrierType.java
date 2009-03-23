@@ -23,10 +23,7 @@ package org.jquantlib.instruments;
 
 /**
  * 
- * Ported from
- * <ul>
- * <li>ql/instruments/barrieroption.hpp</li>
- * </ul>
+ * Barrier type
  * 
  * @author <Richard Gomes>
  * 

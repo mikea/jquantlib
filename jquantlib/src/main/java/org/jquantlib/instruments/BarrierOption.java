@@ -49,13 +49,8 @@ import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 
 /**
- * 
- * Ported from 
- * <ul>
- * <li>ql/instruments/barrieroption.hpp</li>
- * <li>ql/instruments/barrieroption.cpp</li>
- * </ul>
  * Barrier option on a single asset.
+ * <p>
  * The analytic pricing engine will be used if none if passed.
  * 
  * @author <Richard Gomes>
@@ -64,7 +59,11 @@ import org.jquantlib.quotes.Handle;
 
 public class BarrierOption extends OneAssetStrikedOption {
     
-    public static final String wrong_argument_type = "wrong argument type";
+    private static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
+
+    protected BarrierType barrierType_;
+    protected double barrier_;
+    protected double rebate_;
 
 	public BarrierOption(StochasticProcess process, Payoff payoff,
 			Exercise exercise, PricingEngine engine) {
@@ -82,7 +81,7 @@ public class BarrierOption extends OneAssetStrikedOption {
             			final Exercise exercise,
             			final PricingEngine engine){
     	super(process,payoff, exercise, engine);
-    	if(engine == null){
+    	if (engine == null){
             setPricingEngine(new AnalyticBarrierOptionEngine());
         }
     	this.barrierType_ = barrierType;
@@ -95,7 +94,7 @@ public class BarrierOption extends OneAssetStrikedOption {
    public void setupArguments(Arguments args) {
 
        if (!(args instanceof BarrierOptionArguments)){
-    	   throw new ArithmeticException(wrong_argument_type);
+    	   throw new ArithmeticException(WRONG_ARGUMENT_TYPE);
        }
        BarrierOptionArguments moreArgs = (BarrierOptionArguments)args;
        moreArgs.barrierType = barrierType_;
@@ -103,12 +102,6 @@ public class BarrierOption extends OneAssetStrikedOption {
        moreArgs.rebate = rebate_;
 
        super.setupArguments(args);
-
    }
-
-	
-    protected BarrierType barrierType_;
-    protected double barrier_;
-    protected double rebate_;
 
 }

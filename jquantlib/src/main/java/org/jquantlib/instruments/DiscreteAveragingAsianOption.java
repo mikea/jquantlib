@@ -61,14 +61,7 @@ import org.jquantlib.util.Date;
  * Description of the terms and conditions of a discrete average out fixed strike
  * option.
  * 
- * <p>
- * Ported from 
- * <ul>
- * <li>ql/instruments/asianoption.hpp</li>
- * <li>ql/instruments/asianoption.cpp</li>
- * </ul>
  * @author <Richard Gomes>
- *
  */
 public class DiscreteAveragingAsianOption extends OneAssetStrikedOption{
 

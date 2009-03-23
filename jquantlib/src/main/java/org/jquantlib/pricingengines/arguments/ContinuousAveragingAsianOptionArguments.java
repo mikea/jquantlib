@@ -43,7 +43,9 @@ import org.jquantlib.instruments.AverageType;
 
 public class ContinuousAveragingAsianOptionArguments extends OneAssetStrikedOptionArguments {
 
-    public static final String unspecified_average_type = "unspecified average type";
+    private static final String UNSPECIFIED_AVERAGE_TYPE = "unspecified average type";
+    
+    public AverageType averageType;
     
 	public ContinuousAveragingAsianOptionArguments() {
 	}
@@ -51,12 +53,11 @@ public class ContinuousAveragingAsianOptionArguments extends OneAssetStrikedOpti
 	@Override
 	public void validate() /*@ReadOnly*/{
         super.validate();
-        //check whether null instead of using -1 enum typ
-        if(averageType==null){
-        	throw new IllegalArgumentException(unspecified_average_type);
+        //TODO: check whether null instead of using -1 enum typ
+        if (averageType==null){
+        	throw new IllegalArgumentException(UNSPECIFIED_AVERAGE_TYPE);
         }
 
     }
 
-    public AverageType averageType;
 }

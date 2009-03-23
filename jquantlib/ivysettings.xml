@@ -9,25 +9,18 @@
 			<artifact pattern="${project.deploy.repository.url}/external_non_free/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 		</url>
 
-		<url name="jquantlib-private" m2compatible="true">
-			<artifact pattern="${project.deploy.repository.url}/inhouse/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-			<artifact pattern="${project.deploy.repository.url}/inhouse_snapshot/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-		</url>
-
-		<url name="joda" m2compatible="true">
-			<artifact pattern="http://joda-primitives.sourceforge.net/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-		</url>
-
-		<chain name="chain-resolver" dual="true">
-			<url name="main" m2compatible="true">
-				<artifact pattern="${project.deploy.repository.url}/inhouse/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-				<artifact pattern="${project.deploy.repository.url}/inhouse_snapshot/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-				<artifact pattern="${project.deploy.repository.url}/external_free/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-				<artifact pattern="${project.deploy.repository.url}/external_non_free/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-				<artifact pattern="http://joda-primitives.sourceforge.net/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
-			</url>
+		<chain name="chain-resolver" dual="false">
+			<resolver ref="jquantlib" />
 			<ibiblio name="maven2" m2compatible="true" />
 		</chain>
 	</resolvers>
 
 </ivysettings>
+
+<!--
+		<url name="joda" m2compatible="true">
+			<artifact pattern="http://joda-primitives.sourceforge.net/repo/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+		</url>
+
+		<resolver ref="joda" />
+-->
