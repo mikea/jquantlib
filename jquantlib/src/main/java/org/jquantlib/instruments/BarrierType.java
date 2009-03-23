@@ -21,19 +21,37 @@
  */
 package org.jquantlib.instruments;
 
-
 /**
  * 
- * Ported from 
+ * Ported from
  * <ul>
  * <li>ql/instruments/barrieroption.hpp</li>
  * </ul>
  * 
  * @author <Richard Gomes>
- *
+ * 
  */
 
 public enum BarrierType {
 
-	DownIn, UpIn, DownOut, UpOut ;
+    DownIn {
+        public String toString() {
+            return "Down & In";
+        }
+    },
+    UpIn {
+        public String toString() {
+            return "Up & In";
+        }
+    },
+    DownOut {
+        public String toString() {
+            return "Down & Out";
+        }
+    },
+    UpOut {
+        public String toString() {
+            return "Up & Out";
+        }
+    }
 }
