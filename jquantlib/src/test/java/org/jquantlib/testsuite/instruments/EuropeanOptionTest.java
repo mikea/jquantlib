@@ -42,6 +42,7 @@ package org.jquantlib.testsuite.instruments;
 
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -56,6 +57,7 @@ import org.jquantlib.instruments.AssetOrNothingPayoff;
 import org.jquantlib.instruments.CashOrNothingPayoff;
 import org.jquantlib.instruments.EuropeanOption;
 import org.jquantlib.instruments.GapPayoff;
+import org.jquantlib.instruments.OneAssetOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
@@ -833,141 +835,134 @@ public class EuropeanOptionTest {
     }
 
     
-//    @Test
-//    public void testImpliedVol() {
-//
-//        logger.info("Testing European option implied volatility...");
-//
-//        final int maxEvaluations = 100;
-//        final double tolerance = 1.0e-6;
-//
-//        // test options
-//        Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
-//        double strikes[] = { 90.0, 99.5, 100.0, 100.5, 110.0 };
-//        int lengths[] = { 36, 180, 360, 1080 };
-//
-//        // test data
-//        double underlyings[] = { 90.0, 95.0, 99.9, 100.0, 100.1, 105.0, 110.0 };
-//        double qRates[] = { 0.01, 0.05, 0.10 };
-//        double rRates[] = { 0.01, 0.05, 0.10 };
-//        double vols[] = { 0.01, 0.20, 0.30, 0.70, 0.90 };
-//
-//        DayCounter dc = Actual360.getDayCounter();
-//        Date today = DateFactory.getFactory().getTodaysDate();
-//
-//        SimpleQuote spot = new SimpleQuote(0.0);
-//        SimpleQuote vol = new SimpleQuote(0.0);
-//        BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<SimpleQuote>(vol), dc);
-//        SimpleQuote qRate = new SimpleQuote(0.0);
-//        YieldTermStructure qTS = Utilities.flatRate(today, new Handle<SimpleQuote>(qRate), dc);
-//        SimpleQuote rRate = new SimpleQuote(0.0);
-//        YieldTermStructure rTS = Utilities.flatRate(today, new Handle<SimpleQuote>(rRate), dc);
-//
-//        for (int i=0; i<types.length; i++) {
-//          for (int j=0; j<strikes.length; j++) {
-//            for (int k=0; k<lengths.length; k++) {
-//              // option to check
-//    
-//              Date exDate = today.getDateAfter( lengths[k] );
-//
-//              Exercise exercise = new EuropeanExercise(exDate);
-//
-//              StrikedTypePayoff payoff = new PlainVanillaPayoff(types[i], strikes[j]);
-//
-////            boost::shared_ptr<VanillaOption> option =
-////                makeOption(payoff, exercise, spot, qTS, rTS, volTS,
-////                           Analytic, Null<Size>(), Null<Size>());
-//
-//              StochasticProcess process = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-//                                                                        new Handle<YieldTermStructure>(qTS), 
-//                                                                        new Handle<YieldTermStructure>(rTS), 
-//                                                                        new Handle<BlackVolTermStructure>(volTS));
-//
-//
-//              
-//              VanillaOption option = new EuropeanOption(process, payoff, exercise, new AnalyticEuropeanEngine());
-//
-//              for (int l=0; l<underlyings.length; l++) {
-//                for (int m=0; m<qRates.length; m++) {
-//                  for (int n=0; n<rRates.length; n++) {
-//                    for (int p=0; p<vols.length; p++) {
-//                      double u = underlyings[l];
-//                      double q = qRates[m],
-//                           r = rRates[n];
-//                      double v = vols[p];
-//                      spot.setValue(u);
-//                      qRate.setValue(q);
-//                      rRate.setValue(r);
-//                      vol.setValue(v);
-//
-//                      double value = option.getNPV();
-//                      double implVol = 0.0; // just to remove a warning...
-//                      if (value != 0.0) {
-//                          // shift guess somehow
-//                          vol.setValue(v*0.5);
-//                          if (Math.abs(value-option.getNPV()) <= 1.0e-12) {
-//                              // flat price vs vol --- pointless (and
-//                              // numerically unstable) to solve
-//                              continue;
-//                          }
-//
-////                        implVol = option.impliedVolatility(value,
-////                                                                tolerance,
-////                                                                maxEvaluations);
-//                          implVol = option.impliedVolatility(value);
-//                          
-////                        } catch (std::exception& e) {
-////                            BOOST_ERROR(
-////                                "\nimplied vol calculation failed:" +
-////                                "\n   option:         " + types[i] +
-////                                "\n   strike:         " + strikes[j] +
-////                                "\n   spot value:     " + u +
-////                                "\n   dividend yield: " + io::rate(q) +
-////                                "\n   risk-free rate: " + io::rate(r) +
-////                                "\n   today:          " + today +
-////                                "\n   maturity:       " + exDate +
-////                                "\n   volatility:     " + io::volatility(v) +
-////                                "\n   option value:   " + value +
-////                                "\n" + e.what());
-////                        }
-//                          if (Math.abs(implVol-v) > tolerance) {
-//                              // the difference might not matter
-//                              vol.setValue(implVol);
-//                              double value2 = option.getNPV();
-//                              double error = Utilities.relativeError(value,value2,u);
-//                              if (error > tolerance) {
-//                                  fail(
-//                                      types[i] + " option :\n"
-//                                      + "    spot value:          " + u + "\n"
-//                                      + "    strike:              "
-//                                      + strikes[j] + "\n"
-//                                      + "    dividend yield:      "
-//                                      + (q) + "\n"
-//                                      + "    risk-free rate:      "
-//                                      + (r) + "\n"
-//                                      + "    maturity:            "
-//                                      + exDate + "\n\n"
-//                                      + "    original volatility: "
-//                                      + (v) + "\n"
-//                                      + "    price:               "
-//                                      + value + "\n"
-//                                      + "    implied volatility:  "
-//                                      + (implVol)
-//                                      + "\n"
-//                                      + "    corresponding price: "
-//                                      + value2 + "\n"
-//                                      + "    error:               " + error);
-//                              }
-//                          }
-//                      }
-//                    }
-//                  }
-//                }
-//              }
-//            }
-//          }
-//        }
-//    }
+      @Test
+    public void testImpliedVol() {
+
+        logger.info("Testing European option implied volatility...");
+
+        final int maxEvaluations = 100;
+        final double tolerance = 1.0e-6;
+
+        // test options
+        Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        double strikes[] = { 90.0, 99.5, 100.0, 100.5, 110.0 };
+        int lengths[] = { 36, 180, 360, 1080 };
+
+        // test data
+        double underlyings[] = { 90.0, 95.0, 99.9, 100.0, 100.1, 105.0, 110.0 };
+        double qRates[] = { 0.01, 0.05, 0.10 };
+        double rRates[] = { 0.01, 0.05, 0.10 };
+        double vols[] = { 0.01, 0.20, 0.30, 0.70, 0.90 };
+
+        DayCounter dc = Actual360.getDayCounter();
+        Date today = DateFactory.getFactory().getTodaysDate();
+
+        Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
+        Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today,qRate, dc));
+        Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+
+        for (int i=0; i<types.length; i++) {
+          for (int j=0; j<strikes.length; j++) {
+            for (int k=0; k<lengths.length; k++) {
+              // option to check
+              Date exDate = today.getDateAfter( lengths[k] );
+
+              Exercise exercise = new EuropeanExercise(exDate);
+
+              StrikedTypePayoff payoff = new PlainVanillaPayoff(types[i], strikes[j]);
+              
+              VanillaOption option = makeOption(payoff, exercise, spot, qTS, rTS, volTS, EngineType.Analytic, 0, 0);
+
+              for (int l=0; l<underlyings.length; l++) {
+                for (int m=0; m<qRates.length; m++) {
+                  for (int n=0; n<rRates.length; n++) {
+                    for (int p=0; p<vols.length; p++) {
+                      double u = underlyings[l];
+                      double q = qRates[m],
+                           r = rRates[n];
+                      double v = vols[p];
+                      spot.getLink().setValue(u);
+                      qRate.getLink().setValue(q);
+                      rRate.getLink().setValue(r);
+                      vol.getLink().setValue(v);
+
+                      double value = option.getNPV();
+                      double implVol = 0.0; // just to remove a warning...
+                      if (value != 0.0) {
+                          // shift guess somehow
+                          vol.getLink().setValue(v*0.5);
+                          if (Math.abs(value-option.getNPV()) <= 1.0e-12) {
+                              // flat price vs vol --- pointless (and
+                              // numerically unstable) to solve
+                              continue;
+                          }
+                          
+                      try{
+                          /*TODO: implement implVol = option->impliedVolatility(value, tolerance,maxEvaluations); instead of this hack.*/
+                          Method method = option.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredMethod("impliedVolatility", new Class[]{double.class,
+                                  double.class, int.class, double.class, double.class});
+                          method.setAccessible(true);
+                          implVol = (Double) method.invoke(option, new Object[]{value, 1.0e-6, 200, 1.0e-8, 4.0 });
+
+                        } catch (Exception e) {
+                            if(e instanceof NoSuchMethodException|| e instanceof NullPointerException || e instanceof SecurityException){
+                                fail("API changed - reimplement testcase");
+                            }
+                            fail(
+                                "\n implied vol calculation failed:" +
+                                "\n   option:         " + types[i] +
+                                "\n   strike:         " + strikes[j] +
+                                "\n   spot value:     " + u +
+                                "\n   dividend yield: " + q +
+                                "\n   risk-free rate: " + r +
+                                "\n   today:          " + today +
+                                "\n   maturity:       " + exDate +
+                                "\n   volatility:     " + vol +
+                                "\n   option value:   " + value +
+                                "\n" + e.getMessage());
+                       }
+                          if (Math.abs(implVol-v) > tolerance) {
+                              // the difference might not matter
+                              vol.getLink().setValue(implVol);
+                              double value2 = option.getNPV();
+                              double error = Utilities.relativeError(value,value2,u);
+                              if (error > tolerance) {
+                                  fail(
+                                      types[i] + " option :\n"
+                                      + "    spot value:          " + u + "\n"
+                                      + "    strike:              "
+                                      + strikes[j] + "\n"
+                                      + "    dividend yield:      "
+                                      + (q) + "\n"
+                                      + "    risk-free rate:      "
+                                      + (r) + "\n"
+                                      + "    maturity:            "
+                                      + exDate + "\n\n"
+                                      + "    original volatility: "
+                                      + (v) + "\n"
+                                      + "    price:               "
+                                      + value + "\n"
+                                      + "    implied volatility:  "
+                                      + (implVol)
+                                      + "\n"
+                                      + "    corresponding price: "
+                                      + value2 + "\n"
+                                      + "    error:               " + error);
+                              }
+                          }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    }
 
     
 //  void EuropeanOptionTest::testImpliedVolContainment() {
