@@ -912,7 +912,7 @@ public class EuropeanOptionTest {
                             if(e instanceof NoSuchMethodException|| e instanceof NullPointerException || e instanceof SecurityException){
                                 fail("API changed - reimplement testcase");
                             }
-                            fail(
+                            else fail(
                                 "\n implied vol calculation failed:" +
                                 "\n   option:         " + types[i] +
                                 "\n   strike:         " + strikes[j] +
