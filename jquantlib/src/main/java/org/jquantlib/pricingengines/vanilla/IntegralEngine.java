@@ -61,25 +61,32 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * @author Richard Gomes
  *
  */
+
+// Pricing engine for European vanilla options using integral approach
+// TODO: define tolerance for calculate()
+
 public class IntegralEngine extends OneAssetStrikedOptionEngine {
+    
+    private static final String not_a_European_Option = "not a European Option";
+    private static final String non_striked_payoff_given = "non-striked payoff given";
+    private static final String black_scholes_process_required = "Black-Scholes process required";
 
 
 	@Override
 	public void calculate() {
 		
-
     	if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
-			throw new ArithmeticException("not a Euroepan Option");
+			throw new ArithmeticException(not_a_European_Option);
 		}
 
 		if (!(arguments.payoff instanceof StrikedTypePayoff)){
-			throw new ArithmeticException("non-striked payoff given");
+			throw new ArithmeticException(non_striked_payoff_given);
 		}
 		
 		StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
 
 		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException("Black-Scholes process required");
+			throw new ArithmeticException(black_scholes_process_required);
 		}
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
