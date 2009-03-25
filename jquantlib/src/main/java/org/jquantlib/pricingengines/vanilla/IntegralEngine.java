@@ -113,6 +113,7 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
 
 	}
 
+	//TODO: Refactor this in public class?
 	static private class Integrand implements UnaryFunctionDouble {
           public Integrand(Payoff payoff,
                     double s0,
