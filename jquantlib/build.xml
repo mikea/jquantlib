@@ -417,7 +417,10 @@
 		    </target>
 		    
 		    <target name="initialize" depends="validate,_bootstrap-environment,_initialize-show-info,_initialize-scm" description="initialize build state, e.g. set properties or create directories">
-			    <echo>VERSION: ${project.version}-${buildNumber}</echo>
+				<property name="jar"      value="${project.build.target}/${project.installation.base}.jar"/>
+				<property name="ubberjar" value="${project.build.target}/${project.installation.base}-ubber.jar"/>
+
+		    	<echo>VERSION: ${project.version}-${buildNumber}</echo>
 			    <mkdir dir="${project.build.classes}" />
 		    </target>
 		    
@@ -541,8 +544,6 @@
 			<!-- prepare-package -->
 			
 			<target name="prepare-package" depends="test" description="perform any operations necessary to prepare a package before the actual packaging. This often results in an unpacked, processed version of the package">
-				<property name="jar"      value="${project.build.target}/${project.installation.base}.jar"/>
-				<property name="ubberjar" value="${project.build.target}/${project.installation.base}-ubber.jar"/>
 				<fileset casesensitive="true" id="fileset.classes" dir="${project.build.classes}" />
 				<fileset casesensitive="true" id="fileset.resources" dir="${project.build.src.main.res}" />
 				<fileset casesensitive="true" id="fileset.libs" dir="${project.build.lib}" />
@@ -677,12 +678,15 @@
 			
 			
 			<target name="integration-test" depends="pre-integration-test" description="process and deploy the package if necessary into an environment where integration tests can be run">
-				<parallel>
-					<echo>Running on ${os.name}</echo>
-					<java fork="true" failonerror="true" maxmemory="${options.integration-test.memory}" jar="${ubberjar}" />
-				</parallel>
+				<echo>Running on ${os.name}</echo>
+				<java fork="true" failonerror="true" maxmemory="${options.integration-test.memory}" jar="${ubberjar}" />
 			</target>
 			
+			<target name="run" depends="initialize" description="runs a pre-built project">
+				<echo>Running on ${os.name}</echo>
+				<java fork="true" failonerror="true" maxmemory="${options.integration-test.memory}" jar="${ubberjar}" />
+			</target>
+	
 			
 			<!-- post-integration-test -->
 			
