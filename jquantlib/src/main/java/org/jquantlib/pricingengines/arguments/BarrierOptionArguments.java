@@ -55,9 +55,10 @@ import org.jquantlib.instruments.BarrierType;
  */
 
 public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
+    
+    private static final String unknown_type = "unknown type";
 
-	//FIXME encapsulate??
-	public BarrierType barrierType;
+    public BarrierType barrierType;
 	public double barrier, rebate;
 
 	@Override
@@ -99,7 +100,7 @@ public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
 			}
 			break;
 		default:
-			throw new ArithmeticException("unknown type");
+			throw new ArithmeticException(unknown_type);
 		}
 
 	}
