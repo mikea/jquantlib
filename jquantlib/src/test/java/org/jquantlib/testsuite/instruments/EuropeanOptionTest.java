@@ -395,18 +395,14 @@ public class EuropeanOptionTest {
         clock.log();
     }
     
-    //TODO: To be completed - still failing
-    @Ignore
     @Test 
     public void testGreekValues(){
-        logger.info("Testing European option greek values...2");
+        logger.info("Testing European option greek values...");
         /* The data below are from
         "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
         pag 11-16
         */
-        
-        try{
-        
+
         EuropeanOptionData values[] = 
             //        type, strike,   spot,    q,    r,        t,  vol,  value delta
                 {new EuropeanOptionData(Option.Type.CALL, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36,  0.5946, 0),
@@ -445,9 +441,6 @@ public class EuropeanOptionTest {
            double error;
            
            int i = -1;
-           i++;
-           i++;
-           
            
            // testing delta 1
            i++; 
@@ -463,18 +456,11 @@ public class EuropeanOptionTest {
            calculated = option.getLink().delta();
            error = Math.abs(calculated - values[i].result);
            
-           //TODO: this test fails
-           if(error>tolerance){
-               System.out.println("Testing delta 1 fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
-           }
-           
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
-           
+           if (error > tolerance) {
+                REPORT_FAILURE("delta", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                        values[i].result, calculated, error, tolerance);
+            }
+                      
            //testing delta 2
            i++;
            payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
@@ -488,17 +474,10 @@ public class EuropeanOptionTest {
            calculated = option.getLink().delta();
            error = Math.abs(calculated - values[i].result);
            if(error>tolerance){
-               System.out.println("Testing delta 2 fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("delta", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
-           
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
-           
-           
+                     
            //testing elasticity
            i++;
            payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
@@ -512,17 +491,10 @@ public class EuropeanOptionTest {
            calculated = option.getLink().elasticity();
            error = Math.abs(Math.abs(calculated - values[i].result));
            if(error>tolerance){
-               System.out.println("Testing elasticity fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("elasticity", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
-           
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
-           
-           
+       
            // testing gamma 1
            i++;
            payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
@@ -536,15 +508,9 @@ public class EuropeanOptionTest {
            calculated = option.getLink().gamma();
            error = Math.abs(Math.abs(calculated - values[i].result));
            if(error>tolerance){
-               System.out.println("Testing gamma 1 fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("gamma", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
-           
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
            
            // testing gamma 2
            i++;
@@ -559,15 +525,9 @@ public class EuropeanOptionTest {
            calculated = option.getLink().gamma();
            error = Math.abs(Math.abs(calculated - values[i].result));
            if(error>tolerance){
-               System.out.println("Testing gamma 2 fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("gamma", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
-           
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
            
            //testing vega 1
            i++;
@@ -582,15 +542,9 @@ public class EuropeanOptionTest {
            calculated = option.getLink().vega();
            error = Math.abs(Math.abs(calculated - values[i].result));
            if(error>tolerance){
-               System.out.println("Testing vega fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("vega", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
-           
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
            
            //testing vega 2
            i++;
@@ -605,16 +559,10 @@ public class EuropeanOptionTest {
            calculated = option.getLink().vega();
            error = Math.abs(Math.abs(calculated - values[i].result));
            if(error>tolerance){
-               System.out.println("Testing vega 2 fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("vega", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
-           
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
-           
+  
            //testing theta
            i++;
            payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
@@ -628,15 +576,10 @@ public class EuropeanOptionTest {
            calculated = option.getLink().theta();
            error = Math.abs(Math.abs(calculated - values[i].result));
            if(error>tolerance){
-               System.out.println("Testing theta fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("theta", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
            
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
            
            //testing theta per day
            i++;
@@ -651,15 +594,9 @@ public class EuropeanOptionTest {
            calculated = option.getLink().thetaPerDay();
            error = Math.abs(Math.abs(calculated - values[i].result));
            if(error>tolerance){
-               System.out.println("Fifth test case failed");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("theta per day", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
-           
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
            
            
            //testing rho
@@ -675,15 +612,9 @@ public class EuropeanOptionTest {
            calculated = option.getLink().rho();
            error = Math.abs(Math.abs(calculated - values[i].result));
            if(error>tolerance){
-               System.out.println("Testing rho fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("rho", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
-           
-           System.out.println("------------------------------------");
-           System.out.println("------------------------------------");
            
            //testing dividend rho
            i++;
@@ -698,16 +629,11 @@ public class EuropeanOptionTest {
            calculated = option.getLink().dividendRho();
            error = Math.abs(Math.abs(calculated - values[i].result));
            if(error>tolerance){
-               System.out.println("Testing dividend rho fails");
-               System.out.println("Expected: " + values[i].result);
-               System.out.println("Result: " + calculated);
-               System.out.println("------------------------------------");
-               //fail("testGreeks failed");
+               REPORT_FAILURE("dividend rho", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                       values[i].result, calculated, error, tolerance);
            }
-        }catch(Exception ex){
-            ex.printStackTrace();
         }
-    }
+    
     
     
     @Test
