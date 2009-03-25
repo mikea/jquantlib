@@ -48,6 +48,7 @@ import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.pricingengines.BlackCalculator;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
+import org.jquantlib.util.stdlibc.Std;
 
 /**
  * 
@@ -62,29 +63,39 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  */
 
 public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
-
+    
+    private static final String not_an_American_Option = "not an American Option";
+    private static final String non_American_exercise_given = "non-American exercise given";
+    private static final String payoff_at_expiry_not_handled = "payoff at expiry not handled";
+    private static final String non_plain_payoff_given = "non-plain payoff given";
+    private static final String black_scholes_process_required = "Black-Scholes process required";
+    private static final String bjerksund_not_applicable = "Bjerksund-Stensland approximation " +
+    "not applicable to this set of parameters";
+    
+    
 	@Override
 	public void calculate() /*@ReadOnly*/{
 		
 		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
-			throw new ArithmeticException("not an American Option");
+			throw new ArithmeticException(not_an_American_Option);
 		}
 
+		// check type before cast!
 		if (!(arguments.exercise instanceof AmericanExercise)){
-			throw new ArithmeticException("non-American exercise given");
+			throw new ArithmeticException(non_American_exercise_given);
 		}
 		AmericanExercise ex = (AmericanExercise)arguments.exercise;
 		if (ex.payoffAtExpiry()){
-			throw new ArithmeticException("payoff at expiry not handled");
+			throw new ArithmeticException(payoff_at_expiry_not_handled);
 		}
 
 		if (!(arguments.payoff instanceof PlainVanillaPayoff)){
-			throw new ArithmeticException("non-plain payoff given");
+			throw new ArithmeticException(non_plain_payoff_given);
 		}
 		PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
 
 		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException("Black-Scholes process required");
+			throw new ArithmeticException(black_scholes_process_required);
 		}
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
@@ -99,15 +110,13 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
 		double /*@Real*/ strike = payoff.strike();
 
 		if (payoff.optionType()==Option.Type.PUT) {
-			// use put-call simmetry
-			//std::swap(spot, strike);
-			///argh!!! cant swap primtives, do it by hand
+			// use put-call symmetry
+			// swap spot and strike, has to be done inline
 			double tmp = spot; spot = strike; strike = tmp;
 			
-			//std::swap(riskFreeDiscount, dividendDiscount);
+			// swap riskFreeDiscount and dividenDiscount, has to be done inline
 			tmp = riskFreeDiscount; riskFreeDiscount = dividendDiscount; dividendDiscount = tmp;
 
-			
 			payoff = new PlainVanillaPayoff(Option.Type.CALL, strike);
 		}
 
@@ -186,12 +195,9 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
 
     	// investigate what happen to I for dD->0.0
     	double /*@Real*/ I = B0 + (BInfinity - B0) * (1 - Math.exp(ht));
-//    	QL_REQUIRE(I >= X,
-//    			"Bjerksund-Stensland approximation not applicable "
-//    	"to this set of parameters");
+
     	if (!(I>=X)){
-    		throw new ArithmeticException("Bjerksund-Stensland approximation " +
-    				"not applicable to this set of parameters");
+    		throw new ArithmeticException(bjerksund_not_applicable);
     	}
     	if (S >= I) {
     		return S - X;
