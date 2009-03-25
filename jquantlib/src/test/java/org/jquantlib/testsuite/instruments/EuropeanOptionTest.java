@@ -432,7 +432,7 @@ public class EuropeanOptionTest {
             Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
             Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
             Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-            Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol.getLink().evaluate(), dc));
+            Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
             PricingEngine engine = new AnalyticEuropeanEngine();
             Handle<StochasticProcess> stochProcess = new Handle<StochasticProcess>(new BlackScholesMertonProcess(spot, qTS, rTS, volTS));
            
