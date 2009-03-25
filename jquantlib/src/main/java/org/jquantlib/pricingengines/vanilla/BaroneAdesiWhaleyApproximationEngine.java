@@ -64,29 +64,36 @@ import org.jquantlib.instruments.Option;
  *
  */
 public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
+    
+    private static final String not_an_American_Option = "not an American Option";
+    private static final String non_American_exercise_given = "non-American exercise given";
+    private static final String payoff_at_expiry_not_handled = "payoff at expiry not handled";
+    private static final String non_striked_payoff_given = "non-striked payoff given";
+    private static final String black_scholes_process_required = "Black-Scholes process required";
+    private static final String unknown_option_type = "unknown Option type";
 
 	@Override
 	public void calculate() {
 
 		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
-			throw new ArithmeticException("not an American Option");
+			throw new ArithmeticException(not_an_American_Option);
 		}
 
 		if (!(arguments.exercise instanceof AmericanExercise)){
-			throw new ArithmeticException("non-American exercise given");
+			throw new ArithmeticException(non_American_exercise_given);
 		}
 		AmericanExercise ex = (AmericanExercise)arguments.exercise;
 		if (ex.payoffAtExpiry()){
-			throw new ArithmeticException("payoff at expiry not handled");
+			throw new ArithmeticException(payoff_at_expiry_not_handled);
 		}
 
 		if (!(arguments.payoff instanceof StrikedTypePayoff)){
-			throw new ArithmeticException("non-striked payoff given");
+			throw new ArithmeticException(non_striked_payoff_given);
 		}
 		StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
 
 		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException("Black-Scholes process required");
+			throw new ArithmeticException(black_scholes_process_required);
 		}
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
@@ -165,7 +172,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
                     }
                     break;
                 default:
-                  throw new ArithmeticException("unknown option type");
+                  throw new ArithmeticException(unknown_option_type);
             }
         } // end of "early exercise can be optimal"
 		
@@ -208,7 +215,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             Si = Su + (payoff.strike() - Su) * Math.exp(h);
             break;
           default:
-            throw new ArithmeticException("unknown option type");
+            throw new ArithmeticException(unknown_option_type);
         }
 
 
@@ -267,7 +274,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             }
             break;
           default:
-            throw new ArithmeticException("unknown option type");
+            throw new ArithmeticException(unknown_option_type);
         }
 
         return Si;
