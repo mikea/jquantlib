@@ -57,8 +57,7 @@ public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArgumen
 	private final static double NULLREAL = Double.MAX_VALUE;
 	private final static int NULLSIZE = Integer.MAX_VALUE;
 	public DiscreteAveragingAsianOptionArguments() {
-        //averageType(Average::Type(-1)),
-		averageType = AverageType.Arithmetic;//FIXME check this default...
+        averageType = null;//FIXME check this default... see http://bugs.jquantlib.org/view.php?id=275
         runningAccumulator = NULLREAL;//FIXME is there central values?
         pastFixings = NULLSIZE;//FIXME is there central values?
         fixingDates = new ArrayList<Date>();
@@ -68,33 +67,22 @@ public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArgumen
 	@Override
 	public void validate() /*/@ReadOnly*/{
         super.validate();
-        
-        //FIXME what is the convention enum = -1;???
-
-        //QL_REQUIRE(Integer(averageType) != -1, "unspecified average type");
+        //FIXME what is the convention enum = -1;??? -- shall we use null (as usual)?
         if (averageType==null) 
         	throw new IllegalArgumentException("unspecified average type");
-        
-        //QL_REQUIRE(pastFixings != Null<Size>(), "null past-fixing number");
+
         if (pastFixings==NULLSIZE) throw new IllegalArgumentException("null past-fixing number");
         
-        //QL_REQUIRE(runningAccumulator != Null<Real>(), "null running product");
         if (runningAccumulator==NULLREAL) throw new IllegalArgumentException("null running product");
         
         switch (averageType) {
             case Arithmetic:
-                //QL_REQUIRE(runningAccumulator >= 0.0,
-                //           "non negative running sum required: "
-                //           << runningAccumulator << " not allowed");
                 if (runningAccumulator>=0.0){
                 	throw new IllegalArgumentException("non negative running sum required: "
                             	+ runningAccumulator + " not allowed");
                 }
                 break;
             case Geometric:
-                //QL_REQUIRE(runningAccumulator > 0.0,
-               //            "positive running product required: "
-               //            << runningAccumulator << " not allowed");
                if (!(runningAccumulator>0.0)){
             	   throw new IllegalArgumentException("positive running product required: "
             			   	+ runningAccumulator + " not allowed");
@@ -105,11 +93,9 @@ public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArgumen
         }
 
 	}
-	//TODO encapsulate?
+
 	public AverageType averageType;
 	public /*Real*/ double runningAccumulator;
 	public /*Size*/ int pastFixings;
 	public List<Date> fixingDates;
-
-
 }
