@@ -64,6 +64,8 @@ import org.jquantlib.util.Date;
  * @author <Richard Gomes>
  */
 public class DiscreteAveragingAsianOption extends OneAssetStrikedOption{
+    
+    public static final String wrong_argument_type =  "wrong argument type";
 
 	public DiscreteAveragingAsianOption(
 	        final StochasticProcess process,
@@ -94,7 +96,7 @@ public class DiscreteAveragingAsianOption extends OneAssetStrikedOption{
         super.setupArguments(args);
 
         if (!(args instanceof DiscreteAveragingAsianOptionArguments)){
-        	throw new IllegalArgumentException("wrong argument type");
+        	throw new IllegalArgumentException(wrong_argument_type);
         }
         DiscreteAveragingAsianOptionArguments moreArgs = (DiscreteAveragingAsianOptionArguments)args;
         moreArgs.averageType = averageType_;
