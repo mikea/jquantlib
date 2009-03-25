@@ -68,23 +68,14 @@ import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 
 abstract public class DiscreteAveragingAsianOptionEngine extends GenericEngine<DiscreteAveragingAsianOptionArguments, OneAssetOptionResults>{
 
-
+        //! Extra %arguments for single-asset continuous-average Asian option
     	protected DiscreteAveragingAsianOptionEngine() {
     		super(new DiscreteAveragingAsianOptionArguments(), new OneAssetOptionResults());
     	}
     	
-//		public DiscreteAveragingAsianOptionEngine(
-//				DiscretAveragingAsianOptionArguments arguments,
-//				OneAssetOptionResults results) {
-//			
-//			super(arguments, results);
-//			
-//		}
-
 		@Override
 		abstract public void calculate();
 		
-    	
     }
 
 
