@@ -19,12 +19,7 @@ JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice. 
  */ 
 package org.jquantlib.examples; 
-/** 
- * This class explores the functionalities provided by Calendar interface.
- * 
- * @author Apratim Rajendra 
- * 
- */ 
+
 import java.util.ArrayList; 
 import java.util.List; 
 import org.jquantlib.time.BusinessDayConvention; 
@@ -38,6 +33,14 @@ import org.jquantlib.time.calendars.UnitedStates.Market;
 import org.jquantlib.util.Date; 
 import org.jquantlib.util.DateFactory; 
 import org.jquantlib.util.StopClock; 
+
+/** 
+ * This class explores the functionalities provided by Calendar interface.
+ * 
+ * @author Apratim Rajendra 
+ * 
+ */ 
+
 public class Calendars { 
 	
 	public static void main(String args[]) { 
