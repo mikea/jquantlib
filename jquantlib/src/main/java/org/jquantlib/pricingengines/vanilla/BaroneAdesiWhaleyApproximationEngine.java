@@ -42,14 +42,14 @@ package org.jquantlib.pricingengines.vanilla;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
-import org.jquantlib.exercise.Exercise;
+import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.StrikedTypePayoff;
+import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.pricingengines.BlackCalculator;
 import org.jquantlib.pricingengines.BlackFormula;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.instruments.Option;
 
 /**
  * Barone-Adesi and Whaley pricing engine for American options (1987)
@@ -64,50 +64,47 @@ import org.jquantlib.instruments.Option;
  *
  */
 public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
+// XXX     
+//    private static final String not_an_American_Option = "not an American Option";
     
-    private static final String not_an_American_Option = "not an American Option";
-    private static final String non_American_exercise_given = "non-American exercise given";
-    private static final String payoff_at_expiry_not_handled = "payoff at expiry not handled";
-    private static final String non_striked_payoff_given = "non-striked payoff given";
-    private static final String black_scholes_process_required = "Black-Scholes process required";
+    private static final String NON_AMERICAN_EXERCISE_GIVEN = "non-American exercise given";
+    private static final String PAYOFF_AT_EXPIRY_NOT_HANDLED = "payoff at expiry not handled";
+    private static final String NON_STRIKE_PAYOFF_GIVEN = "non-striked payoff given";
+    private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
     private static final String unknown_option_type = "unknown Option type";
 
 	@Override
 	public void calculate() {
-
-		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
-			throw new ArithmeticException(not_an_American_Option);
-		}
+//XXX this test is not needed
+//		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
+//			throw new ArithmeticException(not_an_American_Option);
+//		}
 
 		if (!(arguments.exercise instanceof AmericanExercise)){
-			throw new ArithmeticException(non_American_exercise_given);
+			throw new ArithmeticException(NON_AMERICAN_EXERCISE_GIVEN);
 		}
+		
 		AmericanExercise ex = (AmericanExercise)arguments.exercise;
 		if (ex.payoffAtExpiry()){
-			throw new ArithmeticException(payoff_at_expiry_not_handled);
+			throw new ArithmeticException(PAYOFF_AT_EXPIRY_NOT_HANDLED);
 		}
-
 		if (!(arguments.payoff instanceof StrikedTypePayoff)){
-			throw new ArithmeticException(non_striked_payoff_given);
+			throw new ArithmeticException(NON_STRIKE_PAYOFF_GIVEN);
 		}
 		StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
 
 		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException(black_scholes_process_required);
+			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_REQUIRED);
 		}
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         
-        double /*@Real*/ variance = process.blackVolatility().getLink().blackVariance(
-            ex.lastDate(), payoff.strike());
-        double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().getLink().discount(
-            ex.lastDate());
-        double /*@DiscountFactor*/ riskFreeDiscount = process.riskFreeRate().getLink().discount(
-            ex.lastDate());
+        double /*@Real*/ variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
+        double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
+        double /*@DiscountFactor*/ riskFreeDiscount = process.riskFreeRate().getLink().discount(ex.lastDate());
         double /*@Real*/ spot = process.stateVariable().getLink().evaluate();
         double /*@Real*/ forwardPrice = spot * dividendDiscount / riskFreeDiscount;
-        BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance),
-                              riskFreeDiscount);
+        BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
         if (dividendDiscount>=1.0 && payoff.optionType()==Option.Type.CALL) {
             // early exercise never optimal
@@ -120,16 +117,13 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
             DayCounter divdc = process.dividendYield().getLink().dayCounter();
             DayCounter voldc = process.blackVolatility().getLink().dayCounter();
-            double /*@Time*/ t = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(),
-                                       arguments.exercise.lastDate());
+            double /*@Time*/ t = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
             results.rho = black.rho(t);
 
-            t = divdc.yearFraction(process.dividendYield().getLink().referenceDate(),
-                                   arguments.exercise.lastDate());
+            t = divdc.yearFraction(process.dividendYield().getLink().referenceDate(), arguments.exercise.lastDate());
             results.dividendRho = black.dividendRho(t);
 
-            t = voldc.yearFraction(process.blackVolatility().getLink().referenceDate(),
-                                   arguments.exercise.lastDate());
+            t = voldc.yearFraction(process.blackVolatility().getLink().referenceDate(), arguments.exercise.lastDate());
             results.vega        = black.vega(t);
             results.theta       = black.theta(spot, t);
             results.thetaPerDay = black.thetaPerDay(spot, t);
@@ -140,30 +134,25 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             // early exercise can be optimal
             CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
             double /*@Real*/ tolerance = 1e-6;
-            double /*@Real*/ Sk = criticalPrice(payoff, riskFreeDiscount,
-                dividendDiscount, variance, tolerance);
+            double /*@Real*/ Sk = criticalPrice(payoff, riskFreeDiscount, dividendDiscount, variance, tolerance);
             double /*@Real*/ forwardSk = Sk * dividendDiscount / riskFreeDiscount;
-            double /*@Real*/ d1 = (Math.log(forwardSk/payoff.strike()) + 0.5*variance)
-                /Math.sqrt(variance);
+            double /*@Real*/ d1 = (Math.log(forwardSk/payoff.strike()) + 0.5*variance)/Math.sqrt(variance);
             double /*@Real*/ n = 2.0*Math.log(dividendDiscount/riskFreeDiscount)/variance;
-            double /*@Real*/ K = -2.0*Math.log(riskFreeDiscount)/
-                (variance*(1.0-riskFreeDiscount));
+            double /*@Real*/ K = -2.0*Math.log(riskFreeDiscount)/(variance*(1.0-riskFreeDiscount));
             double /*@Real*/ Q, a;
             switch (payoff.optionType()) {
                 case CALL:
                     Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
                     a =  (Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.evaluate(d1));
                     if (spot<Sk) {
-                        results.value = black.value() +
-                            a * Math.pow((spot/Sk), Q);
+                        results.value = black.value() + a * Math.pow((spot/Sk), Q);
                     } else {
                         results.value = spot - payoff.strike();
                     }
                     break;
                 case PUT:
                     Q = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
-                    a = -(Sk/Q) *
-                        (1.0 - dividendDiscount * cumNormalDist.evaluate(-d1));
+                    a = -(Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.evaluate(-d1));
                     if (spot>Sk) {
                         results.value = black.value() +
                             a * Math.pow((spot/Sk), Q);
@@ -178,19 +167,20 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
 		
 	}
 	
-    static double  criticalPrice(
+    private double  criticalPrice(
             StrikedTypePayoff payoff,
             double /*@DiscountFactor*/ riskFreeDiscount,
             double /*@DiscountFactor*/ dividendDiscount,
-            double variance){
+            double variance) {
     	return criticalPrice(payoff, riskFreeDiscount, dividendDiscount, variance, 1.0e-6);
     }
-    static double  criticalPrice(
+    
+    @PackagePrivate static double  criticalPrice(
             StrikedTypePayoff payoff,
             double /*@DiscountFactor*/ riskFreeDiscount,
             double /*@DiscountFactor*/ dividendDiscount,
             double variance,
-            double tolerance){
+            double tolerance) {
     	
         // Calculation of seed value, Si
         double /*@Real*/ n= 2.0*Math.log(dividendDiscount/riskFreeDiscount)/(variance);
@@ -202,16 +192,13 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
           case CALL:
             qu = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0)) + 4.0*m))/2.0;
             Su = payoff.strike() / (1.0 - 1.0/qu);
-            h = -(bT + 2.0*Math.sqrt(variance)) * payoff.strike() /
-                (Su - payoff.strike());
-            Si = payoff.strike() + (Su - payoff.strike()) *
-                (1.0 - Math.exp(h));
+            h = -(bT + 2.0*Math.sqrt(variance)) * payoff.strike() / (Su - payoff.strike());
+            Si = payoff.strike() + (Su - payoff.strike()) * (1.0 - Math.exp(h));
             break;
           case PUT:
             qu = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0)) + 4.0*m))/2.0;
             Su = payoff.strike() / (1.0 - 1.0/qu);
-            h = (bT - 2.0*Math.sqrt(variance)) * payoff.strike() /
-                (payoff.strike() - Su);
+            h = (bT - 2.0*Math.sqrt(variance)) * payoff.strike() / (payoff.strike() - Su);
             Si = Su + (payoff.strike() - Su) * Math.exp(h);
             break;
           default:
@@ -222,34 +209,26 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
         // Newton Raphson algorithm for finding critical price Si
         double /*@Real*/ Q, LHS, RHS, bi;
         double /*@Real*/ forwardSi = Si * dividendDiscount / riskFreeDiscount;
-        double /*@Real*/ d1 = (Math.log(forwardSi/payoff.strike()) + 0.5*variance) /
-            Math.sqrt(variance);
+        double /*@Real*/ d1 = (Math.log(forwardSi/payoff.strike()) + 0.5*variance) / Math.sqrt(variance);
         CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
-        double /*@Real*/ K = (riskFreeDiscount!=1.0 ? -2.0*Math.log(riskFreeDiscount)/
-            (variance*(1.0-riskFreeDiscount)) : 0.0);
-        double /*@Real*/ temp = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(),
-                forwardSi, Math.sqrt(variance))*riskFreeDiscount;
+        double /*@Real*/ K = (riskFreeDiscount!=1.0 ? -2.0*Math.log(riskFreeDiscount)/ (variance*(1.0-riskFreeDiscount)) : 0.0);
+        double /*@Real*/ temp = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
         switch (payoff.optionType()) {
           case CALL:
             Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0)) + 4 * K)) / 2;
             LHS = Si - payoff.strike();
             RHS = temp + (1 - dividendDiscount * cumNormalDist.evaluate(d1)) * Si / Q;
-            bi =  dividendDiscount * cumNormalDist.evaluate(d1) * (1 - 1/Q) +
-                (1 - dividendDiscount *
-                 cumNormalDist.derivative(d1) / Math.sqrt(variance)) / Q;
+            bi =  dividendDiscount * cumNormalDist.evaluate(d1) * (1 - 1/Q)
+               + (1 - dividendDiscount * cumNormalDist.derivative(d1) / Math.sqrt(variance)) / Q;
             while (Math.abs(LHS - RHS)/payoff.strike() > tolerance) {
                 Si = (payoff.strike() + RHS - bi * Si) / (1 - bi);
                 forwardSi = Si * dividendDiscount / riskFreeDiscount;
-                d1 = (Math.log(forwardSi/payoff.strike())+0.5*variance)
-                    /Math.sqrt(variance);
+                d1 = (Math.log(forwardSi/payoff.strike())+0.5*variance)/Math.sqrt(variance);
                 LHS = Si - payoff.strike();
-                double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(),
-                    forwardSi, Math.sqrt(variance))*riskFreeDiscount;
+                double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
                 RHS = temp2 + (1 - dividendDiscount * cumNormalDist.evaluate(d1)) * Si / Q;
                 bi = dividendDiscount * cumNormalDist.evaluate(d1) * (1 - 1 / Q)
-                    + (1 - dividendDiscount *
-                       cumNormalDist.derivative(d1) / Math.sqrt(variance))
-                    / Q;
+                   + (1 - dividendDiscount * cumNormalDist.derivative(d1) / Math.sqrt(variance)) / Q;
             }
             break;
           case PUT:
@@ -257,20 +236,16 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             LHS = payoff.strike() - Si;
             RHS = temp - (1 - dividendDiscount * cumNormalDist.evaluate(-d1)) * Si / Q;
             bi = -dividendDiscount * cumNormalDist.evaluate(-d1) * (1 - 1/Q)
-                - (1 + dividendDiscount * cumNormalDist.derivative(-d1)
-                   / Math.sqrt(variance)) / Q;
+               - (1 + dividendDiscount * cumNormalDist.derivative(-d1) / Math.sqrt(variance)) / Q;
             while (Math.abs(LHS - RHS)/payoff.strike() > tolerance) {
                 Si = (payoff.strike() - RHS + bi * Si) / (1 + bi);
                 forwardSi = Si * dividendDiscount / riskFreeDiscount;
-                d1 = (Math.log(forwardSi/payoff.strike())+0.5*variance)
-                    /Math.sqrt(variance);
+                d1 = (Math.log(forwardSi/payoff.strike())+0.5*variance)/Math.sqrt(variance);
                 LHS = payoff.strike() - Si;
-                double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(),
-                    forwardSi, Math.sqrt(variance))*riskFreeDiscount;
+                double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
                 RHS = temp2 - (1 - dividendDiscount * cumNormalDist.evaluate(-d1)) * Si / Q;
                 bi = -dividendDiscount * cumNormalDist.evaluate(-d1) * (1 - 1 / Q)
-                    - (1 + dividendDiscount * cumNormalDist.derivative(-d1)
-                       / Math.sqrt(variance)) / Q;
+                   - (1 + dividendDiscount * cumNormalDist.derivative(-d1) / Math.sqrt(variance)) / Q;
             }
             break;
           default:

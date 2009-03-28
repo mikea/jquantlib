@@ -66,44 +66,38 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 // TODO: define tolerance for calculate()
 
 public class IntegralEngine extends OneAssetStrikedOptionEngine {
+//xxx    
+//    private static final String not_a_European_Option = "not a European Option";
     
-    private static final String not_a_European_Option = "not a European Option";
-    private static final String non_striked_payoff_given = "non-striked payoff given";
-    private static final String black_scholes_process_required = "Black-Scholes process required";
+    private static final String NON_STRIKED_PAYOFF_GIVEN = "non-striked payoff given";
+    private static final String BLACK_SCHOLES_PROCESS_GIVEN = "Black-Scholes process required";
 
 
 	@Override
 	public void calculate() {
-		
-    	if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
-			throw new ArithmeticException(not_a_European_Option);
-		}
+//XXX this test is not needed
+//    	if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
+//			throw new ArithmeticException(not_a_European_Option);
+//		}
 
 		if (!(arguments.payoff instanceof StrikedTypePayoff)){
-			throw new ArithmeticException(non_striked_payoff_given);
+			throw new ArithmeticException(NON_STRIKED_PAYOFF_GIVEN);
 		}
 		
 		StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
 
 		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException(black_scholes_process_required);
+			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_GIVEN);
 		}
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
-		double variance =
-			process.blackVolatility().getLink().blackVariance(
-                arguments.exercise.lastDate(), payoff.strike());
+		double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
+		double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
+        double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
+        double /* @Rate */drift = Math.log(dividendDiscount / riskFreeDiscount) - 0.5 * variance;
 
-		double /*@DiscountFactor*/ dividendDiscount =
-			process.dividendYield().getLink().discount(arguments.exercise.lastDate());
-		double /*@DiscountFactor*/ riskFreeDiscount =
-			process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
-		double /*@Rate*/ drift = Math.log(dividendDiscount/riskFreeDiscount)-0.5*variance;
-
-		Integrand f = new Integrand(arguments.payoff,
-				process.stateVariable().getLink().evaluate(),
-				drift, variance);
-		SegmentIntegral integrator = new SegmentIntegral(5000);
+		Integrand f = new Integrand(arguments.payoff, process.stateVariable().getLink().evaluate(), drift, variance);
+        SegmentIntegral integrator = new SegmentIntegral(5000);
 
 		double infinity = 10.0*Math.sqrt(variance);
 		results.value =
@@ -113,26 +107,31 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
 
 	}
 
-	//TODO: Refactor this in public class?
-	static private class Integrand implements UnaryFunctionDouble {
-          public Integrand(Payoff payoff,
-                    double s0,
-                    double /*@Rate*/ drift,
-                    double variance){
-         	payoff_ = payoff;
-         	s0_ = s0;
-         	drift_ = drift;
-         	variance_ = variance;
-         	}
-          public double evaluate(double x) {
-              double temp = s0_ * Math.exp(x);
-              double result = payoff_.valueOf(temp);
-              return result *
-                  Math.exp(-(x - drift_)*(x -drift_)/(2.0*variance_)) ;
-          }
-          private Payoff payoff_;
-          private double s0_;
-          private double /*@Rate*/ drift_;
-          double variance_;
-      };
+
+	//
+	// static inner classes
+	//
+	
+	private static class Integrand implements UnaryFunctionDouble {
+
+        private Payoff payoff_;
+        private double s0_;
+        private double /* @Rate */drift_;
+        private double variance_;
+
+        public Integrand(Payoff payoff, double s0, double /* @Rate */drift, double variance) {
+            payoff_ = payoff;
+            s0_ = s0;
+            drift_ = drift;
+            variance_ = variance;
+        }
+
+        public double evaluate(double x) {
+            double temp = s0_ * Math.exp(x);
+            double result = payoff_.valueOf(temp);
+            return result * Math.exp(-(x - drift_) * (x - drift_) / (2.0 * variance_));
+        }
+
+    }
+    
 }

@@ -58,22 +58,26 @@ import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.util.Date;
 
 /**
- * Description of the terms and conditions of a discrete average out fixed strike
- * option.
+ * Description of the terms and conditions of a discrete average out fixed strike option.
  * 
  * @author <Richard Gomes>
  */
-public class DiscreteAveragingAsianOption extends OneAssetStrikedOption{
+public class DiscreteAveragingAsianOption extends OneAssetStrikedOption {
     
-    public static final String wrong_argument_type =  "wrong argument type";
+    public static final String WRONG_ARGUMENT_TYPE =  "wrong argument type";
 
-	public DiscreteAveragingAsianOption(
-	        final StochasticProcess process,
-			final Payoff payoff,
-			final Exercise exercise, 
-			final PricingEngine engine) {
-		super(process, payoff, exercise, engine);
-	}
+    private final AverageType averageType_;
+    private final /*@Real*/ double runningAccumulator_;
+    private final /*@Size*/ int pastFixings_;
+    private final List<Date> fixingDates_;
+
+//	public DiscreteAveragingAsianOption(
+//	        final StochasticProcess process,
+//			final Payoff payoff,
+//			final Exercise exercise, 
+//			final PricingEngine engine) {
+//		super(process, payoff, exercise, engine);
+//	}
 	
     public DiscreteAveragingAsianOption(
             final AverageType averageType,
@@ -89,6 +93,8 @@ public class DiscreteAveragingAsianOption extends OneAssetStrikedOption{
     	this.runningAccumulator_ = runningAccumulator;
     	this.fixingDates_ = new ArrayList<Date>(fixingDates);
     	Collections.sort(this.fixingDates_);
+
+    	throw new UnsupportedOperationException("pastFixings needs to be initialized");
     }
     
     @Override    
@@ -96,21 +102,13 @@ public class DiscreteAveragingAsianOption extends OneAssetStrikedOption{
         super.setupArguments(args);
 
         if (!(args instanceof DiscreteAveragingAsianOptionArguments)){
-        	throw new IllegalArgumentException(wrong_argument_type);
+        	throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
         }
         DiscreteAveragingAsianOptionArguments moreArgs = (DiscreteAveragingAsianOptionArguments)args;
         moreArgs.averageType = averageType_;
         moreArgs.runningAccumulator = runningAccumulator_;
         moreArgs.pastFixings = pastFixings_;
         moreArgs.fixingDates = fixingDates_;
-
     }
-    
-    protected AverageType averageType_;
-    protected /*@Real*/ double runningAccumulator_;
-    protected /*@Size*/ int pastFixings_;
-    protected List<Date> fixingDates_;
-
-
     
 }

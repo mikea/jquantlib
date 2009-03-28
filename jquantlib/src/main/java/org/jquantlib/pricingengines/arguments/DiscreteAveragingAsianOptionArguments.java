@@ -56,18 +56,23 @@ public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArgumen
     
 	private final static double NULLREAL = Double.MAX_VALUE;
 	private final static int NULLSIZE = Integer.MAX_VALUE;
-	public DiscreteAveragingAsianOptionArguments() {
-        averageType = null;//FIXME check this default... see http://bugs.jquantlib.org/view.php?id=275
-        runningAccumulator = NULLREAL;//FIXME is there central values?
-        pastFixings = NULLSIZE;//FIXME is there central values?
+	
+    /*@PackagePrivate*/ public AverageType averageType;
+    /*@PackagePrivate*/ public /*@Real*/ double runningAccumulator;
+    /*@PackagePrivate*/ public /*@Size*/ int pastFixings;
+    /*@PackagePrivate*/ public List<Date> fixingDates;
+
+    
+    public DiscreteAveragingAsianOptionArguments() {
+        averageType = null;
+        runningAccumulator = NULLREAL; //FIXME is there central values?
+        pastFixings = NULLSIZE; //FIXME is there central values?
         fixingDates = new ArrayList<Date>();
-		
 	}
 	
 	@Override
 	public void validate() /*/@ReadOnly*/{
         super.validate();
-        //FIXME what is the convention enum = -1;??? -- shall we use null (as usual)?
         if (averageType==null) 
         	throw new IllegalArgumentException("unspecified average type");
 
@@ -94,8 +99,4 @@ public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArgumen
 
 	}
 
-	public AverageType averageType;
-	public /*Real*/ double runningAccumulator;
-	public /*Size*/ int pastFixings;
-	public List<Date> fixingDates;
 }

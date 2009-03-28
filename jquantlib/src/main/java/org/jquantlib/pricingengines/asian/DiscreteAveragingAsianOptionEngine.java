@@ -38,11 +38,6 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-/*! \file asianoption.hpp
-    \brief Asian option on a single asset
-*/
-
-
 package org.jquantlib.pricingengines.asian;
 
 
@@ -65,10 +60,11 @@ import org.jquantlib.pricingengines.results.OneAssetOptionResults;
  *
  */
 
-
 abstract public class DiscreteAveragingAsianOptionEngine extends GenericEngine<DiscreteAveragingAsianOptionArguments, OneAssetOptionResults>{
 
-        //! Extra %arguments for single-asset continuous-average Asian option
+		/**
+		 * Extra arguments for single-asset continuous-average Asian option
+		 */
     	protected DiscreteAveragingAsianOptionEngine() {
     		super(new DiscreteAveragingAsianOptionArguments(), new OneAssetOptionResults());
     	}

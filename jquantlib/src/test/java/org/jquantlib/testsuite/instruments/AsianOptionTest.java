@@ -73,6 +73,7 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,8 +97,9 @@ public class AsianOptionTest {
     }
     
     
+    @Ignore // see: http://bugs.jquantlib.org/view.php?id=276
 	@Test
-	public void reportFailure() {
+	public void testAnalyticDiscreteGeometricAverage() {
 
 	    logger.info("Testing analytic discrete geometric average-price Asians...");
 
@@ -170,6 +172,7 @@ public class AsianOptionTest {
 	    }
 	}
 
+	@Ignore // see: http://bugs.jquantlib.org/view.php?id=276
 	@Test
 	public void testAnalyticDiscreteGeometricAveragePriceGreeks() {
 

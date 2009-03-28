@@ -55,6 +55,6 @@ package org.jquantlib.instruments;
  *
  */
 public enum AverageType {
-
-	Arithmetic, Geometric 
+    Arithmetic, 
+    Geometric 
 }

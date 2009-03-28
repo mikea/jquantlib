@@ -56,7 +56,7 @@ import org.jquantlib.instruments.BarrierType;
 
 public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
     
-    private static final String unknown_type = "unknown type";
+    private static final String UNKNOWN_TYPE = "unknown type";
 
     public BarrierType barrierType;
 	public double barrier, rebate;
@@ -100,7 +100,7 @@ public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
 			}
 			break;
 		default:
-			throw new ArithmeticException(unknown_type);
+			throw new ArithmeticException(UNKNOWN_TYPE);
 		}
 
 	}
