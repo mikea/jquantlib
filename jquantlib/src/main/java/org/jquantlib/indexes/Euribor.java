@@ -72,6 +72,337 @@ public class Euribor extends IborIndex {
 					euriborEOM(new Period(1, TimeUnit.DAYS)), Actual365Fixed.getDayCounter(), h);
 		}
 	}
+	
+    /**
+     * 
+     * 1-week Euribor index
+     *
+     */
+	public static class EuriborSW extends Euribor{
+	    public EuriborSW(Handle<YieldTermStructure> h){
+	        super(new Period(1, TimeUnit.WEEKS), h);
+	    }
+	}
+	
+	/**
+	 * 
+	 * 2-weeks Euribor index
+	 *
+	 */
+	public static class Euribor2W extends Euribor{
+	    public Euribor2W(Handle<YieldTermStructure> h){
+	        super(new Period(2, TimeUnit.WEEKS), h);
+	    }
+	}
+	
+	 /**
+     * 
+     * 3-weeks Euribor index
+     *
+     */
+    public static class Euribor3W extends Euribor{
+        public Euribor3W(Handle<YieldTermStructure> h){
+            super(new Period(3, TimeUnit.WEEKS), h);
+        }
+    }
+	
+    /**
+     * 
+     * 1-month Euribor index
+     *
+     */
+    public static class Euribor1M extends Euribor{
+        public Euribor1M(Handle<YieldTermStructure> h){
+            super(new Period(1, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 2-months Euribor index
+     *
+     */
+    public static class Euribor2M extends Euribor{
+        public Euribor2M(Handle<YieldTermStructure> h){
+            super(new Period(2, TimeUnit.MONTHS), h);
+        }
+    }
+	
+    /**
+     * 
+     * 3-months Euribor index
+     *
+     */
+    public static class Euribor3M extends Euribor{
+        public Euribor3M(Handle<YieldTermStructure> h){
+            super(new Period(3, TimeUnit.MONTHS), h);
+        }
+    }
+	
+    /**
+     * 
+     * 4-months Euribor index
+     *
+     */
+    public static class Euribor4M extends Euribor{
+        public Euribor4M(Handle<YieldTermStructure> h){
+            super(new Period(4, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 5-months Euribor index
+     *
+     */
+    public static class Euribor5M extends Euribor{
+        public Euribor5M(Handle<YieldTermStructure> h){
+            super(new Period(5, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 6-months Euribor index
+     *
+     */
+    public static class Euribor6M extends Euribor{
+        public Euribor6M(Handle<YieldTermStructure> h){
+            super(new Period(6, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 7-months Euribor index
+     *
+     */
+    public static class Euribor7M extends Euribor{
+        public Euribor7M(Handle<YieldTermStructure> h){
+            super(new Period(7, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 8-months Euribor index
+     *
+     */
+    public static class Euribor8M extends Euribor{
+        public Euribor8M(Handle<YieldTermStructure> h){
+            super(new Period(8, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 9-months Euribor index
+     *
+     */
+    public static class Euribor9M extends Euribor{
+        public Euribor9M(Handle<YieldTermStructure> h){
+            super(new Period(9, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 10-months Euribor index
+     *
+     */
+    public static class Euribor10M extends Euribor{
+        public Euribor10M(Handle<YieldTermStructure> h){
+            super(new Period(10, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 11-months Euribor index
+     *
+     */
+    public static class Euribor11M extends Euribor{
+        public Euribor11M(Handle<YieldTermStructure> h){
+            super(new Period(11, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 1-year Euribor index
+     *
+     */
+    public static class Euribor1Y extends Euribor{
+        public Euribor1Y(Handle<YieldTermStructure> h){
+            super(new Period(1, TimeUnit.YEARS), h);
+        }
+    }
+	
+    /**
+     * 
+     * 1-week Euribor365 index
+     *
+     */
+    public static class Euribor365_SW extends Euribor365{
+        public Euribor365_SW(Handle<YieldTermStructure> h){
+            super(new Period(1, TimeUnit.WEEKS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 2-week Euribor365 index
+     *
+     */
+    public static class Euribor365_2W extends Euribor365{
+        public Euribor365_2W(Handle<YieldTermStructure> h){
+            super(new Period(1, TimeUnit.WEEKS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 3-week Euribor365 index
+     *
+     */
+    public static class Euribor365_3W extends Euribor365{
+        public Euribor365_3W(Handle<YieldTermStructure> h){
+            super(new Period(3, TimeUnit.WEEKS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 1-month Euribor365 index
+     *
+     */
+    public static class Euribor365_1M extends Euribor365{
+        public Euribor365_1M(Handle<YieldTermStructure> h){
+            super(new Period(1, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 2-month Euribor365 index
+     *
+     */
+    public static class Euribor365_2M extends Euribor365{
+        public Euribor365_2M(Handle<YieldTermStructure> h){
+            super(new Period(2, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 3-month Euribor365 index
+     *
+     */
+    public static class Euribor365_3M extends Euribor365{
+        public Euribor365_3M(Handle<YieldTermStructure> h){
+            super(new Period(3, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 4-month Euribor365 index
+     *
+     */
+    public static class Euribor365_4M extends Euribor365{
+        public Euribor365_4M(Handle<YieldTermStructure> h){
+            super(new Period(4, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 5-month Euribor365 index
+     *
+     */
+    public static class Euribor365_5M extends Euribor365{
+        public Euribor365_5M(Handle<YieldTermStructure> h){
+            super(new Period(5, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 6-month Euribor365 index
+     *
+     */
+    public static class Euribor365_6M extends Euribor365{
+        public Euribor365_6M(Handle<YieldTermStructure> h){
+            super(new Period(6, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 7-month Euribor365 index
+     *
+     */
+    public static class Euribor365_7M extends Euribor365{
+        public Euribor365_7M(Handle<YieldTermStructure> h){
+            super(new Period(7, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 8-month Euribor365 index
+     *
+     */
+    public static class Euribor365_8M extends Euribor365{
+        public Euribor365_8M(Handle<YieldTermStructure> h){
+            super(new Period(8, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 9-month Euribor365 index
+     *
+     */
+    public static class Euribor365_9M extends Euribor365{
+        public Euribor365_9M(Handle<YieldTermStructure> h){
+            super(new Period(9, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 10-month Euribor365 index
+     *
+     */
+    public static class Euribor365_10M extends Euribor365{
+        public Euribor365_10M(Handle<YieldTermStructure> h){
+            super(new Period(10, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 11-month Euribor365 index
+     *
+     */
+    public static class Euribor365_11M extends Euribor365{
+        public Euribor365_11M(Handle<YieldTermStructure> h){
+            super(new Period(11, TimeUnit.MONTHS), h);
+        }
+    }
+    
+    /**
+     * 
+     * 1-year Euribor365 index
+     *
+     */
+    public static class Euribor365_1Y extends Euribor365{
+        public Euribor365_1Y(Handle<YieldTermStructure> h){
+            super(new Period(1, TimeUnit.YEARS), h);
+        }
+    }
+	
 
 	protected Euribor(String name, Period tenor, int settlementDays,
 			DayCounter dayCounter, Handle<YieldTermStructure> h) {
