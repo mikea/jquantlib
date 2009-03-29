@@ -253,6 +253,10 @@ public class Array {
         vectorOperationValidation(paramArray);
         return quickOperatorMultiplyCopy(paramArray);
     }
+    
+    public Array operatorMultiplyCopy(final double scale){
+        return quickOperatorMultiplyCopy(scale);
+    }
 
     public Array operatorSubtractCopy(final Array paramArray) {
         vectorOperationValidation(paramArray);
@@ -455,6 +459,11 @@ public class Array {
 
     private Array quickOperatorMultiplyCopy(final Array paramArray) {
         double[] dataCopy = quickOperatorMultiply(data, paramArray.data);
+        return new Array(dataCopy);
+    }
+    
+    private Array quickOperatorMultiplyCopy(final double scale) {
+        double[] dataCopy = quickOperatorMultiply(data, scale);
         return new Array(dataCopy);
     }
 
