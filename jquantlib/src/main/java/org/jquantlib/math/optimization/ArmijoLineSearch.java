@@ -21,6 +21,8 @@
  */
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+
 
 public class ArmijoLineSearch extends LineSearch {
 
@@ -28,5 +30,11 @@ public class ArmijoLineSearch extends LineSearch {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
+    }
+
+    @Override
+    public double evaluate(Problem P, CriteriaType ecType, double t_ini) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }
