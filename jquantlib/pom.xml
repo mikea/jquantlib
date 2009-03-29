@@ -51,12 +51,14 @@
 	should never be used inside Eclipse environment.
 -->
 
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jquantlib</groupId>
 	<artifactId>jquantlib</artifactId>
 	<name>JQuantLib</name>
-	<version>0.1.2</version>
+	<version>0.1.3-SNAPSHOT</version>
 	<url>http://www.jquantlib.org/</url>
 	<description>
 		JQuantLib is a free, open-source and comprehensive framework for quantitative finance, offering
@@ -164,6 +166,19 @@
 			<id>homdol</id>
 			<name>Dominik Holenstein</name>
 			<email>dholenstein@gmail.com</email>
+			<url />
+			<organization>JQuantLib.org</organization>
+			<organizationUrl>http://www.jquantlib.org/</organizationUrl>
+			<roles>
+				<role>developer</role>
+				<role>tester</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>ueli</id>
+			<name>Ueli Hofstetter</name>
+			<email>uelihofstetter@gmail.com</email>
 			<url />
 			<organization>JQuantLib.org</organization>
 			<organizationUrl>http://www.jquantlib.org/</organizationUrl>
@@ -734,6 +749,8 @@
 				<version>2.5</version>
 				<configuration>
 
+		            <destDir>api-${project.version}</destDir>
+
 					<show>private</show>
 					<use>true</use>
 					<splitindex>true</splitindex>
@@ -979,6 +996,6 @@
     <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
     <maven.scm.url>http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.url>
     
-  </properties>>
+  </properties>
  
 </project>
