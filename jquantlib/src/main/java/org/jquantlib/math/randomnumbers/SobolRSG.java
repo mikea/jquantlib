@@ -19,12 +19,10 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.methods.montecarlo;
+package org.jquantlib.math.randomnumbers;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.randomnumbers.MersenneTwisterUniformRng;
-import org.jquantlib.math.randomnumbers.PrimitivePolynomials;
-import org.jquantlib.math.randomnumbers.UniformRandomSequenceGenerator;
+import org.jquantlib.methods.montecarlo.Sample;
 
 /**
  * Sobol low-discrepancy sequence generator
@@ -84,7 +82,7 @@ import org.jquantlib.math.randomnumbers.UniformRandomSequenceGenerator;
  * @author Dominik Holenstein
  * @author Q.Boiler  
  */
-public class SobolRsg /*<RNG extends RandomNumberGenerator>*/ implements UniformRandomSequenceGenerator<double[]> {
+public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
     
 	// Sobol' Levitan coefficients of the free direction integers as given by Bratley, P., Fox, B.L. (1988)
 	private static final long dim02SLinitializers[] = {1, 0};
@@ -955,16 +953,16 @@ public class SobolRsg /*<RNG extends RandomNumberGenerator>*/ implements Uniform
 	/**
 	 * dimensionality must be <= PPMT_MAX_DIM
 	 */
-	public SobolRsg(final int dimensionality) {
+	public SobolRSG(final int dimensionality) {
 		this(dimensionality, 0);
 	}
 
-	public SobolRsg(final int dimensionality, final long seed) {
+	public SobolRSG(final int dimensionality, final long seed) {
 		this(dimensionality, seed, DirectionIntegers.Jaeckel);
 	}
 	
 	// TODO: parameter "directionIntegers" or field "directionIntegers_" are absolutely different concepts : should have different names
-	public SobolRsg(final int dimensionality, final long seed, final DirectionIntegers directionIntegers) {
+	public SobolRSG(final int dimensionality, final long seed, final DirectionIntegers directionIntegers) {
 
 		if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
 		
