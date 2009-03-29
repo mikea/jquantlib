@@ -21,11 +21,23 @@
  */
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
 
-public class LineSearchBasedMethod extends OptimizationMethod {
-    public LineSearchBasedMethod(){
+
+public abstract class LineSearchBasedMethod extends OptimizationMethod {
+    
+    protected LineSearch lineSearch_;
+    
+    protected LineSearchBasedMethod(){}
+    
+    public LineSearchBasedMethod(LineSearch lineSearch){
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
+        lineSearch_ = lineSearch;
+        //FIXME: is this correct
+        if(lineSearch_ == null){
+            lineSearch_ = new ArmijoLineSearch();
         }
     }
 }

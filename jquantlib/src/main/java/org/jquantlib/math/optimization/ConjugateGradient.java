@@ -45,12 +45,31 @@
 */
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+
+//! Multi-dimensional Conjugate Gradient class.
+/*! User has to provide line-search method and
+    optimization end criteria.
+    Search direction \f$ d_i = - f'(x_i) + c_i*d_{i-1} \f$
+    where \f$ c_i = ||f'(x_i)||^2/||f'(x_{i-1})||^2 \f$
+    and \f$ d_1 = - f'(x_1) \f$
+*/
+
 public class ConjugateGradient extends LineSearchBasedMethod {
 
-    public ConjugateGradient() {
+    public ConjugateGradient(LineSearch lineSearch) {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
+        if(lineSearch == null){
+            
+        }
+    }
+
+    @Override
+    public CriteriaType minimize(Problem P, EndCriteria endCriteria) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -83,7 +83,7 @@ public abstract class LineSearch {
             EndCriteria::Type& ecType,
             const EndCriteria&,
             const Real t_ini) = 0;  */
-    public abstract double evaluate(Problem P, EndCriteria.CriteriaType ecType, double t_ini);
+    public abstract double evaluate(Problem P, EndCriteria.CriteriaType ecType,EndCriteria endCriteria, double t_ini);
     
     public double update(Array params, Array direction, double beta, Constraint constraint){
         double diff = beta;

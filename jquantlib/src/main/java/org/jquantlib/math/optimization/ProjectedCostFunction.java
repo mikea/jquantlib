@@ -21,12 +21,20 @@
  */
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.math.Array;
+
 public class ProjectedCostFunction extends CostFunction {
 
     public ProjectedCostFunction() {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
+    }
+
+    @Override
+    public double value(Array x) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }

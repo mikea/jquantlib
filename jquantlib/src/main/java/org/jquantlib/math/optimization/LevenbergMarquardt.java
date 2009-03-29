@@ -21,10 +21,18 @@
  */
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+
 public class LevenbergMarquardt extends OptimizationMethod {
     public LevenbergMarquardt() {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
+    }
+
+    @Override
+    public CriteriaType minimize(Problem P, EndCriteria endCriteria) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

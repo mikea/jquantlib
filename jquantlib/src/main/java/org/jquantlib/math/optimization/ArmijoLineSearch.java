@@ -19,22 +19,100 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
+    //! Armijo line search.
+    /*! Let \f$ \alpha \f$ and \f$ \beta \f$ be 2 scalars in \f$ [0,1]
+        \f$.  Let \f$ x \f$ be the current value of the unknown, \f$ d
+        \f$ the search direction and \f$ t \f$ the step. Let \f$ f \f$
+        be the function to minimize.  The line search stops when \f$ t
+        \f$ verifies
+        \f[ f(x + t \cdot d) - f(x) \leq -\alpha t f'(x+t \cdot d) \f]
+        and
+        \f[ f(x+\frac{t}{\beta} \cdot d) - f(x) > -\frac{\alpha}{\beta}
+            t f'(x+t \cdot d) \f]
+
+        (see Polak, Algorithms and consistent approximations, Optimization,
+        volume 124 of Applied Mathematical Sciences, Springer-Verlag, NY,
+        1997)
+    */
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
 
 
 public class ArmijoLineSearch extends LineSearch {
 
     public ArmijoLineSearch(){
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        this(1e-8, 0.05, 0.65);
+    }
+
+    public ArmijoLineSearch(double eps, double alpha, double beta){
+        super(eps);
+        alpha_ = alpha;
+        beta_ = beta;
     }
 
     @Override
-    public double evaluate(Problem P, CriteriaType ecType, double t_ini) {
-        // TODO Auto-generated method stub
-        return 0;
+    public double evaluate(Problem P, CriteriaType ecType, EndCriteria endCriteria, double t_ini) {
+        Constraint constraint = P.constraint();
+        succeed_ = true;
+        boolean maxIter = false;
+        //FIXME: check this initialization
+        double qtold = t_ini;
+        double t = t_ini;
+        int loopNumber = 0;
+        
+        double q0 = P.functionValue();
+        double qpO = P.gradientNormValue();
+        
+        qt_ = q0;
+        qpt_ = (gradient_.empty()? qpO : -Array.dotProduct(gradient_, searchDirection_));
+        
+        // Initialize gradient
+        gradient_ = new Array(P.currentValue().size());
+        // Compute new point
+        xtd_ = P.currentValue();
+        t = update(xtd_, searchDirection_, t, constraint);
+        // Compute fucntion value at the new point
+        qt_ = P.value(xtd_);
+        
+        //Enter in the loop if the criterion is not satisfied
+        if((qt_ - q0) > -alpha_*t*qpt_){
+            do{
+                loopNumber++;
+                // Decrease the step
+                t *= beta_;
+                // Store old value of the function
+                qtold = qt_;
+                // New point value
+                xtd_ = P.currentValue();
+                t = update(xtd_, searchDirection_, t, constraint);
+                
+                // Compute function value at the new point
+                qt_ = P.value(xtd_);
+                P.gradient(gradient_, xtd_);
+                // and it squared norm
+                maxIter = endCriteria.checkMaxIterations(loopNumber, ecType);
+            }
+            while((((qt_ - q0) > (-alpha_ * t * qpt_)) ||
+                   ((qtold - q0) <= (-alpha_ * t * qpt_ / beta_))) &&
+                   (!maxIter));
+        }
+        
+        if(maxIter){
+            succeed_ = false;
+        }
+        
+        // Compute new Gradient
+        P.gradient(gradient_, xtd_);
+        // and it squared norm
+        qpt_ = Array.dotProduct(gradient_, gradient_);
+        
+        // Return new step value
+        return t;
     }
+    
+    private double alpha_;
+    private double beta_;
 }
