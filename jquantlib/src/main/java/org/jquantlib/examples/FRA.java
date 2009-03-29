@@ -48,11 +48,20 @@ package org.jquantlib.examples;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
+import org.jquantlib.daycounters.ActualActual;
+import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.daycounters.ActualActual.Convention;
 import org.jquantlib.indexes.Euribor;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
+import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
+import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.yieldcurves.FraRateHelper;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
+import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
@@ -73,7 +82,7 @@ public class FRA {
          *********************/
         
         //FIXME: What kind of yieldtermstructure, how to initialize?
-        RelinkableHandle<YieldTermStructure> euriborTermStructure = null;//new RelinkableHandle<YieldTermStructure>(new YieldTermStructure());
+        RelinkableHandle<YieldTermStructure> euriborTermStructure = null;
         Handle<IborIndex> euribor3m = new Handle<IborIndex>(new Euribor.Euribor365_3M(euriborTermStructure));
         
         Date todaysDate = DateFactory.getFactory().getDate(23, Month.MAY, 2006);
@@ -89,10 +98,94 @@ public class FRA {
         System.out.println("Settlement date: " + settlementDate.getWeekday() + "," + settlementDate);
         
         // 3 month term FRA quotes (index refers to monthsToStart)
+        double threeMonthFraQuote [] = new double[10];
+        threeMonthFraQuote[1]=0.030;
+        threeMonthFraQuote[2]=0.031;
+        threeMonthFraQuote[3]=0.032;
+        threeMonthFraQuote[6]=0.033;
+        threeMonthFraQuote[9]=0.034;
         
+        /********************
+         ***    QUOTES    ***
+         ********************/
+
+        // SimpleQuote stores a value which can be manually changed;
+        // other Quote subclasses could read the value from a database
+        // or some kind of data feed.
         
+        Handle<SimpleQuote> fra1x4Rate = new Handle<SimpleQuote>(new SimpleQuote(threeMonthFraQuote[1]));
+        Handle<SimpleQuote> fra2x5Rate = new Handle<SimpleQuote>(new SimpleQuote(threeMonthFraQuote[2]));
+        Handle<SimpleQuote> fra3x6Rate = new Handle<SimpleQuote>(new SimpleQuote(threeMonthFraQuote[3]));
+        Handle<SimpleQuote> fra6x9Rate = new Handle<SimpleQuote>(new SimpleQuote(threeMonthFraQuote[6]));
+        Handle<SimpleQuote> fra9x12Rate = new Handle<SimpleQuote>(new SimpleQuote(threeMonthFraQuote[9]));
         
+        RelinkableHandle<Quote> h1x4 = null ;       h1x4.setLink(fra1x4Rate.getLink());
+        RelinkableHandle<Quote> h2x5 = null;        h2x5.setLink(fra2x5Rate.getLink());
+        RelinkableHandle<Quote> h3x6 = null;        h3x6.setLink(fra3x6Rate.getLink());
+        RelinkableHandle<Quote> h6x9 = null;        h6x9.setLink(fra6x9Rate.getLink());
+        RelinkableHandle<Quote> h9x12 = null;       h9x12.setLink(fra9x12Rate.getLink());
+
+        /*********************
+         ***  RATE HELPERS ***
+         *********************/
+
+        // RateHelpers are built from the above quotes together with
+        // other instrument dependant infos.  Quotes are passed in
+        // relinkable handles which could be relinked to some other
+        // data source later.
         
+        DayCounter fraDayCounter = euribor3m.getLink().getDayCounter();
+        BusinessDayConvention convention = euribor3m.getLink().getConvention();
+        boolean endOfMonth = euribor3m.getLink().isEndOfMonth();
+        
+        /*RateHelper fra1x4 = new FraRateHelper(h1x4, 1, 4, fixingDays, calendar, convention,endOfMonth,);/*(h1x4, 1, 4,
+                                  fixingDays, calendar, convention,
+                                  endOfMonth, fixingDays,
+                                  fraDayCounter);*/
+        //FIXME....
+       /*
+        boost::shared_ptr<RateHelper> fra1x4(
+                new FraRateHelper(h1x4, 1, 4,
+                                  fixingDays, calendar, convention,
+                                  endOfMonth, fixingDays,
+                                  fraDayCounter));
+
+        boost::shared_ptr<RateHelper> fra2x5(
+                new FraRateHelper(h2x5, 2, 5,
+                                  fixingDays, calendar, convention,
+                                  endOfMonth, fixingDays,
+                                  fraDayCounter));
+
+        boost::shared_ptr<RateHelper> fra3x6(
+                new FraRateHelper(h3x6, 3, 6,
+                                  fixingDays, calendar, convention,
+                                  endOfMonth, fixingDays,
+                                  fraDayCounter));
+
+        boost::shared_ptr<RateHelper> fra6x9(
+                new FraRateHelper(h6x9, 6, 9,
+                                  fixingDays, calendar, convention,
+                                  endOfMonth, fixingDays,
+                                  fraDayCounter));
+
+        boost::shared_ptr<RateHelper> fra9x12(
+                new FraRateHelper(h9x12, 9, 12,
+                                  fixingDays, calendar, convention,
+                                  endOfMonth, fixingDays,
+                                  fraDayCounter));
+        */
+        
+        /*********************
+         **  CURVE BUILDING **
+         *********************/
+
+        // Any DayCounter would be fine.
+        // ActualActual::ISDA ensures that 30 years is 30.0
+        DayCounter termStructureDayCounter = ActualActual.getDayCounter(Convention.ISDA);
+        
+        double tolerance = 1.0e-15;
+        
+        //A FRA curve
         
 
     }
