@@ -34,15 +34,15 @@ import org.jquantlib.methods.montecarlo.Sample;
 // This code is a work in progress and needs code review. [Richard Gomes]
 public interface RandomSequenceGeneratorIntf {
 
-    public Sample<DoubleList> nextSequence() /*@ReadOnly*/;
+    public Sample<double[]> nextSequence() /*@ReadOnly*/;
 
-    public Sample<DoubleList> lastSequence() /*@ReadOnly*/;
+    public Sample<double[]> lastSequence() /*@ReadOnly*/;
 
     /**
      * Once JVM does not support unsigned fixed arithmetic, we use 64bit variables as containers for 32bit values in order to reduce
      * the complexity and performance overhead of certain fixed arithmetic operations.
      * <p>
-     * From the user's perspective, it's more straightforward to understand that a certain <code>long</code> variable contains 
+     * From the user's perspective, it's easier to understand that a certain <code>long</code> variable contains 
      * values from 0 to 2^32 than understand that a certain <code>int</code> variable contains negative values that should be 
      * converted to it's two's complement and extended to a <code>long</code> variable before use.
      * 
@@ -52,7 +52,7 @@ public interface RandomSequenceGeneratorIntf {
      * 
      * @return an array of unsigned 32bit wide numbers encapsulated in a 64bit containers
      */
-    public /*@Unsigned*/ long[] nextInt32Sequence() /*@ReadOnly*/;
+    public /*@UnsignedInt*/ long[] nextInt32Sequence() /*@ReadOnly*/;
 
     public /*@NonNegative*/ int dimension() /* @ReadOnly */;
 

@@ -56,8 +56,8 @@ import org.jquantlib.methods.montecarlo.Sample;
  */
 
 //TODO: why USG and not RSG? What's the difference between URSG and RSG??
-public class InverseCumulativeRsg<USG extends RandomSequenceGeneratorIntf,IC extends InverseCumulative>
-            implements RandomSequenceGeneratorIntf {
+public class InverseCumulativeRsg<USG extends UniformRandomSequenceGenerator<double[]>, IC extends InverseCumulative>
+            implements UniformRandomSequenceGenerator<double[]> {
 
     private final USG                   ursg;
     private final /*@NonNegative*/ int  dimension;
@@ -82,27 +82,14 @@ public class InverseCumulativeRsg<USG extends RandomSequenceGeneratorIntf,IC ext
         this.ic = ic;
     }
 
-    /**
-     * @return next sample from the Gaussian distribution
-     */
-    @Override
-    public Sample<DoubleList> nextSequence() /* @ReadOnly */ {
-        if (System.getProperty("EXPERIMENTAL")==null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        Sample<DoubleList> sample = this.ursg.nextSequence();
-        double tmp[] = sample.getValue().toDoubleArray(); //FIXME: should be toArray(new double[size]) ??
-        this.weight = sample.getWeight();
-        for (int i = 0; i < this.dimension; i++) {
-            this.sequence[i] = this.ic.evaluate(tmp[i]);
-        }
-        return new Sample<DoubleList>(new ArrayDoubleList(sequence), weight);
-    }
+
+    //
+    // implements UniformRandomSequenceGenerator
+    //
 
     @Override
-    public final Sample<DoubleList> lastSequence() /* @ReadOnly */ {
-        DoubleList list = new ArrayDoubleList(this.sequence);
-        return new Sample<DoubleList>(list, this.weight);
+    public/*@NonNegative*/int dimension() /* @ReadOnly */{
+        return this.dimension;
     }
 
     @Override
@@ -111,9 +98,26 @@ public class InverseCumulativeRsg<USG extends RandomSequenceGeneratorIntf,IC ext
         throw new UnsupportedOperationException(); //TODO: message
     }
     
+    /**
+     * @return next sample from the Gaussian distribution
+     */
     @Override
-    public/*@NonNegative*/int dimension() /* @ReadOnly */{
-        return this.dimension;
+    public Sample<double[]> nextSequence() /* @ReadOnly */ {
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+        Sample<double[]> sample = this.ursg.nextSequence();
+        double tmp[] = sample.getValue();
+        this.weight = sample.getWeight();
+        for (int i = 0; i < this.dimension; i++) {
+            this.sequence[i] = this.ic.evaluate(tmp[i]);
+        }
+        return new Sample<double[]>(sequence, weight);
+    }
+
+    @Override
+    public final Sample<double[]> lastSequence() /* @ReadOnly */ {
+        return new Sample<double[]>(sequence, this.weight);
     }
 
 }

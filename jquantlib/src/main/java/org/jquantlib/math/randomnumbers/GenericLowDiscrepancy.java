@@ -50,7 +50,7 @@ import org.jquantlib.lang.reflect.TypeToken;
  * @param <URSG> represents the UniformRandomSequenceGenerator<T>
  * @param <IC> represents the InverseCumulative
  */
-public class GenericLowDiscrepancy<RSG extends RandomSequenceGeneratorIntf, IC extends InverseCumulative> { 
+public class GenericLowDiscrepancy<RSG extends UniformRandomSequenceGenerator<double[]>, IC extends InverseCumulative> { 
 
     //
     // static private fields

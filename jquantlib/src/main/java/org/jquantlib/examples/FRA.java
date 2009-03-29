@@ -51,16 +51,13 @@ import org.jquantlib.Settings;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.ActualActual.Convention;
-import org.jquantlib.indexes.Euribor;
+import org.jquantlib.indexes.Euribor365_3M;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
-import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.yieldcurves.FraRateHelper;
-import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.TimeUnit;
@@ -83,7 +80,7 @@ public class FRA {
         
         //FIXME: What kind of yieldtermstructure, how to initialize?
         RelinkableHandle<YieldTermStructure> euriborTermStructure = null;
-        Handle<IborIndex> euribor3m = new Handle<IborIndex>(new Euribor.Euribor365_3M(euriborTermStructure));
+        Handle<IborIndex> euribor3m = new Handle<IborIndex>(new Euribor365_3M(euriborTermStructure));
         
         Date todaysDate = DateFactory.getFactory().getDate(23, Month.MAY, 2006);
         Settings settings = Configuration.newConfiguration(null).newSettings();

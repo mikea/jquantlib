@@ -43,18 +43,14 @@ public final class Sample<T> {
 
     /**
      * This field represents the value held by this Sample.
-     * <p>
-     * This field can has public read access via getter 
-     * but can only be written by friend classes (same package)
      */
+    //XXX This field has public read access via getter but can be written by friend classes (same package)
     private T value;
 
     /**
      * This field represents the weight held by this Sample.
-     * <p>
-     * This field can has public read access via getter 
-     * but can only be written by friend classes (same package)
      */
+    //XXX This field has public read access via getter but can be written by friend classes (same package)
     private double weight;
     
 
@@ -63,7 +59,7 @@ public final class Sample<T> {
     //
     
     public Sample(final T value, double weight) {
-    	if (0==0) throw new UnsupportedOperationException("Work in progress");
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
         this.value=value;
         this.weight=weight;
     }

@@ -54,7 +54,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  * @author Richard Gomes
  */
 // FIXME: code review :: possibly rename this class ???
-public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implements RandomSequenceGeneratorIntf {
+public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implements UniformRandomSequenceGenerator<double[]> {
 
     //
     // private fields
@@ -71,11 +71,10 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
     //
 
     public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final RNG rng) {
-        if (System.getProperty("EXPERIMENTAL")==null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        if (dimensionality < 1)
-            throw new IllegalArgumentException("dimensionality must be greater than 0");
+
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
+
+        if (dimensionality < 1) throw new IllegalArgumentException("dimensionality must be greater than 0");
         this.dimension = dimensionality;
         this.rng = rng;
         this.sequence = new double[this.dimension];
@@ -87,8 +86,10 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
     }
 
     public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final long seed) {
-        if (dimensionality < 1)
-            throw new IllegalArgumentException("dimensionality must be greater than 0");
+
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
+
+        if (dimensionality < 1) throw new IllegalArgumentException("dimensionality must be greater than 0");
         this.dimension = dimensionality;
         this.sequence = new double[this.dimension];
         this.int32Sequence = new long[this.dimension];
@@ -103,23 +104,28 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
 
 
     //
-    // implements RandomSequenceGeneratorIntf
+    // implements UniformRandomSequenceGenerator
     //
 
     @Override
-    public final Sample<DoubleList> lastSequence() /* @ReadOnly */{
-        return new Sample<DoubleList>(new ArrayDoubleList(sequence), 1.0);
+    public /*@NonNegative*/ int dimension() /* @ReadOnly */{
+        return this.dimension;
     }
 
     @Override
-    public final Sample<DoubleList> nextSequence() /* @ReadOnly */{
+    public final Sample<double[]> lastSequence() /* @ReadOnly */{
+        return new Sample<double[]>(sequence, 1.0);
+    }
+
+    @Override
+    public final Sample<double[]> nextSequence() /* @ReadOnly */{
         double weight = 1.0;
         for (int i = 0; i < this.dimension; i++) {
             Sample<Double> sample = this.rng.next();
             this.sequence[i] = sample.getValue();
             weight *= sample.getWeight();
         }
-        return new Sample<DoubleList>(new ArrayDoubleList(sequence), weight);
+        return new Sample<double[]>(sequence, weight);
     }
 
     @Override
@@ -129,10 +135,4 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
         }
         return this.int32Sequence;
     }
-
-    @Override
-    public /*@NonNegative*/ int dimension() /* @ReadOnly */{
-        return this.dimension;
-    }
-
 }

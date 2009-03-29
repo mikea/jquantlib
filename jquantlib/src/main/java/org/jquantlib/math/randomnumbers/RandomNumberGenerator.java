@@ -37,7 +37,7 @@ public interface RandomNumberGenerator {
      * Once JVM does not support unsigned fixed arithmetic, we use 64bit variables as containers for 32bit values in order to reduce
      * the complexity and performance overhead of certain fixed arithmetic operations.
      * <p>
-     * From the user's perspective, it's more straightforward to understand that a certain <code>long</code> variable contains 
+     * From the user's perspective, it's easier to understand that a certain <code>long</code> variable contains 
      * values from 0 to 2^32 than understand that a certain <code>int</code> variable contains negative values that should be 
      * converted to it's two's complement and extended to a <code>long</code> variable before use.
      * 
@@ -47,7 +47,7 @@ public interface RandomNumberGenerator {
      * 
      * @return an unsigned 32bit wide number encapsulated in a 64bit container
      */
-    public /*@Unsigned*/ long nextInt32() /*@ReadOnly*/;
+    public /*@UnsignedInt*/ long nextInt32() /*@ReadOnly*/;
 
     // FIXME: code review:: public boolean allowErrorEstimate(); // FIXME: should declare this method???
 }
