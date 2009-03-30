@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2009 Ueli Hofstetter, Philippe Hungerbühler
+ Copyright (C) 2009 Ueli Hofstetter, Philippe Hungerbuehler
 
  This source code is release under the BSD License.
  
