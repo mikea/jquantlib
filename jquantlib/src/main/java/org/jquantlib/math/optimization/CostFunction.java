@@ -57,6 +57,9 @@ public abstract class CostFunction {
     
     //! method to overload to compute grad_f, the first derivative of
     //  the cost function with respect to x
+    public abstract Array values(Array x);
+    
+    
     public void gradient(Array grad,  Array x) {
         //FIXME: Implement method
         double eps = 0;//finiteDifferenceEpsilon();
