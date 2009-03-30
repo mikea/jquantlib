@@ -233,7 +233,7 @@ public class Array {
         vectorOperationValidation(paramArray);
         data = quickOperatorMultiplyReplace(data, paramArray.data);
     }
-
+    
     public void operatorSubtract(final Array paramArray) throws Exception {
         vectorOperationValidation(paramArray);
         data = quickOperatorSubtractReplace(data, paramArray.data);
@@ -267,6 +267,7 @@ public class Array {
         vectorOperationValidation(paramArray);
         return quickOperatorAddCopy(paramArray);
     }
+    
 
     public boolean empty() /* @ReadOnly */{
         return (data.length == 0);

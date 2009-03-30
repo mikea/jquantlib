@@ -23,7 +23,7 @@ package org.jquantlib.math.optimization;
 
 import org.jquantlib.math.Array;
 
-public abstract class LineSearch {
+public class LineSearch {
     
     private final String cant_update_linesearch = "can't update linesearch";
     
@@ -83,7 +83,9 @@ public abstract class LineSearch {
             EndCriteria::Type& ecType,
             const EndCriteria&,
             const Real t_ini) = 0;  */
-    public abstract double evaluate(Problem P, EndCriteria.CriteriaType ecType,EndCriteria endCriteria, double t_ini);
+    public double evaluate(Problem P, EndCriteria.CriteriaType ecType,EndCriteria endCriteria, double t_ini){
+        throw new UnsupportedOperationException("Work in progress");
+    }
     
     public double update(Array params, Array direction, double beta, Constraint constraint){
         double diff = beta;
@@ -103,6 +105,10 @@ public abstract class LineSearch {
         
         params.operatorAdd(direction.operatorMultiplyCopy(diff));
         return diff;
+    }
+    
+    public void setSearchDirection(Array searchDirection){
+        this.searchDirection_ = searchDirection;
     }
     
     

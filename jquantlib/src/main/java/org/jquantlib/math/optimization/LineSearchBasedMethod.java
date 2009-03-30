@@ -21,7 +21,7 @@
  */
 package org.jquantlib.math.optimization;
 
-import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+import org.jquantlib.math.Array;
 
 
 public abstract class LineSearchBasedMethod extends OptimizationMethod {
@@ -40,4 +40,5 @@ public abstract class LineSearchBasedMethod extends OptimizationMethod {
             lineSearch_ = new ArmijoLineSearch();
         }
     }
+    
 }
