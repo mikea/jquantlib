@@ -21,6 +21,9 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.randomnumbers;
 
+import java.util.List;
+
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.math.Constants;
 import org.jquantlib.methods.montecarlo.Sample;
 
@@ -82,7 +85,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  * @author Dominik Holenstein
  * @author Q.Boiler  
  */
-public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
+public class SobolRSG<T extends List<Double>> implements UniformRandomSequenceGenerator<T> {
     
 	// Sobol' Levitan coefficients of the free direction integers as given by Bratley, P., Fox, B.L. (1988)
 	private static final long dim02SLinitializers[] = {1, 0};
@@ -908,42 +911,42 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 		dim360Linitializers
 	};
 	
+	
 	//
-	// enums
+	// public enums
 	//
 	public enum DirectionIntegers {
 		Unit, Jaeckel, SobolLevitan, SobolLevitanLemieux
 	}
 	
+	
 	//
-	// Constants
+	// constants
 	//
 	
 	/**
-	 * bits_ = 8*sizeof(unsigned long);
+	 * BITS = 8*sizeof(unsigned long) = 64
 	 */
-	private static final int bits_ = 64;
+	private static final int BITS = 64;
 	
 	/**
 	 *  1/(2^bits_) (written as (1/2)/(2^(bits_-1)) to avoid long overflow)
 	 */
-	private static final double normalizationFactor_ = 0.5 / (1 << (bits_-1));
+	private static final double NORMALIZATION_FACTOR = 0.5 / (1 << (BITS-1));
 	
 	
 	//
 	// private fields
 	//
 	
-	private final /*@Size*/ int dimensionality_;
+	private final /*@Size*/ int dimensionality;
 	
-	private final double[]   seqValues;    
-	private final double     seqWeight;
-	
-	private final long[]     integerSequence_;
-    private final long[][]   directionIntegers_;
+	private final long[]     integerSequence;
+    private final long[][]   directionIntegers;
     
-	private long       sequenceCounter_;
-	private boolean    firstDraw_;
+	private long       sequenceCounter;
+	private boolean    firstDraw;
+	private T          sequence;
 
 	
 	//
@@ -961,12 +964,11 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 		this(dimensionality, seed, DirectionIntegers.Jaeckel);
 	}
 	
-	// TODO: parameter "directionIntegers" or field "directionIntegers_" are absolutely different concepts : should have different names
-	public SobolRSG(final int dimensionality, final long seed, final DirectionIntegers directionIntegers) {
+	public SobolRSG(final int dimensionality, final long seed, final DirectionIntegers direction) {
 
 		if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
 		
-        if (dimensionality <= 0) {
+		if (dimensionality <= 0) {
             throw new ArithmeticException("dimensionality must be greater than 0"); // TODO: message
         }
 
@@ -976,29 +978,26 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
             throw new ArithmeticException("dimensionality exceeds the number of available primitive polynomials module two"); // TODO: message
         }
         
-		this.dimensionality_ = dimensionality;
-		this.sequenceCounter_ = 0;
-		this.firstDraw_ = true;
+		this.dimensionality = dimensionality;
+		this.sequenceCounter = 0;
+		this.firstDraw = true;
 		
-		this.seqValues = new double[dimensionality];
-		this.seqWeight = 1.0;
-
-		this.integerSequence_   = new long[dimensionality_];
-		this.directionIntegers_ = new long[dimensionality][bits_];
+		this.integerSequence   = new long[this.dimensionality];
+		this.directionIntegers = new long[this.dimensionality][BITS];
 		
 		
 		//XXX final long[] bits = new long[bits_];
-		// XXX List<Long> dimLongArray = new ArrayLongList(dimensionality_);
+		//XXX List<Long> dimLongArray = new ArrayLongList(dimensionality_);
 
         // initializes coefficient array of the k-th primitive polynomial
         // and degree of the k-th primitive polynomial
-		final long[] degree = new long[dimensionality_];
-		final long[] ppmt   = new long[dimensionality_];
+		final long[] degree = new long[this.dimensionality];
+		final long[] ppmt   = new long[this.dimensionality];
 
         // degree 0 is not used
         ppmt[0]=0;
         degree[0]=0;
-		for (int k=1, index=0, currentDegree=1; k < dimensionality_; k++, index++) {
+		for (int k=1, index=0, currentDegree=1; k < this.dimensionality; k++, index++) {
 			ppmt[k] = pp.get(currentDegree - 1, k);
 			if (ppmt[k] == -1) {
 				++currentDegree;
@@ -1018,24 +1017,24 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 		// that the l-th leftmost bit must be set
 
 		// degenerate (no free direction integers) first dimension
-		for (int j=0; j < bits_; j++) {
+		for (int j=0; j < BITS; j++) {
 
 			// FIXME: Translate this line
-			directionIntegers_[0][j] = (1 << (bits_ - j - 1));
+			directionIntegers[0][j] = (1 << (BITS - j - 1));
 		}
 
 		int maxTabulated = 0;
 		// dimensions from 2 (k=1) to maxTabulated (k=maxTabulated-1) included
 		// are initialized from tabulated coefficients
-		switch (directionIntegers) {
+		switch (direction) {
 			case Unit:
-				maxTabulated = dimensionality_;
+				maxTabulated = this.dimensionality;
 				for (int k = 1; k < maxTabulated; k++) {
 					for (int l = 1; l <= degree[k]; l++) {
 						// FIXME: Translate these two lines
 						// TODO: Code Review is this correct.
-						directionIntegers_[k][l - 1] = 1L;
-						directionIntegers_[k][l - 1] <<= (bits_ - l);
+						directionIntegers[k][l - 1] = 1L;
+						directionIntegers[k][l - 1] <<= (BITS - l);
 					}
 				}
 				break;
@@ -1049,13 +1048,13 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 				for (int mtCounter = 0; mtCounter < initializers.length; ++mtCounter) {
 					maxTabulated += initializers[mtCounter].length;
 				}
-				for (int k = 1; k < Math.min(dimensionality_, maxTabulated); k++) {
+				for (int k = 1; k < Math.min(this.dimensionality, maxTabulated); k++) {
 					int j = 0;
 					// 0UL marks coefficients' end for a given dimension
 					while (initializers[k - 1][j] != 0) {
 						// FIXME: Translate these two lines
-						directionIntegers_[k][j] = initializers[k - 1][j];
-						directionIntegers_[k][j] <<= (bits_ - j - 1);
+						directionIntegers[k][j] = initializers[k - 1][j];
+						directionIntegers[k][j] <<= (BITS - j - 1);
 						j++;
 					}
 				}
@@ -1068,13 +1067,13 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 				for (int mtCounter = 0; mtCounter < SLinitializers.length; ++mtCounter) {
 					maxTabulated += SLinitializers[mtCounter].length;
 				}
-				for (int k = 1; k < Math.min(dimensionality_, maxTabulated); k++) {
+				for (int k = 1; k < Math.min(this.dimensionality, maxTabulated); k++) {
 					int j = 0;
 					// 0UL marks coefficients' end for a given dimension
 					while (SLinitializers[k - 1][j] != 0) {
 						// FIXME: Translate these two lines
-						directionIntegers_[k][j] = SLinitializers[k - 1][j];
-						directionIntegers_[k][j] <<= (bits_ - j - 1);
+						directionIntegers[k][j] = SLinitializers[k - 1][j];
+						directionIntegers[k][j] <<= (BITS - j - 1);
 						j++;
 					}
 				}
@@ -1087,13 +1086,13 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 				for (int mtCounter = 0; mtCounter < Linitializers.length; ++mtCounter) {
 					maxTabulated += Linitializers[mtCounter].length;
 				}
-				for (int k = 1; k < Math.min(dimensionality_, maxTabulated); k++) {
+				for (int k = 1; k < Math.min(this.dimensionality, maxTabulated); k++) {
 					int j = 0;
 					// 0UL marks coefficients' end for a given dimension
 					while (Linitializers[k - 1][j] != 0L) {
 						// FIXME: Translate these two lines
-						directionIntegers_[k][j] = Linitializers[k - 1][j];
-						directionIntegers_[k][j] <<= (bits_ - j - 1);
+						directionIntegers[k][j] = Linitializers[k - 1][j];
+						directionIntegers[k][j] <<= (BITS - j - 1);
 						j++;
 					}
 				}
@@ -1106,9 +1105,9 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 		// random initialization for higher dimensions
 
 		// FIXME: Check maxTabulated below: How is it initialized?
-		if (dimensionality_ > maxTabulated) {
+		if (this.dimensionality > maxTabulated) {
 			MersenneTwisterUniformRng uniformRng = new MersenneTwisterUniformRng(seed);
-			for (int k = maxTabulated; k < dimensionality_; k++) {
+			for (int k = maxTabulated; k < this.dimensionality; k++) {
 				for (int l = 1; l <= degree[k]; l++) {
 
 					do {
@@ -1118,8 +1117,8 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 						// rightmost l bits non-zero
 
 						// FIXME: Translate this line
-						directionIntegers_[k][l - 1] = (long) (u * (1 << l));
-					} while (!((directionIntegers_[k][l - 1] & 1) == 0));
+						directionIntegers[k][l - 1] = (long) (u * (1 << l));
+					} while (!((directionIntegers[k][l - 1] & 1) == 0));
 
 					// iterate until the direction integer is odd
 					// that is it has the rightmost bit set
@@ -1130,18 +1129,18 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 					// can be non-zero
 
 					// FIXME: Translate this line
-					directionIntegers_[k][l - 1] <<= (bits_ - l);
+					directionIntegers[k][l - 1] <<= (BITS - l);
 				}
 			}
 		}
 
 		// computation of directionIntegers_[k][l] for l>=degree_[k]
 		// by recurrence relation
-		for (int k = 1; k < dimensionality_; k++) {
+		for (int k = 1; k < this.dimensionality; k++) {
 			int gk = (int) degree[k];
-			for (int l = gk; l < bits_; l++) {
+			for (int l = gk; l < BITS; l++) {
 				// eq. 8.19 "Monte Carlo Methods in Finance" by P. Jaeckel
-				long n = (directionIntegers_[k][l-gk] >> gk); // FIXME: unsigned long
+				long n = (directionIntegers[k][l-gk] >> gk); // FIXME: unsigned long
 
 				// a[k][j] are the coefficients of the monomials in ppmt[k]
 				// The highest order coefficient a[k][0] is not actually
@@ -1158,7 +1157,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 					// FIXME: Correct this line if ((ppmt.get(k) >>> (gk-j-1)) & 1 != 0)
 					// TODO: REVIEW THIS.
 					if (((long) (ppmt[k] >> (gk - j - 1)) & 1L) != 0) {
-						n ^= directionIntegers_[k][l - j];
+						n ^= directionIntegers[k][l - j];
 					}
 
 				}
@@ -1167,8 +1166,8 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 				// will always enter
 
 				// FIXME: Correct these two lines regarding directionIntegers_
-				n ^= directionIntegers_[k][l - gk];
-				directionIntegers_[k][l] = n;
+				n ^= directionIntegers[k][l - gk];
+				directionIntegers[k][l] = n;
 			}
 		}
 
@@ -1208,8 +1207,8 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 
 		// initialize Sobol integer/double vectors
 		// first draw
-		for (int k=0; k<dimensionality_; k++) {
-			integerSequence_[k] = directionIntegers_[k][0];
+		for (int k=0; k<this.dimensionality; k++) {
+			integerSequence[k] = directionIntegers[k][0];
 		}
 	}
 	
@@ -1223,15 +1222,15 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
         final long gray = n ^ (n>>1);
 
         // FIXME: Correct the following for loop regarding directionIntegers_ .
-        for (int k = 0; k < dimensionality_; k++) {
-            integerSequence_[k] = 0;
+        for (int k = 0; k < this.dimensionality; k++) {
+            integerSequence[k] = 0;
             for (int index = 0; index < ops; index++) {
                 if (((gray >> index) & 1) != 0) {
-                    integerSequence_[k] = directionIntegers_[k][index];
+                    integerSequence[k] = directionIntegers[k][index];
                 }
             }
         }
-        sequenceCounter_ = skip;
+        sequenceCounter = skip;
     }
 
     
@@ -1241,53 +1240,56 @@ public class SobolRSG implements UniformRandomSequenceGenerator<double[]> {
 
     @Override
     public int dimension() /* @Read-only */ {
-        return dimensionality_;
+        return this.dimensionality;
     }
     
 	@Override
 	public final long[] nextInt32Sequence() /* @ReadOnly */ {
-		if (firstDraw_) {
+		if (firstDraw) {
 			// it was precomputed in the constructor
-			firstDraw_ = false;
-			return integerSequence_;
+			firstDraw = false;
+			return integerSequence;
 		}
 		// increment the counter
-		sequenceCounter_++;
+		sequenceCounter++;
 		// did we overflow?
-		if (sequenceCounter_ == 0) throw new ArithmeticException("period exceeded"); // TODO: message
+		if (sequenceCounter == 0) throw new ArithmeticException("period exceeded"); // TODO: message
 
 		// Instead of using the counter n as new unique generating integer
 		// for the n-th draw use the Gray code G(n) as proposed
 		// by Antonov and Saleev
-		long n = sequenceCounter_;
+		long n = sequenceCounter;
 		// Find rightmost zero bit of n
 		int j = 0;
 		while ((n & 1) != 0) { n >>= 1; j++; }
-		for (int k = 0; k < dimensionality_; k++) {
+		for (int k = 0; k < this.dimensionality; k++) {
 			// XOR the appropriate direction number into each component of
 			// the integer sequence to obtain a new Sobol integer for that
 			// component
-			integerSequence_[k] ^= directionIntegers_[k][j];
+			integerSequence[k] ^= directionIntegers[k][j];
 		}
-		return integerSequence_;
+		return integerSequence;
 	}
 	
 	@Override
-	public final Sample<double[]> nextSequence() /* @ReadOnly */ {
+	public final Sample<T> nextSequence() /* @ReadOnly */ {
 		final long[] v = nextInt32Sequence();
-		// normalize to get a double in (0,1)
-		for (int k = 0; k < dimensionality_; ++k) {
+	    final double[] d = new double[this.dimensionality];
+
+	    // normalize to get a double in (0,1)
+		for (int k = 0; k < this.dimensionality; ++k) {
 
 			// FIXME: (Richard will solve!) Check orignial C++ code: see comment code block below.
-			seqValues[k] = v[k] * normalizationFactor_;
+			d[k] = v[k] * NORMALIZATION_FACTOR;
 		}
 
-		return new Sample<double[]>(seqValues, seqWeight);
+		this.sequence = (T) new ArrayDoubleList(d);
+		return new Sample<T>(this.sequence, 1.0);
 	}
 
 	@Override
-	public final Sample<double[]> lastSequence() /* @Read-only*/ {
-        return new Sample<double[]>(seqValues, seqWeight);
+	public final Sample<T> lastSequence() /* @Read-only*/ {
+        return new Sample<T>(this.sequence, 1.0);
 	}
 
 }
