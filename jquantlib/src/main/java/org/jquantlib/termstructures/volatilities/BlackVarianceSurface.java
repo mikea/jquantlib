@@ -91,7 +91,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 		super(referenceDate);
 
 		this.dayCounter = dayCounter;
-		this.maxDate = dates[dates.length];
+		this.maxDate = dates[dates.length-1];
 		this.strikes = strikes.clone();
 		this.lowerExtrapolation = lowerExtrapolation;
 		this.upperExtrapolation = upperExtrapolation;
@@ -109,6 +109,13 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 		for (int i = 0; i < blackVolMatrix.length; i++) {
 			variances[i][0] = 0.0;
 		}
+		this.strikes = new double[strikes.length+1];
+		this.strikes[0] = 0.0;
+		for(int i = 1; i < strikes.length+1; i++){
+			this.strikes[i] = strikes[i-1];
+		}
+		
+		
 		for (int j = 1; j <= blackVolMatrix[0].length; j++) {
 			times[j] = timeFromReference(dates[j - 1]);
 			if (!(times[j] > times[j - 1]))
