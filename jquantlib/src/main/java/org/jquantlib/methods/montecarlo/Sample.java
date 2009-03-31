@@ -34,7 +34,11 @@ package org.jquantlib.methods.montecarlo;
 //TODO: Add JavaDocs
 //TODO: Code review
 
-//weighted sample
+// Sample<Double>
+// Sample<Array>
+// Sample<Path>
+// Sample<MultiPath>
+
 public final class Sample<T> {
     
     //

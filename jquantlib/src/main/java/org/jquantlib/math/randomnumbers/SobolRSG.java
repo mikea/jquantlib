@@ -21,9 +21,6 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.randomnumbers;
 
-import java.util.List;
-
-import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.math.Constants;
 import org.jquantlib.methods.montecarlo.Sample;
 
@@ -85,7 +82,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  * @author Dominik Holenstein
  * @author Q.Boiler  
  */
-public class SobolRSG<T extends List<Double>> implements UniformRandomSequenceGenerator<T> {
+public class SobolRSG implements UniformRandomSequenceGenerator {
     
 	// Sobol' Levitan coefficients of the free direction integers as given by Bratley, P., Fox, B.L. (1988)
 	private static final long dim02SLinitializers[] = {1, 0};
@@ -941,12 +938,12 @@ public class SobolRSG<T extends List<Double>> implements UniformRandomSequenceGe
 	
 	private final /*@Size*/ int dimensionality;
 	
-	private final long[]     integerSequence;
-    private final long[][]   directionIntegers;
+	private final long[]       integerSequence;
+    private final long[][]     directionIntegers;
     
-	private long       sequenceCounter;
-	private boolean    firstDraw;
-	private T          sequence;
+    private Sample<double[]>   sequence;
+	private long               sequenceCounter;
+	private boolean            firstDraw;
 
 	
 	//
@@ -1272,24 +1269,22 @@ public class SobolRSG<T extends List<Double>> implements UniformRandomSequenceGe
 	}
 	
 	@Override
-	public final Sample<T> nextSequence() /* @ReadOnly */ {
-		final long[] v = nextInt32Sequence();
+	public final Sample<double[]> nextSequence() /* @ReadOnly */ {
+		final long[]   v = nextInt32Sequence();
 	    final double[] d = new double[this.dimensionality];
 
 	    // normalize to get a double in (0,1)
 		for (int k = 0; k < this.dimensionality; ++k) {
-
-			// FIXME: (Richard will solve!) Check orignial C++ code: see comment code block below.
 			d[k] = v[k] * NORMALIZATION_FACTOR;
 		}
 
-		this.sequence = (T) new ArrayDoubleList(d);
-		return new Sample<T>(this.sequence, 1.0);
+		this.sequence = new Sample<double[]>(d, 1.0);
+		return sequence;
 	}
 
 	@Override
-	public final Sample<T> lastSequence() /* @Read-only*/ {
-        return new Sample<T>(this.sequence, 1.0);
+	public final Sample<double[]> lastSequence() /* @Read-only*/ {
+        return sequence;
 	}
 
 }

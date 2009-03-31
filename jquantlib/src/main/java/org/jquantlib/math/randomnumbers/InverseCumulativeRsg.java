@@ -40,8 +40,6 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import org.joda.primitives.list.DoubleList;
-import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**
@@ -56,14 +54,15 @@ import org.jquantlib.methods.montecarlo.Sample;
  */
 
 //TODO: why USG and not RSG? What's the difference between URSG and RSG??
-public class InverseCumulativeRsg<USG extends UniformRandomSequenceGenerator<double[]>, IC extends InverseCumulative>
-            implements UniformRandomSequenceGenerator<double[]> {
+public class InverseCumulativeRsg<USG extends UniformRandomSequenceGenerator, IC extends InverseCumulative>
+            implements UniformRandomSequenceGenerator {
 
-    private final USG                   ursg;
     private final /*@NonNegative*/ int  dimension;
-    private double[]                    sequence;
-    private double                      weight;
+    private final USG                   ursg;
+    
+    private Sample<double[]>            sequence;
     private IC                          ic;
+    private double                      weight;
     
 
     public InverseCumulativeRsg(final USG ursg) {
@@ -72,8 +71,8 @@ public class InverseCumulativeRsg<USG extends UniformRandomSequenceGenerator<dou
         }
         this.ursg = ursg;
         this.dimension = this.ursg.dimension();
-        this.sequence = new double[this.dimension];
         this.weight = 1.0;
+        this.sequence = new Sample<double[]>(new double[this.dimension], this.weight);
         this.ic = null;
     }
 
@@ -103,21 +102,23 @@ public class InverseCumulativeRsg<USG extends UniformRandomSequenceGenerator<dou
      */
     @Override
     public Sample<double[]> nextSequence() /* @ReadOnly */ {
-        if (System.getProperty("EXPERIMENTAL")==null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
+        
         Sample<double[]> sample = this.ursg.nextSequence();
-        double tmp[] = sample.getValue();
+        double[] v = sample.getValue();
         this.weight = sample.getWeight();
+        
+        double[] d = new double[this.dimension];
         for (int i = 0; i < this.dimension; i++) {
-            this.sequence[i] = this.ic.evaluate(tmp[i]);
+            d[i] = this.ic.evaluate(v[i]);
         }
-        return new Sample<double[]>(sequence, weight);
+
+        return new Sample<double[]>(d, weight);
     }
 
     @Override
     public final Sample<double[]> lastSequence() /* @ReadOnly */ {
-        return new Sample<double[]>(sequence, this.weight);
+        return this.sequence;
     }
 
 }

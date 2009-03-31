@@ -20,7 +20,6 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.math.randomnumbers;
 
-import org.joda.primitives.list.DoubleList;
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**
@@ -31,11 +30,11 @@ import org.jquantlib.methods.montecarlo.Sample;
 //FIXME: code review :: possibly rename this interface ???
 //FIXME:: Should this interface be kept or deleted ???
 //This code is a work in progress and needs code review. [Richard Gomes]
-public interface UniformRandomSequenceGenerator<T> {
+public interface UniformRandomSequenceGenerator {
 
-   public Sample<T> nextSequence() /*@ReadOnly*/;
+   public Sample<double[]> nextSequence() /*@ReadOnly*/;
 
-   public Sample<T> lastSequence() /*@ReadOnly*/;
+   public Sample<double[]> lastSequence() /*@ReadOnly*/;
 
    /**
     * Once JVM does not support unsigned fixed arithmetic, we use 64bit variables as containers for 32bit values in order to reduce
