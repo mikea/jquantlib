@@ -159,7 +159,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 	
 	@Override
 	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, /*@Price*/ double maturity) {
-		if (t <= times[times.length]) {
+		if (t <= times[times.length-1]) {
 			return varianceCurve.evaluate(t);
 		} else {
 			// extrapolate with flat vol
