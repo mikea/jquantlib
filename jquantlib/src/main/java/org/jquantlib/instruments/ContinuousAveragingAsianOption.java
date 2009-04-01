@@ -36,64 +36,54 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 /*! \file asianoption.hpp
-    \brief Asian option on a single asset
-*/
-
-
+ \brief Asian option on a single asset
+ */
 
 package org.jquantlib.instruments;
 
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.ContinuousAveragingAsianOptionArguments;
 import org.jquantlib.processes.StochasticProcess;
 
-
 /**
- * Description of the terms and conditions of a discrete average out fixed strike
- * option.
+ * Description of the terms and conditions of a discrete average out fixed strike option.
  * 
  * @author gary_kennedy
  */
 
-
-
-
-public class ContinuousAveragingAsianOption extends OneAssetStrikedOption{
+public class ContinuousAveragingAsianOption extends OneAssetStrikedOption {
 
     private static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
-    
+
+    @PackagePrivate
     protected AverageType averageType_;
 
-    public ContinuousAveragingAsianOption(
-            AverageType averageType,
-            final StochasticProcess process,
-            final StrikedTypePayoff payoff,
-            final Exercise exercise,
-            final PricingEngine engine ){
-		super(process, payoff, exercise, engine);
-		averageType_ = averageType;
-	}
-	
-    public ContinuousAveragingAsianOption(StochasticProcess process,
-			Payoff payoff, Exercise exercise, PricingEngine engine) {
-		super(process, payoff, exercise, engine);
-	}
+    public ContinuousAveragingAsianOption(AverageType averageType, final StochasticProcess process, final StrikedTypePayoff payoff,
+            final Exercise exercise, final PricingEngine engine) {
+        super(process, payoff, exercise, engine);
+        averageType_ = averageType;
+    }
+
+    public ContinuousAveragingAsianOption(StochasticProcess process, Payoff payoff, Exercise exercise, PricingEngine engine) {
+        super(process, payoff, exercise, engine);
+    }
 
     @Override
-	public void setupArguments(Arguments arguments) /*@ReadOnly*/{
+    public void setupArguments(Arguments arguments) /* @ReadOnly */{
         super.setupArguments(arguments);
 
-        if (!(arguments instanceof ContinuousAveragingAsianOptionArguments)){
-        	throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
+        if (!(arguments instanceof ContinuousAveragingAsianOptionArguments)) {
+            throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
         }
-        ContinuousAveragingAsianOptionArguments moreArgs = (ContinuousAveragingAsianOptionArguments)arguments;
+        ContinuousAveragingAsianOptionArguments moreArgs = (ContinuousAveragingAsianOptionArguments) arguments;
         moreArgs.averageType = averageType_;
-	
+
     }
-    
+
 }
