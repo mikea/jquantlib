@@ -36,13 +36,11 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 /*! \file asianoption.hpp
-    \brief Asian option on a single asset
-*/
-
-
+ \brief Asian option on a single asset
+ */
 
 package org.jquantlib.instruments;
 
@@ -51,6 +49,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.DiscreteAveragingAsianOptionArguments;
@@ -63,52 +62,41 @@ import org.jquantlib.util.Date;
  * @author <Richard Gomes>
  */
 public class DiscreteAveragingAsianOption extends OneAssetStrikedOption {
-    
-    public static final String WRONG_ARGUMENT_TYPE =  "wrong argument type";
 
-    private final AverageType averageType_;
-    private final /*@Real*/ double runningAccumulator_;
-    private final /*@Size*/ int pastFixings_;
-    private final List<Date> fixingDates_;
+    public static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
 
-//	public DiscreteAveragingAsianOption(
-//	        final StochasticProcess process,
-//			final Payoff payoff,
-//			final Exercise exercise, 
-//			final PricingEngine engine) {
-//		super(process, payoff, exercise, engine);
-//	}
-	
-    public DiscreteAveragingAsianOption(
-            final AverageType averageType,
-            final /*@Real*/ double runningAccumulator,
-            final /*@Size*/ int pastFixings,
-            final List<Date> fixingDates,
-            final StochasticProcess process,
-            final StrikedTypePayoff payoff,
-            final Exercise exercise,
-            final PricingEngine engine){
-    	super(process,payoff,exercise,engine);
-    	this.averageType_ = averageType;
-    	this.runningAccumulator_ = runningAccumulator;
-    	this.fixingDates_ = new ArrayList<Date>(fixingDates);
-    	Collections.sort(this.fixingDates_);
+    @PackagePrivate
+    protected final AverageType averageType_;
+    @PackagePrivate
+    protected final/* @Real */double runningAccumulator_;
+    @PackagePrivate
+    protected final/* @Size */int pastFixings_;
+    @PackagePrivate
+    protected final List<Date> fixingDates_;
 
-    	throw new UnsupportedOperationException("pastFixings needs to be initialized");
+    public DiscreteAveragingAsianOption(final AverageType averageType, final/* @Real */double runningAccumulator,
+            final/* @Size */int pastFixings, final List<Date> fixingDates, final StochasticProcess process,
+            final StrikedTypePayoff payoff, final Exercise exercise, final PricingEngine engine) {
+        super(process, payoff, exercise, engine);
+        this.averageType_ = averageType;
+        this.runningAccumulator_ = runningAccumulator;
+        this.pastFixings_ = pastFixings;
+        this.fixingDates_ = new ArrayList<Date>(fixingDates);
+        Collections.sort(this.fixingDates_);
     }
-    
-    @Override    
-    public void setupArguments(final Arguments args) /* @ReadOnly */ {
+
+    @Override
+    public void setupArguments(final Arguments args) /* @ReadOnly */{
         super.setupArguments(args);
 
-        if (!(args instanceof DiscreteAveragingAsianOptionArguments)){
-        	throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
+        if (!(args instanceof DiscreteAveragingAsianOptionArguments)) {
+            throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
         }
-        DiscreteAveragingAsianOptionArguments moreArgs = (DiscreteAveragingAsianOptionArguments)args;
+        DiscreteAveragingAsianOptionArguments moreArgs = (DiscreteAveragingAsianOptionArguments) args;
         moreArgs.averageType = averageType_;
         moreArgs.runningAccumulator = runningAccumulator_;
         moreArgs.pastFixings = pastFixings_;
         moreArgs.fixingDates = fixingDates_;
     }
-    
+
 }
