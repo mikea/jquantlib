@@ -21,8 +21,12 @@
  */
 package org.jquantlib.math.optimization;
 
+import java.util.List;
+
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+
 
 public class SteepestDescent extends LineSearchBasedMethod {
     
@@ -53,6 +57,8 @@ public class SteepestDescent extends LineSearchBasedMethod {
        // set gold at the size of the optimization problem search direction
        Array gold = new Array(lineSearch_.searchDirection().size());
        Array gdiff = new Array(lineSearch_.searchDirection().size());
+       
+       
        
        P.setFunctionValue(P.valueAndGradient(gold, x_));
        lineSearch_.searchDirection_ = gold.operatorMultiplyCopy(-1);

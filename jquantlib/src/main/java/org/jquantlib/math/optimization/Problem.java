@@ -21,6 +21,9 @@
  */
 package org.jquantlib.math.optimization;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jquantlib.math.Array;
 
 public class Problem {
@@ -36,9 +39,9 @@ public class Problem {
     //! number of evaluation of cost function and its gradient
     protected Integer functionEvaluation_, gradientEvaluation_;
 
-    public Problem(CostFunction costFunction, Constraint constraint, Array initialArray){
+    public Problem(CostFunction costFunction, Constraint constraint, List<Double> initialArray){
         if(initialArray == null){
-            initialArray = new Array();
+            initialArray = new ArrayList<Double>();
         }
     }
     
@@ -56,11 +59,12 @@ public class Problem {
     
     //FIXME: implementation of Disposable
     //! call cost values computation and increment evaluation counter
-    /*
-    Disposable<Array> values(Array x){
-        
+    
+    public Array values(Array x){
+        throw new UnsupportedOperationException("Not implemented yet");
+        //return null;
     }
-    */
+    
     
     //! call cost function gradient computation and increment
     //  evaluation counter
