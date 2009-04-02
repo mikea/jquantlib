@@ -35,6 +35,7 @@ public class Simplex extends OptimizationMethod {
     private double lambda_;
     private List<Array> vertices_;
     private Array values_, sum_;
+   
     
     public Simplex(double lambda) {
         if (System.getProperty("EXPERIMENTAL") == null) {
@@ -73,22 +74,27 @@ public class Simplex extends OptimizationMethod {
         int iterationNumber_ = 0;
         
         boolean end = false;
-        int n = x_.size(), i;
+        int n = x_.size();
+        int i;
         
-        vertices_ = new ArrayList<Array>();
+        vertices_ = new ArrayList<Array>(n+1);
+        //add empty Arrays
+        for(int fill = 0; fill<=n+1; fill++){
+            vertices_.add(new Array(x_));
+        }
         for(i = 0; i<n; i++){
-            Array direction = new Array();
+            Array direction = new Array(n);
             direction.set(i, 1.0);
             P.constraint().update(vertices_.get(i+1), direction, lambda_);
         }
         
-        values_ = new Array();
+        values_ = new Array(n+1, 0.0);
         for(i = 0; i<= n; i++){
             values_.set(i, P.value(vertices_.get(i)));
         }
         
         do {
-            sum_ = new Array();
+            sum_ = new Array(n, 0.0);
             for (i=0; i<=n; i++)
                 sum_ = sum_.operatorAddCopy(vertices_.get(i));
             //Determine best, worst and 2nd worst vertices

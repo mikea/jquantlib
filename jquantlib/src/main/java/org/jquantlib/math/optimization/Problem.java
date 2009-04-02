@@ -26,6 +26,8 @@ import java.util.List;
 
 import org.jquantlib.math.Array;
 
+import cern.colt.Arrays;
+
 public class Problem {
     
     //! Unconstrained cost function
@@ -39,10 +41,19 @@ public class Problem {
     //! number of evaluation of cost function and its gradient
     protected Integer functionEvaluation_, gradientEvaluation_;
 
-    public Problem(CostFunction costFunction, Constraint constraint, List<Double> initialArray){
-        if(initialArray == null){
-            initialArray = new ArrayList<Double>();
+    public Problem(CostFunction costFunction, Constraint constraint, List<Double> initialValue){
+        if(initialValue == null){
+            initialValue = new ArrayList<Double>();
         }
+        /*this is crap*/
+        double [] temp = new double [initialValue.size()];
+        for(int i = 0; i<initialValue.size(); i++){
+            temp[i] = initialValue.get(i);
+        }
+        
+        this.currentValue_ = new Array(temp);
+        this.costFunction_ = costFunction;
+        this.constraint_ = constraint;
     }
     
     /*! \warning it does not reset the current minumum to any initial value
@@ -61,8 +72,8 @@ public class Problem {
     //! call cost values computation and increment evaluation counter
     
     public Array values(Array x){
-        throw new UnsupportedOperationException("Not implemented yet");
-        //return null;
+        ++functionEvaluation_;
+        return costFunction_.values(x);
     }
     
     

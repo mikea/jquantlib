@@ -46,6 +46,11 @@ public class OptimizerTest {
     enum OptimizationMethodType {
         simplex, levenbergMarquardt, conjugateGradient, steepestDescent
     };
+    
+    public static void main (String [] args){
+        OptimizerTest opt = new OptimizerTest();
+        opt.testOptimizers();
+    }
 
     @Ignore
     @Test
@@ -53,7 +58,7 @@ public class OptimizerTest {
         
         //System.setProperty("EXPERIMENTAL", "true");
         System.out.println("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-        System.out.println("Testing optimizers... cleaned");
+        System.out.println("Testing optimizers... ");
 
         // following block moved inside this method body
         List<CostFunction> costFunctions_ = new ArrayList<CostFunction>();
@@ -66,9 +71,9 @@ public class OptimizerTest {
         List<Double> gradientNormEpsilons_ = new ArrayList<Double>();
         List<EndCriteria> endCriterias_ = new ArrayList<EndCriteria>();
         List<List<OptimizationMethod>> optimizationMethods_ = new ArrayList<List<OptimizationMethod>>();
-        List<List> xMinExpected_ = new ArrayList<List>();
-        List<List> yMinExpected_ = new ArrayList<List>();
-
+        double [] xMinExpected = new double[1];
+        double [] yMinExpected = new double[1];
+        
         // following block moved from setup() to here
         // keep stuff local... (move here from setup())
         // Cost function n. 1: 1D polynomial of degree 2 (parabolic function y=a*x^2+b*x+c)
@@ -80,6 +85,15 @@ public class OptimizerTest {
         coefficients.add(c);
         coefficients.add(b);
         coefficients.add( a);
+        xMinExpected[0] = -b/(2.0*a);
+        yMinExpected[0] = -(b*b-4.0*a*c)/(4.0*a);
+
+
+        //List<Array> yMinExpected_ = new ArrayList<Array>();
+        List xMinExpected_ = new ArrayDoubleList();
+        List yMinExpected_ = new ArrayDoubleList();
+        xMinExpected_.add(xMinExpected[xMinExpected.length-1]);
+        yMinExpected_.add(xMinExpected[yMinExpected.length-1]);
         costFunctions_.add(new OneDimensionalPolynomDegreeN(coefficients));
         // Set Constraint for optimizers: unconstrained problem
         constraints_.add(new NoConstraint());
@@ -105,14 +119,7 @@ public class OptimizerTest {
         
         optimizationMethods_.add(makeOptimizationMethods(optimizationMethodTypes, simplexLambda, levenbergMarquardtEpsfcn, levenbergMarquardtXtol, levenbergMarquardtGtol));
         // Set expected results for optimizer
-        double [] xMinExpected = new double [1];
-        double [] yMinExpected = new double [1];
-        xMinExpected[0] = -b/(2.0*a);
-        yMinExpected[0] = -(b*b-4.0*a*c)/(4.0*a);
-        //WHAT DOES THIS MEAN?????
-        //xMinExpected_.add(xMinExpected);
-        //yMinExpected_.add(yMinExpected);
-        
+
         for (int i=0; i<costFunctions_.size(); ++i) {
             Problem problem = new Problem(costFunctions_.get(i), constraints_.get(i), initialValues_.get(i));
             for (int j=0; j<(optimizationMethods_.get(i)).size(); ++j) {
@@ -121,26 +128,24 @@ public class OptimizerTest {
             Array yMinCalculated = problem.values(xMinCalculated);
             // Check optimizatin results vs known solution
             for (int k=0; k < xMinCalculated.size(); ++k) {
+                //if(Math.abs(yMinExpected_.get(k)- yMinCalculated.get(k))> functionEpsilons_.get(i)){
                 //if (std::fabs(yMinExpected_[k]- yMinCalculated[k]) > functionEpsilons_[i]) {
-                if (false) {
-                    System.out.println("Test failing.....");
-                    /*
-                    fail("costFunction = " + String.valueOf(i) + "\n"
-                                  "optimizer =  " +  j + "\n"
-                                  + "    x expected:    " + xMinExpected_[k] << "\n"
-                                  + "    x calculated:  " + std::setprecision(9) << xMinCalculated[k] << "\n"
-                                  + "    x difference:  " +  xMinExpected_[k]- xMinCalculated[k] << "\n"
-                                  + "    rootEpsilon:   " + std::setprecision(9) << rootEpsilons_[i] << "\n"
-                                  + "    y expected:    " + yMinExpected_[k] << "\n"
-                                  + "    y calculated:  " + std::setprecision(9) << yMinCalculated[k] << "\n"
-                                  + "    y difference:  " +  yMinExpected_[k]- yMinCalculated[k] << "\n"
-                                  + "    functionEpsilon:   " + std::setprecision(9) << functionEpsilons_[i] << "\n"
+                if (true) {
+                    /*fail*/System.out.println("costFunction = " + String.valueOf(i) + "\n"
+                                  + "optimizer =  " +  j + "\n"
+                                  + "    x expected:    " +  xMinExpected_.get(k) + "\n"
+                                  + "    x calculated:  " +  xMinCalculated.get(k) + "\n"
+                                  + "    x difference:  " +  ((Double)xMinExpected_.get(k)- xMinCalculated.get(k)) + "\n"
+                                  + "    rootEpsilon:   " +  rootEpsilons_.get(i) + "\n"
+                                  + "    y expected:    " +  yMinExpected_.get(k) + "\n"
+                                  + "    y calculated:  " +  yMinCalculated.get(k) + "\n"
+                                  + "    y difference:  " +  ((Double)yMinExpected_.get(k)- yMinCalculated.get(k)) + "\n"
+                                  + "    functionEpsilon:   " +  functionEpsilons_.get(i) + "\n"
                                   + "    endCriteriaResult:  " + endCriteriaResult);
                     }
-                    */
+                    
                 }
             }
-        }
         }
     }
         
@@ -213,7 +218,7 @@ public class OptimizerTest {
             if (x.size() != 1) {
                 throw new IllegalArgumentException("Independent variable must be 1 dimensional");
             }
-            Array y = new Array();
+            Array y = new Array(1);
             y.set(0, value(x));
             return y;
         }
