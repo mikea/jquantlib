@@ -78,10 +78,13 @@ import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
+import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.testsuite.util.Utilities;
+import org.jquantlib.time.Period;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
@@ -925,6 +928,77 @@ public class EuropeanOptionTest {
             }
           }
         }
+    }
+     
+    @Ignore
+    @Test
+    public void testImpliedVolContainment(){
+        logger.info("Testing self-containment of implied volatility calculation...");
+        
+        int maxEvaluations = 100;
+        double tolerance = 1.0e-6;
+        
+        // test options
+        
+        DayCounter dc = Actual360.getDayCounter();
+        Date today = DateFactory.getFactory().getTodaysDate();
+        
+        //does not really have to be a handle
+        Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(100.0));
+        Handle<Quote> underlying = new Handle<Quote>(spot.getLink());
+        //does not really have to be a handle
+        Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.05));
+        Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
+        //does not really have to be a handle
+        Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.03));
+        Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+        //does not really have to be a handle
+        Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.20));
+        Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(vol, dc));
+    
+        Date exerciseDate = today.getDateAfter(Period.ONE_YEAR_FORWARD);
+        Exercise exercise = new EuropeanExercise(exerciseDate);
+        StrikedTypePayoff payoff = new PlainVanillaPayoff(Option.Type.CALL, 100);
+        
+        StochasticProcess process = new BlackScholesMertonProcess(underlying, qTS, rTS, volTS);
+        
+        // link to the same stochastic process, which shouldn't be changed
+        // by calling methods of either option
+
+        VanillaOption option1 = new EuropeanOption(process, payoff, exercise);
+        VanillaOption option2 = new EuropeanOption(process, payoff, exercise);
+
+        // test
+        double refValue = option2.getNPV();
+
+        Flag f;
+        //TODO check this
+        //f.registerWith(option2);
+
+        /*
+        option1.impliedVolatility(impliedVolatility(refValue*1.5, tolerance, maxEvaluations);
+
+        if (f.isUp())
+            BOOST_ERROR("implied volatility calculation triggered a change "
+                        "in another instrument");
+
+        option2->recalculate();
+        if (std::fabs(option2->NPV() - refValue) >= 1.0e-8)
+            BOOST_ERROR("implied volatility calculation changed the value "
+                        << "of another instrument: \n"
+                        << std::setprecision(8)
+                        << "previous value: " << refValue << "\n"
+                        << "current value:  " << option2->NPV());
+
+        vol->setValue(vol->value()*1.5);
+
+        if (!f.isUp())
+            BOOST_ERROR("volatility change not notified");
+
+        if (std::fabs(option2->NPV() - refValue) <= 1.0e-8)
+            BOOST_ERROR("volatility change did not cause the value to change");
+    
+    */
     }
 
     
