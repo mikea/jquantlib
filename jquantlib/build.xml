@@ -472,7 +472,22 @@
 		    
 		    <!-- compile -->
 		    
-		    <target name="compile" depends="dependencies,generate-resources" description="compile the source code of the project">
+			<target name="_verify-jdk">
+				<condition property="unsupported-jdk">
+					<or>
+						<equals arg1="${ant.java.version}" arg2="1.1"/>
+						<equals arg1="${ant.java.version}" arg2="1.2"/>
+						<equals arg1="${ant.java.version}" arg2="1.3"/>
+						<equals arg1="${ant.java.version}" arg2="1.4"/>
+						<equals arg1="${ant.java.version}" arg2="1.5"/>
+					</or>
+				</condition>
+				<fail if="unsupported-jdk">
+					${ant.project.name} requires JDK 1.6 or greater to continue
+				</fail>
+			</target>
+	
+		    <target name="compile" depends="_verify-jdk,dependencies,generate-resources" description="compile the source code of the project">
 			    <javac compiler="${options.javac.compiler}"
 				   srcdir="${project.build.src.main.java}" 
 				   excludes="${options.javac.excludes.main}"
@@ -507,7 +522,7 @@
 		    
 		    <!-- test-compile -->
 		    
-		    <target name="test-compile" depends="process-test-resources" if="reactor.compile.testcases" description="compile the test source code into the test destination directory">
+		    <target name="test-compile" depends="_verify-jdk,process-test-resources" if="reactor.compile.testcases" description="compile the test source code into the test destination directory">
 			<javac compiler="${options.javac.compiler}"
 			       srcdir="${project.build.src.test.java}" 
 			       excludes="${options.javac.excludes.test}"
