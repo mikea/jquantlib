@@ -251,6 +251,10 @@ public class OneAssetOption extends Option {
         return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
     }
     
+    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue, double tolerance, int maxEvalutions) /* @ReadOnly */ {
+        return impliedVolatility(targetValue, tolerance, maxEvalutions, 1.0e-7, 4.0);
+    }
+    
 
     //
     // private final methods

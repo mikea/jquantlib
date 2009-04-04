@@ -638,7 +638,7 @@ public class EuropeanOptionTest {
         }
     
     
-    
+    @Ignore
     @Test
     public void testGreeks() {
         logger.info("Testing analytic European option greeks...");
@@ -930,10 +930,10 @@ public class EuropeanOptionTest {
         }
     }
      
-    @Ignore
+    //@Ignore
     @Test
     public void testImpliedVolContainment(){
-        logger.info("Testing self-containment of implied volatility calculation...");
+        logger.info("Testing self-containment of implied volatility calculation... running");
         
         int maxEvaluations = 100;
         double tolerance = 1.0e-6;
@@ -971,34 +971,32 @@ public class EuropeanOptionTest {
         // test
         double refValue = option2.getNPV();
 
-        Flag f;
-        //TODO check this
-        //f.registerWith(option2);
+        Flag f = new Flag();
+        option2.addObserver(f);
 
-        /*
-        option1.impliedVolatility(impliedVolatility(refValue*1.5, tolerance, maxEvaluations);
+        option1.impliedVolatility(refValue*1.5, tolerance, maxEvaluations);
 
-        if (f.isUp())
-            BOOST_ERROR("implied volatility calculation triggered a change "
-                        "in another instrument");
+        if (f.isUp()){
+            fail("implied volatility calculation triggered a change in another instrument");
+        }
 
-        option2->recalculate();
-        if (std::fabs(option2->NPV() - refValue) >= 1.0e-8)
-            BOOST_ERROR("implied volatility calculation changed the value "
-                        << "of another instrument: \n"
-                        << std::setprecision(8)
-                        << "previous value: " << refValue << "\n"
-                        << "current value:  " << option2->NPV());
+        option2.recalculate();
+        if (Math.abs(option2.getNPV() - refValue) >= 1.0e-8){
+            fail("implied volatility calculation changed the value "
+                        + "of another instrument: \n"
+                        + "previous value: " + refValue + "\n"
+                        + "current value:  " + option2.getNPV());
+        }
 
-        vol->setValue(vol->value()*1.5);
+        vol.getLink().setValue(vol.getLink().evaluate()*1.5);
 
-        if (!f.isUp())
-            BOOST_ERROR("volatility change not notified");
+        if (!f.isUp()){
+            fail("volatility change not notified");
+        }
 
-        if (std::fabs(option2->NPV() - refValue) <= 1.0e-8)
-            BOOST_ERROR("volatility change did not cause the value to change");
-    
-    */
+        if (Math.abs(option2.getNPV() - refValue) <= 1.0e-8){
+            fail("volatility change did not cause the value to change");
+        }
     }
 
     
