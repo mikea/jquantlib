@@ -23,6 +23,9 @@ package org.jquantlib.math.optimization;
 
 public class SphereCylinderOptimizer {
 
+    /*
+     * non existing in version 0.8.1
+     */
     public SphereCylinderOptimizer() {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");

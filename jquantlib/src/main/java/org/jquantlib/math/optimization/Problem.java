@@ -41,18 +41,23 @@ public class Problem {
     //! number of evaluation of cost function and its gradient
     protected Integer functionEvaluation_, gradientEvaluation_;
 
-    public Problem(CostFunction costFunction, Constraint constraint, List<Double> initialValue){
-        if(initialValue == null){
-            initialValue = new ArrayList<Double>();
+    public Problem(CostFunction lsf, Constraint constraint, Array initialValue_){
+        if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+        
+        if(initialValue_ == null){
+            // TODO: what size?
+            //initialValue_ = Array();
         }
         /*this is crap*/
-        double [] temp = new double [initialValue.size()];
-        for(int i = 0; i<initialValue.size(); i++){
-            temp[i] = initialValue.get(i);
+        double [] temp = new double [initialValue_.size()];
+        for(int i = 0; i<initialValue_.size(); i++){
+            temp[i] = initialValue_.get(i);
         }
         
         this.currentValue_ = new Array(temp);
-        this.costFunction_ = costFunction;
+        this.costFunction_ = lsf;
         this.constraint_ = constraint;
     }
     

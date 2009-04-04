@@ -21,10 +21,24 @@
  */
 package org.jquantlib.math.optimization;
 
-public class LeastSquareProblem {
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
+
+public abstract class LeastSquareProblem {
     public LeastSquareProblem(){
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
     }
+    //! size of the problem ie size of target vector
+    public abstract int size();
+    //! compute the target vector and the values of the function to fit
+    public abstract void targetAndValue(Array x, Array target, Array fct2fit);
+    /*! compute the target vector, the values of the function to fit
+    and the matrix of derivatives
+     */
+    public abstract void targetValueAndGradient(final Array x,
+                                    Matrix grad_fct2fit,
+                                    Array target,
+                                    Array fct2fit);
 }

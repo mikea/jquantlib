@@ -45,6 +45,7 @@
 */
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
 
 //! Multi-dimensional Conjugate Gradient class.
@@ -66,10 +67,81 @@ public class ConjugateGradient extends LineSearchBasedMethod {
         }
     }
 
+    /*! Multi-dimensional Conjugate Gradient
+    (Fletcher-Reeves-Polak-Ribiere algorithm
+    adapted from Numerical Recipes in C, 2nd edition).
+     */
     @Override
     public CriteriaType minimize(Problem P, EndCriteria endCriteria) {
-        // TODO Auto-generated method stub
-        return null;
+        EndCriteria.CriteriaType ecType = EndCriteria.CriteriaType.None;
+        P.reset();
+        Array x_ = P.currentValue();
+        int iterationNumber_ = 0;
+        int stationaryStateIterationNumber_ = 0;
+        lineSearch_.setSearchDirection(new Array(x_.size()));
+        
+        boolean done = false;
+        
+        // function and squared norm of gradient values;
+        double fold, gold2;
+        double c;
+        double normdiff;
+        // clssical inital value for line-search step
+        double t = 1.0;
+        // Set gradient g at the size of the optimization problem search direction.
+        int sz = lineSearch_.searchDirection().size();
+        Array g = new Array(sz); Array d = new Array(sz); Array sddiff = new Array(sz);
+        // Initialize cost function and gradient g
+        P.setFunctionValue(P.valueAndGradient(g, x_));
+        lineSearch_.setSearchDirection(g.operatorMultiplyCopy(-1));
+        P.setGradientNormValue(Array.dotProduct(g, g));
+        // Loop over iterations
+        do{
+            // Linesearch
+            // FIXME: what are we doing here?
+            //t = (*lineSearch_)(P, ecType, endCriteria, t);
+            // don't throw: it can fail just because maxIterations exceeded
+            //QL_REQUIRE(lineSearch_->succeed(), "line-search failed!");
+            if (lineSearch_.succeed_)
+            {
+                // Updates
+                d = lineSearch_.searchDirection();
+                // New point
+                x_ = lineSearch_.lastX();
+                // New function value
+                fold = P.functionValue();
+                P.setFunctionValue(lineSearch_.lastFunctionValue());
+                // New gradient and search direction vectors
+                g = lineSearch_.lastGradient();
+                // orthogonalization coef
+                gold2 = P.gradientNormValue();
+                P.setGradientNormValue(lineSearch_.lastGradientNormNorm2());
+                //c = P.gradientNormValue() / gold2;
+                // conjugate gradient search direction
+                //sddiff = (-g + c * d) - lineSearch_->searchDirection();
+                //normdiff = std::sqrt(DotProduct(sddiff, sddiff));
+                //lineSearch_->searchDirection() = -g + c * d;
+                // End criteria
+                /* FIXME: This part will be remove in later versions of Quantlib --> to be reviewd!!
+                done = endCriteria(iterationNumber_,
+                                   stationaryStateIterationNumber_,
+                                   true,  //FIXME: it should be in the problem
+                                   fold,
+                                   Math.sqrt(gold2),
+                                   P.functionValue(),
+                                   Math.sqrt(P.gradientNormValue()),
+                                   ecType
+                                   // FIXME: it's never been used! ???
+                                   // , normdiff
+                                   );*/
+                // Increase interation number"
+                ++iterationNumber_;
+            } else {
+                done=true;
+            }
+        } while (!done);
+        P.setCurrentValue(x_);
+        return ecType;
+        }
     }
 
-}
