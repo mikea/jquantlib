@@ -49,13 +49,15 @@ public class PerformanceDriver {
 		populateMicroscopicTests();
 		populateMacroscopicTests();
 	}
+	
+	//TODO: code review
 	public void populateMicroscopicTests(){
-		microscopicTests.add(new Array());
-		microscopicTests.add(new PrimeNumbers());
-
+//		microscopicTests.add(new Array());
+//		microscopicTests.add(new PrimeNumbers());
 	}
+	
+	
 	public void populateMacroscopicTests(){
-
 	}
 
 	public static void main(String args[]){

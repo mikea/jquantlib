@@ -22,29 +22,30 @@
 
 package org.jquantlib.experimental;
 
-import org.joda.primitives.collection.DoubleCollection;
-import org.joda.primitives.collection.FloatCollection;
-import org.joda.primitives.list.impl.ArrayDoubleList;
+import java.util.Collection;
 
-import cern.colt.list.FloatArrayList;
+import org.joda.primitives.list.impl.ArrayDoubleList;
+import org.joda.primitives.list.impl.ArrayFloatList;
 
 public class PrimitiveCollectionAddVisitorImpl implements PrimitiveCollectionAddVisitor {
 
 	@Override
-	public boolean visitAddDoubleCollection(DoubleCollection collection, double value) {
+	public boolean visitAddDoubleCollection(Collection collection, double value) {
 		return collection.add(value);
 	}
 
 	@Override
-	public boolean visitAddFloatCollection(FloatCollection collection, float value) {
+	public boolean visitAddFloatCollection(Collection collection, float value) {
 		return collection.add(value);
 	}
 
 	public static void main(String[] args) {
 		PrimitiveCollectionAddVisitor v = PrimitiveCollectionAddVisitor.impl;
+		
 		ArrayDoubleList dal = new ArrayDoubleList();
 		v.visitAddDoubleCollection(dal, 6.66);
-		FloatArrayList fal = new FloatArrayList();
+		
+		ArrayFloatList fal = new ArrayFloatList();
 		v.visitAddFloatCollection(fal, 6.66f);
 	}
 }

@@ -22,17 +22,16 @@
 
 package org.jquantlib.experimental;
 
-import org.joda.primitives.collection.DoubleCollection;
-import org.joda.primitives.collection.FloatCollection;
+import java.util.Collection;
 
 public interface PrimitiveCollectionAddVisitor {
 
 	PrimitiveCollectionAddVisitor impl = new PrimitiveCollectionAddVisitorImpl();
 
 	// Must have same return type as the Collection.add method
-	boolean visitAddDoubleCollection(DoubleCollection collection, double value);
+	boolean visitAddDoubleCollection(Collection collection, double value);
 
-	boolean visitAddFloatCollection(FloatCollection list, float value);
+	boolean visitAddFloatCollection(Collection list, float value);
 	// ... etc etc
 
 }
