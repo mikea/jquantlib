@@ -28,6 +28,7 @@ import static org.junit.Assert.assertFalse;
 import org.jquantlib.math.integrals.SimpsonIntegral;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
+import org.jquantlib.math.interpolations.factories.MonotonicCubicSpline;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -58,7 +59,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
     @Ignore
 	@Test
 	public void testSplineErrorOnGaussianValues(){
-
+	    //System.setProperty("EXPERIMENTAL", "true");	    
 		logger.info("Testing spline approximation on Gaussian data sets...");
 		
 		int[] points = {5, 9, 17, 33};
@@ -66,9 +67,17 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	    // complete spline data from the original 1983 Hyman paper
 	    double[] tabulatedErrors = { 3.5e-2, 2.0e-3, 4.0e-5, 1.8e-6 };
 	    double[] toleranceOnTabErr = { 0.1e-2, 0.1e-3, 0.1e-5, 0.1e-6 };
+	    
+	    // (complete) MC spline data from the original 1983 Hyman paper
+	    // NB: with the improved Hyman filter from the Dougherty, Edelman, and
+	    //     Hyman 1989 paper the n=17 nonmonotonicity is not filtered anymore
+	    //     so the error agrees with the non MC method.
+	    double tabulatedMCErrors[]   = { 1.7e-2, 2.0e-3, 4.0e-5, 1.8e-6 };
+	    double toleranceOnTabMCErr[] = { 0.1e-2, 0.1e-3, 0.1e-5, 0.1e-6 };
+
 
 	    //TODO: check if SimpsonIntegral used correctly
-	    SimpsonIntegral integral = new SimpsonIntegral(1e-12, 0);
+	    SimpsonIntegral integral = new SimpsonIntegral(1e-12, 100);
 
 	    // still unexplained scale factor needed to obtain the numerical
 	    // results from the paper
@@ -88,17 +97,31 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		    		false)
 		    		.interpolate(x, y);
 	        
+	        interpolation.reload();
 	        //TODO: how to use the integral.integrate method which is the protected method?
-//	        double result = sqrt(integral.integrate (interpolation, -1.7, 1.9));
-//	        result /= scaleFactor;
-//	        assertFalse("Not-a-knot spline interpolation "
-//					+"\n    sample points:      "+n
-//					+"\n    norm of difference: "+result
-//					+"\n    it should be:       "+tabulatedErrors[i],
-//					abs(result-tabulatedErrors[i]) > toleranceOnTabErr[i]);
+	        double result = Math.sqrt(integral.evaluate(interpolation, -1.7, 1.9));//integrate (interpolation, -1.7, 1.9));
+	        result /= scaleFactor;
+	        assertFalse("Not-a-knot spline interpolation "
+					+"\n    sample points:      "+n
+					+"\n    norm of difference: "+result
+					+"\n    it should be:       "+tabulatedErrors[i],
+					abs(result-tabulatedErrors[i]) > toleranceOnTabErr[i]);
 	        
+	        // MC not-a-knot
+	        interpolation = new MonotonicCubicSpline(CubicSplineInterpolation.BoundaryCondition.NotAKnot,
+                    0.0,
+                    CubicSplineInterpolation.BoundaryCondition.NotAKnot,
+                    0.0)
+                    .interpolate(x, y);
+	        interpolation.reload();
+	        result = Math.sqrt(integral.evaluate(interpolation, -1.7, 1.9));
+	        result /= scaleFactor;
+	        assertFalse ("MC Not-a-knot spline interpolation "
+                    + "\n    sample points:      "
+                    + "\n    norm of difference: " + result
+                    + "\n    it should be:       " + tabulatedErrors[i], Math.abs(result-tabulatedMCErrors[i]) < toleranceOnTabMCErr[i]);
+	                
 	    }
-		
 	}
 
 	@Test

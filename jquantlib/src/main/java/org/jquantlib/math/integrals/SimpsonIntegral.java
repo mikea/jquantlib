@@ -57,7 +57,7 @@ public class SimpsonIntegral extends TrapezoidIntegral {
 	//
 	
 	public SimpsonIntegral(double accuracy) {
-		super(accuracy); // FIXME: code review :: what's the default "maxEvaluations" value???
+		super(accuracy, 0); 
 		if (System.getProperty("EXPERIMENTAL")==null) {
 		    throw new UnsupportedOperationException("Work in progress");
 		 }
