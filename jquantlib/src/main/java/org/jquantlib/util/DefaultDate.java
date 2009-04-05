@@ -461,9 +461,9 @@ public class DefaultDate extends BaseDate {
      */
     public static final DefaultDate getNthWeekday(final int nth, final Weekday dayOfWeek, final int month, final int year) {
         if (!(nth > 0))
-            throw new IllegalArgumentException("zeroth day of week in a given (month, year) is undefined");
+            throw new IllegalArgumentException("zeroth day of week in a given (month, year) is undefined"); //TODO: message
         if (!(nth < 6))
-            throw new IllegalArgumentException("no more than 5 weekday in a given (month, year)");
+            throw new IllegalArgumentException("no more than 5 weekday in a given (month, year)"); //TODO: message
         final int m = month;
         final int y = year;
         final int dow = dayOfWeek.toInteger();
@@ -703,6 +703,8 @@ public class DefaultDate extends BaseDate {
      * @see Updatable
      */
     public final Updatable<Date> getUpdatable() {
+        // The 'if' statement below could be avoided but it would imply on always create
+        // an additional Updatable object for every DefaultDate. 
         if (updatable==null) updatable = new UpdatableDate(this);
         return updatable;
     }
@@ -712,7 +714,7 @@ public class DefaultDate extends BaseDate {
     // inner classes
     //
     
-    //XXX private final UpdatableDate updatable = new UpdatableDate(this);
+    // Intentionally, we are not creating an Updatable object during instance initialization
     private UpdatableDate updatable = null;
     
     /**

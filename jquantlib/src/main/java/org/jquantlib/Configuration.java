@@ -33,7 +33,7 @@ import java.util.prefs.Preferences;
  * <p>
  * Singleton pattern is used for the system wide configuration. In an
  * application server environment, singleton instance could be by class loader
- * depending on scope of the jquantlib library to the module.
+ * depending on scope of the JQuantLib library to the module.
  * 
  * <p>
  * Each configuration can have one or more Settings. By default every

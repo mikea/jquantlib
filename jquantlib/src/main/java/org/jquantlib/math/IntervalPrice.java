@@ -44,7 +44,6 @@ import java.util.Iterator;
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
-import org.jquantlib.util.TimeSeriesDouble;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.MessageFormatter;
@@ -179,10 +178,10 @@ public class IntervalPrice implements Serializable {
         return result;
     }
 
-    public static TimeSeriesDouble extractComponent(final TimeSeries<IntervalPrice> ts, IntervalPrice.Type type) {
+    public static TimeSeries<Double> extractComponent(final TimeSeries<IntervalPrice> ts, IntervalPrice.Type type) {
         final Date[] dates = ts.dates();
         final double[] values = extractValues(ts, type);
-        return new TimeSeriesDouble(dates, values);
+        return new TimeSeries<Double>(dates, values) { /* anonymous */ };
     }
 
 	

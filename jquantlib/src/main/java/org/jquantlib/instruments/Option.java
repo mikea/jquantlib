@@ -44,6 +44,8 @@ import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for Options
@@ -51,6 +53,8 @@ import org.jquantlib.util.Date;
  * @author Richard Gomes
  */
 public abstract class Option extends NewInstrument {
+
+    // private final static Logger logger = LoggerFactory.getLogger(Option.class);
 
     //
     // protected final fields
@@ -84,6 +88,8 @@ public abstract class Option extends NewInstrument {
 		this.payoff = payoff;
 		this.exercise = exercise;
 		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+//		Exception e = new Exception();
+//		logger.debug(evaluationDate.toString(), e);
 		this.evaluationDate.addObserver(this);
 	}
 

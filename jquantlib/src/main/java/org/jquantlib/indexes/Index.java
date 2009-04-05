@@ -31,7 +31,6 @@ import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 import org.jquantlib.util.TimeSeries;
-import org.jquantlib.util.TimeSeriesDouble;
 
 /**
  * @author Srinivas Hasti
@@ -68,7 +67,7 @@ public abstract class Index implements Observable {
 	 * 
 	 * Returns the fixing TimeSeries
 	 */
-	public TimeSeriesDouble timeSeries() {
+	public TimeSeries<Double> timeSeries() {
 		return IndexManager.getInstance().get(getName());
 	}
 
@@ -90,8 +89,8 @@ public abstract class Index implements Observable {
 	 * The dates in the TimeSeries must be the actual calendar dates of the
 	 * fixings; no settlement days must be used.
 	 */
-	public void addFixings(TimeSeriesDouble t, boolean forceOverwrite) {
-		addFixings(t.dates(), t.values(), forceOverwrite);
+	public void addFixings(TimeSeries<Double> t, boolean forceOverwrite) {
+		addFixings(t.dates(), t.valuesAsDoubles(), forceOverwrite);
 	}
 
 	
@@ -103,7 +102,7 @@ public abstract class Index implements Observable {
 	 */
 	public void addFixings(final Date[] dates, final double[] values, boolean forceOverwrite) {
 		final String tag = getName();
-		final TimeSeriesDouble h = IndexManager.getInstance().get(tag);
+		final TimeSeries<Double> h = IndexManager.getInstance().get(tag);
 		boolean missingFixing;
 		boolean validFixing;
 		boolean noInvalidFixing = true;
@@ -120,8 +119,7 @@ public abstract class Index implements Observable {
 		    Double value = values[i];
             validFixing = isValidFixingDate(date);
             double currentValue = h.find(date);
-            missingFixing = forceOverwrite
-                    || Closeness.isClose(currentValue, nullValue);
+            missingFixing = forceOverwrite || Closeness.isClose(currentValue, nullValue);
             if (validFixing) {
                 if (missingFixing)
                     h.add(date, value);
@@ -143,12 +141,12 @@ public abstract class Index implements Observable {
 		if (!noInvalidFixing)
 			throw new IllegalStateException(
 					"At least one invalid fixing provided: " + invalidDate
-							+ ", " + invalidValue);
+							+ ", " + invalidValue); // TODO: message
 
 		if (!noDuplicatedFixing)
 			throw new IllegalStateException(
 					"At least one duplicated fixing provided: "
-							+ duplicatedDate + ", " + duplicatedValue);
+							+ duplicatedDate + ", " + duplicatedValue); // TODO: message
 	}
 
 	/**

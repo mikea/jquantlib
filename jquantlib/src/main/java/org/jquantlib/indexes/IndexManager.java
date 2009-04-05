@@ -26,10 +26,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.ObservableValue;
-import org.jquantlib.util.TimeSeriesDouble;
+import org.jquantlib.util.TimeSeries;
 
 //FIXME: code review
-public class IndexManager extends ConcurrentHashMap<String, TimeSeriesDouble> {
+public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> {
 
     private static final long serialVersionUID = 1L;
 	/**
@@ -51,12 +51,12 @@ public class IndexManager extends ConcurrentHashMap<String, TimeSeriesDouble> {
 	}
 	
 	public Observable notifier(String name) {
-		TimeSeriesDouble value = super.get(name);
-		if(value == null){
-			value = new TimeSeriesDouble();
+	    TimeSeries<Double> value = super.get(name);
+		if (value == null){
+			value = new TimeSeries<Double>(){ /* anonymous class */ };
 			super.put(name, value);
 		}
-		return new ObservableValue<TimeSeriesDouble>(value);
+		return new ObservableValue<TimeSeries<Double>>(value);
 	}
 
 	public void clearHistory(String name){

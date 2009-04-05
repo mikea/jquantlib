@@ -39,12 +39,12 @@
 
 package org.jquantlib.model.volatility;
 
-import org.jquantlib.util.TimeSeriesDouble;
+import org.jquantlib.util.TimeSeries;
 
 public interface VolatilityCompositor {
 
-	public void calibrate(final TimeSeriesDouble timeSeries);
+	public void calibrate(final TimeSeries<Double> timeSeries);
 
-	public TimeSeriesDouble calculate(final TimeSeriesDouble volatilitySeries);
+	public TimeSeries<Double> calculate(final TimeSeries<Double> volatilitySeries);
 
 }

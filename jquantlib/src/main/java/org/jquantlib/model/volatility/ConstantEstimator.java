@@ -41,7 +41,6 @@ package org.jquantlib.model.volatility;
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
-import org.jquantlib.util.TimeSeriesDouble;
 
 /**
  * Constant-estimator volatility model
@@ -53,34 +52,33 @@ import org.jquantlib.util.TimeSeriesDouble;
 // TODO : Test cases
 public class ConstantEstimator implements VolatilityCompositor {
 
-	private/* @NonNegative */int size_;
+	private/* @NonNegative */int size;
 
 	public ConstantEstimator(final/* @NonNegative */int size) {
-		this.size_ = size;
+		this.size = size;
 	}
 
 	@Override
-	public void calibrate(final TimeSeriesDouble timeSeries) {
+	public void calibrate(final TimeSeries<Double> timeSeries) {
 		// nothing
 	}
 
 	@Override
-	public TimeSeriesDouble calculate(final TimeSeriesDouble volatilitySeries) {
+	public TimeSeries<Double> calculate(final TimeSeries<Double> volatilitySeries) {
 		final Date[] dates = volatilitySeries.dates();
-		final double[] values = volatilitySeries.values();
-		TimeSeriesDouble retval = new TimeSeriesDouble();
+		final double[] values = volatilitySeries.valuesAsDoubles();
+		final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */};
 
-		for (int i = size_; i < volatilitySeries.size(); i++) {
+		for (int i = size; i < volatilitySeries.size(); i++) {
 			double sumu2 = 0.0, sumu = 0.0;
-			for (int j = i - size_; j < i; j++) {
+			for (int j = i - size; j < i; j++) {
 				double uj = values[j];
 				sumu += uj;
 				sumu2 += uj * uj;
 			}
-			double dsize = (double) size_;
-			double s = Math.sqrt(sumu2 / dsize - sumu * sumu / dsize
-					/ (dsize + 1));
-			retval.add(dates[i], s);
+			double dsize = (double) size;
+			double s = Math.sqrt(sumu2 / dsize - sumu * sumu / dsize / (dsize + 1));
+			retval.addDouble(dates[i], s);
 		}
 		return retval;
 	}

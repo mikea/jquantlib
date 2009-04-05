@@ -41,7 +41,6 @@ package org.jquantlib.model.volatility;
 
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
-import org.jquantlib.util.TimeSeriesDouble;
 
 /**
  * Simple Local Estimator volatility model
@@ -59,18 +58,17 @@ public class SimpleLocalEstimator {
         this.yearFraction = y;
     }
     
-    //FIXME: PERFORMANCE:: We should use (maybe!) a specialized TimeSeries backed by a double[] instead of a Double[]
-    public TimeSeriesDouble calculate(final TimeSeriesDouble quoteSeries) {
+    public TimeSeries<Double> calculate(final TimeSeries<Double> quoteSeries) {
         final Date[] dates = quoteSeries.dates();
-        final /*@Volatility*/ double[] values = quoteSeries.values();
-    	TimeSeriesDouble retval = new TimeSeriesDouble();
-    	Double prev = null ;
-    	Double cur  = null;
+        final /*@Volatility*/ double[] values = quoteSeries.valuesAsDoubles();
+        final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
+    	double prev = Double.NaN;
+    	double cur  = Double.NaN;
     	for (int i = 1; i < values.length; i++) {
     		cur = values[i] ;
     		prev = values[i-1];
     		double s = Math.abs(Math.log(cur/prev))/Math.sqrt(yearFraction) ;
-    		retval.add(dates[i], s);
+    		retval.addDouble(dates[i], s);
     	}
         return retval;
     }

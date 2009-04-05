@@ -44,7 +44,6 @@ import java.util.Collection;
 import org.jquantlib.math.IntervalPrice;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
-import org.jquantlib.util.TimeSeriesDouble;
 
 /**
  * Garman-Klass volatility model
@@ -66,12 +65,12 @@ public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<In
 	}
 
 	@Override
-	public TimeSeriesDouble calculate(TimeSeries<IntervalPrice> quoteSeries) {
+	public TimeSeries<Double> calculate(TimeSeries<IntervalPrice> quoteSeries) {
 		final Date[] dates = quoteSeries.dates();
 		final Collection<IntervalPrice> values = quoteSeries.values();
-		TimeSeriesDouble retval = new TimeSeriesDouble();	
-		int i =0;
-		for (IntervalPrice cur: values) {
+		final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };	
+		int i = 0;
+		for (IntervalPrice cur : values) {
 			double s = Math.sqrt(Math.abs(calculatePoint(cur)) / yearFraction);
 			retval.add(dates[i++], s);
 		}

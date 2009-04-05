@@ -27,6 +27,8 @@ import java.util.prefs.Preferences;
 import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Settings for the application.
@@ -50,6 +52,8 @@ import org.jquantlib.util.DateFactory;
 //
 
 public class Settings {
+
+    // private final static Logger logger = LoggerFactory.getLogger(Settings.class);
 
     private static boolean defaultTodaysPayments = false;
 
@@ -158,6 +162,8 @@ public class Settings {
      */
     public void setEvaluationDate(final Date evaluationDate) {
         this.evaluationDate.getUpdatable().update(evaluationDate);
+//        Exception e = new Exception();
+//        logger.debug(evaluationDate.toString(), e);
     }
 
 }

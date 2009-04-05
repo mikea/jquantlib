@@ -47,11 +47,7 @@ import org.jquantlib.model.volatility.VolatilityCompositor;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultDate;
 import org.jquantlib.util.Month;
-import org.jquantlib.util.TimeSeriesDouble;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.jquantlib.util.TimeSeries;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,49 +56,37 @@ public class EstimatorsTest {
 
     private final static Logger logger = LoggerFactory.getLogger(EstimatorsTest.class);
 
-	private static TimeSeriesDouble ts ;
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	    logger.info("Testing volatility model construction...");
+	private final TimeSeries<Double> ts ;
+	
+	
+	public EstimatorsTest() {
+        logger.info("Testing volatility model construction...");
+        
+        final Date[] dates = new Date[] { 
+                new DefaultDate(25, Month.MARCH, 2005), 
+                new DefaultDate(29, Month.MARCH, 2005),
+                new DefaultDate(15, Month.MARCH, 2005), 
+                new DefaultDate(21, Month.MARCH, 2005),
+                new DefaultDate(27, Month.MARCH, 2005) };
 
-	    Date[] dates = new Date[] {
-                           new DefaultDate(25, Month.MARCH, 2005),
-                           new DefaultDate(29, Month.MARCH, 2005),
-                           new DefaultDate(15, Month.MARCH, 2005),
-                           new DefaultDate(21, Month.MARCH, 2005),
-                           new DefaultDate(27, Month.MARCH, 2005) };
-	    
-	    double[] values =new double[]{1.2, 2.3, 0.3, 2.0, 2.5};
-	    
-	    ts = new TimeSeriesDouble(dates, values);
-	}
+        final double[] values = new double[] { 1.2, 2.3, 0.3, 2.0, 2.5 };
 
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
-	//TODO The testcase for the Simple Estimator. Uncomment once SimpleEstimator is translated.
+        ts = new TimeSeries<Double>(dates, values) { /* anonymous */ };
+    }
+	
 	@Test
 	public void testSECalculate() {
-	    SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
-	    TimeSeriesDouble locale = sle.calculate(ts);
+	    final SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
+	    final TimeSeries<Double> locale = sle.calculate(ts);
 		assertNotNull(locale) ;
 	}
 	
 	@Test
 	public void testCECalculate() {
-	    SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
-	    TimeSeriesDouble locale = sle.calculate(ts);
-		VolatilityCompositor ce = new ConstantEstimator(1);
-		TimeSeriesDouble value = ce.calculate(locale);
+	    final SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
+	    final TimeSeries<Double> locale = sle.calculate(ts);
+		final VolatilityCompositor ce = new ConstantEstimator(1);
+		final TimeSeries<Double> value = ce.calculate(locale);
 		assertNotNull(value) ;
 	}
 

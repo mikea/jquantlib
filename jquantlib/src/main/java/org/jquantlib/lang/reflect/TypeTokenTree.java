@@ -1,14 +1,18 @@
 package org.jquantlib.lang.reflect;
 
-import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 
 /**
+ * TypeTokenTree is a helper class intended to return a {@link TypeNode} root.
+ * <p>
+ * A typical usage consists on obtain a {@link TypeNode} root which can be used to traverse a hierarchy of generic parameters.
+ * 
+ * @see <a href="http://www.jquantlib.org/index.php/Using_TypeTokens_to_retrieve_generic_parameters">Using TypeTokens to retrieve generic parameters</a>
+ * @see TypeNode
+ * 
  * @author Richard Gomes 
  */
-//TODO: add comments and explain what this class is about
 public class TypeTokenTree {
 
     private final TypeNode root;
@@ -28,7 +32,7 @@ public class TypeTokenTree {
     private TypeNode retrieve(final Class<?> klass) {
         final Type superclass = klass.getGenericSuperclass();
         if (superclass instanceof Class) {
-            throw new IllegalArgumentException(ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED);
+            throw new TypeNotPresentException(ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED, new ClassCastException());
         }
         
         final TypeNode node = new TypeNode(klass);

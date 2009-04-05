@@ -88,7 +88,6 @@ import org.jquantlib.time.Period;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +108,7 @@ public class EuropeanOptionTest {
     public EuropeanOptionTest() {
         logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        this.today = settings.getEvaluationDate();      
+        this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
     }
     
     
@@ -638,7 +637,6 @@ public class EuropeanOptionTest {
         }
     
     
-    @Ignore
     @Test
     public void testGreeks() {
         logger.info("Testing analytic European option greeks...");
@@ -678,7 +676,7 @@ public class EuropeanOptionTest {
           for (int j=0; j<strikes.length; j++) {
             for (int k=0; k<residualTimes.length; k++) {
             
-                final Date exDate = today.getDateAfter( timeToDays(residualTimes[k]) );
+                final Date exDate = today.getDateAfter( timeToDays(residualTimes[k]) ); //TODO: code review
                 final Exercise exercise = new EuropeanExercise(exDate);
 
                 for (int kk=0; kk<4; kk++) {

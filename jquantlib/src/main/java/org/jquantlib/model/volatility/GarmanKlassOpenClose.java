@@ -43,7 +43,6 @@ import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.IntervalPrice;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
-import org.jquantlib.util.TimeSeriesDouble;
 
 /**
  * This template factors out common functionality found in classes which rely on the difference between the previous day's close
@@ -83,10 +82,10 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
 	//
 	
 	@Override
-	public TimeSeriesDouble calculate(final TimeSeries<IntervalPrice> quoteSeries) {
+	public TimeSeries<Double> calculate(final TimeSeries<IntervalPrice> quoteSeries) {
 		final Date[] dates = quoteSeries.dates();
 		final IntervalPrice[] values = quoteSeries.values().toArray(new IntervalPrice[0]);
-		TimeSeriesDouble retval = new TimeSeriesDouble();
+		final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
 		IntervalPrice prev = null;
 		IntervalPrice cur = null;
 		for (int i = 1; i < values.length; i++) {
