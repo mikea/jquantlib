@@ -29,7 +29,6 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
-import org.jquantlib.lang.reflect.TypeNode;
 import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.IntervalPrice;
 import org.slf4j.Logger;
@@ -58,6 +57,7 @@ public class TimeSeries<T> {
     private final static String USE_FINDDOUBLE_INSTEAD      = "findDouble(Date) expected";
     private final static String USE_VALUESASDOUBLES_INSTEAD = "valuesAsDoubles() expected";
 
+    
     //
     // private fields
     //
@@ -71,17 +71,14 @@ public class TimeSeries<T> {
     //
     
     public TimeSeries() {
-        final TypeNode root = new TypeTokenTree(this.getClass()).getRoot();
-        final TypeNode node = root.get(0);
-        Class klass = node==null ? Double.class : node.getElement();
-        if ((node==null) || (Double.class.isAssignableFrom(klass))) {
+        this.klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+        if (Double.class.isAssignableFrom(klass)) {
             this.delegate = new SeriesDouble<T>();
         } else if (IntervalPrice.class.isAssignableFrom(klass)) {
             this.delegate = new SeriesIntervalPrice<T>();
         } else {
             throw new UnsupportedOperationException("only Double and IntervalPrice are supported");
         }
-        this.klass = klass;
     }
 
     public TimeSeries(final Date[] dates, final T[] values) {
@@ -130,6 +127,7 @@ public class TimeSeries<T> {
         }
     }
 
+    
     //
     // public methods
     //
@@ -260,6 +258,9 @@ public class TimeSeries<T> {
     // private inner classes
     //
 
+    /**
+     * This TimeSeries implementation is a specialised to work with {@link IntervalPrice} 
+     */
     private class SeriesIntervalPrice<T> implements Series<T> {
         
         private final NavigableMap<Date, T> map;
@@ -320,6 +321,9 @@ public class TimeSeries<T> {
     }
     
 
+    /**
+     * This TimeSeries implementation is specialised to work with a single price value 
+     */
     private class SeriesDouble<T> implements Series<T> {
         
         
