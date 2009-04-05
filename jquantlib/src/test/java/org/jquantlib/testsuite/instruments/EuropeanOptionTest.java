@@ -678,7 +678,7 @@ public class EuropeanOptionTest {
           for (int j=0; j<strikes.length; j++) {
             for (int k=0; k<residualTimes.length; k++) {
             
-                final Date exDate = today.getDateAfter( timeToDays(residualTimes[i]) );
+                final Date exDate = today.getDateAfter( timeToDays(residualTimes[k]) );
                 final Exercise exercise = new EuropeanExercise(exDate);
 
                 for (int kk=0; kk<4; kk++) {
