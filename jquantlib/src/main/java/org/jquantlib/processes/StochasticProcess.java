@@ -66,6 +66,13 @@ public abstract class StochasticProcess implements Observable, Observer {
 
 	private Discretization discretization;
 	
+	//TODO: done to get Praneet's work compiling
+	protected StochasticProcess(){
+	    if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+	}
+	
 	/**
 	 * @param discretization is an Object that <b>must</b> implement {@link Discretization}.
 	 */

@@ -13,25 +13,35 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
+
 
 package org.jquantlib.math.statistics;
 
 /**
  * @author Richard Gomes
  */
-public class Statistics {
-    
-    
-	public Double mean(){ return 0.0; }
-	public Double standardDeviation(){ return 0.0; }
+public class StatisticsImpl {
+    public Double mean() {
+        return 0.0;
+    }
 
-	public Double  skewness(){ return 0.0;}
-	public Double  kurtosis(){ return 0.0;}
-	
+    public Double standardDeviation() {
+        return 0.0;
+    }
+
+    public Double skewness() {
+        return 0.0;
+    }
+
+    public Double kurtosis() {
+        return 0.0;
+    }
+
     // FIXME: Decide if it's a class, interface or if we simply get rid of it
-
 }
+

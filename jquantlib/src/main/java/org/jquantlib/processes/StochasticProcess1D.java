@@ -58,6 +58,8 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     	this.discretization1D = discretization;
     }
 
+    public StochasticProcess1D() {}
+
     /**
      * Returns the initial value of the state variable
      */ 
