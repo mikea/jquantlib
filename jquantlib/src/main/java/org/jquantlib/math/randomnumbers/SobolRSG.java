@@ -124,6 +124,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 	private static final long dim38SLinitializers[] = {1, 3, 1, 1, 9, 27, 89, 7, 0};
 	private static final long dim39SLinitializers[] = {1, 1, 3, 7, 31, 15, 45, 23, 0};
 	private static final long dim40SLinitializers[] = {1, 3, 3, 9, 9, 25, 107, 39, 0};
+	
 	private final long[][] SLinitializers = {
 		dim02SLinitializers,
 		dim03SLinitializers,
@@ -166,6 +167,47 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 		dim40SLinitializers
 	};
 	
+    private final int sizeSLinitializers 
+        = dim02SLinitializers.length
+        + dim03SLinitializers.length
+        + dim04SLinitializers.length
+        + dim05SLinitializers.length
+        + dim06SLinitializers.length
+        + dim07SLinitializers.length
+        + dim08SLinitializers.length
+        + dim09SLinitializers.length
+        + dim10SLinitializers.length
+        + dim11SLinitializers.length
+        + dim12SLinitializers.length
+        + dim13SLinitializers.length
+        + dim14SLinitializers.length
+        + dim15SLinitializers.length
+        + dim16SLinitializers.length
+        + dim17SLinitializers.length
+        + dim18SLinitializers.length
+        + dim19SLinitializers.length
+        + dim20SLinitializers.length
+        + dim21SLinitializers.length
+        + dim22SLinitializers.length
+        + dim23SLinitializers.length
+        + dim24SLinitializers.length
+        + dim25SLinitializers.length
+        + dim26SLinitializers.length
+        + dim27SLinitializers.length
+        + dim28SLinitializers.length
+        + dim29SLinitializers.length
+        + dim30SLinitializers.length
+        + dim31SLinitializers.length
+        + dim32SLinitializers.length
+        + dim33SLinitializers.length
+        + dim34SLinitializers.length
+        + dim35SLinitializers.length
+        + dim36SLinitializers.length
+        + dim37SLinitializers.length
+        + dim38SLinitializers.length
+        + dim39SLinitializers.length
+        + dim40SLinitializers.length;
+    
 	// coefficients of the free direction integers as given in "Monte Carlo Methods in Finance", by Peter Jaeckel, section 8.3
 	private static final long dim09initializers[] = {1, 3, 7, 7, 21, 0};
 	private static final long dim10initializers[] = {1, 1, 5, 11, 27, 0};
@@ -224,6 +266,40 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 		dim31initializers,
 		dim32initializers
 	};
+	
+	private final int sizeInitializers 
+        = dim02SLinitializers.length
+        + dim03SLinitializers.length
+        + dim04SLinitializers.length
+        + dim05SLinitializers.length
+        + dim06SLinitializers.length
+        + dim07SLinitializers.length
+        + dim08SLinitializers.length
+        + dim09initializers.length
+        + dim10initializers.length
+        + dim11initializers.length
+        + dim12initializers.length
+        + dim13initializers.length
+        + dim14initializers.length
+        + dim15initializers.length
+        + dim16initializers.length
+        + dim17initializers.length
+        + dim18initializers.length
+        + dim19initializers.length
+        + dim20initializers.length
+        + dim21initializers.length
+        + dim22initializers.length
+        + dim23initializers.length
+        + dim24initializers.length
+        + dim25initializers.length
+        + dim26initializers.length
+        + dim27initializers.length
+        + dim28initializers.length
+        + dim29initializers.length
+        + dim30initializers.length
+        + dim31initializers.length
+        + dim32initializers.length;
+	    
 	
 	// Lemieux coefficients of the free direction integers as given in Christiane Lemieux, private communication, September 2004
 	private static final long dim041Linitializers[] = {1, 1, 3, 13, 7, 35, 61, 91, 0};
@@ -546,6 +622,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 	private static final long dim358Linitializers[] = {1, 1, 1, 1, 19, 9, 125, 157, 119, 283, 1721, 743, 0};
 	private static final long dim359Linitializers[] = {1, 1, 7, 3, 1, 7, 61, 71, 119, 257, 1227, 2893, 0};
 	private static final long dim360Linitializers[] = {1, 3, 3, 3, 25, 41, 25, 225, 31, 57, 925, 2139, 0};
+	
 	private static final long[][] Linitializers = {
 		dim02SLinitializers,
 		dim03SLinitializers,
@@ -908,7 +985,367 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 		dim360Linitializers
 	};
 	
-	
+	   private final int sizeLinitializers 
+       = dim02SLinitializers.length
+       + dim03SLinitializers.length
+       + dim04SLinitializers.length
+       + dim05SLinitializers.length
+       + dim06SLinitializers.length
+       + dim07SLinitializers.length
+       + dim08SLinitializers.length
+       + dim09SLinitializers.length
+       + dim10SLinitializers.length
+       + dim11SLinitializers.length
+       + dim12SLinitializers.length
+       + dim13SLinitializers.length
+       + dim14SLinitializers.length
+       + dim15SLinitializers.length
+       + dim16SLinitializers.length
+       + dim17SLinitializers.length
+       + dim18SLinitializers.length
+       + dim19SLinitializers.length
+       + dim20SLinitializers.length
+       + dim21SLinitializers.length
+       + dim22SLinitializers.length
+       + dim23SLinitializers.length
+       + dim24SLinitializers.length
+       + dim25SLinitializers.length
+       + dim26SLinitializers.length
+       + dim27SLinitializers.length
+       + dim28SLinitializers.length
+       + dim29SLinitializers.length
+       + dim30SLinitializers.length
+       + dim31SLinitializers.length
+       + dim32SLinitializers.length
+       + dim33SLinitializers.length
+       + dim34SLinitializers.length
+       + dim35SLinitializers.length
+       + dim36SLinitializers.length
+       + dim37SLinitializers.length
+       + dim38SLinitializers.length
+       + dim39SLinitializers.length
+       + dim40SLinitializers.length
+       + dim041Linitializers.length
+       + dim042Linitializers.length
+       + dim043Linitializers.length
+       + dim044Linitializers.length
+       + dim045Linitializers.length
+       + dim046Linitializers.length
+       + dim047Linitializers.length
+       + dim048Linitializers.length
+       + dim049Linitializers.length
+       + dim050Linitializers.length
+       + dim051Linitializers.length
+       + dim052Linitializers.length
+       + dim053Linitializers.length
+       + dim054Linitializers.length
+       + dim055Linitializers.length
+       + dim056Linitializers.length
+       + dim057Linitializers.length
+       + dim058Linitializers.length
+       + dim059Linitializers.length
+       + dim060Linitializers.length
+       + dim061Linitializers.length
+       + dim062Linitializers.length
+       + dim063Linitializers.length
+       + dim064Linitializers.length
+       + dim065Linitializers.length
+       + dim066Linitializers.length
+       + dim067Linitializers.length
+       + dim068Linitializers.length
+       + dim069Linitializers.length
+       + dim070Linitializers.length
+       + dim071Linitializers.length
+       + dim072Linitializers.length
+       + dim073Linitializers.length
+       + dim074Linitializers.length
+       + dim075Linitializers.length
+       + dim076Linitializers.length
+       + dim077Linitializers.length
+       + dim078Linitializers.length
+       + dim079Linitializers.length
+       + dim080Linitializers.length
+       + dim081Linitializers.length
+       + dim082Linitializers.length
+       + dim083Linitializers.length
+       + dim084Linitializers.length
+       + dim085Linitializers.length
+       + dim086Linitializers.length
+       + dim087Linitializers.length
+       + dim088Linitializers.length
+       + dim089Linitializers.length
+       + dim090Linitializers.length
+       + dim091Linitializers.length
+       + dim092Linitializers.length
+       + dim093Linitializers.length
+       + dim094Linitializers.length
+       + dim095Linitializers.length
+       + dim096Linitializers.length
+       + dim097Linitializers.length
+       + dim098Linitializers.length
+       + dim099Linitializers.length
+       + dim100Linitializers.length
+       + dim101Linitializers.length
+       + dim102Linitializers.length
+       + dim103Linitializers.length
+       + dim104Linitializers.length
+       + dim105Linitializers.length
+       + dim106Linitializers.length
+       + dim107Linitializers.length
+       + dim108Linitializers.length
+       + dim109Linitializers.length
+       + dim110Linitializers.length
+       + dim111Linitializers.length
+       + dim112Linitializers.length
+       + dim113Linitializers.length
+       + dim114Linitializers.length
+       + dim115Linitializers.length
+       + dim116Linitializers.length
+       + dim117Linitializers.length
+       + dim118Linitializers.length
+       + dim119Linitializers.length
+       + dim120Linitializers.length
+       + dim121Linitializers.length
+       + dim122Linitializers.length
+       + dim123Linitializers.length
+       + dim124Linitializers.length
+       + dim125Linitializers.length
+       + dim126Linitializers.length
+       + dim127Linitializers.length
+       + dim128Linitializers.length
+       + dim129Linitializers.length
+       + dim130Linitializers.length
+       + dim131Linitializers.length
+       + dim132Linitializers.length
+       + dim133Linitializers.length
+       + dim134Linitializers.length
+       + dim135Linitializers.length
+       + dim136Linitializers.length
+       + dim137Linitializers.length
+       + dim138Linitializers.length
+       + dim139Linitializers.length
+       + dim140Linitializers.length
+       + dim141Linitializers.length
+       + dim142Linitializers.length
+       + dim143Linitializers.length
+       + dim144Linitializers.length
+       + dim145Linitializers.length
+       + dim146Linitializers.length
+       + dim147Linitializers.length
+       + dim148Linitializers.length
+       + dim149Linitializers.length
+       + dim150Linitializers.length
+       + dim151Linitializers.length
+       + dim152Linitializers.length
+       + dim153Linitializers.length
+       + dim154Linitializers.length
+       + dim155Linitializers.length
+       + dim156Linitializers.length
+       + dim157Linitializers.length
+       + dim158Linitializers.length
+       + dim159Linitializers.length
+       + dim160Linitializers.length
+       + dim161Linitializers.length
+       + dim162Linitializers.length
+       + dim163Linitializers.length
+       + dim164Linitializers.length
+       + dim165Linitializers.length
+       + dim166Linitializers.length
+       + dim167Linitializers.length
+       + dim168Linitializers.length
+       + dim169Linitializers.length
+       + dim170Linitializers.length
+       + dim171Linitializers.length
+       + dim172Linitializers.length
+       + dim173Linitializers.length
+       + dim174Linitializers.length
+       + dim175Linitializers.length
+       + dim176Linitializers.length
+       + dim177Linitializers.length
+       + dim178Linitializers.length
+       + dim179Linitializers.length
+       + dim180Linitializers.length
+       + dim181Linitializers.length
+       + dim182Linitializers.length
+       + dim183Linitializers.length
+       + dim184Linitializers.length
+       + dim185Linitializers.length
+       + dim186Linitializers.length
+       + dim187Linitializers.length
+       + dim188Linitializers.length
+       + dim189Linitializers.length
+       + dim190Linitializers.length
+       + dim191Linitializers.length
+       + dim192Linitializers.length
+       + dim193Linitializers.length
+       + dim194Linitializers.length
+       + dim195Linitializers.length
+       + dim196Linitializers.length
+       + dim197Linitializers.length
+       + dim198Linitializers.length
+       + dim199Linitializers.length
+       + dim200Linitializers.length
+       + dim201Linitializers.length
+       + dim202Linitializers.length
+       + dim203Linitializers.length
+       + dim204Linitializers.length
+       + dim205Linitializers.length
+       + dim206Linitializers.length
+       + dim207Linitializers.length
+       + dim208Linitializers.length
+       + dim209Linitializers.length
+       + dim210Linitializers.length
+       + dim211Linitializers.length
+       + dim212Linitializers.length
+       + dim213Linitializers.length
+       + dim214Linitializers.length
+       + dim215Linitializers.length
+       + dim216Linitializers.length
+       + dim217Linitializers.length
+       + dim218Linitializers.length
+       + dim219Linitializers.length
+       + dim220Linitializers.length
+       + dim221Linitializers.length
+       + dim222Linitializers.length
+       + dim223Linitializers.length
+       + dim224Linitializers.length
+       + dim225Linitializers.length
+       + dim226Linitializers.length
+       + dim227Linitializers.length
+       + dim228Linitializers.length
+       + dim229Linitializers.length
+       + dim230Linitializers.length
+       + dim231Linitializers.length
+       + dim232Linitializers.length
+       + dim233Linitializers.length
+       + dim234Linitializers.length
+       + dim235Linitializers.length
+       + dim236Linitializers.length
+       + dim237Linitializers.length
+       + dim238Linitializers.length
+       + dim239Linitializers.length
+       + dim240Linitializers.length
+       + dim241Linitializers.length
+       + dim242Linitializers.length
+       + dim243Linitializers.length
+       + dim244Linitializers.length
+       + dim245Linitializers.length
+       + dim246Linitializers.length
+       + dim247Linitializers.length
+       + dim248Linitializers.length
+       + dim249Linitializers.length
+       + dim250Linitializers.length
+       + dim251Linitializers.length
+       + dim252Linitializers.length
+       + dim253Linitializers.length
+       + dim254Linitializers.length
+       + dim255Linitializers.length
+       + dim256Linitializers.length
+       + dim257Linitializers.length
+       + dim258Linitializers.length
+       + dim259Linitializers.length
+       + dim260Linitializers.length
+       + dim261Linitializers.length
+       + dim262Linitializers.length
+       + dim263Linitializers.length
+       + dim264Linitializers.length
+       + dim265Linitializers.length
+       + dim266Linitializers.length
+       + dim267Linitializers.length
+       + dim268Linitializers.length
+       + dim269Linitializers.length
+       + dim270Linitializers.length
+       + dim271Linitializers.length
+       + dim272Linitializers.length
+       + dim273Linitializers.length
+       + dim274Linitializers.length
+       + dim275Linitializers.length
+       + dim276Linitializers.length
+       + dim277Linitializers.length
+       + dim278Linitializers.length
+       + dim279Linitializers.length
+       + dim280Linitializers.length
+       + dim281Linitializers.length
+       + dim282Linitializers.length
+       + dim283Linitializers.length
+       + dim284Linitializers.length
+       + dim285Linitializers.length
+       + dim286Linitializers.length
+       + dim287Linitializers.length
+       + dim288Linitializers.length
+       + dim289Linitializers.length
+       + dim290Linitializers.length
+       + dim291Linitializers.length
+       + dim292Linitializers.length
+       + dim293Linitializers.length
+       + dim294Linitializers.length
+       + dim295Linitializers.length
+       + dim296Linitializers.length
+       + dim297Linitializers.length
+       + dim298Linitializers.length
+       + dim299Linitializers.length
+       + dim300Linitializers.length
+       + dim301Linitializers.length
+       + dim302Linitializers.length
+       + dim303Linitializers.length
+       + dim304Linitializers.length
+       + dim305Linitializers.length
+       + dim306Linitializers.length
+       + dim307Linitializers.length
+       + dim308Linitializers.length
+       + dim309Linitializers.length
+       + dim310Linitializers.length
+       + dim311Linitializers.length
+       + dim312Linitializers.length
+       + dim313Linitializers.length
+       + dim314Linitializers.length
+       + dim315Linitializers.length
+       + dim316Linitializers.length
+       + dim317Linitializers.length
+       + dim318Linitializers.length
+       + dim319Linitializers.length
+       + dim320Linitializers.length
+       + dim321Linitializers.length
+       + dim322Linitializers.length
+       + dim323Linitializers.length
+       + dim324Linitializers.length
+       + dim325Linitializers.length
+       + dim326Linitializers.length
+       + dim327Linitializers.length
+       + dim328Linitializers.length
+       + dim329Linitializers.length
+       + dim330Linitializers.length
+       + dim331Linitializers.length
+       + dim332Linitializers.length
+       + dim333Linitializers.length
+       + dim334Linitializers.length
+       + dim335Linitializers.length
+       + dim336Linitializers.length
+       + dim337Linitializers.length
+       + dim338Linitializers.length
+       + dim339Linitializers.length
+       + dim340Linitializers.length
+       + dim341Linitializers.length
+       + dim342Linitializers.length
+       + dim343Linitializers.length
+       + dim344Linitializers.length
+       + dim345Linitializers.length
+       + dim346Linitializers.length
+       + dim347Linitializers.length
+       + dim348Linitializers.length
+       + dim349Linitializers.length
+       + dim350Linitializers.length
+       + dim351Linitializers.length
+       + dim352Linitializers.length
+       + dim353Linitializers.length
+       + dim354Linitializers.length
+       + dim355Linitializers.length
+       + dim356Linitializers.length
+       + dim357Linitializers.length
+       + dim358Linitializers.length
+       + dim359Linitializers.length
+       + dim360Linitializers.length;
+
 	//
 	// public enums
 	//
@@ -969,7 +1406,9 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
             throw new ArithmeticException("dimensionality must be greater than 0"); // TODO: message
         }
 
-        PrimitivePolynomials pp = new PrimitivePolynomials();
+        // In QuantLib/C++ PrimitivePolinomials is initialized in a template given its maximum dimensionality
+        // defined via macros. In Java we allocate at runtime. 
+        final PrimitivePolynomials pp = new PrimitivePolynomials();
         
         if (dimensionality > pp.getPpmtMaxDim()) {
             throw new ArithmeticException("dimensionality exceeds the number of available primitive polynomials module two"); // TODO: message
@@ -979,13 +1418,10 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 		this.sequenceCounter = 0;
 		this.firstDraw = true;
 		
-		this.integerSequence   = new long[this.dimensionality];
 		this.directionIntegers = new long[this.dimensionality][BITS];
+        this.integerSequence   = new long[this.dimensionality];
 		
 		
-		//XXX final long[] bits = new long[bits_];
-		//XXX List<Long> dimLongArray = new ArrayLongList(dimensionality_);
-
         // initializes coefficient array of the k-th primitive polynomial
         // and degree of the k-th primitive polynomial
 		final long[] degree = new long[this.dimensionality];
@@ -995,7 +1431,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
         ppmt[0]=0;
         degree[0]=0;
 		for (int k=1, index=0, currentDegree=1; k < this.dimensionality; k++, index++) {
-			ppmt[k] = pp.get(currentDegree - 1, k);
+			ppmt[k] = pp.get(currentDegree - 1, index);
 			if (ppmt[k] == -1) {
 				++currentDegree;
 				index = 0;
@@ -1004,7 +1440,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 			degree[k] = currentDegree;
 		}
 
-
+		
 		// initializes bits_ direction integers for each dimension
 		// and store them into directionIntegers_[dimensionality_][bits_]
 		//
@@ -1015,9 +1451,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 
 		// degenerate (no free direction integers) first dimension
 		for (int j=0; j < BITS; j++) {
-
-			// FIXME: Translate this line
-			directionIntegers[0][j] = (1 << (BITS - j - 1));
+		    directionIntegers[0][j] = (1 << (BITS-j-1));
 		}
 
 		int maxTabulated = 0;
@@ -1030,40 +1464,28 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 					for (int l = 1; l <= degree[k]; l++) {
 						// FIXME: Translate these two lines
 						// TODO: Code Review is this correct.
-						directionIntegers[k][l - 1] = 1L;
-						directionIntegers[k][l - 1] <<= (BITS - l);
+						directionIntegers[k][l-1] = 1L;
+						directionIntegers[k][l-1] <<= (BITS-l);
 					}
 				}
 				break;
 			case Jaeckel:
-				maxTabulated = 32;
-				// maxTabulated = sizeof(initializers)/sizeof(unsigned long *)+1;
-				// FIXME: How to achieve maxTabulated in Java (no sizeof() in Java...)
-				// Here is a poor answer to your question, you can do better 
-				// I am sure. TODO REVIEW THIS
-				maxTabulated = 0;
-				for (int mtCounter = 0; mtCounter < initializers.length; ++mtCounter) {
-					maxTabulated += initializers[mtCounter].length;
-				}
+				// maxTabulated = 32;
+				maxTabulated = sizeInitializers/(Long.SIZE/8) + 1; 
 				for (int k = 1; k < Math.min(this.dimensionality, maxTabulated); k++) {
 					int j = 0;
 					// 0UL marks coefficients' end for a given dimension
-					while (initializers[k - 1][j] != 0) {
+					while (initializers[k-1][j] != 0) {
 						// FIXME: Translate these two lines
-						directionIntegers[k][j] = initializers[k - 1][j];
-						directionIntegers[k][j] <<= (BITS - j - 1);
+						directionIntegers[k][j] = initializers[k-1][j];
+						directionIntegers[k][j] <<= (BITS-j-1);
 						j++;
 					}
 				}
 				break;
 			case SobolLevitan:
-				maxTabulated = 40;
-				// maxTabulated = sizeof(SLinitializers)/sizeof(unsigned long *)+1;
-				// FIXME: How to achieve maxTabulated in Java (no sizeof() in Java...)
-				maxTabulated = 0;
-				for (int mtCounter = 0; mtCounter < SLinitializers.length; ++mtCounter) {
-					maxTabulated += SLinitializers[mtCounter].length;
-				}
+				// maxTabulated = 40;
+                maxTabulated = sizeSLinitializers/(Long.SIZE/8) + 1; 
 				for (int k = 1; k < Math.min(this.dimensionality, maxTabulated); k++) {
 					int j = 0;
 					// 0UL marks coefficients' end for a given dimension
@@ -1077,12 +1499,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 				break;
 			case SobolLevitanLemieux:
 				maxTabulated = 360;
-				// maxTabulated = sizeof(Linitializers)/sizeof(unsigned long *)+1;
-				// FIXME: How to achieve maxTabulated in Java (no sizeof() in Java...)
-				maxTabulated = 0;
-				for (int mtCounter = 0; mtCounter < Linitializers.length; ++mtCounter) {
-					maxTabulated += Linitializers[mtCounter].length;
-				}
+                maxTabulated = sizeLinitializers/(Long.SIZE/8) + 1; 
 				for (int k = 1; k < Math.min(this.dimensionality, maxTabulated); k++) {
 					int j = 0;
 					// 0UL marks coefficients' end for a given dimension
