@@ -85,7 +85,6 @@
 	
 	<target name="_options">
 		<!-- components managed by hand -->
-		<property name="download.tools"              value="(does not matter)"/> 
 		<property name="options.ivy.version"         value="2.0.0"/>
 		<property name="options.antcontrib.version"  value="1.0b3"/>
 		<property name="options.svnkit.version"      value="1.2.1"/>
@@ -215,33 +214,41 @@
 		<property name="ivy.jar.file"     value="${ivy.jar.dir}/ivy.jar"/>
 		<property name="ivy.download.url" value="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${options.ivy.version}/ivy-${options.ivy.version}.jar"/>
 	</target>
+
+	<target name="_tools-check-ivy" depends="_tools-properties-ivy">
+		<available file="${ivy.jar.file}" property="available.ivy" value="true" />
+	</target>
 	
-	<target name="_tools-download-ivy" depends="_tools-properties-ivy" if="download.tools">
+	<target name="_tools-download-ivy" depends="_tools-check-ivy" unless="available.ivy">
 		<echo message="installing ivy..."/>
 		<mkdir dir="${ivy.jar.dir}"/>
 		<get verbose="false" src="${ivy.download.url}" dest="${ivy.jar.file}" usetimestamp="true"/>
 	</target>
-	
+
 	<target name="_tools-install-ivy" depends="_tools-download-ivy">
 		<path id="ivy.lib.path">
 			<fileset casesensitive="true" dir="${ivy.jar.dir}" includes="**/*.jar" />
 		</path>
 		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
 	</target>
-	
+
 	<!-- antcontrib -->
 	<target name="_tools-properties-antcontrib" depends="_options">
 		<property name="antcontrib.jar.dir"      value="${user.home}/.antcontrib"/>
 		<property name="antcontrib.jar.file"     value="${antcontrib.jar.dir}/antcontrib-${options.antcontrib.version}.jar"/>
 		<property name="antcontrib.download.url" value="http://mirrors.ibiblio.org/pub/mirrors/maven2/ant-contrib/ant-contrib/${options.antcontrib.version}/ant-contrib-${options.antcontrib.version}.jar"/>
 	</target>
+
+	<target name="_tools-check-antcontrib" depends="_tools-properties-antcontrib">
+		<available file="${antcontrib.jar.file}" property="available.antcontrib" value="true" />
+	</target>
 	
-	<target name="_tools-download-antcontrib" depends="_tools-properties-antcontrib" if="download.tools">
+	<target name="_tools-download-antcontrib" depends="_tools-check-antcontrib" unless="available.antcontrib">
 		<echo message="installing ant-contrib..."/>
 		<mkdir dir="${antcontrib.jar.dir}"/>
 		<get verbose="false" src="${antcontrib.download.url}" dest="${antcontrib.jar.file}" usetimestamp="true"/>
 	</target>
-	
+
 	<target name="_tools-install-antcontrib" depends="_tools-download-antcontrib">
 		<path id="antcontrib.lib.path">
 			<fileset casesensitive="true" dir="${antcontrib.jar.dir}" includes="**/*.jar" />
@@ -256,13 +263,17 @@
 		<property name="svnkit.jar.zip"      value="${svnkit.jar.dir}/svnkit.zip"/>
 		<property name="svnkit.download.url" value="http://subclipse.tigris.org/files/documents/906/43359/svnant-${options.svnkit.version}.zip"/>
 	</target>
+
+	<target name="_tools-check-svnkit" depends="_tools-properties-svnkit">
+		<available file="${svnkit.jar.zip}" property="available.svnkit" value="true" />
+	</target>
 	
-	<target name="_tools-download-svnkit" depends="_tools-properties-svnkit" if="download.tools">
+	<target name="_tools-download-svnkit" depends="_tools-check-svnkit" unless="available.svnkit">
 		<echo message="installing svnkit..."/>
 		<mkdir dir="${svnkit.jar.dir}"/>
 		<get verbose="false" src="${svnkit.download.url}" dest="${svnkit.jar.zip}" usetimestamp="true"/>
 	</target>
-	
+
 	<target name="_tools-install-svnkit" depends="_tools-download-svnkit">
 		<unzip src="${svnkit.jar.zip}" dest="${svnkit.jar.dir}">
 			<patternset includes="**/*.jar"/>
@@ -274,7 +285,7 @@
 		</path>
 		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnkit.lib.path"/>
 	</target>
-	
+
 	
 	<!-- proguard -->
 	<target name="_tools-properties-proguard" depends="_options">
@@ -282,26 +293,30 @@
 		<property name="proguard.jar.file"     value="${proguard.jar.dir}/proguard.jar"/>
 		<property name="proguard.download.url" value="http://mirrors.ibiblio.org/pub/mirrors/maven2/net/sf/proguard/proguard/${options.proguard.version}/proguard-${options.proguard.version}.jar"/>
 	</target>
+
+	<target name="_tools-check-proguard" depends="_tools-properties-proguard">
+		<available file="${proguard.jar.file}" property="available.proguard" value="true" />
+	</target>
 	
-	<target name="_tools-download-proguard" depends="_tools-properties-proguard" if="download.tools">
+	<target name="_tools-download-proguard" depends="_tools-check-proguard" unless="available.proguard">
 		<echo message="installing proguard..."/>
 		<mkdir dir="${proguard.jar.dir}"/>
 		<get verbose="false" src="${proguard.download.url}" dest="${proguard.jar.file}" usetimestamp="true"/>
 	</target>
-	
+
 	<target name="_tools-install-proguard" depends="_tools-download-proguard">
 		<!-- We dont install a task definition because ProGuard ant task is not very convenient :( -->
 		<!--
-		    <path id="proguard.lib.path" >
-			    <fileset casesensitive="true" dir="${proguard.jar.dir}">
-				    <include name="**/*.jar"/>
-			    </fileset>
-		    </path>
-		    <taskdef resource="proguard/ant/task.properties" classpathref="proguard.lib.path"/>
-		    -->
-	    </target>
-	    
-	    <target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-svnkit,_tools-install-proguard"/>
+		<path id="proguard.lib.path" >
+			<fileset casesensitive="true" dir="${proguard.jar.dir}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</path>
+		<taskdef resource="proguard/ant/task.properties" classpathref="proguard.lib.path"/>
+		-->
+	</target>
+	
+	<target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-svnkit,_tools-install-proguard"/>
 	    
 	    
 	    <!-- bootstrap -->
