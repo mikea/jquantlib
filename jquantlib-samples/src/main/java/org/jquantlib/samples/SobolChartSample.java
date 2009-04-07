@@ -25,7 +25,7 @@ public class SobolChartSample extends ApplicationFrame {
     private final int seed;
 
     public SobolChartSample(final String title) {
-        this(title, 50);
+        this(title, 500);
     }
     
     public SobolChartSample(final String title, final /*@NonNegative*/ int samples) {
