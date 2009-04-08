@@ -45,7 +45,7 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         int size = unsortedArrayList.size();
         ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
         Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
-        Pair<F, S> fs = new Pair<F, S>();
+        Pair<F, S> fs = new Pair<F, S>(null, null);
 
         // there are no arrays of generics, just yet :-<
         Number[] f = new Number[size];
@@ -92,7 +92,7 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         int size = unsortedArrayList.size();
         ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
         Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
-        Pair<F, S> fs = new Pair<F, S>();
+        Pair<F, S> fs = new Pair<F, S>(null, null);;
 
         // there are no arrays of generics, just yet :-<
         Number[] f = new Number[size];
@@ -169,7 +169,7 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         int size = unsortedArrayList.size();
         ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
         Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
-        Pair<F, S> fs = new Pair<F, S>();
+        Pair<F, S> fs = new Pair<F, S>(null, null);;
 
         // there are no arrays of generics, just yet :-<
         Number[] f = new Number[size];
@@ -224,7 +224,7 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         int size = unsortedArrayList.size();
         ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
         Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
-        Pair<F, S> fs = new Pair<F, S>();
+        Pair<F, S> fs = new Pair<F, S>(null, null);;
 
         // there are no arrays of generics, just yet :-<
         Number[] f = new Number[size];
