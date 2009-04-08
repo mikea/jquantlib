@@ -25,6 +25,8 @@ package org.jquantlib.math.statistics;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.jquantlib.util.Pair;
+
 /**
  *
  * @author Praneet Tiwari

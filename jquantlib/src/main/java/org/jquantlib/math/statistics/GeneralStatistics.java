@@ -22,6 +22,12 @@
 package org.jquantlib.math.statistics;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.jquantlib.math.ComposedFunction;
+import org.jquantlib.math.UnaryFunction;
+import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.util.Pair;
  
 
 /**
@@ -41,7 +47,10 @@ samples, thus increasing the memory requirements.
  */
 
 //FIXME: changed to extending base class rather then implementing interface
-public class GeneralStatistics extends Statistics {
+public class GeneralStatistics /*extends Statistics*/ {
+    
+    private final static String empty_sample_set =  "empty sample set";
+    private final static String unsufficient_sample_size = "sample number <=1, unsufficient";
 
     private ArrayList<Pair<Double, Double>> samples;
     private boolean sorted = false;
@@ -77,44 +86,79 @@ public class GeneralStatistics extends Statistics {
         return samples;
     }
 
+    
+    //reviewed!
     //! sum of data weights
-    public Double weightSum() {
-        Double result = 0.0;
+    public double weightSum() {
+        double result = 0.0;
         for (Pair<Double, Double> element : samples) {
             // casting required, re-visit
-            result += (Double) element.getSecond();
+            result += element.getSecond();
         }
         return result;
     }
 
+    //reviewed/ refactored!
     /*! returns the mean, defined as
     \f[ \langle x \rangle = \frac{\sum w_i x_i}{\sum w_i}. \f]
      */
-    public Double mean() {
+    public double mean() {
         int size = getSampleSize();
         if (size == 0) {
-            throw new IllegalArgumentException("Sample size cannot be less than 1");
+            throw new IllegalArgumentException(empty_sample_set);
         }
-        //  return expectationValue(identity<Real>(),
-        //                         everywhere()).first;
-        return (Double) expectationValue("identity").getFirst();
+        
+        //some boilerplate code ...
+        UnaryFunction<Double, Boolean> everyWhere = new UnaryFunction<Double, Boolean>(){
+            @Override
+            public Boolean evaluate(Double x) {
+                return true;
+            }
+        };
+        
+        UnaryFunctionDouble identity = new UnaryFunctionDouble(){
+            @Override
+            public double evaluate(double x) {
+                return x;
+            }
+        };
+        return (Double) expectationValue(identity,everyWhere).getFirst();
     }
 
+    //reviewed/refactored
     /*! Expectation value of a function \f$ f \f$ on a given
     range \f$ \mathcal{R} \f$, i.e.,
     \f[ \mathrm{E}\left[f \;|\; \mathcal{R}\right] =
-    \frac{\sum_{x_i \in \mathcal{R}} f(x_i) w_i}{
-    \sum_{x_i \in \mathcal{R}} w_i}. \f]
+        \frac{\sum_{x_i \in \mathcal{R}} f(x_i) w_i}{
+              \sum_{x_i \in \mathcal{R}} w_i}. \f]
     The range is passed as a boolean function returning
     <tt>true</tt> if the argument belongs to the range
     or <tt>false</tt> otherwise.
 
     The function returns a pair made of the result and
     the number of observations in the given range.
-     */
-
-    // Quantlib uses a function pointer, of course we can't
-    // Using the identity function as a default instead
+    */
+    public Pair<Double, Integer> expectationValue(UnaryFunctionDouble f, UnaryFunction<Double, Boolean> inRange) {
+        double num = 0.0;
+        double den = 0.0;
+        int N = 0;
+        for (Pair<Double, Double> element : samples) {
+            double x = (Double) element.getFirst();
+            double w = (Double) element.getSecond();
+            if (inRange.evaluate(x)) {
+                num += x * w;
+                den += w;
+                N++;
+            }
+        }
+        if (N == 0) {
+            return new Pair<Double, Integer>(0.0, 0);
+        } else {
+            return new Pair<Double, Integer>(0.0, 0);
+        }
+    }
+    
+    /* Refactored!!!
     public Pair<Number, Number> expectationValue(String functype) {
         Double num = 0.0, den = 0.0;
         int n = 0;
@@ -136,14 +180,54 @@ public class GeneralStatistics extends Statistics {
         }
 
     }
+    */
+    
+    public double variance() {
+        int N = getSampleSize();
+        if (N < 1) {
+            throw new IllegalArgumentException(unsufficient_sample_size);
+        }
+        
+        UnaryFunction<Double, Double> square = new UnaryFunction<Double, Double>(){
+            @Override
+            public Double evaluate(Double x) {
+                return x*x;
+            }
+        };
+        
+        UnaryFunction<Double, Boolean> everyWhere = new UnaryFunction<Double, Boolean>(){
+            @Override
+            public Boolean evaluate(Double x) {
+                return true;
+            }
+        };
+        
+        //argh no generic arrays :-(
+        List<UnaryFunction<Double, Double>> functions = new ArrayList<UnaryFunction<Double,Double>>();
+        functions.add(square);
+        //functions.add(e)
+        
+        //TODO: implement std::bind2nd 
+        
+        ComposedFunction<Double> comp = new ComposedFunction<Double>(functions);
+        
+        //UnaryFunction<Double, Double> = new ComposedFunction<Double>(new UnaryFunction<ParameterType, ReturnType>);
+        
+        //double s2 = expectationValue(square, everyWhere).getFirst();
+        
+        return 0;
+    }
+    
+    
+    
     /*! returns the variance, defined as
     \f[ \sigma^2 = \frac{N}{N-1} \left\langle \left(
     x-\langle x \rangle \right)^2 \right\rangle. \f]
      */
-
-    public Double variance() {
-        int n = getSampleSize();
-        if (n <= 1) {
+    /*
+    public double variance() {
+        int N = getSampleSize();
+        if (N <= 1) {
             throw new IllegalArgumentException("Sample size cannot be less than 1");
         }
         double mean = mean();
@@ -156,7 +240,7 @@ public class GeneralStatistics extends Statistics {
         }
         return runningTotal / (n - 1);
     }
-
+    */
     /*! returns the standard deviation \f$ \sigma \f$, defined as the
     square root of the variance.
      */
@@ -373,6 +457,9 @@ public class GeneralStatistics extends Statistics {
         System.out.println("Percentile 95 is " + gs.percentile(.95));
     }
 }
+
+
+
 
 /*
  * sample of 100

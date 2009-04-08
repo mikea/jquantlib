@@ -24,6 +24,8 @@ package org.jquantlib.math.statistics;
 //~--- JDK imports ------------------------------------------------------------
 import java.util.ArrayList;
 
+import org.jquantlib.util.Pair;
+
 /**
  *
  * @author Praneet Tiwari
