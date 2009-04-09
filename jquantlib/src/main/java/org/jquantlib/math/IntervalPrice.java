@@ -170,7 +170,7 @@ public class IntervalPrice implements Serializable {
 
     public static double[] extractValues(final TimeSeries<IntervalPrice> ts, IntervalPrice.Type type)  {
         final double[] result = new double[ts.size()];
-        final Iterator<IntervalPrice> it = ts.values().iterator();
+        final Iterator<IntervalPrice> it = ts.valuesIntervalPrice().iterator();
         
         for (int i=0; i<ts.size(); i++) {
             result[i] = it.next().value(type);

@@ -90,7 +90,7 @@ public abstract class Index implements Observable {
 	 * fixings; no settlement days must be used.
 	 */
 	public void addFixings(TimeSeries<Double> t, boolean forceOverwrite) {
-		addFixings(t.dates(), t.valuesAsDoubles(), forceOverwrite);
+		addFixings(t.dates(), t.values(), forceOverwrite);
 	}
 
 	

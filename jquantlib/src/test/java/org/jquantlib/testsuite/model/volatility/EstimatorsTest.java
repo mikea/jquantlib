@@ -56,7 +56,7 @@ public class EstimatorsTest {
 
     private final static Logger logger = LoggerFactory.getLogger(EstimatorsTest.class);
 
-	private final TimeSeries<Double> ts ;
+	private final TimeSeries<Double> ts;
 	
 	
 	public EstimatorsTest() {
@@ -71,7 +71,7 @@ public class EstimatorsTest {
 
         final double[] values = new double[] { 1.2, 2.3, 0.3, 2.0, 2.5 };
 
-        ts = new TimeSeries<Double>(dates, values) { /* anonymous */ };
+        this.ts = new TimeSeries<Double>(dates, values) { /* anonymous */ };
     }
 	
 	@Test

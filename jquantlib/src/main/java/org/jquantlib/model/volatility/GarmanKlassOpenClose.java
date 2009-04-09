@@ -39,6 +39,9 @@
 
 package org.jquantlib.model.volatility;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.IntervalPrice;
 import org.jquantlib.util.Date;
@@ -84,18 +87,21 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
 	@Override
 	public TimeSeries<Double> calculate(final TimeSeries<IntervalPrice> quoteSeries) {
 		final Date[] dates = quoteSeries.dates();
-		final IntervalPrice[] values = quoteSeries.values().toArray(new IntervalPrice[0]);
+		final Collection<IntervalPrice> values = quoteSeries.valuesIntervalPrice();
 		final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
-		IntervalPrice prev = null;
-		IntervalPrice cur = null;
-		for (int i = 1; i < values.length; i++) {
-			cur = values[i];
-			prev = values[i - 1];
+		// obtain first IntervalPrice
+		Iterator<IntervalPrice> it = values.iterator();
+		if (!it.hasNext()) return retval;
+		// process remaining IntervalPrices
+		IntervalPrice prev = it.next();
+		for (int i=1; it.hasNext(); i++) {
+			IntervalPrice curr = it.next();
 			double c0 = Math.log(prev.close());
-			double o1 = Math.log(cur.open());
-			double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * delegate.calculatePoint(cur) / (1 - this.f);
+			double o1 = Math.log(curr.open());
+			double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * delegate.calculatePoint(curr) / (1 - this.f);
 			double s = Math.sqrt(sigma2 / delegate.getYearFraction());
 			retval.add(dates[i], s);
+			prev = curr;
 		}
 		return retval;
 	}

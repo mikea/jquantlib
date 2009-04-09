@@ -66,7 +66,7 @@ public class ConstantEstimator implements VolatilityCompositor {
 	@Override
 	public TimeSeries<Double> calculate(final TimeSeries<Double> volatilitySeries) {
 		final Date[] dates = volatilitySeries.dates();
-		final double[] values = volatilitySeries.valuesAsDoubles();
+		final double[] values = volatilitySeries.values();
 		final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */};
 
 		for (int i = size; i < volatilitySeries.size(); i++) {
@@ -78,7 +78,7 @@ public class ConstantEstimator implements VolatilityCompositor {
 			}
 			double dsize = (double) size;
 			double s = Math.sqrt(sumu2 / dsize - sumu * sumu / dsize / (dsize + 1));
-			retval.addDouble(dates[i], s);
+			retval.add(dates[i], s);
 		}
 		return retval;
 	}

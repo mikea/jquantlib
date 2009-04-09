@@ -60,7 +60,7 @@ public class SimpleLocalEstimator {
     
     public TimeSeries<Double> calculate(final TimeSeries<Double> quoteSeries) {
         final Date[] dates = quoteSeries.dates();
-        final /*@Volatility*/ double[] values = quoteSeries.valuesAsDoubles();
+        final /*@Volatility*/ double[] values = quoteSeries.values();
         final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
     	double prev = Double.NaN;
     	double cur  = Double.NaN;
@@ -68,7 +68,7 @@ public class SimpleLocalEstimator {
     		cur = values[i] ;
     		prev = values[i-1];
     		double s = Math.abs(Math.log(cur/prev))/Math.sqrt(yearFraction) ;
-    		retval.addDouble(dates[i], s);
+    		retval.add(dates[i], s);
     	}
         return retval;
     }

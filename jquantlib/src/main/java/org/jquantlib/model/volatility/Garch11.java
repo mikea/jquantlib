@@ -79,8 +79,8 @@ public class Garch11 implements VolatilityCompositor{
 	protected double costFunction (final TimeSeries<Double> vs, double alpha, double beta, double omega) {
 		double retValue = 0.0;
 		final TimeSeries<Double> test = calculate(vs, alpha, beta, omega);
-		final /* @Volatility */ double[] testValues = test.valuesAsDoubles();
-		final /* @Volatility */ double[] quoteValues = vs.valuesAsDoubles();
+		final /* @Volatility */ double[] testValues = test.values();
+		final /* @Volatility */ double[] quoteValues = vs.values();
 		//assert (testValues.size() == quoteValues.size(), "quote and test values do not match");
 		double v = 0;
 		double u2 = 0 ;
@@ -94,7 +94,7 @@ public class Garch11 implements VolatilityCompositor{
 	
 	private TimeSeries<Double> calculate(final TimeSeries<Double> vs, double alpha, double beta, double omega) {
         final Date[] dates = vs.dates();
-        final /* @Volatility */ double[] values = vs.valuesAsDoubles();
+        final /* @Volatility */ double[] values = vs.values();
 		final TimeSeries<Double> retValue = new TimeSeries<Double>() { /* anonymous */ };
         double zerothDayValue = values[0];
 		retValue.add (dates[0], zerothDayValue) ;
