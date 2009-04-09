@@ -88,6 +88,7 @@
 		<property name="options.ivy.version"         value="2.0.0"/>
 		<property name="options.antcontrib.version"  value="1.0b3"/>
 		<property name="options.svnkit.version"      value="1.2.1"/>
+		<property name="options.sigil.version"       value="0.8.0-r26"/>
 		<property name="options.proguard.version"    value="4.3"/>
 		
 		<property name="options.javac.compiler"      value="javac1.6" />
@@ -286,7 +287,38 @@
 		<taskdef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnkit.lib.path"/>
 	</target>
 
+
+	<!-- sigil -->
+	<target name="_tools-properties-sigil" depends="_options">
+		<property name="sigil.jar.dir"      value="${user.home}/.sigil"/>
+		<property name="sigil.jar.file"     value="${sigil.jar.dir}/sigil-${options.sigil.version}/lib/sigil-ivy-plugin.jar"/>
+		<property name="sigil.jar.zip"      value="${sigil.jar.dir}/sigil-${options.sigil.version}.zip"/>
+		<property name="sigil.download.url" value="http://ci.codecauldron.org/hudson/view/sigil/job/sigil-release/lastSuccessfulBuild/artifact/sigil/bld-ivy/target/sigil-${options.sigil.version}.zip"/>
+	</target>
+
+	<target name="_tools-check-sigil" depends="_tools-properties-sigil">
+		<available file="${sigil.jar.zip}" property="available.sigil" value="true" />
+	</target>
 	
+	<target name="_tools-download-sigil" depends="_tools-check-sigil" unless="available.sigil">
+		<echo message="installing sigil..."/>
+		<mkdir dir="${sigil.jar.dir}"/>
+		<get verbose="false" src="${sigil.download.url}" dest="${sigil.jar.zip}" usetimestamp="true"/>
+	</target>
+
+	<target name="_tools-install-sigil" depends="_tools-download-sigil">
+		<unzip src="${sigil.jar.zip}" dest="${sigil.jar.dir}">
+			<patternset includes="**/*.jar"/>
+		</unzip>
+		<path id="sigil.lib.path" >
+			<fileset casesensitive="true" dir="${sigil.jar.dir}">
+				<include name="**/*.jar"/>
+			</fileset>
+		</path>
+		<taskdef name="sigil.bundle" classname="org.cauldron.bld.ant.BundleTask" classpathref="sigil.lib.path"/>
+	</target>
+
+
 	<!-- proguard -->
 	<target name="_tools-properties-proguard" depends="_options">
 		<property name="proguard.jar.dir"      value="${user.home}/.proguard"/>
@@ -316,7 +348,7 @@
 		-->
 	</target>
 	
-	<target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-svnkit,_tools-install-proguard"/>
+	<target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-svnkit,_tools-install-sigil,_tools-install-proguard"/>
 	    
 	    
 	    <!-- bootstrap -->
