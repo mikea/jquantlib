@@ -8,4 +8,5 @@ public interface IStatistics {
     public Pair<Double, Double> expectationValue(E_IUnaryFunction<Double, Double> f, E_IUnaryFunction<Double, Boolean> inRange);
     public int getSampleSize();
     public double percentile(double y);
+    public double standardDeviation();
 }
