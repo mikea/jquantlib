@@ -29,7 +29,8 @@ import org.jquantlib.model.shortrate.ConstantParameter;
 import org.jquantlib.model.shortrate.OneFactorAffineModel;
 import org.jquantlib.model.shortrate.Parameter;
 import org.jquantlib.model.shortrate.ShortRateDynamics;
-import org.jquantlib.model.shortrate.processes.OrnsteinUhlenbeckProcess;
+import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
+
 import static org.jquantlib.pricingengines.BlackFormula.*;
 import org.jquantlib.util.Observer;
 

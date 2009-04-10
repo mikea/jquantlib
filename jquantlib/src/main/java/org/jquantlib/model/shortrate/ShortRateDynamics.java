@@ -29,6 +29,13 @@ import org.jquantlib.processes.StochasticProcess1D;
  * 
  * @author Praneet Tiwari
  */
+
+/**
+ * Moved to OneFactorModel
+ */
+
+
+//reviewed
 public abstract class ShortRateDynamics {
 
     private StochasticProcess1D process_;

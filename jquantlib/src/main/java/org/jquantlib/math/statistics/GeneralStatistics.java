@@ -24,10 +24,14 @@ package org.jquantlib.math.statistics;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.math.ComposedFunction;
+import org.jquantlib.math.E_BinaryFunction;
+import org.jquantlib.math.E_ComposedFunction;
+import org.jquantlib.math.E_IBinaryFunction;
+import org.jquantlib.math.E_IUnaryFunction;
+import org.jquantlib.math.E_UnaryFunction;
 import org.jquantlib.math.UnaryFunction;
-import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.util.Pair;
+import org.jquantlib.util.stdlibc.Std;
  
 
 /**
@@ -51,7 +55,11 @@ public class GeneralStatistics /*extends Statistics*/ {
     
     private final static String empty_sample_set =  "empty sample set";
     private final static String unsufficient_sample_size = "sample number <=1, unsufficient";
-
+    private final static String unsufficient_sample_size_2 = "Sample size cannot be less than 2";
+    private final static String unsufficient_sample_size_3 = "Sample size cannot be less than 3";
+    private final static String empyt_sample_set = "empty sample set";
+    private final static String negative_weight_not_allowed = "negative weight not allowed";
+    
     private ArrayList<Pair<Double, Double>> samples;
     private boolean sorted = false;
 
@@ -62,12 +70,12 @@ public class GeneralStatistics /*extends Statistics*/ {
         reset();
     }
 
-    private void reset() {
+    private final void reset() {
         samples = new ArrayList<Pair<Double, Double>>();
         sorted = true;
     }
 
-    private void sort() {
+    private final void sort() {
         if (!sorted) {
             samples = new PairSortingAlgorithms().insertionSort(samples);
         }
@@ -77,7 +85,7 @@ public class GeneralStatistics /*extends Statistics*/ {
     //! \name Inspectors
     //@{
     //! number of samples collected
-    private int getSampleSize() {
+    private final int getSampleSize() {
         return samples.size();
     }
 
@@ -89,7 +97,7 @@ public class GeneralStatistics /*extends Statistics*/ {
     
     //reviewed!
     //! sum of data weights
-    public double weightSum() {
+    public final double weightSum() {
         double result = 0.0;
         for (Pair<Double, Double> element : samples) {
             // casting required, re-visit
@@ -102,23 +110,23 @@ public class GeneralStatistics /*extends Statistics*/ {
     /*! returns the mean, defined as
     \f[ \langle x \rangle = \frac{\sum w_i x_i}{\sum w_i}. \f]
      */
-    public double mean() {
+    public final double mean() {
         int size = getSampleSize();
         if (size == 0) {
             throw new IllegalArgumentException(empty_sample_set);
         }
         
-        //some boilerplate code ...
-        UnaryFunction<Double, Boolean> everyWhere = new UnaryFunction<Double, Boolean>(){
+        //some boilerplate code ... could be implemented in E_UnaryFunction as factory
+        E_UnaryFunction<Double, Boolean> everyWhere = new E_UnaryFunction<Double, Boolean>(){
             @Override
             public Boolean evaluate(Double x) {
                 return true;
             }
         };
         
-        UnaryFunctionDouble identity = new UnaryFunctionDouble(){
+        E_UnaryFunction<Double, Double> identity = new E_UnaryFunction<Double, Double>(){
             @Override
-            public double evaluate(double x) {
+            public Double evaluate(Double x) {
                 return x;
             }
         };
@@ -138,15 +146,20 @@ public class GeneralStatistics /*extends Statistics*/ {
     The function returns a pair made of the result and
     the number of observations in the given range.
     */
-    public Pair<Double, Integer> expectationValue(UnaryFunctionDouble f, UnaryFunction<Double, Boolean> inRange) {
+    public final Pair<Double, Integer> expectationValue(E_IUnaryFunction<Double, Double> f, E_IUnaryFunction<Double, Boolean> inRange) {
         double num = 0.0;
         double den = 0.0;
         int N = 0;
         for (Pair<Double, Double> element : samples) {
-            double x = (Double) element.getFirst();
             double w = (Double) element.getSecond();
+            double x = (Double) element.getFirst();
+            Double evaluated = f.evaluate(x);
+            //argh we have to do this check :-( refactor E_ClippedFunction
+            if(evaluated == null){
+                evaluated = 0.0;
+            }
             if (inRange.evaluate(x)) {
-                num += x * w;
+                num += evaluated * w;
                 den += w;
                 N++;
             }
@@ -182,20 +195,25 @@ public class GeneralStatistics /*extends Statistics*/ {
     }
     */
     
+    /*! returns the variance, defined as
+    \f[ \sigma^2 = \frac{N}{N-1} \left\langle \left(
+    x-\langle x \rangle \right)^2 \right\rangle. \f]
+     */
+    // reviewed/ refactored
     public double variance() {
         int N = getSampleSize();
         if (N < 1) {
             throw new IllegalArgumentException(unsufficient_sample_size);
         }
         
-        UnaryFunction<Double, Double> square = new UnaryFunction<Double, Double>(){
+        E_UnaryFunction<Double, Double> square = new E_UnaryFunction<Double, Double>(){
             @Override
             public Double evaluate(Double x) {
                 return x*x;
             }
         };
         
-        UnaryFunction<Double, Boolean> everyWhere = new UnaryFunction<Double, Boolean>(){
+        E_UnaryFunction<Double, Boolean> everyWhere = new E_UnaryFunction<Double, Boolean>(){
             @Override
             public Boolean evaluate(Double x) {
                 return true;
@@ -203,28 +221,28 @@ public class GeneralStatistics /*extends Statistics*/ {
         };
         
         //argh no generic arrays :-(
-        List<UnaryFunction<Double, Double>> functions = new ArrayList<UnaryFunction<Double,Double>>();
+        List<E_IUnaryFunction<Double, Double>> functions = new ArrayList<E_IUnaryFunction<Double,Double>>();
         functions.add(square);
-        //functions.add(e)
         
-        //TODO: implement std::bind2nd 
+        //First let's create the minus function
+        E_BinaryFunction<Double, Double> minus = new E_BinaryFunction<Double, Double>(){
+            @Override
+            public Double evaluate(Double x_1, Double x_2) {
+                return x_1 - x_2;
+            }   
+        };
         
-        ComposedFunction<Double> comp = new ComposedFunction<Double>(functions);
-        
-        //UnaryFunction<Double, Double> = new ComposedFunction<Double>(new UnaryFunction<ParameterType, ReturnType>);
-        
-        //double s2 = expectationValue(square, everyWhere).getFirst();
-        
-        return 0;
+        // Bind the second parameter
+        E_IUnaryFunction<Double, Double> bounded = Std.bind2nd(minus, new Double(mean()));
+        // Add the second function and create the composed one.
+        functions.add(bounded);
+        E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
+        // Evaluate the composed function in the specified range (ie. everyWhere).
+        Double s2 = expectationValue(comp, everyWhere).getFirst();
+        return s2*N/(N-1.0);
     }
-    
-    
-    
-    /*! returns the variance, defined as
-    \f[ \sigma^2 = \frac{N}{N-1} \left\langle \left(
-    x-\langle x \rangle \right)^2 \right\rangle. \f]
-     */
-    /*
+
+    /* reviewed/refactored
     public double variance() {
         int N = getSampleSize();
         if (N <= 1) {
@@ -241,16 +259,20 @@ public class GeneralStatistics /*extends Statistics*/ {
         return runningTotal / (n - 1);
     }
     */
+    
+
     /*! returns the standard deviation \f$ \sigma \f$, defined as the
     square root of the variance.
      */
-    public Double standardDeviation() {
+    //Reviewed
+    public final double standardDeviation() {
         return Math.sqrt(variance());
     }
 
     /*! returns the error estimate on the mean value, defined as
     \f$ \epsilon = \sigma/\sqrt{N}. \f$
      */
+    //reviewed
     public Double errorEstimate() {
         return Math.sqrt((variance()) / getSampleSize());
     }
@@ -260,21 +282,70 @@ public class GeneralStatistics /*extends Statistics*/ {
     x-\langle x \rangle \right)^3 \right\rangle}{\sigma^3}. \f]
     The above evaluates to 0 for a Gaussian distribution.
      */
+    //reviewed/refactored
     public Double skewness() {
         int n = getSampleSize();
         if (n <= 2) {
-            throw new IllegalArgumentException("Sample size cannot be less than 2");
+            throw new IllegalArgumentException(unsufficient_sample_size_2);
+        }
+    
+        E_UnaryFunction<Double, Double> cube = new E_UnaryFunction<Double, Double>(){
+            @Override
+            public Double evaluate(Double x) {
+                return x*x*x;
+            }
+        };
+        
+        E_UnaryFunction<Double, Boolean> everyWhere = new E_UnaryFunction<Double, Boolean>(){
+            @Override
+            public Boolean evaluate(Double x) {
+                return true;
+            }
+        };
+        
+        //argh no generic arrays :-(
+        List<E_IUnaryFunction<Double, Double>> functions = new ArrayList<E_IUnaryFunction<Double,Double>>();
+        functions.add(cube);
+        
+        //First let's create the minus function
+        E_BinaryFunction<Double, Double> minus = new E_BinaryFunction<Double, Double>(){
+            @Override
+            public Double evaluate(Double x_1, Double x_2) {
+                return x_1 - x_2;
+            }   
+        };
+        
+        // Bind the second parameter
+        E_IUnaryFunction<Double, Double> bounded = Std.bind2nd(minus, new Double(mean()));
+        // Add the second function and create the composed one.
+        functions.add(bounded);
+        E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
+        
+        double x = expectationValue(comp, everyWhere).getFirst();
+        double sigma = standardDeviation();
+        double _n = n;
+        return (_n / ((_n - 1) * (_n - 2))) * x / (Math.pow(sigma, 3));
+    }
+    
+    /*
+        public Double skewness() {
+        int n = getSampleSize();
+        if (n <= 2) {
+            throw new IllegalArgumentException(unsufficient_sample_size_2);
         }
         double mean = mean();
-        double runningTotal = 0.0;
+        double x = expectationValue(f, inRange)
+        
         for (Pair<Double, Double> element : samples) {
             Double x = (Double) element.getFirst();
             runningTotal += Math.pow((x - mean), 3);
         }
+       
         double sigma = standardDeviation();
 
         return (n / ((n - 1) * (n - 2))) * runningTotal / (Math.pow(sigma, 3));
-    }
+        }
+     */
 
     /*! returns the excess kurtosis, defined as
     \f[ \frac{N^2(N+1)}{(N-1)(N-2)(N-3)}
@@ -282,10 +353,60 @@ public class GeneralStatistics /*extends Statistics*/ {
     \right\rangle}{\sigma^4} - \frac{3(N-1)^2}{(N-2)(N-3)}. \f]
     The above evaluates to 0 for a Gaussian distribution.
      */
+    //reviewed
     public Double kurtosis() {
+        int N = getSampleSize();
+        if (N <= 3) {
+            throw new IllegalArgumentException(unsufficient_sample_size_3);
+        }
+        
+        E_UnaryFunction<Double, Double> fourth_power = new E_UnaryFunction<Double, Double>(){
+            @Override
+            public Double evaluate(Double x) {
+                return x*x*x*x;
+            }
+        };
+        
+        E_UnaryFunction<Double, Boolean> everyWhere = new E_UnaryFunction<Double, Boolean>(){
+            @Override
+            public Boolean evaluate(Double x) {
+                return true;
+            }
+        };
+        
+        //argh no generic arrays :-(
+        List<E_IUnaryFunction<Double, Double>> functions = new ArrayList<E_IUnaryFunction<Double,Double>>();
+        functions.add(fourth_power);
+        
+        //First let's create the minus function
+        E_BinaryFunction<Double, Double> minus = new E_BinaryFunction<Double, Double>(){
+            @Override
+            public Double evaluate(Double x_1, Double x_2) {
+                return x_1 - x_2;
+            }   
+        };
+        
+        // Bind the second parameter
+        E_IUnaryFunction<Double, Double> bounded = Std.bind2nd(minus, new Double(mean()));
+        // Add the second function and create the composed one.
+        functions.add(bounded);
+        E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
+        
+        double x = expectationValue(comp, everyWhere).getFirst();
+      
+        double _N = N;
+        double sigma2 = standardDeviation();
+        double c1 = (_N/(_N-1.0)) * (_N/(_N-2.0)) * ((N+1.0)/(_N-3.0));
+        double c2 = 3.0 * ((_N-1.0)/(_N-2.0)) * ((_N-1.0)/(_N-3.0));
+        
+        return c1*(x/(sigma2*sigma2))-c2;
+    }
+    
+    /*
+     * public Double kurtosis() {
         int n = getSampleSize();
         if (n <= 3) {
-            throw new IllegalArgumentException("Sample size cannot be less than 3");
+            throw new IllegalArgumentException(unsufficient_sample_size_3);
         }
         double mean = mean();
         double runningTotal = 0.0;
@@ -297,25 +418,22 @@ public class GeneralStatistics /*extends Statistics*/ {
         double unadjustedKurtosis = (((n) * (n + 1)) * (runningTotal)) / ((n - 1) * (n - 2) * (n - 3) * (Math.pow(sigma, 4)));
         return unadjustedKurtosis - (3 * (Math.pow(n - 1, 2)) / ((n - 1) * (n - 2)));
     }
-
-    /*! returns the minimum sample value */
+     */
+    
+    /* ! returns the minimum sample value */
+    //reviewed
     public Double min() {
-
-        /*
-         * return std::min_element(samples_.begin(),
-        samples_.end())->first;
-         */
         if (getSampleSize() <= 1) {
-            //throw some exception
-            }
+            throw new IllegalArgumentException(empyt_sample_set);
+        }
         return MathUtil.min(samples);
     }
 
     /*! returns the maximum sample value */
+    //reviewed
     public Double max() {
-
         if (getSampleSize() <= 1) {
-            throw new IllegalArgumentException("Sample size needs to be more tha 1");
+            throw new IllegalArgumentException(unsufficient_sample_size);
         }
         return MathUtil.max(samples);
     }
@@ -327,23 +445,21 @@ public class GeneralStatistics /*extends Statistics*/ {
 
     \pre \f$ y \f$ must be in the range \f$ (0-1]. \f$
      */
-    public Double percentile(Double percent) {
-
+    //reviewed
+    public Double percentile(double percent) {
         if (percent < 0.0 || percent > 1.0) {
             throw new IllegalArgumentException("percentile (" + percent + ") must be in (0.0, 1.0]");
         }
-
         double wt = weightSum();
-
         if (wt < 0.0) {
-            throw new IllegalArgumentException("empty sample set");
+            throw new IllegalArgumentException(empty_sample_set);
         }
         sort();
         double target = percent * wt;
         double integral = 0.0;
-
-
         int k = 0;
+        /* the sum of weight is non null, therefore there's
+        at least one sample */
         while (integral < target && k < samples.size()) {
             Pair<Double, Double> element = samples.get(k);
             integral += element.getSecond().doubleValue();
@@ -360,25 +476,24 @@ public class GeneralStatistics /*extends Statistics*/ {
 
     \pre \f$ y \f$ must be in the range \f$ (0-1]. \f$
      */
+    //reviewed
     public Double topPercentile(Double percent) {
         if (percent < 0.0 || percent > 1.0) {
             throw new IllegalArgumentException("percentile (" + percent + ") must be in (0.0, 1.0]");
         }
-
-        double wt = weightSum();
-
-        if (wt < 0.0) {
-            throw new IllegalArgumentException("empty sample set");
+        double sampleWeight = weightSum();
+        if (sampleWeight < 0.0) {
+            throw new IllegalArgumentException(empty_sample_set);
         }
         sort();
+        
+        
+        ////!!!! keeping fingers crossed that this does what's intended to to
         //there is no reverse iterator, do a manual copy instead
-        ArrayList<Pair<Double, Double>> samplesReverse = new ArrayList<Pair<Double, Double>>(samples.size());
+        //ArrayList<Pair<Double, Double>> samplesReverse = new ArrayList<Pair<Double, Double>>(samples.size());
         //dropping this approach for now approaching this another way
-
-        double target = percent * wt;
-        double integral = wt;
-
-
+        double target = percent * sampleWeight;
+        double integral = sampleWeight;
         int k = 0;
         while (integral < target && k < samples.size()) {
             Pair<Double, Double> element = samples.get(k);
@@ -386,17 +501,16 @@ public class GeneralStatistics /*extends Statistics*/ {
             k++;
         }
         return samples.get(k).getFirst().doubleValue();
-
     }
 
-    //! \name Modifiers
-    //@{
-    //! adds a datum to the set, possibly with a weight
-    public void add(Double value, Double weight/* = 1.0*/) {
-        if (weight == null) {
-            weight = 1.0;
+    /*! \pre weights must be positive or null */
+    //reviewd
+    public void add(double value, double weight/* = 1.0*/) {
+        if(weight < 0){
+            throw new IllegalArgumentException(negative_weight_not_allowed);
         }
         samples.add(new Pair<Double, Double>(value, weight));
+        sorted = false;
     }
 
     /**commented for now

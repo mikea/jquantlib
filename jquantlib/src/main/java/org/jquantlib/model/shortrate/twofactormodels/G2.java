@@ -33,7 +33,7 @@ import org.jquantlib.model.shortrate.TwoFactorModel;
 //import org.jquantlib.model.shortrate.instruments.Swaption;
 import org.jquantlib.model.shortrate.onefactormodels.FittingParameter;
 import org.jquantlib.model.shortrate.onefactormodels.TermStructureConsistentModelClass;
-import org.jquantlib.model.shortrate.processes.OrnsteinUhlenbeckProcess;
+import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import static org.jquantlib.pricingengines.BlackFormula.*;

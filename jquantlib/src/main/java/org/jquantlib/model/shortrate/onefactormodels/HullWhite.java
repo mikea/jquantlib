@@ -30,7 +30,7 @@ import org.jquantlib.model.shortrate.Parameter;
 import org.jquantlib.model.shortrate.ShortRateDynamics;
 import org.jquantlib.model.shortrate.ShortRateTree;
 import org.jquantlib.model.shortrate.TermStructureFittingParameter;
-import org.jquantlib.model.shortrate.processes.OrnsteinUhlenbeckProcess;
+import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -82,7 +82,7 @@ public class HullWhite extends Vasicek {// implements TermStructureConsistentMod
         // needed to activate the above constructor
         ShortRateDynamics numericDynamics = (new Dynamics(phi, a(), sigma()));
         TrinomialTree trinomial = new TrinomialTree(numericDynamics.process(), grid, true);
-        ShortRateTree numericTree = new ShortRateTree(trinomial, numericDynamics, grid);
+        ShortRateTree numericTree = null;//new ShortRateTree(trinomial, numericDynamics, grid);
 
         // typedef TermStructureFittingParameter::NumericalImpl NumericalImpl;
         TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) (phi.getImplementation());

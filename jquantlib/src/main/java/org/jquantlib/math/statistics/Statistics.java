@@ -32,6 +32,8 @@ public class Statistics {
 	public Double  skewness(){ return 0.0;}
 	public Double  kurtosis(){ return 0.0;}
 	
+	
+	
     // FIXME: Decide if it's a class, interface or if we simply get rid of it
 
 }

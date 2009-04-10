@@ -62,7 +62,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
     @Override
     public Lattice tree(TimeGrid grid) {
         TrinomialTree trinomial = new TrinomialTree(dynamics().process(), grid, true);
-        return new ShortRateTree(trinomial, dynamics(), grid);
+        return null;//new ShortRateTree(trinomial, dynamics(), grid);
     }
 
     protected Double /* @Real */A(Double /* @Time */t, Double /* @Time */T) {

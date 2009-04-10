@@ -30,6 +30,10 @@ import org.jquantlib.time.TimeGrid;
  * @author Praneet Tiwari
  */
 
+/*
+ * Moved to OneFactorModel
+ */
+//reviewed
 // ! Recombining trinomial tree discretizing the state variable
 public class ShortRateTree extends TreeLattice1D {
 

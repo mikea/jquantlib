@@ -22,6 +22,7 @@
 
 package org.jquantlib.math.distributions;
 
+
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Factorial;
 import org.jquantlib.math.UnaryFunction;
@@ -100,4 +101,7 @@ public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
 		Factorial fact = new Factorial();
 		return Math.exp(-lambda_) * Math.pow(lambda_, index) / fact.get(index);
     }
+
+
+
 }

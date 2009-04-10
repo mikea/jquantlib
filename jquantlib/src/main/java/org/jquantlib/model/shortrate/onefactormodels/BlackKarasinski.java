@@ -33,7 +33,7 @@ import org.jquantlib.model.shortrate.Parameter;
 import org.jquantlib.model.shortrate.ShortRateDynamics;
 import org.jquantlib.model.shortrate.ShortRateTree;
 import org.jquantlib.model.shortrate.TermStructureFittingParameter;
-import org.jquantlib.model.shortrate.processes.OrnsteinUhlenbeckProcess;
+import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.TimeGrid;
@@ -172,7 +172,7 @@ public class BlackKarasinski extends OneFactorModel {
         // new ShortRateTree(trinomial, numericDynamics, grid));
         ShortRateDynamics numericDynamics = (new Dynamics(phi, a(), sigma()));
         TrinomialTree trinomial = new TrinomialTree(numericDynamics.process(), grid, true);
-        ShortRateTree numericTree = new ShortRateTree(trinomial, numericDynamics, grid);
+        ShortRateTree numericTree = null;//new ShortRateTree(trinomial, numericDynamics, grid);
         // typedef TermStructureFittingParameter::NumericalImpl NumericalImpl;
         // boost::shared_ptr<NumericalImpl> impl =
         // boost::dynamic_pointer_cast<NumericalImpl>(phi.implementation());

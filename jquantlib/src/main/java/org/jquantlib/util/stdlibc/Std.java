@@ -26,8 +26,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.jquantlib.math.Array;
+import org.jquantlib.math.E_IBinaryFunction;
+import org.jquantlib.math.E_IUnaryFunction;
+import org.jquantlib.math.E_UnaryFunction;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.functions.DoubleFunction;
+
+import sun.reflect.generics.tree.ReturnType;
 
 /**
  * @see <a href="http://javadude.com/articles/passbyvalue.htm">Java is
@@ -82,6 +87,37 @@ public final class Std {
         	array.set(i, func.apply(array.at(i)));
         }
 	}
+	
+	public static<ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> 
+	bind2nd(E_IBinaryFunction<ParameterType,  ReturnType> binaryFunction, ParameterType bounded){   
+        E_IUnaryFunction<ParameterType, ReturnType> ret = new E_UnaryFunction<ParameterType, ReturnType>(){
+            private E_IBinaryFunction<ParameterType, ReturnType> binary;
+            private ParameterType bounded;
+            @Override
+            public ReturnType evaluate(ParameterType x) {
+                return binary.evaluate(x, bounded);
+            }
+        };
+        ret.setBinaryFunction(binaryFunction);
+        ret.setBoundedValue(bounded);
+        return ret;
+	}
+	
+	
+	public static<ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> 
+	    bind1st(E_IBinaryFunction<ParameterType,  ReturnType> binaryFunction, ParameterType bounded){   
+	        E_IUnaryFunction<ParameterType, ReturnType> ret = new E_UnaryFunction<ParameterType, ReturnType>(){
+	            private E_IBinaryFunction<ParameterType, ReturnType> binary;
+	            private ParameterType bounded;
+	            @Override
+	            public ReturnType evaluate(ParameterType x) {
+	                return binary.evaluate(bounded, x);
+	            }
+	        };
+	        ret.setBinaryFunction(binaryFunction);
+	        ret.setBoundedValue(bounded);
+	        return ret;
+	    }
 	
 	   /**
      * Implements std::min_element
