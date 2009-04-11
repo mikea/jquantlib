@@ -70,6 +70,8 @@ public class Euribor extends IborIndex {
 //    }
     
 
+    
+
     protected Euribor(String name, Period tenor, int settlementDays, DayCounter dayCounter, Handle<YieldTermStructure> h) {
         super(name, tenor, settlementDays, Target.getCalendar(), Currency.getInstance("EUR"), euriborConvention(tenor),
                 euriborEOM(tenor), dayCounter, h);
@@ -106,5 +108,68 @@ public class Euribor extends IborIndex {
 			throw new IllegalArgumentException("invalid time units"); // TODO: message
 		}
 	}
+	
+	public static Euribor getEuribor1W(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(1, TimeUnit.WEEKS), h);
+    }
+	public static Euribor getEuribor2W(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(2, TimeUnit.WEEKS), h);
+    }
+	public static Euribor getEuribor3W(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(3, TimeUnit.WEEKS), h);
+    }
+	
+	public static Euribor getEuribor1M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(1, TimeUnit.MONTHS), h);
+    }
 
+    public static Euribor getEuribor2M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(1, TimeUnit.MONTHS), h);
+    }
+
+    public static Euribor getEuribor3M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(3, TimeUnit.MONTHS), h);
+    }
+
+    public static Euribor getEuribor4M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(4, TimeUnit.MONTHS), h);
+    }
+
+    public static Euribor getEuribor5M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(5, TimeUnit.MONTHS), h);
+    }
+
+    public static Euribor getEuribor6M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(6, TimeUnit.MONTHS), h);
+    }
+
+    public static Euribor getEuribor7M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(7, TimeUnit.MONTHS), h);
+    }
+
+    public static Euribor getEuribor8M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(8, TimeUnit.MONTHS), h);
+    }
+
+    public static Euribor getEuribor9M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(9, TimeUnit.MONTHS), h);
+    }
+
+    public static Euribor getEuribor10M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(10, TimeUnit.MONTHS), h);
+    }
+
+    public static Euribor getEuribor11M(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(11, TimeUnit.MONTHS), h);
+    }
+    public static Euribor getEuribor1Y(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(1, TimeUnit.YEARS), h);
+    }
+    
+    public static Euribor getEuribor_SW(Handle<YieldTermStructure> h) {
+        return new Euribor(new Period(1, TimeUnit.WEEKS), h);
+    }
+    
+    
+	        
 }
