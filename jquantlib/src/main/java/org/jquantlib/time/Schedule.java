@@ -39,6 +39,11 @@ import org.jquantlib.util.DateFactory;
  */
 // FIXME: this class needs code review :: http://bugs.jquantlib.org/view.php?id=59
 public class Schedule {
+    
+    private static final String full_interface_not_available = "full interface not available";
+    
+    
+    
     private final boolean fullInterface;
     private final Period tenor;
     private final Calendar calendar;
@@ -49,13 +54,21 @@ public class Schedule {
     private final Date firstDate;
     private final Date nextToLastDate;
     private final boolean finalIsRegular;
-    private final List<Date> dates;
+    private final List<Date> dates_;
     private final List<Boolean> isRegular;
     
 
-    private Schedule(final Period tenor, final Calendar calendar, final BusinessDayConvention convention,
-            final BusinessDayConvention terminationDateConvention, final DateGenerationRule rule, final boolean endOfMonth, final Date firstDate,
-            final Date nextToLastDate, final List<Date> dates, final boolean finalIsRegular, final boolean fullInterface) {
+    private Schedule(final Period tenor, 
+            final Calendar calendar, 
+            final BusinessDayConvention convention,
+            final BusinessDayConvention terminationDateConvention, 
+            final DateGenerationRule rule, 
+            final boolean endOfMonth, 
+            final Date firstDate,
+            final Date nextToLastDate, 
+            final List<Date> dates, 
+            final boolean finalIsRegular, 
+            final boolean fullInterface) {
         this.tenor = tenor;
         this.calendar = calendar;
         this.convention = convention;
@@ -67,9 +80,9 @@ public class Schedule {
         this.finalIsRegular = finalIsRegular;
         this.fullInterface = fullInterface;
         if (dates == null) {
-            this.dates = new ArrayList<Date>();
+            this.dates_ = new ArrayList<Date>();
         } else {
-            this.dates = dates;
+            this.dates_ = dates;
         }
         this.isRegular = new ArrayBooleanList();
     }
@@ -80,8 +93,14 @@ public class Schedule {
 
     }
 
-    public Schedule(final Date effectiveDate, final Date terminationDate, final Period periodTenor, final Calendar calendar, final BusinessDayConvention businessDayConvention,
-            final BusinessDayConvention terminationDateConvention, final DateGenerationRule dateGenerationRule, final boolean endOfMonth, final Date firstDate,
+    public Schedule(final Date effectiveDate, 
+            final Date terminationDate, 
+            final Period periodTenor, 
+            final Calendar calendar, 
+            final BusinessDayConvention businessDayConvention,
+            final BusinessDayConvention terminationDateConvention, 
+            final DateGenerationRule dateGenerationRule, 
+            final boolean endOfMonth, final Date firstDate,
             final Date nextToLastDate) {
     	
         this(periodTenor, calendar, businessDayConvention, terminationDateConvention, dateGenerationRule, endOfMonth, firstDate, nextToLastDate, null, true, true);
@@ -154,19 +173,19 @@ public class Schedule {
 
         case ZERO:
             tenor = new Period(0, TimeUnit.DAYS);
-            dates.add(effectiveDate);
-            dates.add(terminationDate);
+            dates_.add(effectiveDate);
+            dates_.add(terminationDate);
             isRegular.add(true);
             break;
 
         case BACKWARD:
 
-            dates.add(terminationDate);
+            dates_.add(terminationDate);
 
             seed = terminationDate;
             if (nextToLastDate != Date.NULL_DATE && nextToLastDate != null) {
                 // Add it after 1'st element
-                dates.add(1, nextToLastDate);
+                dates_.add(1, nextToLastDate);
                 Date temp = nullCalendar.advance(seed, new Period(-periods * tenor.length(), tenor.units()), convention,
                         endOfMonth);
                 if (!temp.equals(nextToLastDate))
@@ -186,7 +205,7 @@ public class Schedule {
                 if (temp.lt(exitDate))
                     break;
                 else {
-                    dates.add(0, temp);
+                    dates_.add(0, temp);
                     isRegular.add(0, true);
                     ++periods;
                 }
@@ -195,8 +214,8 @@ public class Schedule {
             if (endOfMonth && calendar.isEndOfMonth(seed))
                 convention = BusinessDayConvention.PRECEDING;
 
-            if (!calendar.adjust(dates.get(0), convention).eq(calendar.adjust(effectiveDate, convention))) {
-                dates.add(0, effectiveDate);
+            if (!calendar.adjust(dates_.get(0), convention).eq(calendar.adjust(effectiveDate, convention))) {
+                dates_.add(0, effectiveDate);
                 isRegular.add(0, false);
             }
             break;
@@ -207,11 +226,11 @@ public class Schedule {
             // fall through
         case FORWARD:
 
-            dates.add(effectiveDate);
+            dates_.add(effectiveDate);
 
             seed = effectiveDate;
             if (firstDate != Date.NULL_DATE && firstDate != null) {
-                dates.add(firstDate);
+                dates_.add(firstDate);
                 Date temp = nullCalendar.advance(seed, new Period(periods * tenor.length(), tenor.units()), convention,
                         endOfMonth);
                 if (temp != firstDate)
@@ -231,7 +250,7 @@ public class Schedule {
                 if (temp.gt(exitDate))
                     break;
                 else {
-                    dates.add(temp);
+                    dates_.add(temp);
                     isRegular.add(true);
                     ++periods;
                 }
@@ -240,9 +259,9 @@ public class Schedule {
             if (endOfMonth && calendar.isEndOfMonth(seed))
                 convention = BusinessDayConvention.PRECEDING;
 
-            if (!calendar.adjust(dates.get(dates.size() - 1), terminationDateConvention).equals(
+            if (!calendar.adjust(dates_.get(dates_.size() - 1), terminationDateConvention).equals(
                     calendar.adjust(terminationDate, terminationDateConvention))) {
-                dates.add(terminationDate);
+                dates_.add(terminationDate);
                 isRegular.add(false);
             }
 
@@ -254,39 +273,55 @@ public class Schedule {
 
         // adjustments
         if (rule == DateGenerationRule.THIRD_WEDNESDAY)
-            for (int i = 1; i < dates.size() - 1; ++i) {
-                Date d = dates.get(i);
+            for (int i = 1; i < dates_.size() - 1; ++i) {
+                Date d = dates_.get(i);
                 Date adjDate = d.getNthWeekday(3, Weekday.WEDNESDAY);
                 d.getUpdatable().update(adjDate);
             }
 
-        for (int i = 0; i < dates.size() - 1; ++i) {
-            dates.get(i).getUpdatable().update(calendar.adjust(dates.get(i), convention));
+        for (int i = 0; i < dates_.size() - 1; ++i) {
+            dates_.get(i).getUpdatable().update(calendar.adjust(dates_.get(i), convention));
         }
 
         // termination date is NOT adjusted as per ISDA specifications,
         // unless otherwise specified in the confirmation of the deal
         if (terminationDateConvention != BusinessDayConvention.UNADJUSTED) {
-            dates.get(dates.size() - 1).getUpdatable().update(
-                    calendar.adjust(dates.get(dates.size() - 1), terminationDateConvention));
+            dates_.get(dates_.size() - 1).getUpdatable().update(
+                    calendar.adjust(dates_.get(dates_.size() - 1), terminationDateConvention));
         }
 
     }
 
+    public Schedule(Date startDate, 
+            Date maturity, 
+            Period tenor, 
+            Calendar fixingCalendar, 
+            BusinessDayConvention convention,
+            BusinessDayConvention terminationDateConvention, 
+            boolean backward, 
+            boolean endOfMonth) {
+        throw new UnsupportedOperationException("Diverging from 0.8.1 - needs review");
+        /*
+        this(startDate, maturity, tenor, fixingCalendar, convention, terminationDateConvention, backward, 
+                endOfMonth, DateFactory.getFactory().getDate(0, 0, 0), DateFactory.getFactory().getDate(0,0,0));
+        */
+        
+    }
+
     public Iterator<Date> getDatesAfter(Date date) {
-        if (dates.size() > 0) {
+        if (dates_.size() > 0) {
             List<Date> ldates = new ArrayList<Date>();
             int index = -1;
-            for (int i = 0; i < dates.size(); i++) {
-                Date d = dates.get(i);
+            for (int i = 0; i < dates_.size(); i++) {
+                Date d = dates_.get(i);
                 if (d.equals(date)) {
                     index = i;
                     break;
                 }
             }
             if (index > 0) {
-                for (int i = index; i < dates.size(); i++) {
-                    ldates.add(dates.get(i));
+                for (int i = index; i < dates_.size(); i++) {
+                    ldates.add(dates_.get(i));
                 }
                 return ldates.iterator();
             }
@@ -295,34 +330,34 @@ public class Schedule {
     }
 
     public Date getNextDate(Date refDate) {
-        if (dates.size() > 0) {
+        if (dates_.size() > 0) {
             int index = -1;
-            for (int i = 0; i < dates.size(); i++) {
-                Date d = dates.get(i);
+            for (int i = 0; i < dates_.size(); i++) {
+                Date d = dates_.get(i);
                 if (d.equals(refDate)) {
                     index = i;
                     break;
                 }
             }
-            if (index >= 0 && index != dates.size() - 1) {
-                return dates.get(index + 1);
+            if (index >= 0 && index != dates_.size() - 1) {
+                return dates_.get(index + 1);
             }
         }
         return null;
     }
 
     public Date getPreviousDate(Date refDate) {
-        if (dates.size() > 0) {
+        if (dates_.size() > 0) {
             int index = -1;
-            for (int i = 0; i < dates.size(); i++) {
-                Date d = dates.get(i);
+            for (int i = 0; i < dates_.size(); i++) {
+                Date d = dates_.get(i);
                 if (d.equals(refDate)) {
                     index = i;
                     break;
                 }
             }
             if (index > 0) {
-                return dates.get(index - 1);
+                return dates_.get(index - 1);
             }
         }
         return null;
@@ -339,6 +374,23 @@ public class Schedule {
         }
         return false;
     }
+    
+    public Calendar getCalendar(){
+        return calendar;
+    }
+    
+    
+    public Date date(int i){
+        return dates_.get(i);
+    }
+    
+    public Period tenor(){
+        if(!fullInterface){
+            throw new IllegalArgumentException(full_interface_not_available);
+        }
+        return tenor;
+    }
+    
 
     /*
      * Date Schedule::previousDate(const Date& refDate) const { std::vector<Date>::const_iterator res = lower_bound(refDate); if
