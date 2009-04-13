@@ -68,15 +68,14 @@ public class CapHelper extends CalibrationHelper {
                 
         double [] nominals = {1,1.0};
         
-        /* missing constructor :-(
         Schedule floatSchedule = new Schedule(startDate, maturity,
                 index.getTenor(), index.getFixingCalendar(), 
                 index.getConvention(),
                 index.getConvention(), false, false);
-        */
         
+        /*
+        Leg floatingLeg = new IborL
         
-        /* to be completed
          Leg fixedLeg = FixedRateLeg(nominals,
                                     fixedSchedule,
                                     std::vector<Rate>(1, fixedRate),
