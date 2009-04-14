@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.lang.annotation.Rate;
-import org.jquantlib.lang.annotation.Real;
+import org.jquantlib.indexes.Index;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Schedule;
@@ -38,9 +37,33 @@ public class Leg {
     private static final String coupon_rates_not_specified = "coupon rates not specified";
     private static final String nominals_not_specified = "nominals not specified";
     private static final String regular_first_coupon_day_count = "regular first coupon does not allow a first-period day count";
+    private static final String no_nominal_given = "no nominal given";
+    
+    private static double get(double[] v, int i, double defaultValue) {
+        if (v == null) {
+            return defaultValue;
+        } else if (i < v.length) {
+            return v[i];
+        } else {
+            return v[v.length - 1];
+        }
+    }
 
+    private static double effectiveFixedRate(double[] spreads, double[] caps, double[] floors, int i) {
+        double result = get(spreads, i, 0.0);
+        double floor = get(floors, i, 0);
+        if (floor != 0)
+            result = Math.max(floor, result);
+        double cap = get(caps, i, 0);
+        if (cap != 0)
+            result = Math.min(cap, result);
+        return result;
+    }
+    
+    
     public static List<CashFlow> FixedRateLeg(double[] nominals, 
-            Schedule schedule, double[] couponRates,
+            Schedule schedule, 
+            double[] couponRates,
             DayCounter paymentDayCounter, 
             BusinessDayConvention paymentAdj, 
             DayCounter firstPeriodDayCount) {
@@ -75,65 +98,245 @@ public class Leg {
             leg.add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter,
                                 start, end, start, end));
 
-        } else {}
-        /*
-            Date ref = end - schedule.
-            ref = calendar.adjust(ref,
-                                        schedule.businessDayConvention());
-            DayCounter dc = firstPeriodDayCount.empty() ?
+        } else {
+            Date ref = end.decrement(schedule.tenor());
+            ref = calendar.adjust(ref,schedule.businessDayConvention());
+            //FIXME: check this, seems like our internal implementation uses another approach
+            DayCounter dc = firstPeriodDayCount==null?
                             paymentDayCounter :
                             firstPeriodDayCount;
-            leg.push_back(boost::shared_ptr<CashFlow>(new
-                FixedRateCoupon(nominal, paymentDate, rate,
-                                dc, start, end, ref, end)));
+            leg.add(new FixedRateCoupon(nominal, paymentDate, rate,
+                                dc, start, end, ref, end));
         }
         // regular periods
-        for (Size i=2; i<schedule.size()-1; ++i) {
+        for (int i=2; i<schedule.size()-1; ++i) {
             start = end; end = schedule.date(i);
             paymentDate = calendar.adjust(end,paymentAdj);
-            if ((i-1) < couponRates.size())
+            if ((i-1) < couponRates.length){
                 rate = couponRates[i-1];
-            else
-                rate = couponRates.back();
-            if ((i-1) < nominals.size())
+            }
+            else{
+                rate = couponRates[couponRates.length - 1];
+            }
+            if ((i-1) < nominals.length){
                 nominal = nominals[i-1];
-            else
-                nominal = nominals.back();
-            leg.push_back(boost::shared_ptr<CashFlow>(new
-                FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter,
-                                start, end, start, end)));
+            }
+            else{
+                nominal = nominals[nominals.length - 1];
+            }
+            leg.add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter,
+                                start, end, start, end));
         }
         if (schedule.size() > 2) {
             // last period might be short or long
-            Size N = schedule.size();
+            int N = schedule.size();
             start = end; end = schedule.date(N-1);
             paymentDate = calendar.adjust(end,paymentAdj);
-            if ((N-2) < couponRates.size())
+            if ((N-2) < couponRates.length){
                 rate = couponRates[N-2];
-            else
-                rate = couponRates.back();
-            if ((N-2) < nominals.size())
+            }
+            else{
+                rate = couponRates[couponRates.length - 1];
+            }
+            if ((N-2) < nominals.length){
                 nominal = nominals[N-2];
-            else
-                nominal = nominals.back();
+            }
+            else{
+                nominal = nominals[nominals.length - 1];
+            }
             if (schedule.isRegular(N-1)) {
-                leg.push_back(boost::shared_ptr<CashFlow>(new
+                leg.add(new
                     FixedRateCoupon(nominal, paymentDate,
                                     rate, paymentDayCounter,
-                                    start, end, start, end)));
+                                    start, end, start, end));
             } else {
-                Date ref = start + schedule.tenor();
-                ref = calendar.adjust(ref,
-                                            schedule.businessDayConvention());
-                leg.push_back(boost::shared_ptr<CashFlow>(new
-                    FixedRateCoupon(nominal, paymentDate,
+                Date ref = start.increment(schedule.tenor());
+                ref = calendar.adjust(ref,schedule.businessDayConvention());
+                leg.add(new FixedRateCoupon(nominal, paymentDate,
                                     rate, paymentDayCounter,
-                                    start, end, start, ref)));
+                                    start, end, start, ref));
             }
         }
-        */
         return leg;
     }
+    
+    /*
+    template <typename IndexType,
+    typename FloatingCouponType,
+    typename CappedFlooredCouponType>
+    */
+    public static List<CashFlow> FloatingLeg(double[] nominals, 
+            Schedule schedule, 
+            Index index,
+            DayCounter paymentDayCounter, 
+            BusinessDayConvention paymentAdj, 
+            int fixingDays,
+            double [] gearings,
+            double [] spreads,
+            double [] caps,
+            double [] floors,
+            boolean isInArrears
+            //used to mimic templates
+            //class CouponType
+            ){
+        
+        if(nominals==null || nominals.length == 0){
+            throw new IllegalArgumentException(no_nominal_given);
+        }
+        
+        int n = schedule.size() - 1;
+        if(nominals.length>n){
+            throw new IllegalArgumentException("too many nominals (" + nominals.length +
+            "), only " + n + " required");
+        }
+        
+        if(gearings.length>n){
+            throw new IllegalArgumentException("too many gearings (" + gearings.length +
+                   "), only " + n + " required");
+        }
+        
+        if(spreads.length > n){
+            throw new IllegalArgumentException("too many spreads (" + spreads.length +
+                   "), only " + n + " required");
+        }
+        
+        if(caps.length>n){
+            throw new IllegalArgumentException("too many caps (" + caps.length +
+                   "), only " + n + " required");
+        }
+        
+        if(floors.length>n){
+            throw new IllegalArgumentException("too many floors (" + floors.length +
+                "), only " + n + " required");
+        }
+        
+        List<CashFlow> leg = new ArrayList<CashFlow>(n);
+        
+        // the following is not always correct (orignial c++ comment)
+        Calendar calendar = schedule.getCalendar();
+        
+        //FIXME: constructor for uninitialized date available ?
+        Date refStart, start, refEnd, end;
+        Date paymentDate;
+        
+        for(int i = 0; i<n; i++){
+            refStart = start = schedule.date(i);
+            refEnd = end = schedule.date(i+1);
+            paymentDate =  calendar.adjust(end, paymentAdj);
+        
+            if (i==0   && !schedule.isRegular(i+1))
+                refStart = calendar.adjust(end.decrement(schedule.tenor()), paymentAdj);
+            if (i==n-1 && !schedule.isRegular(i+1))
+                refEnd = calendar.adjust(start.increment(schedule.tenor()), paymentAdj);
+            if (get(gearings, i, 1.0) == 0.0) { // fixed coupon
+                leg.add(new FixedRateCoupon(get(nominals, i, 0), paymentDate,
+                                    effectiveFixedRate(spreads, caps, floors, i),
+                                    paymentDayCounter,
+                                    start, end, refStart, refEnd));
+                
+            } else { // floating coupon
+                /*
+                if (noOption(caps, floors, i))
+                    leg.add(FloatingCouponType.(paymentDate,
+                                   get(nominals, i, 0),
+                                   start, end, fixingDays, index,
+                                   get(gearings, i, 1.0),
+                                   get(spreads, i, 0.0),
+                                   refStart, refEnd,
+                                   paymentDayCounter, isInArrears)));
+                else {
+                    leg.push_back(boost::shared_ptr<CashFlow>(new
+                        CappedFlooredCouponType(paymentDate,
+                                                get(nominals, i, Null<Real>()),
+                                                start, end, fixingDays, index,
+                                                get(gearings, i, 1.0),
+                                                get(spreads, i, 0.0),
+                                                get(caps,   i, Null<Rate>()),
+                                                get(floors, i, Null<Rate>()),
+                                                refStart, refEnd,
+                                                paymentDayCounter, isInArrears)));
+                }
+            }
+        }*/
+        
+    }
+           
+        }
+        return leg;
+    }
+}
+        
+        
+
+
+/*
+QL_REQUIRE(!nominals.empty(), "no nominal given");
+
+Size n = schedule.size()-1;
+QL_REQUIRE(nominals.size() <= n,
+           "too many nominals (" << nominals.size() <<
+           "), only " << n << " required");
+QL_REQUIRE(gearings.size()<=n,
+           "too many gearings (" << gearings.size() <<
+           "), only " << n << " required");
+QL_REQUIRE(spreads.size()<=n,
+           "too many spreads (" << spreads.size() <<
+           "), only " << n << " required");
+QL_REQUIRE(caps.size()<=n,
+           "too many caps (" << caps.size() <<
+           "), only " << n << " required");
+QL_REQUIRE(floors.size()<=n,
+           "too many floors (" << floors.size() <<
+           "), only " << n << " required");
+
+Leg leg; leg.reserve(n);
+
+// the following is not always correct
+Calendar calendar = schedule.calendar();
+
+Date refStart, start, refEnd, end;
+Date paymentDate;
+
+for (Size i=0; i<n; ++i) {
+    refStart = start = schedule.date(i);
+    refEnd   =   end = schedule.date(i+1);
+    paymentDate = calendar.adjust(end, paymentAdj);
+    if (i==0   && !schedule.isRegular(i+1))
+        refStart = calendar.adjust(end - schedule.tenor(), paymentAdj);
+    if (i==n-1 && !schedule.isRegular(i+1))
+        refEnd = calendar.adjust(start + schedule.tenor(), paymentAdj);
+    if (get(gearings, i, 1.0) == 0.0) { // fixed coupon
+        leg.push_back(boost::shared_ptr<CashFlow>(new
+            FixedRateCoupon(get(nominals, i, Null<Real>()), paymentDate,
+                            effectiveFixedRate(spreads, caps, floors, i),
+                            paymentDayCounter,
+                            start, end, refStart, refEnd)));
+    } else { // floating coupon
+        if (noOption(caps, floors, i))
+            leg.push_back(boost::shared_ptr<CashFlow>(new
+                FloatingCouponType(paymentDate,
+                           get(nominals, i, Null<Real>()),
+                           start, end, fixingDays, index,
+                           get(gearings, i, 1.0),
+                           get(spreads, i, 0.0),
+                           refStart, refEnd,
+                           paymentDayCounter, isInArrears)));
+        else {
+            leg.push_back(boost::shared_ptr<CashFlow>(new
+                CappedFlooredCouponType(paymentDate,
+                                        get(nominals, i, Null<Real>()),
+                                        start, end, fixingDays, index,
+                                        get(gearings, i, 1.0),
+                                        get(spreads, i, 0.0),
+                                        get(caps,   i, Null<Rate>()),
+                                        get(floors, i, Null<Rate>()),
+                                        refStart, refEnd,
+                                        paymentDayCounter, isInArrears)));
+        }
+    }
+}
+return leg;
+}
     /*
      * Real get(const std::vector<Real>& v, Size i, Real defaultValue) { if (v.empty()) { return defaultValue; } else if (i <
      * v.size()) { return v[i]; } else { return v.back(); } }
@@ -305,4 +508,4 @@ public class Leg {
      * start, end, fixingDays, paymentDayCounter, get(gearings, i, 1.0), get(spreads, i, 0.0), refStart, refEnd,
      * observationsSchedules.back(), get(lowerTriggers, i, Null<Rate>()), get(upperTriggers, i, Null<Rate>())))); } } return leg; }
      */
-}
+

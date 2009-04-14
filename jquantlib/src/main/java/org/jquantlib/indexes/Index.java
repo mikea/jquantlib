@@ -189,5 +189,9 @@ public abstract class Index implements Observable {
 	public List<Observer> getObservers() {
 		return delegatedObservable.getObservers();
 	}
+	
+	public double fixing(Date fixingDate){
+	    return fixing(fixingDate, false);
+	}
 
 }

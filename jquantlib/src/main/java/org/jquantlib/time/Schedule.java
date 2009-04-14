@@ -391,6 +391,14 @@ public class Schedule {
         return tenor;
     }
     
+    public BusinessDayConvention businessDayConvention(){
+        return convention;
+    }
+    
+    public int size(){
+        return dates_.size();
+    }
+    
 
     /*
      * Date Schedule::previousDate(const Date& refDate) const { std::vector<Date>::const_iterator res = lower_bound(refDate); if

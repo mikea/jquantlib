@@ -106,6 +106,10 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		// forecast
 		return forecastFixing(fixingDate);
 	}
+	
+	   public double fixing(Date fixingDate) {
+	       return fixing(fixingDate, false);
+	    }
 
 	@Override
 	public String getName() {
@@ -177,5 +181,6 @@ public abstract class InterestRateIndex extends Index implements Observer {
 	public void update(Observable o, Object arg) {
 	    notifyObservers(arg);	
 	}
+	
 
 }
