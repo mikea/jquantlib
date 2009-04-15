@@ -26,9 +26,16 @@ import org.jquantlib.Configuration;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.lang.annotation.Rate;
+import org.jquantlib.pricingengines.BlackFormula;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Observable;
+
+/*
+ * DONE!
+ */
+
 
 public class BlackIborCouponPricer extends IborCouponPricer {
     
@@ -45,7 +52,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
     private double spreadLegValue_;
     
     
-    public double initialize( FloatingRateCoupon coupon) {
+    public void initialize( FloatingRateCoupon coupon) {
         coupon_ =  (IborCoupon)coupon;
         gearing_ = coupon_.gearing();
         spread_ = coupon_.spread();
@@ -61,10 +68,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
         else{
             discount_ = 1.0;
         }
-
         spreadLegValue_ = spread_ * coupon_.accrualPeriod()* discount_;
-        //FIXME ...
-        return 0;
     }
 
     public double swapletPrice() {
@@ -98,7 +102,6 @@ public class BlackIborCouponPricer extends IborCouponPricer {
 
     public double optionletPrice(Option.Type optionType,
                                                double effStrike)  {
-        /*
         Date fixingDate = coupon_.fixingDate();
         if (fixingDate.le(Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate())) {
             // the amount is determined
@@ -114,19 +117,18 @@ public class BlackIborCouponPricer extends IborCouponPricer {
         } 
         else {
             if(capletVolatility()==null){
-                throw new IllegalArgumentException("missing caplet volatility");
+                throw new IllegalArgumentException(missing_caplet_volatility);
             }
             // not yet determined, use Black model
             double fixing =
-                 blackFormula(
+                 BlackFormula.blackFormula(
                        optionType,
                        effStrike,
                        adjustedFixing(),
                        Math.sqrt(capletVolatility().getLink().blackVariance(fixingDate,
                                                                    effStrike)));
-            return fixing * coupon_.accrualPeriod()*discount_; ;
-        }*/
-        return 0;
+            return fixing * coupon_.accrualPeriod()*discount_;
+        }
     }
 
     public double adjustedFixing() {
@@ -134,29 +136,26 @@ public class BlackIborCouponPricer extends IborCouponPricer {
         double adjustement = 0.0;
 
         double fixing = coupon_.indexFixing();
-        /*
+        
         if (!coupon_.isInArrears()) {
             adjustement = 0.0;
         } else {
             // see Hull, 4th ed., page 550
             if(capletVolatility() == null){
-                throw new IllegalArgumentException(missin)
-            }
-            QL_REQUIRE(!capletVolatility().empty(),"missing caplet volatility");
-            Date d1 = coupon_->fixingDate(),
-                 referenceDate = capletVolatility()->referenceDate();
-            if (d1 <= referenceDate) {
+                throw new IllegalArgumentException(missing_caplet_volatility);
+            };
+            Date d1 = coupon_.fixingDate(),
+                 referenceDate = capletVolatility().getLink().referenceDate();
+            if (d1.le(referenceDate)) {
                 adjustement = 0.0;
             } else {
-                Date d2 = coupon_->index()->maturityDate(d1);
-                Time tau = coupon_->index()->dayCounter().yearFraction(d1, d2);
-                double variance = capletVolatility()->blackVariance(d1, fixing);
+                Date d2 = coupon_.index().maturityDate(d1);
+                double tau = coupon_.index().getDayCounter().yearFraction(d1, d2);
+                double variance = capletVolatility().getLink().blackVariance(d1, fixing);
                 adjustement = fixing*fixing*variance*tau/(1.0+fixing*tau);
             }
         }
         return fixing + adjustement;
-        */
-        return 0;
     }
 
            

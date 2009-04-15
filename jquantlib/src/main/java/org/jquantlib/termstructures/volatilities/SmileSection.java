@@ -22,12 +22,15 @@
 
 package org.jquantlib.termstructures.volatilities;
 
+import java.util.List;
+
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Observable;
+import org.jquantlib.util.Observer;
 
 public abstract class SmileSection implements Observable {
 
@@ -72,6 +75,61 @@ public abstract class SmileSection implements Observable {
             throw new IllegalArgumentException("expiry date (" + d + ") must be greater than reference date (" + refDate + ")");
         }
         exerciseTime_ = dc_.yearFraction(refDate, d);
+    }
+
+    public SmileSection(double exerciseTime, DayCounter dc) {
+        this.dc_ = dc;
+        this.exerciseTime_ = exerciseTime;
+        if (exerciseTime_ < 0.0) {
+            throw new IllegalArgumentException("expiry time must be positive: " + exerciseTime_ + " not allowed");
+        }
+
+    }
+
+    public SmileSection(double timeToExpiry) {
+        this(timeToExpiry, Actual365Fixed.getDayCounter());
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public int countObservers() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public void deleteObserver(Observer observer) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void deleteObservers() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public List<Observer> getObservers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void notifyObservers() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void notifyObservers(Object arg) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

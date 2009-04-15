@@ -20,9 +20,40 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-
 package org.jquantlib.cashflow;
 
-public class CmsCouponPricer {
+import org.jquantlib.SwaptionVolatilityStructure;
+import org.jquantlib.quotes.Handle;
+
+import sun.awt.geom.AreaOp.AddOp;
+
+//base pricer for vanilla CMS coupons
+public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
+
+    private Handle<SwaptionVolatilityStructure> swaptionVol_;
+    private static final String no_adequate_swaptionVol_given = "no adequate swaptionVol given";
+
+    public CmsCouponPricer(final Handle<SwaptionVolatilityStructure> swaptionVol) {
+        this.swaptionVol_ = swaptionVol;
+        swaptionVol_.addObserver(this);
+    }
+
+    public Handle<SwaptionVolatilityStructure> swaptionVolatility() {
+        return swaptionVol_;
+    }
+
+    public void setSwaptionVolatility(final Handle<SwaptionVolatilityStructure> swaptionVol) {
+        swaptionVol_.deleteObserver(this);
+        swaptionVol_ = swaptionVol;
+        if (swaptionVol_ == null || swaptionVol_.getLink() == null) {
+            throw new IllegalArgumentException(no_adequate_swaptionVol_given);
+        }
+        swaptionVol_.addObserver(this);
+        update();
+    }
+
+    private void update() {
+        notifyObservers();
+    }
 
 }

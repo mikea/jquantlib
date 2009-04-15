@@ -71,11 +71,19 @@ public abstract class CapletVolatilityStructure extends TermStructure {
         double vol = volatilityImpl(t, strike);
         return vol * vol * t;
     }
+    
+    public double blackVariance(Date start, double strike) {
+        return blackVariance(start, strike, false);
+    }
 
     public double blackVariance(double t, double strike, boolean extrapolate) {
         checkRange(t, strike, extrapolate);
         double vol = volatilityImpl(t, strike);
         return vol * vol * t;
+    }
+    
+    public double blackVariance(double t, double strike) {
+        return blackVariance(t, strike, false);
     }
 
     public double blackVariance(Period optionTenor, double strike, boolean extrapolate) {

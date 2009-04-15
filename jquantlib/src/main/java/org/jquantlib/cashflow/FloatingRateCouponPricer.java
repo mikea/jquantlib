@@ -37,12 +37,11 @@ public abstract class FloatingRateCouponPricer implements Observer, Observable {
     public abstract double capletRate(double effectiveCap);
     public abstract double floorletPrice(double effectiveFloor);
     public abstract double floorletRate(double effectiveFloor);
-    public abstract double initialize(FloatingRateCoupon coupon);
+    public abstract void initialize(FloatingRateCoupon coupon);
 
     @Override
     public void update(Observable o, Object arg) {
-        // TODO Auto-generated method stub
-        
+        notifyObservers(o);
     }
 
     @Override
