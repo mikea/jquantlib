@@ -76,7 +76,7 @@ public abstract class StochasticProcess implements Observable, Observer {
 	/**
 	 * @param discretization is an Object that <b>must</b> implement {@link Discretization}.
 	 */
-    protected StochasticProcess(final LinearDiscretization discretization) {
+    protected StochasticProcess(final /*LinearDiscretization*/ Discretization discretization) {
     	super();
     	if (discretization==null) throw new NullPointerException(); // FIXME: message
     	this.discretization = discretization;
