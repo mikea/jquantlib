@@ -28,7 +28,7 @@ import org.jquantlib.util.Date;
  * @author Daniel Kong
  */
 
-public class FractionalDividend extends AbstractDividend {
+public class FractionalDividend extends Dividend {
 
 	protected double rate;
 	protected double nominal;

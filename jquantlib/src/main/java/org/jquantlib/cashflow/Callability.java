@@ -30,18 +30,57 @@ import org.jquantlib.util.Date;
  */
 
 public class Callability extends Event {
+	
+	public enum Type{CALL, PUT}
+	
+	private Price price;
+	private Type type;
+	private Date date;
 
-	//TODO: Work in progress
-	public Callability(){
-        if (System.getProperty("EXPERIMENTAL")==null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+	public Callability(final Price price, Type type, final Date date){
+        this.price=price;
+        this.type=type;
+        this.date=date;
 	}
 	
 	@Override
 	public Date date() { 
-		// TODO Auto-generated method stub
-		return null;
+		return date;
+	}
+	
+	public Price getPrice(){
+		return price;
+	}
+	
+	public Type getType(){
+		return type;
+	}
+	
+	public static class Price{
+		
+		public enum Type{ DIRTY, CLEAN }
+		
+		private double amount;
+		private Type type;
+		
+		public Price(){amount=0.0;}
+		
+		public Price(double amount, Type type){
+			this.amount=amount;
+			this.type=type;
+		}
+		
+		public double getAmount(){
+			if(amount==0.0){
+				throw new IllegalStateException("no amount given");
+			}
+			return amount;
+		}
+		
+		public Type getType(){
+			return type;
+		}
+	
 	}
 
 }

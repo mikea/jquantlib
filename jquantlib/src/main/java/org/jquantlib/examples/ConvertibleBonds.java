@@ -22,7 +22,13 @@
 
 package org.jquantlib.examples;
 
+import java.util.List;
+
 import org.jquantlib.Configuration;
+import org.jquantlib.cashflow.Dividend;
+import org.jquantlib.cashflow.Callability;
+import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.daycounters.Thirty360;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
@@ -45,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Daniel Kong
  */
-
+//TODO: Work in progress
 public class ConvertibleBonds {
 
 	private final static Logger logger = LoggerFactory.getLogger(ConvertibleBonds.class);
@@ -91,7 +97,41 @@ public class ConvertibleBonds {
         Schedule schedule = new Schedule(issueDate, exerciseDate,new Period(frequency),calendar, 
         									convention, convention, DateGenerationRule.BACKWARD, false, 
         									Date.NULL_DATE, Date.NULL_DATE);
+        
+        List<Dividend> dividends;
+        List<Callability> callability;
+        
+        //std::vector<Real> coupons(1, 0.05);
+        double [] coupons = {1, 0.05};
 
+        DayCounter bondDayCount = Thirty360.getDayCounter();
+        
+        // Call dates, years 2, 4        
+        int[] callLength = { 2, 4 };
+        // Put dates year 3
+        int[] putLength = { 3 };
+        
+        double[] callPrices = {101.5, 100.85};
+        double[] putPrices = { 105.0 };
+        
+        for(int i=0; i<callLength.length; i++){
+//        	callability.add(e);
+        }
+//
+//        // Load call schedules
+//        for (Size i=0; i<LENGTH(callLength); i++) {
+//            callability.push_back(
+//                   boost::shared_ptr<Callability>(
+//                       new SoftCallability(Callability::Price(
+//                                                   callPrices[i],
+//                                                   Callability::Price::Clean),
+//                                           schedule.date(callLength[i]),
+//                                           1.20)));
+//        }
+
+        
+        
+        
       //TODO: Work in progress 
 		
 		clock.stopClock();

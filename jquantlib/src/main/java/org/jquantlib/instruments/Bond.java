@@ -24,13 +24,21 @@ package org.jquantlib.instruments;
 
 import java.util.List; // FIXME :: performance
 
+import org.jquantlib.Settings;
 import org.jquantlib.cashflow.CashFlow;
+import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.quotes.Handle;
+import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 
 /**
  * @author Srinivas Hasti
+ * 
+ * @author Daniel Kong
  *
  */
 //TODO: Complete implementation
@@ -38,12 +46,46 @@ import org.jquantlib.util.Date;
 public class Bond extends NewInstrument {
 	  protected int settlementDays;
 	  protected Calendar calendar;
-	  protected double faceAmount;
+	  protected double faceAmount;	  
+	  protected DayCounter paymentDayCounter;
+      protected BusinessDayConvention paymentConvention;
+      protected Handle<YieldTermStructure> discountCurve;
+      protected Frequency frequency;
 	  protected List<CashFlow> cashFlows;
 	  protected Date maturityDate;
 	  protected Date issueDate;
+	  protected Date datedDate;
       
+	protected Bond (int settlementDays,
+					double faceAmount,
+					final Calendar calendar,
+					final DayCounter paymentDayCounter,
+					BusinessDayConvention paymentConvention){
+		this(settlementDays, faceAmount, calendar, paymentDayCounter, paymentConvention, new Handle(YieldTermStructure.class));		
+	}
+	
+	protected Bond (int settlementDays,
+			double faceAmount,
+			final Calendar calendar,
+			final DayCounter paymentDayCounter,
+			BusinessDayConvention paymentConvention,
+			final Handle<YieldTermStructure> discountCurve){
+		this.settlementDays = settlementDays;
+		this.faceAmount = faceAmount;
+		this.calendar = calendar;
+		this.paymentDayCounter = paymentDayCounter;
+		this.paymentConvention = paymentConvention;
+		this.discountCurve = discountCurve;
+		frequency = Frequency.NO_FREQUENCY;
+		
+//		Settings class need a public method to return the singleton instance
+//		Settings.instance().getEvaluationDate().addObserver(this);
+		
+		discountCurve.addObserver(this);
+		
+	}
 
+	
 	public int getSettlementDays() {
 		return settlementDays;
 	}
@@ -159,7 +201,7 @@ public class Bond extends NewInstrument {
                Frequency freq,
                Date settlementDate = Date(),
                Real accuracy = 1.0e-8,
-               Size maxEvaluations = 100) const;
+               Size maxEvaluations = 100) const;\
      */
     //! clean price given Z-spread
     /*! Z-spread compounding, frequency, daycount are taken into account

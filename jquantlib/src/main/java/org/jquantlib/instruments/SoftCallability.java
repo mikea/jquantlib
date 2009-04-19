@@ -19,32 +19,29 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+package org.jquantlib.instruments;
 
-package org.jquantlib.cashflow;
-
+import org.jquantlib.cashflow.Callability;
+import org.jquantlib.cashflow.Callability.Price;
+import org.jquantlib.cashflow.Callability.Type;
 import org.jquantlib.util.Date;
 
 /**
+ * %callability leaving to the holder the possibility to convert
+ * 
  * @author Daniel Kong
  */
 
-public class FixedDividend extends Dividend {
+public class SoftCallability extends Callability {
 
-	protected double amount;
+	private double trigger;
 	
-	public FixedDividend(final Date date, final double amount){
-		super(date);
-		this.amount = amount;
+	public SoftCallability(final Price price, final Date date, double trigger){
+		super(price, Callability.Type.CALL, date);
+		this.trigger = trigger;
 	}
 	
-	@Override
-	public double getAmount(final double underlying) {
-		return amount;
+	public double getTrigger(){
+		return trigger;
 	}
-
-	@Override
-	public double getAmount() {
-		return amount;
-	}
-
 }

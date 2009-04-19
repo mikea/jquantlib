@@ -30,11 +30,11 @@ import org.jquantlib.util.Visitor;
  * @author Daniel Kong
  */
 
-public abstract class AbstractDividend extends CashFlow {
+public abstract class Dividend extends CashFlow {
 	
 	protected Date date;
 	
-	public AbstractDividend (final Date date){
+	public Dividend (final Date date){
 		super();
 		this.date = date;
 	}

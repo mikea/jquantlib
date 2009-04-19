@@ -22,9 +22,18 @@
 
 package org.jquantlib.examples;
 
+import org.jquantlib.Configuration;
+import org.jquantlib.time.AbstractCalendar;
+import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Weekday;
+import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.Month;
 import org.jquantlib.util.StopClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.jquantlib.util.Month.*;
 
 /**
  * This example prices a few bermudan swaptions using different short-rate models calibrated to market swaptions.
@@ -33,6 +42,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Daniel Kong
  */
+//TODO: Work in progress
 public class BermudanSwaption {
 	
 	private final static Logger logger = LoggerFactory.getLogger(BermudanSwaption.class);
@@ -44,9 +54,18 @@ public class BermudanSwaption {
 		logger.info("\n\n::::: "+BermudanSwaption.class.getSimpleName()+" :::::");		
 	}
 	
-	public void run(){
+	public void run() throws Exception{
 		StopClock clock = new StopClock();
 		clock.startClock();
+		
+		Date todaysDate = DateFactory.getFactory().getDate(15, FEBRUARY, 2002);
+		
+		Calendar calendar = new AbstractCalendar(){
+			                    public String getName(){return "";}
+			                    public boolean isWeekend(Weekday w){throw new UnsupportedOperationException();}};
+		
+		Date settlementDate = DateFactory.getFactory().getDate(19, FEBRUARY, 2002);
+		Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(todaysDate);
 		
 		//TODO: Work in progress
 		
@@ -57,7 +76,11 @@ public class BermudanSwaption {
 	}
 	
 	public static void main (String [] args){
-		new BermudanSwaption().run();
+		try{
+			new BermudanSwaption().run();			
+		}catch(Exception e){
+			logger.info(e.getMessage());
+		}
 	}
 
 }
