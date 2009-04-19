@@ -9,4 +9,7 @@ public interface IStatistics {
     public int getSampleSize();
     public double percentile(double y);
     public double standardDeviation();
+    public void add(IStatistics stats, double value);
+    public int samples();
+    public void reset();
 }
