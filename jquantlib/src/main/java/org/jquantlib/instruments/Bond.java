@@ -24,6 +24,7 @@ package org.jquantlib.instruments;
 
 import java.util.List; // FIXME :: performance
 
+import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.daycounters.DayCounter;
@@ -33,6 +34,7 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
+import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
 
 /**
@@ -44,18 +46,26 @@ import org.jquantlib.util.Date;
 //TODO: Complete implementation
 // FIXME: code review
 public class Bond extends NewInstrument {
-	  protected int settlementDays;
-	  protected Calendar calendar;
-	  protected double faceAmount;	  
-	  protected DayCounter paymentDayCounter;
-      protected BusinessDayConvention paymentConvention;
-      protected Handle<YieldTermStructure> discountCurve;
-      protected Frequency frequency;
-	  protected List<CashFlow> cashFlows;
-	  protected Date maturityDate;
-	  protected Date issueDate;
-	  protected Date datedDate;
+	protected int settlementDays;
+	protected Calendar calendar;
+	protected double faceAmount;	  
+	protected DayCounter paymentDayCounter;
+    protected BusinessDayConvention paymentConvention;
+    protected Handle<YieldTermStructure> discountCurve;
+    protected Frequency frequency;
+	protected List<CashFlow> cashFlows;
+	protected Date maturityDate;
+	protected Date issueDate;
+	protected Date datedDate;
       
+	/**
+	 * This private field is automatically initialized by constructor which
+	 * picks up it's value from {@link Settings} singleton. This procedure
+	 * caches values from the singleton, intending to avoid contention in
+	 * heavily multi-threaded environments.
+	 */
+	private final Date evaluationDate;
+		
 	protected Bond (int settlementDays,
 					double faceAmount,
 					final Calendar calendar,
@@ -78,8 +88,8 @@ public class Bond extends NewInstrument {
 		this.discountCurve = discountCurve;
 		frequency = Frequency.NO_FREQUENCY;
 		
-//		Settings class need a public method to return the singleton instance
-//		Settings.instance().getEvaluationDate().addObserver(this);
+		evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+		evaluationDate.addObserver(this);
 		
 		discountCurve.addObserver(this);
 		
@@ -162,6 +172,25 @@ public class Bond extends NewInstrument {
     public double getDirtyPrice() {
     	return 0.0;
     }
+    
+    public Date settlementDate(){
+    	return settlementDate(Date.NULL_DATE);
+    }
+    
+    public Date settlementDate(final Date date){
+    	Date d = date==Date.NULL_DATE ? Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate() : date;
+
+        // usually, the settlement is at T+n...
+        Date settlement = calendar.advance(d, settlementDays, TimeUnit.DAYS);
+        // ...but the bond won't be traded until the issue date (if given.)
+        if (issueDate == Date.NULL_DATE)
+            return settlement;
+        else
+        	//TODO: return std::max(settlement, issueDate_);
+        	return null;                	
+    }
+    
+    
     //! theoretical bond yield
     /*! The default bond settlement and theoretical price are used
         for calculation.
