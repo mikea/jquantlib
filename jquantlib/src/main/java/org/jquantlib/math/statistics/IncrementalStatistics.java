@@ -247,9 +247,4 @@ public class IncrementalStatistics /*implements IStatistics*/ {
         }
         return Math.sqrt(var/samples());
     }
-    
-    
-    
-    
-
 }

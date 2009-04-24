@@ -22,6 +22,7 @@
 
 package org.jquantlib.util.stdlibc;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -132,6 +133,26 @@ public final class Std {
         for(double temp: list){
             if(temp<value){
                 value = temp;
+            }
+        }
+        return value;
+    }
+ 
+    public static double min_element(int from, int to, double []  list){
+        double value = Double.POSITIVE_INFINITY;
+        for(int i = from; i<to; i++){
+            if(list[i]<value){
+                value = list[i];
+            }
+        }
+        return value;
+    }
+    
+    public static double max_element(int from, int to, double []  list){
+        double value = Double.NEGATIVE_INFINITY;
+        for(int i = from; i<to; i++){
+            if(list[i]>value){
+                value = list[i];
             }
         }
         return value;
@@ -505,6 +526,18 @@ public final class Std {
 				throws NoSuchElementException {
 			return new DoubleReference(list, index);
 		}
+	}
+	
+	public static double accumulate(int start, int end, double [] list, double init){
+	    double sum = init;
+	    for(int i = start; i<end; i++){
+	        sum += list[i];
+	    }
+	    return sum;
+	}
+	
+	public static double accumulate(double [] list, double init){
+	    return accumulate(0, list.length, list, init);
 	}
 
 }

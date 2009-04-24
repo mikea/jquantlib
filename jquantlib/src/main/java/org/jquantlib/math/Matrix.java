@@ -343,9 +343,17 @@ public class Matrix {
 	public double[][] getRawData(){
 		return data;
 	}
-//    /*! \relates Matrix */
-//    const Disposable<Matrix> operator*(const Matrix&, const Matrix&);
+	
+	public double[] diagonal() {
+        int arraySize = Math.min(rows(), columns());
+        double[] tmp = new double[arraySize];
+        for (int i = 0; i < arraySize; i++) {
+            tmp[i] = this.get(i, i);
+        }
+        return tmp;
+    }
 }
+
 //    class Matrix {
 //     public:
 //! \name Constructors, destructor, and assignment

@@ -27,7 +27,7 @@ import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.InverseCumulativeNormal;
 import org.jquantlib.math.distributions.NormalDistribution;
 
-public class GaussianStatistics {
+public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussianStatistics*/ {
 
     private IStatistics statistics;
 

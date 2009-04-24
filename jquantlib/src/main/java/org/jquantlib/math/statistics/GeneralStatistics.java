@@ -51,7 +51,7 @@ samples, thus increasing the memory requirements.
  */
 
 //FIXME: changed to extending base class rather then implementing interface
-public class GeneralStatistics /*extends Statistics*/ {
+public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/ {
     
     private final static String empty_sample_set =  "empty sample set";
     private final static String unsufficient_sample_size = "sample number <=1, unsufficient";
