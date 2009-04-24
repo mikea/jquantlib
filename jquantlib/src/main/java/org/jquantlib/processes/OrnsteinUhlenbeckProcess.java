@@ -21,6 +21,8 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.processes;
 
+import org.jquantlib.math.Constants;
+
 
 /**
  * 
@@ -34,14 +36,20 @@ package org.jquantlib.processes;
  * \ingroup processes
  */
 
+//class reviewed!
+
 public class OrnsteinUhlenbeckProcess extends StochasticProcess1D {
+    
+    
+    private static final String negative_speed_given = "negative speed given";
+    private static final String negative_volatility_given = "negative volatilty given";
 
-    private Double /* @Real */x0_, speed_, level_;
-    private Double /* @Volatility */volatility_;
-    public static double QL_EPSILON = 1e-10;
+    private double /* @Real */x0_, speed_, level_;
+    private double /* @Volatility */volatility_;
+    //public static double QL_EPSILON = 1e-10; use constants defs
 
-    public OrnsteinUhlenbeckProcess(Double /* @Real */speed, Double /* @Volatility */vol, Double /* @Real */x0,
-            Double /* @Real */level) {
+    public OrnsteinUhlenbeckProcess(double /* @Real */speed, double /* @Volatility */vol, double /* @Real */x0,
+            double /* @Real */level) {
         // had to introduce protected StochasticProcess1D(){} in
         // StochasticProcess1D
         super();
@@ -52,15 +60,19 @@ public class OrnsteinUhlenbeckProcess extends StochasticProcess1D {
         speed_ = (speed);
         level_ = (level);
         volatility_ = (vol);
-        // QL_REQUIRE(speed_ >= 0.0, "negative speed given");
-        if (speed_ <= 0.0) {
-            throw new IllegalArgumentException("negative speed given");
+        if (speed_ < 0.0) {
+            throw new IllegalArgumentException(negative_speed_given);
         }
-        // QL_REQUIRE(volatility_ >= 0.0, "negative volatility given");
-        if (volatility_ <= 0.0) {
-            throw new IllegalArgumentException("negative volatility given");
+        if (volatility_ < 0.0) {
+            throw new IllegalArgumentException(negative_volatility_given);
         }
     }
+    
+    public OrnsteinUhlenbeckProcess(double speed, double vol){
+        this(speed, vol, 0.0, 0.0);
+    }
+    
+    
 
     // ! \name StochasticProcess interface
     // @{
@@ -69,15 +81,15 @@ public class OrnsteinUhlenbeckProcess extends StochasticProcess1D {
         return x0_;
     }
 
-    public Double /* @Real */speed() {
+    public double /* @Real */speed() {
         return speed_;
     }
 
-    public Double /* @Real */volatility() {
+    public double /* @Real */volatility() {
         return volatility_;
     }
 
-    public Double /* @Real */level() {
+    public double /* @Real */level() {
         return level_;
     }
 
@@ -90,17 +102,16 @@ public class OrnsteinUhlenbeckProcess extends StochasticProcess1D {
         return volatility_;
     }
 
-    public Double /* @Real */expectation(Double /* @Time */t0, Double /* @Real */x0, Double /* @Time */dt) {
+    public double /* @Real */expectation(Double /* @Time */t0, Double /* @Real */x0, Double /* @Time */dt) {
         return level_ + (x0 - level_) * Math.exp(-speed_ * dt);
     }
 
-    public Double /* @Real */stdDeviation(Double /* @Time */t0, Double /* @Real */x0, Double /* @Time */dt) {
+    public double /* @Real */stdDeviation(Double /* @Time */t0, Double /* @Real */x0, Double /* @Time */dt) {
         return Math.sqrt(variance(t0, x0, dt));
     }
 
-    public Double /* @Real */variance(Double /* @Time */t0, Double /* @Real */x0, Double /* @Time */dt) {
-
-        if (speed_ < Math.sqrt(QL_EPSILON)) {
+    public double /* @Real */variance(Double /* @Time */t0, Double /* @Real */x0, Double /* @Time */dt) {
+        if (speed_ < Math.sqrt(Constants.QL_EPSILON)) {
             // algebraic limit for small speed
             return volatility_ * volatility_ * dt;
         } else {
