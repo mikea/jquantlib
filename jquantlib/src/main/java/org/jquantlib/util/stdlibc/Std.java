@@ -23,6 +23,7 @@
 package org.jquantlib.util.stdlibc;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -32,8 +33,7 @@ import org.jquantlib.math.E_IUnaryFunction;
 import org.jquantlib.math.E_UnaryFunction;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.functions.DoubleFunction;
-
-import sun.reflect.generics.tree.ReturnType;
+import org.jquantlib.util.Date;
 
 /**
  * @see <a href="http://javadude.com/articles/passbyvalue.htm">Java is
@@ -539,5 +539,16 @@ public final class Std {
 	public static double accumulate(double [] list, double init){
 	    return accumulate(0, list.length, list, init);
 	}
-
+	
+	public static <T extends Comparable<T>> T min(T ... t){
+	    List<T> t_ = Arrays.asList(t);
+	    Collections.sort(t_);
+	    return  t_.get(0);
+	}
+	
+	public static <T extends Comparable<T>> T max(T... t) {
+        List<T> t_ = Arrays.asList(t);
+        Collections.sort(t_);
+        return t_.get(t_.size() - 1);
+    }
 }
