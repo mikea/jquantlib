@@ -12,7 +12,7 @@ import org.jquantlib.model.shortrate.Parameter;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 
-public abstract class CalibratedModel implements Observer, Observable {
+public abstract class CalibratedModel implements org.jquantlib.util.Observer, Observable {
     
     private static final String parameter_array_to_small = "parameter array to small";
     private static final String parameter_array_to_big = "parameter array to big";
@@ -22,7 +22,7 @@ public abstract class CalibratedModel implements Observer, Observable {
     protected List<Parameter> arguments_;
     protected Constraint constraint_;
     
-    
+    protected CalibratedModel(){}
     
     public CalibratedModel(int nArguments){
         arguments_ = new ArrayList<Parameter>(nArguments);
@@ -91,11 +91,11 @@ public abstract class CalibratedModel implements Observer, Observable {
     }
     
     @Override
-    public void update(java.util.Observable o, Object arg) {
+    public void update(Observable o, Object arg) {
         generateArguments();
         notifyObservers();
-        
     }
+    
 
     @Override
     public void addObserver(org.jquantlib.util.Observer observer) {
