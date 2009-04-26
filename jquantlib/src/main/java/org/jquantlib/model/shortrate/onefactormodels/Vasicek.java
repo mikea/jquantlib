@@ -167,11 +167,7 @@ public class Vasicek extends OneFactorAffineModel {
         }
     }
 
-    // sundry cosmetic methods
-    @Override
-    protected void generateArguments() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+
 
     @Override
     public void addObserver(Observer observer) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry excluding="org/jquantlib/termstructures/volatilities/SabrSmileSection.java|org/jquantlib/processes/HullWhiteForwardProcess.java|org/jquantlib/TestClass.java|org/jquantlib/Tester.java|org/jquantlib/model/equity/" kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/test/resources"/>

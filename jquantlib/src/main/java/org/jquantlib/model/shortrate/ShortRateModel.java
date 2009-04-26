@@ -22,6 +22,7 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.model.shortrate;
 
 import org.jquantlib.methods.lattices.Lattice;
+import org.jquantlib.model.CalibratedModel;
 import org.jquantlib.time.TimeGrid;
 
 /**
