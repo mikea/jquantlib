@@ -1,5 +1,7 @@
 /*
-Copyright (C) 2008 Praneet Tiwari
+Copyright (C)
+ 2008 Praneet Tiwari
+ 2009 Ueli Hofstetter
 
 This source code is release under the BSD License.
 
@@ -21,8 +23,8 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate.onefactormodels;
 
-import java.util.List;
 import org.jquantlib.math.Array;
+import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.optimization.PositiveConstraint;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.methods.lattices.Lattice;
@@ -30,14 +32,12 @@ import org.jquantlib.methods.lattices.TrinomialTree;
 import org.jquantlib.model.shortrate.ConstantParameter;
 import org.jquantlib.model.shortrate.OneFactorModel;
 import org.jquantlib.model.shortrate.Parameter;
-import org.jquantlib.model.shortrate.ShortRateDynamics;
 import org.jquantlib.model.shortrate.ShortRateTree;
 import org.jquantlib.model.shortrate.TermStructureFittingParameter;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.TimeGrid;
-import org.jquantlib.util.Observer;
 
 /**
  * 
@@ -50,72 +50,48 @@ import org.jquantlib.util.Observer;
  * 
  * \ingroup shortrate
  */
-public class BlackKarasinski extends OneFactorModel {
+public class BlackKarasinski extends OneFactorModel implements TermStructureConsistentModel {
     // need permanent solution for this one
     
-
-    public static double QL_EPSILON = 1e-10;
-    TermStructureConsistentModelClass termStructureConsistentModelClass;
-
-    public Double /* @Real */a() {
+    //TODO:renaming....
+    private TermStructureConsistentModelClass termstructureConsistentModel;
+    
+    private static final String no_defined_process_for_bk = "no defined process for Black-Karasinski";
+    
+    public BlackKarasinski(final Handle<YieldTermStructure> termStructure){
+        this(termStructure, 0.1,0.1);
+    }
+    
+    public BlackKarasinski(final Handle<YieldTermStructure> termStructure, double a, double sigma){
+       super(2);
+       termstructureConsistentModel = new TermStructureConsistentModelClass(termStructure);
+       this.a_ = arguments_.get(0);
+       this.sigma_ = arguments_.get(1);
+       //FIXME: bug?
+       this.a_ = new ConstantParameter(a, new PositiveConstraint());
+       this.sigma_ = new ConstantParameter(sigma, new PositiveConstraint());
+       termStructure.getLink().addObserver(this);
+    }
+    
+    public double /* @Real */a() {
         return a_.getOperatorEq(0.0);
     }
 
-    public Double /* @Real */sigma() {
+    public double /* @Real */sigma() {
         return sigma_.getOperatorEq(0.0);
     }
 
     Parameter a_;
     Parameter sigma_;
 
-    // all cosmetic methods
-
-    @Override
-    public void addObserver(Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public int countObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Observer> getObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void deleteObserver(Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void deleteObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void notifyObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void notifyObservers(Object arg) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    // inner class
-    // Private function used by solver to determine time-dependent parameter
-    class Helper {
-
+    class Helper implements UnaryFunctionDouble {
         private int /* @Size */size_;
-        private Double /* @Time */dt_;
-        private Double /* @Real */xMin_, dx_;
+        private double /* @Time */dt_;
+        private double /* @Real */xMin_, dx_;
         private Array statePrices_;
-        private Double /* @Real */discountBondPrice_;
+        private double /* @Real */discountBondPrice_;
 
-        public Helper(int /* @Size */i, Double /* @Real */xMin, Double /* @Real */dx, Double /* @Real */discountBondPrice,
+        public Helper(int /* @Size */i, double /* @Real */xMin, double /* @Real */dx, double /* @Real */discountBondPrice,
                 ShortRateTree tree) {
             size_ = (tree.size(i));
             dt_ = (tree.timeGrid().dt(i));
@@ -125,75 +101,46 @@ public class BlackKarasinski extends OneFactorModel {
             discountBondPrice_ = (discountBondPrice);
         }
 
-        public Double /* @Real */getOperatorEq /* () */(Double /* @Real */theta) {
-            Double /* @Real */value = discountBondPrice_;
-            Double /* @Real */x = xMin_;
+        public double /* @Real */evaluate /* () */(double /* @Real */theta) {
+            double /* @Real */value = discountBondPrice_;
+            double /* @Real */x = xMin_;
             for (int /* @Size */j = 0; j < size_; j++) {
-                Double /* @Real */discount = Math.exp(-Math.exp(theta + x) * dt_);
+                double /* @Real */discount = Math.exp(-Math.exp(theta + x) * dt_);
                 value -= statePrices_.get(j)/* [j] */* discount;
                 x += dx_;
             }
             return value;
         }
-    } // helper
+    } 
 
-    public BlackKarasinski(final Handle<YieldTermStructure> termStructure, Double /* @Real */a, Double /* @Real */sigma) {
-        super(2);
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        termStructureConsistentModelClass = new TermStructureConsistentModelClass(termStructure);
-        a_ = (arguments_.get(0) /* [0] */);
-        sigma_ = (arguments_.get(1) /* [1] */);
-        a_ = new ConstantParameter(a, new PositiveConstraint());
-        sigma_ = new ConstantParameter(sigma, new PositiveConstraint());
-
-        // registerWith(termStructure);
-    }
+   
 
     @Override
     public ShortRateDynamics dynamics() {
-        // QL_FAIL("no defined process for Black-Karasinski");
-        throw new RuntimeException("no defined process for Black-Karasinski");
+        throw new IllegalArgumentException(no_defined_process_for_bk);
     }
 
     @Override
     public Lattice tree(final TimeGrid grid) {
-
-        // TermStructureFittingParameter phi(termStructure());
-        TermStructureFittingParameter phi = new TermStructureFittingParameter(termStructureConsistentModelClass.termStructure());
-        // needed to activate the above constructor
-        // boost::shared_ptr<ShortRateDynamics> numericDynamics(
-        // new Dynamics(phi, a(), sigma()));
-
-        // boost::shared_ptr<TrinomialTree> trinomial(
-        // new TrinomialTree(numericDynamics->process(), grid));
-        // boost::shared_ptr<ShortRateTree> numericTree(
-        // new ShortRateTree(trinomial, numericDynamics, grid));
+        TermStructureFittingParameter phi = new TermStructureFittingParameter(termstructureConsistentModel.termStructure());
         ShortRateDynamics numericDynamics = (new Dynamics(phi, a(), sigma()));
         TrinomialTree trinomial = new TrinomialTree(numericDynamics.process(), grid, true);
         ShortRateTree numericTree = null;//new ShortRateTree(trinomial, numericDynamics, grid);
-        // typedef TermStructureFittingParameter::NumericalImpl NumericalImpl;
-        // boost::shared_ptr<NumericalImpl> impl =
-        // boost::dynamic_pointer_cast<NumericalImpl>(phi.implementation());
+       
         TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) (phi.getImplementation());
         impl.reset();
-        Double /* @Real */value = 1.0;
-        Double /* @Real */vMin = -50.0;
-        Double /* @Real */vMax = 50.0;
-        // for (Size i=0; i<(grid.size() - 1); i++) {
+        double /* @Real */value = 1.0;
+        double /* @Real */vMin = -50.0;
+        double /* @Real */vMax = 50.0;
         for (int /* @Size */i = 0; i < (grid.size() - 1); i++) {
-            Double /* @Real */discountBond = termStructureConsistentModelClass.termStructure().getLink().discount(grid.at(i + 1));
-            Double /* @Real */xMin = trinomial.underlying(i, 0);
-            Double /* @Real */dx = trinomial.dx(i);
+            double /* @Real */discountBond = termstructureConsistentModel.termStructure().getLink().discount(grid.at(i + 1));
+            double /* @Real */xMin = trinomial.underlying(i, 0);
+            double /* @Real */dx = trinomial.dx(i);
 
             Helper finder = new BlackKarasinski.Helper(i, xMin, dx, discountBond, numericTree);
             Brent s1d = new Brent();
             s1d.setMaxEvaluations(1000);
-            // value = s1d.solve(finder, 1e-7, value, vMin, vMax);
-            // brent currently does not have solve
-            // the argument of AbstractSolver1D currently extends UnaryFunctionDouble
-            // why is it that way?
+            value = s1d.solve(finder, 1e-7, value, vMin, vMax);
             impl.set(grid.index(i) /* [i] */, value);
             // vMin = value - 10.0;
             // vMax = value + 10.0;
@@ -214,21 +161,20 @@ public class BlackKarasinski extends OneFactorModel {
             fitting_ = (fitting);
         }
 
-        // Real variable(Time t, Rate r) const {
-        // return std::log(r) - fitting_(t);
-        // }
         public double /* @Real */variable(double /* @Time */t, double /* @Rate */r) {
             return Math.log(r) - fitting_.getOperatorEq(t);
         }
 
-        // Real shortRate(Time t, Real x) const {
-        // return std::exp(x + fitting_(t));
-        // }
         @Override
         public double /* @Real */shortRate(double /* @Time */t, double /* @Real */x) {
             return Math.exp(x + fitting_.getOperatorEq(t));
         }
 
         private Parameter fitting_;
+    }
+
+    @Override
+    public Handle<YieldTermStructure> termStructure() {
+        return termstructureConsistentModel.termStructure();
     }
 }
