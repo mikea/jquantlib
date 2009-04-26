@@ -36,7 +36,11 @@ public class TrinomialTree extends Tree {
 	protected double x0_;
 	protected Vector<Double> dx_ = new Vector<Double>();
 	protected TimeGrid timeGrid_;
-
+	
+	public TrinomialTree(final StochasticProcess1D process, final TimeGrid timeGrid) {
+	    this(process, timeGrid, false);
+	}
+	
 	public TrinomialTree(final StochasticProcess1D process, final TimeGrid timeGrid, boolean isPositive) {
 		super(timeGrid.size());
 		dx_.add(new Double(1));

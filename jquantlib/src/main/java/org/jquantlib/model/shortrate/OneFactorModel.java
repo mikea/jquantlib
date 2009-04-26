@@ -1,5 +1,7 @@
 /*
-Copyright (C) 2008 Praneet Tiwari
+Copyright (C) 
+2008 Praneet Tiwari
+2009 Ueli Hofstetter
 
 This source code is release under the BSD License.
 
@@ -21,6 +23,9 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TreeLattice1D;
 import org.jquantlib.methods.lattices.TrinomialTree;
@@ -39,19 +44,29 @@ public abstract class OneFactorModel extends ShortRateModel {
             throw new UnsupportedOperationException("Work in progress");
         }
     }
+
+    // ! returns the short-rate dynamics
+    public abstract ShortRateDynamics dynamics();
+
+    // ! Return by default a trinomial recombining tree
+    public  Lattice tree(final TimeGrid grid){
+        TrinomialTree trinominal = new TrinomialTree(dynamics().process(), grid);
+        return new ShortRateTree(trinominal, dynamics(), grid);
+        
+    }
     
     public abstract class ShortRateDynamics{
         private StochasticProcess1D process_;
 
         public ShortRateDynamics(final StochasticProcess1D process) {
-            process_ = process;
+            this.process_ = process;
         }
 
         // ! Compute state variable from short rate
-        public abstract Double /* @Real */variable(Double /* @Time */t, Double /* @Rate */r);
+        public abstract double /* @Real */variable(double /* @Time */t, double /* @Rate */r);
 
         // ! Compute short rate from state variable
-        public abstract Double /* @Rate */shortRate(Double /* @Time */t, Double /* @Real */variable);
+        public abstract double /* @Rate */shortRate(double /* @Time */t, double /* @Real */variable);
 
         // ! Returns the risk-neutral dynamics of the state variable
         public StochasticProcess1D process() {
@@ -60,6 +75,8 @@ public abstract class OneFactorModel extends ShortRateModel {
         
     }
     
+    //TODO: generic type?
+    //! Recombining trinomial tree discretizing the state variable
     class ShortRateTree extends TreeLattice1D{
         private TrinomialTree tree_;
         private ShortRateDynamics dynamics_;
@@ -76,12 +93,10 @@ public abstract class OneFactorModel extends ShortRateModel {
         }
 
         // ! Tree build-up + numerical fitting to term-structure
-
-        public ShortRateTree(final TrinomialTree tree, final ShortRateDynamics dynamics,
+        public ShortRateTree(final TrinomialTree tree, 
+                final ShortRateDynamics dynamics,
                 final TermStructureFittingParameter.NumericalImpl theta,
-                // int n,
                 final TimeGrid timeGrid) {
-            // why 1 here?
             super(timeGrid, tree.size(1));
             if (System.getProperty("EXPERIMENTAL") == null) {
                 throw new UnsupportedOperationException("Work in progress");
@@ -90,19 +105,19 @@ public abstract class OneFactorModel extends ShortRateModel {
             this.dynamics_ = dynamics;
             theta.reset();
 
-            Double /* @Real */value = 1.0;
-            Double /* @Real */vMin = -100.0;
-            Double /* @Real */vMax = 100.0;
+            double /* @Real */value = 1.0;
+            double /* @Real */vMin = -100.0;
+            double /* @Real */vMax = 100.0;
 
             for (int /* @Size */i = 0; i < (timeGrid.size() - 1); i++) {
-                // TODO: Complete the for loop
-                // Double /*@Real*/ discountBond = theta.termStructure().discount(t_.[i+1]);
-
-                // Double /*@Real*/ discountBond = theta.termStructure().;
-                /*
-                 * Helper finder(i, discountBond, theta, *this); Brent s1d; s1d.setMaxEvaluations(1000); value = s1d.solve(finder, 1e-7,
-                 * value, vMin, vMax); // vMin = value - 1.0; // vMax = value + 1.0; theta->change(value);
-                 */
+                 double /*@Real*/ discountBond = theta.termStructure().getLink().discount(t.get(i+1));
+                 Helper finder = new Helper(i, discountBond, theta, this);
+                 Brent s1d = new Brent();
+                 s1d.setMaxEvaluations(1000);
+                 value = s1d.solve(finder, 1e-7, value, vMin, vMax);
+                 // vMin = value - 1.0;
+                 // vMax = value + 1.0;
+                 theta.change(value);
             }
         }
 
@@ -112,10 +127,8 @@ public abstract class OneFactorModel extends ShortRateModel {
 
         @Override
         public double /* @DiscountFactor */discount(int /* @Size */i, int /* @Size */index) {
-            Double /* @Real */x = tree_.underlying(i, index);
-            Double /* @Real */r = 0.0;//dynamics_.shortRate(timeGrid().at(i), x);
-            // TimeGrid has operator overloading, defined as
-            // Time operator[](Size i) const { return times_[i]; }
+            double /* @Real */x = tree_.underlying(i, index);
+            double /* @Real */r = dynamics_.shortRate(timeGrid().get(i), x);
             return Math.exp(-r * timeGrid().dt(i));
         }
 
@@ -134,38 +147,35 @@ public abstract class OneFactorModel extends ShortRateModel {
             return tree_.probability(i, index, branch);
         }
         
+        class Helper implements UnaryFunctionDouble{
+           
+            private int size_;
+            private int i_;
+            private Array statePrices_;
+            private double discountBondPrice_;
+            private TermStructureFittingParameter.NumericalImpl theta_;
+            private ShortRateTree tree_;
+           
+           public Helper(int i, double discountBondPrice, TermStructureFittingParameter.NumericalImpl theta,
+                   ShortRateTree tree){
+               this.size_ = tree.size(i);
+               this.i_ = i;
+               this.statePrices_ = tree.statePrices(i);
+               this.discountBondPrice_ = discountBondPrice;
+               this.theta_ = theta;
+               this.tree_ = tree;
+               //argh.... FIXME: either vice versa or bad design ?
+               theta_.set(new Double(tree.timeGrid().get(i)).intValue(), 0.0);
+           }
+           
+           public double evaluate(double theta){
+               double value = discountBondPrice_;
+               theta_.change(theta);
+               for(int j=0; j<size_; j++){
+                   value -= statePrices_.get(j)*tree_.discount(i_, j);
+               }
+               return value;
+           }
+        }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    public Lattice tree(final TimeGrid grid) {
-        TrinomialTree trinomial = new TrinomialTree(dynamics().process(), grid, true);
-        return new ShortRateTree(trinomial, dynamics(), grid);
-    }
-
-    // ! returns the short-rate dynamics
-    public abstract ShortRateDynamics dynamics();
-
-    // ! Return by default a trinomial recombining tree
-    // public abstract Lattice tree(final TimeGrid grid) ;
 }
