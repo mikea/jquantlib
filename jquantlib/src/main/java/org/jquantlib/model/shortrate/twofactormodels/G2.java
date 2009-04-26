@@ -70,15 +70,15 @@ public class G2 extends TwoFactorModel implements AffineModel {
     public static double M_PI = 3.141592653589793238462643383280;
     TermStructureConsistentModelClass termStructureConsistentModelClass;
 
-    private Double /*@Real*/ sigmaP(Double /*@Time*/ t, Double /*@Time*/ s) {
-        Double /*@Real*/ temp = 1.0 - Math.exp(-(a() + b()) * t);
-        Double /*@Real*/ temp1 = 1.0 - Math.exp(-a() * (s - t));
-        Double /*@Real*/ temp2 = 1.0 - Math.exp(-b() * (s - t));
-        Double /*@Real*/ a3 = a() * a() * a();
-        Double /*@Real*/ b3 = b() * b() * b();
-        Double /*@Real*/ sigma2 = sigma() * sigma();
-        Double /*@Real*/ eta2 = eta() * eta();
-        Double /*@Real*/ value =
+    private double /*@Real*/ sigmaP(double /*@Time*/ t, double /*@Time*/ s) {
+        double /*@Real*/ temp = 1.0 - Math.exp(-(a() + b()) * t);
+        double /*@Real*/ temp1 = 1.0 - Math.exp(-a() * (s - t));
+        double /*@Real*/ temp2 = 1.0 - Math.exp(-b() * (s - t));
+        double /*@Real*/ a3 = a() * a() * a();
+        double /*@Real*/ b3 = b() * b() * b();
+        double /*@Real*/ sigma2 = sigma() * sigma();
+        double /*@Real*/ eta2 = eta() * eta();
+        double /*@Real*/ value =
                 0.5 * sigma2 * temp1 * temp1 * (1.0 - Math.exp(-2.0 * a() * t)) / a3 +
                 0.5 * eta2 * temp2 * temp2 * (1.0 - Math.exp(-2.0 * b() * t)) / b3 +
                 2.0 * rho() * sigma() * eta() / (a() * b() * (a() + b())) *
@@ -92,43 +92,43 @@ public class G2 extends TwoFactorModel implements AffineModel {
     private Parameter rho_;
     private Parameter phi_;
 
-    private Double /*@Real*/ V(Double /*@Time*/ t) {
-        Double /*@Real*/ expat = Math.exp(-a() * t);
-        Double /*@Real*/ expbt = Math.exp(-b() * t);
-        Double /*@Real*/ cx = sigma() / a();
-        Double /*@Real*/ cy = eta() / b();
-        Double /*@Real*/ valuex = cx * cx * (t + (2.0 * expat - 0.5 * expat * expat - 1.5) / a());
-        Double /*@Real*/ valuey = cy * cy * (t + (2.0 * expbt - 0.5 * expbt * expbt - 1.5) / b());
-        Double /*@Real*/ value = 2.0 * rho() * cx * cy * (t + (expat - 1.0) / a() + (expbt - 1.0) / b() - (expat * expbt - 1.0) / (a() + b()));
+    private double /*@Real*/ V(double /*@Time*/ t) {
+        double /*@Real*/ expat = Math.exp(-a() * t);
+        double /*@Real*/ expbt = Math.exp(-b() * t);
+        double /*@Real*/ cx = sigma() / a();
+        double /*@Real*/ cy = eta() / b();
+        double /*@Real*/ valuex = cx * cx * (t + (2.0 * expat - 0.5 * expat * expat - 1.5) / a());
+        double /*@Real*/ valuey = cy * cy * (t + (2.0 * expbt - 0.5 * expbt * expbt - 1.5) / b());
+        double /*@Real*/ value = 2.0 * rho() * cx * cy * (t + (expat - 1.0) / a() + (expbt - 1.0) / b() - (expat * expbt - 1.0) / (a() + b()));
         return valuex + valuey + value;
     }
 
-    private Double /*@Real*/ a() {
+    private double /*@Real*/ a() {
         return a_.getOperatorEq(0.0);
     }
 
-    private Double /*@Real*/ sigma() {
+    private double /*@Real*/ sigma() {
         return sigma_.getOperatorEq(0.0);
     }
 
-    private Double /*@Real*/ b() {
+    private double /*@Real*/ b() {
         return b_.getOperatorEq(0.0);
     }
 
-    private Double /*@Real*/ eta() {
+    private double /*@Real*/ eta() {
         return eta_.getOperatorEq(0.0);
     }
 
-    private Double /*@Real*/ rho() {
+    private double /*@Real*/ rho() {
         return rho_.getOperatorEq(0.0);
     }
 
     public G2(final Handle<YieldTermStructure> termStructure,
-            Double /*@Real*/ a /*= 0.1*/,
-            Double /*@Real*/ sigma /*= 0.01*/,
-            Double /*@Real*/ b/* = 0.1*/,
-            Double /*@Real*/ eta/* = 0.01*/,
-            Double /*@Real*/ rho/*= -0.75*/) {
+            double /*@Real*/ a /*= 0.1*/,
+            double /*@Real*/ sigma /*= 0.01*/,
+            double /*@Real*/ b/* = 0.1*/,
+            double /*@Real*/ eta/* = 0.01*/,
+            double /*@Real*/ rho/*= -0.75*/) {
         super(5);
         termStructureConsistentModelClass = new TermStructureConsistentModelClass(termStructure);
         a_ = (arguments_.get(0) /*[0]*/);
@@ -175,30 +175,30 @@ public class G2 extends TwoFactorModel implements AffineModel {
     }
 
     @Override
-    public double discount(Double t) {
+    public double discount(double t) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Double discountBond(Double now, Double maturity, Array factors) {
+    public double discountBond(double now, double maturity, Array factors) {
         if (factors.size() < 1) {
             throw new IllegalArgumentException("g2 model needs two factors to compute discount bond");
         }
         return discountBond(now, maturity, factors.get(0), factors.get(1));
     }
 
-    public Double discountBond(Double t, Double T, Double x, Double y) {
+    public double discountBond(double t, double T, double x, double y) {
         return A(t, T) * Math.exp(-B(a(), (T - t)) * x - B(b(), (T - t)) * y);
     }
 
     class Dynamics extends TwoFactorModel.ShortRateDynamics {
 
         public Dynamics(final Parameter fitting,
-                Double /*@Real*/ a,
-                Double /*@Real*/ sigma,
-                Double /*@Real*/ b,
-                Double /*@Real*/ eta,
-                Double /*@Real*/ rho) {
+                double /*@Real*/ a,
+                double /*@Real*/ sigma,
+                double /*@Real*/ b,
+                double /*@Real*/ eta,
+                double /*@Real*/ rho) {
             super(
                     new OrnsteinUhlenbeckProcess(a, sigma, 0.0, 0.0),
                     new OrnsteinUhlenbeckProcess(b, eta, 0.0, 0.0),
@@ -206,9 +206,9 @@ public class G2 extends TwoFactorModel implements AffineModel {
             fitting_ = (fitting);
         }
 
-        public Double /*@Rate*/ shortRate(Double /*@Time*/ t,
-                Double /*@Real*/ x,
-                Double /*@Real*/ y) {
+        public double /*@Rate*/ shortRate(double /*@Time*/ t,
+                double /*@Real*/ x,
+                double /*@Real*/ y) {
             return fitting_.getOperatorEq(t) + x + y;
         }
         private Parameter fitting_;
@@ -238,33 +238,33 @@ public class G2 extends TwoFactorModel implements AffineModel {
     }
 
     @Override
-    public Double /*@Real*/ discountBondOption(Option.Type type, Double /*@Real*/ strike, Double /*@Time*/ maturity,
-            Double /*@Time*/ bondMaturity) {
+    public double /*@Real*/ discountBondOption(Option.Type type, double /*@Real*/ strike, double /*@Time*/ maturity,
+            double /*@Time*/ bondMaturity) {
 
-        Double /*@Real*/ v = sigmaP(maturity, bondMaturity);
-        Double /*@Real*/ f = termStructureConsistentModelClass.termStructure().getLink().discount(bondMaturity);
-        Double /*@Real*/ k = termStructureConsistentModelClass.termStructure().getLink().discount(maturity) * strike;
+        double /*@Real*/ v = sigmaP(maturity, bondMaturity);
+        double /*@Real*/ f = termStructureConsistentModelClass.termStructure().getLink().discount(bondMaturity);
+        double /*@Real*/ k = termStructureConsistentModelClass.termStructure().getLink().discount(maturity) * strike;
 
         return blackFormula(type, k, f, v);
     }
 
-    Double /*@Real*/ A(Double /*@Time*/ t, Double /*@Time*/ T) {
+    double /*@Real*/ A(double /*@Time*/ t, double /*@Time*/ T) {
         return termStructureConsistentModelClass.termStructure().getLink().discount(T) / termStructureConsistentModelClass.termStructure().getLink().discount(t) *
                 Math.exp(0.5 * (V(T - t) - V(T) + V(t)));
     }
 
-    Double /*@Real*/ B(Double /*@Real*/ x, Double /*@Time*/ t) {
+    double /*@Real*/ B(double /*@Real*/ x, double /*@Time*/ t) {
         return (1.0 - Math.exp(-x * t)) / x;
     }
 
     //inner class
     class SwaptionPricingFunction {
 
-        public SwaptionPricingFunction(Double /*@Real*/ a, Double /*@Real*/ sigma,
-                Double /*@Real*/ b, Double /*@Real*/ eta, Double /*@Real*/ rho,
-                Double /*@Real*/ w, Double /*@Real*/ start,
+        public SwaptionPricingFunction(double /*@Real*/ a, double /*@Real*/ sigma,
+                double /*@Real*/ b, double /*@Real*/ eta, double /*@Real*/ rho,
+                double /*@Real*/ w, double /*@Real*/ start,
                 final /*std::vector<Time>& */ ArrayList<Double /*@Time*/> payTimes,
-                Double /*@Rate*/ fixedRate, final G2 model) {
+                double /*@Rate*/ fixedRate, final G2 model) {
             a_ = (a);
             sigma_ = (sigma);
             b_ = (b);
@@ -287,7 +287,7 @@ public class G2 extends TwoFactorModel implements AffineModel {
             rhoxy_ = rho_ * eta_ * sigma_ * (1.0 - Math.exp(-(a_ + b_) * T_)) /
                     ((a_ + b_) * sigmax_ * sigmay_);
 
-            Double /*@Real*/ temp = sigma_ * sigma_ / (a_ * a_);
+            double /*@Real*/ temp = sigma_ * sigma_ / (a_ * a_);
             mux_ = -((temp + rho_ * sigma_ * eta_ / (a_ * b_)) * (1.0 - Math.exp(-a * T_)) -
                     0.5 * temp * (1.0 - Math.exp(-2.0 * a_ * T_)) -
                     rho_ * sigma_ * eta_ / (b_ * (a_ + b_)) *
@@ -311,24 +311,24 @@ public class G2 extends TwoFactorModel implements AffineModel {
             }
         }
 
-        Double /*@Real*/ mux() {
+        double /*@Real*/ mux() {
             return mux_;
         }
 
-        Double /*@Real*/ sigmax() {
+        double /*@Real*/ sigmax() {
             return sigmax_;
         }
 
-        Double /*@Real*/ getOperatorEq(Double /*@Real*/ x) {
+        double /*@Real*/ getOperatorEq(double /*@Real*/ x) {
             CumulativeNormalDistribution phi = new CumulativeNormalDistribution();
-            Double /*@Real*/ temp = (x - mux_) / sigmax_;
-            Double /*@Real*/ txy = Math.sqrt(1.0 - rhoxy_ * rhoxy_);
+            double /*@Real*/ temp = (x - mux_) / sigmax_;
+            double /*@Real*/ txy = Math.sqrt(1.0 - rhoxy_ * rhoxy_);
 
             Array lambda = new Array(size_);
             int /*@Size*/ i;
             for (i = 0; i < size_; i++) {
-                Double /*@Real*/ tau = (i == 0 ? t_.get(0) - T_ : t_.get(i) - t_.get(i - 1));
-                Double /*@Real*/ c = (i == size_ - 1 ? (1.0 + rate_ * tau) : rate_ * tau);
+                double /*@Real*/ tau = (i == 0 ? t_.get(0) - T_ : t_.get(i) - t_.get(i - 1));
+                double /*@Real*/ c = (i == size_ - 1 ? (1.0 + rate_ * tau) : rate_ * tau);
                 lambda.set(i, c * A_.get(i) * Math.exp(-Ba_.at(i) * x));
             }
 
@@ -337,18 +337,18 @@ public class G2 extends TwoFactorModel implements AffineModel {
             s1d.setMaxEvaluations(1000);
 
             //brent does not have solve
-            //      Double /*@Real*/ yb = s1d.solve(function, 1e-6, 0.00, -100.0, 100.0);
-            Double /*@Real*/ yb = 0.0;
-            Double /*@Real*/ h1 = (yb - muy_) / (sigmay_ * txy) -
+            //      double /*@Real*/ yb = s1d.solve(function, 1e-6, 0.00, -100.0, 100.0);
+            double /*@Real*/ yb = 0.0;
+            double /*@Real*/ h1 = (yb - muy_) / (sigmay_ * txy) -
                     rhoxy_ * (x - mux_) / (sigmax_ * txy);
             //not sure if evaluate method is equivalent of op overloading
-            Double /*@Real*/ value = /*phi(-w_*h1)*/ phi.evaluate(-w_ * h1);
+            double /*@Real*/ value = /*phi(-w_*h1)*/ phi.evaluate(-w_ * h1);
 
 
             for (i = 0; i < size_; i++) {
-                Double /*@Real*/ h2 = h1 +
+                double /*@Real*/ h2 = h1 +
                         Bb_.get(i) * sigmay_ * Math.sqrt(1.0 - rhoxy_ * rhoxy_);
-                Double /*@Real*/ kappa = -Bb_.get(i) *
+                double /*@Real*/ kappa = -Bb_.get(i) *
                         (muy_ - 0.5 * txy * txy * sigmay_ * sigmay_ * Bb_.get(i) +
                         rhoxy_ * sigmay_ * (x - mux_) / sigmax_);
                 // operator overloading problem again
@@ -366,8 +366,8 @@ public class G2 extends TwoFactorModel implements AffineModel {
                 Bb_ = (Bb);
             }
 
-            public Double /*@Real*/ getOperatorEq(Double /*@Real*/ y) {
-                Double /*@Real*/ value = 1.0;
+            public double /*@Real*/ getOperatorEq(double /*@Real*/ y) {
+                double /*@Real*/ value = 1.0;
                 for (int /*@Size*/ i = 0; i < lambda_.size(); i++) {
                     value -= lambda_.get(i) * Math.exp(-Bb_.get(i) * y);
                 }
@@ -376,16 +376,16 @@ public class G2 extends TwoFactorModel implements AffineModel {
             private Array lambda_;
             private Array Bb_;
         }
-        Double /*@Real*/ a_, sigma_, b_, eta_, rho_, w_;
-        Double /*@Time*/ T_;
+        double /*@Real*/ a_, sigma_, b_, eta_, rho_, w_;
+        double /*@Time*/ T_;
         /*  std::vector<Time> */ ArrayList<Double /*@Time*/> t_;
-        Double /*@Rate*/ rate_;
+        double /*@Rate*/ rate_;
         int /*@Size*/ size_;
         Array A_, Ba_, Bb_;
-        Double /*@Real*/ mux_, muy_, sigmax_, sigmay_, rhoxy_;
+        double /*@Real*/ mux_, muy_, sigmax_, sigmay_, rhoxy_;
     }
     /*
-    public     Double /*@Real   swaption(final Swaption ::arguments& arguments,
+    public     double /*@Real   swaption(final Swaption ::arguments& arguments,
     Rate fixedRate, Real range, Size intervals) const {
 
     Date settlement = termStructure()->referenceDate();
