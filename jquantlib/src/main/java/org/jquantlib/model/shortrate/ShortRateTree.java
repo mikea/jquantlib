@@ -38,10 +38,10 @@ import org.jquantlib.time.TimeGrid;
 public class ShortRateTree extends TreeLattice1D {
 
     private TrinomialTree tree_;
-    private ShortRateDynamics dynamics_;
+    private OneFactorModel.ShortRateDynamics dynamics_;
 
     // ! Plain tree build-up from short-rate dynamics
-    public ShortRateTree(TrinomialTree tree, ShortRateDynamics dynamics, final TimeGrid timeGrid) {
+    public ShortRateTree(TrinomialTree tree, OneFactorModel.ShortRateDynamics dynamics, final TimeGrid timeGrid) {
         // why 1 here?
         super(timeGrid, tree.size(1));
         this.tree_ = tree;
@@ -53,7 +53,7 @@ public class ShortRateTree extends TreeLattice1D {
 
     // ! Tree build-up + numerical fitting to term-structure
 
-    public ShortRateTree(final TrinomialTree tree, final ShortRateDynamics dynamics,
+    public ShortRateTree(final TrinomialTree tree, final OneFactorModel.ShortRateDynamics dynamics,
             final TermStructureFittingParameter.NumericalImpl theta,
             // int n,
             final TimeGrid timeGrid) {
