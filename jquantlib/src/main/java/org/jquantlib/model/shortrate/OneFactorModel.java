@@ -38,6 +38,10 @@ import org.jquantlib.time.TimeGrid;
  */
 public abstract class OneFactorModel extends ShortRateModel {
 
+    protected OneFactorModel(){
+        super();
+    }
+    
     public OneFactorModel(int /* @Size */nArguments) {
         super(nArguments);
         if (System.getProperty("EXPERIMENTAL") == null) {
@@ -63,7 +67,9 @@ public abstract class OneFactorModel extends ShortRateModel {
         }
 
         // ! Compute state variable from short rate
-        public abstract double /* @Real */variable(double /* @Time */t, double /* @Rate */r);
+        public  double /* @Real */variable(double /* @Time */t, double /* @Rate */r){
+            throw new UnsupportedOperationException("work in progress");
+        };
 
         // ! Compute short rate from state variable
         public abstract double /* @Rate */shortRate(double /* @Time */t, double /* @Real */variable);

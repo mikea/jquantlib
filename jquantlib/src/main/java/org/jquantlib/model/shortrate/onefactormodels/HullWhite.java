@@ -60,8 +60,8 @@ public class HullWhite extends Vasicek {// implements TermStructureConsistentMod
     TermStructureConsistentModelClass termStructureConsistentModelClass;
     Parameter phi_;
 
-    public HullWhite(final Handle<YieldTermStructure>/* YieldTermStructure */termStructure, Double /* @Real */a /* = 0.1 */,
-            Double /* @Real */sigma /* = 0.01 */) {
+    public HullWhite(final Handle<YieldTermStructure>/* YieldTermStructure */termStructure, double /* @Real */a /* = 0.1 */,
+            double /* @Real */sigma /* = 0.01 */) {
         super(termStructure.getLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate(), a, 0.0, sigma,
                 0.0);
         if (System.getProperty("EXPERIMENTAL") == null) {
@@ -88,13 +88,13 @@ public class HullWhite extends Vasicek {// implements TermStructureConsistentMod
         TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) (phi.getImplementation());
         impl.reset();
         for (int /* @Size */i = 0; i < (grid.size() - 1); i++) {
-            Double /* @Real */discountBond = termStructureConsistentModelClass.termStructure().getLink().discount(grid.at(i + 1));
+            double /* @Real */discountBond = termStructureConsistentModelClass.termStructure().getLink().discount(grid.at(i + 1));
             Array statePrices = numericTree.statePrices(i);
             int /* @Size */size = numericTree.size(i);
-            Double /* @Time */dt = numericTree.timeGrid().dt(i);
-            Double /* @Real */dx = trinomial.dx(i);
-            Double /* @Real */x = trinomial.underlying(i, 0);
-            Double /* @Real */value = 0.0;
+            double /* @Time */dt = numericTree.timeGrid().dt(i);
+            double /* @Real */dx = trinomial.dx(i);
+            double /* @Real */x = trinomial.underlying(i, 0);
+            double /* @Real */value = 0.0;
             for (int /* @Size */j = 0; j < size; j++) {
                 value += statePrices.get(j) * Math.exp(-x * dt);
                 x += dx;
@@ -107,13 +107,13 @@ public class HullWhite extends Vasicek {// implements TermStructureConsistentMod
     }
 
     @Override
-    public Double /* @Real */A(Double /* @Time */t, Double /* @Time */T) {
-        Double /* @DiscountFactor */discount1 = termStructureConsistentModelClass.termStructure().getLink().discount(t);
-        Double /* @DiscountFactor */discount2 = termStructureConsistentModelClass.termStructure().getLink().discount(T);
-        Double /* @Rate */forward = termStructureConsistentModelClass.termStructure().getLink().forwardRate(t, t,
+    public double /* @Real */A(double /* @Time */t, double /* @Time */T) {
+        double /* @DiscountFactor */discount1 = termStructureConsistentModelClass.termStructure().getLink().discount(t);
+        double /* @DiscountFactor */discount2 = termStructureConsistentModelClass.termStructure().getLink().discount(T);
+        double /* @Rate */forward = termStructureConsistentModelClass.termStructure().getLink().forwardRate(t, t,
                 Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
-        Double /* @Real */temp = sigma() * B(t, T);
-        Double /* @Real */value = B(t, T) * forward - 0.25 * temp * temp * B(0.0, 2.0 * t);
+        double /* @Real */temp = sigma() * B(t, T);
+        double /* @Real */value = B(t, T) * forward - 0.25 * temp * temp * B(0.0, 2.0 * t);
         return Math.exp(value) * discount2 / discount1;
     }
 
@@ -121,24 +121,24 @@ public class HullWhite extends Vasicek {// implements TermStructureConsistentMod
         phi_ = new FittingParameter(termStructureConsistentModelClass.termStructure(), a(), sigma());
     }
 
-    public Double /* @Real */discountBondOption(Option.Type type, Double /* @Real */strike, Double /* @Time */maturity,
-            Double /* @Time */bondMaturity) {
+    public double /* @Real */discountBondOption(Option.Type type, double /* @Real */strike, double /* @Time */maturity,
+            double /* @Time */bondMaturity) {
 
-        Double /* @Real */_a = a();
-        Double /* @Real */v;
+        double /* @Real */_a = a();
+        double /* @Real */v;
         if (_a < Math.sqrt(QL_EPSILON)) {
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(maturity);
         } else {
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(0.5 * (1.0 - Math.exp(-2.0 * _a * maturity)) / _a);
         }
-        Double /* @Real */f = termStructureConsistentModelClass.termStructure().getLink().discount(bondMaturity);
-        Double /* @Real */k = termStructureConsistentModelClass.termStructure().getLink().discount(maturity) * strike;
+        double /* @Real */f = termStructureConsistentModelClass.termStructure().getLink().discount(bondMaturity);
+        double /* @Real */k = termStructureConsistentModelClass.termStructure().getLink().discount(maturity) * strike;
 
         return blackFormula(type, k, f, v);
     }
 
-    public static Double /* @Rate */convexityBias(Double /* @Real */futuresPrice, Double /* @Time */t, Double /* @Time */T,
-            Double /* @Real */sigma, Double /* @Real */a) {
+    public static double /* @Rate */convexityBias(double /* @Real */futuresPrice, double /* @Time */t, double /* @Time */T,
+            double /* @Real */sigma, double /* @Real */a) {
         /***
          * QL_REQUIRE(futuresPrice>=0.0, "negative futures price (" << futuresPrice << ") not allowed"); QL_REQUIRE(t>=0.0,
          * "negative t (" << t << ") not allowed"); QL_REQUIRE(T>=t, "T (" << T << ") must not be less than t (" << t << ")");
@@ -161,22 +161,22 @@ public class HullWhite extends Vasicek {// implements TermStructureConsistentMod
             throw new IllegalArgumentException("negative a (" + a + ") not allowed");
         }
 
-        Double /* @Time */deltaT = (T - t);
-        Double /* @Real */tempDeltaT = (1. - Math.exp(-a * deltaT)) / a;
-        Double /* @Real */halfSigmaSquare = sigma * sigma / 2.0;
+        double /* @Time */deltaT = (T - t);
+        double /* @Real */tempDeltaT = (1. - Math.exp(-a * deltaT)) / a;
+        double /* @Real */halfSigmaSquare = sigma * sigma / 2.0;
 
         // lambda adjusts for the fact that the underlying is an interest rate
-        Double /* @Real */lambda = halfSigmaSquare * (1. - Math.exp(-2.0 * a * t)) / a * tempDeltaT * tempDeltaT;
+        double /* @Real */lambda = halfSigmaSquare * (1. - Math.exp(-2.0 * a * t)) / a * tempDeltaT * tempDeltaT;
 
-        Double /* @Real */tempT = (1.0 - Math.exp(-a * t)) / a;
+        double /* @Real */tempT = (1.0 - Math.exp(-a * t)) / a;
 
         // phi is the MtM adjustment
-        Double /* @Real */phi = halfSigmaSquare * tempDeltaT * tempT * tempT;
+        double /* @Real */phi = halfSigmaSquare * tempDeltaT * tempT * tempT;
 
         // the adjustment
-        Double /* @Real */z = lambda + phi;
+        double /* @Real */z = lambda + phi;
 
-        Double /* @Rate */futureRate = (100.0 - futuresPrice) / 100.0;
+        double /* @Rate */futureRate = (100.0 - futuresPrice) / 100.0;
         return (1.0 - Math.exp(-z)) * (futureRate + 1.0 / (T - t));
     }
 

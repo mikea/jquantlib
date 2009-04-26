@@ -1,5 +1,7 @@
 /*
-Copyright (C) 2008 Praneet Tiwari
+Copyright (C) 
+2008 Praneet Tiwari
+2009 Ueli Hofstetter
 
 This source code is release under the BSD License.
 
@@ -50,10 +52,9 @@ import org.jquantlib.util.Observer;
  * \ingroup shortrate
  */
 public class CoxIngersollRoss extends OneFactorAffineModel {
-    // private Double /*@Real*/ y0_, theta_, k_, sigma_;
+    // private double /*@Real*/ y0_, theta_, k_, sigma_;
     // check this value, arbitrary for now
 
-    private static double QL_EPSILON = 1e-10;
     private Parameter theta_;
     private Parameter k_;
     private Parameter sigma_;
@@ -65,81 +66,45 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         return null;//new ShortRateTree(trinomial, dynamics(), grid);
     }
 
-    protected Double /* @Real */A(Double /* @Time */t, Double /* @Time */T) {
-        Double /* @Real */sigma2 = sigma() * sigma();
-        Double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma2);
-        Double /* @Real */numerator = 2.0 * h * Math.exp(0.5 * (k() + h) * (T - t));
-        Double /* @Real */denominator = 2.0 * h + (k() + h) * (Math.exp((T - t) * h) - 1.0);
-        Double /* @Real */value = Math.log(numerator / denominator) * 2.0 * k() * theta() / sigma2;
+    protected double /* @Real */A(double /* @Time */t, double /* @Time */T) {
+        double /* @Real */sigma2 = sigma() * sigma();
+        double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma2);
+        double /* @Real */numerator = 2.0 * h * Math.exp(0.5 * (k() + h) * (T - t));
+        double /* @Real */denominator = 2.0 * h + (k() + h) * (Math.exp((T - t) * h) - 1.0);
+        double /* @Real */value = Math.log(numerator / denominator) * 2.0 * k() * theta() / sigma2;
         return Math.exp(value);
     }
 
-    protected Double /* @Real */B(Double /* @Time */t, Double /* @Time */T) {
-        Double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma() * sigma());
-        Double /* @Real */temp = Math.exp((T - t) * h) - 1.0;
-        Double /* @Real */numerator = 2.0 * temp;
-        Double /* @Real */denominator = 2.0 * h + (k() + h) * temp;
-        Double /* @Real */value = numerator / denominator;
+    protected double /* @Real */B(double /* @Time */t, double /* @Time */T) {
+        double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma() * sigma());
+        double /* @Real */temp = Math.exp((T - t) * h) - 1.0;
+        double /* @Real */numerator = 2.0 * temp;
+        double /* @Real */denominator = 2.0 * h + (k() + h) * temp;
+        double /* @Real */value = numerator / denominator;
         return value;
     }
 
-    protected Double /* @Real */theta() {
+    protected double /* @Real */theta() {
         return theta_.getOperatorEq(0.0);
     }
 
-    protected Double /* @Real */k() {
+    protected double /* @Real */k() {
         return k_.getOperatorEq(0.0);
     }
 
-    protected Double /* @Real */sigma() {
+    protected double /* @Real */sigma() {
         return sigma_.getOperatorEq(0.0);
     }
 
-    protected Double /* @Real */x0() {
+    protected double /* @Real */x0() {
         return r0_.getOperatorEq(0.0);
-    }
-
-    // cosmetic methods, not supported yet.
-    @Override
-    public void addObserver(Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public int countObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Observer> getObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void deleteObserver(Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void deleteObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void notifyObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void notifyObservers(Object arg) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     class VolatilityConstraint extends Constraint {
 
-        Double /* @Real */k_, theta_;
+        double /* @Real */k_, theta_;
 
-        public VolatilityConstraint(Double /* @Real */k, Double /* @Real */theta) {
+        public VolatilityConstraint(double /* @Real */k, double /* @Real */theta) {
             // : Constraint(boost::shared_ptr<Constraint::Impl>(
             // new VolatilityConstraint::Impl(k, theta))) {
             this.k_ = k;
@@ -147,7 +112,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         }
 
         public boolean test(final Array params) {
-            Double /* @Real */sigma = params.get(0);
+            double /* @Real */sigma = params.get(0);
             if (sigma <= 0.0) {
                 return false;
             }
@@ -160,7 +125,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
 
     class HelperProcess extends StochasticProcess1D {
 
-        public HelperProcess(Double /* @Real */theta, Double /* @Real */k, Double /* @Real */sigma, Double /* @Real */y0) {
+        public HelperProcess(double /* @Real */theta, double /* @Real */k, double /* @Real */sigma, double /* @Real */y0) {
             this.y0_ = y0;
             this.theta_ = theta;
             this.k_ = k;
@@ -183,7 +148,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
             return 0.5 * sigma_;
         }
 
-        private Double /* @Real */y0_, theta_, k_, sigma_;
+        private double /* @Real */y0_, theta_, k_, sigma_;
     };
 
     // ! %Dynamics of the short-rate under the Cox-Ingersoll-Ross model
@@ -195,7 +160,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
 
     class Dynamics extends ShortRateDynamics {
 
-        public Dynamics(Double /* @Real */theta, Double /* @Real */k, Double /* @Real */sigma, Double /* @Real */x0) {
+        public Dynamics(double /* @Real */theta, double /* @Real */k, double /* @Real */sigma, double /* @Real */x0) {
             super(new HelperProcess(theta, k, sigma, Math.sqrt(x0)));
         }
 
@@ -210,7 +175,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         }
     }
 
-    public CoxIngersollRoss(Double /* @Rate */r0, Double /* @Real */theta, Double /* @Real */k, Double /* @Real */sigma) {
+    public CoxIngersollRoss(double /* @Rate */r0, double /* @Real */theta, double /* @Real */k, double /* @Real */sigma) {
         super(4);
         theta_ = (arguments_.get(0));
         k_ = arguments_.get(1);
@@ -226,36 +191,36 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         return new Dynamics(theta(), k(), sigma(), x0());
     }
 
-    public Double /* @Real */discountBondOption(Option.Type type, Double /* @Real */strike, Double /* @Time */t,
-            Double /* @Time */s) {
+    public double /* @Real */discountBondOption(Option.Type type, double /* @Real */strike, double /* @Time */t,
+            double /* @Time */s) {
 
         // QL_REQUIRE(strike>0.0, "strike must be positive");
         if (strike < 0.0) {
             throw new IllegalArgumentException("strike must be positive");
         }
-        Double /* @DiscountFactor */discountT = discountBond(0.0, t, x0());
-        Double /* @DiscountFactor */discountS = discountBond(0.0, s, x0());
+        double /* @DiscountFactor */discountT = discountBond(0.0, t, x0());
+        double /* @DiscountFactor */discountS = discountBond(0.0, s, x0());
         /****
-         * TODO if (t < QL_EPSILON) { switch(type) { case 1:// Option.Type.CALL: return Math.max<Double /*@Real/>(discountS -
-         * strike, 0.0); case Option::Put: return Math.max<Double /*@Real/>(strike - discountS, 0.0); default:
+         * TODO if (t < QL_EPSILON) { switch(type) { case 1:// Option.Type.CALL: return Math.max<double /*@Real/>(discountS -
+         * strike, 0.0); case Option::Put: return Math.max<double /*@Real/>(strike - discountS, 0.0); default:
          * QL_FAIL("unsupported option type"); } }
          * ****/
-        Double /* @Real */sigma2 = sigma() * sigma();
-        Double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma2);
-        Double /* @Real */b = B(t, s);
+        double /* @Real */sigma2 = sigma() * sigma();
+        double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma2);
+        double /* @Real */b = B(t, s);
 
-        Double /* @Real */rho = 2.0 * h / (sigma2 * (Math.exp(h * t) - 1.0));
-        Double /* @Real */psi = (k() + h) / sigma2;
+        double /* @Real */rho = 2.0 * h / (sigma2 * (Math.exp(h * t) - 1.0));
+        double /* @Real */psi = (k() + h) / sigma2;
 
-        Double /* @Real */df = 4.0 * k() * theta() / sigma2;
-        Double /* @Real */ncps = 2.0 * rho * rho * x0() * Math.exp(h * t) / (rho + psi + b);
-        Double /* @Real */ncpt = 2.0 * rho * rho * x0() * Math.exp(h * t) / (rho + psi);
+        double /* @Real */df = 4.0 * k() * theta() / sigma2;
+        double /* @Real */ncps = 2.0 * rho * rho * x0() * Math.exp(h * t) / (rho + psi + b);
+        double /* @Real */ncpt = 2.0 * rho * rho * x0() * Math.exp(h * t) / (rho + psi);
         /***
          * TODO: Implement NonCentralChiSquareDistribution NonCentralChiSquareDistribution chis(df, ncps);
          * NonCentralChiSquareDistribution chit(df, ncpt);
          **/
-        Double /* @Real */z = Math.log(A(t, s) / strike) / b;
-        // Double /*@Real*/ call = discountS*chis(2.0*z*(rho+psi+b)) -
+        double /* @Real */z = Math.log(A(t, s) / strike) / b;
+        // double /*@Real*/ call = discountS*chis(2.0*z*(rho+psi+b)) -
         // strike*discountT*chit(2.0*z*(rho+psi));
 
         if (type == Option.Type.CALL) // return call;
@@ -266,4 +231,6 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
             return 1.0;
         }
     }
+
+
 }

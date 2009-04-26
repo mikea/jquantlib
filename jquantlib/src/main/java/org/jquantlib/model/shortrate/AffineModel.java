@@ -32,10 +32,10 @@ import org.jquantlib.util.Observable;
 public interface AffineModel extends Observable {
 
     // ! Implied discount curve
-    public abstract double /* @DiscountFactor */discount(Double /* @Time */t);
+    public abstract double /* @DiscountFactor */discount(double /* @Time */t);
 
-    public abstract Double /* @Real */discountBond(Double /* @Time */now, Double /* @Time */maturity, Array factors);
+    public abstract double /* @Real */discountBond(double /* @Time */now, double /* @Time */maturity, Array factors);
 
-    public abstract Double /* @Real */discountBondOption(Option.Type type, Double /* @Real */strike, Double /* @Time */maturity,
-            Double /* @Time */bondMaturity);
+    public abstract double /* @Real */discountBondOption(Option.Type type, double /* @Real */strike, double /* @Time */maturity,
+            double /* @Time */bondMaturity);
 }

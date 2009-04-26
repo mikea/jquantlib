@@ -31,6 +31,10 @@ import org.jquantlib.time.TimeGrid;
  */
 public abstract class ShortRateModel extends CalibratedModel {
 
+    protected ShortRateModel(){
+        super();
+    }
+    
     public ShortRateModel(int /* @Size */nArguments) {
         super(nArguments);
 

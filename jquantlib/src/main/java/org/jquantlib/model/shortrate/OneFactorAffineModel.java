@@ -36,22 +36,22 @@ public abstract class OneFactorAffineModel extends OneFactorModel implements Aff
         }
     }
 
-    public Double /* @Real */discountBond(Double /* @Time */now, Double /* @Time */maturity, Array factors) {
+    public double /* @Real */discountBond(double /* @Time */now, double /* @Time */maturity, Array factors) {
         return discountBond(now, maturity, factors.at(0));
     }
 
-    public Double /* @Real */discountBond(Double /* @Time */now, Double /* @Time */maturity, Double /* @Rate */rate) {
+    public double /* @Real */discountBond(double /* @Time */now, double /* @Time */maturity, double /* @Rate */rate) {
         return A(now, maturity) * Math.exp(-B(now, maturity) * rate);
     }
 
     @Override
-    public double /* @DiscountFactor */discount(Double /* @Time */t) {
-        Double /* @Real */x0 = dynamics().process().x0();
-        Double /* @Rate */r0 = dynamics().shortRate(0.0, x0);
+    public double /* @DiscountFactor */discount(double /* @Time */t) {
+        double /* @Real */x0 = dynamics().process().x0();
+        double /* @Rate */r0 = dynamics().shortRate(0.0, x0);
         return discountBond(0.0, t, r0);
     }
 
-    protected abstract Double /* @Real */A(Double /* @Time */t, Double /* @Time */T);
+    protected abstract double /* @Real */A(double /* @Time */t, double /* @Time */T);
 
-    protected abstract Double /* @Real */B(Double /* @Time */t, Double /* @Time */T);
+    protected abstract double /* @Real */B(double /* @Time */t, double /* @Time */T);
 }

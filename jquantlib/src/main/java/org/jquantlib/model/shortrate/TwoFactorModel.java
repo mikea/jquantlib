@@ -47,16 +47,16 @@ public abstract class TwoFactorModel extends ShortRateModel {
     public abstract class ShortRateDynamics {
 
         private StochasticProcess1D xProcess_, yProcess_;
-        Double /* @Real */correlation_;
+        double /* @Real */correlation_;
 
         public ShortRateDynamics(final StochasticProcess1D xProcess, final StochasticProcess1D yProcess,
-                Double /* @Real */correlation) {
+                double /* @Real */correlation) {
             xProcess_ = (xProcess);
             yProcess_ = (yProcess);
             correlation_ = (correlation);
         }
 
-        public abstract Double /* @Rate */shortRate(Double /* @Time */t, Double /* @Real */x, Double /* @Real */y);
+        public abstract double /* @Rate */shortRate(double /* @Time */t, double /* @Real */x, double /* @Real */y);
 
         // ! Risk-neutral dynamics of the first state variable x
         public StochasticProcess1D xProcess() {
@@ -69,7 +69,7 @@ public abstract class TwoFactorModel extends ShortRateModel {
         }
 
         // ! Correlation \f$ \rho \f$ between the two brownian motions.
-        public Double /* @Real */correlation() {
+        public double /* @Real */correlation() {
             return correlation_;
         }
 
@@ -114,10 +114,10 @@ public abstract class TwoFactorModel extends ShortRateModel {
             int /* @Size */index1 = index % modulo;
             int /* @Size */index2 = index / modulo;
 
-            Double /* @Real */x = tree1.underlying(i, index1);
-            Double /* @Real */y = tree2.underlying(i, index2);
+            double /* @Real */x = tree1.underlying(i, index1);
+            double /* @Real */y = tree2.underlying(i, index2);
 
-            Double /* @Real */r = dynamics_.shortRate(timeGrid().at(i), x, y);
+            double /* @Real */r = dynamics_.shortRate(timeGrid().at(i), x, y);
             return Math.exp(-r * timeGrid().dt(i));
         }
     }

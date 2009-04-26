@@ -49,30 +49,30 @@ public class Vasicek extends OneFactorAffineModel {
 
     // check this value, arbitrary for now
     private static double QL_EPSILON = 1e-10;
-    Double /* @Real */r0_;
+    double /* @Real */r0_;
     Parameter a_;
     Parameter b_;
     Parameter sigma_;
     Parameter lambda_;
 
-    Double /* @Real */a() {
+    double /* @Real */a() {
         return a_.getOperatorEq(0.0);
     }
 
-    Double /* @Real */b() {
+    double /* @Real */b() {
         return b_.getOperatorEq(0.0);
     }
 
-    Double /* @Real */lambda() {
+    double /* @Real */lambda() {
         return lambda_.getOperatorEq(0.0);
     }
 
-    Double /* @Real */sigma() {
+    double /* @Real */sigma() {
         return sigma_.getOperatorEq(0.0);
     }
 
-    public Vasicek(Double /* @Rate */r0, Double /* @Real */a, Double /* @Real */b, Double /* @Real */sigma,
-            Double /* @Real */lambda) {
+    public Vasicek(double /* @Rate */r0, double /* @Real */a, double /* @Real */b, double /* @Real */sigma,
+            double /* @Real */lambda) {
         super(4);
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
@@ -90,10 +90,10 @@ public class Vasicek extends OneFactorAffineModel {
         lambda_ = new ConstantParameter(lambda, new NoConstraint());
     }
 
-    public Double /* @Real */discountBondOption(Option.Type type, Double /* @Real */strike, Double /* @Time */maturity,
-            Double /* @Time */bondMaturity) {
-        Double /* @Real */v;
-        Double /* @Real */_a = a();
+    public double /* @Real */discountBondOption(Option.Type type, double /* @Real */strike, double /* @Time */maturity,
+            double /* @Time */bondMaturity) {
+        double /* @Real */v;
+        double /* @Real */_a = a();
 
         /****** disable these checks for a while* v = 0.0; *************/
         // if (std::fabs(maturity) < QL_EPSILON) {
@@ -105,8 +105,8 @@ public class Vasicek extends OneFactorAffineModel {
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(0.5 * (1.0 - Math.exp(-2.0 * _a * maturity)) / _a);
         }
 
-        Double /* @Real */f = discountBond(0.0, bondMaturity, r0_);
-        Double /* @Real */k = discountBond(0.0, maturity, r0_) * strike;
+        double /* @Real */f = discountBond(0.0, bondMaturity, r0_);
+        double /* @Real */k = discountBond(0.0, maturity, r0_) * strike;
 
         return blackFormula(type, k, f, v);
 
@@ -124,7 +124,7 @@ public class Vasicek extends OneFactorAffineModel {
      */
     class Dynamics extends ShortRateDynamics {
 
-        public Dynamics(Double /* @Real */a, Double /* @Real */b, Double /* @Real */sigma, Double /* @Real */r0) {
+        public Dynamics(double /* @Real */a, double /* @Real */b, double /* @Real */sigma, double /* @Real */r0) {
             super(new OrnsteinUhlenbeckProcess(a, sigma, r0 - b, 0.0));
 
             a_ = (a);
@@ -141,25 +141,25 @@ public class Vasicek extends OneFactorAffineModel {
             return x + b_;
         }
 
-        private Double /* @Real */a_, b_, r0_;
+        private double /* @Real */a_, b_, r0_;
     }
 
     // the real heart of Vasicek, A & B
-    public Double /* @Real */A(Double /* @Time */t, Double /* @Time */T) {
-        Double /* @Real */_a = a();
+    public double /* @Real */A(double /* @Time */t, double /* @Time */T) {
+        double /* @Real */_a = a();
         if (_a < Math.sqrt(QL_EPSILON)) {
             return 0.0;
         } else {
-            Double /* @Real */sigma2 = sigma() * sigma();
-            Double /* @Real */bt = B(t, T);
+            double /* @Real */sigma2 = sigma() * sigma();
+            double /* @Real */bt = B(t, T);
             return Math.exp((b() + lambda() * sigma() / _a - 0.5 * sigma2 / (_a * _a)) * (bt - (T - t)) - 0.25 * sigma2 * bt * bt
                     / _a);
         }
     }
 
     @Override
-    public Double /* @Real */B(Double /* @Time */t, Double /* @Time */T) {
-        Double /* @Real */_a = a();
+    public double /* @Real */B(double /* @Time */t, double /* @Time */T) {
+        double /* @Real */_a = a();
         if (_a < Math.sqrt(QL_EPSILON)) {
             return (T - t);
         } else {
