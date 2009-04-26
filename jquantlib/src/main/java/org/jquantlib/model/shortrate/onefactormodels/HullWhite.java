@@ -190,16 +190,16 @@ public class HullWhite extends Vasicek {// implements TermStructureConsistentMod
 
         private Parameter fitting_;
 
-        public Dynamics(final Parameter fitting, Double /* @Real */a, Double /* @Real */sigma) {
+        public Dynamics(final Parameter fitting, double /* @Real */a, double /* @Real */sigma) {
             super(new OrnsteinUhlenbeckProcess(a, sigma, /* default */0.0, /* default */0.0));
             fitting_ = (fitting);
         }
 
-        public Double /* @Real */variable(Double /* @Time */t, Double /* @Rate */r) {
+        public double /* @Real */variable(double /* @Time */t, double /* @Rate */r) {
             return r - fitting_.getOperatorEq(t);
         }
 
-        public Double /* @Real */shortRate(Double /* @Time */t, Double /* @Real */x) {
+        public double /* @Real */shortRate(double /* @Time */t, double /* @Real */x) {
             return x + fitting_.getOperatorEq(t);
         }
     }
