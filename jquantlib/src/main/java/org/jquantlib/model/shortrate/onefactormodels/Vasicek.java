@@ -132,12 +132,12 @@ public class Vasicek extends OneFactorAffineModel {
             r0_ = (r0);
         }
 
-        public Double /* @Real */variable(Double /* @Time */t, Double /* @Rate */r) {
+        public double /* @Real */variable(double /* @Time */t, double /* @Rate */r) {
             return r - b_;
         }
 
         @Override
-        public Double /* @Real */shortRate(Double /* @Time */t, Double /* @Real */x) {
+        public double /* @Real */shortRate(double /* @Time */t, double /* @Real */x) {
             return x + b_;
         }
 

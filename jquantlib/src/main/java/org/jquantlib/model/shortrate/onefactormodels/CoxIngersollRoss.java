@@ -200,12 +200,12 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         }
 
         @Override
-        public Double /* @Real */variable(Double /* @Time */t, Double /* @Real */r) {
+        public double /* @Real */variable(double /* @Time */t, double /* @Real */r) {
             return Math.sqrt(r);
         }
 
         @Override
-        public Double /* @Real */shortRate(Double /* @Time */t, Double /* @Real */y) {
+        public double /* @Real */shortRate(double /* @Time */t, double /* @Real */y) {
             return y * y;
         }
     }

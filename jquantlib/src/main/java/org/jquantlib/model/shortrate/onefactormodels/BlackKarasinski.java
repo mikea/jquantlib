@@ -217,7 +217,7 @@ public class BlackKarasinski extends OneFactorModel {
         // Real variable(Time t, Rate r) const {
         // return std::log(r) - fitting_(t);
         // }
-        public Double /* @Real */variable(Double /* @Time */t, Double /* @Rate */r) {
+        public double /* @Real */variable(double /* @Time */t, double /* @Rate */r) {
             return Math.log(r) - fitting_.getOperatorEq(t);
         }
 
@@ -225,7 +225,7 @@ public class BlackKarasinski extends OneFactorModel {
         // return std::exp(x + fitting_(t));
         // }
         @Override
-        public Double /* @Real */shortRate(Double /* @Time */t, Double /* @Real */x) {
+        public double /* @Real */shortRate(double /* @Time */t, double /* @Real */x) {
             return Math.exp(x + fitting_.getOperatorEq(t));
         }
 
