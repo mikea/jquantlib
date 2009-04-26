@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007 Srinivas Hasti
+ Copyright (C) 2007 Srinivas Hasti, Daniel Kong
 
  This source code is release under the BSD License.
  
@@ -27,6 +27,7 @@ import java.util.List; // FIXME :: performance
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.cashflow.CashFlow;
+import org.jquantlib.cashflow.Coupon;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.quotes.Handle;
@@ -46,6 +47,7 @@ import org.jquantlib.util.Date;
 //TODO: Complete implementation
 // FIXME: code review
 public class Bond extends NewInstrument {
+	
 	protected int settlementDays;
 	protected Calendar calendar;
 	protected double faceAmount;	  
@@ -186,11 +188,36 @@ public class Bond extends NewInstrument {
         if (issueDate == Date.NULL_DATE)
             return settlement;
         else
-        	//TODO: return std::max(settlement, issueDate_);
-        	return null;                	
+        	if(issueDate.ge(settlement))
+        		return issueDate;
+        	else 
+        		return settlement;
     }
     
+    //! accrued amount at a given date
+    /*! The default bond settlement is used if no date is given. */
+    public double accruedAmount(){
+    	return accruedAmount(Date.NULL_DATE);
+    }
     
+    public double accruedAmount(Date settlement){
+    	if (settlement == Date.NULL_DATE)
+            settlement = settlementDate();
+
+        for (int i = 0; i<cashFlows.size(); ++i) {
+            // the first coupon paying after d is the one we're after
+            if (!cashFlows.get(i).hasOccurred(settlement)) {
+                Coupon coupon = (Coupon)cashFlows.get(i);
+                if (coupon != null)
+                    // !!!
+                    return coupon.accruedAmount(settlement)/faceAmount*100.0;
+                else
+                    return 0.0;
+            }
+        }
+        return 0.0;
+    }
+      
     //! theoretical bond yield
     /*! The default bond settlement and theoretical price are used
         for calculation.

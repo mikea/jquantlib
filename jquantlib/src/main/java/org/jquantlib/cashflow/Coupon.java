@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2009 Ueli Hofstetter, Daniel Kong
 
  This source code is release under the BSD License.
  
@@ -26,6 +26,12 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
+
+/** 
+ * @author Ueli Hofstetter
+ * @author Daniel Kong
+ */
+
 //! %coupon accruing over a fixed period
 /*! This class implements part of the CashFlow interface but it is
     still abstract and provides derived classes with methods for
@@ -33,65 +39,64 @@ import org.jquantlib.util.Visitor;
 */
 public abstract class Coupon extends CashFlow {
     
-    protected double nominal_;
-    protected Date paymentDate_,
-                   accrualStartDate_,
-                   accrualEndDate_,
-                   refPeriodStart_,
-                   refPeriodEnd_;
+    protected double nominal;
+    protected Date paymentDate,
+                   accrualStartDate,
+                   accrualEndDate,
+                   refPeriodStart,
+                   refPeriodEnd;
     
     public Coupon(double nominal,
             Date paymentDate,
             Date accrualStartDate,
-            Date accrualEndDate,
-            Date refPeriodStart,
-            Date refPeriodEnd){
-        this.nominal_ = nominal;
-        this.paymentDate_ = paymentDate;
-        this.accrualStartDate_ = accrualStartDate;
-        this.accrualEndDate_ = accrualEndDate;
-        this.refPeriodStart_ = refPeriodEnd;
-        this.refPeriodEnd_ = refPeriodEnd;
-        
-        // TODO: this allows as to provide only one constructor, no clue why this is done this way in c++
-        if(refPeriodStart_ == null){
-            refPeriodStart_ = accrualEndDate_;
-        }
-        if(refPeriodEnd_ == null){
-            refPeriodEnd_ = accrualEndDate_;
-        }
+            Date accrualEndDate){
+        this(nominal, paymentDate, accrualStartDate, accrualEndDate, Date.NULL_DATE, Date.NULL_DATE);
+    }
+    
+    public Coupon(double nominal,
+    		Date paymentDate,
+    		Date accrualStartDate,
+    		Date accrualEndDate,
+    		Date refPeriodStart,
+    		Date refPeriodEnd){
+    	this.nominal = nominal;
+    	this.paymentDate = paymentDate;
+    	this.accrualStartDate = accrualStartDate;
+    	this.accrualEndDate = accrualEndDate;
+    	this.refPeriodStart = refPeriodEnd;
+    	this.refPeriodEnd = refPeriodEnd;
     }
     
     public double nominal(){
-        return nominal_;
+        return nominal;
     }
     
     public Date accrualStartDate(){
-        return accrualStartDate_;
+        return accrualStartDate;
     }
 
     public Date accrualEndDate(){
-        return accrualEndDate_;
+        return accrualEndDate;
     }
     
     public Date referencePeriodStart() {
-        return refPeriodStart_;
+        return refPeriodStart;
     }
 
     public Date referencePeriodEnd() {
-        return refPeriodEnd_;
+        return refPeriodEnd;
     }
 
     public double accrualPeriod() {
-        return dayCounter().yearFraction(accrualStartDate_,
-                                         accrualEndDate_,
-                                         refPeriodStart_,
-                                         refPeriodEnd_);
+        return dayCounter().yearFraction(accrualStartDate,
+                                         accrualEndDate,
+                                         refPeriodStart,
+                                         refPeriodEnd);
     }
 
     public int accrualDays() {
-        return dayCounter().dayCount(accrualStartDate_,
-                                     accrualEndDate_);
+        return dayCounter().dayCount(accrualStartDate,
+                                     accrualEndDate);
     }
 
     @Override
@@ -104,11 +109,15 @@ public abstract class Coupon extends CashFlow {
         }
     }
     
+    public abstract /*Rate*/ double rate();
+    
     public abstract DayCounter dayCounter();
+    
+    public abstract double accruedAmount(final Date date);
 
     @Override
     public Date date() {
-        return paymentDate_;
+        return paymentDate;
     }
 
 }

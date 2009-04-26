@@ -19,32 +19,35 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+package org.jquantlib.pricingengines;
 
-package org.jquantlib.cashflow;
-
-import org.jquantlib.util.Date;
+import org.jquantlib.methods.lattices.BinomialTree;
 
 /**
+ * 
  * @author Daniel Kong
+ * 
  */
+//TODO: work in progress
 
-public class FixedDividend extends Dividend {
+//! Binomial Tsiveriotis-Fernandes engine for convertible bonds
+/*  \ingroup hybridengines
 
-	protected double amount;
+    \test the correctness of the returned value is tested by
+          checking it against known results in a few corner cases.
+*/
+public class BinomialConvertibleEngine <B extends BinomialTree> extends ConvertibleBondOptionEngine {
 	
-	public FixedDividend( final double amount, final Date date){
-		super(date);
-		this.amount = amount;
-	}
+	private int timeSteps;
 	
-	@Override
-	public double getAmount(final double underlying) {
-		return amount;
+	public BinomialConvertibleEngine (int timeSteps){
+		this.timeSteps = timeSteps;
 	}
 
 	@Override
-	public double getAmount() {
-		return amount;
+	public void calculate() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

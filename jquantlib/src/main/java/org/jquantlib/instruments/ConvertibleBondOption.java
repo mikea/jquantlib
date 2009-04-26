@@ -21,6 +21,7 @@
  */
 package org.jquantlib.instruments;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.cashflow.Callability;
@@ -51,7 +52,7 @@ public class ConvertibleBondOption extends OneAssetStrikedOption{
     private List<Callability> callability;
     private List<Dividend>  dividends;
     private Handle<Quote> creditSpread;
-    private List<CashFlow> cashflows;
+    private List<CashFlow> cashFlows;
     private DayCounter dayCounter;
     private Date issueDate;
     private Schedule schedule;
@@ -66,7 +67,7 @@ public class ConvertibleBondOption extends OneAssetStrikedOption{
             final List<Dividend> dividends,
             final List<Callability> callability,
             final Handle<Quote> creditSpread,
-            final List<CashFlow> cashflows,
+            final List<CashFlow> cashFlows,
             final DayCounter dayCounter,
             final Schedule schedule,
             final Date issueDate,
@@ -78,7 +79,7 @@ public class ConvertibleBondOption extends OneAssetStrikedOption{
     	this.dividends =dividends;
     	this.callability = callability;
     	this.creditSpread = creditSpread;
-    	this.cashflows = cashflows;
+    	this.cashFlows = cashFlows;
     	this.dayCounter = dayCounter;
     	this.schedule = schedule;
     	this.issueDate = issueDate;
@@ -93,78 +94,61 @@ public class ConvertibleBondOption extends OneAssetStrikedOption{
 
 		moreArgs.conversionRatio = conversionRatio;
 
-//TODO: need to change stochasticProcess in OneAssetOption from private to protected
-//		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) stochasticProcess;
-		
-//        boost::shared_ptr<GeneralizedBlackScholesProcess> process =
-//            boost::dynamic_pointer_cast<GeneralizedBlackScholesProcess>(
-//                                                          stochasticProcess_);
+		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) stochasticProcess;
 
-        int i;
         Date settlement = bond.settlementDate();
-//        DayCounter dayCounter = process->riskFreeRate()->dayCounter();
-//
-//        moreArgs->stoppingTimes = std::vector<Time>(exercise_->dates().size());
-//        for (i=0; i<exercise_->dates().size(); i++) {
-//            moreArgs->stoppingTimes[i] =
-//                dayCounter.yearFraction(settlement, exercise_->date(i));
-//        }
-//
-//        Size n = callability_.size();
-//        moreArgs->callabilityTimes.clear();
-//        moreArgs->callabilityTypes.clear();
-//        moreArgs->callabilityPrices.clear();
-//        moreArgs->callabilityTriggers.clear();
-//        moreArgs->callabilityTimes.reserve(n);
-//        moreArgs->callabilityTypes.reserve(n);
-//        moreArgs->callabilityPrices.reserve(n);
-//        moreArgs->callabilityTriggers.reserve(n);
-//        for (i=0; i<n; i++) {
-//            if (!callability_[i]->hasOccurred(settlement)) {
-//                moreArgs->callabilityTypes.push_back(callability_[i]->type());
-//                moreArgs->callabilityTimes.push_back(
-//                             dayCounter.yearFraction(settlement,
-//                                                     callability_[i]->date()));
-//                moreArgs->callabilityPrices.push_back(
-//                                            callability_[i]->price().amount());
-//                if (callability_[i]->price().type() ==
-//                                                    Callability::Price::Clean)
-//                    moreArgs->callabilityPrices.back() +=
-//                        bond_->accruedAmount(callability_[i]->date());
-//                boost::shared_ptr<SoftCallability> softCall =
-//                    boost::dynamic_pointer_cast<SoftCallability>(
-//                                                             callability_[i]);
-//                if (softCall)
-//                    moreArgs->callabilityTriggers.push_back(
-//                                                         softCall->trigger());
-//                else
-//                    moreArgs->callabilityTriggers.push_back(Null<Real>());
-//            }
-//        }
-//
-//        const Leg& cashflows =
-//                                                           bond_->cashflows();
-//        moreArgs->couponTimes.clear();
-//        moreArgs->couponAmounts.clear();
-//        for (i=0; i<cashflows.size()-1; i++) {
-//            if (!cashflows[i]->hasOccurred(settlement)) {
-//                moreArgs->couponTimes.push_back(
-//                    dayCounter.yearFraction(settlement,cashflows[i]->date()));
-//                moreArgs->couponAmounts.push_back(cashflows[i]->amount());
-//            }
-//        }
-//
-//        moreArgs->dividends.clear();
-//        moreArgs->dividendTimes.clear();
-//        for (i=0; i<dividends_.size(); i++) {
-//            if (!dividends_[i]->hasOccurred(settlement)) {
-//                moreArgs->dividends.push_back(dividends_[i]);
-//                moreArgs->dividendTimes.push_back(
-//                              dayCounter.yearFraction(settlement,
-//                                                      dividends_[i]->date()));
-//            }
-//        }
-//
+        DayCounter dayCounter = process.riskFreeRate().getLink().dayCounter();
+
+        moreArgs.stoppingTimes = new ArrayList<Double>();
+        for (int i=0; i<exercise.size(); i++) {
+            moreArgs.stoppingTimes.add(dayCounter.yearFraction(settlement, exercise.date(i)));
+        }
+
+        int n = callability.size();
+        moreArgs.callabilityTimes.clear();
+        moreArgs.callabilityTypes.clear();
+        moreArgs.callabilityPrices.clear();
+        moreArgs.callabilityTriggers.clear();
+
+        for (int i=0; i<n; i++) {
+            if (!callability.get(i).hasOccurred(settlement)) {          	
+                moreArgs.callabilityTypes.add(callability.get(i).getType());
+                moreArgs.callabilityTimes.add(dayCounter.yearFraction(settlement, callability.get(i).date()));
+                
+                double d = callability.get(i).getPrice().getAmount();
+                if (callability.get(i).getPrice().getType() == Callability.Price.Type.CLEAN){               	
+                	d += bond.accruedAmount(callability.get(i).date());
+                }
+                moreArgs.callabilityPrices.add(d);
+                
+                SoftCallability softCall = (SoftCallability)callability.get(i);
+				if(softCall != null){
+                    moreArgs.callabilityTriggers.add(softCall.getTrigger());
+				}else{
+					moreArgs.callabilityTriggers.add(0.0);
+				}
+            }
+        }
+
+        final List<CashFlow> cashFlows = bond.getCashFlows();
+
+        moreArgs.couponTimes.clear();
+        moreArgs.couponAmounts.clear();
+        for (int i=0; i<cashFlows.size()-1; i++) {
+            if (!cashFlows.get(i).hasOccurred(settlement)) {
+                moreArgs.couponTimes.add(dayCounter.yearFraction(settlement,cashFlows.get(i).date()));
+                moreArgs.couponAmounts.add(cashFlows.get(i).getAmount());
+            }
+        }
+
+        moreArgs.dividends.clear();
+        moreArgs.dividendTimes.clear();
+        for (int i=0; i<dividends.size(); i++) {
+            if (!dividends.get(i).hasOccurred(settlement)) {
+                moreArgs.dividends.add(dividends.get(i));
+                moreArgs.dividendTimes.add(dayCounter.yearFraction(settlement,dividends.get(i).date()));
+            }
+        }
 
         moreArgs.creditSpread = creditSpread;
         moreArgs.dayCounter = dayCounter;
@@ -172,9 +156,7 @@ public class ConvertibleBondOption extends OneAssetStrikedOption{
         moreArgs.settlementDate = settlement;
         moreArgs.settlementDays = settlementDays;
         moreArgs.redemption = redemption;
-		
-		
+				
 	}
-
-        
+       
 }

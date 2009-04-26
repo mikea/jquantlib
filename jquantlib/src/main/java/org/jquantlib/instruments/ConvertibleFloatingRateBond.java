@@ -27,6 +27,7 @@ import org.jquantlib.cashflow.Callability;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
@@ -56,11 +57,15 @@ public class ConvertibleFloatingRateBond extends ConvertibleBond {
 	          final Handle<Quote> creditSpread,
 	          final Date issueDate,
 	          int settlementDays,
+	          final IborIndex index,
+	          /*Natural*/int fixingDays,
+//	            final List<Spread> spreads,
+	          final List<Double> spreads,
 	          final DayCounter dayCounter,
 	          final Schedule schedule){
 		this(process, exercise, engine, conversionRatio, 
 				dividends, callability, creditSpread, issueDate, 
-				settlementDays, dayCounter, schedule, 100);
+				settlementDays, index, fixingDays, spreads, dayCounter, schedule, 100);
 	}
 	
 	public ConvertibleFloatingRateBond(final StochasticProcess process,
@@ -72,6 +77,10 @@ public class ConvertibleFloatingRateBond extends ConvertibleBond {
 			final Handle<Quote> creditSpread,
 			final Date issueDate,
 			int settlementDays,
+			final IborIndex index,
+            /*Natural*/int fixingDays,
+//            final List<Spread> spreads,
+            final List<Double> spreads,
 			final DayCounter dayCounter,
 			final Schedule schedule,
 			double redemption){
@@ -81,10 +90,7 @@ public class ConvertibleFloatingRateBond extends ConvertibleBond {
 		
 		//TODO:
 		
-		
-		
-		
-		
+	
 	}
 
 }

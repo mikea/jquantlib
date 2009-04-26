@@ -84,7 +84,7 @@ public class OneAssetOption extends Option {
     private double itmCashProbability;
     
     // arguments
-    private StochasticProcess stochasticProcess;
+    protected StochasticProcess stochasticProcess;
     
 
     //

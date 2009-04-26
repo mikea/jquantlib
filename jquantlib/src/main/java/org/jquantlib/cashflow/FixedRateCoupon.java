@@ -30,7 +30,7 @@ import org.jquantlib.util.Visitor;
 
 public class FixedRateCoupon extends Coupon{
     
-    private double rate_;
+	private double rate_;
     private DayCounter dayCounter_;
 
     public FixedRateCoupon(double nominal, 
@@ -57,14 +57,14 @@ public class FixedRateCoupon extends Coupon{
     }
     
     public double accruedAmount(Date d){
-        if(d.le(accrualStartDate_) || d.gt(paymentDate_)){
+        if(d.le(accrualStartDate) || d.gt(paymentDate)){
             return 0.0;
         }
         else{
-            return nominal()*rate_*dayCounter_.yearFraction(accrualStartDate_, 
+            return nominal()*rate_*dayCounter_.yearFraction(accrualStartDate, 
                     /* FIXME: nasty......*/
-                    d.le(accrualEndDate_)?d:accrualEndDate_, 
-                            refPeriodStart_, refPeriodEnd_);
+                    d.le(accrualEndDate)?d:accrualEndDate, 
+                            refPeriodStart, refPeriodEnd);
         }
     }
     
@@ -77,5 +77,11 @@ public class FixedRateCoupon extends Coupon{
             super.accept(v);
         }
     }
+    
+
+    @Override
+	public double rate() {
+		return rate_;
+	}
 
 }

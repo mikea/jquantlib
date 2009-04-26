@@ -56,11 +56,12 @@ public class ConvertibleFixedCouponBond extends ConvertibleBond {
 	          final Handle<Quote> creditSpread,
 	          final Date issueDate,
 	          int settlementDays,
+	          /*Rate*/final List<Double> coupons,
 	          final DayCounter dayCounter,
 	          final Schedule schedule){
 		this(process, exercise, engine, conversionRatio, 
 				dividends, callability, creditSpread, issueDate, 
-				settlementDays, dayCounter, schedule, 100);
+				settlementDays, coupons, dayCounter, schedule, 100);
 	}
 	
 	public ConvertibleFixedCouponBond(final StochasticProcess process,
@@ -72,6 +73,7 @@ public class ConvertibleFixedCouponBond extends ConvertibleBond {
 			final Handle<Quote> creditSpread,
 			final Date issueDate,
 			int settlementDays,
+			/*Rate*/final List<Double> coupons,
 			final DayCounter dayCounter,
 			final Schedule schedule,
 			double redemption){

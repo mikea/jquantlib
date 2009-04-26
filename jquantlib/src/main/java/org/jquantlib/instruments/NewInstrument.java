@@ -151,7 +151,7 @@ public abstract class NewInstrument extends Instrument {
      * @see LazyObject#performCalculations
      */
     @Override
-    protected final void performCalculations() {
+    protected void performCalculations() {
         // verify if a PricingEngine was previously defined
         if (engine == null)
             throw new NullPointerException(SHOULD_DEFINE_PRICING_ENGINE);

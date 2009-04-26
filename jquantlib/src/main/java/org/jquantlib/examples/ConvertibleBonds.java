@@ -22,14 +22,35 @@
 
 package org.jquantlib.examples;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.cashflow.Callability;
+import org.jquantlib.cashflow.FixedDividend;
+import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.Thirty360;
+import org.jquantlib.exercise.AmericanExercise;
+import org.jquantlib.exercise.EuropeanExercise;
+import org.jquantlib.exercise.Exercise;
+import org.jquantlib.instruments.ConvertibleFixedCouponBond;
 import org.jquantlib.instruments.Option;
+import org.jquantlib.instruments.SoftCallability;
+import org.jquantlib.methods.lattices.JarrowRudd;
+import org.jquantlib.pricingengines.BinomialConvertibleEngine;
+import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.processes.BlackScholesMertonProcess;
+import org.jquantlib.processes.StochasticProcess;
+import org.jquantlib.quotes.Handle;
+import org.jquantlib.quotes.Quote;
+import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.termstructures.BlackVolTermStructure;
+import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.volatilities.BlackConstantVol;
+import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.DateGenerationRule;
@@ -98,11 +119,12 @@ public class ConvertibleBonds {
         									convention, convention, DateGenerationRule.BACKWARD, false, 
         									Date.NULL_DATE, Date.NULL_DATE);
         
-        List<Dividend> dividends;
-        List<Callability> callability;
+        List<Dividend> dividends = new ArrayList<Dividend>();
+        List<Callability> callability = new ArrayList<Callability>();
         
-        //std::vector<Real> coupons(1, 0.05);
-        double [] coupons = {1, 0.05};
+        List<Double> coupons = new ArrayList<Double>();
+        coupons.add(1.0);
+        coupons.add(0.05);
 
         DayCounter bondDayCount = Thirty360.getDayCounter();
         
@@ -115,21 +137,95 @@ public class ConvertibleBonds {
         double[] putPrices = { 105.0 };
         
         for(int i=0; i<callLength.length; i++){
-//        	callability.add(e);
+        	callability.add(new SoftCallability(new Callability.Price(callPrices[i], Callability.Price.Type.CLEAN), 
+        										schedule.date(callLength[i]), 
+        										1.20));
         }
-//
-//        // Load call schedules
-//        for (Size i=0; i<LENGTH(callLength); i++) {
-//            callability.push_back(
-//                   boost::shared_ptr<Callability>(
-//                       new SoftCallability(Callability::Price(
-//                                                   callPrices[i],
-//                                                   Callability::Price::Clean),
-//                                           schedule.date(callLength[i]),
-//                                           1.20)));
-//        }
 
+        for (int j=0; j<putLength.length; j++) {
+            callability.add(new Callability(new Callability.Price(putPrices[j],Callability.Price.Type.CLEAN),
+                                           Callability.Type.PUT,
+                                           schedule.date(putLength[j])));
+        }
+
+        // Assume dividends are paid every 6 months.
+        for (Date d = today.increment(new Period(6, TimeUnit.MONTHS)); d.lt(exerciseDate); d.increment(new Period(6, TimeUnit.MONTHS))) {
+            dividends.add(new FixedDividend(1.0, d));
+        }
+
+        DayCounter dayCounter = Actual365Fixed.getDayCounter();
+        /*@Time*/ double maturity = dayCounter.yearFraction(settlementDate,exerciseDate);
         
+        System.out.println("option type = "+type);
+        System.out.println("Time to maturity = "+maturity);
+        System.out.println("Underlying price = "+underlying);
+        System.out.println("Risk-free interest rate = "+riskFreeRate);
+        System.out.println("Dividend yield = "+dividendYield);
+        System.out.println("Volatility = "+volatility);
+        System.out.println("");
+        System.out.println("");
+
+        // write column headings
+        int widths[] = { 35, 14, 14 };
+        int totalWidth = widths[0] + widths[1] + widths[2];
+        StringBuilder ruleBuilder = new StringBuilder();
+        StringBuilder dblruleBuilder = new StringBuilder();
+        for(int i=0; i<totalWidth; i++){
+        	ruleBuilder.append('-');
+        	dblruleBuilder.append('=');
+        }
+        String rule = ruleBuilder.toString(), dblrule=dblruleBuilder.toString();
+
+        System.out.println(dblrule);
+        System.out.println("Tsiveriotis-Fernandes method");
+        System.out.println(dblrule);
+//        std::cout << std::setw(widths[0]) << std::left << "Tree type"
+//                  << std::setw(widths[1]) << std::left << "European"
+//                  << std::setw(widths[1]) << std::left << "American"
+//                  << std::endl;
+        System.out.println(rule);
+        
+        Exercise exercise = new EuropeanExercise(exerciseDate);
+        Exercise amExercise = new AmericanExercise(settlementDate,exerciseDate);
+
+        Handle<Quote> underlyingH = new Handle (new SimpleQuote(underlying));
+        Handle<YieldTermStructure> flatTermStructure = new Handle( new FlatForward(settlementDate, riskFreeRate, dayCounter));
+        Handle<YieldTermStructure> flatDividendTS = new Handle(new FlatForward(settlementDate, dividendYield, dayCounter));
+        Handle<BlackVolTermStructure> flatVolTS = new Handle(new BlackConstantVol(settlementDate, volatility, dayCounter));
+
+        StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH,
+                                              								flatDividendTS,
+                                              								flatTermStructure,
+                                              								flatVolTS);
+
+        int timeSteps = 801;
+
+        Handle<Quote> creditSpread = new Handle(new SimpleQuote(spreadRate));
+        Quote rate = new SimpleQuote(riskFreeRate);
+
+        Handle<YieldTermStructure> discountCurve = new Handle(new FlatForward(today, new Handle<Quote>(rate), dayCounter));
+
+        PricingEngine engine = new BinomialConvertibleEngine<JarrowRudd>(timeSteps);
+
+        ConvertibleFixedCouponBond europeanBond = new ConvertibleFixedCouponBond(
+                                stochasticProcess, exercise, engine,
+                                conversionRatio, dividends, callability,
+                                creditSpread, issueDate, settlementDays,
+                                coupons, bondDayCount, schedule, redemption);
+
+        ConvertibleFixedCouponBond americanBond = new ConvertibleFixedCouponBond(
+                                stochasticProcess, amExercise, engine,
+                                conversionRatio, dividends, callability,
+                                creditSpread, issueDate, settlementDays,
+                                coupons, bondDayCount, schedule, redemption);
+        String method = "Jarrow-Rudd";
+        europeanBond.setPricingEngine(new BinomialConvertibleEngine<JarrowRudd>(timeSteps));
+        americanBond.setPricingEngine(new BinomialConvertibleEngine<JarrowRudd>(timeSteps));
+//        std::cout << std::setw(widths[0]) << std::left << method
+//                  << std::fixed
+//                  << std::setw(widths[1]) << std::left << europeanBond.NPV()
+//                  << std::setw(widths[2]) << std::left << americanBond.NPV()
+//                  << std::endl;
         
         
       //TODO: Work in progress 
