@@ -23,9 +23,10 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate.onefactormodels;
 
-import java.util.List;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.math.Array;
+import org.jquantlib.math.Constants;
+import org.jquantlib.math.distributions.NonCentralChiSquaredDistribution;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
 import org.jquantlib.methods.lattices.Lattice;
@@ -33,11 +34,9 @@ import org.jquantlib.methods.lattices.TrinomialTree;
 import org.jquantlib.model.shortrate.ConstantParameter;
 import org.jquantlib.model.shortrate.OneFactorAffineModel;
 import org.jquantlib.model.shortrate.Parameter;
-import org.jquantlib.model.shortrate.ShortRateDynamics;
 import org.jquantlib.model.shortrate.ShortRateTree;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
-import org.jquantlib.util.Observer;
 
 /**
  * 
@@ -54,16 +53,36 @@ import org.jquantlib.util.Observer;
 public class CoxIngersollRoss extends OneFactorAffineModel {
     // private double /*@Real*/ y0_, theta_, k_, sigma_;
     // check this value, arbitrary for now
-
+    
+    private static final String strike_must_be_positive = "strike must be positive";
+    private static final String unsupported_option_type = "unsupported option type";
+    
+    
     private Parameter theta_;
     private Parameter k_;
     private Parameter sigma_;
     private Parameter r0_;
+    
+    public CoxIngersollRoss() {
+        this(0.05, 0.1, 0.1, 0.1);
+    }
+    
+    public CoxIngersollRoss(double /* @Rate */r0, double /* @Real */theta, double /* @Real */k, double /* @Real */sigma) {
+        super(4);
+        theta_ = (arguments_.get(0));
+        k_ = arguments_.get(1);
+        sigma_ = arguments_.get(2);
+        r0_ = arguments_.get(3);
+        theta_ = new ConstantParameter(theta, new PositiveConstraint());
+        k_ = new ConstantParameter(k, new PositiveConstraint());
+        sigma_ = new ConstantParameter(sigma, new VolatilityConstraint(k, theta));
+        r0_ = new ConstantParameter(r0, new PositiveConstraint());
+    }
 
     @Override
     public Lattice tree(TimeGrid grid) {
         TrinomialTree trinomial = new TrinomialTree(dynamics().process(), grid, true);
-        return null;//new ShortRateTree(trinomial, dynamics(), grid);
+        return new ShortRateTree(trinomial, dynamics(), grid);
     }
 
     protected double /* @Real */A(double /* @Time */t, double /* @Time */T) {
@@ -101,16 +120,13 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
     }
 
     class VolatilityConstraint extends Constraint {
-
+        //TODO: check whether IMPL is necessary
         double /* @Real */k_, theta_;
-
-        public VolatilityConstraint(double /* @Real */k, double /* @Real */theta) {
-            // : Constraint(boost::shared_ptr<Constraint::Impl>(
-            // new VolatilityConstraint::Impl(k, theta))) {
+        public VolatilityConstraint(double k, double theta){
             this.k_ = k;
             this.theta_ = theta;
         }
-
+       
         public boolean test(final Array params) {
             double /* @Real */sigma = params.get(0);
             if (sigma <= 0.0) {
@@ -130,7 +146,6 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
             this.theta_ = theta;
             this.k_ = k;
             this.sigma_ = sigma;
-
         }
 
         @Override
@@ -175,17 +190,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         }
     }
 
-    public CoxIngersollRoss(double /* @Rate */r0, double /* @Real */theta, double /* @Real */k, double /* @Real */sigma) {
-        super(4);
-        theta_ = (arguments_.get(0));
-        k_ = arguments_.get(1);
-        sigma_ = arguments_.get(2);
-        r0_ = arguments_.get(3);
-        theta_ = new ConstantParameter(theta, new PositiveConstraint());
-        k_ = new ConstantParameter(k, new PositiveConstraint());
-        sigma_ = new ConstantParameter(sigma, new VolatilityConstraint(k, theta));
-        r0_ = new ConstantParameter(r0, new PositiveConstraint());
-    }
+
 
     public ShortRateDynamics dynamics() {
         return new Dynamics(theta(), k(), sigma(), x0());
@@ -194,17 +199,22 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
     public double /* @Real */discountBondOption(Option.Type type, double /* @Real */strike, double /* @Time */t,
             double /* @Time */s) {
 
-        // QL_REQUIRE(strike>0.0, "strike must be positive");
-        if (strike < 0.0) {
-            throw new IllegalArgumentException("strike must be positive");
+        if (strike <= 0.0) {
+            throw new IllegalArgumentException(strike_must_be_positive);
         }
         double /* @DiscountFactor */discountT = discountBond(0.0, t, x0());
         double /* @DiscountFactor */discountS = discountBond(0.0, s, x0());
-        /****
-         * TODO if (t < QL_EPSILON) { switch(type) { case 1:// Option.Type.CALL: return Math.max<double /*@Real/>(discountS -
-         * strike, 0.0); case Option::Put: return Math.max<double /*@Real/>(strike - discountS, 0.0); default:
-         * QL_FAIL("unsupported option type"); } }
-         * ****/
+        
+        if (t < Constants.QL_EPSILON) {
+            switch(type) {
+              case CALL:
+                return Math.max(discountS - strike, 0.0);
+              case PUT:
+                return Math.max(strike - discountS, 0.0);
+              default: throw new IllegalArgumentException(unsupported_option_type);
+            }
+        }
+        
         double /* @Real */sigma2 = sigma() * sigma();
         double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma2);
         double /* @Real */b = B(t, s);
@@ -215,13 +225,13 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         double /* @Real */df = 4.0 * k() * theta() / sigma2;
         double /* @Real */ncps = 2.0 * rho * rho * x0() * Math.exp(h * t) / (rho + psi + b);
         double /* @Real */ncpt = 2.0 * rho * rho * x0() * Math.exp(h * t) / (rho + psi);
-        /***
-         * TODO: Implement NonCentralChiSquareDistribution NonCentralChiSquareDistribution chis(df, ncps);
-         * NonCentralChiSquareDistribution chit(df, ncpt);
-         **/
+        
+        NonCentralChiSquaredDistribution chis = new NonCentralChiSquaredDistribution(df, ncps);
+        NonCentralChiSquaredDistribution chit = new NonCentralChiSquaredDistribution(df, ncpt);
+        
         double /* @Real */z = Math.log(A(t, s) / strike) / b;
-        // double /*@Real*/ call = discountS*chis(2.0*z*(rho+psi+b)) -
-        // strike*discountT*chit(2.0*z*(rho+psi));
+        double /*@Real*/ call = discountS*chis.evaluate(2.0*z*(rho+psi+b)) -
+        strike*discountT*chit.evaluate(2.0*z*(rho+psi));
 
         if (type == Option.Type.CALL) // return call;
         {
