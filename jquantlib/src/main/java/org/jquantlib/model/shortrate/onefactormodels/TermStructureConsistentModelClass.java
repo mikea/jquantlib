@@ -1,5 +1,7 @@
 /*
-Copyright (C) 2008 Praneet Tiwari
+Copyright (C) 
+2008 Praneet Tiwari
+2009 Ueli Hofstetter
 
 This source code is release under the BSD License.
 
@@ -24,6 +26,7 @@ package org.jquantlib.model.shortrate.onefactormodels;
 import java.util.List;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
@@ -38,6 +41,8 @@ import org.jquantlib.util.Observer;
  * \ingroup shortrate
  */
 public class TermStructureConsistentModelClass implements Observable {
+    
+    private DefaultObservable delegatedObservable = new DefaultObservable(this);
 
     public TermStructureConsistentModelClass(final Handle<YieldTermStructure> termStructure) {
         termStructure_ = (termStructure);
@@ -49,39 +54,38 @@ public class TermStructureConsistentModelClass implements Observable {
 
     private Handle<YieldTermStructure> termStructure_;
 
-    // cosmetic methods, what to do?
     @Override
     public void addObserver(Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        delegatedObservable.addObserver(observer);
     }
 
     @Override
     public int countObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Observer> getObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return delegatedObservable.countObservers();
     }
 
     @Override
     public void deleteObserver(Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        delegatedObservable.deleteObserver(observer);
     }
 
     @Override
     public void deleteObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        delegatedObservable.deleteObservers();
+    }
+
+    @Override
+    public List<Observer> getObservers() {
+        return delegatedObservable.getObservers();
     }
 
     @Override
     public void notifyObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        delegatedObservable.notifyObservers();
     }
 
     @Override
     public void notifyObservers(Object arg) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        delegatedObservable.notifyObservers(arg);
     }
 }
