@@ -58,6 +58,11 @@ import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
 
 public class ConjugateGradient extends LineSearchBasedMethod {
 
+    public ConjugateGradient(){
+        throw new UnsupportedOperationException("Work in progress");
+    }
+    
+    
     public ConjugateGradient(LineSearch lineSearch) {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
