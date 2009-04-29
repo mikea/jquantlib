@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jquantlib.math.optimization.PositiveConstraint;
-import org.jquantlib.model.shortrate.ConstantParameter;
+import org.jquantlib.model.ConstantParameter;
 
 //! %linear exponential volatility model
 /*! This class describes a linear-exponential volatility model
