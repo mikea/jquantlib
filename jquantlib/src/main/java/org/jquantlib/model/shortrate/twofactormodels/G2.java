@@ -21,22 +21,22 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate.twofactormodels;
 
+import static org.jquantlib.pricingengines.BlackFormula.blackFormula;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jquantlib.instruments.Option;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.solvers1D.Brent;
+import org.jquantlib.model.AffineModel;
 import org.jquantlib.model.Parameter;
-import org.jquantlib.model.shortrate.AffineModel;
 import org.jquantlib.model.shortrate.TwoFactorModel;
-//import org.jquantlib.model.shortrate.instruments.Swaption;
-import org.jquantlib.model.shortrate.onefactormodels.FittingParameter;
 import org.jquantlib.model.shortrate.onefactormodels.TermStructureConsistentModelClass;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
-import static org.jquantlib.pricingengines.BlackFormula.*;
 import org.jquantlib.util.Observer;
 
 /**
