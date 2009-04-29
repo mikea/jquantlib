@@ -1,5 +1,6 @@
 /*
-Copyright (C) 2008 Praneet Tiwari
+Copyright (C) 
+2008 Praneet Tiwari
 
 This source code is release under the BSD License.
 
@@ -20,6 +21,8 @@ JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model;
+
+//reviewed once: uh
 
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.math.Array;
@@ -57,9 +60,7 @@ public abstract class Parameter {
     }
 
     public void setParam(int /* @Size */i, double x) {
-
         params.set(i, x);
-
     }
 
     public boolean testParams(final Array p) {
@@ -70,7 +71,7 @@ public abstract class Parameter {
     /*
      * Real operator()(Time t) const { return impl_->value(params_, t); }
      */
-    public Double /* @Real */getOperatorEq(Double /* @Time */t) {
+    public double /* @Real */getOperatorEq(double /* @Time */t) {
         return impl.value(params, t);
     }
 
