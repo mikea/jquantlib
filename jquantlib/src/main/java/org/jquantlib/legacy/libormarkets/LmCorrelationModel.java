@@ -26,6 +26,7 @@ package org.jquantlib.legacy.libormarkets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.JQuantlib;
 import org.jquantlib.model.shortrate.Parameter;
 
 public class LmCorrelationModel {
@@ -51,7 +52,8 @@ public class LmCorrelationModel {
     }
     /*
     public double pseudoSqrt(double t, final Array x){
-        return Quan
+        return JQuantlib.pseudoSqrt(this->correlation(t, x),
+                SalvagingAlgorithm::Spectral);
     }
     
     public  Matrix correlation(

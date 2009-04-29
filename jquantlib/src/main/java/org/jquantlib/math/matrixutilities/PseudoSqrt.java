@@ -28,6 +28,10 @@ import org.jquantlib.math.Matrix;
 import org.jquantlib.math.optimization.CostFunction;
 
 class HypersphereCostFunction extends CostFunction {
+    
+    
+    
+    
     private int size_;
     private boolean lowerDiagonal_;
     private Matrix targetMatrix_;
@@ -105,8 +109,8 @@ class HypersphereCostFunction extends CostFunction {
 }
 
 public class PseudoSqrt {
-    
-    enum SalvagingAlgorithm {
+    private final static String unknown_salvaging_algorithm = "unknown salvaging algorithm";
+    public enum SalvagingAlgorithm {
         None, Spectral, Hypersphere, LowerDiagonal, Higham;
     }
     
@@ -142,12 +146,7 @@ public class PseudoSqrt {
         return pseudoSqrt(matrix, SalvagingAlgorithm.None);
     }
     
-    public Matrix pseudoSqrt(
-                        final Matrix matrix,
-                        SalvagingAlgorithm algorithm){
-                            return matrix;
-        
-    }
+
 
     //! Returns the rank-reduced pseudo square root of a real symmetric matrix
     /*! The result matrix has rank<=maxRank. If maxRank>=size, then the
@@ -428,88 +427,97 @@ public class PseudoSqrt {
 
 }
 
-
-const Disposable<Matrix> pseudoSqrt(const Matrix& matrix,
-                                    SalvagingAlgorithm::Type sa) {
-    Size size = matrix.rows();
-
+*/
+public static Matrix pseudoSqrt(final Matrix matrix,
+                                    SalvagingAlgorithm sa) {
+    int size = matrix.rows();
+    /*
     #if defined(QL_EXTRA_SAFETY_CHECKS)
     checkSymmetry(matrix);
     #else
-    QL_REQUIRE(size == matrix.columns(),
-               "non square matrix: " << size << " rows, " <<
-               matrix.columns() << " columns");
-    #endif
+    */
+    if(size != matrix.columns()){
+               throw new IllegalArgumentException("non square matrix: " + size + " rows, " +
+               matrix.columns() + " columns");
+    }
+
 
     // spectral (a.k.a Principal Component) analysis
-    SymmetricSchurDecomposition jd(matrix);
-    Matrix diagonal(size, size, 0.0);
+    SymmetricSchurDecomposition jd = new SymmetricSchurDecomposition(matrix);
+    Matrix diagonal = new Matrix(size, size, 0.0);
 
     // salvaging algorithm
-    Matrix result(size, size);
-    bool negative;
+    Matrix result = new Matrix(size, size);
+    boolean negative;
     switch (sa) {
-      case SalvagingAlgorithm::None:
+      case None:
         // eigenvalues are sorted in decreasing order
-        QL_REQUIRE(jd.eigenvalues()[size-1]>=-1e-16,
-                   "negative eigenvalue(s) ("
-                   << std::scientific << jd.eigenvalues()[size-1]
-                   << ")");
-        result = CholeskyDecomposition(matrix, true);
+        if(jd.eigenvalues().get(size-1)<-1e-16){
+                  throw new IllegalArgumentException( "negative eigenvalue(s) ("
+                    + /*std::scientific*/ + jd.eigenvalues().get(size-1)
+                  + ")");
+        }
+        result = new CholeskyDecomposition().CholeskyDecomposition(matrix, true);
         break;
-      case SalvagingAlgorithm::Spectral:
+      case Spectral:
         // negative eigenvalues set to zero
-        for (Size i=0; i<size; i++)
-            diagonal[i][i] =
-                std::sqrt(std::max<Real>(jd.eigenvalues()[i], 0.0));
-
-        result = jd.eigenvectors() * diagonal;
+        for (int i=0; i<size; i++){
+            diagonal.set(i, i, Math.sqrt(Math.max((jd.eigenvalues().get(i)), 0.0)));
+        }
+        if(true)
+        throw new UnsupportedOperationException("work in progress");
+        //result = jd.eigenvectors() * diagonal;
         normalizePseudoRoot(matrix, result);
         break;
-      case SalvagingAlgorithm::Hypersphere:
+      case Hypersphere:
         // negative eigenvalues set to zero
         negative=false;
-        for (Size i=0; i<size; ++i){
-            diagonal[i][i] =
-                std::sqrt(std::max<Real>(jd.eigenvalues()[i], 0.0));
-            if (jd.eigenvalues()[i]<0.0) negative=true;
+        for (int i=0; i<size; ++i){
+            diagonal.set(i, i, Math.sqrt(Math.max(jd.eigenvalues().get(i), 0.0)));
+            if (jd.eigenvalues().get(i)<0.0) {negative=true;}
         }
-        result = jd.eigenvectors() * diagonal;
+        if(true)
+        throw new UnsupportedOperationException("work in progress");
+        //result = jd.eigenvectors() * diagonal;
+        normalizePseudoRoot(matrix, result);
+
+        if (negative){
+            throw new UnsupportedOperationException("work in progress");
+            //result = hypersphereOptimize(matrix, result, false);
+        }
+        break;
+      case LowerDiagonal:
+        // negative eigenvalues set to zero
+        negative=false;
+        for (int i=0; i<size; ++i){
+            diagonal.set(i, i, Math.sqrt(Math.max(jd.eigenvalues().get(i), 0.0)));
+            if (jd.eigenvalues().get(i)<0.0) {negative=true;}
+        }
+        if(true)
+        throw new UnsupportedOperationException("work in progress");
+        //result = jd.eigenvectors() * diagonal;
         normalizePseudoRoot(matrix, result);
 
         if (negative)
-            result = hypersphereOptimize(matrix, result, false);
+            throw new UnsupportedOperationException("work in progress");
+            //result = hypersphereOptimize(matrix, result, true);
         break;
-      case SalvagingAlgorithm::LowerDiagonal:
-        // negative eigenvalues set to zero
-        negative=false;
-        for (Size i=0; i<size; ++i){
-            diagonal[i][i] =
-                std::sqrt(std::max<Real>(jd.eigenvalues()[i], 0.0));
-            if (jd.eigenvalues()[i]<0.0) negative=true;
-        }
-        result = jd.eigenvectors() * diagonal;
-
-        normalizePseudoRoot(matrix, result);
-
-        if (negative)
-            result = hypersphereOptimize(matrix, result, true);
-        break;
-      case SalvagingAlgorithm::Higham: {
+      case Higham: {
           int maxIterations = 40;
-          Real tol = 1e-6;
-          result = highamImplementation(matrix, maxIterations, tol);
-          result = CholeskyDecomposition(result, true);
+          double tol = 1e-6;
+          if(true)
+          throw new UnsupportedOperationException("work in progress");
+          //result = highamImplementation(matrix, maxIterations, tol);
+          result = new CholeskyDecomposition().CholeskyDecomposition(result, true);
         }
         break;
       default:
-        QL_FAIL("unknown salvaging algorithm");
+        throw new IllegalArgumentException(unknown_salvaging_algorithm);
     }
-
     return result;
 }
 
-
+/*
 const Disposable<Matrix> rankReducedSqrt(const Matrix& matrix,
                                          Size maxRank,
                                          Real componentRetainedPercentage,
