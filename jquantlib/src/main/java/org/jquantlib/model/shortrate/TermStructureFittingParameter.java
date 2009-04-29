@@ -26,6 +26,7 @@ import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.NoConstraint;
+import org.jquantlib.model.Parameter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 

@@ -24,6 +24,7 @@ package org.jquantlib.model.shortrate;
 import java.util.ArrayList;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.Constraint;
+import org.jquantlib.model.Parameter;
 
 /**
  * 

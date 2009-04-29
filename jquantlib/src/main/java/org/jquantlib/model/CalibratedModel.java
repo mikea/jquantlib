@@ -8,7 +8,6 @@ import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.EndCriteria;
 import org.jquantlib.math.optimization.OptimizationMethod;
-import org.jquantlib.model.shortrate.Parameter;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 

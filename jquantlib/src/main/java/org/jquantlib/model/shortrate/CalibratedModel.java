@@ -27,6 +27,7 @@ import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.CompositeConstraint;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.model.CalibrationHelper;
+import org.jquantlib.model.Parameter;
 import org.jquantlib.model.shortrate.EndCriteria.Type;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;

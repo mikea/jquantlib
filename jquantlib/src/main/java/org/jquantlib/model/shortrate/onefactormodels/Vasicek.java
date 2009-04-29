@@ -25,9 +25,9 @@ import java.util.List;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
+import org.jquantlib.model.Parameter;
 import org.jquantlib.model.shortrate.ConstantParameter;
 import org.jquantlib.model.shortrate.OneFactorAffineModel;
-import org.jquantlib.model.shortrate.Parameter;
 import org.jquantlib.model.shortrate.ShortRateDynamics;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 

@@ -26,7 +26,7 @@ package org.jquantlib.legacy.libormarkets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.model.shortrate.Parameter;
+import org.jquantlib.model.Parameter;
 
 public abstract class LmVolatilityModel {
     

@@ -22,7 +22,7 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.model.shortrate.onefactormodels;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.model.shortrate.Parameter;
+import org.jquantlib.model.Parameter;
 import org.jquantlib.model.shortrate.TermStructureFittingParameter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.Compounding;
