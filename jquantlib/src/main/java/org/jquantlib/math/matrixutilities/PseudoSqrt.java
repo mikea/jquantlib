@@ -123,7 +123,7 @@ public class PseudoSqrt {
 
         For more information see: "The most general methodology to create
         a valid correlation matrix for risk management and option pricing
-        purposes", by R. Rebonato and P. Jäckel.
+        purposes", by R. Rebonato and P. Jaeckel.
         The Journal of Risk, 2(2), Winter 1999/2000
         http://www.rebonato.com/correlationmatrix.pdf
 
