@@ -69,7 +69,7 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
        //FIXME: bug?
        this.a_ = new ConstantParameter(a, new PositiveConstraint());
        this.sigma_ = new ConstantParameter(sigma, new PositiveConstraint());
-       termStructure.getLink().addObserver(this);
+       termStructure.addObserver(this);
     }
     
     public double /* @Real */a() {

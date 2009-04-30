@@ -20,6 +20,8 @@
 
 package org.jquantlib.math.statistics;
 
+import java.util.List;
+
 import org.jquantlib.math.E_IUnaryFunction;
 import org.jquantlib.util.Pair;
 
@@ -40,7 +42,7 @@ public class Statistics implements IStatistics {
         
     }
     @Override
-    public Pair<Double, Double> expectationValue(E_IUnaryFunction<Double, Double> f, E_IUnaryFunction<Double, Boolean> inRange) {
+    public Pair<Double, Integer> expectationValue(E_IUnaryFunction<Double, Double> f, E_IUnaryFunction<Double, Boolean> inRange) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -170,7 +172,7 @@ public class Statistics implements IStatistics {
         return 0;
     }
     @Override
-    public Pair<Double, Double>[] data() {
+    public List<Pair<Double, Double>> data() {
         // TODO Auto-generated method stub
         return null;
     }

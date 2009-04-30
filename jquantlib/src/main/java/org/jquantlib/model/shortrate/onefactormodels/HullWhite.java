@@ -77,7 +77,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         b_ = new NullParameter();
         lambda_ = new NullParameter();
         generateArguments();
-        termStructure.getLink().addObserver(this);
+        termStructure.addObserver(this);
     }
 
     public Lattice tree(final TimeGrid grid) {

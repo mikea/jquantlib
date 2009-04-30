@@ -21,13 +21,15 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.statistics;
 
+import java.util.List;
+
 import org.jquantlib.math.E_IUnaryFunction;
 import org.jquantlib.util.Pair;
 
 public interface IStatistics {
     public double mean();
 
-    public Pair<Double, Double> expectationValue(E_IUnaryFunction<Double, Double> f, E_IUnaryFunction<Double, Boolean> inRange);
+    public Pair<Double, Integer> expectationValue(E_IUnaryFunction<Double, Double> f, E_IUnaryFunction<Double, Boolean> inRange);
 
     public int getSampleSize();
 
@@ -87,6 +89,6 @@ public interface IStatistics {
 
     public double averageShortfall(double target);
     
-    public Pair<Double, Double> []  data();
+    public List<Pair<Double, Double>>  data();
 
 }

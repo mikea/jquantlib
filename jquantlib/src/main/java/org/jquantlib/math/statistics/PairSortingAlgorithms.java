@@ -24,6 +24,7 @@ package org.jquantlib.math.statistics;
 //~--- JDK imports ------------------------------------------------------------
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.jquantlib.util.Pair;
 
@@ -40,7 +41,7 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         }
     }
 
-    public ArrayList<Pair<Number, Number>> insertionSort(ArrayList<Pair<F, S>> unsortedArrayList) {
+    public ArrayList<Pair<Number, Number>> insertionSort(List<Pair<F, S>> unsortedArrayList) {
         Number t, u;    // =  Number.;
         int size = unsortedArrayList.size();
         ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);

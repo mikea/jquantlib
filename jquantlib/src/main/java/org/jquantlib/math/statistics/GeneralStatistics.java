@@ -26,10 +26,8 @@ import java.util.List;
 
 import org.jquantlib.math.E_BinaryFunction;
 import org.jquantlib.math.E_ComposedFunction;
-import org.jquantlib.math.E_IBinaryFunction;
 import org.jquantlib.math.E_IUnaryFunction;
 import org.jquantlib.math.E_UnaryFunction;
-import org.jquantlib.math.UnaryFunction;
 import org.jquantlib.util.Pair;
 import org.jquantlib.util.stdlibc.Std;
  
@@ -51,7 +49,7 @@ samples, thus increasing the memory requirements.
  */
 
 //FIXME: changed to extending base class rather then implementing interface
-public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/ {
+public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     
     private final static String empty_sample_set =  "empty sample set";
     private final static String unsufficient_sample_size = "sample number <=1, unsufficient";
@@ -60,7 +58,7 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
     private final static String empyt_sample_set = "empty sample set";
     private final static String negative_weight_not_allowed = "negative weight not allowed";
     
-    private ArrayList<Pair<Double, Double>> samples;
+    private List <Pair<Double, Double>> samples;
     private boolean sorted = false;
 
     public GeneralStatistics() {
@@ -70,12 +68,12 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
         reset();
     }
 
-    private final void reset() {
+    public final void reset() {
         samples = new ArrayList<Pair<Double, Double>>();
         sorted = true;
     }
 
-    private final void sort() {
+    public final void sort() {
         if (!sorted) {
             samples = new PairSortingAlgorithms().insertionSort(samples);
         }
@@ -85,12 +83,12 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
     //! \name Inspectors
     //@{
     //! number of samples collected
-    private final int getSampleSize() {
+    public final int getSampleSize() {
         return samples.size();
     }
 
     //! collected data
-    public ArrayList<Pair<Double, Double>> data() {
+    public List<Pair<Double, Double>> data() {
         return samples;
     }
 
@@ -273,7 +271,7 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
     \f$ \epsilon = \sigma/\sqrt{N}. \f$
      */
     //reviewed
-    public Double errorEstimate() {
+    public double errorEstimate() {
         return Math.sqrt((variance()) / getSampleSize());
     }
 
@@ -283,7 +281,7 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
     The above evaluates to 0 for a Gaussian distribution.
      */
     //reviewed/refactored
-    public Double skewness() {
+    public double skewness() {
         int n = getSampleSize();
         if (n <= 2) {
             throw new IllegalArgumentException(unsufficient_sample_size_2);
@@ -354,7 +352,7 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
     The above evaluates to 0 for a Gaussian distribution.
      */
     //reviewed
-    public Double kurtosis() {
+    public double kurtosis() {
         int N = getSampleSize();
         if (N <= 3) {
             throw new IllegalArgumentException(unsufficient_sample_size_3);
@@ -422,7 +420,7 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
     
     /* ! returns the minimum sample value */
     //reviewed
-    public Double min() {
+    public double min() {
         if (getSampleSize() <= 1) {
             throw new IllegalArgumentException(empyt_sample_set);
         }
@@ -431,7 +429,7 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
 
     /*! returns the maximum sample value */
     //reviewed
-    public Double max() {
+    public double max() {
         if (getSampleSize() <= 1) {
             throw new IllegalArgumentException(unsufficient_sample_size);
         }
@@ -446,7 +444,7 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
     \pre \f$ y \f$ must be in the range \f$ (0-1]. \f$
      */
     //reviewed
-    public Double percentile(double percent) {
+    public double percentile(double percent) {
         if (percent < 0.0 || percent > 1.0) {
             throw new IllegalArgumentException("percentile (" + percent + ") must be in (0.0, 1.0]");
         }
@@ -477,7 +475,7 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
     \pre \f$ y \f$ must be in the range \f$ (0-1]. \f$
      */
     //reviewed
-    public Double topPercentile(Double percent) {
+    public double topPercentile(Double percent) {
         if (percent < 0.0 || percent > 1.0) {
             throw new IllegalArgumentException("percentile (" + percent + ") must be in (0.0, 1.0]");
         }
@@ -569,6 +567,108 @@ public class GeneralStatistics /*extends Statistics*/ /*implements IStatistics*/
         System.out.println("Variance is " + gs.variance());
         System.out.println("Std. dev is " + gs.standardDeviation());
         System.out.println("Percentile 95 is " + gs.percentile(.95));
+    }
+
+    @Override
+    public double averageShortfall(double target) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double downsideDeviation() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double downsideVariance() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double expectedShortfall(double percentile) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double gaussianAverageShortfall(double target) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double gaussianExpectedShortfall(double percentile) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double gaussianPercentile(double percentile) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double gaussianPotentialUpside(double percentile) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double gaussianShortfall(double target) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double gaussianValueAtRisk(double percentile) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double potentialUpside(double percentile) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double regret(double target) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int samples() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double semiDeviation() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double semiVariance() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double shortfall(double target) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double valueAtRisk(double percentile) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }
 

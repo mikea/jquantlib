@@ -63,7 +63,7 @@ public class DiscrepancyStatistics extends GenericSequenceStatistics {
             temp = 1.0;
             for (k = 0, it = begin; k < dimension_; ++it, ++k) {
                 // running i=1..(N-1)
-                r_ik = stats_[k].data()[m].getFirst();
+                r_ik = stats_[k].data().get(m).getFirst();
                 // fixed j=N
                 r_jk = samples[it];
                 temp *= (1.0 - Math.max(r_ik, r_jk));
@@ -75,7 +75,7 @@ public class DiscrepancyStatistics extends GenericSequenceStatistics {
                 // fixed i=N
                 r_ik = samples[it];
                 // running j=1..(N-1)
-                r_jk = stats_[k].data()[m].getFirst();
+                r_jk = stats_[k].data().get(m).getFirst();
                 temp *= (1.0 - Math.max(r_ik, r_jk));
             }
             adiscr_ += temp;

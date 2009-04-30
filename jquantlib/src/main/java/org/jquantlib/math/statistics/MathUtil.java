@@ -22,7 +22,7 @@
 package org.jquantlib.math.statistics;
 
 //~--- JDK imports ------------------------------------------------------------
-import java.util.ArrayList;
+import java.util.List;
 
 import org.jquantlib.util.Pair;
 
@@ -32,7 +32,7 @@ import org.jquantlib.util.Pair;
  */
 public class MathUtil {
 
-    public static Double min(ArrayList<Pair<Double, Double>> values) {
+    public static Double min(List<Pair<Double, Double>> values) {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
@@ -49,7 +49,7 @@ public class MathUtil {
         return std;
     }
 
-    public static Double max(ArrayList<Pair<Double, Double>> values) {
+    public static Double max(List<Pair<Double, Double>> values) {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
@@ -67,7 +67,7 @@ public class MathUtil {
     }
 
     // more generic methods, don't know if they are useful...
-    public static <T extends Number> T max(ArrayList<Pair<Number, Number>> values) {
+    public static <T extends Number> T max(List<Pair<Number, Number>> values) {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
@@ -84,7 +84,7 @@ public class MathUtil {
         return (T) std;
     }
 
-    public static <T extends Number> T min(ArrayList<Pair<Number, Number>> values) {
+    public static <T extends Number> T min(List<Pair<Number, Number>> values) {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }

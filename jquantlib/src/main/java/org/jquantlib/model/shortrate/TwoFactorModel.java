@@ -77,15 +77,11 @@ public abstract class TwoFactorModel extends ShortRateModel {
 
         public StochasticProcess process() {
             Matrix correlation = new Matrix(2, 2);
-            // correlation[0][0] = correlation[1][1] = 1.0;
             correlation.set(0, 0, 1.0);
             correlation.set(1, 1, 1.0);
-            // correlation[0][1] = correlation[1][0] = correlation_;
             correlation.set(0, 1, correlation_);
             correlation.set(1, 0, correlation_);
             ArrayList<StochasticProcess1D> processes = new ArrayList<StochasticProcess1D>();
-            // processes[0] = xProcess_;
-            // processes[1] = yProcess_;
             processes.add(0, xProcess_);
             processes.add(1, xProcess_);
             return (new StochasticProcessArray(processes, correlation));
@@ -99,10 +95,7 @@ public abstract class TwoFactorModel extends ShortRateModel {
         private ShortRateDynamics dynamics_;
 
         // ! Plain tree build-up from short-rate dynamics
-
         public ShortRateTree(final TrinomialTree tree1, final TrinomialTree tree2, final ShortRateDynamics dynamics) {
-            // : TreeLattice2D<TwoFactorModel::ShortRateTree,TrinomialTree>(
-            // tree1, tree2, dynamics->correlation());
             super(tree1, tree2, dynamics.correlation());
 
             dynamics_ = dynamics;

@@ -119,7 +119,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
         };
         
         E_IUnaryFunction<Double, Boolean> bounded_less = Std.bind2nd(less, target);
-        Pair<Double, Double> result = statistics.expectationValue(comp, bounded_less);
+        Pair<Double, Integer> result = statistics.expectationValue(comp, bounded_less);
         
         double x = result.getFirst();
         //argh.....
@@ -189,10 +189,10 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
         
         E_IUnaryFunction<Double, Boolean> bounded = Std.bind2nd(less, target);
         
-        Pair<Double, Double> result = statistics.expectationValue(identity, bounded);
+        Pair<Double, Integer> result = statistics.expectationValue(identity, bounded);
         
         double x = result.getFirst();
-        Double N = result.getSecond();
+        Integer N = result.getSecond();
         
         if(N.intValue() ==  0.0){
             throw new IllegalArgumentException(no_data_below_the_target);
@@ -266,10 +266,10 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
         // Bind the second parameter
         E_IUnaryFunction<Double, Boolean> bounded_less = Std.bind1st(less, new Double(target));
         
-        Pair<Double, Double> result = statistics.expectationValue(bounded_minus, bounded_less);
+        Pair<Double, Integer> result = statistics.expectationValue(bounded_minus, bounded_less);
         double x = result.getFirst();
         //mmhh somewhere we have to change N to int
-        Double N = result.getSecond();
+        Integer N = result.getSecond();
         if(N.intValue()==0){
             throw new IllegalArgumentException(no_data_below_the_target);
         }
