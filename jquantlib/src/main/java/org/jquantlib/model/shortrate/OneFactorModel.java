@@ -83,7 +83,7 @@ public abstract class OneFactorModel extends ShortRateModel {
     
     //TODO: generic type?
     //! Recombining trinomial tree discretizing the state variable
-    class ShortRateTree extends TreeLattice1D{
+    public class ShortRateTree extends TreeLattice1D{
         private TrinomialTree tree_;
         private ShortRateDynamics dynamics_;
 

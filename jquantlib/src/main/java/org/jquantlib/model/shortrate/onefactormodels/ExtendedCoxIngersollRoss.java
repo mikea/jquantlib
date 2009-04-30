@@ -136,7 +136,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         Dynamics numericDynamics =  new Dynamics(phi, theta(), k(), sigma(), x0());
         TrinomialTree trinominal = new TrinomialTree(numericDynamics.process(), grid, true);
         TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl)phi.getImplementation();
-        return new org.jquantlib.model.shortrate.ShortRateTree(trinominal, numericDynamics, impl, grid);
+        return new OneFactorModel.ShortRateTree(trinominal, numericDynamics, impl, grid);
     }
     
     //! Short-rate dynamics in the extended Cox-Ingersoll-Ross model

@@ -23,6 +23,8 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate.onefactormodels;
 
+import static org.jquantlib.pricingengines.BlackFormula.blackFormula;
+
 import org.jquantlib.instruments.Option;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Constants;
@@ -30,8 +32,6 @@ import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TrinomialTree;
 import org.jquantlib.model.Parameter;
 import org.jquantlib.model.shortrate.NullParameter;
-import org.jquantlib.model.shortrate.ShortRateDynamics;
-import org.jquantlib.model.shortrate.ShortRateTree;
 import org.jquantlib.model.shortrate.TermStructureFittingParameter;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 import org.jquantlib.quotes.Handle;
@@ -39,7 +39,6 @@ import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeGrid;
-import static org.jquantlib.pricingengines.BlackFormula.*;
 
 /**
  * 

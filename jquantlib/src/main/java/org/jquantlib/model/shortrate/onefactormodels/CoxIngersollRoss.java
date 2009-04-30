@@ -34,7 +34,6 @@ import org.jquantlib.methods.lattices.TrinomialTree;
 import org.jquantlib.model.ConstantParameter;
 import org.jquantlib.model.Parameter;
 import org.jquantlib.model.shortrate.OneFactorAffineModel;
-import org.jquantlib.model.shortrate.ShortRateTree;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 

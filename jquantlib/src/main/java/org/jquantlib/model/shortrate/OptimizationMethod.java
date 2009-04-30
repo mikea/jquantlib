@@ -21,6 +21,8 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate;
 
+import org.jquantlib.math.optimization.EndCriteria;
+
 /**
  * 
  * @author Praneet Tiwari
@@ -28,5 +30,5 @@ package org.jquantlib.model.shortrate;
 public abstract class OptimizationMethod {
 
     // ! minimize the optimization problem P
-    public abstract EndCriteria.Type minimize(Problem P, final EndCriteria endCriteria);
+    public abstract EndCriteria.CriteriaType minimize(Problem P, final EndCriteria endCriteria);
 }

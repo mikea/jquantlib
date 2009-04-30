@@ -1,5 +1,7 @@
 /*
-Copyright (C) 2008 Praneet Tiwari
+Copyright (C) 
+2008 Praneet Tiwari
+2009 Ueli Hofstetter
 
 This source code is release under the BSD License.
 
@@ -38,7 +40,6 @@ import org.jquantlib.util.Observer;
  */
 //! liquid market instrument used during calibration
 
-/********** CLASS REVIEWED/REFACTORED ONCE ********************/
 public abstract class CalibrationHelper implements Observer, Observable {
 
     protected double/* @Real */marketValue;
@@ -46,12 +47,7 @@ public abstract class CalibrationHelper implements Observer, Observable {
     protected Handle<YieldTermStructure> termStructure_;
     protected PricingEngine engine_;
     private boolean calibrateVolatility_ = false;
-
-    // private:
-    // class ImpliedVolatilityHelper;
     
-    
-    //reviewed
     public CalibrationHelper(final Handle<Quote> volatility, final Handle<YieldTermStructure> termStructure,
             boolean calibrateVolatility) {
         if (System.getProperty("EXPERIMENTAL") == null) {

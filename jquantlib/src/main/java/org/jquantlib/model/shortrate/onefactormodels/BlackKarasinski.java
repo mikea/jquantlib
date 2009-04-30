@@ -32,7 +32,6 @@ import org.jquantlib.methods.lattices.TrinomialTree;
 import org.jquantlib.model.ConstantParameter;
 import org.jquantlib.model.Parameter;
 import org.jquantlib.model.shortrate.OneFactorModel;
-import org.jquantlib.model.shortrate.ShortRateTree;
 import org.jquantlib.model.shortrate.TermStructureFittingParameter;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 import org.jquantlib.quotes.Handle;
@@ -92,7 +91,7 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
         private double /* @Real */discountBondPrice_;
 
         public Helper(int /* @Size */i, double /* @Real */xMin, double /* @Real */dx, double /* @Real */discountBondPrice,
-                ShortRateTree tree) {
+                OneFactorModel.ShortRateTree tree) {
             size_ = (tree.size(i));
             dt_ = (tree.timeGrid().dt(i));
             xMin_ = (xMin);

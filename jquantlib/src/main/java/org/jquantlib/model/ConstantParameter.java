@@ -21,6 +21,8 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model;
 
+//reviewed once uh.
+
 import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.Constraint;
 
@@ -40,20 +42,13 @@ public class ConstantParameter extends Parameter {
 
     public ConstantParameter(final Constraint constraint) {
         super(1, new ConstantParameter.Impl(), constraint);
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
     public ConstantParameter(double /* @Real */value, final Constraint constraint) {
         super(1, new ConstantParameter.Impl(), constraint);
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
         params.set(0, value);
         if (!testParams(params)) {
-            // value << ": invalid value");
-            throw new IllegalArgumentException(": invalid value");
+            throw new IllegalArgumentException(value + ": invalid value");
         }
 
     }

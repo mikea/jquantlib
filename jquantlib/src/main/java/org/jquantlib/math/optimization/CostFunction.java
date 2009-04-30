@@ -38,12 +38,7 @@
 
 package org.jquantlib.math.optimization;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jquantlib.math.Array;
-import org.jquantlib.model.shortrate.EndCriteria;
-import org.jquantlib.model.shortrate.Problem;
 
 public abstract class CostFunction {
 
