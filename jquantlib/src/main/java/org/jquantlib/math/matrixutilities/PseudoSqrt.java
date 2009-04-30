@@ -128,7 +128,7 @@ public class PseudoSqrt {
         http://www.rebonato.com/correlationmatrix.pdf
 
         Revised and extended in "Monte Carlo Methods in Finance",
-        by Peter Jäckel, Chapter 6.
+        by Peter Jaeckel, Chapter 6.
 
         \pre the given matrix must be symmetric.
 

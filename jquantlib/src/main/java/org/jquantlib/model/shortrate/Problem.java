@@ -23,6 +23,7 @@ package org.jquantlib.model.shortrate;
 
 import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.Constraint;
+import org.jquantlib.math.optimization.CostFunction;
 
 /**
  * 

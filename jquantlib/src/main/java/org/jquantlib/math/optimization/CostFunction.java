@@ -42,53 +42,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.math.Array;
+import org.jquantlib.model.shortrate.EndCriteria;
+import org.jquantlib.model.shortrate.Problem;
 
 public abstract class CostFunction {
 
-    public CostFunction() {
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        } 
-    }
-    
-    //! method to overload to compute the cost function value in x
-    public abstract double value(Array x);
-    
-    //FIXME: Disposable implementation
-    //! method to overload to compute the cost function values in x
-    //virtual Disposable<Array> values(const Array& x) const =0;
-    
-    //! method to overload to compute grad_f, the first derivative of
-    //  the cost function with respect to x
-    public abstract Array values(Array x);
-    
-    
-    public void gradient(Array grad,  Array x) {
-        //FIXME: Implement method
-        double eps = 0;//finiteDifferenceEpsilon();
-        double fp = 0;
-        double fm = 0;
+    // ! method to overload to compute the cost function values in x
+    public abstract/* Disposable<Array> */Array values(final Array x);
+
+    // ! method to overload to compute the cost function value in x
+    public abstract double /* @Real */value(final Array x);
+
+    // ! method to overload to compute grad_f, the first derivative of
+    // the cost function with respect to x
+    public void gradient(Array grad, final Array x) {
+        double /* @Real */eps = finiteDifferenceEpsilon(), fp, fm;
         Array xx = new Array(x);
-        for (int i=0; i<x.size(); i++) {
-            xx.set(i, xx.get(i) + eps);
+        for (int /* @Size */i = 0; i < x.size(); i++) {
+            // xx[i] += eps;
+            xx.set(i, eps + xx.get(i));
             fp = value(xx);
-            xx.set(i, xx.get(i) - 2.0*eps);
+            // xx[i] -= 2.0*eps;
+            xx.set(i, xx.get(i) - 2.0 * eps);
             fm = value(xx);
-            grad.set(i, 0.5*(fp - fm)/eps);
+            // grad[i] = 0.5*(fp - fm)/eps;
+            grad.set(i, 0.5 * (fp - fm) / eps);
+            // xx[i] = x[i];
             xx.set(i, x.get(i));
         }
     }
-    
-    //! method to overload to compute grad_f, the first derivative of
-    //  the cost function with respect to x and also the cost function
-    public double valueAndGradient(Array grad, Array x){
-        //FIXME: missing implementation see above
-        //gradient(grad, x);
+
+    // ! method to overload to compute grad_f, the first derivative of
+    // the cost function with respect to x and also the cost function
+
+    public double /* @Real */valueAndGradient(Array grad, final Array x) {
+        gradient(grad, x);
         return value(x);
     }
-    
-    /*
-     * Moved ParametersTransformation in external top level class
-     */
 
+    // ! Default epsilon for finite difference method :
+    public double /* @Real */finiteDifferenceEpsilon() {
+        return 1e-8;
+    }
 }
+
