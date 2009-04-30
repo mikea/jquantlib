@@ -38,8 +38,9 @@ public abstract class E_UnaryFunction<ParameterType, ReturnType> implements E_IU
 	 * @param x
 	 * @return f(x)
 	 */
-    private ParameterType boundedValue;
-    private E_IBinaryFunction<ParameterType, ReturnType> binaryFunction;
+    protected ParameterType boundedValue;
+    protected E_IBinaryFunction<ParameterType, ReturnType> binaryFunction;
+    protected ParameterType[] params; 
     
 	public abstract ReturnType evaluate(ParameterType x);
 	@Override
@@ -48,6 +49,9 @@ public abstract class E_UnaryFunction<ParameterType, ReturnType> implements E_IU
 	};
 	public void setBoundedValue(ParameterType x){
 	    boundedValue = x;
+	}
+	public void setParams(ParameterType ... params){
+	    this.params = params;
 	}
 	
 	

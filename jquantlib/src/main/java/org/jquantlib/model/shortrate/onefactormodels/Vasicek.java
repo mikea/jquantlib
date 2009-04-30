@@ -21,17 +21,17 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate.onefactormodels;
 
+import static org.jquantlib.pricingengines.BlackFormula.blackFormula;
+
 import java.util.List;
+
 import org.jquantlib.instruments.Option;
 import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
 import org.jquantlib.model.ConstantParameter;
 import org.jquantlib.model.Parameter;
 import org.jquantlib.model.shortrate.OneFactorAffineModel;
-import org.jquantlib.model.shortrate.ShortRateDynamics;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
-
-import static org.jquantlib.pricingengines.BlackFormula.*;
 import org.jquantlib.util.Observer;
 
 /**

@@ -1,5 +1,7 @@
 /*
-Copyright (C) 2008 Praneet Tiwari
+Copyright (C) 
+2008 Praneet Tiwari
+2009 Ueli Hofstetter
 
 This source code is release under the BSD License.
 
@@ -21,91 +23,137 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.PseudoSqrt;
+import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.processes.StochasticProcess1D;
+import org.jquantlib.util.Date;
+import org.jquantlib.util.stdlibc.Std;
 
 /**
  * 
  * @author Praneet Tiwari
  */
 public class StochasticProcessArray extends StochasticProcess {
+    
+    private static final String no_process_given = "no process given";
+    private static final String mismatch_processnumber_sizecorrelationmatrix =  "mismatch between number of processes and size of correlation matrix";
 
-    protected ArrayList<StochasticProcess1D> processes_;
+    protected List<StochasticProcess1D> processes_;
     protected Matrix sqrtCorrelation_;
 
-    public StochasticProcessArray(final ArrayList<StochasticProcess1D> processes, final Matrix correlation) {
+    public StochasticProcessArray(final List<StochasticProcess1D> processes, final Matrix correlation) {
         this.processes_ = processes;
-        this.sqrtCorrelation_ = correlation;
+        this.sqrtCorrelation_ = PseudoSqrt.pseudoSqrt(correlation, SalvagingAlgorithm.Spectral);
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
+        
+        if(processes.isEmpty()){
+            throw new IllegalArgumentException(no_process_given);
+        }
+        
+        if(correlation.rows() != processes.size()){
+            throw new IllegalArgumentException(mismatch_processnumber_sizecorrelationmatrix);
+        }
+        
+        for (int i=0; i<processes_.size(); i++){
+            processes_.get(i).addObserver(this);
+        }
+    }
+    
+    public int  size()  {
+        return processes_.size();
+    }
 
-        /*
-         * : processes_(processes), sqrtCorrelation_(pseudoSqrt(correlation,SalvagingAlgorithm::Spectral))
-         * 
-         * QL_REQUIRE(!processes.empty(), "no processes given"); QL_REQUIRE(correlation.rows() == processes.size(),
-         * "mismatch between number of processes " "and size of correlation matrix"); for (Size i=0; i<processes_.size(); i++)
-         * registerWith(processes_[i]);
-         */
+    public double[] initialValues()  {
+        double[] tmp = new double[size()];
+        for (int i=0; i<size(); ++i){
+            tmp[i] = processes_.get(i).x0();
+        }
+        return tmp;
+    }
+
+    public double[][] diffusion(/*Time*/ double t, final double [] x)  {
+        Matrix tmp = sqrtCorrelation_;
+        for (int i=0; i<size(); ++i) {
+            double sigma = processes_.get(i).diffusion(t, x[i]);
+            Std.transform(tmp.getRow(i), tmp.getRow(i), Std.multiplies(sigma));
+        }
+        return tmp.getRawData();
+    }
+    
+    public double[] expectation(/*@Time*/double t0, final double[] x0, /*@Time*/double dt)  {
+        double [] tmp = new double[size()];
+        for (int i=0; i<size(); ++i){
+            tmp[i] = processes_.get(i).expectation(t0, x0[i], dt);
+        }
+        return tmp;
+    }
+
+    public double[][] stdDeviation(/*@Time*/ double t0, double[] x0,
+            /*@Time*/ double dt)  {
+        Matrix tmp = sqrtCorrelation_;
+        for (int i=0; i<size(); ++i) {
+            double sigma = processes_.get(i).stdDeviation(t0, x0[i], dt);
+            Std.transform(tmp.getRow(i), tmp.getRow(i),Std.multiplies(sigma));
+        }
+        return tmp.getRawData();
+    }
+    
+    public double [][] covariance(/*@Time*/ double t0, double[] x0,
+            /*@Time*/ double dt)  {
+        Matrix tmp = new Matrix(stdDeviation(t0, x0, dt));
+        return tmp.operatorMultiply(tmp, tmp.transpose(tmp)).getRawData();
+    }
+
+    public double[] evolve(
+            /*@Time*/ double t0, final double [] x0, /*@Time*/double dt, final double[] dw)  {
+        double [] dz = sqrtCorrelation_.operatorMultiply(sqrtCorrelation_, new Array(dw)).getData();
+
+       double [] tmp = new double [size()];
+        for (int i=0; i<size(); ++i){
+            tmp[i] = processes_.get(i).evolve(t0, x0[i], dt, dz[i]);
+        }
+        return tmp;
+    }
+
+    public double [] apply(final  double [] x0,final  double [] dx)  {
+        double [] tmp = new double[size()];
+        for (int i=0; i<size(); ++i){
+            tmp[i] = processes_.get(i).apply(x0[i],dx[i]);
+        }
+        return tmp;
+    }
+    
+    public /*@Time*/ double time(final Date d)  {
+        return processes_.get(0).getTime(d);
+    }
+    
+    public StochasticProcess1D process(int i) {
+        return processes_.get(i);
+    }
+
+    public double [][] correlation() {
+        return sqrtCorrelation_.operatorMultiply(sqrtCorrelation_, sqrtCorrelation_.transpose(sqrtCorrelation_)).getRawData();
+    }
+
+    public double[] drift(/* @Time */double t, double[] x) {
+        double[] tmp = new double[size()];
+        for (int i = 0; i < size(); ++i)
+            tmp[i] = processes_.get(i).drift(t, x[i]);
+        return tmp;
     }
 
     @Override
     public int getSize() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return processes_.size();
     }
 
-    @Override
-    public double[] initialValues() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
-    @Override
-    public double[] drift(double t, double[] x) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public double[][] diffusion(double t, double[] x) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    /***
-     * Size StochasticProcessArray::size() const { return processes_.size(); }
-     * 
-     * Disposable<Array> StochasticProcessArray::initialValues() const { Array tmp(size()); for (Size i=0; i<size(); ++i) tmp[i] =
-     * processes_[i]->x0(); return tmp; }
-     * 
-     * Disposable<Array> StochasticProcessArray::drift(Time t, const Array& x) const { Array tmp(size()); for (Size i=0; i<size();
-     * ++i) tmp[i] = processes_[i]->drift(t, x[i]); return tmp; }
-     * 
-     * Disposable<Matrix> StochasticProcessArray::diffusion( Time t, const Array& x) const { Matrix tmp = sqrtCorrelation_; for
-     * (Size i=0; i<size(); ++i) { Real sigma = processes_[i]->diffusion(t, x[i]); std::transform(tmp.row_begin(i), tmp.row_end(i),
-     * tmp.row_begin(i), std::bind2nd(std::multiplies<Real>(),sigma)); } return tmp; }
-     * 
-     * Disposable<Array> StochasticProcessArray::expectation(Time t0, const Array& x0, Time dt) const { Array tmp(size()); for (Size
-     * i=0; i<size(); ++i) tmp[i] = processes_[i]->expectation(t0, x0[i], dt); return tmp; }
-     * 
-     * Disposable<Matrix> StochasticProcessArray::stdDeviation(Time t0, const Array& x0, Time dt) const { Matrix tmp =
-     * sqrtCorrelation_; for (Size i=0; i<size(); ++i) { Real sigma = processes_[i]->stdDeviation(t0, x0[i], dt);
-     * std::transform(tmp.row_begin(i), tmp.row_end(i), tmp.row_begin(i), std::bind2nd(std::multiplies<Real>(),sigma)); } return
-     * tmp; }
-     * 
-     * Disposable<Matrix> StochasticProcessArray::covariance(Time t0, const Array& x0, Time dt) const { Matrix tmp =
-     * stdDeviation(t0, x0, dt); return tmp*transpose(tmp); }
-     * 
-     * Disposable<Array> StochasticProcessArray::evolve( Time t0, const Array& x0, Time dt, const Array& dw) const { const Array dz
-     * = sqrtCorrelation_ * dw;
-     * 
-     * Array tmp(size()); for (Size i=0; i<size(); ++i) tmp[i] = processes_[i]->evolve(t0, x0[i], dt, dz[i]); return tmp; }
-     * 
-     * Disposable<Array> StochasticProcessArray::apply(const Array& x0, const Array& dx) const { Array tmp(size()); for (Size i=0;
-     * i<size(); ++i) tmp[i] = processes_[i]->apply(x0[i],dx[i]); return tmp; }
-     * 
-     * Time StochasticProcessArray::time(const Date& d) const { return processes_[0]->time(d); }
-     * 
-     * const boost::shared_ptr<StochasticProcess1D>& StochasticProcessArray::process(Size i) const { return processes_[i]; }
-     * 
-     * Disposable<Matrix> StochasticProcessArray::correlation() const { return sqrtCorrelation_ * transpose(sqrtCorrelation_); }
-     */
+  
 }

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.jquantlib.math.Array;
+import org.jquantlib.math.E_BinaryFunction;
 import org.jquantlib.math.E_IBinaryFunction;
 import org.jquantlib.math.E_IUnaryFunction;
 import org.jquantlib.math.E_UnaryFunction;
@@ -267,6 +268,12 @@ public final class Std {
 		}
 	}
 	
+	public static final<ParameterType, ReturnType>  void transform(final double[] array, final double[] result, final E_UnaryFunction<Double, Double> func) {
+	        for(int i=0; i<array.length; i++){
+	            result[i] = func.evaluate(array[i]);
+	        }
+	    }
+
 	
 	
 	
@@ -551,4 +558,15 @@ public final class Std {
         Collections.sort(t_);
         return t_.get(t_.size() - 1);
     }
+	
+	public static E_UnaryFunction<Double, Double> multiplies(double multiplier){
+        E_UnaryFunction<Double, Double> ret = new E_UnaryFunction<Double, Double>(){
+            @Override
+            public Double evaluate(Double x) {
+                return x*params[0];
+            }
+        };
+        ret.setParams(multiplier);
+        return ret;
+	}
 }

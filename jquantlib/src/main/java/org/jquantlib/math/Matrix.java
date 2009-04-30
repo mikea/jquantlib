@@ -85,6 +85,14 @@ public class Matrix {
 			System.arraycopy(m.data[i], 0, data[i], 0, rows);
 		}
 	}
+	
+	
+	public Matrix(double[][] A) {
+        columns = A[0].length;
+        rows = A.length;
+        data = new double[columns][rows];
+    }
+	
 	public Matrix (double[][] A, int m, int n) {
       this.data = A;
       this.columns = m;
@@ -352,7 +360,17 @@ public class Matrix {
         }
         return tmp;
     }
+	
+	public double[] getRow(int row){
+	    return data[row];
+	}
+	
+	public void setRow(int row, double [] row_){
+	    data[row] = row_;
+	}
 }
+	
+  
 
 //    class Matrix {
 //     public:
