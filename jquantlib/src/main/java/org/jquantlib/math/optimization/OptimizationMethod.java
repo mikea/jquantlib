@@ -44,14 +44,5 @@ import org.jquantlib.math.Array;
 
 public abstract class OptimizationMethod {
     
-
-    
-    
-    public OptimizationMethod() {
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-    }
-    
     public abstract EndCriteria.CriteriaType minimize(Problem P, EndCriteria endCriteria);
 }
