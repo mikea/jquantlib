@@ -23,59 +23,71 @@
 
 package org.jquantlib.legacy.libormarkets;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.JQuantlib;
+import org.jquantlib.lang.annotation.Real;
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
 import org.jquantlib.model.Parameter;
 
-public class LmCorrelationModel {
-    
-    private int size_;
-    private List<Parameter> arguments_;
-    
-    public LmCorrelationModel(int size, int nArguments){
+public abstract class LmCorrelationModel {
+
+    protected int size_;
+    protected List<Parameter> arguments_;
+
+    public LmCorrelationModel(int size, int nArguments) {
         this.size_ = size;
         this.arguments_ = new ArrayList<Parameter>(nArguments);
     }
-    
-    public int size(){
+
+    public int size() {
         return size_;
     }
-    
-    public int factors(){
+
+    public int factors() {
         return size_;
     }
-    
-    public boolean isTimeDependent(){
+
+    public boolean isTimeDependent() {
         return false;
     }
-    /*
-    public double pseudoSqrt(double t, final Array x){
-        return JQuantlib.pseudoSqrt(this->correlation(t, x),
-                SalvagingAlgorithm::Spectral);
+
+    public Matrix pseudoSqrt(
+    /* @Time */double t, final Array x) {
+        return JQuantlib.pseudoSqrt(this.correlation(t, x), SalvagingAlgorithm.Spectral);
     }
-    
-    public  Matrix correlation(
-            double t, final Array x){
-        
+
+    public double correlation(int i, int j, /* @Time */double t, final Array x) {
+        // inefficient implementation, please overload in derived classes
+        return correlation(t, x).get(i, j);
     }
-    
-    public  Matrix correlation(
-            double t){
+
+    public double correlation(int i, int j, /* @Time */double t) {
+        // inefficient implementation, please overload in derived classes
+        return correlation(t, new Array()).get(i, j);
+    }
+
+    public abstract Matrix correlation(
+    /* @Time */double t, final Array x);
+
+    public Matrix correlation(
+    /* @Time */double t) {
         return correlation(t, new Array());
     }
-    
-    public double correlation(
-            int i, int j, double t, final Array x){
-        
+
+    public List<Parameter> params() {
+        return arguments_;
     }
-    
-    public double correlation(
-            int i, int j, double t){
-        return correlation(i, j, t, new Array());
-        
+
+    public void setParams(final List<Parameter> arguments) {
+        arguments_ = arguments;
+        generateArguments();
     }
-    */
+
+    protected abstract void generateArguments();
 
 }

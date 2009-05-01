@@ -48,6 +48,8 @@ import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
 import org.jquantlib.util.Pair;
 
+import cern.colt.matrix.linalg.EigenvalueDecomposition;
+
 //! symmetric threshold Jacobi algorithm.
 /*! Given a real symmetric matrix S, the Schur decomposition
     finds the eigenvalues and eigenvectors of S. If D is the
@@ -76,6 +78,10 @@ public class SymmetricSchurDecomposition {
         x2 = m.get(j1, k2);
         m.set(j1, k1, x1 - dil*(x2 + x1*rot));
         m.set(j2, k2, x2 - dil*(x2 + x2*rot));
+    }
+    
+    public Matrix eigenVectors(){
+        return eigenVectors_;
     }
     
     /*! \pre s must be symmetric */

@@ -22,10 +22,12 @@
  */
 package org.jquantlib.math.matrixutilities;
 
+import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Matrix;
 import org.jquantlib.math.optimization.CostFunction;
+import org.jquantlib.util.stdlibc.Std;
 
 class HypersphereCostFunction extends CostFunction {
     
@@ -161,11 +163,90 @@ public class PseudoSqrt {
 
         \relates Matrix
     */
-    public Matrix rankReducedSqrt(final Matrix matrix,
+    public static Matrix rankReducedSqrt(final Matrix matrix,
                                              int maxRank,
                                              int componentRetainedPercentage,
-                                             SalvagingAlgorithm algoritm){
-                                                return null;
+                                             SalvagingAlgorithm sa){
+        int size = matrix.rows();
+        
+        //TODO: do we already have this mechanism
+        //#if defined(QL_EXTRA_SAFETY_CHECKS)
+        checkSymmetry(matrix);
+        //#else
+        if(size != matrix.columns()){
+            throw new IllegalArgumentException("non square matrix: " + size + " rows, " +
+                   matrix.columns() + " columns");
+        }
+
+        if(componentRetainedPercentage<=0.0){
+            throw new IllegalArgumentException("no eigenvalues retained");
+        }
+
+        if(componentRetainedPercentage>1.0){
+            throw new IllegalArgumentException("percentage to be retained > 100%");
+        }
+                   
+
+        if(maxRank<1){
+            throw new IllegalArgumentException("max rank required < 1");
+        }
+        // spectral (a.k.a Principal Component) analysis
+        SymmetricSchurDecomposition jd = new SymmetricSchurDecomposition(matrix);
+        Array eigenValues = jd.eigenvalues();
+
+        // salvaging algorithm
+        switch (sa) {
+          case None:
+            // eigenvalues are sorted in decreasing order
+            if(eigenValues.get(size-1)<-1e-16){
+                       throw new IllegalArgumentException("negative eigenvalue(s) ("
+                       + eigenValues.get(size-1)+")");
+                       }
+            break;
+          case Spectral:
+            // negative eigenvalues set to zero
+            for (int i=0; i<size; ++i){
+                eigenValues.set(i,Math.max(eigenValues.get(i), 0.0));
+            }
+            break;
+          case Higham:
+              {
+                  int maxIterations = 40;
+                  double tolerance = 1e-6;
+                  Matrix adjustedMatrix = null;//highamImplementation(matrix, maxIterations, tolerance);
+                  jd = new SymmetricSchurDecomposition(adjustedMatrix);
+                  eigenValues = jd.eigenvalues();
+              }
+              break;
+          default:
+            throw new IllegalArgumentException("unknown or invalid salvaging algorithm");
+        }
+
+        // factor reduction
+        double enough = componentRetainedPercentage *
+                      Std.accumulate(eigenValues.getData(), 0.0);
+        if (componentRetainedPercentage == 1.0) {
+            // numerical glitches might cause some factors to be discarded
+            enough *= 1.1;
+        }
+        // retain at least one factor
+        double components = eigenValues.get(0);
+        int retainedFactors = 1;
+        for (int i=1; components<enough && i<size; ++i) {
+            components += eigenValues.get(i);
+            retainedFactors++;
+        }
+        // output is granted to have a rank<=maxRank
+        retainedFactors=Math.min(retainedFactors, maxRank);
+
+        Matrix diagonal = new Matrix(size, retainedFactors, 0.0);
+        for (int i=0; i<retainedFactors; ++i){
+            diagonal.set(i,i, Math.sqrt(eigenValues.get(i)));
+        }
+        Matrix result = jd.eigenVectors().operatorMultiply(jd.eigenVectors(), diagonal);
+
+        normalizePseudoRoot(matrix, result);
+        return result;
                                             }
     
     

@@ -234,6 +234,15 @@ public final class Std {
 	public static int upper_bound(final double[] list, final double val) {
 		return upper_bound(list, 0, list.length-1, val);
 	}
+	
+	   public static int upper_bound(final Double[] list, final double val) {
+	       double [] d = new double[list.length];
+	       for(int i = 0; i<list.length; i++){
+	           d[i] = list[i];
+	       }
+	        return upper_bound(d, 0, list.length-1, val);
+	    }
+	
 
 	@SuppressWarnings("PMD")
 	private static int upper_bound(final double[] list, int first, int last, final double val) {
@@ -568,5 +577,13 @@ public final class Std {
         };
         ret.setParams(multiplier);
         return ret;
+	}
+	
+	public static double inner_product(Array a, Array b){
+	    double innerProduct=0;
+	    for(int i = 0; i<a.size(); i++){
+	        innerProduct += a.get(i)*b.get(i);
+	    }
+	    return innerProduct;
 	}
 }

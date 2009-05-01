@@ -1,6 +1,6 @@
 /*
- Copyright (C) 2009 
-Ueli Hofstetter
+ Copyright 
+ (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
  
@@ -45,7 +45,7 @@ import org.jquantlib.model.ConstantParameter;
  (<http://www.business.uts.edu.au/qfrc/conferences/qmf2001/Brigo_D.pdf>)
  */
 
-public class LmLinearExponentialVolatilityModel extends LmVolatilityModel {
+public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityModel {
 
     private List<Double> fixingTimes_;
 

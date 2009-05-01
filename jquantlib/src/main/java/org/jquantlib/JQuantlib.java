@@ -33,4 +33,11 @@ public class JQuantlib {
                                     SalvagingAlgorithm sa){
         return PseudoSqrt.pseudoSqrt(matrix, sa);
     }
+    
+    public static Matrix rankReducedSqrt(final Matrix matrix,
+            int maxRank,
+            int componentRetainedPercentage,
+            SalvagingAlgorithm sa){
+        return PseudoSqrt.rankReducedSqrt(matrix, maxRank, componentRetainedPercentage, sa);
+    }
 }
