@@ -110,7 +110,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         return fixingDays_;
     }
 
-    Date fixingDate() {
+    public Date fixingDate() {
         // if isInArrears_ fix at the end of period
         Date refDate = isInArrears_ ? accrualEndDate : accrualStartDate;
         return index_.getFixingCalendar().advance(refDate,

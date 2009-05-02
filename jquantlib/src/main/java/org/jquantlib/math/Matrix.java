@@ -368,6 +368,14 @@ public class Matrix {
 	public void setRow(int row, double [] row_){
 	    data[row] = row_;
 	}
+	
+	public double[] getColumn(int col){
+	    double [] colarray = new double[this.columns];
+	    for(int i = 0; i<this.rows; i++){
+	        colarray[i] = this.get(i, col);
+	    }
+	    return colarray;
+	}
 }
 	
   

@@ -580,10 +580,24 @@ public final class Std {
 	}
 	
 	public static double inner_product(Array a, Array b){
-	    double innerProduct=0;
-	    for(int i = 0; i<a.size(); i++){
-	        innerProduct += a.get(i)*b.get(i);
-	    }
-	    return innerProduct;
+	    return inner_product(a, b, 0.0);
 	}
+	
+	   public static double inner_product(Array a, Array b, double init){
+	        double innerProduct=init;
+	        for(int i = 0; i<a.size(); i++){
+	            innerProduct += a.get(i)*b.get(i);
+	        }
+	        return innerProduct;
+	    }
+	
+	public static double inner_product(Array a, int start_a, Array b, int start_b, int lenght, double init){
+	        double innerProduct=init;
+	        for(int i = 0; i<lenght; i++){
+	            innerProduct += a.get(start_a)*b.get(start_b);
+	            start_a++;
+	            start_b++;
+	        }
+	        return innerProduct;
+	    }
 }
