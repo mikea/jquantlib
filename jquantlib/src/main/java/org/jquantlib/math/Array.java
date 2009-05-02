@@ -39,7 +39,9 @@
 
 package org.jquantlib.math;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.jquantlib.util.stdlibc.DoubleForwardIterator;
 import org.jquantlib.util.stdlibc.DoubleReference;
@@ -75,6 +77,13 @@ public class Array {
 
     public Array() {
         this(0);
+    }
+    
+    public Array(List<Double> list){
+        this(list.size());
+        for(int i = 0; i<list.size(); i++){
+            data[i] = list.get(i);
+        }
     }
 
     
@@ -675,6 +684,15 @@ public class Array {
         System.arraycopy(vectorA.data, 0, swapArray, 0, vectorA.data.length);
         System.arraycopy(vectorB.data, 0, vectorA.data, 0, vectorB.data.length);
         System.arraycopy(swapArray, 0, vectorB.data, 0, swapArray.length);
+    }
+    
+    @Deprecated
+    public List<Double> dataAsList(){
+        ArrayList<Double> list = new ArrayList<Double>();
+        for(int i = 0; i<data.length; i++){
+            list.set(i, data[i]);
+        }
+        return list;
     }
 
 }

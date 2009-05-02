@@ -52,7 +52,7 @@ public abstract class LmCorrelationModel {
         return size_;
     }
 
-    public boolean isTimeDependent() {
+    public boolean isTimeIndependent() {
         return false;
     }
 

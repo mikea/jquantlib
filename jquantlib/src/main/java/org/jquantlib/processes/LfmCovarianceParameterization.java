@@ -24,10 +24,12 @@ package org.jquantlib.processes;
 
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
+import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.integrals.GaussKronrodAdaptive;
 import org.jquantlib.util.stdlibc.Std;
 
 public abstract class LfmCovarianceParameterization {
-    private int size_;
+    protected int size_;
     private int factors_;
 
     public LfmCovarianceParameterization(int size, int factors) {
@@ -64,10 +66,6 @@ public abstract class LfmCovarianceParameterization {
         // because it is too slow and too inefficient.
         // This method is useful for testing and R&D.
         // Please overload the method within derived classes.
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-
         if (x.empty()) {
             throw new IllegalArgumentException("can not handle given x here");
         }
@@ -76,11 +74,12 @@ public abstract class LfmCovarianceParameterization {
 
         for (int i = 0; i < size_; ++i) {
             for (int j = 0; j <= i; ++j) {
-                /*
-                 * Var_Helper helper = new Var_Helper(this, i, j); GaussKronrodAdaptive integrator = new Gaus(1e-10, 10000); double
-                 * value = 0; for (int k=0; k < 64; ++k) { value += 0;//integrator(helper, k*t/64.,(k+1)*t/64.); tmp.set(i,j, value
-                 * +=integrator(helper, k*t/64.,(k+1)*t/64.); } tmp.set(j, i,tmp.get(i, j));
-                 */
+                Var_Helper helper = new Var_Helper(this, i, j);
+                GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
+                for(int k = 0; k<64; ++k){
+                    tmp.set(i, j, tmp.get(i, j)+integrator.evaluate(helper, k*t/64.0,(k+1)*t/64.0));
+                }
+                tmp.set(j,i, tmp.get(i, j));
             }
         }
 
@@ -91,7 +90,7 @@ public abstract class LfmCovarianceParameterization {
         return integratedCovariance(t, new Array());
     }
 
-    private static class Var_Helper {
+    private static class Var_Helper implements UnaryFunctionDouble {
 
         private int i_, j_;
         private final LfmCovarianceParameterization param_;
@@ -102,7 +101,7 @@ public abstract class LfmCovarianceParameterization {
             this.param_ = param;
         }
 
-        public double operator(double t) {
+        public double evaluate(double t) {
             final Matrix m = param_.diffusion(t);
             return Std.inner_product(new Array(m.getRow(i_)), new Array(m.getRow(j_)));
         }

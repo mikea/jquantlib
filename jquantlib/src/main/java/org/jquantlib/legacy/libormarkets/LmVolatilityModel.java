@@ -44,6 +44,10 @@ public abstract class LmVolatilityModel {
         return size_;
     }
     
+    public boolean isTimeIndependent() {
+        return false;
+    }
+    
     public double volatility(int i, double t){
         return volatility(t, new ArrayList<Double>()).get(i);
     }
@@ -56,9 +60,9 @@ public abstract class LmVolatilityModel {
         return volatility(t, new ArrayList<Double>());
     }
     
-    public abstract List<Double> volatility(double t, List x);
+    public abstract List<Double> volatility(double t, List<Double> x);
     
-    public double integrateVariance(int i, int ii, double t, List list){
+    public double integratedVariance(int i, int ii, double t, List list){
         throw new UnsupportedOperationException(integrated_variance_not_supported);
     }
     
