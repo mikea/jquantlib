@@ -22,18 +22,16 @@
 
 package org.jquantlib.processes;
 
-import java.sql.Time;
-
-import org.jquantlib.math.Array;
+import org.jquantlib.math.Constants;
 import org.jquantlib.math.Matrix;
-import org.jquantlib.model.shortrate.Disposable;
+import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
-
+import org.jquantlib.util.Date;
 
 public class HestonProcess extends StochasticProcess {
 
@@ -117,165 +115,147 @@ public class HestonProcess extends StochasticProcess {
         return tmp;
     }
 
-    //
-    // Disposable<Matrix> HestonProcess::diffusion(Time, const Array& x) const {
-    // /* the correlation matrix is
-    // | 1 rho |
-    // | rho 1 |
-    // whose square root (which is used here) is
-    // | 1 0 |
-    // | rho sqrt(1-rho^2) |
-    // */
-    // Matrix tmp(2,2);
-    // const Real vol = (x[1] > 0.0) ? std::sqrt(x[1])
-    // : (discretization_ == Reflection) ? -sqrt(-x[1])
-    // : 0.0;
-    // const Real sigma2 = sigmav_ * vol;
-    //
-    // tmp[0][0] = vol; tmp[0][1] = 0.0;
-    // tmp[1][0] = rhov_*sigma2; tmp[1][1] = sqrhov_*sigma2;
-    // return tmp;
-    // }
-    //
-    // Disposable<Array> HestonProcess::apply(const Array& x0,
-    // const Array& dx) const {
-    // Array tmp(2);
-    // tmp[0] = x0[0] * std::exp(dx[0]);
-    // tmp[1] = x0[1] + dx[1];
-    // return tmp;
-    // }
-    //
-    // Disposable<Array> HestonProcess::evolve(Time t0, const Array& x0,
-    // Time dt, const Array& dw) const {
-    // Array retVal(2);
-    // Real ncp, df, p, dy;
-    // Real vol, vol2, mu, nu;
-    //
-    // const Real sdt = std::sqrt(dt);
-    //
-    // switch (discretization_) {
-    // // For the definition of PartialTruncation, FullTruncation
-    // // and Reflection see Lord, R., R. Koekkoek and D. van Dijk (2006),
-    // // "A Comparison of biased simulation schemes for
-    // // stochastic volatility models",
-    // // Working Paper, Tinbergen Institute
-    // case PartialTruncation:
-    // vol = (x0[1] > 0.0) ? std::sqrt(x0[1]) : 0.0;
-    // vol2 = sigmav_ * vol;
-    // mu = riskFreeRate_->forwardRate(t0, t0, Continuous)
-    // - dividendYield_->forwardRate(t0, t0, Continuous)
-    // - 0.5 * vol * vol;
-    // nu = kappav_*(thetav_ - x0[1]);
-    //             
-    // retVal[0] = x0[0] * std::exp(mu*dt+vol*dw[0]*sdt);
-    // retVal[1] = x0[1] + nu*dt + vol2*sdt*(rhov_*dw[0] + sqrhov_*dw[1]);
-    // break;
-    // case FullTruncation:
-    // vol = (x0[1] > 0.0) ? std::sqrt(x0[1]) : 0.0;
-    // vol2 = sigmav_ * vol;
-    // mu = riskFreeRate_->forwardRate(t0, t0, Continuous)
-    // - dividendYield_->forwardRate(t0, t0, Continuous)
-    // - 0.5 * vol * vol;
-    // nu = kappav_*(thetav_ - vol*vol);
-    //             
-    // retVal[0] = x0[0] * std::exp(mu*dt+vol*dw[0]*sdt);
-    // retVal[1] = x0[1] + nu*dt + vol2*sdt*(rhov_*dw[0] + sqrhov_*dw[1]);
-    // break;
-    // case Reflection:
-    // vol = std::sqrt(std::fabs(x0[1]));
-    // vol2 = sigmav_ * vol;
-    // mu = riskFreeRate_->forwardRate(t0, t0, Continuous)
-    // - dividendYield_->forwardRate(t0, t0, Continuous)
-    // - 0.5 * vol*vol;
-    // nu = kappav_*(thetav_ - vol*vol);
-    //
-    // retVal[0] = x0[0]*std::exp(mu*dt+vol*dw[0]*sdt);
-    // retVal[1] = vol*vol
-    // +nu*dt + vol2*sdt*(rhov_*dw[0] + sqrhov_*dw[1]);
-    // break;
-    // case ExactVariance:
-    // // use Alan Lewis trick to decorrelate the equity and the variance
-    // // process by using y(t)=x(t)-\frac{rho}{sigma}\nu(t)
-    // // and Ito's Lemma. Then use exact sampling for the variance
-    // // process. For further details please read the wilmott thread
-    // // "QuantLib code is very high quatlity"
-    // vol = (x0[1] > 0.0) ? std::sqrt(x0[1]) : 0.0;
-    // mu = riskFreeRate_->forwardRate(t0, t0, Continuous)
-    // - dividendYield_->forwardRate(t0, t0, Continuous)
-    // - 0.5 * vol*vol;
-    //
-    // df = 4*thetav_*kappav_/(sigmav_*sigmav_);
-    // ncp = 4*kappav_*std::exp(-kappav_*dt)
-    // /(sigmav_*sigmav_*(1-std::exp(-kappav_*dt)))*x0[1];
-    //
-    // p = CumulativeNormalDistribution()(dw[1]);
-    // if (p<0.0)
-    // p = 0.0;
-    // else if (p >= 1.0)
-    // p = 1.0-QL_EPSILON;
-    //
-    // retVal[1] = sigmav_*sigmav_*(1-std::exp(-kappav_*dt))/(4*kappav_)
-    // *InverseNonCentralChiSquareDistribution(df, ncp, 100)(p);
-    //
-    // dy = (mu - rhov_/sigmav_*kappav_
-    // *(thetav_-vol*vol)) * dt + vol*sqrhov_*dw[0]*sdt;
-    //
-    // retVal[0] = x0[0]*std::exp(dy + rhov_/sigmav_*(retVal[1]-x0[1]));
-    // break;
-    // default:
-    // QL_FAIL("unknown discretization schema");
-    // }
-    //    
-    // return retVal;
-    // }
-    //
-    // const RelinkableHandle<Quote>& HestonProcess::v0() const {
-    // return v0_;
-    // }
-    //
-    // const RelinkableHandle<Quote>& HestonProcess::rho() const {
-    // return rho_;
-    // }
-    //
-    // const RelinkableHandle<Quote>& HestonProcess::kappa() const {
-    // return kappa_;
-    // }
-    //
-    // const RelinkableHandle<Quote>& HestonProcess::theta() const {
-    // return theta_;
-    // }
-    //
-    // const RelinkableHandle<Quote>& HestonProcess::sigma() const {
-    // return sigma_;
-    // }
-    //
-    // const Handle<Quote>& HestonProcess::s0() const {
-    // return s0_;
-    // }
-    //
-    // const Handle<YieldTermStructure>& HestonProcess::dividendYield() const {
-    // return dividendYield_;
-    // }
-    //
-    // const Handle<YieldTermStructure>& HestonProcess::riskFreeRate() const {
-    // return riskFreeRate_;
-    // }
-    //
-    // Time HestonProcess::time(const Date& d) const {
-    // return riskFreeRate_->dayCounter().yearFraction(
-    // riskFreeRate_->referenceDate(), d);
-    // }
-    //    
+    public/* Disposable<Matrix> */double[][] diffusion(/* @Time */double time, final double[] x) {
+        /*
+         * the correlation matrix is | 1 rho | | rho 1 | whose square root (which is used here) is | 1 0 | | rho sqrt(1-rho^2) |
+         */
+        Matrix tmp = new Matrix(2, 2);
+        final double vol = (x[1] > 0.0) ? Math.sqrt(x[1]) : (discretization_ == Discretization.Reflection) ? -Math.sqrt(-x[1])
+                : 0.0;
+        final double sigma2 = sigmav_ * vol;
 
-    @Override
-    public double[][] diffusion(double t, double[] x) {
-        // TODO Auto-generated method stub
-        return null;
+        tmp.set(0, 0, vol);
+        tmp.set(0, 1, 0.0);
+        tmp.set(1, 0, rhov_ * sigma2);
+        tmp.set(1, 1, sqrhov_ * sigma2);
+        return tmp.getRawData();
+    }
+
+    public double[] apply(final double[] x0, final double[] dx) {
+        double[] tmp = new double[2];
+        tmp[0] = x0[0] * Math.exp(dx[0]);
+        tmp[1] = x0[1] + dx[1];
+        return tmp;
+    }
+
+    public double[] evolve(/* @Time */double t0, final double[] x0,
+    /* @Time */double dt, final double[] dw) {
+        double[] retVal = new double[2];
+        double ncp, df, p, dy;
+        double vol, vol2, mu, nu;
+
+        final double sdt = Math.sqrt(dt);
+
+        switch (discretization_) {
+        // For the definition of PartialTruncation, FullTruncation
+        // and Reflection see Lord, R., R. Koekkoek and D. van Dijk (2006),
+        // "A Comparison of biased simulation schemes for
+        // stochastic volatility models",
+        // Working Paper, Tinbergen Institute
+        case PartialTruncation:
+            vol = (x0[1] > 0.0) ? Math.sqrt(x0[1]) : 0.0;
+            vol2 = sigmav_ * vol;
+            mu = riskFreeRate_.getLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
+                    - dividendYield_.getLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+            nu = kappav_ * (thetav_ - x0[1]);
+
+            retVal[0] = x0[0] * Math.exp(mu * dt + vol * dw[0] * sdt);
+            retVal[1] = x0[1] + nu * dt + vol2 * sdt * (rhov_ * dw[0] + sqrhov_ * dw[1]);
+            break;
+        case FullTruncation:
+            vol = (x0[1] > 0.0) ? Math.sqrt(x0[1]) : 0.0;
+            vol2 = sigmav_ * vol;
+            mu = riskFreeRate_.getLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
+                    - dividendYield_.getLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+            nu = kappav_ * (thetav_ - vol * vol);
+
+            retVal[0] = x0[0] * Math.exp(mu * dt + vol * dw[0] * sdt);
+            retVal[1] = x0[1] + nu * dt + vol2 * sdt * (rhov_ * dw[0] + sqrhov_ * dw[1]);
+            break;
+        case Reflection:
+            vol = Math.sqrt(Math.abs(x0[1]));
+            vol2 = sigmav_ * vol;
+            mu = riskFreeRate_.getLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
+                    - dividendYield_.getLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+            nu = kappav_ * (thetav_ - vol * vol);
+
+            retVal[0] = x0[0] * Math.exp(mu * dt + vol * dw[0] * sdt);
+            retVal[1] = vol * vol + nu * dt + vol2 * sdt * (rhov_ * dw[0] + sqrhov_ * dw[1]);
+            break;
+        case ExactVariance:
+            // use Alan Lewis trick to decorrelate the equity and the variance
+            // process by using y(t)=x(t)-\frac{rho}{sigma}\nu(t)
+            // and Ito's Lemma. Then use exact sampling for the variance
+            // process. For further details please read the wilmott thread
+            // "QuantLib code is very high quatlity"
+            vol = (x0[1] > 0.0) ? Math.sqrt(x0[1]) : 0.0;
+            mu = riskFreeRate_.getLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
+                    - dividendYield_.getLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+
+            df = 4 * thetav_ * kappav_ / (sigmav_ * sigmav_);
+            ncp = 4 * kappav_ * Math.exp(-kappav_ * dt) / (sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt))) * x0[1];
+
+            p = new CumulativeNormalDistribution().evaluate(dw[1]);
+            if (p < 0.0)
+                p = 0.0;
+            else if (p >= 1.0)
+                p = 1.0 - Constants.QL_EPSILON;
+
+            retVal[1] = sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt)) / (4 * kappav_);
+            if (true) {
+                throw new UnsupportedOperationException("Work in progress");
+            }
+            // new InverseNonCentralChiSquareDistribution(df, ncp, 100).(p);
+
+            dy = (mu - rhov_ / sigmav_ * kappav_ * (thetav_ - vol * vol)) * dt + vol * sqrhov_ * dw[0] * sdt;
+
+            retVal[0] = x0[0] * Math.exp(dy + rhov_ / sigmav_ * (retVal[1] - x0[1]));
+            break;
+        default:
+            throw new IllegalArgumentException("unknown discretization schema");
+        }
+
+        return retVal;
+    }
+
+    public final RelinkableHandle<Quote> v0() {
+        return v0_;
+    }
+
+    public final RelinkableHandle<Quote> rho() {
+        return rho_;
+    }
+
+    public final RelinkableHandle<Quote> kappa() {
+        return kappa_;
+    }
+
+    public final RelinkableHandle<Quote> theta() {
+        return theta_;
+    }
+
+    public final RelinkableHandle<Quote> sigma() {
+        return sigma_;
+    }
+
+    public final Handle<Quote> s0() {
+        return s0_;
+    }
+
+    public final Handle<YieldTermStructure> dividendYield() {
+        return dividendYield_;
+    }
+
+    public Handle<YieldTermStructure> riskFreeRate() {
+        return riskFreeRate_;
+    }
+
+    public final/* @Time */double time(final Date d) {
+        return riskFreeRate_.getLink().dayCounter().yearFraction(riskFreeRate_.getLink().referenceDate(), d);
     }
 
     @Override
     public int getSize() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
