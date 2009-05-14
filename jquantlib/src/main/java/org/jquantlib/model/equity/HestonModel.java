@@ -37,6 +37,8 @@ package org.jquantlib.model.equity;
  * Implementation of the Heston Model, see http://en.wikipedia.org/wiki/Heston_model
  */
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
 import org.jquantlib.model.CalibratedModel;
 import org.jquantlib.model.ConstantParameter;
@@ -96,5 +98,22 @@ public class HestonModel extends CalibratedModel {
     public double v0() {
         return arguments_.get(4).getOperatorEq(0.0);
     }
-
+    
+    private class VolatilityConstraint extends Constraint {
+        public VolatilityConstraint(){
+            if(true){
+                throw new UnsupportedOperationException("Work in progress. Todo: check class hierarchy");
+            }
+            //super(new VolatilityConstraint());
+        }
+        
+        @Override
+        public boolean test(Array p) {
+            final double theta = p.get(0);
+            final double kappa = p.get(1);
+            final double sigma = p.get(2);
+            return (sigma >= 0.0 && sigma*sigma < 2.0*kappa*theta);
+        }
+        
+    }
 }
