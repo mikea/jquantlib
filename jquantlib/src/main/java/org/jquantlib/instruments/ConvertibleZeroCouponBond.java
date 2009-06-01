@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Daniel Kong
+ Copyright (C) 2009 Daniel Kong
  
  This source code is release under the BSD License.
  
