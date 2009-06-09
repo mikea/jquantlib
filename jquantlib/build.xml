@@ -348,7 +348,7 @@
 		-->
 	</target>
 	
-	<target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-svnkit,_tools-install-sigil,_tools-install-proguard"/>
+	<target name="_tools-install" depends="_tools-install-ivy,_tools-install-antcontrib,_tools-install-svnkit,_tools-install-proguard"/>
 	    
 	    
 	    <!-- bootstrap -->
