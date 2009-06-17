@@ -36,7 +36,7 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.barrier.AnalyticBarrierOptionEngine;
+import org.jquantlib.pricingengines.barrier.AnalyticBarrierEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
@@ -74,9 +74,9 @@ public class BarrierOptionTest {
 	    logger.info("Testing barrier options against Haug's values...");
 
 	    final NewBarrierOptionData values[] = {
-	        /* The data below are from
-	          "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag. 72
-	        */
+	        //
+	        // The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag. 72
+	        //
 	        //     barrierType, barrier, rebate,         type, strike,     s,    q,    r,    t,    v,  result, tol
 	        new NewBarrierOptionData( BarrierType.DownOut,    95.0,    3.0, Option.Type.CALL,     90, 100.0, 0.04, 0.08, 0.50, 0.25,  9.0246, 1.0e-4),
 	        new NewBarrierOptionData( BarrierType.DownOut,    95.0,    3.0, Option.Type.CALL,    100, 100.0, 0.04, 0.08, 0.50, 0.25,  6.7924, 1.0e-4),
@@ -118,8 +118,6 @@ public class BarrierOptionTest {
 	        new NewBarrierOptionData( BarrierType.UpIn,      105.0,    3.0, Option.Type.CALL,   100, 100.0, 0.04, 0.08, 0.50, 0.30,  9.7278, 1.0e-4),
 	        new NewBarrierOptionData( BarrierType.UpIn,      105.0,    3.0, Option.Type.CALL,   110, 100.0, 0.04, 0.08, 0.50, 0.30,  5.8350, 1.0e-4),
 
-
-
 	        new NewBarrierOptionData( BarrierType.DownOut,    95.0,    3.0,  Option.Type.PUT,    90, 100.0, 0.04, 0.08, 0.50, 0.25,  2.2798, 1.0e-4 ),
 	        new NewBarrierOptionData( BarrierType.DownOut,    95.0,    3.0,  Option.Type.PUT,   100, 100.0, 0.04, 0.08, 0.50, 0.25,  2.2947, 1.0e-4 ),
 	        new NewBarrierOptionData( BarrierType.DownOut,    95.0,    3.0,  Option.Type.PUT,   110, 100.0, 0.04, 0.08, 0.50, 0.25,  2.6252, 1.0e-4 ),
@@ -158,56 +156,52 @@ public class BarrierOptionTest {
 	        new NewBarrierOptionData( BarrierType.DownIn,    100.0,    3.0,  Option.Type.PUT,   110, 100.0, 0.04, 0.08, 0.50, 0.30, 12.9713, 1.0e-4 ),
 	        new NewBarrierOptionData( BarrierType.UpIn,      105.0,    3.0,  Option.Type.PUT,    90, 100.0, 0.04, 0.08, 0.50, 0.30,  2.0658, 1.0e-4 ),
 	        new NewBarrierOptionData( BarrierType.UpIn,      105.0,    3.0,  Option.Type.PUT,   100, 100.0, 0.04, 0.08, 0.50, 0.30,  4.4226, 1.0e-4 ),
-	        new NewBarrierOptionData( BarrierType.UpIn,      105.0,    3.0,  Option.Type.PUT,   110, 100.0, 0.04, 0.08, 0.50, 0.30,  8.3686, 1.0e-4 )
+	        new NewBarrierOptionData( BarrierType.UpIn,      105.0,    3.0,  Option.Type.PUT,   110, 100.0, 0.04, 0.08, 0.50, 0.30,  8.3686, 1.0e-4 ),
 
-	        /*
-	            Data from "Going to Extreme: Correcting Simulation Bias in Exotic Option Valuation"
-	            D.R. Beaglehole, P.H. Dybvig and G. Zhou
-	            Financial Analysts Journal; Jan / Feb 1997; 53, 1
-	        */
+	        //
+	        //  Data from "Going to Extreme: Correcting Simulation Bias in Exotic Option Valuation"
+	        //  D.R. Beaglehole, P.H. Dybvig and G. Zhou
+	        //  Financial Analysts Journal; Jan / Feb 1997; 53, 1
+	        //
 	        //    barrierType, barrier, rebate,         type, strike,     s,    q,    r,    t,    v,  result, tol
-	        // { BarrierType.DownOut,    45.0,    0.0,  Option.Type.PUT,     50,  50.0,-0.05, 0.10, 0.25, 0.50,   4.032, 1.0e-3 },
-	        // { BarrierType.DownOut,    45.0,    0.0,  Option.Type.PUT,     50,  50.0,-0.05, 0.10, 1.00, 0.50,   5.477, 1.0e-3 }
-
+	        new NewBarrierOptionData( BarrierType.DownOut,    45.0,    0.0,  Option.Type.PUT,     50,  50.0,-0.05, 0.10, 0.25, 0.50,   4.032, 1.0e-3 ),
+	        new NewBarrierOptionData( BarrierType.DownOut,    45.0,    0.0,  Option.Type.PUT,     50,  50.0,-0.05, 0.10, 1.00, 0.50,   5.477, 1.0e-3 )
 	    };
 
+	    final DayCounter dc = Actual360.getDayCounter();
+	    final SimpleQuote spot = new SimpleQuote(0.0);
+	    final SimpleQuote qRate = new SimpleQuote(0.0);
+	    final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
+	    final SimpleQuote rRate = new SimpleQuote(0.0);
+	    final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
+	    final SimpleQuote vol = new SimpleQuote(0.0);
+	    final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
-	    DayCounter dc = Actual360.getDayCounter();
-	    SimpleQuote spot = new SimpleQuote(0.0);
-	    SimpleQuote qRate = new SimpleQuote(0.0);
-	    YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
-	    SimpleQuote rRate = new SimpleQuote(0.0);
-	    YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
-	    SimpleQuote vol = new SimpleQuote(0.0);
-	    BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
-
-	    
 	    for (int i=0; i<values.length; i++) {
-	        Date exDate = today.getDateAfter( timeToDays(values[i].t) );
-
-	        Exercise exercise = new EuropeanExercise(exDate);
+	    	final Date exDate = today.getDateAfter( timeToDays(values[i].t) );
+	        final Exercise exercise = new EuropeanExercise(exDate);
 
 	        spot.setValue(values[i].s);
 	        qRate.setValue(values[i].q);
 	        rRate.setValue(values[i].r);
 	        vol.setValue(values[i].v);
 
-	        StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+	        final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
 
-	        StochasticProcess stochProcess = new 
+	        final StochasticProcess stochProcess = new 
 	            BlackScholesMertonProcess(new Handle<Quote>(spot),
 	                                      new Handle<YieldTermStructure>(qTS),
 	                                      new Handle<YieldTermStructure>(rTS),
 	                                      new Handle<BlackVolTermStructure>(volTS));
 
-	        BarrierOption barrierOption = new 
+	        final BarrierOption barrierOption = new 
 	            BarrierOption(values[i].barrierType,
 	                          values[i].barrier,
 	                          values[i].rebate,
 	                          stochProcess,
 	                          payoff,
 	                          exercise,
-	                          new AnalyticBarrierOptionEngine());
+	                          new AnalyticBarrierEngine());
 	        
 	        double calculated = barrierOption.getNPV();
 	        double expected = values[i].result;
@@ -229,7 +223,7 @@ public class BarrierOptionTest {
 	//TODO: fix barrier option - getNPV() gets 0
     @Ignore
     @Test
-    public void testBabsiriValues(){
+    public void testBabsiriValues() {
         logger.info("Testing barrier options against Babsiri's values...");
         /*
         Data from
@@ -238,65 +232,65 @@ public class BarrierOptionTest {
             Journal of Derivatives; Winter 1998; 6, 2
         */
         
-    final BarrierOptionData values[] = {
-        new BarrierOptionData( BarrierType.DownIn,   0.10,   100,  90,   0.07187,  0.0),
-        new BarrierOptionData( BarrierType.DownIn,   0.15,   100,  90,   0.60638,  0.0),
-        new BarrierOptionData( BarrierType.DownIn,   0.20,   100,  90,   1.64005,  0.0),
-        new BarrierOptionData( BarrierType.DownIn,   0.25,   100,  90,   2.98495,  0.0),
-        new BarrierOptionData( BarrierType.DownIn,   0.30,   100,  90,   4.50952,  0.0),
-        new BarrierOptionData( BarrierType.UpIn,     0.10,   100,  110,  4.79148,  0.0),
-        new BarrierOptionData( BarrierType.UpIn,     0.15,   100,  110,   7.08268,  0.0 ),
-        new BarrierOptionData( BarrierType.UpIn,     0.20,   100,  110,   9.11008,  0.0 ),
-        new BarrierOptionData( BarrierType.UpIn,     0.25,   100,  110,  11.06148,  0.0 ),
-        new BarrierOptionData( BarrierType.UpIn,     0.30,   100,  110,  12.98351,  0.0 )
-    };
+	    final BarrierOptionData values[] = {
+	        new BarrierOptionData( BarrierType.DownIn,   0.10,   100,  90,   0.07187,  0.0),
+	        new BarrierOptionData( BarrierType.DownIn,   0.15,   100,  90,   0.60638,  0.0),
+	        new BarrierOptionData( BarrierType.DownIn,   0.20,   100,  90,   1.64005,  0.0),
+	        new BarrierOptionData( BarrierType.DownIn,   0.25,   100,  90,   2.98495,  0.0),
+	        new BarrierOptionData( BarrierType.DownIn,   0.30,   100,  90,   4.50952,  0.0),
+	        new BarrierOptionData( BarrierType.UpIn,     0.10,   100,  110,  4.79148,  0.0),
+	        new BarrierOptionData( BarrierType.UpIn,     0.15,   100,  110,   7.08268,  0.0 ),
+	        new BarrierOptionData( BarrierType.UpIn,     0.20,   100,  110,   9.11008,  0.0 ),
+	        new BarrierOptionData( BarrierType.UpIn,     0.25,   100,  110,  11.06148,  0.0 ),
+	        new BarrierOptionData( BarrierType.UpIn,     0.30,   100,  110,  12.98351,  0.0 )
+	    };
         
+        final double underlyingPrice = 100.0;
+        final double rebate = 0.0;
+        final double r = 0.05;
+        final double q = 0.02;
 
-        double underlyingPrice = 100.0;
-        double rebate = 0.0;
-        double r = 0.05;
-        double q = 0.02;
+        final DayCounter dc = Actual360.getDayCounter();
+        final Date today = DateFactory.getFactory().getTodaysDate();
+        final Handle<Quote> underlying = new Handle<Quote>(new SimpleQuote(underlyingPrice));
+        
+        final Handle<Quote> qH_SME = new Handle<Quote>(new SimpleQuote(q));
+        final YieldTermStructure qTS = Utilities.flatRate(today, qH_SME, dc);
 
-        DayCounter dc = Actual360.getDayCounter();
-        Date today = DateFactory.getFactory().getTodaysDate();
-        Handle<Quote> underlying = new Handle<Quote>(new SimpleQuote(underlyingPrice));
+        final Handle<Quote> rH_SME = new Handle<Quote>(new SimpleQuote(r));
+        final YieldTermStructure rTS = Utilities.flatRate(today, rH_SME, dc);
         
-        Handle<Quote> qH_SME = new Handle<Quote>(new SimpleQuote(q));
-        YieldTermStructure qTS = Utilities.flatRate(today, qH_SME, dc);
-
-        Handle<Quote> rH_SME = new Handle<Quote>(new SimpleQuote(r));
-        YieldTermStructure rTS = Utilities.flatRate(today, rH_SME, dc);
+        final Handle<SimpleQuote> volatility = new Handle<SimpleQuote>(new SimpleQuote(0.10));
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, volatility, dc);
         
-        Handle<SimpleQuote> volatility = new Handle<SimpleQuote>(new SimpleQuote(0.10));
-        BlackVolTermStructure volTS = Utilities.flatVol(today, volatility, dc);
+        final PricingEngine engine = new AnalyticBarrierEngine();
         
-        PricingEngine engine = new AnalyticBarrierOptionEngine();
+        final Date exDate = today.getDateAfter(Period.ONE_YEAR_FORWARD);
         
-        Date exDate = today.getDateAfter(Period.ONE_YEAR_FORWARD);
+        final Exercise exercise = new EuropeanExercise(exDate);
         
-        Exercise exercise = new EuropeanExercise(exDate);
-        
-        for(int i = 0; i<values.length; i++){
+        for (int i = 0; i < values.length; i++) {
             volatility.getLink().setValue(values[i].volatility);
-            StrikedTypePayoff callPayoff = new PlainVanillaPayoff(Option.Type.CALL, values[i].strike);
-            StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(underlying),
-                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), 
-                            new Handle<BlackVolTermStructure>(volTS));
-            
-           BarrierOption barrierCallOption = new BarrierOption(values[i].barrierType,
-                   values[i].barrier, rebate, stochProcess, callPayoff, exercise, engine);
-           
-           double calculated = barrierCallOption.getNPV();
-           double expected = values[i].callValue;
-           double error = Math.abs(calculated - expected);
-           double maxErrorAllowed = 1.0e-5;
-           if(error>maxErrorAllowed){
-               REPORT_FAILURE("value", values[i].barrierType, values[i].barrier,
-                       rebate, callPayoff, exercise, underlyingPrice,
-                       q, r, today, values[i].volatility,
-                       expected, calculated, error, maxErrorAllowed);
-           }
-           }
+            final StrikedTypePayoff callPayoff = new PlainVanillaPayoff(Option.Type.CALL, values[i].strike);
+            final StochasticProcess stochProcess = new BlackScholesMertonProcess(
+                    new Handle<Quote>(underlying),
+                    new Handle<YieldTermStructure>(qTS), 
+                    new Handle<YieldTermStructure>(rTS), 
+                    new Handle<BlackVolTermStructure>(volTS));
+
+            final BarrierOption barrierCallOption = new BarrierOption(values[i].barrierType, values[i].barrier, rebate,
+                    stochProcess, callPayoff, exercise, engine);
+
+            double calculated = barrierCallOption.getNPV();
+            double expected = values[i].callValue;
+            double error = Math.abs(calculated - expected);
+            double maxErrorAllowed = 1.0e-5;
+
+            if (error > maxErrorAllowed) {
+                REPORT_FAILURE("value", values[i].barrierType, values[i].barrier, rebate, callPayoff, exercise, underlyingPrice, q,
+                        r, today, values[i].volatility, expected, calculated, error, maxErrorAllowed);
+            }
+        }
     }
         
     //TODO: fix barrier option - getNPV() gets 0
@@ -312,55 +306,56 @@ public class BarrierOptionTest {
               - D.R. Beaglehole, P.H. Dybvig and G. Zhou
                 Financial Analysts Journal; Jan / Feb 1997; 53, 1
         */
-        BarrierOptionData values[] = {
+        final BarrierOptionData values[] = {
              new BarrierOptionData(BarrierType.DownOut, 0.50,   50,      45,  5.477,  0.0)
         };
         
-        double underlyingPrice = 50.0;
-        double rebate = 0.0;
-        double r = Math.log(1.1);
-        double q = 0.00;
+        final double underlyingPrice = 50.0;
+        final double rebate = 0.0;
+        final double r = Math.log(1.1);
+        final double q = 0.00;
         
-        DayCounter dc = Actual360.getDayCounter();
-        Date today = DateFactory.getFactory().getTodaysDate();
-        Handle<Quote> underlying = new Handle<Quote>(new SimpleQuote(underlyingPrice));
+        final DayCounter dc = Actual360.getDayCounter();
+        final Date today = DateFactory.getFactory().getTodaysDate();
+        final Handle<Quote> underlying = new Handle<Quote>(new SimpleQuote(underlyingPrice));
         
-        Handle<Quote> qH_SME = new Handle<Quote>(new SimpleQuote(q));
-        YieldTermStructure qTS = Utilities.flatRate(today, qH_SME, dc);
+        final Handle<Quote> qH_SME = new Handle<Quote>(new SimpleQuote(q));
+        final YieldTermStructure qTS = Utilities.flatRate(today, qH_SME, dc);
 
-        Handle<Quote> rH_SME = new Handle<Quote>(new SimpleQuote(r));
-        YieldTermStructure rTS = Utilities.flatRate(today, rH_SME, dc);
+        final Handle<Quote> rH_SME = new Handle<Quote>(new SimpleQuote(r));
+        final YieldTermStructure rTS = Utilities.flatRate(today, rH_SME, dc);
         
-        Handle<SimpleQuote> volatility = new Handle<SimpleQuote>(new SimpleQuote(0.10));
-        BlackVolTermStructure volTS = Utilities.flatVol(today, volatility, dc);
+        final Handle<SimpleQuote> volatility = new Handle<SimpleQuote>(new SimpleQuote(0.10));
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, volatility, dc);
         
-        PricingEngine engine = new AnalyticBarrierOptionEngine();
+        final PricingEngine engine = new AnalyticBarrierEngine();
         
-        Date exDate = today.getDateAfter(Period.ONE_YEAR_FORWARD);
+        final Date exDate = today.getDateAfter(Period.ONE_YEAR_FORWARD);
         
-        Exercise exercise = new EuropeanExercise(exDate);
+        final Exercise exercise = new EuropeanExercise(exDate);
         
-        for(int i = 0; i<values.length; i++){
+        for (int i = 0; i < values.length; i++) {
             volatility.getLink().setValue(values[i].volatility);
-            StrikedTypePayoff callPayoff = new PlainVanillaPayoff(Option.Type.CALL, values[i].strike);
-            StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(underlying),
-                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), 
-                            new Handle<BlackVolTermStructure>(volTS));
+            final StrikedTypePayoff callPayoff = new PlainVanillaPayoff(Option.Type.CALL, values[i].strike);
+            final StochasticProcess stochProcess = new BlackScholesMertonProcess(
+                    new Handle<Quote>(underlying),
+                    new Handle<YieldTermStructure>(qTS), 
+                    new Handle<YieldTermStructure>(rTS), 
+                    new Handle<BlackVolTermStructure>(volTS));
+
+            final BarrierOption barrierCallOption = new BarrierOption(values[i].barrierType, values[i].barrier, rebate, stochProcess,
+                    callPayoff, exercise, engine);
+
+            double calculated = barrierCallOption.getNPV();
+            double expected = values[i].callValue;
+            double error = Math.abs(calculated - expected);
+            double maxErrorAllowed = 1.0e-5;
             
-           BarrierOption barrierCallOption = new BarrierOption(values[i].barrierType,
-                   values[i].barrier, rebate, stochProcess, callPayoff, exercise, engine);
-           
-           double calculated = barrierCallOption.getNPV();
-           double expected = values[i].callValue;
-           double error = Math.abs(calculated - expected);
-           double maxErrorAllowed = 1.0e-5;
-           if(error>maxErrorAllowed){
-               REPORT_FAILURE("value", values[i].barrierType, values[i].barrier,
-                       rebate, callPayoff, exercise, underlyingPrice,
-                       q, r, today, values[i].volatility,
-                       expected, calculated, error, maxErrorAllowed);
-           }
-           }
+            if (error > maxErrorAllowed) {
+                REPORT_FAILURE("value", values[i].barrierType, values[i].barrier, rebate, callPayoff, exercise, underlyingPrice, q,
+                        r, today, values[i].volatility, expected, calculated, error, maxErrorAllowed);
+            }
+        }
         
         double maxMcRelativeErrorAllowed = 0.01;
         int timeSteps = 1;

@@ -51,34 +51,30 @@ import org.jquantlib.pricingengines.OneAssetStrikedOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
- * 
- * Ported from 
- * <ul>
- * <li>ql/pricingengines/vanilla/integralengine.cpp</li>
- * <li>ql/pricingengines/vanilla/integralengine.hpp</li>
- * </ul>
+ * Pricing engine for European vanilla options using integral approach 
  * 
  * @author Richard Gomes
- *
  */
 
-// Pricing engine for European vanilla options using integral approach
-// TODO: define tolerance for calculate()
-
 public class IntegralEngine extends OneAssetStrikedOptionEngine {
-//xxx    
-//    private static final String not_a_European_Option = "not a European Option";
-    
+
+    // TODO: refactor messages
+    private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";
     private static final String NON_STRIKED_PAYOFF_GIVEN = "non-striked payoff given";
     private static final String BLACK_SCHOLES_PROCESS_GIVEN = "Black-Scholes process required";
 
 
+    //
+    // implements PricingEngine
+    //
+    
+    // TODO: define tolerance for calculate()
 	@Override
 	public void calculate() {
-//XXX this test is not needed
-//    	if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
-//			throw new ArithmeticException(not_a_European_Option);
-//		}
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
+    	if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
+			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
+		}
 
 		if (!(arguments.payoff instanceof StrikedTypePayoff)){
 			throw new ArithmeticException(NON_STRIKED_PAYOFF_GIVEN);
@@ -109,27 +105,27 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
 
 
 	//
-	// static inner classes
+	// inner classes
 	//
 	
 	private static class Integrand implements UnaryFunctionDouble {
 
-        private Payoff payoff_;
-        private double s0_;
-        private double /* @Rate */drift_;
-        private double variance_;
+        private Payoff payoff;
+        private double s0;
+        private double /* @Rate */ drift;
+        private double variance;
 
-        public Integrand(Payoff payoff, double s0, double /* @Rate */drift, double variance) {
-            payoff_ = payoff;
-            s0_ = s0;
-            drift_ = drift;
-            variance_ = variance;
+        public Integrand(final Payoff payoff, final double s0, final double /* @Rate */drift, final double variance) {
+            this.payoff = payoff;
+            this.s0 = s0;
+            this.drift = drift;
+            this.variance = variance;
         }
 
-        public double evaluate(double x) {
-            double temp = s0_ * Math.exp(x);
-            double result = payoff_.valueOf(temp);
-            return result * Math.exp(-(x - drift_) * (x - drift_) / (2.0 * variance_));
+        public double evaluate(final double x) {
+            double temp = s0 * Math.exp(x);
+            double result = payoff.valueOf(temp);
+            return result * Math.exp(-(x - drift) * (x - drift) / (2.0 * variance));
         }
 
     }

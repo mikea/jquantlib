@@ -42,7 +42,6 @@ package org.jquantlib.testsuite.instruments;
 
 import static org.junit.Assert.fail;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -400,14 +399,14 @@ public class EuropeanOptionTest {
     @Test 
     public void testGreekValues(){
         logger.info("Testing European option greek values...");
-        /* The data below are from
-        "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
-        pag 11-16
-        */
+        
+        //
+        // The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag 11-16
+        //
 
-        EuropeanOptionData values[] = 
+        final EuropeanOptionData values[] = { 
             //        type, strike,   spot,    q,    r,        t,  vol,  value delta
-                {new EuropeanOptionData(Option.Type.CALL, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36,  0.5946, 0),
+                new EuropeanOptionData(Option.Type.CALL, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36,  0.5946, 0),
                 new EuropeanOptionData(Option.Type.PUT,  100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -0.3566, 0),
                 new EuropeanOptionData(Option.Type.PUT,100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -4.8775, 0 ),
                 new EuropeanOptionData(Option.Type.CALL, 60.00,  55.00, 0.00, 0.10, 0.750000, 0.30,  0.0278, 0 ),
@@ -420,19 +419,19 @@ public class EuropeanOptionTest {
                 new EuropeanOptionData(Option.Type.PUT,  490.00, 500.00, 0.05, 0.08, 0.250000, 0.15, 42.2254, 0)
                 };
         
-            DayCounter dc = Actual360.getDayCounter();
-            Date today = DateFactory.getFactory().getTodaysDate();
-            
-            Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-            Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-            Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
+           final DayCounter dc = Actual360.getDayCounter();
+           final Date today = DateFactory.getFactory().getTodaysDate();
 
-            Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-            Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
-            Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-            Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
-            PricingEngine engine = new AnalyticEuropeanEngine();
-            Handle<StochasticProcess> stochProcess = new Handle<StochasticProcess>(new BlackScholesMertonProcess(spot, qTS, rTS, volTS));
+           final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+           final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+           final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
+
+           final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+           final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+           final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+           final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
+           final PricingEngine engine = new AnalyticEuropeanEngine();
+           final Handle<StochasticProcess> stochProcess = new Handle<StochasticProcess>(new BlackScholesMertonProcess(spot, qTS, rTS, volTS));
            
            StrikedTypePayoff payoff;
            Date exDate;
@@ -799,7 +798,7 @@ public class EuropeanOptionTest {
     }
 
     
-      @Test
+    @Test
     public void testImpliedVol() {
 
         logger.info("Testing European option implied volatility...");
@@ -839,7 +838,7 @@ public class EuropeanOptionTest {
 
               StrikedTypePayoff payoff = new PlainVanillaPayoff(types[i], strikes[j]);
               
-              VanillaOption option = makeOption(payoff, exercise, spot, qTS, rTS, volTS, EngineType.Analytic, 0, 0);
+              final VanillaOption option = makeOption(payoff, exercise, spot, qTS, rTS, volTS, EngineType.Analytic, 0, 0);
 
               for (int l=0; l<underlyings.length; l++) {
                 for (int m=0; m<qRates.length; m++) {
@@ -864,31 +863,9 @@ public class EuropeanOptionTest {
                               // numerically unstable) to solve
                               continue;
                           }
-                          
-                      try{
-                          /*TODO: implement implVol = option->impliedVolatility(value, tolerance,maxEvaluations); instead of this hack.*/
-                          Method method = option.getClass().getSuperclass().getSuperclass().getSuperclass().getDeclaredMethod("impliedVolatility", new Class[]{double.class,
-                                  double.class, int.class, double.class, double.class});
-                          method.setAccessible(true);
-                          implVol = (Double) method.invoke(option, new Object[]{value, 1.0e-6, 200, 1.0e-8, 4.0 });
+                     
+                          implVol = option.impliedVolatility(value, 1.0e-6, 200, 1.0e-8, 4.0);
 
-                        } catch (Exception e) {
-                            if(e instanceof NoSuchMethodException|| e instanceof NullPointerException || e instanceof SecurityException){
-                                fail("API changed - reimplement testcase");
-                            }
-                            else fail(
-                                "\n implied vol calculation failed:" +
-                                "\n   option:         " + types[i] +
-                                "\n   strike:         " + strikes[j] +
-                                "\n   spot value:     " + u +
-                                "\n   dividend yield: " + q +
-                                "\n   risk-free rate: " + r +
-                                "\n   today:          " + today +
-                                "\n   maturity:       " + exDate +
-                                "\n   volatility:     " + vol +
-                                "\n   option value:   " + value +
-                                "\n" + e.getMessage());
-                       }
                           if (Math.abs(implVol-v) > tolerance) {
                               // the difference might not matter
                               vol.getLink().setValue(implVol);
@@ -928,7 +905,6 @@ public class EuropeanOptionTest {
         }
     }
      
-    //@Ignore
     @Test
     public void testImpliedVolContainment(){
         logger.info("Testing self-containment of implied volatility calculation... running");
@@ -998,80 +974,6 @@ public class EuropeanOptionTest {
     }
 
     
-//  void EuropeanOptionTest::testImpliedVolContainment() {
-//
-//      BOOST_MESSAGE("Testing self-containment of "
-//                    "implied volatility calculation...");
-//
-//      Size maxEvaluations = 100;
-//      Real tolerance = 1.0e-6;
-//
-//      // test options
-//
-//      DayCounter dc = Actual360();
-//      Date today = Date::todaysDate();
-//
-//      boost::shared_ptr<SimpleQuote> spot(new SimpleQuote(100.0));
-//      Handle<Quote> underlying(spot);
-//      boost::shared_ptr<SimpleQuote> qRate(new SimpleQuote(0.05));
-//      Handle<YieldTermStructure> qTS(flatRate(today, qRate, dc));
-//      boost::shared_ptr<SimpleQuote> rRate(new SimpleQuote(0.03));
-//      Handle<YieldTermStructure> rTS(flatRate(today, rRate, dc));
-//      boost::shared_ptr<SimpleQuote> vol(new SimpleQuote(0.20));
-//      Handle<BlackVolTermStructure> volTS(flatVol(today, vol, dc));
-//
-//      Date exerciseDate = today + 1*Years;
-//      boost::shared_ptr<Exercise> exercise(new EuropeanExercise(exerciseDate));
-//      boost::shared_ptr<StrikedTypePayoff> payoff(
-//                                   new PlainVanillaPayoff(Option.Type.Call, 100.0));
-//
-//      boost::shared_ptr<StochasticProcess> process(
-//                    new BlackScholesMertonProcess(underlying, qTS, rTS, volTS));
-//
-//      // link to the same stochastic process, which shouldn't be changed
-//      // by calling methods of either option
-//
-//      boost::shared_ptr<VanillaOption> option1(
-//                                 new EuropeanOption(process, payoff, exercise));
-//      boost::shared_ptr<VanillaOption> option2(
-//                                 new EuropeanOption(process, payoff, exercise));
-//
-//      // test
-//
-//      Real refValue = option2->NPV();
-//
-//      Flag f;
-//      f.registerWith(option2);
-//
-//      option1->impliedVolatility(refValue*1.5, tolerance, maxEvaluations);
-//
-//      if (f.isUp())
-//          BOOST_ERROR("implied volatility calculation triggered a change "
-//                      "in another instrument");
-//
-//      option2->recalculate();
-//      if (std::fabs(option2->NPV() - refValue) >= 1.0e-8)
-//          BOOST_ERROR("implied volatility calculation changed the value "
-//                      + "of another instrument: \n"
-//                      + std::setprecision(8)
-//                      + "previous value: " + refValue + "\n"
-//                      + "current value:  " + option2->NPV());
-//
-//      vol->setValue(vol->value()*1.5);
-//
-//      if (!f.isUp())
-//          BOOST_ERROR("volatility change not notified");
-//
-//      if (std::fabs(option2->NPV() - refValue) <= 1.0e-8)
-//          BOOST_ERROR("volatility change did not cause the value to change");
-//
-//  }
-//
-//
-//  // different engines
-//
-//  QL_BEGIN_TEST_LOCALS(EuropeanOptionTest)
-//
 
     private void testEngineConsistency(final EngineType engine,
             final int binomialSteps, final int samples,

@@ -45,6 +45,11 @@ public class FDEuropeanEngine extends OneAssetOptionEngine {
         this(stochProcess,binomialSteps,samples,false);
     }
 
+    
+    //
+    // implements PricingEngine
+    //
+    
     @Override
     public void calculate() {
         fdVanillaEngine.setupArguments(arguments);

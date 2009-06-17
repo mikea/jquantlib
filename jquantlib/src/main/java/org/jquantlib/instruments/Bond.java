@@ -40,9 +40,7 @@ import org.jquantlib.util.Date;
 
 /**
  * @author Srinivas Hasti
- * 
  * @author Daniel Kong
- *
  */
 //TODO: Complete implementation
 // FIXME: code review

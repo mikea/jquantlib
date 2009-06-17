@@ -28,18 +28,17 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  */
 public class FDShoutEngine extends FDEngineAdapter<FDShoutCondition> {
 
-	public FDShoutEngine(GeneralizedBlackScholesProcess process, int timeSteps,
-			int gridPoints, boolean timeDependent) {
-		super(process, timeSteps, gridPoints, timeDependent);
-	}
+    public FDShoutEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints,
+            final boolean timeDependent) {
+        super(process, timeSteps, gridPoints, timeDependent);
+    }
 
-	public FDShoutEngine(GeneralizedBlackScholesProcess process, int timeSteps,
-			int gridPoints) {
-		this(process, timeSteps, gridPoints, false);
-	}
+    public FDShoutEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints) {
+        this(process, timeSteps, gridPoints, false);
+    }
 
-	public FDShoutEngine(BlackScholesMertonProcess process) {
-		this(process, 100, 100, false);
-	}
+    public FDShoutEngine(final BlackScholesMertonProcess process) {
+        this(process, 100, 100, false);
+    }
 
 }

@@ -121,7 +121,6 @@ public abstract class AbstractInterpolation implements Interpolation {
         }
     }
 
-    // FIXME: code review here: compare against original C++ code
     protected int locate(double x) /* @ReadOnly */ {
         if (x <= vx[0])
             return 0;

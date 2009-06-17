@@ -65,6 +65,7 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
     protected A arguments;
 	protected R results;
 
+	
 	//
 	// public constructors
 	//
@@ -74,22 +75,22 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 		this.results = results;
 	}
 
+	
 	//
-	// public final methods
+	// implements PricingEngine
 	//
 	
+    @Override
 	public final A getArguments() {
 		return arguments;
 	}
 
+    @Override
 	public final R getResults() {
 		return results;
 	}
 
-	//
-	// public methods
-	//
-	
+	@Override
 	public void reset() {
 		results.reset();
 	}

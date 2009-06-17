@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007 Gary Kennedy
+ Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -54,7 +54,7 @@ import org.jquantlib.processes.StochasticProcess;
 /**
  * Description of the terms and conditions of a discrete average out fixed strike option.
  * 
- * @author gary_kennedy
+ * @author <Richard Gomes>
  */
 
 public class ContinuousAveragingAsianOption extends OneAssetStrikedOption {

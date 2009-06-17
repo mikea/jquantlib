@@ -44,10 +44,13 @@ public class BinomialConvertibleEngine <B extends BinomialTree> extends Converti
 		this.timeSteps = timeSteps;
 	}
 
+    //
+    // implements PricingEngine
+    //
+    
 	@Override
 	public void calculate() {
-		// TODO Auto-generated method stub
-
+		throw new UnsupportedOperationException();
 	}
 
 }

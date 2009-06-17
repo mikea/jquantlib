@@ -162,6 +162,52 @@ public class OneAssetOption extends Option {
     }
 
     /**
+     * Currently, this method returns the Black-Scholes implied volatility. 
+     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
+     *  
+     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
+     * In these cases the calculation can fail and the result (if any) is almost meaningless.
+     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
+     * a target value lower than the intrinsic value in the case of American options.
+     */
+    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue) /* @ReadOnly */ {
+        return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
+    }
+    
+    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue, double tolerance, int maxEvalutions) /* @ReadOnly */ {
+        return impliedVolatility(targetValue, tolerance, maxEvalutions, 1.0e-7, 4.0);
+    }
+    
+
+    /**
+     * @Note Currently, this method returns the Black-Scholes implied volatility. 
+     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
+     *  
+     * @Note Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
+     * In these cases the calculation can fail and the result (if any) is almost meaningless.
+     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
+     * a target value lower than the intrinsic value in the case of American options.
+     */
+    public final /* @Volatility */ double impliedVolatility(
+                                /*@Price*/ double targetValue, double accuracy, int maxEvaluations, 
+                                /* @Volatility */ double minVol, /* @Volatility */ double maxVol) /* @ReadOnly */ {
+        calculate();
+        if (isExpired()) throw new IllegalArgumentException("option expired");
+
+        /* @Volatility */ double guess = (minVol+maxVol)/2.0;
+        ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(engine, targetValue);
+        AbstractSolver1D<UnaryFunctionDouble> solver = new Brent();
+        solver.setMaxEvaluations(maxEvaluations);
+        /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
+        return result;
+    }
+
+
+    //
+    // overrides NewInstrument
+    //
+    
+    /**
      * {@inheritDoc}
      * 
      * Passes the {@link StochasticProcess}, {@link Exercise} 
@@ -196,6 +242,7 @@ public class OneAssetOption extends Option {
      * @see MoreGreeks
      * @see PricingEngine
      */
+    @Override
     public void fetchResults(final Results results) /* @ReadOnly */ {
         // obtain results from chained results
         super.fetchResults(results);
@@ -238,55 +285,6 @@ public class OneAssetOption extends Option {
         itmCashProbability = moreGreeks.itmCashProbability;
     }
 
-    /**
-     * Currently, this method returns the Black-Scholes implied volatility. 
-     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
-     *  
-     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
-     * In these cases the calculation can fail and the result (if any) is almost meaningless.
-     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
-     * a target value lower than the intrinsic value in the case of American options.
-     */
-    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue) /* @ReadOnly */ {
-        return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
-    }
-    
-    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue, double tolerance, int maxEvalutions) /* @ReadOnly */ {
-        return impliedVolatility(targetValue, tolerance, maxEvalutions, 1.0e-7, 4.0);
-    }
-    
-
-    //
-    // private final methods
-    //
-
-    /**
-     * @Note Currently, this method returns the Black-Scholes implied volatility. 
-     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
-     *  
-     * @Note Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
-     * In these cases the calculation can fail and the result (if any) is almost meaningless.
-     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
-     * a target value lower than the intrinsic value in the case of American options.
-     */
-    private final /* @Volatility */ double impliedVolatility(
-    							/*@Price*/ double targetValue, double accuracy, int maxEvaluations, 
-    							/* @Volatility */ double minVol, /* @Volatility */ double maxVol) /* @ReadOnly */ {
-        calculate();
-        if (isExpired()) throw new IllegalArgumentException("option expired");
-
-        /* @Volatility */ double guess = (minVol+maxVol)/2.0;
-        ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(engine, targetValue);
-        AbstractSolver1D<UnaryFunctionDouble> solver = new Brent();
-        solver.setMaxEvaluations(maxEvaluations);
-        /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
-        return result;
-    }
-
-    //
-    // protected methods
-    //
-    
     @Override
     protected void setupExpired() /* @ReadOnly */ {
         super.setupExpired();
@@ -358,7 +356,13 @@ public class OneAssetOption extends Option {
         	impliedResults = (OneAssetOptionResults)impliedEngine.getResults();
         }
 
-		public final double evaluate(/* @Volatility */ double x) /* @ReadOnly */ {
+		
+        //
+        // implements UnaryFunctionDouble
+        //
+        
+        @Override
+        public final double evaluate(/* @Volatility */ double x) /* @ReadOnly */ {
 			SimpleQuote quote = (SimpleQuote)vol.getLink();
 			quote.setValue(x);
 			this.impliedEngine.calculate();

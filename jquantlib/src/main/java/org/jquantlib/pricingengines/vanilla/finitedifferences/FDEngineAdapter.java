@@ -29,31 +29,27 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * @author Srinivas Hasti
  * 
  */
-public class FDEngineAdapter<T extends FDVanillaEngine> extends
-		VanillaOptionEngine {
+public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOptionEngine {
 
 	private final FDVanillaEngine fdVanillaEngine;
 
-	public FDEngineAdapter(GeneralizedBlackScholesProcess process,
-			int timeSteps, int gridPoints, boolean timeDependent) {
-		try {
-			final Class<T> rsgClass = (Class<T>) TypeToken.getClazz(this
-					.getClass());
-			final Constructor<T> c = rsgClass.getConstructor(
-					GeneralizedBlackScholesProcess.class, int.class, int.class,
-					boolean.class);
-			fdVanillaEngine = c.newInstance(process, timeSteps, gridPoints,
-					timeDependent);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jquantlib.pricingengines.PricingEngine#calculate()
-	 */
+    public FDEngineAdapter(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints,
+            final boolean timeDependent) {
+        try {
+            final Class<T> rsgClass = (Class<T>) TypeToken.getClazz(this.getClass());
+            final Constructor<T> c = rsgClass.getConstructor(
+                    GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
+            fdVanillaEngine = c.newInstance(process, timeSteps, gridPoints, timeDependent);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+	
+    
+    //
+    // implements PricingEngine
+    //
+    
 	@Override
 	public void calculate() {
 		fdVanillaEngine.setupArguments(arguments);

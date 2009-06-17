@@ -65,6 +65,7 @@ public abstract class NewInstrument extends Instrument {
 
     private static final String SHOULD_DEFINE_PRICING_ENGINE = "Should define pricing engine";
 
+    
     //
     // protected fields
     //
@@ -76,6 +77,7 @@ public abstract class NewInstrument extends Instrument {
      */
     protected PricingEngine engine;
 
+    
     //
     // abstract methods
     //
@@ -91,6 +93,7 @@ public abstract class NewInstrument extends Instrument {
      */
     protected abstract void setupArguments(final Arguments arguments);
 
+    
     //
     // protected constructors
     //
@@ -115,6 +118,7 @@ public abstract class NewInstrument extends Instrument {
         this.setPricingEngine(engine);
     }
 
+    
     //
     // public final methods
     //
@@ -138,10 +142,30 @@ public abstract class NewInstrument extends Instrument {
         update(this, null);
     }
 
+    
     //
-    // protected *final* methods
+    // protected methods
     //
 
+    /**
+     * Obtains the {@link Results} populated by a {@link PricingEngine}.
+     * When a derived result structure is defined for an instrument, this method should be overridden to read from it.
+     * 
+     * @param results contains the {@link Results} object populated by a {@link PricingEngine}
+     * 
+     * @see Results
+     * @see PricingEngine
+     */
+    protected void fetchResults(final Results results) /* @ReadOnly */{
+        super.NPV = results.value;
+        super.errorEstimate = results.errorEstimate;
+    }
+
+    
+    //
+    // overrides LazyObject
+    //
+    
     /**
      * This method performs the actual calculations and set any needed results.
      * <p>
@@ -164,10 +188,11 @@ public abstract class NewInstrument extends Instrument {
         fetchResults(engine.getResults());
     }
 
+    
     //
-    // protected *virtual* methods
+    // Overrides Instrument
     //
-
+    
     /**
      * @InheritDoc
      * 
@@ -178,20 +203,6 @@ public abstract class NewInstrument extends Instrument {
     @Override
     protected void setupExpired() {
         super.setupExpired();
-    }
-
-    /**
-     * Obtains the {@link Results} populated by a {@link PricingEngine}.
-     * When a derived result structure is defined for an instrument, this method should be overridden to read from it.
-     * 
-     * @param results contains the {@link Results} object populated by a {@link PricingEngine}
-     * 
-     * @see Results
-     * @see PricingEngine
-     */
-    protected void fetchResults(final Results results) /* @ReadOnly */{
-        super.NPV = results.value;
-        super.errorEstimate = results.errorEstimate;
     }
 
 }

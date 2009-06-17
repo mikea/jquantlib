@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Gary Kennedy
+ Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -38,14 +38,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-/*! \file asianoption.hpp
-    \brief Asian option on a single asset
-*/
-
-
 package org.jquantlib.pricingengines.asian;
-
-
 
 import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.arguments.ContinuousAveragingAsianOptionArguments;
@@ -53,30 +46,21 @@ import org.jquantlib.pricingengines.arguments.DiscreteAveragingAsianOptionArgume
 import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 
 /**
- * Description of the terms and conditions of a discrete average out fixed strike
- * option.
- * 
+ * Asian option on a single asset
  * <p>
- * Ported from 
- * <ul>
- * <li>ql/instruments/asianoption.hpp</li>
- * <li>ql/instruments/asianoption.cpp</li>
- * </ul>
- * @author gary_kennedy
- *
+ * Description of the terms and conditions of a continuous average out fixed strike option.
+ * 
+ * @author <Richard Gomes>
  */
+@SuppressWarnings("PMD.AbstractNaming")
+abstract public class ContinuousAveragingAsianOptionEngine extends
+        GenericEngine<ContinuousAveragingAsianOptionArguments, OneAssetOptionResults> {
 
-abstract public class ContinuousAveragingAsianOptionEngine extends GenericEngine<ContinuousAveragingAsianOptionArguments, OneAssetOptionResults>{
+    /**
+     * Extra arguments for single-asset continuous-average Asian option
+     */
+    protected ContinuousAveragingAsianOptionEngine() {
+        super(new ContinuousAveragingAsianOptionArguments(), new OneAssetOptionResults());
+    }
 
-
-	protected ContinuousAveragingAsianOptionEngine() {
-		super(new ContinuousAveragingAsianOptionArguments(), new OneAssetOptionResults());
-	}
-
-	@Override
-	abstract public void calculate();
-	
-
-
-	
 }

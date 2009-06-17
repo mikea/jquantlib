@@ -44,7 +44,7 @@ import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.BarrierOptionArguments;
-import org.jquantlib.pricingengines.barrier.AnalyticBarrierOptionEngine;
+import org.jquantlib.pricingengines.barrier.AnalyticBarrierEngine;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 
@@ -56,52 +56,69 @@ import org.jquantlib.quotes.Handle;
  * @author <Richard Gomes>
  *
  */
-
 public class BarrierOption extends OneAssetStrikedOption {
     
     private static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
 
-    protected BarrierType barrierType_;
-    protected double barrier_;
-    protected double rebate_;
+    //
+    // protected fields
+    //
+    
+    protected BarrierType barrierType;
+    protected double barrier;
+    protected double rebate;
 
-	public BarrierOption(StochasticProcess process, Payoff payoff,
-			Exercise exercise, PricingEngine engine) {
+	
+    //
+    // public constructors
+    //
+    
+    public BarrierOption(final StochasticProcess process, final Payoff payoff,
+			final Exercise exercise, final PricingEngine engine) {
+		
 		super(process, payoff, exercise, engine);
-		if(engine == null){
-		    setPricingEngine(new AnalyticBarrierOptionEngine());
+		if (engine == null) {
+			setPricingEngine(new AnalyticBarrierEngine());
 		}
 	}
 	
-   public BarrierOption(BarrierType barrierType,
-            			double barrier,
-            			double rebate,
+    public BarrierOption(final BarrierType barrierType,
+            			final double barrier,
+            			final double rebate,
             			final StochasticProcess process,
             			final StrikedTypePayoff payoff,
             			final Exercise exercise,
             			final PricingEngine engine){
+	   
     	super(process,payoff, exercise, engine);
     	if (engine == null){
-            setPricingEngine(new AnalyticBarrierOptionEngine());
+            setPricingEngine(new AnalyticBarrierEngine());
         }
-    	this.barrierType_ = barrierType;
-    	this.barrier_ = barrier;
-    	this.rebate_ = rebate;
     	
+    	this.barrierType = barrierType;
+    	this.barrier = barrier;
+    	this.rebate = rebate;
     }
-	
-   @Override
-   public void setupArguments(Arguments args) {
 
-       if (!(args instanceof BarrierOptionArguments)){
-    	   throw new ArithmeticException(WRONG_ARGUMENT_TYPE);
-       }
-       BarrierOptionArguments moreArgs = (BarrierOptionArguments)args;
-       moreArgs.barrierType = barrierType_;
-       moreArgs.barrier = barrier_;
-       moreArgs.rebate = rebate_;
+    
+    //
+    // overrides OneAssetStrikedOption
+    //
+    
+    @Override
+    public void setupArguments(final Arguments args) {
 
-       super.setupArguments(args);
-   }
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (!(args instanceof BarrierOptionArguments)) {
+            throw new ArithmeticException(WRONG_ARGUMENT_TYPE);
+        }
+
+        final BarrierOptionArguments moreArgs = (BarrierOptionArguments) args;
+        moreArgs.barrierType = barrierType;
+        moreArgs.barrier = barrier;
+        moreArgs.rebate = rebate;
+
+        super.setupArguments(args);
+    }
 
 }

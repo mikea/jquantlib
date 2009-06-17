@@ -43,17 +43,11 @@ package org.jquantlib.pricingengines.arguments;
 import org.jquantlib.instruments.BarrierType;
 
 /**
- * 
- * Ported from 
- * <ul>
- * <li>ql/instruments/barrieroption.hpp</li>
- * <li>ql/instruments/barrieroption.cpp</li>
- * </ul>
+ * This class defines validation for option arguments
  * 
  * @author <Richard Gomes>
  *
  */
-
 public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
     
     private static final String UNKNOWN_TYPE = "unknown type";
@@ -61,6 +55,12 @@ public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
     public BarrierType barrierType;
 	public double barrier, rebate;
 
+	/**
+	 * This method performs additional validation of needed to conform to the barrier type.
+	 * The validation is done by comparing the underlying price against the barrier type. 
+	 * 
+	 * @see org.jquantlib.pricingengines.arguments.OneAssetStrikedOptionArguments#validate()
+	 */
 	@Override
 	public void validate() {
 		super.validate();

@@ -235,16 +235,16 @@ public final class Std {
 		return upper_bound(list, 0, list.length-1, val);
 	}
 	
-	   public static int upper_bound(final Double[] list, final double val) {
-	       double [] d = new double[list.length];
-	       for(int i = 0; i<list.length; i++){
-	           d[i] = list[i];
-	       }
-	        return upper_bound(d, 0, list.length-1, val);
-	    }
-	
+	@SuppressWarnings("PMD.MethodNamingConventions")
+	public static int upper_bound(final Double[] list, final double val) {
+		double[] d = new double[list.length];
+		for (int i = 0; i < list.length; i++) {
+			d[i] = list[i];
+		}
+		return upper_bound(d, 0, list.length - 1, val);
+	}	
 
-	@SuppressWarnings("PMD")
+	@SuppressWarnings("PMD.MethodNamingConventions")
 	private static int upper_bound(final double[] list, int first, int last, final double val) {
 		int len = last - first;
 		int half;
@@ -278,10 +278,10 @@ public final class Std {
 	}
 	
 	public static final<ParameterType, ReturnType>  void transform(final double[] array, final double[] result, final E_UnaryFunction<Double, Double> func) {
-	        for(int i=0; i<array.length; i++){
-	            result[i] = func.evaluate(array[i]);
-	        }
-	    }
+        for(int i=0; i<array.length; i++){
+            result[i] = func.evaluate(array[i]);
+        }
+    }
 
 	
 	

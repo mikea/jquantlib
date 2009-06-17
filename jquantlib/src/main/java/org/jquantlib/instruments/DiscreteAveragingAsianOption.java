@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007 Gary Kennedy
+ Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -63,40 +63,41 @@ import org.jquantlib.util.Date;
  */
 public class DiscreteAveragingAsianOption extends OneAssetStrikedOption {
 
+    // TODO: refactor messages
     public static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
 
-    @PackagePrivate
-    protected final AverageType averageType_;
-    @PackagePrivate
-    protected final/* @Real */double runningAccumulator_;
-    @PackagePrivate
-    protected final/* @Size */int pastFixings_;
-    @PackagePrivate
-    protected final List<Date> fixingDates_;
+    protected final AverageType averageType;
+    protected final /* @Real */ double runningAccumulator;
+    protected final /* @Size */ int pastFixings;
+    protected final List<Date> fixingDates;
 
-    public DiscreteAveragingAsianOption(final AverageType averageType, final/* @Real */double runningAccumulator,
+    public DiscreteAveragingAsianOption(final AverageType averageType, final /* @Real */ double runningAccumulator,
             final/* @Size */int pastFixings, final List<Date> fixingDates, final StochasticProcess process,
             final StrikedTypePayoff payoff, final Exercise exercise, final PricingEngine engine) {
+        
         super(process, payoff, exercise, engine);
-        this.averageType_ = averageType;
-        this.runningAccumulator_ = runningAccumulator;
-        this.pastFixings_ = pastFixings;
-        this.fixingDates_ = new ArrayList<Date>(fixingDates);
-        Collections.sort(this.fixingDates_);
+        this.averageType = averageType;
+        this.runningAccumulator = runningAccumulator;
+        this.pastFixings = pastFixings;
+        this.fixingDates = new ArrayList<Date>(fixingDates);
+        Collections.sort(this.fixingDates);
     }
 
     @Override
-    public void setupArguments(final Arguments args) /* @ReadOnly */{
-        super.setupArguments(args);
+    public void setupArguments(final Arguments args) /* @ReadOnly */ {
 
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
         if (!(args instanceof DiscreteAveragingAsianOptionArguments)) {
             throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
         }
+        
+        super.setupArguments(args);
+        
         DiscreteAveragingAsianOptionArguments moreArgs = (DiscreteAveragingAsianOptionArguments) args;
-        moreArgs.averageType = averageType_;
-        moreArgs.runningAccumulator = runningAccumulator_;
-        moreArgs.pastFixings = pastFixings_;
-        moreArgs.fixingDates = fixingDates_;
+        moreArgs.averageType = averageType;
+        moreArgs.runningAccumulator = runningAccumulator;
+        moreArgs.pastFixings = pastFixings;
+        moreArgs.fixingDates = fixingDates;
     }
 
 }

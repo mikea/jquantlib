@@ -61,6 +61,10 @@ import org.jquantlib.util.Date;
 
 public class AnalyticContinuousGeometricAveragePriceasianEngine extends ContinuousAveragingAsianOptionEngine{
 
+    //
+    // implements PricingEngine
+    //
+    
 	@Override
 	public void calculate() /*@ReadOnly*/ {
 

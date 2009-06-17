@@ -62,8 +62,7 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 	 * current date may or may not be considered accordingly to defaults taken
 	 * from {@link Settings}
 	 * 
-	 * @param d
-	 *            is a Date
+	 * @param d is a Date
 	 * @return true if an event has already occurred before a date
 	 * 
 	 * @see Settings.todaysPayments
@@ -77,8 +76,7 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 	 * Returns true if an event has already occurred before a date where it is
 	 * explicitly defined whether the current date must considered.
 	 * 
-	 * @param d
-	 *            is a Date
+	 * @param d is a Date
 	 * @return true if an event has already occurred before a date
 	 */
 	public boolean hasOccurred(final Date d, final boolean includeToday) /* @ReadOnly */{
@@ -89,6 +87,7 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 		}
 	}
 
+	
 	//
 	// implements Observable interface
 	//
@@ -101,37 +100,36 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 	 */
 	private DefaultObservable delegatedObservable = new DefaultObservable(this);
 
+    @Override
 	public void addObserver(Observer observer) {
 		delegatedObservable.addObserver(observer);
 	}
 
+    @Override
 	public int countObservers() {
 		return delegatedObservable.countObservers();
 	}
 
+    @Override
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
 
+    @Override
 	public void notifyObservers() {
 		delegatedObservable.notifyObservers();
 	}
 
+    @Override
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.jquantlib.util.Observable#deleteObservers()
-	 */
 	@Override
 	public void deleteObservers() {
 		delegatedObservable.deleteObservers();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.jquantlib.util.Observable#getObservers()
-	 */
 	@Override
 	public List<Observer> getObservers() {
 		return delegatedObservable.getObservers();
@@ -139,7 +137,7 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 
 
 	//
-	// implements TypedVisitable
+	// implements TypedVisitable<Event>
 	//
 	
 	@Override

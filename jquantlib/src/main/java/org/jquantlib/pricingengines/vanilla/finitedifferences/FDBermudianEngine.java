@@ -26,30 +26,34 @@ import org.jquantlib.methods.finitedifferences.NullCondition;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
-//work in progress
+//TODO: work in progress
 
 public class FDBermudianEngine extends VanillaOptionEngine {
 
     private double extraTermInBermuda;
     private FDMultiPeriodEngine fdVanillaEngine;
 
-    private static class FDBermudianMPEngine extends FDMultiPeriodEngine {
-        public FDBermudianMPEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
-            super(process, timeSteps, gridPoints, timeDependent);
-        }
-
-        @Override
-        protected void executeIntermediateStep(int step) {
-            int size = intrinsicValues.size();
-            for (int j = 0; j < size; j++) {
-                prices_.values().set(j, Math.max(prices_.value(j), intrinsicValues.value(j)));
-            }
-        }
-    }
-
     public FDBermudianEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
         fdVanillaEngine = new FDBermudianMPEngine(process, timeSteps, gridPoints, timeDependent);
     }
+
+    // TODO: verify how this method is called
+    private void initializeStepCondition() {
+        fdVanillaEngine.stepCondition = new NullCondition<Array>();
+    }
+
+    // TODO: verify how this method is called
+    private void executeIntermediateStep(int step) {
+        int size = fdVanillaEngine.intrinsicValues.size();
+        for (int j = 0; j < size; j++) {
+            fdVanillaEngine.prices.values().set(j, Math.max(fdVanillaEngine.prices.value(j), fdVanillaEngine.intrinsicValues.value(j)));
+        }
+    }
+    
+    
+    //
+    // implements PricingEngine
+    //
     
     @Override
     public void calculate() {
@@ -57,14 +61,28 @@ public class FDBermudianEngine extends VanillaOptionEngine {
         fdVanillaEngine.calculate(results);
     }
 
-    void initializeStepCondition() {
-        fdVanillaEngine.stepCondition_ = new NullCondition<Array>();
-    }
+    
+    //
+    // private inner classes
+    //
+    
+    private static class FDBermudianMPEngine extends FDMultiPeriodEngine {
+        public FDBermudianMPEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
+            super(process, timeSteps, gridPoints, timeDependent);
+        }
 
-    protected void executeIntermediateStep(int step) {
-        int size = fdVanillaEngine.intrinsicValues.size();
-        for (int j = 0; j < size; j++) {
-            fdVanillaEngine.prices_.values().set(j, Math.max(fdVanillaEngine.prices_.value(j), fdVanillaEngine.intrinsicValues.value(j)));
+
+        //
+        // overrides FDMultiPeriodEngine
+        //
+        
+        @Override
+        protected void executeIntermediateStep(int step) {
+            int size = intrinsicValues.size();
+            for (int j = 0; j < size; j++) {
+                prices.values().set(j, Math.max(prices.value(j), intrinsicValues.value(j)));
+            }
         }
     }
+    
 }

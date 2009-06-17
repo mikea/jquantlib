@@ -73,6 +73,11 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 //		super(arguments, results);
 //	}
 
+    
+    //
+    // implements PricingEngine
+    //
+    
 	@Override
 	public void calculate() /*@ReadOnly*/{
 

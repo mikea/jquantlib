@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Gary Kennedy
+ Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -36,42 +36,30 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.asian;
-
-
 
 import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.arguments.DiscreteAveragingAsianOptionArguments;
 import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 
 /**
- * Description of the terms and conditions of a discrete average out fixed strike
- * option.
- * 
+ * Asian option on a single asset
  * <p>
- * Ported from 
- * <ul>
- * <li>ql/instruments/asianoption.hpp</li>
- * <li>ql/instruments/asianoption.cpp</li>
- * </ul>
- * @author gary_kennedy
- *
+ * Description of the terms and conditions of a discrete average out fixed strike option.
+ * 
+ * @author <Richard Gomes>
  */
+@SuppressWarnings("PMD.AbstractNaming")
+abstract public class DiscreteAveragingAsianOptionEngine extends
+        GenericEngine<DiscreteAveragingAsianOptionArguments, OneAssetOptionResults> {
 
-abstract public class DiscreteAveragingAsianOptionEngine extends GenericEngine<DiscreteAveragingAsianOptionArguments, OneAssetOptionResults>{
-
-		/**
-		 * Extra arguments for single-asset continuous-average Asian option
-		 */
-    	protected DiscreteAveragingAsianOptionEngine() {
-    		super(new DiscreteAveragingAsianOptionArguments(), new OneAssetOptionResults());
-    	}
-    	
-		@Override
-		abstract public void calculate();
-		
+    /**
+     * Extra arguments for single-asset discrete-average Asian option
+     */
+    protected DiscreteAveragingAsianOptionEngine() {
+        super(new DiscreteAveragingAsianOptionArguments(), new OneAssetOptionResults());
     }
 
-
+}

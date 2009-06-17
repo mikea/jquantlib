@@ -42,6 +42,7 @@ package org.jquantlib.pricingengines.vanilla;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
+import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.lang.annotation.PackagePrivate;
@@ -52,33 +53,31 @@ import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
- * Barone-Adesi and Whaley pricing engine for American options (1987)
- * <p>
- * Ported from 
- * <ul>
- * <li>ql/pricingengines/vanilla/baroneadesiwhaleyengine.cpp</li>
- * <li>ql/pricingengines/vanilla/baroneadesiwhaleyengine.hpp</li>
- * </ul>
+ * Barone-Adesi and Whaley pricing engine for American options
  * 
  * @author <Richard Gomes>
- *
  */
 public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
-// XXX     
-//    private static final String not_an_American_Option = "not an American Option";
-    
+
+    // TODO: refactor messages
+    private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";
     private static final String NON_AMERICAN_EXERCISE_GIVEN = "non-American exercise given";
     private static final String PAYOFF_AT_EXPIRY_NOT_HANDLED = "payoff at expiry not handled";
     private static final String NON_STRIKE_PAYOFF_GIVEN = "non-striked payoff given";
     private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
-    private static final String unknown_option_type = "unknown Option type";
+    private static final String UNKNOWN_OPTION_TYPE = "unknown Option type";
 
+    
+    //
+    // implements PricingEngine
+    //
+    
 	@Override
 	public void calculate() {
-//XXX this test is not needed
-//		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
-//			throw new ArithmeticException(not_an_American_Option);
-//		}
+	    // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
+	    if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
+			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
+		}
 
 		if (!(arguments.exercise instanceof AmericanExercise)){
 			throw new ArithmeticException(NON_AMERICAN_EXERCISE_GIVEN);
@@ -161,11 +160,16 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
                     }
                     break;
                 default:
-                  throw new ArithmeticException(unknown_option_type);
+                  throw new ArithmeticException(UNKNOWN_OPTION_TYPE);
             }
         } // end of "early exercise can be optimal"
 		
 	}
+	
+	
+	//
+	// private methods
+	//
 	
     private double  criticalPrice(
             StrikedTypePayoff payoff,
@@ -174,6 +178,13 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             double variance) {
     	return criticalPrice(payoff, riskFreeDiscount, dividendDiscount, variance, 1.0e-6);
     }
+    
+    
+    //
+    // package protected methods
+    //
+    // TODO: study if a refactoring is a good idea, in order to remove the package private access modifier
+    //
     
     @PackagePrivate static double  criticalPrice(
             StrikedTypePayoff payoff,
@@ -202,7 +213,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             Si = Su + (payoff.strike() - Su) * Math.exp(h);
             break;
           default:
-            throw new ArithmeticException(unknown_option_type);
+            throw new ArithmeticException(UNKNOWN_OPTION_TYPE);
         }
 
 
@@ -249,7 +260,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             }
             break;
           default:
-            throw new ArithmeticException(unknown_option_type);
+            throw new ArithmeticException(UNKNOWN_OPTION_TYPE);
         }
 
         return Si;

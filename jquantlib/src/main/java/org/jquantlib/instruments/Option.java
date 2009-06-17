@@ -63,6 +63,7 @@ public abstract class Option extends NewInstrument {
     protected final Payoff payoff;
 	protected final Exercise exercise;
 	
+	
 	//
 	// private fields
 	//
@@ -93,8 +94,9 @@ public abstract class Option extends NewInstrument {
 		this.evaluationDate.addObserver(this);
 	}
 
+	
 	//
-	// public methods overriden from Instrument
+	// overrides Instrument
 	//
 	
 	@Override

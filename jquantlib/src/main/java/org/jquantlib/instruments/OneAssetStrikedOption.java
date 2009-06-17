@@ -59,6 +59,11 @@ public class OneAssetStrikedOption extends OneAssetOption {
     // results
     private /* @Price */ double strikeSensitivity;
 
+    
+    //
+    // public constructors
+    //
+    
 // FIXME: code review
 //    public OneAssetStrikedOption(
 //            final StochasticProcess process,
@@ -74,13 +79,23 @@ public class OneAssetStrikedOption extends OneAssetOption {
             final PricingEngine engine) {
     	super(process, payoff, exercise, engine);
     }
+
+    
+    //
+    // public methods
+    //
     
     public /* @Price */ double getStrikeSensitivity() /* @ReadOnly */ {
         calculate();
         if (Double.isNaN(strikeSensitivity)) throw new ArithmeticException("strike sensitivity not provided");
         return strikeSensitivity;
     }
-        
+       
+    
+    //
+    // overrides OneAssetOption
+    //
+    
     @Override
 	protected void setupExpired() /* @ReadOnly */ {
 		super.setupExpired();
@@ -101,7 +116,6 @@ public class OneAssetStrikedOption extends OneAssetOption {
      * This programming style is not recommended and we should use getters/setters instead.
      * At the moment, we keep the original implementation.
 	 */
-    // TODO: code review
     @Override    
 	public void fetchResults(final Results results) /* @ReadOnly */ {
         // obtain results from chained results

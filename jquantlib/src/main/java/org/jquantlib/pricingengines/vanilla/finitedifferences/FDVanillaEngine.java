@@ -36,30 +36,33 @@ import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.util.Date;
 
-//! Finite-differences pricing engine for BSM one asset options
-/*! The name is a misnomer as this is a base class for any finite
- difference scheme.  Its main job is to handle grid layout.
- */
 /**
- * @author Srinivas Hasti
+ * Finite-differences pricing engine for BSM one asset options
+ * <p>
+ * The name is a misnomer as this is a base class for any finite difference scheme.  Its main job is to handle grid layout.
  * 
+ * @author Srinivas Hasti
  */
 public class FDVanillaEngine {
 	protected GeneralizedBlackScholesProcess process;
-	protected/* Size */int timeSteps, gridPoints;
+	protected /* Size */ int timeSteps, gridPoints;
 	protected boolean timeDependent;
-	protected/* Real */double requiredGridValue;
+	protected /* Real */ double requiredGridValue;
 	protected Date exerciseDate;
 	protected Payoff payoff;
 	protected TridiagonalOperator finiteDifferenceOperator;
 	protected SampledCurve intrinsicValues;
 	protected List<BoundaryCondition<TridiagonalOperator>> bcS;
 	// temporaries
-	protected/* Real */double sMin, center, sMax;
+	protected /* Real */ double sMin, center, sMax;
 
 	//private double gridLogSpacing; //Not used
-	public final static/* Real */double safetyZoneFactor = 1.1;
+	private final static/* Real */double safetyZoneFactor = 1.1;
 
+	
+	//
+	// public constructors
+	//
 	public FDVanillaEngine(GeneralizedBlackScholesProcess process,
 			int timeSteps, int gridPoints, boolean timeDependent) {
 		this.process = process;
@@ -69,11 +72,21 @@ public class FDVanillaEngine {
 		this.intrinsicValues = new SampledCurve(gridPoints);
 		bcS = new Vector<BoundaryCondition<TridiagonalOperator>>();
 	}
+	
+	
+	//
+	// public methods
+	//
 
 	public Array grid() {
 		return intrinsicValues.grid();
 	}
 
+	
+	//
+	// protected methods
+	//
+	
 	protected void setGridLimits() {
 		setGridLimits(process.stateVariable().getLink().evaluate(),
 				getResidualTime());
@@ -164,5 +177,5 @@ public class FDVanillaEngine {
 								: minGridPoints);
 	}
 
-	protected void calculate(Results r){}
+	protected void calculate(Results r) { }
 }

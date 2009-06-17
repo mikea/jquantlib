@@ -45,25 +45,15 @@ import org.jquantlib.pricingengines.arguments.BarrierOptionArguments;
 import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 
 /**
- * 
- * Ported from 
- * <ul>
- * <li>ql/instruments/barrieroption.hpp</li>
- * <li>ql/instruments/barrieroption.cpp</li>
- * </ul>
+ * Barrier-option engine base class 
  * 
  * @author <Richard Gomes>
- *
  */
 @SuppressWarnings("PMD.AbstractNaming")
-public abstract class BarrierOptionEngine  extends GenericEngine<BarrierOptionArguments, OneAssetOptionResults>{
+public abstract class BarrierOptionEngine extends GenericEngine<BarrierOptionArguments, OneAssetOptionResults> {
 
-	
-	protected BarrierOptionEngine() {
-		super(new BarrierOptionArguments(), new OneAssetOptionResults());
-	}
-
-	@Override
-	abstract public void calculate();
+    protected BarrierOptionEngine() {
+        super(new BarrierOptionArguments(), new OneAssetOptionResults());
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Gary Kennedy
+ Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -51,7 +51,7 @@ package org.jquantlib.instruments;
  * 
  * Port from ql/instruments/asianoption.hpp
  * 
- * @author gary_kennedy
+ * @author <Richard Gomes>
  *
  */
 public enum AverageType {

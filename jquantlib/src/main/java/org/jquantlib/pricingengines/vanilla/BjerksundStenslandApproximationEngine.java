@@ -48,24 +48,17 @@ import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.pricingengines.BlackCalculator;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.util.stdlibc.Std;
 
 /**
- * 
- * Ported from 
- * <ul>
- * <li>ql/pricingengines/vanilla/bjerksundstenslandengine.cpp</li>
- * <li>ql/pricingengines/vanilla/bjerksundstenslandengine.hpp</li>
- * </ul>
+ * Bjerksund and Stensland approximation engine
  * 
  * @author <Richard Gomes>
- *
  */
 
 public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
-//XXX    
-//    private static final String not_an_American_Option = "not an American Option";
-    
+
+    // TODO: refactor messages
+    private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";
     private static final String NON_AMERICAN_EXERCISE_GIVEN = "non-American exercise given";
     private static final String PAYOFF_AT_EXPIRY_NOT_HANDLED = "payoff at expiry not handled";
     private static final String NON_PLAIN_PAYOFF_GIVEN = "non-plain payoff given";
@@ -75,12 +68,16 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
     private CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
 
     
+    //
+    // implements PricingEngine
+    //
+    
 	@Override
 	public void calculate() /*@ReadOnly*/{
-//XXX this test is not needed
-//		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
-//			throw new ArithmeticException(not_an_American_Option);
-//		}
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
+		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
+			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
+		}
 
 		// check type before cast!
 		if (!(arguments.exercise instanceof AmericanExercise)){
@@ -158,6 +155,9 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
 	}
 
 	
+	//
+	// private methods
+	//
 	
     private double /*@Real*/ phi(double /*@Real*/ S, double /*@Real*/ gamma, double /*@Real*/ H, 
     		double /*@Real*/ I, double /*@Real*/ rT, double /*Real*/ bT, double /*@Real*/ variance) {

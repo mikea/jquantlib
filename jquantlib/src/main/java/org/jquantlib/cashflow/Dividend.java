@@ -23,6 +23,7 @@
 package org.jquantlib.cashflow;
 
 import org.jquantlib.util.Date;
+import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
@@ -30,6 +31,7 @@ import org.jquantlib.util.Visitor;
  * @author Daniel Kong
  */
 
+@SuppressWarnings("PMD.AbstractNaming")
 public abstract class Dividend extends CashFlow {
 	
 	protected Date date;
@@ -39,6 +41,11 @@ public abstract class Dividend extends CashFlow {
 		this.date = date;
 	}
 
+	
+	//
+	// overrides Event
+	//
+	
 	@Override
 	public Date date() {
 		return date;
@@ -46,6 +53,11 @@ public abstract class Dividend extends CashFlow {
 	
 	public abstract double getAmount(final double underlying);
 	
+
+	//
+    // implements TypedVisitable<Event>
+    //
+    
 	@Override
 	public void accept(final TypedVisitor<Event> event) {
 		Visitor<Event> event1 = (event!=null) ? event.getVisitor(this.getClass()) : null;

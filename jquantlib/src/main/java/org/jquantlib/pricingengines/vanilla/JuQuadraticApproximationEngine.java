@@ -53,62 +53,55 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An Approximate Formula for Pricing American Options, 
- * Journal of Derivatives Winter 1999,  Ju, N.
+ * An Approximate Formula for Pricing American Options, Journal of Derivatives Winter 1999,  Ju, N.
  * <p>
  * Known issue, the case of zero interest rates causes a division by zero     
  *      
- * <p>
- * Ported from 
- * <ul>
- * <li>ql/pricingengines/vanilla/juquadraticengine.cpp</li>
- * <li>ql/pricingengines/vanilla/juquadraticengine.hpp</li>
- * </ul>
- * 
  * @author <Richard Gomes>
- *
  */
-
 public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
     
     final static Logger logger = LoggerFactory.getLogger(JuQuadraticApproximationEngine.class);
 
-//XXX
-//    private static final String not_an_American_Option = "not an American Option";
-    
-    private static final String non_American_exercise_given = "non American exercise given";
-    private static final String payoff_at_expiry_not_handled = "payoff at expiry not handled";
-    private static final String non_striked_payoff_given = "non-striked payoff given";
-    private static final String black_scholes_process_required = "Black-Scholes process required";
-    private static final String unknown_option_type = "unknown option type";
-    private static final String dividing_by_zero_interst_rate = "dividing by zero interst rate";
+    // TODO: refactor messages
+    private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";
+    private static final String NON_AMERICAN_EXERCISE_GIVEN = "non-American exercise given";
+    private static final String PAYOFF_AT_EXPIRY_NOT_HANDLED = "payoff at expiry not handled";
+    private static final String NON_STRIKE_PAYOFF_GIVEN = "non-striked payoff given";
+    private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
+    private static final String UNKNOWN_OPTION_TYPE = "unknown Option type";
+    private static final String DIVIDING_BY_ZERO_INTEREST_RATE = "dividing by zero interst rate";
 
+    
+    //
+    // implements PricingEngine
+    //
+    
 	@Override
 	public void calculate() {
-//XXX this test is not needed
-//		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
-//			throw new ArithmeticException(not_an_American_Option);
-//		}
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
+		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
+			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
+		}
 
 		//checking type before cast!
 		if (!(arguments.exercise instanceof AmericanExercise)){
-			throw new ArithmeticException(non_American_exercise_given);
+			throw new ArithmeticException(NON_AMERICAN_EXERCISE_GIVEN);
 		}
 		
 		AmericanExercise ex = (AmericanExercise)arguments.exercise;
 		if (ex.payoffAtExpiry()){
-			throw new ArithmeticException(payoff_at_expiry_not_handled);
+			throw new ArithmeticException(PAYOFF_AT_EXPIRY_NOT_HANDLED);
 		}
 		if (!(arguments.payoff instanceof StrikedTypePayoff)){
-			throw new ArithmeticException(non_striked_payoff_given);
+			throw new ArithmeticException(NON_STRIKE_PAYOFF_GIVEN);
 		}
 		StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
 
 		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException(black_scholes_process_required);
+			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_REQUIRED);
 		}
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
-
 
 		double /* @Real */variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
         double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
@@ -166,16 +159,16 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 				phi = -1;
 				break;
 			default:
-				throw new ArithmeticException(unknown_option_type);
+				throw new ArithmeticException(UNKNOWN_OPTION_TYPE);
 			}
 			
 			// TODO: study how zero interest rate could be handled
 			if(h == 0.0){
-			    throw new ArithmeticException(dividing_by_zero_interst_rate);
+			    throw new ArithmeticException(DIVIDING_BY_ZERO_INTEREST_RATE);
 			}
 
 			/*
-                Work around:
+                Workaround ????
 			    if(h == 0.0){
 			        logger.warn("h equals zero, use MIN_VALUE");
 			        h = Double.MIN_VALUE;
@@ -186,9 +179,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
             double /* @Real */lambda = (-(beta - 1) + phi * temp_root) / 2;
             double /* @Real */lambda_prime = -phi * alpha / (h * h * temp_root);
 
-            double /* @Real */black_Sk = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSk, Math
-                    .sqrt(variance))
-                    * riskFreeDiscount;
+            double /* @Real */black_Sk = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSk, Math.sqrt(variance)) * riskFreeDiscount;
             double /* @Real */hA = phi * (Sk - payoff.strike()) - black_Sk;
 
             double /* @Real */d1_Sk = (Math.log(forwardSk / payoff.strike()) + 0.5 * variance) / Math.sqrt(variance);

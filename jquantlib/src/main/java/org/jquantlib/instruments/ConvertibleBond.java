@@ -99,4 +99,5 @@ public class ConvertibleBond extends Bond {
         NPV = option.getNPV();
         errorEstimate = 0.0;
 	}
+	
 }

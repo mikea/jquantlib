@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * WeakReferences.
  * 
  * @note This implementation notifies the observers in a synchronous
- * fashion. Note that this can cause trouble if you notify the observers while
+ * fashion. Note that this can cause trouble if you notify observers while
  * in a transactional context because the notification is then done also in the
  * transaction.
  * 
@@ -64,17 +64,19 @@ public class WeakReferenceObservable extends DefaultObservable {
     }
 
     @Override
-    public void addObserver(Observer observer) {
-        super.addObserver(new WeakReferenceObserver(observer));
+    public void addObserver(Observer referent) {
+        super.addObserver(new WeakReferenceObserver(referent));
     }
 
+    /**
+     * This method deletes the Observer passed as argument but also discards those Observers which where reclaimed by gc 
+     */
     @Override
     public void deleteObserver(Observer observer) {
-        // Also deletes weak references whose referents got gc'ed
         for (Observer weakObserver : getObservers()) {
             WeakReferenceObserver weakReference = (WeakReferenceObserver) weakObserver;
-            Observer o = weakReference.get();
-            if (o == null || o.equals(observer)) {
+            Observer referent = weakReference.get();
+            if (referent == null || referent.equals(observer)) {
                 deleteWeakReference(weakReference);
             }
         }
@@ -95,11 +97,15 @@ public class WeakReferenceObservable extends DefaultObservable {
             super(referent);
         }
 
+        //
+        // implements Observer
+        //
+        
         public void update(Observable o, Object arg) {
             Observer referent = get();
             if (referent != null)
                 referent.update(o, arg);  
-            else //delete the weak reference from the list if underlying gc'ed
+            else // delete this WeakReferenceObserver from list as underlying Observer was reclaimed by gc
                 deleteWeakReference(this);
         }
     }
