@@ -44,11 +44,20 @@ package org.jquantlib.pricingengines.arguments;
 
 public class OneAssetStrikedOptionArguments extends OneAssetOptionArguments {
 
-	public OneAssetStrikedOptionArguments() {
+	//
+    // public constructors
+    //
+    
+    public OneAssetStrikedOptionArguments() {
 		super();
 	}
 	
-	@Override
+	
+    //
+    // public methods
+    //
+    
+    @Override
 	public void validate() /*@ReadOnly*/ {
 		super.validate();
 	}

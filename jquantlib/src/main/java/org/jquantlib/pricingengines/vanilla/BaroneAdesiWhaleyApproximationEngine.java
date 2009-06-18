@@ -69,6 +69,15 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
 
     
     //
+    // public constructors
+    //
+    
+    public BaroneAdesiWhaleyApproximationEngine() {
+        super();
+    }
+
+    
+    //
     // implements PricingEngine
     //
     

@@ -556,16 +556,24 @@ public final class Std {
 	    return accumulate(0, list.length, list, init);
 	}
 	
+    public static double accumulate(final List<Double> list, double init) {
+        double sum = 0.0;
+        for (int i = 0; i < list.size(); i++) {
+            sum += list.get(i);
+        }
+        return sum;
+    }
+    
 	public static <T extends Comparable<T>> T min(T ... t){
-	    List<T> t_ = Arrays.asList(t);
-	    Collections.sort(t_);
-	    return  t_.get(0);
+	    List<T> list = Arrays.asList(t);
+	    Collections.sort(list);
+	    return  list.get(0);
 	}
 	
 	public static <T extends Comparable<T>> T max(T... t) {
-        List<T> t_ = Arrays.asList(t);
-        Collections.sort(t_);
-        return t_.get(t_.size() - 1);
+        List<T> list = Arrays.asList(t);
+        Collections.sort(list);
+        return list.get(list.size() - 1);
     }
 	
 	public static E_UnaryFunction<Double, Double> multiplies(double multiplier){

@@ -62,7 +62,7 @@ import org.jquantlib.util.Date;
 public abstract class ForwardRateStructure extends YieldTermStructure {
 
 	//
-	// constructors
+	// protected constructors
 	//
 	
 	/**
@@ -186,6 +186,11 @@ public abstract class ForwardRateStructure extends YieldTermStructure {
 		return sum * dt / t;
 	}
 
+	
+	//
+	// overrides YieldTermStructure
+	//
+	
 	@Override
 	protected/* @DiscountFactor */double discountImpl(/* @Time */double t) /* @ReadOnly */{
 		/* @Rate */double r = zeroYieldImpl(t);

@@ -43,14 +43,31 @@ import org.jquantlib.instruments.AverageType;
 
 public class ContinuousAveragingAsianOptionArguments extends OneAssetStrikedOptionArguments {
 
+    // TODO: refactor messages
     private static final String UNSPECIFIED_AVERAGE_TYPE = "unspecified average type";
     
+    //
+    // public fields
+    //
+    
+    // FIXME: public fields here is a bad design technique :(
     public AverageType averageType;
     
-	public ContinuousAveragingAsianOptionArguments() {
+
+    //
+    // public constructors
+    //
+    
+    public ContinuousAveragingAsianOptionArguments() {
+	    super();
 	}
     
-	@Override
+	
+    //
+    // public methods
+    //
+    
+    @Override
 	public void validate() /*@ReadOnly*/{
         super.validate();
         //TODO: check whether null instead of using -1 enum typ

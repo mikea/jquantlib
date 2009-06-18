@@ -20,6 +20,24 @@
  When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2003, 2004 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.daycounters.DayCounter;
@@ -31,57 +49,83 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 
+/**
+ * Term structure with added spread on the instantaneous forward rate
+ * 
+ * @note This term structure will remain linked to the original structure, i.e., any changes in the latter will be reflected in this
+ *       structure as well.
+ * 
+ * @category yieldtermstructures
+ * 
+ * @author Ueli Hofstetter
+ */
 public class ForwardSpreadedTermStructure extends ForwardRateStructure {
 	
-	private Handle<YieldTermStructure> originalCurve_;
-	private Handle<Quote> spread_;
+	//
+    // private fields
+    //
+    
+    private Handle<YieldTermStructure> originalCurve;
+	private Handle<Quote> spread;
 	
-	public ForwardSpreadedTermStructure(final Handle<YieldTermStructure> h,
-			final Handle<Quote> spread){
-		this.originalCurve_ = h;
-		this.spread_ = spread;
-		
-		//registerWith(originalCurve_);
-        //registerWith(spread_);
-	}
 	
-	@Override
-	public DayCounter dayCounter(){
-		return originalCurve_.getLink().dayCounter();
-	}
+	//
+	// public constructors
+	//
 	
-	@Override
-	public Calendar calendar(){
-		return originalCurve_.getLink().calendar();
-	}
-	
-	@Override
-	public Date referenceDate(){
-		return originalCurve_.getLink().referenceDate();
-	}
-	
-	@Override
-	public Date maxDate(){
-		return originalCurve_.getLink().maxDate();
-	}
-	
-	@Override
-	public double maxTime(){
-		return originalCurve_.getLink().maxTime();
-	}
+    public ForwardSpreadedTermStructure(final Handle<YieldTermStructure> h, final Handle<Quote> spread) {
+        this.originalCurve = h;
+        this.spread = spread;
 
-	@Override
-	protected double forwardImpl(double t) {
-		return originalCurve_.getLink().forwardRate(t, t, 
-				Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate()
-				+ spread_.getLink().evaluate();
-	}
+        this.originalCurve.addObserver(this);
+        this.spread.addObserver(this);
+    }
 	
-	@Override 
-	public double zeroYieldImpl(final double t){
-		return originalCurve_.getLink().zeroRate( t, 
-				Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate()
-				+ spread_.getLink().evaluate();
-		
-	}
+    
+    //
+    // overrides TermStructure
+    //
+    
+    @Override
+    public DayCounter dayCounter() {
+        return originalCurve.getLink().dayCounter();
+    }
+
+    @Override
+    public Calendar calendar() {
+        return originalCurve.getLink().calendar();
+    }
+
+    @Override
+    public Date referenceDate() {
+        return originalCurve.getLink().referenceDate();
+    }
+
+    @Override
+    public Date maxDate() {
+        return originalCurve.getLink().maxDate();
+    }
+
+    @Override
+    public double maxTime() {
+        return originalCurve.getLink().maxTime();
+    }
+
+    
+    //
+    // overrides ForwardRateStructure
+    //
+    
+    @Override
+    protected double forwardImpl(double t) {
+        return originalCurve.getLink().forwardRate(
+                t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.getLink().evaluate();
+    }
+
+    @Override
+    public double zeroYieldImpl(final double t) {
+        return originalCurve.getLink().zeroRate(
+                t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.getLink().evaluate();
+    }
+
 }

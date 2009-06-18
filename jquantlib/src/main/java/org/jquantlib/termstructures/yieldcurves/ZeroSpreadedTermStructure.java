@@ -13,58 +13,85 @@ import org.jquantlib.util.Date;
 
 public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
 	
-	private Handle<YieldTermStructure> originalCurve_;
-	private Handle<Quote> spread_;
-	private Compounding comp_;
-	private Frequency freq_;
+	//
+    // private fields
+    //
+    
+    private Handle<YieldTermStructure> originalCurve;
+	private Handle<Quote> spread;
+	private Compounding comp;
+	private Frequency freq;
 
-	public ZeroSpreadedTermStructure(final Handle<YieldTermStructure> h, 
+	
+	//
+	// public constructors
+	//
+	
+	public ZeroSpreadedTermStructure(
+	        final Handle<YieldTermStructure> h, 
 			final Handle<Quote> spread, Compounding comp , Frequency freq,
 			final DayCounter dc){
-		this.originalCurve_ = h;
-		this.spread_ = spread;
-		this.comp_ = comp;
-		this.freq_ = freq;
-		//registerWith(originalCurve_);
-	    //registerWith(spread_);
+		this.originalCurve = h;
+		this.spread = spread;
+		this.comp = comp;
+		this.freq = freq;
+		
+		this.originalCurve.addObserver(this);
+		this.spread.addObserver(this);
 	}
+	
+
+	//
+	// public methods
+	//
+	
+	public double forwardImpl(final double t){
+        return originalCurve.getLink().
+        forwardRate(t, t, comp, freq, true).rate()
+        + spread.getLink().evaluate();
+    }
+    
+	
+	//
+	// overrides ZeroYieldStructure
+	//
 	
 	@Override
 	protected double zeroYieldImpl(double t) {
 		//org.comment: to be fixed: user-defined daycounter should be used
-		InterestRate zeroRate = originalCurve_.getLink().
-		zeroRate(t, comp_, freq_, true);
+		InterestRate zeroRate = originalCurve.getLink().
+		zeroRate(t, comp, freq, true);
 		InterestRate spreadedRate = 
-			new InterestRate(zeroRate.rate() + spread_.getLink().evaluate(), 
+			new InterestRate(zeroRate.rate() + spread.getLink().evaluate(), 
 				zeroRate.dayCounter(),
 				zeroRate.compounding(),
 				zeroRate.frequency());
 		return spreadedRate.equivalentRate(t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
 	}
 	
-	public double forwardImpl(final double t){
-		return originalCurve_.getLink().
-		forwardRate(t, t, comp_, freq_, true).rate()
-		+ spread_.getLink().evaluate();
-	}
 	
-	@Override
-	public Calendar calendar(){
-		return originalCurve_.getLink().calendar();
-	}
+	//
+	// overrides TermStructure
+	//
 	
-	@Override
-	public Date referenceDate(){
-		return originalCurve_.getLink().referenceDate();
-	}
-	
-	@Override
-	public Date maxDate(){
-		return originalCurve_.getLink().maxDate();
-	}
-	
-	@Override
-	public /*@Time*/ double maxTime(){
-		return originalCurve_.getLink().maxTime();
-	}
+    @Override
+    public Calendar calendar() {
+        return originalCurve.getLink().calendar();
+    }
+
+    @Override
+    public Date referenceDate() {
+        return originalCurve.getLink().referenceDate();
+    }
+
+    @Override
+    public Date maxDate() {
+        return originalCurve.getLink().maxDate();
+    }
+
+    @Override
+    public/* @Time */double maxTime() {
+        return originalCurve.getLink().maxTime();
+    }
+
 }

@@ -33,10 +33,20 @@ public class FDBermudianEngine extends VanillaOptionEngine {
     private double extraTermInBermuda;
     private FDMultiPeriodEngine fdVanillaEngine;
 
+    
+    //
+    // public constructors
+    //
+    
     public FDBermudianEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
         fdVanillaEngine = new FDBermudianMPEngine(process, timeSteps, gridPoints, timeDependent);
     }
 
+    
+    //
+    // private methods
+    //
+    
     // TODO: verify how this method is called
     private void initializeStepCondition() {
         fdVanillaEngine.stepCondition = new NullCondition<Array>();

@@ -50,11 +50,22 @@ import org.jquantlib.instruments.BarrierType;
  */
 public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
     
+    // TODO: refactor messages
     private static final String UNKNOWN_TYPE = "unknown type";
 
+    //
+    // public fields
+    //
+    
+    // FIXME: public fields here is a bad design technique :(
     public BarrierType barrierType;
 	public double barrier, rebate;
 
+
+	//
+	// public methods
+	//
+	
 	/**
 	 * This method performs additional validation of needed to conform to the barrier type.
 	 * The validation is done by comparing the underlying price against the barrier type. 

@@ -54,22 +54,36 @@ import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 
 public class AmericanPayoffAtHit {
 
+    //
+    // private final fields
+    //
+    
     private final /* @Price */ double spot;
     private final /* @Variance */ double variance;
-    
-    private final double /* @Volatility */ stdDev;
-    private       double strike, K, DKDstrike; // TODO RICHARD :: add "final" here and see what happens! :)
+    private final /* @Volatility */ double  stdDev;
+    private final /* @Price */ double  strike, forward;
     private final double mu, lambda, muPlusLambda, muMinusLambda, log_H_S;
-    private       double D1, D2, cum_d1, cum_d2, n_d1, n_d2; // TODO RICHARD :: add "final" here and see what happens! :)
     private final double alpha, beta, DalphaDd1, DbetaDd2;
+    private final double cum_d1, cum_d2, n_d1, n_d2;
     private final boolean inTheMoney;
-    private       double forward, X, DXDstrike; // TODO RICHARD :: add "final" here and see what happens! :)
     
-    public AmericanPayoffAtHit(final double spot, final double discount, final double dividendDiscount, final double variance, final StrikedTypePayoff strikedTypePayoff) {
-        super();
-        this.spot = spot;
-        this.variance = variance;
-        
+    
+    //
+    // private fields
+    //
+    
+    private transient double X, K;
+    private transient double D1, D2;
+    
+    
+    //
+    // public constructors
+    //
+    
+    public AmericanPayoffAtHit(
+            final double spot, final double discount, final double dividendDiscount, final double variance, 
+            final StrikedTypePayoff strikedTypePayoff) {
+
         if (spot <= 0.0)
             throw new IllegalArgumentException("positive spot value required: " + spot + " not allowed");
                 
@@ -82,22 +96,21 @@ public class AmericanPayoffAtHit {
         if (variance < 0.0)
             throw new IllegalArgumentException("negative variance: " + variance + " not allowed");
         
-        stdDev = Math.sqrt(variance);
+        this.spot = spot;
+        this.variance = variance;
+        this.stdDev = Math.sqrt(variance);
+        this.strike = strikedTypePayoff.strike();
+        this.log_H_S = Math.log(strike / spot);
 
-        Option.Type optionType = strikedTypePayoff.optionType();
-        strike = strikedTypePayoff.strike();
-
-        log_H_S = Math.log(strike / spot);
+        final Option.Type optionType = strikedTypePayoff.optionType();
         
         if (variance >= Math.E) {
             if (discount == 0.0 && dividendDiscount == 0.0) {
                 mu      = - 0.5;
                 lambda  = 0.5;
-            }
-            else if (discount == 0.0) {
+            } else if (discount == 0.0) {
                 throw new IllegalArgumentException("null discount not handled yet");
-            }
-            else {
+            } else {
                 mu = Math.log(dividendDiscount / discount) / variance - 0.5;
                 lambda = Math.sqrt( mu * mu - 2.0 * Math.log(discount) / variance);
             }
@@ -108,16 +121,14 @@ public class AmericanPayoffAtHit {
             cum_d2 = f.evaluate(D2);
             n_d1 = f.derivative(D1);
             n_d2 = f.derivative(D2);
-        }
-        else {
+        } else {
             // TODO: not tested yet
             mu = Math.log(dividendDiscount / discount) / variance - 0.5;
             lambda = Math.sqrt( mu * mu - 2.0 * Math.log(discount) / variance);
             if (log_H_S > 0) {
                 cum_d1 = 1.0;
                 cum_d2 = 1.0;
-            }
-            else {
+            } else {
                 cum_d1 = 0.0;
                 cum_d2 = 0.0;                
             }
@@ -154,8 +165,7 @@ public class AmericanPayoffAtHit {
                 beta      = 0.5;
                 DbetaDd2  = 0.0;
             }            
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("invalid option type");
         }
         
@@ -163,6 +173,14 @@ public class AmericanPayoffAtHit {
         muMinusLambda = mu - lambda;
         inTheMoney = (optionType.equals(Type.CALL) && strike < spot) || 
                      (optionType.equals(Type.PUT) && strike > spot);
+
+        //
+        // TODO: code review
+        //
+        // These two variables are laying around. Values are assigned but never used.
+        //
+        double DXDstrike, DKDstrike;
+        
         if (inTheMoney) {
             forward     = 1.0;
             X           = 1.0;
@@ -186,13 +204,17 @@ public class AmericanPayoffAtHit {
             if (inTheMoney) {
                 K = spot;
                 DKDstrike = 0.0;                
-            }
-            else {
+            } else {
                 K = aoo.strike();
                 DKDstrike = 1.0;
             }
         }
     }
+    
+
+    //
+    // public methods
+    //
     
     public /* @Price */ double value() /* @ReadOnly */ {
         /* @Price */ final double result = K * (forward * alpha + X * beta);

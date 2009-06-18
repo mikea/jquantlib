@@ -55,6 +55,7 @@ import org.jquantlib.pricingengines.results.Results;
  * 
  * @author Richard Gomes
  */
+// TODO: study the possibility of changing to an interface
 public abstract class Arguments {
     
     /**

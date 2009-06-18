@@ -47,21 +47,25 @@ import org.jquantlib.instruments.AverageType;
 import org.jquantlib.util.Date;
 
 /**
- * Description of the terms and conditions of a discrete average out fixed strike
- * option.
+ * Description of the terms and conditions of a discrete average out fixed strike option.
  * 
  * @author <Richard Gomes>
  */
 public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArguments {
     
+    //TODO: code review :: are these definitions really necessary?
 	private final static double NULLREAL = Double.MAX_VALUE;
 	private final static int NULLSIZE = Integer.MAX_VALUE;
 	
-    /*@PackagePrivate*/ public AverageType averageType;
-    /*@PackagePrivate*/ public /*@Real*/ double runningAccumulator;
-    /*@PackagePrivate*/ public /*@Size*/ int pastFixings;
-    /*@PackagePrivate*/ public List<Date> fixingDates;
+    public AverageType averageType;
+    public /*@Real*/ double runningAccumulator;
+    public /*@Size*/ int pastFixings;
+    public List<Date> fixingDates;
 
+    
+    //
+    // public constructors
+    //
     
     public DiscreteAveragingAsianOptionArguments() {
         averageType = null;
@@ -69,8 +73,13 @@ public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArgumen
         pastFixings = NULLSIZE; //FIXME is there central values?
         fixingDates = new ArrayList<Date>();
 	}
+
 	
-	@Override
+    //
+    // public methods
+    //
+    
+    @Override
 	public void validate() /*/@ReadOnly*/{
         super.validate();
         if (averageType==null) 

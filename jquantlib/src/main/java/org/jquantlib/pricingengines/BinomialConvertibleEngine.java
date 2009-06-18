@@ -24,21 +24,20 @@ package org.jquantlib.pricingengines;
 import org.jquantlib.methods.lattices.BinomialTree;
 
 /**
+ * Binomial Tsiveriotis-Fernandes engine for convertible bonds
+ *
+ * @category hybridengines
  * 
  * @author Daniel Kong
- * 
  */
 //TODO: work in progress
-
-//! Binomial Tsiveriotis-Fernandes engine for convertible bonds
-/*  \ingroup hybridengines
-
-    \test the correctness of the returned value is tested by
-          checking it against known results in a few corner cases.
-*/
 public class BinomialConvertibleEngine <B extends BinomialTree> extends ConvertibleBondOptionEngine {
 	
 	private int timeSteps;
+	
+	//
+	// public constructors
+	//
 	
 	public BinomialConvertibleEngine (int timeSteps){
 		this.timeSteps = timeSteps;

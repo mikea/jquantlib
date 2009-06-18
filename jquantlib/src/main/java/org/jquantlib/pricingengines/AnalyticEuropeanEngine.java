@@ -68,22 +68,39 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 //TEST: write more test cases
 public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 
-	//
+    // TODO: refactor messages
+    private static final String NOT_AN_EUROPEAN_OPTION = "not an European Option";
+    private static final String NON_STRIKED_PAYOFF_GIVEN = "non-striked payoff given";
+    private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
+
+    
+    //
+    // public constructors
+    //
+    
+    public AnalyticEuropeanEngine() {
+        super();
+    }
+
+    
+    //
     // implements PricingEngine
     //
     
     @Override
     public void calculate() /* @ReadOnly */{
+
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
 		if (arguments.exercise.type() != Exercise.Type.EUROPEAN)
-			throw new IllegalArgumentException("not an European option");
+			throw new IllegalArgumentException(NOT_AN_EUROPEAN_OPTION);
 
 		StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
 		if (payoff == null)
-			throw new NullPointerException("non-striked payoff given");
+			throw new NullPointerException(NON_STRIKED_PAYOFF_GIVEN);
 
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
 		if (process == null)
-			throw new NullPointerException("Black-Scholes process required");
+			throw new NullPointerException(BLACK_SCHOLES_PROCESS_REQUIRED);
 
 		/* @Variance */double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
 

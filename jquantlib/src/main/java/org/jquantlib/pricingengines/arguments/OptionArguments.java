@@ -56,6 +56,21 @@ import org.jquantlib.pricingengines.PricingEngine;
 //TODO :: how to handle strike-less option (asian average strike, forward, etc.?
 public class OptionArguments extends Arguments {
 	
+    //
+    // public constructors
+    //
+    
+    public OptionArguments() {
+        super();
+    }
+    
+    
+    //
+    // public fields
+    //
+    
+    // FIXME: public fields here is a bad design technique :(
+
     /**
      * Represents the {@link Payoff} policy to be used
      * 
@@ -73,13 +88,14 @@ public class OptionArguments extends Arguments {
 	//TODO:Shouldn't be here. It should be moved elsewhere
 	public /*@Time*/ List<Double> stoppingTimes;
 	
-	public OptionArguments() {
-		super();
-	}
+
+	//
+	// public methods
+	//
 	
 	@Override
 	public void validate() /*@ReadOnly*/ {
-		if (payoff == null) throw new IllegalArgumentException("No payoff given");
+		if (payoff == null) throw new IllegalArgumentException("No payoff given"); //TODO: message
 	}
 	
 }

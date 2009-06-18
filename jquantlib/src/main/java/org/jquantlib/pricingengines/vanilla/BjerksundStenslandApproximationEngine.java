@@ -62,10 +62,19 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
     private static final String NON_AMERICAN_EXERCISE_GIVEN = "non-American exercise given";
     private static final String PAYOFF_AT_EXPIRY_NOT_HANDLED = "payoff at expiry not handled";
     private static final String NON_PLAIN_PAYOFF_GIVEN = "non-plain payoff given";
-    private static final String BLACK_SCHOLES_PROCESS_GIVEN = "Black-Scholes process required";
+    private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
     private static final String BJERKSUND_NOT_APPLICABLE = "Bjerksund-Stensland approximation not applicable to this set of parameters";
     
     private CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
+
+        
+    //
+    // public constructors
+    //
+    
+    public BjerksundStenslandApproximationEngine() {
+        super();
+    }
 
     
     //
@@ -94,7 +103,7 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
 		PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
 
 		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_GIVEN);
+			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_REQUIRED);
 		}
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 

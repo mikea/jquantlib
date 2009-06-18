@@ -57,22 +57,33 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.stdlibc.Std;
 
 
-//TODO add reference to original paper, clewlow strickland
 /**
+ * Pricing engine for European discrete geometric average price Asian
+ * <p>
+ * This class implements a discrete geometric average price Asian option, with European exercise. The formula is from "Asian
+ * Option", E. Levy (1997) in "Exotic Options: The State of the Art", edited by L. Clewlow, C. Strickland, pag 65-97
+ * 
  * @author <Richard Gomes>
  */
-//TODO: this class needs code review, better documentation, etc.
 public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAveragingAsianOptionEngine {
 
+    // TODO: refactor messages
+    private static final String NOT_AN_EUROPEAN_OPTION = "not an European Option";
+    private static final String NON_STRIKED_PAYOFF_GIVEN = "non-striked payoff given";
+    private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
 	
-//	public AnalyticDiscreteGeometricAveragePriceAsianEngine(
-//			DiscretAveragingAsianOptionArguments arguments,
-//			OneAssetOptionResults results) {
-//		super(arguments, results);
-//	}
 
+    //
+    // public constructors
+    //
+    
+    public AnalyticDiscreteGeometricAveragePriceAsianEngine() {
+        super();
+    }
+    
     
     //
     // implements PricingEngine
@@ -81,18 +92,27 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 	@Override
 	public void calculate() /*@ReadOnly*/{
 
-		/* this engine cannot really check for the averageType==Geometric
-        	since it can be used as control variate for the Arithmetic version
-     		QL_REQUIRE(arguments_.averageType == Average::Geometric,
-                "not a geometric average option");
-		 */
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
+        if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
+            throw new ArithmeticException(NOT_AN_EUROPEAN_OPTION);
+        }
 
-		//QL_REQUIRE(arguments_.exercise->type() == Exercise::European,
-		//"not an European Option");
-		if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
-			throw new IllegalArgumentException("not an European Option");
-		}
-		
+        StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
+        if (!(arguments.payoff instanceof StrikedTypePayoff)) {
+            throw new IllegalArgumentException(NON_STRIKED_PAYOFF_GIVEN);
+        }
+        
+        GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
+        if (process == null)
+            throw new NullPointerException(BLACK_SCHOLES_PROCESS_REQUIRED);
+
+        /*
+         * This engine cannot really check for the averageType==Geometric
+         * since it can be used as control variate for the Arithmetic version 
+         *  
+         * QL_REQUIRE(arguments_.averageType == Average::Geometric, "not a geometric average option");
+         */
+        
 		/*@Real*/ double runningLog;
 		/*@Size*/ int pastFixings;
 		if (arguments.averageType == AverageType.Geometric) {
@@ -108,22 +128,10 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 			pastFixings = 0;
 		}
 
-		//TODO compare to Analytic Euorpean, it checks for null instead of type...??
-		StrikedTypePayoff payoff = null;
-		if (!(arguments.payoff instanceof StrikedTypePayoff)) {
-			throw new IllegalArgumentException("non-plain payoff given");
-		}
-		payoff = (StrikedTypePayoff) arguments.payoff;
-		
-		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
-		if (process == null)
-			throw new NullPointerException("Black-Scholes process required");
-
 		Date referenceDate = process.riskFreeRate().getLink().referenceDate();
 		DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
 		DayCounter divdc = process.dividendYield().getLink().dayCounter();
 		DayCounter voldc = process.blackVolatility().getLink().dayCounter();
-	     
 
 	    List<Double> fixingTimes = new ArrayDoubleList();
 	    /*@Size*/ int i;
@@ -142,17 +150,9 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 	    /*@Real*/ double pastWeight = pastFixings/N;
 	    /*@Real*/ double futureWeight = 1.0-pastWeight;
 
-//	    Time timeSum = std::accumulate(fixingTimes.begin(), fixingTimes.end(), 0.0);
+	    double timeSum = Std.accumulate(fixingTimes, 0.0);
+	    /*@Volatility*/ double vola = process.blackVolatility().getLink().blackVol(arguments.exercise.lastDate(), payoff.strike());
 	    
-	    //TODO add accumulate to std
-	    double timeSum = 0.0;
-	    for(int j=0;j<fixingTimes.size();j++){
-	    	timeSum += fixingTimes.get(j);
-	    }
-	    
-	    /*@Volatility*/ double vola = process.blackVolatility().getLink().blackVol(
-                                           arguments.exercise.lastDate(),
-                                           payoff.strike());
 	    /*@Real*/ double temp = 0.0;
 	    for (i=pastFixings+1; i<numberOfFixings; i++) {
 	    	temp += fixingTimes.get(i-pastFixings-1)*(N-i);
@@ -179,14 +179,12 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 	    /*@DiscountFactor*/ double riskFreeDiscount = process.riskFreeRate().getLink().
 	    								discount(arguments.exercise.lastDate());
 
-	    BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance),
-                           riskFreeDiscount);
+	    BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
 	    results.value = black.value();
 	    results.delta = futureWeight*black.delta(forwardPrice)*forwardPrice/s;
-	    results.gamma = forwardPrice*futureWeight/(s*s)
-				*(  black.gamma(forwardPrice)*futureWeight*forwardPrice
-				  - pastWeight*black.delta(forwardPrice) );
+	    results.gamma = forwardPrice*futureWeight/(s*s)*(black.gamma(forwardPrice)*futureWeight*forwardPrice
+	            - pastWeight*black.delta(forwardPrice) );
 
 		/*@Real*/ double Nx_1, nx_1;
 		CumulativeNormalDistribution CND = new CumulativeNormalDistribution();
@@ -200,30 +198,21 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 			Nx_1 = (muG > Math.log(payoff.strike()) ? 1.0 : 0.0);
 			nx_1 = 0.0;
 		}
-		results.vega = forwardPrice * riskFreeDiscount *
-                ( (dmuG_dsig + sigG * dsigG_dsig)*Nx_1 + nx_1*dsigG_dsig );
+		results.vega = forwardPrice * riskFreeDiscount * ( (dmuG_dsig + sigG * dsigG_dsig)*Nx_1 + nx_1*dsigG_dsig );
 
 		if (payoff.optionType() == Option.Type.PUT)
-			results.vega -= riskFreeDiscount * forwardPrice *
-                                           (dmuG_dsig + sigG * dsigG_dsig);
+			results.vega -= riskFreeDiscount * forwardPrice * (dmuG_dsig + sigG * dsigG_dsig);
 
-		/*@Time*/ double tRho = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(),
-									  arguments.exercise.lastDate());
-		results.rho = black.rho(tRho)*timeSum/(N*tRho) 
-                   - (tRho-timeSum/N)*results.value;
+		/*@Time*/ double tRho = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
+		results.rho = black.rho(tRho)*timeSum/(N*tRho) - (tRho-timeSum/N)*results.value;
 
 		/*@Time*/ double tDiv = divdc.yearFraction(
                         process.dividendYield().getLink().referenceDate(),
                         arguments.exercise.lastDate());
 
-     results.dividendRho = black.dividendRho(tDiv)*timeSum/(N*tDiv);
-
-     results.strikeSensitivity = black.strikeSensitivity();
-
-     results.theta = Greeks.blackScholesTheta(process,
-                                        results.value,
-                                        results.delta,
-										results.gamma);
+		results.dividendRho = black.dividendRho(tDiv)*timeSum/(N*tDiv);
+		results.strikeSensitivity = black.strikeSensitivity();
+		results.theta = Greeks.blackScholesTheta(process, results.value, results.delta, results.gamma);
 	}
 	
 }

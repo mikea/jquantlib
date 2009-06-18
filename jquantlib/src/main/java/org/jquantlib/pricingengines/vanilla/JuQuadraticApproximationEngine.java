@@ -74,6 +74,15 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 
     
     //
+    // public constructors
+    //
+    
+    public JuQuadraticApproximationEngine() {
+        super();
+    }
+
+    
+    //
     // implements PricingEngine
     //
     

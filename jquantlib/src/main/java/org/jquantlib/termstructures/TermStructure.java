@@ -89,6 +89,7 @@ public abstract class TermStructure implements Observer, Observable {
 	//
 	// protected fields
 	//
+	
 	protected final Settings settings;
 	
 	

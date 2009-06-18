@@ -28,6 +28,10 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  */
 public class FDShoutEngine extends FDEngineAdapter<FDShoutCondition> {
 
+    //
+    // public constructors
+    //
+    
     public FDShoutEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints,
             final boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);

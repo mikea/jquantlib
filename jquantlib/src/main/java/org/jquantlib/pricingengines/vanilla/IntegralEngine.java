@@ -61,7 +61,7 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
     // TODO: refactor messages
     private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";
     private static final String NON_STRIKED_PAYOFF_GIVEN = "non-striked payoff given";
-    private static final String BLACK_SCHOLES_PROCESS_GIVEN = "Black-Scholes process required";
+    private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
 
 
     //
@@ -83,7 +83,7 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
 		StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
 
 		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_GIVEN);
+			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_REQUIRED);
 		}
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 

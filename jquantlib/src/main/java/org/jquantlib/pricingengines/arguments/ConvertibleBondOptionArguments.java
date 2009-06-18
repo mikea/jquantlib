@@ -36,9 +36,15 @@ import org.jquantlib.util.Date;
  * @author Daniel Kong
  */
 //TODO: Work in progress
-public class ConvertibleBondOptionArguments extends
-		OneAssetStrikedOptionArguments {
-	public double conversionRatio;
+public class ConvertibleBondOptionArguments extends OneAssetStrikedOptionArguments {
+
+    //
+    // public fields
+    //
+    
+    // FIXME: public fields here is a bad design technique :(
+
+    public double conversionRatio;
     public Handle<Quote> creditSpread;
     public List<Dividend> dividends;
     public /*@Time*/ List<Double> dividendTimes;
@@ -54,13 +60,23 @@ public class ConvertibleBondOptionArguments extends
     public int settlementDays;
     public double redemption;
     
-	public ConvertibleBondOptionArguments(){
+	
+    //
+    // public constructors
+    //
+    
+    public ConvertibleBondOptionArguments(){
 		conversionRatio = 0.0;
 		settlementDays = 0;
 		redemption = 0.0;
 	}
 	
-	@Override
+	
+    //
+    // public methods
+    //
+    
+    @Override
 	public void validate() /*@ReadOnly*/ {
 		super.validate();
 	}

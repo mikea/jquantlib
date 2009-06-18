@@ -33,6 +33,11 @@ public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOptionEng
 
 	private final FDVanillaEngine fdVanillaEngine;
 
+	
+	//
+	// public constructors
+	//
+	
     public FDEngineAdapter(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints,
             final boolean timeDependent) {
         try {

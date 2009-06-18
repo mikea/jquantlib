@@ -36,18 +36,25 @@ import org.jquantlib.processes.StochasticProcess;
  */
 public class OneAssetOptionArguments extends OptionArguments {
 
-	//
-	// Public fields as this class works pretty much as 
-	// a Data Transfer Object
-	//
-
-	// FIXME: assign JSR-308 annotations
-    // FIXME: public field is a bad design technique :(
+    //
+    // public constructors
+    //
+    
+    public OneAssetOptionArguments() {
+        super();
+    }
+    
+    //
+    // public fields
+    //
+    
+    // FIXME: public fields here is a bad design technique :(
 	public StochasticProcess stochasticProcess; // FIXME: should use Generics
 
-	public OneAssetOptionArguments() {
-		super();
-	}
+	
+	//
+	// public methods
+	//
 	
 	@Override
 	public void validate() /*@ReadOnly*/ {
