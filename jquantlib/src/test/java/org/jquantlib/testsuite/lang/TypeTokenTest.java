@@ -45,12 +45,12 @@ public class TypeTokenTest {
     public void testTypeToken() {
         C c = new C();
         if (c.getClazz() != Double.class) {
-            fail("C should be java.lang.Double");
+            fail("Object 'c' should be java.lang.Double");
         }
         
         D d = new D();
         if (d.getClazz() != Integer.class) {
-            fail("D should be java.lang.Integer");
+            fail("Object 'd' should be java.lang.Integer");
         }
     }
         
@@ -65,12 +65,12 @@ public class TypeTokenTest {
     public void testTypeToken2() {
         K k1 = new K<java.lang.Double>() {}; // ANONYMOUS INSTANCE!
         if (k1.getClazz() != Double.class) {
-            fail("C should be java.lang.Double");
+            fail("Object 'k1' should be java.lang.Double");
         }
         
         K k2 = new K<java.lang.Integer>() {}; // ANONYMOUS INSTANCE!
         if (k2.getClazz() != Integer.class) {
-            fail("D should be java.lang.Integer");
+            fail("Object 'k2' should be java.lang.Integer");
         }
         
     }

@@ -71,8 +71,8 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     private final CumulativeNormalDistribution f;
     
     // these fields are initialised every time calculate() is called
-    private volatile GeneralizedBlackScholesProcess process;
-    private volatile PlainVanillaPayoff payoff;
+    private transient GeneralizedBlackScholesProcess process;
+    private transient PlainVanillaPayoff payoff;
 
     public AnalyticBarrierEngine() {
         this.f = new CumulativeNormalDistribution();

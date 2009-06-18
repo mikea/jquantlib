@@ -130,8 +130,6 @@ public class Configuration {
      * @return
      */
     public static Configuration getSystemConfiguration(Preferences prefs) {
-        // Double check locking has been fixed in J2SE 5.0 or above with the
-        // usage of volatile
         if (systemConfiguration == null) {
             synchronized (Configuration.class) {
                 if (systemConfiguration == null) {
