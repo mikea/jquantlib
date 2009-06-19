@@ -86,7 +86,7 @@ public class FRA {
         Settings settings = Configuration.newConfiguration(null).newSettings();
         settings.setEvaluationDate(todaysDate);
         
-        Calendar calendar = euribor3m.getLink().getFixingCalendar();
+        Calendar calendar = euribor3m.getLink().fixingCalendar();
         int fixingDays = euribor3m.getLink().getFixingDays();
         Date settlementDate = calendar.advance(todaysDate, fixingDays, TimeUnit.MONTHS );
         

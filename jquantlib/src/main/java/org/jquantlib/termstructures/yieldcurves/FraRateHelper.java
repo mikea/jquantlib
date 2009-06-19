@@ -83,7 +83,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		this.monthsToStart = monthsToStart;
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				i.getTenor(), i.getFixingDays(), i.getFixingCalendar(), null, i
+				i.getTenor(), i.getFixingDays(), i.fixingCalendar(), null, i
 						.getConvention(), i.isEndOfMonth(), i.getDayCounter(),
 				termStructureHandle);
 		initializeDates();
@@ -95,7 +95,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		this.monthsToStart = monthsToStart;
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				i.getTenor(), i.getFixingDays(), i.getFixingCalendar(), null, i
+				i.getTenor(), i.getFixingDays(), i.fixingCalendar(), null, i
 						.getConvention(), i.isEndOfMonth(), i.getDayCounter(),
 				termStructureHandle);
 		initializeDates();
@@ -113,9 +113,9 @@ public class FraRateHelper extends RelativeDateRateHelper {
     }
 
     protected void initializeDates() {
-        Date settlement = iborIndex.getFixingCalendar().advance(
+        Date settlement = iborIndex.fixingCalendar().advance(
             evaluationDate, new Period(iborIndex.getFixingDays(),TimeUnit.DAYS), BusinessDayConvention.FOLLOWING, false);
-        earliestDate = iborIndex.getFixingCalendar().advance(
+        earliestDate = iborIndex.fixingCalendar().advance(
                                settlement,
                                new Period(monthsToStart,TimeUnit.MONTHS),
                                iborIndex.getConvention(),

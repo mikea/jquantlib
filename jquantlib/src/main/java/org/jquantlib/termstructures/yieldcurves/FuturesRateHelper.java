@@ -84,7 +84,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 		if (!IMM.getDefaultIMM().isIMMdate(immDate, false))
 			throw new IllegalArgumentException(" is not a valid IMM date");
 		earliestDate = immDate;
-		Calendar cal = i.getFixingCalendar();
+		Calendar cal = i.fixingCalendar();
 		latestDate = cal.advance(immDate, i.getTenor(), i.getConvention());
 		yearFraction = i.getDayCounter().yearFraction(earliestDate,
 				latestDate);

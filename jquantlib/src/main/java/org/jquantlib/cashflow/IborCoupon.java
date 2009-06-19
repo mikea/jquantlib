@@ -67,7 +67,7 @@ public class IborCoupon extends FloatingRateCoupon {
                 // FIXME ...
                 double pastFixing = 0;// IndexManager.getInstance().getHistory( index_.getName())[fixing_date.g];
                 if (pastFixing == 0) {
-                    throw new IllegalArgumentException("Missing " + index_.getName() + " fixing for " + fixing_date);
+                    throw new IllegalArgumentException("Missing " + index_.name() + " fixing for " + fixing_date);
                 }
                 return pastFixing;
             }
@@ -84,12 +84,12 @@ public class IborCoupon extends FloatingRateCoupon {
                     ; // fall through and forecast
                 }
             }
-            Date fixingValueDate = index_.getFixingCalendar().advance(fixing_date, index_.getFixingDays(), TimeUnit.DAYS);
+            Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.getFixingDays(), TimeUnit.DAYS);
             double startDiscount = termStructure.getLink().discount(fixingValueDate);
             // ???
-            Date temp = index_.getFixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
+            Date temp = index_.fixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
             double endDiscount = termStructure.getLink().discount(
-                    index_.getFixingCalendar().advance(temp, index_.getFixingDays(), TimeUnit.DAYS));
+                    index_.fixingCalendar().advance(temp, index_.getFixingDays(), TimeUnit.DAYS));
             return (startDiscount / endDiscount - 1.0) / accrualPeriod();
         }
     }

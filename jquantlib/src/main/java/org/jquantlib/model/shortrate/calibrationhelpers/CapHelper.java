@@ -59,7 +59,7 @@ public class CapHelper extends CalibrationHelper {
         IborIndex dummyIndex = new IborIndex("dummy", 
                 indexTenor, 
                 index.getFixingDays(),
-                index.getFixingCalendar(),
+                index.fixingCalendar(),
                 index.getCurrency(),
                 index.getConvention(),
                 index.isEndOfMonth(),
@@ -69,7 +69,7 @@ public class CapHelper extends CalibrationHelper {
         double [] nominals = {1,1.0};
         
         Schedule floatSchedule = new Schedule(startDate, maturity,
-                index.getTenor(), index.getFixingCalendar(), 
+                index.getTenor(), index.fixingCalendar(), 
                 index.getConvention(),
                 index.getConvention(), false, false);
         

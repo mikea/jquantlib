@@ -25,6 +25,7 @@ package org.jquantlib.indexes;
 import java.util.List;
 
 import org.jquantlib.math.Closeness;
+import org.jquantlib.math.Constants;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
@@ -33,48 +34,53 @@ import org.jquantlib.util.Observer;
 import org.jquantlib.util.TimeSeries;
 
 /**
- * @author Srinivas Hasti
+ * Purely virtual base class for indexes
  * 
+ * @author Srinivas Hasti
  */
 //TODO: Code review and comments
 public abstract class Index implements Observable {
 
-	/**
-	 * Return name of the Index
-	 * @return
+	//
+    // public abstract methods
+    //
+    
+    /**
+	 * @return name of the Index
 	 */
-	public abstract String getName();
+	public abstract String name();
 
 	/**
-	 * Returns the calendar defining valid fixing dates
+	 * @return the calendar defining valid fixing dates
 	 */
-	public abstract Calendar getFixingCalendar();
+	public abstract Calendar fixingCalendar();
 
 	/**
-	 * 
-	 *  Returns TRUE if the fixing date is a valid one
+	 *  @return TRUE if the fixing date is a valid one
 	 */
 	public abstract boolean isValidFixingDate(Date fixingDate);
 
 	/**
-	 * Returns the fixing at the given date
-	 * ! the date passed as arguments must be the actual calendar date of the
+	 * @return the fixing at the given date. The date passed as arguments must be the actual calendar date of the
 	 * fixing; no settlement days must be used.
 	 */
 	public abstract double fixing(Date fixingDate, boolean forecastTodaysFixing);
 
+	
+	//
+	// public methods
+	//
+	
 	/**
-	 * 
-	 * Returns the fixing TimeSeries
+	 * @return the fixing TimeSeries
 	 */
 	public TimeSeries<Double> timeSeries() {
-		return IndexManager.getInstance().get(getName());
+		return IndexManager.getInstance().get(name());
 	}
 
-	 
-	/*
+	/**
 	 * Stores the historical fixing at the given date
-	 * 
+	 * <p>
 	 * The date passed as arguments must be the actual calendar date of the
 	 * fixing; no settlement days must be used.
 	 */
@@ -82,10 +88,9 @@ public abstract class Index implements Observable {
 		addFixings(new Date[] {fixingDate}, new double[] { fixing }, forceOverwrite);
 	}
 
-	
-	/*
+	/**
 	 * Stores historical fixings from a TimeSeries
-	 * 
+	 * <p> 
 	 * The dates in the TimeSeries must be the actual calendar dates of the
 	 * fixings; no settlement days must be used.
 	 */
@@ -93,15 +98,14 @@ public abstract class Index implements Observable {
 		addFixings(t.dates(), t.values(), forceOverwrite);
 	}
 
-	
-	/*
+	/**
 	 * Stores historical fixings at the given dates
-	 * 
-	 * the dates passed as arguments must be the actual calendar dates of the
+	 * <p>
+	 * The dates passed as arguments must be the actual calendar dates of the
 	 * fixings; no settlement days must be used.
 	 */
 	public void addFixings(final Date[] dates, final double[] values, boolean forceOverwrite) {
-		final String tag = getName();
+		final String tag = name();
 		final TimeSeries<Double> h = IndexManager.getInstance().get(tag);
 		boolean missingFixing;
 		boolean validFixing;
@@ -109,8 +113,6 @@ public abstract class Index implements Observable {
 		boolean noDuplicatedFixing = true;
 		Date invalidDate = null;
 		Date duplicatedDate = null;
-		//final Double nullValue = null; TODO: do we need our own null implementation (see null.hpp)
-		final double nullValue = 0;
 		double invalidValue = Double.NaN;
 		double duplicatedValue = Double.NaN;
 
@@ -119,7 +121,7 @@ public abstract class Index implements Observable {
 		    Double value = values[i];
             validFixing = isValidFixingDate(date);
             double currentValue = h.find(date);
-            missingFixing = forceOverwrite || Closeness.isClose(currentValue, nullValue);
+            missingFixing = forceOverwrite || Closeness.isClose(currentValue, Constants.NULL_Double);
             if (validFixing) {
                 if (missingFixing)
                     h.add(date, value);
@@ -153,45 +155,57 @@ public abstract class Index implements Observable {
 	 * Clear the fixings stored for the index
 	 */
 	public void clearFixings() {
-		IndexManager.getInstance().clearHistory(getName());
+		IndexManager.getInstance().clearHistory(name());
 	}
 
+	public double fixing(Date fixingDate){
+        return fixing(fixingDate, false);
+    }
+
+
+	//
+	// implements Observable
+	//
+	
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
 	 * 
 	 */
 	private Observable delegatedObservable = new DefaultObservable(this);
 
+	@Override
 	public void addObserver(Observer observer) {
 		delegatedObservable.addObserver(observer);
 	}
 
+    @Override
 	public int countObservers() {
 		return delegatedObservable.countObservers();
 	}
 
+    @Override
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
 
+    @Override
 	public void notifyObservers() {
 		delegatedObservable.notifyObservers();
 	}
 
+    @Override
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
 
+    @Override
 	public void deleteObservers() {
 		delegatedObservable.deleteObservers();
 	}
 
+    @Override
 	public List<Observer> getObservers() {
 		return delegatedObservable.getObservers();
 	}
 	
-	public double fixing(Date fixingDate){
-	    return fixing(fixingDate, false);
-	}
-
 }

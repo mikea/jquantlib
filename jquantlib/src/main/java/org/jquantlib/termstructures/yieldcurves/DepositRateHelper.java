@@ -105,7 +105,7 @@ public class DepositRateHelper<T extends TermStructure> extends
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
 				ibor.getTenor(), ibor.getFixingDays(),
-				ibor.getFixingCalendar(), null, ibor.getConvention(), ibor
+				ibor.fixingCalendar(), null, ibor.getConvention(), ibor
 						.isEndOfMonth(), ibor.getDayCounter(),
 				termStructureHandle);
 		initializeDates();
@@ -122,7 +122,7 @@ public class DepositRateHelper<T extends TermStructure> extends
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
 				ibor.getTenor(), ibor.getFixingDays(),
-				ibor.getFixingCalendar(), null, ibor.getConvention(), ibor
+				ibor.fixingCalendar(), null, ibor.getConvention(), ibor
 						.isEndOfMonth(), ibor.getDayCounter(),
 				termStructureHandle);
 
@@ -132,7 +132,7 @@ public class DepositRateHelper<T extends TermStructure> extends
 	 * 
 	 */
 	protected void initializeDates() {
-		earliestDate = iborIndex.getFixingCalendar().advance(evaluationDate,
+		earliestDate = iborIndex.fixingCalendar().advance(evaluationDate,
 				iborIndex.getFixingDays(), TimeUnit.DAYS);
 		latestDate = iborIndex.maturityDate(earliestDate);
 		fixingDate = iborIndex.fixingDate(earliestDate);

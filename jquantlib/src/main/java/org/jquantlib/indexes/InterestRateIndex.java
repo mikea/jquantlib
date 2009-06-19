@@ -68,7 +68,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		// tenor.normalize(); //TODO
 		Configuration.getSystemConfiguration(null)
 		.getGlobalSettings().getEvaluationDate().addObserver(this);
-		IndexManager.getInstance().notifier(getName()).addObserver(this);		
+		IndexManager.getInstance().notifier(name()).addObserver(this);		
 	}
 
 	@Override
@@ -84,16 +84,16 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		if (fixingDate.le(today)
 				|| (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
 			// must have been fixed
-			Double pastFixing = IndexManager.getInstance().get(getName()).find(
+			Double pastFixing = IndexManager.getInstance().get(name()).find(
 					fixingDate);
 			if (pastFixing == null)
-				throw new IllegalArgumentException("Missing " + getName() + " fixing for " + fixingDate);
+				throw new IllegalArgumentException("Missing " + name() + " fixing for " + fixingDate);
 			return pastFixing;
 		}
 		if ((fixingDate.equals(today)) && !forecastTodaysFixing) {
 			// might have been fixed
 			try {
-				Double pastFixing = IndexManager.getInstance().get(getName())
+				Double pastFixing = IndexManager.getInstance().get(name())
 						.find(fixingDate);
 				if (pastFixing != null)
 					return pastFixing;
@@ -112,7 +112,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 	    }
 
 	@Override
-	public String getName() {
+	public String name() {
 		StringBuilder builder = new StringBuilder(familyName);
 		if (tenor.units() == TimeUnit.DAYS) {
 			if (fixingDays == 0)
@@ -128,7 +128,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 	}
 
 	public Date fixingDate(Date valueDate) {
-		Date fixingDate = getFixingCalendar().advance(valueDate, (fixingDays),
+		Date fixingDate = fixingCalendar().advance(valueDate, (fixingDays),
 				TimeUnit.DAYS);
 		if (!(isValidFixingDate(fixingDate)))
 			throw new IllegalArgumentException("fixing date " + fixingDate + " is not valid");
@@ -152,7 +152,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		return fixingDays;
 	}
 
-	public Calendar getFixingCalendar() {
+	public Calendar fixingCalendar() {
 		return fixingCalendar;
 	}
 
@@ -170,7 +170,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		if (!isValidFixingDate(fixingDate))
 			throw new IllegalArgumentException("Fixing date " + fixingDate
 					+ " is not valid");
-		return getFixingCalendar().advance(fixingDate, fixingDays,
+		return fixingCalendar().advance(fixingDate, fixingDays,
 				TimeUnit.DAYS);
 	}
 

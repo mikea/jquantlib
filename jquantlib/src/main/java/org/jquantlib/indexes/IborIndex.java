@@ -77,7 +77,7 @@ public class IborIndex extends InterestRateIndex {
 	@Override
 	protected double forecastFixing(Date fixingDate) {
 		if (!termStructure.isEmpty())
-			throw new IllegalStateException("no forecasting term structure set to " + getName());
+			throw new IllegalStateException("no forecasting term structure set to " + name());
 		Date fixingValueDate = valueDate(fixingDate);
 		Date endValueDate = maturityDate(fixingValueDate);
 		double fixingDiscount = termStructure.getLink().discount(fixingValueDate);
@@ -103,7 +103,7 @@ public class IborIndex extends InterestRateIndex {
 	 */
 	@Override
 	public Date maturityDate(Date valueDate) {
-		return getFixingCalendar().advance(valueDate, getTenor(), convention, endOfMonth);
+		return fixingCalendar().advance(valueDate, getTenor(), convention, endOfMonth);
 	}
 
 	public BusinessDayConvention getConvention() {
