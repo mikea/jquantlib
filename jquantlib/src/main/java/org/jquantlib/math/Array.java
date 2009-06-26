@@ -376,21 +376,24 @@ public class Array {
         }
     }
 
-    public DoubleForwardIterator forwardIterator() {
-        return Std.forwardIterator(data);
-    }
 
-    public MutableDoubleForwardIterator mutableForwardIterator() {
-        return Std.mutableForwardIterator(data);
-    }
+    //TODO: remove old code below    
 
-    public DoubleReverseIterator reverseIterator() {
-        return Std.reverseIterator(data);
-    }
-
-    public MutableDoubleReverseIterator mutableReverseIterator() {
-        return Std.mutableReverseIterator(data);
-    }
+//    public DoubleForwardIterator forwardIterator() {
+//        return Std.forwardIterator(data);
+//    }
+//
+//    public MutableDoubleForwardIterator mutableForwardIterator() {
+//        return Std.mutableForwardIterator(data);
+//    }
+//
+//    public DoubleReverseIterator reverseIterator() {
+//        return Std.reverseIterator(data);
+//    }
+//
+//    public MutableDoubleReverseIterator mutableReverseIterator() {
+//        return Std.mutableReverseIterator(data);
+//    }
 
     
     //

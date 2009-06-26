@@ -23,7 +23,6 @@
 
 package org.jquantlib.time;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,8 +31,6 @@ import org.jquantlib.lang.annotation.NonNegative;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.DoubleComparatorImpl;
-import org.jquantlib.util.stdlibc.DoubleForwardIterator;
-import org.jquantlib.util.stdlibc.DoubleReverseIterator;
 import org.jquantlib.util.stdlibc.Std;
 
 import cern.colt.Sorting;
@@ -170,17 +167,17 @@ public class TimeGrid {
         // list. Between these points, there are inner-points which are
         // regularly spaced.
         
-        if(steps == 0){
-            List<Double> diff = new ArrayList<Double>();
-            List templist = Arrays.asList(mandatoryTimes);
-            //FIXME: Review when adjacent_difference is fixed. 
-            Std.adjacent_difference(templist, 1, diff);
-            if(diff.get(0)==0.0){
-                diff.remove(0.0);
+        if (steps == 0){
+            final double[] diff = Std.adjacent_difference(mandatoryTimes, 1);
+            
+            int idx_min = 0;
+            int idx_max = diff.length-1;
+            
+            if (diff[0]==0.0){
+                idx_min++;
             }
-            dtMax = Std.min_element(0, diff.size()-1, diff);
-        }
-        else{
+            dtMax = Std.min_element(idx_min, idx_max, diff);
+        } else {
             dtMax = last/steps;
         }
         
@@ -381,13 +378,17 @@ public class TimeGrid {
             return times[times.length-1]; 
         }
 
-        public DoubleForwardIterator forwardIterator() /*@Readonly*/ { 
-            return Std.forwardIterator(times);
-        }
         
-        public DoubleReverseIterator reverseIterator() /*@Readonly*/ { 
-            return Std.reverseIterator(times);
-        }
+      //TODO: remove old code below    
+        
+//        public DoubleForwardIterator forwardIterator() /*@Readonly*/ { 
+//            return Std.forwardIterator(times);
+//        }
+//        
+//        public DoubleReverseIterator reverseIterator() /*@Readonly*/ { 
+//            return Std.reverseIterator(times);
+//        }
+
         
         public double front() /*@Readonly*/ { 
             return times[0];

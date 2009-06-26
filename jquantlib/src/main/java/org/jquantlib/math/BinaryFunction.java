@@ -23,20 +23,20 @@
  package org.jquantlib.math;
 
 /**
- * Represents a function of one variable; f(x)
+ * Represents a function of two variables; z = f(x, y)
  * 
- * @author <Richard Gomes>
+ * @author Richard Gomes
  */
-public interface BinaryFunctionDouble {
+//FIXME: code review :: this interface implies on boxing/unboxing and ideally should be removed.
+public interface BinaryFunction<ParameterType, ReturnType> {
 
-	/**
-	 * Computes the value of the function; f(x, y)
-	 * 
-	 * @param x
-	 * @param y
-	 * @return f(x, y)
-	 */
-	public double evaluate(double x, double y);
-	
-	//boolean isFailed() TODO error handling
+    /**
+     * Computes the value of the function; f(x, y)
+     * 
+     * @param x
+     * @param y
+     * @return f(x, y)
+     */
+    public ReturnType evaluate(final ParameterType x, final ParameterType y);
+    
 }

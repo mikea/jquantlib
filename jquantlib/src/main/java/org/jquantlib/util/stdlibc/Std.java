@@ -25,20 +25,21 @@ package org.jquantlib.util.stdlibc;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.math.E_BinaryFunction;
 import org.jquantlib.math.E_IBinaryFunction;
 import org.jquantlib.math.E_IUnaryFunction;
 import org.jquantlib.math.E_UnaryFunction;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.functions.DoubleFunction;
-import org.jquantlib.util.Date;
 
 /**
- * @see <a href="http://javadude.com/articles/passbyvalue.htm">Java is
- *      Pass-by-Value, Dammit!</a>
+ * Mimics library libstdc++ from C++ language which exposes top level functions to <code>std:: namespace</code>
+ * 
+ * @note all fields, methods and inner classes are static
+ * 
+ * @see <a http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/index.html">libstdc++ Source Documentation</a>
+ * @see <a href="http://javadude.com/articles/passbyvalue.htm">Java is Pass-by-Value, Dammit!</a>
  * 
  * @author Dominik Holenstein
  * @author Richard Gomes
@@ -52,49 +53,111 @@ public final class Std {
 	// static public methods
 	//
 
-	/**
-	 * Java implementation of std::adjacent_difference
-	 * <p>
-	 * @param inputList
-	 * @param begin
-	 * @param diffList
-	 * @return diffList
-	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/namespacestd.html#a558">Functional description: std::adjacent_difference</a> 
-	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__numeric_8h-source.html#l00268">Source code: std::adjacent_difference</a> 
-	 *
+    /**
+     * Return differences between adjacent values. 
+     * 
+     * @note Mimics std::adjacent_difference
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
+     */
+    @SuppressWarnings("PMD")
+    static public final double[] adjacent_difference(final double[] array) {
+        return adjacent_difference(array, 0);
+    }
+    
+    /**
+     * Return differences between adjacent values. 
+     * 
+     * @note Mimics std::adjacent_difference
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
+     */
+    @SuppressWarnings("PMD")
+    static public final double[] adjacent_difference(final double[] array, final int from) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+        if (from>=array.length) throw new IndexOutOfBoundsException();
+        
+        final double[] diff = new double[array.length-from];
+        for (int i = from; i < array.length; i++) {
+            final double curr = array[i]; 
+            if (i == 0) {
+                diff[i] = array[i];
+            } else {
+                final double prev = array[i - 1];
+                diff[i] = curr - prev;
+            }
+        }
+        return diff;
+    }
+    
+
+    /**
+	 * Apply all <i>typelist</i> types to generator functor. 
+	 * 
+	 * @note Mimics std::apply
+	 * 
+	 * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00960.html#c173ae39df0e242021655f0f02eb381a">__gnu_cxx::typelist Namespace Reference</a>
 	 */
-	// FIXME: this method needs code review
-	@SuppressWarnings("PMD")
-	static public List<Double> adjacent_difference(final List<Double> inputList,
-			final int begin, List<Double> diffList) {
-		for (int i = begin; i < inputList.size(); i++) {
-			final double curr = inputList.get(i); 
-			if (i == 0) {
-				diffList.add(inputList.get(i));
-			} else {
-				final double prev = inputList.get(i - 1);
-				diffList.add(curr - prev);
-			}
-		}
-		return diffList;
-	}
-
-
 	public static void apply(final Array array, final DoubleFunction func) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null || func==null) throw new NullPointerException();
+        
 		apply(array, 0, array.size(), func);
 	}
 
-	public static void apply(final Array array, final int startIndex, final int endIndex, final DoubleFunction func) {
+
+	/**
+     * Apply all <i>typelist</i> types to generator functor. 
+     * 
+     * @note Mimics std::apply
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00960.html#c173ae39df0e242021655f0f02eb381a">__gnu_cxx::typelist Namespace Reference</a>
+     */
+	public static void apply(final Array array, final int from, final int to, final DoubleFunction func) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null || func==null) throw new NullPointerException();
+        if (from>to || to>=array.size()) throw new IndexOutOfBoundsException();
+        
 		for(int i=0; i<array.size(); i++){
         	array.set(i, func.apply(array.at(i)));
         }
 	}
 	
-	public static<ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> 
-	bind2nd(E_IBinaryFunction<ParameterType,  ReturnType> binaryFunction, ParameterType bounded){   
-        E_IUnaryFunction<ParameterType, ReturnType> ret = new E_UnaryFunction<ParameterType, ReturnType>(){
+
+	//FIXME :: needs code review.
+	// The use of E_IUnaryFunction and E_IBinaryFunction are pretty confusing.
+	// It's not clear what these interfaces/classes do (where are the comments and references, etc?)
+	// and, in particular, E_IBinaryFunction should have 3 generic arguments: 2 parameter types and 1 result type.
+	public static <ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> bind1st(
+            E_IBinaryFunction<ParameterType, ReturnType> binaryFunction, ParameterType bounded) {
+        
+        final E_IUnaryFunction<ParameterType, ReturnType> ret = new E_UnaryFunction<ParameterType, ReturnType>() {
             private E_IBinaryFunction<ParameterType, ReturnType> binary;
             private ParameterType bounded;
+
+            @Override
+            public ReturnType evaluate(ParameterType x) {
+                return binary.evaluate(bounded, x);
+            }
+        };
+        ret.setBinaryFunction(binaryFunction);
+        ret.setBoundedValue(bounded);
+        return ret;
+    }
+    
+    
+    //FIXME :: needs code review.
+    // The use of E_IUnaryFunction and E_IBinaryFunction are pretty confusing.
+    // It's not clear what these interfaces/classes do (where are the comments and references, etc?)
+    // and, in particular, E_IBinaryFunction should have 3 generic arguments: 2 parameter types and 1 result type.
+	public static <ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> bind2nd(
+            E_IBinaryFunction<ParameterType, ReturnType> binaryFunction, ParameterType bounded) {
+        
+        final E_IUnaryFunction<ParameterType, ReturnType> ret = new E_UnaryFunction<ParameterType, ReturnType>() {
+            private E_IBinaryFunction<ParameterType, ReturnType> binary;
+            private ParameterType bounded;
+
             @Override
             public ReturnType evaluate(ParameterType x) {
                 return binary.evaluate(x, bounded);
@@ -103,57 +166,94 @@ public final class Std {
         ret.setBinaryFunction(binaryFunction);
         ret.setBoundedValue(bounded);
         return ret;
-	}
+    }	
 	
 	
-	public static<ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> 
-	    bind1st(E_IBinaryFunction<ParameterType,  ReturnType> binaryFunction, ParameterType bounded){   
-	        E_IUnaryFunction<ParameterType, ReturnType> ret = new E_UnaryFunction<ParameterType, ReturnType>(){
-	            private E_IBinaryFunction<ParameterType, ReturnType> binary;
-	            private ParameterType bounded;
-	            @Override
-	            public ReturnType evaluate(ParameterType x) {
-	                return binary.evaluate(bounded, x);
-	            }
-	        };
-	        ret.setBinaryFunction(binaryFunction);
-	        ret.setBoundedValue(bounded);
-	        return ret;
-	    }
-	
-	   /**
-     * Implements std::min_element
-     * @param from
-     * @param to
-     * @param list
-     * @return
+	/**
+     * Return the minimum element in a range using comparison functor. 
+     * 
+     * @note Mimics std::min_element
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
+     * 
+     * @deprecated
      */
-    
-    public static double min_element(int from, int to, List<Double>  list){
+    public static double min_element(final int from, final int to, final List<Double> array) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+        if (from>to || to>=array.size()) throw new IndexOutOfBoundsException();
+
         double value = Double.POSITIVE_INFINITY;
-        for(double temp: list){
-            if(temp<value){
+        for (double temp : array){
+            if (temp<value){
                 value = temp;
             }
         }
         return value;
     }
  
-    public static double min_element(int from, int to, double []  list){
+    /**
+     * Return the minimum element in a range using comparison functor. 
+     * 
+     * @note Mimics std::min_element
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
+     */
+    public static double min_element(final int from, final int to, final double []  array) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+        if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
+        
         double value = Double.POSITIVE_INFINITY;
-        for(int i = from; i<to; i++){
-            if(list[i]<value){
-                value = list[i];
+        for (int i = from; i<to; i++){
+            if (array[i]<value){
+                value = array[i];
             }
         }
         return value;
     }
     
-    public static double max_element(int from, int to, double []  list){
+    
+    /**
+     * Return the maximum element in a range using comparison functor. 
+     * 
+     * @note Mimics std::max_element
+     * list
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a>
+     *  
+     * @deprecated
+     */
+    public static double max_element(final int from, final int to, final List<Double> array) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+        if (from>to || to>=array.size()) throw new IndexOutOfBoundsException();
+        
+        double value = Double.NEGATIVE_INFINITY;
+        for (double temp: array){
+            if (temp>value){
+                value = temp;
+            }
+        }
+        return value;
+    }
+
+    
+    /**
+     * Return the maximum element in a range using comparison functor. 
+     * 
+     * @note Mimics std::max_element
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a> 
+     */
+    public static double max_element(final int from, final int to, double [] array) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+        if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
+        
         double value = Double.NEGATIVE_INFINITY;
         for(int i = from; i<to; i++){
-            if(list[i]>value){
-                value = list[i];
+            if(array[i]>value){
+                value = array[i];
             }
         }
         return value;
@@ -161,114 +261,136 @@ public final class Std {
 
 	
     /**
-     * Java implementation of std::lower_bound
-     * <p>
-     * This method signature is specific for <i>int</i> values.
-     * Other method signatures may be available for other types.
-     * <p> 
-     * The original function signature is
-     * <pre>
-     * template<typename _ForwardIterator, typename _Tp>
-     *  _ForwardIterator lower_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __val)
-     * </pre>
-     * <p>
-     * In this implementation we provide as many as needed type-specific method signatures. In particular
-     * we use an array intended to mimic the semantic of <i>elements located between __first and __last</i>.
-     *  
-     * @param list is an array of values which implicitly defines it's begin (zero) and end (it's own size)
-     * @param val is the value to be located
-     * @return see upper_bound doc
+     * Finds the first position in which val could be inserted without changing the ordering.
      * 
-     * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__algo_8h-source.html#l02597">Source code: std::lower_bound</a> 
+     * @note Mimics std::lower_bound
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
      */
     @SuppressWarnings("PMD.MethodNamingConventions")
-    public static int lower_bound(final double[] list, final double val) {
-        return lower_bound(list, 0, list.length-1, val);
+    public static int lower_bound(final double[] array, final double val) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+
+        return lower_bound(array, 0, array.length-1, val);
     }
 
+
+    /**
+     * Finds the first position in which val could be inserted without changing the ordering.
+     * 
+     * @note Mimics std::lower_bound
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+     */
     @SuppressWarnings("PMD")
-    private static int lower_bound(final double[] list, int first, int last, final double val) {
-        int len = last - first;
+    private static int lower_bound(final double[] array, int from, int to, final double val) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+        if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
+
+        int len = to - from;
         int half;
         int middle;
         
         while (len > 0) {
             half = len >> 1;
-            middle = first;
+            middle = from;
             middle = middle + half;
             
-            if (list[middle] < val) {
-                first = middle;
-                first++;
+            if (array[middle] < val) {
+                from = middle;
+                from++;
                 len = len - half -1;
             } else {
                 len = half;
             }
         }
-        return first;
+        return from;
     }
 
     
+    /**
+     * Finds the first position in which val could be inserted without changing the ordering.
+     * 
+     * @note Mimics std::lower_bound
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+     */
+	@SuppressWarnings("PMD.MethodNamingConventions")
+	public static int upper_bound(final double[] array, final double val) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+
+		return upper_bound(array, 0, array.length-1, val);
+	}
+
+	
 	/**
-	 * Java implementation of std::upper_bound
-	 * <p>
-	 * This method signature is specific for <i>int</i> values.
-	 * Other method signatures may be available for other types.
-	 * <p> 
-	 * The original function signature is
-	 * <pre>
-	 * template<typename _ForwardIterator, typename _Tp>
-     *  _ForwardIterator upper_bound(_ForwardIterator __first, _ForwardIterator __last, const _Tp& __val)
-	 * </pre>
-	 * <p>
-	 * In this implementation we provide as many as needed type-specific method signatures. In particular
-	 * we use an array intended to mimic the semantic of <i>elements located between __first and __last</i>.
-	 *  
-	 * @param list is an array of values which implicitly defines it's begin (zero) and end (it's own size)
-	 * @param val is the value to be located
-	 * @return see upper_bound doc
+	 * Finds the last position in which val could be inserted without changing the ordering. 
 	 * 
-	 * @see <a href="http://acm.cs.uct.ac.za/docs/libstdc++-3.4/stl__algo_8h-source.html#l02699">Source code: std::upper_bound</a> 
+     * @note Mimics std::upper_bound
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
 	 */
 	@SuppressWarnings("PMD.MethodNamingConventions")
-	public static int upper_bound(final double[] list, final double val) {
-		return upper_bound(list, 0, list.length-1, val);
-	}
-	
-	@SuppressWarnings("PMD.MethodNamingConventions")
-	public static int upper_bound(final Double[] list, final double val) {
-		double[] d = new double[list.length];
-		for (int i = 0; i < list.length; i++) {
-			d[i] = list[i];
+	public static int upper_bound(final Double[] array, final double val) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+
+		double[] d = new double[array.length];
+		for (int i = 0; i < array.length; i++) {
+			d[i] = array[i];
 		}
-		return upper_bound(d, 0, list.length - 1, val);
+		return upper_bound(d, 0, array.length - 1, val);
 	}	
 
+
+	/**
+     * Finds the last position in which val could be inserted without changing the ordering. 
+     * 
+     * @note Mimics std::upper_bound
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
+     */
 	@SuppressWarnings("PMD.MethodNamingConventions")
-	private static int upper_bound(final double[] list, int first, int last, final double val) {
-		int len = last - first;
+	private static int upper_bound(final double[] array, int from, int to, final double val) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+        if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
+
+		int len = to - from;
 		int half;
 		int middle;
 		
 		while (len > 0) {
 			half = len >> 1;
-			middle = first;
+			middle = from;
 			middle = middle + half;
 			
-			if (val < list[middle]){
+			if (val < array[middle]){
 				len = half;
 			} else {
-				first = middle;
-				first++;
+				from = middle;
+				from++;
 				len = len - half -1;
 			}
 		}
-		return first;
+		return from;
 	}
 
 	
-	//TODO: needs code review
+	/**
+	 * Perform an operation on corresponding elements of two sequences. 
+	 * 
+	 * @note Mimics std::transform
+	 * 
+	 * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01012.html#gaf771a08ae2322b42640bb14fc342c5d">std::transform</a>
+	 */
 	public static final void transform(final Array array, final Array result, final UnaryFunctionDouble func) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null || result==null || func==null) throw new NullPointerException();
+
 		double[] a = array.getData();
 		double[] r = result.getData();
 		
@@ -277,335 +399,230 @@ public final class Std {
 		}
 	}
 	
-	public static final<ParameterType, ReturnType>  void transform(final double[] array, final double[] result, final E_UnaryFunction<Double, Double> func) {
+
+	/**
+     * Perform an operation on corresponding elements of two sequences. 
+     * 
+     * @note Mimics std::transform
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01012.html#gaf771a08ae2322b42640bb14fc342c5d">std::transform</a>
+     */
+	public static final<ParameterType, ReturnType>
+	        void transform(final double[] array, final double[] result, final E_UnaryFunction<Double, Double> func) {
+
+	    // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null || result==null || func==null) throw new NullPointerException();
+	    
         for(int i=0; i<array.length; i++){
             result[i] = func.evaluate(array[i]);
         }
     }
 
 	
-	
-	
-	//
-	// static public methods ::: unmutable iterators
-	//
+    /**
+     * Return the minimum element in a range.
+     * 
+     * @note Mimics std::min
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g49f0c87cb0e1bf950f5c2d49aa106573">std::min</a>
+     */
+	// TODO: consider the parallel version of std::min (probably implementing in class GnuParallel)
+	// http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00964.html#0d0e5aa5b83e8ffa90d57714f03d73bf
+    public static <T extends Comparable<T>> T min(T... t) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (t==null) throw new NullPointerException();
 
-	static public IntForwardIterator forwardIterator(final int[] list) {
-		return new IntForwardIteratorImpl(list);
-	}
-
-	static public IntReverseIterator reverseIterator(final int[] list) {
-		return new IntReverseIteratorImpl(list);
-	}
-
-	static public DoubleForwardIterator forwardIterator(final double[] list) {
-		return new DoubleForwardIteratorImpl(list);
-	}
-
-	static public DoubleReverseIterator reverseIterator(final double[] list) {
-		return new DoubleReverseIteratorImpl(list);
-	}
-
-	static public ObjectForwardIterator forwardIterator(final Object[] list) {
-		return new ObjectForwardIteratorImpl(list);
-	}
-
-	
-	//
-	// static public methods ::: mutable iterators
-	//
-
-	static public MutableIntForwardIterator mutableForwardIterator(final int[] list) {
-		return new MutableIntForwardIteratorImpl(list);
-	}
-
-	static public MutableIntReverseIterator mutableReverseIterator(final int[] list) {
-		return new MutableIntReverseIteratorImpl(list);
-	}
-
-	static public MutableDoubleForwardIterator mutableForwardIterator(final double[] list) {
-		return new MutableDoubleForwardIteratorImpl(list);
-	}
-
-	static public MutableDoubleReverseIterator mutableReverseIterator(final double[] list) {
-		return new MutableDoubleReverseIteratorImpl(list);
-	}
-
-	
-	// 
-	// static private abstract inner classes
-	//
-	@SuppressWarnings("PMD.AbstractNaming")
-	static private abstract class ForwardIteratorImpl implements ForwardIterator {
-		private final int size;
-		protected int index;
-
-		protected ForwardIteratorImpl(final int size) {
-			this.size = size;
-			this.index = 0;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return (index < size);
-		}
-
-		@Override
-		@SuppressWarnings("PMD.AvoidFinalLocalVariable")
-		public int skip(final int skipsize) {
-			final int jump = (index + skipsize < size) ? skipsize : (size - index - 1);
-			index += jump;
-			return jump;
-		}
-	}
-
-	@SuppressWarnings("PMD.AbstractNaming")
-	static private abstract class ReverseIteratorImpl implements ReverseIterator {
-		protected int index;
-
-		protected ReverseIteratorImpl(final int size) {
-			this.index = size - 1;
-		}
-
-		@Override
-		public boolean hasPrevious() {
-			return (index >= 0);
-		}
-
-		@Override
-		@SuppressWarnings("PMD.AvoidFinalLocalVariable")
-		public int back(final int backstep) {
-			final int jump = (index - backstep >= 0) ? backstep : index;
-			index -= jump;
-			return jump;
-		}
-	}
-
-	
-	// 
-	// static private inner classes
-	//
-	// These classes implement unmutable iterators
-	//
-
-	static private class IntForwardIteratorImpl extends ForwardIteratorImpl 
-			implements IntForwardIterator {
-
-		protected int[] list;
-
-		public IntForwardIteratorImpl(final int[] list) {
-			super((list == null) ? 0 : list.length);
-			this.list = list;
-		}
-
-		@Override
-		public int next() throws NoSuchElementException {
-			if (hasNext())
-				return list[index++];
-			throw new NoSuchElementException();
-		}
-	}
-
-	static private class IntReverseIteratorImpl extends ReverseIteratorImpl
-			implements IntReverseIterator {
-
-		protected int[] list;
-
-		public IntReverseIteratorImpl(final int[] list) {
-			super((list == null) ? 0 : list.length);
-			this.list = list;
-		}
-
-		@Override
-		public int previous() throws NoSuchElementException {
-			if (hasPrevious())
-				return list[index++];
-			throw new NoSuchElementException();
-		}
-	}
-
-	static private class DoubleForwardIteratorImpl extends ForwardIteratorImpl
-			implements DoubleForwardIterator {
-
-		protected double[] list;
-
-		public DoubleForwardIteratorImpl(final double[] list) {
-			super((list == null) ? 0 : list.length);
-			this.list = list;
-		}
-
-		@Override
-		public double next() throws NoSuchElementException {
-			if (hasNext())
-				return list[index++];
-			throw new NoSuchElementException();
-		}
-
-	}
-
-	static private class DoubleReverseIteratorImpl extends ReverseIteratorImpl
-			implements DoubleReverseIterator {
-
-		protected double[] list;
-
-		public DoubleReverseIteratorImpl(final double[] list) {
-			super((list == null) ? 0 : list.length);
-			this.list = list;
-		}
-
-		@Override
-		public double previous() throws NoSuchElementException {
-			if (hasPrevious())
-				return list[index++];
-			throw new NoSuchElementException();
-		}
-
-	}
-
-	static private class ObjectForwardIteratorImpl extends ForwardIteratorImpl
-			implements ObjectForwardIterator {
-
-		protected Object[] list;
-
-		public ObjectForwardIteratorImpl(final Object[] list) {
-			super((list == null) ? 0 : list.length);
-			this.list = list;
-		}
-
-		@Override
-		public Object next() throws NoSuchElementException {
-			if (hasNext())
-				return list[index++]; // FIXME :: make a clone
-			throw new NoSuchElementException();
-		}
-
-	}
-
-	
-	// 
-	// static private inner classes
-	//
-	// These classes implement mutable iterators
-	//
-
-	static private class MutableIntForwardIteratorImpl extends 
-			IntForwardIteratorImpl implements MutableIntForwardIterator {
-
-		public MutableIntForwardIteratorImpl(final int[] list) {
-			super(list);
-		}
-
-		@Override
-		public IntReference nextReference() throws NoSuchElementException {
-			return new IntReference(list, index);
-		}
-
-	}
-
-	static private class MutableIntReverseIteratorImpl extends
-			IntReverseIteratorImpl implements MutableIntReverseIterator {
-
-		public MutableIntReverseIteratorImpl(final int[] list) {
-			super(list);
-		}
-
-		@Override
-		public IntReference previousReference() throws NoSuchElementException {
-			return new IntReference(list, index);
-		}
-
-	}
-
-	static private class MutableDoubleForwardIteratorImpl extends
-			DoubleForwardIteratorImpl implements MutableDoubleForwardIterator {
-
-		public MutableDoubleForwardIteratorImpl(final double[] list) {
-			super(list);
-		}
-
-		@Override
-		public DoubleReference nextReference() throws NoSuchElementException {
-			return new DoubleReference(list, index);
-		}
-
-	}
-
-	static private class MutableDoubleReverseIteratorImpl extends
-			DoubleReverseIteratorImpl implements MutableDoubleReverseIterator {
-
-		public MutableDoubleReverseIteratorImpl(final double[] list) {
-			super(list);
-		}
-
-		@Override
-		public DoubleReference previousReference()
-				throws NoSuchElementException {
-			return new DoubleReference(list, index);
-		}
-	}
-	
-	public static double accumulate(int start, int end, double [] list, double init){
-	    double sum = init;
-	    for(int i = start; i<end; i++){
-	        sum += list[i];
-	    }
-	    return sum;
-	}
-	
-	public static double accumulate(double [] list, double init){
-	    return accumulate(0, list.length, list, init);
-	}
-	
-    public static double accumulate(final List<Double> list, double init) {
-        double sum = 0.0;
-        for (int i = 0; i < list.size(); i++) {
-            sum += list.get(i);
-        }
-        return sum;
+        List<T> list = Arrays.asList(t);
+        Collections.sort(list);
+        return list.get(0);
     }
+
     
-	public static <T extends Comparable<T>> T min(T ... t){
-	    List<T> list = Arrays.asList(t);
-	    Collections.sort(list);
-	    return  list.get(0);
-	}
-	
-	public static <T extends Comparable<T>> T max(T... t) {
+    /**
+     * Return the maximum element in a range.
+     * 
+     * @note Mimics std::max
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#gacf2fd7d602b70d56279425df06bd02c">std::max</a>
+     */
+    // TODO: consider the parallel version of std::max (probably implementing in class GnuParallel)
+    // http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00964.html#992b78d1946c7c02e46bc3509637f12d
+    public static <T extends Comparable<T>> T max(T... t) {
+        
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (t==null) throw new NullPointerException();
+        
         List<T> list = Arrays.asList(t);
         Collections.sort(list);
         return list.get(list.size() - 1);
     }
-	
-	public static E_UnaryFunction<Double, Double> multiplies(double multiplier){
-        E_UnaryFunction<Double, Double> ret = new E_UnaryFunction<Double, Double>(){
+
+
+    /**
+     * Accumulate values in a range. 
+     * 
+     * @note Mimics std::accumulate
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
+     */
+    public static double accumulate(final int from, final int to, final double[] array, final double init) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+        if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
+
+        double sum = init;
+        for (int i = from; i < to; i++) {
+            sum += array[i];
+        }
+        return sum;
+    }
+
+    
+    /**
+     * Accumulate values in a range. 
+     * 
+     * @note Mimics std::accumulate
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
+     */
+    public static double accumulate(final double[] array, final double init) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+
+        return accumulate(0, array.length, array, init);
+    }
+
+    
+    /**
+     * Accumulate values in a range. 
+     * 
+     * @note Mimics std::accumulate
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
+     * 
+     * @deprecated
+     */
+    public static double accumulate(final List<Double> array, final double init) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (array==null) throw new NullPointerException();
+
+        double sum = 0.0;
+        for (int i = 0; i < array.size(); i++) {
+            sum += array.get(i);
+        }
+        return sum;
+    }
+
+
+    // FIXME: This method must be refactored.
+    // There's no such "std::multiplies"
+    // This class returns an object which is extended from an abstract class from math package, which
+    // is something weird because 2 very related concepts which could not be apart are located in
+    // two very different places.
+    public static E_UnaryFunction<Double, Double> multiplies(double multiplier) {
+        
+        E_UnaryFunction<Double, Double> ret = new E_UnaryFunction<Double, Double>() {
             @Override
             public Double evaluate(Double x) {
-                return x*params[0];
+                return x * params[0];
             }
         };
         ret.setParams(multiplier);
         return ret;
-	}
-	
-	public static double inner_product(Array a, Array b){
-	    return inner_product(a, b, 0.0);
-	}
-	
-	   public static double inner_product(Array a, Array b, double init){
-	        double innerProduct=init;
-	        for(int i = 0; i<a.size(); i++){
-	            innerProduct += a.get(i)*b.get(i);
-	        }
-	        return innerProduct;
-	    }
-	
-	public static double inner_product(Array a, int start_a, Array b, int start_b, int lenght, double init){
-	        double innerProduct=init;
-	        for(int i = 0; i<lenght; i++){
-	            innerProduct += a.get(start_a)*b.get(start_b);
-	            start_a++;
-	            start_b++;
-	        }
-	        return innerProduct;
-	    }
+    }
+
+    
+    /**
+     * Compute inner product of two ranges. 
+     * 
+     * @note Mimics std::inner_product
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
+     */
+    public static double inner_product(final Array arrayA, final Array arrayB) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (arrayA==null || arrayB==null) throw new NullPointerException();
+
+        return inner_product(arrayA.getData(), arrayB.getData(), 0.0);
+    }
+
+    
+    /**
+     * Compute inner product of two ranges. 
+     * 
+     * @note Mimics std::inner_product
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
+     */
+    public static double inner_product(final Array arrayA, final Array arrayB, final double init) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (arrayA==null || arrayB==null) throw new NullPointerException();
+
+        return inner_product(arrayA.getData(), arrayB.getData(), init);
+    }
+
+    
+    /**
+     * Compute inner product of two ranges. 
+     * 
+     * @note Mimics std::inner_product
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
+     */
+    public static double inner_product(final Array arrayA, final int fromA, final Array arrayB, final int fromB, final int length, final double init) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (arrayA==null || arrayB==null) throw new NullPointerException();
+        if (fromA<0 || fromA>=arrayA.size() || fromA<0 || fromA>=arrayA.size()) throw new IllegalArgumentException();
+        if (fromA+length>=arrayA.size() || fromB+length>=arrayB.size()) throw new IllegalArgumentException();
+
+        return inner_product(arrayA.getData(), fromA, arrayB.getData(), fromB, length, init);
+    }
+    
+    
+    /**
+     * Compute inner product of two ranges. 
+     * 
+     * @note Mimics std::inner_product
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
+     */
+    public static double inner_product(final double[] arrayA, final double[] arrayB, final double init) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (arrayA==null || arrayB==null) throw new NullPointerException();
+        if (arrayA.length!=arrayB.length) throw new IllegalArgumentException();
+
+        double innerProduct = init;
+        for (int i = 0; i < arrayA.length; i++) {
+            innerProduct += arrayA[i] * arrayB[i];
+        }
+        return innerProduct;
+    }
+
+    
+    /**
+     * Compute inner product of two ranges. 
+     * 
+     * @note Mimics std::inner_product
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
+     */
+    public static double inner_product(
+            final double[] arrayA, int fromA, 
+            final double[] arrayB, int fromB, 
+            final int length, final double init) {
+        
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (arrayA==null || arrayB==null) throw new NullPointerException();
+        if (fromA<0 || fromA>=arrayA.length || fromA<0 || fromA>=arrayA.length) throw new IllegalArgumentException();
+        if (fromA+length>=arrayA.length || fromB+length>=arrayB.length) throw new IllegalArgumentException();
+
+        double innerProduct = init;
+        for (int i = 0; i < length; i++) {
+            innerProduct += arrayA[fromA] * arrayB[fromB];
+            fromA++;
+            fromB++;
+        }
+        return innerProduct;
+    }
+    
 }

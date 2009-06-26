@@ -48,6 +48,7 @@ import org.jquantlib.util.stdlibc.Std;
  * 
  */
 
+// FIXME: needs code review
 public class CashFlows {
 
     private static final String not_enough_information_available = "not enough information available";

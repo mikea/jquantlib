@@ -22,19 +22,10 @@
 
 package org.jquantlib.math;
 
-public interface E_IBinaryFunction<ParameterType, ReturnType> {
+public interface E_IBinaryFunction<ParameterType, ReturnType> extends BinaryFunction<ParameterType, ReturnType> {
 
+    public void bind_x_1(final ParameterType bind_x1);
 
-    /**
-     * Computes the value of the function; f(x)
-     * 
-     * @param x
-     * @return f(x)
-     */
-    public ReturnType evaluate(ParameterType x_1, ParameterType x_2);
-
-    public void bind_x_1(ParameterType bind_x1);
-
-    public void bind_x_2(ParameterType bind_x2);
+    public void bind_x_2(final ParameterType bind_x2);
 
 }
