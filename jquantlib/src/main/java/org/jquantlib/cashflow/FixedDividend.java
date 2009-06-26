@@ -32,16 +32,26 @@ public class FixedDividend extends Dividend {
 
 	protected double amount;
 	
-	public FixedDividend( final double amount, final Date date){
+	public FixedDividend(final double amount, final Date date) {
 		super(date);
 		this.amount = amount;
 	}
+	
+	
+	//
+	// Overrides Dividend
+	//
 	
 	@Override
 	public double getAmount(final double underlying) {
 		return amount;
 	}
 
+	
+	//
+	// Overrides Cashflow
+	//
+	
 	@Override
 	public double getAmount() {
 		return amount;

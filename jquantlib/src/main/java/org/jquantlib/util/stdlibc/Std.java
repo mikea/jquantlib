@@ -117,9 +117,9 @@ public final class Std {
 	public static void apply(final Array array, final int from, final int to, final DoubleFunction func) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null || func==null) throw new NullPointerException();
-        if (from>to || to>=array.size()) throw new IndexOutOfBoundsException();
+        if (from>to || to>array.size()) throw new IndexOutOfBoundsException();
         
-		for(int i=0; i<array.size(); i++){
+		for(int i=from; i<to; i++) {
         	array.set(i, func.apply(array.at(i)));
         }
 	}
@@ -184,10 +184,9 @@ public final class Std {
         if (from>to || to>=array.size()) throw new IndexOutOfBoundsException();
 
         double value = Double.POSITIVE_INFINITY;
-        for (double temp : array){
-            if (temp<value){
-                value = temp;
-            }
+        for (int i=from; i<to; i++) {
+            double temp = array.get(i); 
+            if (temp < value) value = temp;
         }
         return value;
     }
@@ -205,10 +204,8 @@ public final class Std {
         if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
         
         double value = Double.POSITIVE_INFINITY;
-        for (int i = from; i<to; i++){
-            if (array[i]<value){
-                value = array[i];
-            }
+        for (int i = from; i<to; i++) {
+            if (array[i] < value) value = array[i];
         }
         return value;
     }
@@ -229,10 +226,9 @@ public final class Std {
         if (from>to || to>=array.size()) throw new IndexOutOfBoundsException();
         
         double value = Double.NEGATIVE_INFINITY;
-        for (double temp: array){
-            if (temp>value){
-                value = temp;
-            }
+        for (int i=from; i<to; i++) {
+            double temp = array.get(i); 
+            if (temp > value) value = temp;
         }
         return value;
     }
@@ -252,9 +248,7 @@ public final class Std {
         
         double value = Double.NEGATIVE_INFINITY;
         for(int i = from; i<to; i++){
-            if(array[i]>value){
-                value = array[i];
-            }
+            if (array[i] > value) value = array[i];
         }
         return value;
     }

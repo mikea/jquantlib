@@ -22,15 +22,16 @@
 
 package org.jquantlib.cashflow;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jquantlib.util.Date;
-import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
  * @author Daniel Kong
  */
-
 @SuppressWarnings("PMD.AbstractNaming")
 public abstract class Dividend extends CashFlow {
 	
@@ -51,10 +52,35 @@ public abstract class Dividend extends CashFlow {
 		return date;
 	}
 	
+	
+	//
+	// public abstract methods
+	//
+	
 	public abstract double getAmount(final double underlying);
 	
 
 	//
+	// public static methods
+	//
+	
+	public static List<? extends Dividend> DividendVector(final List<Date> dividendDates, final List<Double> dividends) {
+    
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+	    if (!(dividendDates.size() == dividends.size())) {
+            throw new ArithmeticException("size mismatch between dividend dates and amounts");
+        }
+        
+        final List<Dividend> items = new ArrayList<Dividend>(dividendDates.size());
+        for (int i=0;i<dividendDates.size();i++){
+
+            items.add(new FixedDividend(dividends.get(i), dividendDates.get(i)));
+        }
+        return items;
+    }
+
+    
+    //
     // implements TypedVisitable<Event>
     //
     

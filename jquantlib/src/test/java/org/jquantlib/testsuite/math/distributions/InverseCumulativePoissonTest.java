@@ -37,8 +37,7 @@ import static org.junit.Assert.fail;
 
 public class InverseCumulativePoissonTest {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(InverseCumulativePoissonTest.class);
+	private final static Logger logger = LoggerFactory.getLogger(InverseCumulativePoissonTest.class);
 
 	public InverseCumulativePoissonTest() {
 		logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
