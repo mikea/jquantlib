@@ -39,7 +39,7 @@ public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
 	// private fields
 	//
 	
-	private double lambda_;
+	private double lambda;
 
 	
 	//
@@ -52,20 +52,30 @@ public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
 //    }
     
 	
-    public InverseCumulativePoisson(double lambda) {
-    	lambda_ = lambda;
+    public InverseCumulativePoisson(final double lambda) {
+    	this.lambda = lambda;
     	
     	// FIXME lambda_ is initialized with lambda first and then set equal to 1.0. This doesn't make sense.
-    	lambda_ = 1.0;
-    	if(lambda_ <= 0.0) {
+    	this.lambda = 1.0;
+    	if(this.lambda <= 0.0) {
     	    throw new ArithmeticException("lambda must be positive");
     	}
     }
 
+    
+    //
+    // public methods
+    //
+    
+    private double calcSummand(final int index) {
+        Factorial fact = new Factorial();
+        return Math.exp(-lambda) * Math.pow(lambda, index) / fact.get(index);
+    }
+
+    
     //
     // implements UnaryFunction
     //
-    
     
     /**
      * Computes the inverse cumulative poisson distribution.
@@ -74,7 +84,7 @@ public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
      * @returns the inverse of the cumulative poisson distribution of input <code>x</code>
      */
     @Override
-    public Double evaluate (Double x) /* @Read-only */ {
+    public Double evaluate (final Double x) /* @Read-only */ {
         if(x <= 0.0 && x >= 1.0) {
             throw new ArithmeticException("Inverse cumulative Poisson distribution is only defined on the interval [0,1]");
         }
@@ -92,16 +102,4 @@ public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
         return (double)(index-1);
     }
     
-    
-    //
-    // implements the calcSummand function
-    //
-
-    private double calcSummand(int index) {
-		Factorial fact = new Factorial();
-		return Math.exp(-lambda_) * Math.pow(lambda_, index) / fact.get(index);
-    }
-
-
-
 }

@@ -54,11 +54,11 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 
 
-//TODO add reference to original paper, clewlow strickland
 /**
  * @author <Richard Gomes>
  */
-
+//TODO class comments
+//TODO add reference to original paper, clewlow strickland
 public class AnalyticContinuousGeometricAveragePriceasianEngine extends ContinuousAveragingAsianOptionEngine{
 
     //
@@ -68,6 +68,7 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
 	@Override
 	public void calculate() /*@ReadOnly*/ {
 
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
 		if (!(arguments.averageType==AverageType.Geometric)){
 			throw new IllegalArgumentException("not a geometric average option");
 		}

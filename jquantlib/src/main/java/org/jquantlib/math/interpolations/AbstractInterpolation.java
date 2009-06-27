@@ -54,6 +54,8 @@ public abstract class AbstractInterpolation implements Interpolation {
 	//
 	// abstract methods
 	//
+    
+    //
 	// These methods are used by their counterparts, e.g:
 	//   evaluateImpl is called by evaluate
 	//   primitiveImpl is called by primitive

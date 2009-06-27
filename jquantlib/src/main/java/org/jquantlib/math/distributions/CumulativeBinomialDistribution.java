@@ -90,13 +90,14 @@ public class CumulativeBinomialDistribution implements UnaryFunctionInteger {
      * @return 1.0 - Beta.incompleteBetaFunction(k+1, n_-k, p_, accuracy, maxIteration)
      */
     @Override
-	public double evaluate(int k) {
-	    if (k >= n) {
-		return 1.0;
-	} else
-	    return 1.0 - Beta.incompleteBetaFunction(k + 1, n - k, p, accuracy, maxIteration);
-	}
-		
+    public double evaluate(int k) {
+        if (k >= n) {
+            return 1.0;
+        } else
+            return 1.0 - Beta.incompleteBetaFunction(k + 1, n - k, p, accuracy, maxIteration);
+    }
+
+    
 	//
     // static methods
     //

@@ -69,6 +69,27 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 		originalTS.addObserver(this);
 	}
 	
+	
+    //
+    // Overrides TermStructure
+    //
+    
+    @Override
+    public Date maxDate() {
+        return originalTS.getLink().maxDate();
+    }
+
+    
+    @Override
+    public DayCounter dayCounter() /* @ReadOnly */ {
+        return originalTS.getLink().dayCounter();
+    }
+
+    
+	//
+	// Override BlackVolTermStructure
+	//
+	
 	@Override
 	protected double blackVarianceImpl(/* @Time */double t, /* @Price */double strike) /* @ReadOnly */{
 		// timeShift (and/or variance) variance at evaluation date cannot be cached since the original curve could change between
@@ -90,18 +111,7 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 		return originalTS.getLink().minStrike();
 	}
 
-	@Override
-	public Date maxDate() {
-		return originalTS.getLink().maxDate();
-	}
 
-	
-	@Override
-	public DayCounter dayCounter() /* @ReadOnly */ {
-		return originalTS.getLink().dayCounter();
-	}
-
-	
 	//
 	// implements TypedVisitable
 	//

@@ -121,42 +121,52 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     	factory = LinearInterpolation.getInterpolator();
     }
 
+	
 	//
-	// public final methods
+	// public methods
 	//
 	
+    public void setInterpolation() {
+        this.setInterpolation(factory);
+    }
+
+    public final void setInterpolation(final Interpolator factory) {
+        varianceCurve = factory.interpolate(times, variances);
+        varianceCurve.enableExtrapolation();
+        varianceCurve.reload();
+        notifyObservers();
+    }
+
+
+    //
+    // Overrides TermStructure
+    //
+    
+    @Override
 	public final DayCounter dayCounter() {
 		return dayCounter;
 	}
 
+    @Override
 	public final Date maxDate() {
 		return maxDate;
 	}
 
+    
+    //
+    // Overrides BlackVolTermStrucure
+    //
+    
+    @Override
 	public final /*@Price*/ double minStrike() {
 		return Double.NEGATIVE_INFINITY;
 	}
 
+    @Override
 	public final /*@Price*/ double maxStrike() {
 		return Double.POSITIVE_INFINITY;
 	}
 
-	public void setInterpolation() {
-		this.setInterpolation(factory);
-	}
-
-	public final void setInterpolation(final Interpolator factory) {
-		varianceCurve = factory.interpolate(times, variances);
-		varianceCurve.enableExtrapolation();
-		varianceCurve.reload();
-		notifyObservers();
-	}
-
-
-	//
-	// protected final methods
-	//
-	
 	@Override
 	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, /*@Price*/ double maturity) {
 		if (t <= times[times.length-1]) {
@@ -168,6 +178,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 		}
 	}
 
+	
 	//
 	// implements TypedVisitable
 	//

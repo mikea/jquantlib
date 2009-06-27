@@ -68,12 +68,22 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
 	private static final String STRIKE_MUST_BE_POSITIVE = "strike must be positive";
 	private static final String UNKNOWN_TYPE = "unknown type";
 
-    private final CumulativeNormalDistribution f;
+    
+	//
+	// private fields
+	//
+	
+	private final CumulativeNormalDistribution f;
     
     // these fields are initialised every time calculate() is called
     private transient GeneralizedBlackScholesProcess process;
     private transient PlainVanillaPayoff payoff;
 
+    
+    //
+    // public constructors
+    //
+    
     public AnalyticBarrierEngine() {
         this.f = new CumulativeNormalDistribution();
     }

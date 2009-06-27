@@ -36,15 +36,18 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     //
     
     /**
-	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
+	 * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i> 
 	 */
 	protected double[] vx;
 
 	/**
-	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
+     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i> 
 	 */
 	protected double[] vy;
 	
+    /**
+     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i> 
+     */
 	protected double[][] mz;
 	
 
@@ -66,7 +69,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 	 * @throws UnsupportedOperationException
 	 */
 	public void calculate() {
-	    throw new UnsupportedOperationException(); //FIXME: message :: maybe a 'global' static final String ?
+	    throw new UnsupportedOperationException(); //FIXME: message
 	}
 	
 	
@@ -102,6 +105,76 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     }
 
     
+    //
+    // implements Interpolation
+    //
+    
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated
+     */
+    @Override
+    public void update() {
+        reload();
+    }
+
+
+    //
+    // Overrides AbstractInterpolation
+    //
+    
+    @Override
+    public void reload() {
+        if (vx.length < 2 || vy.length < 2)
+            throw new IllegalArgumentException("not enough points to interpolate");
+        for (int i = 0; i < vx.length-1; i++) {
+            if ( vx[i] > vx[i+1] )
+                throw new IllegalArgumentException("unsorted values on array X");
+            if ( vy[i] > vy[i+1] )
+                throw new IllegalArgumentException("unsorted values on array Y");
+        }
+    }
+
+    
+    //
+    // implements BinaryFunctionDouble
+    //
+    
+    @Override
+    public double evaluate(final double x, final double y) {
+        checkRange(x, y, this.allowsExtrapolation());
+        return evaluateImpl(x, y);
+    }
+    
+  
+    //
+    // implements Extrapolator
+    //
+
+    /**
+     * Implements multiple inheritance via delegate pattern to an inner class
+     * 
+     * @see Extrapolator
+     */
+    private DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
+    
+    @Override
+    public final boolean allowsExtrapolation() {
+        return delegatedExtrapolator.allowsExtrapolation();
+    }
+
+    @Override
+    public void disableExtrapolation() {
+        delegatedExtrapolator.disableExtrapolation();
+    }
+
+    @Override
+    public void enableExtrapolation() {
+        delegatedExtrapolator.enableExtrapolation();
+    }
+
+
     //
 	// implements Interpolation2D
 	//
@@ -173,61 +246,6 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         double y1 = yMin(), y2 = yMax();
         return (y >= y1 && y <= y2) || isClose(y,y1) || isClose(y,y2);
     }
+
     
-    @Deprecated
-    @Override
-    public void update() {
-        reload();
-    }
-
-    @Override
-	public void reload() {
-		if (vx.length < 2 || vy.length < 2)
-			throw new IllegalArgumentException("not enough points to interpolate");
-		for (int i = 0; i < vx.length-1; i++) {
-			if ( vx[i] > vx[i+1] )
-				throw new IllegalArgumentException("unsorted values on array X");
-			if ( vy[i] > vy[i+1] )
-				throw new IllegalArgumentException("unsorted values on array Y");
-		}
-	}
-
-	
-	//
-	// implements BinaryFunctionDouble
-	//
-	
-    @Override
-	public double evaluate(final double x, final double y) {
-        checkRange(x, y, this.allowsExtrapolation());
-        return evaluateImpl(x, y);
-    }
-    
-  
-	//
-	// implements Extrapolator
-	//
-
-	/**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
-	 * @see Extrapolator
-	 */
-	private DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
-	
-    @Override
-	public final boolean allowsExtrapolation() {
-		return delegatedExtrapolator.allowsExtrapolation();
-	}
-
-    @Override
-	public void disableExtrapolation() {
-		delegatedExtrapolator.disableExtrapolation();
-	}
-
-    @Override
-	public void enableExtrapolation() {
-		delegatedExtrapolator.enableExtrapolation();
-	}
-
 }

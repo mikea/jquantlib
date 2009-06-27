@@ -303,12 +303,19 @@ public class OneAssetOption extends Option {
      */
     private static class ImpliedVolatilityHelper implements UnaryFunctionDouble {
     	
-        private final OneAssetOptionResults impliedResults;
-
-        private PricingEngine impliedEngine;
-        private Handle<Quote> vol;
-        private double targetValue;
+        //
+        // private final fields
+        //
         
+        private final OneAssetOptionResults impliedResults;
+        private final PricingEngine impliedEngine;
+        private final Handle<Quote> vol;
+        private final double targetValue;
+        
+        
+        //
+        // public constructors
+        //
         
         public ImpliedVolatilityHelper(final PricingEngine engine, double targetValue)  {
         	this.impliedEngine = engine;
@@ -332,7 +339,8 @@ public class OneAssetOption extends Option {
         	if (originalProcess==null) throw new NullPointerException("Black-Scholes process required");
 
         	// initialize arguments for calculation of implied volatility
-        	this.vol = new Handle<Quote>(new SimpleQuote(0.0));
+        	this.vol = new Handle
+        	<Quote>(new SimpleQuote(0.0));
         	Handle<? extends Quote> stateVariable = originalProcess.stateVariable();
         	Handle<YieldTermStructure> dividendYield = originalProcess.dividendYield();
         	Handle<YieldTermStructure> riskFreeRate = originalProcess.riskFreeRate();

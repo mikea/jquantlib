@@ -173,7 +173,7 @@ public class Thirty360 extends AbstractDayCounter {
 
 	
 	//
-	// inner classes
+	// private inner classes
 	//
 	
 	/**
@@ -255,4 +255,5 @@ public class Thirty360 extends AbstractDayCounter {
 			return compute(dd1,dd2,mm1,mm2,yy1,yy2);
 		}
 	}
+
 }

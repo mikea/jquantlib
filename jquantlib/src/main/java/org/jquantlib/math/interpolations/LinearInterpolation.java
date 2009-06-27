@@ -108,14 +108,19 @@ public class LinearInterpolation extends AbstractInterpolation {
     
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @deprecated
 	 */
-    @Deprecated
     @Override
 	public void update() {
 	    reload();
 	}
 
 	
+    //
+    // Overrides AbstractInterpolation
+    //
+    
 	/**
      * {@inheritDoc}
      * 
@@ -134,14 +139,14 @@ public class LinearInterpolation extends AbstractInterpolation {
             vp[i] = vp[i-1] + dx*(vy[i-1] +0.5*dx*vs[i-1]);
         }
 	}
+
 	
-
-
     //
     // implements UnaryFunctionDouble
     //
-    
-    protected double evaluateImpl(final double x) /* @ReadOnly */ {
+
+	@Override
+	protected double evaluateImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
         return vy[i] + (x - vx[i])*vs[i];
 	}
@@ -163,10 +168,12 @@ public class LinearInterpolation extends AbstractInterpolation {
 			this.delegate = delegate;
 		}
 		
+		@Override
 		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
 			return interpolate(x.length, x, y);
 		}
 
+        @Override
 		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
 			delegate.vx = Arrays.copyOfRange(x, 0, size);
 			delegate.vy = Arrays.copyOfRange(y, 0, size);
@@ -174,6 +181,7 @@ public class LinearInterpolation extends AbstractInterpolation {
 			return delegate;
 		}
 		
+        @Override
 		public final boolean isGlobal() {
 			return false; // only CubicSpline and Sabr are global, whatever it means!
 		}

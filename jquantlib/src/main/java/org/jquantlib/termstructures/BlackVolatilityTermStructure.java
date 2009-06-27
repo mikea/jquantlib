@@ -57,7 +57,6 @@ import org.jquantlib.util.Visitor;
  * <p>
  * Volatility is assumed to be expressed on an annual basis.
  */
-// FIXME: ElementVisitor
 abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure {
 
 	/**
@@ -111,6 +110,11 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 		super(settlementDays, cal, dc);
 	}
 
+
+	//
+	// Overrides BlackVolTermStructure
+	//
+	
 	/**
 	 * Returns the variance for the given strike and date calculating it from
 	 * the volatility.
@@ -121,6 +125,7 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 		/*@Variance*/ double variance = vol*vol*maturity;
 		return variance;
 	}
+	
 
 	//
 	// implements TypedVisitable

@@ -65,11 +65,6 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     private Handle<? extends Quote> volatility;
     private DayCounter dayCounter;
     
-    @Override
-    protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-        return volatility.getLink().evaluate();
-    }
-    
     public BlackConstantVol(final Date referenceDate, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
     	super(referenceDate);
     	this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
@@ -107,7 +102,12 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
 		
 	}
 	
-    @Override
+    
+	//
+	// Overrides TermStructure
+	//
+	
+	@Override
     public final DayCounter dayCounter() { 
     	return dayCounter; 
     }
@@ -116,6 +116,11 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     public final Date maxDate() {
         return DateFactory.getFactory().getMaxDate();
     }
+    
+    
+    //
+    // Override BlackVolTermStructure
+    //
     
     @Override
     public final /*@Price*/ double minStrike() {
@@ -126,6 +131,12 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     public final /*@Price*/ double maxStrike() {
     	return Double.POSITIVE_INFINITY;
 	}
+	
+    @Override
+    protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+        return volatility.getLink().evaluate();
+    }
+    
 
 	//
 	// implements TypedVisitable

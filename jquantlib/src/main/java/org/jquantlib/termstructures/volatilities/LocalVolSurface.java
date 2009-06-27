@@ -99,35 +99,37 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		this.dividendTS_.addObserver(this);
 	}
 
+	
+	//
+	// Overrides LocalVolTermStructure
+	//
+	
+    @Override
 	public final Date referenceDate() {
 		return this.blackTS_.getLink().referenceDate();
 	}
 
+    @Override
 	public final DayCounter dayCounter() {
 		return this.blackTS_.getLink().dayCounter();
 	}
 
+    @Override
 	public final Date maxDate() {
 		return blackTS_.getLink().maxDate();
 	}
 
+    @Override
 	public final /*@Price*/ double minStrike() {
 		return blackTS_.getLink().minStrike();
 	}
 
+    @Override
 	public final /*@Price*/ double maxStrike() {
 		return blackTS_.getLink().maxStrike();
 	}
 
-	// void LocalVolSurface::accept(AcyclicVisitor& v) {
-	// Visitor<LocalVolSurface>* v1 =
-	// dynamic_cast<Visitor<LocalVolSurface>*>(&v);
-	// if (v1 != 0)
-	// v1->visit(*this);
-	// else
-	// LocalVolTermStructure::accept(v);
-	// }
-
+    @Override
 	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double time, final /*@Price*/ double underlyingLevel) {
 
 		// obtain local copies of objects
@@ -195,6 +197,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
 		}
 	}
 
+    
 	//
 	// implements TypedVisitable
 	//

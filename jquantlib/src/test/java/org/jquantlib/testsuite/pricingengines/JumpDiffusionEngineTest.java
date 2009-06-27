@@ -53,15 +53,14 @@ public class JumpDiffusionEngineTest {
     public void testMerton76() {
         logger.info("Testing Merton 76 jump-diffusion model for European options...");
 
-        /* The data below are from
-        "Option pricing formulas", E.G. Haug, McGraw-Hill 1998, pag 9
-        
-        Haug use the arbitrary truncation criterium of 11 terms in the sum,
-        which doesn't guarantee convergence up to 1e-2.
-        Using Haug's criterium Haug's values have been correctly reproduced.
-        the following values have the right 1e-2 accuracy: any value different
-        from Haug has been noted.
-         */
+        // The data below are from 
+        //"Option pricing formulas", E.G. Haug, McGraw-Hill 1998, pag 9
+        //
+        // Haug use the arbitrary truncation criterium of 11 terms in the sum,
+        // which doesn't guarantee convergence up to 1e-2.
+        // Using Haug's criterium Haug's values have been correctly reproduced.
+        // the following values have the right 1e-2 accuracy: any value different
+        // from Haug has been noted.
         HaugMertonData values[] = {
                 //        type, strike,   spot,    q,    r,    t,  vol, int, gamma, value, tol
                 // gamma = 0.25, strike = 80

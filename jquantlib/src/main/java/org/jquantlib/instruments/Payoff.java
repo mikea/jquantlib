@@ -60,6 +60,7 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
 	 */
     protected static final String UNKNOWN_OPTION_TYPE = "unknown option type";
 
+    
     //
     // protected abstract methods
     //

@@ -83,6 +83,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
     
 	@Override
 	public void calculate() {
+	    
 	    // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
 	    if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
 			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);

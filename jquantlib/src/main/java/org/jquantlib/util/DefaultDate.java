@@ -831,6 +831,7 @@ public class DefaultDate extends BaseDate {
     // implements FunctionDate
     //
 
+    @Override
     public final int dateValue() /* @ReadOnly */{
     	logger.debug("{}", value);
         return value;

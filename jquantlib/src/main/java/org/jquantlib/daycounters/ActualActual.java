@@ -356,4 +356,5 @@ public class ActualActual extends AbstractDayCounter {
 		}
 
 	}
+
 }

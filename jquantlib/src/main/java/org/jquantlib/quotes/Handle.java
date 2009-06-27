@@ -55,7 +55,7 @@ import org.jquantlib.util.WeakReferenceObservable;
  * 
  * @author Richard Gomes
  */
-// TODO: explain how Handle and Link work together
+// TODO: better explain how Handle and Link work together
 public class Handle<T extends Observable> implements Observable {
 
 	protected Link link;
@@ -99,30 +99,37 @@ public class Handle<T extends Observable> implements Observable {
 
     private Observable delegatedObservable = new WeakReferenceObservable(this);
 	
+    @Override
     public final void addObserver(Observer observer) {
     	delegatedObservable.addObserver(observer);
 	}
 
+    @Override
 	public final int countObservers() {
 		return delegatedObservable.countObservers();
 	}
 
+    @Override
 	public final void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
 
+    @Override
 	public final void notifyObservers() {
 		delegatedObservable.notifyObservers();
 	}
 
+    @Override
 	public final void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
 
+    @Override
 	public final void deleteObservers() {
 		delegatedObservable.deleteObservers();
 	}
 
+    @Override
 	public final List<Observer> getObservers() {
 		return delegatedObservable.getObservers();
 	}
@@ -133,10 +140,20 @@ public class Handle<T extends Observable> implements Observable {
     //
     
     private class Link implements Observable, Observer {
+        // TODO: refactor messages?
     	static private final String EMPTY_HANDLE = "empty Handle cannot be dereferenced";
     	
-		public T observable	= null;
+		//
+    	// private fields
+    	//
+    	
+    	private T observable	   = null;
 		private boolean isObserver = false;
+		
+
+		//
+		// public constructors
+		//
 		
 //XXX
 //		public Link() {
@@ -151,6 +168,11 @@ public class Handle<T extends Observable> implements Observable {
 			setLink(observable, registerAsObserver);
 		}
 
+
+		//
+		// public methods
+		//
+		
 		public final boolean isEmpty() /* @ReadOnly */ {
 			return (this.observable==null);
 		}
@@ -183,48 +205,56 @@ public class Handle<T extends Observable> implements Observable {
 		
 		
 		//
-		// Implements Observer interface
+		// Implements Observer
 		//
 		
+	    @Override
 		public final void update(Observable o, Object arg) {
 			delegatedObservable.notifyObservers(arg);
 		}
 
 		
 		//
-		// implements Observable interface
+		// implements Observable
 		//
 		
+	    @Override
 	    public final void addObserver(Observer observer) {
 	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
 	    	observable.addObserver(observer);
 		}
 
+	    @Override
 		public final int countObservers() {
 	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
 			return observable.countObservers();
 		}
 
+	    @Override
 		public final void deleteObserver(Observer observer) {
 	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
 			observable.deleteObserver(observer);
 		}
 
+	    @Override
 		public final void notifyObservers() {
 	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
 			observable.notifyObservers();
 		}
 
+	    @Override
 		public final void notifyObservers(Object arg) {
 	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
 			observable.notifyObservers(arg);
 		}
 
+	    @Override
 		public final void deleteObservers() {
 	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
 			observable.deleteObservers();
 		}
 
+	    @Override
 		public final List<Observer> getObservers() {
 	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
 			return observable.getObservers();

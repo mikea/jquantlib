@@ -113,7 +113,8 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
 	
 	@Override
 	public void calculate() /*@ReadOnly*/ {
-
+	    
+	    // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) this.arguments.stochasticProcess;
         if (process==null) throw new NullPointerException("Black-Scholes process required");
         

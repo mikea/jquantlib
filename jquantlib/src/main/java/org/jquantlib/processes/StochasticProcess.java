@@ -64,9 +64,18 @@ import cern.jet.math.Functions;
  */ 
 public abstract class StochasticProcess implements Observable, Observer {
 
-	private Discretization discretization;
+	//
+    // private fields
+    //
+    
+    private Discretization discretization;
 	
-	//TODO: done to get Praneet's work compiling
+	
+	//
+	// protected constructors
+	//
+	
+	//FIXME: code review :: constructor added in order to get Praneet's work compiling
 	protected StochasticProcess(){
 	    if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
@@ -82,10 +91,20 @@ public abstract class StochasticProcess implements Observable, Observer {
     	this.discretization = discretization;
     }
     
+    
+    //
+    // abstract methods
+    //
+    
     /**
      * Returns the number of dimensions of the stochastic process
      */
     public abstract int getSize();
+    
+    
+    //
+    // public methods
+    //
     
     /**
      * Returns the number of independent factors of the process
@@ -113,8 +132,7 @@ public abstract class StochasticProcess implements Observable, Observer {
         
     /**
      * Returns the expectation
-     * {@latex$ S(\mathrm{x}_{t_0 + \Delta t}
-     *     | \mathrm{x}_{t_0} = \mathrm{x}_0) }
+     * {@latex$ S(\mathrm{x}_{t_0 + \Delta t} | \mathrm{x}_{t_0} = \mathrm{x}_0) }
      * of the process after a time interval {@latex$ \Delta t }
      * according to the given discretization. This method can be
      * overridden in derived classes which want to hard-code a
@@ -191,16 +209,17 @@ public abstract class StochasticProcess implements Observable, Observer {
     
     
 	//
-	// implements Observer interface
+	// implements Observer
 	//
 	
+    @Override
     public void update(Observable o, Object arg) {
     	notifyObservers();
     }
 
     
 	//
-	// implements Observable interface
+	// implements Observable
 	//
 	
 	/**
@@ -211,30 +230,37 @@ public abstract class StochasticProcess implements Observable, Observer {
 	 */
     private Observable delegatedObservable = new DefaultObservable(this);
 
+    @Override
 	public void addObserver(Observer observer) {
 		delegatedObservable.addObserver(observer);
 	}
 
+    @Override
 	public int countObservers() {
 		return delegatedObservable.countObservers();
 	}
 
+    @Override
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
 
+    @Override
 	public void notifyObservers() {
 		delegatedObservable.notifyObservers();
 	}
 
+    @Override
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
 
+    @Override
 	public void deleteObservers() {
 		delegatedObservable.deleteObservers();
 	}
 
+    @Override
 	public List<Observer> getObservers() {
 		return delegatedObservable.getObservers();
 	}

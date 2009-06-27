@@ -51,10 +51,11 @@ import cern.jet.math.Mult;
  * 
  * @author Richard Gomes
  */
+// TODO: class comments
 public class EulerDiscretization implements LinearDiscretization {
 
     //
-    // Implements interface Discretization
+    // Implements Discretization
     //
 
     /**
@@ -62,6 +63,7 @@ public class EulerDiscretization implements LinearDiscretization {
      * <p>
      * {@latex[ \mu(t_0, \mathbf{x}_0) \Delta t }
      */
+    @Override
     public/* @Drift */double[] driftDiscretization(final StochasticProcess sp, /* @Time */final double t0, 
             /* @Price */ final double[] x0, /* @Time */ final double dt) {
         return new DenseDoubleMatrix1D(sp.drift(t0, x0)).assign(Mult.mult(dt)).toArray();
@@ -72,6 +74,7 @@ public class EulerDiscretization implements LinearDiscretization {
      * <p>
      * {@latex[ \sigma(t_0, \mathbf{x}_0) \sqrt{\Delta t} }
      */
+    @Override
     public/* @Diffusion */double[][] diffusionDiscretization(final StochasticProcess sp, /* @Time */final double t0, 
             /* @Price */ final double[] x0, /* @Time */final double dt) {
         return new DenseDoubleMatrix2D(sp.diffusion(t0, x0)).assign(Mult.mult(Math.sqrt(dt))).toArray();
@@ -82,6 +85,7 @@ public class EulerDiscretization implements LinearDiscretization {
      * <p>
      * {@latex[ \sigma(t_0, \mathbf{x}_0)^2 \Delta t }
      */
+    @Override
     public/* @Covariance */double[][] covarianceDiscretization(final StochasticProcess sp, /* @Time */final double t0, 
             /* @Price */ final double[] x0, /* @Time */final double dt) {
 
@@ -90,8 +94,9 @@ public class EulerDiscretization implements LinearDiscretization {
         return sigma.zMult(sigmaT, null, dt, 0.0, false, false).toArray();
     }
 
+    
     //
-    // Implements interface Discretization1D
+    // Implements Discretization1D
     //
 
     /**
@@ -99,6 +104,7 @@ public class EulerDiscretization implements LinearDiscretization {
      * <p>
      * {@latex[ \mu(t_0, x_0) \Delta t }
      */
+    @Override
     public/* @Drift */double driftDiscretization(final StochasticProcess1D sp, /* @Time */final double t0, 
             /* @Price */ final double x0, /* @Time */final double dt) {
         return sp.drift(t0, x0) * dt;
@@ -109,6 +115,7 @@ public class EulerDiscretization implements LinearDiscretization {
      * <p>
      * {@latex[ \sigma(t_0, x_0) \sqrt{\Delta t} }
      */
+    @Override
     public/* @Diffusion */double diffusionDiscretization(final StochasticProcess1D sp, /* @Time */final double t0, 
             /* @Price */ final double x0, /* @Time */final double dt) {
         return sp.diffusion(t0, x0) * Math.sqrt(dt);
@@ -119,6 +126,7 @@ public class EulerDiscretization implements LinearDiscretization {
      * <p>
      * {@latex[ \sigma(t_0, x_0)^2 \Delta t }
      */
+    @Override
     public/* @Variance */double varianceDiscretization(final StochasticProcess1D sp, /* @Time */final double t0, 
             /* @Price */ final double x0, /* @Time */final double dt) {
         /* @Diffusion */final double sigma = sp.diffusion(t0, x0);

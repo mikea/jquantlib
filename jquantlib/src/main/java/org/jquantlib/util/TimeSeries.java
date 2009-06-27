@@ -45,6 +45,7 @@ import org.slf4j.helpers.MessageFormatter;
  * @see TimeSeriesDouble
  * 
  * @author Srinivas Hasti
+ * @author Richard Gomes
  */
 public class TimeSeries<T> {
 
@@ -174,7 +175,7 @@ public class TimeSeries<T> {
     
 
     //
-    // public interfaces
+    // private interfaces
     //
     
     private interface Series {
@@ -259,10 +260,6 @@ public class TimeSeries<T> {
         private final NavigableMap<Date, IntervalPrice> map;
         
 
-        //
-        // public constructors
-        //
-        
         public TimeSeriesIntervalPrice() {
             this.map = new TreeMap<Date, IntervalPrice>();
         }
@@ -287,39 +284,42 @@ public class TimeSeries<T> {
             }
         }
 
-        
-        //
-        // public methods
-        //
-        
+        @Override
         public Date firstDate() /*@ReadOnly*/ {
             return map.firstKey();
         }
 
+        @Override
         public Date lastDate() /*@ReadOnly*/ {
             return map.lastKey();
         }
 
+        @Override
         public int size() /*@ReadOnly*/ {
             return map.size();
         }
 
+        @Override
         public boolean isEmpty() /*@ReadOnly*/ {
             return map.isEmpty();
         }
 
+        @Override
         public Date[] dates() {
             return (Date[])map.keySet().toArray(new Date[0]);
         }
         
+        @Override
         public void addIntervalPrice(final Date date, final IntervalPrice dt) {
             map.put(date, dt) ;
         }
 
+        @Override
         public IntervalPrice findIntervalPrice(final Date d) /*@ReadOnly*/ {
             return map.get(d);
         }
 
+        @Override
         public Collection<IntervalPrice> valuesIntervalPrice() {
             return map.values();
         }
@@ -334,7 +334,7 @@ public class TimeSeries<T> {
         
         //XXX: private final NavigableMap<Date, Double> map;
         private final List<Date>   dates;
-        private final List<Double> values;
+        private final ArrayDoubleList values;
         
         //
         // public constructors
@@ -377,21 +377,19 @@ public class TimeSeries<T> {
             }
         }
 
-        
-        //
-        // public methods
-        //
-        
+        @Override
         public Date firstDate() /*@ReadOnly*/ {
             //XXX: return map.firstKey();
             return dates.get(0);
         }
 
+        @Override
         public Date lastDate() /*@ReadOnly*/ {
             //XXX: return map.lastKey();
             return dates.get(dates.size()-1);
         }
 
+        @Override
         public int size() /*@ReadOnly*/ {
             //XXX: return map.size();
             return dates.size();
@@ -402,26 +400,31 @@ public class TimeSeries<T> {
             return dates.isEmpty();
         }
 
+        @Override
         public Date[] dates() {
             //XXX: return (Date[])map.keySet().toArray(new Date[0]);
             return dates.toArray(new Date[dates.size()]);
         }
         
+        @Override
         public void add(final Date date, final double dt) {
             //XXX: map.put(date, dt) ;
             dates.add(date) ;
-            ((ArrayDoubleList)values).add(dt);
+            values.add(dt);
         }
 
+        @Override
         public double find(final Date d) /*@ReadOnly*/ {
             //XXX: return map.get(d);
             int index = dates.indexOf(d);
-            return ((ArrayDoubleList)values).getDouble(index);
+            return values.getDouble(index);
         }
 
+        @Override
         public double[] values() {
         	//XXX: return map.values();
-            return ((ArrayDoubleList)values).toDoubleArray();
+            return values.toDoubleArray();
         }
     }
+
 }

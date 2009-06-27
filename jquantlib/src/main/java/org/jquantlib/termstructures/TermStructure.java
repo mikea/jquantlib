@@ -81,7 +81,7 @@ import org.jquantlib.util.Observer;
  *  
  * @author Richard Gomes
  */
-public abstract class TermStructure implements Observer, Observable {
+public abstract class TermStructure implements Extrapolator, Observer, Observable {
 
 	static private final String THIS_METHOD_MUST_BE_OVERRIDDEN = "This method must be overridden";
 	
@@ -407,14 +407,20 @@ public abstract class TermStructure implements Observer, Observable {
 	 */
 	private DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
 	
-	public final boolean allowsExtrapolation() {
+    /**
+     * @return
+     */
+    @Override
+    public final boolean allowsExtrapolation() {
 		return delegatedExtrapolator.allowsExtrapolation();
 	}
 
+    @Override
 	public void disableExtrapolation() {
 		delegatedExtrapolator.disableExtrapolation();
 	}
 
+    @Override
 	public void enableExtrapolation() {
 		delegatedExtrapolator.enableExtrapolation();
 	}
@@ -424,6 +430,7 @@ public abstract class TermStructure implements Observer, Observable {
 	// implements Observer
 	//
 	
+    @Override
 	public void update(Observable o, Object arg) {
 		if (moving) {
 			updated = false;
@@ -444,30 +451,37 @@ public abstract class TermStructure implements Observer, Observable {
 	 */
     private Observable delegatedObservable = new DefaultObservable(this);
 
+    @Override
 	public void addObserver(Observer observer) {
 		delegatedObservable.addObserver(observer);
 	}
 
+    @Override
 	public int countObservers() {
 		return delegatedObservable.countObservers();
 	}
 
+    @Override
 	public void deleteObserver(Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
 
+    @Override
 	public void notifyObservers() {
 		delegatedObservable.notifyObservers();
 	}
 
+    @Override
 	public void notifyObservers(Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
 
+    @Override
 	public void deleteObservers() {
 		delegatedObservable.deleteObservers();
 	}
 
+    @Override
 	public List<Observer> getObservers() {
 		return delegatedObservable.getObservers();
 	}

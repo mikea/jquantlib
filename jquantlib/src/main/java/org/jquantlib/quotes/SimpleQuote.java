@@ -22,13 +22,20 @@
 
 package org.jquantlib.quotes;
 
-
-// FIXME: understand how this class is used
+// TODO: comments
 public class SimpleQuote extends Quote {
 
-	private double value;
+    //
+    // private fields
+    //
+    
+    private double value;
 	
 
+	//
+	// public constructors
+	//
+	
 	public SimpleQuote(final SimpleQuote o) {
 		this.value = o.value;
 	}
@@ -37,6 +44,11 @@ public class SimpleQuote extends Quote {
 		this.value = d;
 	}
 
+
+	//
+	// public methods
+	//
+	
 	public void setValue(final double value) {
 		double diff = this.value - value; 
 		if (diff != 0.0) {
@@ -48,6 +60,8 @@ public class SimpleQuote extends Quote {
 	//
 	// implements FunctionDouble
 	//
+
+	@Override
 	public final double evaluate() {
 		if (Double.isNaN(value)) throw new ArithmeticException("invalid simple quote: no value available");
 		return value;

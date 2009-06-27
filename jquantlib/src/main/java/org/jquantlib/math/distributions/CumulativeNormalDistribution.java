@@ -120,6 +120,7 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
 	    final double xn = (x - average) / sigma;
 	    return gaussian.evaluate(xn) / sigma;
 	}
+
 }
 
 

@@ -29,9 +29,15 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * @author Srinivas Hasti
  * 
  */
+//TODO: class comments
+//TODO: work in progress
 public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOptionEngine {
 
-	private final FDVanillaEngine fdVanillaEngine;
+	//
+    // private fields
+    //
+    
+    private final FDVanillaEngine fdVanillaEngine;
 
 	
 	//

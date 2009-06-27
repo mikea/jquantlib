@@ -33,6 +33,7 @@ public class ObservableValue<T> implements Observable {
         this.value = observable.value;
     }
     
+    
     //
     // public methods
     //

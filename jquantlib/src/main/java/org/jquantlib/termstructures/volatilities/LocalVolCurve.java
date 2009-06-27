@@ -59,18 +59,31 @@ public class LocalVolCurve extends LocalVolTermStructure {
 		blackVarianceCurve_.addObserver(this);
 	}
 
+    
+	//
+	// Overrides TermStructure
+	//
+	
+	@Override
 	public final Date referenceDate() {
 		return blackVarianceCurve_.referenceDate();
 	}
 
+    @Override
 	public final DayCounter dayCounter() {
 		return blackVarianceCurve_.dayCounter();
 	}
 
+    @Override
 	public final Date maxDate() {
 		return blackVarianceCurve_.maxDate();
 	}
-
+    
+    
+    //
+    // Overrides LocalVolTermStructure
+    //
+    
 	@Override
 	public final /*@Price*/ double minStrike() {
 		return Double.NEGATIVE_INFINITY;
@@ -82,17 +95,18 @@ public class LocalVolCurve extends LocalVolTermStructure {
 	}
 
 	/**
-	 * The relation
-	 {@latex[ \int_0^T \sigma_L^2(t)dt = \sigma_B^2 T }
+	 * The relation 
+	 * {@latex[ \int_0^T \sigma_L^2(t)dt = \sigma_B^2 T }
 	 * holds, where
-	 {@latex$ \sigma_L(t) }
+	 * {@latex$ \sigma_L(t) }
 	 * is the local volatility at time {@latex$ t } and {@latex$ \sigma_B(T) }
 	 * is the Black volatility for maturity {@latex$ T }.
-	 * 
-	 * <p>From the above, the formula
-	 {@latex[ \sigma_L(t) = \sqrt{\frac{\mathrm{d}}{\mathrm{d}t}\sigma_B^2(t)t} }
+	 * <p>
+	 * From the above, the formula
+	 * {@latex[ \sigma_L(t) = \sqrt{\frac{\mathrm{d}}{\mathrm{d}t}\sigma_B^2(t)t} }
 	 * can be deduced which is here implemented.
 	 */
+	@Override
 	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
 		/*@Time*/ double m = maturity;
 		/*@Time*/ double dt = 1.0 / 365.0;

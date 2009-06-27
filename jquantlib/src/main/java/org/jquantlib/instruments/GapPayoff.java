@@ -62,7 +62,15 @@ import org.jquantlib.util.Visitor;
  */
 public class GapPayoff extends StrikedTypePayoff {
 	
-	protected /*@Price*/ double secondStrike;
+	//
+    // protected fields
+    //
+    
+    protected /*@Price*/ double secondStrike;
+	
+	//
+	// public constructors
+	//
 	
 	public GapPayoff(final Option.Type type, final /*@Price*/ double strike, final /*@Price*/ double secondStrike) {
 		super(type, strike);
@@ -76,6 +84,11 @@ public class GapPayoff extends StrikedTypePayoff {
 		return secondStrike;
 	}
 
+	
+	//
+	// Overrides Payoff
+	//
+	
     /**
      * {@inheritDoc}
      * <p>

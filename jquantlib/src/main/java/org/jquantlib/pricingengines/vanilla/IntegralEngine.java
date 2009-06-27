@@ -71,6 +71,7 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
     // TODO: define tolerance for calculate()
 	@Override
 	public void calculate() {
+	    
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
     	if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
 			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
@@ -80,32 +81,30 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
 			throw new ArithmeticException(NON_STRIKED_PAYOFF_GIVEN);
 		}
 		
-		StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
-
+		final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
 		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
 			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_REQUIRED);
 		}
-		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
+		final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
-		double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
-		double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
-        double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
-        double /* @Rate */drift = Math.log(dividendDiscount / riskFreeDiscount) - 0.5 * variance;
+		final double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
+		final double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
+        final double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
+        final double /* @Rate */drift = Math.log(dividendDiscount / riskFreeDiscount) - 0.5 * variance;
 
-		Integrand f = new Integrand(arguments.payoff, process.stateVariable().getLink().evaluate(), drift, variance);
-        SegmentIntegral integrator = new SegmentIntegral(5000);
+		final Integrand f = new Integrand(arguments.payoff, process.stateVariable().getLink().evaluate(), drift, variance);
+        final SegmentIntegral integrator = new SegmentIntegral(5000);
 
-		double infinity = 10.0*Math.sqrt(variance);
+		final double infinity = 10.0*Math.sqrt(variance);
 		results.value =
 			process.riskFreeRate().getLink().discount(arguments.exercise.lastDate()) /
-			Math.sqrt(2.0*Math.PI*variance) *
-			integrator.evaluate(f, drift-infinity, drift+infinity);
+			Math.sqrt(2.0*Math.PI*variance) * integrator.evaluate(f, drift-infinity, drift+infinity);
 
 	}
 
 
 	//
-	// inner classes
+	// private inner classes
 	//
 	
 	private static class Integrand implements UnaryFunctionDouble {

@@ -168,6 +168,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 
 	public abstract double getImpliedQuote();
 
+	
 	//
 	// implements Observer
 	//
@@ -176,6 +177,11 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 	public void update(final Observable o, final Object arg) {
 		this.notifyObservers(arg); // FIXME: maybe all calls to notifyObservers should forward "arg" in entire JQuantLib ???
 	}
+
+
+	//
+    // implements Observable
+    //
 
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class

@@ -90,4 +90,5 @@ public class CumulativePoissonDistribution implements UnaryFunctionInteger {
     	   IncompleteGamma incmplgamma = new IncompleteGamma();
            return 1.0 - incmplgamma.incompleteGammaFunction((double)k +1, mu, accuracy, maxIteration);
 	}
+	
 }

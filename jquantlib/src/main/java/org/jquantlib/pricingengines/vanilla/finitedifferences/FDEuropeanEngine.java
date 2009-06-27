@@ -32,10 +32,21 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * 
  * @author Srinivas Hasti
  */
+//TODO: class comments
+//TODO: work in progress
 public class FDEuropeanEngine extends OneAssetOptionEngine {
+    
+    //
+    // private fields
+    //
+    
     private final FDVanillaEngine fdVanillaEngine;
     private SampledCurve prices;
 
+    //
+    // public constructors
+    //
+    
     public FDEuropeanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
         fdVanillaEngine = new FDVanillaEngine(process, timeSteps, gridPoints, timeDependent);
         prices = new SampledCurve(gridPoints);

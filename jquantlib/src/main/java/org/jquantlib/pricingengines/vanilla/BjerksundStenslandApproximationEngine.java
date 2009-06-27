@@ -65,6 +65,10 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
     private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
     private static final String BJERKSUND_NOT_APPLICABLE = "Bjerksund-Stensland approximation not applicable to this set of parameters";
     
+    //
+    // private fields
+    //
+    
     private CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
 
         
@@ -78,11 +82,58 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
 
     
     //
+    // private methods
+    //
+    
+    private double /*@Real*/ phi(double /*@Real*/ S, double /*@Real*/ gamma, double /*@Real*/ H, 
+            double /*@Real*/ I, double /*@Real*/ rT, double /*Real*/ bT, double /*@Real*/ variance) {
+
+        double /* @Real */lambda = (-rT + gamma * bT + 0.5 * gamma * (gamma - 1.0) * variance);
+        double /* @Real */d = -(Math.log(S / H) + (bT + (gamma - 0.5) * variance)) / Math.sqrt(variance);
+        double /* @Real */kappa = 2.0 * bT / variance + (2.0 * gamma - 1.0);
+        return Math.exp(lambda) * Math.pow(S, gamma)
+               * (cumNormalDist.evaluate(d) - Math.pow((I / S), kappa) * cumNormalDist.evaluate(d - 2.0 * Math.log(I / S) / Math.sqrt(variance)));
+    }
+
+    private double /*@Real*/ americanCallApproximation(
+                double /*@Real*/ s, double /*@Real*/ x, double /*@Real*/ rfD, double /*@Real*/ dD, double /*@Real*/ variance) {
+
+        double /* @Real */bT = Math.log(dD / rfD);
+        double /* @Real */rT = Math.log(1.0 / rfD);
+
+        double /* @Real */beta = (0.5 - bT / variance) + Math.sqrt(Math.pow((bT / variance - 0.5), (double) (2.0)) + 2.0 * rT / variance);
+        double /* @Real */BInfinity = beta / (beta - 1.0) * x;
+        // Real B0 = std::max(X, std::log(rfD) / std::log(dD) * X);
+        double /* @Real */B0 = Math.max(x, rT / (rT - bT) * x);
+        double /* @Real */ht = -(bT + 2.0 * Math.sqrt(variance)) * B0 / (BInfinity - B0);
+
+        // investigate what happen to I for dD->0.0
+        double /*@Real*/ i = B0 + (BInfinity - B0) * (1 - Math.exp(ht));
+
+        if (!(i>=x)) throw new ArithmeticException(BJERKSUND_NOT_APPLICABLE);
+        
+        if (s >= i) {
+            return s - x;
+        } else {
+            // investigate what happen to alpha for dD->0.0
+            double /*@Real*/ alpha = (i - x) * Math.pow(i, (-beta));
+            return alpha * Math.pow(s, beta)
+                    - alpha * phi(s, beta, i, i, rT, bT, variance)
+                    +         phi(s,  1.0, i, i, rT, bT, variance)
+                    -         phi(s,  1.0, x, i, rT, bT, variance)
+                    -    x *  phi(s,  0.0, i, i, rT, bT, variance)
+                    +    x *  phi(s,  0.0, x, i, rT, bT, variance);
+        }
+    }
+
+
+    //
     // implements PricingEngine
     //
     
 	@Override
 	public void calculate() /*@ReadOnly*/{
+	    
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
 		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
 			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
@@ -162,51 +213,5 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
 		}
 
 	}
-
-	
-	//
-	// private methods
-	//
-	
-    private double /*@Real*/ phi(double /*@Real*/ S, double /*@Real*/ gamma, double /*@Real*/ H, 
-    		double /*@Real*/ I, double /*@Real*/ rT, double /*Real*/ bT, double /*@Real*/ variance) {
-
-        double /* @Real */lambda = (-rT + gamma * bT + 0.5 * gamma * (gamma - 1.0) * variance);
-        double /* @Real */d = -(Math.log(S / H) + (bT + (gamma - 0.5) * variance)) / Math.sqrt(variance);
-        double /* @Real */kappa = 2.0 * bT / variance + (2.0 * gamma - 1.0);
-        return Math.exp(lambda) * Math.pow(S, gamma)
-               * (cumNormalDist.evaluate(d) - Math.pow((I / S), kappa) * cumNormalDist.evaluate(d - 2.0 * Math.log(I / S) / Math.sqrt(variance)));
-    }
-
-    private double /*@Real*/ americanCallApproximation(
-                double /*@Real*/ s, double /*@Real*/ x, double /*@Real*/ rfD, double /*@Real*/ dD, double /*@Real*/ variance) {
-
-    	double /* @Real */bT = Math.log(dD / rfD);
-        double /* @Real */rT = Math.log(1.0 / rfD);
-
-        double /* @Real */beta = (0.5 - bT / variance) + Math.sqrt(Math.pow((bT / variance - 0.5), (double) (2.0)) + 2.0 * rT / variance);
-        double /* @Real */BInfinity = beta / (beta - 1.0) * x;
-        // Real B0 = std::max(X, std::log(rfD) / std::log(dD) * X);
-        double /* @Real */B0 = Math.max(x, rT / (rT - bT) * x);
-        double /* @Real */ht = -(bT + 2.0 * Math.sqrt(variance)) * B0 / (BInfinity - B0);
-
-    	// investigate what happen to I for dD->0.0
-    	double /*@Real*/ i = B0 + (BInfinity - B0) * (1 - Math.exp(ht));
-
-    	if (!(i>=x)) throw new ArithmeticException(BJERKSUND_NOT_APPLICABLE);
-    	
-    	if (s >= i) {
-    		return s - x;
-    	} else {
-    		// investigate what happen to alpha for dD->0.0
-    		double /*@Real*/ alpha = (i - x) * Math.pow(i, (-beta));
-    		return alpha * Math.pow(s, beta)
-    				- alpha * phi(s, beta, i, i, rT, bT, variance)
-    				+         phi(s,  1.0, i, i, rT, bT, variance)
-    				-         phi(s,  1.0, x, i, rT, bT, variance)
-    				-    x *  phi(s,  0.0, i, i, rT, bT, variance)
-    				+    x *  phi(s,  0.0, x, i, rT, bT, variance);
-    	}
-    }
 
 }

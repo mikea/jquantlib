@@ -37,44 +37,48 @@ import org.jquantlib.math.randomnumbers.InverseCumulative;
  * @author Dominik Holenstein
  */
 
-// RICHARD: This class uses trial code:
-// org.jquantlib.math.randomnumbers.trial.InverseCumulative;
-
-// TODO: Code review. Remove inheritance from NormalDistribution and use of objects types.
-
 public class InverseCumulativeNormal implements InverseCumulative {
 		
-	//
-	// static final fields (constants)
-	//
-	
-    static final double a1_ = -3.969683028665376e+01;
-    static final double a2_ =  2.209460984245205e+02;
-    static final double a3_ = -2.759285104469687e+02;
-    static final double a4_ =  1.383577518672690e+02;
-    static final double a5_ = -3.066479806614716e+01;
-    static final double a6_ =  2.506628277459239e+00;
-
-    static final double b1_ = -5.447609879822406e+01;
-    static final double b2_ =  1.615858368580409e+02;
-    static final double b3_ = -1.556989798598866e+02;
-    static final double b4_ =  6.680131188771972e+01;
-    static final double b5_ = -1.328068155288572e+01;
-
-    static final double c1_ = -7.784894002430293e-03;
-    static final double c2_ = -3.223964580411365e-01;
-    static final double c3_ = -2.400758277161838e+00;
-    static final double c4_ = -2.549732539343734e+00;
-    static final double c5_ =  4.374664141464968e+00;
-    static final double c6_ =  2.938163982698783e+00;
-
-    static final double d1_ =  7.784695709041462e-03;
-    static final double d2_ =  3.224671290700398e-01;
-    static final double d3_ =  2.445134137142996e+00;
-    static final double d4_ =  3.754408661907416e+00;
-
+    // TODO: refactor messages?
+    static final private String SIGMA_MUST_BE_POSITIVE = "sigma must be greater than 0.0";
     
 	//
+	// static final private fields
+	//
+	
+    static final private double a1_ = -3.969683028665376e+01;
+    static final private double a2_ =  2.209460984245205e+02;
+    static final private double a3_ = -2.759285104469687e+02;
+    static final private double a4_ =  1.383577518672690e+02;
+    static final private double a5_ = -3.066479806614716e+01;
+    static final private double a6_ =  2.506628277459239e+00;
+
+    static final private double b1_ = -5.447609879822406e+01;
+    static final private double b2_ =  1.615858368580409e+02;
+    static final private double b3_ = -1.556989798598866e+02;
+    static final private double b4_ =  6.680131188771972e+01;
+    static final private double b5_ = -1.328068155288572e+01;
+
+    static final private double c1_ = -7.784894002430293e-03;
+    static final private double c2_ = -3.223964580411365e-01;
+    static final private double c3_ = -2.400758277161838e+00;
+    static final private double c4_ = -2.549732539343734e+00;
+    static final private double c5_ =  4.374664141464968e+00;
+    static final private double c6_ =  2.938163982698783e+00;
+
+    static final private double d1_ =  7.784695709041462e-03;
+    static final private double d2_ =  3.224671290700398e-01;
+    static final private double d3_ =  2.445134137142996e+00;
+    static final private double d4_ =  3.754408661907416e+00;
+
+    //
+    // Limits of the approximation regions (break-points)
+    //
+    static final private double x_low_ = 0.02425;
+    static final private double x_high_= 1.0 - x_low_;
+    
+	
+    //
 	// protected fields
 	//
 	
@@ -82,16 +86,6 @@ public class InverseCumulativeNormal implements InverseCumulative {
 	protected double sigma;
     
       
-    /**
-     * Limits of the approximation regions (break-points)
-     * 
-     * @param x_low_
-     * @param X_high_
-     */
-    static final double x_low_ = 0.02425;
-    static final double x_high_= 1.0 - x_low_;
-    
-    
     //
     // private fields
     //
@@ -109,7 +103,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
     }
 
     public InverseCumulativeNormal(double average, double sigma) {
-    	if (sigma <= 0.0) throw new IllegalArgumentException("sigma must be greater than 0.0 ("+sigma+" not allowed)");
+    	if (sigma <= 0.0) throw new IllegalArgumentException(SIGMA_MUST_BE_POSITIVE);
 
 		this.average = average;
 		this.sigma = sigma;
@@ -132,16 +126,11 @@ public class InverseCumulativeNormal implements InverseCumulative {
     	double r;
     
     	// x has to be between 0.00 and 1.00
-    	if (x <= 0.0) {
-    	    return 0.00;
-    	}
-    	if (x >= 1.0) {
-    	    return 1.00;
-    	}
+    	if (x <= 0.0) return 0.00;
+    	if (x >= 1.0) return 1.00;
     
-    	if (sigma <= 0.0) {
-    	    throw new IllegalArgumentException("sigma must be greater than 0.0 (" + sigma + " not allowed)");
-    	}
+    	if (sigma <= 0.0)
+    	    throw new IllegalArgumentException(SIGMA_MUST_BE_POSITIVE);
     
     	if (x < x_low_) {
     	    // Rational approximation for the lower region 0<x<u_low
@@ -166,7 +155,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
     	// order) gives full machine precision.
     	// #define REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD
     	// error (f_(z) - x) divided by the cumulative's derivative
-    	// r = (f_(z) - x) * M_SQRT2 *y� M_SQRTPI * exp(0.5 * z*z);
+    	// r = (f_(z) - x) * M_SQRT2 *y M_SQRTPI * exp(0.5 * z*z);
     
     	// Only run if highPrecision is set to true.
     	// This is not implemented in QuantLib 0.8.1 yet therefore highPrecision

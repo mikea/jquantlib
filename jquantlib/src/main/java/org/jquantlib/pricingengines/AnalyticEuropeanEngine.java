@@ -64,8 +64,10 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  *     is tested by reproducing numerical derivatives.</li>
  *     
  * @see PricingEngine
+ * 
+ * @author <Richard Gomes>
  */
-//TEST: write more test cases
+//TODO: write more test cases
 public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 
     // TODO: refactor messages

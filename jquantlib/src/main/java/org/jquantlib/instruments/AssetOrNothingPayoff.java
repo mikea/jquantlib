@@ -73,8 +73,9 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
 		super(type, strike);
 	}
 
+    
 	//
-    // public final methods
+    // Overrides Payoff
     //
     
     /**

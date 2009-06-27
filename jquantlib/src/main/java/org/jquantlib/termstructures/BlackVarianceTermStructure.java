@@ -143,7 +143,7 @@ public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
 
 
     //
-    // protected methods
+    // Overrides BlackVolTermStructure
     //
     
     /**

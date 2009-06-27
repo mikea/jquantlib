@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -21,7 +21,7 @@
  */
 
 /*
- Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2004, 2007 StatPro Italia srl
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -37,67 +37,20 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.quotes;
+package org.jquantlib.pricingengines.vanilla;
 
-import java.util.List; // FIXME :: performance
-
-import org.jquantlib.math.FunctionDouble;
-import org.jquantlib.util.DefaultObservable;
-import org.jquantlib.util.Observable;
-import org.jquantlib.util.Observer;
+import org.jquantlib.pricingengines.GenericEngine;
+import org.jquantlib.pricingengines.arguments.DividendVanillaOptionArguments;
+import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 
 /**
- * Purely virtual base class for market observables
  * 
- * @author Richard Gomes
+ * @author <Richard Gomes>
  */
-public abstract class Quote implements FunctionDouble, Observable {
+abstract public class DividendVanillaOptionEngine extends GenericEngine<DividendVanillaOptionArguments, OneAssetOptionResults>{
 
-	//
-	// implements Observable
-	//
-	
-	/**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
-	 * @see Observable
-	 * @see DefaultObservable
-	 */
-    private Observable delegatedObservable = new DefaultObservable(this);
-
-    @Override
-	public void addObserver(Observer observer) {
-		delegatedObservable.addObserver(observer);
-	}
-
-    @Override
-	public int countObservers() {
-		return delegatedObservable.countObservers();
-	}
-
-    @Override
-	public void deleteObserver(Observer observer) {
-		delegatedObservable.deleteObserver(observer);
-	}
-
-    @Override
-	public void notifyObservers() {
-		delegatedObservable.notifyObservers();
-	}
-
-    @Override
-	public void notifyObservers(Object arg) {
-		delegatedObservable.notifyObservers(arg);
-	}
-
-    @Override
-	public void deleteObservers() {
-		delegatedObservable.deleteObservers();
-	}
-
-    @Override
-	public List<Observer> getObservers() {
-		return delegatedObservable.getObservers();
-	}
+    protected DividendVanillaOptionEngine() {
+        super(new DividendVanillaOptionArguments(), new OneAssetOptionResults());
+    }
 
 }

@@ -97,7 +97,7 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 
 
 	//
-	// implements Observable interface
+	// implements Observable
 	//
 	
 	/**

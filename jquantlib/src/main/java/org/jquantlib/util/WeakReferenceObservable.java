@@ -97,10 +97,7 @@ public class WeakReferenceObservable extends DefaultObservable {
             super(referent);
         }
 
-        //
-        // implements Observer
-        //
-        
+        @Override
         public void update(Observable o, Object arg) {
             Observer referent = get();
             if (referent != null)

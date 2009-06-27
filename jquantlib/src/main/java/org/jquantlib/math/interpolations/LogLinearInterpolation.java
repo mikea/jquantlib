@@ -122,12 +122,18 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	
     /**
      * {@inheritDoc}
+     * 
+     * @deprecated
      */
-    @Deprecated
     @Override
 	public void update() {
         reload();
     }
+    
+    
+    //
+    // Overrides AbstractInterpolation
+    //
 	
     /**
      * {@inheritDoc}
@@ -152,7 +158,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	// 
 	// implements UnaryFunctionDouble
 	//
-	
+	@Override
 	protected double evaluateImpl(final double x) /* @ReadOnly */ {
 		return Math.exp(linearInterpolation.evaluate(x));
 	}
@@ -176,10 +182,16 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 			this.delegate = delegate;
 		}
 
+		//
+		// implements Interpolator
+		//
+		
+		@Override
 		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
 			return interpolate(x.length, x, y);
 		}
 
+	    @Override
 		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
 			delegate.vx = Arrays.copyOfRange(x, 0, size);
 			delegate.vy = Arrays.copyOfRange(y, 0, size);
@@ -187,6 +199,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 			return delegate;
 		}
 
+	    @Override
 		public final boolean isGlobal() {
 			return false; // only CubicSpline and Sabr are global, whatever it means!
 		}

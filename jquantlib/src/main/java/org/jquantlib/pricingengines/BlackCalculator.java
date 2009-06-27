@@ -61,24 +61,39 @@ import org.jquantlib.util.Visitor;
  * 
  * @author Richard Gomes
  */
-// FIXME When the variance is null, division by zero occur during calculations of 
+// FIXME When the variance is null, division by zero occur during calculations
 // TODO: write test cases, including a situation when variance is zero
 public class BlackCalculator {
 
+    //
+    // private final fields
+    //
+    
     private final /* @Price */ double strike;
 	private final /* @Price */ double forward;
 	private final /* @StdDev */ double stdDev;
 	private final /* @DiscountFactor */ double discount;
 	private final /* @Variance */ double variance;
+    private final double dX_dS;
+    private final double n_d1, cum_d1, n_d2, cum_d2;
 
 	
-	private double D1, D2, alpha, beta, dAlpha_dD1, dBeta_dD2;
-	private double n_d1, cum_d1, n_d2, cum_d2;
+    //
+    // private fields
+    //
+	
+    private double D1, D2;
+	private double alpha, beta;
+	private double dAlpha_dD1, dBeta_dD2;
 	private double x;
-    final double dX_dS;
     private double dx_dStrike;
 
-	public BlackCalculator(final StrikedTypePayoff payoff, final double forward, final double stdDev) {
+	
+    //
+    // public constructors
+    //
+    
+    public BlackCalculator(final StrikedTypePayoff payoff, final double forward, final double stdDev) {
 		this(payoff, forward, stdDev, 1.0);
 	}
 
@@ -155,6 +170,11 @@ public class BlackCalculator {
 		payoff.accept(calc);
 	}
 
+	
+	//
+	// public methods
+	//
+	
 	public/* @Price */double value() /* @ReadOnly */{
 		/* @Price */final double result = discount * (forward * alpha + x * beta);
 		return result;
@@ -280,13 +300,12 @@ public class BlackCalculator {
 
 		// =====================================================================
 		//
-		// *** The following code is commented in the source QuantLib ***
+		// *** The following code is commented out in QuantLib ***
 		//
-		// vol = stdDev_ / std::sqrt(maturity);
-		// rate = -std::log(discount_)/maturity;
+		// vol          = stdDev_ / std::sqrt(maturity);
+		// rate         = -std::log(discount_)/maturity;
 		// dividendRate = -std::log(forward_ / spot * discount_)/maturity;
-		// return rate*value() - (rate-dividendRate)*spot*delta(spot)
-		// - 0.5*vol*vol*spot*spot*gamma(spot);
+		// return rate*value() - (rate-dividendRate)*spot*delta(spot) - 0.5*vol*vol*spot*spot*gamma(spot);
 		// =====================================================================
 
 		return -(Math.log(discount) * value() + Math.log(forward / spot) * spot * delta(spot) + 0.5 * variance * spot * spot * gamma(spot)) / maturity;
@@ -400,6 +419,7 @@ public class BlackCalculator {
 	
 	private static class Calculator implements TypedVisitor<Payoff> {
 
+	    // TODO: refactor messages?
 	    private static final String INVALID_OPTION_TYPE = "invalid option type";
 		private static final String INVALID_PAYOFF_TYPE = "invalid payoff type";
 		
@@ -409,6 +429,7 @@ public class BlackCalculator {
 		
 		private final BlackCalculator black;
 
+		
 		//
 		// public constructors
 		//
@@ -417,6 +438,7 @@ public class BlackCalculator {
 			this.black = black;
 		}
 
+		
 		//
 		// implements TypedVisitor<Payoff>
 		//
@@ -435,6 +457,7 @@ public class BlackCalculator {
 				throw new UnsupportedOperationException(INVALID_PAYOFF_TYPE + klass);
 			}
 		}
+
 		
         //
         // implements Visitor<PlainVanillaPayoff>

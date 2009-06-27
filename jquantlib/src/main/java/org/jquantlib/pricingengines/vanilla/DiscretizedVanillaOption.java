@@ -90,9 +90,7 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
 
 	
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see org.jquantlib.assets.DiscretizedAsset#mandatoryTimes()
 	 */
 	@Override

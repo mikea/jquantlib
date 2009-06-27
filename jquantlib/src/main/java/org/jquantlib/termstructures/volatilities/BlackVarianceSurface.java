@@ -62,13 +62,17 @@ import org.jquantlib.util.Visitor;
  * @author Richard Gomes
  */
 // TODO: check time extrapolation
-// CODE REVIEW DONE by Richard Gomes
 public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
 	public enum Extrapolation {
 		ConstantExtrapolation, InterpolatorDefaultExtrapolation
 	};
 
+
+	//
+	// private fields
+	//
+	
 	private DayCounter dayCounter;
 	private Date maxDate;
 	private/* @Time */double[] times;
@@ -79,6 +83,11 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 	private Extrapolation upperExtrapolation;
 	private Interpolator2D factory;
 
+	
+	//
+	// public constructors
+	//
+	
 	public BlackVarianceSurface(final Date referenceDate, final Date[] dates, final/* @Price */double[] strikes,
 			final/* @Volatility */double[][] blackVolMatrix, final DayCounter dayCounter) {
 		this(referenceDate, dates, strikes, blackVolMatrix, dayCounter, Extrapolation.InterpolatorDefaultExtrapolation,
@@ -115,7 +124,6 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 			this.strikes[i] = strikes[i-1];
 		}
 		
-		
 		for (int j = 1; j <= blackVolMatrix[0].length; j++) {
 			times[j] = timeFromReference(dates[j - 1]);
 			if (!(times[j] > times[j - 1]))
@@ -130,29 +138,49 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 		factory = BilinearInterpolation.getInterpolator();
 	}
 
+
+	//
+	// public methods
+	//
+	
+	public void setInterpolation(final Interpolator i) {
+        varianceSurface = factory.interpolate(times, strikes, variances);
+        varianceSurface.enableExtrapolation();
+        varianceSurface.reload();
+        notifyObservers();
+    }
+
+	
+	//
+	// Overrides TermStructure
+	//
+	
+	@Override
 	public final DayCounter dayCounter() {
 		return dayCounter;
 	}
 
+    @Override
 	public final Date maxDate() {
 		return maxDate;
 	}
 
+
+    //
+    // Overrides BlackVolTermStructure
+    //
+    
+    @Override
 	public final/* @Price */double minStrike() {
 		return strikes[0];
 	}
 
+    @Override
 	public final/* @Price */double maxStrike() {
 		return strikes[strikes.length - 1];
 	}
 
-	public void setInterpolation(final Interpolator i) {
-		varianceSurface = factory.interpolate(times, strikes, variances);
-		varianceSurface.enableExtrapolation();
-		varianceSurface.reload();
-		notifyObservers();
-	}
-
+    @Override
 	protected final/* @Variance */double blackVarianceImpl(/* @Time */double t, /* @Price */double strike) /* @ReadOnly */{
 
 		if (t == 0.0)
@@ -174,6 +202,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 		}
 	}
 
+    
 	//
 	// implements TypedVisitable
 	//

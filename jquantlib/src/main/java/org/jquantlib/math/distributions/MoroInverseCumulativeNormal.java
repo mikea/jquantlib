@@ -37,15 +37,15 @@ public class MoroInverseCumulativeNormal extends NormalDistribution implements U
     // static final fields (constants)
 	//
 	
-	static final double a0_ =  2.50662823884;
-	static final double a1_ =-18.61500062529;
-	static final double a2_ = 41.39119773534;
-	static final double a3_ =-25.44106049637;
+	static final double a0_ =   2.50662823884;
+	static final double a1_ = -18.61500062529;
+	static final double a2_ =  41.39119773534;
+	static final double a3_ = -25.44106049637;
 
-	static final double b0_ = -8.47351093090;
-	static final double b1_ = 23.08336743743;
-	static final double b2_ =-21.06224101826;
-	static final double b3_ =  3.13082909833;
+	static final double b0_ =  -8.47351093090;
+	static final double b1_ =  23.08336743743;
+	static final double b2_ = -21.06224101826;
+	static final double b3_ =   3.13082909833;
 
 	static final double c0_ = 0.3374754822726147;
 	static final double c1_ = 0.9761690190917186;
@@ -75,18 +75,15 @@ public class MoroInverseCumulativeNormal extends NormalDistribution implements U
     // implements UnaryFunctionDouble
     //
         
+    @Override
     public double evaluate(double x) /* Read-only */ {
-        double result;
-        double temp=x-0.5;
+        final double temp=x-0.5;
         
         // x has to be between 0.00 and 1.00
-		if (x <= 0.0) {
-			return 0.00;
-		}
-		if (x >=1.0) {
-			return 1.00;
-		}
+		if (x <= 0.0) return 0.00;
+		if (x >=1.0)  return 1.00;
 
+        double result;
         if (Math.abs(temp) < 0.42) {
             // Beasley and Springer, 1977
             result=temp*temp;
@@ -108,4 +105,5 @@ public class MoroInverseCumulativeNormal extends NormalDistribution implements U
         }
         return average + result * sigma;
     }
+
 }

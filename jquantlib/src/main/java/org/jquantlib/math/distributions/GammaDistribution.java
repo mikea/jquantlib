@@ -49,7 +49,7 @@ public class GammaDistribution implements UnaryFunctionDouble {
 	// private field
 	//
 	
-	private double a_;
+	private double a;
 	
 	
 	//
@@ -63,11 +63,8 @@ public class GammaDistribution implements UnaryFunctionDouble {
 	 * @throws ArithmeticException if <code>a_</code> is smaller than 0.00
 	 */
 	public GammaDistribution(double a) {
-	    a_ = a;
-
-	    if (a_ < 0.0) {
-		throw new ArithmeticException("invalid parameter for gamma distribution");
-	    }
+	    this.a = a;
+	    if (this.a < 0.0) throw new ArithmeticException("invalid parameter for gamma distribution");
 	}
 	
 	
@@ -81,34 +78,33 @@ public class GammaDistribution implements UnaryFunctionDouble {
 	 * @param x random variable
 	 * @return Gamma distribution of <code>x</code>
 	 */
+	@Override
 	public double evaluate(double x) /* Read-only */ {
      	
-    	if (x <= 0.0){
-    	    return 0.0;
-    	}
+    	if (x <= 0.0) return 0.0;
 
     	GammaFunction gf = new GammaFunction();
-        double gln = gf.logValue(a_);
+        double gln = gf.logValue(a);
 
-        if (x < (a_ + 1.0)) {
-	    double ap = a_;
-	    double del = 1.0 / a_;
-	    double sum = del;
-	    for (int n = 1; n <= 100; n++) {
-	    	ap += 1.0;
-	    	del *= x / ap;
-	    	sum += del;
-	    	if (Math.abs(del) < Math.abs(sum) * 3.0e-7) {
-	    		return sum * Math.exp(-x + a_ * Math.log(x) - gln);
-	    	}
-	    }
+        if (x < (a + 1.0)) {
+    	    double ap = a;
+    	    double del = 1.0 / a;
+    	    double sum = del;
+    	    for (int n = 1; n <= 100; n++) {
+    	    	ap += 1.0;
+    	    	del *= x / ap;
+    	    	sum += del;
+    	    	if (Math.abs(del) < Math.abs(sum) * 3.0e-7) {
+    	    		return sum * Math.exp(-x + a * Math.log(x) - gln);
+    	    	}
+    	    }
         } else {
-        	double b = x + 1.0 - a_;
+        	double b = x + 1.0 - a;
         	double c = Constants.QL_MAX_REAL;
         	double d = 1.0 / b;
         	double h = d;
         	for (int n = 1; n <= 100; n++) {
-        		double an = -1.0 * n * (n - a_);
+        		double an = -1.0 * n * (n - a);
         		b += 2.0;
         		d = an * d + b;
 
@@ -123,11 +119,13 @@ public class GammaDistribution implements UnaryFunctionDouble {
         		double del = d * c;
         		h *= del;
         		if (Math.abs(del - 1.0) < Constants.QL_EPSILON) {
-        			return h * Math.exp(-x + a_ * Math.log(x) - gln);
+        			return h * Math.exp(-x + a * Math.log(x) - gln);
         		}
         	}
         }
+        
         throw new ArithmeticException("too few iterations");
     }
+	
 }
 

@@ -77,38 +77,22 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
     
     
     //
-    // overrides AbstractInterpolation
-    //
-    
-	@Override
-	protected double primitiveImpl(final double x) /* @ReadOnly */ {
-        int i = locate(x);
-        double dx = x - vx[i];
-        return vp[i] + dx*vy[i+1];
-	}
-
-	@Override
-	protected double derivativeImpl(final double x) /* @ReadOnly */ {
-        return 0.0;
-	}
-
-	@Override
-	protected double secondDerivativeImpl(final double x) /* @ReadOnly */ {
-        return 0.0;
-	}
-
-	
-    //
     // implements Interpolation
     //
     
     /**
      * {@inheritDoc}
+     * 
+     * @deprecated
      */
-    @Deprecated
     @Override
 	public void update() { reload(); }
 
+
+    //
+    // Overrides AbstractInterpolation
+    //
+    
     /**
      * {@inheritDoc}
      * 
@@ -126,11 +110,29 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
         }
 	}
 	
+    @Override
+    protected double primitiveImpl(final double x) /* @ReadOnly */ {
+        int i = locate(x);
+        double dx = x - vx[i];
+        return vp[i] + dx*vy[i+1];
+    }
 
+    @Override
+    protected double derivativeImpl(final double x) /* @ReadOnly */ {
+        return 0.0;
+    }
+
+    @Override
+    protected double secondDerivativeImpl(final double x) /* @ReadOnly */ {
+        return 0.0;
+    }
+
+    
     //
     // implements UnaryFunctionDouble
     //
     
+    @Override
     protected double evaluateImpl(final double x) /* @ReadOnly */ {
     	if (x <= vx[0])
             return vy[0];
@@ -159,10 +161,12 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 			this.delegate = delegate;
 		}
 		
+	    @Override
 		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
 			return interpolate(x.length, x, y);
 		}
 
+	    @Override
 		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
 			delegate.vx = Arrays.copyOfRange(x, 0, size);
 			delegate.vy = Arrays.copyOfRange(y, 0, size);
@@ -170,6 +174,7 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 			return delegate;
 		}
 
+	    @Override
 		public final boolean isGlobal() {
 			return false; // only CubicSpline and Sabr are global, whatever it means!
 		}

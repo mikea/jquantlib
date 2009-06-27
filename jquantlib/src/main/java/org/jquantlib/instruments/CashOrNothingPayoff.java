@@ -68,6 +68,7 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
      */
     protected/* @Payoff */double cashPayoff;
 
+    
     //
     // public constructors
     //
@@ -91,8 +92,9 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
 		return cashPayoff;
 	}
 
+	
     //
-    // public final methods
+    // Overrides Payoff
     //
     
     /**

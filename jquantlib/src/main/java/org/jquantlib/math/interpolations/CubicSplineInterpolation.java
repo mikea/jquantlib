@@ -99,6 +99,39 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
     
     
     //
+    // public inner enums
+    //
+    
+    public enum BoundaryCondition {
+        /**
+         * Make second(-last) point an inactive knot
+         */
+        NotAKnot,
+        
+        /**
+         * Match value of end-slope
+         */
+        FirstDerivative,
+        
+        /**
+         * Match value of second derivative at end
+         */
+        SecondDerivative,
+        
+        /**
+         * Match first and second derivative at either end
+         */
+        Periodic,
+        
+        /**
+         * Match end-slope to the slope of the cubic that matches
+         * the first four data at the respective end
+         */
+        Lagrange;
+    }
+
+
+    //
     // static public methods
     //
     
@@ -148,18 +181,40 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
     
     
     //
+    // public methods
+    //
+    
+    public double[] getVa() {
+        return va;
+    }
+
+    public double[] getVb() {
+        return vb;
+    }
+
+    public double[] getVc() {
+        return vc;
+    }   
+
+    
+    //
     // implements Interpolation
     //
     
     /**
      * {@inheritDoc}
+     * 
+     * @deprecated
      */
-    @Deprecated
     @Override
     public void update() {
         reload();
     }
 
+    
+    //
+    // Overrides AbstractInterpolation
+    //
     
     /**
      * {@inheritDoc}
@@ -347,20 +402,8 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
     }
     
 
-	public double[] getVa() {
-		return va;
-	}
-
-	public double[] getVb() {
-		return vb;
-	}
-
-	public double[] getVc() {
-		return vc;
-	}   
-    
     //
-    // inner classes
+    // private inner classes
     //
     
 
@@ -378,10 +421,12 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
             this.delegate = delegate;
         }
         
+        @Override
         public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
             return interpolate(x.length, x, y);
         }
 
+        @Override
         public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
             delegate.vx = Arrays.copyOfRange(x, 0, size);
             delegate.vy = Arrays.copyOfRange(y, 0, size);
@@ -394,39 +439,11 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
             return delegate;
         }
         
+        @Override
         public final boolean isGlobal() {
             return true; // only CubicSpline and Sabr are global, whatever it means!
         }
         
-    }
-
-    
-    public enum BoundaryCondition {
-        /**
-         * Make second(-last) point an inactive knot
-         */
-        NotAKnot,
-        
-        /**
-         * Match value of end-slope
-         */
-        FirstDerivative,
-        
-        /**
-         * Match value of second derivative at end
-         */
-        SecondDerivative,
-        
-        /**
-         * Match first and second derivative at either end
-         */
-        Periodic,
-        
-        /**
-         * Match end-slope to the slope of the cubic that matches
-         * the first four data at the respective end
-         */
-        Lagrange;
     }
 
 }

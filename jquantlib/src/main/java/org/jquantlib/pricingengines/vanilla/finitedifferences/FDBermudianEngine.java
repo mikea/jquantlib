@@ -26,10 +26,14 @@ import org.jquantlib.methods.finitedifferences.NullCondition;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
+//TODO: class comments
 //TODO: work in progress
-
 public class FDBermudianEngine extends VanillaOptionEngine {
 
+    //
+    // private fields
+    //
+    
     private double extraTermInBermuda;
     private FDMultiPeriodEngine fdVanillaEngine;
 
