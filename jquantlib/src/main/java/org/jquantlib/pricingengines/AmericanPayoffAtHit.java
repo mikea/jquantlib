@@ -84,17 +84,11 @@ public class AmericanPayoffAtHit {
             final double spot, final double discount, final double dividendDiscount, final double variance, 
             final StrikedTypePayoff strikedTypePayoff) {
 
-        if (spot <= 0.0)
-            throw new IllegalArgumentException("positive spot value required: " + spot + " not allowed");
-                
-        if (discount <= 0.0)
-            throw new IllegalArgumentException("positive discount required: " + discount + " not allowed");
-        
-        if (dividendDiscount <= 0.0)
-            throw new IllegalArgumentException("positive dividend discount required: " + dividendDiscount + " not allowed");
-
-        if (variance < 0.0)
-            throw new IllegalArgumentException("negative variance: " + variance + " not allowed");
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (spot <= 0.0) throw new IllegalArgumentException("positive spot value required");
+        if (discount <= 0.0) throw new IllegalArgumentException("positive discount required");
+        if (dividendDiscount <= 0.0) throw new IllegalArgumentException("positive dividend discount required");
+        if (variance < 0.0) throw new IllegalArgumentException("non-negative variance required");
         
         this.spot = spot;
         this.variance = variance;
@@ -273,7 +267,7 @@ public class AmericanPayoffAtHit {
         return gamma;
     } 
     
-    public double theta(final /* @Time */ double maturity) /* @ReadOnly */ {
+    public double rho(final /* @Time */ double maturity) /* @ReadOnly */ {
 
         if (maturity <= 0.0)
             throw new IllegalArgumentException("negative maturity: " + maturity + " not allowed");
@@ -290,14 +284,12 @@ public class AmericanPayoffAtHit {
             DXDr       = X       * (1.0-(1.0+mu)/lambda) * log_H_S / variance;
         }
 
-        double theta = maturity * K * (
+        return maturity * K * (
               DalphaDr * forward
             + alpha   * DforwardDr
             + DbetaDr  * X
             + beta    * DXDr
             );      
-        
-        return theta;
     }    
     
 }

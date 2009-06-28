@@ -50,132 +50,47 @@ import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 
+// TODO: class comments
 public class Utilities {
-
-	//
-	// utilities.hpp
-	//
-
-	
-//    std::string payoffTypeToString(const boost::shared_ptr<Payoff>&);
-//    std::string exerciseTypeToString(const boost::shared_ptr<Exercise>&);
-//
-//
-//    boost::shared_ptr<YieldTermStructure>
-//    flatRate(const Date& today,
-//             const boost::shared_ptr<Quote>& forward,
-//             const DayCounter& dc);
-//
-//    boost::shared_ptr<YieldTermStructure>
-//    flatRate(const Date& today,
-//             Rate forward,
-//             const DayCounter& dc);
-//
-//    boost::shared_ptr<YieldTermStructure>
-//    flatRate(const boost::shared_ptr<Quote>& forward,
-//             const DayCounter& dc);
-//
-//    boost::shared_ptr<YieldTermStructure>
-//    flatRate(Rate forward,
-//             const DayCounter& dc);
-//
-//
-//    boost::shared_ptr<BlackVolTermStructure>
-//    flatVol(const Date& today,
-//            const boost::shared_ptr<Quote>& volatility,
-//            const DayCounter& dc);
-//
-//    boost::shared_ptr<BlackVolTermStructure>
-//    flatVol(const Date& today,
-//            Volatility volatility,
-//            const DayCounter& dc);
-//
-//    boost::shared_ptr<BlackVolTermStructure>
-//    flatVol(const boost::shared_ptr<Quote>& volatility,
-//            const DayCounter& dc);
-//
-//    boost::shared_ptr<BlackVolTermStructure>
-//    flatVol(Volatility volatility,
-//            const DayCounter& dc);
-//
-//
-//    Real relativeError(Real x1, Real x2, Real reference);
-//
-//    //bool checkAbsError(Real x1, Real x2, Real tolerance){
-//    //    return std::fabs(x1 - x2) < tolerance;
-//    //};
 
     static public double relativeError(final double x1, final double x2, final double reference) {
         if (reference != 0.0)
-            return Math.abs(x1-x2)/reference;
+            return Math.abs(x1 - x2) / reference;
         else
             // fall back to absolute error
-            return Math.abs(x1-x2);
+            return Math.abs(x1 - x2);
     }
 
-    
-	static public YieldTermStructure flatRate(
-	    		final Date today,
-	            final Handle<? extends Quote> forward,
-	            final DayCounter dc) {
-	        return new FlatForward(today, forward, dc);
-	    }
+    static public YieldTermStructure flatRate(final Date today, final Handle<? extends Quote> forward, final DayCounter dc) {
+        return new FlatForward(today, forward, dc);
+    }
 
-	    static public YieldTermStructure flatRate(
-	    		final Date today, 
-	    		final /*@Rate*/ double forward, 
-	    		final DayCounter dc) {
-	        return flatRate(today, new Handle<Quote>(new SimpleQuote(forward)), dc);
-	    }
+    static public YieldTermStructure flatRate(final Date today, final/* @Rate */double forward, final DayCounter dc) {
+        return flatRate(today, new Handle<Quote>(new SimpleQuote(forward)), dc);
+    }
 
-	    static public YieldTermStructure flatRate(
-	    		final Handle<? extends Quote> forward,
-	    		final DayCounter dc) {
-	        return new FlatForward(0, new NullCalendar(), forward, dc);
-	    }
+    static public YieldTermStructure flatRate(final Handle<? extends Quote> forward, final DayCounter dc) {
+        return new FlatForward(0, new NullCalendar(), forward, dc);
+    }
 
-	    static public YieldTermStructure flatRate(
-	    		final /*@Rate*/ double forward, 
-	    		final DayCounter dc) {
-	        return flatRate(new Handle<Quote>(new SimpleQuote(forward)), dc);
-	    }
+    static public YieldTermStructure flatRate(final/* @Rate */double forward, final DayCounter dc) {
+        return flatRate(new Handle<Quote>(new SimpleQuote(forward)), dc);
+    }
 
+    static public BlackVolTermStructure flatVol(final Date today, final Handle<? extends Quote> vol, final DayCounter dc) {
+        return new BlackConstantVol(today, vol, dc);
+    }
 
-	    static public BlackVolTermStructure flatVol(
-	    		final Date today,
-	            final Handle<? extends Quote> vol,
-	            final DayCounter dc) {
-	        return new BlackConstantVol(today, vol, dc);
-	    }
+    static public BlackVolTermStructure flatVol(final Date today, final/* @Volatility */double vol, final DayCounter dc) {
+        return flatVol(today, new Handle<Quote>(new SimpleQuote(vol)), dc);
+    }
 
-	    static public BlackVolTermStructure flatVol(
-	    		final Date today,
-	    		final /*@Volatility*/ double vol,
-	            final DayCounter dc) {
-	        return flatVol(today, new Handle<Quote>(new SimpleQuote(vol)), dc);
-	    }
+    static public BlackVolTermStructure flatVol(final Handle<? extends Quote> vol, final DayCounter dc) {
+        return new BlackConstantVol(0, new NullCalendar(), vol, dc);
+    }
 
-	    static public BlackVolTermStructure flatVol(
-	    		final Handle<? extends Quote> vol,
-	            final DayCounter dc) {
-	        return new BlackConstantVol(0, new NullCalendar(), vol, dc);
-	    }
-
-	    static public BlackVolTermStructure flatVol(
-	    		final /*@Volatility*/ double vol,
-	            final DayCounter dc) {
-	        return flatVol(new Handle<Quote>(new SimpleQuote(vol)), dc);
-	    }
-
-	//
-//	    Real relativeError(Real x1, Real x2, Real reference) {
-//	        if (reference != 0.0)
-//	            return std::fabs(x1-x2)/reference;
-//	        else
-//	            // fall back to absolute error
-//	            return std::fabs(x1-x2);
-//	    }
-	//
-	//}
+    static public BlackVolTermStructure flatVol(final/* @Volatility */double vol, final DayCounter dc) {
+        return flatVol(new Handle<Quote>(new SimpleQuote(vol)), dc);
+    }
 
 }

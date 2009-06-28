@@ -103,8 +103,7 @@ public class AsianOptionTest {
         // this.today = settings.getEvaluationDate();
     }
 
-    // @Ignore
-    // see: http://bugs.jquantlib.org/view.php?id=276
+
     @Test
     public void testAnalyticDiscreteGeometricAverage() {
 
@@ -175,8 +174,7 @@ public class AsianOptionTest {
         }
     }
 
-    // @Ignore
-    // see: http://bugs.jquantlib.org/view.php?id=276
+
     @Test
     public void testAnalyticDiscreteGeometricAveragePriceGreeks() {
 
@@ -347,7 +345,7 @@ public class AsianOptionTest {
 
     }
 
-    @Ignore
+    //XXX @Ignore
     @Test
     public void testAnalyticContinuousGeometricAveragePrice() {
         logger.info("Testing analytic continuous geometric average-price Asians...");
@@ -364,16 +362,17 @@ public class AsianOptionTest {
         SimpleQuote vol = new SimpleQuote(0.20);
         BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<SimpleQuote>(vol), dc);
 
-        BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-                new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
+        BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
+                new Handle<Quote>(spot), new Handle<YieldTermStructure>(qTS), 
+                new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
 
         PricingEngine engine = new AnalyticContinuousGeometricAveragePriceasianEngine();
         AverageType averageType = AverageType.Geometric;
         Option.Type type = Option.Type.PUT;
         /* @Real */double strike = 85.0;
 
-        Date exerciseDate = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear())
-                .increment(90);
+        Date exerciseDate = DateFactory.getFactory().getDate(
+                today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(90);
 
         /* @Size */int pastFixings = Integer.MAX_VALUE;
         /* @Real */double runningAccumulator = Double.NaN;
@@ -381,8 +380,8 @@ public class AsianOptionTest {
         StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike);
         Exercise exercise = new EuropeanExercise(exerciseDate);
 
-        ContinuousAveragingAsianOption option = new ContinuousAveragingAsianOption(averageType, stochProcess, payoff, exercise,
-                engine);
+        ContinuousAveragingAsianOption option = new ContinuousAveragingAsianOption(
+                averageType, stochProcess, payoff, exercise, engine);
 
         /* @Real */double calculated = option.getNPV();
         /* @Real */double expected = 4.6922;
@@ -415,7 +414,8 @@ public class AsianOptionTest {
         }
     }
 
-    @Ignore
+    
+    //XXX @Ignore
     @Test
     public void testAnalyticContinuousGeometricAveragePriceGreeks() {
         logger.info("Testing analytic continuous geometric average-price Asian greeks...");
@@ -448,8 +448,9 @@ public class AsianOptionTest {
         SimpleQuote vol = new SimpleQuote(0.0);
         BlackVolTermStructure volTS = Utilities.flatVol(new Handle<SimpleQuote>(vol), dc);
 
-        BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-                new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
+        BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
+                new Handle<Quote>(spot), new Handle<YieldTermStructure>(qTS), 
+                new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
 
         for (int i = 0; i < types.length; i++) {
             for (int j = 0; j < strikes.length; j++) {
@@ -462,8 +463,8 @@ public class AsianOptionTest {
                     PricingEngine engine = new AnalyticContinuousGeometricAveragePriceasianEngine();
                     PlainVanillaPayoff payoff = new PlainVanillaPayoff(types[i], strikes[j]);
 
-                    ContinuousAveragingAsianOption option = new ContinuousAveragingAsianOption(AverageType.Geometric, stochProcess,
-                            payoff, maturity, engine);
+                    ContinuousAveragingAsianOption option = new ContinuousAveragingAsianOption(
+                            AverageType.Geometric, stochProcess, payoff, maturity, engine);
 
                     /* @Size */int pastFixings = Integer.MAX_VALUE;
                     /* @Real */double runningAverage = Double.NaN;

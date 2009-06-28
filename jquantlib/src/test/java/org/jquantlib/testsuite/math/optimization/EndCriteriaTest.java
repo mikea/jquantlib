@@ -33,11 +33,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author
- *
- *
  */
-
-
+//TODO: class comments, license, code review
 public class EndCriteriaTest {
 	
 	private final static Logger logger = LoggerFactory.getLogger(EndCriteriaTest.class);
@@ -61,11 +58,14 @@ public class EndCriteriaTest {
 		// ec=null; // TODO: remove this line after EndCriteria is ready
 	}
 	
+    @Ignore("End Criteria needs code review")
 	@Test
-	public void dummyTest(){
+	public void dummyTest() {
+	    //TODO: add test case here
 	}
 	
 	@Ignore("End Criteria needs code review")
+	@Test
 	//maxIterations = 100
 	//iteration >= maxIterations_
 	public void testCheckMaxIterations() {
@@ -101,7 +101,8 @@ public class EndCriteriaTest {
 	}
 	
 	
-	@Ignore("End Criteria needs code review")
+    @Ignore("End Criteria needs code review")
+    @Test
 	//maxStationaryStateIterations = 30
 	//rootEpsilon = 0.05
 	//Math.abs( xNew-xOld) < rootEpsilon_ 
@@ -174,7 +175,8 @@ public class EndCriteriaTest {
 	
 	
 	
-	@Ignore("End Criteria needs code review")
+    @Ignore("End Criteria needs code review")
+    @Test
     //maxStationaryStateIterations_ = 30
 	//functionEpsilon = 0.08			
 	public void testCheckStationaryFunctionValue() {
@@ -246,9 +248,8 @@ public class EndCriteriaTest {
 		logger.info("testCheckStationaryFunctionValue -- SUCCESS : Math.abs(fxNew-fxOld) >= functionEpsilon_ ;statStateIterations <= maxStationaryStateIterations_   return FALSE");	
 	}
 	
-	
-	
-	@Ignore("End Criteria needs code review")
+    @Ignore("End Criteria needs code review")
+    @Test
 	//functionEpsilon_ = 0.08
 	public void testCheckStationaryFunctionAccuracy() {
 		//create the matching constraint type -- StationaryFunctionAccuracy
@@ -297,8 +298,8 @@ public class EndCriteriaTest {
 		logger.info("testCheckStationaryFunctionAccuracy -- SUCCESS : positiveOptimization=false ;0.07 < functionEpsilon_   return FALSE");	
 	}
 	
-
-	@Ignore("End Criteria needs code review")
+    @Ignore("End Criteria needs code review")
+    @Test
 	//gradientNormEpsilon = 0.2
 	public void testCheckZeroGradientNorm() {
 		//create the matching constraint type -- ZeroGradientNorm
@@ -331,12 +332,13 @@ public class EndCriteriaTest {
 		
 	}
 	
-	//TO DO - Verify this should be removed
+	//XXX Verify this should be removed
 	//private boolean isArrayEqual(Array one,Array two,double precision){
 	//	Array diffArray = one.operatorSubtractCopy(two);
 	//	System.out.println("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
 	//	return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );
 	//	
 	//}
+
 }
 

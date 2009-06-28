@@ -57,41 +57,36 @@ import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 
 public class AmericanPayoffAtExpiry {
 
-    private final /* @DiscountFactor */ double discount;
-    
-    private final double /*@Price*/ forward;
-    private final double /* @Volatility */ stdDev;
-    private final double /*@Price*/ strike;
+    private final /*@DiscountFactor*/ double discount;
+    private final /*@Price*/ double forward;
+    private final /*@Volatility*/ double stdDev;
+    private final /*@Price*/ double strike;
     private final double log_H_S;
-    private final double cum_d1, cum_d2, n_d1, n_d2;
-    private final double alpha, beta, DalphaDd1, DbetaDd2;
+    private final double cum_d1, cum_d2;
+    private final double n_d1, n_d2;
+    private final double alpha, beta;
+    private final double DalphaDd1, DbetaDd2;
     private final boolean inTheMoney;
-    private final double Y, X;
+    private final double x, y;
+    
     private double mu, K, D1, D2;
     private double DKDstrike, DXDstrike, DYDstrike;
     
     public AmericanPayoffAtExpiry(final double spot, final double discount, final double dividendDiscount, final double variance, final StrikedTypePayoff strikedTypePayoff) {
         super();
+        
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (spot <= 0.0) throw new IllegalArgumentException("positive spot value required");
+        if (discount <= 0.0) throw new IllegalArgumentException("positive discount required");
+        if (dividendDiscount <= 0.0) throw new IllegalArgumentException("positive dividend discount required");
+        if (variance < 0.0) throw new IllegalArgumentException("non-negative variance required");
+        
         this.discount = discount;
-        
-        if (spot <= 0.0)
-            throw new IllegalArgumentException("positive spot value required");
-                
-        if (discount <= 0.0)
-            throw new IllegalArgumentException("positive discount required: " + discount + " not allowed");
-        
-        if (dividendDiscount <= 0.0)
-            throw new IllegalArgumentException("positive dividend discount required: " + dividendDiscount + " not allowed");
-
-        if (variance < 0.0)
-            throw new IllegalArgumentException("negative variance: " + variance + " not allowed");
-        
-        forward = spot * dividendDiscount / discount;
-        stdDev = Math.sqrt(variance);
+        this.forward = spot * dividendDiscount / discount;
+        this.stdDev = Math.sqrt(variance);
 
         final Option.Type optionType = strikedTypePayoff.optionType();
         strike = strikedTypePayoff.strike();
-        
         mu = Math.log(dividendDiscount / discount) / variance - 0.5;
         
         // binary cash-or-nothing payoff ?
@@ -167,20 +162,20 @@ public class AmericanPayoffAtExpiry {
         inTheMoney = (optionType.equals(Type.CALL) && strike < spot) ||
                      (optionType.equals(Type.PUT) && strike > spot);
         if (inTheMoney) {
-            Y         = 1.0;
-            X         = 1.0;
+            y         = 1.0;
+            x         = 1.0;
             DYDstrike = 0.0;
             DXDstrike = 0.0; 
         } else {
-            Y = 1.0;
-            X = Math.pow(strike / spot, 2.0 * mu);
+            y = 1.0;
+            x = Math.pow(strike / spot, 2.0 * mu);
 // Commented out in original C++ code :: DXDstrike_ = ......;
         }
         
     }
     
     public /* @Price */ double value() /* @ReadOnly */ {
-        /* @Price */ final double result = discount * K * (Y * alpha + X * beta);
+        /* @Price */ final double result = discount * K * (y * alpha + x * beta);
         return result;
     }   
     
