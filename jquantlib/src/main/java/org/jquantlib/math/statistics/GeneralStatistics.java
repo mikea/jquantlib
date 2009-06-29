@@ -231,7 +231,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         };
         
         // Bind the second parameter
-        E_IUnaryFunction<Double, Double> bounded = Std.bind2nd(minus, new Double(mean()));
+        E_IUnaryFunction<Double, Double> bounded = Std.getInstance().bind2nd(minus, new Double(mean()));
         // Add the second function and create the composed one.
         functions.add(bounded);
         E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
@@ -314,7 +314,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         };
         
         // Bind the second parameter
-        E_IUnaryFunction<Double, Double> bounded = Std.bind2nd(minus, new Double(mean()));
+        E_IUnaryFunction<Double, Double> bounded = Std.getInstance().bind2nd(minus, new Double(mean()));
         // Add the second function and create the composed one.
         functions.add(bounded);
         E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
@@ -385,7 +385,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         };
         
         // Bind the second parameter
-        E_IUnaryFunction<Double, Double> bounded = Std.bind2nd(minus, new Double(mean()));
+        E_IUnaryFunction<Double, Double> bounded = Std.getInstance().bind2nd(minus, new Double(mean()));
         // Add the second function and create the composed one.
         functions.add(bounded);
         E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
@@ -565,7 +565,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         System.out.println("Skewness is " + gs.skewness());
         System.out.println("Kurtosis is" + gs.kurtosis());
         System.out.println("Variance is " + gs.variance());
-        System.out.println("Std. dev is " + gs.standardDeviation());
+        System.out.println("Std.getInstance(). dev is " + gs.standardDeviation());
         System.out.println("Percentile 95 is " + gs.percentile(.95));
     }
 
@@ -787,14 +787,14 @@ Min is 0.0
 Skewness is 0.0
 Kurtosis is-1.1098736644231717
 Variance is 0.08181597241455381
-Std. dev is 0.28603491467748093
+Std.getInstance(). dev is 0.28603491467748093
 Percentile 95 is 0.2641826642666173
 
  *
  * open office o/p
 Mean 	0.52
 Variance	0.08
-Std. Dev	0.29
+Std.getInstance(). Dev	0.29
 skewness	0.03
 kurtosis	-1.17
 max	0.99

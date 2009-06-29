@@ -151,7 +151,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 	    /*@Real*/ double pastWeight = pastFixings/N;
 	    /*@Real*/ double futureWeight = 1.0-pastWeight;
 
-	    double timeSum = Std.accumulate(fixingTimes, 0.0);
+	    double timeSum = Std.getInstance().accumulate(fixingTimes, 0.0);
 	    /*@Volatility*/ double vola = process.blackVolatility().getLink().blackVol(arguments.exercise.lastDate(), payoff.strike());
 	    
 	    /*@Real*/ double temp = 0.0;

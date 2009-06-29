@@ -29,7 +29,7 @@ public interface Statistics_Praneet {
 /**TODO: Should have following methods
  * mean
  * variance
- * std. dev
+ * Std.getInstance(). dev
  * min
  * max
  * skewness

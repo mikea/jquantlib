@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.E_IBinaryFunction;
 import org.jquantlib.math.E_IUnaryFunction;
 import org.jquantlib.math.E_UnaryFunction;
@@ -36,8 +35,6 @@ import org.jquantlib.math.functions.DoubleFunction;
 /**
  * Mimics library libstdc++ from C++ language which exposes top level functions to <code>std:: namespace</code>
  * 
- * @note all fields, methods and inner classes are static
- * 
  * @see <a http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/index.html">libstdc++ Source Documentation</a>
  * @see <a href="http://javadude.com/articles/passbyvalue.htm">Java is Pass-by-Value, Dammit!</a>
  * 
@@ -46,34 +43,50 @@ import org.jquantlib.math.functions.DoubleFunction;
  * @author Srinivas Hasti
  */
 
-@SuppressWarnings("PMD.TooManyMethods")
+//XXX @SuppressWarnings("PMD.TooManyMethods")
 public final class Std {
 
+    
+    /**
+     * Singleton instance for the whole application.
+     * <p>
+     * In an application server environment, it could be by class loader depending on scope of the
+     * jquantlib library to the module.
+     * 
+     * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
+     */
+    private volatile static Std instance = null;
+    
+    public static Std getInstance() {
+        if (instance == null) {
+            synchronized (Std.class) {
+                if (instance == null) {
+                    instance = new Std();
+                }
+            }
+        }
+        return instance;
+    }
+
+    
+    
 	//
-	// static public methods
+	// public methods
 	//
 
-    /**
-     * Return differences between adjacent values. 
-     * 
-     * @note Mimics std::adjacent_difference
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#adjacent_difference(double[])
      */
     @SuppressWarnings("PMD")
-    static public final double[] adjacent_difference(final double[] array) {
+    public final double[] adjacent_difference(final double[] array) {
         return adjacent_difference(array, 0);
     }
     
-    /**
-     * Return differences between adjacent values. 
-     * 
-     * @note Mimics std::adjacent_difference
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#adjacent_difference(double[], int)
      */
     @SuppressWarnings("PMD")
-    static public final double[] adjacent_difference(final double[] array, final int from) {
+    public final double[] adjacent_difference(final double[] array, final int from) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
         if (from>=array.length) throw new IndexOutOfBoundsException();
@@ -92,35 +105,27 @@ public final class Std {
     }
     
 
-    /**
-	 * Apply all <i>typelist</i> types to generator functor. 
-	 * 
-	 * @note Mimics std::apply
-	 * 
-	 * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00960.html#c173ae39df0e242021655f0f02eb381a">__gnu_cxx::typelist Namespace Reference</a>
-	 */
-	public static void apply(final Array array, final DoubleFunction func) {
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#apply(org.jquantlib.math.Array, org.jquantlib.math.functions.DoubleFunction)
+     */
+	public void apply(final double[] array, final DoubleFunction f) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (array==null || func==null) throw new NullPointerException();
+        if (array==null || f==null) throw new NullPointerException();
         
-		apply(array, 0, array.size(), func);
+		apply(array, 0, array.length, f);
 	}
 
 
-	/**
-     * Apply all <i>typelist</i> types to generator functor. 
-     * 
-     * @note Mimics std::apply
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00960.html#c173ae39df0e242021655f0f02eb381a">__gnu_cxx::typelist Namespace Reference</a>
+	/* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#apply(org.jquantlib.math.Array, int, int, org.jquantlib.math.functions.DoubleFunction)
      */
-	public static void apply(final Array array, final int from, final int to, final DoubleFunction func) {
+	public void apply(final double[] array, final int from, final int to, final DoubleFunction f) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (array==null || func==null) throw new NullPointerException();
-        if (from>to || to>array.size()) throw new IndexOutOfBoundsException();
+        if (array==null || f==null) throw new NullPointerException();
+        if (from > to || to > array.length) throw new IndexOutOfBoundsException();
         
 		for(int i=from; i<to; i++) {
-        	array.set(i, func.apply(array.at(i)));
+        	array[i] = f.apply(array[i]);
         }
 	}
 	
@@ -129,7 +134,10 @@ public final class Std {
 	// The use of E_IUnaryFunction and E_IBinaryFunction are pretty confusing.
 	// It's not clear what these interfaces/classes do (where are the comments and references, etc?)
 	// and, in particular, E_IBinaryFunction should have 3 generic arguments: 2 parameter types and 1 result type.
-	public static <ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> bind1st(
+	/* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#bind1st(org.jquantlib.math.E_IBinaryFunction, ParameterType)
+     */
+	public <ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> bind1st(
             E_IBinaryFunction<ParameterType, ReturnType> binaryFunction, ParameterType bounded) {
         
         final E_IUnaryFunction<ParameterType, ReturnType> ret = new E_UnaryFunction<ParameterType, ReturnType>() {
@@ -151,7 +159,10 @@ public final class Std {
     // The use of E_IUnaryFunction and E_IBinaryFunction are pretty confusing.
     // It's not clear what these interfaces/classes do (where are the comments and references, etc?)
     // and, in particular, E_IBinaryFunction should have 3 generic arguments: 2 parameter types and 1 result type.
-	public static <ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> bind2nd(
+	/* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#bind2nd(org.jquantlib.math.E_IBinaryFunction, ParameterType)
+     */
+	public <ParameterType, ReturnType> E_IUnaryFunction<ParameterType, ReturnType> bind2nd(
             E_IBinaryFunction<ParameterType, ReturnType> binaryFunction, ParameterType bounded) {
         
         final E_IUnaryFunction<ParameterType, ReturnType> ret = new E_UnaryFunction<ParameterType, ReturnType>() {
@@ -169,16 +180,10 @@ public final class Std {
     }	
 	
 	
-	/**
-     * Return the minimum element in a range using comparison functor. 
-     * 
-     * @note Mimics std::min_element
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
-     * 
-     * @deprecated
+	/* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#min_element(int, int, java.util.List)
      */
-    public static double min_element(final int from, final int to, final List<Double> array) {
+    public double min_element(final int from, final int to, final List<Double> array) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
         if (from>to || to>=array.size()) throw new IndexOutOfBoundsException();
@@ -191,14 +196,10 @@ public final class Std {
         return value;
     }
  
-    /**
-     * Return the minimum element in a range using comparison functor. 
-     * 
-     * @note Mimics std::min_element
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#min_element(int, int, double[])
      */
-    public static double min_element(final int from, final int to, final double []  array) {
+    public double min_element(final int from, final int to, final double []  array) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
         if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
@@ -211,16 +212,10 @@ public final class Std {
     }
     
     
-    /**
-     * Return the maximum element in a range using comparison functor. 
-     * 
-     * @note Mimics std::max_element
-     * list
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a>
-     *  
-     * @deprecated
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#max_element(int, int, java.util.List)
      */
-    public static double max_element(final int from, final int to, final List<Double> array) {
+    public double max_element(final int from, final int to, final List<Double> array) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
         if (from>to || to>=array.size()) throw new IndexOutOfBoundsException();
@@ -234,14 +229,10 @@ public final class Std {
     }
 
     
-    /**
-     * Return the maximum element in a range using comparison functor. 
-     * 
-     * @note Mimics std::max_element
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a> 
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#max_element(int, int, double[])
      */
-    public static double max_element(final int from, final int to, double [] array) {
+    public double max_element(final int from, final int to, double [] array) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
         if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
@@ -254,15 +245,11 @@ public final class Std {
     }
 
 	
-    /**
-     * Finds the first position in which val could be inserted without changing the ordering.
-     * 
-     * @note Mimics std::lower_bound
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#lower_bound(double[], double)
      */
     @SuppressWarnings("PMD.MethodNamingConventions")
-    public static int lower_bound(final double[] array, final double val) {
+    public int lower_bound(final double[] array, final double val) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
 
@@ -278,7 +265,7 @@ public final class Std {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
      */
     @SuppressWarnings("PMD")
-    private static int lower_bound(final double[] array, int from, int to, final double val) {
+    private int lower_bound(final double[] array, int from, int to, final double val) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
         if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
@@ -304,15 +291,11 @@ public final class Std {
     }
 
     
-    /**
-     * Finds the first position in which val could be inserted without changing the ordering.
-     * 
-     * @note Mimics std::lower_bound
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#upper_bound(double[], double)
      */
 	@SuppressWarnings("PMD.MethodNamingConventions")
-	public static int upper_bound(final double[] array, final double val) {
+	public int upper_bound(final double[] array, final double val) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
 
@@ -320,15 +303,11 @@ public final class Std {
 	}
 
 	
-	/**
-	 * Finds the last position in which val could be inserted without changing the ordering. 
-	 * 
-     * @note Mimics std::upper_bound
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
-	 */
+	/* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#upper_bound(java.lang.Double[], double)
+     */
 	@SuppressWarnings("PMD.MethodNamingConventions")
-	public static int upper_bound(final Double[] array, final double val) {
+	public int upper_bound(final Double[] array, final double val) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
 
@@ -348,7 +327,7 @@ public final class Std {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
      */
 	@SuppressWarnings("PMD.MethodNamingConventions")
-	private static int upper_bound(final double[] array, int from, int to, final double val) {
+	private int upper_bound(final double[] array, int from, int to, final double val) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
         if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
@@ -374,55 +353,40 @@ public final class Std {
 	}
 
 	
-	/**
-	 * Perform an operation on corresponding elements of two sequences. 
-	 * 
-	 * @note Mimics std::transform
-	 * 
-	 * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01012.html#gaf771a08ae2322b42640bb14fc342c5d">std::transform</a>
-	 */
-	public static final void transform(final Array array, final Array result, final UnaryFunctionDouble func) {
+	/* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#transform(org.jquantlib.math.Array, org.jquantlib.math.Array, org.jquantlib.math.UnaryFunctionDouble)
+     */
+	public final void transform(final double[] array, final double[] result, final UnaryFunctionDouble f) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (array==null || result==null || func==null) throw new NullPointerException();
+        if (array==null || result==null || f==null) throw new NullPointerException();
 
-		double[] a = array.getData();
-		double[] r = result.getData();
-		
-		for (int i=0; i<a.length; i++) {
-			r[i] = func.evaluate(a[i]);
+		for (int i=0; i<array.length; i++) {
+			result[i] = f.evaluate(array[i]);
 		}
 	}
 	
 
-	/**
-     * Perform an operation on corresponding elements of two sequences. 
-     * 
-     * @note Mimics std::transform
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01012.html#gaf771a08ae2322b42640bb14fc342c5d">std::transform</a>
+	/* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#transform(double[], double[], org.jquantlib.math.E_UnaryFunction)
      */
-	public static final<ParameterType, ReturnType>
-	        void transform(final double[] array, final double[] result, final E_UnaryFunction<Double, Double> func) {
+	public final<ParameterType, ReturnType>
+	        void transform(final double[] array, final double[] result, final E_UnaryFunction<Double, Double> f) {
 
 	    // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (array==null || result==null || func==null) throw new NullPointerException();
+        if (array==null || result==null || f==null) throw new NullPointerException();
 	    
         for(int i=0; i<array.length; i++){
-            result[i] = func.evaluate(array[i]);
+            result[i] = f.evaluate(array[i]);
         }
     }
 
 	
-    /**
-     * Return the minimum element in a range.
-     * 
-     * @note Mimics std::min
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g49f0c87cb0e1bf950f5c2d49aa106573">std::min</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#min(T)
      */
 	// TODO: consider the parallel version of std::min (probably implementing in class GnuParallel)
 	// http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00964.html#0d0e5aa5b83e8ffa90d57714f03d73bf
-    public static <T extends Comparable<T>> T min(T... t) {
+    public <T extends Comparable<T>> T min(T... t) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (t==null) throw new NullPointerException();
 
@@ -431,17 +395,13 @@ public final class Std {
         return list.get(0);
     }
 
-    
-    /**
-     * Return the maximum element in a range.
-     * 
-     * @note Mimics std::max
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#gacf2fd7d602b70d56279425df06bd02c">std::max</a>
+
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#max(T)
      */
     // TODO: consider the parallel version of std::max (probably implementing in class GnuParallel)
     // http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00964.html#992b78d1946c7c02e46bc3509637f12d
-    public static <T extends Comparable<T>> T max(T... t) {
+    public <T extends Comparable<T>> T max(T... t) {
         
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (t==null) throw new NullPointerException();
@@ -452,14 +412,10 @@ public final class Std {
     }
 
 
-    /**
-     * Accumulate values in a range. 
-     * 
-     * @note Mimics std::accumulate
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#accumulate(int, int, double[], double)
      */
-    public static double accumulate(final int from, final int to, final double[] array, final double init) {
+    public double accumulate(final int from, final int to, final double[] array, final double init) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
         if (from>to || to>=array.length) throw new IndexOutOfBoundsException();
@@ -472,14 +428,10 @@ public final class Std {
     }
 
     
-    /**
-     * Accumulate values in a range. 
-     * 
-     * @note Mimics std::accumulate
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#accumulate(double[], double)
      */
-    public static double accumulate(final double[] array, final double init) {
+    public double accumulate(final double[] array, final double init) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
 
@@ -487,16 +439,10 @@ public final class Std {
     }
 
     
-    /**
-     * Accumulate values in a range. 
-     * 
-     * @note Mimics std::accumulate
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
-     * 
-     * @deprecated
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#accumulate(java.util.List, double)
      */
-    public static double accumulate(final List<Double> array, final double init) {
+    public double accumulate(final List<Double> array, final double init) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (array==null) throw new NullPointerException();
 
@@ -513,7 +459,10 @@ public final class Std {
     // This class returns an object which is extended from an abstract class from math package, which
     // is something weird because 2 very related concepts which could not be apart are located in
     // two very different places.
-    public static E_UnaryFunction<Double, Double> multiplies(double multiplier) {
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#multiplies(double)
+     */
+    public E_UnaryFunction<Double, Double> multiplies(double multiplier) {
         
         E_UnaryFunction<Double, Double> ret = new E_UnaryFunction<Double, Double>() {
             @Override
@@ -526,61 +475,45 @@ public final class Std {
     }
 
     
-    /**
-     * Compute inner product of two ranges. 
-     * 
-     * @note Mimics std::inner_product
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#inner_product(org.jquantlib.math.Array, org.jquantlib.math.Array)
      */
-    public static double inner_product(final Array arrayA, final Array arrayB) {
+    public double inner_product(final double[] arrayA, final double[] arrayB) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (arrayA==null || arrayB==null) throw new NullPointerException();
 
-        return inner_product(arrayA.getData(), arrayB.getData(), 0.0);
+        return inner_product(arrayA, arrayB, 0.0);
     }
 
     
-    /**
-     * Compute inner product of two ranges. 
-     * 
-     * @note Mimics std::inner_product
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
-     */
-    public static double inner_product(final Array arrayA, final Array arrayB, final double init) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (arrayA==null || arrayB==null) throw new NullPointerException();
-
-        return inner_product(arrayA.getData(), arrayB.getData(), init);
-    }
+//    /* (non-Javadoc)
+//     * @see org.jquantlib.util.stdlibc.StdIntf#inner_product(org.jquantlib.math.Array, org.jquantlib.math.Array, double)
+//     */
+//    public double inner_product(final double[] arrayA, final double[] arrayB, final double init) {
+//        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+//        if (arrayA==null || arrayB==null) throw new NullPointerException();
+//
+//        return inner_product(arrayA.getData(), arrayB.getData(), init);
+//    }
 
     
-    /**
-     * Compute inner product of two ranges. 
-     * 
-     * @note Mimics std::inner_product
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
-     */
-    public static double inner_product(final Array arrayA, final int fromA, final Array arrayB, final int fromB, final int length, final double init) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (arrayA==null || arrayB==null) throw new NullPointerException();
-        if (fromA<0 || fromA>=arrayA.size() || fromA<0 || fromA>=arrayA.size()) throw new IllegalArgumentException();
-        if (fromA+length>=arrayA.size() || fromB+length>=arrayB.size()) throw new IllegalArgumentException();
-
-        return inner_product(arrayA.getData(), fromA, arrayB.getData(), fromB, length, init);
-    }
+//    /* (non-Javadoc)
+//     * @see org.jquantlib.util.stdlibc.StdIntf#inner_product(org.jquantlib.math.Array, int, org.jquantlib.math.Array, int, int, double)
+//     */
+//    public double inner_product(final double[] arrayA, final int fromA, final double[] arrayB, final int fromB, final int length, final double init) {
+//        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+//        if (arrayA==null || arrayB==null) throw new NullPointerException();
+//        if (fromA<0 || fromA>=arrayA.size() || fromA<0 || fromA>=arrayA.size()) throw new IllegalArgumentException();
+//        if (fromA+length>=arrayA.size() || fromB+length>=arrayB.size()) throw new IllegalArgumentException();
+//
+//        return inner_product(arrayA.getData(), fromA, arrayB.getData(), fromB, length, init);
+//    }
     
     
-    /**
-     * Compute inner product of two ranges. 
-     * 
-     * @note Mimics std::inner_product
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#inner_product(double[], double[], double)
      */
-    public static double inner_product(final double[] arrayA, final double[] arrayB, final double init) {
+    public double inner_product(final double[] arrayA, final double[] arrayB, final double init) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (arrayA==null || arrayB==null) throw new NullPointerException();
         if (arrayA.length!=arrayB.length) throw new IllegalArgumentException();
@@ -593,14 +526,10 @@ public final class Std {
     }
 
     
-    /**
-     * Compute inner product of two ranges. 
-     * 
-     * @note Mimics std::inner_product
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#50185519487fc7981622fde2df2b78da">std::inner_product</a>
+    /* (non-Javadoc)
+     * @see org.jquantlib.util.stdlibc.StdIntf#inner_product(double[], int, double[], int, int, double)
      */
-    public static double inner_product(
+    public double inner_product(
             final double[] arrayA, int fromA, 
             final double[] arrayB, int fromB, 
             final int length, final double init) {

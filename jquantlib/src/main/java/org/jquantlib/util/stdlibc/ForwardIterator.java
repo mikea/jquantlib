@@ -2,6 +2,8 @@ package org.jquantlib.util.stdlibc;
 
 /**
  * @author Richard Gomes
+ * 
+ * @deprecated
  */
 public interface ForwardIterator {
 

@@ -75,7 +75,7 @@ public class CashFlows {
         for (int i = 0; i < cashflows.size(); ++i) {
             Coupon c = (Coupon) cashflows.get(i);
             if (c != null) {
-                d = Std.min(c.accrualStartDate(), d);
+                d = Std.getInstance().min(c.accrualStartDate(), d);
             }
         }
         if (d == DateFactory.getFactory().getMaxDate()) {
@@ -87,7 +87,7 @@ public class CashFlows {
     public static Date maturityDate(final List<CashFlow> cashflows) {
         Date d = DateFactory.getFactory().getMinDate();
         for (int i = 0; i < cashflows.size(); i++) {
-            d = Std.max(d, cashflows.get(i).date());
+            d = Std.getInstance().max(d, cashflows.get(i).date());
         }
         if (d == DateFactory.getFactory().getMinDate()) {
             throw new IllegalArgumentException(no_cashflows);

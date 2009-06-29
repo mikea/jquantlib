@@ -31,7 +31,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
         Matrix pca = corrModel_.pseudoSqrt(t, x);
         Array  vol = new Array(volaModel_.volatility(t, x.dataAsList()));
         for (int i=0; i<size_; ++i) {
-            Std.transform(pca.getRow(i), pca.getRow(i), Std.multiplies(vol.get(i)));
+            Std.getInstance().transform(pca.getRow(i), pca.getRow(i), Std.getInstance().multiplies(vol.get(i)));
         }
         return pca;
     }

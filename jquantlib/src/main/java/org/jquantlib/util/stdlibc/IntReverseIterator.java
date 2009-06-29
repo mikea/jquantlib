@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 
 /**
  * @author Richard Gomes
+ * 
+ * @deprecated
  */
 public interface IntReverseIterator extends ReverseIterator {
 

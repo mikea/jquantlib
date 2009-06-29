@@ -223,7 +223,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         else if (x > vx[vx.length-1])
             return vx.length-2;
         else
-            return Std.upper_bound(vx, x) - 1;
+            return Std.getInstance().upper_bound(vx, x) - 1;
     }
     
     @Override
@@ -234,7 +234,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         else if (y > vy[vy.length-1])
             return vy.length-2;
         else
-            return Std.upper_bound(vy, y) - 1;
+            return Std.getInstance().upper_bound(vy, y) - 1;
     }
     
     @Override

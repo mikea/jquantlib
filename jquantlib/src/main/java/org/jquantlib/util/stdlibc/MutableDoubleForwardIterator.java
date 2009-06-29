@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
  * @see <a href="http://javadude.com/articles/passbyvalue.htm">Java is Pass-by-Value, Dammit!</a>
  * 
  * @author Richard Gomes
+ * 
+ * @deprecated
  */
 public interface MutableDoubleForwardIterator {
 

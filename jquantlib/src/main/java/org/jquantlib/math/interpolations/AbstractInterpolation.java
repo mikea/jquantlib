@@ -129,7 +129,7 @@ public abstract class AbstractInterpolation implements Interpolation {
         else if (x > vx[vx.length-1])
             return vx.length-2;
         else
-            return Std.upper_bound(vx, x) - 1;
+            return Std.getInstance().upper_bound(vx, x) - 1;
     }   
 
 

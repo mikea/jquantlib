@@ -43,12 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jquantlib.util.stdlibc.DoubleForwardIterator;
 import org.jquantlib.util.stdlibc.DoubleReference;
-import org.jquantlib.util.stdlibc.DoubleReverseIterator;
-import org.jquantlib.util.stdlibc.MutableDoubleForwardIterator;
-import org.jquantlib.util.stdlibc.MutableDoubleReverseIterator;
-import org.jquantlib.util.stdlibc.Std;
 
 /**
  * 1-D array used in linear algebra.
@@ -58,10 +53,10 @@ import org.jquantlib.util.stdlibc.Std;
  * 
  * @author Richard Gomes
  * @author Q.Boiler
+ * 
+ * @deprecated
  */
-//TEST construction of arrays is checked in a number of cases
-//PERFORMANCE:: This class is a good candidate to become an OSGi bundle
-//FIXME code review
+//FIXME code review :: ideally, we should get rid of this class, entirely
 public class Array {
     
     //
@@ -380,19 +375,19 @@ public class Array {
     //TODO: remove old code below    
 
 //    public DoubleForwardIterator forwardIterator() {
-//        return Std.forwardIterator(data);
+//        return Std.getInstance().forwardIterator(data);
 //    }
 //
 //    public MutableDoubleForwardIterator mutableForwardIterator() {
-//        return Std.mutableForwardIterator(data);
+//        return Std.getInstance().mutableForwardIterator(data);
 //    }
 //
 //    public DoubleReverseIterator reverseIterator() {
-//        return Std.reverseIterator(data);
+//        return Std.getInstance().reverseIterator(data);
 //    }
 //
 //    public MutableDoubleReverseIterator mutableReverseIterator() {
-//        return Std.mutableReverseIterator(data);
+//        return Std.getInstance().mutableReverseIterator(data);
 //    }
 
     

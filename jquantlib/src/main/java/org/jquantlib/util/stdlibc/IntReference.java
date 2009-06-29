@@ -4,8 +4,9 @@ package org.jquantlib.util.stdlibc;
  * @see <a href="http://javadude.com/articles/passbyvalue.htm">Java is Pass-by-Value, Dammit!</a>
  * 
  * @author Richard Gomes
+ * 
+ * @deprecated
  */
-@Deprecated
 public class IntReference {
 
     private final int[] list;

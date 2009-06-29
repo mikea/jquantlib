@@ -224,7 +224,7 @@ public class PseudoSqrt {
 
         // factor reduction
         double enough = componentRetainedPercentage *
-                      Std.accumulate(eigenValues.getData(), 0.0);
+                      Std.getInstance().accumulate(eigenValues.getData(), 0.0);
         if (componentRetainedPercentage == 1.0) {
             // numerical glitches might cause some factors to be discarded
             enough *= 1.1;

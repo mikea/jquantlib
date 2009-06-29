@@ -103,7 +103,7 @@ public abstract class LfmCovarianceParameterization {
 
         public double evaluate(double t) {
             final Matrix m = param_.diffusion(t);
-            return Std.inner_product(new Array(m.getRow(i_)), new Array(m.getRow(j_)));
+            return Std.getInstance().inner_product(m.getRow(i_), m.getRow(j_));
         }
     }
 

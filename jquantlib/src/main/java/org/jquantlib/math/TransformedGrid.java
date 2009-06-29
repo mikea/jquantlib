@@ -56,7 +56,7 @@ public class TransformedGrid {
 		this.dxm_ = new Array(grid.size());
 		this.dxp_ = new Array(grid.size());
 		this.dx_ = new Array(grid.size());
-		Std.apply(transformedGrid_, f);
+		Std.getInstance().apply(transformedGrid_.getData(), f);
 		for (int i = 1; i < transformedGrid_.size() - 1; i++) {
 			dxm_.set(i, transformedGrid_.at(i) - transformedGrid_.at(i - 1));
 			dxp_.set(i, transformedGrid_.at(i + 1) - transformedGrid_.at(i));

@@ -65,7 +65,7 @@ public class LmFixedVolatilityModel extends LmVolatilityModel {
             throw new IllegalArgumentException("invalid time given for volatility model");
         }
 
-        final int ti = (int) (Std.upper_bound(startTimes_.toArray(new Double[startTimes_.size()]), t) - startTimes_.get(0) - 1);
+        final int ti = (int) (Std.getInstance().upper_bound(startTimes_.toArray(new Double[startTimes_.size()]), t) - startTimes_.get(0) - 1);
 
         Array tmp = new Array(size_, 0.0);
 
@@ -83,7 +83,7 @@ public class LmFixedVolatilityModel extends LmVolatilityModel {
         if (t < startTimes_.get(0) || t > startTimes_.get(startTimes_.size() - 1)) {
             throw new IllegalArgumentException("invalid time given for volatility model");
         }
-        final int ti = (int) (Std.upper_bound(startTimes_.toArray(new Double[startTimes_.size()]), t) - startTimes_.get(0) - 1.0);
+        final int ti = (int) (Std.getInstance().upper_bound(startTimes_.toArray(new Double[startTimes_.size()]), t) - startTimes_.get(0) - 1.0);
 
         return volatilities_.get(i - ti);
     }

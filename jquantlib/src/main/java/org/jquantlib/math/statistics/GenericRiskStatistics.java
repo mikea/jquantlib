@@ -107,7 +107,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             }   
         };
         
-        E_IUnaryFunction<Double, Double> bounded_minus = Std.bind2nd(minus, new Double(target));
+        E_IUnaryFunction<Double, Double> bounded_minus = Std.getInstance().bind2nd(minus, new Double(target));
         functions.add(bounded_minus);
         
         E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
@@ -118,7 +118,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             } 
         };
         
-        E_IUnaryFunction<Double, Boolean> bounded_less = Std.bind2nd(less, target);
+        E_IUnaryFunction<Double, Boolean> bounded_less = Std.getInstance().bind2nd(less, target);
         Pair<Double, Integer> result = statistics.expectationValue(comp, bounded_less);
         
         double x = result.getFirst();
@@ -187,7 +187,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             } 
         };
         
-        E_IUnaryFunction<Double, Boolean> bounded = Std.bind2nd(less, target);
+        E_IUnaryFunction<Double, Boolean> bounded = Std.getInstance().bind2nd(less, target);
         
         Pair<Double, Integer> result = statistics.expectationValue(identity, bounded);
         
@@ -237,7 +237,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             } 
         };
         
-        E_IUnaryFunction<Double, Boolean> bounded_less = Std.bind2nd(less, new Double(target));
+        E_IUnaryFunction<Double, Boolean> bounded_less = Std.getInstance().bind2nd(less, new Double(target));
         E_ClippedFunction<Double> clipped = new E_ClippedFunction<Double>(bounded_less, constant);
         return statistics.expectationValue(clipped, everyWhere).getFirst();
     }
@@ -254,7 +254,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             }   
         };
         // Bind the first parameter
-        E_IUnaryFunction<Double, Double> bounded_minus = Std.bind1st(minus, new Double(target));
+        E_IUnaryFunction<Double, Double> bounded_minus = Std.getInstance().bind1st(minus, new Double(target));
         
         // now bind the second one
         E_BinaryFunction<Double, Boolean> less = new E_BinaryFunction<Double, Boolean>(){
@@ -264,7 +264,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             } 
         };
         // Bind the second parameter
-        E_IUnaryFunction<Double, Boolean> bounded_less = Std.bind1st(less, new Double(target));
+        E_IUnaryFunction<Double, Boolean> bounded_less = Std.getInstance().bind1st(less, new Double(target));
         
         Pair<Double, Integer> result = statistics.expectationValue(bounded_minus, bounded_less);
         double x = result.getFirst();

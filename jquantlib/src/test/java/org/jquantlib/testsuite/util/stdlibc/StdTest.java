@@ -26,7 +26,7 @@ public class StdTest {
 	    final double[] expected  = { 1.0, 1.0, 1.0, 2.0, 4.0,  2.0,  1.0 };
 
 		
-        final double[] actual = Std.adjacent_difference(inputList);
+        final double[] actual = Std.getInstance().adjacent_difference(inputList);
 
         assertTrue(actual!=null && actual.length==expected.length);
         for (int i=0; i<actual.length; i++) {

@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 
 /**
  * @author Richard Gomes
+ * 
+ * @deprecated
  */
 public interface ObjectForwardIterator<T> extends ForwardIterator {
     

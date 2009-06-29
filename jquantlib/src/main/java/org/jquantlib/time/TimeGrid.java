@@ -132,7 +132,7 @@ public class TimeGrid {
         }
         times = tmp.toDoubleArray();
         //FIXME: Review when adjacent_difference is fixed. null is wrong.
-        //dt = Std.adjacent_difference(times, 1, null);
+        //dt = Std.getInstance().adjacent_difference(times, 1, null);
         dt = null; /* Added to remove compile error - final fields must be initialised */
     }
 
@@ -168,7 +168,7 @@ public class TimeGrid {
         // regularly spaced.
         
         if (steps == 0){
-            final double[] diff = Std.adjacent_difference(mandatoryTimes, 1);
+            final double[] diff = Std.getInstance().adjacent_difference(mandatoryTimes, 1);
             
             int idx_min = 0;
             int idx_max = diff.length-1;
@@ -176,7 +176,7 @@ public class TimeGrid {
             if (diff[0]==0.0){
                 idx_min++;
             }
-            dtMax = Std.min_element(idx_min, idx_max, diff);
+            dtMax = Std.getInstance().min_element(idx_min, idx_max, diff);
         } else {
             dtMax = last/steps;
         }
@@ -203,7 +203,7 @@ public class TimeGrid {
         times = temp_times_.toDoubleArray();
         
         //FIXME: Review when adjacent_difference is fixed. null is wrong
-        //dt = Std.adjacent_difference(times, 1, null);
+        //dt = Std.getInstance().adjacent_difference(times, 1, null);
         dt = null; /* Added to remove compile error - final fields must be initialised */
     }
         
@@ -223,7 +223,7 @@ public class TimeGrid {
 //          dtMax = last/steps;
 //      }
 //
-//          // diff = Std.adjacent_difference(mandatoryTimes_, mandatoryTimes_.indexOf(begin()), diff);
+//          // diff = Std.getInstance().adjacent_difference(mandatoryTimes_, mandatoryTimes_.indexOf(begin()), diff);
 //          
 //          
 //          // The line above replaces the code commented out below:    
@@ -272,7 +272,7 @@ public class TimeGrid {
 ////      std::back_inserter(dt_));
 //        
 //      // FIXME: needs code review             
-//        //dt_ = Std.adjacent_difference(times_, times_.indexOf(begin())+1, dt_);
+//        //dt_ = Std.getInstance().adjacent_difference(times_, times_.indexOf(begin())+1, dt_);
 //        
 //        
 //        // The line above replaces the code commented out below:
@@ -322,7 +322,7 @@ public class TimeGrid {
         
         public @NonNegative int closestIndex(@Time @NonNegative final double t) /* @ReadOnly */ {
             int size = times.length;
-            int result = Std.lower_bound(times, t);
+            int result = Std.getInstance().lower_bound(times, t);
 
             if (result == 0) {
                 return 0;
@@ -382,11 +382,11 @@ public class TimeGrid {
       //TODO: remove old code below    
         
 //        public DoubleForwardIterator forwardIterator() /*@Readonly*/ { 
-//            return Std.forwardIterator(times);
+//            return Std.getInstance().forwardIterator(times);
 //        }
 //        
 //        public DoubleReverseIterator reverseIterator() /*@Readonly*/ { 
-//            return Std.reverseIterator(times);
+//            return Std.getInstance().reverseIterator(times);
 //        }
 
         

@@ -73,6 +73,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
     private List</*@Time*/Double> accrualEndTimes_;
     private List</*@Time*/Double> accrualPeriod_;
     
+    //FIXME: replace Array by double[] wherever possible
     private  Array m1, m2;
     
     public LiborForwardModelProcess(
@@ -122,7 +123,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
         final int m = 0;// nextIndexReset(t);
         for (int k = m; k < size_; ++k) {
             m1.set(k, accrualPeriod_.get(k) * x.get(k) / (1 + accrualPeriod_.get(k) * x.get(k)));
-            f.set(k, Std.inner_product(m1, m, new Array(covariance.getColumn(k)),m,k+1-m, 0.0 ) - 0.5 * covariance.get(k, k));
+            f.set(k, Std.getInstance().inner_product(m1.getData(), m, covariance.getColumn(k), m, k+1-m, 0.0 ) - 0.5 * covariance.get(k, k));
         }
         return f;
     }
@@ -169,17 +170,15 @@ public class LiborForwardModelProcess extends StochasticProcess {
             final double y = accrualPeriod_.get(k)*x0.get(k);
             m1.set(k,y/(1+y));
             final double d = (
-                Std.inner_product(m1, m, new Array(covariance.getColumn(k)), m, k+1-m,0.0)
+                Std.getInstance().inner_product(m1.getData(), m, covariance.getColumn(k), m, k+1-m,0.0)
                 -0.5*covariance.get(k, k)) * dt;
 
-            final double r = Std.inner_product(
-                new Array(diff.getRow(k)), dw, 0.0)*sdt;
+            final double r = Std.getInstance().inner_product(diff.getRow(k), dw.getData(), 0.0)*sdt;
 
             final double x = y*Math.exp(d + r);
-            m2.set(k,x/(1+x));
+            m2.set(k, x/(1+x));
             f.set(k, x0.get(k) * Math.exp(0.5*(d+
-                 (Std.inner_product(m2,m,
-                                     new Array(covariance.getColumn(k)), m, k+1-m,0.0)
+                 (Std.getInstance().inner_product(m2.getData(), m, covariance.getColumn(k), m, k+1-m,0.0)
                   -0.5*covariance.get(k,k))*dt)+ r));
         }
 

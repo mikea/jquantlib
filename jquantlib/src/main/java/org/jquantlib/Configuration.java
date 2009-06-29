@@ -64,8 +64,9 @@ import java.util.prefs.Preferences;
 public class Configuration {
 
     /**
-     * Singleton instance for the whole application. In an application server
-     * environment, it could be by class loader depending on scope of the
+     * Singleton instance for the whole application.
+     * <p>
+     * In an application server environment, it could be by class loader depending on scope of the
      * jquantlib library to the module.
      * 
      * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>

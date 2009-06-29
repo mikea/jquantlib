@@ -151,7 +151,7 @@ public class SampledCurve {
 	// TODO: needs code review
     public void regrid(final Array newGrid, final UnaryFunctionDouble func) {
         final Array transformedGrid = new Array(grid_.size());
-        Std.transform(grid_, transformedGrid, func);
+        Std.getInstance().transform(grid_.getData(), transformedGrid.getData(), func);
         
     	double[] gridData  = transformedGrid.getData();
     	double[] valueData = values_.getData(); 
@@ -159,7 +159,7 @@ public class SampledCurve {
         priceSpline.reload();
 
         final Array newValues = newGrid;
-        Std.transform(newValues, newValues, func);
+        Std.getInstance().transform(newValues.getData(), newValues.getData(), func);
         
         
         for (int i=0; i<newValues.size(); i++) {

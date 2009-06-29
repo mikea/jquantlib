@@ -37,7 +37,7 @@ public class StatisticsTest {
                     "calculated: " + s.samples() + "\n" +
                     "expected: " + data.length);
         }
-        expected = Std.accumulate(weights,0.0);
+        expected = Std.getInstance().accumulate(weights,0.0);
         calculated = s.weightSum();
         if (calculated != expected){
             fail(name  + ": wrong sum of weights\n"
@@ -45,7 +45,7 @@ public class StatisticsTest {
             + "    expected:   " + expected);
         }
         
-        expected = Std.min_element(0, data.length, data);
+        expected = Std.getInstance().min_element(0, data.length, data);
         calculated = s.min();
         if(calculated != expected){
             fail(name + ": wrong minimum value \n" + 
@@ -53,7 +53,7 @@ public class StatisticsTest {
                     "expected: " + expected);
         }
         
-        expected = Std.max_element(0, data.length, data);
+        expected = Std.getInstance().max_element(0, data.length, data);
         calculated = s.max();
         if(calculated != expected){
             fail(name + ": wrong maxmimum value \n" +
