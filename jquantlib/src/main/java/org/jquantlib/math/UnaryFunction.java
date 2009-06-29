@@ -26,11 +26,12 @@ package org.jquantlib.math;
  * Represents a function of one variable; y = f(x)
  * 
  * @author Aaron Roth
+ * @author Richard Gomes
  */
 //FIXME: code review :: this interface implies on boxing/unboxing and ideally should be removed.
 // In particular, this interface is being used by Monte Carlo, which is still in development: It's not clear yet
 // if this class is really needed. [Richard Gomes]
-public interface UnaryFunction<ParameterType, ReturnType> {
+public interface UnaryFunction<X, Y> {
 
 	/**
 	 * Computes the value of the function; f(x)
@@ -38,7 +39,7 @@ public interface UnaryFunction<ParameterType, ReturnType> {
 	 * @param x
 	 * @return f(x)
 	 */
-	public ReturnType evaluate(ParameterType x);
+	public Y evaluate(X x);
 	
 	//boolean isFailed() // TODO is error handling needed?
 }

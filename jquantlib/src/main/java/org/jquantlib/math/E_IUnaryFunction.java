@@ -3,14 +3,16 @@
 package org.jquantlib.math;
 
 
-public interface E_IUnaryFunction<ParameterType, ReturnType> {
+/**
+ * Represents a function of one variable; y = f(x)
+ * 
+ * @author Ueli Hofstetter
+ * @author Richard Gomes
+ */
+public interface E_IUnaryFunction<X, Y> extends UnaryFunction<X, Y> {
     
-	public ReturnType evaluate(ParameterType x);
-	public void setParams(ParameterType ... params);
-    void setBinaryFunction(E_IBinaryFunction<ParameterType, ReturnType> binaryFunction);
-    void setBoundedValue(ParameterType x);
-    
-	
-	
-	//boolean isFailed() // TODO is error handling needed?
+	public void setParams(X ... params);
+    void setBinaryFunction(E_IBinaryFunction<X, Y> binaryFunction);
+    void setBoundedValue(X x);
+
 }

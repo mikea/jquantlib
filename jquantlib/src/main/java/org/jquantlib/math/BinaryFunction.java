@@ -28,7 +28,7 @@
  * @author Richard Gomes
  */
 //FIXME: code review :: this interface implies on boxing/unboxing and ideally should be removed.
-public interface BinaryFunction<ParameterType, ReturnType> {
+public interface BinaryFunction<X, Y, Z> {
 
     /**
      * Computes the value of the function; f(x, y)
@@ -37,6 +37,6 @@ public interface BinaryFunction<ParameterType, ReturnType> {
      * @param y
      * @return f(x, y)
      */
-    public ReturnType evaluate(final ParameterType x, final ParameterType y);
+    public Z evaluate(final X x, final Y y);
     
 }

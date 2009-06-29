@@ -22,10 +22,11 @@
 
 package org.jquantlib.math;
 
-public abstract class E_BinaryFunction<ParameterType, ReturnType> implements E_IBinaryFunction<ParameterType, ReturnType> {
+// FIXME: code review: 
+public abstract class E_BinaryFunction<X, Z> implements E_IBinaryFunction<X, Z> {
 
-    public ParameterType bounded_x1;
-    public ParameterType bounded_x2;
+    public X bounded_x1;
+    public X bounded_x2; // FIXME: should it be Y instead of X ?
 
     /**
      * Computes the value of the function; f(x)
@@ -33,13 +34,13 @@ public abstract class E_BinaryFunction<ParameterType, ReturnType> implements E_I
      * @param x
      * @return f(x)
      */
-    public abstract ReturnType evaluate(ParameterType x_1, ParameterType x_2);
+    public abstract Z evaluate(X x_1, X x_2);
 
-    public void bind_x_1(ParameterType bind_x1) {
+    public void bind_x_1(X bind_x1) {
         this.bounded_x1 = bind_x1;
     }
 
-    public void bind_x_2(ParameterType bind_x2) {
+    public void bind_x_2(X bind_x2) {
         this.bounded_x2 = bind_x2;
     }
 

@@ -22,10 +22,10 @@
 
 package org.jquantlib.math;
 
-public interface E_IBinaryFunction<ParameterType, ReturnType> extends BinaryFunction<ParameterType, ReturnType> {
+public interface E_IBinaryFunction<X, Z> extends BinaryFunction<X, X, Z> {
 
-    public void bind_x_1(final ParameterType bind_x1);
+    public void bind_x_1(final X bind_x1);
 
-    public void bind_x_2(final ParameterType bind_x2);
+    public void bind_x_2(final X bind_x2); // FIXME: should it be Y instead of X ?
 
 }
