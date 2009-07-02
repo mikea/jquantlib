@@ -27,7 +27,6 @@ import static org.junit.Assert.fail;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.optimization.NoConstraint;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,12 +64,6 @@ public class NoConstraintTest {
         if (!isArrayEqual(params, new Array(new double[] { 1.2d, 1.7d, 4.5d }), 0.000001))
             // if (!params.operatorEquals (new Array (new double[]{1.2d,1.7d,4.5d})))
             fail("Constraint update method failed");
-    }
-
-    @Test
-    public void testEmpty() {
-        if (nc.empty())
-            fail("Constraint empty method failed");
     }
 
     private boolean isArrayEqual(final Array one, final Array two, final double precision) {

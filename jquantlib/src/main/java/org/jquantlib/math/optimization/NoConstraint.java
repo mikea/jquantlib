@@ -5,10 +5,7 @@ import org.jquantlib.math.Array;
 //TODO: comments, license, code review
 public class NoConstraint extends Constraint {
 
-    public NoConstraint() {
-    }
-
-    public boolean test(Array nocArray) {
+    public boolean test(Array nocArray) /*@ReadOnly*/ {
         return true;
     }
 

@@ -29,14 +29,11 @@ import org.jquantlib.math.Array;
 //TODO: comments, license, code review
 public abstract class Constraint {
 
-    protected Constraint() {
-        // nothing
-    }
+//XXX 
+//    protected Constraint() {
+//        // nothing
+//    }
     
-    public boolean empty() {
-        return false;
-    }
-
     public abstract boolean test(final Array p);
 
     // take note of precision error when comparing Arrays, only compare difference dot product
@@ -44,9 +41,9 @@ public abstract class Constraint {
     public double update(final Array params, final Array direction, final double beta) {
 
         double diff = beta;
-
         Array newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(), diff)));
         boolean valid = test(newParams);
+
         int icount = 0;
         while (!valid) {
             if (icount > 200)

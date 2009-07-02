@@ -58,13 +58,11 @@ public class EndCriteriaTest {
 		// ec=null; // TODO: remove this line after EndCriteria is ready
 	}
 	
-    @Ignore("End Criteria needs code review")
 	@Test
 	public void dummyTest() {
 	    //TODO: add test case here
 	}
 	
-	@Ignore("End Criteria needs code review")
 	@Test
 	//maxIterations = 100
 	//iteration >= maxIterations_
@@ -101,7 +99,6 @@ public class EndCriteriaTest {
 	}
 	
 	
-    @Ignore("End Criteria needs code review")
     @Test
 	//maxStationaryStateIterations = 30
 	//rootEpsilon = 0.05
@@ -175,7 +172,6 @@ public class EndCriteriaTest {
 	
 	
 	
-    @Ignore("End Criteria needs code review")
     @Test
     //maxStationaryStateIterations_ = 30
 	//functionEpsilon = 0.08			
@@ -248,7 +244,6 @@ public class EndCriteriaTest {
 		logger.info("testCheckStationaryFunctionValue -- SUCCESS : Math.abs(fxNew-fxOld) >= functionEpsilon_ ;statStateIterations <= maxStationaryStateIterations_   return FALSE");	
 	}
 	
-    @Ignore("End Criteria needs code review")
     @Test
 	//functionEpsilon_ = 0.08
 	public void testCheckStationaryFunctionAccuracy() {
@@ -298,7 +293,6 @@ public class EndCriteriaTest {
 		logger.info("testCheckStationaryFunctionAccuracy -- SUCCESS : positiveOptimization=false ;0.07 < functionEpsilon_   return FALSE");	
 	}
 	
-    @Ignore("End Criteria needs code review")
     @Test
 	//gradientNormEpsilon = 0.2
 	public void testCheckZeroGradientNorm() {

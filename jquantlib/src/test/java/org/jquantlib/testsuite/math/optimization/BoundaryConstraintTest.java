@@ -27,7 +27,6 @@ import static org.junit.Assert.fail;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.optimization.BoundaryConstraint;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,14 +47,12 @@ public class BoundaryConstraintTest {
         this.bc = new BoundaryConstraint(1, 5);
     }
 
-    @Ignore
     @Test
     public void testTest() {
         if (!bc.test(new Array(new double[] { 1.6, 1.2, 5.0 })))
             fail("BoundaryConstraint test method failed");
     }
 
-    @Ignore
     @Test
     public void testUpdate() {
         Array params = new Array(new double[] { 1.2, 1.1, 1.3 });
@@ -69,13 +66,6 @@ public class BoundaryConstraintTest {
         if (!isArrayEqual(params, new Array(new double[] { 1.1, 1.0, 1.2 }), 0.000001))
             fail("BoundaryConstraint update method failed");
 
-    }
-
-    @Ignore
-    @Test
-    public void testEmpty() {
-        if (bc.empty())
-            fail("Constraint empty method failed");
     }
 
     private boolean isArrayEqual(Array one, Array two, double precision) {

@@ -27,7 +27,6 @@ import static org.junit.Assert.fail;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.optimization.PositiveConstraint;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,14 +47,12 @@ public class PositiveConstraintTest {
         this.pc = new PositiveConstraint();
     }
 
-    @Ignore
     @Test
     public void testTest() {
         if (!pc.test(new Array()))
             fail("PositiveConstraint test method failed");
     }
 
-    @Ignore
     @Test
     public void testUpdate() {
         Array params = new Array(new double[] { 1.0, 1.1, 1.3 });
@@ -67,13 +64,6 @@ public class PositiveConstraintTest {
         // if (!params.operatorEquals(new double[]{0.9,0.8,0.2}))
         if (!isArrayEqual(params, new Array(new double[] { 0.9, 0.8, 0.2 }), 0.000001))
             fail("PositiveConstraint update method failed");
-    }
-
-    @Ignore
-    @Test
-    public void testEmpty() {
-        if (pc.empty())
-            fail("Constraint empty method failed");
     }
 
     private boolean isArrayEqual(Array one, Array two, double precision) {

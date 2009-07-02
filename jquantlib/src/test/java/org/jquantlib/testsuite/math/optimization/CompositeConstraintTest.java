@@ -58,7 +58,6 @@ public class CompositeConstraintTest {
         this.cc = new CompositeConstraint(bc, pc); // order does not matter
     }
 
-    @Ignore
     @Test
     public void testTest() {
         if (!cc.test(new Array(new double[] { 1.6, 1.2, 5.0 })))
@@ -66,7 +65,6 @@ public class CompositeConstraintTest {
 
     }
 
-    @Ignore
     @Test
     public void testUpdate() {
         Array params = new Array(new double[] { 1.2, 1.1, 5.3 });
@@ -79,14 +77,6 @@ public class CompositeConstraintTest {
         // if (!params.operatorEquals(new double[]{0.9,0.8,0.2}))
         if (!isArrayEqual(params, new Array(new double[] { 0.0, 1.0, 5.0 }), 0.000001))
             fail("CompositeConstraint update method failed");
-
-    }
-
-    @Ignore
-    @Test
-    public void testEmpty() {
-        if (cc.empty())
-            fail("Constraint empty method failed");
 
     }
 
