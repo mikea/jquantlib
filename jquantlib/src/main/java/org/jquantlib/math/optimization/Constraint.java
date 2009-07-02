@@ -30,7 +30,7 @@ import org.jquantlib.math.Array;
 public abstract class Constraint {
 
     protected Constraint() {
-        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("work in progress");
+        // nothing
     }
     
     public boolean empty() {
@@ -60,4 +60,5 @@ public abstract class Constraint {
         params.operatorAdd(direction.operatorMultiplyCopy(new Array(direction.size(), diff)));
         return diff;
     }
+    
 }

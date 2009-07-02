@@ -33,6 +33,7 @@ import org.jquantlib.math.optimization.OptimizationMethod;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 
+//TODO: comments, license, code review
 public abstract class CalibratedModel implements org.jquantlib.util.Observer, Observable {
     
     private static final String parameter_array_to_small = "parameter array to small";
@@ -43,7 +44,9 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     protected List<Parameter> arguments_;
     protected Constraint constraint_;
     
-    protected CalibratedModel(){}
+    protected CalibratedModel() {
+        // nothing
+    }
     
     public CalibratedModel(int nArguments){
         arguments_ = new ArrayList<Parameter>(nArguments);

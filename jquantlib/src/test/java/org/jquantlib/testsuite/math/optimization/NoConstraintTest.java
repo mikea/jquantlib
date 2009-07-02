@@ -43,47 +43,41 @@ public class NoConstraintTest {
     
     private final NoConstraint nc;
     
-    
-	public NoConstraintTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-
-		this.nc = new NoConstraint();
-	}
-	
-    @Ignore
-	@Test
-	public void testTest() {
-      if (!nc.test(new Array()))
-		fail("NoConstraint test method failed");
+    public NoConstraintTest() {
+        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        this.nc = new NoConstraint();
     }
-	
-    @Ignore
+
+    @Test
+    public void testTest() {
+        if (!nc.test(new Array()))
+            fail("NoConstraint test method failed");
+    }
+
     @Test
     public void testUpdate() {
-	  Array params = new Array(new double[]{1.0d,1.1d,2.3d});
-	  Array direction = new Array(new double[]{0.1d,0.3d,1.1d});
-	  double beta = 2.0;
-	  nc.update(params,direction,beta);
-	  logger.info("params after co.update=" + "{"+params.getData()[0]+","+params.getData()[1]+","+params.getData()[2]+"}");
-	  logger.info("Test 1.1 + 2.0 * 0.3 = " +(1.1 + 2.0 * 0.3));
-	  if (!isArrayEqual (params, new Array (new double[]{ 1.2d, 1.7d, 4.5d }), 0.000001))
-	  //if (!params.operatorEquals (new Array (new double[]{1.2d,1.7d,4.5d})))
-		fail("Constraint update method failed");
+        final Array params    = new Array(new double[] { 1.0d, 1.1d, 2.3d });
+        final Array direction = new Array(new double[] { 0.1d, 0.3d, 1.1d });
+        double beta = 2.0;
+        nc.update(params, direction, beta);
+        logger.info("params after nc.update= {}, {}, {}", new Object[] { params.getData()[0], params.getData()[1], params.getData()[2] } );
+        logger.info("Test 1.1 + 2.0 * 0.3 = " + (1.1 + 2.0 * 0.3));
+        if (!isArrayEqual(params, new Array(new double[] { 1.2d, 1.7d, 4.5d }), 0.000001))
+            // if (!params.operatorEquals (new Array (new double[]{1.2d,1.7d,4.5d})))
+            fail("Constraint update method failed");
     }
-	
-    @Ignore
+
     @Test
     public void testEmpty() {
-      if (nc.empty())
-		fail("Constraint empty method failed");
-	  
+        if (nc.empty())
+            fail("Constraint empty method failed");
     }
-	
-	private boolean isArrayEqual(Array one, Array two, double precision){
-		Array diffArray = one.operatorSubtractCopy(two);
-		logger.info("diffArray =" + "{"+diffArray.getData()[0]+","+diffArray.getData()[1]+","+diffArray.getData()[2]+"}");
-		return Closeness.isCloseEnough(diffArray.dotProduct(diffArray,diffArray) , precision*precision );
-		
-	}
+
+    private boolean isArrayEqual(final Array one, final Array two, final double precision) {
+        final Array diffArray = one.operatorSubtractCopy(two);
+        logger.info("diffArray = {}, {}, {}", new Object[] { diffArray.getData()[0], diffArray.getData()[1], diffArray.getData()[2] });
+        return Closeness.isCloseEnough(diffArray.dotProduct(diffArray, diffArray), precision * precision);
+    }
+
 }
 
