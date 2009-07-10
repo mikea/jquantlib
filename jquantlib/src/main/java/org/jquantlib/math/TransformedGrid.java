@@ -21,14 +21,13 @@
  */
 package org.jquantlib.math;
 
-import org.jquantlib.math.functions.DoubleFunction;
-import org.jquantlib.util.stdlibc.Std;
 
 /**
  * 
  * @author Srinivas Hasti
  *
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class TransformedGrid {
 
 	protected Array grid_;
@@ -37,30 +36,32 @@ public class TransformedGrid {
 	protected Array dxp_;
 	protected Array dx_;
 
-	public TransformedGrid(Array grid) {
-		this.grid_ = new Array(grid);
-		this.transformedGrid_ = new Array(grid);
-		this.dxm_ = new Array(grid.size());
-		this.dxp_ = new Array(grid.size());
-		this.dx_ = new Array(grid.size());
-		for (int i = 1; i < transformedGrid_.size() - 1; i++) {
-			dxm_.set(i, transformedGrid_.at(i) - transformedGrid_.at(i - 1));
-			dxp_.set(i, transformedGrid_.at(i + 1) - transformedGrid_.at(i));
-			dx_.set(i, dxm_.at(i) + dxp_.at(i));
+	public TransformedGrid(final Array grid) {
+	    // TODO: code review :: use of clone()
+		this.grid_ = grid.clone();
+		this.transformedGrid_ = grid.clone();
+		this.dxm_ = new Array(grid.length);
+		this.dxp_ = new Array(grid.length);
+		this.dx_ = new Array(grid.length);
+		for (int i = 1; i < transformedGrid_.length - 1; i++) {
+			dxm_.set(i, transformedGrid_.get(i) - transformedGrid_.get(i - 1));
+			dxp_.set(i, transformedGrid_.get(i + 1) - transformedGrid_.get(i));
+			dx_.set(i, dxm_.get(i) + dxp_.get(i));
 		}
 	}
 
-	public TransformedGrid(Array grid, DoubleFunction f) {
-		this.grid_ = new Array(grid);
-		this.transformedGrid_ = new Array(grid);
-		this.dxm_ = new Array(grid.size());
-		this.dxp_ = new Array(grid.size());
-		this.dx_ = new Array(grid.size());
-		Std.getInstance().apply(transformedGrid_.getData(), f);
-		for (int i = 1; i < transformedGrid_.size() - 1; i++) {
-			dxm_.set(i, transformedGrid_.at(i) - transformedGrid_.at(i - 1));
-			dxp_.set(i, transformedGrid_.at(i + 1) - transformedGrid_.at(i));
-			dx_.set(i, dxm_.at(i) + dxp_.at(i));
+	public TransformedGrid(Array grid, UnaryFunctionDouble f) {
+	    // TODO: code review :: use of clone()
+	    this.grid_ = grid.clone();
+		this.transformedGrid_ = grid.clone();
+		this.dxm_ = new Array(grid.length);
+		this.dxp_ = new Array(grid.length);
+		this.dx_ = new Array(grid.length);
+		transformedGrid_.apply(f);
+		for (int i = 1; i < transformedGrid_.length - 1; i++) {
+			dxm_.set(i, transformedGrid_.get(i) - transformedGrid_.get(i - 1));
+			dxp_.set(i, transformedGrid_.get(i + 1) - transformedGrid_.get(i));
+			dx_.set(i, dxm_.get(i) + dxp_.get(i));
 		}
 	}
 
@@ -85,26 +86,26 @@ public class TransformedGrid {
 	}
 
 	public double grid(int i) {
-		return grid_.at(i);
+		return grid_.get(i);
 	}
 
 	public double transformedGrid(int i) {
-		return transformedGrid_.at(i);
+		return transformedGrid_.get(i);
 	}
 
 	public double dxm(int i) {
-		return dxm_.at(i);
+		return dxm_.get(i);
 	}
 
 	public double dxp(int i) {
-		return dxp_.at(i);
+		return dxp_.get(i);
 	}
 
 	public double dx(int i) {
-		return dx_.at(i);
+		return dx_.get(i);
 	}
 
 	public int size() {
-		return grid_.size();
+		return grid_.length;
 	}
 }

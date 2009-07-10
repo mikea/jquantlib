@@ -183,7 +183,7 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
 	//
 	
     private double  underlying()  {
-        return this.process.initialValues()[0];
+        return this.process.initialValues(). first();
     }
 
     private double strike()  {

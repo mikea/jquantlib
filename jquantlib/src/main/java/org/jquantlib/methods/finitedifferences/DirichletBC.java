@@ -40,7 +40,7 @@ public class DirichletBC implements BoundaryCondition<TridiagonalOperator> {
             u.set(0, value);
             break;
         case UPPER:
-            u.set(u.size() - 1, value);
+            u.set(u.length - 1, value);
             break;
         default:
             throw new IllegalStateException("unknown side for Neumann boundary condition");
@@ -75,7 +75,7 @@ public class DirichletBC implements BoundaryCondition<TridiagonalOperator> {
             break;
         case UPPER:
             operator.setLastRow(0.0, 1.0);
-            rhs.set(rhs.size() - 1, value);
+            rhs.set(rhs.length - 1, value);
             break;
         default:
             throw new IllegalStateException("unknown side for Neumann boundary condition");

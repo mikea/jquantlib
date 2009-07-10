@@ -23,13 +23,14 @@ package org.jquantlib.math.statistics;
 
 import java.util.List;
 
-import org.jquantlib.math.E_IUnaryFunction;
+import org.jquantlib.math.DoublePredicate;
+import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.util.Pair;
 
 public interface IStatistics {
     public double mean();
 
-    public Pair<Double, Integer> expectationValue(E_IUnaryFunction<Double, Double> f, E_IUnaryFunction<Double, Boolean> inRange);
+    public Pair<Double, Integer> expectationValue(UnaryFunctionDouble f, DoublePredicate inRange);
 
     public int getSampleSize();
 

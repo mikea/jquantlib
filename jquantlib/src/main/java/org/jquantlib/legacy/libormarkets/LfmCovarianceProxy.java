@@ -5,7 +5,6 @@ import org.jquantlib.math.Matrix;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.integrals.GaussKronrodAdaptive;
 import org.jquantlib.processes.LfmCovarianceParameterization;
-import org.jquantlib.util.stdlibc.Std;
 
 public class LfmCovarianceProxy extends LfmCovarianceParameterization {
     
@@ -29,16 +28,17 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
     
     public Matrix diffusion(/*@Time*/ double t, final Array x){
         Matrix pca = corrModel_.pseudoSqrt(t, x);
-        Array  vol = new Array(volaModel_.volatility(t, x.dataAsList()));
+        // TODO: code review :: use of clone()
+        Array  vol = volaModel_.volatility(t, x).clone();
         for (int i=0; i<size_; ++i) {
-            Std.getInstance().transform(pca.getRow(i), pca.getRow(i), Std.getInstance().multiplies(vol.get(i)));
+            pca.getRow(i).mul(vol.get(i));
         }
         return pca;
     }
     
     public Matrix covariance(/* @Time */double t, final Array x) {
-
-        Array volatility = new Array(volaModel_.volatility(t, x.dataAsList()));
+        // TODO: code review :: use of clone()
+        Array volatility = volaModel_.volatility(t, x).clone();
         Matrix correlation = corrModel_.correlation(t, x);
 
         Matrix tmp = new Matrix(size_, size_);
@@ -79,16 +79,14 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
       }
     }
 
-     public  double integratedCovariance(
-                                 int i, int j, /*@Time*/double t, final Array x)  {
+     public  double integratedCovariance(int i, int j, /*@Time*/double t, final Array x)  {
 
           if (corrModel_.isTimeIndependent()) {
               try {
                   // if all objects support these methods
                   // thats by far the fastest way to get the
                   // integrated covariance
-                  return corrModel_.correlation(i, j, 0.0, x)
-                          * volaModel_.integratedVariance(j, i, t, x.dataAsList());
+                  return corrModel_.correlation(i, j, 0.0, x) * volaModel_.integratedVariance(j, i, t, x);
               }
               catch (Exception ex) {
                   // okay proceed with the

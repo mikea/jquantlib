@@ -57,7 +57,6 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.stdlibc.Std;
 
 
 /**
@@ -151,7 +150,11 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 	    /*@Real*/ double pastWeight = pastFixings/N;
 	    /*@Real*/ double futureWeight = 1.0-pastWeight;
 
-	    double timeSum = Std.getInstance().accumulate(fixingTimes, 0.0);
+	    double timeSum = 0.0;
+	    for (int k=0; k<fixingTimes.size(); k++) {
+	        timeSum += fixingTimes.get(k);
+	    }
+	    
 	    /*@Volatility*/ double vola = process.blackVolatility().getLink().blackVol(arguments.exercise.lastDate(), payoff.strike());
 	    
 	    /*@Real*/ double temp = 0.0;

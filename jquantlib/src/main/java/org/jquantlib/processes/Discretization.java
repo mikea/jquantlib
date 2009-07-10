@@ -41,31 +41,39 @@
 
 package org.jquantlib.processes;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
+
 /**
  * Discretization of a stochastic process over a given time interval
  * 
  * @author Richard Gomes
  */
+//TODO: refactor this interface to StochasticProcess
+//TODO: review method names againt original C++ sources
 public interface Discretization {
 
     /**
      * Returns the drift part of the equation, i.e., {@latex$ \mu(t, \mathrm{x}_t) }
      */
-    public abstract/* @Drift */double[] driftDiscretization(final StochasticProcess sp, final/* @Time */double t0, final double[] x0,
-            final/* @Time */double dt);
+    public Array driftDiscretization(
+                final StochasticProcess sp, 
+                final/* @Time */double t0, final Array x0, final/* @Time */double dt);
 
     /**
      * Returns the diffusion part of the equation, i.e. {@latex$ \sigma(t, \mathrm{x}_t) }
      */
-    public abstract/* @Diffusion */double[][] diffusionDiscretization(final StochasticProcess sp, final/* @Time */double t0,
-            final double[] x0, final/* @Time */double dt);
+    public Matrix diffusionDiscretization(
+                final StochasticProcess sp, 
+                final/* @Time */double t0, final Array x0, final/* @Time */double dt);
 
     /**
      * Returns the covariance {@latex$ V(\mathrm{x}_{t_0 + \Delta t} | \mathrm{x}_{t_0} = \mathrm{x}_0) } of the process after a
      * time interval {@latex$ \Delta t } according to the given discretization. This method can be overridden in derived classes
      * which want to hard-code a particular discretization.
      */
-    public abstract/* @Covariance */double[][] covarianceDiscretization(final StochasticProcess sp, final/* @Time */double t0,
-            final double[] x0, final/* @Time */double dt);
+    public Matrix covarianceDiscretization(
+                final StochasticProcess sp, 
+                final/* @Time */double t0, final Array x0, final/* @Time */double dt);
 
 }

@@ -21,13 +21,10 @@
  */
 package org.jquantlib.math.optimization;
 
-import java.util.List;
-
-import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
 
-
+//TODO: code review: license, class comments, compare against C++ sources
 public class SteepestDescent extends LineSearchBasedMethod {
     
     public SteepestDescent(LineSearch lineSearch){
@@ -47,30 +44,26 @@ public class SteepestDescent extends LineSearchBasedMethod {
        Array x_ = P.currentValue();
        int iterationNumber = 0;
        int stationaryStateIterationNumber_ = 0;
-       lineSearch_.setSearchDirection(new Array(x_.size()));
+       lineSearch_.setSearchDirection(new Array(x_.length));
        boolean end = false;
        
        // function and squared norm of gradient values
-       double normdiff;
+       double normdiff; // TODO: code review :: variable never read
        // classical initial value for line-search step
        double t = 1.0;
        // set gold at the size of the optimization problem search direction
-       Array gold = new Array(lineSearch_.searchDirection().size());
-       Array gdiff = new Array(lineSearch_.searchDirection().size());
-       
-       
+       Array gold  = new Array(lineSearch_.searchDirection().length);
+       Array gdiff = new Array(lineSearch_.searchDirection().length);
        
        P.setFunctionValue(P.valueAndGradient(gold, x_));
-       lineSearch_.searchDirection_ = gold.operatorMultiplyCopy(-1);
-       P.setGradientNormValue(Array.dotProduct(gold, gold));
+       lineSearch_.searchDirection_ = gold.mul(-1);
+       P.setGradientNormValue(gold.dotProduct(gold));
        normdiff = Math.sqrt(P.gradientNormValue());
        
-       do{
+       do {
            // Linesearch
            t = lineSearch_.evaluate(P, ecType, endCriteria, t);
-           if(lineSearch_.succeed_ == false){
-               throw new ArithmeticException("line search failed");
-           }
+           if (lineSearch_.succeed_ == false) throw new ArithmeticException("line search failed");
            // End
            end = endCriteria.bracket_operator(iterationNumber, 
                    stationaryStateIterationNumber_, 
@@ -90,18 +83,16 @@ public class SteepestDescent extends LineSearchBasedMethod {
            // New function value
            P.setFunctionValue(lineSearch_.lastFunctionValue());
            // New gradient and search direction vectors
-           gdiff = gold.operatorSubtractCopy(lineSearch_.lastGradient());
-           normdiff = Math.sqrt(Array.dotProduct(gdiff, gdiff));
+           gdiff = gold.sub(lineSearch_.lastGradient());
+           normdiff = Math.sqrt(gdiff.dotProduct(gdiff));
            gold = lineSearch_.lastGradient();
-           lineSearch_.setSearchDirection(gold.operatorMultiplyCopy(-1));
+           lineSearch_.setSearchDirection(gold.mul(-1));
            // New gradient squared norm
            P.setGradientNormValue(lineSearch_.lastGradientNormNorm2());
        
            // Increase iteration number
            ++iterationNumber; 
-       }
-       
-       while(end == false);
+       } while (end == false);
        
        P.setCurrentValue(x_);
        return ecType;

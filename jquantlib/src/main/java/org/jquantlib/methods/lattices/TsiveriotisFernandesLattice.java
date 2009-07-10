@@ -74,10 +74,8 @@ public class TsiveriotisFernandesLattice<T extends Tree> extends
 					* riskFreeRate + (1 - newConversionProbability.get(j))
 					* (riskFreeRate + creditSpread));
 
-			newValues.set(j, (pd * values.get(j) / (1 + (spreadAdjustedRate
-					.get(j) * dt)))
-					+ (pu * values.get(j + 1) / (1 + (spreadAdjustedRate
-							.get(j + 1) * dt))));
+			newValues.set(j, (pd * values.get(j) / (1 + (spreadAdjustedRate.get(j) * dt))) 
+			                 + (pu * values.get(j + 1) / (1 + (spreadAdjustedRate.get(j + 1) * dt))));
 		}
 	}
 

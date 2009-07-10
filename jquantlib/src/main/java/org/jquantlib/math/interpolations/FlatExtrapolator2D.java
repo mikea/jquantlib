@@ -22,6 +22,9 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
+
 
 /**
  * This class performs a flat extrapolation backed by an existing {@link Interpolation2D}.
@@ -86,17 +89,17 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
     }
 
     @Override
-    public double[] xValues() {
+    public Array xValues() {
         return decorated.xValues();
     }
 
     @Override
-    public double[] yValues() {
+    public Array yValues() {
         return decorated.yValues();
     }
 
     @Override
-    public double[][] zData() {
+    public Matrix zData() {
         return decorated.zData();
     }
     

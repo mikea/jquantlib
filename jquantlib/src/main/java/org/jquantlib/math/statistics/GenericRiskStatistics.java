@@ -24,13 +24,20 @@ package org.jquantlib.math.statistics;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.math.E_BinaryFunction;
-import org.jquantlib.math.E_ClippedFunction;
-import org.jquantlib.math.E_ComposedFunction;
-import org.jquantlib.math.E_IUnaryFunction;
-import org.jquantlib.math.E_UnaryFunction;
+import org.jquantlib.math.DoublePredicate;
+import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.functions.Bind1st;
+import org.jquantlib.math.functions.Bind1stPredicate;
+import org.jquantlib.math.functions.Bind2nd;
+import org.jquantlib.math.functions.Bind2ndPredicate;
+import org.jquantlib.math.functions.Clipped;
+import org.jquantlib.math.functions.Expression;
+import org.jquantlib.math.functions.Identity;
+import org.jquantlib.math.functions.LessThan;
+import org.jquantlib.math.functions.Minus;
+import org.jquantlib.math.functions.Sqr;
+import org.jquantlib.math.functions.TruePredicate;
 import org.jquantlib.util.Pair;
-import org.jquantlib.util.stdlibc.Std;
 
 public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
     
@@ -89,38 +96,14 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
     */
     public double regret(double target){
         // average over the range below the target
+
+        final List<UnaryFunctionDouble> functions = new ArrayList<UnaryFunctionDouble>();
+        functions.add(new Sqr());
+        functions.add(new Bind2nd(new Minus(), target));
+        final Expression comp = new Expression(functions);
+        final DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
         
-        E_UnaryFunction<Double, Double> square = new E_UnaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x) {
-                return x*x;
-            }
-        };
-        
-        List<E_IUnaryFunction<Double, Double>> functions = new ArrayList<E_IUnaryFunction<Double,Double>>();
-        functions.add(square);
-        
-        E_BinaryFunction<Double, Double> minus = new E_BinaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x_1, Double x_2) {
-                return x_1 - x_2;
-            }   
-        };
-        
-        E_IUnaryFunction<Double, Double> bounded_minus = Std.getInstance().bind2nd(minus, new Double(target));
-        functions.add(bounded_minus);
-        
-        E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
-        E_BinaryFunction<Double, Boolean> less = new E_BinaryFunction<Double, Boolean>(){
-            @Override
-            public Boolean evaluate(Double x_1, Double x_2) {
-               return x_1 < x_2;
-            } 
-        };
-        
-        E_IUnaryFunction<Double, Boolean> bounded_less = Std.getInstance().bind2nd(less, target);
-        Pair<Double, Integer> result = statistics.expectationValue(comp, bounded_less);
-        
+        Pair<Double, Integer> result = statistics.expectationValue(comp, less);
         double x = result.getFirst();
         //argh.....
         int N = result.getSecond().intValue();
@@ -133,7 +116,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
 
     //! potential upside (the reciprocal of VAR) at a given percentile
     public double potentialUpside(double centile){
-        if(centile<0.9 || centile>=1.0){
+        if (centile<0.9 || centile>=1.0){
             throw new IllegalArgumentException("percentile (" + centile + ") out of range [0.9, 1.0)");
         }
         // potential upside must be a gain, i.e., floored at 0.0
@@ -142,7 +125,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
 
     //! value-at-risk at a given percentile
     public double valueAtRisk(double centile){
-        if(centile<0.9 || centile>=1.0){
+        if (centile<0.9 || centile>=1.0){
             throw new IllegalArgumentException("percentile (" + centile + ") out of range [0.9, 1.0)");
         }
         return - Math.min(statistics.percentile(1.0-centile), 0.0);
@@ -172,24 +155,9 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             //throw new IllegalArgumentException(empty_sample_set);
         }
         double target = -valueAtRisk(centile);
-        
-        E_UnaryFunction<Double, Double> identity = new E_UnaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x) {
-                return x;
-            }
-        };
-        
-        E_BinaryFunction<Double, Boolean> less = new E_BinaryFunction<Double, Boolean>(){
-            @Override
-            public Boolean evaluate(Double x_1, Double x_2) {
-               return x_1 < x_2;
-            } 
-        };
-        
-        E_IUnaryFunction<Double, Boolean> bounded = Std.getInstance().bind2nd(less, target);
-        
-        Pair<Double, Integer> result = statistics.expectationValue(identity, bounded);
+
+        final DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
+        Pair<Double, Integer> result = statistics.expectationValue(new Identity(), less);
         
         double x = result.getFirst();
         Integer N = result.getSecond();
@@ -217,56 +185,26 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             throw new IllegalArgumentException(empty_sample_set);
         }
         
-        E_UnaryFunction<Double, Boolean> everyWhere = new E_UnaryFunction<Double, Boolean>(){
+        final UnaryFunctionDouble constant = new UnaryFunctionDouble() {
             @Override
-            public Boolean evaluate(Double x) {
-                return true;
-            }
-        };
-        
-        E_UnaryFunction<Double, Double> constant = new E_UnaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x) {
+            public double evaluate(double x) {
                 return 1.0;
             }
         };
-        E_BinaryFunction<Double, Boolean> less = new E_BinaryFunction<Double, Boolean>(){
-            @Override
-            public Boolean evaluate(Double x_1, Double x_2) {
-               return x_1 < x_2;
-            } 
-        };
         
-        E_IUnaryFunction<Double, Boolean> bounded_less = Std.getInstance().bind2nd(less, new Double(target));
-        E_ClippedFunction<Double> clipped = new E_ClippedFunction<Double>(bounded_less, constant);
-        return statistics.expectationValue(clipped, everyWhere).getFirst();
+        final DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
+        return statistics.expectationValue(new Clipped(less, constant), new TruePredicate()).getFirst();
     }
 
     /*! averaged shortfallness, defined as
         \f[ \mathrm{E}\left[ t-x \;|\; x<t \right] \f]
     */
     public double averageShortfall(double target) {
-       //First let's create the minus function
-        E_BinaryFunction<Double, Double> minus = new E_BinaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x_1, Double x_2) {
-                return x_1 - x_2;
-            }   
-        };
-        // Bind the first parameter
-        E_IUnaryFunction<Double, Double> bounded_minus = Std.getInstance().bind1st(minus, new Double(target));
+
+        final UnaryFunctionDouble minus = new Bind1st(target, new Minus()); 
+        final DoublePredicate less = new Bind1stPredicate(target, new LessThan());
+        Pair<Double, Integer> result = statistics.expectationValue(minus, less);
         
-        // now bind the second one
-        E_BinaryFunction<Double, Boolean> less = new E_BinaryFunction<Double, Boolean>(){
-            @Override
-            public Boolean evaluate(Double x_1, Double x_2) {
-               return x_1 < x_2;
-            } 
-        };
-        // Bind the second parameter
-        E_IUnaryFunction<Double, Boolean> bounded_less = Std.getInstance().bind1st(less, new Double(target));
-        
-        Pair<Double, Integer> result = statistics.expectationValue(bounded_minus, bounded_less);
         double x = result.getFirst();
         //mmhh somewhere we have to change N to int
         Integer N = result.getSecond();

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
  
@@ -19,15 +19,36 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+package org.jquantlib.math.functions;
 
-package org.jquantlib.math;
+import org.jquantlib.math.UnaryFunctionDouble;
 
-import cern.colt.function.DoubleComparator;
+/**
+ * A log(n) function
+ * 
+ * @author Srinivas Hasti
+ */
+public class Log implements UnaryFunctionDouble {
 
-public class DoubleComparatorImpl implements DoubleComparator {
+    // TODO: get rid of statics and singletons
+	private static Log instance = new Log();
 
-    @Override
-    public int compare(final double o1, final double o2) {
-        return (o1==o2) ? 0 : (o1<o2) ? -1 : 1;
-    }
+	private Log() {
+	}
+
+    // TODO: get rid of statics and singletons
+	public static Log getInstance() {
+		return instance;
+	}
+
+
+	//
+    // implements UnaryFunctionDouble
+    //
+    
+	@Override
+	public double evaluate(double a) {
+		return Math.log(a);
+	}
+
 }

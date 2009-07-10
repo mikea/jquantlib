@@ -38,7 +38,7 @@ public abstract class OneFactorAffineModel extends OneFactorModel implements Aff
     }
 
     public double /* @Real */discountBond(double /* @Time */now, double /* @Time */maturity, Array factors) {
-        return discountBond(now, maturity, factors.at(0));
+        return discountBond(now, maturity, factors.first());
     }
 
     public double /* @Real */discountBond(double /* @Time */now, double /* @Time */maturity, double /* @Rate */rate) {

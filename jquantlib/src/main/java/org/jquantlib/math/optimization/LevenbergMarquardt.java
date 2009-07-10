@@ -67,12 +67,12 @@ public class LevenbergMarquardt extends OptimizationMethod {
         ProblemData.getProblemData().setProblem(P);
         ProblemData.getProblemData().setInitCostValues(P.costFunction().values(x_));
         
-        int m = ProblemData.getProblemData().initCostValues_.size();
-        int n = x_.size();
+        int m = ProblemData.getProblemData().initCostValues_.length;
+        int n = x_.length;
         
         Array  xx = new Array();
         //TODO: correct?
-        xx.operatorAddCopy(x_);
+        xx.addAssign(x_);
         
         Array fvec;
         Array diag;

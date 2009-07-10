@@ -43,12 +43,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
 import org.jquantlib.util.Pair;
-
-import cern.colt.matrix.linalg.EigenvalueDecomposition;
 
 //! symmetric threshold Jacobi algorithm.
 /*! Given a real symmetric matrix S, the Schur decomposition
@@ -68,6 +65,7 @@ import cern.colt.matrix.linalg.EigenvalueDecomposition;
     \test the correctness of the returned values is tested by
           checking their properties.
 */
+//TODO: code review
 public class SymmetricSchurDecomposition {
     
     private Array diagonal_;
@@ -86,20 +84,21 @@ public class SymmetricSchurDecomposition {
     
     /*! \pre s must be symmetric */
     public SymmetricSchurDecomposition(final Matrix s){
-        if(s.rows() <= 0 && s.columns() > 0){
+        if(s.rows <= 0 && s.cols > 0){
             throw new IllegalArgumentException("null matrix given");
         }
-        if(s.rows()!=s.columns()){
+        if(s.rows!=s.cols){
             throw new IllegalArgumentException("input matrix must be square");
         }
 
-        int size = s.rows();
+        int size = s.rows;
         for (int q=0; q<size; q++) {
             diagonal_.set(q, s.get(q,q));
             eigenVectors_.set(q, q, 1.0);
         }
+        
         Matrix ss = s;
-        double[] tmpDiag = diagonal_.absCopy().getData();
+        Array tmpDiag = diagonal_.abs();
         List<Double> tmpAccumulate = new ArrayList<Double>(size);
         Collections.fill(tmpAccumulate, 0.0);
         double threshold, epsPrec = 1e-15;
@@ -166,8 +165,9 @@ public class SymmetricSchurDecomposition {
                     }
                 }
                 for (k=0; k<size; k++) {
-                    tmpDiag[k]+= tmpAccumulate.get(k);
-                    diagonal_.set(k,  tmpDiag[k]);
+                    double value = tmpDiag.get(k) + tmpAccumulate.get(k);
+                    tmpDiag.set(k, value);
+                    diagonal_.set(k,  value);
                     tmpAccumulate.set(k,0.0);
                 }
             }

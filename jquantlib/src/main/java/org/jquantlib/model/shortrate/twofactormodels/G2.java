@@ -320,7 +320,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
             for (i = 0; i < size_; i++) {
                 double /* @Real */tau = (i == 0 ? t_.get(0) - T_ : t_.get(i) - t_.get(i - 1));
                 double /* @Real */c = (i == size_ - 1 ? (1.0 + rate_ * tau) : rate_ * tau);
-                lambda.set(i, c * A_.get(i) * Math.exp(-Ba_.at(i) * x));
+                lambda.set(i, c * A_.get(i) * Math.exp(-Ba_.get(i) * x));
             }
 
             SolvingFunction function = new SolvingFunction(lambda, Bb_);
@@ -352,7 +352,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
 
             public double /* @Real */evaluate(double /* @Real */y) {
                 double /* @Real */value = 1.0;
-                for (int /* @Size */i = 0; i < lambda_.size(); i++) {
+                for (int /* @Size */i = 0; i < lambda_.length; i++) {
                     value -= lambda_.get(i) * Math.exp(-Bb_.get(i) * y);
                 }
                 return value;

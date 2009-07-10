@@ -1,7 +1,6 @@
 package org.jquantlib.legacy.libormarkets;
 
 import org.jquantlib.JQuantlib;
-import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
 import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
@@ -41,9 +40,9 @@ public class LmLinearExponentialCorrelationModel extends LmCorrelationModel {
         this(size, rho, beta, 0);
     }
 
-    public Matrix correlation(
-    /* @ Time */double time, final Array x) {
-        return new Matrix(corrMatrix_);
+    public Matrix correlation(final /* @ Time */double time, final Array x) {
+        // TODO: code review :: use of clone()
+        return corrMatrix_.clone();
     }
 
     public double correlation(int i, int j, /* @ Time */double time, final Array x) {
@@ -58,9 +57,9 @@ public class LmLinearExponentialCorrelationModel extends LmCorrelationModel {
         return factors_;
     }
 
-    public Matrix pseudoSqrt(
-    /* @ Time */double time, final Array x) {
-        return new Matrix(pseudoSqrt_);
+    public Matrix pseudoSqrt(final /* @ Time */double time, final Array x) {
+        // TODO: code review :: use of clone()
+        return pseudoSqrt_.clone();
     }
 
     public void generateArguments() {
@@ -76,6 +75,6 @@ public class LmLinearExponentialCorrelationModel extends LmCorrelationModel {
         }
 
         pseudoSqrt_ = JQuantlib.rankReducedSqrt(corrMatrix_, factors_, 1, SalvagingAlgorithm.None);
-        corrMatrix_ = pseudoSqrt_.operatorMultiply(pseudoSqrt_, pseudoSqrt_.transpose(pseudoSqrt_));
+        corrMatrix_ = pseudoSqrt_.mul(pseudoSqrt_).mul(pseudoSqrt_.transpose());
     }
 }

@@ -32,7 +32,6 @@ import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.stdlibc.Std;
 
 /**
  * 
@@ -57,7 +56,7 @@ public class StochasticProcessArray extends StochasticProcess {
             throw new IllegalArgumentException(no_process_given);
         }
         
-        if(correlation.rows() != processes.size()){
+        if (correlation.rows != processes.size()){
             throw new IllegalArgumentException(mismatch_processnumber_sizecorrelationmatrix);
         }
         
@@ -65,88 +64,19 @@ public class StochasticProcessArray extends StochasticProcess {
             processes_.get(i).addObserver(this);
         }
     }
-    
-    public int  size()  {
-        return processes_.size();
-    }
 
-    public double[] initialValues()  {
-        double[] tmp = new double[size()];
-        for (int i=0; i<size(); ++i){
+//TODO: verify what method should survive: size() or getSize()    
+//    public int  size()  {
+//        return processes_.size();
+//    }
+
+    @Override
+    public Array initialValues()  {
+        double[] tmp = new double[getSize()];
+        for (int i=0; i<getSize(); ++i) {
             tmp[i] = processes_.get(i).x0();
         }
-        return tmp;
-    }
-
-    public double[][] diffusion(/*Time*/ double t, final double [] x)  {
-        Matrix tmp = sqrtCorrelation_;
-        for (int i=0; i<size(); ++i) {
-            double sigma = processes_.get(i).diffusion(t, x[i]);
-            Std.getInstance().transform(tmp.getRow(i), tmp.getRow(i), Std.getInstance().multiplies(sigma));
-        }
-        return tmp.getRawData();
-    }
-    
-    public double[] expectation(/*@Time*/double t0, final double[] x0, /*@Time*/double dt)  {
-        double [] tmp = new double[size()];
-        for (int i=0; i<size(); ++i){
-            tmp[i] = processes_.get(i).expectation(t0, x0[i], dt);
-        }
-        return tmp;
-    }
-
-    public double[][] stdDeviation(/*@Time*/ double t0, double[] x0,
-            /*@Time*/ double dt)  {
-        Matrix tmp = sqrtCorrelation_;
-        for (int i=0; i<size(); ++i) {
-            double sigma = processes_.get(i).stdDeviation(t0, x0[i], dt);
-            Std.getInstance().transform(tmp.getRow(i), tmp.getRow(i),Std.getInstance().multiplies(sigma));
-        }
-        return tmp.getRawData();
-    }
-    
-    public double [][] covariance(/*@Time*/ double t0, double[] x0,
-            /*@Time*/ double dt)  {
-        Matrix tmp = new Matrix(stdDeviation(t0, x0, dt));
-        return tmp.operatorMultiply(tmp, tmp.transpose(tmp)).getRawData();
-    }
-
-    public double[] evolve(
-            /*@Time*/ double t0, final double [] x0, /*@Time*/double dt, final double[] dw)  {
-        double [] dz = sqrtCorrelation_.operatorMultiply(sqrtCorrelation_, new Array(dw)).getData();
-
-       double [] tmp = new double [size()];
-        for (int i=0; i<size(); ++i){
-            tmp[i] = processes_.get(i).evolve(t0, x0[i], dt, dz[i]);
-        }
-        return tmp;
-    }
-
-    public double [] apply(final  double [] x0,final  double [] dx)  {
-        double [] tmp = new double[size()];
-        for (int i=0; i<size(); ++i){
-            tmp[i] = processes_.get(i).apply(x0[i],dx[i]);
-        }
-        return tmp;
-    }
-    
-    public /*@Time*/ double time(final Date d)  {
-        return processes_.get(0).getTime(d);
-    }
-    
-    public StochasticProcess1D process(int i) {
-        return processes_.get(i);
-    }
-
-    public double [][] correlation() {
-        return sqrtCorrelation_.operatorMultiply(sqrtCorrelation_, sqrtCorrelation_.transpose(sqrtCorrelation_)).getRawData();
-    }
-
-    public double[] drift(/* @Time */double t, double[] x) {
-        double[] tmp = new double[size()];
-        for (int i = 0; i < size(); ++i)
-            tmp[i] = processes_.get(i).drift(t, x[i]);
-        return tmp;
+        return new Array( tmp );
     }
 
     @Override
@@ -154,6 +84,79 @@ public class StochasticProcessArray extends StochasticProcess {
         return processes_.size();
     }
 
+    @Override
+    public Array drift(final /* @Time */double t, final Array x) {
+        final double[] tmp = new double[getSize()];
+        for (int i=0; i<getSize(); i++)
+            tmp[i] = processes_.get(i).drift(t, x.get(i));
+        return new Array( tmp );
+    }
 
-  
+    @Override
+    public Matrix diffusion(final /*Time*/ double t, final Array x)  {
+        final Matrix tmp = sqrtCorrelation_;
+        for (int i=0; i<getSize(); i++) {
+            double sigma = processes_.get(i).diffusion(t, x.get(i));
+            tmp.getRow(i).mul(sigma);
+        }
+        return tmp;
+    }
+    
+    @Override
+    public Array expectation(final /*@Time*/double t0, final Array x0, final /*@Time*/double dt)  {
+        final double [] tmp = new double[getSize()];
+        for (int i=0; i<getSize(); i++){
+            tmp[i] = processes_.get(i).expectation(t0, x0.get(i), dt);
+        }
+        return new Array(tmp);
+    }
+
+    @Override
+    public Matrix stdDeviation(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt)  {
+        final Matrix tmp = sqrtCorrelation_;
+        for (int i=0; i<getSize(); i++) {
+            double sigma = processes_.get(i).stdDeviation(t0, x0.get(i), dt);
+            tmp.getRow(i).mul(sigma);
+        }
+        return tmp;
+    }
+    
+    @Override
+    public Matrix covariance(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt)  {
+        final Matrix tmp = stdDeviation(t0, x0, dt);
+        return tmp.mul(tmp.transpose());
+    }
+
+    @Override
+    public Array evolve(final /*@Time*/ double t0, final Array x0, final /*@Time*/double dt, final Array dw)  {
+        
+        final Array dz = sqrtCorrelation_.mul(dw);
+        final double[] tmp = new double[getSize()];
+        for (int i=0; i<getSize(); i++)
+            tmp[i] = processes_.get(i).evolve(t0, x0.get(i), dt, dz.get(i));
+        
+        return new Array(tmp);
+    }
+
+    @Override
+    public Array apply(final Array x0, final Array dx)  {
+        double [] tmp = new double[getSize()];
+        for (int i=0; i<getSize(); i++){
+            tmp[i] = processes_.get(i).apply(x0.get(i), dx.get(i));
+        }
+        return new Array(tmp);
+    }
+    
+    public /*@Time*/ double time(final Date d) {
+        return processes_.get(0).getTime(d);
+    }
+    
+    public StochasticProcess1D process(int i) {
+        return processes_.get(i);
+    }
+
+    public Matrix correlation() {
+        return sqrtCorrelation_.mul(sqrtCorrelation_.transpose());
+    }
+
 }

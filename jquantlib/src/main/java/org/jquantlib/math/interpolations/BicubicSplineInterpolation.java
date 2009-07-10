@@ -43,6 +43,8 @@ package org.jquantlib.math.interpolations;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
 import org.jquantlib.math.interpolations.factories.BicubicSpline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,7 +152,8 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
             this.delegate = delegate;
         }
 
-        public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z) {
+        @Override
+        public Interpolation2D interpolate(final Array x, final Array y, final Matrix z) {
             delegate.vx = x;
             delegate.vy = y;
             delegate.mz = z;

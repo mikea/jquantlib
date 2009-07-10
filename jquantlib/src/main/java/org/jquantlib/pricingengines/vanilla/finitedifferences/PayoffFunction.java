@@ -20,13 +20,13 @@
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import org.jquantlib.instruments.Payoff;
-import org.jquantlib.math.functions.DoubleFunction;
+import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
  * @author Srinivas Hasti
  * 
  */
-public class PayoffFunction implements DoubleFunction {
+public class PayoffFunction implements UnaryFunctionDouble {
 	private Payoff payOff;
 
 	public PayoffFunction(Payoff payOff) {
@@ -34,14 +34,14 @@ public class PayoffFunction implements DoubleFunction {
 		this.payOff = payOff;
 	}
 
+	
+	//
+	// implements UnaryFunctionDouble
+	//
+	
 	@Override
-	public double apply(double a) {
+	public double evaluate(double a) {
 		return payOff.valueOf(a);
-	}
-
-	@Override
-	public double apply(double... a) {
-		throw new IllegalStateException("Not supported ");
 	}
 
 }

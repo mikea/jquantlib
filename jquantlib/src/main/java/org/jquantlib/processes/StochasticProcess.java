@@ -41,24 +41,19 @@
 
 package org.jquantlib.processes;
 
-import java.util.List; // FIXME :: performance
+import java.util.List;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
-import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import cern.jet.math.Functions;
-
 /**
  * Multi-dimensional stochastic process class.
- * 
- * <p>{@latex[
- * d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t.
- * }
+ * <p>
+ * {@latex[ d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t }
  * 
  * @author Richard Gomes
  */ 
@@ -76,7 +71,7 @@ public abstract class StochasticProcess implements Observable, Observer {
 	//
 	
 	//FIXME: code review :: constructor added in order to get Praneet's work compiling
-	protected StochasticProcess(){
+	protected StochasticProcess() {
 	    if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
@@ -116,19 +111,19 @@ public abstract class StochasticProcess implements Observable, Observer {
     /**
      * Returns the initial values of the state variables
      */
-    public abstract double[] initialValues(); // FIXME: add typecast
+    public abstract Array initialValues() /*@ReadOnly*/; // FIXME: add typecast
         
     /**
      * Returns the drift part of the equation, i.e.,
      * {@latex$ \mu(t, \mathrm{x}_t) }
      */
-    public abstract /*@Drift*/ double[] drift(final /*@Time*/ double t, final double[] x);
+    public abstract Array drift(final /*@Time*/ double t, final Array x) /*@ReadOnly*/;
         
     /**
      * Returns the diffusion part of the equation, i.e.
      * {@latex$ \sigma(t, \mathrm{x}_t) }
      */
-    public abstract /*@Diffusion*/ double[][] diffusion(final /*@Time*/ double t, final double[] x);
+    public abstract Matrix diffusion(final /*@Time*/ double t, final Array x) /*@ReadOnly*/;
         
     /**
      * Returns the expectation
@@ -138,33 +133,31 @@ public abstract class StochasticProcess implements Observable, Observer {
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public /*@Expectation*/ double[] expectation(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt) {
-    	return apply(x0, discretization.driftDiscretization(this, t0, x0, dt)); //XXX
+    public Array expectation(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt) /*@ReadOnly*/ {
+    	return apply(x0, discretization.driftDiscretization(this, t0, x0, dt));
     }
     
     /**
      * Returns the standard deviation
-     * {@latex$ S(\mathrm{x}_{t_0 + \Delta t}
-     *     | \mathrm{x}_{t_0} = \mathrm{x}_0) }
+     * {@latex$ S(\mathrm{x}_{t_0 + \Delta t} | \mathrm{x}_{t_0} = \mathrm{x}_0) }
      * of the process after a time interval {@latex$ \Delta t }
      * according to the given discretization. This method can be
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public /*@StdDev*/ double[][] stdDeviation(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt) {
+    public Matrix stdDeviation(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt) /*@ReadOnly*/ {
     	return discretization.diffusionDiscretization(this, t0, x0, dt); // XXX
     }
     
     /**
      * Returns the covariance
-     * {@latex$ V(\mathrm{x}_{t_0 + \Delta t}
-     *     | \mathrm{x}_{t_0} = \mathrm{x}_0) }
+     * {@latex$ V(\mathrm{x}_{t_0 + \Delta t} | \mathrm{x}_{t_0} = \mathrm{x}_0) }
      * of the process after a time interval {@latex$ \Delta t }
      * according to the given discretization. This method can be
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public /*@Covariance*/ double[][] covariance(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt) {
+    public Matrix covariance(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt) /*@ReadOnly*/ {
     	return discretization.covarianceDiscretization(this, t0, x0, dt); // XXX
     }
     
@@ -178,21 +171,17 @@ public abstract class StochasticProcess implements Observable, Observer {
      * where {@latex$ E } is the expectation and {@latex$ S } the
      * standard deviation.
      */
-    public /*@Price*/ double[] evolve(final /*@Time*/ double t0, final double[] x0, final /*@Time*/ double dt, final double[] dw) {
-    	// y = M * dw
-    	DenseDoubleMatrix2D m = new DenseDoubleMatrix2D(stdDeviation(t0, x0, dt));
-    	DoubleMatrix1D y = m.zMult(new DenseDoubleMatrix1D(dw), null);
-    	return apply(expectation(t0, x0, dt), y.toArray());
+    public Array evolve(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt, final Array dw) /*@ReadOnly*/ {
+    	return apply(expectation(t0,x0,dt), stdDeviation(t0,x0,dt).mul(dw));
     }
     
     /**
-     * Applies a change to the asset value. By default, it
-     * returns {@latex$ \mathrm{x} + \Delta \mathrm{x} }.
+     * Applies a change to the asset value.
+     * 
+     * @returns {@latex$ \mathrm{x} + \Delta \mathrm{x} }.
      */
-    public /*@Price*/ double[] apply(final double[] x0, final double[] dx) {
-    	DoubleMatrix1D mx0 = new DenseDoubleMatrix1D(x0);
-    	DoubleMatrix1D mdx = new DenseDoubleMatrix1D(dx);
-    	return mx0.assign(mdx, Functions.plus).toArray();
+    public Array apply(final Array x0, final Array dx) /*@ReadOnly*/ {
+    	return x0.add(dx);
     }
 
     /**
@@ -203,7 +192,7 @@ public abstract class StochasticProcess implements Observable, Observer {
      * functionality, a default implementation is given
      * which raises an exception.
      */
-    public /*@Time*/ double getTime(final Date date) {
+    public /*@Time*/ double getTime(final Date date) /*@ReadOnly*/ {
     	throw new UnsupportedOperationException("date/time conversion not supported");
     }
     

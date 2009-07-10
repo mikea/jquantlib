@@ -41,7 +41,7 @@ public abstract class Constraint {
     public double update(final Array params, final Array direction, final double beta) {
 
         double diff = beta;
-        Array newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(), diff)));
+        Array newParams = params.add(direction.mul( new Array(direction.length).fill(diff) ));
         boolean valid = test(newParams);
 
         int icount = 0;
@@ -50,11 +50,11 @@ public abstract class Constraint {
                 throw new RuntimeException("can't update parameter vector");
             diff *= 0.5;
             icount++;
-            newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(new Array(direction.size(), diff)));
+            newParams = params.add(direction.mul( new Array(direction.length).fill(diff) ));
             valid = test(newParams);
         }
 
-        params.operatorAdd(direction.operatorMultiplyCopy(new Array(direction.size(), diff)));
+        params.addAssign(direction.mul( new Array(direction.length).fill(diff) ));
         return diff;
     }
     

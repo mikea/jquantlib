@@ -24,7 +24,6 @@ package org.jquantlib.math.optimization;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
@@ -48,10 +47,10 @@ public class Simplex extends OptimizationMethod {
     public double extrapolate(Problem P, int iHighest, double factor){
         Array pTry = new Array();
         do{
-            double dimensions = values_.size() - 1;
+            double dimensions = values_.length - 1;
             double factor1 = (1.0 - factor)/dimensions;
             double factor2 = factor1 - factor;
-            pTry = sum_.operatorMultiplyCopy(factor1).operatorSubtractCopy(vertices_.get(iHighest).operatorMultiplyCopy(factor2));
+            pTry = sum_.mul(factor1).sub(vertices_.get(iHighest).mul(factor2));
             factor *= 0.5;
         }
         while(!P.constraint().test(pTry));
@@ -60,7 +59,7 @@ public class Simplex extends OptimizationMethod {
         double vTry = P.value(pTry);
         if(vTry < values_.get(iHighest)){
             values_.set(iHighest, vTry);
-            sum_ = sum_.operatorAddCopy(pTry.operatorSubtractCopy(vertices_.get(iHighest)));
+            sum_ = sum_.add(pTry.sub(vertices_.get(iHighest)));
             vertices_.set(iHighest, pTry);
         }
         return vTry;
@@ -74,13 +73,14 @@ public class Simplex extends OptimizationMethod {
         int iterationNumber_ = 0;
         
         boolean end = false;
-        int n = x_.size();
+        int n = x_.length;
         int i;
         
         vertices_ = new ArrayList<Array>(n+1);
         //add empty Arrays
         for(int fill = 0; fill<=n+1; fill++){
-            vertices_.add(new Array(x_));
+            // TODO: code review :: use of clone()
+            vertices_.add(x_.clone());
         }
         for(i = 0; i<n; i++){
             Array direction = new Array(n);
@@ -88,19 +88,19 @@ public class Simplex extends OptimizationMethod {
             P.constraint().update(vertices_.get(i+1), direction, lambda_);
         }
         
-        values_ = new Array(n+1, 0.0);
+        values_ = new Array(n+1);
         for(i = 0; i<= n; i++){
             values_.set(i, P.value(vertices_.get(i)));
         }
         
         do {
-            sum_ = new Array(n, 0.0);
+            sum_ = new Array(n);
             for (i=0; i<=n; i++)
-                sum_ = sum_.operatorAddCopy(vertices_.get(i));
+                sum_ = sum_.add(vertices_.get(i));
             //Determine best, worst and 2nd worst vertices
             int iLowest = 0;
             int iHighest, iNextHighest;
-            if (values_.get(0) < values_.get(0)) {
+            if (values_.first() < values_.first()) {
                 iHighest = 1;
                 iNextHighest = 0;
             } else {
@@ -146,7 +146,7 @@ public class Simplex extends OptimizationMethod {
                         for (i=0; i<=n; i++) {
                             if (i!=iLowest) {
                                 vertices_.set(i, 
-                                    (vertices_.get(i).operatorAddCopy(vertices_.get(iLowest))).operatorMultiplyCopy(0.5));
+                                    (vertices_.get(i).add(vertices_.get(iLowest))).mul(0.5));
                                 values_.set(i, P.value(vertices_.get(i)));
                             }
                         }

@@ -52,8 +52,9 @@ public abstract class CostFunction {
     // the cost function with respect to x
     public void gradient(Array grad, final Array x) {
         double /* @Real */eps = finiteDifferenceEpsilon(), fp, fm;
-        Array xx = new Array(x);
-        for (int /* @Size */i = 0; i < x.size(); i++) {
+        // TODO: code review :: use of clone()
+        Array xx = x.clone();
+        for (int /* @Size */i=0; i<x.length; i++) {
             // xx[i] += eps;
             xx.set(i, eps + xx.get(i));
             fp = value(xx);

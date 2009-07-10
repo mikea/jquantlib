@@ -22,6 +22,7 @@
 
 package org.jquantlib.math.interpolations.factories;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.interpolations.LogLinearInterpolation;
@@ -67,12 +68,12 @@ public class LogLinear implements Interpolator {
 	//
 	
     @Override
-	public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
+	public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
     @Override
-	public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
+	public final Interpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 

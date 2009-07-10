@@ -27,8 +27,6 @@ import java.util.prefs.Preferences;
 import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Settings for the application.

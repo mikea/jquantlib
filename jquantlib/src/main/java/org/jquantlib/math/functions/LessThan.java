@@ -1,5 +1,6 @@
 /*
- Copyright (C) 2008 Srinivas Hasti
+ Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -21,11 +22,24 @@
  */
 package org.jquantlib.math.functions;
 
+import org.jquantlib.math.BinaryDoublePredicate;
+
 /**
- * @author Srinivas Hasti
- * 
+ * This method binds the 1st argument of a binary function to a scalar value, effectively enabling
+ * a binary function to be called in a context intended for a unary function.
+ *
+ * @author Ueli Hofstetter
+ * @author Richard Gomes
  */
-public interface DoubleFunction {
-	public double apply(double a);
-	public double apply(double... a);
+public class LessThan implements BinaryDoublePredicate {
+
+	//
+    // implements BinaryDoublePredicate
+    //
+    
+	@Override
+	public boolean op(double a, double b) {
+		return a < b;
+	}
+
 }

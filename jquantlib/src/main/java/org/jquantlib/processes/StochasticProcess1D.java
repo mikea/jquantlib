@@ -41,6 +41,9 @@
 
 package org.jquantlib.processes;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
+
 
 /**
  * 
@@ -145,48 +148,55 @@ public abstract class StochasticProcess1D extends StochasticProcess {
         return 1;
     }
 
-    public final /*@Price*/ double[] initialValues() {
-        return new double[] { x0() };
+    public final /*@Price*/ Array initialValues() {
+        return new Array().fill( x0() );
     }
 
-    public final /*@Price*/ double[] drift(final /*@Time*/ double t, /*@Price*/ double[] x) {
+    public final /*@Price*/ Array drift(final /*@Time*/ double t, /*@Price*/ Array x) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
     	if (x.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new double[] { drift(t, x[0]) };
+    	return new Array().fill( drift(t, x.first()) );
     }
 
-    public final /*@Diffusion*/ double[][] diffusion(final /*@Time*/ double t, /*@Price*/ double[] x) {
+    public final /*@Diffusion*/ Matrix diffusion(final /*@Time*/ double t, /*@Price*/ Array x) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
     	if (x.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	double v = diffusion(t, x[0]);
-    	return new double[][] { { v } };
+    	double v = diffusion(t, x.first());
+    	return new Matrix(1, 1, v);
     }
 
-    public final /*@Expectation*/ double[] expectation(final /*@Time*/ double t0, final /*@Price*/ double[] x0, final /*@Time*/ double dt) {
+    public final /*@Expectation*/ Array expectation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
     	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new double[] { expectation(t0, x0[0], dt) };
+    	return new Array().fill( expectation(t0, x0.first(), dt) );
     }
     
-    public final /*@StdDev*/ double[][] stdDeviation(final /*@Time*/ double t0, final /*@Price*/ double[] x0, final /*@Time*/ double dt) {
+    public final /*@StdDev*/ Matrix stdDeviation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
     	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	double v = stdDeviation(t0, x0[0], dt);
-    	return new double[][] { { v } };
+    	double v = stdDeviation(t0, x0.first(), dt);
+    	return new Matrix(1, 1, v);
     }
 
-    public final /*@Covariance*/ double[][] covariance(final /*@Time*/ double t0, final /*@Price*/ double[] x0, final /*@Time*/ double dt) {
+    public final /*@Covariance*/ Matrix covariance(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
     	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	double v = discretization1D.varianceDiscretization(this, t0, x0[0], dt);
-    	return new double[][] { { v } };
+    	double v = discretization1D.varianceDiscretization(this, t0, x0.first(), dt);
+        return new Matrix(1, 1, v);
     }
 
-    public final double[] evolve(final /*@Time*/ double t0, final /*@Price*/ double[] x0, final /*@Time*/ double dt, final double[] dw) {
-    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+    public final Array evolve(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt, final Array dw) {
+    	// TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
     	if (dw.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new double[] { evolve(t0, x0[0], dt, dw[0]) };
+    	return new Array().fill( evolve(t0, x0.first(), dt, dw.first()) );
     }
 
-    public final /*@Price*/ double[] apply(final /*@Price*/ double[] x0, final double[] dx) {
+    public final /*@Price*/ Array apply(final /*@Price*/ Array x0, final Array dx) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
     	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
     	if (dx.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new double[] { apply(x0[0], dx[0]) };
+    	return new Array().fill( apply(x0.first(), dx.first()) );
     }
 
 }

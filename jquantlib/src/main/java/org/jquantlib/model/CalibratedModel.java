@@ -24,8 +24,8 @@ package org.jquantlib.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
 
+import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.EndCriteria;
@@ -33,6 +33,12 @@ import org.jquantlib.math.optimization.OptimizationMethod;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 
+
+/**
+ * Calibrated model class
+ * 
+ * @author Ueli Hofstetter
+ */
 //TODO: comments, license, code review
 public abstract class CalibratedModel implements org.jquantlib.util.Observer, Observable {
     
@@ -53,19 +59,47 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
         constraint_ = new PrivateConstraint(arguments_);
     }
     
+    
+    
+    /**
+     * Calibrate to a set of market instruments (caps/swaptions)
+     * <p>
+     * An additional constraint can be passed which must be 
+     * satisfied in addition to the constraints of the model.
+     * 
+     * @param calibrationHelper
+     * @param method
+     * @param endCriteria
+     * @param constraint
+     * @param weights
+     */
     public  void calibrate(List<CalibrationHelper> calibrationHelper,
             OptimizationMethod method,
             final EndCriteria endCriteria,
             final Constraint constraint,
-            final List<Double> weights){
+            final List<Double> weights) {
+        
+        throw new UnsupportedOperationException();
         
     }
     
+    /**
+     * Calibrate to a set of market instruments (caps/swaptions)
+     * <p>
+     * An additional constraint can be passed which must be 
+     * satisfied in addition to the constraints of the model.
+     * 
+     * @param calibrationHelper
+     * @param method
+     * @param endCriteria
+     * @param constraint
+     * @param weights
+     */
     public  void calibrate(List<CalibrationHelper> calibrationHelper,
             OptimizationMethod method,
             final EndCriteria endCriteria){
         //FIXME: what kind of constraint? so far constraint it abstract!?
-        calibrate(calibrationHelper, method, endCriteria, new PrivateConstraint(null), new ArrayList<Double>() );
+        calibrate(calibrationHelper, method, endCriteria, new PrivateConstraint(null), new ArrayDoubleList() );
     }
     
     public Constraint constraint(){
@@ -92,13 +126,13 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
         int p = 0;
         for (int i=0; i<arguments_.size(); i++) {
             for (int j=0; j<arguments_.get(i).getSize(); j++, p++) {
-                if(p==params.size()){
+                if(p==params.length){
                     throw new IllegalArgumentException(parameter_array_to_small);
                 }
                 arguments_.get(i).setParam(j, params.get(p));
             }
         }
-        if(p!=params.size()){
+        if(p!=params.length){
             throw new IllegalArgumentException(parameter_array_to_big);
         }
         update();
@@ -201,10 +235,12 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
         
     }
     
-    private class PrivateConstraint extends Constraint{        
+    
+    private final class PrivateConstraint extends Constraint{        
         public PrivateConstraint(List<Parameter> arguments){
             arguments_ = arguments;
         }
+        
         @Override
         public boolean test(Array params) {
            int k = 0;
@@ -221,5 +257,6 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
            return true;
         }
     }
+    
 }
 

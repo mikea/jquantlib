@@ -40,6 +40,7 @@
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.interpolations.factories.BackwardFlat;
@@ -61,8 +62,8 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 	//
 
 	protected Date[]								dates;
-	protected/* @Time */double[]					times;
-	protected/* @Rate */double[]					data;
+	protected/* @Time */ Array					times;
+	protected/* @Rate */ Array					data;
 	protected Interpolation							interpolation;
 	protected boolean								isNegativeRates;
 
@@ -106,7 +107,7 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
     // public constructors
     //
 	
-	public InterpolatedForwardCurve(final Date[] dates, final/* @Rate */double[] forwards, final DayCounter dayCounter,
+	public InterpolatedForwardCurve(final Date[] dates, final/* @Rate */Array forwards, final DayCounter dayCounter,
 			final T interpolator) {
 		// FIXME: code review: calendar
 		// FIXME: must check dates
@@ -123,12 +124,13 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 		if (dates.length != forwards.length) throw new IllegalArgumentException("dates/yields count mismatch"); // FIXME: message
 
 
-		times = new /* @Time */double[dates.length];
+		times = new Array(dates.length);
 		for (int i = 1; i < dates.length; i++) {
 			if (dates[i].le(dates[i - 1]))
 				throw new IllegalArgumentException("invalid date (" + dates[i] + ", vs " + dates[i - 1] + ")"); // FIXME: message
-			if (!isNegativeRates && (forwards[i] < 0.0)) throw new IllegalArgumentException("negative forward"); // FIXME: message
-			times[i] = dayCounter.yearFraction(dates[0], dates[i]);
+			if (!isNegativeRates && (forwards.get(i) < 0.0)) throw new IllegalArgumentException("negative forward"); // FIXME: message
+			double value = dayCounter.yearFraction(dates[0], dates[i]);
+			times.set(i, value);
 		}
 
 		this.interpolation = this.interpolator.interpolate(times, forwards);
@@ -146,7 +148,7 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 	}
 
 	@Override
-	public final/* @DiscountFactor */double[] getData() /* @ReadOnly */{
+	public final Array getData() /* @ReadOnly */{
     	return data.clone();
 	}
 
@@ -159,12 +161,12 @@ public final class InterpolatedForwardCurve<T extends Interpolator> extends Forw
 	public final Pair<Date, Double>[] getNodes() /* @ReadOnly */{
 		Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
 		for (int i = 0; i < dates.length; ++i)
-			results[i] = new Pair<Date, Double>(dates[i], data[i]);
+			results[i] = new Pair<Date, Double>(dates[i], data.get(i));
 		return results;
 	}
 
 	@Override
-	public final double[] getTimes() /* @ReadOnly */{
+	public final Array getTimes() /* @ReadOnly */{
     	return times.clone();
 	}
 

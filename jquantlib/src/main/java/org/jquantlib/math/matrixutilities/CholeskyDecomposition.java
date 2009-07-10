@@ -65,7 +65,7 @@ public class CholeskyDecomposition {
 
     Matrix CholeskyDecomposition(final Matrix S, boolean flexible) {
 
-        int i, j, size = S.rows();
+        int i, j, size = S.rows;
 
         //  Validate Matrix.
         //  Technically the CholeskyDecomposition works for
@@ -128,7 +128,7 @@ public class CholeskyDecomposition {
     }
 
     private boolean validateMatrix(Matrix S) {
-	    if(S.columns()!=S.rows()){
+	    if (S.cols != S.rows){
 		    throw new RuntimeException("input matrix is not square.");
 	    }
 	    return true;

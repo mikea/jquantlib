@@ -22,17 +22,13 @@
  */
 package org.jquantlib.math.matrixutilities;
 
-import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Matrix;
 import org.jquantlib.math.optimization.CostFunction;
-import org.jquantlib.util.stdlibc.Std;
 
+//TODO: license, class comments
 class HypersphereCostFunction extends CostFunction {
-    
-    
-    
     
     private int size_;
     private boolean lowerDiagonal_;
@@ -40,29 +36,24 @@ class HypersphereCostFunction extends CostFunction {
     private Array targetVariance_;
     private  Matrix currentRoot_, tempMatrix_, currentMatrix_;
 
- public HypersphereCostFunction(final Matrix targetMatrix,
-                           final Array targetVariance,
-                          boolean lowerDiagonal){
-  this.size_ = targetMatrix.rows();
-  this.lowerDiagonal_=lowerDiagonal;
-    this.targetMatrix_= targetMatrix;
-    this.targetVariance_=targetVariance;
-    currentRoot_ = new Matrix(size_, size_);
-    tempMatrix_ = new Matrix(size_, size_);
-    currentMatrix_ = new Matrix(size_, size_); }
-  public Array values(final Array array)  {
-      throw new UnsupportedOperationException("values method not implemented");
-  }
+    public HypersphereCostFunction(final Matrix targetMatrix, final Array targetVariance, boolean lowerDiagonal) {
+        this.size_ = targetMatrix.rows;
+        this.lowerDiagonal_ = lowerDiagonal;
+        this.targetMatrix_ = targetMatrix;
+        this.targetVariance_ = targetVariance;
+        currentRoot_ = new Matrix(size_, size_);
+        tempMatrix_ = new Matrix(size_, size_);
+        currentMatrix_ = new Matrix(size_, size_);
+    }
+ 
+    public Array values(final Array array) {
+        throw new UnsupportedOperationException("values method not implemented");
+    }
   
   public double value(final Array x)  {
       int i,j,k;
-      //std::fill(currentRoot_.begin(), currentRoot_.end(), 1.0);
-      for(int cols = 0; cols<currentRoot_.columns(); cols++){
-          for(int rows = 0; rows<currentRoot_.rows(); rows++){
-              currentRoot_.set(rows, cols, 1.0);
-          }
-      }
-     
+      
+      currentRoot_.fill(1.0);
       if (lowerDiagonal_) {
           for (i=0; i<size_; i++) {
               for (k=0; k<size_; k++) {
@@ -97,12 +88,11 @@ class HypersphereCostFunction extends CostFunction {
           }
       }
       double temp, error=0;
-      tempMatrix_ = currentRoot_.transpose(currentRoot_);
-      currentMatrix_ = currentRoot_.operatorMultiply(currentRoot_,tempMatrix_);
+      tempMatrix_ = currentRoot_.transpose();
+      currentMatrix_ = currentRoot_.mul(tempMatrix_);
       for (i=0;i<size_;i++) {
           for (j=0;j<size_;j++) {
-              temp = currentMatrix_.get(i, j)*targetVariance_.get(i)
-                *targetVariance_.get(j)-targetMatrix_.get(i, j);
+              temp = currentMatrix_.get(i, j)*targetVariance_.get(i)*targetVariance_.get(j)-targetMatrix_.get(i, j);
               error += temp*temp;
           }
       }
@@ -110,6 +100,7 @@ class HypersphereCostFunction extends CostFunction {
   }
 }
 
+//TODO: create a
 public class PseudoSqrt {
     private final static String unknown_salvaging_algorithm = "unknown salvaging algorithm";
     public enum SalvagingAlgorithm {
@@ -167,15 +158,14 @@ public class PseudoSqrt {
                                              int maxRank,
                                              int componentRetainedPercentage,
                                              SalvagingAlgorithm sa){
-        int size = matrix.rows();
+        int size = matrix.rows;
         
         //TODO: do we already have this mechanism
         //#if defined(QL_EXTRA_SAFETY_CHECKS)
         checkSymmetry(matrix);
         //#else
-        if(size != matrix.columns()){
-            throw new IllegalArgumentException("non square matrix: " + size + " rows, " +
-                   matrix.columns() + " columns");
+        if(size != matrix.cols) {
+            throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
         }
 
         if(componentRetainedPercentage<=0.0){
@@ -223,14 +213,13 @@ public class PseudoSqrt {
         }
 
         // factor reduction
-        double enough = componentRetainedPercentage *
-                      Std.getInstance().accumulate(eigenValues.getData(), 0.0);
+        double enough = componentRetainedPercentage * eigenValues.accumulate();
         if (componentRetainedPercentage == 1.0) {
             // numerical glitches might cause some factors to be discarded
             enough *= 1.1;
         }
         // retain at least one factor
-        double components = eigenValues.get(0);
+        double components = eigenValues.first();
         int retainedFactors = 1;
         for (int i=1; components<enough && i<size; ++i) {
             components += eigenValues.get(i);
@@ -243,7 +232,8 @@ public class PseudoSqrt {
         for (int i=0; i<retainedFactors; ++i){
             diagonal.set(i,i, Math.sqrt(eigenValues.get(i)));
         }
-        Matrix result = jd.eigenVectors().operatorMultiply(jd.eigenVectors(), diagonal);
+        // TODO: code review:: compare against C++ code
+        Matrix result = jd.eigenVectors().mul(jd.eigenVectors()).mul(diagonal);
 
         normalizePseudoRoot(matrix, result);
         return result;
@@ -251,10 +241,10 @@ public class PseudoSqrt {
     
     
     public static void checkSymmetry(final Matrix matrix) {
-        int size = matrix.rows();
-        if(size != matrix.columns()){
-            throw new IllegalArgumentException("non square matrix: " + size + " rows, " +
-                   matrix.columns() + " columns");
+        int size = matrix.rows;
+        
+        if (size != matrix.cols){
+            throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
             }
         for (int i=0; i<size; ++i){
             for (int j=0; j<i; ++j){
@@ -267,15 +257,15 @@ public class PseudoSqrt {
         }                
     }
 
-    public static void normalizePseudoRoot(final Matrix matrix,
-                             Matrix pseudo) {
-        int size = matrix.rows();
-        if(size != pseudo.rows()){
-            throw new IllegalArgumentException("matrix/pseudo mismatch: matrix rows are " + size +
-                   " while pseudo rows are " + pseudo.columns());
+    public static void normalizePseudoRoot(final Matrix matrix, Matrix pseudo) {
+        int size = matrix.rows;
+        
+        if (size != pseudo.rows) {
+            throw new IllegalArgumentException(
+                    "matrix/pseudo mismatch: matrix rows are " + size + " while pseudo rows are " + pseudo.cols);
         }
 
-        int pseudoCols = pseudo.columns();
+        int pseudoCols = pseudo.cols;
 
         // row normalization
         for (int i=0; i<size; ++i) {
@@ -511,17 +501,15 @@ public class PseudoSqrt {
 */
 public static Matrix pseudoSqrt(final Matrix matrix,
                                     SalvagingAlgorithm sa) {
-    int size = matrix.rows();
+    int size = matrix.rows;
     /*
     #if defined(QL_EXTRA_SAFETY_CHECKS)
     checkSymmetry(matrix);
     #else
     */
-    if(size != matrix.columns()){
-               throw new IllegalArgumentException("non square matrix: " + size + " rows, " +
-               matrix.columns() + " columns");
+    if (size != matrix.cols) {
+               throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
     }
-
 
     // spectral (a.k.a Principal Component) analysis
     SymmetricSchurDecomposition jd = new SymmetricSchurDecomposition(matrix);
@@ -533,7 +521,7 @@ public static Matrix pseudoSqrt(final Matrix matrix,
     switch (sa) {
       case None:
         // eigenvalues are sorted in decreasing order
-        if(jd.eigenvalues().get(size-1)<-1e-16){
+        if (jd.eigenvalues().get(size-1)<-1e-16){
                   throw new IllegalArgumentException( "negative eigenvalue(s) ("
                     + /*std::scientific*/ + jd.eigenvalues().get(size-1)
                   + ")");

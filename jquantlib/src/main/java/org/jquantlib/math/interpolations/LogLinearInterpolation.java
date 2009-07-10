@@ -22,8 +22,7 @@
 
 package org.jquantlib.math.interpolations;
 
-import java.util.Arrays;
-
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.factories.LogLinear;
 
 
@@ -43,7 +42,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
     // private fields
     //
     
-    private double[] logY;
+    private Array logY;
 	private Interpolation linearInterpolation;
 	
 	
@@ -144,12 +143,13 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	public void reload() {
 		super.reload();
 		
-		logY = new double[vx.length];
+		logY = new Array(vx.length);
 		for (int i=0; i<vx.length; i++){
-			if (vx[i] <= 0.0) {
-				throw new ArithmeticException("negative or null value " + vx[i] + " at " + i + " position.");
+			if (vx.get(i) <= 0.0) {
+				throw new ArithmeticException("negative or null value " + vx.get(i) + " at " + i + " position.");
 			}
-			logY[i] = Math.log(vy[i]);
+			double value = Math.log(vy.get(i));
+			logY.set(i, value);
 		}
 		linearInterpolation = LinearInterpolation.getInterpolator().interpolate(vx, logY);
 	}
@@ -187,14 +187,14 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 		//
 		
 		@Override
-		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
+		public final Interpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
 			return interpolate(x.length, x, y);
 		}
 
 	    @Override
-		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
-			delegate.vx = Arrays.copyOfRange(x, 0, size);
-			delegate.vy = Arrays.copyOfRange(y, 0, size);
+		public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
+			delegate.vx = x.copyOfRange(0, size);
+			delegate.vy = y.copyOfRange(0, size);
 			delegate.reload();
 			return delegate;
 		}

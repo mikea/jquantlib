@@ -52,7 +52,7 @@ public class DiscretizedOption extends DiscretizedAsset {
 		if (method() != underlying.method())
 			throw new IllegalStateException(
 					"option and underlying were initialized on different methods");
-		values = new Array(size, 0.0);
+		values = new Array(size);
 		adjustValues();
 	}
 
@@ -70,7 +70,7 @@ public class DiscretizedOption extends DiscretizedAsset {
 	}
 
 	protected void applyExerciseCondition() {
-		for (int i = 0; i < values.size(); i++)
+		for (int i = 0; i < values.length; i++)
 			values.set(i, Math.max(underlying.values().get(i), values.get(i)));
 	}
 

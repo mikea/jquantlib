@@ -28,8 +28,7 @@ import org.jquantlib.math.Array;
  * @author Srinivas Hasti
  *
  */
-public class NeumannBC implements
-		BoundaryCondition<TridiagonalOperator> {
+public class NeumannBC implements BoundaryCondition<TridiagonalOperator> {
 	private/* @Real */double value;
 	private Side side;
 
@@ -45,7 +44,7 @@ public class NeumannBC implements
 			u.set(0, u.get(1) - value);
 			break;
 		case UPPER:
-			u.set(u.size() - 1, u.get(u.size() - 2) + value);
+			u.set(u.length - 1, u.get(u.length - 2) + value);
 			break;
 		default:
 			throw new IllegalStateException(
@@ -78,7 +77,7 @@ public class NeumannBC implements
 			break;
 		case UPPER:
 			operator.setLastRow(-1.0, 1.0);
-			rhs.set(rhs.size() - 1, value);
+			rhs.set(rhs.length - 1, value);
 			break;
 		default:
 			throw new IllegalStateException(

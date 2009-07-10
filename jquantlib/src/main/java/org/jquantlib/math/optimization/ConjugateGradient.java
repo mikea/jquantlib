@@ -83,7 +83,7 @@ public class ConjugateGradient extends LineSearchBasedMethod {
         Array x_ = P.currentValue();
         int iterationNumber_ = 0;
         int stationaryStateIterationNumber_ = 0;
-        lineSearch_.setSearchDirection(new Array(x_.size()));
+        lineSearch_.setSearchDirection(new Array(x_.length));
         
         boolean done = false;
         
@@ -94,12 +94,12 @@ public class ConjugateGradient extends LineSearchBasedMethod {
         // clssical inital value for line-search step
         double t = 1.0;
         // Set gradient g at the size of the optimization problem search direction.
-        int sz = lineSearch_.searchDirection().size();
+        int sz = lineSearch_.searchDirection().length;
         Array g = new Array(sz); Array d = new Array(sz); Array sddiff = new Array(sz);
         // Initialize cost function and gradient g
         P.setFunctionValue(P.valueAndGradient(g, x_));
-        lineSearch_.setSearchDirection(g.operatorMultiplyCopy(-1));
-        P.setGradientNormValue(Array.dotProduct(g, g));
+        lineSearch_.setSearchDirection(g.mul(-1));
+        P.setGradientNormValue(g.dotProduct(g));
         // Loop over iterations
         do{
             // Linesearch

@@ -37,11 +37,12 @@ public class ProjectedCostFunction extends CostFunction {
             throw new UnsupportedOperationException("Work in progress");
         }
         numberOfFreeParameters_ = 0;
-        fixedParameters_ = new Array(parameterValues);
-        actualParameters_ = new Array(parameterValues);
+        // TODO: code review :: use of clone()
+        fixedParameters_  = parameterValues.clone();
+        actualParameters_ = parameterValues.clone();
         parametersFreedoms_ = parametersFreedoms;
         
-        if(fixedParameters_.size() != parametersFreedoms_.length){
+        if (fixedParameters_.length != parametersFreedoms_.length){
             throw new IllegalArgumentException("fixedParameters_.size()!=parametersFreedoms_.size()");
         }
         for(int i = 0; i<parametersFreedoms_.length; i++){
@@ -55,11 +56,11 @@ public class ProjectedCostFunction extends CostFunction {
     }
     
     public void mapFreeParameters(Array parametersValues){
-        if(!(parametersValues.size() == numberOfFreeParameters_)){
+        if(!(parametersValues.length == numberOfFreeParameters_)){
             throw new IllegalArgumentException("parametersValues.size()!=numberOfFreeParameters");
         }
         int i = 0;
-        for(int j = 0; j<actualParameters_.size(); j++){
+        for(int j = 0; j<actualParameters_.length; j++){
             if(!parametersFreedoms_[j]){
                 actualParameters_.set(j, parametersValues.get(i++));
         }
@@ -80,7 +81,7 @@ public class ProjectedCostFunction extends CostFunction {
     
     //FIXME: check Disposable template
     public Array project(Array parameters){
-        if(!(parameters.size() == parametersFreedoms_.length)){
+        if(!(parameters.length == parametersFreedoms_.length)){
            throw new ArithmeticException("parameters.size()!=parametersFreedoms_.size()");
         }
         Array projectedParameters = new Array(numberOfFreeParameters_);
@@ -95,12 +96,13 @@ public class ProjectedCostFunction extends CostFunction {
     
     //FIXME: check Disposable template
     public Array include(Array projectedParameters){
-        if(!(projectedParameters.size() == numberOfFreeParameters_)){
+        if(!(projectedParameters.length == numberOfFreeParameters_)){
             throw new IllegalArgumentException("projectedParameters.size()!=numberOfFreeParameters");
         }
-        Array y = new Array(fixedParameters_);
+        // TODO: code review :: use of clone()
+        Array y = fixedParameters_.clone();
         int i = 0;
-        for(int j = 0; j<y.size(); j++){
+        for(int j = 0; j<y.length; j++){
             if(!parametersFreedoms_[j]){
                 y.set(j, projectedParameters.get(i++));
             }

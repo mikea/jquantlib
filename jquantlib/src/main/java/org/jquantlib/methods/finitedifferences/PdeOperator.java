@@ -28,9 +28,8 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 public abstract class PdeOperator<T extends PdeSecondOrderParabolic> extends TridiagonalOperator {
    
-	public PdeOperator(Array grid, GeneralizedBlackScholesProcess process,
-			double residualTime) {
-		super(grid.size());
+	public PdeOperator(Array grid, GeneralizedBlackScholesProcess process, double residualTime) {
+		super(grid.length);
 		Class<T> clazz = (Class<T>)TypeToken.getClazz(this.getClass());
 		PdeSecondOrderParabolic pde = PdeTypeTokenUtil.getPdeInstance(clazz, process);
 		timeSetter = new GenericTimeSetter<PdeSecondOrderParabolic>(grid, pde){};

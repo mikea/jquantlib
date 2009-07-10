@@ -23,11 +23,10 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.math.statistics;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.math.E_IUnaryFunction;
 import org.jquantlib.math.Matrix;
-import org.jquantlib.util.Pair;
 
-public class GenericSequenceStatistics /* implements ISequenceStatistics */{
+//TODO: code review: license, class comments, compare against C++ sources
+public class GenericSequenceStatistics /* TODO: implements ISequenceStatistics */ {
 
     private static final String unsufficient_sample_weight = "sampleWeight=0, unsufficient";
     private static final String unsufficient_sample_number = "sample number <=1, unsufficient";
@@ -260,23 +259,23 @@ public class GenericSequenceStatistics /* implements ISequenceStatistics */{
     }
 
     public Matrix correlation() {
-        Matrix correlation = null;// covariance();
-        double[] variances = correlation.diagonal();
+        final Matrix correlation = null; //TODO: code review ::  covariance();
+        final Array variances = correlation.diagonal();
         for (int i = 0; i < dimension_; i++) {
             for (int j = 0; j < dimension_; j++) {
                 if (i == j) {
-                    if (variances[i] == 0.0) {
+                    if (variances.get(i) == 0.0) {
                         correlation.set(i, j, 1.0);
                     } else {
-                        correlation.set(i, j, correlation.get(i, j) * 1.0 / Math.sqrt(variances[i] * variances[j]));
+                        correlation.set(i, j, correlation.get(i, j) * 1.0 / Math.sqrt(variances.get(i) * variances.get(j)));
                     }
                 } else {
-                    if (variances[i] == 0.0 && variances[j] == 0) {
+                    if (variances.get(i) == 0.0 && variances.get(j) == 0) {
                         correlation.set(i, j, 1.0);
-                    } else if (variances[i] == 0.0 || variances[j] == 0.0) {
+                    } else if (variances.get(i) == 0.0 || variances.get(j) == 0.0) {
                         correlation.set(i, j, 1.0);
                     } else {
-                        correlation.set(i, j, correlation.get(i, j) * 1.0 / Math.sqrt(variances[i] * variances[j]));
+                        correlation.set(i, j, correlation.get(i, j) * 1.0 / Math.sqrt(variances.get(i) * variances.get(j)));
                     }
                 }
             } // j for
@@ -287,25 +286,20 @@ public class GenericSequenceStatistics /* implements ISequenceStatistics */{
 
     public Matrix covariance() {
         double sampleWeight = weightSum();
-        if (sampleWeight <= 0.0) {
-            throw new IllegalArgumentException(unsufficient_sample_weight);
-        }
+        if (sampleWeight <= 0.0) throw new IllegalArgumentException(unsufficient_sample_weight);
 
         double sampleNumber = samples();
-        if (sampleNumber <= 1.0) {
-            throw new IllegalArgumentException(unsufficient_sample_number);
-        }
+        if (sampleNumber <= 1.0) throw new IllegalArgumentException(unsufficient_sample_number);
 
-        double[] m = null;// mean();
-
+        Array m = null;// TODO: code review :: mean();
         double inv = 1.0 / sampleWeight;
 
         // TODO: correct?
-        Matrix result = quadraticSum_.operatorMultiply(inv, quadraticSum_);
-        result = result.operatorMinus(result, result.outerProduct(new Array(m), new Array(m)));
-
-        result = result.operatorMultiply(result, sampleNumber / (sampleNumber - 1.0));
-        return result;
+        throw new UnsupportedOperationException("needs code review");
+//        final Matrix result = quadraticSum_.mul(inv);
+//        result.subAssign(result.outerProduct(m));
+//        result.mulAssign(sampleNumber / (sampleNumber - 1.0));
+//        return result;
     }
 
     public void reset(int dimension) {

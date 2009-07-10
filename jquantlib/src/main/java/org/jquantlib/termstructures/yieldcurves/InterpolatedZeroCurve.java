@@ -40,6 +40,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.interpolations.factories.BackwardFlat;
@@ -61,8 +62,8 @@ public final class InterpolatedZeroCurve<T extends Interpolator> extends ZeroYie
 	//
 
 	protected Date[]								dates;
-	protected/* @Time */double[]					times;
-	protected/* @Rate */double[]					data;
+	protected /* @Time */ Array					times;
+	protected /* @Rate */ Array					data;
 	protected Interpolation							interpolation;
 	protected boolean								isNegativeRates;
 
@@ -112,25 +113,25 @@ public final class InterpolatedZeroCurve<T extends Interpolator> extends ZeroYie
 	}
 
 	@Override
-	public final/* @DiscountFactor */double[] getData() /* @ReadOnly */{
+	public final /* @DiscountFactor */ Array getData() /* @ReadOnly */{
     	return data.clone();
 	}
 
 	@Override
 	public final Date maxDate() /* @ReadOnly */{
-		return dates[dates.length - 1];
+		return dates[dates.length-1];
 	}
 
 	@Override
 	public final Pair<Date, Double>[] getNodes() /* @ReadOnly */{
 		Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
 		for (int i = 0; i < dates.length; ++i)
-			results[i] = new Pair<Date, Double>(dates[i], data[i]);
+			results[i] = new Pair<Date, Double>(dates[i], data.get(i));
 		return results;
 	}
 
 	@Override
-	public final double[] getTimes() /* @ReadOnly */{
+	public final Array getTimes() /* @ReadOnly */{
     	return times.clone();
 	}
 

@@ -22,6 +22,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
 
@@ -48,15 +49,15 @@ public interface YieldTraits {
     /**
      * possible constraints based on previous values
      */
-    public /* @DiscountFactor */ double minValueAfter(int i, final double[] data);
+    public /* @DiscountFactor */ double minValueAfter(int i, final Array data);
     
     /**
      * possible constraints based on maximum values
      */
-    public /* @DiscountFactor */ double maxValueAfter(int i, final double[] data);
+    public /* @DiscountFactor */ double maxValueAfter(int i, final Array data);
     
     /**
      * update with new guess
      */
-    public void updateGuess(/* @DiscountFactor */ double[] data, /* @DiscountFactor */ double discount, int i);
+    public void updateGuess(/* @DiscountFactor */ Array data, /* @DiscountFactor */ double discount, int i);
 }

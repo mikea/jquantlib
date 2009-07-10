@@ -76,7 +76,7 @@ public abstract class Parameter {
     }
 
     public int /* @Size */getSize() {
-        return params.size();
+        return params.length;
     }
 
     public Impl getImplementation() {

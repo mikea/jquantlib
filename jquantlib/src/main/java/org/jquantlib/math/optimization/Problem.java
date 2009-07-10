@@ -21,12 +21,8 @@
  */
 package org.jquantlib.math.optimization;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jquantlib.math.Array;
 
-import cern.colt.Arrays;
 
 public class Problem {
     
@@ -51,8 +47,8 @@ public class Problem {
             //initialValue_ = Array();
         }
         /*this is crap*/
-        double [] temp = new double [initialValue_.size()];
-        for(int i = 0; i<initialValue_.size(); i++){
+        double [] temp = new double [initialValue_.length];
+        for(int i = 0; i<initialValue_.length; i++){
             temp[i] = initialValue_.get(i);
         }
         

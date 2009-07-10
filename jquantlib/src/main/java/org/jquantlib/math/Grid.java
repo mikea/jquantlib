@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007 Richard Gomes
+ Copyright (C) 2007 Dominik Holenstein
 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
@@ -45,11 +45,10 @@ import org.jquantlib.math.Array;
  * 
  * @author Dominik Holenstein
  */
-
-
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 final class Grid {
 	
-	private Grid(){}
+	private Grid() { }
 	
     final static Array CenteredGrid(double center, double dx, int steps) {
 		Array result = new Array(steps+1);

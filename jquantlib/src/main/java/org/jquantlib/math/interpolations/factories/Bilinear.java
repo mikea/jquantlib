@@ -22,7 +22,8 @@
 
 package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.math.interpolations.BicubicSplineInterpolation;
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
 import org.jquantlib.math.interpolations.BilinearInterpolation;
 import org.jquantlib.math.interpolations.Interpolation2D;
 import org.jquantlib.math.interpolations.Interpolator2D;
@@ -66,7 +67,7 @@ public class Bilinear implements Interpolator2D {
 	//
 	
     @Override
-	public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z) {
+	public Interpolation2D interpolate(final Array x, final Array y, final Matrix z) {
 		return delegate.interpolate(x, y, z);
 	}
 

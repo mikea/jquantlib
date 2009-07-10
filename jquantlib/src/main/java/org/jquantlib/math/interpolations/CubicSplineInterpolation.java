@@ -40,8 +40,6 @@
 
 package org.jquantlib.math.interpolations;
 
-import java.util.Arrays;
-
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
@@ -91,10 +89,10 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
     //
     
     private int      n;
-    private double[] vp;
-    private double[] va;
-    private double[] vb;
-    private double[] vc;
+    private Array    vp;
+    private Array    va;
+    private Array    vb;
+    private Array    vc;
     private boolean  monotone;
     
     
@@ -184,16 +182,19 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
     // public methods
     //
     
-    public double[] getVa() {
-        return va;
+    public Array getVa() {
+        // TODO: code review: use of clone()
+        return va.clone();
     }
 
-    public double[] getVb() {
-        return vb;
+    public Array getVb() {
+        // TODO: code review: use of clone()
+        return vb.clone();
     }
 
-    public double[] getVc() {
-        return vc;
+    public Array getVc() {
+        // TODO: code review: use of clone()
+        return vc.clone();
     }   
 
     
@@ -225,18 +226,18 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
     public void reload() {
 
         final TridiagonalOperator L = new TridiagonalOperator(n);
-        Array tmp = new Array(n);
-        final double[] dx  = new double[n];
-        final double[] S   = new double[n];
+        final Array dx  = new Array(n);
+        final Array S   = new Array(n);
+        Array tmp       = new Array(n);
         
         int i=0;
-        dx[i] = vx[i+1] - vx[i];
-        S[i] = (vy[i+1] - vy[i])/dx[i];
+        dx.set(i, vx.get(i+1) - vx.get(i) );
+        S.set(i,  (vy.get(i+1) - vy.get(i))/dx.get(i) );
         for (i=1; i<n-1; i++) {
-            dx[i] = vx[i+1] - vx[i];
-            S[i] = (vy[i+1] - vy[i])/dx[i];
-            L.setMidRow(i, dx[i], 2.0*(dx[i]+dx[i-1]), dx[i-1]);
-            tmp.set(i, 3.0*(dx[i]*S[i-1] + dx[i-1]*S[i]));
+            dx.set(i, vx.get(i+1) - vx.get(i) );
+            S.set(i,  (vy.get(i+1) - vy.get(i))/dx.get(i) );
+            L.setMidRow(i, dx.get(i), 2.0*(dx.get(i)+dx.get(i-1)), dx.get(i-1));
+            tmp.set(i, 3.0*(dx.get(i)*S.get(i-1) + dx.get(i-1)*S.get(i)));
         }
         
         // **** BOUNDARY CONDITIONS ****
@@ -245,9 +246,9 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
         switch (leftType) {
             case NotAKnot:
                 // ignoring end condition value
-                L.setFirstRow(dx[1]*(dx[1]+dx[0]),
-                            (dx[0]+dx[1])*(dx[0]+dx[1]));
-                tmp.set(0, S[0]*dx[1]*(2.0*dx[1]+3.0*dx[0]) + S[1]*dx[0]*dx[0]);
+                L.setFirstRow(dx.get(1)*(dx.get(1)+dx.get(0)),
+                            (dx.get(0)+dx.get(1))*(dx.get(0)+dx.get(1)));
+                tmp.set(0, S.get(0)*dx.get(1)*(2.0*dx.get(1)+3.0*dx.get(0)) + S.get(1)*dx.get(0)*dx.get(0));
                 break;
             case FirstDerivative:
                 L.setFirstRow(1.0, 0.0);
@@ -255,7 +256,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
                 break;
             case SecondDerivative:
                 L.setFirstRow(2.0, 1.0);
-                tmp.set(0, 3.0*S[0] - leftValue*dx[0]/2.0);
+                tmp.set(0, 3.0*S.get(0) - leftValue*dx.get(0)/2.0);
                 break;
             case Periodic:
             case Lagrange:
@@ -269,9 +270,9 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
         switch (rightType) {
             case NotAKnot:
                 // ignoring end condition value
-                L.setLastRow(-(dx[n-2]+dx[n-3])*(dx[n-2]+dx[n-3]),
-                             -dx[n-3]*(dx[n-3]+dx[n-2]));
-                tmp.set(n-1, -S[n-3]*dx[n-2]*dx[n-2] - S[n-2]*dx[n-3]*(3.0*dx[n-2]+2.0*dx[n-3]));
+                L.setLastRow(-(dx.get(n-2)+dx.get(n-3))*(dx.get(n-2)+dx.get(n-3)),
+                             -dx.get(n-3)*(dx.get(n-3)+dx.get(n-2)));
+                tmp.set(n-1, -S.get(n-3)*dx.get(n-2)*dx.get(n-2) - S.get(n-2)*dx.get(n-3)*(3.0*dx.get(n-2)+2.0*dx.get(n-3)));
                 break;
             case FirstDerivative:
                 L.setLastRow(0.0, 1.0);
@@ -279,7 +280,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
                 break;
             case SecondDerivative:
                 L.setLastRow(1.0, 2.0);
-                tmp.set(n-1, 3.0*S[n-2] + rightValue*dx[n-2]/2.0);
+                tmp.set(n-1, 3.0*S.get(n-2) + rightValue*dx.get(n-2)/2.0);
                 break;
             case Periodic:
             case Lagrange:
@@ -297,8 +298,8 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
             double pm, pu, pd, M;
             for (i=0; i<n; i++) {
                 if (i==0) {
-                    if (tmp.get(i)*S[0]>0.0) {
-                        correction = tmp.get(i)/Math.abs(tmp.get(i)) * Math.min(Math.abs(tmp.get(i)), Math.abs(3.0*S[0]));
+                    if (tmp.get(i)*S.get(0)>0.0) {
+                        correction = tmp.get(i)/Math.abs(tmp.get(i)) * Math.min(Math.abs(tmp.get(i)), Math.abs(3.0*S.get(0)));
                     } else {
                         correction = 0.0;
                     }
@@ -307,8 +308,8 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
                         monotone = true;
                     }
                 } else if (i==n-1) {
-                    if (tmp.get(i)*S[n-2]>0.0) {
-                        correction = tmp.get(i)/Math.abs(tmp.get(i)) * Math.min(Math.abs(tmp.get(i)), Math.abs(3.0*S[n-2]));
+                    if (tmp.get(i)*S.get(n-2)>0.0) {
+                        correction = tmp.get(i)/Math.abs(tmp.get(i)) * Math.min(Math.abs(tmp.get(i)), Math.abs(3.0*S.get(n-2)));
                     } else {
                         correction = 0.0;
                     }
@@ -317,23 +318,23 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
                         monotone = true;
                     }
                 } else {
-                    pm=(S[i-1]*dx[i]+S[i]*dx[i-1])/ (dx[i-1]+dx[i]);
-                    M = 3.0 * Math.min(Math.min(Math.abs(S[i-1]), Math.abs(S[i])), Math.abs(pm));
+                    pm=(S.get(i-1)*dx.get(i)+S.get(i)*dx.get(i-1))/ (dx.get(i-1)+dx.get(i));
+                    M = 3.0 * Math.min(Math.min(Math.abs(S.get(i-1)), Math.abs(S.get(i))), Math.abs(pm));
                     if (i>1) {
-                        if ((S[i-1]-S[i-2])*(S[i]-S[i-1])>0.0) {
-                            pd=(S[i-1]*(2.0*dx[i-1]+dx[i-2])
-                                  -S[i-2]*dx[i-1])/
-                                  (dx[i-2]+dx[i-1]);
-                            if (pm*pd>0.0 && pm*(S[i-1]-S[i-2])>0.0) {
+                        if ((S.get(i-1)-S.get(i-2))*(S.get(i)-S.get(i-1))>0.0) {
+                            pd=(S.get(i-1)*(2.0*dx.get(i-1)+dx.get(i-2))
+                                  -S.get(i-2)*dx.get(i-1))/
+                                  (dx.get(i-2)+dx.get(i-1));
+                            if (pm*pd>0.0 && pm*(S.get(i-1)-S.get(i-2))>0.0) {
                                 M = Math.max(M, 1.5*Math.min(Math.abs(pm), Math.abs(pd)));
                             }
                         }
                     }
                     if (i<n-2) {
-                        if ((S[i]-S[i-1])*(S[i+1]-S[i])>0.0) {
-                            pu=(S[i]*(2.0*dx[i]+dx[i+1])-S[i+1]*dx[i])/
-                                  (dx[i]+dx[i+1]);
-                            if (pm*pu>0.0 && -pm*(S[i]-S[i-1])>0.0) {
+                        if ((S.get(i)-S.get(i-1))*(S.get(i+1)-S.get(i))>0.0) {
+                            pu=(S.get(i)*(2.0*dx.get(i)+dx.get(i+1))-S.get(i+1)*dx.get(i))/
+                                  (dx.get(i)+dx.get(i+1));
+                            if (pm*pu>0.0 && -pm*(S.get(i)-S.get(i-1))>0.0) {
                                 M = Math.max(M, 1.5*Math.min(Math.abs(pm), Math.abs(pu)));
                             }
                         }
@@ -352,18 +353,18 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
         }
             
         for (i=0; i<n-1; i++) {
-            va[i] = tmp.get(i);
-            vb[i] = (3.0*S[i] - tmp.get(i+1) - 2.0*tmp.get(i))/dx[i];
-            vc[i] = (tmp.get(i+1) + tmp.get(i) - 2.0*S[i])/(dx[i]*dx[i]);
+            va.set(i, tmp.get(i) );
+            vb.set(i, (3.0*S.get(i) - tmp.get(i+1) - 2.0*tmp.get(i))/dx.get(i) );
+            vc.set(i, (tmp.get(i+1) + tmp.get(i) - 2.0*S.get(i))/(dx.get(i)*dx.get(i)) );
         }
 
-        vp[0] = 0.0;
+        vp.set(0, 0.0);
         for (i=1; i<n-1; i++) {
-            vp[i] = vp[i-1] 
-                + dx[i-1] *
-                (vy[i-1] + dx[i-1] *
-                 (va[i-1]/2.0 + dx[i-1] *
-                  (vb[i-1]/3.0 + dx[i-1] * vc[i-1]/4.0)));
+            double value = vp.get(i-1) + dx.get(i-1)
+                           * (vy.get(i-1) + dx.get(i-1)
+                             * (va.get(i-1)/2.0 + dx.get(i-1)
+                               * (vb.get(i-1)/3.0 + dx.get(i-1) * vc.get(i-1)/4.0)));
+            vp.set(i, value);
         }
     }
     
@@ -371,34 +372,34 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
     @Override
     protected double evaluateImpl(double x) {
         int j = locate(x);
-        double dx = x-vx[j];
-        return vy[j] + dx*(va[j] + dx*(vb[j] + dx*vc[j]));
+        double dx = x-vx.get(j);
+        return vy.get(j) + dx*(va.get(j) + dx*(vb.get(j) + dx*vc.get(j)));
     }
 
 
     @Override
     protected double primitiveImpl(double x) {
         int j = locate(x);
-        double dx = x-vx[j];
-        return vp[j]
-            + dx*(vy[j] + dx*(va[j]/2.0
-            + dx*(vb[j]/3.0 + dx*vc[j]/4.0)));
+        double dx = x-vx.get(j);
+        return vp.get(j)
+            + dx*(vy.get(j) + dx*(va.get(j)/2.0
+            + dx*(vb.get(j)/3.0 + dx*vc.get(j)/4.0)));
     }
 
 
     @Override
     protected double derivativeImpl(double x) {
         int j = locate(x);
-        double dx = x-vx[j];
-        return va[j] + (2.0*vb[j] + 3.0*vc[j]*dx)*dx;
+        double dx = x-vx.get(j);
+        return va.get(j) + (2.0*vb.get(j) + 3.0*vc.get(j)*dx)*dx;
     }
 
 
     @Override
     protected double secondDerivativeImpl(double x) {
         int j = locate(x);
-        double dx = x-vx[j];
-        return 2.0*vb[j] + 6.0*vc[j]*dx;
+        double dx = x-vx.get(j);
+        return 2.0*vb.get(j) + 6.0*vc.get(j)*dx;
     }
     
 
@@ -422,19 +423,19 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
         }
         
         @Override
-        public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
+        public final Interpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
             return interpolate(x.length, x, y);
         }
 
         @Override
-        public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
-            delegate.vx = Arrays.copyOfRange(x, 0, size);
-            delegate.vy = Arrays.copyOfRange(y, 0, size);
+        public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
+            delegate.vx = x.copyOfRange(0, size);
+            delegate.vy = y.copyOfRange(0, size);
             n = vx.length;
-	        vp = new double[n-1];
-	        va = new double[n-1];
-	        vb = new double[n-1];
-	        vc = new double[n-1];
+	        vp = new Array(n-1);
+	        va = new Array(n-1);
+	        vb = new Array(n-1);
+	        vc = new Array(n-1);
             delegate.reload();
             return delegate;
         }

@@ -24,31 +24,30 @@ package org.jquantlib.math.statistics;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.math.E_BinaryFunction;
-import org.jquantlib.math.E_ComposedFunction;
-import org.jquantlib.math.E_IUnaryFunction;
-import org.jquantlib.math.E_UnaryFunction;
+import org.jquantlib.math.DoublePredicate;
+import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.functions.Bind2nd;
+import org.jquantlib.math.functions.Cube;
+import org.jquantlib.math.functions.Expression;
+import org.jquantlib.math.functions.Identity;
+import org.jquantlib.math.functions.Minus;
+import org.jquantlib.math.functions.Sqr;
+import org.jquantlib.math.functions.TruePredicate;
 import org.jquantlib.util.Pair;
-import org.jquantlib.util.stdlibc.Std;
  
-
 /**
- *
+ * Statistics tool
+ * <p>
+ * This class accumulates a set of data and returns their statistics (e.g: mean, variance, skewness, kurtosis, error estimation,
+ * percentile, etc.) based on the empirical distribution (no gaussian assumption)
+ * <p>
+ * It doesn't suffer the numerical instability problem of IncrementalStatistics. The downside is that it stores all samples, thus
+ * increasing the memory requirements.
+ * 
  * @author Praneet Tiwari
  */
-
-//! Statistics tool
-    /*! This class accumulates a set of data and returns their
-statistics (e.g: mean, variance, skewness, kurtosis,
-error estimation, percentile, etc.) based on the empirical
-distribution (no gaussian assumption)
-
-It doesn't suffer the numerical instability problem of
-IncrementalStatistics. The downside is that it stores all
-samples, thus increasing the memory requirements.
- */
-
 //FIXME: changed to extending base class rather then implementing interface
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     
     private final static String empty_sample_set =  "empty sample set";
@@ -110,25 +109,9 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
      */
     public final double mean() {
         int size = getSampleSize();
-        if (size == 0) {
-            throw new IllegalArgumentException(empty_sample_set);
-        }
+        if (size == 0) throw new IllegalArgumentException(empty_sample_set);
         
-        //some boilerplate code ... could be implemented in E_UnaryFunction as factory
-        E_UnaryFunction<Double, Boolean> everyWhere = new E_UnaryFunction<Double, Boolean>(){
-            @Override
-            public Boolean evaluate(Double x) {
-                return true;
-            }
-        };
-        
-        E_UnaryFunction<Double, Double> identity = new E_UnaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x) {
-                return x;
-            }
-        };
-        return (Double) expectationValue(identity,everyWhere).getFirst();
+        return expectationValue(new Identity(), new TruePredicate()).getFirst();
     }
 
     //reviewed/refactored
@@ -144,7 +127,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     The function returns a pair made of the result and
     the number of observations in the given range.
     */
-    public final Pair<Double, Integer> expectationValue(E_IUnaryFunction<Double, Double> f, E_IUnaryFunction<Double, Boolean> inRange) {
+    public final Pair<Double, Integer> expectationValue(UnaryFunctionDouble f, DoublePredicate inRange) {
         double num = 0.0;
         double den = 0.0;
         int N = 0;
@@ -152,11 +135,12 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
             double w = (Double) element.getSecond();
             double x = (Double) element.getFirst();
             Double evaluated = f.evaluate(x);
-            //argh we have to do this check :-( refactor E_ClippedFunction
+            
+            //TODO:: argh we have to do this check :-( refactor E_ClippedFunction
             if(evaluated == null){
                 evaluated = 0.0;
             }
-            if (inRange.evaluate(x)) {
+            if (inRange.op(x)) {
                 num += evaluated * w;
                 den += w;
                 N++;
@@ -203,40 +187,14 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         if (N < 1) {
             throw new IllegalArgumentException(unsufficient_sample_size);
         }
+
+        final List<UnaryFunctionDouble> functions = new ArrayList<UnaryFunctionDouble>();
+        functions.add(new Sqr());
+        functions.add(new Bind2nd(new Minus(), mean()));
+        final Expression comp = new Expression(functions);
         
-        E_UnaryFunction<Double, Double> square = new E_UnaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x) {
-                return x*x;
-            }
-        };
-        
-        E_UnaryFunction<Double, Boolean> everyWhere = new E_UnaryFunction<Double, Boolean>(){
-            @Override
-            public Boolean evaluate(Double x) {
-                return true;
-            }
-        };
-        
-        //argh no generic arrays :-(
-        List<E_IUnaryFunction<Double, Double>> functions = new ArrayList<E_IUnaryFunction<Double,Double>>();
-        functions.add(square);
-        
-        //First let's create the minus function
-        E_BinaryFunction<Double, Double> minus = new E_BinaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x_1, Double x_2) {
-                return x_1 - x_2;
-            }   
-        };
-        
-        // Bind the second parameter
-        E_IUnaryFunction<Double, Double> bounded = Std.getInstance().bind2nd(minus, new Double(mean()));
-        // Add the second function and create the composed one.
-        functions.add(bounded);
-        E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
         // Evaluate the composed function in the specified range (ie. everyWhere).
-        Double s2 = expectationValue(comp, everyWhere).getFirst();
+        double s2 = expectationValue(comp, new TruePredicate()).getFirst();
         return s2*N/(N-1.0);
     }
 
@@ -287,39 +245,12 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
             throw new IllegalArgumentException(unsufficient_sample_size_2);
         }
     
-        E_UnaryFunction<Double, Double> cube = new E_UnaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x) {
-                return x*x*x;
-            }
-        };
-        
-        E_UnaryFunction<Double, Boolean> everyWhere = new E_UnaryFunction<Double, Boolean>(){
-            @Override
-            public Boolean evaluate(Double x) {
-                return true;
-            }
-        };
-        
-        //argh no generic arrays :-(
-        List<E_IUnaryFunction<Double, Double>> functions = new ArrayList<E_IUnaryFunction<Double,Double>>();
-        functions.add(cube);
-        
-        //First let's create the minus function
-        E_BinaryFunction<Double, Double> minus = new E_BinaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x_1, Double x_2) {
-                return x_1 - x_2;
-            }   
-        };
-        
-        // Bind the second parameter
-        E_IUnaryFunction<Double, Double> bounded = Std.getInstance().bind2nd(minus, new Double(mean()));
-        // Add the second function and create the composed one.
-        functions.add(bounded);
-        E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
-        
-        double x = expectationValue(comp, everyWhere).getFirst();
+        final List<UnaryFunctionDouble> functions = new ArrayList<UnaryFunctionDouble>();
+        functions.add(new Cube());
+        functions.add(new Bind2nd(new Minus(), mean()));
+        final Expression comp = new Expression(functions);
+
+        double x = expectationValue(comp, new TruePredicate()).getFirst();
         double sigma = standardDeviation();
         double _n = n;
         return (_n / ((_n - 1) * (_n - 2))) * x / (Math.pow(sigma, 3));
@@ -357,40 +288,14 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         if (N <= 3) {
             throw new IllegalArgumentException(unsufficient_sample_size_3);
         }
-        
-        E_UnaryFunction<Double, Double> fourth_power = new E_UnaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x) {
-                return x*x*x*x;
-            }
-        };
-        
-        E_UnaryFunction<Double, Boolean> everyWhere = new E_UnaryFunction<Double, Boolean>(){
-            @Override
-            public Boolean evaluate(Double x) {
-                return true;
-            }
-        };
-        
-        //argh no generic arrays :-(
-        List<E_IUnaryFunction<Double, Double>> functions = new ArrayList<E_IUnaryFunction<Double,Double>>();
-        functions.add(fourth_power);
-        
-        //First let's create the minus function
-        E_BinaryFunction<Double, Double> minus = new E_BinaryFunction<Double, Double>(){
-            @Override
-            public Double evaluate(Double x_1, Double x_2) {
-                return x_1 - x_2;
-            }   
-        };
-        
-        // Bind the second parameter
-        E_IUnaryFunction<Double, Double> bounded = Std.getInstance().bind2nd(minus, new Double(mean()));
-        // Add the second function and create the composed one.
-        functions.add(bounded);
-        E_ComposedFunction<Double> comp = new E_ComposedFunction<Double>(functions);
-        
-        double x = expectationValue(comp, everyWhere).getFirst();
+
+        final List<UnaryFunctionDouble> functions = new ArrayList<UnaryFunctionDouble>();
+        functions.add(new Sqr());
+        functions.add(new Sqr());
+        functions.add(new Bind2nd(new Minus(), mean()));
+        final Expression comp = new Expression(functions);
+
+        double x = expectationValue(comp, new TruePredicate()).getFirst();
       
         double _N = N;
         double sigma2 = standardDeviation();

@@ -24,9 +24,8 @@ package org.jquantlib.math.interpolations;
 
 import static org.jquantlib.math.Closeness.isClose;
 
-import org.jquantlib.util.stdlibc.Std;
-
-import cern.colt.Sorting;
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
 
 
 public abstract class AbstractInterpolation2D implements Interpolation2D {
@@ -38,17 +37,17 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     /**
 	 * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i> 
 	 */
-	protected double[] vx;
+	protected Array vx;
 
 	/**
      * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i> 
 	 */
-	protected double[] vy;
+	protected Array vy;
 	
     /**
      * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i> 
      */
-	protected double[][] mz;
+	protected Matrix mz;
 	
 
 	//
@@ -129,9 +128,9 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         if (vx.length < 2 || vy.length < 2)
             throw new IllegalArgumentException("not enough points to interpolate");
         for (int i = 0; i < vx.length-1; i++) {
-            if ( vx[i] > vx[i+1] )
+            if ( vx.get(i) > vx.get(i+1) )
                 throw new IllegalArgumentException("unsorted values on array X");
-            if ( vy[i] > vy[i+1] )
+            if ( vy.get(i) > vy.get(i+1) )
                 throw new IllegalArgumentException("unsorted values on array Y");
         }
     }
@@ -181,36 +180,36 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 	
 	@Override
 	public double xMin() {
-		return vx[0]; // get first element
+		return vx.first();
 	}
 
     @Override
 	public double xMax() {
-		return vx[vx.length-1]; // get last element
+		return vx.last();
 	}
 
     @Override
 	public double yMin() {
-		return  vy[0]; // get first element
+		return  vy.first();
 	}
 
     @Override
 	public double yMax() {
-		return vy[vy.length-1]; // get last element
+		return vy.last();
 	}
 
     @Override
-	public double[] xValues() {
+	public Array xValues() {
     	return vx.clone();
     }
 	
     @Override
-	public double[] yValues() {
+	public Array yValues() {
     	return vy.clone();
     }
 
     @Override
-	public double[][] zData() {
+	public Matrix zData() {
         return mz.clone();
     	// FIXME: code review :: return (double[][])Arrays.trimToCapacity(mz, mz.length);
     }
@@ -218,23 +217,23 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     @Override
     // FIXME: code review here: compare against original C++ code
     public int locateX(double x) /* @ReadOnly */ {
-        if (x <= vx[0])
+        if (x <= vx.first())
             return 0;
-        else if (x > vx[vx.length-1])
+        else if (x > vx.last())
             return vx.length-2;
         else
-            return Std.getInstance().upper_bound(vx, x) - 1;
+            return vx.upperBound(x) - 1;
     }
     
     @Override
     // FIXME: code review here: compare against original C++ code
     public int locateY(double y) /* @ReadOnly */ {
-        if (y <= vy[0])
+        if (y <= vy.first())
             return 0;
-        else if (y > vy[vy.length-1])
+        else if (y > vy.last())
             return vy.length-2;
         else
-            return Std.getInstance().upper_bound(vy, y) - 1;
+            return vy.upperBound(y) - 1;
     }
     
     @Override

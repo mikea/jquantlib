@@ -23,6 +23,8 @@
 package org.jquantlib.examples;
 
 import org.jquantlib.daycounters.Actual365Fixed;
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.jquantlib.processes.EulerDiscretization;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
@@ -116,32 +118,32 @@ public class Processes {
 		
 		//Calculating the drift of the stochastic process after time = 18th day from today with value of the stock as specified from the quote
 		//The drift = (riskFreeForwardRate - dividendForwardRate) - (Variance/2)
-		double[] drift = process.drift(process.getTime(today.getDateAfter(18)), new double[]{5.6});
-		System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote = "+drift[0]);
+		Array drift = process.drift(process.getTime(today.getDateAfter(18)), new Array().fill(5.6));
+		System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote");
 		
 		//Calculating the diffusion of the process after time = 18th day from today with value of the stock as specified from the quote
 		//The diffusion = volatiltiy of the stochastic process
-		double[][] diffusion = process.diffusion(process.getTime(today.getDateAfter(18)), new double[]{5.6});
-		System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote = "+diffusion[0][0]);
+		Matrix diffusion = process.diffusion(process.getTime(today.getDateAfter(18)), new Array().fill(5.6));
+		System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote");
 	
 		//Calulating the standard deviation of the process after time = 18th day from today with value of the stock as specified from the quote
 		//The standard deviation = volatility*sqrt(dt)
-		double[][] stdDeviation = process.stdDeviation(process.getTime(today.getDateAfter(18)), new double[]{5.6}, 0.01);
-		System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote = "+stdDeviation[0][0]);
+		Matrix stdDeviation = process.stdDeviation(process.getTime(today.getDateAfter(18)), new Array().fill(5.6), 0.01);
+		System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote");
 		
 		//Calulating the expected value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
 		//The expectedValue = intialValue*exp(drift*dt)-----can be obtained by integrating----->dx/x= drift*dt  
-		double[] expectation = process.expectation(process.getTime(today.getDateAfter(18)), new double[]{5.6}, 0.01);
-		System.out.println("Expected value = "+expectation[0]);	
+		Array expectation = process.expectation(process.getTime(today.getDateAfter(18)), new Array().fill(5.6), 0.01);
+		System.out.println("Expected value = "+expectation.first());	
 		
 		//Calulating the exact value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
 		//The exact value = intialValue*exp(drift*dt)*exp(volatility*sqrt(dt))-----can be obtained by integrating----->dx/x= drift*dt+volatility*sqrt(dt)
-		double[] evolve = process.evolve(process.getTime(today.getDateAfter(18)), new double[]{6.7}, .001, new double[]{new NormalDistribution().evaluate(Math.random())});
-		System.out.println("Exact value = "+evolve[0]);	
+		Array evolve = process.evolve(process.getTime(today.getDateAfter(18)), new Array().fill(6.7), .001, new Array().fill(new NormalDistribution().evaluate(Math.random()) ));
+		System.out.println("Exact value = "+evolve.first());	
 		
 		//Calculating covariance of the process
-		double[][] covariance = process.covariance(process.getTime(today.getDateAfter(18)),  new double[]{5.6}, 0.01);
-		System.out.println("Covariance = "+covariance[0][0]);			
+		Matrix covariance = process.covariance(process.getTime(today.getDateAfter(18)),  new Array().fill(5.6), 0.01);
+		System.out.println("Covariance = "+covariance.get(0, 0));			
 			
 		clock.stopClock(); 
 		clock.log(); 

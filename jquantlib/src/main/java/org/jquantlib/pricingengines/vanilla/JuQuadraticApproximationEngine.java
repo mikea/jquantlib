@@ -212,7 +212,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 
 			if (Double.isNaN(results.value)){
 				double hh = 0.0;
-				double gg = hh;
+				double gg = hh; //TODO: code review: variable never read?
 			}
 			double /* @Real */temp_chi_prime = (2 * b / spot) * Math.log(spot / Sk);
             double /* @Real */chi_prime = temp_chi_prime + c / spot;

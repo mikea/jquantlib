@@ -40,7 +40,9 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.BinaryFunctionDouble;
+import org.jquantlib.math.Matrix;
 
 /**
  * Interface for 2-D interpolations.
@@ -78,9 +80,9 @@ public interface Interpolation2D extends Extrapolator, BinaryFunctionDouble {
     public double xMax();
     public double yMin();
     public double yMax();
-    public double[] xValues();
-    public double[] yValues();
-    public double[][] zData();
+    public Array xValues();
+    public Array yValues();
+    public Matrix zData();
     public int locateX(double x);
     public int locateY(double y);
     public boolean isInRange(double x, double y);

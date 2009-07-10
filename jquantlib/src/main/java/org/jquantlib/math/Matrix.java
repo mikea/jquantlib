@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2008 Q.Boiler
+Copyright (C) 2008 Richard Gomes
 
 This source code is release under the BSD License.
 
@@ -40,884 +40,760 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 package org.jquantlib.math;
 
+import java.util.Arrays;
+
 /**
+ * Bidimensional matrix operations
+ * <p>
+ * Performance of multidimensional arrays is a big concern in Java. This is because multidimensional arrays
+ * are stored as arrays to arrays, spanning this concept to as many depths as necessary. In C++, a multidimensional
+ * array is stored internally as a unidimensional array where depths are stacked together one after another.
+ * A very simple calculation is needed to map multiple dimensional indexes to an unidimensional index.
+ * <p>
+ * This implementation provides the C/C++ approach of an internal unidimensional array. Everytime a bidimensional
+ * index is involved (because this is a 2d matrix) it is converted to a unidimensional index. In case developers
+ * are seriously concerned about performance, a unidimensional access method is provided, giving a chance for
+ * application developers to 'cache' the starting of a row and reducing the number of multiplications needed for
+ * offset calculations.
+ * <p>
+ * <p>
+ * <b>Assignment operations</b>
+ * <pre>
+ * opr   method     this    right    result
+ * ----- ---------- ------- -------- ------
+ * =     assign     Matrix           Matrix (1)
+ * =     assign     Array            Array  (1)
+ * +=    addAssign  Matrix  Matrix   this
+ * +=    addAssign  Array   scalar   this
+ * +=    addAssign  Array   Array    this
+ * -=    subAssign  Matrix  Matrix   this
+ * -=    subAssign  Array   scalar   this
+ * -=    mulAssign  Array   Array    this
+ * *=    mulAssign  Matrix  scalar   this
+ * *=    mulAssign  Array   scalar   this
+ * *=    mulAssign  Array   Array    this
+ * /=    divAssign  Matrix  scalar   this
+ * /=    divAssign  Array   scalar   this
+ * /=    divAssign  Array   Array    this
+ * </pre>
+ * <p>
+ * <p>
+ * <b>Algebraic products</b>
+ * <pre>
+ * opr   method     this    right    result
+ * ----- ---------- ------- -------- ------
+ * +     add        Matrix  Matrix    Matrix
+ * +     positive   Array             Array  (2)
+ * +     add        Array   scalar    Array
+ * +     add        Array   Array     Array
+ * -     sub        Matrix  Matrix    Matrix
+ * -     negative   Array             Array  (3)
+ * -     sub        Array   scalar    Array
+ * -     sub        Array   Array     Array
+ * *     mul        Matrix  scalar    Matrix
+ * *     mul        Array   scalar    Array
+ * *     mul        Array   Array     Array
+ * /     div        Matrix  scalar    Matrix
+ * /     div        Array   scalar    Array
+ * /     div        Array   Array     Array
+ *</pre>
+ * <p>
+ * <p>
+ * <b>Vetorial products</b>
+ * <pre>
+ * opr   method     this    right    result
+ * ----- ---------- ------- -------- ------
+ * *     mul        Array   Matrix   Array
+ * *     mul        Matrix  Array    Array
+ * *     mul        Matrix  Matrix   Matrix
+ *</pre>
+ * <p>
+ * <p>
+ * <b>Math functions</b>
+ * <pre>
+ * opr   method     this    right    result
+ * ----- ---------- ------- -------- ------
+ * abs   abs        Array            Array
+ * sqrt  sqrt       Array            Array
+ * log   log        Array            Array
+ * exp   exp        Array            Array
+ *</pre>
+ * <p>
+ * <p>
+ * <b>Miscellaneous</b>
+ * <pre>
+ * method       this    right    result
+ * ------------ ------- -------- ------
+ * transpose    Matrix           Matrix
+ * diagonal     Matrix           Array
+ * inverse      Matrix           Matrix
+ * swap         Matrix  Matrix   this
+ * swap         Array   Array    this
+ * outerProduct Array   Array    Matrix
+ * dotProduct   Array   Array    double
+ * </pre>
+ * <p>
+ * <p>
+ * (1): clone()<br/>
+ * (2): Unary + is equivalent to: array.clone()<br/>
+ * (3): Unary ? is equivalent to: array.clone().mulAssign(-1)
+ * <p>
+ * @Note: This is a very naive implementation: there's opportunity for several improvements, like adoption of
+ * paralellism for several kinds of operations and adoption of JSR-166y for matrix multiplication.
  *
- * @author Q.Boiler
+ * @author Richard Gomes
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: refactor Array and Matrix to math.matrixutilities (or something like this)
 public class Matrix {
-	//  A Matrix will have some data, and some sizes.
-	double[][] data;
-	int columns, rows;
+    
+    //
+    // constants
+    //
+    
+    private static final int blksize = 256; // seems to be a reasonably big enough block size
+    
+    
+	//
+	// public fields
+	//
+	
+	public final int cols, rows;
+    public final int length;
 
+
+	//
+	// package private
+	//
+
+	/*@PackagePrivate*/ final double[] data;
+
+	
+	//
+	// public constructors
+	//
+	
+	/**
+	 * Default constructor
+	 * <p>
+	 * Builds an empty Matrix
+	 */
 	public Matrix() {
-		data = new double[0][0];
-		columns = 0;
-		rows = 0;
+        this.rows = 0;
+        this.cols = 0;
+        this.length = 0;
+		this.data = new double[0];
 	}
 
-	public Matrix(int pRows, int pColumns) {
-		columns = pColumns;
-		rows = pRows;
-		data = new double[columns][rows];
+	/**
+	 * Builds a Matrix of <code>rows</code> by <code>cols</code>
+	 * 
+	 * @param rows is the number of rows
+	 * @param cols is the number of columns
+	 */
+	public Matrix(final int rows, final int cols) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+	    if ((rows<=0 && cols>0) || (cols<=0 && rows>0)) throw new IllegalArgumentException(); // TODO: message
+
+	    this.rows = rows;
+        this.cols = cols;
+        this.length = rows*cols;
+        this.data = new double[length];
 	}
 
-	public Matrix(int pRows, int pColumns, double value) {
-
-		columns = pColumns;
-		rows = pRows;
-		data = new double[columns][rows];
-		for (int i = 0; i < data.length; i++) {
-			if (i == 0) {
-				for (int j = 0; j < data[i].length; ++j) {
-					data[i][j] = value;
-				}
-			} else {
-				System.arraycopy(data[i - 1], 0, data[i], 0, rows);
-			}
-		}
-	}
-
-	public Matrix(final Matrix m) {
-		columns = m.columns;
-		rows = m.rows;
-		data = new double[columns][rows];
-		for (int i = 0; i < data.length; i++) {
-			System.arraycopy(m.data[i], 0, data[i], 0, rows);
-		}
-	}
-	
-	
-	public Matrix(double[][] A) {
-        columns = A[0].length;
-        rows = A.length;
-        data = new double[columns][rows];
+    /**
+     * Builds a Matrix of only one element which holds a <code>scalar</code> value
+     * 
+     * @param scalar is the scalar value
+     */
+    public Matrix(final int rows, final int cols, final double scalar) {
+        this(rows, cols);
+        fill(scalar);
     }
-	
-	public Matrix (double[][] A, int m, int n) {
-      this.data = A;
-      this.columns = m;
-      this.rows = n;
-   }
-
-	public double get(int i, int j) {
-		//  Error condition should be set...
-		//  TODO  it may be appropriate to throw an exception.
-		//  return Double.NaN;
-		return data[i][j];
-	}
-
-	public void set(int i, int j, double value) {
-		//  Error condition should be set...
-		//  TODO  it may be appropriate to throw an exception.
-		//  return Double.NaN;
-		data[i][j] = value;
-	}
-
-	public Matrix operatorEquals(final Matrix right) {
-
-		Matrix left = this;
-		if (left.columns != right.columns || left.rows != right.rows) {
-			//  Either throw an exception or return an error code.
-			//  expand the left to be big enough...
-			//  Set the error flag and return null.
-			//  Caller much check the error flag prior to assignment.
-			return null;
-		} else {
-			for (int i = 0; i < data.length; i++) {
-				System.arraycopy(right.data[i], 0, left.data[i], 0, rows);
-			}
-			return left;
-		}
-	}
-
-	//  @ParallelCandidate
-	public Matrix operatorPlusEqual(final Matrix right) {
-		if (this.columns != right.columns || this.rows != right.rows) {
-			//  We can't go on.
-			throw new RuntimeException("Rows and Columns must be the same for Matrix Addition.");
-		}
-
-		//  PARALLEL CANDIDATE. this is a prime candidate for a massively parallel impl.
-		for (int i = 0; i < columns; i++) {
-			//  Spawn a new thread or task for each.
-			for (int j = 0; j < rows; j++) {
-				data[i][j] += right.data[i][j];
-			}
-		}
-		return this;
-	}
-
-	public Matrix operatorMinusEqual(final Matrix right) {
-
-		if (this.columns != right.columns || this.rows != right.rows) {
-			//  We can't go on.
-			throw new RuntimeException("Rows and Columns must be the same for Matrix Addition.");
-		}
-
-		//  PARALLEL CANDIDATE. this is a prime candidate for a massively parallel impl.
-		for (int i = 0; i < columns; i++) {
-			//  Spawn a new thread or task for each.
-			for (int j = 0; j < rows; j++) {
-				data[i][j] -= right.data[i][j];
-			}
-		}
-		return this;
-	}
-
-	public Matrix operatorMultiplyEqual(double d) {
-		//  PARALLEL CANDIDATE. this is a prime candidate for a massively parallel impl.
-		for (int i = 0; i < columns; i++) {
-			//  Spawn a new thread or task for each.
-			for (int j = 0; j < rows; j++) {
-				data[i][j] *= d;
-			}
-		}
-		return this;
-	}
-
-	public Matrix operatorDivideEqual(double d) {
-		//  PARALLEL CANDIDATE. this is a prime candidate for a massively parallel impl.
-		for (int i = 0; i < columns; i++) {
-			//  Spawn a new thread or task for each.
-			for (int j = 0; j < rows; j++) {
-				data[i][j] /= d;
-			}
-		}
-		return this;
-	}
-
-	public int rows() {
-		return rows;
-	}
-
-	public int columns() {
-		return columns;
-	}
-
-	public boolean empty() {
-		if (rows == 0 || columns == 0) {
-			return true;
-		}
-		return false;
-	}
-
-	public void swap(Matrix right) {
-
-		Matrix left = this;
-		if (left.columns != right.columns || left.rows != right.rows) {
-			//  Either throw an exception or return an error code.
-			//  expand the left to be big enough...
-			//  Set the error flag and return null.
-			//  Caller much check the error flag prior to assignment.
-			return;
-		} else {
-			double[] da = new double[rows];
-			for (int i = 0; i < data.length; i++) {
-				System.arraycopy(right.data[i], 0, da, 0, rows);
-				System.arraycopy(left.data[i], 0, right.data[i], 0, rows);
-				System.arraycopy(da, 0, left.data[i], 0, rows);
-			}
-			return;
-		}
-	}
-
-	public Matrix operatorPlus(final Matrix left, final Matrix right) {
-		if (left.columns != right.columns || left.rows != right.rows) {
-
-			//  Errors can be done without throwing exceptions.
-			//  But for now we will throw an exception.
-			throw new RuntimeException("right and left matrix must be the same size.");
-		}
-
-		//  PARALLEL TODO.
-		Matrix result = new Matrix(left);
-		result.operatorPlusEqual(right);
-		return result;
-	}
-
-	public Matrix operatorMinus(final Matrix left, final Matrix right) {
-		if (left.columns != right.columns || left.rows != right.rows) {
-
-			//  Errors can be done without throwing exceptions.
-			//  But for now we will throw an exception.
-			throw new RuntimeException("right and left matrix must be the same size.");
-		}
-
-		//  PARALLEL TODO.
-		Matrix result = new Matrix(left);
-		result.operatorMinusEqual(right);
-		return result;
-	}
-
-	public Matrix operatorMultiply(double scale, final Matrix right) {
-		Matrix result = new Matrix(right);
-		result.operatorMultiplyEqual(scale);
-		return result;
-	}
-
-	public Matrix operatorMultiply(final Matrix left, double scale) {
-		Matrix result = new Matrix(left);
-		result.operatorMultiplyEqual(scale);
-		return result;
-	}
-
-	public Matrix operatorDivide(final Matrix numerator, double denominator) {
-		Matrix result = new Matrix(numerator);
-		result.operatorDivideEqual(denominator);
-		return result;
-	}
-//    // vectorial products
-	public Array operatorMultiply(final Array left, final Matrix right) {
-		if (left.size() != right.rows) {
-			throw new RuntimeException("array size must equal matrix row count for multiplication");
-		}
-		Array result = new Array(right.columns);
-
-		//  PARALLLEL CANDIDATE
-		for (int i = 0; i < right.columns; i++) {
-			result.set(i, Array.dotProduct(left.getData(), right.data[i]));
-		}
-		return result;
-	}
-
-	public Array operatorMultiply(final Matrix left, final Array right) {
-		//  TODO.  I will have to confirm this works latter...
-		//  I think that MA is equal to AM(transposed)
-
-		//  This is only for QUICK TIME TO MARKET.
-		//  THERE ARE MUCH FASTER WAYS TO DO THIS.
-		//  AND LESS MEMORY INTENSIVE.
-		Matrix newLeft = transpose(left);
-		return operatorMultiply(right, newLeft);
-	}
-
-	public Matrix transpose(final Matrix matrix) {
-		Matrix transposed = new Matrix(matrix.columns, matrix.rows);
-		for (int i = 0; i < matrix.data.length; i++) {
-			double[] ds = data[i];
-			for (int j = 0; j < ds.length; j++) {
-				transposed.data[j][i] = ds[j];
-			}
-		}
-		return transposed;
-	}
-
-	public Matrix operatorMultiply(final Matrix left, final Matrix right) {
-		if (right.rows != left.columns) {
-			throw new RuntimeException("Can't Multiply unless left.columns = right.rows");
-		}
-		Matrix result = new Matrix(right.columns, left.rows);
-		for (int i = 0; i < left.rows; ++i) {
-			double[] dtemp = new double[left.columns];
-			for (int k = 0; k < left.columns; ++k) {
-				dtemp[k] = left.data[k][i];
-			}
-			for (int j = 0; j < right.rows; ++j) {
-				result.data[i][j] = Array.dotProduct(dtemp, right.data[j]);
-			}
-		}
-		return result;
-	}
-
-	public Matrix outerProduct(final Array v1, final Array v2) {
-		if (v1.size() != v2.size()) {
-			throw new RuntimeException("Arrays must be the same size to do a cross product");
-		}
-		Matrix result = new Matrix(v1.size(), v2.size());
-		for (int i = 0; i < v1.getData().length; i++) {
-			for (int j = 0; j < v2.getData().length; j++) {
-				result.data[i][j] = v1.getData()[i] * v2.getData()[j];
-			}
-
-		}
-		return result;
-	}
-
-	public String toString(){
-		StringBuffer sb = new StringBuffer();
-
-		sb.append("[\n");
-		for (int i = 0; i < this.rows; i++) {
-			sb.append("[");
-			for (int j = 0; j < this.columns; j++) {
-				sb.append(this.get(j, i)).append("  , ");
-			}
-			sb.append("]\n");
-		}
-		sb.append("]\n");
-		return sb.toString();
-		
-	}
-	public double[][] getRawData(){
-		return data;
-	}
-	
-	public double[] diagonal() {
-        int arraySize = Math.min(rows(), columns());
-        double[] tmp = new double[arraySize];
-        for (int i = 0; i < arraySize; i++) {
-            tmp[i] = this.get(i, i);
+    
+	/**
+	 * Creates a Matrix given a double[][] array
+	 * 
+	 * @param data
+	 */
+	public Matrix(final double[][] data) {
+        this.rows = data.length;
+        this.cols = data[0].length;
+        this.length = rows*cols;
+        this.data = new double[length];
+        
+        for (int i=0; i<this.rows; i++) {
+            int base=address(i);
+            System.arraycopy(data[i], 0, this.data, base, this.cols);
         }
-        return tmp;
     }
 	
-	public double[] getRow(int row){
-	    return data[row];
+	
+    //
+    // overrides Object
+    //
+    
+    @Override
+    public Matrix clone() {
+        return this.copyOfRange(0, 0, this.rows, this.cols);
+    }
+    
+	@Override
+    public boolean equals(final Object o) {
+        if (o == null || !(o instanceof Matrix)) return false;
+        final Matrix another = (Matrix) o;
+        if (this.rows != another.rows || this.cols != another.cols) return false;
+        return Arrays.equals(this.data, another.data);
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append('[').append('\n');
+        for (int row = 0; row < this.rows; row++) {
+            int addr = address(row);
+            sb.append(" [");
+            sb.append(this.data[addr]);
+            for (int col = 1; col < this.cols; col++) {
+                addr++;
+                sb.append(", ");
+                sb.append(this.data[addr]);
+            }
+            sb.append("]\n");
+        }
+        sb.append("]\n");
+        return sb.toString();
+    }
+
+
+    //
+	// package private methods
+	//
+	
+    /**
+     * This method returns the address of the first column in a given row
+     * <p>
+	 * This method is used internally and is provided for performance reasons.
+	 */
+	/*@PackagePrivate*/ int address(final int row) {
+        return row*this.cols;
+    }
+
+    /**
+     * This method returns the address of a given cell identified by <i>(row, col)</i>
+     * <p>
+     * This method is used internally and is provided for performance reasons.
+     */
+    /*@PackagePrivate*/ int address(final int row, final int col) {
+        return row*this.cols + col;
+    }
+
+    
+    //
+	// public methods
+	//
+    
+    
+    // some convenience methods
+    
+    
+    public Object toArray() {
+        double buffer[][] = new double[this.rows][this.cols];
+        return toArray(buffer);
+    }
+    
+    public double[][] toArray(double[][] buffer) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != buffer.length || this.cols != buffer[0].length) throw new IllegalArgumentException(); //TODO:message
+        
+        int addr = 0;
+        for (int row=0; row<this.rows; row++) {
+            System.arraycopy(this.data, addr, buffer[row], 0, this.cols);
+            addr += this.cols;
+        }
+        return buffer;
+    }
+    
+    /**
+     * @return true if the number of rows or number of columns of this {@link Matrix} is zero
+     */
+    public boolean empty() {
+        return (rows == 0 || cols == 0);
+    }
+
+    /**
+     * Fills all elements of this Matrix with a given scalar
+     * 
+     * @param scalar is the value to be used to fill in
+     */
+    public Matrix fill(final double scalar) {
+        Arrays.fill(data, scalar);
+        return this;
+    }
+
+    /**
+     * Returns Matrix containing a copy of a rectangular region
+     * 
+     * @param row is the initial row
+     * @param col is the initial column
+     * @param nrows is the number of rows to be copied
+     * @param ncols is the number of columns to be copied
+     * 
+     * @return a Matrix containing a copy of a rectangular region
+     */
+    public Matrix copyOfRange(final int row, final int col, final int nrows, final int ncols) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if ((row < 0) || (col < 0)) throw new IllegalArgumentException(); //TODO: message
+        if ((nrows <= 0) || (ncols <= 0)) throw new IllegalArgumentException(); //TODO: message
+        if ((row+nrows > this.rows) || (col+ncols > this.cols)) throw new IllegalArgumentException(); //TODO: message
+        
+        final Matrix result = new Matrix(nrows, ncols);
+        if (col+ncols == this.cols) {
+            System.arraycopy(this.data, 0, result.data, 0, this.length);
+        } else {
+            int addr = 0;
+            for (int i=0; i<nrows; i++) {
+                System.arraycopy(data, address(row+i, col), data, addr, ncols);
+                addr += ncols;
+            }
+        }
+        return result;
+    }
+    
+    
+    /**
+     * Retrieves an elementof <code>this</code> Matrix which identified by <i>(row, col)</i>
+     * 
+     * @param row coordinate
+     * @param col coordinate
+     * @return the contents of a given cell
+     */
+    public double get(final int row, final int col) {
+        return data[address(row, col)];
+    }
+
+    /**
+     * Stores a value into an element of <code>this</code> Matrix which is identified by <i>(row, col)</i>
+     * 
+     * @param row coordinate
+     * @param col coordinate
+     */
+    public void set(final int row, final int col, final double value) {
+        data[address(row, col)] = value;
+    }
+
+    
+    /**
+     * Retrieves an element of <code>this</code> Matrix
+     * <p>
+     * This method is provided for performance reasons.
+     * See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for more details
+     * 
+     * @param row coordinate
+     * @param col coordinate
+     * @return the contents of a given cell
+     * 
+     * @see #getAddress(int)
+     * @see #getAddress(int, int)
+     */
+    public double get(final int pos) {
+        return data[pos];
+    }
+
+    /**
+     * Stores a value into an element of <code>this</code> Matrix
+     * <p>
+     * This method is provided for performance reasons.
+     * See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for more details
+     * 
+     * @param row coordinate
+     * @param col coordinate
+     * 
+     * @see #getAddress(int)
+     * @see #getAddress(int, int)
+     */
+    public void set(final int pos, final double value) {
+        data[pos] = value;
+    }
+
+    
+    /**
+	 * This method returns the address of the first column in a given row
+	 * <p>
+	 * A typical usage of this method is when one would like to improve access to elements of a given row by reducing
+	 * the number of calculations needed to obtain the address of cells belonging to that row.
+	 * 
+     * @param row is the desired row which the address is requested for.  
+	 */
+	public int getAddress(final int row) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+	    if (row < 0 || row > this.rows) throw new IllegalArgumentException(); //TODO: message
+	    return row*this.cols;
 	}
 	
-	public void setRow(int row, double [] row_){
-	    data[row] = row_;
+    /**
+     * This method returns the address of a given cell identified by <i>(row, col)</i>
+     * <p>
+     * A typical usage of this method is when one would like to improve access to a given cell, basically
+     * keeping its address for later use.
+     * 
+     * @param row is the desired row which a cell belongs to.  
+     * @param col is the desired col which a cell belongs to.  
+     */
+	public int getAddress(final int row, final int col) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (col < 0 || row > this.cols) throw new IllegalArgumentException(); //TODO: message
+        return getAddress(row)+col;
 	}
 	
-	public double[] getColumn(int col){
-	    double [] colarray = new double[this.columns];
-	    for(int i = 0; i<this.rows; i++){
-	        colarray[i] = this.get(i, col);
-	    }
-	    return colarray;
-	}
+    public Array getRow(final int row) {
+        final Array vector = new Array(this.cols);
+        System.arraycopy(this.data, getAddress(row), vector.data, 0, this.cols);
+        return vector;
+    }
+
+    public Array setRow(final int row, final Array array) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.cols!=array.length) throw new IllegalArgumentException(); //TODO: message
+        
+        System.arraycopy(array.data, 0, this.data, getAddress(row), this.cols);
+        return array;
+    }
+
+    public Array getCol(final int col) {
+        final Array array = new Array(this.rows);
+        if (this.cols == 1) {
+            System.arraycopy(this.data, 0, array.data, 0, this.length);
+        } else {
+            int addr = getAddress(0, col);
+            for (int row = 0; row < this.rows; row++) {
+                array.data[row] = this.data[addr];
+                addr += this.cols;
+            }
+        }
+        return array;
+    }
+
+    public Array setColumn(final int col, final Array array) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows!=array.length) throw new IllegalArgumentException(); //TODO: message
+        
+        if (this.cols == 1) {
+            System.arraycopy(array.data, 0, this.data, 0, this.length);
+        } else {
+            int addr = getAddress(0, col);
+            for (int row = 0; row < this.rows; row++) {
+                this.data[addr] = array.data[row];
+                addr += this.cols;
+            }
+        }
+        return array;
+    }
+
+    
+    //
+    //	Assignment operations
+    //
+    //	opr   method     this    right    result
+    //	----- ---------- ------- -------- ------
+    //	=     assign     Matrix           Matrix (1)
+    //	+=    addAssign  Matrix  Matrix   this
+    //	-=    subAssign  Matrix  Matrix   this
+    //	*=    mulAssign  Matrix  scalar   this
+    //	/=    divAssign  Matrix  scalar   this
+	
+	
+    public Matrix addAssign(final Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
+
+        for (int row=0; row<rows; row++) {
+            int addr = address(row);
+            for (int col=0; col<cols; col++) {
+                this.data[addr] += another.data[addr];
+                addr++;
+            }
+        }
+        return this;
+    }
+
+    public Matrix subAssign(final Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
+
+        for (int row=0; row<rows; row++) {
+            int addr = address(row);
+            for (int col=0; col<cols; col++) {
+                this.data[addr] -= another.data[addr];
+                addr++;
+            }
+        }
+        return this;
+    }
+
+    public Matrix mulAssign(final double scalar) {
+        for (int row = 0; row < rows; row++) {
+            int rowAddress = address(row);
+            for (int col = 0; col < cols; col++) {
+                int cellAddress = rowAddress + col;
+                data[cellAddress] *= scalar;
+            }
+        }
+        return this;
+    }
+
+    public Matrix divAssign(final double scalar) {
+        for (int row = 0; row < rows; row++) {
+            int rowAddress = address(row);
+            for (int col = 0; col < cols; col++) {
+                int cellAddress = rowAddress + col;
+                data[cellAddress] /= scalar;
+            }
+        }
+        return this;
+    }
+    
+    
+    	
+    //	Algebraic products
+    //
+    //	opr   method     this    right    result
+    //	----- ---------- ------- -------- ------
+    //	+     add        Matrix  Matrix    Matrix
+    //	-     sub        Matrix  Matrix    Matrix
+    //	*     mul        Matrix  scalar    Matrix
+    //	/     div        Matrix  scalar    Matrix
+
+    public Matrix add(final Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
+
+        Matrix result = new Matrix(this.rows, this.cols);
+        for (int row=0; row<rows; row++) {
+            int addr = address(row);
+            for (int col=0; col<cols; col++) {
+                result.data[addr] = this.data[addr] + another.data[addr];
+                addr++;
+            }
+        }
+        return result;
+    }
+
+    public Matrix sub(final Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
+
+        Matrix result = new Matrix(this.rows, this.cols);
+        for (int row=0; row<rows; row++) {
+            int addr = address(row);
+            for (int col=0; col<cols; col++) {
+                result.data[addr] = this.data[addr] - another.data[addr];
+                addr++;
+            }
+        }
+        return result;
+    }
+
+    public Matrix mul(final double scalar) {
+        Matrix result = new Matrix(this.rows, this.cols);
+        for (int row=0; row<rows; row++) {
+            int addr = address(row);
+            for (int col=0; col<cols; col++) {
+                result.data[addr] = data[addr] * scalar;
+                addr++;
+            }
+        }
+        return result;
+    }
+
+    public Matrix div(final double scalar) {
+        Matrix result = new Matrix(this.rows, this.cols);
+        for (int row=0; row<rows; row++) {
+            int addr = address(row);
+            for (int col=0; col<cols; col++) {
+                result.data[addr] = data[addr] / scalar;
+                addr++;
+            }
+        }
+        return result;
+    }
+    	
+
+    //
+    //	Vetorial products
+    //
+    //	opr   method     this    right    result
+    //	----- ---------- ------- -------- ------
+    //	*     mul        Matrix  Array    Array
+    //	*     mul        Matrix  Matrix   Matrix
+    
+    public Array mul(final Array array) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.cols != array.length) throw new IllegalArgumentException(); //TODO: message
+
+        final Array result = new Array(this.cols);
+        for (int col=0; col<this.cols; col++) {
+            int addr = address(0, col);
+            double sum = 0.0;
+            for (int row=0; row<this.rows; row++) {
+                sum  += this.data[addr] * array.data[col];
+                addr += this.cols; 
+            }
+            result.data[col] = sum;
+        }
+        return result;
+    }
+    
+    public Matrix mul(final Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.cols != another.rows) throw new IllegalArgumentException(); //TODO: message
+        
+        Matrix result = new Matrix(this.rows, another.cols);
+        for (int col = 0; col < another.cols; col++) {
+            int caddr = another.address(0, col);
+            for (int row = 0; row < this.rows; row++) {
+                int raddr = address(row, 0);
+                int addr = caddr;
+                double sum = 0.0;
+                for (int i = 0; i < this.cols; i++) {
+                    sum += this.data[raddr + i] * another.data[addr];
+                    addr += another.cols;
+                }
+                result.set(row, col, sum);
+            }
+        }
+        return result;
+    }
+
+    
+    //	
+    //	Math functions
+    //
+    //	opr   method     this    right    result
+    //	----- ---------- ------- -------- ------
+    //  (none)
+    
+    
+    //
+    //	Miscellaneous
+    //
+    //	method       this    right    result
+    //	------------ ------- -------- ------
+    //  swap         Matrix  Matrix   this
+    //	transpose    Matrix           Matrix
+	//  diagonal     Matrix           Array
+    //	inverse      Matrix           Matrix
+	
+    public Matrix swap(Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
+        
+        // allocate a temporary buffer for data transfer
+        double[] buffer = new double[Math.min(this.length, blksize)]; 
+
+        // swaps blocks
+        for (int row=0; row<length/blksize; row++) {
+            int addr = row*blksize;
+            System.arraycopy(this.data,    addr, buffer,          0, blksize);
+            System.arraycopy(another.data, addr, this.data,    addr, blksize);
+            System.arraycopy(buffer,          0, another.data, addr, blksize);
+        }
+
+        // swaps last block
+        final int addr = ((int)(length/blksize))*blksize;
+        if (addr>=0 && addr<this.length) {
+            final int remainder = this.length-addr;
+            System.arraycopy(this.data,    addr, buffer,          0, remainder);
+            System.arraycopy(another.data, addr, this.data,    addr, remainder);
+            System.arraycopy(buffer,          0, another.data, addr, remainder);
+        }
+        
+        return this;
+    }
+
+    public Matrix swap(final int pos1row, final int pos1col, final int pos2row, final int pos2col) {
+        int addr1 = address(pos1row, pos1col);
+        int addr2 = address(pos2row, pos2col);
+        double tmp = data[addr1];
+        data[addr1] = data[addr2];
+        data[addr2] = tmp;
+        return this;
+    }
+    
+    
+    public Matrix transpose() {
+        final Matrix result = new Matrix(this.cols, this.rows);
+        for (int row=0; row<this.rows; row++) {
+            int raddr = this.address(row, 0);
+            int caddr = result.address(0, row);
+            for (int col=0; col<this.cols; col++) {
+                result.data[caddr] = this.data[raddr];
+                caddr += result.cols;
+                raddr++;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Obtains a diagonal from a square {@link Matrix}
+     * 
+     * @return a row-matrix which contains the elements of <code>this</code> square Matrix
+     */
+    public Array diagonal() {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != this.cols) throw new IllegalArgumentException(); //TODO: message
+        
+        final Array result = new Array(this.cols);
+        int addr = 0;
+        for (int i = 0; i < this.cols; i++) {
+            result.data[i] = this.data[addr];
+            addr += this.cols + 1;
+        }
+        return result;
+    }
+    
+    public Matrix inverse() {
+        throw new UnsupportedOperationException();
+
+        
+//        
+//        Disposable<Matrix> inverse(const Matrix& m) {
+//            #if !defined(__GNUC__) || __GNUC__ > 3 || __GNUC_MINOR__ > 3
+//
+//            QL_REQUIRE(m.rows() == m.columns(), "matrix is not square");
+//
+//            boost::numeric::ublas::matrix<Real> a(m.rows(), m.columns());
+//
+//            std::copy(m.begin(), m.end(), a.data().begin());
+//
+//            boost::numeric::ublas::permutation_matrix<Size> pert(m.rows());
+//
+//            // lu decomposition
+//            const Size singular = lu_factorize(a, pert);
+//            QL_REQUIRE(singular == 0, "singular matrix given");
+//
+//            boost::numeric::ublas::matrix<Real>
+//                inverse = boost::numeric::ublas::identity_matrix<Real>(m.rows());
+//
+//            // backsubstitution
+//            boost::numeric::ublas::lu_substitute(a, pert, inverse);
+//
+//            Matrix retVal(m.rows(), m.columns());
+//            std::copy(inverse.data().begin(), inverse.data().end(),
+//                      retVal.begin());
+//
+//            return retVal;
+//
+//            #else
+//            QL_FAIL("this version of gcc does not support the Boost uBlas library");
+//            #endif
+//        }        
+//        
+        
+        
+    }
+    
 }
 	
   
-
-//    class Matrix {
-//     public:
-//! \name Constructors, destructor, and assignment
-//@{
-//! creates a null matrix
-//      Matrix();
-//        //! creates a matrix with the given dimensions
-//        Matrix(Size rows, Size columns);
-//        //! creates the matrix and fills it with <tt>value</tt>
-//        Matrix(Size rows, Size columns, Real value);
-//        Matrix(const Matrix&);
-//        Matrix(const Disposable<Matrix>&);
-//        Matrix& operator=(const Matrix&);
-//        Matrix& operator=(const Disposable<Matrix>&);
-//        //@}
-//
-//        //! \name Algebraic operators
-//        /*! \pre all matrices involved in an algebraic expression must have
-//                 the same size.
-//        */
-//        //@{
-//        const Matrix& operator+=(const Matrix&);
-//        const Matrix& operator-=(const Matrix&);
-//        const Matrix& operator*=(Real);
-//        const Matrix& operator/=(Real);
-//        //@}
-//
-//        typedef Real* iterator;
-//        typedef const Real* const_iterator;
-//        typedef boost::reverse_iterator<iterator> reverse_iterator;
-//        typedef boost::reverse_iterator<const_iterator> const_reverse_iterator;
-//        typedef Real* row_iterator;
-//        typedef const Real* const_row_iterator;
-//        typedef boost::reverse_iterator<row_iterator> reverse_row_iterator;
-//        typedef boost::reverse_iterator<const_row_iterator>
-//                                                const_reverse_row_iterator;
-//        typedef step_iterator<iterator> column_iterator;
-//        typedef step_iterator<const_iterator> const_column_iterator;
-//        typedef boost::reverse_iterator<column_iterator>
-//                                                   reverse_column_iterator;
-//        typedef boost::reverse_iterator<const_column_iterator>
-//                                             const_reverse_column_iterator;
-//        //! \name Iterator access
-//        //@{
-//        const_iterator begin() const;
-//        iterator begin();
-//        const_iterator end() const;
-//        iterator end();
-//        const_reverse_iterator rbegin() const;
-//        reverse_iterator rbegin();
-//        const_reverse_iterator rend() const;
-//        reverse_iterator rend();
-//        const_row_iterator row_begin(Size i) const;
-//        row_iterator row_begin(Size i);
-//        const_row_iterator row_end(Size i) const;
-//        row_iterator row_end(Size i);
-//        const_reverse_row_iterator row_rbegin(Size i) const;
-//        reverse_row_iterator row_rbegin(Size i);
-//        const_reverse_row_iterator row_rend(Size i) const;
-//        reverse_row_iterator row_rend(Size i);
-//        const_column_iterator column_begin(Size i) const;
-//        column_iterator column_begin(Size i);
-//        const_column_iterator column_end(Size i) const;
-//        column_iterator column_end(Size i);
-//        const_reverse_column_iterator column_rbegin(Size i) const;
-//        reverse_column_iterator column_rbegin(Size i);
-//        const_reverse_column_iterator column_rend(Size i) const;
-//        reverse_column_iterator column_rend(Size i);
-//        //@}
-//
-//        //! \name Element access
-//        //@{
-//        const_row_iterator operator[](Size) const;
-//        const_row_iterator at(Size) const;
-//        row_iterator operator[](Size);
-//        row_iterator at(Size);
-//        Disposable<Array> diagonal(void) const;
-//        //@}
-//
-//        //! \name Inspectors
-//        //@{
-//        Size rows() const;
-//        Size columns() const;
-//        bool empty() const;
-//        //@}
-//
-//        //! \name Utilities
-//        //@{
-//        void swap(Matrix&);
-//        //@}
-//      private:
-//        boost::scoped_array<Real> data_;
-//        Size rows_, columns_;
-//    };
-//
-//    // algebraic operators
-//
-//    /*! \relates Matrix */
-//    const Disposable<Matrix> operator+(const Matrix&, const Matrix&);
-//    /*! \relates Matrix */
-//    const Disposable<Matrix> operator-(const Matrix&, const Matrix&);
-//    /*! \relates Matrix */
-//    const Disposable<Matrix> operator*(const Matrix&, Real);
-//    /*! \relates Matrix */
-//    const Disposable<Matrix> operator*(Real, const Matrix&);
-//    /*! \relates Matrix */
-//    const Disposable<Matrix> operator/(const Matrix&, Real);
-//
-//
-//    // vectorial products
-//
-//    /*! \relates Matrix */
-//    const Disposable<Array> operator*(const Array&, const Matrix&);
-//    /*! \relates Matrix */
-//    const Disposable<Array> operator*(const Matrix&, const Array&);
-//    /*! \relates Matrix */
-//    const Disposable<Matrix> operator*(const Matrix&, const Matrix&);
-//
-//    // misc. operations
-//
-//    /*! \relates Matrix */
-//    const Disposable<Matrix> transpose(const Matrix&);
-//
-//    /*! \relates Matrix */
-//    const Disposable<Matrix> outerProduct(const Array& v1, const Array& v2);
-//
-//    /*! \relates Matrix */
-//    template<class Iterator1, class Iterator2>
-//    const Disposable<Matrix> outerProduct(Iterator1 v1begin, Iterator1 v1end,
-//                                          Iterator2 v2begin, Iterator2 v2end);
-//
-//    /*! \relates Matrix */
-//    void swap(Matrix&, Matrix&);
-//
-//    /*! \relates Matrix */
-//    std::ostream& operator<<(std::ostream&, const Matrix&);
-//
-//    /*! \relates Matrix */
-//    Disposable<Matrix> inverse(const Matrix& m);
-//
-//    // inline definitions
-//
-//    inline Matrix::Matrix()
-//    : data_((Real*)(0)), rows_(0), columns_(0) {}
-//
-//    inline Matrix::Matrix(Size rows, Size columns)
-//    : data_(rows*columns > 0 ? new Real[rows*columns] : (Real*)(0)),
-//      rows_(rows), columns_(columns) {}
-//
-//    inline Matrix::Matrix(Size rows, Size columns, Real value)
-//    : data_(rows*columns > 0 ? new Real[rows*columns] : (Real*)(0)),
-//      rows_(rows), columns_(columns) {
-//        std::fill(begin(),end(),value);
-//    }
-//
-//    inline Matrix::Matrix(const Matrix& from)
-//    : data_(!from.empty() ? new Real[from.rows_*from.columns_] : (Real*)(0)),
-//      rows_(from.rows_), columns_(from.columns_) {
-//        std::copy(from.begin(),from.end(),begin());
-//    }
-//
-//    inline Matrix::Matrix(const Disposable<Matrix>& from)
-//    : data_((Real*)(0)), rows_(0), columns_(0) {
-//        swap(const_cast<Disposable<Matrix>&>(from));
-//    }
-//
-//    inline Matrix& Matrix::operator=(const Matrix& from) {
-//        // strong guarantee
-//        Matrix temp(from);
-//        swap(temp);
-//        return *this;
-//    }
-//
-//    inline Matrix& Matrix::operator=(const Disposable<Matrix>& from) {
-//        swap(const_cast<Disposable<Matrix>&>(from));
-//        return *this;
-//    }
-//
-//    inline void Matrix::swap(Matrix& from) {
-//        using std::swap;
-//        data_.swap(from.data_);
-//        swap(rows_,from.rows_);
-//        swap(columns_,from.columns_);
-//    }
-//
-//    inline const Matrix& Matrix::operator+=(const Matrix& m) {
-//        QL_REQUIRE(rows_ == m.rows_ && columns_ == m.columns_,
-//                   "matrices with different sizes (" <<
-//                   m.rows_ << "x" << m.columns_ << ", " <<
-//                   rows_ << "x" << columns_ << ") cannot be "
-//                   "added");
-//        std::transform(begin(),end(),m.begin(),
-//                       begin(),std::plus<Real>());
-//        return *this;
-//    }
-//
-//    inline const Matrix& Matrix::operator-=(const Matrix& m) {
-//        QL_REQUIRE(rows_ == m.rows_ && columns_ == m.columns_,
-//                   "matrices with different sizes (" <<
-//                   m.rows_ << "x" << m.columns_ << ", " <<
-//                   rows_ << "x" << columns_ << ") cannot be "
-//                   "subtracted");
-//        std::transform(begin(),end(),m.begin(),begin(),
-//                       std::minus<Real>());
-//        return *this;
-//    }
-//
-//    inline const Matrix& Matrix::operator*=(Real x) {
-//        std::transform(begin(),end(),begin(),
-//                       std::bind2nd(std::multiplies<Real>(),x));
-//        return *this;
-//    }
-//
-//    inline const Matrix& Matrix::operator/=(Real x) {
-//        std::transform(begin(),end(),begin(),
-//                       std::bind2nd(std::divides<Real>(),x));
-//        return *this;
-//    }
-//
-//    inline Matrix::const_iterator Matrix::begin() const {
-//        return data_.get();
-//    }
-//
-//    inline Matrix::iterator Matrix::begin() {
-//        return data_.get();
-//    }
-//
-//    inline Matrix::const_iterator Matrix::end() const {
-//        return data_.get()+rows_*columns_;
-//    }
-//
-//    inline Matrix::iterator Matrix::end() {
-//        return data_.get()+rows_*columns_;
-//    }
-//
-//    inline Matrix::const_reverse_iterator Matrix::rbegin() const {
-//        return const_reverse_iterator(end());
-//    }
-//
-//    inline Matrix::reverse_iterator Matrix::rbegin() {
-//        return reverse_iterator(end());
-//    }
-//
-//    inline Matrix::const_reverse_iterator Matrix::rend() const {
-//        return const_reverse_iterator(begin());
-//    }
-//
-//    inline Matrix::reverse_iterator Matrix::rend() {
-//        return reverse_iterator(begin());
-//    }
-//
-//    inline Matrix::const_row_iterator
-//    Matrix::row_begin(Size i) const {
-//        #if defined(QL_EXTRA_SAFETY_CHECKS)
-//        QL_REQUIRE(i<rows_,
-//                   "row index (" << i << ") must be less than " << rows_ <<
-//                   ": matrix cannot be accessed out of range");
-//        #endif
-//        return data_.get()+columns_*i;
-//    }
-//
-//    inline Matrix::row_iterator Matrix::row_begin(Size i) {
-//        #if defined(QL_EXTRA_SAFETY_CHECKS)
-//        QL_REQUIRE(i<rows_,
-//                   "row index (" << i << ") must be less than " << rows_ <<
-//                   ": matrix cannot be accessed out of range");
-//        #endif
-//        return data_.get()+columns_*i;
-//    }
-//
-//    inline Matrix::const_row_iterator Matrix::row_end(Size i) const{
-//        #if defined(QL_EXTRA_SAFETY_CHECKS)
-//        QL_REQUIRE(i<rows_,
-//                   "row index (" << i << ") must be less than " << rows_ <<
-//                   ": matrix cannot be accessed out of range");
-//        #endif
-//        return data_.get()+columns_*(i+1);
-//    }
-//
-//    inline Matrix::row_iterator Matrix::row_end(Size i) {
-//        #if defined(QL_EXTRA_SAFETY_CHECKS)
-//        QL_REQUIRE(i<rows_,
-//                   "row index (" << i << ") must be less than " << rows_ <<
-//                   ": matrix cannot be accessed out of range");
-//        #endif
-//        return data_.get()+columns_*(i+1);
-//    }
-//
-//    inline Matrix::const_reverse_row_iterator
-//    Matrix::row_rbegin(Size i) const {
-//        return const_reverse_row_iterator(row_end(i));
-//    }
-//
-//    inline Matrix::reverse_row_iterator Matrix::row_rbegin(Size i) {
-//        return reverse_row_iterator(row_end(i));
-//    }
-//
-//    inline Matrix::const_reverse_row_iterator
-//    Matrix::row_rend(Size i) const {
-//        return const_reverse_row_iterator(row_begin(i));
-//    }
-//
-//    inline Matrix::reverse_row_iterator Matrix::row_rend(Size i) {
-//        return reverse_row_iterator(row_begin(i));
-//    }
-//
-//    inline Matrix::const_column_iterator
-//    Matrix::column_begin(Size i) const {
-//        #if defined(QL_EXTRA_SAFETY_CHECKS)
-//        QL_REQUIRE(i<columns_,
-//                   "column index (" << i << ") must be less than " << columns_ <<
-//                   ": matrix cannot be accessed out of range");
-//        #endif
-//        return const_column_iterator(data_.get()+i,columns_);
-//    }
-//
-//    inline Matrix::column_iterator Matrix::column_begin(Size i) {
-//        #if defined(QL_EXTRA_SAFETY_CHECKS)
-//        QL_REQUIRE(i<columns_,
-//                   "column index (" << i << ") must be less than " << columns_ <<
-//                   ": matrix cannot be accessed out of range");
-//        #endif
-//        return column_iterator(data_.get()+i,columns_);
-//    }
-//
-//    inline Matrix::const_column_iterator
-//    Matrix::column_end(Size i) const {
-//        #if defined(QL_EXTRA_SAFETY_CHECKS)
-//        QL_REQUIRE(i<columns_,
-//                   "column index (" << i << ") must be less than " << columns_ <<
-//                   ": matrix cannot be accessed out of range");
-//        #endif
-//        return const_column_iterator(data_.get()+i+rows_*columns_,columns_);
-//    }
-//
-//    inline Matrix::column_iterator Matrix::column_end(Size i) {
-//        #if defined(QL_EXTRA_SAFETY_CHECKS)
-//        QL_REQUIRE(i<columns_,
-//                   "column index (" << i << ") must be less than " << columns_ <<
-//                   ": matrix cannot be accessed out of range");
-//        #endif
-//        return column_iterator(data_.get()+i+rows_*columns_,columns_);
-//    }
-//
-//    inline Matrix::const_reverse_column_iterator
-//    Matrix::column_rbegin(Size i) const {
-//        return const_reverse_column_iterator(column_end(i));
-//    }
-//
-//    inline Matrix::reverse_column_iterator
-//    Matrix::column_rbegin(Size i) {
-//        return reverse_column_iterator(column_end(i));
-//    }
-//
-//    inline Matrix::const_reverse_column_iterator
-//    Matrix::column_rend(Size i) const {
-//        return const_reverse_column_iterator(column_begin(i));
-//    }
-//
-//    inline Matrix::reverse_column_iterator
-//    Matrix::column_rend(Size i) {
-//        return reverse_column_iterator(column_begin(i));
-//    }
-//
-//    inline Matrix::const_row_iterator
-//    Matrix::operator[](Size i) const {
-//        return row_begin(i);
-//    }
-//
-//    inline Matrix::const_row_iterator
-//    Matrix::at(Size i) const {
-//        QL_REQUIRE(i < rows_, "matrix access out of range");
-//        return row_begin(i);
-//    }
-//
-//    inline Matrix::row_iterator Matrix::operator[](Size i) {
-//        return row_begin(i);
-//    }
-//
-//    inline Matrix::row_iterator Matrix::at(Size i) {
-//        QL_REQUIRE(i < rows_, "matrix access out of range");
-//        return row_begin(i);
-//    }
-//
-//    inline Disposable<Array> Matrix::diagonal(void) const{
-//        Size arraySize = std::min<Size>(rows(), columns());
-//        Array tmp(arraySize);
-//        for(Size i = 0; i < arraySize; i++)
-//            tmp[i] = (*this)[i][i];
-//        return tmp;
-//    }
-//
-//    inline Size Matrix::rows() const {
-//        return rows_;
-//    }
-//
-//    inline Size Matrix::columns() const {
-//        return columns_;
-//    }
-//
-//    inline bool Matrix::empty() const {
-//        return rows_ == 0 || columns_ == 0;
-//    }
-//
-//    inline const Disposable<Matrix> operator+(const Matrix& m1,
-//                                              const Matrix& m2) {
-//        QL_REQUIRE(m1.rows() == m2.rows() &&
-//                   m1.columns() == m2.columns(),
-//                   "matrices with different sizes (" <<
-//                   m1.rows() << "x" << m1.columns() << ", " <<
-//                   m2.rows() << "x" << m2.columns() << ") cannot be "
-//                   "added");
-//        Matrix temp(m1.rows(),m1.columns());
-//        std::transform(m1.begin(),m1.end(),m2.begin(),temp.begin(),
-//                       std::plus<Real>());
-//        return temp;
-//    }
-//
-//    inline const Disposable<Matrix> operator-(const Matrix& m1,
-//                                              const Matrix& m2) {
-//        QL_REQUIRE(m1.rows() == m2.rows() &&
-//                   m1.columns() == m2.columns(),
-//                   "matrices with different sizes (" <<
-//                   m1.rows() << "x" << m1.columns() << ", " <<
-//                   m2.rows() << "x" << m2.columns() << ") cannot be "
-//                   "subtracted");
-//        Matrix temp(m1.rows(),m1.columns());
-//        std::transform(m1.begin(),m1.end(),m2.begin(),temp.begin(),
-//                       std::minus<Real>());
-//        return temp;
-//    }
-//
-//    inline const Disposable<Matrix> operator*(const Matrix& m, Real x) {
-//        Matrix temp(m.rows(),m.columns());
-//        std::transform(m.begin(),m.end(),temp.begin(),
-//                       std::bind2nd(std::multiplies<Real>(),x));
-//        return temp;
-//    }
-//
-//    inline const Disposable<Matrix> operator*(Real x, const Matrix& m) {
-//        Matrix temp(m.rows(),m.columns());
-//        std::transform(m.begin(),m.end(),temp.begin(),
-//                       std::bind2nd(std::multiplies<Real>(),x));
-//        return temp;
-//    }
-//
-//    inline const Disposable<Matrix> operator/(const Matrix& m, Real x) {
-//        Matrix temp(m.rows(),m.columns());
-//        std::transform(m.begin(),m.end(),temp.begin(),
-//                       std::bind2nd(std::divides<Real>(),x));
-//        return temp;
-//    }
-//
-//    inline const Disposable<Array> operator*(const Array& v, const Matrix& m) {
-//        QL_REQUIRE(v.size() == m.rows(),
-//                   "vectors and matrices with different sizes ("
-//                   << v.size() << ", " << m.rows() << "x" << m.columns() <<
-//                   ") cannot be multiplied");
-//        Array result(m.columns());
-//        for (Size i=0; i<result.size(); i++)
-//            result[i] =
-//                std::inner_product(v.begin(),v.end(),
-//                                   m.column_begin(i),0.0);
-//        return result;
-//    }
-//
-//    inline const Disposable<Array> operator*(const Matrix& m, const Array& v) {
-//        QL_REQUIRE(v.size() == m.columns(),
-//                   "vectors and matrices with different sizes ("
-//                   << v.size() << ", " << m.rows() << "x" << m.columns() <<
-//                   ") cannot be multiplied");
-//        Array result(m.rows());
-//        for (Size i=0; i<result.size(); i++)
-//            result[i] =
-//                std::inner_product(v.begin(),v.end(),m.row_begin(i),0.0);
-//        return result;
-//    }
-//
-//    inline const Disposable<Matrix> operator*(const Matrix& m1,
-//                                              const Matrix& m2) {
-//        QL_REQUIRE(m1.columns() == m2.rows(),
-//                   "matrices with different sizes (" <<
-//                   m1.rows() << "x" << m1.columns() << ", " <<
-//                   m2.rows() << "x" << m2.columns() << ") cannot be "
-//                   "multiplied");
-//        Matrix result(m1.rows(),m2.columns());
-//        for (Size i=0; i<result.rows(); i++)
-//            for (Size j=0; j<result.columns(); j++)
-//                result[i][j] =
-//                    std::inner_product(m1.row_begin(i), m1.row_end(i),
-//                                       m2.column_begin(j), 0.0);
-//        return result;
-//    }
-//
-//    inline const Disposable<Matrix> transpose(const Matrix& m) {
-//        Matrix result(m.columns(),m.rows());
-//        for (Size i=0; i<m.rows(); i++)
-//            std::copy(m.row_begin(i),m.row_end(i),result.column_begin(i));
-//        return result;
-//    }
-//
-//    inline const Disposable<Matrix> outerProduct(const Array& v1,
-//                                                 const Array& v2) {
-//        return outerProduct(v1.begin(), v1.end(), v2.begin(), v2.end());
-//    }
-//
-//    template<class Iterator1, class Iterator2>
-//    inline const Disposable<Matrix> outerProduct(Iterator1 v1begin,
-//                                                 Iterator1 v1end,
-//                                                 Iterator2 v2begin,
-//                                                 Iterator2 v2end) {
-//
-//        Size size1 = std::distance(v1begin, v1end);
-//        QL_REQUIRE(size1>0, "null first vector");
-//
-//        Size size2 = std::distance(v2begin, v2end);
-//        QL_REQUIRE(size2>0, "null second vector");
-//
-//        Matrix result(size1, size2);
-//
-//        for (Size i=0; v1begin!=v1end; i++, v1begin++)
-//            std::transform(v2begin, v2end, result.row_begin(i),
-//                           std::bind1st(std::multiplies<Real>(), *v1begin));
-//
-//        return result;
-//    }
-//
-//    inline void swap(Matrix& m1, Matrix& m2) {
-//        m1.swap(m2);
-//    }
-//
-//    inline std::ostream& operator<<(std::ostream& out, const Matrix& m) {
-//        std::streamsize width = out.width();
-//        for (Size i=0; i<m.rows(); i++) {
-//            out << "| ";
-//            for (Size j=0; j<m.columns(); j++)
-//                out << std::setw(width) << m[i][j] << " ";
-//            out << "|\n";
-//        }
-//        return out;
-//    }

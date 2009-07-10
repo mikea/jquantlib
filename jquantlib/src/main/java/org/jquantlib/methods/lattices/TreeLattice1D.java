@@ -37,7 +37,7 @@ public abstract class TreeLattice1D extends TreeLattice {
 	public Array grid(double t) {
 		int i = timeGrid().index(t);
 		Array grid = new Array(size(i));
-		for (int j = 0; j < grid.size(); j++)
+		for (int j = 0; j < grid.length; j++)
 			grid.set(j, underlying(i, j));
 		return grid;
 	}

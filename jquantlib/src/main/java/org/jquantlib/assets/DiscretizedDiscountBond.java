@@ -117,7 +117,7 @@ public class DiscretizedDiscountBond extends DiscretizedAsset {
 	 */
 	@Override
 	public void reset(int size) {
-		values = new Array(size, 1.0);
+		values = new Array(size).fill(1.0);
 	}
 
 	/*

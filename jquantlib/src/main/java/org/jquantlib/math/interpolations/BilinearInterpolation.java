@@ -22,6 +22,10 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
+import org.jquantlib.math.interpolations.factories.Bilinear;
+
 
 /**
  * Bilinear interpolation between discrete points
@@ -74,13 +78,13 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
         int i = locateX(x);
         int j = locateY(y);
 
-        double z1 = mz[j][i];
-        double z2 = mz[j][i + 1];
-        double z3 = mz[j + 1][i];
-        double z4 = mz[j + 1][i + 1];
+        double z1 = mz.get(j, i);
+        double z2 = mz.get(j, i+1);
+        double z3 = mz.get(j+1, i);
+        double z4 = mz.get(j+1, i+1);
 
-        double t = (x - vx[i]) / (vx[i + 1] - vx[i]);
-        double u = (y - vy[j]) / (vy[j + 1] - vy[j]);
+        double t = (x - vx.get(i)) / (vx.get(i+1) - vx.get(i));
+        double u = (y - vy.get(j)) / (vy.get(j+1) - vy.get(j));
 
         return (1.0 - t) * (1.0 - u) * z1 + t * (1.0 - u) * z2 + (1.0 - t) * u * z3 + t * u * z4;
     }
@@ -102,7 +106,8 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
 			this.delegate = delegate;
 		}
 
-		public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z) {
+		@Override
+		public Interpolation2D interpolate(final Array x, final Array y, final Matrix z) {
 			delegate.vx = x;
 			delegate.vy = y;
 			delegate.mz = z;

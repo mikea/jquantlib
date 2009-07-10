@@ -22,6 +22,9 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
+
 /**
  * @see Interpolator
  *  
@@ -29,6 +32,6 @@ package org.jquantlib.math.interpolations;
  */
 public interface Interpolator2D {
 
-	public Interpolation2D interpolate(final double[] x, final double[] y, final double[][] z);
+	public Interpolation2D interpolate(final Array x, final Array y, final Matrix z);
 
 }

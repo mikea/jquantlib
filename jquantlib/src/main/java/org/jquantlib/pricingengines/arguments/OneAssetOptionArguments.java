@@ -60,7 +60,7 @@ public class OneAssetOptionArguments extends OptionArguments {
 	public void validate() /*@ReadOnly*/ {
 		super.validate();
 		// we assume the underlying value to be the first state variable
-		if (stochasticProcess.initialValues()[0] <= 0.0)
+		if (stochasticProcess.initialValues().first() <= 0.0)
 			throw new IllegalArgumentException("Negative or zero underlying given");
 	}
 	

@@ -41,6 +41,7 @@
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.interpolations.factories.LogLinear;
@@ -64,8 +65,8 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 	//
 
 	protected Date[]								dates;
-	protected/* @Time */double[]					times;
-	protected/* @Rate */double[]					data;
+	protected /* @Time */ Array					    times;
+	protected /* @Rate */ Array					    data;
 	protected boolean								isNegativeRates;
 
 
@@ -113,7 +114,7 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 	// public constructors
 	//
 	
-	public InterpolatedDiscountCurve(final Date[] dates, final/* @DiscountFactor */double[] discounts,
+	public InterpolatedDiscountCurve(final Date[] dates, final /* @DiscountFactor */ Array discounts,
 			final DayCounter dayCounter, final Calendar cal, final T interpolator) {
 		super(dates[0], cal, dayCounter);
 
@@ -127,17 +128,18 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 		if (this.dates == null || this.dates.length == 0) throw new IllegalArgumentException("no input dates given"); // FIXME: message
 		if (this.data == null || this.data.length != this.dates.length)
 			throw new IllegalArgumentException("dates/discount factors count mismatch"); // FIXME: message
-		if (this.data[0] != 1.0)
+		if (this.data.first() != 1.0)
 			throw new IllegalArgumentException("the first discount must be == 1.0 to flag the corrsponding date as settlement date"); // FIXME: message
 
-		this.times = new /* @Time */double[this.dates.length];
-		times[0] = 0.0;
+		this.times = new Array(this.dates.length);
+		times.set(0, 0.0);
 		for (int i = 1; i < dates.length; i++) {
 			if (this.dates[i].le(this.dates[i - 1]))
 				throw new IllegalArgumentException("invalid date (" + dates[i] + ", vs " + dates[i - 1] + ")"); // FIXME: message
-			if (this.data[i] <= 0.0) throw new IllegalArgumentException("negative discount"); // FIXME: message
+			if (this.data.get(i) <= 0.0) throw new IllegalArgumentException("negative discount"); // FIXME: message
 
-			times[i] = dayCounter.yearFraction(dates[0], dates[i]);
+			double value = dayCounter.yearFraction(dates[0], dates[i]);
+			times.set(i, value);
 		}
 
 		this.interpolation = this.interpolator.interpolate(times, discounts);
@@ -164,7 +166,7 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 	}
 
 	@Override
-	public /* @DiscountFactor */double[] getData() /* @ReadOnly */{
+	public /* @DiscountFactor */ Array getData() /* @ReadOnly */{
     	return data.clone();
 	}
 
@@ -177,12 +179,12 @@ public class InterpolatedDiscountCurve<T extends Interpolator> extends YieldTerm
 	public Pair<Date, Double>[] getNodes() /* @ReadOnly */{
 		Pair<Date, /* @Rate */Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
 		for (int i = 0; i < dates.length; ++i)
-			results[i] = new Pair<Date, Double>(dates[i], data[i]);
+			results[i] = new Pair<Date, Double>(dates[i], data.get(i));
 		return results;
 	}
 
 	@Override
-	public double[] getTimes() /* @ReadOnly */{
+	public Array getTimes() /* @ReadOnly */{
     	return times.clone();
 	}
 

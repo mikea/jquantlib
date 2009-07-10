@@ -27,7 +27,7 @@ package org.jquantlib.math;
  * 
  * @author Richard Gomes
  */
-
+// TODO : consider http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.DoubleOp.html
 public interface UnaryFunctionDouble {
 
 	/**

@@ -23,30 +23,26 @@
 
 package org.jquantlib.legacy.libormarkets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jquantlib.math.Array;
-import org.jquantlib.util.stdlibc.Std;
 
 public class LmFixedVolatilityModel extends LmVolatilityModel {
 
     private Array volatilities_;
-    private List</* @Time */Double> startTimes_;
+    private Array startTimes_;
     
-    public LmFixedVolatilityModel(
-            final Array volatilities,
-            final List</* @Time */Double> startTimes){
-        super(startTimes.size(), 0);
-        this.volatilities_ = volatilities;
-        this.startTimes_ = startTimes;
-        if(startTimes_.size()<=1){
+    public LmFixedVolatilityModel(final Array volatilities, final Array startTimes) {
+        super(startTimes.length, 0);
+        // TODO: code review :: use of clone()
+        this.volatilities_ = volatilities.clone();
+        this.startTimes_ = startTimes.clone();
+        
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (startTimes_.length<=1) 
             throw new IllegalArgumentException("too few dates");
-        }
-        if(volatilities_.size() != startTimes_.size()){
+        if (volatilities_.length != startTimes_.length)
                    throw new IllegalArgumentException("volatility array and fixing time array have to have the same size");
-        }
-        for (int i = 1; i < startTimes_.size(); i++) {
+
+        for (int i = 1; i < startTimes_.length; i++) {
             if(startTimes_.get(i) <= startTimes_.get(i-1)){
                 throw new IllegalArgumentException("invalid time (" + startTimes_.get(i) + ", vs " + startTimes_.get(i) + ")");
             }
@@ -60,30 +56,29 @@ public class LmFixedVolatilityModel extends LmVolatilityModel {
     }
 
     @Override
-    public List<Double> volatility(double t, List x) {
-        if (t >= startTimes_.get(0) && t <= startTimes_.get(startTimes_.size() - 1)) {
+    public Array volatility(double t, Array x) {
+        if (t >= startTimes_.first() && t <= startTimes_.last()) {
             throw new IllegalArgumentException("invalid time given for volatility model");
         }
+        final int ti = (int) (startTimes_.upperBound(t) - startTimes_.first() - 1);
 
-        final int ti = (int) (Std.getInstance().upper_bound(startTimes_.toArray(new Double[startTimes_.size()]), t) - startTimes_.get(0) - 1);
-
-        Array tmp = new Array(size_, 0.0);
+        Array tmp = new Array(size_);
 
         for (int i = ti; i < size_; ++i) {
             tmp.set(i, volatilities_.get(i - ti));
         }
-        List<Double> ret = new ArrayList<Double>();
-        for (int i = 0; i < tmp.size(); i++) {
+        Array ret = new Array();
+        for (int i = 0; i < tmp.length; i++) {
             ret.set(i, tmp.get(i));
         }
         return ret;
     }
 
     public double /* @Volatility */volatility(int i, /* @Time */double t, final Array x) {
-        if (t < startTimes_.get(0) || t > startTimes_.get(startTimes_.size() - 1)) {
+        if (t < startTimes_.first() || t > startTimes_.last()) {
             throw new IllegalArgumentException("invalid time given for volatility model");
         }
-        final int ti = (int) (Std.getInstance().upper_bound(startTimes_.toArray(new Double[startTimes_.size()]), t) - startTimes_.get(0) - 1.0);
+        final int ti = (int) (startTimes_.upperBound(t) - startTimes_.first() - 1);
 
         return volatilities_.get(i - ti);
     }

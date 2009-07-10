@@ -40,8 +40,8 @@
 
 package org.jquantlib.math.interpolations.factories;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
-import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,12 +100,12 @@ public class CubicSpline implements Interpolator {
     //
     
     @Override
-    public final CubicSplineInterpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
+    public final CubicSplineInterpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
         return interpolate(x, y);
     }
 
     @Override
-    public final CubicSplineInterpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
+    public final CubicSplineInterpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
         return (CubicSplineInterpolation)delegate.interpolate(x, y);
     }
 

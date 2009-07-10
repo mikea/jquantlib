@@ -67,10 +67,10 @@ public class ArmijoLineSearch extends LineSearch {
         double qpO = P.gradientNormValue();
         
         qt_ = q0;
-        qpt_ = (gradient_.empty()? qpO : -Array.dotProduct(gradient_, searchDirection_));
+        qpt_ = (gradient_.empty()? qpO : - gradient_.dotProduct(searchDirection_));
         
         // Initialize gradient
-        gradient_ = new Array(P.currentValue().size());
+        gradient_ = new Array(P.currentValue().length);
         // Compute new point
         xtd_ = P.currentValue();
         t = update(xtd_, searchDirection_, t, constraint);
@@ -107,7 +107,7 @@ public class ArmijoLineSearch extends LineSearch {
         // Compute new Gradient
         P.gradient(gradient_, xtd_);
         // and it squared norm
-        qpt_ = Array.dotProduct(gradient_, gradient_);
+        qpt_ = gradient_.dotProduct(gradient_);
         
         // Return new step value
         return t;

@@ -41,11 +41,9 @@
 
 package org.jquantlib.processes;
 
-import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.impl.DenseDoubleMatrix1D;
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import cern.colt.matrix.linalg.Algebra;
-import cern.jet.math.Mult;
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
+
 
 /**
  * 
@@ -64,9 +62,10 @@ public class EulerDiscretization implements LinearDiscretization {
      * {@latex[ \mu(t_0, \mathbf{x}_0) \Delta t }
      */
     @Override
-    public/* @Drift */double[] driftDiscretization(final StochasticProcess sp, /* @Time */final double t0, 
-            /* @Price */ final double[] x0, /* @Time */ final double dt) {
-        return new DenseDoubleMatrix1D(sp.drift(t0, x0)).assign(Mult.mult(dt)).toArray();
+    public Array driftDiscretization(
+                final StochasticProcess sp, 
+                /* @Time */final double t0, /* @Price */ final Array x0, /* @Time */ final double dt) {
+        return sp.drift(t0, x0).mulAssign(dt);
     }
 
     /**
@@ -75,9 +74,10 @@ public class EulerDiscretization implements LinearDiscretization {
      * {@latex[ \sigma(t_0, \mathbf{x}_0) \sqrt{\Delta t} }
      */
     @Override
-    public/* @Diffusion */double[][] diffusionDiscretization(final StochasticProcess sp, /* @Time */final double t0, 
-            /* @Price */ final double[] x0, /* @Time */final double dt) {
-        return new DenseDoubleMatrix2D(sp.diffusion(t0, x0)).assign(Mult.mult(Math.sqrt(dt))).toArray();
+    public Matrix diffusionDiscretization(
+                final StochasticProcess sp, 
+                /* @Time */final double t0, /* @Price */ final Array x0, /* @Time */final double dt) {
+        return sp.diffusion(t0, x0).mulAssign(Math.sqrt(dt));
     }
 
     /**
@@ -86,12 +86,11 @@ public class EulerDiscretization implements LinearDiscretization {
      * {@latex[ \sigma(t_0, \mathbf{x}_0)^2 \Delta t }
      */
     @Override
-    public/* @Covariance */double[][] covarianceDiscretization(final StochasticProcess sp, /* @Time */final double t0, 
-            /* @Price */ final double[] x0, /* @Time */final double dt) {
-
-        final DoubleMatrix2D sigma = new DenseDoubleMatrix2D(sp.diffusion(t0, x0));
-        final DoubleMatrix2D sigmaT = new Algebra().transpose(sigma);
-        return sigma.zMult(sigmaT, null, dt, 0.0, false, false).toArray();
+    public Matrix covarianceDiscretization(
+                final StochasticProcess sp, 
+                /* @Time */final double t0, /* @Price */ final Array x0, /* @Time */final double dt) {
+        final Matrix sigma = sp.diffusion(t0, x0);
+        return sigma.mul(sigma.transpose()).mulAssign(dt);
     }
 
     
@@ -105,8 +104,9 @@ public class EulerDiscretization implements LinearDiscretization {
      * {@latex[ \mu(t_0, x_0) \Delta t }
      */
     @Override
-    public/* @Drift */double driftDiscretization(final StochasticProcess1D sp, /* @Time */final double t0, 
-            /* @Price */ final double x0, /* @Time */final double dt) {
+    public /* @Drift */ double driftDiscretization(
+                final StochasticProcess1D sp, 
+                /* @Time */final double t0, /* @Price */ final double x0, /* @Time */final double dt) {
         return sp.drift(t0, x0) * dt;
     }
 
@@ -116,8 +116,9 @@ public class EulerDiscretization implements LinearDiscretization {
      * {@latex[ \sigma(t_0, x_0) \sqrt{\Delta t} }
      */
     @Override
-    public/* @Diffusion */double diffusionDiscretization(final StochasticProcess1D sp, /* @Time */final double t0, 
-            /* @Price */ final double x0, /* @Time */final double dt) {
+    public /* @Diffusion */ double diffusionDiscretization(
+                final StochasticProcess1D sp, 
+                /* @Time */final double t0, /* @Price */ final double x0, /* @Time */final double dt) {
         return sp.diffusion(t0, x0) * Math.sqrt(dt);
     }
 
@@ -127,8 +128,9 @@ public class EulerDiscretization implements LinearDiscretization {
      * {@latex[ \sigma(t_0, x_0)^2 \Delta t }
      */
     @Override
-    public/* @Variance */double varianceDiscretization(final StochasticProcess1D sp, /* @Time */final double t0, 
-            /* @Price */ final double x0, /* @Time */final double dt) {
+    public /* @Variance */ double varianceDiscretization(
+                final StochasticProcess1D sp,
+                /* @Time */final double t0, /* @Price */ final double x0, /* @Time */final double dt) {
         /* @Diffusion */final double sigma = sp.diffusion(t0, x0);
         return sigma * sigma * dt;
     }

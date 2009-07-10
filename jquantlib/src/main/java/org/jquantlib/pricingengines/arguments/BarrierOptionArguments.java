@@ -78,7 +78,7 @@ public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
 
 		// assuming, as always, that the underlying is the first of
 		// the state variables...
-		double underlying = stochasticProcess.initialValues()[0];
+		double underlying = stochasticProcess.initialValues().first();
 		switch (barrierType) {
 		case DownIn:
 			if (!(underlying >= barrier)) {

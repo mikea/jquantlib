@@ -28,7 +28,6 @@ import org.jquantlib.math.Array;
 import org.jquantlib.methods.lattices.BinomialTree;
 import org.jquantlib.methods.lattices.BlackScholesLattice;
 import org.jquantlib.methods.lattices.Tree;
-import org.jquantlib.methods.lattices.Trigeorgis;
 import org.jquantlib.pricingengines.Greeks;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
@@ -156,16 +155,18 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
 
         // Rollback to third-last step, and get underlying price (s2) & option values (p2) at this point
         option.rollback(grid.at(2));
-        Array va2 = new Array(option.values().getData());
-        if (va2.size() != 3) throw new IllegalStateException("Expect 3 nodes in grid at second step");
-        double p2h = va2.at(2); // high-price
+        // TODO: code review :: verifuy use of clone()
+        final Array va2 = option.values().clone();
+        if (va2.length != 3) throw new IllegalStateException("Expect 3 nodes in grid at second step");
+        double p2h = va2.get(2); // high-price
         double s2 = lattice.underlying(2, 2); // high price
 
         // Rollback to second-last step, and get option value (p1) at this point
         option.rollback(grid.at(1));
-        Array va = new Array(option.values().getData());
-        if (va.size() != 2) throw new IllegalStateException("Expect 2 nodes in grid at first step");
-        double p1 = va.at(1);
+        // TODO: code review :: verifuy use of clone()
+        Array va = option.values().clone();
+        if (va.length != 2) throw new IllegalStateException("Expect 2 nodes in grid at first step");
+        double p1 = va.get(1);
 
         // Finally, rollback to t=0
         option.rollback(0.0);

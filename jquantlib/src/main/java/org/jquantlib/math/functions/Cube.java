@@ -1,5 +1,6 @@
 /*
- Copyright (C) 2008 Srinivas Hasti
+ Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -21,34 +22,23 @@
  */
 package org.jquantlib.math.functions;
 
+import org.jquantlib.math.UnaryFunctionDouble;
+
 /**
- * @author Srinivas Hasti
+ * A cubic function
  * 
+ * @author Ueli Hofstetter
+ * @author Richard Gomes
  */
-public class LogFunction implements org.jquantlib.math.functions.DoubleFunction {
+public class Cube implements UnaryFunctionDouble {
 
-	private static LogFunction instance = new LogFunction();
-
-	private LogFunction() {
-	}
-
-	public static LogFunction getInstance() {
-		return instance;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jquantlib.math.functions.DoubleFunction#apply(double[])
-	 */
+	//
+    // implements UnaryFunctionDouble
+    //
+    
 	@Override
-	public double apply(double a) {
-		return Math.log(a);
-	}
-
-	@Override
-	public double apply(double... a) {
-		throw new RuntimeException("Not supported");
+	public double evaluate(double a) {
+		return a*a*a;
 	}
 
 }

@@ -13,8 +13,8 @@ public class BoundaryConstraint extends Constraint {
     }
 
     public boolean test(Array bndArray) {
-        for (int i = 0; i < bndArray.size(); i++) {
-            if ((bndArray.at(i) < low_) || (bndArray.at(i) > high_))
+        for (int i=0; i<bndArray.length; i++) {
+            if ((bndArray.get(i) < low_) || (bndArray.get(i) > high_))
                 return false;
         }
         return true;

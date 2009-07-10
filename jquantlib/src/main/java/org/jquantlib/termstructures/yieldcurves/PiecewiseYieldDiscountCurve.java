@@ -22,7 +22,10 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import java.util.Arrays;
+
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Array;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.interpolations.Interpolator;
@@ -36,8 +39,6 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Pair;
-
-import cern.colt.Sorting;
 
 public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends InterpolatedDiscountCurve<T> {
 
@@ -135,7 +136,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 	}
 
 	@Override
-	public final/* @DiscountFactor */double[] getData() /* @ReadOnly */{
+	public final Array getData() /* @ReadOnly */{
 		calculator.calculate();
 		return super.getData();
 	}
@@ -153,7 +154,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 	}
 
 	@Override
-	public final double[] getTimes() /* @ReadOnly */{
+	public final Array getTimes() /* @ReadOnly */{
 		calculator.calculate();
 		return super.getTimes();
 	}
@@ -199,25 +200,25 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 		}
 
 		@Override
-		public final/* @DiscountFactor */double minValueAfter(int i, final double[] data) {
+		public final/* @DiscountFactor */double minValueAfter(int i, final Array data) {
 			return Constants.QL_EPSILON;
 		}
 
 		@Override
-		public final/* @DiscountFactor */double maxValueAfter(int i, final double[] data) {
+		public final/* @DiscountFactor */double maxValueAfter(int i, final Array data) {
 			if (isNegativeRates) {
 				// discount are not required to be decreasing--all bets are off.
 				// We choose as max a value very unlikely to be exceeded.
 				return 3.0;
 			} else {
 				// discounts cannot increaseYieldCurve
-				return data[i - 1];
+				return data.get(i-1);
 			}
 		}
 
 		@Override
-		public final void updateGuess(/* @DiscountFactor */double[] data, /* @DiscountFactor */double discount, int i) {
-			data[i] = discount;
+		public final void updateGuess(/* @DiscountFactor */ Array data, /* @DiscountFactor */double discount, int i) {
+			data.set(i, discount);
 		}
 
 	}
@@ -262,19 +263,19 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 			}
 
 			dates[0] = referenceDate();
-			times[0] = 0.0;
-			data[0] = traits.initialValue();
+			times.set(0, 0.0);
+			data.set(0, traits.initialValue());
 			for (int i = 0; i < n; i++) {
 				dates[i + 1] = curveData.instruments[i].getLatestDate();
-				times[i + 1] = timeFromReference(dates[i + 1]);
-				data[i + 1] = data[i];
+				times.set(i+1, timeFromReference(dates[i + 1]));
+				data.set(i+1, data.get(i));
 			}
 
 			Brent solver = new Brent();
 			int maxIterations = 25;
 			// bootstrapping loop
 			for (int iteration = 0;; iteration++) {
-				double[] previousData = curve.getData(); // FIXME: could be: getData() ????
+				Array previousData = curve.getData(); // FIXME: could be: getData() ????
 				for (int i = 1; i < n + 1; i++) {
 					if (iteration == 0) {
 						// extend interpolation a point at a time
@@ -290,7 +291,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 					double guess;
 					if (iteration > 0) {
 						// use perturbed value from previous loop
-						guess = 0.99 * data[i];
+						guess = 0.99 * data.get(i);
 					} else if (i > 1) {
 						// extrapolate
 						guess = traits.guess(yts, dates[i]);
@@ -302,7 +303,8 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 					double max = traits.maxValueAfter(i, data);
 					if (guess <= min || guess >= max) guess = (min + max) / 2.0;
 					try {
-						data[i] = solver.solve(new ObjectiveFunction(instrument, i), curveData.accuracy, guess, min, max);
+					    double value = solver.solve(new ObjectiveFunction(instrument, i), curveData.accuracy, guess, min, max); 
+						data.set(i, value);
 					} catch (Exception e) {
 						throw new IllegalStateException("could not bootstrap the " + i + "th instrument, maturity " + dates[i], e);
 					}
@@ -312,7 +314,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 
 				double improvement = 0.0;
 				for (int i = 1; i < n + 1; i++)
-					improvement += Math.abs(data[i] - previousData[i]);
+					improvement += Math.abs(data.get(i) - previousData.get(i));
 				if (improvement <= n * curveData.accuracy) // convergence reached
 					break;
 
@@ -328,7 +330,7 @@ public class PiecewiseYieldDiscountCurve<T extends Interpolator> extends Interpo
 			// sort rate helpers
 			for (int i = 0; i < curveData.instruments.length; i++)
 				curveData.instruments[i].setTermStructure(yts);
-			Sorting.quickSort(curveData.instruments, new RateHelperSorter<RateHelper<YieldTermStructure>>());
+			Arrays.sort(curveData.instruments, new RateHelperSorter<RateHelper<YieldTermStructure>>());
 			// check that there is no instruments with the same maturity
 			for (int i = 1; i < curveData.instruments.length; i++) {
 				Date m1 = curveData.instruments[i - 1].getLatestDate();

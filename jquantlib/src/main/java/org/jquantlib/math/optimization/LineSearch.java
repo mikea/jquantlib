@@ -90,7 +90,7 @@ public class LineSearch {
     public double update(Array params, Array direction, double beta, Constraint constraint){
         double diff = beta;
         //TODO: check whether we implemented overloaded c++ operators correctly
-        Array newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(diff));
+        Array newParams = params.add(direction.mul(diff));
         boolean valid = constraint.test(newParams);
         int icount = 0;
         while(!valid){
@@ -99,11 +99,11 @@ public class LineSearch {
             }
             diff *= 0.5;
             icount++;
-            newParams = params.operatorAddCopy(direction.operatorMultiplyCopy(diff));
+            newParams = params.add(direction.mul(diff));
             valid = constraint.test(newParams);
         }
         
-        params.operatorAdd(direction.operatorMultiplyCopy(diff));
+        params.add(direction.mul(diff));
         return diff;
     }
     

@@ -43,7 +43,7 @@ public abstract class TreeLattice extends Lattice {
 		if (n <= 0)
 			throw new IllegalStateException("there is no zeronomial lattice!");
 		statePrices = new Vector<Array>();
-		statePrices.add(new Array(1, 1.0));
+		statePrices.add(new Array().fill( 1.0 ));
 		statePricesLimit = 0;
 	}
 	
@@ -57,7 +57,7 @@ public abstract class TreeLattice extends Lattice {
 
 	 protected void computeStatePrices(int until)  {
 	        for (int i=statePricesLimit; i<until; i++) {
-	            statePrices.add(new Array(size(i+1), 0.0));
+	            statePrices.add(new Array(size(i+1)));
 	            for (int j=0; j<size(i); j++) {
 	                double disc = discount(i,j);
 	                double statePrice = statePrices.get(i).get(j);
@@ -80,7 +80,7 @@ public abstract class TreeLattice extends Lattice {
 
 	    public double presentValue(DiscretizedAsset asset)  {
 	        int i = t.index(asset.time());
-	        return Array.dotProduct(asset.values(), statePrices(i));
+	        return asset.values().dotProduct(statePrices(i));
 	    }
 
 	    public void initialize(DiscretizedAsset asset, double ti)  {
@@ -120,13 +120,11 @@ public abstract class TreeLattice extends Lattice {
 	        }
 	    }
 
-	   public void stepback(int i, Array values,
-	                                     Array newValues)  {
+	   public void stepback(int i, Array values, Array newValues)  {
 	        for (int j=0; j<size(i); j++) {
 	            double value = 0.0;
 	            for (int l=0; l<n; l++) {
-	                value += probability(i,j,l) *
-	                         values.get(descendant(i,j,l));
+	                value += probability(i,j,l) * values.get(descendant(i,j,l));
 	            }
 	            value *= discount(i,j);
 	            newValues.set(j,value);

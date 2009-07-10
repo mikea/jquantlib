@@ -26,6 +26,7 @@ import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.math.Array;
 
+//TODO: code review :: license, class comments, comments for access modifiers, put "final" everywhere
 public class CurveDependentStepCondition implements StepCondition<Array> {
 
     public static interface CurveWrapper {
@@ -52,7 +53,7 @@ public class CurveDependentStepCondition implements StepCondition<Array> {
 
     @Override
     public void applyTo(Array a, double t) {
-        for (int i = 0; i < a.size(); i++) {
+        for (int i = 0; i < a.length; i++) {
             a.set(i, applyToValue(a.get(i), getValue(a, i)));
         }
     }
@@ -65,7 +66,7 @@ public class CurveDependentStepCondition implements StepCondition<Array> {
         private Array values;
 
         public ArrayWrapper(Array values) {
-            this.values = new Array(values);
+            this.values = values;
         }
 
         public double getValue(Array a, int i) {

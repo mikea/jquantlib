@@ -23,6 +23,8 @@
 package org.jquantlib.examples;
 
 import org.jquantlib.daycounters.Actual365Fixed;
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
@@ -222,14 +224,25 @@ public class VolatilityTermStructures {
 		//Following is the time axis
 		Date[] datesAxis = {today.getDateAfter(10),today.getDateAfter(15),today.getDateAfter(20),today.getDateAfter(25),today.getDateAfter(30),today.getDateAfter(40)};
 		
-		double[] strikeAxis = {10,20,35,40,56,60};
+		final Array strikeAxis = new Array(new double[] {10,20,35,40,56,60});
 		
 		//Following is the volatility surface on which interpolations will be done
-		double[][] volatilityMatrix = {{0.01,0.02,0.03,0.04,0.05,0.06},{0.02,0.03,0.04,0.05,0.06,0.07},{0.03,0.04,0.05,0.06,0.07,0.08},{0.3,0.5,0.6,0.7,0.8,0.9},{0.1,0.4,0.6,0.7,0.8,0.9},{0.2,0.5,0.6,0.7,0.8,0.9}};
+		final Matrix volatilityMatrix = new Matrix(new double[][] {
+                     {0.01,0.02,0.03,0.04,0.05,0.06},
+                     {0.02,0.03,0.04,0.05,0.06,0.07},
+                     {0.03,0.04,0.05,0.06,0.07,0.08},
+                     {0.3,0.5,0.6,0.7,0.8,0.9},
+                     {0.1,0.4,0.6,0.7,0.8,0.9},
+                     {0.2,0.5,0.6,0.7,0.8,0.9}
+                 });
 		
 		
 		//Following is the variance surface where variance = f(strike,maturity) and f = function
-		BlackVarianceTermStructure varianceSurface = new BlackVarianceSurface(today,datesAxis,strikeAxis,volatilityMatrix,Actual365Fixed.getDayCounter(),Extrapolation.InterpolatorDefaultExtrapolation,Extrapolation.InterpolatorDefaultExtrapolation);
+		BlackVarianceTermStructure varianceSurface = new BlackVarianceSurface(
+		        today, datesAxis, 
+		        strikeAxis, volatilityMatrix, Actual365Fixed.getDayCounter(),
+		        Extrapolation.InterpolatorDefaultExtrapolation,
+		        Extrapolation.InterpolatorDefaultExtrapolation);
 		((BlackVarianceSurface)varianceSurface).setInterpolation(null);
 		
 		//As the surface has been set up to do interpolations so let's start calculating the volatilities for strikes

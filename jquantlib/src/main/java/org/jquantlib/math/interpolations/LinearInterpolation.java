@@ -22,8 +22,7 @@
 
 package org.jquantlib.math.interpolations;
 
-import java.util.Arrays;
-
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.factories.Linear;
 
 
@@ -44,8 +43,8 @@ public class LinearInterpolation extends AbstractInterpolation {
     // private fields
     //
     
-    private double[] vp;
-    private double[] vs;
+    private Array vp;
+    private Array vs;
 
 
     //
@@ -86,14 +85,14 @@ public class LinearInterpolation extends AbstractInterpolation {
     @Override
 	protected double primitiveImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
-        double dx = x - vx[i];
-        return vp[i-1] + dx*(vy[i-1] + 0.5*dx*vs[i-1]);
+        double dx = x - vx.get(i);
+        return vp.get(i-1) + dx*(vy.get(i-1) + 0.5*dx*vs.get(i-1));
 	}
 
 	@Override
 	protected double derivativeImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
-        return vs[i];
+        return vs.get(i);
 	}
 
 	@Override
@@ -130,13 +129,16 @@ public class LinearInterpolation extends AbstractInterpolation {
 	public void reload() {
     	super.reload();
 
-    	vp = new double[vx.length];
-    	vs = new double[vx.length];
-        vp[0] = 0.0;
+    	vp = new Array(vx.length);
+    	vs = new Array(vx.length);
+        vp.set(0, 0.0);
+        double value;
         for (int i=1; i < vx.length; i++) {
-        	double dx = vx[i] - vx[i-1];
-        	vs[i-1] = (vy[i] - vy[i-1]) / dx;
-            vp[i] = vp[i-1] + dx*(vy[i-1] +0.5*dx*vs[i-1]);
+        	double dx = vx.get(i) - vx.get(i-1);
+        	value = (vy.get(i) - vy.get(i-1)) / dx; 
+        	vs.set(i-1, value);
+        	value = vp.get(i-1) + dx*(vy.get(i-1) +0.5*dx*vs.get(i-1)); 
+            vp.set(i, value); 
         }
 	}
 
@@ -148,7 +150,7 @@ public class LinearInterpolation extends AbstractInterpolation {
 	@Override
 	protected double evaluateImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
-        return vy[i] + (x - vx[i])*vs[i];
+        return vy.get(i) + (x - vx.get(i))*vs.get(i);
 	}
 
     
@@ -169,14 +171,14 @@ public class LinearInterpolation extends AbstractInterpolation {
 		}
 		
 		@Override
-		public final Interpolation interpolate(final double[] x, final double[] y) /* @ReadOnly */ {
+		public final Interpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
 			return interpolate(x.length, x, y);
 		}
 
         @Override
-		public final Interpolation interpolate(final int size, final double[] x, final double[] y) /* @ReadOnly */ {
-			delegate.vx = Arrays.copyOfRange(x, 0, size);
-			delegate.vy = Arrays.copyOfRange(y, 0, size);
+		public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
+			delegate.vx = x.copyOfRange(0, size);
+			delegate.vy = y.copyOfRange(0, size);
 			delegate.reload();
 			return delegate;
 		}

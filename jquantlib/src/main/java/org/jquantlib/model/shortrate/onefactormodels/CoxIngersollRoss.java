@@ -127,7 +127,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         }
        
         public boolean test(final Array params) {
-            double /* @Real */sigma = params.get(0);
+            double /* @Real */sigma = params.first();
             if (sigma <= 0.0) {
                 return false;
             }

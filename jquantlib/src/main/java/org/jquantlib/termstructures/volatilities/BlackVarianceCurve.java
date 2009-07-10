@@ -41,6 +41,7 @@
 package org.jquantlib.termstructures.volatilities;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.interpolations.LinearInterpolation;
@@ -74,8 +75,8 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 	private DayCounter dayCounter;
 	private Date maxDate;
 	private Date[] dates;
-	private /*@Time*/ double[] times;
-	private /*@Variance*/ double[] variances;
+	private /*@Time*/ Array times;
+	private /*@Variance*/ Array variances;
 	private Interpolation varianceCurve;
 	private Interpolator factory;
 
@@ -106,15 +107,16 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     	// (variance at referenceDate must be zero)
     	if (this.dates[0].le(referenceDate)) throw new IllegalArgumentException("cannot have dates[0] <= referenceDate");
 
-        variances = new /*@Variance*/ double[this.dates.length+1];
-        times = new /*@Time*/ double [this.dates.length+1];
-        variances[0] = 0.0;
-        times[0] = 0.0;
+        variances = /*@Variance*/ new Array(this.dates.length+1);
+        times     = /*@Time*/     new Array(this.dates.length+1);
+        variances.set(0, 0.0);
+        times.set(0, 0.0);
         for (int j=1; j<=blackVolCurve.length; j++) {
-            times[j] = timeFromReference(this.dates[j-1]);
-            if (! (times[j]>times[j-1]) ) throw new IllegalArgumentException("dates must be sorted unique");
-            variances[j] = times[j] * blackVolCurve[j-1]*blackVolCurve[j-1];
-            if (! (variances[j]>=variances[j-1] || !forceMonotoneVariance) ) throw new IllegalArgumentException("variance must be non-decreasing");
+            times.set(j, timeFromReference(this.dates[j-1]));
+            if (! (times.get(j)>times.get(j-1)) ) throw new IllegalArgumentException("dates must be sorted unique");
+            double value = times.get(j) * blackVolCurve[j-1]*blackVolCurve[j-1];
+            variances.set(j, value); 
+            if (! (variances.get(j)>=variances.get(j-1) || !forceMonotoneVariance) ) throw new IllegalArgumentException("variance must be non-decreasing");
         }
 
         // default: linear interpolation
@@ -168,12 +170,13 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 	}
 
 	@Override
+	// TODO :: compare against C++ sources
 	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, /*@Price*/ double maturity) {
-		if (t <= times[times.length-1]) {
+		if (t <= times.last()) { // TODO: probably an error here
 			return varianceCurve.evaluate(t);
 		} else {
 			// extrapolate with flat vol
-			/*@Time*/ double lastTime = times[times.length];
+			/*@Time*/ double lastTime = times.last();  // TODO: probably an error here
 			return varianceCurve.evaluate(lastTime) * t / lastTime;
 		}
 	}

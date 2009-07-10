@@ -45,7 +45,7 @@ import static org.jquantlib.math.Closeness.isClose;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
-import org.jquantlib.util.stdlibc.Std;
+import org.jquantlib.math.Array;
 
 
 
@@ -88,12 +88,12 @@ public abstract class AbstractInterpolation implements Interpolation {
 	/**
 	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
 	 */
-	protected double[] vx;
+	protected Array vx;
 
 	/**
 	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
 	 */
-	protected double[] vy;
+	protected Array vy;
 	
 	
     //
@@ -124,12 +124,12 @@ public abstract class AbstractInterpolation implements Interpolation {
     }
 
     protected int locate(double x) /* @ReadOnly */ {
-        if (x <= vx[0])
+        if (x <= vx.first())
             return 0;
-        else if (x > vx[vx.length-1])
+        else if (x > vx.last())
             return vx.length-2;
         else
-            return Std.getInstance().upper_bound(vx, x) - 1;
+            return vx.upperBound(x) - 1;
     }   
 
 
@@ -139,21 +139,21 @@ public abstract class AbstractInterpolation implements Interpolation {
 	
 	@Override
 	public final double xMin() /* @ReadOnly */ {
-		return  vx[0]; // get first element
+		return  vx.first(); // get first element
 	}
 
 	@Override
 	public final double xMax() /* @ReadOnly */ {
-		return vx[vx.length-1]; // get last element
+		return vx.last(); // get last element
 	}
 
 	@Override
-	public final double[] xValues() {
+	public final Array xValues() {
     	return vx.clone();
     }
 	
 	@Override
-	public final double[] yValues() {
+	public final Array yValues() {
     	return vy.clone();
     }
 	
@@ -207,10 +207,10 @@ public abstract class AbstractInterpolation implements Interpolation {
         if (vx.length < 2)
             throw new IllegalArgumentException("not enough points to interpolate");
         if (extraSafetyChecks) {
-            double x1 = vx[0];
+            double x1 = vx.first();
             double x2;
             for (int i = 1; i < vx.length; i++) {
-                x2 = vx[i];
+                x2 = vx.get(i);
                 if (x1>x2) throw new IllegalArgumentException("unsorted values on array X");
                 x1=x2;
             }

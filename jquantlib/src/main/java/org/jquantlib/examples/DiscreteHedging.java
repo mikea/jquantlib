@@ -54,10 +54,9 @@ package org.jquantlib.examples;
 
 import org.jquantlib.examples.utils.ReplicationError;
 import org.jquantlib.instruments.Option;
+import org.jquantlib.util.StopClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cern.colt.Timer;
 
 // FIXME :: This class needs code review ::
 // http://bugs.jquantlib.org/view.php?id=221
@@ -73,8 +72,9 @@ public class DiscreteHedging {
 		}
 		try {
 
-			Timer timer = new Timer();
-			timer.start();
+		    StopClock clock = new StopClock();
+            clock.startClock();
+            
 			/* @Time */			Number maturity = new Double(1.0 / 12.0); // 1 month
 			/* @Price */	 	Number strike = new Double(100);
 			/* @Price */	 	Number underlying = new Double(100);
@@ -93,8 +93,9 @@ public class DiscreteHedging {
 
 			hedgesNum = 84;
 			rp.compute(hedgesNum, scenarios);
-			timer.stop();
-			System.out.println("Run completed in " + timer.elapsedTime());
+
+			clock.stopClock();
+			clock.log();
 		}
 		
 		catch(Exception ex){

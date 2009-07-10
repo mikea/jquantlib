@@ -22,6 +22,8 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.math.Array;
+
 
 
 /**
@@ -31,8 +33,8 @@ package org.jquantlib.math.interpolations;
  */
 public interface Interpolator {
 
-	public Interpolation interpolate(final double[] x, final double[] y);
-	public Interpolation interpolate(final int size, final double[] x, final double[] y);
+	public Interpolation interpolate(final Array x, final Array y);
+	public Interpolation interpolate(final int size, final Array x, final Array y);
 	
 	public boolean isGlobal();
 

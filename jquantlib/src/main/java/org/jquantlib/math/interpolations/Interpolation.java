@@ -41,6 +41,7 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.UnaryFunctionDouble;
 
 /**
@@ -75,8 +76,8 @@ public interface Interpolation extends Extrapolator, UnaryFunctionDouble {
 	
     public double xMin();
     public double xMax();
-    public double[] xValues();
-    public double[] yValues();
+    public Array xValues();
+    public Array yValues();
     public boolean isInRange(double x);
     public double primitive(double x);
     public double derivative(double x);

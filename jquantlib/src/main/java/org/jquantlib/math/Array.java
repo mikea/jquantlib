@@ -39,11 +39,8 @@
 
 package org.jquantlib.math;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import org.jquantlib.util.stdlibc.DoubleReference;
 
 /**
  * 1-D array used in linear algebra.
@@ -52,645 +49,740 @@ import org.jquantlib.util.stdlibc.DoubleReference;
  * java.util.List should be used instead.
  * 
  * @author Richard Gomes
- * @author Q.Boiler
- * 
- * @deprecated
  */
-//FIXME code review :: ideally, we should get rid of this class, entirely
-public class Array {
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+//TODO: refactor Array and Matrix to math.matrixutilities (or something like this)
+public class Array extends Matrix {
     
-    //
-    // private fields
-    //
-    
-    private double[] data;
-
-    
-    //  
-    // public constructors
-    //
-
+    /**
+     * Default constructor
+     * <p>
+     * Builds an empty Array
+     */
     public Array() {
-        this(0);
-    }
-    
-    public Array(List<Double> list){
-        this(list.size());
-        for(int i = 0; i<list.size(); i++){
-            data[i] = list.get(i);
-        }
-    }
-
-    
-    public Array(final int size) {
-        this.data = new double[size];
-    }
-
-    public Array(final int size, final double value) {
-        this(size);
-        for (int i = 0; i < size; ++i) {
-            data[i] = value;
-        }
+        super(1, 1);
     }
 
     /**
-     * Get Access to the underlying Data.
+     * Builds an Array of <code>cols</code>
      * 
-     * @note default package protection
+     * @param cols is the number of columns
      */
-    public double[] getData(){
-	    return data;
-    }
-    
-    /**
-     * Creates the array and fills it according to \f$ a_{0} = value, a_{i}=a_{i-1}+increment \f$
-     */
-    public Array(int size, double value, double increment) {
-        this(size);
-		
-		if (size > 0) {
-			data[0]=value;
-		}
-        for (int i = 1; i < size; ++i) {
-            data[i] = data[i-1] + increment;
-        }
+    public Array(final int length) {
+        super(1, length);
     }
 
-    public Array(double[] d) {
-        this.data = d;
+
+    /**
+     * Creates an Array given a double[] array
+     * 
+     * @param data
+     */
+    public Array(final double[] array) {
+        super(1, array.length);
+        System.arraycopy(array, 0, this.data, 0, this.length);
     }
+
 
     //
-    
-    // overridden public methods
+    // Overrides Object
     //
+
+    @Override
+    public Array clone() {
+        return this.copyOfRange(0, this.length);
+    }
     
-    /**
-     * A copy constructor
-     */
-    public Array(Array oldArray)
-    {
-        double [] copy = new double[oldArray.getData().length];
-        System.arraycopy(oldArray.getData(), 0, copy, 0, oldArray.getData().length);
-        this.data = copy;
+    
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || !(o instanceof Array)) return false;
+        final Array another = (Array) o;
+        if (this.rows != another.rows || this.cols != another.cols) return false;
+        return Arrays.equals(this.data, another.data);
     }
 
-
-	@Override
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append(Arrays.toString(data));
+
+        sb.append("[");
+        sb.append(this.data[0]);
+        for (int col = 1; col < this.cols; col++) {
+            sb.append(", ").append(this.data[col]);
+        }
+        sb.append(']').append('\n');
         return sb.toString();
     }
 
+    
     //
     // public methods
     //
+
+    // some convenience methods
     
-    /**
-     * Calculates the dotProduct of vectorA and vectorB.
-     * 
-     * @throws Exception if vectorA or vectorB is null, or if vectorA.length is not equal to vectorB.length.
-     */
-    public static double dotProduct(final Array vectorA, final Array vectorB) {
-        return dotProduct(vectorA.data, vectorB.data);
+    public Object toArray() {
+        double buffer[] = new double[this.length];
+        return toArray(buffer);
     }
-
-    /**
-     * Calulates the dotProduct of vectorA, and vectorB.
-     * 
-     * @throws Exception if vectorA or vectorB is null, or if vectorA.length is not equal to vectorB.length.
-     */
-    public static double dotProduct(final double[] vectorA, final double[] vectorB) {
-
-        // Done as a local calc.
-        if (vectorA != null && vectorB != null && vectorA.length == vectorB.length) {
-            return quickDotProduct(vectorA, vectorB);
-        } else {
-            // TODO make this a JQuantLib Specific Checked Exception.
-            throw new RuntimeException("VectorA and VectorB must both be non-null and the same length.");
-        }
-
+    
+    public double[] toArray(double[] buffer) {
+        if (this.length != buffer.length) throw new IllegalArgumentException(); //TODO:message
+        System.arraycopy(this.data, 0, buffer, 0, this.length);
+        return buffer;
     }
 
     /**
-     * If both arrays are null true will be returned, this may be confusing. if both are identical false is returned.
+     * Fills all elements of this {@link Array} with a given scalar
      * 
-     * @param paramArray
-     * @return
+     * @param scalar is the value to be used to fill in
      */
-    public boolean operatorNotEquals(final Array paramArray) {
-        return !operatorEquals(paramArray);
+    @Override
+    public Array fill(final double scalar) {
+        Arrays.fill(data, scalar);
+        return this;
     }
 
-    public boolean operatorEquals(final Array paramArray) {
-		
-        if (this.data == null || paramArray == null || paramArray.data == null) {
-            return false;
-        } else if (data.length != paramArray.data.length) {
-            return false;
-        } else {
-            return operatorEquals(paramArray.data);
-        }
+    public double first() {
+        return data[0];
     }
-
+    
+    public double last() {
+        return data[data.length-1];
+    }
+    
     /**
-     * returns true or false or throws an exception. NO BOUNDS CHECKING OR NULL CHECKING is done here.
+     * Returns an Array containing a copy of region
      * 
-     * @param paramData
-     * @return
-     */
-    public boolean operatorEquals(final double[] paramData) {
-        for (int i = 0; i < data.length; ++i) {
-            if (data[i] != paramData[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    //
-    // Methods and Operators on this instance.
-    //
-    public void operatorDivide(final double scale) {
-        data = quickOperatorDivideReplace(data, scale);
-    }
-
-    public void operatorMultiply(final double scale) {
-        data = quickOperatorMultiplyReplace(data, scale);
-    }
-
-    public void operatorSubtract(final double scale) {
-        data = quickOperatorSubtractReplace(data, scale);
-    }
-
-    public void operatorAdd(final double scale) {
-        data = quickOperatorAddReplace(data, scale);
-    }
-
-    public void operatorDivide(final Array paramArray) {
-        vectorOperationValidation(paramArray);
-        data = quickOperatorDivideReplace(data, paramArray.data);
-    }
-
-    public void operatorMultiply(final Array paramArray) {
-        vectorOperationValidation(paramArray);
-        data = quickOperatorMultiplyReplace(data, paramArray.data);
-    }
-    
-    public void operatorSubtract(final Array paramArray) throws Exception {
-        vectorOperationValidation(paramArray);
-        data = quickOperatorSubtractReplace(data, paramArray.data);
-    }
-
-    public void operatorAdd(final Array paramArray) {
-        vectorOperationValidation(paramArray);
-        data = quickOperatorAddReplace(data, paramArray.data);
-    }
-
-    public Array operatorDivideCopy(final Array paramArray) {
-        vectorOperationValidation(paramArray);
-        return quickOperatorDivideCopy(paramArray);
-    }
-
-    public Array operatorMultiplyCopy(final Array paramArray) {
-        vectorOperationValidation(paramArray);
-        return quickOperatorMultiplyCopy(paramArray);
-    }
-    
-    public Array operatorMultiplyCopy(final double scale){
-        return quickOperatorMultiplyCopy(scale);
-    }
-
-    public Array operatorSubtractCopy(final Array paramArray) {
-        vectorOperationValidation(paramArray);
-        return quickOperatorSubtractCopy(paramArray);
-    }
-
-    public Array operatorAddCopy(final Array paramArray) {
-        vectorOperationValidation(paramArray);
-        return quickOperatorAddCopy(paramArray);
-    }
-    
-
-    public boolean empty() /* @ReadOnly */{
-        return (data.length == 0);
-    }
-
-    public int size() /* @ReadOnly */ {
-        return data.length;
-    }
-
-    public void set(int index, double value) {
-        if (data.length > index) {
-            data[index] = value;
-        } else {
-            throw new RuntimeException("Illegal Argument, index must be less than the Array size.");
-        }
-    }
-
-    public static void swap(final Array vectorA, final Array vectorB) {
-        vectorOperationValidation(vectorA, vectorB);
-        double storage;
-        double[] dataA = vectorA.data;
-        double[] dataB = vectorB.data;
-        for (int i = 0; i < dataA.length; ++i) {
-            storage = dataA[i];
-            dataA[i] = dataB[i];
-            dataB[i] = storage;
-        }
-    }
-
-    public static void shallowSwap(final Array vectorA, final Array vectorB) {
-        double[] swapArray = vectorA.data;
-        vectorA.data = vectorB.data;
-        vectorB.data = swapArray;
-    }
-
-    public void swap(final Array paramVector) {
-        Array.swap(this, paramVector);
-    }
-
-    public void shallowSwap(final Array paramVector) {
-        Array.shallowSwap(this, paramVector);
-    }
-
-    public Array absCopy() {
-        double[] da = new double[data.length];
-        for (int i = 0; i < data.length; ++i) {
-            da[i] = Math.abs(data[i]);
-        }
-        return new Array(da);
-    }
-
-    public void abs() {
-        for (int i = 0; i < data.length; ++i) {
-            data[i] = Math.abs(data[i]);
-        }
-    }
-
-    public Array sqrtCopy() {
-        double[] da = new double[data.length];
-        for (int i = 0; i < data.length; ++i) {
-            da[i] = Math.sqrt(data[i]);
-        }
-        return new Array(da);
-    }
-
-    public void sqrt() {
-        for (int i = 0; i < data.length; ++i) {
-            data[i] = Math.sqrt(data[i]);
-        }
-    }
-
-    public Array logCopy() {
-        double[] da = new double[data.length];
-        for (int i = 0; i < data.length; ++i) {
-            da[i] = Math.log(data[i]);
-        }
-        return new Array(da);
-    }
-
-    public void log() {
-        for (int i = 0; i < data.length; ++i) {
-            data[i] = Math.log(data[i]);
-        }
-    }
-
-    public Array expCopy() {
-        double[] da = new double[data.length];
-        for (int i = 0; i < data.length; ++i) {
-            da[i] = Math.exp(data[i]);
-        }
-        return new Array(da);
-    }
-
-    public void exp() {
-        for (int i = 0; i < data.length; ++i) {
-            data[i] = Math.exp(data[i]);
-        }
-    }
-
-
-    //TODO: remove old code below    
-
-//    public DoubleForwardIterator forwardIterator() {
-//        return Std.getInstance().forwardIterator(data);
-//    }
-//
-//    public MutableDoubleForwardIterator mutableForwardIterator() {
-//        return Std.getInstance().mutableForwardIterator(data);
-//    }
-//
-//    public DoubleReverseIterator reverseIterator() {
-//        return Std.getInstance().reverseIterator(data);
-//    }
-//
-//    public MutableDoubleReverseIterator mutableReverseIterator() {
-//        return Std.getInstance().mutableReverseIterator(data);
-//    }
-
-    
-    //
-    // read-only versions of get, at, front and back
-    //
-    
-    public double get(int i) { //XXX: candidate to be removed
-        validateData(i);
-        return data[i];
-    }
-
-    public double at(int i) {
-        return get(i);
-    }
-
-    public double front() {
-        return get(0);
-    }
-
-    public double back() {
-        return get(data.length-1);
-    }
-
-    //
-    // read-write versions of get, at, front and back
-    //
-    
-    public DoubleReference getReference(int i) { //XXX: candidate to be removed
-        validateData(i);
-        return new DoubleReference(data, i);
-    }
-
-    public DoubleReference atReference(int i) {
-        validateData(i);
-        return new DoubleReference(data, i);
-    }
-
-    public DoubleReference frontReference() {
-        validateData(0);
-        return new DoubleReference(data, 0);
-    }
-
-    public DoubleReference backReference() {
-        validateData(data.length-1);
-        return new DoubleReference(data, data.length-1);
-    }
-
-    
-    
-    //
-    // private methods
-    //
-    // These methods are optimised to operate directly on an array of primitive types
-    //
-    
-    private void quickOperatorDivide(final Array paramArray) {
-        data = quickOperatorDivideReplace(data, paramArray.data);
-    }
-
-    private void quickOperatorMultiply(final Array paramArray) {
-        data = quickOperatorMultiplyReplace(data, paramArray.data);
-    }
-
-    private void quickOperatorSubtract(final Array paramArray) {
-        data = quickOperatorSubtractReplace(data, paramArray.data);
-    }
-
-    private void quickOperatorAdd(final Array paramArray) {
-        data = quickOperatorAddReplace(data, paramArray.data);
-    }
-
-    private Array quickOperatorDivideCopy(final Array paramArray) {
-        double[] dataCopy = quickOperatorDivide(data, paramArray.data);
-        return new Array(dataCopy);
-    }
-
-    private Array quickOperatorMultiplyCopy(final Array paramArray) {
-        double[] dataCopy = quickOperatorMultiply(data, paramArray.data);
-        return new Array(dataCopy);
-    }
-    
-    private Array quickOperatorMultiplyCopy(final double scale) {
-        double[] dataCopy = quickOperatorMultiply(data, scale);
-        return new Array(dataCopy);
-    }
-
-    private Array quickOperatorSubtractCopy(final Array paramArray) {
-        double[] dataCopy = quickOperatorSubtract(data, paramArray.data);
-        return new Array(dataCopy);
-    }
-
-    private Array quickOperatorAddCopy(final Array paramArray) {
-        double[] dataCopy = quickOperatorAdd(data, paramArray.data);
-        return new Array(dataCopy);
-    }
-
-    private void validateData(int s) {
-        if (data == null || data.length < s + 1) {
-            throw new RuntimeException("data is not properly conditioned.");
-        }
-    }
-
-    private void quickSwap(final Array paramVector) {
-        Array.quickSwap(this, paramVector);
-    }
-
-    private void vectorOperationValidation(final Array paramArray) {
-
-        if (data == null) {
-            throw new RuntimeException("the underlying array must not be null");
-        } else if (paramArray == null) {
-            throw new RuntimeException("the param array must not be null");
-        } else if (paramArray.data == null) {
-            throw new RuntimeException("the param array's underlying must not be null");
-        } else if (data.length != paramArray.data.length) {
-            throw new RuntimeException("the two arrays must be the same length");
-        }
-    }
-
-    private static void vectorOperationValidation(final Array vectorA, final Array vectorB) {
-        if (vectorA != null) {
-            vectorA.vectorOperationValidation(vectorB);
-        }
-    }
-
-    //
-    // private static methods
-    //
-    
-    /*
-     * +,-,,/ Real Array
-     */
-    private static double[] quickOperatorAdd(final double[] vectorA, final double[] vectorB) {
-        double[] outputData = new double[vectorA.length];
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] + vectorB[i];
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorSubtract(final double[] vectorA, final double[] vectorB) {
-        double[] outputData = new double[vectorA.length];
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] - vectorB[i];
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorMultiply(final double[] vectorA, final double[] vectorB) {
-        double[] outputData = new double[vectorA.length];
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] * vectorB[i];
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorDivide(final double[] vectorA, final double[] vectorB) {
-        double[] outputData = new double[vectorA.length];
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] / vectorB[i];
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorAdd(final double[] vectorA, final double scale) {
-        double[] outputData = new double[vectorA.length];
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] + scale;
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorSubtract(final double[] vectorA, final double scale) {
-        double[] outputData = new double[vectorA.length];
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] - scale;
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorMultiply(final double[] vectorA, final double scale) {
-        double[] outputData = new double[vectorA.length];
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] * scale;
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorDivide(final double[] vectorA, final double scale) {
-        double[] outputData = new double[vectorA.length];
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] / scale;
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorAddReplace(final double[] vectorA, final double[] vectorB) {
-        double[] outputData = vectorA;
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] + vectorB[i];
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorSubtractReplace(final double[] vectorA, final double[] vectorB) {
-        double[] outputData = vectorA;
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] - vectorB[i];
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorMultiplyReplace(final double[] vectorA, final double[] vectorB) {
-        double[] outputData = vectorA;
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] * vectorB[i];
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorDivideReplace(final double[] vectorA, final double[] vectorB) {
-        double[] outputData = vectorA;
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] / vectorB[i];
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorAddReplace(final double[] vectorA, final double scale) {
-        double[] outputData = vectorA;
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] + scale;
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorSubtractReplace(final double[] vectorA, final double scale) {
-        double[] outputData = vectorA;
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] - scale;
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorMultiplyReplace(final double[] vectorA, final double scale) {
-        double[] outputData = vectorA;
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] * scale;
-        }
-        return outputData;
-    }
-
-    private static double[] quickOperatorDivideReplace(final double[] vectorA, final double scale) {
-        double[] outputData = vectorA;
-        for (int i = 0; i < vectorA.length; ++i) {
-            outputData[i] = vectorA[i] / scale;
-        }
-        return outputData;
-    }
-
-    /**
-     * Calculates the dotProduct of vectorA and vectorB, No null checks or bounds checks are performed
+     * @param pos is the initial position
+     * @param len is the quantity of elements
      * 
-     * @param vectorA has the precondition that it is a non-null double[] the same size as vectorB
-     * @param vectorB has the precondition that it is a non-null double[] the same size as vectorA
-     * @return the dotProduct/InnerProduct of vectorA and vectorB.
+     * @return an Array containing a copy of region
      */
-    private static double quickDotProduct(final double[] vectorA, final double[] vectorB) {
-        // This will only throw un-checked exceptions.
-        double result = 0.0d;
-        for (int i = 0; i < vectorA.length; ++i) {
-            result += vectorA[i] * vectorB[i];
-        }
+    public Array copyOfRange(final int pos, final int len) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (pos < 0) throw new IllegalArgumentException(); //TODO: message
+        if (len <= 0) throw new IllegalArgumentException(); //TODO: message
+        if (pos+len > this.length) throw new IllegalArgumentException(); //TODO: message
+        
+        final Array result = new Array(len);
+        System.arraycopy(this.data, pos, result.data, 0, len);
         return result;
     }
 
     /**
-     * Calculates the dotProduct of vectorA and vectorB, No null checks or bounds checks are performed
+     * Accumulate values in a range. 
      * 
-     * @param vectorA has the precondition that it is a non-null Array the same size as vectorB
-     * @param vectorB has the precondition that it is a non-null Array the same size as vectorA
-     * @return the dotProduct/InnerProduct of vectorA and vectorB.
+     * @note Mimics std::accumulate
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
-    private static double quickDotProduct(final Array vectorA, final Array vectorB) {
-        // This will only throw un-checked exceptions.
-        return quickDotProduct(vectorA.data, vectorB.data);
+    public double accumulate() {
+        return accumulate(0, this.length, 0.0);
     }
 
-    private static void quickSwap(final Array vectorA, final Array vectorB) {
-        double[] swapArray = new double[vectorA.data.length];
-        System.arraycopy(vectorA.data, 0, swapArray, 0, vectorA.data.length);
-        System.arraycopy(vectorB.data, 0, vectorA.data, 0, vectorB.data.length);
-        System.arraycopy(swapArray, 0, vectorB.data, 0, swapArray.length);
+    /**
+     * Accumulate values in a range. 
+     * 
+     * @note Mimics std::accumulate
+     * 
+     * @param from is the initial inclusive index
+     * @param to   is the final exclusive index
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
+     */
+    public double accumulate(final int from, final int to, final double init) {
+        double sum = init;
+        for (int i=from; i<to; i++) {
+            sum += this.data[i];
+        }
+        return sum;
+    }
+
+    public double min() {
+        return min(0, this.length);
     }
     
-    @Deprecated
-    public List<Double> dataAsList(){
-        ArrayList<Double> list = new ArrayList<Double>();
-        for(int i = 0; i<data.length; i++){
-            list.set(i, data[i]);
+    /**
+     * Return the minimum element in a range using comparison functor. 
+     * 
+     * @note Mimics std::min_element
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
+     */
+    public double min(final int from, final int to) {
+        double result = this.data[from];
+        for (int i=from+1; i<to; i++) {
+            double tmp = this.data[i]; 
+            if (tmp < result) result = tmp;
         }
-        return list;
+        return result;
+    }
+ 
+    public double max() {
+        return max(0, this.length);
     }
 
+    /**
+     * Return the maximum element in a range using comparison functor. 
+     * 
+     * @note Mimics std::max_element
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a>
+     */
+    public double max(final int from, final int to) {
+        double result = this.data[from];
+        for (int i=from+1; i<to; i++) {
+            double tmp = data[i]; 
+            if (tmp > result) result = tmp;
+        }
+        return result;
+    }
+
+    public Array sort() {
+        Arrays.sort(data);
+        return this;
+    }
+    
+    /**
+     * Return differences between adjacent values. 
+     * 
+     * @note Mimics std::adjacent_difference
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
+     */
+    public final Array adjacentDifference() {
+        return adjacentDifference(0);
+    }
+    
+    /**
+     * Return differences between adjacent values. 
+     * 
+     * @note Mimics std::adjacent_difference
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
+     */
+    public final Array adjacentDifference(final int from) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        final Array diff = new Array(this.length-from);
+        for (int i = from; i < this.length; i++) {
+            final double curr = this.data[i]; 
+            if (i == from) {
+                diff.data[i-from] = curr;
+            } else {
+                final double prev = this.data[i-1];
+                diff.data[i-from] = curr - prev;
+            }
+        }
+        return diff;
+    }
+
+    /**
+     * Finds the first position in which val could be inserted without changing the ordering.
+     * 
+     * @note Mimics std::lower_bound
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+     */
+    public int lowerBound(final double val) {
+        return lowerBound(0, this.length-1, val);
+    }
+
+    /**
+     * Finds the first position in which val could be inserted without changing the ordering.
+     * 
+     * @note Mimics std::lower_bound
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+     */
+    private int lowerBound(int from, final int to, final double val) {
+        int len = to - from;
+        int half;
+        int middle;
+        
+        while (len > 0) {
+            half = len >> 1;
+            middle = from;
+            middle = middle + half;
+            
+            if (data[middle] < val) {
+                from = middle;
+                from++;
+                len = len - half -1;
+            } else {
+                len = half;
+            }
+        }
+        return from;
+    }
+
+    /**
+     * Finds the last position in which val could be inserted without changing the ordering. 
+     * 
+     * @note Mimics std::upper_bound
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
+     */
+    public int upperBound(final double val) {
+        return upperBound(0, this.length-1, val);
+    }   
+
+    /**
+     * Finds the last position in which val could be inserted without changing the ordering. 
+     * 
+     * @note Mimics std::upper_bound
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
+     */
+    private int upperBound(int from, final int to, final double val) {
+        int len = to - from;
+        int half;
+        int middle;
+        
+        while (len > 0) {
+            half = len >> 1;
+            middle = from;
+            middle = middle + half;
+            
+            if (val < data[middle]){
+                len = half;
+            } else {
+                from = middle;
+                from++;
+                len = len - half -1;
+            }
+        }
+        return from;
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Apply all <i>typelist</i> types to generator functor. 
+     * 
+     * @note Mimics std::apply
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00960.html#c173ae39df0e242021655f0f02eb381a">__gnu_cxx::typelist Namespace Reference</a>
+     */
+    public Array apply(final UnaryFunctionDouble func) {
+        return apply(0, this.length, func);
+    }
+
+    /**
+     * Apply all <i>typelist</i> types to generator functor. 
+     * 
+     * @note Mimics std::apply
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00960.html#c173ae39df0e242021655f0f02eb381a">__gnu_cxx::typelist Namespace Reference</a>
+     */
+    public Array apply(final int from, final int to, final UnaryFunctionDouble func) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (from>to || to>this.length || func == null) throw new IndexOutOfBoundsException();
+        
+        for(int i=from; i<to; i++) {
+            data[i] = func.evaluate(data[i]);
+        }
+        return this;
+    }
+
+    /**
+     * Perform an operation on corresponding elements of two sequences. 
+     * 
+     * @note Mimics std::transform
+     * 
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01012.html#gaf771a08ae2322b42640bb14fc342c5d">std::transform</a>
+     */
+    public final Array transform(final UnaryFunctionDouble func) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (func==null) throw new NullPointerException();
+
+        final Array result = new Array(this.length);
+        for(int i=0; i<this.length; i++) {
+            result.data[i] = func.evaluate(data[i]);
+        }
+        return result;
+    }
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //
+    //    Assignment operations
+    //
+    //    opr   method     this    right    result
+    //    ----- ---------- ------- -------- ------
+    //    =     assign     Array            Array  (1)
+    //    +=    addAssign  Array   scalar   this
+    //    +=    addAssign  Array   Array    this
+    //    -=    subAssign  Array   scalar   this
+    //    -=    mulAssign  Array   Array    this
+    //    *=    mulAssign  Array   scalar   this
+    //    *=    mulAssign  Array   Array    this
+    //    /=    divAssign  Array   scalar   this
+    //    /=    divAssign  Array   Array    this
+
+    public Array addAssign(final double scalar) {
+        for (int i=0; i<length; i++) {
+            data[i] += scalar;
+        }
+        return this;
+    }
+
+    public Array subAssign(final double scalar) {
+        for (int i=0; i<length; i++) {
+            data[i] -= scalar;
+        }
+        return this;
+    }
+
+    public Array mulAssign(final double scalar) {
+        for (int i=0; i<length; i++) {
+            data[i] *= scalar;
+        }
+        return this;
+    }
+
+    public Array divAssign(final double scalar) {
+        for (int i=0; i<length; i++) {
+            data[i] /= scalar;
+        }
+        return this;
+    }
+
+    public Array addAssign(final Array another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+
+        for (int i=0; i<length; i++) {
+            data[i] += another.data[i];
+        }
+        return this;
+    }
+
+    public Array subAssign(final Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != another.rows || this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+
+        for (int i=0; i<length; i++) {
+            data[i] -= another.data[i];
+        }
+        return this;
+    }
+
+    public Array mulAssign(final Array another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+
+        for (int i=0; i<length; i++) {
+            data[i] *= another.data[i];
+        }
+        return this;
+    }    
+
+
+    public Array divAssign(final Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != another.rows || this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+
+        for (int i=0; i<length; i++) {
+            data[i] /= another.data[i];
+        }
+        return this;
+    }
+
+    
+    //
+    //    Algebraic products
+    //
+    //    opr   method     this    right    result
+    //    ----- ---------- ------- -------- ------
+    //    +     positive   Array             Array  (2)
+    //    +     add        Array   scalar    Array
+    //    +     add        Array   Array     Array
+    //    -     negative   Array             Array  (3)
+    //    -     sub        Array   scalar    Array
+    //    -     sub        Array   Array     Array
+    //    *     mul        Array   scalar    Array
+    //    *     mul        Array   Array     Array
+    //    /     div        Array   scalar    Array
+    //    /     div        Array   Array     Array
+
+    public Array add(final double scalar) {
+        final Array result = new Array(this.length);
+        for (int i=0; i<length; i++) {
+            result.data[i] = this.data[i] + scalar;
+        }
+        return result;
+    }
+
+    public Array sub(final double scalar) {
+        final Array result = new Array(this.length);
+        for (int i=0; i<length; i++) {
+            result.data[i] = this.data[i] - scalar;
+        }
+        return result;
+    }
+
+    public Array mul(final double scalar) {
+        final Array result = new Array(this.length);
+        for (int i=0; i<length; i++) {
+            result.data[i] = this.data[i] * scalar;
+        }
+        return result;
+    }
+
+    public Array div(final double scalar) {
+        final Array result = new Array(this.length);
+        for (int i=0; i<length; i++) {
+            result.data[i] = this.data[i] / scalar;
+        }
+        return result;
+    }
+
+    public Array add(final Array another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+
+        final Array result = new Array(this.length);
+        for (int i=0; i<length; i++) {
+            result.data[i] = this.data[i] + another.data[i];
+        }
+        return result;
+    }
+
+    public Array sub(final Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != another.rows || this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+
+        final Array result = new Array(this.length);
+        for (int i=0; i<length; i++) {
+            result.data[i] = this.data[i] - another.data[i];
+        }
+        return result;
+    }
+
+    public Array mul(final Array another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+
+        final Array result = new Array(this.length);
+        for (int i=0; i<length; i++) {
+            result.data[i] = this.data[i] * another.data[i];
+        }
+        return result;
+    }    
+
+
+    public Array div(final Matrix another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.rows != another.rows || this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+
+        final Array result = new Array(this.length);
+        for (int i=0; i<length; i++) {
+            result.data[i] = this.data[i] / another.data[i];
+        }
+        return result;
+    }
+
+    
+    //
+    //    Vetorial products
+    //
+    //    opr   method     this    right    result
+    //    ----- ---------- ------- -------- ------
+    //    *     mul        Array   Matrix   Array
+
+    public Array mul(final Matrix matrix) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.length != matrix.rows) throw new IllegalArgumentException(); //TODO: message
+
+        final Array result = new Array(this.cols);
+        for (int i=0; i<this.length; i++) {
+            int addr = matrix.address(i);
+            double sum = 0.0;
+            for (int col=0; col<matrix.cols; col++) {
+                sum += this.data[i] * matrix.data[addr];
+                addr++; 
+            }
+            result.data[i] = sum;
+        }
+        return result;
+    }
+
+    
+    //
+    //    Math functions
+    //
+    //    opr   method     this    right    result
+    //    ----- ---------- ------- -------- ------
+    //    abs   abs        Array            Array
+    //    sqrt  sqrt       Array            Array
+    //    log   log        Array            Array
+    //    exp   exp        Array            Array
+
+    public Array abs() {
+        final Array result = new Array(this.length);
+        for (int i=0; i<this.length; i++) {
+            result.data[i] = Math.abs(data[i]);
+        }
+        return result;
+    }
+    
+    public Array sqrt() {
+        final Array result = new Array(this.length);
+        for (int i=0; i<this.length; i++) {
+            result.data[i] = Math.sqrt(data[i]);
+        }
+        return result;
+    }
+    
+    public Array log() {
+        final Array result = new Array(this.length);
+        for (int i=0; i<this.length; i++) {
+            result.data[i] = Math.log(data[i]);
+        }
+        return result;
+    }
+    
+    public Array exp() {
+        final Array result = new Array(this.length);
+        for (int i=0; i<this.length; i++) {
+            result.data[i] = Math.exp(data[i]);
+        }
+        return result;
+    }
+    
+
+    
+    //
+    //    Miscellaneous
+    //
+    //    method       this    right    result
+    //    ------------ ------- -------- ------
+    //    swap         Array   Array    this
+    //    outerProduct Array   Array    Matrix
+    //    dotProduct   Array   Array    double
+    
+    public Array swap(Array another) {
+        swap((Matrix)another);
+        return this;
+    }
+
+    public Array swap(final int pos1, int pos2) {
+        double tmp = data[pos1];
+        data[pos1] = data[pos2];
+        data[pos2] = tmp;
+        return this;
+    }
+    
+    /**
+     * Returns the <b>dot product</b> (also known as <b>scalar product</b>) of 
+     * <code>this</code> Array and <code>another</code> Array.
+     * <p>
+     * The definition of dot product is
+     * {@latex[ \mathbf{a}\cdot \mathbf{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + \cdots + a_nb_n }
+     * 
+     * @param another Matrix
+     * @return the dot product between this Matrix and another Matrix
+     * 
+     * @see <a href="http://en.wikipedia.org/wiki/Dot_product">Dot Product</a>
+     */
+    public double dotProduct(final Array another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+        return innerProduct(another, 0, length);
+    }
+    
+    /**
+     * The inner product generalizes the dot product to abstract vector spaces and is normally denoted by {@latex$ <a , b>}.
+     * <p>
+     * As we are working in space {@latex$ \Re} (real numbers), it's sufficient to understand that both <b>inner product</b> and
+     * <b>dot operator</b> give equivalent results.
+     * 
+     * @param another Matrix
+     * @return the inner product between this Matrix and another Matrix
+     * 
+     * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
+     */
+    public double innerProduct(final Array another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+        return innerProduct(another, 0, length);
+    }
+    
+    
+    /**
+     * The inner product generalizes the dot product to abstract vector spaces and is normally denoted by {@latex$ <a , b>}.
+     * <p>
+     * As we are working in space {@latex$ \Re} (real numbers), it's sufficient to understand that both <b>inner product</b> and
+     * <b>dot operator</b> give equivalent results.
+     * 
+     * @param another Matrix
+     * @param from is the start element
+     * @param to is the end element
+     * @return the inner product between this Matrix and another Matrix
+     * 
+     * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
+     */
+    public double innerProduct(final Array another, final int from, final int to) {
+        double sum = 0.0;
+        for (int i=from; i<to; i++) {
+            sum += this.data[i] * another.data[i];
+        }
+        return sum;
+    }
+    
+    
+    /**
+     * Performs the <b>outer product</b> of <code>this</code> Array and <code>another</code> Array
+     * <p>
+     * The definition of outer product is:<br/>
+     * Given a vector $\mathbf{u} = (u_1, u_2, \dots, u_m)$ with <i>m</i> elements and 
+     *       a vector $\mathbf{v} = (v_1, v_2, \dots, v_n)$ with <i>n</i> elements, 
+     * their outer product $\mathbf{u} \otimes \mathbf{v}$ is defined as
+     * {@latex[ $\mathbf{u} \otimes \mathbf{v} = \left[\begin{array}{c c c c}
+     *    u_1v_1 & u_1v_2 & \dots  & u_1v_n \\ 
+     *    u_2v_1 & u_2v_2 & \dots  & u_2v_n \\ 
+     *    \vdots & \vdots & \ddots & \vdots \\ 
+     *    u_mv_1 & u_mv_2 & \dots  & u_mv_n
+     *  \end{array}\right] }
+     * 
+     * @param another Array
+     * @return the outer product of <code>this</code> Array and <code>another</code> Array
+     * 
+     * @see <a href="http://en.wikipedia.org/wiki/Outer_product">Outer product</a>
+     */
+    public Matrix outerProduct(final Array another) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (this.length == 0 || another.length == 0) throw new IllegalArgumentException(); //TODO: message
+
+        final Matrix result = new Matrix(this.length, another.length);
+        for (int row=0; row<this.length; row++) {
+            int addr = result.getAddress(row);
+            for (int col=0; col<another.length; col++) {
+                result.data[addr+col] = this.data[row] * another.data[col];
+            }
+        }
+        return result;
+    }
+    
 }

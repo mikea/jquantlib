@@ -22,7 +22,7 @@
 
 package org.jquantlib.math;
 
-import org.jquantlib.math.functions.LogFunction;
+import org.jquantlib.math.functions.Log;
 
 /**
  * 
@@ -30,8 +30,9 @@ import org.jquantlib.math.functions.LogFunction;
  * 
  */
 public class LogGrid extends TransformedGrid {
+    
 	public LogGrid(Array grid) {
-		super(grid, LogFunction.getInstance());
+		super(grid, Log.getInstance());
 	}
 
 	public Array logGridArray() {

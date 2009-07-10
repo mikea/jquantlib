@@ -36,7 +36,7 @@ public class ConstantParameter extends Parameter {
 
         @Override
         public double /* @Real */value(final Array params, double /* @Time */t) {
-            return params.get(0);
+            return params.first();
         }
     }
 

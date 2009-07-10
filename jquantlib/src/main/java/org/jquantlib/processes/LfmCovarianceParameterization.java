@@ -53,8 +53,7 @@ public abstract class LfmCovarianceParameterization {
 
     public Matrix covariance(/* @Time */double t, final Array x) {
         Matrix sigma = this.diffusion(t, x);
-        Matrix result = sigma.operatorMultiply(sigma, sigma.transpose(sigma));
-        return result;
+        return sigma.mul(sigma.transpose());
     }
 
     public Matrix covariance(/* @Time */double t) {
@@ -103,7 +102,9 @@ public abstract class LfmCovarianceParameterization {
 
         public double evaluate(double t) {
             final Matrix m = param_.diffusion(t);
-            return Std.getInstance().inner_product(m.getRow(i_), m.getRow(j_));
+            final Array iRow = m.getRow(i_);
+            final Array jRow = m.getRow(i_);
+            return iRow.innerProduct(jRow);
         }
     }
 

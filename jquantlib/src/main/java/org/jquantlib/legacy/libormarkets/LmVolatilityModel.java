@@ -26,6 +26,7 @@ package org.jquantlib.legacy.libormarkets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.model.Parameter;
 
 public abstract class LmVolatilityModel {
@@ -49,20 +50,20 @@ public abstract class LmVolatilityModel {
     }
     
     public double volatility(int i, double t){
-        return volatility(t, new ArrayList<Double>()).get(i);
+        return volatility(t, new Array()).get(i);
     }
     
-    public double volatility(int i, double t, final List x){
+    public double volatility(int i, double t, final Array x){
         return volatility(t, x).get(i);
     }
     
-    public  List<Double> volatility(double t){
-        return volatility(t, new ArrayList<Double>());
+    public Array volatility(double t) {
+        return volatility(t, new Array());
     }
     
-    public abstract List<Double> volatility(double t, List<Double> x);
+    public abstract Array volatility(double t, Array x);
     
-    public double integratedVariance(int i, int ii, double t, List list){
+    public double integratedVariance(int i, int ii, double t, Array list){
         throw new UnsupportedOperationException(integrated_variance_not_supported);
     }
     

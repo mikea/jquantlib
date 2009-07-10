@@ -28,15 +28,11 @@ import java.util.List;
 
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.IborCoupon;
-import org.jquantlib.cashflow.Leg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.stdlibc.Std;
-
-import com.sun.org.apache.regexp.internal.recompile;
 
 //! libor-forward-model process
 /*! stochastic process of a libor forward model using the
@@ -61,6 +57,7 @@ import com.sun.org.apache.regexp.internal.recompile;
 
     \ingroup processes
 */
+// TODO: license, class comments, access modifiers organization, good formatting
 public class LiborForwardModelProcess extends StochasticProcess {
 
     private int size_;
@@ -73,13 +70,14 @@ public class LiborForwardModelProcess extends StochasticProcess {
     private List</*@Time*/Double> accrualEndTimes_;
     private List</*@Time*/Double> accrualPeriod_;
     
-    //FIXME: replace Array by double[] wherever possible
     private  Array m1, m2;
     
-    public LiborForwardModelProcess(
-            int size,
-            final IborIndex  index){
+    public LiborForwardModelProcess(final int size, final IborIndex  index) {
         super(new EulerDiscretization());
+        
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+        
         this.size_ = size;
         this.index_ = index;
         this.initialValues_ = new Array(size_);
@@ -92,7 +90,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
         this.m2 = new Array(size_);
 
         final DayCounter dayCounter = index_.getDayCounter();
-        final List<CashFlow> flows = null;// cashFlows();
+        final List<CashFlow> flows = null /* cashFlows() */; // FIXME: translate cashFlows();
 
         if (size_ != flows.size()) {
             throw new IllegalArgumentException("wrong number of cashflows");
@@ -117,77 +115,10 @@ public class LiborForwardModelProcess extends StochasticProcess {
         }
     }
 
-    public Array drift(/* @Time */double t, final Array x) {
-        Array f = new Array(size_, 0.0);
-        Matrix covariance = new Matrix(lfmParam_.covariance(t, x));
-        final int m = 0;// nextIndexReset(t);
-        for (int k = m; k < size_; ++k) {
-            m1.set(k, accrualPeriod_.get(k) * x.get(k) / (1 + accrualPeriod_.get(k) * x.get(k)));
-            f.set(k, Std.getInstance().inner_product(m1.getData(), m, covariance.getColumn(k), m, k+1-m, 0.0 ) - 0.5 * covariance.get(k, k));
-        }
-        return f;
-    }
     
-    public Matrix diffusion(/*@Time*/ double t, final Array x){
-        return lfmParam_.diffusion(t, x);
-    }
-    
-    public Matrix covariance(/*@Time*/double t, final Array x, /*@Time*/ double dt){
-        return lfmParam_.covariance(dt, x).operatorMultiply(lfmParam_.covariance(dt, x), dt);
-    }
-    
-    public Array apply(final Array x0, final Array dx){
-        Array tmp = new Array(size_);
-        for(int k = 0; k<size_; ++k){
-            tmp.set(k, x0.get(k)*Math.exp(dx.get(k)));
-        }
-        return tmp;
-    }
-    
-    public Array evolve(/*@Time*/ double t0, final Array x0,
-            /*@Time*/ double dt, final Array dw)  {
-        /* predictor-corrector step to reduce discretization errors.
-
-           Short - but slow - solution would be
-
-           Array rnd_0     = stdDeviation(t0, x0, dt)*dw;
-           Array drift_0   = discretization_->drift(*this, t0, x0, dt);
-
-           return apply(x0, ( drift_0 + discretization_
-                ->drift(*this,t0,apply(x0, drift_0 + rnd_0),dt) )*0.5 + rnd_0);
-
-           The following implementation does the same but is faster.
-        */
-        if(true){throw new UnsupportedOperationException("work in progress");}
-        final int m   = 0;//nextIndexReset(t0);
-        final double sdt = Math.sqrt(dt);
-
-        Array f = new Array(x0);
-        Matrix diff       = lfmParam_.diffusion(t0, x0);
-        Matrix covariance = lfmParam_.covariance(t0, x0);
-
-        for (int k=m; k<size_; ++k) {
-            final double y = accrualPeriod_.get(k)*x0.get(k);
-            m1.set(k,y/(1+y));
-            final double d = (
-                Std.getInstance().inner_product(m1.getData(), m, covariance.getColumn(k), m, k+1-m,0.0)
-                -0.5*covariance.get(k, k)) * dt;
-
-            final double r = Std.getInstance().inner_product(diff.getRow(k), dw.getData(), 0.0)*sdt;
-
-            final double x = y*Math.exp(d + r);
-            m2.set(k, x/(1+x));
-            f.set(k, x0.get(k) * Math.exp(0.5*(d+
-                 (Std.getInstance().inner_product(m2.getData(), m, covariance.getColumn(k), m, k+1-m,0.0)
-                  -0.5*covariance.get(k,k))*dt)+ r));
-        }
-
-        return f;
-    }
-   public double[] initialValues()  {
-        Array tmp = new Array(initialValues_);
-        return tmp.getData();
-    }
+    //
+    // public methods
+    //
 
     public void setCovarParam(final LfmCovarianceParameterization  param) {
         lfmParam_ = param;
@@ -201,16 +132,14 @@ public class LiborForwardModelProcess extends StochasticProcess {
         return index_;
     }
 
+    
+    //
+    // Overrides StochasticProcess
+    //
+    
     @Override
-    public double[][] diffusion(double t, double[] x) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public double[] drift(double t, double[] x) {
-        // TODO Auto-generated method stub
-        return null;
+    public Array initialValues()  {
+        return initialValues_.clone();
     }
 
     @Override
@@ -218,7 +147,86 @@ public class LiborForwardModelProcess extends StochasticProcess {
         // TODO Auto-generated method stub
         return 0;
     }
+
+    @Override
+    public Array drift(/* @Time */double t, final Array x) {
+        final Array f = new Array(size_);
+        final Matrix covariance = lfmParam_.covariance(t, x);
+        final int m = 0;// nextIndexReset(t);
+        for (int k = m; k < size_; ++k) {
+            m1.set(k, accrualPeriod_.get(k) * x.get(k) / (1 + accrualPeriod_.get(k) * x.get(k)));
+            double value = m1.innerProduct(covariance.getCol(k), m, k+1-m) - 0.5 * covariance.get(k, k);
+            f.set(k, value);
+        }
+        return f;
+    }
+    
+    @Override
+    public Matrix diffusion(/*@Time*/ double t, final Array x){
+        return lfmParam_.diffusion(t, x);
+    }
+    
+    @Override
+    public Matrix covariance(/*@Time*/double t, final Array x, /*@Time*/ double dt){
+        return lfmParam_.covariance(dt, x).mul(lfmParam_.covariance(dt, x).mulAssign(dt));
+    }
+    
+    @Override
+    public Array apply(final Array x0, final Array dx){
+        Array tmp = new Array(size_);
+        for(int k = 0; k<size_; ++k){
+            tmp.set(k, x0.get(k)*Math.exp(dx.get(k)));
+        }
+        return tmp;
+    }
+    
+    @Override
+    public Array evolve(/*@Time*/ double t0, final Array x0, /*@Time*/ double dt, final Array dw)  {
+        
+        /* predictor-corrector step to reduce discretization errors.
+
+           Short - but slow - solution would be
+
+           Array rnd_0     = stdDeviation(t0, x0, dt)*dw;
+           Array drift_0   = discretization_->drift(*this, t0, x0, dt);
+
+           return apply(x0, ( drift_0 + discretization_
+                ->drift(*this,t0,apply(x0, drift_0 + rnd_0),dt) )*0.5 + rnd_0);
+
+           The following implementation does the same but is faster.
+        */
+        
+        if(true){throw new UnsupportedOperationException("work in progress");}
+        final int m   = 0;//nextIndexReset(t0);
+        final double sdt = Math.sqrt(dt);
+
+        Array f = x0.clone();
+        Matrix diff       = lfmParam_.diffusion(t0, x0);
+        Matrix covariance = lfmParam_.covariance(t0, x0);
+
+        for (int k=m; k<size_; ++k) {
+            final double y = accrualPeriod_.get(k)*x0.get(k);
+            m1.set(k,y/(1+y));
+            final double d = (m1.innerProduct(covariance.getCol(k), m, k+1-m)-0.5*covariance.get(k, k)) * dt;
+            final double r = diff.getRow(k).innerProduct(dw)*sdt;
+            final double x = y*Math.exp(d + r);
+            m2.set(k, x/(1+x));
+            double value = x0.get(k) 
+                         * Math.exp(0.5*(d+m2.innerProduct(covariance.getCol(k), m, k+1-m)-0.5*covariance.get(k,k))*dt)
+                         + r;
+            f.set(k, value);
+        }
+
+        return f;
+    }
+    
+
 }
+
+
+
+
+
 /*
     public List<CashFlow> cashFlows{
 

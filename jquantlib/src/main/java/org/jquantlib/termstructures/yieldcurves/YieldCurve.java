@@ -22,6 +22,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
 
@@ -32,7 +33,7 @@ import org.jquantlib.util.Pair;
 // TODO: comments
 public interface YieldCurve {
 	public Date maxDate() /* @ReadOnly */;
-	public /*@Time*/ double[] getTimes() /* @ReadOnly */;
+	public /*@Time*/ Array getTimes() /* @ReadOnly */;
 	public Date[] getDates() /* @ReadOnly */;
 	public Pair<Date, Double>[] getNodes() /* @ReadOnly */;
 
@@ -41,6 +42,6 @@ public interface YieldCurve {
 	 * 
 	 * @return a chunk of data
 	 */
-	public double[] getData() /* @ReadOnly */;
+	public Array getData() /* @ReadOnly */;
 
 }
