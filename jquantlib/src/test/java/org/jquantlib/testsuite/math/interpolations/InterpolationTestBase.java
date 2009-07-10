@@ -27,10 +27,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.exp;
 import static org.junit.Assert.assertFalse;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
-import org.jquantlib.math.interpolations.Interpolation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Daniel Kong
@@ -42,41 +40,45 @@ public abstract class InterpolationTestBase {
 	public InterpolationTestBase() {
 	}
 	
-	protected double[] xRange(double start, double finish, int size){
+	protected Array xRange(double start, double finish, int size){
 		double[] x = new double [size];
 		double dx = (finish-start)/(size-1);
 		for(int i=0; i<size-1; i++)
 			x[i]=start+i*dx;
 		x[size-1] = finish;
-		return x;
+		return new Array(x);
 	}
 	
-	protected double[] gaussian(final double[] x){
+	protected Array gaussian(final Array x){
 		double[] y = new double [x.length];
-		for(int i=0; i<x.length; i++)
-			y[i] = exp(-x[i]*x[i]);
-		return y;
+		for(int i=0; i<x.length; i++) {
+		    double value = x.get(i); 
+			y[i] = exp(-value*value);
+		}
+		return new Array(y);
 	}
 	
-	protected double[] parabolic(final double[] x){
+	protected Array parabolic(final Array x){
 		double[] y = new double[x.length];
-		for(int i=0; i<x.length; i++)
-			y[i] = -x[i]*x[i];
-		return y;
+		for(int i=0; i<x.length; i++) {
+		    double value = x.get(i);
+			y[i] = -value*value;
+		}
+		return new Array(y);
 	}
 	
 	protected void checkValues(
 			final String type, 
 			final CubicSplineInterpolation spline,
-			double[] x, double[] y){
+			final Array x, final Array y){
 		double tolerance = 2.0e-15;
 		for(int i=0; i<x.length; i++){
-			double interpolated = spline.evaluate(x[i]);
-			assertFalse(type+" interpolation failed at x = "+x[i]
+			double interpolated = spline.evaluate(x.get(i));
+			assertFalse(type+" interpolation failed at x = "+x.get(i)
 					+"\n interpolated value: "+interpolated
-					+"\n expected value:     "+y[i]
-					+"\n error:        "+abs(interpolated-y[i]),
-					abs(interpolated-y[i]) > tolerance);
+					+"\n expected value:     "+y.get(i)
+					+"\n error:        "+abs(interpolated-y.get(i)),
+					abs(interpolated-y.get(i)) > tolerance);
 		}		
 	}
 	
@@ -113,16 +115,16 @@ public abstract class InterpolationTestBase {
 			final CubicSplineInterpolation spline) {
 		double tolerance = 1.0e-14;
 
-		final double [] c = spline.getVc();
+		final Array c = spline.getVc();
 		assertFalse(type+" interpolation failure"
-					+"\n    cubic coefficient of the first polinomial is "+c[0]
-					+"\n    cubic coefficient of the second polinomial is "+c[1],
-					abs(c[0]-c[1]) > tolerance);
+					+"\n    cubic coefficient of the first polinomial is "+c.get(0)
+					+"\n    cubic coefficient of the second polinomial is "+c.get(1),
+					abs(c.get(0)-c.get(1)) > tolerance);
 		int n=c.length;
 		assertFalse(type+" interpolation failure"
-				+"\n    cubic coefficient of the 2nd to last polinomial is "+c[n-2]
-				+"\n    cubic coefficient of the last polinomial is "+c[n-1],
-				abs(c[n-2]-c[n-1]) > tolerance);
+				+"\n    cubic coefficient of the 2nd to last polinomial is "+c.get(n-2)
+				+"\n    cubic coefficient of the last polinomial is "+c.get(n-1),
+				abs(c.get(n-2)-c.get(n-1)) > tolerance);
 		
 	}
 	

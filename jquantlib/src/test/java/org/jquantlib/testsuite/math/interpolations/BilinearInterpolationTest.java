@@ -26,6 +26,8 @@ package org.jquantlib.testsuite.math.interpolations;
 import static java.lang.Math.abs;
 import static org.junit.Assert.fail;
 
+import org.jquantlib.math.Array;
+import org.jquantlib.math.Matrix;
 import org.jquantlib.math.interpolations.Interpolation2D;
 import org.jquantlib.math.interpolations.factories.Bilinear;
 import org.junit.Test;
@@ -35,52 +37,54 @@ import org.slf4j.LoggerFactory;
 public class BilinearInterpolationTest {
 private final static Logger logger = LoggerFactory.getLogger(BilinearInterpolationTest.class);
 	
-	private final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
-	private final double y[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
+	private final Array x = new Array(new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
+	private final Array y = new Array(new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
 	
-	private final double x_test[] = { -0.5 ,0, 0.5, 1.5, 2.5, 3.5, 4.5 };
-	private final double y_test[] = { -0.5 ,0, 0.5, 1.5, 2.5, 3.5, 4.5 };
+	private final Array x_test = new Array(new double[] { -0.5 ,0, 0.5, 1.5, 2.5, 3.5, 4.5 });
+	private final Array y_test = new Array(new double[] { -0.5 ,0, 0.5, 1.5, 2.5, 3.5, 4.5 });
 	
-	private final double zz[][];
+	private final Matrix zz;
 	private final Interpolation2D interpolation2d;
 	private final double tolerance;
 	
-	public BilinearInterpolationTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-		logger.info("\n\n::::: Testing use of interpolations as functors... :::::");
+    public BilinearInterpolationTest() {
+        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        logger.info("\n\n::::: Testing use of interpolations as functors... :::::");
 
-		// fill zz using f(x,y) =  x + y;
-		zz = new double[x.length][y.length];
-		for(int i = 0; i<x.length; i++){
-			for(int ii = 0; ii<y.length; ii++){
-				zz[i][ii] = x[i] + y[ii]; 
-			}
-		}
-		interpolation2d = new Bilinear().interpolate(x, y, zz);
-		interpolation2d.reload();		  
-	    tolerance = 1.0e-12;		
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowIllegalArgumentExceptionWithoutEnableExtrapolation(){
-		for (int i_x=0; i_x<x_test.length; i_x++) {
-    		for(int i_y = 0; i_y<y_test.length; i_y++){
-    			interpolation2d.evaluate(x_test[i_x],y_test[i_y]);
-    		}
-    	}
-	}
-	
-	@Test
-	public void testEnableExtrapolation(){
-		interpolation2d.enableExtrapolation();		
-    	for (int i_x=0; i_x<x_test.length; i_x++) {
-    		for(int i_y = 0; i_y<y_test.length; i_y++){
-    			double interpolated = interpolation2d.evaluate(x_test[i_x],y_test[i_y]);
-    			double expected = x_test[i_x] + y_test[i_y];		
-    			if(abs(interpolated-expected) > tolerance){
-    				fail("failed to interpolate value at x = " + x_test[i_x]  + ", y = " + y_test[i_y]);
-    			}	
-    		}
-    	}
+        // fill zz using f(x,y) = x + y;
+        zz = new Matrix(x.length, y.length);
+        for (int i = 0; i < x.length; i++) {
+            for (int ii = 0; ii < y.length; ii++) {
+                double value = x.get(i) + y.get(ii);
+                zz.set(i, ii, value);
+            }
+        }
+        interpolation2d = new Bilinear().interpolate(x, y, zz);
+        interpolation2d.reload();
+        tolerance = 1.0e-12;
     }
+	
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionWithoutEnableExtrapolation() {
+        for (int i_x = 0; i_x < x_test.length; i_x++) {
+            for (int i_y = 0; i_y < y_test.length; i_y++) {
+                interpolation2d.evaluate(x_test.get(i_x), y_test.get(i_y));
+            }
+        }
+    }
+	
+    @Test
+    public void testEnableExtrapolation() {
+        interpolation2d.enableExtrapolation();
+        for (int i_x = 0; i_x < x_test.length; i_x++) {
+            for (int i_y = 0; i_y < y_test.length; i_y++) {
+                double interpolated = interpolation2d.evaluate(x_test.get(i_x), y_test.get(i_y));
+                double expected = x_test.get(i_x) + y_test.get(i_y);
+                if (abs(interpolated - expected) > tolerance) {
+                    fail("failed to interpolate value at x = " + x_test.get(i_x) + ", y = " + y_test.get(i_y));
+                }
+            }
+        }
+    }
+
 }

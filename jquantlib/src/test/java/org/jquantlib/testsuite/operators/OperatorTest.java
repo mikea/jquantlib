@@ -37,8 +37,6 @@ import org.jquantlib.methods.finitedifferences.BSMOperator;
 import org.jquantlib.methods.finitedifferences.BSMTermOperator;
 import org.jquantlib.methods.finitedifferences.DPlusMinus;
 import org.jquantlib.methods.finitedifferences.DZero;
-import org.jquantlib.methods.finitedifferences.PdeBSM;
-import org.jquantlib.methods.finitedifferences.PdeOperator;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.quotes.Handle;
@@ -83,16 +81,16 @@ public class OperatorTest {
     Array x = new Array(N), y = new Array(N), yi = new Array(N), yd = new Array(N), temp = new Array(N), diff = new Array(N);
 
     int i;
-    for(i=0; i < x.size(); i++)
+    for(i=0; i < x.length; i++)
         x.set(i, xMin+h*i);
     
-    for(i = 0; i < x.size(); i++)
+    for(i = 0; i < x.length; i++)
     	y.set(i, normal.evaluate(x.get(i)));
 
-    for(i = 0; i < x.size(); i++)
+    for(i = 0; i < x.length; i++)
     	yi.set(i, cum.evaluate(x.get(i)));
     
-    for (i=0; i < x.size(); i++)
+    for (i=0; i < x.length; i++)
         yd.set(i, normal.derivative(x.get(i)));
 
     // define the differential operators
@@ -101,7 +99,7 @@ public class OperatorTest {
 
     // check that the derivative of cum is Gaussian
     temp = D.applyTo(yi);
-    for (i=0; i < y.size(); i++)
+    for (i=0; i < y.length; i++)
     	diff.set(i, y.get(i) - temp.get(i));
 
     double e = norm(diff, h);
@@ -113,7 +111,7 @@ public class OperatorTest {
     
     // check that the second derivative of cum is normal.derivative
     temp = D2.applyTo(yi);
-    for (i=0; i < yd.size(); i++)
+    for (i=0; i < yd.length; i++)
     	diff.set(i, yd.get(i) - temp.get(i));
     e = norm(diff, h);
     if (e > 1.0e-4) {
@@ -123,7 +121,7 @@ public class OperatorTest {
       
 	}
 	public void dumpArray(Array arr) {
-        for(int i = 0; i < arr.size(); i++) {
+        for(int i = 0; i < arr.length; i++) {
             logger.info("**** arr[" + i + "] = " + arr.get(i) );
         }
 	}
@@ -131,25 +129,25 @@ public class OperatorTest {
 	public void outputDiagonals(TridiagonalOperator op) {
 	    logger.info("\n");
         String str = "[";
-        double[] data = op.lowerDiagonal().getData();
+        Array data = op.lowerDiagonal();
         for(int i = 0; i < data.length; i++) {
-            str += String.format(" %.4f ", data[i]);
+            str += String.format(" %.4f ", data.get(i));
         }
         str += "]";
         logger.info(str);
 
         str = "[";
-        data = op.diagonal().getData();
+        data = op.diagonal();
         for(int i = 0; i < data.length; i++) {
-            str += String.format(" %.4f ", data[i]);
+            str += String.format(" %.4f ", data.get(i));
         }
         str += "]";
         logger.info(str);
 	    
         str = "[";
-        data = op.upperDiagonal().getData();
+        data = op.upperDiagonal();
         for(int i = 0; i < data.length; i++) {
-            str += String.format(" %.4f ", data[i]);
+            str += String.format(" %.4f ", data.get(i));
         }
         str += "]";
         logger.info(str);
@@ -164,7 +162,7 @@ public class OperatorTest {
 		double price = 20.0;
 		double factor = 1.1;
 		int i;
-		for (i = 0; i < grid.size(); i++) {
+		for (i = 0; i < grid.length; i++) {
 			grid.set(i, price);
 			price *= factor;
 		}
@@ -174,7 +172,7 @@ public class OperatorTest {
 		double q = 0.01;
 		double sigma = 0.5;
 		
-		BSMOperator ref = new BSMOperator(grid.size(), dx, r, q, sigma);
+		BSMOperator ref = new BSMOperator(grid.length, dx, r, q, sigma);
         logger.info("BSMOperator reference diagonals: \n");
         outputDiagonals(ref);
 		
@@ -212,15 +210,15 @@ public class OperatorTest {
 		
 		double tolerance = 1.0e-6;
 		
-		Array lderror = new Array(createCopy(ref.lowerDiagonal().getData()));
-        lderror.operatorSubtract(op1.lowerDiagonal());
-        Array derror = new Array(createCopy(ref.diagonal().getData()));
-        derror.operatorSubtract(op1.diagonal());
-        Array uderror = new Array(createCopy(ref.upperDiagonal().getData()));
-        uderror.operatorSubtract(op1.upperDiagonal());
+		Array lderror = ref.lowerDiagonal().clone();
+        lderror.subAssign(op1.lowerDiagonal());
+        Array derror = ref.diagonal().clone();
+        derror.subAssign(op1.diagonal());
+        Array uderror = ref.upperDiagonal().clone();
+        uderror.subAssign(op1.upperDiagonal());
 
 		
-		for (i=2; i<grid.size()-2; i++) {
+		for (i=2; i<grid.length-2; i++) {
 		    logger.info("lderror(" + i + ") = "+ Math.abs(lderror.get(i)) +  " tolerance " + tolerance + " \n");
 		    logger.info("derror(" + i + ") = "+ Math.abs(derror.get(i)) + " tolerance " + tolerance + " \n");
 		    logger.info("uderror(" + i + ") = "+ Math.abs(uderror.get(i)) + " tolerance " + tolerance + " \n");
@@ -237,14 +235,14 @@ public class OperatorTest {
 		}
 		
 		lderror = ref.lowerDiagonal();
-		lderror.operatorSubtract(op2.lowerDiagonal());
+		lderror.subAssign(op2.lowerDiagonal());
 		derror = ref.diagonal();
-		derror.operatorSubtract(op2.diagonal());
+		derror.subAssign(op2.diagonal());
 		uderror = ref.upperDiagonal();
-		uderror.operatorSubtract(op2.upperDiagonal());
+		uderror.subAssign(op2.upperDiagonal());
 		
 
-		for (i=2; i<grid.size()-2; i++) {
+		for (i=2; i<grid.length-2; i++) {
 			if (Math.abs(lderror.get(i)) > tolerance ||
 				Math.abs(derror.get(i)) > tolerance ||
 				Math.abs(uderror.get(i)) > tolerance) {
@@ -258,16 +256,10 @@ public class OperatorTest {
     }
 
     
-    private double[] createCopy(double[] ref) {
-        double [] copy = new double[ref.length];
-        System.arraycopy(ref, 0, copy, 0, ref.length);
-        return copy;
-    }
-
     private double norm(Array arr, double h) {
     	//copy arr into f2, and square each value
-    	Array f2 = new Array(arr.size()); 
-    	for(int i = 0; i < arr.size(); i++)
+    	Array f2 = new Array(arr.length); 
+    	for(int i = 0; i < arr.length; i++)
     	{
     		double d = arr.get(i);
     		f2.set(i, d*d);
@@ -283,12 +275,12 @@ public class OperatorTest {
     	//I believe this code is adding together the values in f2 (initialized to 0.0)
     	//then subtracting 0.5 * front() and also subtracting 0.5 * back()
     	double I = 0;
-    	for(int i = 0; i < f2.size(); i++)
+    	for(int i = 0; i < f2.length; i++)
     		I += f2.get(i);
     	
     	//not sure about this...
-    	I -= 0.5 * f2.front();	
-    	I -= 0.5 * f2.get(f2.size() - 1);
+    	I -= 0.5 * f2.first();	
+    	I -= 0.5 * f2.last();
     	I *= h;
     	
         return Math.sqrt(I);

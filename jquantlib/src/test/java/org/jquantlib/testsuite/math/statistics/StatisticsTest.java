@@ -3,11 +3,7 @@ package org.jquantlib.testsuite.math.statistics;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.math.statistics.GenericSequenceStatistics;
 import org.jquantlib.math.statistics.IStatistics;
-import org.jquantlib.math.statistics.IncrementalStatistics;
-import org.jquantlib.math.statistics.Statistics;
-import org.jquantlib.util.stdlibc.Std;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -16,17 +12,18 @@ public class StatisticsTest {
     
     private final static Logger logger = LoggerFactory.getLogger(StatisticsTest.class);
 
-    private static final double data[] =    { 3.0, 4.0, 5.0, 2.0, 3.0, 4.0, 5.0, 6.0, 4.0, 7.0 };
-    private static final double weights[] = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
+    private static final Array data    = new Array(new double[] { 3.0, 4.0, 5.0, 2.0, 3.0, 4.0, 5.0, 6.0, 4.0, 7.0 });
+    private static final Array weights = new Array(new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 });
     
     
     public StatisticsTest() {
         logger.info("Testing volatility model construction...");
     }
     
-    public void check(IStatistics s, String name){
-        for(int i = 0; i<data.length; i++){
-            s.add(data[i], weights[i] );
+    public void check(final IStatistics s, String name) {
+        
+        for (int i = 0; i<data.length; i++){
+            s.add(data.get(i), weights.get(i) );
         }
         
         double calculated, expected;
@@ -37,7 +34,7 @@ public class StatisticsTest {
                     "calculated: " + s.samples() + "\n" +
                     "expected: " + data.length);
         }
-        expected = Std.getInstance().accumulate(weights,0.0);
+        expected = weights.accumulate();
         calculated = s.weightSum();
         if (calculated != expected){
             fail(name  + ": wrong sum of weights\n"
@@ -45,7 +42,7 @@ public class StatisticsTest {
             + "    expected:   " + expected);
         }
         
-        expected = Std.getInstance().min_element(0, data.length, data);
+        expected = data.min();
         calculated = s.min();
         if(calculated != expected){
             fail(name + ": wrong minimum value \n" + 
@@ -53,7 +50,7 @@ public class StatisticsTest {
                     "expected: " + expected);
         }
         
-        expected = Std.getInstance().max_element(0, data.length, data);
+        expected = data.max();
         calculated = s.max();
         if(calculated != expected){
             fail(name + ": wrong maxmimum value \n" +

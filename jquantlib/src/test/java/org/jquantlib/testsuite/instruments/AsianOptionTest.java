@@ -97,12 +97,6 @@ public class AsianOptionTest {
         this.today = settings.getEvaluationDate();
     }
 
-    @Before
-    public void setUp() {
-        settings.setEvaluationDate(DateFactory.getFactory().getTodaysDate());
-        // this.today = settings.getEvaluationDate();
-    }
-
 
     @Test
     public void testAnalyticDiscreteGeometricAverage() {
@@ -113,7 +107,6 @@ public class AsianOptionTest {
         // Clewlow, Strickland, p.118-123
 
         DayCounter dc = Actual360.getDayCounter();
-        Date today = DateFactory.getFactory().getTodaysDate();
 
         logger.info("Today: " + today);
 
@@ -308,7 +301,7 @@ public class AsianOptionTest {
                                         settings.setEvaluationDate(tomorrow);
                                         value_p = option.getNPV();
                                         expected.put("theta", (value_p - value_m) / dT);
-
+                                        settings.setEvaluationDate(today);
                                         // compare
                                         for (Entry<String, Double> greek : calculated.entrySet()) {
                                             double expct = expected.get(greek.getKey());
@@ -351,7 +344,6 @@ public class AsianOptionTest {
         logger.info("Testing analytic continuous geometric average-price Asians...");
         DayCounter dc = Actual360.getDayCounter();
         // data from "Option Pricing Formulas", Haug, pag.96-97
-        Date today = DateFactory.getFactory().getTodaysDate();
         logger.info("Today: " + today);
 
         SimpleQuote spot = new SimpleQuote(80.0);
@@ -396,11 +388,10 @@ public class AsianOptionTest {
         runningAccumulator = 1.0;
         pastFixings = 0;
 
-        List<Date> fixingDates = new ArrayList<Date>(89);
+        List<Date> fixingDates = new ArrayList<Date>(91);
 
-        for (/* @Size */int i = 0; i < 89; i++) {
-            fixingDates.add(DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear())
-                    .increment(1));
+        for (/* @Size */int i = 0; i < 91; i++) {
+            fixingDates.add(DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(i));
         }
         PricingEngine engine2 = new AnalyticDiscreteGeometricAveragePriceAsianEngine();
         DiscreteAveragingAsianOption option2 = new DiscreteAveragingAsianOption(averageType, runningAccumulator, pastFixings,
@@ -415,7 +406,6 @@ public class AsianOptionTest {
     }
 
     
-    //XXX @Ignore
     @Test
     public void testAnalyticContinuousGeometricAveragePriceGreeks() {
         logger.info("Testing analytic continuous geometric average-price Asian greeks...");
@@ -437,8 +427,6 @@ public class AsianOptionTest {
         /* @Volatility */double vols[] = { 0.11, 0.50, 1.20 };
 
         DayCounter dc = Actual360.getDayCounter();
-        Date today = DateFactory.getFactory().getTodaysDate();
-        settings.setEvaluationDate(today);
 
         SimpleQuote spot = new SimpleQuote(0.0);
         SimpleQuote qRate = new SimpleQuote(0.0);
@@ -540,7 +528,7 @@ public class AsianOptionTest {
                                         settings.setEvaluationDate(tomorrow);
                                         value_p = option.getNPV();
                                         expected.put("theta", (value_p - value_m) / dT);
-
+                                        settings.setEvaluationDate(today);
                                         // compare
                                         for (Entry<String, Double> greek : calculated.entrySet()) {
                                             /* @Real */double expct = expected.get(greek.getKey());

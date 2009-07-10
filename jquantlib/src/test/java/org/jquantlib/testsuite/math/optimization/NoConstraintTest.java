@@ -59,7 +59,7 @@ public class NoConstraintTest {
         final Array direction = new Array(new double[] { 0.1d, 0.3d, 1.1d });
         double beta = 2.0;
         nc.update(params, direction, beta);
-        logger.info("params after nc.update= {}, {}, {}", new Object[] { params.getData()[0], params.getData()[1], params.getData()[2] } );
+        logger.info("params after nc.update= {}", params );
         logger.info("Test 1.1 + 2.0 * 0.3 = " + (1.1 + 2.0 * 0.3));
         if (!isArrayEqual(params, new Array(new double[] { 1.2d, 1.7d, 4.5d }), 0.000001))
             // if (!params.operatorEquals (new Array (new double[]{1.2d,1.7d,4.5d})))
@@ -67,9 +67,9 @@ public class NoConstraintTest {
     }
 
     private boolean isArrayEqual(final Array one, final Array two, final double precision) {
-        final Array diffArray = one.operatorSubtractCopy(two);
-        logger.info("diffArray = {}, {}, {}", new Object[] { diffArray.getData()[0], diffArray.getData()[1], diffArray.getData()[2] });
-        return Closeness.isCloseEnough(diffArray.dotProduct(diffArray, diffArray), precision * precision);
+        final Array diffArray = one.sub(two);
+        logger.info("diffArray = {}", diffArray);
+        return Closeness.isCloseEnough(diffArray.dotProduct(diffArray), precision * precision);
     }
 
 }

@@ -48,7 +48,6 @@ import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.time.Period;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,8 +219,6 @@ public class BarrierOptionTest {
 	    return (int) (t*360+0.5);
 	}
 	
-	//TODO: fix barrier option - getNPV() gets 0
-    @Ignore
     @Test
     public void testBabsiriValues() {
         logger.info("Testing barrier options against Babsiri's values...");
@@ -293,8 +290,6 @@ public class BarrierOptionTest {
         }
     }
         
-    //TODO: fix barrier option - getNPV() gets 0
-    @Ignore
     @Test
     public void testBeagleholeValues() {
 

@@ -25,6 +25,7 @@ package org.jquantlib.testsuite.math.interpolations;
 import static java.lang.Math.abs;
 import static org.junit.Assert.assertFalse;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.integrals.SimpsonIntegral;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.MonotonicCubicSpline;
@@ -70,8 +71,8 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 
 	    for (int i=0; i<points.length; i++) {
 	        int n = points[i];
-	        double[] x = xRange(-1.7, 1.9, n);
-	        double[] y = gaussian(x);
+	        Array x = xRange(-1.7, 1.9, n);
+	        Array y = gaussian(x);
 
 	        // MC not-a-knot
 	        CubicSplineInterpolation interpolation = new MonotonicCubicSpline(
@@ -101,8 +102,8 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    double interpolated, interpolated2;
 	    int n = 5;
 
-	    double[] x = new double[n];
-	    double[] y = new double[n];
+	    Array x; // = new double[n];
+	    Array y; // = new double[n];
 
 	    double x1_bad=-1.7, x2_bad=1.7;
 
@@ -142,8 +143,8 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 		
 		logger.info("Testing spline interpolation on RPN15A data set...");
 
-	    final double RPN15A_x[] = {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0};
-	    final double RPN15A_y[] = {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994};
+	    final Array RPN15A_x = new Array(new double[] {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0});
+	    final Array RPN15A_y = new Array(new double[] {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994});
 
 	    double interpolated;
 
@@ -158,8 +159,8 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    		.interpolate(RPN15A_x, RPN15A_y);
 	    
 	    checkValues("MC clamped spline", interpolation, RPN15A_x, RPN15A_y);
-	    check1stDerivativeValue("MC clamped spline", interpolation, RPN15A_x[0], 0.0);
-	    check1stDerivativeValue("MC clamped spline", interpolation, RPN15A_x[RPN15A_x.length-1],0.0);
+	    check1stDerivativeValue("MC clamped spline", interpolation, RPN15A_x.first(), 0.0);
+	    check1stDerivativeValue("MC clamped spline", interpolation, RPN15A_x.last(), 0.0);
 	    // good performance
 	    interpolated = interpolation.evaluate(x_bad);
 	    assertFalse("MC clamped spline interpolation good performance unverified"
@@ -174,8 +175,8 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 		
 		logger.info("Testing spline interpolation on RPN15A data set...");
 		
-		final double RPN15A_x[] = {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0};
-		final double RPN15A_y[] = {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994};
+		final Array RPN15A_x = new Array(new double[] {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0});
+		final Array RPN15A_y = new Array(new double[] {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994});
 		
 		double interpolated;
 		
@@ -204,7 +205,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	public void testMCNotAKnotSplineOnSimmetricEndConditions(){
 		int n = 9;
 
-	    double[] x, y;
+	    Array x, y;
 	    x = xRange(-1.8, 1.8, n);
 	    y = gaussian(x);
 
@@ -216,14 +217,14 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    		0.0)
 	    		.interpolate(x, y);
 	    checkValues("Not-a-knot spline", interpolation,x,y);
-	    checkSymmetry("Not-a-knot spline", interpolation, x[0]);
+	    checkSymmetry("Not-a-knot spline", interpolation, x.first());
 	}
 
 	@Test
 	public void testMCNotAKnotSplineOnDerivativeEndConditions(){
 		int n = 4;
 
-	    double[] x, y;
+	    Array x, y;
 	    x = xRange(-2.0, 2.0, n);
 	    y = parabolic(x);
 
@@ -236,9 +237,9 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    		.interpolate(x, y);
 	   
 	    checkValues("MC Not-a-knot spline", interpolation, x, y);
-	    check1stDerivativeValue("MC Not-a-knot spline", interpolation, x[0], 4.0);
-	    check1stDerivativeValue("MC Not-a-knot spline", interpolation, x[n-1], -4.0);
-	    check2ndDerivativeValue("MC Not-a-knot spline", interpolation, x[0], -2.0);
+	    check1stDerivativeValue("MC Not-a-knot spline", interpolation, x.first(), 4.0);
+	    check1stDerivativeValue("MC Not-a-knot spline", interpolation, x.get(n-1), -4.0);
+	    check2ndDerivativeValue("MC Not-a-knot spline", interpolation, x.first(), -2.0);
 	    
 	    //TODO: test failure here!!!
 //	    check2ndDerivativeValue("MC Not-a-knot spline", interpolation, x[n-1], -2.0);
@@ -249,7 +250,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	public void testMCClampedSplineOnDerivativeEndConditions(){
 		int n = 4;
 		
-		double[] x, y;
+		Array x, y;
 		x = xRange(-2.0, 2.0, n);
 		y = parabolic(x);
 		
@@ -262,10 +263,10 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 		.interpolate(x, y);
 		
 		checkValues("MC Clamped spline", interpolation, x, y);
-		check1stDerivativeValue("MC Clamped spline", interpolation, x[0], 4.0);
-		check1stDerivativeValue("MC Clamped spline", interpolation, x[n-1], -4.0);
-		check2ndDerivativeValue("MC Clamped spline", interpolation, x[0], -2.0);
-		check2ndDerivativeValue("MC Clamped spline", interpolation, x[n-1], -2.0);
+		check1stDerivativeValue("MC Clamped spline", interpolation, x.first(), 4.0);
+		check1stDerivativeValue("MC Clamped spline", interpolation, x.get(n-1), -4.0);
+		check2ndDerivativeValue("MC Clamped spline", interpolation, x.first(), -2.0);
+		check2ndDerivativeValue("MC Clamped spline", interpolation, x.get(n-1), -2.0);
 		
 	}
 	
@@ -273,7 +274,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	public void testMCSecondDerivativeSplineOnDerivativeEndConditions(){
 		int n = 4;
 		
-		double[] x, y;
+		Array x, y;
 		x = xRange(-2.0, 2.0, n);
 		y = parabolic(x);
 		
@@ -286,10 +287,10 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 		.interpolate(x, y);
 		
 		checkValues("MC SecondDerivative spline", interpolation, x, y);
-		check1stDerivativeValue("MC SecondDerivative spline", interpolation, x[0], 4.0);
-		check1stDerivativeValue("MC SecondDerivative spline", interpolation, x[n-1], -4.0);
-		check2ndDerivativeValue("MC SecondDerivative spline", interpolation, x[0], -2.0);
-		check2ndDerivativeValue("MC SecondDerivative spline", interpolation, x[n-1], -2.0);
+		check1stDerivativeValue("MC SecondDerivative spline", interpolation, x.first(), 4.0);
+		check1stDerivativeValue("MC SecondDerivative spline", interpolation, x.get(n-1), -4.0);
+		check2ndDerivativeValue("MC SecondDerivative spline", interpolation, x.first(), -2.0);
+		check2ndDerivativeValue("MC SecondDerivative spline", interpolation, x.get(n-1), -2.0);
 		
 	}
 
@@ -297,7 +298,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	public void testMCNotAKnotSplineNonRestrictiveHymanFilter(){
 	    int n = 4;
 
-	    double[] x, y;
+	    Array x, y;
 	    x = xRange(-2.0, 2.0, n);
 	    y = parabolic(x);
 	    double zero=0.0, interpolated, expected=0.0;
@@ -323,7 +324,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	public void testMCClampedSplineNonRestrictiveHymanFilter(){
 		int n = 4;
 		
-		double[] x, y;
+		Array x, y;
 		x = xRange(-2.0, 2.0, n);
 		y = parabolic(x);
 		double zero=0.0, interpolated, expected=0.0;
@@ -348,7 +349,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	@Test
 	public void testMCSecondDerivativeSplineNonRestrictiveHymanFilter(){
 		int n = 4;		
-		double[] x, y;
+		Array x, y;
 		x = xRange(-2.0, 2.0, n);
 		y = parabolic(x);
 		double zero=0.0, interpolated, expected=0.0;

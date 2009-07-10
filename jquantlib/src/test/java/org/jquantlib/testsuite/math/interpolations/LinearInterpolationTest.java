@@ -25,6 +25,7 @@ package org.jquantlib.testsuite.math.interpolations;
 import static java.lang.Math.abs;
 import static org.junit.Assert.fail;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.factories.Linear;
 import org.junit.BeforeClass;
@@ -41,9 +42,9 @@ public class LinearInterpolationTest {
 	
 	private final static Logger logger = LoggerFactory.getLogger(LinearInterpolationTest.class);
 	
-	private static final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
-	private static final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
-	private static final double x2[] = { -2.0, -1.0, 0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0 };
+	private static final Array x  = new Array( new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
+	private static final Array y  = new Array( new double[] { 5.0, 4.0, 3.0, 2.0, 1.0 });
+	private static final Array x2 = new Array( new double[] { -2.0, -1.0, 0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0 });
 	private static double y2[];
 	private static Interpolation interpolation;
 	private static int length;
@@ -67,7 +68,7 @@ public class LinearInterpolationTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWithoutEnableExtrapolation(){
 		for (int i=0; i<length; i++) {
-	    	y2[i] = interpolation.evaluate(x2[i]);
+	    	y2[i] = interpolation.evaluate(x2.get(i));
     	}
 	}
 	
@@ -75,10 +76,10 @@ public class LinearInterpolationTest {
 	public void testEnableExtrapolation(){
 		interpolation.enableExtrapolation();
     	for (int i=0; i<length; i++) {
-    		y2[i] = interpolation.evaluate(x2[i]);
+    		y2[i] = interpolation.evaluate(x2.get(i));
     	}
 	    for (int i=0; i<length; i++) {
-	        double expected = 5.0-x2[i];
+	        double expected = 5.0-x2.get(i);
 	        if (abs(y2[i]-expected) > tolerance) {
 	            StringBuilder sb = new StringBuilder();
 	            sb.append("failed to reproduce ").append(i+1).append("o. expected datum");

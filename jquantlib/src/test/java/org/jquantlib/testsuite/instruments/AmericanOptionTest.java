@@ -99,7 +99,8 @@ public class AmericanOptionTest {
     public AmericanOptionTest() {
         logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        this.today = DateFactory.getFactory().getTodaysDate();
+        //XXX this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
+        this.today = settings.getEvaluationDate();
     }
 
     @Test
@@ -444,8 +445,6 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
-        //XXX Date today = DateFactory.getFactory().getTodaysDate();
-        //XXX Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         settings.setEvaluationDate(today);
 
         double tolerance = 8.0e-2;
@@ -470,9 +469,11 @@ public class AmericanOptionTest {
             rRate.setValue(juValues[i].r);
             vol.setValue(juValues[i].v);
 
-            final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
-                            volTS));
+            final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
+                    new Handle<Quote>(spot),
+                    new Handle<YieldTermStructure>(qTS), 
+                    new Handle<YieldTermStructure>(rTS), 
+                    new Handle<BlackVolTermStructure>(volTS));
 
             final PricingEngine engine = new FDAmericanEngine(stochProcess, 100, 100);
             final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
@@ -509,9 +510,8 @@ public class AmericanOptionTest {
         int years[] = { 1, 2 };
         double vols[] = { 0.11, 0.50, 1.20 };
 
-        //XXX Date today = DateFactory.getFactory().getTodaysDate();
         DayCounter dc = Actual360.getDayCounter();
-        //XXX Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        
         settings.setEvaluationDate(today);
 
         final SimpleQuote spot = new SimpleQuote(0.0);
@@ -616,9 +616,7 @@ public class AmericanOptionTest {
         int years[] = { 1, 2 };
         double vols[] = { 0.11, 0.50, 1.20 };
 
-        //XXX Date today = DateFactory.getFactory().getTodaysDate();
         DayCounter dc = Actual360.getDayCounter();
-        //XXX Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         settings.setEvaluationDate(today);
 
         final SimpleQuote spot = new SimpleQuote(0.0);

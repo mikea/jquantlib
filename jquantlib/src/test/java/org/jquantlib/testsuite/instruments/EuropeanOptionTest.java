@@ -106,8 +106,9 @@ public class EuropeanOptionTest {
     
     public EuropeanOptionTest() {
         logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
+        this.today = settings.getEvaluationDate();
     }
     
     
@@ -915,7 +916,6 @@ public class EuropeanOptionTest {
         // test options
         
         DayCounter dc = Actual360.getDayCounter();
-        Date today = DateFactory.getFactory().getTodaysDate();
         
         //does not really have to be a handle
         Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(100.0));

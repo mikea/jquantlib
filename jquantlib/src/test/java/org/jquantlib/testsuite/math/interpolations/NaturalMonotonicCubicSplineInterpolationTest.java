@@ -2,10 +2,9 @@ package org.jquantlib.testsuite.math.interpolations;
 
 import static org.junit.Assert.assertFalse;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
-import org.jquantlib.math.interpolations.factories.NaturalCubicSpline;
 import org.jquantlib.math.interpolations.factories.NaturalMonotonicCubicSpline;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +23,8 @@ public class NaturalMonotonicCubicSplineInterpolationTest extends
 		
 		logger.info("Testing Natural Monotonic Cubic Spline interpolation on RPN15A data set...");
 
-	    final double RPN15A_x[] = {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0};
-	    final double RPN15A_y[] = {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994};
+	    final Array RPN15A_x = new Array(new double[] {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0}) ;
+	    final Array RPN15A_y = new Array(new double[] {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994});
 
 	    double interpolated;
 

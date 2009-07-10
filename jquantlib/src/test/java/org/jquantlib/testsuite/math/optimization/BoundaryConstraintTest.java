@@ -60,8 +60,7 @@ public class BoundaryConstraintTest {
         // note that boundary constraint have issues of non-convergence when the values in an array are at either boundary
         double beta = -2.0;
         bc.update(params, direction, beta);
-        logger.info("params after co.update=" + "{" + params.getData()[0] + "," + params.getData()[1] + "," + params.getData()[2]
-                + "}");
+        logger.info("params after co.update = {}", params);
         // if (!params.operatorEquals(new double[]{0.9,0.8,0.2}))
         if (!isArrayEqual(params, new Array(new double[] { 1.1, 1.0, 1.2 }), 0.000001))
             fail("BoundaryConstraint update method failed");
@@ -69,10 +68,9 @@ public class BoundaryConstraintTest {
     }
 
     private boolean isArrayEqual(Array one, Array two, double precision) {
-        Array diffArray = one.operatorSubtractCopy(two);
-        logger.info("diffArray =" + "{" + diffArray.getData()[0] + "," + diffArray.getData()[1] + "," + diffArray.getData()[2]
-                + "}");
-        return Closeness.isCloseEnough(diffArray.dotProduct(diffArray, diffArray), precision * precision);
+        Array diffArray = one.sub(two);
+        logger.info("diffArray = {}", diffArray);
+        return Closeness.isCloseEnough(diffArray.dotProduct(diffArray), precision * precision);
 
     }
 

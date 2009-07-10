@@ -30,11 +30,11 @@ package org.jquantlib.testsuite.operators;
 
 import static org.junit.Assert.fail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.math.Array;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TridiagonalOperatorTest {
 	
@@ -71,9 +71,9 @@ public class TridiagonalOperatorTest {
 			
 			Array solved = t.solveFor(rhs);
 			
-			double[] expected = { 20.0, -33.285714285714285, 13.428571428571429 };
+			Array expected = new Array(new double[] {20.0, -33.285714285714285, 13.428571428571429 });
 			//Array expectedArray = new Array(expected);
-			if(!solved.operatorEquals(expected))
+			if(!solved.equals(expected))
 	        	fail(" TridiagonalOperator expected:\n"
 	                    + " { 20, -33.2857, 13.4286 } "   + "\n"
 	                    + " got: "   + solved.get(0) + "\n"

@@ -25,6 +25,7 @@ package org.jquantlib.testsuite.math.interpolations;
 import static java.lang.Math.abs;
 import static org.junit.Assert.assertFalse;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.factories.ForwardFlat;
 import org.junit.Test;
@@ -39,8 +40,8 @@ public class FlatForwardInterpolationTest  {
 	
 	private final static Logger logger = LoggerFactory.getLogger(FlatForwardInterpolationTest.class);
 
-	private final double x[] = { 0.0, 1.0, 2.0, 3.0, 4.0 };
-	private final double y[] = { 5.0, 4.0, 3.0, 2.0, 1.0 };
+	private final Array x = new Array( new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
+	private final Array y = new Array( new double[] { 5.0, 4.0, 3.0, 2.0, 1.0 });
 	private final Interpolation interpolation;
 	private final int length;
 	private final double tolerance;
@@ -55,10 +56,10 @@ public class FlatForwardInterpolationTest  {
 	@Test
 	public void checkAtOriginalPoints(){
 		for(int i=0; i<length; i++){
-			double d = x[i];
+			double d = x.get(i);
 			double calculated = interpolation.evaluate(d);
 			System.out.println(calculated);
-			double expected = y[i];
+			double expected = y.get(i);
 			assertFalse("failed to reproduce "+i+" datum"
 						+"\n expected:     "+expected
 						+"\n calculated:   "+calculated
@@ -70,9 +71,9 @@ public class FlatForwardInterpolationTest  {
 	@Test
 	public void checkAtMiddlePoints(){
 		for(int i=0; i<length-1; i++){
-			double d = (x[i]+x[i+1])/2;
+			double d = (x.get(i)+x.get(i+1))/2;
 			double calculated = interpolation.evaluate(d);
-			double expected = y[i];
+			double expected = y.get(i);
 			
 			assertFalse("failed to interpolate correctly at "+d
 						+"\n expected:     "+expected
@@ -85,17 +86,17 @@ public class FlatForwardInterpolationTest  {
 	@Test
 	public void checkOutsideOriginalRange(){
 		interpolation.enableExtrapolation();
-		double d = x[0] - 0.5;
+		double d = x.first() - 0.5;
 		double calculated = interpolation.evaluate(d);
-		double expected = y[0];
+		double expected = y.first();
 		assertFalse("failed to extrapolate correctly at "+d
 					+"\n expected:     "+expected
 					+"\n calculated:   "+calculated
 					+"\n error:        "+abs(expected-calculated),
 					abs(expected-calculated) > tolerance);
-		d= x[length-1]+0.5;
+		d= x.last()+0.5;
 		calculated = interpolation.evaluate(d);
-		expected = y[length-1];
+		expected = y.last();
 		assertFalse("failed to extrapolate correctly at "+d
 				    +"\n expected:     "+expected
 			    	+"\n calculated:   "+calculated
@@ -106,19 +107,19 @@ public class FlatForwardInterpolationTest  {
 
 	@Test
 	public void checkPrimitiveAtOriginalPoints(){
-		double calculated = interpolation.primitive(x[0]);
+		double calculated = interpolation.primitive(x.first());
 		double expected = 0.0;
-		assertFalse("failed to calculate primitive at "+x[0]
+		assertFalse("failed to calculate primitive at "+x.first()
 				    +"\n expected:     "+expected
 			    	+"\n calculated:   "+calculated
 			    	+"\n error:        "+abs(expected-calculated),
 			    	abs(expected-calculated) > tolerance);
 		double sum = 0.0;
 		for(int i=1; i<length; i++){
-			sum += (x[i]-x[i-1])*y[i-1];
-			calculated = interpolation.primitive(x[i]);
+			sum += (x.get(i)-x.get(i-1))*y.get(i-1);
+			calculated = interpolation.primitive(x.get(i));
 			expected=sum;
-			assertFalse("failed to calculate primitive at "+x[i]
+			assertFalse("failed to calculate primitive at "+x.get(i)
 			            +"\n expected:     "+expected
 			            +"\n calculated:   "+calculated
 			            +"\n error:        "+abs(expected-calculated),
@@ -130,11 +131,11 @@ public class FlatForwardInterpolationTest  {
 	public void checkPrimitiveAtMiddlePoints(){
 		double sum = 0.0;
 		for(int i=0; i<length-1; i++){
-			double d = (x[i]+x[i+1])/2;
-			sum += (x[i+1]-x[i])*y[i]/2;
+			double d = (x.get(i)+x.get(i+1))/2;
+			sum += (x.get(i+1)-x.get(i))*y.get(i)/2;
 			double calculated = interpolation.primitive(d);
 			double expected=sum;
-			sum += (x[i+1]-x[i])*y[i]/2;
+			sum += (x.get(i+1)-x.get(i))*y.get(i)/2;
 			assertFalse("failed to calculate primitive at "+d
 			            +"\n expected:     "+expected
 			            +"\n calculated:   "+calculated

@@ -25,6 +25,7 @@ package org.jquantlib.testsuite.math.interpolations;
 import static java.lang.Math.abs;
 import static org.junit.Assert.assertFalse;
 
+import org.jquantlib.math.Array;
 import org.jquantlib.math.integrals.SimpsonIntegral;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
@@ -43,9 +44,9 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 
 	private final static Logger logger = LoggerFactory.getLogger(CubicSplineInterpolationTest.class);
 
-	private static final double generic_x[] = { 0.0, 1.0, 3.0, 4.0 };
-	private static final double generic_y[] = { 0.0, 0.0, 2.0, 2.0 };
-	private static final double generic_natural_y2[] = { 0.0, 1.5, -1.5, 0.0 };
+	private static final Array generic_x = new Array(new double[] { 0.0, 1.0, 3.0, 4.0 });
+	private static final Array generic_y = new Array(new double[] { 0.0, 0.0, 2.0, 2.0 });
+	private static final Array generic_natural_y2 = new Array(new double[] { 0.0, 1.5, -1.5, 0.0 });
 	private static double x35[]= new double[3];
 
 	public CubicSplineInterpolationTest() {
@@ -85,8 +86,8 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 
 	    for (int i=0; i<points.length; i++) {
 	        int n = points[i];
-	        double[] x = xRange(-1.7, 1.9, n);
-	        double[] y = gaussian(x);
+	        Array x = xRange(-1.7, 1.9, n);
+	        Array y = gaussian(x);
 
 	        // Not-a-knot
 	        CubicSplineInterpolation interpolation = new CubicSpline(
@@ -132,8 +133,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	    double interpolated, interpolated2;
 	    int n = 5;
 
-	    double[] x = new double[n];
-	    double[] y = new double[n];
+	    Array x, y;
 
 	    double x1_bad=-1.7, x2_bad=1.7;
 
@@ -171,8 +171,8 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		
 		logger.info("Testing Clamped spline interpolation on RPN15A data set...");
 		
-		final double RPN15A_x[] = {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0};
-		final double RPN15A_y[] = {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994};
+		final Array RPN15A_x = new Array(new double[] {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0});
+		final Array RPN15A_y = new Array(new double[] {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994});
 		
 		double interpolated;
 		
@@ -186,8 +186,8 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		.interpolate(RPN15A_x, RPN15A_y);
 		
 		checkValues("Clamped spline", interpolation, RPN15A_x, RPN15A_y);
-		check1stDerivativeValue("Clamped spline", interpolation, RPN15A_x[0], 0.0);
-		check1stDerivativeValue("Clamped spline",  interpolation, RPN15A_x[RPN15A_x.length-1],0.0);
+		check1stDerivativeValue("Clamped spline", interpolation, RPN15A_x.first(), 0.0);
+		check1stDerivativeValue("Clamped spline",  interpolation, RPN15A_x.last(),0.0);
 		
 		// poor performance
 		double x_bad = 11.0;
@@ -205,8 +205,8 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		
 		logger.info("Testing Not-a-knot spline interpolation on RPN15A data set...");
 		
-		final double RPN15A_x[] = {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0};
-		final double RPN15A_y[] = {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994};
+		final Array RPN15A_x = new Array(new double[] {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0});
+		final Array RPN15A_y = new Array(new double[] {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994});
 		
 		double interpolated;
 		
@@ -233,24 +233,25 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	}
 	
 	@Test
-	public void testNaturalSplineOnGenericValues(){		
+	public void testNaturalSplineOnGenericValues() {
+	    
 		CubicSplineInterpolation interpolation = new CubicSpline(
 				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
-				generic_natural_y2[0],
+				generic_natural_y2.first(),
 				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
-				generic_natural_y2[generic_x.length-1],
+				generic_natural_y2.last(),
 				false)
 				.interpolate(generic_x, generic_y);
 		
 		checkValues("Natural spline", interpolation, generic_x, generic_y);
 		int n=generic_x.length;
 		for (int i=0; i<n; i++) {
-	        double interpolated = interpolation.secondDerivative(generic_x[i]);
-	        double error = interpolated - generic_natural_y2[i];
+	        double interpolated = interpolation.secondDerivative(generic_x.get(i));
+	        double error = interpolated - generic_natural_y2.get(i);
 	        assertFalse("Natural spline interpolation "
-       					+"second derivative failed at x="+generic_x[i]
+       					+"second derivative failed at x="+generic_x.get(i)
        					+"\n interpolated value: "+interpolated
-       					+"\n expected value:     "+generic_natural_y2[i]
+       					+"\n expected value:     "+generic_natural_y2.get(i)
                         +"\n error:              "+error,
        					abs(error) > 3e-16);
 	    }
@@ -270,8 +271,8 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 				.interpolate(generic_x, generic_y);
 		
 		checkValues("Clamped spline", interpolation, generic_x, generic_y);
-		check1stDerivativeValue("Clamped spline", interpolation, generic_x[0],0.0);
-		check1stDerivativeValue("Clamped spline", interpolation, generic_x[generic_x.length-1],0.0);
+		check1stDerivativeValue("Clamped spline", interpolation, generic_x.first(),0.0);
+		check1stDerivativeValue("Clamped spline", interpolation, generic_x.last(),0.0);
 
 	    x35[0] = interpolation.evaluate(3.5);
 	}
@@ -303,7 +304,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	public void testNotAKnotSimmetricEndConditions(){
 		int n = 9;
 
-	    double[] x, y;
+	    Array x, y;
 	    x = xRange(-1.8, 1.8, n);
 	    y = gaussian(x);
 
@@ -318,7 +319,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 
 	    checkValues("Not-a-knot spline", interpolation,x,y);
 	    checkNotAKnotCondition("Not-a-knot spline", interpolation);
-	    checkSymmetry("Not-a-knot spline", interpolation, x[0]);
+	    checkSymmetry("Not-a-knot spline", interpolation, x.first());
 	    
 	}
 	
@@ -326,7 +327,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	public void testNotAKnotSpineOnDerivativeEndConditions(){
 		int n = 4;
 
-	    double[] x, y;
+	    Array x, y;
 	    x = xRange(-2.0, 2.0, n);
 	    y = parabolic(x);
 
@@ -340,9 +341,9 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	    		.interpolate(x, y);
 	   
 	    checkValues("Not-a-knot spline", interpolation, x, y);
-	    check1stDerivativeValue("Not-a-knot spline", interpolation, x[0], 4.0);
-	    check1stDerivativeValue("Not-a-knot spline", interpolation, x[n-1], -4.0);
-	    check2ndDerivativeValue("Not-a-knot spline", interpolation, x[0], -2.0);
+	    check1stDerivativeValue("Not-a-knot spline", interpolation, x.first(), 4.0);
+	    check1stDerivativeValue("Not-a-knot spline", interpolation, x.get(n-1), -4.0);
+	    check2ndDerivativeValue("Not-a-knot spline", interpolation, x.first(), -2.0);
 	    
 	    //TODO: test failure here!!!
 //	    check2ndDerivativeValue("Not-a-knot spline", interpolation, x[n-1], -2.0);
@@ -353,7 +354,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	public void testClampedSpineOnDerivativeEndConditions(){
 		int n = 4;
 		
-		double[] x, y;
+		Array x, y;
 		x = xRange(-2.0, 2.0, n);
 		y = parabolic(x);
 		
@@ -367,10 +368,10 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		.interpolate(x, y);
 		
 		checkValues("Clamped spline", interpolation, x, y);
-		check1stDerivativeValue("Clamped spline", interpolation, x[0], 4.0);
-		check1stDerivativeValue("Clamped spline", interpolation, x[n-1], -4.0);
-		check2ndDerivativeValue("Clamped spline", interpolation, x[0], -2.0);
-		check2ndDerivativeValue("Clamped spline", interpolation, x[n-1], -2.0);
+		check1stDerivativeValue("Clamped spline", interpolation, x.first(), 4.0);
+		check1stDerivativeValue("Clamped spline", interpolation, x.get(n-1), -4.0);
+		check2ndDerivativeValue("Clamped spline", interpolation, x.first(), -2.0);
+		check2ndDerivativeValue("Clamped spline", interpolation, x.get(n-1), -2.0);
 		
 	}
 
@@ -378,7 +379,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	public void testSecondDerivativeOnDerivativeEndConditions(){
 		int n = 4;
 		
-		double[] x, y;
+		Array x, y;
 		x = xRange(-2.0, 2.0, n);
 		y = parabolic(x);
 		
@@ -392,10 +393,10 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		.interpolate(x, y);
 		
 		checkValues("SecondDerivative spline", interpolation, x, y);
-		check1stDerivativeValue("SecondDerivative spline", interpolation, x[0], 4.0);
-		check1stDerivativeValue("SecondDerivative spline", interpolation, x[n-1], -4.0);
-		check2ndDerivativeValue("SecondDerivative spline", interpolation, x[0], -2.0);
-		check2ndDerivativeValue("SecondDerivative spline", interpolation, x[n-1], -2.0);
+		check1stDerivativeValue("SecondDerivative spline", interpolation, x.first(), 4.0);
+		check1stDerivativeValue("SecondDerivative spline", interpolation, x.get(n-1), -4.0);
+		check2ndDerivativeValue("SecondDerivative spline", interpolation, x.first(), -2.0);
+		check2ndDerivativeValue("SecondDerivative spline", interpolation, x.get(n-1), -2.0);
 		
 	}
 

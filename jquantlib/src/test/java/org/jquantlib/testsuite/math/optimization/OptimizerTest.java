@@ -204,19 +204,19 @@ public class OptimizerTest {
 
         @Override
         public double value(Array x) {
-            if (x.size() != 1) {
+            if (x.length != 1) {
                 throw new IllegalArgumentException("Independent variable must be 1 dimensional");
             }
             double y = 0;
             for (int i = 0; i <= polynominalDegree_; ++i) {
-                y += coefficients_.get(i) * Math.pow(x.get(0), i);
+                y += coefficients_.get(i) * Math.pow(x.first(), i);
             }
             return y;
         }
 
         @Override
         public Array values(Array x) {
-            if (x.size() != 1) {
+            if (x.length != 1) {
                 throw new IllegalArgumentException("Independent variable must be 1 dimensional");
             }
             Array y = new Array(1);
