@@ -78,7 +78,7 @@ final class Grid {
 		result.set(0,xMin);
 		
 		for (int j=1; j < steps+1; j++) {
-			result.set(j ,result.get(j-1)*edx);
+			result.set(j, result.get(j-1)*edx);
 		}		
 		return result;
 	}

@@ -30,7 +30,7 @@ import org.jquantlib.math.DoublePredicate;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public class TruePredicate implements DoublePredicate {
+public final class TruePredicate implements DoublePredicate {
 
 	//
     // implements DoublePredicate

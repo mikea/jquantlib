@@ -47,44 +47,58 @@ public class SampledCurveTest {
 		final SampledCurve curve = new SampledCurve(BoundedGrid(-10.0, 10.0, 100));
 		final UnaryFunctionDouble f2 = new Sqr();
 		
-		curve.sample(f2);
-		double expected = 100.0;
-		if(Math.abs(curve.value(0)-expected)> 1e-5){
-			fail("function sampling failed at 0");
-		}
+        curve.sample(f2);
+        if (Math.abs(curve.value(0) - 100.0) > 1e-5) {
+            fail("function sampling failed at 0");
+        }
 
-		curve.values().set(0, 2);
-	    if (Math.abs(curve.value(0) - 2.0) > 1e-5) {
-	        fail("curve value setting failed");
-	    }
+        curve.values().set(0, 2);
+        if (Math.abs(curve.value(0) - 2.0) > 1e-5) {
+            fail("curve value setting failed");
+        }
 
-	    Array value = curve.values();
-	    value.set(1, 3.0);
-	    if (Math.abs(curve.value(1) - 3.0) > 1e-5) {
-	        fail("curve value grid failed");
-	    }
+        curve.values().set(1, 3.0);
+        if (Math.abs(curve.value(1) - 3.0) > 1e-5) {
+            fail("curve value grid failed");
+        }
 
-	    curve.shiftGrid(10.0);
-	    if (Math.abs(curve.gridValue(0) - 0.0) > 1e-5) {
-	        //BOOST_ERROR("sample curve shift grid failed");
-	    }
-	    
-	    
-	    if (Math.abs(curve.value(0) - 2.0) > 1e-5) {
+        curve.shiftGrid(10.0);
+        if (Math.abs(curve.gridValue(0) - 0.0) > 1e-5) {
+            fail("sample curve shift grid failed");
+        }
+
+        if (Math.abs(curve.value(0) - 2.0) > 1e-5) {
             fail("sample curve shift grid - value failed");
-	    }
+        }
 
-	    curve.sample(f2);
-	    curve.regrid(BoundedGrid(0.0,20.0,200));
-	    double tolerance = 1.0e-2;
-	    for (int i=0; i < curve.size(); i++) {
-	        double grid = curve.gridValue(i);
-	        expected = f2.evaluate(grid);
-	        if (Math.abs(curve.value(i) - expected) > tolerance) {
-	            fail("sample curve regriding failed");
-	        }
-	    }
-		
+        SampledCurve testCurve;
+        double tolerance = 1.0e-2;
+
+        testCurve = curve.clone();
+        testCurve.sample(f2);
+        testCurve.regrid(BoundedGrid(0.0, 20.0, 200));
+        for (int i=0; i < testCurve.size(); i++) {
+            double grid  = testCurve.gridValue(i);
+            double value = testCurve.value(i);
+            double expected = f2.evaluate(grid);
+            if (Math.abs(value - expected) > tolerance) {
+                fail("sample curve regriding failed");
+            }
+        }
+        
+        
+        //TODO: study how this test case could be performed
+//        testCurve = curve.clone();
+//        testCurve.regrid(BoundedGrid(0.0, 20.0, 200), f2);
+//        for (int i=0; i < testCurve.size(); i++) {
+//            double grid  = testCurve.gridValue(i);
+//            double value = testCurve.value(i);
+//            double expected = f2.evaluate(grid);
+//            if (Math.abs(value - expected) > tolerance) {
+//                fail("sample curve regriding failed");
+//            }
+//        }
+        
 	}
 	
 	private Array BoundedGrid(double xMin, double xMax, int steps) {

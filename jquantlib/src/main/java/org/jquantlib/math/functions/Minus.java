@@ -31,7 +31,7 @@ import org.jquantlib.math.BinaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public class Minus implements BinaryFunctionDouble {
+public final class Minus implements BinaryFunctionDouble {
 
 	//
     // implements UnaryFunctionDouble

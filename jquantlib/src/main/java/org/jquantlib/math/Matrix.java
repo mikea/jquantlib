@@ -158,15 +158,15 @@ public class Matrix {
 	// public fields
 	//
 	
-	public final int cols, rows;
-    public final int length;
+	public int cols, rows;
+    public int length;
 
 
 	//
 	// package private
 	//
 
-	/*@PackagePrivate*/ final double[] data;
+	/*@PackagePrivate*/ double[] data;
 
 	
 	//
@@ -233,7 +233,10 @@ public class Matrix {
     // overrides Object
     //
     
-    @Override
+    /**
+     * Returns a copy of <code>this</code> Matrix
+     */
+	@Override
     public Matrix clone() {
         return this.copyOfRange(0, 0, this.rows, this.cols);
     }
@@ -325,11 +328,25 @@ public class Matrix {
      * Fills all elements of this Matrix with a given scalar
      * 
      * @param scalar is the value to be used to fill in
+     * @return this
      */
     public Matrix fill(final double scalar) {
         Arrays.fill(data, scalar);
         return this;
     }
+    
+//XXX
+//    /**
+//     * Fills <code>this</code> Matrix with contents from <code>another</code> Matrix
+//     * 
+//     * @param another is the source Matrix where data is being copied from
+//     * @return <code>this</code>
+//     */
+//    public Matrix fill(final Matrix another) {
+//        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+//        System.arraycopy(another.data, 0, this.data, 0, this.length);
+//        return this;
+//    }
 
     /**
      * Returns Matrix containing a copy of a rectangular region
@@ -339,7 +356,7 @@ public class Matrix {
      * @param nrows is the number of rows to be copied
      * @param ncols is the number of columns to be copied
      * 
-     * @return a Matrix containing a copy of a rectangular region
+     * @return a new instance
      */
     public Matrix copyOfRange(final int row, final int col, final int nrows, final int ncols) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
@@ -379,7 +396,7 @@ public class Matrix {
      * @param col coordinate
      */
     public void set(final int row, final int col, final double value) {
-        data[address(row, col)] = value;
+        this.data[address(row, col)] = value;
     }
 
     
@@ -446,18 +463,23 @@ public class Matrix {
         return getAddress(row)+col;
 	}
 	
+    /**
+     * Returns an Array which contains elements of a requested row
+     * 
+     * @param another
+     * @return a new Array instance
+     */
     public Array getRow(final int row) {
         final Array vector = new Array(this.cols);
         System.arraycopy(this.data, getAddress(row), vector.data, 0, this.cols);
         return vector;
     }
 
-    public Array setRow(final int row, final Array array) {
+    public void setRow(final int row, final Array array) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.cols!=array.length) throw new IllegalArgumentException(); //TODO: message
         
         System.arraycopy(array.data, 0, this.data, getAddress(row), this.cols);
-        return array;
     }
 
     public Array getCol(final int col) {
@@ -474,7 +496,7 @@ public class Matrix {
         return array;
     }
 
-    public Array setColumn(final int col, final Array array) {
+    public void setCol(final int col, final Array array) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows!=array.length) throw new IllegalArgumentException(); //TODO: message
         
@@ -487,7 +509,6 @@ public class Matrix {
                 addr += this.cols;
             }
         }
-        return array;
     }
 
     
@@ -503,6 +524,12 @@ public class Matrix {
     //	/=    divAssign  Matrix  scalar   this
 	
 	
+    /**
+     * Returns the result of an addition of <code>this</code> Matrix and <code>another</code> Matrix
+     * 
+     * @param another
+     * @return this
+     */
     public Matrix addAssign(final Matrix another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
@@ -517,6 +544,12 @@ public class Matrix {
         return this;
     }
 
+    /**
+     * Returns the result of a subtraction of <code>this</code> Matrix and <code>another</code> Matrix
+     * 
+     * @param another
+     * @return this
+     */
     public Matrix subAssign(final Matrix another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
@@ -531,6 +564,12 @@ public class Matrix {
         return this;
     }
 
+    /**
+     * Returns the result of a multiplication of <code>this</code> Matrix by a <code>scalar</code>
+     * 
+     * @param scalar
+     * @return this
+     */
     public Matrix mulAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
             int rowAddress = address(row);
@@ -542,6 +581,12 @@ public class Matrix {
         return this;
     }
 
+    /**
+     * Returns the result of a division of <code>this</code> Matrix by a <code>scalar</code>
+     * 
+     * @param scalar
+     * @return this
+     */
     public Matrix divAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
             int rowAddress = address(row);
@@ -564,6 +609,12 @@ public class Matrix {
     //	*     mul        Matrix  scalar    Matrix
     //	/     div        Matrix  scalar    Matrix
 
+    /**
+     * Returns the result of addition of <code>this</code> Matrix and <code>another</code> Matrix
+     * 
+     * @param another
+     * @return a new instance
+     */
     public Matrix add(final Matrix another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
@@ -579,6 +630,12 @@ public class Matrix {
         return result;
     }
 
+    /**
+     * Returns the result of a subtraction of <code>this</code> Matrix and <code>another</code> Matrix
+     * 
+     * @param another
+     * @return a new instance
+     */
     public Matrix sub(final Matrix another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
@@ -593,7 +650,24 @@ public class Matrix {
         }
         return result;
     }
+    
+    
+    /**
+     * Returns the negative of <code>this</code> Matrix
+     * 
+     * @return this
+     */
+    public Matrix negative() {
+        return this.mulAssign(-1);
+    }
+    
 
+    /**
+     * Returns the result of a multiplication of <code>this</code> Matrix by a <code>scalar</code>
+     * 
+     * @param scalar
+     * @return a new instance
+     */
     public Matrix mul(final double scalar) {
         Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
@@ -606,6 +680,12 @@ public class Matrix {
         return result;
     }
 
+    /**
+     * Returns the result of a division of <code>this</code> Matrix by a <code>scalar</code>
+     * 
+     * @param scalar
+     * @return a new instance
+     */
     public Matrix div(final double scalar) {
         Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
@@ -627,6 +707,12 @@ public class Matrix {
     //	*     mul        Matrix  Array    Array
     //	*     mul        Matrix  Matrix   Matrix
     
+    /**
+     * Returns an Array which represents the multiplication of <code>this</code> Matrix by an Array
+     * 
+     * @param array is the input Array which participates in the operation
+     * @return a new Array which contains the result
+     */
     public Array mul(final Array array) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.cols != array.length) throw new IllegalArgumentException(); //TODO: message
@@ -644,6 +730,12 @@ public class Matrix {
         return result;
     }
     
+    /**
+     * Returns a Matrix which represents the multiplication of <code>this</code> Matrix and <code>another</code> Matrix
+     * 
+     * @param another
+     * @return a new Matrix which contains the result
+     */
     public Matrix mul(final Matrix another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.cols != another.rows) throw new IllegalArgumentException(); //TODO: message
@@ -684,33 +776,59 @@ public class Matrix {
 	//  diagonal     Matrix           Array
     //	inverse      Matrix           Matrix
 	
-    public Matrix swap(Matrix another) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
+    /**
+     * Swaps contents of <code>this</code> Matrix by <code>another</code> Matrix
+     * 
+     * @param another
+     * @return this
+     */
+    public Matrix swap(final Matrix another) {
+        int itmp;
+        double [] dtmp;
         
-        // allocate a temporary buffer for data transfer
-        double[] buffer = new double[Math.min(this.length, blksize)]; 
-
-        // swaps blocks
-        for (int row=0; row<length/blksize; row++) {
-            int addr = row*blksize;
-            System.arraycopy(this.data,    addr, buffer,          0, blksize);
-            System.arraycopy(another.data, addr, this.data,    addr, blksize);
-            System.arraycopy(buffer,          0, another.data, addr, blksize);
-        }
-
-        // swaps last block
-        final int addr = ((int)(length/blksize))*blksize;
-        if (addr>=0 && addr<this.length) {
-            final int remainder = this.length-addr;
-            System.arraycopy(this.data,    addr, buffer,          0, remainder);
-            System.arraycopy(another.data, addr, this.data,    addr, remainder);
-            System.arraycopy(buffer,          0, another.data, addr, remainder);
-        }
+        // swaps rows, cols and length
+        itmp = this.rows;   this.rows   = another.rows;   another.rows   = itmp;
+        itmp = this.cols;   this.cols   = another.cols;   another.cols   = itmp;
+        itmp = this.length; this.length = another.length; another.length = itmp;
+        // swaps data
+        dtmp = this.data;   this.data   = another.data;   another.data   = dtmp;
+        
+//
+//        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+//        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
+//        
+//        // allocate a temporary buffer for data transfer
+//        double[] buffer = new double[Math.min(this.length, blksize)]; 
+//
+//        // swaps blocks
+//        for (int row=0; row<length/blksize; row++) {
+//            int addr = row*blksize;
+//            System.arraycopy(this.data,    addr, buffer,          0, blksize);
+//            System.arraycopy(another.data, addr, this.data,    addr, blksize);
+//            System.arraycopy(buffer,          0, another.data, addr, blksize);
+//        }
+//
+//        // swaps last block
+//        final int addr = ((int)(length/blksize))*blksize;
+//        if (addr>=0 && addr<this.length) {
+//            final int remainder = this.length-addr;
+//            System.arraycopy(this.data,    addr, buffer,          0, remainder);
+//            System.arraycopy(another.data, addr, this.data,    addr, remainder);
+//            System.arraycopy(buffer,          0, another.data, addr, remainder);
+//        }
         
         return this;
     }
 
+    /**
+     * Swaps elements given their coordinates
+     * 
+     * @param pos1row : element1 row
+     * @param pos1col : element1 col
+     * @param pos2row : element2 row
+     * @param pos2col : element2 col
+     * @return this
+     */
     public Matrix swap(final int pos1row, final int pos1col, final int pos2row, final int pos2col) {
         int addr1 = address(pos1row, pos1col);
         int addr2 = address(pos2row, pos2col);
@@ -721,6 +839,11 @@ public class Matrix {
     }
     
     
+    /**
+     * Returns the transpose of <code>this</code> Matrix
+     * 
+     * @return a new instance which contains the result of this operation
+     */
     public Matrix transpose() {
         final Matrix result = new Matrix(this.cols, this.rows);
         for (int row=0; row<this.rows; row++) {
@@ -736,9 +859,9 @@ public class Matrix {
     }
 
     /**
-     * Obtains a diagonal from a square {@link Matrix}
+     * Returns a diagonal from <code>this</code> Matrix, if it is square
      * 
-     * @return a row-matrix which contains the elements of <code>this</code> square Matrix
+     * @return a new instance which contains the result of this operation
      */
     public Array diagonal() {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
@@ -753,6 +876,11 @@ public class Matrix {
         return result;
     }
     
+    /**
+     * Returns an inverse Matrix from <code>this</code> Matrix
+     * 
+     * @return a new instance which contains the result of this operation
+     */
     public Matrix inverse() {
         throw new UnsupportedOperationException();
 
@@ -790,7 +918,6 @@ public class Matrix {
 //            #endif
 //        }        
 //        
-        
         
     }
     

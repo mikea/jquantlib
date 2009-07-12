@@ -63,8 +63,7 @@ public class FDVanillaEngine {
 	//
 	// public constructors
 	//
-	public FDVanillaEngine(GeneralizedBlackScholesProcess process,
-			int timeSteps, int gridPoints, boolean timeDependent) {
+	public FDVanillaEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
 		this.process = process;
 		this.timeSteps = timeSteps;
 		this.gridPoints = gridPoints;
@@ -88,8 +87,7 @@ public class FDVanillaEngine {
 	//
 	
 	protected void setGridLimits() {
-		setGridLimits(process.stateVariable().getLink().evaluate(),
-				getResidualTime());
+		setGridLimits(process.stateVariable().getLink().evaluate(), getResidualTime());
 		ensureStrikeInGrid();
 	}
 
@@ -109,8 +107,7 @@ public class FDVanillaEngine {
 			intrinsicValues = new SampledCurve(newGridPoints);
 		}
 
-		/* Real */double volSqrtTime = Math.sqrt(process.blackVolatility()
-				.getLink().blackVariance(t, center));
+		/* Real */double volSqrtTime = Math.sqrt(process.blackVolatility().getLink().blackVariance(t, center));
 
 		// the prefactor fine tunes performance at small volatilities
 		/* Real */double prefactor = 1.0 + 0.02 / volSqrtTime;
@@ -145,8 +142,7 @@ public class FDVanillaEngine {
 	}
 
 	protected void initializeOperator() {
-		finiteDifferenceOperator = OperatorFactory.getOperator(process,
-				intrinsicValues.grid(), getResidualTime(), timeDependent);
+		finiteDifferenceOperator = OperatorFactory.getOperator(process, intrinsicValues.grid(), getResidualTime(), timeDependent);
 	}
 
 	protected void initializeBoundaryConditions() {
@@ -157,7 +153,6 @@ public class FDVanillaEngine {
 		bcS.add(new NeumannBC(intrinsicValues.value(intrinsicValues.size() - 1)
 				- intrinsicValues.value(intrinsicValues.size() - 2),
 				NeumannBC.Side.UPPER));
-
 	}
 
 	protected/* Time */double getResidualTime() {
@@ -169,13 +164,13 @@ public class FDVanillaEngine {
 	/* Time */double residualTime) {
 		final int minGridPoints = 10;
 		final int minGridPointsPerYear = 2;
-		return Math
-				.max(
+		return Math.max(
 						gridPoints,
-						residualTime > 1.0 ? (int) ((minGridPoints + (residualTime - 1.0)
-								* minGridPointsPerYear))
+						residualTime > 1.0 
+						        ? (int) ((minGridPoints + (residualTime - 1.0) * minGridPointsPerYear))
 								: minGridPoints);
 	}
 
 	protected void calculate(Results r) { }
+	
 }

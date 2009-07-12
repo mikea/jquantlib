@@ -40,6 +40,7 @@
 
 package org.jquantlib.math;
 
+import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.NaturalCubicSpline;
 import org.slf4j.Logger;
@@ -68,13 +69,13 @@ public class SampledCurve {
 	//
 	
 	public SampledCurve(int gridSize) {
-		this.grid = new Array(gridSize);
+		this.grid   = new Array(gridSize);
 		this.values = new Array(gridSize);
 	}
 
 	public SampledCurve(final Array grid) {
-	    // TODO: RICHARD:: code review :: use of clone()
-	    this.grid = grid;
+	    // TODO: code review :: use of clone()
+	    this.grid   = grid;
 	    this.values = new Array(this.grid.length);
 	}
 
@@ -94,23 +95,88 @@ public class SampledCurve {
 	// public methods
 	//
 	
-	public double valueAtCenter() /* @Readonly */{
-			if (empty()) throw new ArithmeticException("empty sampled curve");
-		int jmid = size() / 2;
-		if (size() % 2 != 0)
-			return values.get(jmid);
-		else
-			return (values.get(jmid) + values.get(jmid - 1)) / 2.0;
+	public SampledCurve clone() {
+	    SampledCurve result = new SampledCurve(this);
+	    return result;
 	}
+	
+    public int size() {
+        return grid.length;
+    }
+
+    public SampledCurve swap(final SampledCurve another) {
+        this.grid.swap(another.grid);
+        this.values.swap(another.values);
+        return this;
+    }
+
+    public Array grid() /* @Readonly */{
+        return grid;
+    }
+
+    public Array values() /* @Readonly */{
+        return values;
+    }
+
+    public double gridValue(int i) {
+        return grid.get(i);
+    }
+
+    public double value(int i) {
+        return values.get(i);
+    }
+
+    private boolean empty() /* @Readonly */{
+        return this.grid.empty();
+    }
+
+    public void setGrid(final Array g) {
+        // TODO: RICHARD:: code review :: use of clone()
+        this.grid = g;
+    }
+
+    public void setValues(final Array array) {
+        // TODO: RICHARD:: code review :: use of clone()
+        this.values = array;
+    }
+
+    public void setLogGrid(final double min, final double max) {
+        setGrid(Grid.BoundedLogGrid(min, max, size() - 1));
+    }
+
+    public <T extends UnaryFunctionDouble> void sample(final T func) {
+        for (int i = 0; i < this.grid.length; i++) {
+            double v = func.evaluate(grid.get(i));
+            this.values.set(i, v);
+        }
+    }
+
+    public void shiftGrid(double s) {
+        this.grid.addAssign(s);
+    }
+
+    public void scaleGrid(final double s) {
+        this.grid.mulAssign(s);
+    }
+
+	
+    public double valueAtCenter() /* @Readonly */{
+        if (empty()) throw new ArithmeticException("empty sampled curve");
+        int jmid = size() / 2;
+        if (size() % 2 != 0)
+            return values.get(jmid);
+        else
+            return (values.get(jmid) + values.get(jmid - 1)) / 2.0;
+    }
 
 	public double firstDerivativeAtCenter() /* @Readonly */{
 		if (size() < 3) throw new ArithmeticException("the size of the curve must be at least 3");
-		int jmid = size() / 2;
-		if (size() % 2 != 0) {
-			return (values.get(jmid+1) - values.get(jmid-1)) / (grid.get(jmid+1) - grid.get(jmid-1));
-		} else {
-			return (values.get(jmid) - values.get(jmid-1)) / (grid.get(jmid) - grid.get(jmid-1));
-		}
+        int jmid = size() / 2;
+        if (size() % 2 != 0) {
+            return (values.get(jmid + 1) - values.get(jmid - 1)) / (grid.get(jmid + 1) - grid.get(jmid - 1));
+        } else {
+            return (values.get(jmid) - values.get(jmid - 1)) / (grid.get(jmid) - grid.get(jmid - 1));
+        }
 	}
 
 	public double secondDerivativeAtCenter() /* @Readonly */{
@@ -128,104 +194,37 @@ public class SampledCurve {
         }
 	}
 
-
-	
-	// TODO: needs code review
     public void regrid(final Array newGrid) {
-    	Array gridData  = this.grid;
-    	Array valueData = this.values; 
-        CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(gridData, valueData);
-        priceSpline.reload();
-
-        final Array newValues = new Array(newGrid.length);
-        for (int i=0; i<newGrid.length; i++) {
-        	newValues.set(i, priceSpline.evaluate(gridData.get(i), true) );
-        }
-        
-        // TODO: code review :: use of clone()
-        this.values = newValues;
-        this.grid = newGrid;
+        regrid(newGrid, new Identity());
     }
 
-    
-	// TODO: needs code review
+    /**
+     * @note This method modifies contents of parameter newGrid
+     * 
+     * @param newGrid
+     * @param func
+     */
     public void regrid(final Array newGrid, final UnaryFunctionDouble func) {
-        CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(grid.transform(func), values);
+        final Array transformed;
+        final Array newValues;
+        
+        if (func instanceof Identity) {
+            transformed = this.grid;
+            newValues = newGrid.clone();
+        } else {
+            transformed = this.grid.clone().transform(func);
+            newValues = newGrid.clone().transform(func);
+        }
 
+        final CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(transformed, this.values);
         priceSpline.reload();
-
-        final Array newValues = newGrid.transform(func);
+    
         for (int i=0; i<newValues.length; i++) {
-        	newValues.set(i, priceSpline.evaluate(newValues.get(i), true) );
+            newValues.set(i, priceSpline.evaluate(newValues.get(i), true) );
         }
         
-        // TODO: code review :: use of clone()
-        this.values= newValues;
-        this.grid = newGrid;
-    }
-    
-    
-	public Array grid() /* @Readonly */{
-		return grid;
-	}
-
-	public Array values() /* @Readonly */{
-		return values;
-	}
-
-	// TODO: Check what we have to translate: the const version or the other?
-	/*
-	 * inline Array& SampledCurve::grid() { return grid_; }
-	 * 
-	 * inline const Array& SampledCurve::grid() const { return grid_; }
-	 * 
-	 * inline const Array& SampledCurve::values() const { return values_; }
-	 * 
-	 * inline Array& SampledCurve::values() { return values_; }
-	 */
-
-    public double gridValue(int i) {
-        return grid.get(i);
-    }
-
-	public double value(int i) {
-		return values.get(i);
-	}
-
-	public int size() {
-		return grid.length;
-	}
-
-	private boolean empty() /* @Readonly */{
-		return this.grid.empty();
-	}
-
-	public void setValues(final Array array) {
-	    // TODO: RICHARD:: code review :: use of clone()
-		this.values = array;
-	}
-
-	public void setLogGrid(final double min, final double max) {
-		setGrid(Grid.BoundedLogGrid(min, max, size() - 1));
-	}
-
-	public <T extends UnaryFunctionDouble> void sample(final T value) {
-		for (int i = 0; i < this.grid.length; i++) {
-			this.values.set(i, value.evaluate(grid.get(i)));
-		}
-	}
-
-    public void shiftGrid(double s) {
-        this.grid.addAssign(s);
-    }
-
-    public void scaleGrid(final double s) {
-        this.grid.mulAssign(s);
-    }
-
-    public void setGrid(final Array g) {
-        // TODO: RICHARD:: code review :: use of clone()
-        this.grid = g;
+        this.grid.swap(newGrid);
+        this.values.swap(newValues);
     }
 
 }

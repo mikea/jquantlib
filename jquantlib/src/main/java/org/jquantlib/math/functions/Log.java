@@ -28,7 +28,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * 
  * @author Srinivas Hasti
  */
-public class Log implements UnaryFunctionDouble {
+public final class Log implements UnaryFunctionDouble {
 
     // TODO: get rid of statics and singletons
 	private static Log instance = new Log();

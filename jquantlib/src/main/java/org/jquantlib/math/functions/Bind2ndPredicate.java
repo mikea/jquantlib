@@ -32,7 +32,7 @@ import org.jquantlib.math.DoublePredicate;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public class Bind2ndPredicate implements DoublePredicate {
+public final class Bind2ndPredicate implements DoublePredicate {
 
     private final BinaryDoublePredicate f;  // 1st argument
     private final double scalar;            // 2nd argument

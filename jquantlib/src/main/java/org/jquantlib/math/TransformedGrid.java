@@ -57,7 +57,7 @@ public class TransformedGrid {
 		this.dxm_ = new Array(grid.length);
 		this.dxp_ = new Array(grid.length);
 		this.dx_ = new Array(grid.length);
-		transformedGrid_.apply(f);
+		transformedGrid_.transform(f);
 		for (int i = 1; i < transformedGrid_.length - 1; i++) {
 			dxm_.set(i, transformedGrid_.get(i) - transformedGrid_.get(i - 1));
 			dxp_.set(i, transformedGrid_.get(i + 1) - transformedGrid_.get(i));

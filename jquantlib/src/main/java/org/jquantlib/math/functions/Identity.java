@@ -30,7 +30,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public class Identity implements UnaryFunctionDouble {
+public final class Identity implements UnaryFunctionDouble {
 
 	//
     // implements UnaryFunctionDouble

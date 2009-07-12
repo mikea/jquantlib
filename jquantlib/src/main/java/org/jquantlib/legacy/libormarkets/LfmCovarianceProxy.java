@@ -29,7 +29,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
     public Matrix diffusion(/*@Time*/ double t, final Array x){
         Matrix pca = corrModel_.pseudoSqrt(t, x);
         // TODO: code review :: use of clone()
-        Array  vol = volaModel_.volatility(t, x).clone();
+        Array  vol = volaModel_.volatility(t, x);
         for (int i=0; i<size_; ++i) {
             pca.getRow(i).mul(vol.get(i));
         }
@@ -38,7 +38,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
     
     public Matrix covariance(/* @Time */double t, final Array x) {
         // TODO: code review :: use of clone()
-        Array volatility = volaModel_.volatility(t, x).clone();
+        Array volatility = volaModel_.volatility(t, x);
         Matrix correlation = corrModel_.correlation(t, x);
 
         Matrix tmp = new Matrix(size_, size_);

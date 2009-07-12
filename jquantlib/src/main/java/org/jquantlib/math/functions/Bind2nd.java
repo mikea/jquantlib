@@ -32,7 +32,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public class Bind2nd implements UnaryFunctionDouble {
+public final class Bind2nd implements UnaryFunctionDouble {
 
     private final BinaryFunctionDouble f;   // 1st argument
     private final double scalar;            // 2nd argument

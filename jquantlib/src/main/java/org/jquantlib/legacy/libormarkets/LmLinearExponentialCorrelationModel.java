@@ -42,7 +42,7 @@ public class LmLinearExponentialCorrelationModel extends LmCorrelationModel {
 
     public Matrix correlation(final /* @ Time */double time, final Array x) {
         // TODO: code review :: use of clone()
-        return corrMatrix_.clone();
+        return corrMatrix_;
     }
 
     public double correlation(int i, int j, /* @ Time */double time, final Array x) {
@@ -59,7 +59,7 @@ public class LmLinearExponentialCorrelationModel extends LmCorrelationModel {
 
     public Matrix pseudoSqrt(final /* @ Time */double time, final Array x) {
         // TODO: code review :: use of clone()
-        return pseudoSqrt_.clone();
+        return pseudoSqrt_;
     }
 
     public void generateArguments() {

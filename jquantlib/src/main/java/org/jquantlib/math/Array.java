@@ -41,6 +41,8 @@ package org.jquantlib.math;
 
 import java.util.Arrays;
 
+import org.jquantlib.math.functions.Identity;
+
 
 /**
  * 1-D array used in linear algebra.
@@ -144,6 +146,17 @@ public class Array extends Matrix {
         return this;
     }
 
+//XXX    
+//    /**
+//     * Fills <code>this</code> Array with contents from <code>another</code> Array
+//     * 
+//     * @param another is the source Array where data is being copied from
+//     * @return <code>this</code>
+//     */
+//    public Array fill(final Array another) {
+//        return (Array) super.fill(another);
+//    }
+
     public double first() {
         return data[0];
     }
@@ -158,7 +171,7 @@ public class Array extends Matrix {
      * @param pos is the initial position
      * @param len is the quantity of elements
      * 
-     * @return an Array containing a copy of region
+     * @return a new Array containing a copy of region
      */
     public Array copyOfRange(final int pos, final int len) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
@@ -357,72 +370,34 @@ public class Array extends Matrix {
     }
 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     /**
-     * Apply all <i>typelist</i> types to generator functor. 
-     * 
-     * @note Mimics std::apply
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00960.html#c173ae39df0e242021655f0f02eb381a">__gnu_cxx::typelist Namespace Reference</a>
+     * Applies a transformation function to all elements of <code>this</code> Array 
+     *
+     * @return this
      */
-    public Array apply(final UnaryFunctionDouble func) {
-        return apply(0, this.length, func);
+    public Array transform(final UnaryFunctionDouble func) {
+        return transform(0, this.length, func);
     }
 
     /**
-     * Apply all <i>typelist</i> types to generator functor. 
-     * 
-     * @note Mimics std::apply
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00960.html#c173ae39df0e242021655f0f02eb381a">__gnu_cxx::typelist Namespace Reference</a>
+     * Applies a transformation function to a range of elements of <code>this</code> Array 
+     *
+     * @return this
      */
-    public Array apply(final int from, final int to, final UnaryFunctionDouble func) {
+    public Array transform(final int from, final int to, final UnaryFunctionDouble func) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (from>to || to>this.length || func == null) throw new IndexOutOfBoundsException();
+        if (from<0 || from>to || to>this.length) throw new IndexOutOfBoundsException();
+        if (func == null) throw new NullPointerException();
+
+        if (func instanceof Identity) return this;
         
-        for(int i=from; i<to; i++) {
+        for (int i = from; i < to; i++) {
             data[i] = func.evaluate(data[i]);
         }
         return this;
     }
 
-    /**
-     * Perform an operation on corresponding elements of two sequences. 
-     * 
-     * @note Mimics std::transform
-     * 
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01012.html#gaf771a08ae2322b42640bb14fc342c5d">std::transform</a>
-     */
-    public final Array transform(final UnaryFunctionDouble func) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (func==null) throw new NullPointerException();
 
-        final Array result = new Array(this.length);
-        for(int i=0; i<this.length; i++) {
-            result.data[i] = func.evaluate(data[i]);
-        }
-        return result;
-    }
-
-    
-
-    
-    
-    
-    
-    
-    
-    
     
     
     //
@@ -682,8 +657,8 @@ public class Array extends Matrix {
     //    outerProduct Array   Array    Matrix
     //    dotProduct   Array   Array    double
     
-    public Array swap(Array another) {
-        swap((Matrix)another);
+    public Array swap(final Array another) {
+        super.swap(another);
         return this;
     }
 

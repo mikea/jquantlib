@@ -28,7 +28,7 @@ import org.jquantlib.math.DoublePredicate;
  *
  * @author Richard Gomes
  */
-public class FalsePredicate implements DoublePredicate {
+public final class FalsePredicate implements DoublePredicate {
 
 	//
     // implements DoublePredicate

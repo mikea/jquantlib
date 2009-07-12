@@ -31,7 +31,7 @@ import org.jquantlib.math.BinaryDoublePredicate;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public class LessThan implements BinaryDoublePredicate {
+public final class LessThan implements BinaryDoublePredicate {
 
 	//
     // implements BinaryDoublePredicate

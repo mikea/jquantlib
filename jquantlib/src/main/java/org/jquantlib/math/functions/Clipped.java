@@ -32,7 +32,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public class Clipped implements UnaryFunctionDouble {
+public final class Clipped implements UnaryFunctionDouble {
 
     private final DoublePredicate checker;
     private final UnaryFunctionDouble function;

@@ -27,14 +27,14 @@ import org.jquantlib.math.Array;
 
 public class LmFixedVolatilityModel extends LmVolatilityModel {
 
-    private Array volatilities_;
-    private Array startTimes_;
+    private final Array volatilities_;
+    private final Array startTimes_;
     
     public LmFixedVolatilityModel(final Array volatilities, final Array startTimes) {
         super(startTimes.length, 0);
         // TODO: code review :: use of clone()
-        this.volatilities_ = volatilities.clone();
-        this.startTimes_ = startTimes.clone();
+        this.volatilities_ = volatilities;
+        this.startTimes_ = startTimes;
         
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (startTimes_.length<=1) 
