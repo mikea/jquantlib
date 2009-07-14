@@ -21,59 +21,21 @@
  */
 
 /*
- Quantlib license
+ Copyright (C) 2005, 2006, 2007 StatPro Italia srl
 
- QuantLib is
- Copyright (C) 2002, 2003, 2004, 2005 Ferdinando Ametrano
- Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005 StatPro Italia srl
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
 
- Copyright (C) 2002, 2003, 2004 Decillion Pty(Ltd)
- Copyright (C) 2001, 2002, 2003 Nicolas Di C�sar�
- Copyright (C) 2003, 2004 Neil Firth
- Copyright (C) 2001, 2002, 2003 Sadruddin Rejeb
- Copyright (C) 2003 Niels Elken S�nderby
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
 
- Copyright (C) 2004 FIMAT Group
- Copyright (C) 2003, 2004 Roman Gitlin
- Copyright (C) 2004 M-Dimension Consulting Inc.
- Copyright (C) 2004 Mike Parker
- Copyright (C) 2004 Walter Penschke
- Copyright (C) 2004 Gianni Piolanti
- Copyright (C) 2003 Kawanishi Tomoya
- Copyright (C) 2004 Jeff Yu
-
- Copyright (C) 2005 Serkan Atalik
- Copyright (C) 2005 Gary Kennedy
- Copyright (C) 2005 Klaus Spanderen
- Copyright (C) 2005 Joseph Wang
- Copyright (C) 2005 Charles Whitmore
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
-
- Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimer.
-
- Redistributions in binary form must reproduce the above copyright notice,
- this list of conditions and the following disclaimer in the documentation
- and/or other materials provided with the distribution.
-
- Neither the names of the copyright holders nor the names of the QuantLib
- Group and its contributors may be used to endorse or promote products
- derived from this software without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE
- FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
- **/
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 
 package org.jquantlib.examples;
 
@@ -230,13 +192,6 @@ public class EquityOptions {
 
         int timeSteps = 801;
         
-        // Finite differences
-        method = "Finite differences";
-        europeanOption.setPricingEngine(new FDEuropeanEngine((BlackScholesMertonProcess)stochasticProcess, timeSteps, timeSteps-1, false));
-       //TODO: bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
-        americanOption.setPricingEngine(new FDAmericanEngine((BlackScholesMertonProcess)stochasticProcess,timeSteps,timeSteps-1, false));
-        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() });
-        
         // Binomial method
         method = "Binomial Jarrow-Rudd";
         //XXX System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
@@ -295,6 +250,18 @@ public class EquityOptions {
         System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() } );
 
 
+        //
+        //
+        //
+        
+        // Finite differences
+        method = "Finite differences";
+        //TODO: europeanOption.setPricingEngine(new FDEuropeanEngine((BlackScholesMertonProcess)stochasticProcess, timeSteps, timeSteps-1, false));
+        //TODO: bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
+        //TODO: americanOption.setPricingEngine(new FDAmericanEngine((BlackScholesMertonProcess)stochasticProcess,timeSteps,timeSteps-1, false));
+        //TODO: System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() });
+        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        
         //
         //
         //
