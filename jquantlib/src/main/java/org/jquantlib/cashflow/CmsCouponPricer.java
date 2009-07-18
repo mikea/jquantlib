@@ -25,8 +25,6 @@ package org.jquantlib.cashflow;
 import org.jquantlib.SwaptionVolatilityStructure;
 import org.jquantlib.quotes.Handle;
 
-import sun.awt.geom.AreaOp.AddOp;
-
 //base pricer for vanilla CMS coupons
 public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
 

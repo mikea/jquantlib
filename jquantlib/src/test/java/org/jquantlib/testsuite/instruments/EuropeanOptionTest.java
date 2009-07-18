@@ -1041,8 +1041,11 @@ public class EuropeanOptionTest {
                                     expected.clear();
                                     calculated.clear();
 
-                                    expected.put("value", refOption.getNPV());
-                                    calculated.put("value", option.getNPV());
+                                    double refNPV = refOption.getNPV();
+                                    double optNPV = option.getNPV();
+                                    
+                                    expected.put("value", refNPV);
+                                    calculated.put("value", optNPV);
 
                                     if (testGreeks && option.getNPV() > spot.getLink().evaluate() * 1.0e-5) {
                                         expected.put("delta", refOption.delta());

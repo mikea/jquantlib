@@ -575,6 +575,90 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         // TODO Auto-generated method stub
         return 0;
     }
+
+
+    //
+    // private inner classes
+    //
+    
+    // TODO: ideally, any class which implements Comparable<T> should be supported by min and max.
+    // Have a look at class Std : methods min and max there should be merged with methods min and max
+    // from class MathUtil below:
+    //
+    
+    private static class MathUtil {
+
+        public static Double min(List<Pair<Double, Double>> values) {
+            if (System.getProperty("EXPERIMENTAL") == null) {
+                throw new UnsupportedOperationException("Work in progress");
+            }
+
+            // simplest algo in the first release
+            Double std = 0.0;
+
+            for (Pair<Double, Double> element : values) {
+                if (std > (Double) element.getFirst()) {
+                    std = (Double) element.getFirst();
+                }
+            }
+
+            return std;
+        }
+
+        public static Double max(List<Pair<Double, Double>> values) {
+            if (System.getProperty("EXPERIMENTAL") == null) {
+                throw new UnsupportedOperationException("Work in progress");
+            }
+
+            // simplest algo in the first release
+            Double std = 0.0;
+
+            for (Pair<Double, Double> element : values) {
+                if (std < (Double) element.getFirst()) {
+                    std = (Double) element.getFirst();
+                }
+            }
+
+            return std;
+        }
+
+//        // more generic methods, don't know if they are useful...
+//        public static <T extends Number> T max(List<Pair<Number, Number>> values) {
+//            if (System.getProperty("EXPERIMENTAL") == null) {
+//                throw new UnsupportedOperationException("Work in progress");
+//            }
+//
+//            // simplest algo in the first release
+//            Number std = 0.0;
+//
+//            for (Pair<Number, Number> element : values) {
+//                if (std.doubleValue() > ((Number) element.getFirst()).doubleValue()) {
+//                    std = (Number) element.getFirst();
+//                }
+//            }
+//
+//            return (T) std;
+//        }
+//
+//        public static <T extends Number> T min(List<Pair<Number, Number>> values) {
+//            if (System.getProperty("EXPERIMENTAL") == null) {
+//                throw new UnsupportedOperationException("Work in progress");
+//            }
+//
+//            // simplest algo in the first release
+//            Number std = 0.0;
+//
+//            for (Pair<Number, Number> element : values) {
+//                if (std.doubleValue() < ((Number) element.getFirst()).doubleValue()) {
+//                    std = (Number) element.getFirst();
+//                }
+//            }
+//
+//            return (T) std;
+//        }
+
+    }
+    
 }
 
 

@@ -25,8 +25,6 @@ package org.jquantlib.cashflow;
 import org.jquantlib.CapletVolatilityStructure;
 import org.jquantlib.quotes.Handle;
 
-import com.sun.org.apache.bcel.internal.generic.CPInstruction;
-
 public abstract class IborCouponPricer extends FloatingRateCouponPricer {
     
     public static final String no_adequate_capletVol_given = "no adequate capletVol given";

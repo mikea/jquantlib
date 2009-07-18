@@ -783,7 +783,7 @@
 	                <links>
 	                  <link>http://java.sun.com/j2se/${java.src.version}/docs/api/index.html</link>
 	                  <link>http://joda-primitives.sourceforge.net/apidocs/index.html</link>
-	                  <link>http://acs.lbl.gov/~hoschek/colt/api/cern/colt/package-summary.html</link>
+	                  <!-- link>http://acs.lbl.gov/~hoschek/colt/api/cern/colt/package-summary.html</link -->
 	                  <link>http://www.slf4j.org/apidocs/</link>
 	                  <link>http://junit.sourceforge.net/javadoc/</link>
 	                </links>
