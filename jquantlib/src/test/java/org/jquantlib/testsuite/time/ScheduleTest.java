@@ -64,7 +64,8 @@ public class ScheduleTest {
         DateGenerationRule dateRule = DateGenerationRule.BACKWARD;
 
         Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow,
-                dateRule, false, null, null);
+                dateRule, false, true /*introduced to get compatibility with v.0.8.1 - becomes redundant asa we can use the
+                dategenerationrule style...*/,null, null);
 
         List<Date> dates = new ArrayList<Date>();
         dates.add(startDate);
