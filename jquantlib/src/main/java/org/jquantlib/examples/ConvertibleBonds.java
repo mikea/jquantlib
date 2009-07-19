@@ -73,7 +73,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Daniel Kong
  */
-//TODO: Work in progress
+//TODO: Work in progress ---- PLEASE INDICATE WHEN WORKING ON THIS EXAMPLE - Ueli
 public class ConvertibleBonds {
 
 	private final static Logger logger = LoggerFactory.getLogger(ConvertibleBonds.class);
@@ -128,10 +128,8 @@ public class ConvertibleBonds {
         BusinessDayConvention convention = BusinessDayConvention.MODIFIED_FOLLOWING;
         Frequency frequency = Frequency.ANNUAL;
         
-//  ??      Schedule schedule = new Schedule(issueDate, exerciseDate,new Period(frequency),calendar, convention, convention, true, false);
-        Schedule schedule = new Schedule(issueDate, exerciseDate,new Period(frequency),calendar, 
-        									convention, convention, DateGenerationRule.BACKWARD, false, 
-        									Date.NULL_DATE, Date.NULL_DATE);
+        Schedule schedule = new Schedule(issueDate,exerciseDate,new Period(frequency),calendar,convention, convention, true, false);
+
         
         List<Dividend> dividends = new ArrayList<Dividend>();
         List<Callability> callability = new ArrayList<Callability>();
