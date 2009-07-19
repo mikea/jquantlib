@@ -142,6 +142,12 @@ public interface Calendar {
     public Date adjust(final Date d,final BusinessDayConvention c);
     
     /**
+     * Adjusts a non-business day to the appropriate near business day and the 
+     * default Convention (FOLLOWING).
+     */
+    public Date adjust(final Date d);
+    
+    /**
      * Adjusts the given date of the given number of business days and returns
      * the result.
      */

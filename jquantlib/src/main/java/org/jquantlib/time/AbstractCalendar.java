@@ -86,6 +86,17 @@ public abstract class AbstractCalendar implements Calendar {
         }
         return true;
     }
+    
+    
+    /**
+     * Advances the given date of the given number of business days and returns the result.
+     * Uses the default BusinessDayConvention BusinessDayConvention.Following
+     * 
+     * @return Date is date adjusted to next n-th business day
+     */
+    public final Date adjust(final Date d) {
+        return adjust(d, BusinessDayConvention.FOLLOWING);
+    }
 
     /**
      * Advances the given date of the given number of business days and returns the result. Returned reference is same as original
