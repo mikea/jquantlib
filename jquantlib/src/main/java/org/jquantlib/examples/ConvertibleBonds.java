@@ -59,6 +59,7 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.NullCalendar;
+import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
@@ -85,9 +86,13 @@ public class ConvertibleBonds {
 	}
 
 	public void run(){
+	    // Debugging...
+	    
 		StopClock clock = new StopClock();
 		clock.startClock();
+		logger.info("Started calculation at: " + clock.getElapsedTime());
 		
+		// actually never used.....
 		Option.Type type = Option.Type.PUT;
 		
 		double underlying = 36.0;
@@ -97,21 +102,30 @@ public class ConvertibleBonds {
         double riskFreeRate = 0.06;
         double volatility = 0.20;
 
-        Integer settlementDays = 3;
-        Integer length = 5;
+        int settlementDays = 3;
+        int length = 5;
         double redemption = 100.0;
         double conversionRatio = redemption/underlying; 
         
-        Calendar calendar = new NullCalendar();
-        Date today = calendar.adjust(DateFactory.getFactory().getTodaysDate(), BusinessDayConvention.FOLLOWING);
-        
+        Calendar calendar = Target.getCalendar();
+        //adjust today to the next business...
+        Date today = calendar.adjust(DateFactory.getFactory().getTodaysDate());
+        logger.info("Today's date is adjusted by the default business day convention is: " + today.getShortFormat());
+        // set the evaluation date to the adjusted today's date
         Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
+        logger.info("Set the global evaluation date to the adjusted today's date: " + Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().getShortFormat());
+        
+        //Set up settlement, exercise and issue dates 
         Date settlementDate = calendar.advance(today, settlementDays, TimeUnit.DAYS);
+        logger.info("SettlementDate is: " + settlementDate.getShortFormat());
+        logger.info("Check that we haven't messed up with references --> today's date is still: " + today.getShortFormat());
         Date exerciseDate = calendar.advance(settlementDate, length, TimeUnit.YEARS);
+        logger.info("Excercise date is: " + exerciseDate.getShortFormat());
         Date issueDate = calendar.advance(exerciseDate, -length, TimeUnit.YEARS);
+        logger.info("Issue date is: " + issueDate.getShortFormat());
         
+        //Fix businessday convention and compounding?? frequency
         BusinessDayConvention convention = BusinessDayConvention.MODIFIED_FOLLOWING;
-        
         Frequency frequency = Frequency.ANNUAL;
         
 //  ??      Schedule schedule = new Schedule(issueDate, exerciseDate,new Period(frequency),calendar, convention, convention, true, false);
