@@ -22,4 +22,14 @@ public class Error {
             };
         }
     }
+    
+    //generic conveniance method... to be remove later on.
+    public static void QL_REQUIRE(boolean require, String message){
+        QL_REQUIRE(require, Exception.class, message);
+    }
+    
+    public static void QL_FAIL(String message){
+        //not sure yet how to handle this... for the moment just forward it to QLREQUIRE
+        QL_REQUIRE(false, message);
+    }
 }
