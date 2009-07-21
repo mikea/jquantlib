@@ -33,7 +33,11 @@ import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.stdlibc.Std;
 
+import com.sun.xml.internal.ws.api.pipe.NextAction;
+
+import static org.jquantlib.Error.QL_REQUIRE;
 //! libor-forward-model process
 /*! stochastic process of a libor forward model using the
     rolling forward measure incl. predictor-corrector step
@@ -59,6 +63,10 @@ import org.jquantlib.util.Date;
 */
 // TODO: license, class comments, access modifiers organization, good formatting
 public class LiborForwardModelProcess extends StochasticProcess {
+    
+    //Exception messages
+    private static final String wrong_number_of_cashflows = "wrong number of cashflows";
+    private static final String irregular_coupon_types = "irregular coupon types are not suppported";
 
     private int size_;
     private final IborIndex index_;
@@ -92,19 +100,14 @@ public class LiborForwardModelProcess extends StochasticProcess {
         final DayCounter dayCounter = index_.getDayCounter();
         final List<CashFlow> flows = null /* cashFlows() */; // FIXME: translate cashFlows();
 
-        if (size_ != flows.size()) {
-            throw new IllegalArgumentException("wrong number of cashflows");
-        }
-
+        QL_REQUIRE(size_ == flows.size(), IllegalArgumentException.class, wrong_number_of_cashflows);
+        
         final Date settlement = index_.getTermStructure().getLink().referenceDate();
         final Date startDate = ((IborCoupon) flows.get(0)).fixingDate();
         for (int i = 0; i < size_; ++i) {
             IborCoupon coupon = (IborCoupon) flows.get(i);
-
-            if (!coupon.date().eq(coupon.accrualEndDate())) {
-                throw new IllegalArgumentException("irregular coupon types are not suppported");
-            }
-
+            QL_REQUIRE(coupon.date().eq(coupon.accrualEndDate()), IllegalArgumentException.class, irregular_coupon_types);
+           
             initialValues_.set(i, coupon.rate());
             accrualPeriod_.set(i, coupon.accrualPeriod());
 
@@ -152,7 +155,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
     public Array drift(/* @Time */double t, final Array x) {
         final Array f = new Array(size_);
         final Matrix covariance = lfmParam_.covariance(t, x);
-        final int m = 0;// nextIndexReset(t);
+        final int m = 0;//NextA
         for (int k = m; k < size_; ++k) {
             m1.set(k, accrualPeriod_.get(k) * x.get(k) / (1 + accrualPeriod_.get(k) * x.get(k)));
             double value = m1.innerProduct(covariance.getCol(k), m, k+1-m) - 0.5 * covariance.get(k, k);
@@ -219,6 +222,11 @@ public class LiborForwardModelProcess extends StochasticProcess {
 
         return f;
     }
+//    /*
+//    private /*Size*/ int nextIndexReset(/*Time*/ final double t)  {
+//        return Std.getInstance().
+//                 - fixingTimes_.begin();
+//    }
     
 
 }
