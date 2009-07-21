@@ -256,11 +256,10 @@ public class EquityOptions {
         
         // Finite differences
         method = "Finite differences";
-        //TODO: europeanOption.setPricingEngine(new FDEuropeanEngine((BlackScholesMertonProcess)stochasticProcess, timeSteps, timeSteps-1, false));
+        europeanOption.setPricingEngine(new FDEuropeanEngine((BlackScholesMertonProcess)stochasticProcess, timeSteps, timeSteps-1, false));
         //TODO: bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
-        //TODO: americanOption.setPricingEngine(new FDAmericanEngine((BlackScholesMertonProcess)stochasticProcess,timeSteps,timeSteps-1, false));
-        //TODO: System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() });
-        System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
+        americanOption.setPricingEngine(new FDAmericanEngine((BlackScholesMertonProcess)stochasticProcess,timeSteps,timeSteps-1, false));
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() });
         
         //
         //

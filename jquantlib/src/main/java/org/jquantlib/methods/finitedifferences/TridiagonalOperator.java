@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
  
@@ -29,9 +29,11 @@ import org.jquantlib.math.Array;
  * @author Tim Swetonic
  */
 //TODO: code review :: license, class comments, comments for access modifiers, put "final" everywhere
+//TODO: code review:: This class should be parametrized
 public class TridiagonalOperator implements Operator {
 
-	public static interface TimeSetter {
+	// TODO: code review: consider refactor inner interface TimeSetter
+    public static interface TimeSetter {
 		public void setTime(double t, TridiagonalOperator l);
 	}
 
@@ -41,7 +43,7 @@ public class TridiagonalOperator implements Operator {
 	protected Array upperDiagonal;
 
 	public TridiagonalOperator(int size) {
-		if (size >= 2) {
+		if (size >= 3) {
 			this.lowerDiagonal = new Array(size - 1);
 			this.diagonal = new Array(size);
 			this.upperDiagonal = new Array(size - 1);
@@ -50,7 +52,7 @@ public class TridiagonalOperator implements Operator {
 			this.diagonal = new Array(0);
 			this.upperDiagonal = new Array(0);
 		} else {
-			throw new IllegalStateException("Invalid size " + size);
+			throw new IllegalStateException("Invalid size for Tridiagonal Operator"); // TODO: message
 		}
 
 	}
@@ -64,10 +66,9 @@ public class TridiagonalOperator implements Operator {
 	}
 
 	public TridiagonalOperator(TridiagonalOperator t) {
-	    // TODO: code review :: verify use of clone()
-		this.diagonal = t.diagonal().clone();
-		this.upperDiagonal = t.upperDiagonal().clone();
-		this.lowerDiagonal = t.lowerDiagonal().clone();
+		this.diagonal = t.diagonal();
+		this.upperDiagonal = t.upperDiagonal();
+		this.lowerDiagonal = t.lowerDiagonal();
 		this.timeSetter = t.getTimeSetter();
 	}
 
@@ -100,11 +101,37 @@ public class TridiagonalOperator implements Operator {
 		diagonal.set(size() - 1, b);
 	}
 
+    public final Array lowerDiagonal() {
+        return lowerDiagonal;
+    }
+
+    public final Array diagonal() {
+        return diagonal;
+    }
+
+    public final Array upperDiagonal() {
+        return upperDiagonal;
+    }
+
+    public TimeSetter getTimeSetter() {
+        return this.timeSetter;
+    }
+
 
 	//
-	// Override Operator
+	// implements Operator
 	//
 	
+    @Override
+    public int size() {
+        return diagonal.length;
+    }
+
+    @Override
+    public boolean isTimeDependent() {
+        return timeSetter != null;
+    }
+
 	@Override
 	public void setTime(double t) {
 		if (timeSetter != null) {
@@ -113,148 +140,130 @@ public class TridiagonalOperator implements Operator {
 	}
 
     @Override
-	public int size() {
-		return diagonal.length;
-	}
-
-	//TODO: code review:: default scope in c++? public?
-	
-	// unary operators
-
-    @Override
 	public Operator add(final Operator op) {
-		final TridiagonalOperator D1 = (TridiagonalOperator) op;
-		final TridiagonalOperator D2 = this;
-		final Array low  = D1.lowerDiagonal.add(D2.lowerDiagonal());
-		final Array mid  = D1.diagonal.add(D2.diagonal());
-		final Array high = D1.upperDiagonal.add(D2.upperDiagonal());
-		return new TridiagonalOperator(low, mid, high);
+        final TridiagonalOperator D = (TridiagonalOperator)op;
+        final Array low  = lowerDiagonal.add(D.lowerDiagonal);
+        final Array mid  = diagonal.add(D.diagonal);
+        final Array high = upperDiagonal.add(D.upperDiagonal);
+        return new TridiagonalOperator(low, mid, high);
 	}
 
     @Override
 	public Operator subtract(final Operator op) {
-		TridiagonalOperator D = (TridiagonalOperator) op;
-		Array low  = this.lowerDiagonal.sub(D.lowerDiagonal());
-		Array mid  = this.diagonal.sub(D.diagonal());
-		Array high = this.upperDiagonal.sub(D.upperDiagonal());
-		return new TridiagonalOperator(low, mid, high);
-	}
-
-	// binary operators
-    
-    @Override
-	public Operator add(final Operator op1, final Operator op2) {
-		TridiagonalOperator D1 = (TridiagonalOperator) op1;
-		TridiagonalOperator D2 = (TridiagonalOperator) op2;
-		Array low  = D1.lowerDiagonal.add(D2.lowerDiagonal());
-		Array mid  = D1.diagonal.add(D2.diagonal());
-		Array high = D1.upperDiagonal.add(D2.upperDiagonal());
-		return new TridiagonalOperator(low, mid, high);
+        final TridiagonalOperator D = (TridiagonalOperator)op;
+        final Array low  = lowerDiagonal.sub(D.lowerDiagonal);
+        final Array mid  = diagonal.sub(D.diagonal);
+        final Array high = upperDiagonal.sub(D.upperDiagonal);
+        return new TridiagonalOperator(low, mid, high);
 	}
 
     @Override
-	public Operator subtract(final Operator op1, final Operator op2) {
-		TridiagonalOperator D1 = (TridiagonalOperator) op1;
-		TridiagonalOperator D2 = (TridiagonalOperator) op2;
-		Array low  = D1.lowerDiagonal.sub(D2.lowerDiagonal);
-		Array mid  = D1.diagonal.sub(D2.diagonal);
-		Array high = D1.upperDiagonal.sub(D2.upperDiagonal);
-		return new TridiagonalOperator(low, mid, high);
-	}
-
-    @Override
-	public Operator multiply(final double a, final Operator op) {
-		TridiagonalOperator D = (TridiagonalOperator) op;
-		Array low = D.lowerDiagonal;
-		low.mul(a);
-		Array mid = D.diagonal;
-		mid.mul(a);
-		Array high = D.upperDiagonal;
-		high.mul(a);
-		return new TridiagonalOperator(low, mid, high);
-	}
-
-	public Operator multiply(final Operator D, double a) {
-		return multiply(a, D);
-	}
-	
-	@Override
     public Operator multiply(double a) {
-	    // TODO: code review :: verify use of clone()
-		Array low = lowerDiagonal.clone();
-		low.mul(a);
-		Array mid = diagonal.clone();
-		mid.mul(a);
-		Array high = upperDiagonal.clone();
-		high.mul(a);
-		return new TridiagonalOperator(low, mid, high);
+        final Array low  = lowerDiagonal.mul(a);
+        final Array mid  = diagonal.mul(a);
+        final Array high = upperDiagonal.mul(a);
+        return new TridiagonalOperator(low, mid, high);
     }
 
+//
+//    @Override
+//    public Operator add(final Operator op1, final Operator op2) {
+//        TridiagonalOperator D1 = (TridiagonalOperator) op1;
+//        TridiagonalOperator D2 = (TridiagonalOperator) op2;
+//        Array low  = D1.lowerDiagonal.add(D2.lowerDiagonal());
+//        Array mid  = D1.diagonal.add(D2.diagonal());
+//        Array high = D1.upperDiagonal.add(D2.upperDiagonal());
+//        return new TridiagonalOperator(low, mid, high);
+//    }
+//
+//    @Override
+//    public Operator subtract(final Operator op1, final Operator op2) {
+//        TridiagonalOperator D1 = (TridiagonalOperator) op1;
+//        TridiagonalOperator D2 = (TridiagonalOperator) op2;
+//        Array low  = D1.lowerDiagonal.sub(D2.lowerDiagonal);
+//        Array mid  = D1.diagonal.sub(D2.diagonal);
+//        Array high = D1.upperDiagonal.sub(D2.upperDiagonal);
+//        return new TridiagonalOperator(low, mid, high);
+//    }
+//
+//    @Override
+//    public Operator multiply(final double a, final Operator op) {
+//        TridiagonalOperator D = (TridiagonalOperator) op;
+//        Array low = D.lowerDiagonal;
+//        low.mul(a);
+//        Array mid = D.diagonal;
+//        mid.mul(a);
+//        Array high = D.upperDiagonal;
+//        high.mul(a);
+//        return new TridiagonalOperator(low, mid, high);
+//    }
+//
+//    @Override
+//    public Operator multiply(final Operator D, double a) {
+//		return multiply(a, D);
+//	}
+//	
+//    @Override
+//	public Operator divide(final Operator op, double a) {
+//		TridiagonalOperator D = (TridiagonalOperator) op;
+//		Array low = D.lowerDiagonal;
+//		low.div(a);
+//		Array mid = D.diagonal;
+//		mid.div(a);
+//		Array high = D.upperDiagonal;
+//		low.div(a);
+//		return new TridiagonalOperator(low, mid, high);
+//	}
+//
+//	/**
+//	 * Solve linear system with SOR approach
+//	 */
+//    @Override
+//	public final Array SOR(final Array rhs, int tol) {
+//		if (rhs.length != size())
+//			throw new IllegalStateException("rhs has the wrong size");
+//
+//		// initial guess
+//		Array result = rhs;
+//
+//		// solve tridiagonal system with SOR technique
+//		int sorIteration, i;
+//		double omega = 1.5;
+//		double err = 2.0 * tol;
+//		double temp;
+//		for (sorIteration = 0; err > tol; sorIteration++) {
+//			if (sorIteration > 100000) {
+//				throw new IllegalStateException("tolerance (" + tol
+//						+ ") not reached in " + sorIteration + " iterations. "
+//						+ "The error still is " + err);
+//			}
+//
+//			temp = omega * (rhs.first() - upperDiagonal.first() * result.get(1) - diagonal.first() * result.first()) / diagonal.first();
+//			err = temp * temp;
+//			result.set(0, result.first() + temp);
+//
+//			for (i = 1; i < size() - 1; i++) {
+//				temp = omega
+//						* (rhs.get(i) - upperDiagonal.get(i)
+//								* result.get(i + 1) - diagonal.get(i)
+//								* result.get(i) - lowerDiagonal.get(i - 1)
+//								* result.get(i - 1)) / diagonal.get(i);
+//				err += temp * temp;
+//				result.set(i, result.get(i) + temp);
+//			}
+//
+//			temp = omega * (rhs.get(i) - diagonal.get(i) * result.get(i) - lowerDiagonal.get(i - 1) * result.get(i - 1)) / diagonal.get(i);
+//			err += temp * temp;
+//			result.set(i, result.get(i) + temp);
+//		}
+//
+//		return result;
+//
+//	}
 
-    @Override
-	public Operator divide(final Operator op, double a) {
-		TridiagonalOperator D = (TridiagonalOperator) op;
-		Array low = D.lowerDiagonal;
-		low.div(a);
-		Array mid = D.diagonal;
-		mid.div(a);
-		Array high = D.upperDiagonal;
-		low.div(a);
-		return new TridiagonalOperator(low, mid, high);
-	}
-
-	// public:
-	// typedef Array array_type;
-
-	// ! \name Operator interface
-	// @{
-	// ! apply operator to a given array
-
-	// ! solve linear system with SOR approach
-    @Override
-	public final Array SOR(final Array rhs, int tol) {
-		if (rhs.length != size())
-			throw new IllegalStateException("rhs has the wrong size");
-
-		// initial guess
-		Array result = rhs;
-
-		// solve tridiagonal system with SOR technique
-		int sorIteration, i;
-		double omega = 1.5;
-		double err = 2.0 * tol;
-		double temp;
-		for (sorIteration = 0; err > tol; sorIteration++) {
-			if (sorIteration > 100000) {
-				throw new IllegalStateException("tolerance (" + tol
-						+ ") not reached in " + sorIteration + " iterations. "
-						+ "The error still is " + err);
-			}
-
-			temp = omega * (rhs.first() - upperDiagonal.first() * result.get(1) - diagonal.first() * result.first()) / diagonal.first();
-			err = temp * temp;
-			result.set(0, result.first() + temp);
-
-			for (i = 1; i < size() - 1; i++) {
-				temp = omega
-						* (rhs.get(i) - upperDiagonal.get(i)
-								* result.get(i + 1) - diagonal.get(i)
-								* result.get(i) - lowerDiagonal.get(i - 1)
-								* result.get(i - 1)) / diagonal.get(i);
-				err += temp * temp;
-				result.set(i, result.get(i) + temp);
-			}
-
-			temp = omega * (rhs.get(i) - diagonal.get(i) * result.get(i) - lowerDiagonal.get(i - 1) * result.get(i - 1)) / diagonal.get(i);
-			err += temp * temp;
-			result.set(i, result.get(i) + temp);
-		}
-
-		return result;
-
-	}
-
-	// ! identity instance
+	/**
+	 * Identity instance
+	 */
     @Override
 	public TridiagonalOperator identity(int size) {
 		TridiagonalOperator I = new TridiagonalOperator(
@@ -264,77 +273,50 @@ public class TridiagonalOperator implements Operator {
 		return I;
 	}
 
-	// TODO: test assignment
+    @Override
+	public void swap(Operator from) {
+		TridiagonalOperator D = (TridiagonalOperator) from;
+		this.diagonal.swap(D.diagonal);
+		this.lowerDiagonal.swap(D.lowerDiagonal);
+		this.upperDiagonal.swap(D.upperDiagonal);
+		// swaps TimeSetter
+		final TimeSetter tmpTimeSetter = this.timeSetter; this.timeSetter = D.timeSetter; D.timeSetter = tmpTimeSetter;
+	}
 
-    /*
-	 * inline TridiagonalOperator& TridiagonalOperator::operator=( const
-	 * Disposable<TridiagonalOperator>& from) {
-	 * swap(const_cast<Disposable<TridiagonalOperator>&>(from)); returnthis; }
-	 */
+//	// CODE REVIEW: This doesn't look right, L1 and temp will be pointing to
+//	// same reference ??
+//    @Override
+//	public void swap(Operator op1, Operator op2) {
+//		TridiagonalOperator L1 = (TridiagonalOperator) op1;
+//		TridiagonalOperator temp = L1;
+//		L1.swap(op2);
+//		op2.swap(temp);
+//	}
 
     @Override
-	public boolean isTimeDependent() {
-		return timeSetter != null;
-	}
-
-	public final Array lowerDiagonal() {
-		return lowerDiagonal;
-	}
-
-	public final Array diagonal() {
-		return diagonal;
-	}
-
-	public final Array upperDiagonal() {
-		return upperDiagonal;
-	}
-
-	public TimeSetter getTimeSetter() {
-		return this.timeSetter;
-	}
-
-    @Override
-	public void swap(Operator opFrom) {
-		TridiagonalOperator from = (TridiagonalOperator) opFrom;
-		this.diagonal.swap(from.diagonal);
-		this.lowerDiagonal.swap(from.lowerDiagonal);
-		this.upperDiagonal.swap(from.upperDiagonal);
-		this.timeSetter = from.getTimeSetter();
-	}
-
-	// CODE REVIEW: This doesn't look right, L1 and temp will be pointing to
-	// same reference ??
-    @Override
-	public void swap(Operator op1, Operator op2) {
-		TridiagonalOperator L1 = (TridiagonalOperator) op1;
-		TridiagonalOperator temp = L1;
-		L1.swap(op2);
-		op2.swap(temp);
-	}
-
-    @Override
-	public Array applyTo(Array v) {
+	public Array applyTo(final Array v) /*@ReadOnly*/ {
 		if (v.length != size())
 			throw new IllegalStateException("vector of the wrong size (" + v.length + "instead of " + size() + ")");
 
-		final Array result = this.diagonal.clone();
-		// multiply result values by (diagonal * v)
-		result.mul(v);
+		// result = diagonal * v
+		final Array result = this.diagonal.mul(v);
 
 		// matricial product
-		result.set(0, result.first() + (this.upperDiagonal.first() * v.get(1)));
-
-		for (int j = 1; j <= size() - 2; j++) {
-			result.set(j, result.get(j)
-					+ (lowerDiagonal.get(j - 1) * v.get(j - 1))
-					+ (upperDiagonal.get(j) * v.get(j + 1)));
+		double d = result.get(0) + (this.upperDiagonal.get(0) * v.get(1));
+		result.set(0, d);
+		for (int j=1; j<=size()-2; j++) {
+		    d = result.get(j) + (lowerDiagonal.get(j-1) * v.get(j-1)) + (upperDiagonal.get(j) * v.get(j+1));
+			result.set(j, d);
 		}
+		d = result.get(size()-1) + (lowerDiagonal.get(size()-2) * v.get(size()-2));
+		result.set(size()-1, d);
 
-		result.set(size() - 1, result.get(size() - 1) + (lowerDiagonal.get(size() - 2) * v.get(size() - 2)));
 		return result;
 	}
 
-	// ! solve linear system for a given right-hand side
+	/**
+	 * Solve linear system for a given right-hand side
+	 */
     @Override
 	public final Array solveFor(final Array rhs) {
 		final Array result = new Array(size());

@@ -63,18 +63,18 @@ public abstract class Option extends NewInstrument {
     protected final Payoff payoff;
 	protected final Exercise exercise;
 	
-	
-	//
-	// private fields
-	//
-	
-	/**
-	 * This private field is automatically initialized by constructor which
-	 * picks up it's value from {@link Settings} singleton. This procedure
-	 * caches values from the singleton, intending to avoid contention in
-	 * heavily multi-threaded environments.
-	 */
-	private final Date evaluationDate;
+//XXX
+//	//
+//	// private fields
+//	//
+//	
+//	/**
+//	 * This private field is automatically initialized by constructor which
+//	 * picks up it's value from {@link Settings} singleton. This procedure
+//	 * caches values from the singleton, intending to avoid contention in
+//	 * heavily multi-threaded environments.
+//	 */
+//	private final Date evaluationDate;
 	
 
 	//
@@ -88,21 +88,10 @@ public abstract class Option extends NewInstrument {
 		super(engine);
 		this.payoff = payoff;
 		this.exercise = exercise;
-		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-//		Exception e = new Exception();
-//		logger.debug(evaluationDate.toString(), e);
-		this.evaluationDate.addObserver(this);
+//XXX
+//		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+//		this.evaluationDate.addObserver(this);
 	}
-
-	
-	//
-	// overrides Instrument
-	//
-	
-	@Override
-	public boolean isExpired() /* @ReadOnly */ {
-        return exercise.lastDate().le( evaluationDate );
-    }
 
 	
 	//

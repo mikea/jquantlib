@@ -22,7 +22,6 @@
 
 package org.jquantlib.testsuite.time;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -63,10 +62,20 @@ public class ScheduleTest {
         BusinessDayConvention modFollow = BusinessDayConvention.MODIFIED_FOLLOWING;
         DateGenerationRule dateRule = DateGenerationRule.BACKWARD;
 
-        Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow,
-                dateRule, false, true /*introduced to get compatibility with v.0.8.1 - becomes redundant asa we can use the
-                dategenerationrule style...*/,null, null);
 
+        
+        
+        // TODO: make sure all sources are synchronized properly and Schedule API is consistent
+        
+        Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow, 
+                dateRule, false, null, null);
+        
+//        // introduced to get compatibility with v.0.8.1 - becomes redundant asa we can use the dategenerationrule style...
+//        Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow,
+//                dateRule, false, true, null, null);
+
+        
+        
         List<Date> dates = new ArrayList<Date>();
         dates.add(startDate);
         dates.add(calendar.advance(startDate, new Period(10, TimeUnit.WEEKS),modFollow));

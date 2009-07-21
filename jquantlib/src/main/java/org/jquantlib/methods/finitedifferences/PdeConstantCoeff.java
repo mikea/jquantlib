@@ -31,8 +31,7 @@ public abstract class PdeConstantCoeff<T extends Pde> extends PdeSecondOrderPara
 	/* Real*/private double drift;
 	/* Real*/private double discount;
 
-	public PdeConstantCoeff(GeneralizedBlackScholesProcess process,
-	/*Time*/double t, /*Real*/double x) {
+	public PdeConstantCoeff(final GeneralizedBlackScholesProcess process, /*Time*/double t, /*Real*/double x) {
 	    Class<T> clazz = (Class<T>) TypeToken.getClazz(this.getClass());
 	    T pde = getInstance(clazz, process);
 		diffusion = pde.diffusion(t, x);

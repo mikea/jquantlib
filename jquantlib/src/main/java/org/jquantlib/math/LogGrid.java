@@ -25,10 +25,9 @@ package org.jquantlib.math;
 import org.jquantlib.math.functions.Log;
 
 /**
- * 
  * @author Srinivas Hasti
- * 
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class LogGrid extends TransformedGrid {
     
 	public LogGrid(Array grid) {

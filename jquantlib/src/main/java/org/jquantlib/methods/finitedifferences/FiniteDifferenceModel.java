@@ -65,7 +65,7 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
         return evolver;
     }
 
-    public Array rollback(final Array a, final /*@Time*/ double from, final /*@Time*/double to, final int steps) {
+    public Array rollback(Array a, final /*@Time*/ double from, final /*@Time*/double to, final int steps) {
         return rollbackImpl(a, from, to, steps, null);
     }
 

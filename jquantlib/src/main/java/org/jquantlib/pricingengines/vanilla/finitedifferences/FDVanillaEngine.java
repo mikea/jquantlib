@@ -92,7 +92,8 @@ public class FDVanillaEngine {
 	}
 
 	protected void setupArguments(Arguments a) {
-		OneAssetOptionArguments args = (OneAssetOptionArguments) a;
+		OneAssetOptionArguments args = (OneAssetOptionArguments) a; 
+//XXX		process = (GeneralizedBlackScholesProcess) args.stochasticProcess;
 		exerciseDate = args.exercise.lastDate();
 		payoff = args.payoff;
 		requiredGridValue = ((StrikedTypePayoff) (payoff)).strike();

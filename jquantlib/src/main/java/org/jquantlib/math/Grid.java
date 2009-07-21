@@ -39,47 +39,45 @@
 
 package org.jquantlib.math;
 
-import org.jquantlib.math.Array;
 
 /**
- * 
  * @author Dominik Holenstein
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-final class Grid {
-	
-	private Grid() { }
-	
-    final static Array CenteredGrid(double center, double dx, int steps) {
-		Array result = new Array(steps+1);
-		
-		for (int i=0; i<steps+1; i++)
-			result.set(i, center + (i - steps/2.0)*dx);
-		
-		return result;
-	}
-	
-	
-	
-	final static Array BoundedGrid(double xMin, double xMax, int steps) {
-		Array result = new Array(steps+1);
-		
-		double x=xMin, dx=(xMax-xMin)/steps;
-		for (int i=0; i<steps+1; i++, x+=dx)
-			result.set(i, x);
-		
-		return result;
-	}
-	
-   final static Array BoundedLogGrid(double xMin, double xMax, int steps) {
-		Array result = new Array(steps+1);
-		double gridLogSpacing = (Math.log(xMax) - Math.log(xMin)) / (steps);
-		double edx = Math.exp(gridLogSpacing);
-		result.set(0,xMin);
-		
-		for (int j=1; j < steps+1; j++) {
-			result.set(j, result.get(j-1)*edx);
-		}		
-		return result;
-	}
+// TODO: remove statics
+public final class Grid {
+
+    private Grid() {
+        // avoid creation of this class
+    }
+
+    final static public Array CenteredGrid(double center, double dx, int steps) {
+        final Array result = new Array(steps + 1);
+        for (int i = 0; i < steps + 1; i++) {
+            result.set(i, center + (i - steps / 2.0) * dx);
+        }
+        return result;
+    }
+
+    final static public Array BoundedGrid(double xMin, double xMax, int steps) {
+        final Array result = new Array(steps + 1);
+        final double dx = (xMax - xMin) / steps;
+        double x = xMin;
+        for (int i = 0; i < steps + 1; i++, x += dx) {
+            result.set(i, x);
+        }
+        return result;
+    }
+
+    final static public Array BoundedLogGrid(double xMin, double xMax, int steps) {
+        final Array result = new Array(steps + 1);
+        final double gridLogSpacing = (Math.log(xMax) - Math.log(xMin)) / (steps);
+        final double edx = Math.exp(gridLogSpacing);
+        result.set(0, xMin);
+        for (int j = 1; j < steps + 1; j++) {
+            result.set(j, result.get(j - 1) * edx);
+        }
+        return result;
+    }
+
 }

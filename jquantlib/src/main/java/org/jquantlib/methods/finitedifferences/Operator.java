@@ -30,38 +30,36 @@ import org.jquantlib.math.Array;
 // CODE REVIEW: Do we really need this interface. Helps to easily replaces Tridiaginal implementations
 public interface Operator {
 
-	int size();
+	public int size();
 
-	boolean isTimeDependent();
+	public boolean isTimeDependent();
 
-	void setTime(double t);
+	public void setTime(double t);
 
-	<T extends Operator> T identity(int size);
+	public <T extends Operator> T identity(int size);
 
-	Array applyTo(Array a);
+	public Array applyTo(Array a);
 
-	Array solveFor(Array a);
-
-	Array SOR(Array rhs, int tol);
-
-	<T extends Operator> void swap(T from);
-
-	<T extends Operator> void swap(T op1, T op2);
-
-	<T extends Operator> T add(T d); // for + with current instance
-
-	<T extends Operator> T subtract(T d); // for - with current instance
-
-	<T extends Operator> T add(T a, T b);
-
-	<T extends Operator> T subtract(T a, T b);
-
-	<T extends Operator> T multiply(double a, final T d);
-
-	<T extends Operator> T multiply(T d, double a);
+	public Array solveFor(Array a);
 	
-	<T extends Operator> T multiply(double a);
+    public <T extends Operator> void swap(T from);
+	
+    public <T extends Operator> T add(T d);
 
-	<T extends Operator> T divide(T d, double a);
+    public <T extends Operator> T subtract(T d);
+	
+    public <T extends Operator> T multiply(double a);
+
+    
+//
+// methods not called, not tested
+//
+//	Array SOR(Array rhs, int tol);
+//	<T extends Operator> void swap(T op1, T op2);
+//	<T extends Operator> T add(T a, T b);
+//	<T extends Operator> T subtract(T a, T b);
+//	<T extends Operator> T multiply(double a, final T d);
+//	<T extends Operator> T multiply(T d, double a);
+//	<T extends Operator> T divide(T d, double a);
 	 
 }

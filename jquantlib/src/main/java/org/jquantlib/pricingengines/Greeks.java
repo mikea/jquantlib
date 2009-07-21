@@ -52,7 +52,7 @@ public class Greeks {
 
     static public /*@Real*/ double  blackScholesTheta(
             final GeneralizedBlackScholesProcess p,
-            /*@Real*/ double value, /*@Real*/ double delta, /*@Real*/ double gamma) {
+            final /*@Real*/ double value, final /*@Real*/ double delta, final /*@Real*/ double gamma) {
 
     	/*@Real*/ double u = p.stateVariable().getLink().evaluate();
     	//TODO update zeroRate so that we do not need to set frequency and extrapolate

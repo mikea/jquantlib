@@ -1,6 +1,5 @@
 /*
- Copyright (C) 
- 2009 Ueli Hofstetter
+ Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
  
@@ -35,32 +34,26 @@ import org.jquantlib.math.Matrix;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.stdlibc.Std;
 
-import com.sun.xml.internal.ws.api.pipe.NextAction;
-
 import static org.jquantlib.Error.QL_REQUIRE;
-//! libor-forward-model process
-/*! stochastic process of a libor forward model using the
-    rolling forward measure incl. predictor-corrector step
 
-    References:
-
-    Glasserman, Paul, 2004, Monte Carlo Methods in Financial Engineering,
-    Springer, Section 3.7
-
-    Antoon Pelsser, 2000, Efficient Methods for Valuing Interest Rate
-    Derivatives, Springer, 8
-
-    Hull, John, White, Alan, 1999, Forward Rate Volatilities, Swap Rate
-    Volatilities and the Implementation of the Libor Market Model
-    (<http://www.rotman.utoronto.ca/~amackay/fin/libormktmodel2.pdf>)
-
-    \test the correctness is tested by Monte-Carlo reproduction of
-          caplet & ratchet NPVs and comparison with Black pricing.
-
-    \warning this class does not work correctly with Visual C++ 6.
-
-    \ingroup processes
-*/
+/**
+ * Libor-forward-model process
+ * <p>
+ * Stochastic process of a libor forward model using the rolling forward measure including predictor-corrector step
+ * <p>
+ * References:
+ * <li>Glasserman, Paul, 2004, Monte Carlo Methods in Financial Engineering, Springer, Section 3.7</li>
+ * <li>Antoon Pelsser, 2000, Efficient Methods for Valuing Interest Rate Derivatives, Springer, 8</li>
+ * <li>Hull, John, White, Alan, 1999, Forward Rate Volatilities, Swap Rate Volatilities and the Implementation of the Libor Market
+ * Model<li>
+ * 
+ * @see <a href="http://www.rotman.utoronto.ca/~amackay/fin/libormktmodel2.pdf">FORWARD RATE VOLATILITIES, SWAP RATE VOLATILITIES,
+ *      AND THE IMPLEMENTATION OF THE LIBOR MARKET MODEL</a>
+ * 
+ * @category processes
+ * 
+ * @author Ueli Hofstetter
+ */
 // TODO: license, class comments, access modifiers organization, good formatting
 public class LiborForwardModelProcess extends StochasticProcess {
     

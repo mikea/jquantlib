@@ -38,7 +38,7 @@ public class TransformedGrid {
 
 	public TransformedGrid(final Array grid) {
 	    // TODO: code review :: use of clone()
-		this.grid_ = grid.clone();
+		this.grid_ = grid;
 		this.transformedGrid_ = grid.clone();
 		this.dxm_ = new Array(grid.length);
 		this.dxp_ = new Array(grid.length);
@@ -52,12 +52,11 @@ public class TransformedGrid {
 
 	public TransformedGrid(Array grid, UnaryFunctionDouble f) {
 	    // TODO: code review :: use of clone()
-	    this.grid_ = grid.clone();
-		this.transformedGrid_ = grid.clone();
+	    this.grid_ = grid;
+		this.transformedGrid_ = grid.clone().transform(f);
 		this.dxm_ = new Array(grid.length);
 		this.dxp_ = new Array(grid.length);
 		this.dx_ = new Array(grid.length);
-		transformedGrid_.transform(f);
 		for (int i = 1; i < transformedGrid_.length - 1; i++) {
 			dxm_.set(i, transformedGrid_.get(i) - transformedGrid_.get(i - 1));
 			dxp_.set(i, transformedGrid_.get(i + 1) - transformedGrid_.get(i));

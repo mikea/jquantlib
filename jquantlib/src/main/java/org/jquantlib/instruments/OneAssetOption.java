@@ -44,6 +44,7 @@ package org.jquantlib.instruments;
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
+import org.jquantlib.Configuration;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.UnaryFunctionDouble;
@@ -64,6 +65,7 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
+import org.jquantlib.util.Date;
 
 public class OneAssetOption extends Option {
 
@@ -204,6 +206,17 @@ public class OneAssetOption extends Option {
 
 
     //
+    // overrides Instrument
+    //
+    
+    @Override
+    public boolean isExpired() /* @ReadOnly */ {
+        Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        return exercise.lastDate().le( evaluationDate );
+    }
+
+    
+    //
     // overrides NewInstrument
     //
     
@@ -226,11 +239,11 @@ public class OneAssetOption extends Option {
         optionArguments.exercise = exercise;
         // set up stopping times
         int n = exercise.size();
-        List<Double> arr = new ArrayDoubleList(n);
+        List<Double> list = new ArrayDoubleList(n);
         for (int i=0; i<n; ++i) {
-            arr.add(/*@Time*/ stochasticProcess.getTime(exercise.date(i)));
+            list.add(/*@Time*/ stochasticProcess.getTime(exercise.date(i)));
         }
-        optionArguments.stoppingTimes = arr;
+        optionArguments.stoppingTimes = list;
     }
 
     /**

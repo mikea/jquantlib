@@ -72,8 +72,7 @@ public class FDEuropeanEngine extends OneAssetOptionEngine {
         StandardFiniteDifferenceModel model = new StandardFiniteDifferenceModel(fdVanillaEngine.finiteDifferenceOperator, fdVanillaEngine.bcS);
 
         prices = new SampledCurve(fdVanillaEngine.intrinsicValues);
-
-        prices.setValues(model.rollback(prices.values(), fdVanillaEngine.getResidualTime(), 0, fdVanillaEngine.timeSteps));
+        prices.setValues( model.rollback(prices.values(), fdVanillaEngine.getResidualTime(), 0, fdVanillaEngine.timeSteps) );
 
         results.value = prices.valueAtCenter();
         results.delta = prices.firstDerivativeAtCenter();
