@@ -203,7 +203,7 @@ public abstract class AbstractInterpolation implements Interpolation {
     }
 
 	@Override
-    public void reload() {
+    public void update() {
         if (vx.length < 2)
             throw new IllegalArgumentException("not enough points to interpolate");
         if (extraSafetyChecks) {

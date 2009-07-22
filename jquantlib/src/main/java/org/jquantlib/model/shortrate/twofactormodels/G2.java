@@ -49,19 +49,18 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Observer;
 
 /**
+ * Two-additive-factor gaussian model class.
+ * <p>
+ * This class implements a two-additive-factor model defined by {@latex$ dr_t = \varphi(t) + x_t + y_t } 
+ * where {@latex$ x_t } and {@latex$ y_t } are defined by
+ * {@latex[ dx_t = -a x_t dt + \sigma dW^1_t, x_0 = 0 }
+ * {@latex[ dy_t = -b y_t dt + \sigma dW^2_t, y_0 = 0 } and {@latex$ dW^1_t dW^2_t = \rho dt }
+ * 
+ * @note This class was not tested enough to guarantee its functionality.
+ * 
+ * @category shortrate
  * 
  * @author Praneet Tiwari
- */
-
-// ! Two-additive-factor gaussian model class.
-/*
- * ! This class implements a two-additive-factor model defined by \f[ dr_t = \varphi(t) + x_t + y_t \f] where \f$ x_t \f$ and \f$
- * y_t \f$ are defined by \f[ dx_t = -a x_t dt + \sigma dW^1_t, x_0 = 0 \f] \f[ dy_t = -b y_t dt + \sigma dW^2_t, y_0 = 0 \f] and
- * \f$ dW^1_t dW^2_t = \rho dt \f$.
- * 
- * \bug This class was not tested enough to guarantee its functionality.
- * 
- * \ingroup shortrate
  */
 public class G2 extends TwoFactorModel implements AffineModel, TermStructureConsistentModel {
 

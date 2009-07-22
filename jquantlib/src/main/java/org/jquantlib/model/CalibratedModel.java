@@ -236,25 +236,26 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     }
     
     
-    private final class PrivateConstraint extends Constraint{        
-        public PrivateConstraint(List<Parameter> arguments){
-            arguments_ = arguments;
+    private final class PrivateConstraint extends Constraint{
+        
+        public PrivateConstraint(List<Parameter> arguments) {
+            arguments_ = arguments; // TODO: code review: using the outermost variable???
         }
         
         @Override
-        public boolean test(Array params) {
-           int k = 0;
-           for (int i = 0; i<arguments_.size(); i++){
-               int size = arguments_.get(i).getSize();
-               Array testParams = new Array(size);
-               for(int j = 0; j<size; j++ , k++){
-                   testParams.set(j, params.get(k));
-               }
-               if(!arguments_.get(i).testParams(testParams)){
-                   return false;
-               }
-           }
-           return true;
+        public boolean test(final Array array) /* @ReadOnly */ {
+            int k = 0;
+            for (int i = 0; i < arguments_.size(); i++) {
+                int size = arguments_.get(i).getSize();
+                Array testParams = new Array(size);
+                for (int j = 0; j < size; j++, k++) {
+                    testParams.set(j, array.get(k));
+                }
+                if (!arguments_.get(i).testParams(testParams)) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
     

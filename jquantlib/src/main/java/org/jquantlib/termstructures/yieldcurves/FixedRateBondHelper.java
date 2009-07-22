@@ -62,7 +62,7 @@ bond_->setPricingEngine(bondEngine); */
 }
             
 	@Override
-	public double getImpliedQuote() {
+	public double impliedQuote() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

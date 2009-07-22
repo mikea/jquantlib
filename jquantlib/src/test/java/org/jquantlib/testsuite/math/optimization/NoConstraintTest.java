@@ -55,8 +55,8 @@ public class NoConstraintTest {
 
     @Test
     public void testUpdate() {
-        final Array params    = new Array(new double[] { 1.0d, 1.1d, 2.3d });
-        final Array direction = new Array(new double[] { 0.1d, 0.3d, 1.1d });
+        final Array params    = new Array(new double[] { 1.0, 1.1, 2.3 });
+        final Array direction = new Array(new double[] { 0.1, 0.3, 1.1 });
         double beta = 2.0;
         nc.update(params, direction, beta);
         logger.info("params after nc.update= {}", params );

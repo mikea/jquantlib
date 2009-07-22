@@ -19,6 +19,7 @@
  */
 
 package org.jquantlib.math.optimization;
+
 import org.jquantlib.math.Array;
 
 /**
@@ -29,32 +30,23 @@ import org.jquantlib.math.Array;
 //TODO: comments, license, code review
 public abstract class Constraint {
 
-//XXX 
-//    protected Constraint() {
-//        // nothing
-//    }
-    
     public abstract boolean test(final Array p);
 
     // take note of precision error when comparing Arrays, only compare difference dot product
     // this is due to representation of numbers such as 0.1 in binary
     public double update(final Array params, final Array direction, final double beta) {
+        final boolean forever = true;
 
         double diff = beta;
-        Array newParams = params.add(direction.mul( new Array(direction.length).fill(diff) ));
-        boolean valid = test(newParams);
-
         int icount = 0;
-        while (!valid) {
-            if (icount > 200)
-                throw new RuntimeException("can't update parameter vector");
+        do {
+            final Array newParams = params.add(direction.mul(diff));
+            if (test(newParams)) break;
+            if (icount++ > 200) throw new RuntimeException("can't update parameter vector"); // TODO: message
             diff *= 0.5;
-            icount++;
-            newParams = params.add(direction.mul( new Array(direction.length).fill(diff) ));
-            valid = test(newParams);
-        }
+        } while (forever);
 
-        params.addAssign(direction.mul( new Array(direction.length).fill(diff) ));
+        params.addAssign(direction.mul(diff));
         return diff;
     }
     

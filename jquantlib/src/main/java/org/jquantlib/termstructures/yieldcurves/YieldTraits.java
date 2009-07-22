@@ -23,41 +23,46 @@
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.termstructures.IYieldTermStructure;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.Pair;
 
 /**
  * 
  * @author Richard Gomes
  */
-public interface YieldTraits {
-    /**
-     * value at reference
-     */ 
-    public /* @DiscountFactor */ double initialValue();
-    
-    /**
-     * initial guess
-     */
-    public /* @DiscountFactor */ double initialGuess();
-    
-    /**
-     * further guesses
-     */
-    public /* @DiscountFactor */ double guess(final YieldTermStructure c, final Date d);
+public interface YieldTraits<I extends Interpolator> extends IYieldTermStructure {
 
-    /**
-     * possible constraints based on previous values
-     */
-    public /* @DiscountFactor */ double minValueAfter(int i, final Array data);
+    //
+    // common
+    //
+    public abstract Date maxDate() /* @ReadOnly */;
+    public abstract Array times() /* @ReadOnly */;
+    public abstract Date[] dates() /* @ReadOnly */;
+    public abstract Pair<Date, /* @Rate */Double>[] nodes() /* @ReadOnly */;
+
+    // exclusive to discount curve
+    public abstract/* @DiscountFactor */Array discounts() /* @ReadOnly */;
+
+    // exclusive to forward curve
+    public abstract/* @Rate */Array forwards() /* @ReadOnly */;
+
+    // exclusive to zero rate
+    public abstract/* @Rate */Array zeroRates() /* @ReadOnly */;
+
+
+    //
+    // The following methods should be protected in order to mimick as it is done in C++
+    //
     
-    /**
-     * possible constraints based on maximum values
-     */
-    public /* @DiscountFactor */ double maxValueAfter(int i, final Array data);
-    
-    /**
-     * update with new guess
-     */
-    public void updateGuess(/* @DiscountFactor */ Array data, /* @DiscountFactor */ double discount, int i);
+    // exclusive to discount curve :: SHOULD BE "protected"
+    public abstract/* @DiscountFactor */double discountImpl(final/* @Time */double t) /* @ReadOnly */;
+
+    // exclusive to forward curve :: SHOULD BE "protected"
+    public abstract/* @Rate */double forwardImpl(final/* @Time */double t) /* @ReadOnly */;
+
+    // common to forward curve and to zero curve :: SHOULD BE "protected"
+    public abstract/* @Rate */double zeroYieldImpl(final/* @Time */double t) /* @ReadOnly */;
+
 }

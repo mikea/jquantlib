@@ -149,7 +149,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         state variable, the square-root of a standard CIR process.
     */
     
-    class Dynamics extends CoxIngersollRoss.Dynamics{
+    private class Dynamics extends CoxIngersollRoss.Dynamics{
         
         private Parameter phi_;
         
@@ -180,7 +180,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         and \f$ h = \sqrt{k^2 + 2\sigma^2} \f$.
     */
     
-    class FittingParameter extends TermStructureFittingParameter{
+    private class FittingParameter extends TermStructureFittingParameter{
         // FIXME: Review object model
         public FittingParameter(final Handle<YieldTermStructure> termStructure,
                 double theta, double k, double sigma, double x0){

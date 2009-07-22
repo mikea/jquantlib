@@ -36,6 +36,6 @@ public interface Interpolator {
 	public Interpolation interpolate(final Array x, final Array y);
 	public Interpolation interpolate(final int size, final Array x, final Array y);
 	
-	public boolean isGlobal();
+	public boolean global();
 
 }

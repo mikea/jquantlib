@@ -95,21 +95,6 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 		return 0.0;
 	}
 
-	//
-	// implements Interpolation
-	//
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @deprecated
-     */
-    @Override
-	public void update() {
-		reload();
-	}
-
-    
     //
     // Overrides AbstractInterpolation
     //
@@ -120,8 +105,8 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
      * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>  
      */
 	@Override
-	public void reload() {
-		super.reload();
+	public void update() {
+		super.update();
 
 		vp = new Array(vx.length);
 		vp.set(0, 0.0);
@@ -173,12 +158,12 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 		public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */{
 			delegate.vx = x.copyOfRange(0, size);
 			delegate.vy = y.copyOfRange(0, size);
-			delegate.reload();
+			delegate.update();
 			return delegate;
 		}
 
 	    @Override
-		public final boolean isGlobal() {
+		public final boolean global() {
 			return false; // only CubicSpline and Sabr are global, whatever it means!
 		}
 	}

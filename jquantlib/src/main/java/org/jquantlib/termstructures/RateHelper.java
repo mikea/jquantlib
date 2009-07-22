@@ -22,8 +22,9 @@
 
 package org.jquantlib.termstructures;
 
-import java.util.List; // FIXME :: performance
+import java.util.List;
 
+import org.jquantlib.math.Constants;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
@@ -43,7 +44,7 @@ import org.jquantlib.util.Observer;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
-public abstract class RateHelper<T extends TermStructure> implements Observer, Observable {
+public abstract class RateHelper<T extends ITermStructure> implements Observer, Observable {
 
 	//
 	// protected fields
@@ -95,7 +96,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 	 * 
 	 * @return the earliest relevant date
 	 */
-	public final Date getEarliestDate() {
+	public final Date earliestDate() {
 		return earliestDate;
 	}
 
@@ -105,68 +106,54 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 	 * 
 	 * @return the latest relevant date
 	 */
-	public final Date getLatestDate() {
+	public final Date latestDate() {
 		return latestDate;
 	}
 
-//XXX
-//	public T getTermStructure() {
-//		return termStructure;
-//	}
 
 	/**
 	 * Sets the term structure to be used for pricing
 	 * 
+	 * @note Comments kept for JQuantLib developers only as they refer to original C++ code:
+     * Being a pointer and not a shared_ptr, the term
+     * structure is not guaranteed to remain allocated
+     * for the whole life of the rate helper. It is
+     * responsibility of the programmer to ensure that
+     * the pointer remains valid. It is advised that
+     * rate helpers be used only in term structure
+     * constructors, setting the term structure to
+     * <b>this</b>, i.e., the one being constructed.
+	 * 
 	 * @param termStructure
 	 */
-//	
-// COMMENTS kept for JQuantLib developers only as they refer to original C++ code:
-//	
-//	 Being a pointer and not a shared_ptr, the term
-//   structure is not guaranteed to remain allocated
-//   for the whole life of the rate helper. It is
-//   responsibility of the programmer to ensure that
-//   the pointer remains valid. It is advised that
-//   rate helpers be used only in term structure
-//   constructors, setting the term structure to
-//   <b>this</b>, i.e., the one being constructed.
-//	
 	public final void setTermStructure(final T termStructure) {
 		if (termStructure == null) throw new NullPointerException("null term structure given"); // FIXME: message
 		this.termStructure = termStructure;
 	}
 
-	public final double getQuoteError() {
-		return quote.getLink().evaluate() - getImpliedQuote();
+	public final /* @Price */ double quoteError() {
+		return quote.getLink().evaluate() - impliedQuote();
 	}
 
-	public final double getQuoteValue() {
+	public final /* @Price */ double quoteValue() {
 		return quote.getLink().evaluate();
 	}
 
-//XXX	
-//	public final boolean quoteIsValid() {
-//		// quote_->isValid();
-//		return true; //TODO
-//	}
-
-	public double getReferenceQuote() /* @ReadOnly */ {
+	public /* @Price */ double referenceQuote() /* @ReadOnly */ {
 		return quote.getLink().evaluate();
 	}
 	
 
-	
-// TODO: code review :: how this method is used?
-//	virtual DiscountFactor discountGuess() const {
-//            return Null<Real>();
-//        }
+	public /*@DiscountFactor*/ double discountGuess() /* @ReadOnly */ {
+	    return Constants.NULL_Double;
+	}
 	
 	
 	//
 	// abstract methods
 	//
 
-	public abstract double getImpliedQuote();
+	public abstract double impliedQuote();
 
 	
 	//

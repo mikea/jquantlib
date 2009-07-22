@@ -49,6 +49,7 @@ import org.jquantlib.time.TimeGrid;
  * 
  * \ingroup shortrate
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CoxIngersollRoss extends OneFactorAffineModel {
     // private double /*@Real*/ y0_, theta_, k_, sigma_;
     // check this value, arbitrary for now
@@ -78,30 +79,6 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         r0_ = new ConstantParameter(r0, new PositiveConstraint());
     }
 
-    @Override
-    public Lattice tree(TimeGrid grid) {
-        TrinomialTree trinomial = new TrinomialTree(dynamics().process(), grid, true);
-        return new ShortRateTree(trinomial, dynamics(), grid);
-    }
-
-    protected double /* @Real */A(double /* @Time */t, double /* @Time */T) {
-        double /* @Real */sigma2 = sigma() * sigma();
-        double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma2);
-        double /* @Real */numerator = 2.0 * h * Math.exp(0.5 * (k() + h) * (T - t));
-        double /* @Real */denominator = 2.0 * h + (k() + h) * (Math.exp((T - t) * h) - 1.0);
-        double /* @Real */value = Math.log(numerator / denominator) * 2.0 * k() * theta() / sigma2;
-        return Math.exp(value);
-    }
-
-    protected double /* @Real */B(double /* @Time */t, double /* @Time */T) {
-        double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma() * sigma());
-        double /* @Real */temp = Math.exp((T - t) * h) - 1.0;
-        double /* @Real */numerator = 2.0 * temp;
-        double /* @Real */denominator = 2.0 * h + (k() + h) * temp;
-        double /* @Real */value = numerator / denominator;
-        return value;
-    }
-
     protected double /* @Real */theta() {
         return theta_.getOperatorEq(0.0);
     }
@@ -118,83 +95,17 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         return r0_.getOperatorEq(0.0);
     }
 
-    class VolatilityConstraint extends Constraint {
-        //TODO: check whether IMPL is necessary
-        double /* @Real */k_, theta_;
-        public VolatilityConstraint(double k, double theta){
-            this.k_ = k;
-            this.theta_ = theta;
-        }
-       
-        public boolean test(final Array params) {
-            double /* @Real */sigma = params.first();
-            if (sigma <= 0.0) {
-                return false;
-            }
-            if (sigma * sigma >= 2.0 * k_ * theta_) {
-                return false;
-            }
-            return true;
-        }
-    }
-
-    class HelperProcess extends StochasticProcess1D {
-
-        public HelperProcess(double /* @Real */theta, double /* @Real */k, double /* @Real */sigma, double /* @Real */y0) {
-            this.y0_ = y0;
-            this.theta_ = theta;
-            this.k_ = k;
-            this.sigma_ = sigma;
-        }
-
-        @Override
-        public double /* @Real */x0() {
-            return y0_;
-        }
-
-        @Override
-        public double /* @Real */drift(double /* @Time */t, double /* @Real */y) {
-            return (0.5 * theta_ * k_ - 0.125 * sigma_ * sigma_) / y - 0.5 * k_ * y;
-        }
-
-        @Override
-        public double /* @Real */diffusion(double /* @Time */t, double /* @Real */y) {
-            return 0.5 * sigma_;
-        }
-
-        private double /* @Real */y0_, theta_, k_, sigma_;
-    };
-
-    // ! %Dynamics of the short-rate under the Cox-Ingersoll-Ross model
-    /*
-     * ! The state variable \f$ y_t \f$ will here be the square-root of the short-rate. It satisfies the following stochastic
-     * equation \f[ dy_t=\left[ (\frac{k\theta }{2}+\frac{\sigma ^2}{8})\frac{1}{y_t}- \frac{k}{2}y_t \right] d_t+ \frac{\sigma
-     * }{2}dW_{t} \f].
-     */
-
-    class Dynamics extends ShortRateDynamics {
-
-        public Dynamics(double /* @Real */theta, double /* @Real */k, double /* @Real */sigma, double /* @Real */x0) {
-            super(new HelperProcess(theta, k, sigma, Math.sqrt(x0)));
-        }
-
-        @Override
-        public double /* @Real */variable(double /* @Time */t, double /* @Real */r) {
-            return Math.sqrt(r);
-        }
-
-        @Override
-        public double /* @Real */shortRate(double /* @Time */t, double /* @Real */y) {
-            return y * y;
-        }
-    }
-
-
-
+    
+    //
+    // overrides OneFactorModel
+    //
+    
+    @Override
     public ShortRateDynamics dynamics() {
         return new Dynamics(theta(), k(), sigma(), x0());
     }
 
+    @Override
     public double /* @Real */discountBondOption(Option.Type type, double /* @Real */strike, double /* @Time */t,
             double /* @Time */s) {
 
@@ -241,5 +152,108 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         }
     }
 
+    @Override
+    public Lattice tree(TimeGrid grid) {
+        TrinomialTree trinomial = new TrinomialTree(dynamics().process(), grid, true);
+        return new ShortRateTree(trinomial, dynamics(), grid);
+    }
+
+    @Override
+    protected double /* @Real */A(double /* @Time */t, double /* @Time */T) {
+        double /* @Real */sigma2 = sigma() * sigma();
+        double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma2);
+        double /* @Real */numerator = 2.0 * h * Math.exp(0.5 * (k() + h) * (T - t));
+        double /* @Real */denominator = 2.0 * h + (k() + h) * (Math.exp((T - t) * h) - 1.0);
+        double /* @Real */value = Math.log(numerator / denominator) * 2.0 * k() * theta() / sigma2;
+        return Math.exp(value);
+    }
+
+    @Override
+    protected double /* @Real */B(double /* @Time */t, double /* @Time */T) {
+        double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma() * sigma());
+        double /* @Real */temp = Math.exp((T - t) * h) - 1.0;
+        double /* @Real */numerator = 2.0 * temp;
+        double /* @Real */denominator = 2.0 * h + (k() + h) * temp;
+        double /* @Real */value = numerator / denominator;
+        return value;
+    }
+
+
+    
+    //
+    // inner classes
+    //
+
+    private class VolatilityConstraint extends Constraint {
+        
+        double k, theta;
+        
+        public VolatilityConstraint(double k, double theta) {
+            this.k = k;
+            this.theta = theta;
+        }
+       
+        public boolean test(final Array array) /*@ReadOnly*/ {
+            double sigma = array.first();
+            if (sigma <= 0.0) {
+                return false;
+            }
+            if (sigma * sigma >= 2.0 * k * theta) {
+                return false;
+            }
+            return true;
+        }
+    }
+    
+    private class HelperProcess extends StochasticProcess1D {
+
+        public HelperProcess(double /* @Real */theta, double /* @Real */k, double /* @Real */sigma, double /* @Real */y0) {
+            this.y0_ = y0;
+            this.theta_ = theta;
+            this.k_ = k;
+            this.sigma_ = sigma;
+        }
+
+        @Override
+        public double /* @Real */x0() {
+            return y0_;
+        }
+
+        @Override
+        public double /* @Real */drift(double /* @Time */t, double /* @Real */y) {
+            return (0.5 * theta_ * k_ - 0.125 * sigma_ * sigma_) / y - 0.5 * k_ * y;
+        }
+
+        @Override
+        public double /* @Real */diffusion(double /* @Time */t, double /* @Real */y) {
+            return 0.5 * sigma_;
+        }
+
+        private double /* @Real */y0_, theta_, k_, sigma_;
+    }
+
+    // ! %Dynamics of the short-rate under the Cox-Ingersoll-Ross model
+    /*
+     * ! The state variable \f$ y_t \f$ will here be the square-root of the short-rate. It satisfies the following stochastic
+     * equation \f[ dy_t=\left[ (\frac{k\theta }{2}+\frac{\sigma ^2}{8})\frac{1}{y_t}- \frac{k}{2}y_t \right] d_t+ \frac{\sigma
+     * }{2}dW_{t} \f].
+     */
+
+    protected class Dynamics extends ShortRateDynamics {
+
+        public Dynamics(double /* @Real */theta, double /* @Real */k, double /* @Real */sigma, double /* @Real */x0) {
+            super(new HelperProcess(theta, k, sigma, Math.sqrt(x0)));
+        }
+
+        @Override
+        public double /* @Real */variable(double /* @Time */t, double /* @Real */r) {
+            return Math.sqrt(r);
+        }
+
+        @Override
+        public double /* @Real */shortRate(double /* @Time */t, double /* @Real */y) {
+            return y * y;
+        }
+    }
 
 }

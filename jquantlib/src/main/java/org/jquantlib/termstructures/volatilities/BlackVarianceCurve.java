@@ -135,7 +135,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     public final void setInterpolation(final Interpolator factory) {
         varianceCurve = factory.interpolate(times, variances);
         varianceCurve.enableExtrapolation();
-        varianceCurve.reload();
+        varianceCurve.update();
         notifyObservers();
     }
 

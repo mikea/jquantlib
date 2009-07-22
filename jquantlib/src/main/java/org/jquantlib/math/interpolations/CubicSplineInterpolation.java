@@ -199,21 +199,6 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
 
     
     //
-    // implements Interpolation
-    //
-    
-    /**
-     * {@inheritDoc}
-     * 
-     * @deprecated
-     */
-    @Override
-    public void update() {
-        reload();
-    }
-
-    
-    //
     // Overrides AbstractInterpolation
     //
     
@@ -223,8 +208,10 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
      * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>  
      */
     @Override
-    public void reload() {
+    public void update() {
 
+        super.update();
+        
         final TridiagonalOperator L = new TridiagonalOperator(n);
         final Array dx  = new Array(n);
         final Array S   = new Array(n);
@@ -436,12 +423,12 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
 	        va = new Array(n-1);
 	        vb = new Array(n-1);
 	        vc = new Array(n-1);
-            delegate.reload();
+            delegate.update();
             return delegate;
         }
         
         @Override
-        public final boolean isGlobal() {
+        public final boolean global() {
             return true; // only CubicSpline and Sabr are global, whatever it means!
         }
         

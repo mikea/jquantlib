@@ -78,8 +78,8 @@ public class LogLinear implements Interpolator {
 	}
 
     @Override
-	public final boolean isGlobal() /* @ReadOnly */ {
-		return delegate.isGlobal();
+	public final boolean global() /* @ReadOnly */ {
+		return delegate.global();
 	}
 
 }

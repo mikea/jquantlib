@@ -55,24 +55,12 @@ import org.jquantlib.math.UnaryFunctionDouble;
 public interface Interpolation extends Extrapolator, UnaryFunctionDouble {
 
 	/**
-	 * This method performs the interpolation itself.
+     * This method performs the interpolation itself and should be called
+     * just after the construction of a interpolation class.
 	 * 
-	 * @note This method is deprecated as it causes confusion with
-	 * Observer.update. Concrete implementations must use {@link Interpolation#reload()} instead.
-	 * 
-	 * @see reload
-	 * 
-	 * @deprecated
+	 * @note Do not confuse this method with Observer.update.
 	 */
 	public void update();
-	
-	/**
-	 * This method performs the interpolation itself and should be called
-	 * just after the construction of a interpolation class.
-	 * 
-	 * @see update
-	 */
-	public void reload();
 	
     public double xMin();
     public double xMax();

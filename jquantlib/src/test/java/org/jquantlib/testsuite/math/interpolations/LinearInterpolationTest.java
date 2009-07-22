@@ -59,7 +59,7 @@ public class LinearInterpolationTest {
 		logger.info("\n\n::::: Testing use of interpolations as functors... :::::");
 
 		interpolation = new Linear().interpolate(x, y);
-		interpolation.reload();		  
+		interpolation.update();		  
 	    length = x2.length;
 	    y2 = new double[length];
 	    tolerance = 1.0e-12;

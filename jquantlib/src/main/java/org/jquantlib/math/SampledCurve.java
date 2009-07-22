@@ -217,7 +217,7 @@ public class SampledCurve {
         }
 
         final CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(transformed, this.values);
-        priceSpline.reload();
+        priceSpline.update();
     
         for (int i=0; i<newValues.length; i++) {
             newValues.set(i, priceSpline.evaluate(newValues.get(i), true) );

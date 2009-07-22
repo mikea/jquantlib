@@ -5,16 +5,16 @@ import org.jquantlib.math.Array;
 //TODO: comments, formatting
 
 public class BoundaryConstraint extends Constraint {
-    private double low_, high_; // inclusive!
+    private double low, high; // inclusive!
 
     public BoundaryConstraint(double low, double high) {
-        low_ = low;
-        high_ = high;
+        this.low = low;
+        this.high = high;
     }
 
-    public boolean test(Array bndArray) {
-        for (int i=0; i<bndArray.length; i++) {
-            if ((bndArray.get(i) < low_) || (bndArray.get(i) > high_))
+    public boolean test(final Array array) /* @ReadOnly */ {
+        for (int i=0; i<array.length; i++) {
+            if ((array.get(i) < low) || (array.get(i) > high))
                 return false;
         }
         return true;

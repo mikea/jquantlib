@@ -98,7 +98,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		    		false)
 		    		.interpolate(x, y);
 	        
-	        interpolation.reload();
+	        interpolation.update();
 	        //TODO: how to use the integral.integrate method which is the protected method?
 	        double result = Math.sqrt(integral.evaluate(interpolation, -1.7, 1.9));//integrate (interpolation, -1.7, 1.9));
 	        result /= scaleFactor;
@@ -114,7 +114,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
                     CubicSplineInterpolation.BoundaryCondition.NotAKnot,
                     0.0)
                     .interpolate(x, y);
-	        interpolation.reload();
+	        interpolation.update();
 	        result = Math.sqrt(integral.evaluate(interpolation, -1.7, 1.9));
 	        result /= scaleFactor;
 	        assertFalse ("MC Not-a-knot spline interpolation "

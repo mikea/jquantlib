@@ -39,6 +39,6 @@ public class RateHelperSorter<T extends RateHelper<YieldTermStructure>> implemen
 	private static final long serialVersionUID = 6335152611463577317L;
 
 	public int compare(final T h1, final T h2) /* @ReadOnly */ {
-		return h1.getLatestDate().compareTo(h2.getLatestDate());
+		return h1.latestDate().compareTo(h2.latestDate());
 	}
 }

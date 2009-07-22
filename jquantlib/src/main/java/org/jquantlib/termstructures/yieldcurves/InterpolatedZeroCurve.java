@@ -55,89 +55,89 @@ import org.jquantlib.util.Pair;
  * @author Richard Gomes
  * @param <T>
  */
-public final class InterpolatedZeroCurve<T extends Interpolator> extends ZeroYieldStructure implements YieldCurve {
+public final class InterpolatedZeroCurve /* <T extends Interpolator> extends ZeroYieldStructure implements CurveTraits */ {
 
-	//
-	// protected fields
-	//
-
-	protected Date[]								dates;
-	protected /* @Time */ Array					times;
-	protected /* @Rate */ Array					data;
-	protected Interpolation							interpolation;
-	protected boolean								isNegativeRates;
-
-	//
-	// private fields
-	//
-	
-	private Interpolator							interpolator;
-
-	
-	//
-	// protected constructors
-	//
-	
-    protected InterpolatedZeroCurve(final DayCounter dayCounter, final T interpolator) {
-    	super(dayCounter);
-		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
-
-		if (0==0) throw new UnsupportedOperationException("Work in progress");
-		
-    }
-
-    protected InterpolatedZeroCurve(final Date referenceDate, final DayCounter dayCounter, final T interpolator) {
-        super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review : default calendar?
-		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
-
-		if (0==0) throw new UnsupportedOperationException("Work in progress");
-		
-    }
-
-    protected InterpolatedZeroCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter, final T interpolator) {
-        super(settlementDays,calendar, dayCounter);
-		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
-
-		if (0==0) throw new UnsupportedOperationException("Work in progress");
-		
-    }
-
-	
-	//
-	// implements YieldCurve
-	//
-
-	@Override
-	public final Date[] getDates() /* @ReadOnly */{
-    	return dates.clone();
-	}
-
-	@Override
-	public final /* @DiscountFactor */ Array getData() /* @ReadOnly */{
-    	return data.clone();
-	}
-
-	@Override
-	public final Date maxDate() /* @ReadOnly */{
-		return dates[dates.length-1];
-	}
-
-	@Override
-	public final Pair<Date, Double>[] getNodes() /* @ReadOnly */{
-		Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
-		for (int i = 0; i < dates.length; ++i)
-			results[i] = new Pair<Date, Double>(dates[i], data.get(i));
-		return results;
-	}
-
-	@Override
-	public final Array getTimes() /* @ReadOnly */{
-    	return times.clone();
-	}
-
-	@Override
-	public final /*@Rate*/double zeroYieldImpl(/*@Time*/double t) /* @ReadOnly */{
-        return interpolation.evaluate(t, true);
-	}
-	
+//	//
+//	// protected fields
+//	//
+//
+//	protected Date[]								dates;
+//	protected /* @Time */ Array					times;
+//	protected /* @Rate */ Array					data;
+//	protected Interpolation							interpolation;
+//	protected boolean								isNegativeRates;
+//
+//	//
+//	// private fields
+//	//
+//	
+//	private Interpolator							interpolator;
+//
+//	
+//	//
+//	// protected constructors
+//	//
+//	
+//    protected InterpolatedZeroCurve(final DayCounter dayCounter, final T interpolator) {
+//    	super(dayCounter);
+//		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
+//
+//		if (0==0) throw new UnsupportedOperationException("Work in progress");
+//		
+//    }
+//
+//    protected InterpolatedZeroCurve(final Date referenceDate, final DayCounter dayCounter, final T interpolator) {
+//        super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review : default calendar?
+//		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
+//
+//		if (0==0) throw new UnsupportedOperationException("Work in progress");
+//		
+//    }
+//
+//    protected InterpolatedZeroCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter, final T interpolator) {
+//        super(settlementDays,calendar, dayCounter);
+//		this.interpolator = (interpolator!=null) ? interpolator : new BackwardFlat();
+//
+//		if (0==0) throw new UnsupportedOperationException("Work in progress");
+//		
+//    }
+//
+//	
+//	//
+//	// implements YieldCurve
+//	//
+//
+//	@Override
+//	public final Date[] getDates() /* @ReadOnly */{
+//    	return dates.clone();
+//	}
+//
+//	@Override
+//	public final /* @DiscountFactor */ Array getData() /* @ReadOnly */{
+//    	return data.clone();
+//	}
+//
+//	@Override
+//	public final Date maxDate() /* @ReadOnly */{
+//		return dates[dates.length-1];
+//	}
+//
+//	@Override
+//	public final Pair<Date, Double>[] getNodes() /* @ReadOnly */{
+//		Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
+//		for (int i = 0; i < dates.length; ++i)
+//			results[i] = new Pair<Date, Double>(dates[i], data.get(i));
+//		return results;
+//	}
+//
+//	@Override
+//	public final Array getTimes() /* @ReadOnly */{
+//    	return times.clone();
+//	}
+//
+//	@Override
+//	public final /*@Rate*/double zeroYieldImpl(/*@Time*/double t) /* @ReadOnly */{
+//        return interpolation.evaluate(t, true);
+//	}
+//	
 }

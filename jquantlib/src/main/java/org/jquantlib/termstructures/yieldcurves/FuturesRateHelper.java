@@ -90,7 +90,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 				latestDate);
 	}
 
-	public double getImpliedQuote() {
+	public double impliedQuote() {
 		if (termStructure == null)
 			throw new IllegalStateException("term structure not set");
 		double forwardRate = termStructure.discount(earliestDate)

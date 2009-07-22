@@ -101,7 +101,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		initializeDates();
 	}
 	
-	public double getImpliedQuote()  {
+	public double impliedQuote()  {
         if(termStructure == null) throw new IllegalStateException("term structure not set");
         return iborIndex.fixing(fixingDate, true);
     }

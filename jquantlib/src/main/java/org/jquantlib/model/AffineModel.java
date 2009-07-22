@@ -28,22 +28,26 @@ import org.jquantlib.math.Array;
 import org.jquantlib.util.Observable;
 
 /**
-* 
-* @author Praneet Tiwari
-*/
-
-//! Affine model class
-/*! Base class for analytically tractable models.
-
-    \ingroup shortrate
-*/
+ * Affine model class
+ * <p>
+ * Base class for analytically tractable models.
+ * 
+ * @category shortrate
+ * 
+ * @author Praneet Tiwari
+ */
 public interface AffineModel extends Observable {
 
-   // ! Implied discount curve
-   public abstract double /* @DiscountFactor */discount(double /* @Time */t);
+   /**
+    * Implied discount curve
+    */
+   public abstract double /* @DiscountFactor */ discount(final double /* @Time */ t);
 
-   public abstract double /* @Real */discountBond(double /* @Time */now, double /* @Time */maturity, Array factors);
+   public abstract double /* @Price */ discountBond(
+           final double /* @Time */ now, final double /* @Time */ maturity, final Array factors);
 
-   public abstract double /* @Real */discountBondOption(Option.Type type, double /* @Real */strike, double /* @Time */maturity,
-           double /* @Time */bondMaturity);
+   public abstract double /* @Real */ discountBondOption(
+           final Option.Type type, 
+           final double /* @Price */ strike, final double /* @Time */ maturity, 
+           final double /* @Time */ bondMaturity);
 }

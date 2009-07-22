@@ -8,7 +8,10 @@ import java.lang.reflect.InvocationTargetException;
  * @author Ueli Hofstetter
  *
  */
+// FIXME: get rid of this class
+// see also :: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
 public class Error {
+    
     public static void QL_REQUIRE(boolean require, Class ex, String message){
         if(!require){
             Throwable t = new Throwable(); 

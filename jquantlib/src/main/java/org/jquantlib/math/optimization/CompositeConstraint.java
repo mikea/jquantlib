@@ -5,15 +5,15 @@ import org.jquantlib.math.optimization.Constraint;
 
 //TODO: comments, license, code review
 public class CompositeConstraint extends Constraint {
-    private Constraint c1_, c2_;
+    private Constraint c1, c2;
 
-    public CompositeConstraint(Constraint c1_, Constraint c2_) {
-        this.c1_ = c1_;
-        this.c2_ = c2_;
+    public CompositeConstraint(final Constraint c1, final Constraint c2) {
+        this.c1 = c1;
+        this.c2 = c2;
     }
 
-    public boolean test(final Array params) {
-        return c1_.test(params) && c2_.test(params);
+    public boolean test(final Array array) /* @ReadOnly */ {
+        return c1.test(array) && c2.test(array);
     }
 
 }

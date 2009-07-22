@@ -81,7 +81,7 @@ import org.jquantlib.util.Observer;
  *  
  * @author Richard Gomes
  */
-public abstract class TermStructure implements Extrapolator, Observer, Observable {
+public abstract class TermStructure implements Extrapolator, Observer, Observable, ITermStructure {
 
 	static private final String THIS_METHOD_MUST_BE_OVERRIDDEN = "This method must be overridden";
 	
@@ -289,98 +289,70 @@ public abstract class TermStructure implements Extrapolator, Observer, Observabl
 	}
 	
 	
-	//
-	// abstract methods
-	//
-	
-	/**
-	 * @return the latest date for which the curve can return values
-	 */
-	public abstract Date maxDate();
+    //
+    // protected methods
+    //
+    
+    /**
+     * This method performs date-range check
+     */ 
+    protected final void checkRange(final Date date, boolean extrapolate) {
+        checkRange(timeFromReference(date), extrapolate);
+    }
 
+    /**
+     * This method performs date-range check
+     */ 
+    protected final void checkRange(final /*@Time*/ double time, boolean extrapolate) {
+        /*@Time*/ double t = time;
+        if (t<0.0) throw new IllegalArgumentException("negative double given");
+        if (! (extrapolate || allowsExtrapolation() || (t<=maxTime())) ) 
+            throw new IllegalArgumentException("double ("+time+") is past max curve double ("+maxTime()+")");
+    }
+    
+
+    //
+    // implements ITermStructure
+    //
 	
-	//
-	// public methods
-	//
-	
-	/**
-	 * Return the calendar used for reference date calculation
-	 * 
-     * @category Dates and Time
-	 * @return the calendar used for reference date calculation
-	 */
+	/* (non-Javadoc)
+     * @see org.jquantlib.termstructures.ITermStructure#calendar()
+     */
+	@Override
 	public Calendar calendar() /* @ReadOnly */ {
 		if (this.calendar == null) throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);
 		return calendar;
 	}
 
-	/**
-	 * This method performs a date to double conversion which represents
-	 * the fraction of the year between the reference date and the date passed as parameter.
-	 * 
-	 * @category Dates and Time
-	 * @param date
-	 * @return the fraction of the year as a double
-	 */
+	/* (non-Javadoc)
+     * @see org.jquantlib.termstructures.ITermStructure#timeFromReference(org.jquantlib.util.Date)
+     */
+    @Override
 	public final /*@Time*/ double timeFromReference(final Date date) {
 		return dayCounter().yearFraction(referenceDate(), date);
 	}
 
-	
-	//
-	// protected methods
-	//
-	
-	/**
-	 * This method performs date-range check
-	 */ 
-	protected final void checkRange(final Date date, boolean extrapolate) {
-		checkRange(timeFromReference(date), extrapolate);
-	}
-
-	/**
-	 * This method performs date-range check
-	 */ 
-	protected final void checkRange(final /*@Time*/ double time, boolean extrapolate) {
-		/*@Time*/ double t = time;
-		if (t<0.0) throw new IllegalArgumentException("negative double given");
-		if (! (extrapolate || allowsExtrapolation() || (t<=maxTime())) ) 
-			throw new IllegalArgumentException("double ("+time+") is past max curve double ("+maxTime()+")");
-	}
-	
-	/**
-	 * Return the day counter used for date/double conversion
-	 * 
-	 * @category Dates and Time
-     * @return the day counter used for date/double conversion
-     * 
-	 * @see #dayCounter
-	 */
+	/* (non-Javadoc)
+     * @see org.jquantlib.termstructures.ITermStructure#dayCounter()
+     */
+    @Override
 	public DayCounter dayCounter() {
 		if (this.dayCounter == null) throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);
 		return dayCounter;
 	}
 
-	/**
-	 * Returns the latest double for which the curve can return values
-	 * 
-     * @category Dates and Time
-	 * @return the latest double for which the curve can return values
-	 */
+	/* (non-Javadoc)
+     * @see org.jquantlib.termstructures.ITermStructure#maxTime()
+     */
+    @Override
 	public /*@Time*/ double maxTime(){
 		return timeFromReference(maxDate());
 	}
 
-	/**
-	 * Returns the Date at which discount = 1.0 and/or variance = 0.0
-	 * 
-	 * @note Term structures initialized by means of this
-	 * constructor must manage their own reference date 
-	 * by overriding the getReferenceDate() method.
-	 *  
-     * @category Dates and Time
-	 * @returns the Date at which discount = 1.0 and/or variance = 0.0
-	 */
+	/* (non-Javadoc)
+     * @see org.jquantlib.termstructures.ITermStructure#referenceDate()
+     */
+    @Override
 	public Date referenceDate() {
 		if (moving) {
 			if (!updated) {

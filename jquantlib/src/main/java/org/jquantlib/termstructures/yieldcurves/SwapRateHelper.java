@@ -134,7 +134,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
 	 * @see org.jquantlib.termstructures.BootstrapHelper#getImpliedQuote()
 	 */
 	@Override
-	public double getImpliedQuote() {
+	public double impliedQuote() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

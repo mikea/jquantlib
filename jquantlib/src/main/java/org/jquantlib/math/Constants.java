@@ -54,5 +54,5 @@ final strictfp public class Constants {
 	public final static double QL_MIN_POSITIVE_REAL = Double.MIN_VALUE; // typically about 2.22E-308 
 
 	public static final double NULL_Integer = Integer.MAX_VALUE;
-	public static final double NULL_Double  = Double.MAX_VALUE;
+	public static final double NULL_Double  = Double.MAX_VALUE;  // TODO: should be Double.NaN ???
 }
