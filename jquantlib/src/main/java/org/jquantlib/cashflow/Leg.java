@@ -60,7 +60,16 @@ public class Leg {
         return result;
     }
     
-    
+    /**
+     * @deprecated v 0.8.1 use the FixedRateLeg class instead
+     * @param nominals
+     * @param schedule
+     * @param couponRates
+     * @param paymentDayCounter
+     * @param paymentAdj
+     * @param firstPeriodDayCount
+     * @return
+     */
     public static List<CashFlow> FixedRateLeg(double[] nominals, 
             Schedule schedule, 
             double[] couponRates,
