@@ -21,13 +21,13 @@
  */
 package org.jquantlib.cashflow;
 
-import org.jquantlib.CapletVolatilityStructure;
 import org.jquantlib.Configuration;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.lang.annotation.Rate;
 import org.jquantlib.pricingengines.BlackFormula;
 import org.jquantlib.quotes.Handle;
+import org.jquantlib.termstructures.CapletVolatilityStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Observable;

@@ -44,7 +44,7 @@ import org.jquantlib.util.Observer;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
-public abstract class RateHelper<T extends ITermStructure> implements Observer, Observable {
+public abstract class RateHelper<T extends TermStructure> implements Observer, Observable {
 
 	//
 	// protected fields

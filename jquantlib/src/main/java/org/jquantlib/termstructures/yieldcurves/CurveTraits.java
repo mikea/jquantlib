@@ -23,7 +23,7 @@
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.termstructures.IYieldTermStructure;
+import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
 
 /**
@@ -45,7 +45,7 @@ public interface CurveTraits {
     /**
      * further guesses
      */
-    public double guess(final IYieldTermStructure c, final Date d);
+    public double guess(final YieldTermStructure c, final Date d);
 
     /**
      * possible constraints based on previous values

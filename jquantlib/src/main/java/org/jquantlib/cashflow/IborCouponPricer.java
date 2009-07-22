@@ -22,8 +22,8 @@
 
 package org.jquantlib.cashflow;
 
-import org.jquantlib.CapletVolatilityStructure;
 import org.jquantlib.quotes.Handle;
+import org.jquantlib.termstructures.CapletVolatilityStructure;
 
 public abstract class IborCouponPricer extends FloatingRateCouponPricer {
     

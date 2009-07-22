@@ -85,6 +85,24 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
 
     @Override
+    public boolean allowsExtrapolation() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void disableExtrapolation() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void enableExtrapolation() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
     public Calendar calendar() {
         // TODO Auto-generated method stub
         return null;

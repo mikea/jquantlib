@@ -40,7 +40,7 @@ import org.jquantlib.util.Visitor;
  * @author Richard Gomes
  */
 // FIXME: code review
-public abstract class BlackVolTermStructure extends TermStructure implements TypedVisitable<TermStructure> {
+public abstract class BlackVolTermStructure extends AbstractTermStructure implements TermStructure, TypedVisitable<TermStructure> {
 
 	static private final double dT = 1.0/365.0;
 

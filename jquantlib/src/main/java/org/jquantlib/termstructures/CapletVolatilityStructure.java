@@ -20,18 +20,15 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib;
-
-import java.sql.Time;
+package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Period;
 import org.jquantlib.util.Date;
 
-public abstract class CapletVolatilityStructure extends TermStructure {
+public abstract class CapletVolatilityStructure extends AbstractTermStructure {
 
     protected abstract double volatilityImpl(double length,
             double strike);

@@ -40,6 +40,7 @@
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.quotes.Handle;
+import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
@@ -54,7 +55,7 @@ import org.jquantlib.util.Date;
 //TEST the correctness of the returned values is tested by checking them against numerical calculations.
 //TEST observability against changes in the underlying term structure is checked.
 //FIXME: code review
-public class ImpliedTermStructure<T extends YieldTermStructure> extends YieldTermStructure {
+public class ImpliedTermStructure<T extends YieldTermStructure> extends AbstractYieldTermStructure {
 
 	private Handle<T>	originalCurve;
 

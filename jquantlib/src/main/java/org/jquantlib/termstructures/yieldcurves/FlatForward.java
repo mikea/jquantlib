@@ -44,9 +44,9 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
-import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.NullCalendar;
@@ -55,7 +55,7 @@ import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
-public class FlatForward extends YieldTermStructure {
+public class FlatForward extends AbstractYieldTermStructure {
 
 	private Handle<? extends Quote> forward;
 	private Compounding compounding;

@@ -42,8 +42,8 @@ package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.TermStructure;
-import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
@@ -59,7 +59,7 @@ import org.jquantlib.util.Date;
  * 
  * @author Richard Gomes
  */
-public abstract class ForwardRateStructure extends YieldTermStructure {
+public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 
 	//
 	// protected constructors

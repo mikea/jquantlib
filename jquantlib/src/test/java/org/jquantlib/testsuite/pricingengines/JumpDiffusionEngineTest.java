@@ -44,8 +44,12 @@ public class JumpDiffusionEngineTest {
 
     public JumpDiffusionEngineTest() {
         logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+
+        // TODO: code review
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
+        this.today = settings.getEvaluationDate();
+//        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+//        this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
     }
     
 
@@ -61,7 +65,7 @@ public class JumpDiffusionEngineTest {
         // Using Haug's criterium Haug's values have been correctly reproduced.
         // the following values have the right 1e-2 accuracy: any value different
         // from Haug has been noted.
-        HaugMertonData values[] = {
+        final HaugMertonData values[] = {
                 //        type, strike,   spot,    q,    r,    t,  vol, int, gamma, value, tol
                 // gamma = 0.25, strike = 80
                 new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25, 20.67, 1e-2) ,

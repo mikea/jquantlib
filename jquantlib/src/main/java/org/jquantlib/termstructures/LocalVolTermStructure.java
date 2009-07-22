@@ -50,7 +50,7 @@ import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 // FIXME: format comments, etc
-public abstract class LocalVolTermStructure extends TermStructure implements TypedVisitable<TermStructure> {
+public abstract class LocalVolTermStructure extends AbstractTermStructure implements TermStructure, TypedVisitable<TermStructure> {
 
         //! default constructor
         /*! \warning term structures initialized by means of this

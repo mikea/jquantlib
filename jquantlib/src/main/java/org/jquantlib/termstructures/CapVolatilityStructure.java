@@ -19,19 +19,17 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib;
+package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.lang.annotation.Rate;
-import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 
-public abstract class CapVolatilityStructure extends TermStructure {
+public abstract class CapVolatilityStructure extends AbstractTermStructure {
 
     public CapVolatilityStructure(DayCounter dc) {
         super(dc == null ? Actual365Fixed.getDayCounter() : dc);
