@@ -71,7 +71,13 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		IndexManager.getInstance().notifier(name()).addObserver(this);		
 	}
 
-	@Override
+	//adoption for 0.9.7 switched parameters...
+	public InterestRateIndex(String familyName, Period tenor, int settlementDays, Currency currency, Calendar calendar,
+            DayCounter fixedLegDayCounter) {
+        this(familyName, tenor, settlementDays, calendar, currency, fixedLegDayCounter);
+    }
+
+    @Override
 	//FIXME: a detailed code review is needed here!
 	public double fixing(Date fixingDate, boolean forecastTodaysFixing) {
 		if (isValidFixingDate(fixingDate))
