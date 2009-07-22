@@ -10,6 +10,10 @@ import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.daycounters.Thirty360;
+import org.jquantlib.daycounters.Thirty360.Convention;
+import org.jquantlib.indexes.Euribor;
+import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
@@ -18,7 +22,7 @@ import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yieldcurves.DepositRateHelper;
 import org.jquantlib.termstructures.yieldcurves.FixedRateBondHelper;
-import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
+import org.jquantlib.termstructures.yieldcurves.SwapRateHelper;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.DateGenerationRule;
@@ -32,7 +36,6 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.jquantlib.util.StopClock;
-import org.jquantlib.util.StopClock.Unit;
 
 public class Bonds {
 
@@ -169,12 +172,13 @@ public class Bonds {
                  bondInstruments.add(zc3m);
                  bondInstruments.add(zc6m);
                  bondInstruments.add(zc1y);
-//
+                 
                  // Adding the Fixed rate bonds to the curve for the long end
                  for (/*@Size*/int i=0; i<numberOfBonds; i++) {
                      bondInstruments.add(bondsHelpers.get(i));
                  }
-
+                 
+                 //TODO: PieceWiseYieldTermStructure to be translated by Richard!
 //                 YieldTermStructure bondDiscountingTermStructure = new YieldTermStructure(
 //                         new PiecewiseYieldCurve<Discount,LogLinear>(
 //                                 settlementDate, bondInstruments,
@@ -207,77 +211,79 @@ public class Bonds {
                  // other Quote subclasses could read the value from a database
                  // or some kind of data feed.
 
-//                 // deposits
-//                 boost::shared_ptr<Quote> d1wRate(new SimpleQuote(d1wQuote));
-//                 boost::shared_ptr<Quote> d1mRate(new SimpleQuote(d1mQuote));
-//                 boost::shared_ptr<Quote> d3mRate(new SimpleQuote(d3mQuote));
-//                 boost::shared_ptr<Quote> d6mRate(new SimpleQuote(d6mQuote));
-//                 boost::shared_ptr<Quote> d9mRate(new SimpleQuote(d9mQuote));
-//                 boost::shared_ptr<Quote> d1yRate(new SimpleQuote(d1yQuote));
-//                 // swaps
-//                 boost::shared_ptr<Quote> s2yRate(new SimpleQuote(s2yQuote));
-//                 boost::shared_ptr<Quote> s3yRate(new SimpleQuote(s3yQuote));
-//                 boost::shared_ptr<Quote> s5yRate(new SimpleQuote(s5yQuote));
-//                 boost::shared_ptr<Quote> s10yRate(new SimpleQuote(s10yQuote));
-//                 boost::shared_ptr<Quote> s15yRate(new SimpleQuote(s15yQuote));
+                 // deposits
+                 Quote d1wRate=(new SimpleQuote(d1wQuote));
+                 Quote d1mRate=(new SimpleQuote(d1mQuote));
+                 Quote d3mRate=(new SimpleQuote(d3mQuote));
+                 Quote d6mRate=(new SimpleQuote(d6mQuote));
+                 Quote d9mRate=(new SimpleQuote(d9mQuote));
+                 Quote d1yRate=(new SimpleQuote(d1yQuote));
+                 // swaps
+                 Quote s2yRate=(new SimpleQuote(s2yQuote));
+                 Quote s3yRate=(new SimpleQuote(s3yQuote));
+                 Quote s5yRate=(new SimpleQuote(s5yQuote));
+                 Quote s10yRate=(new SimpleQuote(s10yQuote));
+                 Quote s15yRate=(new SimpleQuote(s15yQuote));
 
-//                 /*********************
-//                  ***  RATE HELPERS ***
-//                  *********************/
-//
-//                 // RateHelpers are built from the above quotes together with
-//                 // other instrument dependant infos.  Quotes are passed in
-//                 // relinkable handles which could be relinked to some other
-//                 // data source later.
-//
-//                 // deposits
-//                 DayCounter depositDayCounter = Actual360();
-//
-//                 boost::shared_ptr<RateHelper> d1w(new DepositRateHelper(
-//                         Handle<Quote>(d1wRate),
-//                         1*Weeks, fixingDays,
-//                         calendar, ModifiedFollowing,
-//                         true, depositDayCounter));
-//                 boost::shared_ptr<RateHelper> d1m(new DepositRateHelper(
-//                         Handle<Quote>(d1mRate),
-//                         1*Months, fixingDays,
-//                         calendar, ModifiedFollowing,
-//                         true, depositDayCounter));
-//                 boost::shared_ptr<RateHelper> d3m(new DepositRateHelper(
-//                         Handle<Quote>(d3mRate),
-//                         3*Months, fixingDays,
-//                         calendar, ModifiedFollowing,
-//                         true, depositDayCounter));
-//                 boost::shared_ptr<RateHelper> d6m(new DepositRateHelper(
-//                         Handle<Quote>(d6mRate),
-//                         6*Months, fixingDays,
-//                         calendar, ModifiedFollowing,
-//                         true, depositDayCounter));
-//                 boost::shared_ptr<RateHelper> d9m(new DepositRateHelper(
-//                         Handle<Quote>(d9mRate),
-//                         9*Months, fixingDays,
-//                         calendar, ModifiedFollowing,
-//                         true, depositDayCounter));
-//                 boost::shared_ptr<RateHelper> d1y(new DepositRateHelper(
-//                         Handle<Quote>(d1yRate),
-//                         1*Years, fixingDays,
-//                         calendar, ModifiedFollowing,
-//                         true, depositDayCounter));
-//
-//                 // setup swaps
-//                 Frequency swFixedLegFrequency = Annual;
-//                 BusinessDayConvention swFixedLegConvention = Unadjusted;
-//                 DayCounter swFixedLegDayCounter = Thirty360(Thirty360::European);
-//                 boost::shared_ptr<IborIndex> swFloatingLegIndex(new Euribor6M);
-//
-//                 const Period forwardStart(1*Days);
-//
-//                 boost::shared_ptr<RateHelper> s2y(new SwapRateHelper(
-//                         Handle<Quote>(s2yRate), 2*Years,
+                 /*********************
+                  ***  RATE HELPERS ***
+                  *********************/
+
+                 // RateHelpers are built from the above quotes together with
+                 // other instrument dependant infos.  Quotes are passed in
+                 // relinkable handles which could be relinked to some other
+                 // data source later.
+
+                 // deposits
+                 DayCounter depositDayCounter = null;//Actual360();
+
+                 RateHelper d1w=(new DepositRateHelper(
+                         new Handle<Quote>(d1wRate),
+                         new Period(1,TimeUnit.WEEKS), fixingDays,
+                         calendar, BusinessDayConvention.MODIFIED_FOLLOWING,
+                         true, depositDayCounter));
+                 RateHelper d1m=(new DepositRateHelper(
+                         new Handle<Quote>(d1mRate),
+                         new Period(1, TimeUnit.MONTHS), fixingDays,
+                         calendar, BusinessDayConvention.MODIFIED_FOLLOWING,
+                         true, depositDayCounter));
+                 RateHelper d3m=(new DepositRateHelper(
+                         new Handle<Quote>(d3mRate),
+                         new Period(3, TimeUnit.MONTHS), fixingDays,
+                         calendar, BusinessDayConvention.MODIFIED_FOLLOWING,
+                         true, depositDayCounter));
+                 RateHelper d6m=(new DepositRateHelper(
+                         new Handle<Quote>(d6mRate),
+                         new Period(6, TimeUnit.MONTHS), fixingDays,
+                         calendar, BusinessDayConvention.MODIFIED_FOLLOWING,
+                         true, depositDayCounter));
+                 RateHelper d9m=(new DepositRateHelper(
+                         new Handle<Quote>(d9mRate),
+                         new Period(9, TimeUnit.MONTHS), fixingDays,
+                         calendar, BusinessDayConvention.MODIFIED_FOLLOWING,
+                         true, depositDayCounter));
+                 RateHelper d1y=(new DepositRateHelper(
+                         new Handle<Quote>(d1yRate),
+                         new Period(1, TimeUnit.YEARS), fixingDays,
+                         calendar, BusinessDayConvention.MODIFIED_FOLLOWING,
+                         true, depositDayCounter));
+
+                 // setup swaps
+                 Frequency swFixedLegFrequency = Frequency.ANNUAL;
+                 BusinessDayConvention swFixedLegConvention = BusinessDayConvention.UNADJUSTED;
+                 DayCounter swFixedLegDayCounter = Thirty360.getDayCounter(Convention.EUROPEAN);
+                 
+                 //TODO and FIXME: not sure whether the class stuff works properly
+                 IborIndex swFloatingLegIndex = Euribor.getEuribor6M(new Handle<YieldTermStructure>(YieldTermStructure.class));
+
+                 final Period forwardStart = new Period(1,TimeUnit.DAYS);
+
+//                 RateHelper s2y = (new SwapRateHelper(
+//                         new Handle<Quote>(s2yRate), new Period(2, TimeUnit.YEARS),
 //                         calendar, swFixedLegFrequency,
 //                         swFixedLegConvention, swFixedLegDayCounter,
-//                         swFloatingLegIndex, Handle<Quote>(),forwardStart));
-//                 boost::shared_ptr<RateHelper> s3y(new SwapRateHelper(
+//                         swFloatingLegIndex, new Handle<Quote>(Quote.class),forwardStart));
+//                 RateHelper> s3y(new SwapRateHelper(
 //                         Handle<Quote>(s3yRate), 3*Years,
 //                         calendar, swFixedLegFrequency,
 //                         swFixedLegConvention, swFixedLegDayCounter,
@@ -297,8 +303,8 @@ public class Bonds {
 //                         calendar, swFixedLegFrequency,
 //                         swFixedLegConvention, swFixedLegDayCounter,
 //                         swFloatingLegIndex, Handle<Quote>(),forwardStart));
-//
-//
+
+
 //                 /*********************
 //                  **  CURVE BUILDING **
 //                  *********************/
@@ -368,7 +374,7 @@ public class Bonds {
 //                         fixedBondSchedule,
 //                         std::vector<Rate>(1, 0.045),
 //                         ActualActual(ActualActual::Bond),
-//                         ModifiedFollowing,
+//                         BusinessDayConvention.MODIFIED_FOLLOWING,
 //                         100.0, Date(15, May, 2007));
 //
 //                 fixedRateBond.setPricingEngine(bondEngine);
@@ -392,7 +398,7 @@ public class Bonds {
 //                         floatingBondSchedule,
 //                         libor3m,
 //                         Actual360(),
-//                         ModifiedFollowing,
+//                         BusinessDayConvention.MODIFIED_FOLLOWING,
 //                         Natural(2),
 //                         // Gearings
 //                         std::vector<Real>(1, 1.0),
@@ -420,7 +426,7 @@ public class Bonds {
 //                                 ConstantOptionletVolatility(
 //                                         settlementDays,
 //                                         calendar,
-//                                         ModifiedFollowing,
+//                                         BusinessDayConvention.MODIFIED_FOLLOWING,
 //                                         volatility,
 //                                         Actual365Fixed())));
 //
