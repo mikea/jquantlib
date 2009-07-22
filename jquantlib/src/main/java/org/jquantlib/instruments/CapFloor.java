@@ -146,6 +146,8 @@ public class CapFloor extends NewInstrument {
         FloatingRateCoupon lastFloatingCoupon = (FloatingRateCoupon) lastCoupon;
         return lastFloatingCoupon.fixingDate();
     }
+    
+//    public void setupArguments
 //TODO: inner class arguments
 //void void setupArguments(/*PricingEngine.arguments* args*/Arguments args)  {
 //   CapFloor::arguments* arguments =

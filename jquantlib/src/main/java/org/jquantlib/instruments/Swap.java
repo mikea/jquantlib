@@ -126,7 +126,7 @@ public class Swap extends Instrument {
     }
     
     //helper used above
-    private Swap(){};
+    protected Swap(){};
             
     
 
