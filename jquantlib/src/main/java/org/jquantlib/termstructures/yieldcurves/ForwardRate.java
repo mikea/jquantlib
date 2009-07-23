@@ -1,10 +1,3 @@
-package org.jquantlib.termstructures.yieldcurves;
-
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Constants;
-import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.util.Date;
-
 /*
 Copyright (C) 2008 Richard Gomes
 
@@ -44,49 +37,61 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
+package org.jquantlib.termstructures.yieldcurves;
+
+import org.jquantlib.math.Array;
+import org.jquantlib.termstructures.Compounding;
+import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.Frequency;
+import org.jquantlib.util.Date;
+
 /**
- * Discount-curve traits
+ * Forward-curve traits
  * 
  * @author Richard Gomes
  */
-public class Discount implements CurveTraits {
+public class ForwardRate implements CurveTraits {
 
     @Override
     public double initialValue() {
-        return 1.0;
+        return 0.02;
     }
 
     @Override
     public double initialGuess() {
-        return 0.9;
+        return 0.02;
     }
 
     @Override
     public double guess(YieldTermStructure c, Date d) {
-        return c.discount(d,true);
+        return c.forwardRate(d, d, c.dayCounter(), Compounding.CONTINUOUS, Frequency.ANNUAL, true).rate();
     }
 
     @Override
+    //TODO: solve macros
     public double minValueAfter(int i, Array data) {
-        return Constants.QL_EPSILON;
+        //#if defined(QL_NEGATIVE_RATES)
+        // no constraints.
+        // We choose as min a value very unlikely to be exceeded.
+        return -3.0;
+        //#else
+        //return QL_EPSILON;
+        //#endif
     }
 
     @Override
     //TODO: solve macros
     public double maxValueAfter(int i, Array data) {
-//      #if defined(QL_NEGATIVE_RATES)
-      // discount are not required to be decreasing--all bets are off.
-      // We choose as max a value very unlikely to be exceeded.
-      return 3.0;
-//      #else
-//      // discounts cannot increase
-//      return data[i-1];
-//      #endif
+        // no constraints.
+        // We choose as max a value very unlikely to be exceeded.
+        return 3.0;
     }
 
     @Override
     public void updateGuess(Array data, double value, int i) {
         data.set(i, value);
+        if (i == 1)
+            data.set(i, value); // first point is updated as well
     }
 
 }

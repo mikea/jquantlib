@@ -163,10 +163,10 @@ public class Matrix {
 
 
 	//
-	// package private
+	// protected fields
 	//
 
-	/*@PackagePrivate*/ double[] data;
+	protected double[] data;
 
 	
 	//

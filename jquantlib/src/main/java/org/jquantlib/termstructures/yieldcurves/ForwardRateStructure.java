@@ -72,6 +72,8 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure() {
 		this(Actual365Fixed.getDayCounter());
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	/**
@@ -81,6 +83,8 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final DayCounter dc) {
 		super(dc);
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	// ---
@@ -94,6 +98,8 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final Date refDate, final Calendar cal) {
 		this(refDate, cal, Actual365Fixed.getDayCounter());
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	/**
@@ -105,6 +111,8 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final Date refDate, final DayCounter dc) {
 		this(refDate, Target.getCalendar(), dc); // FIXME: code review : default calendar
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	/**
@@ -116,6 +124,8 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final Date refDate) {
 		this(refDate, Target.getCalendar(), Actual365Fixed.getDayCounter()); // FIXME: code review : default calendar
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	/**
@@ -127,6 +137,8 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
 		super(refDate, cal, dc);
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	// ---
@@ -138,8 +150,10 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 * @param cal
 	 * @param dc
 	 */
-	protected ForwardRateStructure(final int settlDays, final Calendar cal) {
-		super(settlDays, cal, Actual365Fixed.getDayCounter());
+	protected ForwardRateStructure(final int settlementDays, final Calendar cal) {
+		super(settlementDays, cal, Actual365Fixed.getDayCounter());
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	/**
@@ -151,6 +165,8 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final int settlDays, final Calendar cal, final DayCounter dc) {
 		super(settlDays, cal, dc);
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	
@@ -174,7 +190,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 * @note This is just a default, highly inefficient and possibly wildly inaccurate implementation.
 	 * Derived classes should implement their own zeroYield method.
 	 */
-	protected/* @Rate */double zeroYieldImpl(/* @Time */double t) /* @ReadOnly */{
+	protected /* @Rate */ double zeroYieldImpl(/* @Time */double t) /* @ReadOnly */{
 		if (t == 0.0) return forwardImpl(0.0);
 		// implement smarter integration if plan to use the following code
 		/* @Rate */double sum = 0.5 * forwardImpl(0.0);
@@ -192,7 +208,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	//
 	
 	@Override
-	protected/* @DiscountFactor */double discountImpl(/* @Time */double t) /* @ReadOnly */{
+	public /* @DiscountFactor */ double discountImpl(/* @Time */double t) /* @ReadOnly */{
 		/* @Rate */double r = zeroYieldImpl(t);
 		return Math.exp(-r * t);
 	}

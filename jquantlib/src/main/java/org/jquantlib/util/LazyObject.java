@@ -39,7 +39,7 @@
 
 package org.jquantlib.util;
 
-import java.util.List; //FIXME: performance
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,7 +161,7 @@ public abstract class LazyObject implements Observer, Observable {
     // implements Observer interface
     //
 
-    public final void update(final Observable o, final Object arg) {
+    public void update(final Observable o, final Object arg) {
         // observers don't expect notifications from frozen objects
         // LazyObject forwards notifications only once until it has been
         // recalculated

@@ -74,6 +74,8 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	 */
 	public ZeroYieldStructure() {
 		this(Actual365Fixed.getDayCounter());
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	/**
@@ -83,9 +85,8 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	 */
 	public ZeroYieldStructure(final DayCounter dc) {
 		super(dc);
-
-		if (0==0) throw new UnsupportedOperationException("Work in progress");
-		
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	// ---
@@ -99,6 +100,8 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	 */
 	public ZeroYieldStructure(final Date refDate, final Calendar cal) {
 		this(refDate, cal, Actual365Fixed.getDayCounter());
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	/**
@@ -110,6 +113,8 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	 */
 	public ZeroYieldStructure(final Date refDate, final DayCounter dc) {
 		this(refDate, Target.getCalendar(), dc); // FIXME: code review : default calendar
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	/**
@@ -121,6 +126,8 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	 */
 	public ZeroYieldStructure(final Date refDate) {
 		this(refDate, Target.getCalendar(), Actual365Fixed.getDayCounter()); // FIXME: code review : default calendar
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 
@@ -133,9 +140,8 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	 */
 	public ZeroYieldStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
 		super(refDate, cal, dc);
-
-		if (0==0) throw new UnsupportedOperationException("Work in progress");
-		
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	// ---
@@ -150,6 +156,8 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	 */
 	public ZeroYieldStructure(final int settlementDays, final Calendar cal) {
 		this(settlementDays, cal, Actual365Fixed.getDayCounter());
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	/**
@@ -161,9 +169,8 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	 */
 	public ZeroYieldStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
 		super(settlementDays, cal, dc);
-
-		if (0==0) throw new UnsupportedOperationException("Work in progress");
-		
+		if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 
 	
@@ -175,7 +182,7 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	 * Returns the discount factor for the given date calculating it from the zero yield.
 	 */
 	@Override
-    protected final /*@DiscountFactor*/ double discountImpl(/*@Time*/ double t) /* @ReadOnly */ {
+    protected /*@DiscountFactor*/ double discountImpl(/*@Time*/ double t) /* @ReadOnly */ {
         /*@Rate*/ double r = zeroYieldImpl(t);
         return Math.exp(-r*t);
     }
