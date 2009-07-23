@@ -31,7 +31,7 @@ public class VanillaSwap extends Swap {
     
     enum Type{RECEIVER /*-1*/, PAYER /*1*/}
     
-//  class Schedule;
+    //  class Schedule;
 //  class IborIndex;
 //class results;
 //class engine;

@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jquantlib.cashflow.CashFlow;
+import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
@@ -126,7 +127,7 @@ public class Swap extends Instrument {
     }
     
     //helper used above
-    protected Swap(){};
+    public Swap(){};
             
     
 
@@ -337,6 +338,28 @@ public class Swap extends Instrument {
             legBPS.clear();
 
         }
+    }
+    
+    public class Engine extends GenericEngine<Arguments, Results>{
+
+        
+        public Engine() {
+            super();
+            //super(arguments, results);
+            // TODO Auto-generated constructor stub
+        }
+        
+        public Engine(Arguments arguments, Results results) {
+            super(arguments, results);
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        public void calculate() {
+            // TODO Auto-generated method stub
+            
+        }
+        
     }
     // The engine inner class not written at the moment
     // does nothing substantial
