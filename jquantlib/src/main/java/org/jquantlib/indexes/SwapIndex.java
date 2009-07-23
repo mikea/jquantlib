@@ -3,6 +3,7 @@ package org.jquantlib.indexes;
 import java.util.Currency;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.instruments.MakeVanillaSwap;
 import org.jquantlib.instruments.VanillaSwap;
 import org.jquantlib.lang.annotation.Rate;
 import org.jquantlib.quotes.Handle;
@@ -41,6 +42,31 @@ public class SwapIndex extends InterestRateIndex {
         this.fixedLegConvention_=(fixedLegConvention);
         this.iborIndex_.addObserver(this); 
     }
+    
+    public Handle<YieldTermStructure> termStructure() {
+        return iborIndex_.getTermStructure();
+    }
+
+//    public /*@Rate*/ forecastFixing(final Date fixingDate)  {
+//        return underlyingSwap(fixingDate)->fairRate();
+//    }
+//
+//    boost::shared_ptr<VanillaSwap> SwapIndex::underlyingSwap(
+//                                               const Date& fixingDate) const {
+//        Rate fixedRate = 0.0;
+//        return MakeVanillaSwap(tenor_, iborIndex_, fixedRate)
+//            .withEffectiveDate(valueDate(fixingDate))
+//            .withFixedLegCalendar(fixingCalendar())
+//            .withFixedLegDayCount(dayCounter_)
+//            .withFixedLegTenor(fixedLegTenor_)
+//            .withFixedLegConvention(fixedLegConvention_)
+//            .withFixedLegTerminationDateConvention(fixedLegConvention_);
+//    }
+//
+//    Date SwapIndex::maturityDate(const Date& valueDate) const {
+//        Date fixDate = fixingDate(valueDate);
+//        return underlyingSwap(fixDate)->maturityDate();
+//    }
 
 
 
@@ -73,14 +99,14 @@ public class SwapIndex extends InterestRateIndex {
     
     private VanillaSwap underlyingSwap(
             final Date fixingDate)  {
-/*Rate*/ double fixedRate = 0.0;
-//return MakeVanillaSwap(tenor_, iborIndex_, fixedRate)
-//.withEffectiveDate(valueDate(fixingDate))
+        /*Rate*/ double fixedRate = 0.0;
+//return new MakeVanillaSwap(tenor_, iborIndex_, fixedRate)
+//.withEffectiveDate(valueDate(fixingDate)))
 //.withFixedLegCalendar(fixingCalendar())
-//.withFixedLegDayCount(dayCounter_)
+//.withFixedLegDayCount(dayCounter)
 //.withFixedLegTenor(fixedLegTenor_)
 //.withFixedLegConvention(fixedLegConvention_)
-//.withFixedLegTerminationDateConvention(fixedLegConvention_);
+//.withFixedLegTerminationDateConvention(fixedLegConvention_)
     return new VanillaSwap(null, null, null);
     }
 }

@@ -47,7 +47,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 	private int fixingDays;
 	private Calendar fixingCalendar;
 	private Currency currency;
-	private DayCounter dayCounter;
+	protected DayCounter dayCounter;
 
 	public InterestRateIndex(String familyName, Period tenor, int fixingDays,
 			Calendar fixingCalendar, Currency currency, DayCounter dayCounter) {
