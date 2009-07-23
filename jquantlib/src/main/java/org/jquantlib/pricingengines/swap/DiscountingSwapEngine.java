@@ -12,6 +12,11 @@ public class DiscountingSwapEngine extends Swap.Engine {
         swap.super(arguments, results);
         // TODO Auto-generated constructor stub
         }
+        public DiscountingSwapEngine(Handle<YieldTermStructure> termStructure) {
+            new Swap().super();//super();
+            //swap.super(arguments, results);
+            // TODO Auto-generated constructor stub
+         }
 
         private Handle<YieldTermStructure> discountCurve_;
 }
