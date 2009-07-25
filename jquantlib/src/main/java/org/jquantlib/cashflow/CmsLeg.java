@@ -112,7 +112,7 @@ public class CmsLeg {
     }
 
     public CashFlowVectors.Leg Leg() {
-        return new CashFlowVectors.FloatingLeg(null);
+        return new CashFlowVectors.FloatingLeg(null, schedule_, caps_, paymentDayCounter_, paymentAdjustment_, fixingDays_, caps_, caps_, caps_, caps_, inArrears_, inArrears_);
         // return FloatingLeg<SwapIndex, CmsCoupon, CappedFlooredCmsCoupon>(
         // notionals_, schedule_, swapIndex_, paymentDayCounter_,
         // paymentAdjustment_, fixingDays_, gearings_, spreads_,
