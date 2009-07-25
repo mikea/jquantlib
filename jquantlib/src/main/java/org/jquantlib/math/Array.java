@@ -39,6 +39,7 @@
 
 package org.jquantlib.math;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.jquantlib.math.functions.Identity;
@@ -758,6 +759,15 @@ public class Array extends Matrix {
             }
         }
         return result;
+    }
+    
+    ////HUE: temporary generics fix!!!!!!!!!!!!!!
+    public ArrayList<Double> toDoubleList(){
+        ArrayList<Double> tempList = new ArrayList<Double>(data.length);
+        for(int i = 0; i<data.length; i++){
+            tempList.add(data[i]);
+        }
+        return tempList;
     }
     
 }
