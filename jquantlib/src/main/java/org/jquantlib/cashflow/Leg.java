@@ -39,6 +39,7 @@ public class Leg {
     private static final String regular_first_coupon_day_count = "regular first coupon does not allow a first-period day count";
     private static final String no_nominal_given = "no nominal given";
     
+    @Deprecated
     private static double get(double[] v, int i, double defaultValue) {
         if (v == null) {
             return defaultValue;
@@ -49,6 +50,7 @@ public class Leg {
         }
     }
 
+    @Deprecated
     private static double effectiveFixedRate(double[] spreads, double[] caps, double[] floors, int i) {
         double result = get(spreads, i, 0.0);
         double floor = get(floors, i, 0);
@@ -70,6 +72,7 @@ public class Leg {
      * @param firstPeriodDayCount
      * @return
      */
+    @Deprecated
     public static List<CashFlow> FixedRateLeg(double[] nominals, 
             Schedule schedule, 
             double[] couponRates,
