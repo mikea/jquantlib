@@ -50,7 +50,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
    protected InterestRateIndex index_;
    private DayCounter dayCounter_;
    private int fixingDays_;
-   private double gearing_;
+   protected double gearing_;
    private double spread_;
    private boolean isInArrears_;
    private FloatingRateCouponPricer pricer_; //FIXME: to be implemented
