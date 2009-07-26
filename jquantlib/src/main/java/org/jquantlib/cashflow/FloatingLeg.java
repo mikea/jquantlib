@@ -13,11 +13,11 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.util.Date;
 
-public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, FloatingCouponType, CappedFlooredCouponType> extends Leg {
+public class FloatingLeg<InterestRateIndexType extends InterestRateIndex , FloatingCouponType, CappedFlooredCouponType> extends Leg {
 
     public FloatingLeg(final Array nominals, final Schedule schedule, final InterestRateIndexType index,
             final DayCounter paymentDayCounter, BusinessDayConvention paymentAdj, Array fixingDays, final Array gearings,
-            final Array spreads, final Array caps, final Array floors, boolean isInArrears, boolean isZero) throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException {
+            final Array spreads, final Array caps, final Array floors, boolean isInArrears, boolean isZero) /*throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException*/ {
 
         super(schedule.size() - 1);
         int n = schedule.size() - 1;
@@ -53,9 +53,60 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
                                     start, end, refStart, refEnd));
             } else { // floating coupon
                 if (Detail.noOption(caps, floors, i)){
-                    final Class<?> fctklass = new TypeTokenTree(this.getClass()).getRoot().get(1).getElement();                  
-                    //currently only one constructor in IborLeg....<-- make this explicit
-                    FloatingRateCoupon frc = (FloatingRateCoupon)fctklass.getConstructors()[0].newInstance(paymentDate,
+                    //try{
+                        //get the generic type
+                        final Class<?> fctklass = new TypeTokenTree(this.getClass()).getRoot().get(1).getElement();                  
+                        //construct a new instance using reflection. first get the constructor ...
+                        FloatingCouponType frc;
+                        try {
+                            frc = (FloatingCouponType)fctklass.getConstructor(
+                                    Date.class, 
+                                    int.class, 
+                                    Date.class, 
+                                    Date.class, 
+                                    int.class, 
+                                    InterestRateIndex.class,
+                                    double.class, 
+                                    double.class, 
+                                    Date.class, 
+                                    Date.class, 
+                                    DayCounter.class, 
+                                    boolean.class)
+                             //then create a new instance
+                            .newInstance(paymentDate,
+                                Detail.get(nominals, i, new Double(1.0)),
+                                start, end,
+                                Detail.get(fixingDays, i, index.getFixingDays()),
+                                index,
+                                Detail.get(gearings, i, 1.0),
+                                Detail.get(spreads, i, 0.0),
+                                refStart, refEnd,
+                                paymentDayCounter, isInArrears);
+                        } catch (Exception e) {
+                            throw new IllegalArgumentException("Couldn't construct new instance from generic type");
+                        }
+                    add((CashFlow)frc);
+                    }
+                else {
+                    final Class<?> cfcklass = new TypeTokenTree(this.getClass()).getRoot().get(2).getElement();
+                    CappedFlooredCouponType cfctc;
+                    try {
+                    	//FIXME: not finished yet!!!!!!!!!!!!!!
+                        cfctc = (CappedFlooredCouponType)(cfcklass).getConstructor(
+                                Date.class, 
+                                int.class, 
+                                Date.class, 
+                                Date.class, 
+                                int.class, 
+                                InterestRateIndex.class,
+                                double.class, 
+                                double.class, 
+                                Date.class, 
+                                Date.class, 
+                                DayCounter.class, 
+                                boolean.class)
+                         //then create a new instance
+                        .newInstance(paymentDate,
                             Detail.get(nominals, i, new Double(1.0)),
                             start, end,
                             Detail.get(fixingDays, i, index.getFixingDays()),
@@ -64,28 +115,15 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
                             Detail.get(spreads, i, 0.0),
                             refStart, refEnd,
                             paymentDayCounter, isInArrears);
-                    add(frc);
-                }
-                else {
-                    final Class<?> cfcklass = new TypeTokenTree(this.getClass()).getRoot().get(2).getElement();
-                    
-//                    add(new
-//                        CappedFlooredCouponType(
-//                               paymentDate,
-//                               detail::get(nominals, i, 1.0),
-//                               start, end,
-//                               detail::get(fixingDays, i, index->fixingDays()),
-//                               index,
-//                               detail::get(gearings, i, 1.0),
-//                               detail::get(spreads, i, 0.0),
-//                               detail::get(caps,   i, Null<Rate>()),
-//                               detail::get(floors, i, Null<Rate>()),
-//                               refStart, refEnd,
-//                               paymentDayCounter,
-//                               isInArrears)));
-                }
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("Couldn't construct new instance from generic type");
+                    }
+                add((CashFlow)cfctc);
             }
         }
         }
     }
+}
+        
+    
 //}
