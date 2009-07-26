@@ -761,13 +761,15 @@ public class Array extends Matrix {
         return result;
     }
     
-    ////HUE: temporary generics fix!!!!!!!!!!!!!!
-    public ArrayList<Double> toDoubleList(){
-        ArrayList<Double> tempList = new ArrayList<Double>(data.length);
-        for(int i = 0; i<data.length; i++){
-            tempList.add(data[i]);
-        }
-        return tempList;
-    }
+////HUE: temporary generics fix!!!!!!!!!!!!!!
+// NOTE: this method is required if one needs an List<Double> for generic methods...
+// the problem is that autoboxing doesn't work for ArrayList<Double> d = Arrays.asList(double[]))
+//    public ArrayList<Double> toDoubleList(){
+//        ArrayList<Double> tempList = new ArrayList<Double>(data.length);
+//        for(int i = 0; i<data.length; i++){
+//            tempList.add(data[i]);
+//        }
+//        return tempList;
+//    }
     
 }
