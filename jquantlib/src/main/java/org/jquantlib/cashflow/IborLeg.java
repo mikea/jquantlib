@@ -112,18 +112,16 @@ public class IborLeg {
 
     public List<CashFlow> Leg() {
 
-        List<CashFlow> cashflows = new ArrayList<CashFlow>();
-        if (true)
-            throw new UnsupportedOperationException("Floating Leg has to be translated first");
-        // new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
-        // notionals_, schedule_, index_, paymentDayCounter_,
-        // paymentAdjustment_, fixingDays_, gearings_, spreads_,
-        // caps_, floors_, inArrears_, zeroPayments_);
-        //
-        // if (caps_.empty() && floors_.empty() && !inArrears_)
-        // setCouponPricer(cashflows,
-        // boost::shared_ptr<FloatingRateCouponPricer>(
-        // new BlackIborCouponPricer));
+        List<CashFlow> cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
+         notionals_, schedule_, index_, paymentDayCounter_,
+         paymentAdjustment_, fixingDays_, gearings_, spreads_,
+         caps_, floors_, inArrears_, zeroPayments_);
+        
+         if (caps_.empty() && floors_.empty() && !inArrears_){
+             throw new UnsupportedOperationException("Implement PricerSetter namespace");
+             //TODO: PricerSetter class...
+             //super.setCouponPricer(cashflows,new BlackIborCouponPricer()));
+         }
         return cashflows;
     }
 
