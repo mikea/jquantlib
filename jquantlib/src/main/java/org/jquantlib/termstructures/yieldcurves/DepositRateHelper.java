@@ -68,7 +68,7 @@ public class DepositRateHelper<T extends TermStructure> extends
 		
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				tenor, fixingDays, calendar, null, convention, endOfMonth,
+				tenor, fixingDays,  null, calendar, convention, endOfMonth,
 				dayCounter, termStructureHandle);
 		initializeDates();
 
@@ -90,7 +90,7 @@ public class DepositRateHelper<T extends TermStructure> extends
 		super(rate);
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				tenor, fixingDays, calendar, null, convention, endOfMonth,
+				tenor, fixingDays, null, calendar, convention, endOfMonth,
 				dayCounter, termStructureHandle);
 		initializeDates();
 	}
@@ -104,8 +104,8 @@ public class DepositRateHelper<T extends TermStructure> extends
 		super(rate, null, null, null); // TODO
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				ibor.getTenor(), ibor.getFixingDays(),
-				ibor.fixingCalendar(), null, ibor.getConvention(), ibor
+				ibor.getTenor(), ibor.getFixingDays(),null,
+				ibor.fixingCalendar(),  ibor.getConvention(), ibor
 						.isEndOfMonth(), ibor.getDayCounter(),
 				termStructureHandle);
 		initializeDates();
@@ -121,8 +121,8 @@ public class DepositRateHelper<T extends TermStructure> extends
 		super(rate); // TODO
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				ibor.getTenor(), ibor.getFixingDays(),
-				ibor.fixingCalendar(), null, ibor.getConvention(), ibor
+				ibor.getTenor(), ibor.getFixingDays(),null,
+				ibor.fixingCalendar(),  ibor.getConvention(), ibor
 						.isEndOfMonth(), ibor.getDayCounter(),
 				termStructureHandle);
 
