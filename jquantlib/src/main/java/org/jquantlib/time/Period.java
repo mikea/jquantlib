@@ -44,6 +44,7 @@ package org.jquantlib.time;
 
 import java.util.Formatter;
 import java.util.Locale;
+import static org.jquantlib.Error.QL_FAIL;
 
 /**
  * Time period to represent time by days, month and years as specified by
@@ -424,5 +425,30 @@ public class Period {
 		formatter.format("%d%s", this.length, this.units.getShortFormat());
 		return sb.toString();
 	}
+	
+	public void normalize() {
+        if (length!=0)
+            switch (units) {
+              case DAYS:
+                //if (!(length%7)) {
+                //FIXME....c++ true !=null ? always true???
+                if (!(length%7!=0)) {
+                    length/=7;
+                    units = TimeUnit.WEEKS;
+                }
+                break;
+              case MONTHS:
+                if (!(length%12!=0)) {
+                    length/=12;
+                    units = TimeUnit.YEARS;
+                }
+                break;
+              case WEEKS:
+              case YEARS:
+                break;
+              default:
+                QL_FAIL("unknown time unit (" + units.getShortFormat() + ")");
+            }
+    }
 
 }
