@@ -24,6 +24,7 @@ package org.jquantlib.cashflow;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.indexes.IndexManager;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.lang.annotation.DiscountFactor;
@@ -37,7 +38,7 @@ import org.jquantlib.util.Visitor;
 public class IborCoupon extends FloatingRateCoupon {
     
     /**
-     * WORK IN PROGRESS
+     * WORK IN PROGRESS  - review entire constructor hierarchy....
      */
 
     private final static String null_term_structure = "null term structure set to par coupon";
@@ -46,6 +47,13 @@ public class IborCoupon extends FloatingRateCoupon {
             double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, boolean isInArrears) {
         super(paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, spread, refPeriodStart, refPeriodEnd,
                 dayCounter, isInArrears);
+    }
+
+    public IborCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, IborIndex index,
+            double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, boolean isInArrears) {
+            super(paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, spread, refPeriodStart, refPeriodEnd,
+                dayCounter, isInArrears);
+            throw new UnsupportedOperationException("Missing constructors");
     }
 
     public double indexFixing() {
