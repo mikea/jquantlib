@@ -73,7 +73,7 @@ public class Euribor extends IborIndex {
     
 
     protected Euribor(String name, Period tenor, int settlementDays, DayCounter dayCounter, Handle<YieldTermStructure> h) {
-        super(name, tenor, settlementDays, Target.getCalendar(), Currency.getInstance("EUR"), euriborConvention(tenor),
+        super(name, tenor, settlementDays, Currency.getInstance("EUR"), Target.getCalendar(), euriborConvention(tenor),
                 euriborEOM(tenor), dayCounter, h);
     }
 
