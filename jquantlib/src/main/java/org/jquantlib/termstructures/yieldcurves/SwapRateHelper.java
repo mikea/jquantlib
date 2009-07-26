@@ -283,7 +283,14 @@ public class SwapRateHelper extends RelativeDateRateHelper {
 		this.fwdStart = fwdStart;
 	}
 
-	/* (non-Javadoc)
+	public SwapRateHelper(Handle<Quote> handle, Period period, Calendar calendar2, Frequency swFixedLegFrequency,
+            BusinessDayConvention swFixedLegConvention, DayCounter swFixedLegDayCounter, IborIndex swFloatingLegIndex,
+            Handle<Quote> handle2, Period forwardStart) {
+	    //@ Richard: this constructor is used from the bond example ....
+        throw new UnsupportedOperationException("work in progress....");
+    }
+
+    /* (non-Javadoc)
 	 * @see org.jquantlib.termstructures.yield.RelativeDateRateHelper#initializeDates()
 	 */
 	@Override
