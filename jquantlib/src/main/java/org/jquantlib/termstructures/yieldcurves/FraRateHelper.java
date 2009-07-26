@@ -55,7 +55,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 			throw new IllegalArgumentException(
 					"monthsToEnd must be greater than monthsToStart");
 		iborIndex = new IborIndex("no-fix", new Period(monthsToEnd
-				- monthsToStart, TimeUnit.MONTHS), fixingDays, calendar, null,
+				- monthsToStart, TimeUnit.MONTHS), fixingDays, null,calendar, 
 				convention, endOfMonth, dayCounter, termStructureHandle);
 		initializeDates();
 
@@ -73,7 +73,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
 				new Period(monthsToEnd - monthsToStart, TimeUnit.MONTHS),
-				fixingDays, calendar, null, convention, endOfMonth, dayCounter,
+				fixingDays, null, calendar, convention, endOfMonth, dayCounter,
 				termStructureHandle);
 		initializeDates();
 	}
@@ -83,7 +83,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		this.monthsToStart = monthsToStart;
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				i.getTenor(), i.getFixingDays(), i.fixingCalendar(), null, i
+				i.getTenor(), i.getFixingDays(), null,i.fixingCalendar(),  i
 						.getConvention(), i.isEndOfMonth(), i.getDayCounter(),
 				termStructureHandle);
 		initializeDates();
@@ -95,7 +95,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		this.monthsToStart = monthsToStart;
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				i.getTenor(), i.getFixingDays(), i.fixingCalendar(), null, i
+				i.getTenor(), i.getFixingDays(), null,i.fixingCalendar(),  i
 						.getConvention(), i.isEndOfMonth(), i.getDayCounter(),
 				termStructureHandle);
 		initializeDates();
