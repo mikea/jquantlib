@@ -32,7 +32,7 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Swaption;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.model.AffineModel;
@@ -80,6 +80,11 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
             double /* @Real */sigma /* = 0.01 */, double /* @Real */b/* = 0.1 */, double /* @Real */eta/* = 0.01 */,
             double /* @Real */rho/* = -0.75 */) {
         super(5);
+        
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
+        
         termStructureConsistentModelClass = new TermStructureConsistentModelClass(termStructure);
         a_ = (arguments_.get(0) /* [0] */);
         sigma_ = (arguments_.get(1) /* [1] */);
@@ -329,27 +334,27 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
             double /* @Real */yb = s1d.solve(function, 1e-6, 0.00, -100.0, 100.0);
             double /* @Real */h1 = (yb - muy_) / (sigmay_ * txy) - rhoxy_ * (x - mux_) / (sigmax_ * txy);
             // not sure if evaluate method is equivalent of op overloading -> we have to test it ;-)
-            double /* @Real */value = /* phi(-w_*h1) */phi.evaluate(-w_ * h1);
+            double /* @Real */value = /* phi(-w_*h1) */phi.op(-w_ * h1);
 
             for (i = 0; i < size_; i++) {
                 double /* @Real */h2 = h1 + Bb_.get(i) * sigmay_ * Math.sqrt(1.0 - rhoxy_ * rhoxy_);
                 double /* @Real */kappa = -Bb_.get(i)
                         * (muy_ - 0.5 * txy * txy * sigmay_ * sigmay_ * Bb_.get(i) + rhoxy_ * sigmay_ * (x - mux_) / sigmax_);
                 // operator overloading problem again
-                value -= lambda.get(i) * Math.exp(kappa) * /* phi(-w_*h2) */phi.evaluate(-w_ * h2);
+                value -= lambda.get(i) * Math.exp(kappa) * /* phi(-w_*h2) */phi.op(-w_ * h2);
             }
 
             return Math.exp(-0.5 * temp * temp) * value / (sigmax_ * Math.sqrt(2.0 * Constants.M_PI));
         }
 
-        private class SolvingFunction implements UnaryFunctionDouble {
+        private class SolvingFunction implements Ops.DoubleOp {
 
             public SolvingFunction(final Array lambda, final Array Bb) {
                 lambda_ = (lambda);
                 Bb_ = (Bb);
             }
 
-            public double /* @Real */evaluate(double /* @Real */y) {
+            public double /* @Real */op(double /* @Real */y) {
                 double /* @Real */value = 1.0;
                 for (int /* @Size */i = 0; i < lambda_.length; i++) {
                     value -= lambda_.get(i) * Math.exp(-Bb_.get(i) * y);

@@ -152,7 +152,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             switch (payoff.optionType()) {
                 case CALL:
                     Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
-                    a =  (Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.evaluate(d1));
+                    a =  (Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(d1));
                     if (spot<Sk) {
                         results.value = black.value() + a * Math.pow((spot/Sk), Q);
                     } else {
@@ -161,7 +161,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
                     break;
                 case PUT:
                     Q = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
-                    a = -(Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.evaluate(-d1));
+                    a = -(Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(-d1));
                     if (spot>Sk) {
                         results.value = black.value() +
                             a * Math.pow((spot/Sk), Q);
@@ -238,8 +238,8 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
           case CALL:
             Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0)) + 4 * K)) / 2;
             LHS = Si - payoff.strike();
-            RHS = temp + (1 - dividendDiscount * cumNormalDist.evaluate(d1)) * Si / Q;
-            bi =  dividendDiscount * cumNormalDist.evaluate(d1) * (1 - 1/Q)
+            RHS = temp + (1 - dividendDiscount * cumNormalDist.op(d1)) * Si / Q;
+            bi =  dividendDiscount * cumNormalDist.op(d1) * (1 - 1/Q)
                + (1 - dividendDiscount * cumNormalDist.derivative(d1) / Math.sqrt(variance)) / Q;
             while (Math.abs(LHS - RHS)/payoff.strike() > tolerance) {
                 Si = (payoff.strike() + RHS - bi * Si) / (1 - bi);
@@ -247,16 +247,16 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
                 d1 = (Math.log(forwardSi/payoff.strike())+0.5*variance)/Math.sqrt(variance);
                 LHS = Si - payoff.strike();
                 double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
-                RHS = temp2 + (1 - dividendDiscount * cumNormalDist.evaluate(d1)) * Si / Q;
-                bi = dividendDiscount * cumNormalDist.evaluate(d1) * (1 - 1 / Q)
+                RHS = temp2 + (1 - dividendDiscount * cumNormalDist.op(d1)) * Si / Q;
+                bi = dividendDiscount * cumNormalDist.op(d1) * (1 - 1 / Q)
                    + (1 - dividendDiscount * cumNormalDist.derivative(d1) / Math.sqrt(variance)) / Q;
             }
             break;
           case PUT:
             Q = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0)) + 4 * K)) / 2;
             LHS = payoff.strike() - Si;
-            RHS = temp - (1 - dividendDiscount * cumNormalDist.evaluate(-d1)) * Si / Q;
-            bi = -dividendDiscount * cumNormalDist.evaluate(-d1) * (1 - 1/Q)
+            RHS = temp - (1 - dividendDiscount * cumNormalDist.op(-d1)) * Si / Q;
+            bi = -dividendDiscount * cumNormalDist.op(-d1) * (1 - 1/Q)
                - (1 + dividendDiscount * cumNormalDist.derivative(-d1) / Math.sqrt(variance)) / Q;
             while (Math.abs(LHS - RHS)/payoff.strike() > tolerance) {
                 Si = (payoff.strike() - RHS + bi * Si) / (1 + bi);
@@ -264,8 +264,8 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
                 d1 = (Math.log(forwardSi/payoff.strike())+0.5*variance)/Math.sqrt(variance);
                 LHS = payoff.strike() - Si;
                 double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
-                RHS = temp2 - (1 - dividendDiscount * cumNormalDist.evaluate(-d1)) * Si / Q;
-                bi = -dividendDiscount * cumNormalDist.evaluate(-d1) * (1 - 1 / Q)
+                RHS = temp2 - (1 - dividendDiscount * cumNormalDist.op(-d1)) * Si / Q;
+                bi = -dividendDiscount * cumNormalDist.op(-d1) * (1 - 1 / Q)
                    - (1 + dividendDiscount * cumNormalDist.derivative(-d1) / Math.sqrt(variance)) / Q;
             }
             break;

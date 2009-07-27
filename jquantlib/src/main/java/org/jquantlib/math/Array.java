@@ -41,6 +41,7 @@ package org.jquantlib.math;
 
 import java.util.Arrays;
 
+import org.jquantlib.math.Ops.DoubleOp;
 import org.jquantlib.math.functions.Identity;
 
 
@@ -372,7 +373,7 @@ public class Array extends Matrix {
      *
      * @return this
      */
-    public Array transform(final UnaryFunctionDouble func) {
+    public Array transform(final DoubleOp func) {
         return transform(0, this.length, func);
     }
 
@@ -381,7 +382,7 @@ public class Array extends Matrix {
      *
      * @return this
      */
-    public Array transform(final int from, final int to, final UnaryFunctionDouble func) {
+    public Array transform(final int from, final int to, final Ops.DoubleOp func) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (from<0 || from>to || to>this.length) throw new IndexOutOfBoundsException();
         if (func == null) throw new NullPointerException();
@@ -389,7 +390,7 @@ public class Array extends Matrix {
         if (func instanceof Identity) return this;
         
         for (int i = from; i < to; i++) {
-            data[i] = func.evaluate(data[i]);
+            data[i] = func.op(data[i]);
         }
         return this;
     }

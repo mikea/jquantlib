@@ -32,6 +32,9 @@ public abstract class TermStructureConsistentModel implements Observable {
     
     public TermStructureConsistentModel(final Handle<YieldTermStructure> termStructure){
         this.termStructure_ = termStructure;
+        
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
     
     public Handle<YieldTermStructure> termStructure(){

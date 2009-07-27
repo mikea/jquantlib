@@ -144,9 +144,9 @@ public class SampledCurve {
         setGrid(Grid.BoundedLogGrid(min, max, size() - 1));
     }
 
-    public <T extends UnaryFunctionDouble> void sample(final T func) {
+    public <T extends Ops.DoubleOp> void sample(final T func) {
         for (int i = 0; i < this.grid.length; i++) {
-            double v = func.evaluate(grid.get(i));
+            double v = func.op(grid.get(i));
             this.values.set(i, v);
         }
     }
@@ -204,7 +204,7 @@ public class SampledCurve {
      * @param newGrid
      * @param func
      */
-    public void regrid(final Array newGrid, final UnaryFunctionDouble func) {
+    public void regrid(final Array newGrid, final Ops.DoubleOp func) {
         final Array transformed;
         final Array newValues;
         

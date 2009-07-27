@@ -219,11 +219,11 @@ public abstract class AbstractInterpolation implements Interpolation {
     
     
     //
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
     
     @Override
-    public final double evaluate(final double x) {
+    public final double op(final double x) {
         return evaluate(x, false);
     }
 

@@ -258,7 +258,7 @@ public class HestonProcess extends StochasticProcess {
             df = 4 * thetav_ * kappav_ / (sigmav_ * sigmav_);
             ncp = 4 * kappav_ * Math.exp(-kappav_ * dt) / (sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt))) * x01;
 
-            p = new CumulativeNormalDistribution().evaluate(dw1);
+            p = new CumulativeNormalDistribution().op(dw1);
             if (p < 0.0)
                 p = 0.0;
             else if (p >= 1.0)

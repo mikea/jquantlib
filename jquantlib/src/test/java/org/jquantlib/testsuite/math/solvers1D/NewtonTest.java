@@ -53,7 +53,7 @@ public class NewtonTest {
 		final Derivative f = new Derivative() {
 
 			@Override
-			public double evaluate(double x) {
+			public double op(double x) {
 				return x*x-1;
 			}
 			

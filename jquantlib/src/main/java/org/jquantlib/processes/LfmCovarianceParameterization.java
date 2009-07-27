@@ -24,9 +24,8 @@ package org.jquantlib.processes;
 
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.integrals.GaussKronrodAdaptive;
-import org.jquantlib.util.stdlibc.Std;
 
 public abstract class LfmCovarianceParameterization {
     protected int size_;
@@ -89,7 +88,7 @@ public abstract class LfmCovarianceParameterization {
         return integratedCovariance(t, new Array());
     }
 
-    private static class Var_Helper implements UnaryFunctionDouble {
+    private static class Var_Helper implements Ops.DoubleOp {
 
         private int i_, j_;
         private final LfmCovarianceParameterization param_;
@@ -100,7 +99,7 @@ public abstract class LfmCovarianceParameterization {
             this.param_ = param;
         }
 
-        public double evaluate(double t) {
+        public double op(final double t) {
             final Matrix m = param_.diffusion(t);
             final Array iRow = m.getRow(i_);
             final Array jRow = m.getRow(i_);

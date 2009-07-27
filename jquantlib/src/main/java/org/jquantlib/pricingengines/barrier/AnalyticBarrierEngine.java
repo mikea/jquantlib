@@ -243,8 +243,8 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     @SuppressWarnings("PMD.MethodNamingConventions")
     private double  A(double phi)  {
         double x1 = Math.log(underlying()/strike())/stdDeviation() + muSigma();
-        double N1 = f.evaluate(phi*x1);
-        double N2 = f.evaluate(phi*(x1-stdDeviation()));
+        double N1 = f.op(phi*x1);
+        double N2 = f.op(phi*(x1-stdDeviation()));
         return phi*(underlying() * dividendDiscount() * N1 - strike() * riskFreeDiscount() * N2);
     }
 
@@ -252,8 +252,8 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     @SuppressWarnings("PMD.MethodNamingConventions")
     private double  B(final double phi)  {
         double x2 = Math.log(underlying()/barrier())/stdDeviation() + muSigma();
-        double N1 = f.evaluate(phi*x2);
-        double N2 = f.evaluate(phi*(x2-stdDeviation()));
+        double N1 = f.op(phi*x2);
+        double N2 = f.op(phi*(x2-stdDeviation()));
         return phi*(underlying() * dividendDiscount() * N1 - strike() * riskFreeDiscount() * N2);
     }
 
@@ -264,8 +264,8 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
         double powHS0 = Math.pow(HS, 2 * mu());
         double powHS1 = powHS0 * HS * HS;
         double y1 = Math.log(barrier()*HS/strike())/stdDeviation() + muSigma();
-        double N1 = f.evaluate(eta*y1);
-        double N2 = f.evaluate(eta*(y1-stdDeviation()));
+        double N1 = f.op(eta*y1);
+        double N2 = f.op(eta*(y1-stdDeviation()));
         return phi*(underlying() * dividendDiscount() * powHS1 * N1 - strike() * riskFreeDiscount() * powHS0 * N2);
     }
     
@@ -276,8 +276,8 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
         double powHS0 = Math.pow(HS, 2 * mu());
         double powHS1 = powHS0 * HS * HS;
         double y2 = Math.log(barrier()/underlying())/stdDeviation() + muSigma();
-        double N1 = f.evaluate(eta*y2);
-        double N2 = f.evaluate(eta*(y2-stdDeviation()));
+        double N1 = f.op(eta*y2);
+        double N2 = f.op(eta*(y2-stdDeviation()));
         return phi*(underlying() * dividendDiscount() * powHS1 * N1 - strike() * riskFreeDiscount() * powHS0 * N2);
     }
     
@@ -288,8 +288,8 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
             double powHS0 = Math.pow(barrier()/underlying(), 2 * mu());
             double x2 = Math.log(underlying()/barrier())/stdDeviation() + muSigma();
             double y2 = Math.log(barrier()/underlying())/stdDeviation() + muSigma();
-            double N1 = f.evaluate(eta*(x2 - stdDeviation()));
-            double N2 = f.evaluate(eta*(y2 - stdDeviation()));
+            double N1 = f.op(eta*(x2 - stdDeviation()));
+            double N2 = f.op(eta*(y2 - stdDeviation()));
             return rebate() * riskFreeDiscount() * (N1 - powHS0 * N2);
         } else {
             return 0.0;
@@ -310,8 +310,8 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
             double sigmaSqrtT = stdDeviation();
             double z = Math.log(barrier()/underlying())/sigmaSqrtT + lambda*sigmaSqrtT;
 
-            double N1 = f.evaluate(eta * z);
-            double N2 = f.evaluate(eta * (z - 2.0 * lambda * sigmaSqrtT));
+            double N1 = f.op(eta * z);
+            double N2 = f.op(eta * (z - 2.0 * lambda * sigmaSqrtT));
             return rebate() * (powHSplus * N1 + powHSminus * N2);
         } else {
             return 0.0;

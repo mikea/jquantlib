@@ -122,14 +122,14 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	        checkValues("MC not-a-knot spline", interpolation, x, y);
 	        
 	        // good performance
-	        interpolated = interpolation.evaluate(x1_bad);
+	        interpolated = interpolation.op(x1_bad);
 	        assertFalse("MC not-a-knot spline interpolation good performance unverified"
 					+"\n    at x = "+x1_bad
 					+"\n    interpolated value: "+interpolated
 					+"\n    expected value > 0.0",
 					interpolated<0.0);
 	        
-	        interpolated = interpolation.evaluate(x2_bad);
+	        interpolated = interpolation.op(x2_bad);
 	        assertFalse("MC not-a-knot spline interpolation good performance unverified"
 					+"\n    at x = "+x2_bad
 					+"\n    interpolated value: "+interpolated
@@ -162,7 +162,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    check1stDerivativeValue("MC clamped spline", interpolation, RPN15A_x.first(), 0.0);
 	    check1stDerivativeValue("MC clamped spline", interpolation, RPN15A_x.last(), 0.0);
 	    // good performance
-	    interpolated = interpolation.evaluate(x_bad);
+	    interpolated = interpolation.op(x_bad);
 	    assertFalse("MC clamped spline interpolation good performance unverified"
 				+"\n    at x = "+x_bad
 				+"\n    interpolated value: "+interpolated
@@ -192,7 +192,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 		
 		checkValues("MC not-a-knot spline", interpolation, RPN15A_x, RPN15A_y);
 		// good performance
-		interpolated = interpolation.evaluate(x_bad);
+		interpolated = interpolation.op(x_bad);
 		assertFalse("MC not-a-knot spline interpolation good performance unverified"
 				+"\n    at x = "+x_bad
 				+"\n    interpolated value: "+interpolated
@@ -311,7 +311,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    		0.0)
 	    		.interpolate(x, y);
 	    
-	    interpolated = interpolation.evaluate(zero);
+	    interpolated = interpolation.op(zero);
 	    assertFalse("MC not-a-knot spline interpolation failed at x = "+zero
 					+"\n    interpolated value: "+interpolated
 					+"\n    expected value:     "+expected
@@ -337,7 +337,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 				-4.0)
 		.interpolate(x, y);
 		
-		interpolated =  interpolation.evaluate(zero);
+		interpolated =  interpolation.op(zero);
 		assertFalse("MC clamped spline interpolation failed at x = "+zero
 				+"\n    interpolated value: "+interpolated
 				+"\n    expected value:     "+expected
@@ -362,7 +362,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 				-2.0)
 		.interpolate(x, y);
 		
-		interpolated =  interpolation.evaluate(zero);
+		interpolated =  interpolation.op(zero);
 		assertFalse("MC SecondDerivative spline interpolation failed at x = "+zero
 				+"\n    interpolated value: "+interpolated
 				+"\n    expected value:     "+expected

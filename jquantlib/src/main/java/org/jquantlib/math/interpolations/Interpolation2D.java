@@ -41,8 +41,8 @@
 package org.jquantlib.math.interpolations;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.math.BinaryFunctionDouble;
 import org.jquantlib.math.Matrix;
+import org.jquantlib.math.Ops;
 
 /**
  * Interface for 2-D interpolations.
@@ -54,7 +54,7 @@ import org.jquantlib.math.Matrix;
  * 
  * @author Richard Gomes
  */
-public interface Interpolation2D extends Extrapolator, BinaryFunctionDouble {
+public interface Interpolation2D extends Extrapolator, Ops.BinaryDoubleOp {
 	
     /**
      * This method performs the interpolation itself.

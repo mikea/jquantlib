@@ -1,14 +1,26 @@
 package org.jquantlib.model.marketmodels;
 
-import org.jquantlib.lang.annotation.Real;
 
-//! Engine collecting cash flows along a market-model simulation
+/** 
+ * Engine collecting cash flows along a market-model simulation
+ * 
+ * @author Ueli Hofstetter
+ */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: please verify against original QL/C++ code
 public class AccountingEngine {
     
+    public AccountingEngine(
+            final MarketModelEvolver evolver,
+            final Object /* const Clone<MarketModelMultiProduct>& product*/ Mark,
+            final /*@Price*/ double initialNumeraireValue) {
+        
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+    }
     
-//    public AccountingEngine(final MarketModelEvolver evolver,
-//                         final /* const Clone<MarketModelMultiProduct>& product*/ Mark,
-//                         Real initialNumeraireValue);
+    
+    
 //        void multiplePathValues(SequenceStatistics& stats,
 //                                Size numberOfPaths);
 //      private:
@@ -26,8 +38,6 @@ public class AccountingEngine {
 //        std::vector<std::vector<MarketModelMultiProduct::CashFlow> >
 //                                                         cashFlowsGenerated_;
 //        std::vector<MarketModelDiscounter> discounters_;
-//
-//    };
 
 
 }

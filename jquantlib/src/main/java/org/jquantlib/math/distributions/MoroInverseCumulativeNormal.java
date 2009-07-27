@@ -22,7 +22,7 @@
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * 
@@ -31,7 +31,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  */
 
 // TODO Add test case for MoroInverseCumulativeNormal class.
-public class MoroInverseCumulativeNormal extends NormalDistribution implements UnaryFunctionDouble{
+public class MoroInverseCumulativeNormal extends NormalDistribution implements Ops.DoubleOp {
 	
     //
     // static final fields (constants)
@@ -72,11 +72,11 @@ public class MoroInverseCumulativeNormal extends NormalDistribution implements U
     
     
     //
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
         
     @Override
-    public double evaluate(double x) /* Read-only */ {
+    public double op(final double x) /* Read-only */ {
         final double temp=x-0.5;
         
         // x has to be between 0.00 and 1.00

@@ -24,8 +24,13 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops.DoubleOp;
 import org.jquantlib.math.distributions.NormalDistribution;
+import org.jquantlib.math.functions.Constant;
+import org.jquantlib.math.functions.Cos;
+import org.jquantlib.math.functions.Identity;
+import org.jquantlib.math.functions.Sin;
+import org.jquantlib.math.functions.Sqr;
 import org.jquantlib.math.integrals.Integrator;
 import org.jquantlib.math.integrals.SimpsonIntegral;
 import org.junit.Ignore;
@@ -36,11 +41,9 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  * @author Dominik Holenstein
- *
  */
-
-
 //TODO: Write SimpsonIntegral test case.
+// TODO: code review :: Please complete this class and perform another code review.
 public class SimpsonIntegralTest {
 	
     private final static Logger logger = LoggerFactory.getLogger(SimpsonIntegralTest.class);
@@ -54,50 +57,27 @@ public class SimpsonIntegralTest {
 	public void testSimpsonIntegral(){
 		double tolerance = 1.0e-6;
 		//f(x) = 1
-		testSingle(new SimpsonIntegral(tolerance), new UnaryFunctionDouble(){
-			public double evaluate(double x) {
-				return 1;
-			}
-		}, 0.0, 1.0, 1.0, tolerance, "f(x) = 1" );
+		testSingle(new SimpsonIntegral(tolerance), new Constant(1.0), 0.0, 1.0, 1.0, tolerance, "f(x) = 1" );
 		
 		//f(x) = x
-		testSingle(new SimpsonIntegral(tolerance), new UnaryFunctionDouble(){
-			public double evaluate(double x) {
-				return x;
-			}
-		}, 0.0, 1.0, 0.5, tolerance, "f(x) = x" );
+		testSingle(new SimpsonIntegral(tolerance), new Identity(), 0.0, 1.0, 0.5, tolerance, "f(x) = x" );
 		
 		//f(x) = x^2
-		testSingle(new SimpsonIntegral(tolerance), new UnaryFunctionDouble(){
-			public double evaluate(double x) {
-				return Math.pow(x, 2);
-			}
-		}, 0.0, 1.0, 1.0/3.0, tolerance, "f(x) = x^2" );
+		testSingle(new SimpsonIntegral(tolerance), new Sqr(), 0.0, 1.0, 1.0/3.0, tolerance, "f(x) = x^2" );
 		
 		//f(x) = sin(x)
-		testSingle(new SimpsonIntegral(tolerance), new UnaryFunctionDouble(){
-			public double evaluate(double x) {
-				return Math.sin(x);
-			}
-		}, 0.0, Math.PI, 2.0, tolerance, "f(x) = sin(x)" );
+		testSingle(new SimpsonIntegral(tolerance), new Sin(), 0.0, Math.PI, 2.0, tolerance, "f(x) = sin(x)" );
 		
 		//f(x) = cos(x)
-		testSingle(new SimpsonIntegral(tolerance), new UnaryFunctionDouble(){
-			public double evaluate(double x) {
-				return Math.cos(x);
-			}
-		}, 0.0, Math.PI, 0.0, tolerance, "f(x) = cos(x)" );
+		testSingle(new SimpsonIntegral(tolerance), new Cos(), 0.0, Math.PI, 0.0, tolerance, "f(x) = cos(x)" );
 		
 		//f(x) = Gaussian(x)
-		testSingle(new SimpsonIntegral(tolerance), new UnaryFunctionDouble(){
-			public double evaluate(double x) {
-				return new NormalDistribution(0.0, 1.0).evaluate(x);
-			}
-		}, -10.0, 10.0, 1.0, tolerance, "f(x) = Gaussian(x)" );
+		testSingle(new SimpsonIntegral(tolerance), new NormalDistribution(0.0, 1.0), -10.0, 10.0, 1.0, tolerance, "f(x) = Gaussian(x)" );
+		
 		
 		//f(x) = Abcd2(x)
 		/* FIXME: Method not implemented yet.
-		testSingle(new SimpsonIntegral(tolerance), new UnaryFunctionDouble(){
+		testSingle(new SimpsonIntegral(tolerance), new Ops.DoubleOp(){
 			public double evaluate(double x) {
 				return new (0.0, 1.0).evaluate(x);
 			}
@@ -116,8 +96,8 @@ public class SimpsonIntegralTest {
 	@Test
 	public void quickConvergenceTest() {
 		// only intended to avoid failure during unit tests
-		UnaryFunctionDouble f = new UnaryFunctionDouble() {
-			public double evaluate(double x) {
+		DoubleOp f = new DoubleOp() {
+			public double op(double x) {
 				return 1/(1+Math.pow(Math.tan(x),Math.sqrt(2)));
 			}
 		};
@@ -137,7 +117,7 @@ public class SimpsonIntegralTest {
 	
 	
 	
-	private void testSingle(Integrator integrator, UnaryFunctionDouble function, double min, double max, double desired, double precision, String tag){
+	private void testSingle(Integrator integrator, DoubleOp function, double min, double max, double desired, double precision, String tag){
 		double realised = integrator.evaluate(function, min, max);
 		if(Math.abs(realised - desired) > precision){
 			fail("Integration failed for " + tag);

@@ -119,7 +119,7 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 
 	
 	//
-	// implements UnaryFunctionDouble
+	// implements Ops.DoubleOp
 	//
 
     @Override

@@ -42,9 +42,8 @@
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.math.BinaryFunctionDouble;
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.integrals.TabulatedGaussLegendre;
 
 
@@ -79,7 +78,7 @@ import org.jquantlib.math.integrals.TabulatedGaussLegendre;
  * @author Richard Gomes
  */
 //TODO: code review :: seems like we should extend or implement something ?
-public class BivariateNormalDistribution implements BinaryFunctionDouble {
+public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
 	
 	//
 	// private fields
@@ -110,7 +109,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
     
     
     //
-    // implements BinaryFunctionDouble
+    // implements Ops.BinaryDoubleOp
     //
     
     /**
@@ -124,7 +123,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
      * @return BVN
      */
     @Override
-    public double evaluate(double x, double y) {
+    public double op(final double x, final double y) {
         final TabulatedGaussLegendre gaussLegendreQuad = new TabulatedGaussLegendre(20);
 
         if (Math.abs(correlation_) < 0.3) {
@@ -145,7 +144,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
                 bvn = gaussLegendreQuad.evaluate(f);
                 bvn *= asr * (0.25 / Math.PI);
             }
-            bvn += cumnorm_.evaluate(-h) * cumnorm_.evaluate(-k);
+            bvn += cumnorm_.op(-h) * cumnorm_.op(-k);
         } else {
             if (correlation_ < 0) {
                 k *= -1;
@@ -163,7 +162,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
                 }
                 if (-hk < 100) {
                     double B = Math.sqrt(bs);
-                    bvn -= Math.exp(-hk / 2) * Constants.M_SQRT2PI * cumnorm_.evaluate(-B / a) * B
+                    bvn -= Math.exp(-hk / 2) * Constants.M_SQRT2PI * cumnorm_.op(-B / a) * B
                             * (1 - c * bs * (1 - d * bs / 5) / 3);
                 }
                 a /= 2;
@@ -173,11 +172,11 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
             }
 
             if (correlation_ > 0) {
-                bvn += cumnorm_.evaluate(-Math.max(h, k));
+                bvn += cumnorm_.op(-Math.max(h, k));
             } else {
                 bvn *= -1;
                 if (k > h) {
-                    bvn += cumnorm_.evaluate(k) - cumnorm_.evaluate(h);
+                    bvn += cumnorm_.op(k) - cumnorm_.op(h);
                 }
             }
         }
@@ -191,7 +190,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
      * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">Genz 2004, The Transformed BVN Problem</a>
      */
 
-    private static class Eqn3 implements UnaryFunctionDouble {
+    private static class Eqn3 implements Ops.DoubleOp {
 
     	private double hk_, asr_, hs_;
     
@@ -212,7 +211,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
     
 
     	//
-        // Implements UnaryFunctionDouble
+        // Implements Ops.DoubleOp
         //
         
     	/**
@@ -225,7 +224,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
     	 * @param asr ASIN of <code>correlation_</code>
     	 * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
     	 */
-    	public double evaluate(double x) {
+    	public double op(final double x) {
     	    double sn = Math.sin(asr_ * (-x + 1) * 0.5);
     	    return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn));
     	}
@@ -238,7 +237,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
      * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Genz 2004, Numerical Integration Results</a>
      * 
      */
-    private static class Eqn6 implements UnaryFunctionDouble {
+    private static class Eqn6 implements Ops.DoubleOp {
 
         private double a_, c_, d_, bs_, hk_;
 
@@ -261,7 +260,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
 
         
         //
-        // Implements UnaryFunctionDouble
+        // Implements Ops.DoubleOp
         //
         
         /**
@@ -276,7 +275,7 @@ public class BivariateNormalDistribution implements BinaryFunctionDouble {
          *         <code>else</code> return 0.00
          * 
          */
-        public double evaluate(double x) {
+        public double op(final double x) {
             double xs = a_ * (-x + 1);
             xs = Math.abs(xs * xs);
             double rs = Math.sqrt(1 - xs);

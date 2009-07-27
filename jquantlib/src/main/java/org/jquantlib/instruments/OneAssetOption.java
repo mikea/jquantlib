@@ -47,7 +47,7 @@ import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.Configuration;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.math.AbstractSolver1D;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
@@ -200,14 +200,18 @@ public class OneAssetOption extends Option {
      * a target value lower than the intrinsic value in the case of American options.
      */
     public final /* @Volatility */ double impliedVolatility(
-                                /*@Price*/ double targetValue, double accuracy, int maxEvaluations, 
-                                /* @Volatility */ double minVol, /* @Volatility */ double maxVol) /* @ReadOnly */ {
+            final /*@Price*/ double targetValue, 
+            final double accuracy, 
+            final int maxEvaluations,
+            final /* @Volatility */ double minVol,
+            final /* @Volatility */ double maxVol) /* @ReadOnly */ {
+        
         calculate();
         if (isExpired()) throw new IllegalArgumentException("option expired");
 
         /* @Volatility */ double guess = (minVol+maxVol)/2.0;
         ImpliedVolHelper f = new ImpliedVolHelper(engine, targetValue);
-        AbstractSolver1D<UnaryFunctionDouble> solver = new Brent();
+        AbstractSolver1D<Ops.DoubleOp> solver = new Brent();
         solver.setMaxEvaluations(maxEvaluations);
         /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
         return result;
@@ -323,7 +327,7 @@ public class OneAssetOption extends Option {
     /**
      * Helper class for implied volatility calculation
      */
-    private static class ImpliedVolHelper implements UnaryFunctionDouble {
+    private static class ImpliedVolHelper implements Ops.DoubleOp {
     	
         //
         // private final fields
@@ -339,7 +343,7 @@ public class OneAssetOption extends Option {
         // public constructors
         //
         
-        public ImpliedVolHelper(final PricingEngine engine, double targetValue)  {
+        public ImpliedVolHelper(final PricingEngine engine, final double targetValue)  {
         	this.impliedEngine = engine;
         	this.targetValue = targetValue;
 
@@ -388,11 +392,11 @@ public class OneAssetOption extends Option {
 
 		
         //
-        // implements UnaryFunctionDouble
+        // implements Ops.DoubleOp
         //
         
         @Override
-        public final double evaluate(/* @Volatility */ double x) /* @ReadOnly */ {
+        public final double op(final /* @Volatility */ double x) /* @ReadOnly */ {
 			SimpleQuote quote = (SimpleQuote)vol.getLink();
 			quote.setValue(x);
 			this.impliedEngine.calculate();

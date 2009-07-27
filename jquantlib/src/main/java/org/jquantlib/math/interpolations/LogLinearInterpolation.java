@@ -141,11 +141,11 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 	
 
 	// 
-	// implements UnaryFunctionDouble
+	// implements Ops.DoubleOp
 	//
 	@Override
 	protected double evaluateImpl(final double x) /* @ReadOnly */ {
-		return Math.exp(linearInterpolation.evaluate(x));
+		return Math.exp(linearInterpolation.op(x));
 	}
 	
     

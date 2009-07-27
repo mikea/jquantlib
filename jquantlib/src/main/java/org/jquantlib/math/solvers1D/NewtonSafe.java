@@ -41,60 +41,60 @@ public class NewtonSafe extends AbstractSolver1D<Derivative> {
 	 * @returns <code>root_</code>
 	 */
 	@Override
-	protected double solveImpl(Derivative f, double xAccuracy) {
+	protected double solveImpl(final Derivative f, final double xAccuracy) {
 
         double froot, dfroot, dx, dxold;
         double xh, xl;
         
         // Orient the search so that f(xl) < 0
-        if (fxMin_ < 0.0) {
-            xl=xMin_;
-            xh=xMax_;
+        if (fxMin < 0.0) {
+            xl=xMin;
+            xh=xMax;
         } else {
-            xh=xMin_;
-            xl=xMax_;
+            xh=xMin;
+            xl=xMax;
         }
 
         // the "stepsize before last"
-        dxold=xMax_-xMin_;
+        dxold=xMax-xMin;
         // it was dxold=std::fabs(xMax_-xMin_); in Numerical Recipes
         // here (xMax_-xMin_ > 0) is verified in the constructor
 
         // and the last step
         dx=dxold;
 
-        froot = f.evaluate(root_);
-        dfroot = f.derivative(root_);
-        evaluationNumber_++;
+        froot = f.op(root);
+        dfroot = f.derivative(root);
+        evaluationNumber++;
 
-        while (evaluationNumber_<= getMaxEvaluations()) {
+        while (evaluationNumber<= getMaxEvaluations()) {
             // Bisect if (out of range || not decreasing fast enough)
-            if ((((root_-xh)*dfroot-froot)*
-                 ((root_-xl)*dfroot-froot) > 0.0)
+            if ((((root-xh)*dfroot-froot)*
+                 ((root-xl)*dfroot-froot) > 0.0)
                 || (Math.abs(2.0*froot) > Math.abs(dxold*dfroot))) {
 
                 dxold = dx;
                 dx = (xh-xl)/2.0;
-                root_=xl+dx;
+                root=xl+dx;
             } else {
                 dxold=dx;
                 dx=froot/dfroot;
-                root_ -= dx;
+                root -= dx;
             }
             // Convergence criterion
             if (Math.abs(dx) < xAccuracy){
-            	return root_;
+            	return root;
             }
             
-            froot = f.evaluate(root_);
-            dfroot = f.derivative(root_);
-            evaluationNumber_++;
+            froot = f.op(root);
+            dfroot = f.derivative(root);
+            evaluationNumber++;
             
             if (froot < 0.0){
-            	xl=root_;
+            	xl=root;
             }  
             else {
-            	xh=root_;
+            	xh=root;
             }
         }
         throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");     

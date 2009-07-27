@@ -71,7 +71,7 @@ public class CumulativeNormalDistributionTest {
 		for(int i=0;i<testvalues.length;i++){
 			double z = testvalues[i][0];
 			double expected = testvalues[i][1];
-			double computed = cnd.evaluate(z);
+			double computed = cnd.op(z);
 			double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
 			
 			
@@ -81,8 +81,8 @@ public class CumulativeNormalDistributionTest {
 			}
 			
 			// assertEquals(1.0, computed+ cnd.evaluate(-z),tolerance);
-			if (Math.abs(1.0-(computed+cnd.evaluate(-z)))>tolerance) {
-				fail("expected: 1.0" + " but is: " + computed + cnd.evaluate(-z));
+			if (Math.abs(1.0-(computed+cnd.op(-z)))>tolerance) {
+				fail("expected: 1.0" + " but is: " + computed + cnd.op(-z));
 			}
 		}
 	}
@@ -96,26 +96,26 @@ public class CumulativeNormalDistributionTest {
 		CumulativeNormalDistribution cnd = new CumulativeNormalDistribution();
 		
 		// assertEquals(0, cnd.evaluate(z),1.0e-15);
-		if (Math.abs(0.0-(cnd.evaluate(z)))>tolerance) {
-			fail("expected: 1.0" + " but is: " + cnd.evaluate(z));
+		if (Math.abs(0.0-(cnd.op(z)))>tolerance) {
+			fail("expected: 1.0" + " but is: " + cnd.op(z));
 		}
 		
 		z = -10;
 		// assertEquals(0, cnd.evaluate(z),1.0e-15);
-		if (Math.abs(0.0-cnd.evaluate(z))>tolerance) {
-			fail("expected: 1.0" + " but is: " + cnd.evaluate(z));
+		if (Math.abs(0.0-cnd.op(z))>tolerance) {
+			fail("expected: 1.0" + " but is: " + cnd.op(z));
 		}
 	
 		z = 10;
 		// assertEquals(1.0, cnd.evaluate(z),1.0e-15);
-		if (Math.abs(1.0-(cnd.evaluate(z)))>tolerance) {
-			fail("expected: 1.0" + " but is: " + cnd.evaluate(z));
+		if (Math.abs(1.0-(cnd.op(z)))>tolerance) {
+			fail("expected: 1.0" + " but is: " + cnd.op(z));
 		}
 		
 		z = 40;
 		// assertEquals(1.0, cnd.evaluate(z),1.0e-15);
-		if (Math.abs(1.0-(cnd.evaluate(z)))>tolerance) {
-			fail("expected: 1.0" + " but is: " + cnd.evaluate(z));
+		if (Math.abs(1.0-(cnd.op(z)))>tolerance) {
+			fail("expected: 1.0" + " but is: " + cnd.op(z));
 		}
 	}
 }

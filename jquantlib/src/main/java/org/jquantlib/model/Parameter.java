@@ -24,7 +24,6 @@ package org.jquantlib.model;
 
 //reviewed once: uh
 
-import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.NoConstraint;
@@ -49,10 +48,16 @@ public abstract class Parameter {
         this.constraint = c;
         this.impl = impl;
         params = new Array(size);
+        
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
 
     public Parameter() {
         constraint = new NoConstraint();
+        
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
 
     public Array getParams() {

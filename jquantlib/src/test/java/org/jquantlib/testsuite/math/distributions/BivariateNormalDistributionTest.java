@@ -57,7 +57,7 @@ public class BivariateNormalDistributionTest {
 	        for (Integer sgn=-1; sgn < 2; sgn+=2) {
 	            BivariateNormalDistribution bvn= new BivariateNormalDistribution(sgn*rho[i]);
 	            double expected = 0.25 + Math.asin(sgn*rho[i]) / (2*Math.PI) ;
-	            double realised = bvn.evaluate(x,y);
+	            double realised = bvn.op(x,y);
 
 	            if (Math.abs(realised-expected)>=tolerance)
 	            	fail(" bivariate cumulative distribution\n"
@@ -140,7 +140,7 @@ public class BivariateNormalDistributionTest {
 	    	double result = values[i][3];
 	    	
 	        BivariateNormalDistribution bcd = new BivariateNormalDistribution(rho);
-	        double value = bcd.evaluate(a, b);
+	        double value = bcd.op(a, b);
 
 	        double tolerance = 1.0e-6;
 	        if (Math.abs(value-result) >= tolerance)

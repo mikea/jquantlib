@@ -196,8 +196,8 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 		
 		if (sigG > Constants.QL_EPSILON) {
 			/*@Real*/ double x_1  = (muG-Math.log(payoff.strike())+variance)/sigG;
-			Nx_1 = CND.evaluate(x_1);
-			nx_1 = ND.evaluate(x_1);
+			Nx_1 = CND.op(x_1);
+			nx_1 = ND.op(x_1);
 		} else {
 			Nx_1 = (muG > Math.log(payoff.strike()) ? 1.0 : 0.0);
 			nx_1 = 0.0;

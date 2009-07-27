@@ -57,7 +57,7 @@ public class NormalDistributionTest {
 		for(int i=0;i<testvalues.length;i++){
 			double z = testvalues[i][0];
 			double expected = testvalues[i][1];
-			double computed = normal.evaluate(z);
+			double computed = normal.op(z);
 			double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
 			
 			//assertEquals(expected, computed,tolerance);
@@ -66,8 +66,8 @@ public class NormalDistributionTest {
 			}
 			
 			//assertEquals(expected, normal.evaluate(-z),tolerance);
-			if(Math.abs(expected-normal.evaluate(-z))>tolerance){
-				fail("expected: " + expected + " but was " + normal.evaluate(-z));
+			if(Math.abs(expected-normal.op(-z))>tolerance){
+				fail("expected: " + expected + " but was " + normal.op(-z));
 			}
 		}
 	}

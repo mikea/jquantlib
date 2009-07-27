@@ -23,7 +23,7 @@
 package org.jquantlib.math.solvers1D;
 
 import org.jquantlib.math.AbstractSolver1D;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * False Position method.
@@ -36,7 +36,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Dominik Holenstein
  */
 //TODO FalsePosition: Add test case.
-public class FalsePosition extends AbstractSolver1D<UnaryFunctionDouble> {
+public class FalsePosition extends AbstractSolver1D<Ops.DoubleOp> {
 	
 	/**
 	 * Computes the roots of a function by using the False Position method.
@@ -45,43 +45,43 @@ public class FalsePosition extends AbstractSolver1D<UnaryFunctionDouble> {
 	 * @returns <code>root_</code>
 	 */
 	@Override
-	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
+	protected double solveImpl(final Ops.DoubleOp f, final double xAccuracy) {
 		
 		double fl, fh, xl, xh, dx, del, froot;
 
         // Identify the limits so that xl corresponds to the low side
-        if (fxMin_ < 0.0) {
-            xl=xMin_;
-            fl = fxMin_;
-            xh=xMax_;
-            fh = fxMax_;
+        if (fxMin < 0.0) {
+            xl=xMin;
+            fl = fxMin;
+            xh=xMax;
+            fh = fxMax;
         } else {
-            xl=xMax_;
-            fl = fxMax_;
-            xh=xMin_;
-            fh = fxMin_;
+            xl=xMax;
+            fl = fxMax;
+            xh=xMin;
+            fh = fxMin;
         }
         dx=xh-xl;
 
-        while (evaluationNumber_<= getMaxEvaluations()) {
+        while (evaluationNumber<= getMaxEvaluations()) {
             // Increment with respect to latest value
-            root_=xl+dx*fl/(fl-fh);
-            froot=f.evaluate(root_);
-            evaluationNumber_++;
+            root=xl+dx*fl/(fl-fh);
+            froot=f.op(root);
+            evaluationNumber++;
             if (froot < 0.0) {  // Replace appropriate limit
-                del=xl-root_;
-                xl=root_;
+                del=xl-root;
+                xl=root;
                 fl=froot;
             } else {
-                del=xh-root_;
-                xh=root_;
+                del=xh-root;
+                xh=root;
                 fh=froot;
             }
             dx=xh-xl;
             
             // Convergence criterion
             if (Math.abs(del) < xAccuracy || froot == 0.0)  {
-                return root_;
+                return root;
             }
         }
 		throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");        

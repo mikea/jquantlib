@@ -36,6 +36,12 @@ public class LiborForwardModel extends CalibratedModel implements AffineModel {
     
     
     
+    public LiborForwardModel() {
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
+    }
+    
     
     @Override
     public double discount(double t) {

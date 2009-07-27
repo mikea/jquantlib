@@ -24,13 +24,13 @@ package org.jquantlib.math.statistics;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.math.DoublePredicate;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.functions.Bind1st;
 import org.jquantlib.math.functions.Bind1stPredicate;
 import org.jquantlib.math.functions.Bind2nd;
 import org.jquantlib.math.functions.Bind2ndPredicate;
 import org.jquantlib.math.functions.Clipped;
+import org.jquantlib.math.functions.Constant;
 import org.jquantlib.math.functions.Expression;
 import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.functions.LessThan;
@@ -39,6 +39,7 @@ import org.jquantlib.math.functions.Sqr;
 import org.jquantlib.math.functions.TruePredicate;
 import org.jquantlib.util.Pair;
 
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
     
     private static final String no_data_below_the_target = "no data below the target";
@@ -97,11 +98,11 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
     public double regret(double target){
         // average over the range below the target
 
-        final List<UnaryFunctionDouble> functions = new ArrayList<UnaryFunctionDouble>();
+        final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
         functions.add(new Sqr());
         functions.add(new Bind2nd(new Minus(), target));
         final Expression comp = new Expression(functions);
-        final DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
+        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
         
         Pair<Double, Integer> result = statistics.expectationValue(comp, less);
         double x = result.getFirst();
@@ -156,7 +157,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
         }
         double target = -valueAtRisk(centile);
 
-        final DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
+        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
         Pair<Double, Integer> result = statistics.expectationValue(new Identity(), less);
         
         double x = result.getFirst();
@@ -181,19 +182,12 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             \right. \f]
     */
     public double shortfall(double target){
-        if(statistics.getSampleSize()==0){
+        if (statistics.getSampleSize()==0){
             throw new IllegalArgumentException(empty_sample_set);
         }
         
-        final UnaryFunctionDouble constant = new UnaryFunctionDouble() {
-            @Override
-            public double evaluate(double x) {
-                return 1.0;
-            }
-        };
-        
-        final DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
-        return statistics.expectationValue(new Clipped(less, constant), new TruePredicate()).getFirst();
+        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
+        return statistics.expectationValue(new Clipped(less, new Constant(1.0)), new TruePredicate()).getFirst();
     }
 
     /*! averaged shortfallness, defined as
@@ -201,8 +195,8 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
     */
     public double averageShortfall(double target) {
 
-        final UnaryFunctionDouble minus = new Bind1st(target, new Minus()); 
-        final DoublePredicate less = new Bind1stPredicate(target, new LessThan());
+        final Ops.DoubleOp minus = new Bind1st(target, new Minus()); 
+        final Ops.DoublePredicate less = new Bind1stPredicate(target, new LessThan());
         Pair<Double, Integer> result = statistics.expectationValue(minus, less);
         
         double x = result.getFirst();

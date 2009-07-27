@@ -22,11 +22,12 @@
 
 package org.jquantlib.math.integrals;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * @author <Richard Gomes>
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class TabulatedGaussLegendre {
 
     // Abscissas and Weights from Abramowitz and Stegun
@@ -111,7 +112,7 @@ public class TabulatedGaussLegendre {
 	setOrder(order);
     }
 
-    public double evaluate(UnaryFunctionDouble f) {
+    public double evaluate(Ops.DoubleOp f) {
 	
 	int startIdx;
         double val;
@@ -129,7 +130,7 @@ public class TabulatedGaussLegendre {
           if (!(n_ > 0)) {
 		throw new ArithmeticException("assume at least 1 point in quadrature");
 	  }
-          val = w_[0]*f.evaluate(x_[0]);
+          val = w_[0]*f.op(x_[0]);
           startIdx=1;
         } else {
             val = 0.0;
@@ -139,8 +140,8 @@ public class TabulatedGaussLegendre {
         for (int i=startIdx; i<n_; ++i) {
             double w = w_[i];
             double x = x_[i];
-            val += w*f.evaluate(x);
-            val += w*f.evaluate(-x);
+            val += w*f.op(x);
+            val += w*f.op(-x);
         }
         return val;
     }

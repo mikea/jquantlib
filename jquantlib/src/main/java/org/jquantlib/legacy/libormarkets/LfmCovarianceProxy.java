@@ -2,7 +2,7 @@ package org.jquantlib.legacy.libormarkets;
 
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.integrals.GaussKronrodAdaptive;
 import org.jquantlib.processes.LfmCovarianceParameterization;
 
@@ -51,7 +51,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
         return tmp;
     }
     
-    static class Var_Helper implements UnaryFunctionDouble {
+    static class Var_Helper implements Ops.DoubleOp {
 
         private final  int i_, j_;
         private final LmVolatilityModel/* * */   volaModel_;
@@ -65,7 +65,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
         this.corrModel_ = proxy.corrModel_;
       }
 
-      public double evaluate(double t)  {
+      public double op(final double t)  {
           /*@Volatility*/ double v1, v2;
 
           if (i_ == j_) {

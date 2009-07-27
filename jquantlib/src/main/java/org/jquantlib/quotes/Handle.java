@@ -58,7 +58,7 @@ import org.jquantlib.util.WeakReferenceObservable;
 // TODO: code review :: please verify against original QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 
-//TODO: ideally T should extend UnaryFunctionDouble, Observable
+//TODO: ideally T should extend Ops.DoubleOp, Observable
 // and we should offer a method called "value()" which does T.evaluate()
 
 public class Handle<T extends Observable> implements Observable {

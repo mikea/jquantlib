@@ -50,7 +50,7 @@ public class TransformedGrid {
 		}
 	}
 
-	public TransformedGrid(Array grid, UnaryFunctionDouble f) {
+	public TransformedGrid(final Array grid, final Ops.DoubleOp f) {
 	    // TODO: code review :: use of clone()
 	    this.grid_ = grid;
 		this.transformedGrid_ = grid.clone().transform(f);

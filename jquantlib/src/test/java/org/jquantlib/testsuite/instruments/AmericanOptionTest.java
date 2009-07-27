@@ -110,7 +110,7 @@ public class AmericanOptionTest {
 
         // type, strike, spot, q, r, t, vol, value, tol
         final AmericanOptionData values[] = {
-        // From "Option pricing formulas", Haug, McGraw-Hill 1998, pag 27
+                // From "Option pricing formulas", Haug, McGraw-Hill 1998, pag 27
                 new AmericanOptionData(Option.Type.CALL, 40.00, 42.00, 0.08, 0.04, 0.75, 0.35, 5.2704),
                 // From "Option pricing formulas", Haug, McGraw-Hill 1998, VBA
                 new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
@@ -532,8 +532,10 @@ public class AmericanOptionTest {
                     Exercise exercise = new AmericanExercise(today, exDate);
                     payoff = new PlainVanillaPayoff(types[i], strikes[j]);
 
-                    final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-                            new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS),
+                    final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
+                            new Handle<Quote>(spot),
+                            new Handle<YieldTermStructure>(qTS), 
+                            new Handle<YieldTermStructure>(rTS),
                             new Handle<BlackVolTermStructure>(volTS));
 
                     final PricingEngine engine = new FDAmericanEngine(stochProcess);
@@ -734,7 +736,15 @@ public class AmericanOptionTest {
         private final double /* @Volatility */v; // volatility
         private final double /* @Real */result; // expected result
 
-        public AmericanOptionData(Option.Type type, double strike, double s, double q, double r, double t, double v, double result) {
+        public AmericanOptionData(
+                final Option.Type type, 
+                final double strike, 
+                final double s, 
+                final double q, 
+                final double r, 
+                final double t, 
+                final double v, 
+                final double result) {
             this.type = type;
             this.strike = strike;
             this.s = s;

@@ -1,10 +1,14 @@
 package org.jquantlib.model.marketmodels;
 
-//! Market-model evolver
-/*! Abstract base class. The evolver does the actual gritty work of
-    evolving the forward rates from one time to the next.
-*/
-
+/**
+ * Market-model evolver
+ * <p>
+ * Abstract base class. The evolver does the actual gritty work of evolving the forward rates from one time to the next.
+ *  
+ * @author Ueli Hofstetter
+ */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: please verify against original QL/C++ code
 public abstract class MarketModelEvolver {
     
     abstract int [] numeraires();

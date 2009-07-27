@@ -40,7 +40,7 @@
 package org.jquantlib.math.integrals;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * @author Dominik Holenstein
@@ -91,7 +91,7 @@ public class GaussKronrodPatterson extends Integrator {
 	//
 	
 	@Override
-	protected double integrate(UnaryFunctionDouble f, double a, double b) {
+	protected double integrate(final Ops.DoubleOp f, final double a, final double b) {
 
 		double result;
 		double[] fv1 = new double[5];
@@ -125,7 +125,7 @@ public class GaussKronrodPatterson extends Integrator {
 
 		final double halfLength = 0.5 * (b - a);
 		final double center = 0.5 * (b + a);
-		final double fCenter = f.evaluate(center);
+		final double fCenter = f.op(center);
 
 		// Compute the integral using the 10- and 21-point formula.
 
@@ -135,8 +135,8 @@ public class GaussKronrodPatterson extends Integrator {
 
 		for (int k = 0; k < 5; k++) {
 			double abscissa = halfLength * x1[k];
-			double fval1 = f.evaluate(center + abscissa);
-			double fval2 = f.evaluate(center - abscissa);
+			double fval1 = f.op(center + abscissa);
+			double fval2 = f.op(center - abscissa);
 			double fval = fval1 + fval2;
 			res10 += w10[k] * fval;
 			res21 += w21a[k] * fval;
@@ -148,8 +148,8 @@ public class GaussKronrodPatterson extends Integrator {
 
 		for (int k = 0; k < 5; k++) {
 			double abscissa = halfLength * x2[k];
-			double fval1 = f.evaluate(center + abscissa);
-			double fval2 = f.evaluate(center - abscissa);
+			double fval1 = f.op(center + abscissa);
+			double fval2 = f.op(center - abscissa);
 			double fval = fval1 + fval2;
 			res21 += w21b[k] * fval;
 			resAbs += w21b[k] * (Math.abs(fval1) + Math.abs(fval2));
@@ -190,7 +190,7 @@ public class GaussKronrodPatterson extends Integrator {
 
 		for (int k = 0; k < 11; k++) {
 			double abscissa = halfLength * x3[k];
-			double fval = (f.evaluate(center + abscissa) + f.evaluate(center
+			double fval = (f.op(center + abscissa) + f.op(center
 					- abscissa));
 			res43 += fval * w43b[k];
 			savfun[k + 10] = fval;
@@ -218,7 +218,7 @@ public class GaussKronrodPatterson extends Integrator {
 		for (int k = 0; k < 22; k++) {
 			double abscissa = halfLength * x4[k];
 			res87 += w87b[k]
-					* (f.evaluate(center + abscissa) + f.evaluate(center
+					* (f.op(center + abscissa) + f.op(center
 							- abscissa));
 		}
 

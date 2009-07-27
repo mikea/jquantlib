@@ -24,7 +24,8 @@ package org.jquantlib.math.functions;
 
 import java.util.List;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
+import org.jquantlib.math.Ops.DoubleOp;
 
 /**
  * Processes a sequence of functions
@@ -32,24 +33,24 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public class Expression implements UnaryFunctionDouble {
+public class Expression implements Ops.DoubleOp {
 
-    private final List<UnaryFunctionDouble> list;
+    private final List<DoubleOp> list;
     
-    public Expression(final List<UnaryFunctionDouble> list) {
+    public Expression(final List<DoubleOp> list) {
         this.list = list;
     }
     
     
 	//
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
     
 	@Override
-	public double evaluate(double a) {
+	public double op(final double a) {
         double result = a;
         for (int i = 0; i<list.size(); i++) {
-            result = list.get(i).evaluate(result);
+            result = list.get(i).op(result);
         }
         return result;
 	}

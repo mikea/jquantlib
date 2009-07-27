@@ -92,7 +92,7 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
         double /* @Real */d = -(Math.log(S / H) + (bT + (gamma - 0.5) * variance)) / Math.sqrt(variance);
         double /* @Real */kappa = 2.0 * bT / variance + (2.0 * gamma - 1.0);
         return Math.exp(lambda) * Math.pow(S, gamma)
-               * (cumNormalDist.evaluate(d) - Math.pow((I / S), kappa) * cumNormalDist.evaluate(d - 2.0 * Math.log(I / S) / Math.sqrt(variance)));
+               * (cumNormalDist.op(d) - Math.pow((I / S), kappa) * cumNormalDist.op(d - 2.0 * Math.log(I / S) / Math.sqrt(variance)));
     }
 
     private double /*@Real*/ americanCallApproximation(

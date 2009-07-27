@@ -24,7 +24,7 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.model.shortrate;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TreeLattice1D;
@@ -153,7 +153,7 @@ public abstract class OneFactorModel extends ShortRateModel {
             return tree_.probability(i, index, branch);
         }
         
-        class Helper implements UnaryFunctionDouble{
+        private class Helper implements Ops.DoubleOp{
            
             private int size_;
             private int i_;
@@ -162,8 +162,11 @@ public abstract class OneFactorModel extends ShortRateModel {
             private TermStructureFittingParameter.NumericalImpl theta_;
             private ShortRateTree tree_;
            
-           public Helper(int i, double discountBondPrice, TermStructureFittingParameter.NumericalImpl theta,
-                   ShortRateTree tree){
+           public Helper(
+                   final int i, 
+                   final double discountBondPrice, 
+                   final TermStructureFittingParameter.NumericalImpl theta,
+                   final ShortRateTree tree) {
                this.size_ = tree.size(i);
                this.i_ = i;
                this.statePrices_ = tree.statePrices(i);
@@ -174,7 +177,7 @@ public abstract class OneFactorModel extends ShortRateModel {
                theta_.set(new Double(tree.timeGrid().get(i)).intValue(), 0.0);
            }
            
-           public double evaluate(double theta){
+           public double op(final double theta){
                double value = discountBondPrice_;
                theta_.change(theta);
                for(int j=0; j<size_; j++){

@@ -22,8 +22,7 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.BinaryFunctionDouble;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * This method binds the 2nd argument of a binary function to a scalar value, effectively enabling
@@ -32,24 +31,24 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public final class Bind2nd implements UnaryFunctionDouble {
+public final class Bind2nd implements Ops.DoubleOp {
 
-    private final BinaryFunctionDouble f;   // 1st argument
-    private final double scalar;            // 2nd argument
+    private final Ops.BinaryDoubleOp f;   // 1st argument
+    private final double scalar;          // 2nd argument
     
-	public Bind2nd(final BinaryFunctionDouble f, final double scalar) {
+	public Bind2nd(final Ops.BinaryDoubleOp f, final double scalar) {
 	    this.f = f;
         this.scalar = scalar;
 	}
 
 	
 	//
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
     
 	@Override
-	public double evaluate(double a) {
-		return f.evaluate(a, scalar);
+	public double op(final double a) {
+		return f.op(a, scalar);
 	}
 
 }

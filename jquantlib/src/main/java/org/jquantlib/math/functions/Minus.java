@@ -22,7 +22,7 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.BinaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 
 /**
@@ -31,14 +31,14 @@ import org.jquantlib.math.BinaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public final class Minus implements BinaryFunctionDouble {
+public final class Minus implements Ops.BinaryDoubleOp {
 
 	//
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
     
 	@Override
-	public double evaluate(double a, double b) {
+	public double op(final double a, final double b) {
 		return a - b;
 	}
 

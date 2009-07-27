@@ -115,7 +115,7 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 
     
     //
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
     
     @Override

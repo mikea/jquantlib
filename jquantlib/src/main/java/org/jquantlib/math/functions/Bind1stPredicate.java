@@ -22,8 +22,8 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.BinaryDoublePredicate;
-import org.jquantlib.math.DoublePredicate;
+import org.jquantlib.math.Ops;
+
 
 /**
  * This method binds the 1st argument of a binary predicate to a scalar value, effectively enabling
@@ -32,12 +32,12 @@ import org.jquantlib.math.DoublePredicate;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public final class Bind1stPredicate implements DoublePredicate {
+public final class Bind1stPredicate implements Ops.DoublePredicate {
 
-    private final double scalar;            // 1st argument
-    private final BinaryDoublePredicate f;  // 2nd argument
+    private final double scalar;                // 1st argument
+    private final Ops.BinaryDoublePredicate f;  // 2nd argument
     
-	public Bind1stPredicate(final double scalar, final BinaryDoublePredicate f) {
+	public Bind1stPredicate(final double scalar, final Ops.BinaryDoublePredicate f) {
 	    this.scalar = scalar;
 	    this.f = f;
 	}
@@ -48,7 +48,7 @@ public final class Bind1stPredicate implements DoublePredicate {
     //
     
 	@Override
-	public boolean op(double a) {
+	public boolean op(final double a) {
 		return f.op(scalar, a);
 	}
 

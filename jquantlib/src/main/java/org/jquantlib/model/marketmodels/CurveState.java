@@ -1,33 +1,37 @@
 package org.jquantlib.model.marketmodels;
 
-import java.util.Arrays;
 import static org.jquantlib.Validate.QL_REQUIRE;
 
-//! %Curve state for market-model simulations
-/*! This class stores the state of the yield curve associated to the
-    fixed calendar times within the simulation.
-    This is the workhorse discounting object associated to the rate times
-    of the simulation. It's important to pass the rates via an object like
-    this to the product rather than directly to make it easier to switch
-    to other engines such as a coterminal swap rate engine.
-    Many products will not need expired rates and others will only require
-    the first rate.
-*/
+/**
+ * Curve state for market-model simulations
+ * <p>
+ * This class stores the state of the yield curve associated to the fixed calendar times within the simulation. This is the
+ * workhorse discounting object associated to the rate times of the simulation. It's important to pass the rates via an object like
+ * this to the product rather than directly to make it easier to switch to other engines such as a coterminal swap rate engine. Many
+ * products will not need expired rates and others will only require the first rate.
+ * 
+ * @author Ueli Hofstetter
+ */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CurveState {
     
     protected int numberOfRates_;
     protected /*@Time*/double [] rateTimes_, rateTaus_;
-    /* There will n+1 rate times expressing payment and reset times
-    of forward rates.
+    
+    // There will n+1 rate times expressing payment and reset times of forward rates.
+    //
+    //            |-----|-----|-----|-----|-----|      (size = 6)
+    //            t0    t1    t2    t3    t4    t5     rateTimes
+    //            f0    f1    f2    f3    f4           forwardRates
+    //            d0    d1    d2    d3    d4    d5     discountBonds
+    //            d0/d0 d1/d0 d2/d0 d3/d0 d4/d0 d5/d0  discountRatios
+    //            sr0   sr1   sr2   sr3   sr4          cotSwaps
 
-            |-----|-----|-----|-----|-----|      (size = 6)
-            t0    t1    t2    t3    t4    t5     rateTimes
-            f0    f1    f2    f3    f4           forwardRates
-            d0    d1    d2    d3    d4    d5     discountBonds
-            d0/d0 d1/d0 d2/d0 d3/d0 d4/d0 d5/d0  discountRatios
-            sr0   sr1   sr2   sr3   sr4          cotSwaps
-*/
     public CurveState(final  /*@Time*/ double []  rateTimes){
+        
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+        
         numberOfRates_ = rateTimes==null || rateTimes.length == 0 ? 0 : rateTimes.length-1;
         rateTimes_ = (rateTimes);
         rateTaus_ = new double[numberOfRates_];

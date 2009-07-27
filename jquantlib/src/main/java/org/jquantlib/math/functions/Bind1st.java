@@ -22,8 +22,7 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.BinaryFunctionDouble;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * This method binds the 1st argument of a binary function to a scalar value, effectively enabling
@@ -32,24 +31,24 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public final class Bind1st implements UnaryFunctionDouble {
+public final class Bind1st implements Ops.DoubleOp {
 
-    private final double scalar;            // 1st argument
-    private final BinaryFunctionDouble f;   // 2nd argument
+    private final double scalar;          // 1st argument
+    private final Ops.BinaryDoubleOp f;   // 2nd argument
     
-	public Bind1st(final double scalar, final BinaryFunctionDouble f) {
+	public Bind1st(final double scalar, final Ops.BinaryDoubleOp f) {
 	    this.scalar = scalar;
 	    this.f = f;
 	}
 
 	
 	//
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
     
 	@Override
-	public double evaluate(double a) {
-		return f.evaluate(scalar, a);
+	public double op(final double a) {
+		return f.op(scalar, a);
 	}
 
 }

@@ -23,12 +23,13 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
+
 
 /**
  * @author Richard Gomes
  */
-public class NonCentralChiSquaredDistribution implements UnaryFunctionDouble {
+public class NonCentralChiSquaredDistribution implements Ops.DoubleOp {
 
 	//
 	// private fields
@@ -55,11 +56,11 @@ public class NonCentralChiSquaredDistribution implements UnaryFunctionDouble {
 	
 	
 	//
-	// implements UnaryFunctionDouble
+	// implements Ops.DoubleOp
 	//
 	
 	@Override
-	public double evaluate(double x) /* @Read-only */ {
+	public double op(final double x) /* @Read-only */ {
 		//C++ appears to be based on Algorithm AS 275 with perhaps one addition, see below
         if (x <= 0.0) return 0.0;
 

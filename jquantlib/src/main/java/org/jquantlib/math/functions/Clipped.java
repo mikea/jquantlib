@@ -22,8 +22,7 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.DoublePredicate;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * This class verifies a condition and if true, returns the evaluation of 
@@ -32,24 +31,24 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public final class Clipped implements UnaryFunctionDouble {
+public final class Clipped implements Ops.DoubleOp {
 
-    private final DoublePredicate checker;
-    private final UnaryFunctionDouble function;
+    private final Ops.DoublePredicate checker;
+    private final Ops.DoubleOp function;
 
-    public Clipped(DoublePredicate checker, UnaryFunctionDouble function){
+    public Clipped(final Ops.DoublePredicate checker, final Ops.DoubleOp function){
         this.checker = checker;
         this.function = function;
     }
 
     
     //
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
     
 	@Override
-	public double evaluate(double a) {
-        return checker.op(a) ? function.evaluate(a) : Double.NaN;
+	public double op(final double a) {
+        return checker.op(a) ? function.op(a) : Double.NaN;
 	}
 
 }

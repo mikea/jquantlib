@@ -21,33 +21,21 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * A log(n) function
  * 
  * @author Srinivas Hasti
  */
-public final class Log implements UnaryFunctionDouble {
-
-    // TODO: get rid of statics and singletons
-	private static Log instance = new Log();
-
-	private Log() {
-	}
-
-    // TODO: get rid of statics and singletons
-	public static Log getInstance() {
-		return instance;
-	}
-
+public final class Log implements Ops.DoubleOp {
 
 	//
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
     
 	@Override
-	public double evaluate(double a) {
+	public double op(final double a) {
 		return Math.log(a);
 	}
 

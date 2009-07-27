@@ -1,9 +1,17 @@
 package org.jquantlib.model.marketmodels;
 
+/**
+ * 
+ * @author Ueli Hofstetter
+ *
+ */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: please verify against original QL/C++ code
 public abstract class BrownianGenerator {
     
     public BrownianGenerator(){
-        
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
     
     public abstract double nextStep();

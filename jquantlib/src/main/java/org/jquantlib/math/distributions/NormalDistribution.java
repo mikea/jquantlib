@@ -35,6 +35,7 @@ import org.jquantlib.math.Constants;
  *  
  * @author Richard Gomes
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class NormalDistribution implements Derivative {
 
 	//
@@ -81,10 +82,10 @@ public class NormalDistribution implements Derivative {
 	}
 	
 	
-	//
-	// implements Derivative
-	//
-	
+    //
+    // implements Ops.DoubleOp
+    //
+    
 	/**
 	 * @InheritDoc
 	 * 
@@ -94,7 +95,7 @@ public class NormalDistribution implements Derivative {
 	 * @return the Normal distribution at point {@latex$ x }
 	 */
 	@Override
-	public double evaluate(double x) /* @ReadOnly */ {
+	public double op(final double x) /* @ReadOnly */ {
 		double exponent = -0.5*x*x;
 		if (exponent <= -690.0) {
 			return 0.0;
@@ -102,6 +103,10 @@ public class NormalDistribution implements Derivative {
 		return Constants.M_1_SQRT2PI*Math.exp(exponent);
 	}
 
+    //
+    // implements Derivative
+    //
+    
 	/**
 	 * @InheritDoc
 	 * 
@@ -111,8 +116,8 @@ public class NormalDistribution implements Derivative {
 	 * @return the first derivative of a Normal distribution at point {@latex$ x }
 	 */
 	@Override
-	public double derivative(double x) /* @ReadOnly */ {
-	    return (evaluate(x) * (average - x)) / denormalizationFactor;
+	public double derivative(final double x) /* @ReadOnly */ {
+	    return (op(x) * (average - x)) / denormalizationFactor;
 	}
 
 }

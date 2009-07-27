@@ -194,9 +194,9 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 
             double /* @Real */d1_Sk = (Math.log(forwardSk / payoff.strike()) + 0.5 * variance) / Math.sqrt(variance);
             double /* @Real */d2_Sk = d1_Sk - Math.sqrt(variance);
-            double /* @Real */part1 = forwardSk * normalDist.evaluate(d1_Sk) / (alpha * Math.sqrt(variance));
-            double /* @Real */part2 = -phi * forwardSk * cumNormalDist.evaluate(phi * d1_Sk) * Math.log(dividendDiscount) / Math.log(riskFreeDiscount);
-            double /* @Real */part3 = +phi * payoff.strike() * cumNormalDist.evaluate(phi * d2_Sk);
+            double /* @Real */part1 = forwardSk * normalDist.op(d1_Sk) / (alpha * Math.sqrt(variance));
+            double /* @Real */part2 = -phi * forwardSk * cumNormalDist.op(phi * d1_Sk) * Math.log(dividendDiscount) / Math.log(riskFreeDiscount);
+            double /* @Real */part3 = +phi * payoff.strike() * cumNormalDist.op(phi * d2_Sk);
             double /* @Real */V_E_h = part1 + part2 + part3;
 
             double /* @Real */b = (1 - h) * alpha * lambda_prime / (2 * (2 * lambda + beta - 1));
@@ -217,11 +217,11 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 			double /* @Real */temp_chi_prime = (2 * b / spot) * Math.log(spot / Sk);
             double /* @Real */chi_prime = temp_chi_prime + c / spot;
             double /* @Real */chi_double_prime = 2 * b / (spot * spot) - temp_chi_prime / spot - c / (spot * spot);
-			results.delta = phi * dividendDiscount * cumNormalDist.evaluate(phi * d1_Sk)
+			results.delta = phi * dividendDiscount * cumNormalDist.op(phi * d1_Sk)
 							+ (lambda / (spot * (1 - chi)) + chi_prime / ((1 - chi)*(1 - chi))) *
 							(phi * (Sk - payoff.strike()) - black_Sk) * Math.pow((spot/Sk), lambda);
 
-			results.gamma = phi * dividendDiscount * normalDist.evaluate(phi*d1_Sk) /
+			results.gamma = phi * dividendDiscount * normalDist.op(phi*d1_Sk) /
                              (spot * Math.sqrt(variance))
                              + (2 * lambda * chi_prime / (spot * (1 - chi) * (1 - chi))
                             		 + 2 * chi_prime * chi_prime / ((1 - chi) * (1 - chi) * (1 - chi))

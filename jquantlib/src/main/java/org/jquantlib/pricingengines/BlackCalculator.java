@@ -122,8 +122,8 @@ public class BlackCalculator {
 				D1 = Math.log(forward / strike) / stdDev + 0.5 * stdDev;
 				D2 = D1 - stdDev;
 				final CumulativeNormalDistribution f = new CumulativeNormalDistribution();
-				cum_d1 = f.evaluate(D1);
-				cum_d2 = f.evaluate(D2);
+				cum_d1 = f.op(D1);
+				cum_d2 = f.op(D2);
 				n_d1 = f.derivative(D1);
 				n_d2 = f.derivative(D2);
 			}

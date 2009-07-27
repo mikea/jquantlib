@@ -64,6 +64,8 @@ public class HestonModel extends CalibratedModel {
         arguments_.set(3, new ConstantParameter(process.rho().getLink().evaluate(), new PositiveConstraint()));
         arguments_.set(4, new ConstantParameter(process.v0().getLink().evaluate(), new PositiveConstraint()));
 
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
 
     public void generateArguments() {

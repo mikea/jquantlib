@@ -4,8 +4,8 @@ import static org.junit.Assert.fail;
 
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Grid;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.TransformedGrid;
-import org.jquantlib.math.UnaryFunctionDouble;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,14 +36,14 @@ public class TransformedGridTest {
     }
     
 
-    private final class PlusOne implements UnaryFunctionDouble {
+    private final class PlusOne implements Ops.DoubleOp {
 
         //
-        // implements UnaryFunctionDouble
+        // implements Ops.DoubleOp
         //
         
         @Override
-        public double evaluate(double a) {
+        public double op(final double a) {
             return a + 1.0;
         }
 

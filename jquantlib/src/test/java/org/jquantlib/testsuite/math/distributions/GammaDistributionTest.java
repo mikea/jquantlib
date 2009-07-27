@@ -86,7 +86,7 @@ public class GammaDistributionTest {
 		for (int i=0;i<testvalues.length;i++) {
 			double expected = testvalues[i][1];
 			double x = testvalues[i][0];
-			double computed = gammDistribution.evaluate(x);
+			double computed = gammDistribution.op(x);
 			// logger.info(computed); // for testing
 			double tolerance = 1.0e-15;
 			if (Math.abs(expected-computed)>tolerance) {
@@ -100,7 +100,7 @@ public class GammaDistributionTest {
 		for (int i=0;i<testvalues2.length;i++) {
 			double expected = testvalues2[i][1];
 			double x = testvalues2[i][0];
-			double computed = gammDist.evaluate(x);
+			double computed = gammDist.op(x);
 			// logger.info(computed); // for testing
 			double tolerance = 1.0e-15;
 			if (Math.abs(expected-computed)>tolerance) {

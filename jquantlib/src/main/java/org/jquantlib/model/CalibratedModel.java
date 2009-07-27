@@ -51,12 +51,15 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     protected Constraint constraint_;
     
     protected CalibratedModel() {
-        // nothing
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
     
     public CalibratedModel(int nArguments){
         arguments_ = new ArrayList<Parameter>(nArguments);
         constraint_ = new PrivateConstraint(arguments_);
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
     
     

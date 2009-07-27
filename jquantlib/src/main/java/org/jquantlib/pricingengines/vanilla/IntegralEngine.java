@@ -45,7 +45,7 @@ package org.jquantlib.pricingengines.vanilla;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.integrals.SegmentIntegral;
 import org.jquantlib.pricingengines.OneAssetStrikedOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
@@ -55,7 +55,6 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * 
  * @author Richard Gomes
  */
-
 public class IntegralEngine extends OneAssetStrikedOptionEngine {
 
     // TODO: refactor messages
@@ -99,7 +98,6 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
 		results.value =
 			process.riskFreeRate().getLink().discount(arguments.exercise.lastDate()) /
 			Math.sqrt(2.0*Math.PI*variance) * integrator.evaluate(f, drift-infinity, drift+infinity);
-
 	}
 
 
@@ -107,7 +105,7 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
 	// private inner classes
 	//
 	
-	private static class Integrand implements UnaryFunctionDouble {
+	private static class Integrand implements Ops.DoubleOp {
 
         private Payoff payoff;
         private double s0;
@@ -121,7 +119,7 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
             this.variance = variance;
         }
 
-        public double evaluate(final double x) {
+        public double op(final double x) {
             double temp = s0 * Math.exp(x);
             double result = payoff.valueOf(temp);
             return result * Math.exp(-(x - drift) * (x - drift) / (2.0 * variance));

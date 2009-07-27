@@ -32,9 +32,7 @@ import org.jquantlib.termstructures.YieldTermStructure;
  * <p>
  * This class describes the stochastic process for a stock or
  * stock index paying a continuous dividend yield given by
- * {@latex[
- * dS(t, S) = (r(t) - q(t) - \frac{\sigma(t, S)^2}{2}) dt
- * }
+ * {@latex[ dS(t, S) = (r(t) - q(t) - \frac{\sigma(t, S)^2}{2}) dt }
  * 
  * @author Richard Gomes
  */ 

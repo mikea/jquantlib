@@ -21,21 +21,21 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.DoublePredicate;
+import org.jquantlib.math.Ops;
 
 /**
  * Always false
  *
  * @author Richard Gomes
  */
-public final class FalsePredicate implements DoublePredicate {
+public final class FalsePredicate implements Ops.DoublePredicate {
 
 	//
     // implements DoublePredicate
     //
     
 	@Override
-	public boolean op(double a) {
+	public boolean op(final double a) {
 		return false;
 	}
 

@@ -20,13 +20,13 @@
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import org.jquantlib.instruments.Payoff;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * @author Srinivas Hasti
  * 
  */
-public class PayoffFunction implements UnaryFunctionDouble {
+public class PayoffFunction implements Ops.DoubleOp {
 	private Payoff payOff;
 
 	public PayoffFunction(Payoff payOff) {
@@ -36,11 +36,11 @@ public class PayoffFunction implements UnaryFunctionDouble {
 
 	
 	//
-	// implements UnaryFunctionDouble
+	// implements Ops.DoubleOp
 	//
 	
 	@Override
-	public double evaluate(double a) {
+	public double op(double a) {
 		return payOff.valueOf(a);
 	}
 

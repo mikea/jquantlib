@@ -68,7 +68,7 @@ private final static Logger logger = LoggerFactory.getLogger(BilinearInterpolati
     public void shouldThrowIllegalArgumentExceptionWithoutEnableExtrapolation() {
         for (int i_x = 0; i_x < x_test.length; i_x++) {
             for (int i_y = 0; i_y < y_test.length; i_y++) {
-                interpolation2d.evaluate(x_test.get(i_x), y_test.get(i_y));
+                interpolation2d.op(x_test.get(i_x), y_test.get(i_y));
             }
         }
     }
@@ -78,7 +78,7 @@ private final static Logger logger = LoggerFactory.getLogger(BilinearInterpolati
         interpolation2d.enableExtrapolation();
         for (int i_x = 0; i_x < x_test.length; i_x++) {
             for (int i_y = 0; i_y < y_test.length; i_y++) {
-                double interpolated = interpolation2d.evaluate(x_test.get(i_x), y_test.get(i_y));
+                double interpolated = interpolation2d.op(x_test.get(i_x), y_test.get(i_y));
                 double expected = x_test.get(i_x) + y_test.get(i_y);
                 if (abs(interpolated - expected) > tolerance) {
                     fail("failed to interpolate value at x = " + x_test.get(i_x) + ", y = " + y_test.get(i_y));

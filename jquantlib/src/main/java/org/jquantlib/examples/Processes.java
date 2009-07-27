@@ -114,7 +114,7 @@ public class Processes {
 		
 		//Calulating the exact value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
 		//The exact value = intialValue*exp(drift*dt)*exp(volatility*sqrt(dt))-----can be obtained by integrating----->dx/x= drift*dt+volatility*sqrt(dt)
-		System.out.println("Exact value = "+process.evolve(process.getTime(today.getDateAfter(18)), 6.7, .001, new NormalDistribution().evaluate(Math.random())));
+		System.out.println("Exact value = "+process.evolve(process.getTime(today.getDateAfter(18)), 6.7, .001, new NormalDistribution().op(Math.random())));
 		
 		//Calculating the drift of the stochastic process after time = 18th day from today with value of the stock as specified from the quote
 		//The drift = (riskFreeForwardRate - dividendForwardRate) - (Variance/2)
@@ -138,7 +138,7 @@ public class Processes {
 		
 		//Calulating the exact value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
 		//The exact value = intialValue*exp(drift*dt)*exp(volatility*sqrt(dt))-----can be obtained by integrating----->dx/x= drift*dt+volatility*sqrt(dt)
-		Array evolve = process.evolve(process.getTime(today.getDateAfter(18)), new Array().fill(6.7), .001, new Array().fill(new NormalDistribution().evaluate(Math.random()) ));
+		Array evolve = process.evolve(process.getTime(today.getDateAfter(18)), new Array().fill(6.7), .001, new Array().fill(new NormalDistribution().op(Math.random()) ));
 		System.out.println("Exact value = "+evolve.first());	
 		
 		//Calculating covariance of the process

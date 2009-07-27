@@ -22,7 +22,7 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.BinaryDoublePredicate;
+import org.jquantlib.math.Ops;
 
 /**
  * This method binds the 1st argument of a binary function to a scalar value, effectively enabling
@@ -31,14 +31,14 @@ import org.jquantlib.math.BinaryDoublePredicate;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public final class LessThan implements BinaryDoublePredicate {
+public final class LessThan implements Ops.BinaryDoublePredicate {
 
 	//
     // implements BinaryDoublePredicate
     //
     
 	@Override
-	public boolean op(double a, double b) {
+	public boolean op(final double a, final double b) {
 		return a < b;
 	}
 

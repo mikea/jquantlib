@@ -41,13 +41,17 @@ public interface AffineModel extends Observable {
    /**
     * Implied discount curve
     */
-   public abstract double /* @DiscountFactor */ discount(final double /* @Time */ t);
+   public abstract double /* @DiscountFactor */ discount(
+           final double /* @Time */ t);
 
    public abstract double /* @Price */ discountBond(
-           final double /* @Time */ now, final double /* @Time */ maturity, final Array factors);
+           final double /* @Time */ now, 
+           final double /* @Time */ maturity, 
+           final Array factors);
 
    public abstract double /* @Real */ discountBondOption(
            final Option.Type type, 
-           final double /* @Price */ strike, final double /* @Time */ maturity, 
+           final double /* @Price */ strike, 
+           final double /* @Time */ maturity, 
            final double /* @Time */ bondMaturity);
 }

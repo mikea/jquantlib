@@ -42,29 +42,29 @@ public class Newton extends AbstractSolver1D<Derivative> {
 	 * @returns <code>root_</code>
 	 */
 	@Override
-	protected double solveImpl(Derivative f, double xAccuracy) {
+	protected double solveImpl(final Derivative f, final double xAccuracy) {
 		
 	    double froot, dfroot, dx;
 
-	    froot = f.evaluate(root_);
-	    dfroot = f.derivative(root_);
-	    evaluationNumber_++;
+	    froot = f.op(root);
+	    dfroot = f.derivative(root);
+	    evaluationNumber++;
 
-	    while (evaluationNumber_<= getMaxEvaluations()) {
+	    while (evaluationNumber<= getMaxEvaluations()) {
 		dx=froot/dfroot;
-		root_ -= dx;
+		root -= dx;
 		// jumped out of brackets, switch to NewtonSafe
-		if ((xMin_-root_)*(root_-xMax_) < 0.0) {
+		if ((xMin-root)*(root-xMax) < 0.0) {
             		NewtonSafe s = new NewtonSafe();
-            		s.setMaxEvaluations(getMaxEvaluations()-evaluationNumber_);
-            		return s.solve(f, xAccuracy, root_+dx, xMin_, xMax_);
+            		s.setMaxEvaluations(getMaxEvaluations()-evaluationNumber);
+            		return s.solve(f, xAccuracy, root+dx, xMin, xMax);
 		}
 		if (Math.abs(dx) < xAccuracy) {
-            		return root_;
+            		return root;
 		}
-		froot = f.evaluate(root_);
-		dfroot = f.derivative(root_);
-		evaluationNumber_++;
+		froot = f.op(root);
+		dfroot = f.derivative(root);
+		evaluationNumber++;
 	    }
 	    throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");     
 	}

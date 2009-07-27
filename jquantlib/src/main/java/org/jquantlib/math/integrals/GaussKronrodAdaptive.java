@@ -1,6 +1,5 @@
 /*
- Copyright (C) 
- 2009 Ueli Hofstetter
+ Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
  
@@ -22,24 +21,22 @@
  */
 package org.jquantlib.math.integrals;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
-//! Integral of a 1-dimensional function using the Gauss-Kronrod methods
-/*! This class provide a non-adaptive integration procedure which
-    uses fixed Gauss-Kronrod abscissae to sample the integrand at
-    a maximum of 87 points.  It is provided for fast integration
-    of smooth functions.
-
-    This function applies the Gauss-Kronrod 10-point, 21-point, 43-point
-    and 87-point integration rules in succession until an estimate of the
-    integral of f over (a, b) is achieved within the desired absolute and
-    relative error limits, epsabs and epsrel. The function returns the
-    final approximation, result, an estimate of the absolute error,
-    abserr and the number of function evaluations used, neval. The
-    Gauss-Kronrod rules are designed in such a way that each rule uses
-    all the results of its predecessors, in order to minimize the total
-    number of function evaluations.
-*/
+/**
+ * Integral of a 1-dimensional function using the Gauss-Kronrod methods
+ * <p>
+ * This class provide a non-adaptive integration procedure which uses fixed Gauss-Kronrod abscissae to sample the integrand at a
+ * maximum of 87 points. It is provided for fast integration of smooth functions.
+ * <p>
+ * This function applies the Gauss-Kronrod 10-point, 21-point, 43-point and 87-point integration rules in succession until an
+ * estimate of the integral of f over (a, b) is achieved within the desired absolute and relative error limits, epsabs and epsrel.
+ * The function returns the final approximation, result, an estimate of the absolute error, abserr and the number of function
+ * evaluations used, neval. The Gauss-Kronrod rules are designed in such a way that each rule uses all the results of its
+ * predecessors, in order to minimize the total number of function evaluations.
+ * 
+ * @author Ueli Hofstetter
+ */
 public class GaussKronrodAdaptive extends KronrodIntegral {
     
  // weights for 7-point Gauss-Legendre integration
@@ -76,11 +73,11 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
     }
 
     @Override
-    protected double integrate(UnaryFunctionDouble f, double a, double b) {
+    protected double integrate(final Ops.DoubleOp f, final double a, final double b) {
         return integrateRecursively(f, a, b, getAbsoluteAccuracy());
     }
 
-    private double integrateRecursively(UnaryFunctionDouble f, double a, double b, double tolerance) {
+    private double integrateRecursively(final Ops.DoubleOp f, final double a, final double b, final double tolerance) {
 
         double halflength = (b - a) / 2;
         double center = (a + b) / 2;
@@ -89,7 +86,7 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
         double k15; // will be result of K15 integral
 
         double t, fsum; // t (abscissa) and f(t)
-        double fc = f.evaluate(center);
+        double fc = f.op(center);
         g7 = fc * g7w[0];
         k15 = fc * k15w[0];
 
@@ -97,7 +94,7 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
         int j, j2;
         for (j = 1, j2 = 2; j < 4; j++, j2 += 2) {
             t = halflength * k15t[j2];
-            fsum = f.evaluate(center - t) + f.evaluate(center + t);
+            fsum = f.op(center - t) + f.op(center + t);
             g7 += fsum * g7w[j];
             k15 += fsum * k15w[j2];
         }
@@ -105,7 +102,7 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
         // calculate other half of k15
         for (j2 = 1; j2 < 8; j2 += 2) {
             t = halflength * k15t[j2];
-            fsum = f.evaluate(center - t) + f.evaluate(center + t);
+            fsum = f.op(center - t) + f.op(center + t);
             k15 += fsum * k15w[j2];
         }
 

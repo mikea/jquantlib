@@ -40,7 +40,7 @@
 
 package org.jquantlib.math.integrals;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * Integral of a one-dimensional function using Simpson formula
@@ -86,10 +86,10 @@ public class SimpsonIntegral extends TrapezoidIntegral {
 	//
 	
 	@Override
-    protected double integrate (UnaryFunctionDouble f, double a, double b) {
+    protected double integrate (final Ops.DoubleOp f, final double a, final double b) {
         // start from the coarsest trapezoid...
         int N = 1;
-        double I = (f.evaluate(a)+f.evaluate(b))*(b-a)/2.0, newI;
+        double I = (f.op(a)+f.op(b))*(b-a)/2.0, newI;
         double adjI = I, newAdjI;
         // ...and refine it
         int i = 1;

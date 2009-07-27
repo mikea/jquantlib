@@ -22,7 +22,7 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.DoublePredicate;
+import org.jquantlib.math.Ops;
 
 /**
  * Always true
@@ -30,14 +30,14 @@ import org.jquantlib.math.DoublePredicate;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public final class TruePredicate implements DoublePredicate {
+public final class TruePredicate implements Ops.DoublePredicate {
 
 	//
     // implements DoublePredicate
     //
     
 	@Override
-	public boolean op(double a) {
+	public boolean op(final double a) {
 		return true;
 	}
 

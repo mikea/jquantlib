@@ -131,7 +131,7 @@ public class BlackFormula {
 		// TODO: code review
 		final CumulativeNormalDistribution phi = new CumulativeNormalDistribution();
 		@Price final double result = discount * optionType.toInteger()
-				* (forward * phi.evaluate(optionType.toInteger() * d1) - strike * phi.evaluate(optionType.toInteger() * d2));
+				* (forward * phi.op(optionType.toInteger() * d1) - strike * phi.op(optionType.toInteger() * d2));
 
 		if (result >= 0.0) return result;
 		
@@ -596,7 +596,7 @@ public class BlackFormula {
 
         // TODO: code review
         final CumulativeNormalDistribution phi = new CumulativeNormalDistribution();
-        return phi.evaluate(optionType.toInteger() * d2);
+        return phi.op(optionType.toInteger() * d2);
 	}
 
 	// ---
@@ -802,7 +802,7 @@ public class BlackFormula {
 
         // TODO: code review
         final CumulativeNormalDistribution phi = new CumulativeNormalDistribution();
-        @NonNegative double result = discount * stddev * phi.derivative(h) + d * phi.evaluate(h);
+        @NonNegative double result = discount * stddev * phi.derivative(h) + d * phi.op(h);
         if (result < 0.0) throw new RuntimeException("negative value");
         return result;
 	}
@@ -888,7 +888,7 @@ public class BlackFormula {
             this.N_ = new CumulativeNormalDistribution();
 		}
 
-		public double evaluate(@NonNegative double stddev) {
+		public double op(@NonNegative double stddev) {
 		    
 		    //XXX :; Remove QL_EXTRA_SAFETY_CHECKS block
             if (stddev < 0.0) throw new IllegalArgumentException("stddev must be non-negative");
@@ -900,7 +900,7 @@ public class BlackFormula {
             double d = signedMoneyness_ / stddev;
             double signedD1 = d + temp;
             double signedD2 = d - temp;
-            double result = signedForward_ * N_.evaluate(signedD1) - signedStrike_ * N_.evaluate(signedD2);
+            double result = signedForward_ * N_.op(signedD1) - signedStrike_ * N_.op(signedD2);
             // numerical inaccuracies can yield a negative answer
             return Math.max(0.0, result) - undiscountedBlackPrice_;
 		}

@@ -73,7 +73,7 @@ public abstract class InterpolationTestBase {
 			final Array x, final Array y){
 		double tolerance = 2.0e-15;
 		for(int i=0; i<x.length; i++){
-			double interpolated = spline.evaluate(x.get(i));
+			double interpolated = spline.op(x.get(i));
 			assertFalse(type+" interpolation failed at x = "+x.get(i)
 					+"\n interpolated value: "+interpolated
 					+"\n expected value:     "+y.get(i)
@@ -134,8 +134,8 @@ public abstract class InterpolationTestBase {
 			double xMin) {
 		double tolerance = 1.0e-15;
 		for (double x = xMin; x < 0.0; x += 0.1){
-			double y1=spline.evaluate(x);
-			double y2=spline.evaluate(-x);
+			double y1=spline.op(x);
+			double y2=spline.op(-x);
 			assertFalse(type+" interpolation not symmetric"
    					+"\n    x = "+x
    					+"\n    g(x)  = "+y1

@@ -23,13 +23,14 @@
 package org.jquantlib.math.integrals;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * This is the abstract base class for all integrators
  * 
  * @author Richard Gomes
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class Integrator {
 
     //
@@ -58,7 +59,7 @@ public abstract class Integrator {
     // protected abstract methods
     //
     
-    protected abstract double integrate(UnaryFunctionDouble f, double a, double b) /* @ReadOnly */;
+    protected abstract double integrate(final Ops.DoubleOp f, final double a, final double b) /* @ReadOnly */;
 
 	
     //
@@ -91,7 +92,7 @@ public abstract class Integrator {
 	// public final methods
 	//
 	
-	public double evaluate(UnaryFunctionDouble f, double a, double b) /* @ReadOnly */{
+	public double evaluate(final Ops.DoubleOp f, final double a, final double b) /* @ReadOnly */{
 		if (a == b) return 0.0;
 		if (a > b) return -1 * evaluate(f, b, a);
 		this.numberOfEvaluations = 0;

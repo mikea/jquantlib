@@ -67,7 +67,7 @@ public class MoroInverseCumulativeNormalTest {
 			double tolerance = 15.0e-3;//(Math.abs(x_position)<3.01) ? 1.0e-15: 1.0e-10;
 
 			double normal_expected = normal_testvalues[i][1];
-			double computed_normal = icn.evaluate(x_position);
+			double computed_normal = icn.op(x_position);
 			if (Math.abs(normal_expected - computed_normal) > tolerance) {
 				fail("x_position " + x_position + " normal_expected: "
 						+ normal_expected + " normal_computed: "
@@ -84,32 +84,32 @@ public class MoroInverseCumulativeNormalTest {
 		InverseCumulativeNormal icn = new InverseCumulativeNormal();
 
 		// assertEquals(0, icn.evaluate(z),tolerance); --> not JUnit 4.4 conform
-		if (Math.abs(icn.evaluate(z)) > tolerance) {
+		if (Math.abs(icn.op(z)) > tolerance) {
 			fail("z: " + z + " expected: " + 0.0 + " realized: "
-					+ icn.evaluate(z));
+					+ icn.op(z));
 		}
 
 		z = -10;
 		// assertEquals(0, icn.evaluate(z),tolerance); --> not JUnit 4.4 conform
-		if (Math.abs(icn.evaluate(z)) > tolerance) {
+		if (Math.abs(icn.op(z)) > tolerance) {
 			fail("z: " + z + " expected: " + 0.0 + " realized: "
-					+ icn.evaluate(z));
+					+ icn.op(z));
 		}
 
 		z = 10;
 		// assertEquals(1.0, icn.evaluate(z),tolerance); --> not JUnit 4.4
 		// conform
-		if (Math.abs(icn.evaluate(z)) > (tolerance + 1.0)) {
+		if (Math.abs(icn.op(z)) > (tolerance + 1.0)) {
 			fail("z: " + z + " expected: " + 1.0 + " realized: "
-					+ icn.evaluate(z));
+					+ icn.op(z));
 		}
 
 		z = 40;
 		// assertEquals(1.0, icn.evaluate(z),tolerance); --> not JUnit 4.4
 		// conform
-		if (Math.abs(icn.evaluate(z)) > (tolerance + 1.0)) {
+		if (Math.abs(icn.op(z)) > (tolerance + 1.0)) {
 			fail("z: " + z + " expected: " + 1.0 + " realized: "
-					+ icn.evaluate(z));
+					+ icn.op(z));
 		}
 	}
 

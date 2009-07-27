@@ -68,7 +68,7 @@ public class LinearInterpolationTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWithoutEnableExtrapolation(){
 		for (int i=0; i<length; i++) {
-	    	y2[i] = interpolation.evaluate(x2.get(i));
+	    	y2[i] = interpolation.op(x2.get(i));
     	}
 	}
 	
@@ -76,7 +76,7 @@ public class LinearInterpolationTest {
 	public void testEnableExtrapolation(){
 		interpolation.enableExtrapolation();
     	for (int i=0; i<length; i++) {
-    		y2[i] = interpolation.evaluate(x2.get(i));
+    		y2[i] = interpolation.op(x2.get(i));
     	}
 	    for (int i=0; i<length; i++) {
 	        double expected = 5.0-x2.get(i);

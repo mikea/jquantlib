@@ -24,7 +24,7 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.model.shortrate.onefactormodels;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.optimization.PositiveConstraint;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.methods.lattices.Lattice;
@@ -39,15 +39,15 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.TimeGrid;
 
 /**
+ * Standard Black-Karasinski model class.
+ * <p>
+ * This class implements the standard Black-Karasinski model defined by 
+ * {@latex[ d\ln r_t = (\theta(t) - \alpha \ln r_t)dt + \sigma dW_t }
+ * where {@latex$ \alpha } and {@latex$ \sigma } are constants.
+ * 
+ * @category shortrate
  * 
  * @author Praneet Tiwari
- */
-// ! Standard Black-Karasinski model class.
-/*
- * ! This class implements the standard Black-Karasinski model defined by \f[ d\ln r_t = (\theta(t) - \alpha \ln r_t)dt + \sigma
- * dW_t, \f] where \f$ alpha \f$ and \f$ sigma \f$ are constants.
- * 
- * \ingroup shortrate
  */
 public class BlackKarasinski extends OneFactorModel implements TermStructureConsistentModel {
     // need permanent solution for this one
@@ -63,6 +63,10 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
     
     public BlackKarasinski(final Handle<YieldTermStructure> termStructure, double a, double sigma){
        super(2);
+       
+       if (System.getProperty("EXPERIMENTAL") == null)
+        throw new UnsupportedOperationException("Work in progress");
+       
        termstructureConsistentModel = new TermStructureConsistentModelClass(termStructure);
        this.a_ = arguments_.get(0);
        this.sigma_ = arguments_.get(1);
@@ -83,7 +87,7 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
     Parameter a_;
     Parameter sigma_;
 
-    class Helper implements UnaryFunctionDouble {
+    private class Helper implements Ops.DoubleOp {
         private int /* @Size */size_;
         private double /* @Time */dt_;
         private double /* @Real */xMin_, dx_;
@@ -100,7 +104,7 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
             discountBondPrice_ = (discountBondPrice);
         }
 
-        public double /* @Real */evaluate /* () */(double /* @Real */theta) {
+        public double /* @Real */op /* () */(final double /* @Real */theta) {
             double /* @Real */value = discountBondPrice_;
             double /* @Real */x = xMin_;
             for (int /* @Size */j = 0; j < size_; j++) {

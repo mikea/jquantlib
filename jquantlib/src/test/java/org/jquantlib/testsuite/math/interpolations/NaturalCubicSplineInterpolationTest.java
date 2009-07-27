@@ -65,7 +65,7 @@ public class NaturalCubicSplineInterpolationTest extends InterpolationTestBase {
 	                            
 	    // poor performance
 	    double x_bad = 11.0;
-	    interpolated = interpolation.evaluate(x_bad);
+	    interpolated = interpolation.op(x_bad);
 	    assertFalse("Natural spline interpolation poor performance unverified"
 				+"\n    at x = "+x_bad
 				+"\n    interpolated value: "+interpolated

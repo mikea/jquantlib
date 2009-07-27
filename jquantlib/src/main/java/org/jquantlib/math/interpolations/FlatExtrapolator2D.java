@@ -131,14 +131,14 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
 
     
     //
-    // overrides BinaryFunctionDouble
+    // overrides Ops.BinaryDoubleOp
     //
     
     @Override
-    public double evaluate(double x, double y) {
+    public double op(double x, double y) {
         x = bindX(x);
         y = bindY(y);
-        return decorated.evaluate(x, y);
+        return decorated.op(x, y);
     }
 
     

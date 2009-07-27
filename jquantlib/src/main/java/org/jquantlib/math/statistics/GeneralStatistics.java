@@ -24,11 +24,12 @@ package org.jquantlib.math.statistics;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.math.DoublePredicate;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
+import org.jquantlib.math.Ops.DoubleOp;
 import org.jquantlib.math.functions.Bind2nd;
 import org.jquantlib.math.functions.Cube;
 import org.jquantlib.math.functions.Expression;
+import org.jquantlib.math.functions.Fourth;
 import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.functions.Minus;
 import org.jquantlib.math.functions.Sqr;
@@ -127,14 +128,14 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     The function returns a pair made of the result and
     the number of observations in the given range.
     */
-    public final Pair<Double, Integer> expectationValue(UnaryFunctionDouble f, DoublePredicate inRange) {
+    public final Pair<Double, Integer> expectationValue(final Ops.DoubleOp f, final Ops.DoublePredicate inRange) {
         double num = 0.0;
         double den = 0.0;
         int N = 0;
         for (Pair<Double, Double> element : samples) {
             double w = (Double) element.getSecond();
             double x = (Double) element.getFirst();
-            Double evaluated = f.evaluate(x);
+            Double evaluated = f.op(x);
             
             //TODO:: argh we have to do this check :-( refactor E_ClippedFunction
             if(evaluated == null){
@@ -188,7 +189,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
             throw new IllegalArgumentException(unsufficient_sample_size);
         }
 
-        final List<UnaryFunctionDouble> functions = new ArrayList<UnaryFunctionDouble>();
+        final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
         functions.add(new Sqr());
         functions.add(new Bind2nd(new Minus(), mean()));
         final Expression comp = new Expression(functions);
@@ -245,7 +246,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
             throw new IllegalArgumentException(unsufficient_sample_size_2);
         }
     
-        final List<UnaryFunctionDouble> functions = new ArrayList<UnaryFunctionDouble>();
+        final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
         functions.add(new Cube());
         functions.add(new Bind2nd(new Minus(), mean()));
         final Expression comp = new Expression(functions);
@@ -289,9 +290,8 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
             throw new IllegalArgumentException(unsufficient_sample_size_3);
         }
 
-        final List<UnaryFunctionDouble> functions = new ArrayList<UnaryFunctionDouble>();
-        functions.add(new Sqr());
-        functions.add(new Sqr());
+        final List<DoubleOp> functions = new ArrayList<DoubleOp>();
+        functions.add(new Fourth());
         functions.add(new Bind2nd(new Minus(), mean()));
         final Expression comp = new Expression(functions);
 

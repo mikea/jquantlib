@@ -171,13 +171,13 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 
 	@Override
 	// TODO :: compare against C++ sources
-	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, /*@Price*/ double maturity) {
+	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, final /*@Price*/ double maturity) {
 		if (t <= times.last()) { // TODO: probably an error here
-			return varianceCurve.evaluate(t);
+			return varianceCurve.op(t);
 		} else {
 			// extrapolate with flat vol
 			/*@Time*/ double lastTime = times.last();  // TODO: probably an error here
-			return varianceCurve.evaluate(lastTime) * t / lastTime;
+			return varianceCurve.op(lastTime) * t / lastTime;
 		}
 	}
 

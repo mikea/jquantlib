@@ -40,7 +40,8 @@
 
 package org.jquantlib.math.integrals;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
+import org.jquantlib.math.Ops.DoubleOp;
 
 /**
  * Integral of a one-dimensional function
@@ -92,22 +93,22 @@ public class TrapezoidIntegral extends Integrator {
 	// protected final methods
 	//
 	
-	protected final double defaultIteration(final UnaryFunctionDouble f, double a, double b, double I, int N) /* @ReadOnly */ {
+	protected final double defaultIteration(final Ops.DoubleOp f, final double a, final double b, final double I, final int N) /* @ReadOnly */ {
 		double sum = 0.0;
 	    double dx = (b-a)/N;
 	    double x = a + dx/2.0;
 	    for (int i=0; i<N; x += dx, ++i)
-	    	sum += f.evaluate(x);
+	    	sum += f.op(x);
 	    return (I + dx*sum)/2.0;
 	}
 
-	protected final double midPointIteration(final UnaryFunctionDouble f, double a, double b, double I, double N) /* @ReadOnly */ {
+	protected final double midPointIteration(final Ops.DoubleOp f, final double a, final double b, final double I, final double N) /* @ReadOnly */ {
 		double sum = 0.0;
 	    double dx = (b-a)/N;
 	    double x = a + dx/6.0;
 	    double D = 2.0*dx/3.0;
 	    for (int i=0; i<N; x += dx, ++i)
-	    	sum += f.evaluate(x) + f.evaluate(x+D);
+	    	sum += f.op(x) + f.op(x+D);
 	    return (I + dx*sum)/3.0;
 	}
 	
@@ -128,11 +129,11 @@ public class TrapezoidIntegral extends Integrator {
 	}
 
 	@Override
-	protected double integrate(final UnaryFunctionDouble f, double a, double b) /* @ReadOnly */ {
+	protected double integrate(final DoubleOp f, double a, double b) /* @ReadOnly */ {
 
 		// start from the coarsest trapezoid...
 		int N = 1;
-		double I = (f.evaluate(a)+f.evaluate(b))*(b-a)/2.0;
+		double I = (f.op(a)+f.op(b))*(b-a)/2.0;
 		double newI;
 	      
 		// ...and refine it

@@ -25,101 +25,103 @@ package org.jquantlib.math.solvers1D;
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * Brent 1-D solver
  * <p>
  * The implementation of the algorithm was inspired by <br/>
- * <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes in C", 2nd
- * edition, Cambridge University Press</i>
+ * <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes in C", 2nd Edition, Cambridge University Press</i>
  *	 
  * @author Richard Gomes
  **/
-public class Brent extends AbstractSolver1D<UnaryFunctionDouble> {
+public class Brent extends AbstractSolver1D<Ops.DoubleOp> {
 
-	/**
-	 * Computes the roots of a function by using the Brent method.
-	 * @param f the function
-	 * @param xAccuracy the provided accuracy 
-	 * @returns <code>root_</code>
-	 */
-	@Override
-	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
-	
+    /**
+     * Computes the roots of a function by using the Brent method.
+     * 
+     * @param f the function
+     * @param xAccuracy the provided accuracy
+     * @returns <code>root</code>
+     */
+    @Override
+    protected double solveImpl(final Ops.DoubleOp f, final double xAccuracy) {
+
         double min1, min2;
         double froot, p, q, r, s, xAcc1, xMid;
         double d = 0.0, e = 0.0;
 
-        root_ = xMax_;
-        froot = fxMax_;
-        while (evaluationNumber_<=getMaxEvaluations()) {
-            if ((froot > 0.0 && fxMax_ > 0.0) || (froot < 0.0 && fxMax_ < 0.0)) {
-				// Rename xMin_, root_, xMax_ and adjust bounds
-				xMax_ = xMin_;
-				fxMax_ = fxMin_;
-				e = d = root_ - xMin_;
-			}
-            if (Math.abs(fxMax_) < Math.abs(froot)) {
-				xMin_ = root_;
-				root_ = xMax_;
-				xMax_ = xMin_;
-				fxMin_ = froot;
-				froot = fxMax_;
-				fxMax_ = fxMin_;
-			}
+        root = xMax;
+        froot = fxMax;
+        while (evaluationNumber <= getMaxEvaluations()) {
+            if ((froot > 0.0 && fxMax > 0.0) || (froot < 0.0 && fxMax < 0.0)) {
+                // Rename xMin, root, xMax and adjust bounds
+                xMax = xMin;
+                fxMax = fxMin;
+                e = d = root - xMin;
+            }
+
+            if (Math.abs(fxMax) < Math.abs(froot)) {
+                xMin = root;
+                root = xMax;
+                xMax = xMin;
+                fxMin = froot;
+                froot = fxMax;
+                fxMax = fxMin;
+            }
+
             // Convergence check
-            xAcc1=2.0*Constants.QL_EPSILON*Math.abs(root_)+0.5*xAccuracy;
-            xMid=(xMax_-root_)/2.0;
+            xAcc1 = 2.0 * Constants.QL_EPSILON * Math.abs(root) + 0.5 * xAccuracy;
+            xMid = (xMax - root) / 2.0;
             if (Math.abs(xMid) <= xAcc1 || froot == 0.0)
-                return root_;
-            if (Math.abs(e) >= xAcc1 &&
-                Math.abs(fxMin_) > Math.abs(froot)) {
-
+                return root;
+            
+            if (Math.abs(e) >= xAcc1 && Math.abs(fxMin) > Math.abs(froot)) {
                 // Attempt inverse quadratic interpolation
-                s=froot/fxMin_;
+                s = froot / fxMin;
 
-                if (Closeness.isClose(xMin_, xMax_)) {
-                    p=2.0*xMid*s;
-                    q=1.0-s;
+                if (Closeness.isClose(xMin, xMax)) {
+                    p = 2.0 * xMid * s;
+                    q = 1.0 - s;
                 } else {
-                    q=fxMin_/fxMax_;
-                    r=froot/fxMax_;
-                    p=s*(2.0*xMid*q*(q-r)-(root_-xMin_)*(r-1.0));
-                    q=(q-1.0)*(r-1.0)*(s-1.0);
+                    q = fxMin / fxMax;
+                    r = froot / fxMax;
+                    p = s * (2.0 * xMid * q * (q - r) - (root - xMin) * (r - 1.0));
+                    q = (q - 1.0) * (r - 1.0) * (s - 1.0);
                 }
-                if (p > 0.0) q = -q;  // Check whether in bounds
-                p=Math.abs(p);
-                min1=3.0*xMid*q-Math.abs(xAcc1*q);
-                min2=Math.abs(e*q);
-                if (2.0*p < (min1 < min2 ? min1 : min2)) {
-                    e=d;                // Accept interpolation
-                    d=p/q;
+                if (p > 0.0)
+                    q = -q; // Check whether in bounds
+                p = Math.abs(p);
+                min1 = 3.0 * xMid * q - Math.abs(xAcc1 * q);
+                min2 = Math.abs(e * q);
+                if (2.0 * p < (min1 < min2 ? min1 : min2)) {
+                    e = d; // Accept interpolation
+                    d = p / q;
                 } else {
-                    d=xMid;  // Interpolation failed, use bisection
-                    e=d;
+                    d = xMid; // Interpolation failed, use bisection
+                    e = d;
                 }
             } else {
-                d=xMid; // Bounds decreasing too slowly, use bisection
-                e=d;
+                d = xMid; // Bounds decreasing too slowly, use bisection
+                e = d;
             }
-            xMin_=root_;
-            fxMin_=froot;
+
+            xMin = root;
+            fxMin = froot;
             if (Math.abs(d) > xAcc1) {
-            	root_ += d;
+                root += d;
+            } else {
+                root += sign(xAcc1, xMid);
             }
-            else {
-            	root_ += sign(xAcc1,xMid);
-            }
-            froot=f.evaluate(root_);
-            evaluationNumber_++;
+            froot = f.op(root);
+            evaluationNumber++;
         }
-        
-        throw new ArithmeticException("maximum number of function evaluations (" + getMaxEvaluations() + ") exceeded");
-               
+
+        throw new ArithmeticException("maximum number of function evaluations exceeded"); // TODO: message
     }
-    
-    private double sign(double a, double b) {
+
+    private double sign(final double a, final double b) {
         return b >= 0.0 ? Math.abs(a) : -Math.abs(a);
     }
+
 }

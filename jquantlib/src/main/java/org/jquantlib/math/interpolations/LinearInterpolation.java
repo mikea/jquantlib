@@ -129,7 +129,7 @@ public class LinearInterpolation extends AbstractInterpolation {
 
 	
     //
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
 
 	@Override

@@ -153,8 +153,8 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	        checkValues("Not-a-knot spline", interpolation, x, y);
 	        checkNotAKnotCondition("Not-a-knot spline", interpolation);
 	        // bad performance
-	        interpolated = interpolation.evaluate(x1_bad);
-	        interpolated2= interpolation.evaluate(x2_bad);
+	        interpolated = interpolation.op(x1_bad);
+	        interpolated2= interpolation.op(x2_bad);
 	        assertFalse("Not-a-knot spline interpolation bad performance unverified"
 					+"\n    at x = "+x1_bad
 					+"\n    interpolated value: "+interpolated
@@ -191,7 +191,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		
 		// poor performance
 		double x_bad = 11.0;
-		interpolated = interpolation.evaluate(x_bad);
+		interpolated = interpolation.op(x_bad);
 		assertFalse("Clamped spline interpolation poor performance unverified"
 				+"\n    at x = "+x_bad
 				+"\n    interpolated value: "+interpolated
@@ -223,7 +223,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		checkNotAKnotCondition("Not-a-knot spline", interpolation);
 		// poor performance
 		double x_bad = 11.0;
-		interpolated = interpolation.evaluate(x_bad);
+		interpolated = interpolation.op(x_bad);
 		assertFalse("Not-a-knot spline interpolation poor performance unverified"
 				+"\n    at x = "+x_bad
 				+"\n    interpolated value: "+interpolated
@@ -256,7 +256,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
        					abs(error) > 3e-16);
 	    }
  
-	    x35[1] = interpolation.evaluate(3.5);
+	    x35[1] = interpolation.op(3.5);
 	}
 	
 	@Test
@@ -274,7 +274,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		check1stDerivativeValue("Clamped spline", interpolation, generic_x.first(),0.0);
 		check1stDerivativeValue("Clamped spline", interpolation, generic_x.last(),0.0);
 
-	    x35[0] = interpolation.evaluate(3.5);
+	    x35[0] = interpolation.op(3.5);
 	}
 	
 	@Test
@@ -290,7 +290,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		checkValues("Not-a-knot spline", interpolation, generic_x, generic_y);
 		checkNotAKnotCondition("Not-a-knot spline", interpolation);
 
-	    x35[2] = interpolation.evaluate(3.5);
+	    x35[2] = interpolation.op(3.5);
 		assertFalse("Spline interpolation failure"
 					+"\n at x = "+3.5
 					+"\n clamped spline    "+x35[0]

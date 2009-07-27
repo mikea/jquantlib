@@ -69,9 +69,9 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
         CumulativeNormalDistribution gIntegral = new CumulativeNormalDistribution(m, std);
         NormalDistribution g = new NormalDistribution(m, std);
         double firstTerm = variance + m * m - 2.0 * target * m + target * target;
-        double alfa = gIntegral.evaluate(target);
+        double alfa = gIntegral.op(target);
         double secondTerm = m - target;
-        double beta = variance * g.evaluate(target);
+        double beta = variance * g.op(target);
         double result = alfa * firstTerm - beta * secondTerm;
         return result / alfa;
     }
@@ -88,7 +88,7 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
             throw new IllegalArgumentException("percentile (" + percentile + ") must be < 1.0");
         }
         InverseCumulativeNormal gInverse = new InverseCumulativeNormal(statistics.mean(), statistics.standardDeviation());
-        return gInverse.evaluate(percentile);
+        return gInverse.op(percentile);
     }
 
     /* ! \pre percentile must be in range (0%-100%) extremes excluded */
@@ -137,9 +137,9 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
         double m = statistics.mean();
         double std = statistics.standardDeviation();
         InverseCumulativeNormal gInverse = new InverseCumulativeNormal(m, std);
-        double var = gInverse.evaluate(1.0 - percentile);
+        double var = gInverse.op(1.0 - percentile);
         NormalDistribution g = new NormalDistribution(m, std);
-        double result = m - std * std * g.evaluate(var) / (1.0 - percentile);
+        double result = m - std * std * g.op(var) / (1.0 - percentile);
         // expectedShortfall must be a loss
         // this means that it has to be MIN(result, 0.0)
         // expectedShortfall must also be a positive quantity, so -MIN(*)
@@ -148,7 +148,7 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
 
     public double gaussianShortfall(double target) {
         CumulativeNormalDistribution gIntegral = new CumulativeNormalDistribution(statistics.mean(), statistics.standardDeviation());
-        return gIntegral.evaluate(target);
+        return gIntegral.op(target);
     }
 
     public double gaussianAverageShortfall(double target) {
@@ -156,7 +156,7 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
         double std = statistics.standardDeviation();
         CumulativeNormalDistribution gIntegral = new CumulativeNormalDistribution(m, std);
         NormalDistribution g = new NormalDistribution(m, std);
-        return ((target - m) + std * std * g.evaluate(target) / gIntegral.evaluate(target));
+        return ((target - m) + std * std * g.op(target) / gIntegral.op(target));
     }
 
     /*

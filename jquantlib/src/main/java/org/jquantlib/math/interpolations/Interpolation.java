@@ -42,7 +42,7 @@
 package org.jquantlib.math.interpolations;
 
 import org.jquantlib.math.Array;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * Interface for 1-D interpolations.
@@ -52,7 +52,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * 
  * @author Richard Gomes
  */
-public interface Interpolation extends Extrapolator, UnaryFunctionDouble {
+public interface Interpolation extends Extrapolator, Ops.DoubleOp {
 
 	/**
      * This method performs the interpolation itself and should be called

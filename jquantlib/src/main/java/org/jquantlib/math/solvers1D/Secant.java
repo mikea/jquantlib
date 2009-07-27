@@ -23,7 +23,8 @@
 package org.jquantlib.math.solvers1D;
 
 import org.jquantlib.math.AbstractSolver1D;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
+import org.jquantlib.math.Ops.DoubleOp;
 
 
 /**
@@ -33,7 +34,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * 
  * @author Dominik Holenstein
  */
-public class Secant extends AbstractSolver1D<UnaryFunctionDouble> {
+public class Secant extends AbstractSolver1D<Ops.DoubleOp> {
 	
 	/**
 	 * Computes the roots of a function by using the Secant method.
@@ -42,32 +43,32 @@ public class Secant extends AbstractSolver1D<UnaryFunctionDouble> {
 	 * @returns <code>root_</code>
 	 */
 	@Override
-	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy)  {
+	protected double solveImpl(final DoubleOp f, final double xAccuracy)  {
 
 		double fl, froot, dx, xl;
 
         // Pick the bound with the smaller function value
         // as the most recent guess
-        if (Math.abs(fxMin_) < Math.abs(fxMax_)) {
-			root_ = xMin_;
-			froot = fxMin_;
-			xl = xMax_;
-			fl = fxMax_;
+        if (Math.abs(fxMin) < Math.abs(fxMax)) {
+			root = xMin;
+			froot = fxMin;
+			xl = xMax;
+			fl = fxMax;
 		} else {
-			root_ = xMax_;
-			froot = fxMax_;
-			xl = xMin_;
-			fl = fxMin_;
+			root = xMax;
+			froot = fxMax;
+			xl = xMin;
+			fl = fxMin;
 		}
-        while (evaluationNumber_ <= getMaxEvaluations()) {
-			dx = (xl - root_) * froot / (froot - fl);
-			xl = root_;
+        while (evaluationNumber <= getMaxEvaluations()) {
+			dx = (xl - root) * froot / (froot - fl);
+			xl = root;
 			fl = froot;
-			root_ += dx;
-			froot = f.evaluate(root_);
-			evaluationNumber_++;
+			root += dx;
+			froot = f.op(root);
+			evaluationNumber++;
 			if (Math.abs(dx) < xAccuracy || froot == 0.0) {
-				return root_;
+				return root;
 			}
 		}
         throw new ArithmeticException("maximum number of function evaluations (" + getMaxEvaluations() + ") exceeded");

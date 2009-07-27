@@ -24,8 +24,9 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.model;
 
 import java.util.ArrayList;
+
 import org.jquantlib.lang.annotation.Time;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.quotes.Handle;
@@ -35,11 +36,10 @@ import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 /**
- * 
+ * Liquid market instrument used during calibration
  * @author Praneet Tiwari
  */
-//! liquid market instrument used during calibration
-
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class CalibrationHelper implements Observer, Observable {
 
     protected double/* @Real */marketValue;
@@ -48,8 +48,10 @@ public abstract class CalibrationHelper implements Observer, Observable {
     protected PricingEngine engine_;
     private boolean calibrateVolatility_ = false;
     
-    public CalibrationHelper(final Handle<Quote> volatility, final Handle<YieldTermStructure> termStructure,
-            boolean calibrateVolatility) {
+    public CalibrationHelper(
+            final Handle<Quote> volatility, 
+            final Handle<YieldTermStructure> termStructure,
+            final boolean calibrateVolatility) {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
@@ -121,13 +123,13 @@ public abstract class CalibrationHelper implements Observer, Observable {
         this.engine_ = engine;
     }
     
-    private class ImpliedVolatilityHelper implements UnaryFunctionDouble{
+    private class ImpliedVolatilityHelper implements Ops.DoubleOp {
         public ImpliedVolatilityHelper(CalibrationHelper helper, double value){
             this.helper_ = helper;
             this.value_ = value;
         }
         
-        public double evaluate(final double x){
+        public double op(final double x) {
             return value_ - helper_.blackPrice(x);
         }
         

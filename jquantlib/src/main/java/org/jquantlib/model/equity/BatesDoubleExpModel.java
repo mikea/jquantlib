@@ -45,7 +45,9 @@ public class BatesDoubleExpModel extends HestonModel {
         arguments_.set(6, new ConstantParameter(nuDown, new PositiveConstraint()));
         arguments_.set(7, new ConstantParameter(nuUp, new PositiveConstraint()));
         arguments_.set(8, new ConstantParameter(lambda, new PositiveConstraint()));
-
+        
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
 
     public double p() {

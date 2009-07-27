@@ -137,11 +137,11 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 
     
     //
-    // implements BinaryFunctionDouble
+    // implements Ops.BinaryDoubleOp
     //
     
     @Override
-    public double evaluate(final double x, final double y) {
+    public double op(final double x, final double y) {
         checkRange(x, y, this.allowsExtrapolation());
         return evaluateImpl(x, y);
     }

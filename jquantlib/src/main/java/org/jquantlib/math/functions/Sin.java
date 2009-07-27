@@ -1,5 +1,6 @@
 /*
- Copyright (C) 2008 Srinivas Hasti
+ Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
  
@@ -19,27 +20,24 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+package org.jquantlib.math.functions;
 
-package org.jquantlib.math;
-
-import org.jquantlib.math.functions.Log;
+import org.jquantlib.math.Ops;
 
 /**
- * @author Srinivas Hasti
+ * A sin(x) function
+ * 
+ * @author Richard Gomes
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public class LogGrid extends TransformedGrid {
+public final class Sin implements Ops.DoubleOp {
+
+	//
+    // implements Ops.DoubleOp
+    //
     
-	public LogGrid(Array grid) {
-		super(grid, new Log());
-	}
-
-	public Array logGridArray() {
-		return transformedGridArray();
-	}
-
-	public double logGrid(int i) {
-		return transformedGrid(i);
+	@Override
+	public double op(final double a) {
+		return Math.sin(a);
 	}
 
 }

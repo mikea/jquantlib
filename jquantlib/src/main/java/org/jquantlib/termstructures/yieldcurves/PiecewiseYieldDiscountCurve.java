@@ -22,23 +22,6 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import java.util.Arrays;
-
-import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
-import org.jquantlib.math.interpolations.Interpolator;
-import org.jquantlib.math.interpolations.factories.Linear;
-import org.jquantlib.math.solvers1D.Brent;
-import org.jquantlib.termstructures.RateHelper;
-import org.jquantlib.termstructures.RateHelperSorter;
-import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.time.Calendar;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.LazyObject;
-import org.jquantlib.util.Observable;
-import org.jquantlib.util.Pair;
 
 public class PiecewiseYieldDiscountCurve /* <T extends Interpolator> extends InterpolatedDiscountCurve<T> */ {
 
@@ -345,11 +328,11 @@ public class PiecewiseYieldDiscountCurve /* <T extends Interpolator> extends Int
 //	}
 //
 //	/**
-//	 * Composition pattern to an UnaryFunctionDouble
+//	 * Composition pattern to an Ops.DoubleOp
 //	 * 
-//	 * @see UnaryFunctionDouble
+//	 * @see Ops.DoubleOp
 //	 */
-//	private class ObjectiveFunction implements UnaryFunctionDouble {
+//	private class ObjectiveFunction implements Ops.DoubleOp {
 //
 //		// XXX :: const PiecewiseYieldCurve<C,I>* curve_;
 //		private RateHelper<? extends YieldTermStructure>	rateHelper;

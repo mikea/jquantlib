@@ -43,9 +43,9 @@ import org.jquantlib.Validate;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.reflect.TypeNode;
 import org.jquantlib.lang.reflect.TypeTokenTree;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.interpolations.factories.BackwardFlat;
@@ -56,7 +56,6 @@ import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.termstructures.RateHelper;
-import org.jquantlib.termstructures.RateHelperSorter;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
@@ -65,7 +64,6 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Pair;
-import org.jquantlib.util.stdlibc.Std;
 
 /**
  * Piecewise yield term structure
@@ -886,7 +884,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     }
 
     
-    private class ObjectiveFunction<C extends CurveTraits, I extends Interpolator> implements UnaryFunctionDouble {
+    private class ObjectiveFunction<C extends CurveTraits, I extends Interpolator> implements Ops.DoubleOp {
 
         private final PiecewiseYieldCurve<C, I> curve;
         private final RateHelper rateHelper;
@@ -899,7 +897,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
 
         @Override
-        public double evaluate(double guess) /* @ReadOnly */{
+        public double op(final double guess) /* @ReadOnly */{
             traits.updateGuess(this.curve.data, guess, this.segment);
             curve.interpolation.update();
             return rateHelper.quoteError();

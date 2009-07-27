@@ -25,7 +25,7 @@ package org.jquantlib.cashflow;
 import java.util.List;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.Compounding;
@@ -291,6 +291,8 @@ public class CashFlows {
         }
 
         /*
+         * THIS COMMENT COMES UNMODIFIED FROM QL/C++ SOURCES
+         * 
          * The following is commented out due to the lack of a QL_WARN macro 
          * 
          * if (signChanges > 1) { // Danger of non-unique solution
@@ -307,8 +309,11 @@ public class CashFlows {
 
         Brent solver = new Brent();
         solver.setMaxEvaluations(maxIterations);
-        return solver.solve(new IRRFinder(cashflows, marketPrice, dayCounter, compounding, frequency, settlementDate), tolerance,
-                guess, guess / 10.0);
+        return solver.solve(
+                new IRRFinder(cashflows, marketPrice, dayCounter, compounding, frequency, settlementDate), 
+                tolerance, 
+                guess, 
+                guess/10.0);
     }
 
     public double irr(final List<CashFlow> leg, double marketPrice, final DayCounter dayCounter, Compounding compounding) {
@@ -514,7 +519,7 @@ public class CashFlows {
     // private inner classes
     //
 
-    private class IRRFinder implements UnaryFunctionDouble {
+    private class IRRFinder implements Ops.DoubleOp {
 
         public IRRFinder(final List<CashFlow> cashflows, double marketPrice, final DayCounter dayCounter, Compounding compounding,
                 Frequency frequency, Date settlementDate) {
@@ -534,7 +539,7 @@ public class CashFlows {
         private Date settlementDate_;
 
         @Override
-        public double evaluate(double guess) {
+        public double op(final double guess) {
             InterestRate rate = new InterestRate(guess, dayCounter_, compounding_, frequency_);
             double NPV = npv(cashflows_, rate, settlementDate_);
             return marketPrice_ - NPV;

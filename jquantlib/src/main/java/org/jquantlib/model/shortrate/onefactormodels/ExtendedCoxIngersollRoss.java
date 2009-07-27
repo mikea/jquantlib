@@ -121,8 +121,8 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         NonCentralChiSquaredDistribution chit = new NonCentralChiSquaredDistribution(df, ncpt);
 
         double z = Math.log(super.A(t, s) / strike) / b;
-        double call = discountS * chis.evaluate(2.0 * z * (rho + psi + b)) - strike * discountT
-                * chit.evaluate(2.0 * z * (rho + psi));
+        double call = discountS * chis.op(2.0 * z * (rho + psi + b)) - strike * discountT
+                * chit.op(2.0 * z * (rho + psi));
         if (type.equals(Option.Type.CALL)) {
             return call;
         } else {

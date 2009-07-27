@@ -22,7 +22,8 @@
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
+
 
 /**
  * 
@@ -30,7 +31,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  *
  */
 
-public interface Derivative extends UnaryFunctionDouble {
+public interface Derivative extends Ops.DoubleOp {
     	
     /**
 	 * Computes the derivation of the function; f(x)
@@ -38,6 +39,6 @@ public interface Derivative extends UnaryFunctionDouble {
 	 * @param x
 	 * @return f(x)
 	 */
-	public double derivative(double x) /* ReadOnly */;
+	public double derivative(final double x) /* ReadOnly */;
 	
 }

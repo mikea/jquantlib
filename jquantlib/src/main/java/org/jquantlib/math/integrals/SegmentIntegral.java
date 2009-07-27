@@ -39,7 +39,7 @@
 
 package org.jquantlib.math.integrals;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * Integral of a one-dimensional function
@@ -77,12 +77,12 @@ public class SegmentIntegral extends Integrator {
 	//
 	
 	@Override
-	public final double integrate(UnaryFunctionDouble f, double a, double b) {
+	public final double integrate(final Ops.DoubleOp f, final double a, final double b) {
 		double dx = (b-a)/getNumberOfEvaluations(); // getNumberOfEvaluations() returns intervals_
-        double sum = 0.5*(f.evaluate(a)+f.evaluate(b));
+        double sum = 0.5*(f.op(a)+f.op(b));
         double end = b - 0.5*dx;
         for (double x = a+dx; x < end; x += dx)
-            sum += f.evaluate(x);
+            sum += f.op(x);
         return sum*dx;
 	}
 	

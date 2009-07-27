@@ -25,12 +25,12 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.functions.Exp;
 import org.jquantlib.math.integrals.Integrator;
 import org.jquantlib.math.integrals.TrapezoidIntegral;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class TrapezoidIntegralTest {
@@ -43,13 +43,6 @@ public class TrapezoidIntegralTest {
 	
 	@Test
 	public void testExp() {
-		UnaryFunctionDouble exp = new UnaryFunctionDouble() {
-
-			public double evaluate(double x) {
-				return Math.exp(x);
-			}
-		};
-
 		// Integral[e^x, 0, 6] = e^6 - e^0
 		double expected = Math.exp(6) - 1;
 		double realised = 0;
@@ -57,7 +50,7 @@ public class TrapezoidIntegralTest {
 		
 		try {
 			Integrator trapint = new TrapezoidIntegral(tolerance, TrapezoidIntegral.Method.MidPoint, 1000);
-			realised = trapint.evaluate(exp, 0, 6);
+			realised = trapint.evaluate(new Exp(), 0, 6);
 		} catch (ArithmeticException e) {
 			fail("Desired tolerance not achieved while integrating f(x)=e^x within [0,6] using trapezoid-midpoint approximation.\n");
 		}

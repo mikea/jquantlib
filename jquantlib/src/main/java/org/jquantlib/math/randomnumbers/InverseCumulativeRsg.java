@@ -110,7 +110,7 @@ public class InverseCumulativeRsg<USG extends UniformRandomSequenceGenerator, IC
         
         double[] d = new double[this.dimension];
         for (int i = 0; i < this.dimension; i++) {
-            d[i] = this.ic.evaluate(v[i]);
+            d[i] = this.ic.op(v[i]);
         }
 
         return new Sample<double[]>(d, weight);

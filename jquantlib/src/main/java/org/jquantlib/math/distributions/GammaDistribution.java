@@ -23,7 +23,7 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * @author Richard Gomes
@@ -43,7 +43,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Richard Gomes
  * @author Dominik Holenstein
  */
-public class GammaDistribution implements UnaryFunctionDouble {
+public class GammaDistribution implements Ops.DoubleOp {
 	
 	//
 	// private field
@@ -69,7 +69,7 @@ public class GammaDistribution implements UnaryFunctionDouble {
 	
 	
 	//
-	// implements UnaryFunctionDouble
+	// implements Ops.DoubleOp
 	//
 	
 	
@@ -79,7 +79,7 @@ public class GammaDistribution implements UnaryFunctionDouble {
 	 * @return Gamma distribution of <code>x</code>
 	 */
 	@Override
-	public double evaluate(double x) /* Read-only */ {
+	public double op(final double x) /* Read-only */ {
      	
     	if (x <= 0.0) return 0.0;
 

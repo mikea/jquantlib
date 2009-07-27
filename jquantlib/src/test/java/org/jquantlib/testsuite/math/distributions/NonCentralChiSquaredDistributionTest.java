@@ -59,7 +59,7 @@ public class NonCentralChiSquaredDistributionTest {
 			double x = values[i][2];
 			double expected = values[i][3];
 			NonCentralChiSquaredDistribution nccsd = new NonCentralChiSquaredDistribution(df, ncp);
-			double realised = nccsd.evaluate(x);
+			double realised = nccsd.op(x);
 			if (Math.abs(expected-realised)>1.0e-6)
 				fail("Noncentral chi squared failed: df " + df 
 					+ " ncp " + ncp 

@@ -120,7 +120,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
      * @returns <code>average + z * sigma</code>
      */
     @Override
-    public double evaluate(double x)/* @ReadOnly */{
+    public double op(final double x)/* @ReadOnly */{
 
     	double z;
     	double r;
@@ -166,7 +166,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
     	    CumulativeNormalDistribution f_ = new CumulativeNormalDistribution();
     
     	    // error
-    	    r = (f_.evaluate(z) - x) * Constants.M_SQRT2 * Constants.M_SQRTPI * Math.exp(0.5 * z * z);
+    	    r = (f_.op(z) - x) * Constants.M_SQRT2 * Constants.M_SQRTPI * Math.exp(0.5 * z * z);
     
     	    // Halley's method
     	    z -= r / (1 + 0.5 * z * r);

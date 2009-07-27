@@ -23,7 +23,7 @@
 package org.jquantlib.math.solvers1D;
 
 import org.jquantlib.math.AbstractSolver1D;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * Bisection 1-D solver<br/>
@@ -35,7 +35,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Dominik Holenstein
  */
 // TEST the correctness of the returned values is tested by checking them against known good results.
-public class Bisection extends AbstractSolver1D<UnaryFunctionDouble>  {
+public class Bisection extends AbstractSolver1D<Ops.DoubleOp>  {
 	
 	/**
 	 * Computes the roots of a function by using the Bisection method.
@@ -45,28 +45,28 @@ public class Bisection extends AbstractSolver1D<UnaryFunctionDouble>  {
 	 */
 	
 	@Override
-	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy) {
+	protected double solveImpl(final Ops.DoubleOp f, final double xAccuracy) {
 		double dx, xMid, fMid;
 
 		// Orient the search so that f>0 lies at root_+dx
-		if (fxMin_ < 0.0) {
-			dx = xMax_ - xMin_;
-			root_ = xMin_;
+		if (fxMin < 0.0) {
+			dx = xMax - xMin;
+			root = xMin;
 		} else {
-			dx = xMin_ - xMax_;
-			root_ = xMax_;
+			dx = xMin - xMax;
+			root = xMax;
 		}
 
-		while (evaluationNumber_ <= getMaxEvaluations()) {
+		while (evaluationNumber <= getMaxEvaluations()) {
 			dx /= 2.0;
-			xMid = root_ + dx;
-			fMid = f.evaluate(xMid);
-			evaluationNumber_++;
+			xMid = root + dx;
+			fMid = f.op(xMid);
+			evaluationNumber++;
 			if (fMid <= 0.0) {
-				root_ = xMid;
+				root = xMid;
 			}
 			if (Math.abs(dx) < xAccuracy || fMid == 0.0) {
-				return root_;
+				return root;
 			}
 		}
 		throw new ArithmeticException(

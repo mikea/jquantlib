@@ -19,27 +19,24 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+package org.jquantlib.math.functions;
 
-package org.jquantlib.math;
-
-import org.jquantlib.math.functions.Log;
+import org.jquantlib.math.Ops;
 
 /**
+ * A exp(n) function
+ * 
  * @author Srinivas Hasti
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public class LogGrid extends TransformedGrid {
+public final class Exp implements Ops.DoubleOp {
+
+	//
+    // implements Ops.DoubleOp
+    //
     
-	public LogGrid(Array grid) {
-		super(grid, new Log());
-	}
-
-	public Array logGridArray() {
-		return transformedGridArray();
-	}
-
-	public double logGrid(int i) {
-		return transformedGrid(i);
+	@Override
+	public double op(final double a) {
+		return Math.exp(a);
 	}
 
 }

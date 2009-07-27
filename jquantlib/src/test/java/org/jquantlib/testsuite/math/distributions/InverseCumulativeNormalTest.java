@@ -87,7 +87,7 @@ public class InverseCumulativeNormalTest {
 			double tolerance = 1.0e-15;//(Math.abs(x_position)<3.01) ? 1.0e-15: 1.0e-10; 
 			
 			double normal_expected = normal_testvalues[i][1];
-			double computed_normal = icn.evaluate(x_position);
+			double computed_normal = icn.op(x_position);
 			if (Math.abs(normal_expected-computed_normal)>tolerance) {
 				fail("x_position " + x_position + " normal_expected: " + normal_expected + " normal_computed: " + normal_expected);
 			}
@@ -110,7 +110,7 @@ public class InverseCumulativeNormalTest {
 			double tolerance = 1.0e-15;//(Math.abs(x_position)<3.01) ? 1.0e-15: 1.0e-10; 
 			
 			double precision_expected = precision_testvalues[i][1];
-			double computed_precision = icn.evaluate(x_position);
+			double computed_precision = icn.op(x_position);
 			
 			if (Math.abs(precision_expected-computed_precision)>tolerance) {
 				fail("x_position " + x_position + " precision_expected: " + precision_expected + " precision_computed: " + computed_precision);
@@ -126,26 +126,26 @@ public class InverseCumulativeNormalTest {
 		InverseCumulativeNormal icn = new InverseCumulativeNormal();
 		
 		// assertEquals(0, icn.evaluate(z),tolerance); --> not JUnit 4.4 conform
-		if (Math.abs(icn.evaluate(z)) > tolerance) {
-			fail("z: " + z + " expected: " + 0.0 + " realized: " + icn.evaluate(z));
+		if (Math.abs(icn.op(z)) > tolerance) {
+			fail("z: " + z + " expected: " + 0.0 + " realized: " + icn.op(z));
 		}
 		
 		z = -10;
 		// assertEquals(0, icn.evaluate(z),tolerance); --> not JUnit 4.4 conform
-		if (Math.abs(icn.evaluate(z)) > tolerance) {
-			fail("z: " + z + " expected: " + 0.0 + " realized: " + icn.evaluate(z));
+		if (Math.abs(icn.op(z)) > tolerance) {
+			fail("z: " + z + " expected: " + 0.0 + " realized: " + icn.op(z));
 		}
 		
 		z = 10;
 		//assertEquals(1.0, icn.evaluate(z),tolerance); --> not JUnit 4.4 conform
-		if (Math.abs(icn.evaluate(z)) > (tolerance + 1.0)) {
-			fail("z: " + z + " expected: " + 1.0 + " realized: " + icn.evaluate(z));
+		if (Math.abs(icn.op(z)) > (tolerance + 1.0)) {
+			fail("z: " + z + " expected: " + 1.0 + " realized: " + icn.op(z));
 		}
 		
 		z = 40;
 		// assertEquals(1.0, icn.evaluate(z),tolerance); --> not JUnit 4.4 conform
-		if (Math.abs(icn.evaluate(z)) > (tolerance + 1.0)) {
-			fail("z: " + z + " expected: " + 1.0 + " realized: " + icn.evaluate(z));
+		if (Math.abs(icn.op(z)) > (tolerance + 1.0)) {
+			fail("z: " + z + " expected: " + 1.0 + " realized: " + icn.op(z));
 		}		
 	}
 	

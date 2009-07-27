@@ -58,7 +58,7 @@ public class BackwardInterpolationTest {
 	public void checkAtOriginalPoints(){
 		for(int i=0; i<length; i++){
 			double d = x.get(i);
-			double calculated = interpolation.evaluate(d);
+			double calculated = interpolation.op(d);
 			double expected = y.get(i);
 			assertFalse("failed to reproduce "+i+" datum"
 						+"\n expected:     "+expected
@@ -72,7 +72,7 @@ public class BackwardInterpolationTest {
 	public void checkAtMiddlePoints(){
 		for(int i=0; i<length-1; i++){
 			double d = (x.get(i)+x.get(i+1))/2;
-			double calculated = interpolation.evaluate(d);
+			double calculated = interpolation.op(d);
 			double expected = y.get(i+1);
 			
 			assertFalse("failed to interpolate correctly at "+d
@@ -87,7 +87,7 @@ public class BackwardInterpolationTest {
 	public void checkOutsideOriginalRange(){
 		interpolation.enableExtrapolation();
 		double d = x.first() - 0.5;
-		double calculated = interpolation.evaluate(d);
+		double calculated = interpolation.op(d);
 		double expected = y.first();
 		assertFalse("failed to extrapolate correctly at "+d
 					+"\n expected:     "+expected
@@ -95,7 +95,7 @@ public class BackwardInterpolationTest {
 					+"\n error:        "+abs(expected-calculated),
 					abs(expected-calculated) > tolerance);
 		d= x.last()+0.5;
-		calculated = interpolation.evaluate(d);
+		calculated = interpolation.op(d);
 		expected = y.last();
 		assertFalse("failed to extrapolate correctly at "+d
 				    +"\n expected:     "+expected

@@ -22,7 +22,7 @@
  */
 package org.jquantlib.math.functions;
 
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * A square function
@@ -30,14 +30,14 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-public final class Sqr implements UnaryFunctionDouble {
+public final class Sqr implements Ops.DoubleOp {
 
 	//
-    // implements UnaryFunctionDouble
+    // implements Ops.DoubleOp
     //
     
 	@Override
-	public double evaluate(double a) {
+	public double op(final double a) {
 		return a*a;
 	}
 

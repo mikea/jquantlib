@@ -85,10 +85,10 @@ public class OperatorTest {
         x.set(i, xMin+h*i);
     
     for(i = 0; i < x.length; i++)
-    	y.set(i, normal.evaluate(x.get(i)));
+    	y.set(i, normal.op(x.get(i)));
 
     for(i = 0; i < x.length; i++)
-    	yi.set(i, cum.evaluate(x.get(i)));
+    	yi.set(i, cum.op(x.get(i)));
     
     for (i=0; i < x.length; i++)
         yd.set(i, normal.derivative(x.get(i)));

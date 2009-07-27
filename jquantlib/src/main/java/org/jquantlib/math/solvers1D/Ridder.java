@@ -24,7 +24,7 @@ package org.jquantlib.math.solvers1D;
 
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.UnaryFunctionDouble;
+import org.jquantlib.math.Ops;
 
 /**
  * Method by 1d solver.
@@ -33,7 +33,7 @@ import org.jquantlib.math.UnaryFunctionDouble;
  * 
  * @author Dominik Holenstein
  */
-public class Ridder extends AbstractSolver1D<UnaryFunctionDouble> {
+public class Ridder extends AbstractSolver1D<Ops.DoubleOp> {
 	
 	/**
 	 * Computes the roots of a function by using the method due to Ridder.
@@ -42,7 +42,7 @@ public class Ridder extends AbstractSolver1D<UnaryFunctionDouble> {
 	 * @returns <code>root_</code>
 	 */
 	@Override
-	protected double solveImpl(UnaryFunctionDouble f, double xAccuracy){
+	protected double solveImpl(final Ops.DoubleOp f, final double xAccuracy){
 
         double fxMid, froot, s, xMid, nextRoot;
 
@@ -52,54 +52,54 @@ public class Ridder extends AbstractSolver1D<UnaryFunctionDouble> {
         double xAccuracy_ = xAccuracy/100.0;
 
         // Any highly unlikely value, to simplify logic below
-        root_ = Constants.QL_MIN_POSITIVE_REAL;
+        root = Constants.QL_MIN_POSITIVE_REAL;
 
-        while (evaluationNumber_<= getMaxEvaluations()) {
-            xMid=0.5*(xMin_+xMax_);
+        while (evaluationNumber<= getMaxEvaluations()) {
+            xMid=0.5*(xMin+xMax);
             // First of two function evaluations per iteraton
-            fxMid=f.evaluate(xMid);
-            evaluationNumber_++;
-            s = Math.sqrt(fxMid*fxMid-fxMin_*fxMax_);
+            fxMid=f.op(xMid);
+            evaluationNumber++;
+            s = Math.sqrt(fxMid*fxMid-fxMin*fxMax);
             if (s == 0.0) {
-            	return root_;
+            	return root;
             }
             // Updating formula
-            nextRoot = xMid + (xMid - xMin_) * ((fxMin_ >= fxMax_ ? 1.0 : -1.0) * fxMid / s);
-            if (Math.abs(nextRoot-root_) <= xAccuracy_){
-            	return root_;
+            nextRoot = xMid + (xMid - xMin) * ((fxMin >= fxMax ? 1.0 : -1.0) * fxMid / s);
+            if (Math.abs(nextRoot-root) <= xAccuracy_){
+            	return root;
             }
 
-            root_=nextRoot;
+            root=nextRoot;
             // Second of two function evaluations per iteration
-            froot=f.evaluate(root_);
-            evaluationNumber_++;
+            froot=f.op(root);
+            evaluationNumber++;
             if (froot == 0.0)
-                return root_;
+                return root;
 
             // Bookkeeping to keep the root bracketed on next iteration
             if (sign(fxMid,froot) != fxMid) {
-                xMin_=xMid;
-                fxMin_=fxMid;
-                xMax_=root_;
-                fxMax_=froot;
-            } else if (sign(fxMin_,froot) != fxMin_) {
-                xMax_=root_;
-                fxMax_=froot;
-            } else if (sign(fxMax_,froot) != fxMax_) {
-                xMin_=root_;
-                fxMin_=froot;
+                xMin=xMid;
+                fxMin=fxMid;
+                xMax=root;
+                fxMax=froot;
+            } else if (sign(fxMin,froot) != fxMin) {
+                xMax=root;
+                fxMax=froot;
+            } else if (sign(fxMax,froot) != fxMax) {
+                xMin=root;
+                fxMin=froot;
             } else {
                 throw new ArithmeticException("never get here.");
             }
 
-            if (Math.abs(xMax_-xMin_) <= xAccuracy_) {
-            	return root_;
+            if (Math.abs(xMax-xMin) <= xAccuracy_) {
+            	return root;
             }
         }
         throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");        
     }
       
-    private double sign(double a, double b) {
+    private double sign(final double a, final double b) {
         return b >= 0.0 ? Math.abs(a) : -Math.abs(a);
     }
 }
