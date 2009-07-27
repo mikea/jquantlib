@@ -22,12 +22,11 @@
 
 package org.jquantlib.instruments;
 
-import java.util.List; // FIXME :: performance
-
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.Coupon;
+import org.jquantlib.cashflow.Leg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.quotes.Handle;
@@ -53,7 +52,7 @@ public class Bond extends NewInstrument {
     protected BusinessDayConvention paymentConvention;
     protected Handle<YieldTermStructure> discountCurve;
     protected Frequency frequency;
-	protected List<CashFlow> cashFlows;
+	protected Leg cashFlows;
 	protected Date maturityDate;
 	protected Date issueDate;
 	protected Date datedDate;
@@ -70,29 +69,30 @@ public class Bond extends NewInstrument {
 					double faceAmount,
 					final Calendar calendar,
 					final DayCounter paymentDayCounter,
-					BusinessDayConvention paymentConvention){
-		this(settlementDays, faceAmount, calendar, paymentDayCounter, paymentConvention, new Handle(YieldTermStructure.class));		
+					final BusinessDayConvention paymentConvention) {
+		this(settlementDays, faceAmount, calendar, paymentDayCounter, paymentConvention, 
+		        //FIXME: code review 
+		        new Handle<YieldTermStructure>(YieldTermStructure.class));		
 	}
 	
 	protected Bond (int settlementDays,
 			double faceAmount,
 			final Calendar calendar,
 			final DayCounter paymentDayCounter,
-			BusinessDayConvention paymentConvention,
-			final Handle<YieldTermStructure> discountCurve){
+			final BusinessDayConvention paymentConvention,
+			final Handle<YieldTermStructure> discountCurve) {
 		this.settlementDays = settlementDays;
 		this.faceAmount = faceAmount;
 		this.calendar = calendar;
 		this.paymentDayCounter = paymentDayCounter;
 		this.paymentConvention = paymentConvention;
 		this.discountCurve = discountCurve;
-		frequency = Frequency.NO_FREQUENCY;
+		this.frequency = Frequency.NO_FREQUENCY;
 		
-		evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		evaluationDate.addObserver(this);
+		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+		this.evaluationDate.addObserver(this);
 		
 		discountCurve.addObserver(this);
-		
 	}
 
 	
@@ -137,7 +137,7 @@ public class Bond extends NewInstrument {
 	 * the last cash flow.
 	 *            
 	 */
-	public List<CashFlow> getCashFlows() {
+	public Leg getCashFlows() {
 		return cashFlows;
 	}
 	

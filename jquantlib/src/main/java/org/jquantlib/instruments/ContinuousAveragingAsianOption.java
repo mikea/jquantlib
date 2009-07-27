@@ -78,6 +78,7 @@ public class ContinuousAveragingAsianOption extends OneAssetStrikedOption {
     public void setupArguments(Arguments arguments) /* @ReadOnly */{
         super.setupArguments(arguments);
 
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (!(arguments instanceof ContinuousAveragingAsianOptionArguments)) {
             throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
         }

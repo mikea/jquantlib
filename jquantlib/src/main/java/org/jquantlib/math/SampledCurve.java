@@ -202,18 +202,18 @@ public class SampledCurve {
      * @note This method modifies contents of parameter newGrid
      * 
      * @param newGrid
-     * @param func
+     * @param f
      */
-    public void regrid(final Array newGrid, final Ops.DoubleOp func) {
+    public void regrid(final Array newGrid, final Ops.DoubleOp f) {
         final Array transformed;
         final Array newValues;
         
-        if (func instanceof Identity) {
+        if (f instanceof Identity) {
             transformed = this.grid;
             newValues = newGrid.clone();
         } else {
-            transformed = this.grid.clone().transform(func);
-            newValues = newGrid.clone().transform(func);
+            transformed = this.grid.clone().transform(f);
+            newValues = newGrid.clone().transform(f);
         }
 
         final CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(transformed, this.values);

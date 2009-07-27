@@ -138,8 +138,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		if (isValidFixingDate(fixingDate))
 			throw new IllegalStateException("Fixing date " + fixingDate
 					+ " is not valid");
-		Date today = org.jquantlib.Configuration.getSystemConfiguration(null)
-				.getGlobalSettings().getEvaluationDate();
+		Date today = org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
 		boolean enforceTodaysHistoricFixings = org.jquantlib.Configuration
 				.getSystemConfiguration(null).isEnforcesTodaysHistoricFixings();
 		if (fixingDate.le(today)

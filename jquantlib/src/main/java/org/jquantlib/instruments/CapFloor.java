@@ -7,6 +7,7 @@ import org.jquantlib.Validate;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.FloatingRateCoupon;
+import org.jquantlib.cashflow.Leg;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.quotes.Handle;
@@ -35,13 +36,13 @@ public class CapFloor extends NewInstrument {
     public enum Type { Cap, Floor, Collar };
     
     private Type type_;
-    private List<CashFlow> floatingLeg_;
+    private Leg floatingLeg_;
     private List</*@Rate*/ Double> capRates_;
     private List</*@Rate*/ Double> floorRates_;
     private Handle<YieldTermStructure> termStructure_;
     
     public CapFloor(CapFloor.Type type,
-            final List<CashFlow> floatingLeg,
+            final Leg floatingLeg,
             final List</*@Rate*/ Double> capRates,
             final List</*@Rate*/ Double> floorRates,
             final Handle<YieldTermStructure> termStructure,
@@ -84,7 +85,7 @@ public class CapFloor extends NewInstrument {
     }
     
     public CapFloor(Type type,
-            final List<CashFlow> floatingLeg,
+            final Leg floatingLeg,
             final List</*@Rate*/ Double> strikes,
             final Handle<YieldTermStructure> termStructure,
             final PricingEngine engine){

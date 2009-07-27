@@ -41,7 +41,6 @@ package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.lang.reflect.ReflectConstants;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
@@ -209,7 +208,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
     
 
     //
-    // implements IYieldTermStructure
+    // implements YieldTermStructure
     //
     
     

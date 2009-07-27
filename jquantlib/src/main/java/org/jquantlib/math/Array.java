@@ -382,15 +382,15 @@ public class Array extends Matrix {
      *
      * @return this
      */
-    public Array transform(final int from, final int to, final Ops.DoubleOp func) {
+    public Array transform(final int from, final int to, final Ops.DoubleOp f) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (from<0 || from>to || to>this.length) throw new IndexOutOfBoundsException();
-        if (func == null) throw new NullPointerException();
+        if (f == null) throw new NullPointerException();
 
-        if (func instanceof Identity) return this;
+        if (f instanceof Identity) return this;
         
         for (int i = from; i < to; i++) {
-            data[i] = func.op(data[i]);
+            data[i] = f.op(data[i]);
         }
         return this;
     }

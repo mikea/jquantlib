@@ -63,6 +63,8 @@ public class DividendVanillaOption extends VanillaOption {
     @Override
     public void setupArguments(Arguments args) {
         super.setupArguments(args);
+        
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (!(args instanceof DividendVanillaOptionArguments)){
             throw new ArithmeticException("wrong engine type");
         }

@@ -22,8 +22,7 @@
 
 package org.jquantlib.cashflow;
 
-import java.util.List;
-
+import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.solvers1D.Brent;
@@ -35,8 +34,8 @@ import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.jquantlib.util.Visitable;
-import org.jquantlib.util.Visitor;
+import org.jquantlib.util.TypedVisitable;
+import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.stdlibc.Std;
 
 /**
@@ -55,8 +54,9 @@ public class CashFlows {
     private final String unknown_duration_type = "unsupported duration type";
     private final String infeasible_cashflow = "the given cash flows cannot result in the given market price due to their sign";
 
-    private double basisPoint_ = 1.0e-4;
+    private static double basisPoint_ = 1.0e-4;
 
+    
     /**
      * Singleton instance for the whole application.
      * <p>
@@ -96,7 +96,7 @@ public class CashFlows {
     // public methods
     //
     
-    public Date startDate(final List<CashFlow> cashflows) {
+    public Date startDate(final Leg cashflows) {
         Date d = DateFactory.getFactory().getMaxDate();
         for (int i = 0; i < cashflows.size(); ++i) {
             Coupon c = (Coupon) cashflows.get(i);
@@ -110,7 +110,7 @@ public class CashFlows {
         return d;
     }
 
-    public Date maturityDate(final List<CashFlow> cashflows) {
+    public Date maturityDate(final Leg cashflows) {
         Date d = DateFactory.getFactory().getMinDate();
         for (int i = 0; i < cashflows.size(); i++) {
             d = Std.getInstance().max(d, cashflows.get(i).date());
@@ -133,31 +133,32 @@ public class CashFlows {
      * @param exDividendDays
      * @return
      */
-    public double npv(final List<CashFlow> cashflows, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
-            final Date npvDate, int exDividendDays) {
-        if (true) {
-            throw new UnsupportedOperationException("work in progress");
+    public double npv(
+            final Leg cashflows, 
+            final Handle<YieldTermStructure> discountCurve, 
+            final Date settlementDate,
+            final Date npvDate, 
+            final int exDividendDays) {
+
+        Date date = settlementDate;
+        if (date.eq(DateFactory.getFactory().getTodaysDate())) {
+            date = discountCurve.getLink().referenceDate();
         }
-        /*
-         * FIXME: how to implement this Date d = settlementDate != Date() ? settlementDate : discountCurve->referenceDate();
-         */
-        Date d = null;
 
         double totalNPV = 0.0;
         for (int i = 0; i < cashflows.size(); ++i) {
-            if (!cashflows.get(i).hasOccurred(d.increment(exDividendDays))) {
+            if (!cashflows.get(i).hasOccurred(date.increment(exDividendDays))) {
                 totalNPV += cashflows.get(i).amount() * discountCurve.getLink().discount(cashflows.get(i).date());
             }
         }
-        /*
-         * FIXME: how to implement this if (npvDate==Date()){ return totalNPV; } "/ else{ return
-         * totalNPV/discountCurve.getLink().discount(npvDate); }
-         */
-        return totalNPV / discountCurve.getLink().discount(npvDate);
-
+        
+        if (npvDate.eq(DateFactory.getFactory().getTodaysDate()))
+            return totalNPV;
+        else
+            return totalNPV/discountCurve.getLink().discount(npvDate);
     }
 
-    public double npv(final List<CashFlow> leg, final Handle<YieldTermStructure> discountCurve) {
+    public double npv(final Leg leg, final Handle<YieldTermStructure> discountCurve) {
         return npv(leg, discountCurve, DateFactory.getFactory().getTodaysDate(), DateFactory.getFactory().getTodaysDate(), 0);
     }
 
@@ -167,19 +168,21 @@ public class CashFlows {
      * The NPV is the sum of the cash flows, each discounted according to the given constant interest rate. The result is affected
      * by the choice of the interest-rate compounding and the relative frequency and day counter.
      */
-    public double npv(final List<CashFlow> cashflows, final InterestRate irr, Date settlementDate) {
-        if (true) {
-            throw new UnsupportedOperationException("work in progress");
+    public double npv(
+            final Leg cashflows, 
+            final InterestRate irr, 
+            final Date settlementDate) {
+
+        Date date = settlementDate;
+        if (date.eq(DateFactory.getFactory().getTodaysDate())) {
+            date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();;
         }
-        /*
-         * FIXME: how to implement this if (settlementDate == Date()) settlementDate = Settings::instance().evaluationDate();
-         */
-        YieldTermStructure flatRate = new FlatForward(settlementDate, irr.rate(), irr.dayCounter(), irr.compounding(), irr
-                .frequency());
-        return npv(cashflows, new Handle<YieldTermStructure>(flatRate), settlementDate, settlementDate, 0);
+        
+        final YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
+        return npv(cashflows, new Handle<YieldTermStructure>(flatRate), date, date, 0);
     }
 
-    public double npv(final List<CashFlow> leg, final InterestRate interestRate) {
+    public double npv(final Leg leg, final InterestRate interestRate) {
         return npv(leg, interestRate, DateFactory.getFactory().getTodaysDate());
     }
 
@@ -189,27 +192,32 @@ public class CashFlows {
      * The result is the change in NPV due to a uniform 1-basis-point change in the rate paid by the cash flows. The change for
      * each coupon is discounted according to the given term structure.
      */
-    public double bps(final List<CashFlow> cashflows, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
-            final Date npvDate, int exDividendDays) {
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
+    public double bps(
+            final Leg cashflows, 
+            final Handle<YieldTermStructure> discountCurve, 
+            final Date settlementDate,
+            final Date npvDate, 
+            final int exDividendDays) {
+        
+        Date date = settlementDate;
+        if (date.eq(DateFactory.getFactory().getTodaysDate())) {
+            date = discountCurve.getLink().referenceDate();
         }
-
-        Date d = settlementDate;
         
-        
-        // FIXME: how to translate this?? Date d = settlementDate; if (d==Date()){ d = discountCurve->referenceDate(); }
-        final BPSCalculator calc = new BPSCalculator(discountCurve, npvDate);
+        final BPSCalculator<CashFlow> calc = new BPSCalculator<CashFlow>(discountCurve, npvDate);
         for (int i = 0; i < cashflows.size(); ++i) {
-            if (!cashflows.get(i).hasOccurred(d.increment(exDividendDays))) {
-                throw new UnsupportedOperationException("Work in progress");
-                // cashflows.get(i).accept(calc);
+            if (!cashflows.get(i).hasOccurred(date.increment(exDividendDays))) {
+                //TODO: Code review :: incomplete code
+                if (true)
+                    throw new UnsupportedOperationException("Work in progress");
+                
+                //TODO: cashflows.get(i).accept(calc);
             }
         }
         return basisPoint_ * calc.result();
     }
 
-    public double bps(final List<CashFlow> leg, final Handle<YieldTermStructure> discountCurve) {
+    public double bps(final Leg leg, final Handle<YieldTermStructure> discountCurve) {
         return bps(leg, discountCurve, DateFactory.getFactory().getTodaysDate(), DateFactory.getFactory().getTodaysDate(), 0);
     }
 
@@ -220,20 +228,19 @@ public class CashFlows {
      * each coupon is discounted according to the given constant interest rate. The result is affected by the choice of the
      * interest-rate compounding and the relative frequency and day counter.
      */
-    public double bps(final List<CashFlow> cashflows, final InterestRate irr, Date settlementDate) {
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
+    public double bps(final Leg cashflows, final InterestRate irr, final Date settlementDate) {
+        Date date = settlementDate;
+        if (date.eq(DateFactory.getFactory().getTodaysDate())) {
+            date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();;
         }
-        /*
-         * FIXME: how to translate this?? if (settlementDate == Date()){ settlementDate = Settings::instance().evaluationDate(); }
-         */
-        YieldTermStructure flatRate = new FlatForward(settlementDate, irr.rate(), irr.dayCounter(), irr.compounding(), irr
-                .frequency());
+        
+        YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
+        
         // TODO: 0 added by hand -> do we have to hide the method using another layer ?
-        return bps(cashflows, new Handle<YieldTermStructure>(flatRate), settlementDate, settlementDate, 0);
+        return bps(cashflows, new Handle<YieldTermStructure>(flatRate), date, date, 0);
     }
 
-    public double bps(final List<CashFlow> leg, final InterestRate interestRate) {
+    public double bps(final Leg leg, final InterestRate interestRate) {
         return bps(leg, interestRate, DateFactory.getFactory().getTodaysDate());
     }
 
@@ -243,8 +250,13 @@ public class CashFlows {
      * The result is the fixed rate for which a fixed rate cash flow vector, equivalent to the input vector, has the required NPV
      * according to the given term structure. If the required NPV is not given, the input cash flow vector's NPV is used instead.
      */
-    public double atmRate(final List<CashFlow> leg, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
-            final Date npvDate, int exDividendDays, double npv) {
+    public double atmRate(
+            final Leg leg, 
+            final Handle<YieldTermStructure> discountCurve, 
+            final Date settlementDate,
+            final Date npvDate, 
+            final int exDividendDays, 
+            double npv) {
         double bps = bps(leg, discountCurve, settlementDate, npvDate, exDividendDays);
         if (npv == 0) {
             npv = npv(leg, discountCurve, settlementDate, npvDate, exDividendDays);
@@ -252,7 +264,7 @@ public class CashFlows {
         return basisPoint_ * npv / bps;
     }
 
-    public double atmRate(final List<CashFlow> leg, final Handle<YieldTermStructure> discountCurve) {
+    public double atmRate(final Leg leg, final Handle<YieldTermStructure> discountCurve) {
         return atmRate(leg, discountCurve, DateFactory.getFactory().getTodaysDate(), DateFactory.getFactory().getTodaysDate(), 0, 0);
     }
 
@@ -262,21 +274,29 @@ public class CashFlows {
      * The IRR is the interest rate at which the NPV of the cash flows equals the given market price. The function verifies the
      * theoretical existance of an IRR and numerically establishes the IRR to the desired precision.
      */
-    public double irr(final List<CashFlow> cashflows, double marketPrice, final DayCounter dayCounter, Compounding compounding,
-            Frequency frequency, Date settlementDate, double tolerance, int maxIterations, double guess) {
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
+    public double irr(
+            final Leg cashflows, 
+            final double marketPrice, 
+            final DayCounter dayCounter, 
+            final Compounding compounding,
+            final Frequency frequency, 
+            final Date settlementDate, 
+            final double tolerance, 
+            final int maxIterations, 
+            final double guess) {
+
+        Date date = settlementDate;
+        if (date.eq(DateFactory.getFactory().getTodaysDate())) {
+            date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();;
         }
-        /*
-         * FIXME: how to translate this?? if (settlementDate == Date()) settlementDate = Settings::instance().evaluationDate();
-         */
+        
         // depending on the sign of the market price, check that cash
         // flows of the opposite sign have been specified (otherwise
         // IRR is nonsensical.)
 
         int lastSign = sign(-marketPrice), signChanges = 0;
         for (int i = 0; i < cashflows.size(); ++i) {
-            if (!cashflows.get(i).hasOccurred(settlementDate)) {
+            if (!cashflows.get(i).hasOccurred(date)) {
                 int thisSign = sign(cashflows.get(i).amount());
                 if (lastSign * thisSign < 0) { // sign change{
                     signChanges++;
@@ -310,15 +330,23 @@ public class CashFlows {
         Brent solver = new Brent();
         solver.setMaxEvaluations(maxIterations);
         return solver.solve(
-                new IRRFinder(cashflows, marketPrice, dayCounter, compounding, frequency, settlementDate), 
+                new IRRFinder(cashflows, marketPrice, dayCounter, compounding, frequency, date), 
                 tolerance, 
                 guess, 
                 guess/10.0);
     }
 
-    public double irr(final List<CashFlow> leg, double marketPrice, final DayCounter dayCounter, Compounding compounding) {
-        return irr(leg, marketPrice, dayCounter, compounding, Frequency.NO_FREQUENCY, DateFactory.getFactory().getTodaysDate(),
-                1.0e-10, 10000, 0.05);
+    public double irr(final Leg leg, final double marketPrice, final DayCounter dayCounter, final Compounding compounding) {
+        return irr(
+                leg, 
+                marketPrice, 
+                dayCounter, 
+                compounding, 
+                Frequency.NO_FREQUENCY, 
+                DateFactory.getFactory().getTodaysDate(),
+                1.0e-10, 
+                10000, 
+                0.05);
     }
 
     /**
@@ -337,13 +365,13 @@ public class CashFlows {
      * {@latex[ D_{\mathrm{Macaulay}} = \left( 1 + \frac{y}{N} \right) D_{\mathrm{modified}} } 
      * where {@latex$ y } is the IRR and {@latex$ N } is the number of cash flows per year.
      */
-    public double duration(final List<CashFlow> leg, final InterestRate y, Duration duration, Date date) {
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
+    public double duration(final Leg leg, final InterestRate y, final Duration duration, final Date settlementDate) {
+
+        Date date = settlementDate;
+        if (date.eq(DateFactory.getFactory().getTodaysDate())) {
+            date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();;
         }
-        /*
-         * FIXME: how to translate this?? if (settlementDate == Date()) settlementDate = Settings::instance().evaluationDate();
-         */
+        
         switch (duration) {
         case Simple:
             return simpleDuration(leg, y, date);
@@ -356,9 +384,8 @@ public class CashFlows {
         }
     }
 
-    public double duration(final List<CashFlow> leg, final InterestRate y) {
+    public double duration(final Leg leg, final InterestRate y) {
         return duration(leg, y, Duration.Modified, DateFactory.getFactory().getTodaysDate());
-
     }
 
     /**
@@ -368,16 +395,14 @@ public class CashFlows {
      * {@latex[ C = \frac{1}{P} \frac{\partial^2 P}{\partial y^2} } 
      * where {@latex$ P } is the present value of the cash flows according to the given IRR {@latex$ y }.
      */
-    public double convexity(final List<CashFlow> cashFlows, final InterestRate rate, Date settlementDate) {
-        // FIXME.. how to translate this???
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        /*
-         * if (settlementDate == Date()){ settlementDate = Settings::instance().evaluationDate(); }
-         */
+    public double convexity(final Leg cashFlows, final InterestRate rate, final Date settlementDate) {
 
-        DayCounter dayCounter = rate.dayCounter();
+        Date date = settlementDate;
+        if (date.eq(DateFactory.getFactory().getTodaysDate())) {
+            date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();;
+        }
+
+        final DayCounter dayCounter = rate.dayCounter();
 
         double P = 0.0;
         double d2Pdy2 = 0.0;
@@ -385,8 +410,8 @@ public class CashFlows {
         int N = rate.frequency().toInteger();
 
         for (int i = 0; i < cashFlows.size(); ++i) {
-            if (!cashFlows.get(i).hasOccurred(settlementDate)) {
-                double t = dayCounter.yearFraction(settlementDate, cashFlows.get(i).date());
+            if (!cashFlows.get(i).hasOccurred(date)) {
+                double t = dayCounter.yearFraction(date, cashFlows.get(i).date());
                 double c = cashFlows.get(i).amount();
                 double B = rate.discountFactor(t);
 
@@ -415,11 +440,11 @@ public class CashFlows {
         return d2Pdy2 / P;
     }
 
-    public double convexity(final List<CashFlow> leg, final InterestRate y) {
+    public double convexity(final Leg leg, final InterestRate y) {
         return convexity(leg, y, DateFactory.getFactory().getTodaysDate());
     }
 
-    private double simpleDuration(final List<CashFlow> cashflows, final InterestRate rate, Date settlementDate) {
+    private double simpleDuration(final Leg cashflows, final InterestRate rate, Date settlementDate) {
 
         double P = 0.0;
         double tP = 0.0;
@@ -442,7 +467,7 @@ public class CashFlows {
         return tP / P;
     }
 
-    private double modifiedDuration(final List<CashFlow> cashflows, final InterestRate rate, Date settlementDate) {
+    private double modifiedDuration(final Leg cashflows, final InterestRate rate, Date settlementDate) {
 
         double P = 0.0;
         double dPdy = 0.0;
@@ -480,7 +505,7 @@ public class CashFlows {
         return -dPdy / P;
     }
 
-    private double macaulayDuration(final List<CashFlow> cashflows, final InterestRate rate, Date settlementDate) {
+    private double macaulayDuration(final Leg cashflows, final InterestRate rate, Date settlementDate) {
 
         double y = rate.rate();
         int N = rate.frequency().toInteger();
@@ -521,8 +546,20 @@ public class CashFlows {
 
     private class IRRFinder implements Ops.DoubleOp {
 
-        public IRRFinder(final List<CashFlow> cashflows, double marketPrice, final DayCounter dayCounter, Compounding compounding,
-                Frequency frequency, Date settlementDate) {
+        private final Leg cashflows_;
+        private double marketPrice_;
+        private final DayCounter dayCounter_;
+        private final Compounding compounding_;
+        private final Frequency frequency_;
+        private final Date settlementDate_;
+
+        public IRRFinder(
+                final Leg cashflows, 
+                final double marketPrice, 
+                final DayCounter dayCounter, 
+                final Compounding compounding,
+                final Frequency frequency, 
+                final Date settlementDate) {
             this.cashflows_ = cashflows;
             this.marketPrice_ = marketPrice;
             this.dayCounter_ = dayCounter;
@@ -530,13 +567,6 @@ public class CashFlows {
             this.frequency_ = frequency;
             this.settlementDate_ = settlementDate;
         }
-
-        private final List<CashFlow> cashflows_;
-        private double marketPrice_;
-        private DayCounter dayCounter_;
-        private Compounding compounding_;
-        private Frequency frequency_;
-        private Date settlementDate_;
 
         @Override
         public double op(final double guess) {
@@ -546,35 +576,39 @@ public class CashFlows {
         }
     }
 
-    private class BPSCalculator implements Visitable {
+    private class BPSCalculator<T extends Event> implements TypedVisitable<T> {
 
+        private final Handle<YieldTermStructure> termStructure;
+        private final Date npvDate;
+        
+        private double result;
+        
         public BPSCalculator(final Handle<YieldTermStructure> termStructure, final Date npvDate) {
-            this.termStructure_ = termStructure;
-            this.npvDate_ = npvDate;
-            this.result_ = 0.0;
-        }
-
-        public void accept(final Visitor v) {
-            if (v instanceof Coupon) {
-                Coupon c = (Coupon) v;
-                result_ += c.accrualPeriod() * c.nominal() * termStructure_.getLink().discount(c.date());
-            }
+            this.termStructure = termStructure;
+            this.npvDate = npvDate;
+            this.result = 0.0;
         }
 
         public double result() {
-            /*
-             * FIXME: how to implement tis one? if (npvDate_==Date()) return result_; else return
-             * result_/termStructure_->discount(npvDate_);
-             */
-            if (true) {
-                throw new UnsupportedOperationException("Work in progress");
-            }
-            return 0;
+            if (npvDate.eq(DateFactory.getFactory().getTodaysDate()))
+                return result;
+            else
+                return result/termStructure.getLink().discount(npvDate);
         }
 
-        private Handle<YieldTermStructure> termStructure_;
-        private Date npvDate_;
-        private double result_;
+        
+        //
+        // implements TypedVisitable
+        //
+        
+        @Override
+        public void accept(TypedVisitor<T> v) {
+            if (v instanceof Coupon) {
+                Coupon c = (Coupon) v;
+                result += c.accrualPeriod() * c.nominal() * termStructure.getLink().discount(c.date());
+            }
+        }
+
     }
 
 }

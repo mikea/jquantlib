@@ -24,13 +24,17 @@ package org.jquantlib.testsuite.patterns;
 
 import static org.junit.Assert.fail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @author Richard Gomes
+ */
 public class VisitorTest {
 
     private final static Logger logger = LoggerFactory.getLogger(VisitorTest.class);
@@ -137,16 +141,17 @@ public class VisitorTest {
 	//
 	
 	private static class NumberTypedVisitor implements TypedVisitor<Number> {
+	    
 		@Override
 		public Visitor<Number> getVisitor(Class<? extends Number> klass) {
-			return (klass==Number.class) ? visitor : null;
+			return (klass==Number.class) ? numberVisitor : null;
 		}
 		
 		//
 		// composition pattern to an inner Visitor<Number>
 		//
 		
-		private NumberVisitor visitor = new NumberVisitor();
+		private NumberVisitor numberVisitor = new NumberVisitor();
 		
 		private static class NumberVisitor implements Visitor<Number> {
 			@Override
@@ -158,16 +163,17 @@ public class VisitorTest {
 	
 	
 	private static class DoubleTypedVisitor extends NumberTypedVisitor {
+	    
 		@Override
 		public Visitor<Number> getVisitor(Class<? extends Number> klass) {
-			return (klass==Double.class) ? visitor : null;
+			return (klass==Double.class) ? doubleVisitor : null;
 		}
 		
 		//
 		// composition pattern to an inner Visitor<Double>
 		//
 		
-		private DoubleVisitor visitor = new DoubleVisitor();
+		private DoubleVisitor doubleVisitor = new DoubleVisitor();
 		
 		private static class DoubleVisitor implements Visitor<Number> {
 			@Override
@@ -179,16 +185,17 @@ public class VisitorTest {
 	}
 	
 	private static class IntegerTypedVisitor extends NumberTypedVisitor {
+	    
 		@Override
 		public Visitor<Number> getVisitor(Class<? extends Number> klass) {
-			return (klass==Integer.class) ? visitor : null;
+			return (klass==Integer.class) ? integerVisitor : null;
 		}
 		
 		//
 		// composition pattern to an inner Visitor<Double>
 		//
 		
-		private IntegerVisitor visitor = new IntegerVisitor();
+		private IntegerVisitor integerVisitor = new IntegerVisitor();
 		
 		private static class IntegerVisitor implements Visitor<Number> {
 			@Override
