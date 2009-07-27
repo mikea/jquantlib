@@ -114,10 +114,12 @@ public class IborLeg {
          paymentAdjustment_, fixingDays_, gearings_, spreads_,
          caps_, floors_, inArrears_, zeroPayments_);
         
-         if (caps_.empty() && floors_.empty() && !inArrears_){
-             throw new UnsupportedOperationException("Implement PricerSetter namespace");
-             //TODO: PricerSetter class...
-             //super.setCouponPricer(cashflows,new BlackIborCouponPricer()));
+         if (caps_.empty() && floors_.empty() && !inArrears_) {
+             //TODO: Code review :: incomplete code
+            if (true)
+                throw new UnsupportedOperationException("Work in progress");
+            
+             // TODO: PricerSetter.getInstance().setCouponPricer(cashflows, new BlackIborCouponPricer()));
          }
         return cashflows;
     }
