@@ -1,8 +1,5 @@
 package org.jquantlib.cashflow;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.Array;
@@ -110,9 +107,9 @@ public class IborLeg {
         return this;
     }
 
-    public List<CashFlow> Leg() {
+    public Leg Leg() {
 
-        List<CashFlow> cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
+        Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
          notionals_, schedule_, index_, paymentDayCounter_,
          paymentAdjustment_, fixingDays_, gearings_, spreads_,
          caps_, floors_, inArrears_, zeroPayments_);

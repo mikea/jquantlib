@@ -83,10 +83,16 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 		this.quote = new Handle<Quote>(new SimpleQuote(quote));
 	}
 	
-	protected RateHelper(){
-		
+	
+	//
+	// protected constructors
+	//
+	
+	protected RateHelper() {
+		// default constructor only available to descendent classes
 	}
 
+	
 	//
 	// public methods
 	//

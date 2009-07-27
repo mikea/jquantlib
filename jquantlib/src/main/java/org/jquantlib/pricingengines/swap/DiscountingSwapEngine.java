@@ -1,22 +1,46 @@
 package org.jquantlib.pricingengines.swap;
 
-import org.jquantlib.instruments.Swap;
-import org.jquantlib.instruments.Swap.Arguments;
-import org.jquantlib.instruments.Swap.Results;
+import org.jquantlib.Validate;
+import org.jquantlib.cashflow.CashFlows;
+import org.jquantlib.math.Constants;
+import org.jquantlib.pricingengines.SwapEngine;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.util.Observable;
+import org.jquantlib.util.Observer;
 
-public class DiscountingSwapEngine extends Swap.Engine {
+public class DiscountingSwapEngine extends SwapEngine implements Observer {
+
+    private Handle<YieldTermStructure> discountCurve;
     
-        public DiscountingSwapEngine(Swap swap, Arguments arguments, Results results) {
-        swap.super(arguments, results);
-        // TODO Auto-generated constructor stub
-        }
-        public DiscountingSwapEngine(Handle<YieldTermStructure> termStructure) {
-            new Swap().super();//super();
-            //swap.super(arguments, results);
-            // TODO Auto-generated constructor stub
-         }
+    public DiscountingSwapEngine(final Handle<YieldTermStructure> discountCurve) /* @ReadOnly */ {
+        this.discountCurve = discountCurve;
+        
+        // TODO: code review :: please verify against original QL/C++ code
+        this.discountCurve.getLink().addObserver(this);
+    }
 
-        private Handle<YieldTermStructure> discountCurve_;
+    @Override
+    public void calculate() /* @ReadOnly */ {
+        Validate.QL_REQUIRE(!discountCurve.empty(), "no discounting term structure set");
+
+        results.value = 0.0;
+        results.errorEstimate = Constants.NULL_Double;
+        results.legNPV = new double[arguments.legs.size()];
+        results.legBPS = new double[arguments.legs.size()];
+        for (int i=0; i<arguments.legs.size(); ++i) {
+            results.legNPV[i] = arguments.payer[i] * CashFlows.getInstance().npv(arguments.legs.get(i), discountCurve);
+            results.legBPS[i] = arguments.payer[i] * CashFlows.getInstance().bps(arguments.legs.get(i), discountCurve);
+            results.value += results.legNPV[i];
+        }
+     }
+
+    @Override
+    // TODO: code review :: please verify against original QL/C++ code
+    public void update(Observable o, Object arg) {
+        // TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
+    }    
+    
 }

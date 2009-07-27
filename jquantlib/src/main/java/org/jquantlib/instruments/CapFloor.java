@@ -1,11 +1,9 @@
 package org.jquantlib.instruments;
 
-import static org.jquantlib.Error.QL_FAIL;
-import static org.jquantlib.Error.QL_REQUIRE;
-
 import java.util.List;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.Validate;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.FloatingRateCoupon;
@@ -30,6 +28,8 @@ import org.jquantlib.util.DateFactory;
 //- the correctness of the returned value is tested by checking
 //it against a known good value.
 
+// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CapFloor extends NewInstrument {
     
     public enum Type { Cap, Floor, Collar };
@@ -58,7 +58,7 @@ public class CapFloor extends NewInstrument {
         
         
    if (type_ == Type.Cap || type_ == Type.Collar) {
-            QL_REQUIRE(!(capRates_.size() == 0), "no cap rates given");
+            Validate.QL_REQUIRE(!(capRates_.size() == 0), "no cap rates given");
             // capRates_.reserve(floatingLeg_.size());
             while (capRates_.size() < floatingLeg_.size()) {
                 // this looks kind of suspicious...
@@ -67,7 +67,7 @@ public class CapFloor extends NewInstrument {
         }
 
         if (type_ == Type.Floor || type_ == Type.Collar) {
-            QL_REQUIRE(!(floorRates_.size() == 0), "no floor rates given");
+            Validate.QL_REQUIRE(!(floorRates_.size() == 0), "no floor rates given");
             // floorRates_.reserve(floatingLeg_.size());
             while (floorRates_.size() < floatingLeg_.size()) {
                 floorRates_.add(floorRates_.get(floorRates_.size() - 1));
@@ -94,7 +94,7 @@ public class CapFloor extends NewInstrument {
         
         setPricingEngine(engine);
         
-        QL_REQUIRE(!(strikes.size()==0), "no strikes given");
+        Validate.QL_REQUIRE(!(strikes.size()==0), "no strikes given");
         if (type_ == Type.Cap) {
             capRates_ = strikes;
             //capRates_.reserve(floatingLeg_.size());
@@ -108,7 +108,7 @@ public class CapFloor extends NewInstrument {
                 floorRates_.add(floorRates_.get(floorRates_.size()-1));
             }
         } else{
-            QL_FAIL("only Cap/Floor types allowed in this constructor");
+            Validate.QL_FAIL("only Cap/Floor types allowed in this constructor");
         }
         
         for (CashFlow cashFlow : floatingLeg_) {
@@ -121,7 +121,7 @@ public class CapFloor extends NewInstrument {
     }
     
     public /*@Rate*/double atmRate(){
-        return CashFlows.atmRate(floatingLeg_, termStructure_);
+        return CashFlows.getInstance().atmRate(floatingLeg_, termStructure_);
     }
     
     public boolean isExpired(){
@@ -134,11 +134,11 @@ public class CapFloor extends NewInstrument {
     }
     
     public Date startDate(){
-        return CashFlows.startDate(floatingLeg_);
+        return CashFlows.getInstance().startDate(floatingLeg_);
     }
     
     public Date maturityDate() {
-        return CashFlows.maturityDate(floatingLeg_);
+        return CashFlows.getInstance().maturityDate(floatingLeg_);
     }
 
     public Date lastFixingDate() {

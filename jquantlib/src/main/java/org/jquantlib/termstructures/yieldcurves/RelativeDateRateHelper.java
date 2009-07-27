@@ -22,8 +22,6 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-// FIXME: move to org.jquantlib.termstructures.yieldcurves
-
 import org.jquantlib.Configuration;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -40,41 +38,76 @@ import org.jquantlib.util.Observable;
  * evaluation date changes
  * 
  * @author Srinivas Hasti
- */ 
+ */
+// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class RelativeDateRateHelper<T extends TermStructure> extends RateHelper<T> {
 
-	protected Date evaluationDate;
+    //
+    // protected fields
+    //
+    
+    protected Date evaluationDate;
 
-	public RelativeDateRateHelper(double d) {
-		super(d);
-		Configuration.getSystemConfiguration(null).getGlobalSettings()
-				.getEvaluationDate().addObserver(this);
-		evaluationDate = Configuration.getSystemConfiguration(null)
-				.getGlobalSettings().getEvaluationDate();
-	}
-	
-	protected RelativeDateRateHelper(){
-		super();
-	}
+    
+    //
+    // protected constructors
+    //
+    
+    protected RelativeDateRateHelper() {
+        super();
+        
+        // TODO: code review :: please verify against original QL/C++ code
+        this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        this.evaluationDate.addObserver(this);
+    }
 
-	public RelativeDateRateHelper(Handle<Quote> quote, T termStructure,
-			Date earliestDate, Date latestDate) {
-		super(quote, termStructure, earliestDate, latestDate);
-		Configuration.getSystemConfiguration(null).getGlobalSettings()
-				.getEvaluationDate().addObserver(this);
-		evaluationDate = Configuration.getSystemConfiguration(null)
-				.getGlobalSettings().getEvaluationDate();
-	}
+    
+    //
+    // public constructors
+    //
+    
+    public RelativeDateRateHelper(/*@Price*/ double d) {
+        super(d);
+        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
+        this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        this.evaluationDate.addObserver(this);
+    }
 
-	public void update(Observable o, Object arg) {
-		if (!evaluationDate.equals(Configuration.getSystemConfiguration(null)
-				.getGlobalSettings().getEvaluationDate())) {
-			evaluationDate = Configuration.getSystemConfiguration(null)
-					.getGlobalSettings().getEvaluationDate();
-			initializeDates();
-		}
-		super.update(o, arg);
-	}
+    public RelativeDateRateHelper(Handle<Quote> quote) {
+        super(quote);
+        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
+        this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        this.evaluationDate.addObserver(this);
+    }
 
-	protected abstract void initializeDates();
+    
+    public RelativeDateRateHelper(Handle<Quote> quote, T termStructure, Date earliestDate, Date latestDate) {
+        super(quote, termStructure, earliestDate, latestDate);
+        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
+        this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        this.evaluationDate.addObserver(this);
+    }
+
+    
+    //
+    // protected abstract methods
+    //
+    
+    protected abstract void initializeDates();
+
+    
+    //
+    // overrides RateHelper
+    //
+    
+    @Override
+    public void update(Observable o, Object arg) {
+        if (!evaluationDate.equals(Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate())) {
+            evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+            initializeDates();
+        }
+        super.update(o, arg);
+    }
+
 }

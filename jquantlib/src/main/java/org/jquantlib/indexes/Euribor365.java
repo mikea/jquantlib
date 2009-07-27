@@ -3,11 +3,13 @@
  */
 package org.jquantlib.indexes;
 
+import org.jquantlib.Validate;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.calendars.Target;
 
 /**
  * Actual/365 %Euribor index
@@ -18,24 +20,36 @@ import org.jquantlib.time.TimeUnit;
  * 
  * @author Ueli Hofstetter
  */
-public class Euribor365 extends Euribor {
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+public class Euribor365 extends IborIndex {
     
-    public Euribor365(Period tenor, Handle<YieldTermStructure> h) {
-        super("Euribor365", tenor, 2, Actual365Fixed.getDayCounter(), h); // settlement days
-        if (tenor.units() == TimeUnit.DAYS)
-            throw new IllegalArgumentException("for daily tenors dedicated DailyTenor constructor must be used"); // TODO: message
+    
+    
+    public Euribor365(final Period tenor, final Handle<YieldTermStructure> h) {
+        super("Euribor365", tenor,
+                2, // settlement days
+                Target.getCalendar(), 
+                new EURCurrency(), 
+                euriborConvention(tenor), 
+                euriborEOM(tenor),
+                Actual365Fixed.getDayCounter(),
+                h);
+        Validate.QL_REQUIRE(this.tenor().units() != TimeUnit.DAYS, "for daily tenors dedicated DailyTenor constructor must be used");
     }
+
     
     public static Euribor365 getEuribor365_1W(Handle<YieldTermStructure> h) {
         return new Euribor365(new Period(1, TimeUnit.WEEKS), h);
     }
+
     public static Euribor365 getEuribor365_2W(Handle<YieldTermStructure> h) {
         return new Euribor365(new Period(2, TimeUnit.WEEKS), h);
     }
+
     public static Euribor365 getEuribor365_3W(Handle<YieldTermStructure> h) {
         return new Euribor365(new Period(3, TimeUnit.WEEKS), h);
     }
-    
+
     public static Euribor365 getEuribor365_1M(Handle<YieldTermStructure> h) {
         return new Euribor365(new Period(1, TimeUnit.MONTHS), h);
     }
@@ -79,12 +93,13 @@ public class Euribor365 extends Euribor {
     public static Euribor365 getEuribor365_11M(Handle<YieldTermStructure> h) {
         return new Euribor365(new Period(11, TimeUnit.MONTHS), h);
     }
+
     public static Euribor365 getEuribor1Y(Handle<YieldTermStructure> h) {
         return new Euribor365(new Period(1, TimeUnit.YEARS), h);
     }
+
     public static Euribor365 getEuribor365_SW(Handle<YieldTermStructure> h) {
         return new Euribor365(new Period(1, TimeUnit.WEEKS), h);
-    }
-    
+    }    
 
 }

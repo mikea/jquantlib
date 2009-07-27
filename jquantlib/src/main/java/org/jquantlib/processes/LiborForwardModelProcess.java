@@ -34,7 +34,7 @@ import org.jquantlib.math.Matrix;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.stdlibc.Std;
 
-import static org.jquantlib.Error.QL_REQUIRE;
+import static org.jquantlib.Validate.QL_REQUIRE;
 
 /**
  * Libor-forward-model process
@@ -90,12 +90,12 @@ public class LiborForwardModelProcess extends StochasticProcess {
         this.m1 = new Array(size_);
         this.m2 = new Array(size_);
 
-        final DayCounter dayCounter = index_.getDayCounter();
+        final DayCounter dayCounter = index_.dayCounter();
         final List<CashFlow> flows = null /* cashFlows() */; // FIXME: translate cashFlows();
 
         QL_REQUIRE(size_ == flows.size(), IllegalArgumentException.class, wrong_number_of_cashflows);
         
-        final Date settlement = index_.getTermStructure().getLink().referenceDate();
+        final Date settlement = index_.termStructure().getLink().referenceDate();
         final Date startDate = ((IborCoupon) flows.get(0)).fixingDate();
         for (int i = 0; i < size_; ++i) {
             IborCoupon coupon = (IborCoupon) flows.get(i);

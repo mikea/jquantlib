@@ -23,21 +23,37 @@
 package org.jquantlib.cashflow;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.indexes.Index;
-import org.jquantlib.time.BusinessDayConvention;
-import org.jquantlib.time.Calendar;
-import org.jquantlib.time.Schedule;
-import org.jquantlib.util.Date;
-
+/**
+ * @author Ueli Hofstetter
+ */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class Leg extends ArrayList<CashFlow> {
-        public Leg(int n) {
-            super(n);
-        }
+
+    //
+    // public constructors
+    //
+    
+    public Leg() {
+        super();
+    }
+
+    public Leg(int n) {
+        super(n);
+    }
+
+    public CashFlow first() {
+        return this.get(0);
+    }
+    
+    public CashFlow last() {
+        return this.get(this.size()-1);
+    }
+    
 }
 
+//XXX :: remove all commented out code below:
+//
 //    private static final String coupon_rates_not_specified = "coupon rates not specified";
 //    private static final String nominals_not_specified = "nominals not specified";
 //    private static final String regular_first_coupon_day_count = "regular first coupon does not allow a first-period day count";

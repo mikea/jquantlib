@@ -1,27 +1,37 @@
 package org.jquantlib.cashflow;
 
+import org.jquantlib.Validate;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.InterestRateIndex;
+import org.jquantlib.math.Constants;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
 
-import static org.jquantlib.math.Constants.NULL_Double;
-import static org.jquantlib.Error.QL_REQUIRE;
-
+/**
+ * Capped and/or floored floating-rate coupon
+ * <p>
+ * The payoff {@latex$ P } of a capped floating-rate coupon is:
+ * {@latex[ P = N \times T \times \min(a L + b, C) }
+ * <p>
+ * The payoff of a floored floating-rate coupon is:
+ * {@latex[ P = N \times T \times \max(a L + b, F) }
+ * <p>
+ * The payoff of a collared floating-rate coupon is:
+ * {@latex[ P = N \times T \times \min(\max(a L + b, F), C) } where
+ * <p>
+ * {@latex$ N } is the notional, {@latex$ T }is the accrual time, {@latex$ L } is the floating rate, {@latex$ a } is its gearing,
+ * {@latex$ b } is the spread, and {@latex$ C } and {@latex$ F } are the strikes.
+ * <p> 
+ * They can be decomposed in the following manner. Decomposition of a capped floating rate coupon:
+ * {@latex[ R = \min(a L + b, C) = (a L + b) + \min(C - b - \xi |a| L, 0) } where 
+ * {@latex$ \xi = sgn(a) }. Then: 
+ * {@latex[ R = (a L + b) + |a| \min(\frac{C - b}{|a|} - \xi L, 0) }
+ * 
+ * @author Ueli Hofstetter
+ */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CappedFlooredCoupon extends FloatingRateCoupon {
-
-    // ! Capped and/or floored floating-rate coupon
-    /*
-     * ! The payoff \f$ P \f$ of a capped floating-rate coupon is: \f[ P = N \times T \times \min(a L + b, C). \f] The payoff of a
-     * floored floating-rate coupon is: \f[ P = N \times T \times \max(a L + b, F). \f] The payoff of a collared floating-rate
-     * coupon is: \f[ P = N \times T \times \min(\max(a L + b, F), C). \f]
-     * 
-     * where \f$ N \f$ is the notional, \f$ T \f$ is the accrual time, \f$ L \f$ is the floating rate, \f$ a \f$ is its gearing, \f$
-     * b \f$ is the spread, and \f$ C \f$ and \f$ F \f$ the strikes.
-     * 
-     * They can be decomposed in the following manner. Decomposition of a capped floating rate coupon: \f[ R = \min(a L + b, C) = (a
-     * L + b) + \min(C - b - \xi |a| L, 0) \f] where \f$ \xi = sgn(a) \f$. Then: \f[ R = (a L + b) + |a| \min(\frac{C - b}{|a|} -
-     * \xi L, 0) \f]
-     */
 
     protected FloatingRateCoupon underlying_;
     protected boolean isCapped_, isFloored_;
@@ -41,27 +51,27 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
         isFloored_ = (false);
 
         if (gearing_ > 0) {
-            if (cap != NULL_Double) {
+            if (!Double.isNaN(cap)) {
                 isCapped_ = true;
                 cap_ = cap;
             }
-            if (floor != NULL_Double) {
+            if (!Double.isNaN(floor)) {
                 floor_ = floor;
                 isFloored_ = true;
             }
         } else {
-            if (cap != NULL_Double) {
+            if (!Double.isNaN(cap)) {
                 floor_ = cap;
                 isFloored_ = true;
             }
-            if (floor != NULL_Double) {
+            if (!Double.isNaN(floor)) {
                 isCapped_ = true;
                 cap_ = floor;
             }
         }
 
         if (isCapped_ && isFloored_) {
-            QL_REQUIRE(cap >= floor, "cap level (" + cap + ") less than floor level (" + floor + ")");
+            Validate.QL_REQUIRE(cap >= floor, "cap level (" + cap + ") less than floor level (" + floor + ")");
         }
 
         // registerWith(underlying);
@@ -70,7 +80,11 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
     
     
     
-//    void CappedFlooredCoupon::setPricer(
+    private void setPricer() {
+            //TODO: Code review :: incomplete code
+            if (true)
+                throw new UnsupportedOperationException("Work in progress");
+            
 //            const boost::shared_ptr<FloatingRateCouponPricer>& pricer) {
 //       if (pricer_)
 //           unregisterWith(pricer_);
@@ -79,9 +93,14 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
 //           registerWith(pricer_);
 //       update();
 //       underlying_->setPricer(pricer);
-//   }
-//
-//Rate CappedFlooredCoupon::rate() const {
+   }
+
+    
+    @Override
+    public /*@Rate*/ double  rate() /* @ReadOnly */ {
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
 //   QL_REQUIRE(underlying_->pricer(), "pricer not set");
 //   Rate swapletRate = underlying_->rate();
 //   Rate floorletRate = 0.;
@@ -91,50 +110,80 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
 //   if(isCapped_)
 //       capletRate = underlying_->pricer()->capletRate(effectiveCap());
 //   return swapletRate + floorletRate - capletRate;
-//}
-//
-//Rate CappedFlooredCoupon::convexityAdjustment() const {
+
+    return Double.NaN;
+    }
+
+    @Override
+    public /*@Rate*/ double convexityAdjustment() /* @ReadOnly */ {
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
 //   return underlying_->convexityAdjustment();
-//}
-//
-//Rate CappedFlooredCoupon::cap() const {
+
+        return Double.NaN;
+}
+
+    private /*@Rate*/ double cap() /* @ReadOnly */ {
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
 //   if ( (gearing_ > 0) && isCapped_)
 //           return cap_;
 //   if ( (gearing_ < 0) && isFloored_)
 //       return floor_;
-//   return Null<Rate>();
-//}
-//
-//Rate CappedFlooredCoupon::floor() const {
+        return Constants.NULL_Double;
+}
+
+    private /*@Rate*/ double floor() /* @ReadOnly */ {
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
 //   if ( (gearing_ > 0) && isFloored_)
 //       return floor_;
 //   if ( (gearing_ < 0) && isCapped_)
 //       return cap_;
-//   return Null<Rate>();
-//}
-//
-//Rate CappedFlooredCoupon::effectiveCap() const {
+        return Constants.NULL_Double;
+}
+
+    private /*@Rate*/ double effectiveCap() /* @ReadOnly */ {
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
 //   return (cap_ - spread())/gearing();
-//}
-//
-//Rate CappedFlooredCoupon::effectiveFloor() const {
+        return Constants.NULL_Double;
+}
+
+    private /*@Rate*/ double effectiveFloor() /* @ReadOnly */ {
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
 //   return (floor_ - spread())/gearing();
-//}
-//
-//void CappedFlooredCoupon::update() {
+        return Constants.NULL_Double;
+}
+
+    @Override
+    public void update() {
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
 //   notifyObservers();
-//}
-//
-//void CappedFlooredCoupon::accept(AcyclicVisitor& v) {
-//   typedef FloatingRateCoupon super;
-//   Visitor<CappedFlooredCoupon>* v1 =
-//
-//       dynamic_cast<Visitor<CappedFlooredCoupon>*>(&v);
-//   if (v1 != 0)
-//       v1->visit(*this);
-//   else
-//       super::accept(v);
-//}
+}
+
+        //
+        // implements TypedVisitable
+        //
+        
+        // TODO: code review :: object model needs to be validated and eventually refactored
+        @Override
+        public void accept(final TypedVisitor<Event> v) {
+            final Visitor<Event> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+            if (v1 != null) {
+                v1.visit(this);
+            } else {
+                super.accept(v);
+            }
+        }
 
     
 
@@ -144,7 +193,9 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
             boolean isInArrears) {
         super(paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, spread, refPeriodStart, refPeriodEnd,
                 dayCounter, isInArrears);
-        // TODO Auto-generated constructor stub
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
     }
 
 }

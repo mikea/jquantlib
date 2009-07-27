@@ -25,9 +25,7 @@ package org.jquantlib.cashflow;
 import org.jquantlib.Configuration;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.indexes.IndexManager;
 import org.jquantlib.indexes.InterestRateIndex;
-import org.jquantlib.lang.annotation.DiscountFactor;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.TimeUnit;
@@ -35,24 +33,52 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
+// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class IborCoupon extends FloatingRateCoupon {
     
     /**
-     * WORK IN PROGRESS  - review entire constructor hierarchy....
+     * WORK IN PROGRESS
      */
 
     private final static String null_term_structure = "null term structure set to par coupon";
 
-    public IborCoupon(Date paymentDate, int nominal, Date startDate, Date endDate, int fixingDays, InterestRateIndex index,
-            double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, boolean isInArrears) {
-        super(paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, spread, refPeriodStart, refPeriodEnd,
+    public IborCoupon(
+            final Date paymentDate, 
+            final int nominal, 
+            final Date startDate, 
+            final Date endDate, 
+            final int fixingDays, 
+            final InterestRateIndex index,
+            final double gearing, 
+            final double spread, 
+            final Date refPeriodStart, 
+            final Date refPeriodEnd, 
+            final DayCounter dayCounter, 
+            final boolean isInArrears) {
+        super(paymentDate, nominal, startDate, endDate, fixingDays, index, 
+                gearing, spread, refPeriodStart, refPeriodEnd,
                 dayCounter, isInArrears);
     }
 
-    public IborCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, IborIndex index,
-            double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, boolean isInArrears) {
-            super(paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, spread, refPeriodStart, refPeriodEnd,
-                dayCounter, isInArrears);
+    public IborCoupon(
+            final Date paymentDate, 
+            final double nominal, 
+            final Date startDate, 
+            final Date endDate, 
+            final int fixingDays, 
+            final IborIndex index,
+            final double gearing, 
+            final double spread, 
+            final Date refPeriodStart, 
+            final Date refPeriodEnd, 
+            final DayCounter dayCounter, 
+            final boolean isInArrears) {
+            super(paymentDate, nominal, startDate, endDate, fixingDays, index, 
+                    gearing, spread, refPeriodStart, refPeriodEnd,
+                    dayCounter, isInArrears);
+            
+            // TODO: code review :: please verify against original QL/C++ code
             throw new UnsupportedOperationException("Missing constructors");
     }
 
@@ -64,7 +90,7 @@ public class IborCoupon extends FloatingRateCoupon {
         if (isInArrears()) {
             return index_.fixing(fixingDate());
         } else {
-            Handle<YieldTermStructure> termStructure = index_.getTermStructure();
+            Handle<YieldTermStructure> termStructure = index_.termStructure();
             if (termStructure == null) {
                 throw new IllegalArgumentException(null_term_structure);
             }
@@ -92,16 +118,22 @@ public class IborCoupon extends FloatingRateCoupon {
                     ; // fall through and forecast
                 }
             }
-            Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.getFixingDays(), TimeUnit.DAYS);
+            Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.fixingDays(), TimeUnit.DAYS);
             double startDiscount = termStructure.getLink().discount(fixingValueDate);
             // ???
             Date temp = index_.fixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
             double endDiscount = termStructure.getLink().discount(
-                    index_.fixingCalendar().advance(temp, index_.getFixingDays(), TimeUnit.DAYS));
+                    index_.fixingCalendar().advance(temp, index_.fixingDays(), TimeUnit.DAYS));
             return (startDiscount / endDiscount - 1.0) / accrualPeriod();
         }
     }
 
+
+    //
+    // implements TypedVisitable
+    //
+    
+    @Override
     public void accept(final TypedVisitor<Event> v) {
         Visitor<Event> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
         if (v1 != null) {

@@ -115,8 +115,8 @@ public class ConvertibleBondOption extends OneAssetStrikedOption{
                 moreArgs.callabilityTypes.add(callability.get(i).getType());
                 moreArgs.callabilityTimes.add(dayCounter.yearFraction(settlement, callability.get(i).date()));
                 
-                double d = callability.get(i).getPrice().getAmount();
-                if (callability.get(i).getPrice().getType() == Callability.Price.Type.CLEAN){               	
+                double d = callability.get(i).getPrice().amount();
+                if (callability.get(i).getPrice().type() == Callability.Price.Type.CLEAN){               	
                 	d += bond.accruedAmount(callability.get(i).date());
                 }
                 moreArgs.callabilityPrices.add(d);
@@ -137,7 +137,7 @@ public class ConvertibleBondOption extends OneAssetStrikedOption{
         for (int i=0; i<cashFlows.size()-1; i++) {
             if (!cashFlows.get(i).hasOccurred(settlement)) {
                 moreArgs.couponTimes.add(dayCounter.yearFraction(settlement,cashFlows.get(i).date()));
-                moreArgs.couponAmounts.add(cashFlows.get(i).getAmount());
+                moreArgs.couponAmounts.add(cashFlows.get(i).amount());
             }
         }
 

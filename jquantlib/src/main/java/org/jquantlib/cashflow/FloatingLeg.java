@@ -1,9 +1,6 @@
 package org.jquantlib.cashflow;
 
-import static org.jquantlib.Error.QL_REQUIRE;
-
-import java.lang.reflect.InvocationTargetException;
-
+import org.jquantlib.Validate;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.lang.reflect.TypeTokenTree;
@@ -13,20 +10,44 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.util.Date;
 
-public class FloatingLeg<InterestRateIndexType extends InterestRateIndex , FloatingCouponType, CappedFlooredCouponType> extends Leg {
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: Please complete this class and perform another code review.
+public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, FloatingCouponType, CappedFlooredCouponType> extends Leg {
 
-    public FloatingLeg(final Array nominals, final Schedule schedule, final InterestRateIndexType index,
-            final DayCounter paymentDayCounter, BusinessDayConvention paymentAdj, Array fixingDays, final Array gearings,
-            final Array spreads, final Array caps, final Array floors, boolean isInArrears, boolean isZero) /*throws IllegalArgumentException, SecurityException, InstantiationException, IllegalAccessException, InvocationTargetException*/ {
-
+    public FloatingLeg(
+                final Array nominals, 
+                final Schedule schedule, 
+                final InterestRateIndexType index,
+                final DayCounter paymentDayCounter, 
+                final BusinessDayConvention paymentAdj, 
+                final Array fixingDays, 
+                final Array gearings,
+                final Array spreads, 
+                final Array caps, 
+                final Array floors, 
+                final boolean isInArrears, 
+                boolean isZero) {
         super(schedule.size() - 1);
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+        
+        //
+        //FIXME: This class is generic but we are not handling generic parameters properly.
+        // Reason: Imagine that the class paremeter is a fixed coupon class type.
+        // Imagine now that the call "Detail.get(gearings, i, 1.0)" returns non-zero.
+        // It means that we will be dynamically instantiating a floating coupon type whilst a fixed coupon type was
+        // passed as class parameter, which is obviously a programmer error. This situation should be detected.
+        // Please let me know if you need help on it. [Richard]
+        //
+        
         int n = schedule.size() - 1;
-        QL_REQUIRE(nominals.length <= n, "too many nominals (" + nominals.length + "), only " + n + " required");
-        QL_REQUIRE(gearings.length <= n, "too many gearings (" + gearings.length + "), only " + n + " required");
-        QL_REQUIRE(spreads.length <= n, "too many spreads (" + spreads.length + "), only " + n + " required");
-        QL_REQUIRE(caps.length <= n, "too many caps (" + caps.length + "), only " + n + " required");
-        QL_REQUIRE(floors.length <= n, "too many floors (" + floors.length + "), only " + n + " required");
-        QL_REQUIRE(!isZero || !isInArrears, "in-arrears and zero features are not compatible");
+        Validate.QL_REQUIRE(nominals.length <= n, "too many nominals (" + nominals.length + "), only " + n + " required");
+        Validate.QL_REQUIRE(gearings.length <= n, "too many gearings (" + gearings.length + "), only " + n + " required");
+        Validate.QL_REQUIRE(spreads.length <= n, "too many spreads (" + spreads.length + "), only " + n + " required");
+        Validate.QL_REQUIRE(caps.length <= n, "too many caps (" + caps.length + "), only " + n + " required");
+        Validate.QL_REQUIRE(floors.length <= n, "too many floors (" + floors.length + "), only " + n + " required");
+        Validate.QL_REQUIRE(!isZero || !isInArrears, "in-arrears and zero features are not compatible");
 
         // the following is not always correct (orignial c++ comment)
         Calendar calendar = schedule.getCalendar();
@@ -59,7 +80,7 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex , Float
                         //construct a new instance using reflection. first get the constructor ...
                         FloatingCouponType frc;
                         try {
-                            frc = (FloatingCouponType)fctklass.getConstructor(
+                            frc = (FloatingCouponType) fctklass.getConstructor(
                                     Date.class, 
                                     int.class, 
                                     Date.class, 
@@ -76,7 +97,7 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex , Float
                             .newInstance(paymentDate,
                                 Detail.get(nominals, i, new Double(1.0)),
                                 start, end,
-                                Detail.get(fixingDays, i, index.getFixingDays()),
+                                Detail.get(fixingDays, i, index.fixingDays()),
                                 index,
                                 Detail.get(gearings, i, 1.0),
                                 Detail.get(spreads, i, 0.0),
@@ -91,8 +112,8 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex , Float
                     final Class<?> cfcklass = new TypeTokenTree(this.getClass()).getRoot().get(2).getElement();
                     CappedFlooredCouponType cfctc;
                     try {
-                    	//FIXME: not finished yet!!!!!!!!!!!!!!
-                        cfctc = (CappedFlooredCouponType)(cfcklass).getConstructor(
+                        //FIXME: not finished yet!!!!!!!!!!!!!!
+                        cfctc = (CappedFlooredCouponType) cfcklass.getConstructor(
                                 Date.class, 
                                 int.class, 
                                 Date.class, 
@@ -107,9 +128,10 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex , Float
                                 boolean.class)
                          //then create a new instance
                         .newInstance(paymentDate,
+
                             Detail.get(nominals, i, new Double(1.0)),
                             start, end,
-                            Detail.get(fixingDays, i, index.getFixingDays()),
+                            Detail.get(fixingDays, i, index.fixingDays()),
                             index,
                             Detail.get(gearings, i, 1.0),
                             Detail.get(spreads, i, 0.0),

@@ -22,25 +22,28 @@
 
 package org.jquantlib.cashflow;
 
-import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 
 /**
  * @author Srinivas Hasti
- * 
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class CashFlow extends Event implements Comparable<CashFlow> {
 
-	/**
+    //
+    // public abstract methods
+    //
+    
+    /**
 	 * @return amount of the cash flow. The amount is not discounted, i.e., it is the actual amount paid at the cash flow date.
 	 */
-	public abstract double getAmount();
+	public abstract double amount();
 
 
     //
-    // implements Comparable<CashFlow>
+    // implements Comparable
     //
     
 	@Override
@@ -50,7 +53,7 @@ public abstract class CashFlow extends Event implements Comparable<CashFlow> {
 
         if (date().equals(c2.date())) {
             try {
-                if (getAmount() < c2.getAmount())
+                if (amount() < c2.amount())
                     return -1;
             } catch (Exception e) {
                 return -1;
@@ -62,9 +65,10 @@ public abstract class CashFlow extends Event implements Comparable<CashFlow> {
     }
 
 	//
-	// implements TypedVisitable<Event>
+	// implements TypedVisitable
 	//
 	
+	// TODO: code review :: object model needs to be validated and eventually refactored
 	@Override
 	public void accept(final TypedVisitor<Event> v) {
 		final Visitor<Event> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;

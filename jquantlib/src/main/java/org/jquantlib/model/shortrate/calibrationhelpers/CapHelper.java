@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.lang.annotation.Rate;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.model.CalibrationHelper;
 import org.jquantlib.quotes.Handle;
@@ -19,6 +18,8 @@ import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
+// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CapHelper extends CalibrationHelper {
     
     public CapHelper(Period length, 
@@ -44,7 +45,7 @@ public class CapHelper extends CalibrationHelper {
             boolean calibrateVolatility){
         super(volatility, termStructure, calibrateVolatility);
        
-        Period indexTenor = index.getTenor();
+        Period indexTenor = index.tenor();
         double fixedRate = 0.04; //dummy value
         Date startDate, maturity;
         if(includeFirstSwaplet){
@@ -58,9 +59,9 @@ public class CapHelper extends CalibrationHelper {
         
         IborIndex dummyIndex = new IborIndex("dummy", 
                 indexTenor, 
-                index.getFixingDays(),
-                index.getCurrency(),
+                index.fixingDays(),
                 index.fixingCalendar(),
+                index.currency(),
                 index.getConvention(),
                 index.isEndOfMonth(),
                 termStructure.getLink().dayCounter(),
@@ -69,9 +70,14 @@ public class CapHelper extends CalibrationHelper {
         double [] nominals = {1,1.0};
         
         Schedule floatSchedule = new Schedule(startDate, maturity,
-                index.getTenor(), index.fixingCalendar(), 
+                index.tenor(), index.fixingCalendar(), 
                 index.getConvention(),
                 index.getConvention(), false, false);
+        
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
+        
         
         /*
         Leg floatingLeg = new IborL

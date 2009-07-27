@@ -39,7 +39,6 @@
 
 package org.jquantlib.math;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.jquantlib.math.functions.Identity;
@@ -47,14 +46,11 @@ import org.jquantlib.math.functions.Identity;
 
 /**
  * 1-D array used in linear algebra.
- * <p>
- * This class implements the concept of vector as used in linear algebra. As such, it is <b>not</b> meant to be used as a container
- * java.util.List should be used instead.
  * 
  * @author Richard Gomes
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-//TODO: refactor Array and Matrix to math.matrixutilities (or something like this)
+//TODO: consider refactor Array and Matrix to math.matrixutilities (or something like this)
 public class Array extends Matrix {
     
     /**
@@ -760,16 +756,5 @@ public class Array extends Matrix {
         }
         return result;
     }
-    
-////HUE: temporary generics fix!!!!!!!!!!!!!!
-// NOTE: this method is required if one needs an List<Double> for generic methods...
-// the problem is that autoboxing doesn't work for ArrayList<Double> d = Arrays.asList(double[]))
-//    public ArrayList<Double> toDoubleList(){
-//        ArrayList<Double> tempList = new ArrayList<Double>(data.length);
-//        for(int i = 0; i<data.length; i++){
-//            tempList.add(data[i]);
-//        }
-//        return tempList;
-//    }
     
 }

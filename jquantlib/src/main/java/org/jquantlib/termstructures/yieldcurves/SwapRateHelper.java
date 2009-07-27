@@ -26,8 +26,13 @@ package org.jquantlib.termstructures.yieldcurves;
 // FIXME: move to org.jquantlib.termstructures.yieldcurves
 
 
+import org.jquantlib.Validate;
+import org.jquantlib.cashflow.FloatingRateCoupon;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
+import org.jquantlib.indexes.SwapIndex;
+import org.jquantlib.instruments.MakeVanillaSwap;
+import org.jquantlib.instruments.VanillaSwap;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
@@ -36,276 +41,221 @@ import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
+import org.jquantlib.util.Date;
+import org.jquantlib.util.stdlibc.Std;
 
 /**
- * @author Srinivas Hasti
- *
+ * Rate helper for bootstrapping over swap rates
+ * 
+ * @author Richard Gomes
  */
-//TODO: Finish
+//TODO: use input SwapIndex to create the swap
 public class SwapRateHelper extends RelativeDateRateHelper {
-	
-    private Period tenor_;
-    private Calendar calendar;
-    private BusinessDayConvention fixedConvention;
-    private Frequency fixedFrequency;
-    private DayCounter fixedDayCount;
-    private IborIndex iborIndex;
-   // VanillaSwap swap;
-    private RelinkableHandle<YieldTermStructure> termStructureHandle;
-    private Handle<Quote> spread;
-    private Period fwdStart;
-    
-    
-    
-//    public SwapRateHelper(final Handle<Quote> rate,
-//            final SwapIndex swapIndex,
-//            final Handle<Quote> spread,
-//            final Period fwdStart){
-//        super(rate);
-//        tenor_ = swapIndex.
-//    }
-//: RelativeDateRateHelper(rate),
-//tenor_(swapIndex->tenor()),
-//calendar_(swapIndex->fixingCalendar()),
-//fixedConvention_(swapIndex->fixedLegConvention()),
-//fixedFrequency_(swapIndex->fixedLegTenor().frequency()),
-//fixedDayCount_(swapIndex->dayCounter()),
-//iborIndex_(swapIndex->iborIndex()),
-//spread_(spread), fwdStart_(fwdStart) {
-//registerWith(iborIndex_);
-//registerWith(spread_);
-//initializeDates();
-//}
-//
-//SwapRateHelper::SwapRateHelper(const Handle<Quote>& rate,
-//            const Period& tenor,
-//            const Calendar& calendar,
-//            Frequency fixedFrequency,
-//            BusinessDayConvention fixedConvention,
-//            const DayCounter& fixedDayCount,
-//            const shared_ptr<IborIndex>& iborIndex,
-//            const Handle<Quote>& spread,
-//            const Period& fwdStart)
-//: RelativeDateRateHelper(rate),
-//tenor_(tenor),
-//calendar_(calendar),
-//fixedConvention_(fixedConvention),
-//fixedFrequency_(fixedFrequency),
-//fixedDayCount_(fixedDayCount),
-//iborIndex_(iborIndex),
-//spread_(spread), fwdStart_(fwdStart) {
-//registerWith(iborIndex_);
-//registerWith(spread_);
-//initializeDates();
-//}
-//
-//SwapRateHelper::SwapRateHelper(Rate rate,
-//            const Period& tenor,
-//            const Calendar& calendar,
-//            Frequency fixedFrequency,
-//            BusinessDayConvention fixedConvention,
-//            const DayCounter& fixedDayCount,
-//            const shared_ptr<IborIndex>& iborIndex,
-//            const Handle<Quote>& spread,
-//            const Period& fwdStart)
-//: RelativeDateRateHelper(rate),
-//tenor_(tenor),
-//calendar_(calendar),
-//fixedConvention_(fixedConvention),
-//fixedFrequency_(fixedFrequency),
-//fixedDayCount_(fixedDayCount),
-//iborIndex_(iborIndex),
-//spread_(spread), fwdStart_(fwdStart) {
-//registerWith(iborIndex_);
-//registerWith(spread_);
-//initializeDates();
-//}
-//
-//SwapRateHelper::SwapRateHelper(Rate rate,
-//            const shared_ptr<SwapIndex>& swapIndex,
-//            const Handle<Quote>& spread,
-//            const Period& fwdStart)
-//: RelativeDateRateHelper(rate),
-//tenor_(swapIndex->tenor()),
-//calendar_(swapIndex->fixingCalendar()),
-//fixedConvention_(swapIndex->fixedLegConvention()),
-//fixedFrequency_(swapIndex->fixedLegTenor().frequency()),
-//fixedDayCount_(swapIndex->dayCounter()),
-//iborIndex_(swapIndex->iborIndex()),
-//spread_(spread), fwdStart_(fwdStart) {
-//registerWith(iborIndex_);
-//registerWith(spread_);
-//initializeDates();
-//}
-//
-//void SwapRateHelper::initializeDates() {
-//
-//// dummy ibor index with curve/swap arguments
-//boost::shared_ptr<IborIndex> clonedIborIndex =
-//iborIndex_->clone(termStructureHandle_);
-//
-//// do not pass the spread here, as it might be a Quote
-//// i.e. it can dinamically change
-//swap_ = MakeVanillaSwap(tenor_, clonedIborIndex, 0.0, fwdStart_)
-//.withFixedLegDayCount(fixedDayCount_)
-//.withFixedLegTenor(Period(fixedFrequency_))
-//.withFixedLegConvention(fixedConvention_)
-//.withFixedLegTerminationDateConvention(fixedConvention_)
-//.withFixedLegCalendar(calendar_)
-//.withFloatingLegCalendar(calendar_);
-//
-//earliestDate_ = swap_->startDate();
-//
-//// Usually...
-//latestDate_ = swap_->maturityDate();
-//// ...but due to adjustments, the last floating coupon might
-//// need a later date for fixing
-//#ifdef QL_USE_INDEXED_COUPON
-//shared_ptr<FloatingRateCoupon> lastFloating =
-//boost::dynamic_pointer_cast<FloatingRateCoupon>(
-//                          swap_->floatingLeg().back());
-//Date fixingValueDate =
-//iborIndex_->valueDate(lastFloating->fixingDate());
-//Date endValueDate = iborIndex_->maturityDate(fixingValueDate);
-//latestDate_ = std::max(latestDate_, endValueDate);
-//#endif
-//}
-//
-//void SwapRateHelper::setTermStructure(YieldTermStructure* t) {
-//// do not set the relinkable handle as an observer -
-//// force recalculation when needed
-//termStructureHandle_.linkTo(
-//  shared_ptr<YieldTermStructure>(t,no_deletion),
-//  false);
-//RelativeDateRateHelper::setTermStructure(t);
-//}
-//
-//Real SwapRateHelper::impliedQuote() const {
-//QL_REQUIRE(termStructure_ != 0, "term structure not set");
-//// we didn't register as observers - force calculation
-//swap_->recalculate();
-//// weak implementation... to be improved
-//static const Spread basisPoint = 1.0e-4;
-//Real floatingLegNPV = swap_->floatingLegNPV();
-//Spread spread = spread_.empty() ? 0.0 : spread_->value();
-//Real spreadNPV = swap_->floatingLegBPS()/basisPoint*spread;
-//Real totNPV = - (floatingLegNPV+spreadNPV);
-//Real result = totNPV/(swap_->fixedLegBPS()/basisPoint);
-//return result;
-//}
-//
-//Spread SwapRateHelper::spread() const {
-//return spread_.empty() ? 0.0 : spread_->value();
-//}
-//
-//shared_ptr<VanillaSwap> SwapRateHelper::swap() const {
-//return swap_;
-//}
-//
-//const Period& SwapRateHelper::forwardStart() const {
-//return fwdStart_;
-//}
-//
-//void SwapRateHelper::accept(AcyclicVisitor& v) {
-//Visitor<SwapRateHelper>* v1 =
-//dynamic_cast<Visitor<SwapRateHelper>*>(&v);
-//if (v1 != 0)
-//v1->visit(*this);
-//else
-//RateHelper::accept(v);
-//}
 
-
-
-//public SwapRateHelper(final Handle<Quote> rate,
-//            final SwapIndex swapIndex,
-//            final Handle<Quote> spread = Handle<Quote>(),
-//            final Period fwdStart = 0*Days) {
-//	// TODO: Finish
-//}
-//            
-//public SwapRateHelper(final Handle<Quote> rate,
-//            final Period tenor,
-//            final Calendar calendar,
-//            // fixed leg
-//            Frequency fixedFrequency,
-//            BusinessDayConvention fixedConvention,
-//            final DayCounter fixedDayCount,
-//            // floating leg
-//            final IborIndex iborIndex,
-//            final Handle<Quote> spread = Handle<Quote>(),
-//            final Period fwdStart = 0*Days) {
-//	// TODO: Finish
-//}
-//            
-//public SwapRateHelper(Rate rate,
-//            final Period tenor,
-//            final Calendar calendar,
-//            // fixed leg
-//            Frequency fixedFrequency,
-//            BusinessDayConvention fixedConvention,
-//            final DayCounter fixedDayCount,
-//            // floating leg
-//            final IborIndex iborIndex,
-//            final Handle<Quote> spread = Handle<Quote>(),
-//            final Period fwdStart = 0*Days) {
-//	// TODO: Finish
-//}
-//            
-//public SwapRateHelper(Rate rate,
-//            final SwapIndex swapIndex,
-//            final Handle<Quote> spread = Handle<Quote>(),
-//            final Period fwdStart = 0*Days) {
-//	// TODO: Finish
-//}
+    static final /*@Spread*/ double basisPoint = 1.0e-4;
+    
+    protected Period tenor;
+    protected Calendar calendar;
+    protected BusinessDayConvention fixedConvention;
+    protected Frequency fixedFrequency;
+    protected DayCounter fixedDayCount;
+    protected IborIndex iborIndex;
+    protected VanillaSwap swap;
+    protected RelinkableHandle<YieldTermStructure> termStructureHandle;
+    protected Handle<Quote> spread;
+    protected Period fwdStart;
 
     
-	public SwapRateHelper(
-			final double d, 
-			final Period tenor, 
-			final Calendar calendar,
-			final BusinessDayConvention fixedConvention, 
-			final Frequency fixedFrequency,
-			final DayCounter fixedDayCount, 
-			final IborIndex iborIndex,
-			final RelinkableHandle<YieldTermStructure> termStructureHandle,
-			final Handle<Quote> spread, 
-			final Period fwdStart) {
-		super(d);
-		//this.tenor = tenor;
-		this.calendar = calendar;
-		this.fixedConvention = fixedConvention;
-		this.fixedFrequency = fixedFrequency;
-		this.fixedDayCount = fixedDayCount;
-		this.iborIndex = iborIndex;
-		this.termStructureHandle = termStructureHandle;
-		this.spread = spread;
-		this.fwdStart = fwdStart;
-	}
+    //
+    // public constructors
+    //
+    
+    public SwapRateHelper(
+                final Handle<Quote> rate,
+                final SwapIndex swapIndex,
+                final Handle<Quote> spread,
+                final Period fwdStart) {
+        super(rate);
+        this.tenor = swapIndex.tenor();
+        this.calendar = swapIndex.fixingCalendar();
+        this.fixedConvention = swapIndex.fixedLegConvention();
+        this.fixedFrequency = swapIndex.fixedLegTenor().frequency();
+        this.fixedDayCount = swapIndex.dayCounter();
+        this.iborIndex = swapIndex.iborIndex();
+        this.spread = spread;
+        this.fwdStart = fwdStart;
 
-	public SwapRateHelper(Handle<Quote> handle, Period period, Calendar calendar2, Frequency swFixedLegFrequency,
-            BusinessDayConvention swFixedLegConvention, DayCounter swFixedLegDayCounter, IborIndex swFloatingLegIndex,
-            Handle<Quote> handle2, Period forwardStart) {
-	    //@ Richard: this constructor is used from the bond example ....
-        throw new UnsupportedOperationException("work in progress....");
+        this.iborIndex.addObserver(this);
+        this.spread.addObserver(this);
+        initializeDates();
     }
 
+    public SwapRateHelper(
+                final Handle<Quote> rate,
+                final Period tenor,
+                final Calendar calendar,
+                final Frequency fixedFrequency,
+                final BusinessDayConvention fixedConvention,
+                final DayCounter fixedDayCount,
+                final IborIndex iborIndex,
+                final Handle<Quote> spread,
+                final Period fwdStart) {
+        super(rate);
+        this.tenor = tenor;
+        this.calendar = calendar;
+        this.fixedConvention = fixedConvention;
+        this.fixedFrequency = fixedFrequency;
+        this.fixedDayCount = fixedDayCount;
+        this.iborIndex = iborIndex;
+        this.spread =spread;
+        this.fwdStart =fwdStart;
+        
+        this.iborIndex.addObserver(this);
+        this.spread.addObserver(this);
+        initializeDates();
+    }
+
+    public SwapRateHelper(
+                final /*@Rate*/ double rate,
+                final Period tenor,
+                final Calendar calendar,
+                final Frequency fixedFrequency,
+                final BusinessDayConvention fixedConvention,
+                final DayCounter fixedDayCount,
+                final IborIndex iborIndex,
+                final Handle<Quote> spread,
+                final Period fwdStart) {
+        super(rate);
+        this.tenor = tenor;
+        this.calendar = calendar;
+        this.fixedConvention = fixedConvention;
+        this.fixedFrequency = fixedFrequency;
+        this.fixedDayCount = fixedDayCount;
+        this.iborIndex = iborIndex;
+        this.spread = spread;
+        this.fwdStart = fwdStart;
+        
+        this.iborIndex.addObserver(this);
+        this.spread.addObserver(this);
+        initializeDates();
+    }
+
+    public SwapRateHelper(
+                final /*@Rate*/ double rate,
+                final SwapIndex swapIndex,
+                final Handle<Quote> spread,
+                final Period fwdStart) {
+        super(rate);
+        this.tenor = swapIndex.tenor();
+        this.calendar = swapIndex.fixingCalendar();
+        this.fixedConvention = swapIndex.fixedLegConvention();
+        this.fixedFrequency = swapIndex.fixedLegTenor().frequency();
+        this.fixedDayCount = swapIndex.dayCounter();
+        this.iborIndex = swapIndex.iborIndex();
+        this.spread = spread;
+        this.fwdStart = fwdStart;
+            
+        this.iborIndex.addObserver(this);
+        this.spread.addObserver(this);
+        initializeDates();
+    }
+
+
+    //
+    // protected methods
+    //
+    
     /* (non-Javadoc)
-	 * @see org.jquantlib.termstructures.yield.RelativeDateRateHelper#initializeDates()
-	 */
-	@Override
-	protected void initializeDates() {
-		// TODO Auto-generated method stub
+     * @see org.jquantlib.termstructures.yield.RelativeDateRateHelper#initializeDates()
+     */
+    @Override
+    //TODO: solve macros
+    protected void initializeDates() {
+         // dummy ibor index with curve/swap arguments
+         IborIndex clonedIborIndex = iborIndex.clone(this.termStructureHandle);
+    
+         // do not pass the spread here, as it might be a Quote i.e. it can dinamically change
+         this.swap = new MakeVanillaSwap(tenor, clonedIborIndex, 0.0, fwdStart)
+             .withFixedLegDayCount(fixedDayCount)
+             .withFixedLegTenor(new Period(fixedFrequency))
+             .withFixedLegConvention(fixedConvention)
+             .withFixedLegTerminationDateConvention(fixedConvention)
+             .withFixedLegCalendar(calendar)
+             .withFloatingLegCalendar(calendar).value();
+    
+         this.earliestDate = swap.startDate();
+    
+         // Usually...
+         this.latestDate = swap.maturityDate();
+    
+         // ...but due to adjustments, the last floating coupon might need a later date for fixing
+         // #ifdef QL_USE_INDEXED_COUPON
+         FloatingRateCoupon lastFloating = (FloatingRateCoupon) swap.floatingLeg().last();
+         Date fixingValueDate = iborIndex.valueDate(lastFloating.fixingDate());
+         Date endValueDate = iborIndex.maturityDate(fixingValueDate);
+         latestDate = Std.getInstance().max(latestDate, endValueDate);
+         // #endif
+     }
 
-	}
+    
+    /**
+     * Do not set the relinkable handle as an observer.
+     * Force recalculation when needed
+     * 
+     * @param t
+     */
+    public void setTermStructure(final YieldTermStructure t) {
+        // TODO: code review :: please verify against original QL/C++ code
+        // ---- termStructureHandle.linkTo( shared_ptr<YieldTermStructure>(t, no_deletion), false);
+         termStructureHandle.setLink(t, false);
+         
+         super.setTermStructure(t);
+     }
 
-	/* (non-Javadoc)
-	 * @see org.jquantlib.termstructures.BootstrapHelper#getImpliedQuote()
-	 */
-	@Override
-	public double impliedQuote() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    
+    /* (non-Javadoc)
+     * @see org.jquantlib.termstructures.BootstrapHelper#getImpliedQuote()
+     */
+     public /*@Price*/ double impliedQuote() /* @ReadOnly */ {
+         Validate.QL_REQUIRE(termStructure != null, "term structure not set");
+         // we didn't register as observers - force calculation
+         swap.recalculate();
+         
+         // weak implementation... to be improved
+         /*@Price*/ double floatingLegNPV = swap.floatingLegNPV();
+         /*@Spread*/ double spread = this.spread.empty() ? 0.0 : this.spread.getLink().evaluate();
+         /*@Price*/ double spreadNPV = swap.floatingLegBPS()/basisPoint*spread;
+         /*@Price*/ double totNPV = - (floatingLegNPV+spreadNPV);
+         /*@Price*/ double result = totNPV/(swap.fixedLegBPS()/basisPoint);
+         return result;
+     }
 
+     public /*@Spread*/ double spread() /* @ReadOnly */ {
+         return spread.empty() ? 0.0 : spread.getLink().evaluate();
+     }
+
+     public VanillaSwap swap() /* @ReadOnly */ {
+         return swap;
+     }
+
+     public final Period forwardStart() /* @ReadOnly */ {
+         return fwdStart;
+     }
+
+
+     //
+     // implements TypedVisitable
+     //
+     
+     // TODO: code review :: object model needs to be validated and eventually refactored
+     // TODO: code review :: please verify against original QL/C++ code
+//     public void accept(final TypedVisitor<Event> v) {
+//         Visitor<Event> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
+//         if (v1 != null) {
+//             v1.visit(this);
+//         } else {
+//             super.accept(v);
+//         }
+//     }
+    
 }

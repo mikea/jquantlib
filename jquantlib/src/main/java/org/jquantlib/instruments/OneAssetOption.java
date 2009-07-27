@@ -176,6 +176,15 @@ public class OneAssetOption extends Option {
         return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
     }
     
+    /**
+     * Currently, this method returns the Black-Scholes implied volatility. 
+     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
+     *  
+     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
+     * In these cases the calculation can fail and the result (if any) is almost meaningless.
+     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
+     * a target value lower than the intrinsic value in the case of American options.
+     */
     public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue, double tolerance, int maxEvalutions) /* @ReadOnly */ {
         return impliedVolatility(targetValue, tolerance, maxEvalutions, 1.0e-7, 4.0);
     }
@@ -197,7 +206,7 @@ public class OneAssetOption extends Option {
         if (isExpired()) throw new IllegalArgumentException("option expired");
 
         /* @Volatility */ double guess = (minVol+maxVol)/2.0;
-        ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(engine, targetValue);
+        ImpliedVolHelper f = new ImpliedVolHelper(engine, targetValue);
         AbstractSolver1D<UnaryFunctionDouble> solver = new Brent();
         solver.setMaxEvaluations(maxEvaluations);
         /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
@@ -314,7 +323,7 @@ public class OneAssetOption extends Option {
     /**
      * Helper class for implied volatility calculation
      */
-    private static class ImpliedVolatilityHelper implements UnaryFunctionDouble {
+    private static class ImpliedVolHelper implements UnaryFunctionDouble {
     	
         //
         // private final fields
@@ -330,7 +339,7 @@ public class OneAssetOption extends Option {
         // public constructors
         //
         
-        public ImpliedVolatilityHelper(final PricingEngine engine, double targetValue)  {
+        public ImpliedVolHelper(final PricingEngine engine, double targetValue)  {
         	this.impliedEngine = engine;
         	this.targetValue = targetValue;
 

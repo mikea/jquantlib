@@ -41,22 +41,43 @@ import org.jquantlib.util.Visitor;
  */
 public abstract class Event implements Observable, TypedVisitable<Event> {
 
-	/**
+    //
+    // private final fields
+    //
+    
+    /**
 	 * This private field is automatically initialized by constructor which
 	 * picks up it's value from {@link Settings} singleton. This procedure
 	 * caches values from the singleton, intending to avoid contention in
 	 * heavily multi-threaded environments.
 	 */
 	// TODO: make this property dynamically configurable
-	private boolean todaysPayments = Configuration.getSystemConfiguration(null).getGlobalSettings().isTodaysPayments();;
+	private final boolean todaysPayments = Configuration.getSystemConfiguration(null).getGlobalSettings().isTodaysPayments();;
 
-	protected Event() { }
 
+	//
+	// protected constructors
+	//
+	
+	protected Event() { 
+	    // only descendent classes can instantiate
+	}
+
+	
+	//
+	// public abstract methods
+	//
+	
 	/**
 	 * Keeps the date at which the event occurs
 	 */
 	public abstract Date date() /* @ReadOnly */; 
 
+	
+	//
+	// public methods
+	//
+	
 	/**
 	 * Returns true if an event has already occurred before a date where the
 	 * current date may or may not be considered accordingly to defaults taken
@@ -89,7 +110,7 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 
 	
 	//
-	// implements Observable interface
+	// implements Observable
 	//
 
 	/**
@@ -137,7 +158,7 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 
 
 	//
-	// implements TypedVisitable<Event>
+	// implements TypedVisitable
 	//
 	
 	@Override

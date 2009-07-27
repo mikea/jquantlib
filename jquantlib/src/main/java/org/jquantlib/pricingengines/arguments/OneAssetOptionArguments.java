@@ -34,6 +34,7 @@ import org.jquantlib.processes.StochasticProcess;
  * 
  * @author Richard Gomes
  */
+// TODO: code review :: object model needs to be validated and eventually refactored
 public class OneAssetOptionArguments extends OptionArguments {
 
     //

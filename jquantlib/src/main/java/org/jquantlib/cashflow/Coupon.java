@@ -27,30 +27,42 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
-/** 
+/**
+ * Coupon accruing over a fixed period
+ * <p>
+ * This class implements part of the CashFlow interface but it is still abstract and provides derived classes with methods for
+ * accrual period calculations.
+ * 
  * @author Ueli Hofstetter
  * @author Daniel Kong
  */
-
-//! %coupon accruing over a fixed period
-/*! This class implements part of the CashFlow interface but it is
-    still abstract and provides derived classes with methods for
-    accrual period calculations.
-*/
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class Coupon extends CashFlow {
     
+    //
+    // protected fields
+    //
+    
     protected double nominal;
-    protected Date paymentDate,
-                   accrualStartDate,
-                   accrualEndDate,
-                   refPeriodStart,
-                   refPeriodEnd;
+    protected Date paymentDate;
+    protected Date accrualStartDate;
+    protected Date accrualEndDate;
+    protected Date refPeriodStart;
+    protected Date refPeriodEnd;
+    
+
+    //
+    // public constructors
+    //
     
     public Coupon(double nominal,
             Date paymentDate,
             Date accrualStartDate,
             Date accrualEndDate){
         this(nominal, paymentDate, accrualStartDate, accrualEndDate, Date.NULL_DATE, Date.NULL_DATE);
+        
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
     
     public Coupon(double nominal,
@@ -65,7 +77,26 @@ public abstract class Coupon extends CashFlow {
     	this.accrualEndDate = accrualEndDate;
     	this.refPeriodStart = refPeriodEnd;
     	this.refPeriodEnd = refPeriodEnd;
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
+    
+    
+    //
+    // public abstract methods
+    //
+    
+    public abstract /*Rate*/ double rate();
+    
+    public abstract DayCounter dayCounter();
+    
+    public abstract double accruedAmount(final Date date);
+
+
+    //
+    // public methods
+    //
     
     public double nominal(){
         return nominal;
@@ -99,6 +130,22 @@ public abstract class Coupon extends CashFlow {
                                      accrualEndDate);
     }
 
+
+    //
+    // implements Event
+    //
+    
+    @Override
+    public Date date() {
+        return paymentDate;
+    }
+
+    
+    //
+    // implements TypedVisitable
+    //
+    
+    // TODO: code review :: object model needs to be validated and eventually refactored
     @Override
     public void accept(final TypedVisitor<Event> v) {
         Visitor<Event> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
@@ -109,15 +156,4 @@ public abstract class Coupon extends CashFlow {
         }
     }
     
-    public abstract /*Rate*/ double rate();
-    
-    public abstract DayCounter dayCounter();
-    
-    public abstract double accruedAmount(final Date date);
-
-    @Override
-    public Date date() {
-        return paymentDate;
-    }
-
 }

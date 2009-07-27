@@ -22,13 +22,12 @@
 
 package org.jquantlib.cashflow;
 
-import org.jquantlib.examples.ConvertibleBonds;
 import org.jquantlib.util.Date;
 
 /**
  * @author Daniel Kong
  */
-
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class Callability extends Event {
 	
 	public enum Type{CALL, PUT}
@@ -41,6 +40,8 @@ public class Callability extends Event {
         this.price=price;
         this.type=type;
         this.date=date;
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 	}
 	
 	@Override
@@ -63,23 +64,25 @@ public class Callability extends Event {
 		private double amount;
 		private Type type;
 		
-		public Price(){amount=0.0;}
-		
-		public Price(double amount, Type type){
-			this.amount=amount;
-			this.type=type;
-		}
-		
-		public double getAmount(){
-			if(amount==0.0){
-				throw new IllegalStateException("no amount given");
-			}
-			return amount;
-		}
-		
-		public Type getType(){
-			return type;
-		}
+        public Price() {
+            amount = 0.0;
+        }
+
+        public Price(double amount, Type type) {
+            this.amount = amount;
+            this.type = type;
+        }
+
+        public double amount() {
+            if (amount == 0.0) {
+                throw new IllegalStateException("no amount given");
+            }
+            return amount;
+        }
+
+        public Type type() {
+            return type;
+        }
 	
 	}
 

@@ -59,6 +59,9 @@ public final class Std {
         return instance;
     }
 
+    private Std() {
+        // cannot be directly instantiated
+    }
     
     
     //

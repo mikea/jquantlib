@@ -50,6 +50,7 @@ import org.jquantlib.util.Date;
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
+// TODO: code review :: please verify against original QL/C++ code
 public class Actual360 extends AbstractDayCounter {
 
 	//
@@ -58,6 +59,8 @@ public class Actual360 extends AbstractDayCounter {
 	
     private static final Actual360  actual360   = new Actual360();
 	
+    // TODO: code review :: please verify against original QL/C++ code
+    // remove static :: review similar classes too.
 	public static final Actual360 getDayCounter() {
 		return actual360;
 	}

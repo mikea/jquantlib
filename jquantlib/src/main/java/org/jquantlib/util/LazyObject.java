@@ -158,7 +158,7 @@ public abstract class LazyObject implements Observer, Observable {
     }
 
     //
-    // implements Observer interface
+    // implements Observer
     //
 
     public void update(final Observable o, final Object arg) {
@@ -171,7 +171,7 @@ public abstract class LazyObject implements Observer, Observable {
     }
 
     //
-    // implements Observable interface
+    // implements Observable
     //
 
     /**

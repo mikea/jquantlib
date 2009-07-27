@@ -321,8 +321,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.0.2</version>
 				<configuration>
-					<source>${maven.compile.jdk}</source>
-					<target>${maven.compile.jdk}</target>
+					<source>${maven.compile.jdk.source}</source>
+					<target>${maven.compile.jdk.target}</target>
 					<encoding>${maven.compile.encoding}</encoding>
 					<meminitial>${maven.compile.meminitial}</meminitial>
 					<maxmem>${maven.compile.maxmem}</maxmem>
@@ -703,13 +703,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- dependency>
-			<groupId>colt</groupId>
-			<artifactId>colt</artifactId>
-			<version>1.2.0</version>
-			<scope>compile</scope>
-		</dependency -->
-		
 		<dependency>
 			<groupId>net.jcip</groupId>
 			<artifactId>jcip-annotations</artifactId>
@@ -877,7 +870,7 @@
             <linkXref>true</linkXref>
             <sourceEncoding>utf-8</sourceEncoding>
             <minimumTokens>100</minimumTokens>
-            <targetJdk>${maven.compile.jdk}</targetJdk>
+            <targetJdk>${maven.compile.jdk.target}</targetJdk>
             <excludes>
               <exclude>**/*Bean.java</exclude>
               <exclude>**/generated/*.java</exclude>
@@ -983,7 +976,8 @@
 
     <!-- plugin defaults -->
     <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
-    <maven.compile.jdk>1.6</maven.compile.jdk>
+    <maven.compile.jdk.source>1.6</maven.compile.jdk.source>
+    <maven.compile.jdk.target>1.6</maven.compile.jdk.target>
     <maven.compile.encoding>UTF8</maven.compile.encoding>
     <maven.compile.meminitial>128m</maven.compile.meminitial>
     <maven.compile.maxmem>512m</maven.compile.maxmem>

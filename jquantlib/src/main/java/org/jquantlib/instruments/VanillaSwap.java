@@ -1,238 +1,276 @@
-
-
 package org.jquantlib.instruments;
 
-import java.util.List;
+import java.util.ArrayList;
 
+import org.jquantlib.Validate;
 import org.jquantlib.cashflow.CashFlow;
+import org.jquantlib.cashflow.FixedRateCoupon;
+import org.jquantlib.cashflow.FixedRateLeg;
+import org.jquantlib.cashflow.IborCoupon;
+import org.jquantlib.cashflow.IborLeg;
+import org.jquantlib.cashflow.Leg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.quotes.Handle;
-import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.math.Constants;
+import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.pricingengines.arguments.VanillaSwapArguments;
+import org.jquantlib.pricingengines.results.Results;
+import org.jquantlib.pricingengines.results.VanillaSwapResults;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Schedule;
+import org.jquantlib.util.Date;
 
+/**
+ * Plain-vanilla swap
+ * 
+ * @note if QL_TODAYS_PAYMENTS was defined (in userconfig.hpp
+                 or when calling ./configure; it is undefined by
+                 default) payments occurring at the settlement date of
+                 the swap are included in the NPV, and therefore
+                 affect the fair-rate and fair-spread
+                 calculation. This might not be what you want.
+
+    @category instruments
+
+ * @author Richard Gomes
+ */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class VanillaSwap extends Swap {
-    
-    
-    private Type type_;
-    private /*Real*/ double nominal_;
-    private Schedule fixedSchedule_;
-    private /*Rate*/double fixedRate_;
-    private DayCounter fixedDayCount_;
-    private Schedule floatingSchedule_;
-    private IborIndex iborIndex_;
-    private /*Spread*/double spread_;
-    private DayCounter floatingDayCount_;
-    private BusinessDayConvention paymentConvention_;
-    // results
-    private /*mutable Rate*/ double fairRate_;
-    private /*mutable Spread*/ double fairSpread_;
-    
-    enum Type{RECEIVER /*-1*/, PAYER /*1*/}
-    
-    //  class Schedule;
-//  class IborIndex;
-//class results;
-//class engine;
-//  class arguments;
 
-    public VanillaSwap(Handle<YieldTermStructure> termStructure, List<CashFlow> firstLeg, List<CashFlow> secondLeg) {
-        super(termStructure, firstLeg, secondLeg);
-        // TODO Auto-generated constructor stub
-    }
+    static final /*@Spread*/ double  basisPoint = 1.0e-4;
+
     
-    public VanillaSwap(Type type,
-            /*Real*/double nominal,
+    
+    private final Type type;
+    private final /*@Price*/ double nominal;
+    private final Schedule fixedSchedule;
+    private final /*@Rate*/ double  fixedRate;
+    private final DayCounter fixedDayCount;
+    private final Schedule floatingSchedule;
+    private final IborIndex iborIndex;
+    private final /*@Spread*/ double spread;
+    private final DayCounter floatingDayCount;
+    private final BusinessDayConvention paymentConvention;
+    
+    // results
+    private /*@Rate*/ double fairRate;
+    private /*@Spread*/ double fairSpread;
+
+    
+    public VanillaSwap(
+            final Type type,
+            final /*@Price*/ double nominal,
             final Schedule fixedSchedule,
-            /*Rate*/ double fixedRate,
+            final /*@Rate*/ double fixedRate,
             final DayCounter fixedDayCount,
             final Schedule floatSchedule,
             final IborIndex iborIndex,
-            /*Spread*/ double spread,
-            final DayCounter floatingDayCount){
-        this(type, nominal, fixedSchedule, fixedRate, fixedDayCount, floatSchedule, iborIndex, spread, floatingDayCount, BusinessDayConvention.FOLLOWING);
-    }
-    
-    public VanillaSwap(Type type,
-                    /*Real*/double nominal,
-                    final Schedule fixedSchedule,
-                    /*Rate*/ double fixedRate,
-                    final DayCounter fixedDayCount,
-                    final Schedule floatSchedule,
-                    final IborIndex iborIndex,
-                    /*Spread*/ double spread,
-                    final DayCounter floatingDayCount,
-                    BusinessDayConvention paymentConvention){
-        super(2);
-        this.type_=(type);
-        this.nominal_=(nominal);
-        this.fixedSchedule_=(fixedSchedule);
-        this.fixedRate_=(fixedRate);
-        this.fixedDayCount_=(fixedDayCount);
-        this.floatingSchedule_=(floatSchedule);
-       // this.iborIndex_(iborIndex);
-        this.spread_=(spread);
-        this.floatingDayCount_=(floatingDayCount);
-        this.paymentConvention_=(paymentConvention);
-
-//          List<CashFlow> fixedLeg = Leg.FixedRateLeg(fixedSchedule_, fixedDayCount_)
-//              .withNotionals(nominal_)
-//              .withCouponRates(fixedRate_)
-//              .withPaymentAdjustment(paymentConvention_);
-//
-//          Leg floatingLeg = IborLeg(floatingSchedule_, iborIndex_)
-//              .withNotionals(nominal_)
-//              .withPaymentDayCounter(floatingDayCount_)
-//              .withPaymentAdjustment(paymentConvention_)
-//              //.withFixingDays(iborIndex->fixingDays())
-//              .withSpreads(spread_);
-//
-//          Leg::const_iterator i;
-//          for (i = floatingLeg.begin(); i < floatingLeg.end(); ++i)
-//              registerWith(*i);
-//
-//          legs_[0] = fixedLeg;
-//          legs_[1] = floatingLeg;
-//          if (type_==Payer) {
-//              payer_[0] = -1.0;
-//              payer_[1] = +1.0;
-//          } else {
-//              payer_[0] = +1.0;
-//              payer_[1] = -1.0;
-//          }
-//      }
+            final /*@Spread*/ double spread,
+            final DayCounter floatingDayCount,
+            final BusinessDayConvention paymentConvention) {
         
+        super(2);
+        this.type = type;
+        this.nominal = nominal;
+        this.fixedSchedule = fixedSchedule; 
+        this.fixedRate = fixedRate;
+        this.fixedDayCount = fixedDayCount;
+        this.floatingSchedule = floatSchedule; 
+        this.iborIndex = iborIndex;
+        this.spread = spread;
+        this.floatingDayCount = floatingDayCount;
+        this.paymentConvention = paymentConvention;
+        
+        Leg fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
+            .withNotionals(nominal)
+            .withCouponRates(fixedRate)
+            .withPaymentAdjustment(paymentConvention).Leg();
+        
+        Leg floatingLeg = new IborLeg(floatingSchedule, iborIndex)
+            .withNotionals(nominal)
+            .withPaymentDayCounter(floatingDayCount)
+            .withPaymentAdjustment(paymentConvention)
+            .withFixingDays(iborIndex.fixingDays())   // TODO: code review :: please verify against original QL/C++ code
+            .withSpreads(spread).Leg();
+        
+        for (CashFlow item : floatingLeg) item.addObserver(this);
+        
+        super.legs.add(fixedLeg);
+        super.legs.add(floatingLeg);
+        if (type==Type.Payer) {
+            super.payer[0] = -1.0;
+            super.payer[1] = +1.0;
+        } else {
+            super.payer[0] = +1.0;
+            super.payer[1] = -1.0;
+        }
     }
-//        // results
-//        Real fixedLegBPS() const;
-//        Real fixedLegNPV() const;
-//        Rate fairRate() const;
-//
-//        Real floatingLegBPS() const;
-//        Real floatingLegNPV() const;
-//        Spread fairSpread() const;
-//        // inspectors
-//        Type type() const;
-//        Real nominal() const;
-//
-//        const Schedule& fixedSchedule() const;
-//        Rate fixedRate() const;
-//        const DayCounter& fixedDayCount() const;
-//
-//        const Schedule& floatingSchedule() const;
-//        const boost::shared_ptr<IborIndex>& iborIndex() const;
-//        Spread spread() const;
-//        const DayCounter& floatingDayCount() const;
-//
-//        BusinessDayConvention paymentConvention() const;
-//
-//        const Leg& fixedLeg() const;
-//        const Leg& floatingLeg() const;
-//        // other
-//        void setupArguments(PricingEngine::arguments* args) const;
-//        void fetchResults(const PricingEngine::results*) const;
-//      private:
-//        void setupExpired() const;
-//        Type type_;
-//        Real nominal_;
-//        Schedule fixedSchedule_;
-//        Rate fixedRate_;
-//        DayCounter fixedDayCount_;
-//        Schedule floatingSchedule_;
-//        boost::shared_ptr<IborIndex> iborIndex_;
-//        Spread spread_;
-//        DayCounter floatingDayCount_;
-//        BusinessDayConvention paymentConvention_;
-//        // results
-//        mutable Rate fairRate_;
-//        mutable Spread fairSpread_;
-//    };
-//
-//
-//    //! %Arguments for simple swap calculation
-//    class VanillaSwap::arguments : public Swap::arguments {
-//      public:
-//        arguments() : type(Receiver),
-//                      nominal(Null<Real>()) {}
-//        Type type;
-//        Real nominal;
-//
-//        std::vector<Date> fixedResetDates;
-//        std::vector<Date> fixedPayDates;
-//        std::vector<Time> floatingAccrualTimes;
-//        std::vector<Date> floatingResetDates;
-//        std::vector<Date> floatingFixingDates;
-//        std::vector<Date> floatingPayDates;
-//
-//        std::vector<Real> fixedCoupons;
-//        std::vector<Spread> floatingSpreads;
-//        std::vector<Real> floatingCoupons;
-//        void validate() const;
-//    };
-//
-//    //! %Results from simple swap calculation
-//    class VanillaSwap::results : public Swap::results {
-//      public:
-//        Rate fairRate;
-//        Spread fairSpread;
-//        void reset();
-//    };
-//
-//    class VanillaSwap::engine : public GenericEngine<VanillaSwap::arguments,
-//                                                     VanillaSwap::results> {};
-//
-//
-//    // inline definitions
-//
-//    inline VanillaSwap::Type VanillaSwap::type() const {
-//        return type_;
-//    }
-//
-//    inline Real VanillaSwap::nominal() const {
-//        return nominal_;
-//    }
-//
-//    inline const Schedule& VanillaSwap::fixedSchedule() const {
-//        return fixedSchedule_;
-//    }
-//
-//    inline Rate VanillaSwap::fixedRate() const {
-//        return fixedRate_;
-//    }
-//
-//    inline const DayCounter& VanillaSwap::fixedDayCount() const {
-//        return fixedDayCount_;
-//    }
-//
-//    inline const Schedule& VanillaSwap::floatingSchedule() const {
-//        return floatingSchedule_;
-//    }
-//
-//    inline const boost::shared_ptr<IborIndex>& VanillaSwap::iborIndex() const {
-//        return iborIndex_;
-//    }
-//
-//    inline Spread VanillaSwap::spread() const {
-//        return spread_;
-//    }
-//
-//    inline const DayCounter& VanillaSwap::floatingDayCount() const {
-//        return floatingDayCount_;
-//    }
-//
-//    inline BusinessDayConvention VanillaSwap::paymentConvention() const {
-//        return paymentConvention_;
-//    }
-//
-//    inline const Leg& VanillaSwap::fixedLeg() const {
-//        return legs_[0];
-//    }
-//
-//    inline const Leg& VanillaSwap::floatingLeg() const {
-//        return legs_[1];
-//    }
-//
-//    std::ostream& operator<<(std::ostream& out,
-//                             VanillaSwap::Type t);
+
+    public /*@Rate*/ double  fairRate() /* @ReadOnly */ {
+        calculate();
+        Validate.QL_REQUIRE(!Double.isNaN(fairRate), "result not available");
+        return fairRate;
+    }
+
+    public /*@Spread*/ double fairSpread() /* @ReadOnly */ {
+        calculate();
+        Validate.QL_REQUIRE(!Double.isNaN(fairSpread), "result not available");
+        return fairSpread;
+    }
+
+
+    public final Leg fixedLeg() /* @ReadOnly */ {
+        return legs.get(0);
+    }
+
+    public final Leg floatingLeg() /* @ReadOnly */ {
+        return legs.get(1);
+    }
+
+    
+    public /*@Price*/ double fixedLegBPS() /* @ReadOnly */ {
+        calculate();
+        Validate.QL_REQUIRE(!Double.isNaN(legBPS[0]), "result not available");
+        return legBPS[0];
+    }
+
+    public /*@Price*/ double floatingLegBPS() /* @ReadOnly */ {
+        calculate();
+        Validate.QL_REQUIRE(!Double.isNaN(legBPS[1]), "result not available");
+        return legBPS[1];
+    }
+
+    public /*@Price*/ double fixedLegNPV() /* @ReadOnly */ {
+        calculate();
+        Validate.QL_REQUIRE(!Double.isNaN(legNPV[0]), "result not available");
+        return legNPV[0];
+    }
+
+    public /*@Price*/ double floatingLegNPV() /* @ReadOnly */ {
+        calculate();
+        Validate.QL_REQUIRE(!Double.isNaN(legNPV[1]), "result not available");
+        return legNPV[1];
+    }
+
+    @Override
+    public void setupExpired() /* @ReadOnly */ {
+        super.setupExpired();
+        legBPS[0] = 0.0;
+        legBPS[1] = 0.0;
+        fairRate   = Constants.NULL_Double;
+        fairSpread = Constants.NULL_Double;
+    }
+
+    @Override
+    public void setupArguments(final Arguments args) /* @ReadOnly */ {
+        super.setupArguments(args);
+        if (!args.getClass().isAssignableFrom(VanillaSwapArguments.class)) return;
+
+        VanillaSwapArguments arguments = (VanillaSwapArguments) args;
+
+        arguments.type = type;
+        arguments.nominal = nominal;
+
+        final Leg fixedCoupons = fixedLeg();
+
+        arguments.fixedResetDates = new ArrayList<Date>(fixedCoupons.size()); 
+        arguments.fixedPayDates = new ArrayList<Date>(fixedCoupons.size());
+        arguments.fixedCoupons = new ArrayList</*@Price*/ Double>(fixedCoupons.size());
+
+        for (int i=0; i<fixedCoupons.size(); i++) {
+            FixedRateCoupon coupon = (FixedRateCoupon) fixedCoupons.get(i);
+            arguments.fixedPayDates.set(i, coupon.date());
+            arguments.fixedResetDates.set(i, coupon.accrualStartDate());
+            arguments.fixedCoupons.set(i, coupon.amount());
+        }
+
+        final Leg floatingCoupons = floatingLeg();
+
+        arguments.floatingResetDates = new ArrayList<Date>(floatingCoupons.size()); 
+        arguments.floatingPayDates = new ArrayList<Date>(floatingCoupons.size());
+        arguments.floatingFixingDates = new ArrayList<Date>(floatingCoupons.size());
+            
+        arguments.floatingAccrualTimes = new ArrayList</*@Time*/ Double>(floatingCoupons.size());
+        arguments.floatingSpreads = new ArrayList</*@Spread*/ Double>(floatingCoupons.size());
+        arguments.floatingCoupons = new ArrayList</*@Price*/ Double>(floatingCoupons.size());
+        for (int i=0; i<floatingCoupons.size(); ++i) {
+            IborCoupon coupon = (IborCoupon) floatingCoupons.get(i);
+
+            arguments.floatingResetDates.set(i, coupon.accrualStartDate());
+            arguments.floatingPayDates.set(i, coupon.date());
+
+            arguments.floatingFixingDates.set(i, coupon.fixingDate());
+            arguments.floatingAccrualTimes.set(i, coupon.accrualPeriod());
+            arguments.floatingSpreads.set(i, coupon.spread());
+            try {
+                arguments.floatingCoupons.set(i, coupon.amount());
+            } catch (Exception e) {
+                arguments.floatingCoupons.set(i, Constants.NULL_Double);
+            }
+        }
+    }
+
+    
+    @Override
+    public void fetchResults(final Results r) /* @ReadOnly */ {
+
+        super.fetchResults(r);
+        if (r.getClass().isAssignableFrom(VanillaSwapResults.class)) {
+            VanillaSwapResults results = (VanillaSwapResults) r;
+            fairRate = results.fairRate;
+            fairSpread = results.fairSpread;
+        } else {
+            fairRate   = Constants.NULL_Double;
+            fairSpread = Constants.NULL_Double;
+        }
+        
+        if (Double.isNaN(fairRate)) {
+            // calculate it from other results
+            if (!Double.isNaN(legBPS[0]))
+                fairRate = fixedRate- NPV/(legBPS[0]/basisPoint);
+        }
+        if (Double.isNaN(fairSpread)) {
+            // ditto
+            if (!Double.isNaN(legBPS[1]))
+                fairSpread = spread - NPV/(legBPS[1]/basisPoint);
+        }
+    }
+
+    
+    @Override
+    public String toString() {
+        return type.toString();
+    }
+
+
+    //
+    // inner public enums
+    //
+
+    public enum Type {
+        Receiver (-1),
+        Payer (1);
+
+        private final int enumValue;
+        
+        private Type(int frequency) {
+            this.enumValue = frequency;
+        }
+        
+        static public Type valueOf(int value) {
+            switch (value) {
+            case -1:
+                return Type.Receiver;
+            case 1:
+                return Type.Payer;
+            default:
+                throw new IllegalArgumentException("value must be one of -1, 1");
+            }
+        }
+
+        public int toInteger() {
+            return this.enumValue;
+        }
+    }
+
 }

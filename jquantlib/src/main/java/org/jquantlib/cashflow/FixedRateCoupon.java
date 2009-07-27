@@ -27,75 +27,106 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
-public class FixedRateCoupon extends Coupon{
+// TODO: code review :: Please review this class! :S
+public class FixedRateCoupon extends Coupon {
     
 	//private double rate_;
-    private InterestRate rate_;
-    private DayCounter dayCounter_;
+    private InterestRate rate;
+    private DayCounter dayCounter;
 
-    @Deprecated //diverges from 0.9.7
+    // TODO: code review :: please verify against original QL/C++ code
+    @Deprecated // diverges from 0.9.7
     public FixedRateCoupon(double nominal, 
-            Date paymentDate, 
-            double rate,
-            DayCounter dayCounter,
-            Date accrualStartDate, 
-            Date accrualEndDate, 
-            Date refPeriodStart,
-            Date refPeriodEnd) {
+            final Date paymentDate, 
+            final double rate,
+            final DayCounter dayCounter,
+            final Date accrualStartDate, 
+            final Date accrualEndDate, 
+            final Date refPeriodStart,
+            final Date refPeriodEnd) {
         super(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd);
         
-        this.rate_ = new InterestRate(rate, dayCounter, Compounding.SIMPLE);
-        this.dayCounter_ = dayCounter;
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+        
+        this.rate = new InterestRate(rate, dayCounter, Compounding.SIMPLE);
+        this.dayCounter = dayCounter;
     }
 
-    public FixedRateCoupon(double nominal, 
-            Date paymentDate, 
-            InterestRate interestRate, 
-            DayCounter dayCounter, 
-            Date accrualStartDate,
-            Date accrualEndDate, 
-            Date refPeriodStart,
-            Date refPeriodEnd) {
-       //temporary fix... will crash if null is passed
-       /*
+    public FixedRateCoupon(
+            final double nominal, 
+            final Date paymentDate, 
+            final InterestRate interestRate, 
+            final DayCounter dayCounter, 
+            final Date accrualStartDate,
+            final Date accrualEndDate, 
+            final Date refPeriodStart,
+            final Date refPeriodEnd) {
+        super(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd);
+
+        //FIXME :: temporary fix... will crash if null is passed
+        /*
         if(refPeriodStart == null){
            refPeriodStart = DateFactory.getFactory().getTodaysDate();
-       }
-       if(refPeriodEnd == null){
+        }
+        if(refPeriodEnd == null){
            refPeriodEnd = DateFactory.getFactory().getTodaysDate();
-       }
-       */
-       super(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd);
-       this.rate_ = interestRate;
-       this.dayCounter_ = dayCounter;
+        }
+        */
+        
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
+        
+        this.rate = interestRate;
+        this.dayCounter = dayCounter;
     }
     
+    
+    //
+    // Overrides Coupon
+    //
     
     @Override
     public DayCounter dayCounter() {
-       return dayCounter_;
+       return dayCounter;
+    }
+    
+    @Override
+    public double rate() {
+        return rate.rate();
     }
 
     @Override
-    public double getAmount() {
-        return nominal()*rate_.rate()*accrualPeriod();
-    }
-    
     public double accruedAmount(Date d){
         if(d.le(accrualStartDate) || d.gt(paymentDate)){
             return 0.0;
         }
         else{
-            return nominal()*rate_.rate()*dayCounter_.yearFraction(accrualStartDate, 
+            return nominal()*rate.rate()*dayCounter.yearFraction(accrualStartDate, 
                     /* FIXME: nasty......*/
                     d.le(accrualEndDate)?d:accrualEndDate, 
                             refPeriodStart, refPeriodEnd);
         }
     }
+    
+
+    //
+    // Overrides CashFlow
+    //
+    
+    @Override
+    public double amount() {
+        return nominal()*rate.rate()*accrualPeriod();
+    }
+    
+
+    //
+    // implements TypedVisitable
+    //
     
     @Override
     public void accept(final TypedVisitor<Event> v) {
@@ -106,12 +137,5 @@ public class FixedRateCoupon extends Coupon{
             super.accept(v);
         }
     }
-    
-
-    @Override
-    @Deprecated
-	public double rate() {
-		return rate_.rate();
-	}
 
 }

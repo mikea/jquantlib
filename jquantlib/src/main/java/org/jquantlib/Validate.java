@@ -1,7 +1,6 @@
 package org.jquantlib;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * 
@@ -10,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 // FIXME: get rid of this class
 // see also :: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-public class Error {
+public class Validate {
     
     public static void QL_REQUIRE(boolean require, Class ex, String message){
         if(!require){

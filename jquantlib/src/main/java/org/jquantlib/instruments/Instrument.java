@@ -46,9 +46,9 @@ import org.jquantlib.util.LazyObject;
 /**
  * This is an abstract {@link Instrument} class which is able to use a {@link PricingEngine} implemented
  * internally or externally to it. Extended classes {@link OldInstrument} and {@link NewInstrument} are
- * responsible for defining the adequate behavior.
+ * responsible for defining the adequate behaviour.
  * <p>
- * An <i>old style instrument</i> must provide it's own calculation logic whilst a
+ * An <i>old style instrument</i> must provide its own calculation logic whilst a
  * <i>new style instrument</i> relies on a certain pricing engine for performing calculations.
  *
  * @see OldInstrument

@@ -39,9 +39,9 @@ import org.jquantlib.util.Date;
 
 /**
  * @author Srinivas Hasti
- * 
  */
-// FIXME:: This class needs detailed code review
+// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class DepositRateHelper<T extends TermStructure> extends
 		RelativeDateRateHelper<T> {
 
@@ -68,7 +68,7 @@ public class DepositRateHelper<T extends TermStructure> extends
 		
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				tenor, fixingDays,  null, calendar, convention, endOfMonth,
+				tenor, fixingDays, calendar, null, convention, endOfMonth,
 				dayCounter, termStructureHandle);
 		initializeDates();
 
@@ -90,7 +90,7 @@ public class DepositRateHelper<T extends TermStructure> extends
 		super(rate);
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				tenor, fixingDays, null, calendar, convention, endOfMonth,
+				tenor, fixingDays, calendar, null, convention, endOfMonth,
 				dayCounter, termStructureHandle);
 		initializeDates();
 	}
@@ -104,9 +104,9 @@ public class DepositRateHelper<T extends TermStructure> extends
 		super(rate, null, null, null); // TODO
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				ibor.getTenor(), ibor.getFixingDays(),null,
-				ibor.fixingCalendar(),  ibor.getConvention(), ibor
-						.isEndOfMonth(), ibor.getDayCounter(),
+				ibor.tenor(), ibor.fixingDays(),
+				ibor.fixingCalendar(), null, ibor.getConvention(), ibor
+						.isEndOfMonth(), ibor.dayCounter(),
 				termStructureHandle);
 		initializeDates();
 
@@ -121,9 +121,9 @@ public class DepositRateHelper<T extends TermStructure> extends
 		super(rate); // TODO
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				ibor.getTenor(), ibor.getFixingDays(),null,
-				ibor.fixingCalendar(),  ibor.getConvention(), ibor
-						.isEndOfMonth(), ibor.getDayCounter(),
+				ibor.tenor(), ibor.fixingDays(),
+				ibor.fixingCalendar(), null, ibor.getConvention(), ibor
+						.isEndOfMonth(), ibor.dayCounter(),
 				termStructureHandle);
 
 	}
@@ -133,7 +133,7 @@ public class DepositRateHelper<T extends TermStructure> extends
 	 */
 	protected void initializeDates() {
 		earliestDate = iborIndex.fixingCalendar().advance(evaluationDate,
-				iborIndex.getFixingDays(), TimeUnit.DAYS);
+				iborIndex.fixingDays(), TimeUnit.DAYS);
 		latestDate = iborIndex.maturityDate(earliestDate);
 		fixingDate = iborIndex.fixingDate(earliestDate);
 

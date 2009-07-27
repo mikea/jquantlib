@@ -85,8 +85,8 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 			throw new IllegalArgumentException(" is not a valid IMM date");
 		earliestDate = immDate;
 		Calendar cal = i.fixingCalendar();
-		latestDate = cal.advance(immDate, i.getTenor(), i.getConvention());
-		yearFraction = i.getDayCounter().yearFraction(earliestDate,
+		latestDate = cal.advance(immDate, i.tenor(), i.getConvention());
+		yearFraction = i.dayCounter().yearFraction(earliestDate,
 				latestDate);
 	}
 
@@ -95,7 +95,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 			throw new IllegalStateException("term structure not set");
 		double forwardRate = termStructure.discount(earliestDate)
 				/ (termStructure.discount(latestDate) - 1.0) / yearFraction;
-		double convA = convAdj.isEmpty() ? 0.0 : convAdj.getLink()
+		double convA = convAdj.empty() ? 0.0 : convAdj.getLink()
 				.evaluate();
 		if (convA < 0.0)
 			throw new IllegalStateException("Negative (" + convA
@@ -105,7 +105,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 	}
 
 	public double getConvexityAdjustment() {
-		return convAdj.isEmpty() ? 0.0 : convAdj.getLink().evaluate();
+		return convAdj.empty() ? 0.0 : convAdj.getLink().evaluate();
 	}
 
 	/*

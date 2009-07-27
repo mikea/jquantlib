@@ -54,7 +54,7 @@ import org.jquantlib.util.Month;
  * 
  * @category calendars
  */
-//TEST the correctness of the returned results is tested against a list of known holidays.
+//// TODO: code review :: please verify against original QL/C++ code
 public class Target extends DelegateCalendar {
 	
 	private final static Target TARGET_CALENDAR = new Target();

@@ -54,5 +54,14 @@ final strictfp public class Constants {
 	public final static double QL_MIN_POSITIVE_REAL = Double.MIN_VALUE; // typically about 2.22E-308 
 
 	public static final double NULL_Integer = Integer.MAX_VALUE;
-	public static final double NULL_Double  = Double.MAX_VALUE;  // TODO: should be Double.NaN ???
+	
+	
+	/**
+	 * Specifies a <b>double</b> value which must be considered a <i>null value</i> or a <i>not valid value</i>.
+	 * 
+	 * @note FOR THE TIME BEING we are adopting Double.NaN in order to keep what we decided to adopt since the beginning.
+	 * At the moment it's not clear if we should change do Double.POSITIVE-INFINITY or Double.MAX_VALUE.
+	 * In any case, a complete code review is needed as described by http://bugs.jquantlib.org/view.php?id=298.
+	 */
+	public static final double NULL_Double  = Double.NaN;  // TODO: QL uses Double.MAX_VALUE. Evaluate impact of this change
 }

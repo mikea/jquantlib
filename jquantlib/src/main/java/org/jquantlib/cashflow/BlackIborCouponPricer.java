@@ -58,7 +58,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
         spread_ = coupon_.spread();
         Date paymentDate = coupon_.date();
         InterestRateIndex index = coupon_.index();
-        Handle<YieldTermStructure> rateCurve = index.getTermStructure();
+        Handle<YieldTermStructure> rateCurve = index.termStructure();
 
         Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
 
@@ -150,7 +150,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
                 adjustement = 0.0;
             } else {
                 Date d2 = coupon_.index().maturityDate(d1);
-                double tau = coupon_.index().getDayCounter().yearFraction(d1, d2);
+                double tau = coupon_.index().dayCounter().yearFraction(d1, d2);
                 double variance = capletVolatility().getLink().blackVariance(d1, fixing);
                 adjustement = fixing*fixing*variance*tau/(1.0+fixing*tau);
             }

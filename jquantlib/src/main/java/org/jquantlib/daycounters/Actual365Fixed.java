@@ -63,6 +63,9 @@ public class Actual365Fixed extends AbstractDayCounter {
     
     private static final Actual365Fixed  actual365Fixed   = new Actual365Fixed();
     
+
+    // TODO: code review :: please verify against original QL/C++ code
+    // remove static
     public static final Actual365Fixed getDayCounter() {
         return actual365Fixed;
     }

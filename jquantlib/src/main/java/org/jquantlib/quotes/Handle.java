@@ -55,7 +55,12 @@ import org.jquantlib.util.WeakReferenceObservable;
  * 
  * @author Richard Gomes
  */
-// TODO: better explain how Handle and Link work together
+// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+
+//TODO: ideally T should extend UnaryFunctionDouble, Observable
+// and we should offer a method called "value()" which does T.evaluate()
+
 public class Handle<T extends Observable> implements Observable {
 
 	protected Link link;
@@ -76,7 +81,7 @@ public class Handle<T extends Observable> implements Observable {
     	this.link = another.link;
     }
     
-	public final boolean isEmpty() /* @ReadOnly */ {
+	public final boolean empty() /* @ReadOnly */ {
 		return link.isEmpty();
 	}
 
@@ -173,6 +178,7 @@ public class Handle<T extends Observable> implements Observable {
 		// public methods
 		//
 		
+		// TODO: code review :: please verify against original QL/C++ code
 		public final boolean isEmpty() /* @ReadOnly */ {
 			return (this.observable==null);
 		}

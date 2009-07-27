@@ -87,7 +87,7 @@ public class FRA {
         settings.setEvaluationDate(todaysDate);
         
         Calendar calendar = euribor3m.getLink().fixingCalendar();
-        int fixingDays = euribor3m.getLink().getFixingDays();
+        int fixingDays = euribor3m.getLink().fixingDays();
         Date settlementDate = calendar.advance(todaysDate, fixingDays, TimeUnit.MONTHS );
         
         System.out.println("Today: "+ todaysDate.getWeekday() + "," + todaysDate);
@@ -131,7 +131,7 @@ public class FRA {
         // relinkable handles which could be relinked to some other
         // data source later.
         
-        DayCounter fraDayCounter = euribor3m.getLink().getDayCounter();
+        DayCounter fraDayCounter = euribor3m.getLink().dayCounter();
         BusinessDayConvention convention = euribor3m.getLink().getConvention();
         boolean endOfMonth = euribor3m.getLink().isEndOfMonth();
         

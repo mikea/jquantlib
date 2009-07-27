@@ -76,8 +76,6 @@ public abstract interface TermStructure extends Extrapolator, Observer, Observab
      * 
      * @category Dates and Time
      * @return the day counter used for date/double conversion
-     * 
-     * @see #dayCounter_
      */
     public abstract DayCounter dayCounter();
 

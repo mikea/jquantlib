@@ -22,345 +22,163 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.instruments;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 
+import org.jquantlib.Configuration;
+import org.jquantlib.Validate;
 import org.jquantlib.cashflow.CashFlow;
-import org.jquantlib.pricingengines.GenericEngine;
-import org.jquantlib.quotes.Handle;
-import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.cashflow.CashFlows;
+import org.jquantlib.cashflow.Leg;
+import org.jquantlib.math.Constants;
+import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.pricingengines.arguments.SwapArguments;
+import org.jquantlib.pricingengines.results.Results;
+import org.jquantlib.pricingengines.results.SwapResults;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.stdlibc.Std;
 
 /**
+ * Interest rate swap
+ * <p>
+ * The cash flows belonging to the first leg are paid; the ones belonging to the second leg are received.
  * 
- * @author Praneet Tiwari
- */
-
-// ! Interest rate swap
-/*
- * ! The cash flows belonging to the first leg are paid; the ones belonging to the second leg are received.
+ * @category instruments
  * 
- * \ingroup instruments
+ * @author Richard Gomes
  */
+// FIXME: use arrays instead of lists
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+public class Swap extends NewInstrument {
 
-//FIXME: use arrays instead of lists
+    protected List<Leg> legs;
+    protected double[] payer;
+    protected double[] legNPV;
+    protected double[] legBPS;
 
-public class Swap extends Instrument {
     
-    private final static  String payer_leg_mismatch = "payer/leg mismatch";
-    private final static String no_discounting_termstructure = "no discounting term structure set to Swap";
-
-    // data members
-    List<List<CashFlow>> legs_;
-    //CashFlow [][] legs_; 
-    List<Double /* @Real */> payer_;
-    //double[] payer_;
-    /* mutable */
-    List<Double /* @Real */> legNPV_;
-    /* mutable */List<Double /* @Real */> legBPS_;
-    // arguments
-    private VanillaSwap swap_;
-    protected Handle<YieldTermStructure> termStructure_;
-    private Settlement.Type settlementType_;
-
-    // ! \name Constructors
-    // @{
-    /*
-     * ! The cash flows belonging to the first leg are paid; the ones belonging to the second leg are received.
-     */
-    // typedef std::vector<boost::shared_ptr<CashFlow> > Leg;
-    public Swap(final Handle<YieldTermStructure> termStructure, final List<CashFlow> /* @Leg */firstLeg, final List<CashFlow> /* @Leg */secondLeg) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        termStructure_ = termStructure; 
-        legs_ = new ArrayList<List<CashFlow>>(2);
-        payer_ = new ArrayList<Double /* @Real */>(2);
-        legNPV_ = new ArrayList<Double>(2)/* , 0.0) */;
-        Collections.fill(legNPV_, 0.0);
-        legBPS_ = new ArrayList<Double>(2)/* , 0.0) */;
-        Collections.fill(legBPS_, 0.0);
-        
-        legs_.set(0, firstLeg);
-        legs_.set(1, secondLeg);
-        payer_.set(0, -1.0);
-        payer_.set(1, 1.0);
-        
-        //TODO: review this!!!
-        
-        for(int i = 0;i<legs_.get(0).size(); i++){
-            legs_.get(0).get(i).addObserver(this);
-        }
-        
-        for(int i = 0;i<legs_.get(1).size(); i++){
-            legs_.get(1).get(i).addObserver(this);
-        }
-    }
+    //
+    // public constructors
+    //
     
-    //FIXME: erasure problem
-    public static Swap Swap(final Handle<YieldTermStructure> termStructure, final List<List<CashFlow>>legs,
-            final List<Boolean> payer){
-        Swap swap = new Swap();
-        swap.termStructure_ = termStructure;
-        swap.legs_ = legs;
-        swap.payer_ = new ArrayList<Double>(legs.size());
-        Collections.fill(swap.payer_, 1.0);
-        swap.legNPV_ = new ArrayList<Double>(legs.size());
-        Collections.fill(swap.legNPV_, 0.0);
-        swap.legBPS_ = new ArrayList<Double>(legs.size());
-        Collections.fill(swap.legBPS_, 0.0);
-        if(payer.size() != legs.size()){
-            throw new IllegalArgumentException(payer_leg_mismatch);
-        }
-        swap.termStructure_.addObserver(swap);
-        for(int j=0; j<swap.legs_.size(); j++){
-            if(swap.payer_.get(j)==-1.0){
-                for(int i = 0; i<legs.get(j).size(); i++){
-                    legs.get(j).get(i).addObserver(swap);
-                }
-            }
-        }
-        
-        return swap;
-    }
-    
-    //helper used above
-    public Swap(){};
-            
-    
+    public Swap(final Leg firstLeg, final Leg secondLeg) {
+        this.legs = new ArrayList<Leg>();
+        this.payer = new double[2];
+        this.legNPV = new double[2];
+        this.legBPS = new double[2];
+        legs.add(firstLeg);
+        legs.add(secondLeg);
+        payer[0] = -1.0;
+        payer[1] = +1.0;
 
-    // erasure causing name clash
-    /*
-     * ! Multi leg constructor. public Swap(final ArrayList<ArrayList<CashFlow>> legs, final ArrayList<Boolean> payer) {
-     * 
-     * }
-     */
-    @Deprecated
-    public Swap(int /* @Size */legs) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        legs_ = new ArrayList<List<CashFlow>>(legs);
-        payer_ = new ArrayList<Double /* @Real */>(legs);
-
-        legNPV_ = new ArrayList<Double>(legs)/* , 0.0) */;
-        legBPS_ = new ArrayList<Double>(legs)/* , 0.0) */;
+        for (int i = 0; i < legs.size(); i++)
+            for (CashFlow item : legs.get(i))
+                item.addObserver(this);
     }
 
+    public Swap(final List<Leg> legs, final boolean[] payer) {
+        this.legs = legs;
+        this.payer = new double[legs.size()];
+        Arrays.fill(this.payer, 1.0);
+        this.legNPV = new double[legs.size()];
+        this.legBPS = new double[legs.size()];
+
+        for (int j = 0; j < this.legs.size(); j++) {
+            if (payer[j])
+                this.payer[j] = -1.0;
+            for (int i = 0; i < legs.size(); i++)
+                for (CashFlow item : legs.get(i))
+                    item.addObserver(this);
+        }
+    }
+
+    
+    //
+    // protected constructors
+    //
+    
+    protected Swap(int legs) {
+        this.legs   = new ArrayList<Leg>();
+        this.payer  = new double[legs];
+        this.legNPV = new double[legs];
+        this.legBPS = new double[legs];
+    }
+
+    
+    //
+    // public methods
+    //
+    
+    public Date startDate() /* @ReadOnly */{
+        Validate.QL_REQUIRE(legs.size() > 0, "no legs given");
+        Date d = CashFlows.getInstance().startDate(this.legs.get(0));
+        for (int j = 1; j < this.legs.size(); j++)
+            d = Std.getInstance().min(d, CashFlows.getInstance().startDate(this.legs.get(j)));
+        return d;
+    }
+
+    public Date maturityDate() /* @ReadOnly */{
+        Validate.QL_REQUIRE(legs.size() > 0, "no legs given");
+        Date d = CashFlows.getInstance().maturityDate(this.legs.get(0));
+        for (int j = 1; j < this.legs.size(); j++)
+            d = Std.getInstance().max(d, CashFlows.getInstance().maturityDate(this.legs.get(j)));
+        return d;
+    }
+
+
+    //
+    // overrides Instrument
+    //
+    
     @Override
-    public boolean isExpired() {
-        // problem we are outside package, can't get evaluation date
-        // Date today = Settings.instance().evaluationDate();
-        //Date today = DateFactory.getFactory().getTodaysDate();
-        Date settlement = termStructure_.getLink().referenceDate();
-        for (int /* @Size */j = 0; j < legs_.size(); ++j) {
-            //Iterator it = legs_.get(j).iterator();
-            // FIXME: use for each here
-            List<CashFlow> temp = legs_.get(j);
-            for(int i = 0; i<temp.size(); i++){
-                if(temp.get(i).hasOccurred(settlement)){
+    public boolean isExpired() /* @ReadOnly */{
+        Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        for (int i = 0; i < legs.size(); i++)
+            for (CashFlow item : legs.get(i))
+                if (!item.hasOccurred(today))
                     return false;
-                }
-            }
-            /*
-            while (it.hasNext()) {
-                CashFlow cf = (CashFlow) it.next();
-                if (cf.hasOccurred(today)) {
-                    return false;
-                }
-            }
-            */
-        }
         return true;
     }
 
+    
+    //
+    // overrides NewInstrument
+    //
+    
     @Override
-    public void setupExpired() {
+    protected void setupExpired() /* @ReadOnly */{
         super.setupExpired();
-        legBPS_ = new ArrayList<Double>(legs_.size());
-        legNPV_ = new ArrayList<Double>(legs_.size());
-        Collections.fill(legBPS_, 0.0);
-        Collections.fill(legNPV_, 0.0);
-        
-        /**
-         * std::fill(legBPS_.begin(), legBPS_.end(), 0.0); std::fill(legNPV_.begin(), legNPV_.end(), 0.0);
-         * **/
-        /*for (int index = 0; index < legBPS_.size() - 1; index++) {
-            legBPS_.set(index, 0.0);
-        }
-
-        for (int index = 0; index < legNPV_.size() - 1; index++) {
-            legNPV_.set(index, 0.0);
-        }
-        */
-
+        Arrays.fill(legBPS, 0.0);
+        Arrays.fill(legNPV, 0.0);
     }
-    
+
     @Override
-    protected void performCalculations() {
-        if(termStructure_.isEmpty()){
-            throw new IllegalArgumentException(no_discounting_termstructure);
-        }
-        Date d = termStructure_.getLink().referenceDate();
-        
-        errorEstimate = 0.0;
-        NPV = 0.0;
-        //for(int j = 0; j<legs_.size()){
-           //Date settlement = calendar_[j].advance(d, settlementDays_[j], Days);
-           // Date settlement = d;
-            //legNPV_.set(j, payer_.get(j)*CashFlow.settlement);
-            //NPV_ += legNPV_[j] ;
-            //legBPS_[j] = payer_[j]*CashFlows::bps(legs_[j], termStructure_,
-                                                  //settlement);
-        }
-    //}
+    public void setupArguments(final Arguments args) /* @ReadOnly */{
+        SwapArguments arguments = (SwapArguments) args;
 
-    public void setupArguments(/* PricingEngine */Arguments args) {
-        Swap.Arguments arguments = (Swap.Arguments) args;
-        // QL_REQUIRE(arguments != 0, "wrong argument type");
-
-        arguments.legs = legs_;
-        //arguments.payer = payer_;
+        arguments.legs = legs;
+        arguments.payer = payer;
     }
 
-  
+    @Override
+    public void fetchResults(final Results r) /* @ReadOnly */{
+        super.fetchResults(r);
 
-    public void fetchResults(final Results r) {
-        // Instrument.fetchResults(r);
-        // Instrument as yet does not have fetch results method
+        final SwapResults results = (SwapResults) r;
 
-        Swap.Results results = (Swap.Results) r;
-        // QL_REQUIRE(results != 0, "wrong result type");
-
-        if (!results.legNPV.isEmpty()) {
-            // QL_REQUIRE(results->legNPV.size() == legNPV_.size(),
-            // "wrong number of leg NPV returned");
-            if (results.legNPV.size() != legNPV_.size()) {
-                throw new IllegalArgumentException("wrong number of leg NPV returned");
-            }
-            legNPV_ = results.legNPV;
+        if (results.legNPV.length > 0) {
+            Validate.QL_REQUIRE(results.legNPV.length == legNPV.length, "wrong number of leg NPV returned");
+            legNPV = results.legNPV;
         } else {
-            // std::fill(legNPV_.begin(), legNPV_.end(), Null<Real>());
-            // do we need to fill the nulls?
+            Arrays.fill(legNPV, Constants.NULL_Double);
         }
 
-        if (!results.legBPS.isEmpty()) {
-            // QL_REQUIRE(results->legBPS.size() == legBPS_.size(),
-            // "wrong number of leg BPS returned");
-            if (results.legBPS.size() != legBPS_.size()) {
-                throw new IllegalArgumentException("wrong number of leg BPS returned");
-            }
-            legBPS_ = results.legBPS;
+        if (results.legBPS.length > 0) {
+            Validate.QL_REQUIRE(results.legBPS.length == legBPS.length, "wrong number of leg BPS returned");
+            legBPS = results.legBPS;
         } else {
-            // std::fill(legBPS_.begin(), legBPS_.end(), Null<Real>());
+            Arrays.fill(legBPS, Constants.NULL_Double);
         }
     }
 
-    public Date startDate() {
-        // QL_REQUIRE(!legs_.empty(), "no legs given");
-        if (legs_.isEmpty()) {
-            throw new IllegalArgumentException("no legs given");
-        }
-        // TODO:CashFlows class does not exist
-        /*
-         * Date d = CashFlows.startDate(legs_.get(0)); for (Size j=1; j<legs_.size(); ++j) d = std::min(d,
-         * CashFlows::startDate(legs_[j])); return d;
-         */
-        // return something
-        return DateFactory.getFactory().getTodaysDate();
-    }
-
-    public Date maturityDate() {
-        if (legs_.isEmpty()) {
-            throw new IllegalArgumentException("no legs given");
-        }
-        // TODO:CashFlows class does not exist
-        /*
-         * Date d = CashFlows::maturityDate(legs_[0]); for (Size j=1; j<legs_.size(); ++j) d = std::max(d,
-         * CashFlows::maturityDate(legs_[j])); return d;
-         */
-        // return something
-        return DateFactory.getFactory().getTodaysDate();
-    }
-
-    // inner classes to represent arguments and results
-    public class Arguments extends org.jquantlib.pricingengines.arguments.Arguments { // there is no PricingEngine.arguments to
-                                                                                      // extend from
-        // : public virtual PricingEngine::arguments {
-
-        public List<List<CashFlow>> legs;
-        public List<Double /* @Real */> payer;
-
-        @Override
-        public void validate() {
-            // QL_REQUIRE(legs.size() == payer.size(),
-            // "number of legs and multipliers differ");
-            if (legs.size() != payer.size()) {
-                throw new IllegalArgumentException("number of legs and multipliers differ");
-            }
-        }
-    }
-
-    public Double /* @Real */legBPS(int /* @Size */j) {
-        if (j >= legs_.size()) {
-            throw new IllegalArgumentException("leg# " + j + " doesn't exist!");
-        }
-        calculate();
-        return legBPS_.get(j);
-    }
-
-    public Double /* @Real */legNPV(int /* @Size */j) {
-        if (j >= legs_.size()) {
-            throw new IllegalArgumentException("leg# " + j + " doesn't exist!");
-        }
-        calculate();
-        return legNPV_.get(j);
-    }
-
-    public List<CashFlow> leg(int /* @Size */j) {
-        if (j >= legs_.size()) {
-            throw new IllegalArgumentException("leg# " + j + " doesn't exist!");
-        }
-        return legs_.get(j);
-    }
-
-    public class Results extends org.jquantlib.pricingengines.results.Results {
-        // : public Instrument::results {
-
-        public ArrayList<Double /* @Real */> legNPV;
-        public ArrayList<Double /* @Real */> legBPS;
-
-        @Override
-        public void reset() {
-            legNPV.clear();
-            legBPS.clear();
-
-        }
-    }
-    
-    public class Engine extends GenericEngine<Arguments, Results>{
-
-        
-        public Engine() {
-            super();
-            //super(arguments, results);
-            // TODO Auto-generated constructor stub
-        }
-        
-        public Engine(Arguments arguments, Results results) {
-            super(arguments, results);
-            // TODO Auto-generated constructor stub
-        }
-
-        @Override
-        public void calculate() {
-            // TODO Auto-generated method stub
-            
-        }
-        
-    }
-    // The engine inner class not written at the moment
-    // does nothing substantial
 }

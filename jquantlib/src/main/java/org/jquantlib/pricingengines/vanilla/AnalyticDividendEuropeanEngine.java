@@ -85,7 +85,7 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
         
         for (int i=0; i<arguments.cashFlow.size(); i++)
             if (arguments.cashFlow.get(i).date().ge(settlementDate)){
-                riskless += arguments.cashFlow.get(i).getAmount() *
+                riskless += arguments.cashFlow.get(i).amount() *
                     process.riskFreeRate().getLink().discount(arguments.cashFlow.get(i).date());
             }
         double /*@Real*/ spot = process.stateVariable().getLink().evaluate() - riskless;
@@ -101,8 +101,7 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
                                    arguments.exercise.lastDate(),
                                    payoff.strike());
 
-        BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance),
-                   riskFreeDiscount);
+        BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
         results.value = black.value();
         results.delta = black.delta(spot);
@@ -119,11 +118,11 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
         for (int i = 0; i < arguments.cashFlow.size(); i++) {
             Date d = arguments.cashFlow.get(i).date();
             if (d.ge(settlementDate)) {
-                delta_theta -= arguments.cashFlow.get(i).getAmount() *
+                delta_theta -= arguments.cashFlow.get(i).amount() *
                 process.riskFreeRate().getLink().zeroRate(d,rfdc,Compounding.CONTINUOUS,Frequency.ANNUAL).rate()*
                 process.riskFreeRate().getLink().discount(d);
                 double /*@Time*/ tt = process.getTime(d);
-                delta_rho += arguments.cashFlow.get(i).getAmount() * tt *
+                delta_rho += arguments.cashFlow.get(i).amount() * tt *
                   process.riskFreeRate().getLink().discount(tt);
             }
         }

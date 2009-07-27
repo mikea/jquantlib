@@ -50,7 +50,7 @@ public class FractionalDividend extends Dividend {
 	}
 
 	@Override
-	public double getAmount() {
+	public double amount() {
 		if(nominal==0.0){
 			throw new IllegalStateException("No nominal given!");			
 		}

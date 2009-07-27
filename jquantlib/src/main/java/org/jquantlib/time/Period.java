@@ -44,7 +44,8 @@ package org.jquantlib.time;
 
 import java.util.Formatter;
 import java.util.Locale;
-import static org.jquantlib.Error.QL_FAIL;
+
+import org.jquantlib.Validate;
 
 /**
  * Time period to represent time by days, month and years as specified by
@@ -447,7 +448,7 @@ public class Period {
               case YEARS:
                 break;
               default:
-                QL_FAIL("unknown time unit (" + units.getShortFormat() + ")");
+                Validate.QL_FAIL("unknown time unit (" + units.getShortFormat() + ")");
             }
     }
 

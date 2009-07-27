@@ -1,7 +1,7 @@
 package org.jquantlib.model.marketmodels;
 
 import java.util.Arrays;
-import static org.jquantlib.Error.QL_REQUIRE;
+import static org.jquantlib.Validate.QL_REQUIRE;
 
 //! %Curve state for market-model simulations
 /*! This class stores the state of the yield curve associated to the

@@ -39,7 +39,7 @@
 
 package org.jquantlib.pricingengines;
 
-import java.util.List; // FIXME :: performance
+import java.util.List;
 
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.results.Results;
@@ -67,10 +67,10 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 
 	
 	//
-	// public constructors
+	// protected constructors
 	//
 	
-	public GenericEngine(final A arguments, final R results) {
+	protected GenericEngine(final A arguments, final R results) {
 		this.arguments = arguments;
 		this.results = results;
 	}
@@ -79,12 +79,7 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 	//
 	// implements PricingEngine
 	//
-	// just to make everything compiling...
-    public GenericEngine() {
-        // TODO Auto-generated constructor stub
-    }
-
-
+	
     @Override
 	public final A getArguments() {
 		return arguments;

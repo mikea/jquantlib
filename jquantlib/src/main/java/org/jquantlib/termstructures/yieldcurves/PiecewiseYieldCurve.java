@@ -39,7 +39,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import org.jquantlib.Error;
+import org.jquantlib.Validate;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.reflect.TypeNode;
 import org.jquantlib.lang.reflect.TypeTokenTree;
@@ -56,6 +56,7 @@ import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.termstructures.RateHelper;
+import org.jquantlib.termstructures.RateHelperSorter;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
@@ -64,6 +65,7 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.LazyObject;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Pair;
+import org.jquantlib.util.stdlibc.Std;
 
 /**
  * Piecewise yield term structure
@@ -83,20 +85,45 @@ import org.jquantlib.util.Pair;
  */
 public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> extends LazyObject implements YieldTraits<I> { 
 	
+    /**
+     * Intended to hold a reference to <code>this</code> instance.
+     */
     private final PiecewiseYieldCurve<C,I> container;
+
+    /**
+     * Intended to hold a reference to a concrete implementation of <code>super</code> 
+     * as the base class of PiecewiseYieldCurve is virtual.
+     * <p>
+     * In order to provide a virtual base class in Java, we do not extend directly
+     * but we implement the interface that the base class needs to implement and
+     * we use a delegator pattern in order to forward calls to the base class.
+     * <p>
+     * The actual concrete implementation of <code>super</code> is chosen based
+     * on class parameter <code>C</code>. The other class parameter <code>I</code>
+     * is passed to the constructor.
+     */
     private final YieldTraits<I> baseCurve; // TODO: refactor to YieldCurve ???
+    
+    /**
+     * Intended to provide curve traits to be used by our virtual base class.
+     * <p>
+     * The actual curve traits concrete implementation is chosen based
+     * on class parameter <code>C</code>.
+     */
     private final CurveTraits    traits;
+    
+    
+    private final RateHelper[] instruments; // FIXME: class parameter
+    private final /*@Price*/ double accuracy;
 
-    // data members
-    private RateHelper[] instruments;
-    private /*@Price*/ double accuracy;
-
+    
     // common :: SHOULD GO INTO A DEFAULT DELEGATOR WHICH IMPLEMENTS YieldTraits
     private Date[]                            dates;
     private /* @Time */ Array                 times;
     private /* @Rate */ Array                 data;
     private Interpolation                     interpolation;
     private I                                 interpolator;
+
 
     
     public PiecewiseYieldCurve(
@@ -114,7 +141,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         final Class<?> iparam = root.get(1).getElement();
 
         if (cparam==null || iparam==null) throw new IllegalArgumentException("class parameter(s) not specified");
-        if (interpolator==null) throw new NullPointerException("interpolation is null"); // TODO: message
+        if (interpolator==null) throw new NullPointerException("interpolation is null");
         if (!interpolator.getClass().isAssignableFrom(iparam)) 
             throw new ClassCastException("interpolator does not match parameterized type");
         
@@ -153,7 +180,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         final Class<?> iparam = root.get(1).getElement();
 
         if (cparam==null || iparam==null) throw new IllegalArgumentException("class parameter(s) not specified");
-        if (interpolator==null) throw new NullPointerException("interpolation is null"); // TODO: message
+        if (interpolator==null) throw new NullPointerException("interpolation is null");
         if (!interpolator.getClass().isAssignableFrom(iparam)) 
             throw new ClassCastException("interpolator does not match parameterized type");
         
@@ -178,21 +205,19 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
     private void checkInstruments() {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        Error.QL_REQUIRE(!(instruments.length == 0), "no instrument given");
+        Validate.QL_REQUIRE(!(instruments.length == 0), "no instrument given");
 
         // sort rate helpers
         for (int i = 0; i < instruments.length; i++)
             instruments[i].setTermStructure(this); // TODO: code review
 
-        // TODO : compilation error
-        // Std.sort(instruments_, new RateHelperSorter());
-        //                   
+        // TODO: Std.sort(instruments_, new RateHelperSorter());
 
         // check that there is no instruments with the same maturity
         for (int i = 1; i < instruments.length; i++) {
             Date m1 = instruments[i - 1].latestDate();
             Date m2 = instruments[i].latestDate();
-            Error.QL_REQUIRE(m1 != m2, "two instruments have the same maturity");
+            Validate.QL_REQUIRE(m1 != m2, "two instruments have the same maturity");
         }
         for (int i = 0; i < instruments.length; i++)
             instruments[i].addObserver(this);
@@ -208,7 +233,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         // check that there is no instruments with invalid quote
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         for (int i = 0; i < instruments.length; i++)
-            Error.QL_REQUIRE(instruments[i].referenceQuote() != Constants.NULL_Double, "instrument with null price");
+            Validate.QL_REQUIRE(instruments[i].referenceQuote() != Constants.NULL_Double, "instrument with null price");
 
         // setup vectors
         int n = instruments.length;
@@ -268,7 +293,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                     final ObjectiveFunction<C, I> f = new ObjectiveFunction<C, I>(this, instrument, i);
                     this.data.set(i, solver.solve(f, accuracy, guess, min, max));
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("could not bootstrap"); // TODO: message
+                    throw new IllegalArgumentException("could not bootstrap");
                 }
             }
             // check exit conditions
@@ -282,7 +307,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                 break;
 
             if (iteration > maxIterations)
-                throw new IllegalArgumentException("convergence not reached"); // TODO: message
+                throw new IllegalArgumentException("convergence not reached");
         }
     }
 
@@ -501,7 +526,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
     
     //
-    // implements Observer interface
+    // implements Observer
     //
 
     public void update(final Observable o, final Object arg) {
@@ -557,17 +582,17 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
             // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
             // in particular, we are verifying dates.length after calling the super(...)
-            if (dates.length <= 1) throw new IllegalArgumentException("too few dates"); // FIXME: message
-            if (dates.length != discounts.length) throw new IllegalArgumentException("dates/discount factors count mismatch"); // FIXME: message
-            if (discounts.first() != 1.0) throw new IllegalArgumentException("the first discount must be == 1.0 to flag the corrsponding date as settlement date"); // FIXME: message
+            if (dates.length <= 1) throw new IllegalArgumentException("too few dates");
+            if (dates.length != discounts.length) throw new IllegalArgumentException("dates/discount factors count mismatch");
+            if (discounts.first() != 1.0) throw new IllegalArgumentException("the first discount must be == 1.0 to flag the corrsponding date as settlement date");
 
             isNegativeRates = settings.isNegativeRates();
 
             container.times = new Array(dates.length);
             for (int i = 1; i < dates.length; i++) {
                 if (dates[i].le(dates[i-1]))
-                    throw new IllegalArgumentException("invalid date"); // FIXME: message
-                if (!isNegativeRates && (discounts.get(i) < 0.0)) throw new IllegalArgumentException("negative discount"); // FIXME: message
+                    throw new IllegalArgumentException("invalid date");
+                if (!isNegativeRates && (discounts.get(i) < 0.0)) throw new IllegalArgumentException("negative discount");
                 double value = dayCounter.yearFraction(dates[0], dates[i]);
                 times.set(i, value);
             }
@@ -624,7 +649,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
 
         //
-        // The following methods should be protected in order to mimick as it is done in C++
+        // The following methods should be protected in order to mimick the way it is done in C++
         //
         
         @Override
@@ -678,16 +703,16 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
 	        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
 	        // in particular, we are verifying dates.length after calling the super(...)
-	        if (dates.length <= 1) throw new IllegalArgumentException("too few dates"); // FIXME: message
-            if (dates.length != forwards.length) throw new IllegalArgumentException("dates/yields count mismatch"); // FIXME: message
+	        if (dates.length <= 1) throw new IllegalArgumentException("too few dates");
+            if (dates.length != forwards.length) throw new IllegalArgumentException("dates/yields count mismatch");
 
 	        isNegativeRates = settings.isNegativeRates();
 
 	        container.times = new Array(dates.length);
 	        for (int i = 1; i < dates.length; i++) {
 	            if (dates[i].le(dates[i-1]))
-	                throw new IllegalArgumentException("invalid date"); // FIXME: message
-	            if (!isNegativeRates && (forwards.get(i) < 0.0)) throw new IllegalArgumentException("negative forward"); // FIXME: message
+	                throw new IllegalArgumentException("invalid date");
+	            if (!isNegativeRates && (forwards.get(i) < 0.0)) throw new IllegalArgumentException("negative forward");
 	            double value = dayCounter.yearFraction(dates[0], dates[i]);
 	            times.set(i, value);
 	        }
@@ -743,7 +768,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
 
 	    //
-	    // The following methods should be protected in order to mimick as it is done in C++
+        // The following methods should be protected in order to mimick the way it is done in C++
 	    //
 	    
         @Override
@@ -753,7 +778,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         @Override
         public /*@Rate*/ double forwardImpl(/*@Time*/double t) /* @ReadOnly */{
-            return interpolation.evaluate(t, true); // FIXME: code review
+            return interpolation.evaluate(t, true);
         }
 
         @Override
@@ -761,7 +786,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             if (t == 0.0) 
                 return forwardImpl(0.0);
             else 
-                return interpolation.primitive(t, true) / t; // FIXME: code review
+                return interpolation.primitive(t, true) / t;
         }
 
 	}
@@ -840,7 +865,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
 
         //
-        // The following methods should be protected in order to mimick as it is done in C++
+        // The following methods should be protected in order to mimick the way it is done in C++
         //
         
         @Override

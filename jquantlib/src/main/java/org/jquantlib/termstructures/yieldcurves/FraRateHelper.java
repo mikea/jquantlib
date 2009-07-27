@@ -38,6 +38,8 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  * 
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: please verify against original QL/C++ code
 public class FraRateHelper extends RelativeDateRateHelper {
 
 	private Date fixingDate;
@@ -55,7 +57,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 			throw new IllegalArgumentException(
 					"monthsToEnd must be greater than monthsToStart");
 		iborIndex = new IborIndex("no-fix", new Period(monthsToEnd
-				- monthsToStart, TimeUnit.MONTHS), fixingDays, null,calendar, 
+				- monthsToStart, TimeUnit.MONTHS), fixingDays, calendar, null,
 				convention, endOfMonth, dayCounter, termStructureHandle);
 		initializeDates();
 
@@ -73,7 +75,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
 				new Period(monthsToEnd - monthsToStart, TimeUnit.MONTHS),
-				fixingDays, null, calendar, convention, endOfMonth, dayCounter,
+				fixingDays, calendar, null, convention, endOfMonth, dayCounter,
 				termStructureHandle);
 		initializeDates();
 	}
@@ -83,8 +85,8 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		this.monthsToStart = monthsToStart;
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				i.getTenor(), i.getFixingDays(), null,i.fixingCalendar(),  i
-						.getConvention(), i.isEndOfMonth(), i.getDayCounter(),
+				i.tenor(), i.fixingDays(), i.fixingCalendar(), null, i
+						.getConvention(), i.isEndOfMonth(), i.dayCounter(),
 				termStructureHandle);
 		initializeDates();
 
@@ -95,8 +97,8 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		this.monthsToStart = monthsToStart;
 		iborIndex = new IborIndex(
 				"no-fix", // never take fixing into account
-				i.getTenor(), i.getFixingDays(), null,i.fixingCalendar(),  i
-						.getConvention(), i.isEndOfMonth(), i.getDayCounter(),
+				i.tenor(), i.fixingDays(), i.fixingCalendar(), null, i
+						.getConvention(), i.isEndOfMonth(), i.dayCounter(),
 				termStructureHandle);
 		initializeDates();
 	}
@@ -114,7 +116,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
     protected void initializeDates() {
         Date settlement = iborIndex.fixingCalendar().advance(
-            evaluationDate, new Period(iborIndex.getFixingDays(),TimeUnit.DAYS), BusinessDayConvention.FOLLOWING, false);
+            evaluationDate, new Period(iborIndex.fixingDays(),TimeUnit.DAYS), BusinessDayConvention.FOLLOWING, false);
         earliestDate = iborIndex.fixingCalendar().advance(
                                settlement,
                                new Period(monthsToStart,TimeUnit.MONTHS),
