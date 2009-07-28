@@ -22,7 +22,7 @@
 
 package org.jquantlib.cashflow;
 
-import java.util.List; //FIXME: performance
+import java.util.List;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
@@ -39,7 +39,7 @@ import org.jquantlib.util.Visitor;
  * 
  * @author Richard Gomes
  */
-public abstract class Event implements Observable, TypedVisitable<Event> {
+public abstract class Event implements Observable, TypedVisitable<Object> {
 
     //
     // private final fields
@@ -89,9 +89,21 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 	 * @see Settings.todaysPayments
 	 * @see todaysPayments
 	 */
-	public boolean hasOccurred(final Date d) /* @ReadOnly */{
-		return hasOccurred(d, todaysPayments);
-	}
+	
+	
+	/**
+	 * Returns true if an event has already occurred before a date
+	 * <p>
+     * If {@link Settings#isTodaysPayments()} is true, then a payment event has not
+     * occurred if the input date is the same as the event date,
+     * and so includeToday should be defaulted to true.
+     * <p>
+     * This should be the only place in the code that is affected
+     * directly by {@link Settings#isTodaysPayments()}
+	 */
+    public boolean hasOccurred(final Date d) /* @ReadOnly */ {
+        return hasOccurred(d, todaysPayments);
+    }
 
 	/**
 	 * Returns true if an event has already occurred before a date where it is
@@ -162,8 +174,8 @@ public abstract class Event implements Observable, TypedVisitable<Event> {
 	//
 	
 	@Override
-	public void accept(final TypedVisitor<Event> v) {
-		Visitor<Event> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+	public void accept(final TypedVisitor<Object> v) {
+		Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
 		if (v1 != null) {
 			v1.visit(this);
 		} else {

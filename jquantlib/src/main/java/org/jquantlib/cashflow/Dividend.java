@@ -81,17 +81,17 @@ public abstract class Dividend extends CashFlow {
 
     
     //
-    // implements TypedVisitable<Event>
+    // implements TypedVisitable
     //
     
-	@Override
-	public void accept(final TypedVisitor<Event> event) {
-		Visitor<Event> event1 = (event!=null) ? event.getVisitor(this.getClass()) : null;
-		if (event1 != null) {
-			event1.visit(this);
-		} else {
-			super.accept(event);
-		}
-	}
+    @Override
+    public void accept(final TypedVisitor<Object> v) {
+        Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
+    }
 
 }

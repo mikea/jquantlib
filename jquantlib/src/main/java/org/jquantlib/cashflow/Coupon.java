@@ -145,10 +145,9 @@ public abstract class Coupon extends CashFlow {
     // implements TypedVisitable
     //
     
-    // TODO: code review :: object model needs to be validated and eventually refactored
     @Override
-    public void accept(final TypedVisitor<Event> v) {
-        Visitor<Event> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+    public void accept(final TypedVisitor<Object> v) {
+        Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
         if (v1 != null) {
             v1.visit(this);
         } else {

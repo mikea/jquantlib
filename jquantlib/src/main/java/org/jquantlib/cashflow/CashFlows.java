@@ -34,8 +34,8 @@ import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
 import org.jquantlib.util.stdlibc.Std;
 
 /**
@@ -196,6 +196,21 @@ public class CashFlows {
             final Leg cashflows, 
             final Handle<YieldTermStructure> discountCurve, 
             final Date settlementDate,
+            final Date npvDate) {
+        return bps(cashflows, discountCurve, settlementDate, npvDate, 0);
+    }
+    
+    
+    /**
+     * Basis-point sensitivity of the cash flows.
+     * <p>
+     * The result is the change in NPV due to a uniform 1-basis-point change in the rate paid by the cash flows. The change for
+     * each coupon is discounted according to the given term structure.
+     */
+    public double bps(
+            final Leg cashflows, 
+            final Handle<YieldTermStructure> discountCurve, 
+            final Date settlementDate,
             final Date npvDate, 
             final int exDividendDays) {
         
@@ -204,14 +219,10 @@ public class CashFlows {
             date = discountCurve.getLink().referenceDate();
         }
         
-        final BPSCalculator<CashFlow> calc = new BPSCalculator<CashFlow>(discountCurve, npvDate);
+        final BPSCalculator calc = new BPSCalculator(discountCurve, npvDate);
         for (int i = 0; i < cashflows.size(); ++i) {
             if (!cashflows.get(i).hasOccurred(date.increment(exDividendDays))) {
-                //TODO: Code review :: incomplete code
-                if (true)
-                    throw new UnsupportedOperationException("Work in progress");
-                
-                //TODO: cashflows.get(i).accept(calc);
+                cashflows.get(i).accept(calc);
             }
         }
         return basisPoint_ * calc.result();
@@ -235,9 +246,7 @@ public class CashFlows {
         }
         
         YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
-        
-        // TODO: 0 added by hand -> do we have to hide the method using another layer ?
-        return bps(cashflows, new Handle<YieldTermStructure>(flatRate), date, date, 0);
+        return bps(cashflows, new Handle<YieldTermStructure>(flatRate), date, date);
     }
 
     public double bps(final Leg leg, final InterestRate interestRate) {
@@ -576,8 +585,10 @@ public class CashFlows {
         }
     }
 
-    private class BPSCalculator<T extends Event> implements TypedVisitable<T> {
+    private class BPSCalculator implements TypedVisitor<Object> {
 
+        private static final String UNKNOWN_VISITABLE = "unknow visitable object";
+        
         private final Handle<YieldTermStructure> termStructure;
         private final Date npvDate;
         
@@ -598,17 +609,38 @@ public class CashFlows {
 
         
         //
-        // implements TypedVisitable
+        // implements TypedVisitor
         //
         
         @Override
-        public void accept(TypedVisitor<T> v) {
-            if (v instanceof Coupon) {
-                Coupon c = (Coupon) v;
+        public Visitor<Object> getVisitor(Class<? extends Object> klass) {
+            if (klass==CashFlow.class)
+                return new CashFlowVisitor();
+            if (klass==Coupon.class)
+                return new CouponVisitor();
+            throw new UnsupportedOperationException(UNKNOWN_VISITABLE);
+        }
+
+        
+        //
+        // private inner classes
+        //
+        
+        private class CashFlowVisitor implements Visitor<Object> {
+            @Override
+            public void visit(Object o) {
+                // nothing
+            }
+        }
+        
+        private class CouponVisitor implements Visitor<Object> {
+            @Override
+            public void visit(Object o) {
+                Coupon c = (Coupon) o;
                 result += c.accrualPeriod() * c.nominal() * termStructure.getLink().discount(c.date());
             }
         }
-
+        
     }
 
 }

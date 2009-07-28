@@ -134,8 +134,8 @@ public class IborCoupon extends FloatingRateCoupon {
     //
     
     @Override
-    public void accept(final TypedVisitor<Event> v) {
-        Visitor<Event> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
+    public void accept(final TypedVisitor<Object> v) {
+        Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
         if (v1 != null) {
             v1.visit(this);
         } else {

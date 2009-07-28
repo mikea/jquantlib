@@ -170,23 +170,6 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
 //   notifyObservers();
 }
 
-        //
-        // implements TypedVisitable
-        //
-        
-        // TODO: code review :: object model needs to be validated and eventually refactored
-        @Override
-        public void accept(final TypedVisitor<Event> v) {
-            final Visitor<Event> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-            if (v1 != null) {
-                v1.visit(this);
-            } else {
-                super.accept(v);
-            }
-        }
-
-    
-
     //FIXME ... 
     public CappedFlooredCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays,
             InterestRateIndex index, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter,
@@ -196,6 +179,21 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
         //TODO: Code review :: incomplete code
         if (true)
             throw new UnsupportedOperationException("Work in progress");
+    }
+
+    
+    //
+    // implements TypedVisitable
+    //
+        
+    @Override
+    public void accept(final TypedVisitor<Object> v) {
+        Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
     }
 
 }
