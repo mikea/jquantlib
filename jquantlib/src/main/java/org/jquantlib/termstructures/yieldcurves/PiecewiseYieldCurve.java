@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -39,13 +39,12 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import org.jquantlib.Validate;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.reflect.TypeNode;
 import org.jquantlib.lang.reflect.TypeTokenTree;
-import org.jquantlib.math.Ops;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Constants;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.interpolations.factories.BackwardFlat;
@@ -73,23 +72,23 @@ import org.jquantlib.util.Pair;
  * <p>
  * Each segment is determined sequentially starting from the earliest period to the latest and is chosen so that the instrument
  * whose maturity marks the end of such segment is correctly repriced on the curve.
- * 
+ *
  * @note The bootstrapping algorithm will raise an exception if any two instruments have the same maturity date.
- * 
- * 
+ *
+ *
  * @category yieldtermstructures
- * 
+ *
  * @author Richard Gomes
  */
-public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> extends LazyObject implements YieldTraits<I> { 
-	
+public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> extends LazyObject implements YieldTraits<I> {
+
     /**
      * Intended to hold a reference to <code>this</code> instance.
      */
     private final PiecewiseYieldCurve<C,I> container;
 
     /**
-     * Intended to hold a reference to a concrete implementation of <code>super</code> 
+     * Intended to hold a reference to a concrete implementation of <code>super</code>
      * as the base class of PiecewiseYieldCurve is virtual.
      * <p>
      * In order to provide a virtual base class in Java, we do not extend directly
@@ -101,7 +100,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
      * is passed to the constructor.
      */
     private final YieldTraits<I> baseCurve; // TODO: refactor to YieldCurve ???
-    
+
     /**
      * Intended to provide curve traits to be used by our virtual base class.
      * <p>
@@ -109,12 +108,12 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
      * on class parameter <code>C</code>.
      */
     private final CurveTraits    traits;
-    
-    
+
+
     private final RateHelper[] instruments; // FIXME: class parameter
     private final /*@Price*/ double accuracy;
 
-    
+
     // common :: SHOULD GO INTO A DEFAULT DELEGATOR WHICH IMPLEMENTS YieldTraits
     private Date[]                            dates;
     private /* @Time */ Array                 times;
@@ -123,26 +122,26 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     private I                                 interpolator;
 
 
-    
+
     public PiecewiseYieldCurve(
-            final Date referenceDate, 
-            final RateHelper[] instruments, 
+            final Date referenceDate,
+            final RateHelper[] instruments,
             final DayCounter dayCounter,
-            final/* @Price */double accuracy, 
+            final/* @Price */double accuracy,
             final I interpolator) {
 
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        
+
         final TypeNode root = new TypeTokenTree(this.getClass()).getRoot();
         final Class<?> cparam = root.get(0).getElement();
         final Class<?> iparam = root.get(1).getElement();
 
         if (cparam==null || iparam==null) throw new IllegalArgumentException("class parameter(s) not specified");
         if (interpolator==null) throw new NullPointerException("interpolation is null");
-        if (!interpolator.getClass().isAssignableFrom(iparam)) 
+        if (!interpolator.getClass().isAssignableFrom(iparam))
             throw new ClassCastException("interpolator does not match parameterized type");
-        
+
         if (Discount.class.isAssignableFrom(cparam)) {
             this.baseCurve = new InterpolatedDiscountCurve(referenceDate, dayCounter, interpolator);
             this.traits = new Discount();
@@ -152,18 +151,17 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         } else if (ZeroYield.class.isAssignableFrom(cparam)) {
             this.baseCurve = new InterpolatedZeroCurve(referenceDate, dayCounter, interpolator);
             this.traits = new ZeroYield();
-        } else {
+        } else
             throw new UnsupportedOperationException("only Discount, ForwardRate and ZeroYield are supported");
-        }
 
         this.instruments = instruments;
         this.accuracy = accuracy;
         this.container = this;
         checkInstruments();
-    }	
+    }
 
     public PiecewiseYieldCurve(
-            final /*@Natural*/ int settlementDays, 
+            final /*@Natural*/ int settlementDays,
             final Calendar calendar,
             final RateHelper[] instruments,
             final DayCounter dayCounter,
@@ -172,16 +170,16 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        
+
         final TypeNode root = new TypeTokenTree(this.getClass()).getRoot();
         final Class<?> cparam = root.get(0).getElement();
         final Class<?> iparam = root.get(1).getElement();
 
         if (cparam==null || iparam==null) throw new IllegalArgumentException("class parameter(s) not specified");
         if (interpolator==null) throw new NullPointerException("interpolation is null");
-        if (!interpolator.getClass().isAssignableFrom(iparam)) 
+        if (!interpolator.getClass().isAssignableFrom(iparam))
             throw new ClassCastException("interpolator does not match parameterized type");
-        
+
         if (Discount.class.isAssignableFrom(cparam)) {
             this.baseCurve = new InterpolatedDiscountCurve(settlementDays, calendar, dayCounter, interpolator);
             this.traits = new Discount();
@@ -191,54 +189,51 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         } else if (ZeroYield.class.isAssignableFrom(cparam)) {
             this.baseCurve = new InterpolatedZeroCurve(settlementDays, calendar, dayCounter, interpolator);
             this.traits = new ZeroYield();
-        } else {
+        } else
             throw new UnsupportedOperationException("only Discount, ForwardRate and ZeroYield are supported");
-        }
 
         this.instruments = instruments;
         this.accuracy = accuracy;
         this.container = this;
         checkInstruments();
-    }   
+    }
 
     private void checkInstruments() {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        Validate.QL_REQUIRE(!(instruments.length == 0), "no instrument given");
+        assert instruments.length>0 : "no instrument given";
 
         // sort rate helpers
-        for (int i = 0; i < instruments.length; i++)
-            instruments[i].setTermStructure(this); // TODO: code review
+        for (final RateHelper instrument : instruments)
+            instrument.setTermStructure(this); // TODO: code review
 
         // TODO: Std.sort(instruments_, new RateHelperSorter());
 
         // check that there is no instruments with the same maturity
         for (int i = 1; i < instruments.length; i++) {
-            Date m1 = instruments[i - 1].latestDate();
-            Date m2 = instruments[i].latestDate();
-            Validate.QL_REQUIRE(m1 != m2, "two instruments have the same maturity");
+            final Date m1 = instruments[i - 1].latestDate();
+            final Date m2 = instruments[i].latestDate();
+            assert m1.eq(m2) : "two instruments have the same maturity";
         }
-        for (int i = 0; i < instruments.length; i++)
-            instruments[i].addObserver(this);
+        for (final RateHelper instrument : instruments)
+            instrument.addObserver(this);
     }
 
-    
+
     //
     // overrides LazyObject
     //
-    
+
     @Override
     public void performCalculations() /* @ReadOnly */ {
         // check that there is no instruments with invalid quote
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        for (int i = 0; i < instruments.length; i++)
-            Validate.QL_REQUIRE(instruments[i].referenceQuote() != Constants.NULL_Double, "instrument with null price");
+        for (final RateHelper instrument2 : instruments)
+            assert instrument2.referenceQuote() != Constants.NULL_Double : "instrument with null price";
 
         // setup vectors
-        int n = instruments.length;
-        for (int i = 0; i < n; i++) {
+        final int n = instruments.length;
+        for (int i = 0; i < n; i++)
             // don't try this at home!
             instruments[i].setTermStructure(this); // TODO: code review : const_cast<PiecewiseYieldCurve<C,I>*>(this));
-        }
         this.dates = new Date[n + 1];
         this.times = new Array(n + 1);
         this.data = new Array(n + 1);
@@ -246,7 +241,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         this.dates[0] = this.referenceDate();
         this.times.set(0, 0.0);
 
-        double prev = traits.initialValue();
+        final double prev = traits.initialValue();
         this.data.set(0, prev);
 
         for (int i = 0; i < n; i++) {
@@ -256,41 +251,38 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
 
         final Brent solver = new Brent();
-        int maxIterations = 25;
+        final int maxIterations = 25;
         // bootstrapping loop
         for (int iteration = 0;; iteration++) {
             final Array previousData = this.data.clone();
             for (int i = 1; i < n + 1; i++) {
-                if (iteration == 0) {
+                if (iteration == 0)
                     // extend interpolation a point at a time
-                    if (this.interpolator.global() && i < 2) {
+                    if (this.interpolator.global() && i < 2)
                         // not enough points for splines
                         this.interpolation = new Linear().interpolate(this.times, this.data);
-                    } else {
+                    else
                         this.interpolation = this.interpolator.interpolate(this.times, this.data);
-                    }
-                }
                 this.interpolation.update();
-                RateHelper instrument = instruments[i - 1];
+                final RateHelper instrument = instruments[i - 1];
                 /* @Price */double guess;
-                if (iteration > 0) {
+                if (iteration > 0)
                     // use perturbed value from previous loop
                     guess = 0.99 * this.data.get(i);
-                } else if (i > 1) {
+                else if (i > 1)
                     // extrapolate
                     guess = traits.guess(this, this.dates[i]);
-                } else {
+                else
                     guess = traits.initialGuess();
-                }
                 // bracket
-                /* @Price */double min = traits.minValueAfter(i, this.data);
-                /* @Price */double max = traits.maxValueAfter(i, this.data);
+                /* @Price */final double min = traits.minValueAfter(i, this.data);
+                /* @Price */final double max = traits.maxValueAfter(i, this.data);
                 if (guess <= min || guess >= max)
                     guess = (min + max) / 2.0;
                 try {
                     final ObjectiveFunction<C, I> f = new ObjectiveFunction<C, I>(this, instrument, i);
                     this.data.set(i, solver.solve(f, accuracy, guess, min, max));
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     throw new IllegalArgumentException("could not bootstrap");
                 }
             }
@@ -309,11 +301,11 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
     }
 
-    
+
     //
     // implements YieldTraits
     //
-    
+
     @Override
     public Date[] dates() {
         calculate();
@@ -339,7 +331,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     }
 
     @Override
-    public double discountImpl(double t) {
+    public double discountImpl(final double t) {
         calculate();
         return baseCurve.discountImpl(t);
     }
@@ -360,22 +352,22 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     }
 
     @Override
-    public double forwardImpl(double t) {
+    public double forwardImpl(final double t) {
         calculate();
         return baseCurve.forwardImpl(t);
     }
 
     @Override
-    public double zeroYieldImpl(double t) {
+    public double zeroYieldImpl(final double t) {
         calculate();
         return baseCurve.zeroYieldImpl(t);
     }
 
-    
+
     //
     // implements Extrapolator
     //
-    
+
     @Override
     public boolean allowsExtrapolation() {
         return baseCurve.allowsExtrapolation();
@@ -395,7 +387,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     //
     // implements TermStructure
     //
-    
+
     @Override
     public Calendar calendar() {
         return baseCurve.calendar();
@@ -417,27 +409,27 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     }
 
     @Override
-    public double timeFromReference(Date date) {
+    public double timeFromReference(final Date date) {
         return baseCurve.timeFromReference(date);
     }
 
     @Override
-    public double discount(Date d, boolean extrapolate) {
+    public double discount(final Date d, final boolean extrapolate) {
         return baseCurve.discount(d, extrapolate);
     }
 
     @Override
-    public double discount(Date d) {
+    public double discount(final Date d) {
         return baseCurve.discount(d);
     }
 
     @Override
-    public double discount(double t, boolean extrapolate) {
+    public double discount(final double t, final boolean extrapolate) {
         return baseCurve.discount(t, extrapolate);
     }
 
     @Override
-    public double discount(double t) {
+    public double discount(final double t) {
         return baseCurve.discount(t);
     }
 
@@ -445,111 +437,112 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     //
     // implements YieldTermStructure
     //
-    
+
     @Override
-    public InterestRate forwardRate(Date d1, Date d2, DayCounter dayCounter, Compounding comp, Frequency freq, boolean extrapolate) {
+    public InterestRate forwardRate(final Date d1, final Date d2, final DayCounter dayCounter, final Compounding comp, final Frequency freq, final boolean extrapolate) {
         return baseCurve.forwardRate(d1, d2, dayCounter, comp, freq, extrapolate);
     }
 
     @Override
-    public InterestRate forwardRate(Date d1, Date d2, DayCounter resultDayCounter, Compounding comp, Frequency freq) {
+    public InterestRate forwardRate(final Date d1, final Date d2, final DayCounter resultDayCounter, final Compounding comp, final Frequency freq) {
         return baseCurve.forwardRate(d1, d2, resultDayCounter, comp, freq);
     }
 
     @Override
-    public InterestRate forwardRate(Date d1, Date d2, DayCounter resultDayCounter, Compounding comp) {
+    public InterestRate forwardRate(final Date d1, final Date d2, final DayCounter resultDayCounter, final Compounding comp) {
         return baseCurve.forwardRate(d1, d2, resultDayCounter, comp);
     }
 
     @Override
-    public InterestRate forwardRate(Date d, Period p, DayCounter dayCounter, Compounding comp, Frequency freq, boolean extrapolate) {
+    public InterestRate forwardRate(final Date d, final Period p, final DayCounter dayCounter, final Compounding comp, final Frequency freq, final boolean extrapolate) {
         return baseCurve.forwardRate(d, p, dayCounter, comp, freq, extrapolate);
     }
 
     @Override
-    public InterestRate forwardRate(Date d, Period p, DayCounter resultDayCounter, Compounding comp, Frequency freq) {
+    public InterestRate forwardRate(final Date d, final Period p, final DayCounter resultDayCounter, final Compounding comp, final Frequency freq) {
         return baseCurve.forwardRate(d, p, resultDayCounter, comp, freq);
     }
 
     @Override
-    public InterestRate forwardRate(double time1, double time2, Compounding comp, Frequency freq, boolean extrapolate) {
+    public InterestRate forwardRate(final double time1, final double time2, final Compounding comp, final Frequency freq, final boolean extrapolate) {
         return baseCurve.forwardRate(time1, time2, comp, freq, extrapolate);
     }
 
     @Override
-    public InterestRate forwardRate(double t1, double t2, Compounding comp, Frequency freq) {
+    public InterestRate forwardRate(final double t1, final double t2, final Compounding comp, final Frequency freq) {
         return baseCurve.forwardRate(t1, t2, comp, freq);
     }
 
     @Override
-    public InterestRate forwardRate(double t1, double t2, Compounding comp) {
+    public InterestRate forwardRate(final double t1, final double t2, final Compounding comp) {
         return baseCurve.forwardRate(t1, t2, comp);
     }
 
     @Override
-    public double parRate(Date[] dates, Frequency freq, boolean extrapolate) {
+    public double parRate(final Date[] dates, final Frequency freq, final boolean extrapolate) {
         return baseCurve.parRate(dates, freq, extrapolate);
     }
-    
+
 
     @Override
-    public double parRate(double[] times, Frequency frequency, boolean extrapolate) {
+    public double parRate(final double[] times, final Frequency frequency, final boolean extrapolate) {
         return baseCurve.parRate(times, frequency, extrapolate);
     }
 
     @Override
-    public double parRate(int tenor, Date startDate, Frequency freq, boolean extrapolate) {
+    public double parRate(final int tenor, final Date startDate, final Frequency freq, final boolean extrapolate) {
         return baseCurve.parRate(tenor, startDate, freq, extrapolate);
     }
 
     @Override
-    public InterestRate zeroRate(Date d, DayCounter dayCounter, Compounding comp, Frequency freq, boolean extrapolate) {
+    public InterestRate zeroRate(final Date d, final DayCounter dayCounter, final Compounding comp, final Frequency freq, final boolean extrapolate) {
         return baseCurve.zeroRate(d, dayCounter, comp, freq, extrapolate);
     }
 
     @Override
-    public InterestRate zeroRate(Date d, DayCounter resultDayCounter, Compounding comp, Frequency freq) {
+    public InterestRate zeroRate(final Date d, final DayCounter resultDayCounter, final Compounding comp, final Frequency freq) {
         return baseCurve.zeroRate(d, resultDayCounter, comp, freq);
     }
 
     @Override
-    public InterestRate zeroRate(Date d, DayCounter resultDayCounter, Compounding comp) {
+    public InterestRate zeroRate(final Date d, final DayCounter resultDayCounter, final Compounding comp) {
         return baseCurve.zeroRate(d, resultDayCounter, comp);
     }
 
     @Override
-    public InterestRate zeroRate(double time, Compounding comp, Frequency freq, boolean extrapolate) {
+    public InterestRate zeroRate(final double time, final Compounding comp, final Frequency freq, final boolean extrapolate) {
         return baseCurve.zeroRate(time, comp, freq, extrapolate);
     }
 
-    
+
     //
     // implements Observer
     //
 
+    @Override
     public void update(final Observable o, final Object arg) {
         baseCurve.update(o, arg);
         super.update(o, arg);
     }
-    
-    
+
+
     //
     // inner classes
     //
 
     /**
      * Term structure based on interpolation of discount factors.
-     * 
+     *
      * @note LogLinear interpolation is assumed by default when no interpolation class is passed to constructors.
      * Log-linear interpolation guarantees piecewise-constant forward rates.
-     * 
+     *
      * @category yieldtermstructures
-     * 
+     *
      * @author Richard Gomes
      */
     private class InterpolatedDiscountCurve extends AbstractYieldTermStructure implements YieldTraits<I> {
 
-        private boolean isNegativeRates;
+        private final boolean isNegativeRates;
 
         public InterpolatedDiscountCurve(final DayCounter dayCounter, final I interpolator) {
             super(dayCounter);
@@ -571,10 +564,10 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         //TODO: who's calling this constructor???
         public InterpolatedDiscountCurve(
-                final Date[] dates, 
+                final Date[] dates,
                 final /* @DiscountFactor */ Array discounts,
-                final DayCounter dayCounter, 
-                final Calendar cal, 
+                final DayCounter dayCounter,
+                final Calendar cal,
                 final I interpolator) {
             super(dates[0], cal, dayCounter);
 
@@ -591,7 +584,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                 if (dates[i].le(dates[i-1]))
                     throw new IllegalArgumentException("invalid date");
                 if (!isNegativeRates && (discounts.get(i) < 0.0)) throw new IllegalArgumentException("negative discount");
-                double value = dayCounter.yearFraction(dates[0], dates[i]);
+                final double value = dayCounter.yearFraction(dates[0], dates[i]);
                 times.set(i, value);
             }
 
@@ -602,7 +595,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             container.interpolation.update();
         }
 
-        
+
         //
         // implements TraitsCurve
         //
@@ -624,7 +617,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         @Override
         public final Pair<Date, Double>[] nodes() /* @ReadOnly */{
-            Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
+            final Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
             for (int i = 0; i < dates.length; i++)
                 results[i] = new Pair<Date, Double>(dates[i], data.get(i));
             return results;
@@ -632,7 +625,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         // exclusive to discount curve
         public /* @DiscountFactor */Array discounts() /* @ReadOnly */ {
-            throw new UnsupportedOperationException(); 
+            throw new UnsupportedOperationException();
         }
 
         // exclusive to forward curve
@@ -642,40 +635,40 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         // exclusive to zero rate
         public /* @Rate */Array zeroRates() /* @ReadOnly */{
-            throw new UnsupportedOperationException(); 
+            throw new UnsupportedOperationException();
         }
 
 
         //
         // The following methods should be protected in order to mimick the way it is done in C++
         //
-        
+
         @Override
         public /* @DiscountFactor */ double discountImpl(final/* @Time */double t) /* @ReadOnly */ {
             return interpolation.evaluate(t, true);
         }
 
         @Override
-        public /*@Rate*/ double forwardImpl(/*@Time*/double t) /* @ReadOnly */{
-            throw new UnsupportedOperationException(); 
+        public /*@Rate*/ double forwardImpl(/*@Time*/final double t) /* @ReadOnly */{
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public /*@Rate*/ double zeroYieldImpl(/*@Time*/double t) /* @ReadOnly */{
-            throw new UnsupportedOperationException(); 
+        public /*@Rate*/ double zeroYieldImpl(/*@Time*/final double t) /* @ReadOnly */{
+            throw new UnsupportedOperationException();
         }
 
     }
-    
+
     /**
      * Term structure based on interpolation of forward rates
-     * 
+     *
      * @category yieldtermstructures
-     * 
+     *
      * @author Richard Gomes
      */
     private final class InterpolatedForwardCurve extends ForwardRateStructure implements YieldTraits<I> {
-	    
+
 	    private boolean      isNegativeRates;
 
 	    public InterpolatedForwardCurve(final DayCounter dayCounter, final I interpolator) {
@@ -711,7 +704,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 	            if (dates[i].le(dates[i-1]))
 	                throw new IllegalArgumentException("invalid date");
 	            if (!isNegativeRates && (forwards.get(i) < 0.0)) throw new IllegalArgumentException("negative forward");
-	            double value = dayCounter.yearFraction(dates[0], dates[i]);
+	            final double value = dayCounter.yearFraction(dates[0], dates[i]);
 	            times.set(i, value);
 	        }
 
@@ -743,7 +736,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         @Override
         public final Pair<Date, Double>[] nodes() /* @ReadOnly */{
-            Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
+            final Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
             for (int i = 0; i < dates.length; i++)
                 results[i] = new Pair<Date, Double>(dates[i], data.get(i));
             return results;
@@ -751,7 +744,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
 	    // exclusive to discount curve
 	    public /* @DiscountFactor */Array discounts() /* @ReadOnly */ {
-            throw new UnsupportedOperationException(); 
+            throw new UnsupportedOperationException();
         }
 
 	    // exclusive to forward curve
@@ -761,42 +754,42 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
 	    // exclusive to zero rate
 	    public /* @Rate */Array zeroRates() /* @ReadOnly */{
-            throw new UnsupportedOperationException(); 
+            throw new UnsupportedOperationException();
         }
 
 
 	    //
         // The following methods should be protected in order to mimick the way it is done in C++
 	    //
-	    
+
         @Override
         public /* @DiscountFactor */ double discountImpl(final/* @Time */double t) /* @ReadOnly */ {
-            throw new UnsupportedOperationException(); 
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public /*@Rate*/ double forwardImpl(/*@Time*/double t) /* @ReadOnly */{
+        public /*@Rate*/ double forwardImpl(/*@Time*/final double t) /* @ReadOnly */{
             return interpolation.evaluate(t, true);
         }
 
         @Override
-        public /*@Rate*/ double zeroYieldImpl(/*@Time*/double t) /* @ReadOnly */{
-            if (t == 0.0) 
+        public /*@Rate*/ double zeroYieldImpl(/*@Time*/final double t) /* @ReadOnly */{
+            if (t == 0.0)
                 return forwardImpl(0.0);
-            else 
+            else
                 return interpolation.primitive(t, true) / t;
         }
 
 	}
-	
+
 
 
 
     /**
      * Term structure based on interpolation of zero yields
-     * 
+     *
      * @category yieldtermstructures
-     * 
+     *
      * @author Richard Gomes
      */
     private final class InterpolatedZeroCurve extends ZeroYieldStructure implements YieldTraits<I> {
@@ -818,7 +811,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
         }
 
-        
+
         //
         // implements TraitsCurve
         //
@@ -840,7 +833,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         @Override
         public final Pair<Date, Double>[] nodes() /* @ReadOnly */{
-            Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
+            final Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
             for (int i = 0; i < dates.length; i++)
                 results[i] = new Pair<Date, Double>(dates[i], data.get(i));
             return results;
@@ -848,7 +841,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         // exclusive to discount curve
         public /* @DiscountFactor */Array discounts() /* @ReadOnly */ {
-            throw new UnsupportedOperationException(); 
+            throw new UnsupportedOperationException();
         }
 
         // exclusive to forward curve
@@ -858,32 +851,32 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         // exclusive to zero rate
         public /* @Rate */Array zeroRates() /* @ReadOnly */{
-            throw new UnsupportedOperationException(); 
+            throw new UnsupportedOperationException();
         }
 
 
         //
         // The following methods should be protected in order to mimick the way it is done in C++
         //
-        
+
         @Override
         public /* @DiscountFactor */ double discountImpl(final/* @Time */double t) /* @ReadOnly */ {
-            throw new UnsupportedOperationException(); 
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public /*@Rate*/ double forwardImpl(/*@Time*/double t) /* @ReadOnly */{
-            throw new UnsupportedOperationException(); 
+        public /*@Rate*/ double forwardImpl(/*@Time*/final double t) /* @ReadOnly */{
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public /*@Rate*/ double zeroYieldImpl(/*@Time*/double t) /* @ReadOnly */{
+        public /*@Rate*/ double zeroYieldImpl(/*@Time*/final double t) /* @ReadOnly */{
             return interpolation.evaluate(t, true);
         }
 
     }
 
-    
+
     private class ObjectiveFunction<C extends CurveTraits, I extends Interpolator> implements Ops.DoubleOp {
 
         private final PiecewiseYieldCurve<C, I> curve;
@@ -904,5 +897,5 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
 
     }
-               
+
 }

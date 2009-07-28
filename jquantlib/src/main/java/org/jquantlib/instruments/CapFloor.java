@@ -3,7 +3,6 @@ package org.jquantlib.instruments;
 import java.util.List;
 
 import org.jquantlib.Configuration;
-import org.jquantlib.Validate;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.FloatingRateCoupon;
@@ -32,59 +31,56 @@ import org.jquantlib.util.DateFactory;
 // TODO: code review :: please verify against original QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CapFloor extends NewInstrument {
-    
+
     public enum Type { Cap, Floor, Collar };
-    
-    private Type type_;
-    private Leg floatingLeg_;
+
+    private final Type type_;
+    private final Leg floatingLeg_;
     private List</*@Rate*/ Double> capRates_;
     private List</*@Rate*/ Double> floorRates_;
-    private Handle<YieldTermStructure> termStructure_;
-    
-    public CapFloor(CapFloor.Type type,
+    private final Handle<YieldTermStructure> termStructure_;
+
+    public CapFloor(final CapFloor.Type type,
             final Leg floatingLeg,
             final List</*@Rate*/ Double> capRates,
             final List</*@Rate*/ Double> floorRates,
             final Handle<YieldTermStructure> termStructure,
             final PricingEngine engine){
-        
+
         this.type_ = type;
         this.floatingLeg_ = floatingLeg;
         this.capRates_ = capRates;
         this.floorRates_ = floorRates;
         this.termStructure_ = termStructure;
-        
+
         setPricingEngine(engine);
-      
-        
-        
+
+
+
    if (type_ == Type.Cap || type_ == Type.Collar) {
-            Validate.QL_REQUIRE(!(capRates_.size() == 0), "no cap rates given");
+            assert capRates_.size()>0 : "no cap rates given";
             // capRates_.reserve(floatingLeg_.size());
-            while (capRates_.size() < floatingLeg_.size()) {
+            while (capRates_.size() < floatingLeg_.size())
                 // this looks kind of suspicious...
                 capRates_.add(capRates_.get(capRates_.size() - 1));
-            }
         }
 
         if (type_ == Type.Floor || type_ == Type.Collar) {
-            Validate.QL_REQUIRE(!(floorRates_.size() == 0), "no floor rates given");
+            assert floorRates_.size()>0 : "no floor rates given";
             // floorRates_.reserve(floatingLeg_.size());
-            while (floorRates_.size() < floatingLeg_.size()) {
+            while (floorRates_.size() < floatingLeg_.size())
                 floorRates_.add(floorRates_.get(floorRates_.size() - 1));
-            }
         }
 
-        for (CashFlow cashFlow : floatingLeg_) {
+        for (final CashFlow cashFlow : floatingLeg_)
             // registerWith(i*);
             cashFlow.addObserver(this);
-        }
 
         termStructure_.addObserver(this);
         Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
     }
-    
-    public CapFloor(Type type,
+
+    public CapFloor(final Type type,
             final Leg floatingLeg,
             final List</*@Rate*/ Double> strikes,
             final Handle<YieldTermStructure> termStructure,
@@ -92,62 +88,57 @@ public class CapFloor extends NewInstrument {
         this.type_ = type;
         this.floatingLeg_ = floatingLeg;
         this.termStructure_ = termStructure;
-        
+
         setPricingEngine(engine);
-        
-        Validate.QL_REQUIRE(!(strikes.size()==0), "no strikes given");
+
+        assert strikes.size()>0 : "no strikes given";
         if (type_ == Type.Cap) {
             capRates_ = strikes;
             //capRates_.reserve(floatingLeg_.size());
-            while (capRates_.size() < floatingLeg_.size()){
+            while (capRates_.size() < floatingLeg_.size())
                 capRates_.add(capRates_.get(capRates_.size()-1));
-            }
         } else if (type_ == Type.Floor) {
             floorRates_ = strikes;
             //floorRates_.reserve(floatingLeg_.size());
-            while (floorRates_.size() < floatingLeg_.size()){
+            while (floorRates_.size() < floatingLeg_.size())
                 floorRates_.add(floorRates_.get(floorRates_.size()-1));
-            }
-        } else{
-            Validate.QL_FAIL("only Cap/Floor types allowed in this constructor");
-        }
-        
-        for (CashFlow cashFlow : floatingLeg_) {
-            // registerWith(i*);
+        } else
+            assert false : "only Cap/Floor types allowed in this constructor";
+
+        for (final CashFlow cashFlow : floatingLeg_)
             cashFlow.addObserver(this);
-        }
 
         termStructure_.addObserver(this);
         Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
     }
-    
+
     public /*@Rate*/double atmRate(){
         return CashFlows.getInstance().atmRate(floatingLeg_, termStructure_);
     }
-    
+
+    @Override
     public boolean isExpired(){
         Date lastPaymentDate = DateFactory.getFactory().getMinDate();
-      for (int i=0; i<floatingLeg_.size(); i++){
-          //FIXME: kind of ugly... intention: get the last date of all dates in the floatingdate c++ max syntax.
+      for (int i=0; i<floatingLeg_.size(); i++)
+        //FIXME: kind of ugly... intention: get the last date of all dates in the floatingdate c++ max syntax.
           lastPaymentDate = lastPaymentDate.le(floatingLeg_.get(i).date())?floatingLeg_.get(i).date():lastPaymentDate;
-      }
       return lastPaymentDate.le(termStructure_.getLink().referenceDate());
     }
-    
+
     public Date startDate(){
         return CashFlows.getInstance().startDate(floatingLeg_);
     }
-    
+
     public Date maturityDate() {
         return CashFlows.getInstance().maturityDate(floatingLeg_);
     }
 
     public Date lastFixingDate() {
-        CashFlow lastCoupon = floatingLeg_.get(floatingLeg_.size() - 1); // no linkedlist :-(
-        FloatingRateCoupon lastFloatingCoupon = (FloatingRateCoupon) lastCoupon;
+        final CashFlow lastCoupon = floatingLeg_.get(floatingLeg_.size() - 1); // no linkedlist :-(
+        final FloatingRateCoupon lastFloatingCoupon = (FloatingRateCoupon) lastCoupon;
         return lastFloatingCoupon.fixingDate();
     }
-    
+
 //    public void setupArguments
 //TODO: inner class arguments
 //void void setupArguments(/*PricingEngine.arguments* args*/Arguments args)  {
@@ -318,25 +309,25 @@ public class CapFloor extends NewInstrument {
 //   }
 //}
 
-    
-    
-    
-    
+
+
+
+
 
 
     @Override
     protected void performCalculations() throws ArithmeticException {
         // TODO Auto-generated method stub
-        
+
     }
     @Override
-    protected void setupArguments(Arguments arguments) {
+    protected void setupArguments(final Arguments arguments) {
         // TODO Auto-generated method stub
-        
+
     }
-    
-    
-    
+
+
+
 
 //    */
 //    class CapFloor : public Instrument {

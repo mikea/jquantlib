@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -32,9 +32,6 @@ import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.Array;
 import org.jquantlib.math.Matrix;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.stdlibc.Std;
-
-import static org.jquantlib.Validate.QL_REQUIRE;
 
 /**
  * Libor-forward-model process
@@ -46,39 +43,39 @@ import static org.jquantlib.Validate.QL_REQUIRE;
  * <li>Antoon Pelsser, 2000, Efficient Methods for Valuing Interest Rate Derivatives, Springer, 8</li>
  * <li>Hull, John, White, Alan, 1999, Forward Rate Volatilities, Swap Rate Volatilities and the Implementation of the Libor Market
  * Model<li>
- * 
+ *
  * @see <a href="http://www.rotman.utoronto.ca/~amackay/fin/libormktmodel2.pdf">FORWARD RATE VOLATILITIES, SWAP RATE VOLATILITIES,
  *      AND THE IMPLEMENTATION OF THE LIBOR MARKET MODEL</a>
- * 
+ *
  * @category processes
- * 
+ *
  * @author Ueli Hofstetter
  */
 // TODO: license, class comments, access modifiers organization, good formatting
 public class LiborForwardModelProcess extends StochasticProcess {
-    
+
     //Exception messages
     private static final String wrong_number_of_cashflows = "wrong number of cashflows";
     private static final String irregular_coupon_types = "irregular coupon types are not suppported";
 
-    private int size_;
+    private final int size_;
     private final IborIndex index_;
     private LfmCovarianceParameterization lfmParam_;
-    private Array initialValues_;
-    private List</*@Time*/Double> fixingTimes_;
-    private List</*@Time*/Date> fixingDates_;
-    private List</*@Time*/Double> accrualStartTimes_;
-    private List</*@Time*/Double> accrualEndTimes_;
-    private List</*@Time*/Double> accrualPeriod_;
-    
-    private  Array m1, m2;
-    
+    private final Array initialValues_;
+    private final List</*@Time*/Double> fixingTimes_;
+    private final List</*@Time*/Date> fixingDates_;
+    private final List</*@Time*/Double> accrualStartTimes_;
+    private final List</*@Time*/Double> accrualEndTimes_;
+    private final List</*@Time*/Double> accrualPeriod_;
+
+    private final  Array m1, m2;
+
     public LiborForwardModelProcess(final int size, final IborIndex  index) {
         super(new EulerDiscretization());
-        
+
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        
+
         this.size_ = size;
         this.index_ = index;
         this.initialValues_ = new Array(size_);
@@ -93,14 +90,14 @@ public class LiborForwardModelProcess extends StochasticProcess {
         final DayCounter dayCounter = index_.dayCounter();
         final List<CashFlow> flows = null /* cashFlows() */; // FIXME: translate cashFlows();
 
-        QL_REQUIRE(size_ == flows.size(), IllegalArgumentException.class, wrong_number_of_cashflows);
-        
+        assert this.size_ == flows.size() : wrong_number_of_cashflows;
+
         final Date settlement = index_.termStructure().getLink().referenceDate();
         final Date startDate = ((IborCoupon) flows.get(0)).fixingDate();
         for (int i = 0; i < size_; ++i) {
-            IborCoupon coupon = (IborCoupon) flows.get(i);
-            QL_REQUIRE(coupon.date().eq(coupon.accrualEndDate()), IllegalArgumentException.class, irregular_coupon_types);
-           
+            final IborCoupon coupon = (IborCoupon) flows.get(i);
+            assert coupon.date().eq(coupon.accrualEndDate()) : irregular_coupon_types;
+
             initialValues_.set(i, coupon.rate());
             accrualPeriod_.set(i, coupon.accrualPeriod());
 
@@ -111,7 +108,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
         }
     }
 
-    
+
     //
     // public methods
     //
@@ -128,11 +125,11 @@ public class LiborForwardModelProcess extends StochasticProcess {
         return index_;
     }
 
-    
+
     //
     // Overrides StochasticProcess
     //
-    
+
     @Override
     public Array initialValues()  {
         return initialValues_.clone();
@@ -145,40 +142,39 @@ public class LiborForwardModelProcess extends StochasticProcess {
     }
 
     @Override
-    public Array drift(/* @Time */double t, final Array x) {
+    public Array drift(/* @Time */final double t, final Array x) {
         final Array f = new Array(size_);
         final Matrix covariance = lfmParam_.covariance(t, x);
         final int m = 0;//NextA
         for (int k = m; k < size_; ++k) {
             m1.set(k, accrualPeriod_.get(k) * x.get(k) / (1 + accrualPeriod_.get(k) * x.get(k)));
-            double value = m1.innerProduct(covariance.getCol(k), m, k+1-m) - 0.5 * covariance.get(k, k);
+            final double value = m1.innerProduct(covariance.getCol(k), m, k+1-m) - 0.5 * covariance.get(k, k);
             f.set(k, value);
         }
         return f;
     }
-    
+
     @Override
-    public Matrix diffusion(/*@Time*/ double t, final Array x){
+    public Matrix diffusion(/*@Time*/ final double t, final Array x){
         return lfmParam_.diffusion(t, x);
     }
-    
+
     @Override
-    public Matrix covariance(/*@Time*/double t, final Array x, /*@Time*/ double dt){
+    public Matrix covariance(/*@Time*/final double t, final Array x, /*@Time*/ final double dt){
         return lfmParam_.covariance(dt, x).mul(lfmParam_.covariance(dt, x).mulAssign(dt));
     }
-    
+
     @Override
     public Array apply(final Array x0, final Array dx){
-        Array tmp = new Array(size_);
-        for(int k = 0; k<size_; ++k){
+        final Array tmp = new Array(size_);
+        for(int k = 0; k<size_; ++k)
             tmp.set(k, x0.get(k)*Math.exp(dx.get(k)));
-        }
         return tmp;
     }
-    
+
     @Override
-    public Array evolve(/*@Time*/ double t0, final Array x0, /*@Time*/ double dt, final Array dw)  {
-        
+    public Array evolve(/*@Time*/ final double t0, final Array x0, /*@Time*/ final double dt, final Array dw)  {
+
         /* predictor-corrector step to reduce discretization errors.
 
            Short - but slow - solution would be
@@ -191,14 +187,15 @@ public class LiborForwardModelProcess extends StochasticProcess {
 
            The following implementation does the same but is faster.
         */
-        
-        if(true){throw new UnsupportedOperationException("work in progress");}
+
+        if(true)
+            throw new UnsupportedOperationException("work in progress");
         final int m   = 0;//nextIndexReset(t0);
         final double sdt = Math.sqrt(dt);
 
-        Array f = x0.clone();
-        Matrix diff       = lfmParam_.diffusion(t0, x0);
-        Matrix covariance = lfmParam_.covariance(t0, x0);
+        final Array f = x0.clone();
+        final Matrix diff       = lfmParam_.diffusion(t0, x0);
+        final Matrix covariance = lfmParam_.covariance(t0, x0);
 
         for (int k=m; k<size_; ++k) {
             final double y = accrualPeriod_.get(k)*x0.get(k);
@@ -207,7 +204,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
             final double r = diff.getRow(k).innerProduct(dw)*sdt;
             final double x = y*Math.exp(d + r);
             m2.set(k, x/(1+x));
-            double value = x0.get(k) 
+            final double value = x0.get(k)
                          * Math.exp(0.5*(d+m2.innerProduct(covariance.getCol(k), m, k+1-m)-0.5*covariance.get(k,k))*dt)
                          + r;
             f.set(k, value);
@@ -220,7 +217,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
 //        return Std.getInstance().
 //                 - fixingTimes_.begin();
 //    }
-    
+
 
 }
 
@@ -232,7 +229,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
     public List<CashFlow> cashFlows{
 
         final Date refDate = index_.getTermStructure().getLink().referenceDate();
-        
+
         List<CashFlow> floatingLeg = Leg.FloatingLe, schedule, index, paymentDayCounter, paymentAdj, fixingDays, gearings, spreads, caps, floors, isInArrears)(
                    std::vector<Real>(1, amount),
                    Schedule(refDate,
@@ -296,4 +293,4 @@ public class LiborForwardModelProcess extends StochasticProcess {
 
         return discountFactors;
     }*/
-        
+

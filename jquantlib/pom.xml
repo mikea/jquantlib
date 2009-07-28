@@ -359,19 +359,30 @@
 				</configuration>
 			</plugin>
 
+
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>failsafe-maven-plugin</artifactId>
+				<version>2.4.3-alpha-1</version>
+                <!--
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
+				<artifactId>failsafe-maven-plugin</artifactId>
 				<version>2.4.3</version>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-					<excludes>
-						<exclude>**/**$*</exclude>
-					</excludes>
-				</configuration>
+                -->				
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>verify</id>
+						<goals>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
@@ -910,12 +921,26 @@
                 <report>maven-findbugs-plugin</report>
             </configuration> 
         </plugin>
-
+ 
         <plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-surefire-report-plugin</artifactId>
 			<version>2.4.3</version>
-        </plugin>
+			<reportSets>
+				<reportSet>
+					<id>integration-tests</id>
+					<reports>
+						<report>report-only</report>
+					</reports>
+					<configuration>
+						<outputName>failsafe-report</outputName>
+						<reportsDirectories>
+							<reportsDirectory>target/failsafe-reports</reportsDirectory>
+						</reportsDirectories>
+					</configuration>
+				</reportSet>
+			</reportSets>
+		</plugin>
         
         <plugin>
 	        <groupId>org.codehaus.mojo</groupId>

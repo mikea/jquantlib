@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -38,13 +38,18 @@ import java.lang.annotation.Target;
  * the real world and we should never mix them.
  * 
  * @see <a href="http://groups.csail.mit.edu/pag/jsr308/">JSR 308: Annotations on Java Types</a>
- * @see <a href="http://www.jquantlib.org/index.php/Strong_Type_Checking">Strong Type Checking</a>  
+ * @see <a href="http://www.jquantlib.org/index.php/Strong_Type_Checking">Strong Type Checking</a>
  * 
  * @author Richard Gomes
  */
+
+//TODO: code review :: get rid of this annotation ???
+// Makes sense to tell a double is @Volatility, or @Rate, etc but it does not make sense to tell it is a @Real because
+// no additional, useful information is being added to it.
+
 @Typedef
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.LOCAL_VARIABLE, ElementType.PARAMETER })
 public @interface Real {
-	// No methods - Tagging annotation
+    // No methods - Tagging annotation
 }

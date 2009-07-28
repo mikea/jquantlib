@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jquantlib.Configuration;
-import org.jquantlib.Validate;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.Leg;
@@ -42,9 +41,9 @@ import org.jquantlib.util.stdlibc.Std;
  * Interest rate swap
  * <p>
  * The cash flows belonging to the first leg are paid; the ones belonging to the second leg are received.
- * 
+ *
  * @category instruments
- * 
+ *
  * @author Richard Gomes
  */
 // FIXME: use arrays instead of lists
@@ -56,11 +55,11 @@ public class Swap extends NewInstrument {
     protected double[] legNPV;
     protected double[] legBPS;
 
-    
+
     //
     // public constructors
     //
-    
+
     public Swap(final Leg firstLeg, final Leg secondLeg) {
         this.legs = new ArrayList<Leg>();
         this.payer = new double[2];
@@ -72,7 +71,7 @@ public class Swap extends NewInstrument {
         payer[1] = +1.0;
 
         for (int i = 0; i < legs.size(); i++)
-            for (CashFlow item : legs.get(i))
+            for (final CashFlow item : legs.get(i))
                 item.addObserver(this);
     }
 
@@ -87,30 +86,30 @@ public class Swap extends NewInstrument {
             if (payer[j])
                 this.payer[j] = -1.0;
             for (int i = 0; i < legs.size(); i++)
-                for (CashFlow item : legs.get(i))
+                for (final CashFlow item : legs.get(i))
                     item.addObserver(this);
         }
     }
 
-    
+
     //
     // protected constructors
     //
-    
-    protected Swap(int legs) {
+
+    protected Swap(final int legs) {
         this.legs   = new ArrayList<Leg>();
         this.payer  = new double[legs];
         this.legNPV = new double[legs];
         this.legBPS = new double[legs];
     }
 
-    
+
     //
     // public methods
     //
-    
+
     public Date startDate() /* @ReadOnly */{
-        Validate.QL_REQUIRE(legs.size() > 0, "no legs given");
+        assert legs.size() > 0 : "no legs given";
         Date d = CashFlows.getInstance().startDate(this.legs.get(0));
         for (int j = 1; j < this.legs.size(); j++)
             d = Std.getInstance().min(d, CashFlows.getInstance().startDate(this.legs.get(j)));
@@ -118,7 +117,7 @@ public class Swap extends NewInstrument {
     }
 
     public Date maturityDate() /* @ReadOnly */{
-        Validate.QL_REQUIRE(legs.size() > 0, "no legs given");
+        assert legs.size() > 0 : "no legs given";
         Date d = CashFlows.getInstance().maturityDate(this.legs.get(0));
         for (int j = 1; j < this.legs.size(); j++)
             d = Std.getInstance().max(d, CashFlows.getInstance().maturityDate(this.legs.get(j)));
@@ -129,22 +128,22 @@ public class Swap extends NewInstrument {
     //
     // overrides Instrument
     //
-    
+
     @Override
     public boolean isExpired() /* @ReadOnly */{
-        Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        final Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
         for (int i = 0; i < legs.size(); i++)
-            for (CashFlow item : legs.get(i))
+            for (final CashFlow item : legs.get(i))
                 if (!item.hasOccurred(today))
                     return false;
         return true;
     }
 
-    
+
     //
     // overrides NewInstrument
     //
-    
+
     @Override
     protected void setupExpired() /* @ReadOnly */{
         super.setupExpired();
@@ -154,7 +153,7 @@ public class Swap extends NewInstrument {
 
     @Override
     public void setupArguments(final Arguments args) /* @ReadOnly */{
-        SwapArguments arguments = (SwapArguments) args;
+        final SwapArguments arguments = (SwapArguments) args;
 
         arguments.legs = legs;
         arguments.payer = payer;
@@ -167,18 +166,16 @@ public class Swap extends NewInstrument {
         final SwapResults results = (SwapResults) r;
 
         if (results.legNPV.length > 0) {
-            Validate.QL_REQUIRE(results.legNPV.length == legNPV.length, "wrong number of leg NPV returned");
+            assert results.legNPV.length == legNPV.length : "wrong number of leg NPV returned";
             legNPV = results.legNPV;
-        } else {
+        } else
             Arrays.fill(legNPV, Constants.NULL_Double);
-        }
 
         if (results.legBPS.length > 0) {
-            Validate.QL_REQUIRE(results.legBPS.length == legBPS.length, "wrong number of leg BPS returned");
+            assert results.legBPS.length == legBPS.length : "wrong number of leg BPS returned";
             legBPS = results.legBPS;
-        } else {
+        } else
             Arrays.fill(legBPS, Constants.NULL_Double);
-        }
     }
 
 }

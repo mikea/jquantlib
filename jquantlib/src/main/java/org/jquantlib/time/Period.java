@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -45,17 +45,15 @@ package org.jquantlib.time;
 import java.util.Formatter;
 import java.util.Locale;
 
-import org.jquantlib.Validate;
-
 /**
  * Time period to represent time by days, month and years as specified by
  * TimeUnit.
- * 
+ *
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
 public class Period {
-	
+
 	/**
 	 * Constant that can be used to represent one year period forward
 	 */
@@ -86,7 +84,7 @@ public class Period {
 	 */
 	public static final Period ONE_DAY_BACKWARD = new Period(-1, TimeUnit.DAYS);
 
-	
+
 	/**
 	 * Length of the period
 	 */
@@ -107,21 +105,21 @@ public class Period {
 
 	/**
 	 * To construct period representing the specified length and units
-	 * 
+	 *
 	 * @param length
 	 * @param units
 	 */
-	public Period(int length, final TimeUnit units) {
+	public Period(final int length, final TimeUnit units) {
 		this.length = length;
 		this.units = units;
 	}
 
 	/**
 	 * To create a period by Frequency
-	 * 
+	 *
 	 * @param f
 	 */
-	public Period(Frequency f) {
+	public Period(final Frequency f) {
 		switch (f) {
 		case ONCE:
 		case NO_FREQUENCY:
@@ -165,7 +163,7 @@ public class Period {
 
 	/**
 	 * Time units represented by the period
-	 * 
+	 *
 	 * @return time units of the period
 	 */
 	public final TimeUnit units() {
@@ -174,12 +172,12 @@ public class Period {
 
 	/**
 	 * To get at Frequency represented by the period
-	 * 
+	 *
 	 * @return
 	 */
 	public final Frequency frequency() {
 		// unsigned version
-		int length = Math.abs(this.length);
+		final int length = Math.abs(this.length);
 
 		if (length == 0)
 			return Frequency.NO_FREQUENCY;
@@ -221,7 +219,7 @@ public class Period {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param n
 	 *            is the multiplier
 	 * @return a new <code>Period</code> with a multiplied length
@@ -229,7 +227,7 @@ public class Period {
 	public Period times(final int n) {
 		return new Period(n * this.length, this.units);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -240,7 +238,7 @@ public class Period {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -384,7 +382,7 @@ public class Period {
 
 	/**
 	 * Returns the name of period in long format
-	 * 
+	 *
 	 * @return the name of period in long format
 	 */
 	public String getLongFormat() {
@@ -393,7 +391,7 @@ public class Period {
 
 	/**
 	 * Returns the name of period in short format (3 letters)
-	 * 
+	 *
 	 * @return the name of period in short format (3 letters)
 	 */
 	public String getShortFormat() {
@@ -405,13 +403,12 @@ public class Period {
 	 */
 	private String getInternalLongFormat() {
 		String suffix;
-		if (this.length == 1) {
-			suffix = "";
-		} else {
-			suffix = "s";
-		}
-		StringBuilder sb = new StringBuilder();
-		Formatter formatter = new Formatter(sb, Locale.US);
+		if (this.length == 1)
+            suffix = "";
+        else
+            suffix = "s";
+		final StringBuilder sb = new StringBuilder();
+		final Formatter formatter = new Formatter(sb, Locale.US);
 		formatter.format("%d %s%s", this.length, this.units.getLongFormat(),
 				suffix);
 		return sb.toString();
@@ -421,12 +418,12 @@ public class Period {
 	 * Output periods in short format (e.g. "2w")
 	 */
 	private String getInternalShortFormat() {
-		StringBuilder sb = new StringBuilder();
-		Formatter formatter = new Formatter(sb, Locale.US);
+		final StringBuilder sb = new StringBuilder();
+		final Formatter formatter = new Formatter(sb, Locale.US);
 		formatter.format("%d%s", this.length, this.units.getShortFormat());
 		return sb.toString();
 	}
-	
+
 	public void normalize() {
         if (length!=0)
             switch (units) {
@@ -448,7 +445,7 @@ public class Period {
               case YEARS:
                 break;
               default:
-                Validate.QL_FAIL("unknown time unit (" + units.getShortFormat() + ")");
+                  assert false : "unknown time unit";
             }
     }
 

@@ -1,6 +1,5 @@
 package org.jquantlib.model.marketmodels;
 
-import static org.jquantlib.Validate.QL_REQUIRE;
 
 /**
  * Curve state for market-model simulations
@@ -9,15 +8,15 @@ import static org.jquantlib.Validate.QL_REQUIRE;
  * workhorse discounting object associated to the rate times of the simulation. It's important to pass the rates via an object like
  * this to the product rather than directly to make it easier to switch to other engines such as a coterminal swap rate engine. Many
  * products will not need expired rates and others will only require the first rate.
- * 
+ *
  * @author Ueli Hofstetter
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CurveState {
-    
+
     protected int numberOfRates_;
     protected /*@Time*/double [] rateTimes_, rateTaus_;
-    
+
     // There will n+1 rate times expressing payment and reset times of forward rates.
     //
     //            |-----|-----|-----|-----|-----|      (size = 6)
@@ -28,24 +27,23 @@ public class CurveState {
     //            sr0   sr1   sr2   sr3   sr4          cotSwaps
 
     public CurveState(final  /*@Time*/ double []  rateTimes){
-        
+
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        
+
         numberOfRates_ = rateTimes==null || rateTimes.length == 0 ? 0 : rateTimes.length-1;
         rateTimes_ = (rateTimes);
         rateTaus_ = new double[numberOfRates_];
         //checkIncreasingTimesAndCalculateTaus(rateTimes_, rateTaus_);
     }
 
-    public /*@Rate*/ double swapRate(int begin,
-                              int end)  {
+    public /*@Rate*/ double swapRate(final int begin, final int end)  {
 
-        QL_REQUIRE(end > begin, IllegalArgumentException.class, "empty range specified");
-        QL_REQUIRE(end <= numberOfRates_, IllegalArgumentException.class, "taus/end mismatch");
+        assert end > begin : "empty range specified";
+        assert end <= numberOfRates_ : "taus/end mismatch";
 
-        double sum = 0.0;
-        
+        final double sum = 0.0;
+
         return 0;
 //        for (int i=begin; i<end; ++i)
 //            sum += rateTaus_[i]*discountRatio(i+1, numberOfRates_);
@@ -71,7 +69,7 @@ public class CurveState {
 //                    const std::vector<DiscountFactor>& discountFactors,
 //                    const std::vector<Time>& taus,
 //                    std::vector<Rate>& cotSwapRates,
-//                    std::vector<Real>& cotSwapAnnuities) 
+//                    std::vector<Real>& cotSwapAnnuities)
 //    {
 //        Size nCotSwapRates = cotSwapRates.size();
 //        QL_REQUIRE(taus.size()==nCotSwapRates,
@@ -81,15 +79,15 @@ public class CurveState {
 //        QL_REQUIRE(discountFactors.size()==nCotSwapRates+1,
 //                   "discountFactors.size()!=cotSwapRates.size()+1");
 //
-//        cotSwapAnnuities[nCotSwapRates-1] = 
+//        cotSwapAnnuities[nCotSwapRates-1] =
 //            taus[nCotSwapRates-1]*discountFactors[nCotSwapRates];
-//        cotSwapRates[nCotSwapRates-1] = 
+//        cotSwapRates[nCotSwapRates-1] =
 //            (discountFactors[nCotSwapRates-1]-discountFactors[nCotSwapRates])
 //                /cotSwapAnnuities[nCotSwapRates-1];
 //
 //        for (Size i=nCotSwapRates-1; i>firstValidIndex; --i) {
 //            cotSwapAnnuities[i-1] = cotSwapAnnuities[i] + taus[i-1] * discountFactors[i];
-//            cotSwapRates[i-1] = 
+//            cotSwapRates[i-1] =
 //                (discountFactors[i-1]-discountFactors[nCotSwapRates])
 //                /cotSwapAnnuities[i-1];
 //        }

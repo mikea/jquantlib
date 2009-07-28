@@ -1,6 +1,5 @@
 package org.jquantlib.cashflow;
 
-import org.jquantlib.Validate;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.math.Constants;
@@ -22,12 +21,12 @@ import org.jquantlib.util.Visitor;
  * <p>
  * {@latex$ N } is the notional, {@latex$ T }is the accrual time, {@latex$ L } is the floating rate, {@latex$ a } is its gearing,
  * {@latex$ b } is the spread, and {@latex$ C } and {@latex$ F } are the strikes.
- * <p> 
+ * <p>
  * They can be decomposed in the following manner. Decomposition of a capped floating rate coupon:
- * {@latex[ R = \min(a L + b, C) = (a L + b) + \min(C - b - \xi |a| L, 0) } where 
- * {@latex$ \xi = sgn(a) }. Then: 
+ * {@latex[ R = \min(a L + b, C) = (a L + b) + \min(C - b - \xi |a| L, 0) } where
+ * {@latex$ \xi = sgn(a) }. Then:
  * {@latex[ R = (a L + b) + |a| \min(\frac{C - b}{|a|} - \xi L, 0) }
- * 
+ *
  * @author Ueli Hofstetter
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
@@ -42,7 +41,7 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
     }
 
     // FIXME: why is FloatingRateCoupon wrapped in a handle ... looks suspicious
-    public CappedFlooredCoupon(final FloatingRateCoupon underlying, double cap, double floor) {
+    public CappedFlooredCoupon(final FloatingRateCoupon underlying, final double cap, final double floor) {
         super(underlying.date(), underlying.nominal, underlying.accrualStartDate(), underlying.accrualEndDate(), underlying
                 .fixingDays(), underlying.index(), underlying.gearing(), underlying.spread(), underlying.referencePeriodStart(),
                 underlying.referencePeriodEnd(), underlying.dayCounter(), underlying.isInArrears());
@@ -70,21 +69,21 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
             }
         }
 
-        if (isCapped_ && isFloored_) {
-            Validate.QL_REQUIRE(cap >= floor, "cap level (" + cap + ") less than floor level (" + floor + ")");
-        }
+
+        if (isCapped_ && isFloored_)
+            assert cap >= floor : "cap level less than floor level";
 
         // registerWith(underlying);
         underlying.addObserver(this);
     }
-    
-    
-    
+
+
+
     private void setPricer() {
             //TODO: Code review :: incomplete code
             if (true)
                 throw new UnsupportedOperationException("Work in progress");
-            
+
 //            const boost::shared_ptr<FloatingRateCouponPricer>& pricer) {
 //       if (pricer_)
 //           unregisterWith(pricer_);
@@ -95,7 +94,7 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
 //       underlying_->setPricer(pricer);
    }
 
-    
+
     @Override
     public /*@Rate*/ double  rate() /* @ReadOnly */ {
         //TODO: Code review :: incomplete code
@@ -170,10 +169,10 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
 //   notifyObservers();
 }
 
-    //FIXME ... 
-    public CappedFlooredCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays,
-            InterestRateIndex index, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter,
-            boolean isInArrears) {
+    //FIXME ...
+    public CappedFlooredCoupon(final Date paymentDate, final double nominal, final Date startDate, final Date endDate, final int fixingDays,
+            final InterestRateIndex index, final double gearing, final double spread, final Date refPeriodStart, final Date refPeriodEnd, final DayCounter dayCounter,
+            final boolean isInArrears) {
         super(paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, spread, refPeriodStart, refPeriodEnd,
                 dayCounter, isInArrears);
         //TODO: Code review :: incomplete code
@@ -181,19 +180,18 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
             throw new UnsupportedOperationException("Work in progress");
     }
 
-    
+
     //
     // implements TypedVisitable
     //
-        
+
     @Override
     public void accept(final TypedVisitor<Object> v) {
-        Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
+        final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null)
             v1.visit(this);
-        } else {
+        else
             super.accept(v);
-        }
     }
 
 }
