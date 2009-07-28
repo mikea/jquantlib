@@ -80,21 +80,14 @@ public class PricerSetter implements TypedVisitor<Object> {
 //        if (klass == SubPeriodsCoupon.class)
 //            return new SubPeriodsCouponVisitor();
 
-        assert false : UNKNOWN_VISITABLE;
-        return new DummyVisitor();
+
+        throw new AssertionError(UNKNOWN_VISITABLE);
     }
 
 
     //
     // private inner classes
     //
-
-    private class DummyVisitor implements Visitor<Object> {
-        @Override
-        public void visit(final Object o) {
-            // nothing
-        }
-    }
 
     private class CashFlowVisitor implements Visitor<Object> {
         @Override

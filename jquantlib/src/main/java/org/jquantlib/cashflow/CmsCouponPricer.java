@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -43,9 +43,7 @@ public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
     public void setSwaptionVolatility(final Handle<SwaptionVolatilityStructure> swaptionVol) {
         swaptionVol_.deleteObserver(this);
         swaptionVol_ = swaptionVol;
-        if (swaptionVol_ == null || swaptionVol_.getLink() == null) {
-            throw new IllegalArgumentException(no_adequate_swaptionVol_given);
-        }
+        assert swaptionVol_!=null && swaptionVol_.getLink() != null : no_adequate_swaptionVol_given;
         swaptionVol_.addObserver(this);
         update();
     }

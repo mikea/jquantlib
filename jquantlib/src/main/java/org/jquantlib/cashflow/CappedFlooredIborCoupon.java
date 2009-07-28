@@ -5,7 +5,7 @@ import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.util.Date;
 
 public class CappedFlooredIborCoupon extends CappedFlooredCoupon {
-    
+
     public CappedFlooredIborCoupon(
             final Date paymentDate,
             final /*Real*/double nominal,
@@ -20,14 +20,15 @@ public class CappedFlooredIborCoupon extends CappedFlooredCoupon {
             final Date refPeriodStart /*= Date()*/,
             final Date refPeriodEnd /*= Date()*/,
             final DayCounter dayCounter /* = DayCounter()*/,
-            boolean isInArrears/* = false*/){
-        
+            final boolean isInArrears/* = false*/){
+
         super( new IborCoupon(paymentDate, nominal, startDate, endDate, fixingDays,
             index, gearing, spread, refPeriodStart, refPeriodEnd,
                 dayCounter, isInArrears), cap, floor);
+
         throw new UnsupportedOperationException("work in progress...");
-        
-        
+
+
     }
 //  : CappedFlooredCoupon(boost::shared_ptr<FloatingRateCoupon>(new
 //      IborCoupon(paymentDate, nominal, startDate, endDate, fixingDays,

@@ -2,7 +2,7 @@
  Copyright (C) 2007 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -34,7 +34,7 @@ import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 /**
- * 
+ *
  * @author Srinivas Hasti
  *
  */
@@ -42,18 +42,18 @@ import org.jquantlib.util.Observer;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class InterestRateIndex extends Index implements Observer {
 
-    
-    
+
+
     // TODO: code review :: Please review this class! :S
     // This is a time being implementation
     protected static abstract class Currency {
-        
-        protected Currency(String currency) {
+
+        protected Currency(final String currency) {
             //TODO: Code review :: incomplete code
             if (true)
                 throw new UnsupportedOperationException("Work in progress");
         }
-        
+
     }
 
     protected static class EURCurrency extends Currency {
@@ -61,31 +61,31 @@ public abstract class InterestRateIndex extends Index implements Observer {
             super("EUR");
         }
     }
-    
 
-    
-    
-    private String familyName;
-	private Period tenor;
-	private int fixingDays;
-	private Calendar fixingCalendar;
-	private Currency currency;
-	
+
+
+
+    private final String familyName;
+	private final Period tenor;
+	private final int fixingDays;
+	private final Calendar fixingCalendar;
+	private final Currency currency;
+
 	// TODO: code review :: please verify against original QL/C++ code
 	protected DayCounter dayCounter;
 
-	
+
 	public InterestRateIndex(
-	            final String familyName, 
-	            final Period tenor, 
+	            final String familyName,
+	            final Period tenor,
 	            final /*@Natural*/ int fixingDays,
-	            final Calendar fixingCalendar, 
-	            final Currency currency, 
+	            final Calendar fixingCalendar,
+	            final Currency currency,
 	            final DayCounter dayCounter) {
-        
+
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        
+
 		this.familyName = familyName;
 		this.tenor = tenor;
 		this.fixingDays = fixingDays;
@@ -93,20 +93,20 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		this.currency = currency;
 		this.dayCounter = dayCounter;
 
-		if (fixingDays > 2) throw new IllegalArgumentException("wrong number of fixing days"); // TODO: message
-		
+		assert fixingDays <= 2 : "wrong number of fixing days"; // TODO: message
+
 		// tenor.normalize(); //TODO :: code review
 		Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
-		IndexManager.getInstance().notifier(name()).addObserver(this);		
+		IndexManager.getInstance().notifier(name()).addObserver(this);
 	}
 
-	
+
 	//adoption for 0.9.7 switched parameters...
 	public InterestRateIndex(
-	            final String familyName, 
-	            final Period tenor, 
-	            /*@Natural*/ int settlementDays, 
-	            final Currency currency, 
+	            final String familyName,
+	            final Period tenor,
+	            /*@Natural*/ final int settlementDays,
+	            final Currency currency,
 	            final Calendar calendar,
 	            final DayCounter fixedLegDayCounter) {
         this(familyName, tenor, settlementDays, calendar, currency, fixedLegDayCounter);
@@ -116,14 +116,14 @@ public abstract class InterestRateIndex extends Index implements Observer {
     //
     // protected abstract methods
     //
-    
+
     protected abstract double forecastFixing(Date fixingDate);
 
-    
+
 	//
 	// public abstract methods
 	//
-	
+
 	public abstract Handle<YieldTermStructure> termStructure();
     public abstract Date maturityDate(Date valueDate);
 
@@ -131,49 +131,43 @@ public abstract class InterestRateIndex extends Index implements Observer {
 	//
 	// public methods
 	//
-	
+
 	@Override
 	//FIXME: a detailed code review is needed here!
-	public double fixing(Date fixingDate, boolean forecastTodaysFixing) {
-		if (isValidFixingDate(fixingDate))
-			throw new IllegalStateException("Fixing date " + fixingDate
-					+ " is not valid");
-		Date today = org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		boolean enforceTodaysHistoricFixings = org.jquantlib.Configuration
-				.getSystemConfiguration(null).isEnforcesTodaysHistoricFixings();
-		if (fixingDate.le(today)
-				|| (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
+	public double fixing(final Date fixingDate, final boolean forecastTodaysFixing) {
+	    // TODO: code review :: please verify against original QL/C++ code
+		assert isValidFixingDate(fixingDate) : "Fixing date is not valid";
+		final Date today = org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+		final boolean enforceTodaysHistoricFixings = Configuration.getSystemConfiguration(null).isEnforcesTodaysHistoricFixings();
+		if (fixingDate.le(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
 			// must have been fixed
-			Double pastFixing = IndexManager.getInstance().get(name()).find(
-					fixingDate);
-			if (pastFixing == null)
-				throw new IllegalArgumentException("Missing " + name() + " fixing for " + fixingDate);
+			final Double pastFixing = IndexManager.getInstance().get(name()).find(fixingDate);
+			assert pastFixing != null : "Missing fixing for " + fixingDate;
 			return pastFixing;
 		}
-		if ((fixingDate.equals(today)) && !forecastTodaysFixing) {
-			// might have been fixed
+		if ((fixingDate.equals(today)) && !forecastTodaysFixing)
+            // might have been fixed
 			try {
-				Double pastFixing = IndexManager.getInstance().get(name())
-						.find(fixingDate);
+				final Double pastFixing = IndexManager.getInstance().get(name()).find(fixingDate);
 				if (pastFixing != null)
 					return pastFixing;
 				else
 					; // fall through and forecast
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				; // fall through and forecast
 			}
-		}
 		// forecast
 		return forecastFixing(fixingDate);
 	}
-	
-	   public double fixing(Date fixingDate) {
+
+	   @Override
+    public double fixing(final Date fixingDate) {
 	       return fixing(fixingDate, false);
 	    }
 
 	@Override
 	public String name() {
-		StringBuilder builder = new StringBuilder(familyName);
+		final StringBuilder builder = new StringBuilder(familyName);
 		if (tenor.units() == TimeUnit.DAYS) {
 			if (fixingDays == 0)
 				builder.append("ON");
@@ -187,16 +181,14 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		return builder.toString();
 	}
 
-	public Date fixingDate(Date valueDate) {
-		Date fixingDate = fixingCalendar().advance(valueDate, (fixingDays),
-				TimeUnit.DAYS);
-		if (!(isValidFixingDate(fixingDate)))
-			throw new IllegalArgumentException("fixing date " + fixingDate + " is not valid");
+	public Date fixingDate(final Date valueDate) {
+		final Date fixingDate = fixingCalendar().advance(valueDate, (fixingDays), TimeUnit.DAYS);
+		assert isValidFixingDate(fixingDate) : "fixing date is not valid"; // TODO: message
 		return fixingDate;
 	}
 
 	@Override
-	public boolean isValidFixingDate(Date fixingDate) {
+	public boolean isValidFixingDate(final Date fixingDate) {
 		return fixingCalendar.isBusinessDay(fixingDate);
 	}
 
@@ -225,18 +217,15 @@ public abstract class InterestRateIndex extends Index implements Observer {
 		return dayCounter;
 	}
 
-	public Date valueDate(Date fixingDate) {
-		if (!isValidFixingDate(fixingDate))
-			throw new IllegalArgumentException("Fixing date " + fixingDate
-					+ " is not valid");
-		return fixingCalendar().advance(fixingDate, fixingDays,
-				TimeUnit.DAYS);
+	public Date valueDate(final Date fixingDate) {
+		assert isValidFixingDate(fixingDate) : "Fixing date is not valid"; // TODO: message
+		return fixingCalendar().advance(fixingDate, fixingDays, TimeUnit.DAYS);
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-	    notifyObservers(arg);	
+	public void update(final Observable o, final Object arg) {
+	    notifyObservers(arg);
 	}
-	
+
 
 }

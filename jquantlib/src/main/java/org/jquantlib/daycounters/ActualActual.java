@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -30,19 +30,19 @@ import org.jquantlib.util.Month;
 
 /**
  * Implementation of ActualActual day counters.
- * 
+ *
  * @see <a href="http://en.wikipedia.org/wiki/Day_count_convention">Day count convention</a>
- * 
+ *
  * @author Srinivas Hasti
  * @author Richard Gomes
- * 
+ *
  */
 public class ActualActual extends AbstractDayCounter {
 
 	//
     // public enums
     //
-    
+
     /**
 	 * Actual/Actual Calendar Conventions
 	 */
@@ -50,23 +50,23 @@ public class ActualActual extends AbstractDayCounter {
 		ISMA, BOND, ISDA, HISTORICAL, ACTUAL365, AFB, EURO
 	};
 
-	
+
 	//
 	// private final static fields
 	//
-	
+
 	private static final ActualActual ISMA_DAYCOUNTER = new ActualActual(Convention.ISMA);
 	private static final ActualActual ACTUAL365_DAYCOUNTER = new ActualActual(Convention.ISDA);
 	private static final ActualActual AFB_DAYCOUNTER = new ActualActual(Convention.AFB);
 
-	
+
     //
     // public static final constructors
     //
-    
+
     /**
      * Returns ActualActual day counter for the specified convention type
-     * 
+     *
      * @param convention
      * @return
      */
@@ -83,29 +83,29 @@ public class ActualActual extends AbstractDayCounter {
         case EURO:
             return AFB_DAYCOUNTER;
         default:
-            throw new IllegalArgumentException("unknown act/act convention");
+            throw new AssertionError("unknown act/act convention"); // TODO: message
         }
     }
 
-    
+
     //
 	// private final fields
 	//
-	
+
 	private final DayCounter delegate;
 
-	
+
 	//
 	// private constructors
 	//
-	
+
 	/**
 	 * This constructor is intended to be used internally by <code>this</code> class at initialization time,
 	 * when specialized day counters are constructed.
 	 */
 	private ActualActual(final Convention convention) {
 	    super();
-	    
+
 		switch (convention) {
 		case ISMA:
 		case BOND:
@@ -121,15 +121,15 @@ public class ActualActual extends AbstractDayCounter {
 			delegate = new AFB();
 			break;
 		default:
-			throw new IllegalArgumentException("unknown act/act convention");
+			throw new AssertionError("unknown act/act convention"); // TODO: message
 		}
 	}
 
-	
+
 	//
 	// implements DayCounter
 	//
-	
+
 	@Override
 	public final String name() {
 		return delegate.name();
@@ -150,7 +150,7 @@ public class ActualActual extends AbstractDayCounter {
     //
     // inner classes
     //
-    
+
     private static final class ISMA extends AbstractDayCounter {
 
         @Override
@@ -178,16 +178,10 @@ public class ActualActual extends AbstractDayCounter {
 			Date refPeriodStart = (!d3.equals(Date.NULL_DATE) ? d3 : d1);
 			Date refPeriodEnd = (!d4.equals(Date.NULL_DATE) ? d4 : d2);
 
-			if (!(refPeriodEnd.gt(refPeriodStart) && refPeriodEnd.gt(d1))) {
-				throw new IllegalArgumentException("invalid reference period: "
-						+ "date 1: " + d1 + ", date 2: " + d2
-						+ ", reference period start: " + refPeriodStart
-						+ ", reference period end: " + refPeriodEnd);
-			}
+			assert refPeriodEnd.gt(refPeriodStart) && refPeriodEnd.gt(d1) : "invalid reference period"; // TODO: message
 
 			// estimate roughly the length in months of a period
-			int months = (int) (0.5 + 12 * (refPeriodStart
-					.getDayCount(refPeriodEnd)) / 365.0);
+			int months = (int) (0.5 + 12 * (refPeriodStart.getDayCount(refPeriodEnd)) / 365.0);
 
 			// for short periods...
 			if (months == 0) {
@@ -201,8 +195,8 @@ public class ActualActual extends AbstractDayCounter {
 
 			if (d2.le(refPeriodEnd)) {
 				// here refPeriodEnd is a future (notional?) payment date
-				if (d1.ge(refPeriodStart)) {
-					// here refPeriodStart is the last (maybe notional)
+				if (d1.ge(refPeriodStart))
+                    // here refPeriodStart is the last (maybe notional)
 					// payment date.
 					// refPeriodStart <= d1 <= d2 <= refPeriodEnd
 					// [maybe the equality should be enforced, since
@@ -210,7 +204,7 @@ public class ActualActual extends AbstractDayCounter {
 					// could give wrong results] ???
 					return period * dayCount(d1, d2)
 							/ dayCount(refPeriodStart, refPeriodEnd);
-				} else {
+                else {
 					// here refPeriodStart is the next (maybe notional)
 					// payment date and refPeriodEnd is the second next
 					// (maybe notional) payment date.
@@ -231,18 +225,16 @@ public class ActualActual extends AbstractDayCounter {
 								refPeriodStart);
 				}
 			} else {
+			    // TODO: code review :: please verify against original QL/C++ code
+
 				// here refPeriodEnd is the last notional payment date
 				// d1 < refPeriodEnd < d2 AND refPeriodStart < refPeriodEnd
-				if (refPeriodStart.gt(d1)) {
-					throw new IllegalArgumentException(
-							"invalid dates: d1 < refPeriodStart < refPeriodEnd < d2");
-				}
+				assert refPeriodStart.le(d1) : "invalid dates";
 
 				// now it is: refPeriodStart <= d1 < refPeriodEnd < d2
 
 				// the part from d1 to refPeriodEnd
-				double sum = yearFraction(d1, refPeriodEnd, refPeriodStart,
-						refPeriodEnd);
+				double sum = yearFraction(d1, refPeriodEnd, refPeriodStart,	refPeriodEnd);
 
 				// the part from refPeriodEnd to d2
 				// count how many regular periods are in [refPeriodEnd, d2],
@@ -250,13 +242,11 @@ public class ActualActual extends AbstractDayCounter {
 				int i = 0;
 				Date newRefStart, newRefEnd;
 				do {
-					newRefStart = refPeriodEnd.getDateAfter(new Period(months
-							* i, TimeUnit.MONTHS));
-					newRefEnd = refPeriodEnd.getDateAfter(new Period(months
-							* (i + 1), TimeUnit.MONTHS));
-					if (d2.lt(newRefEnd)) {
-						break;
-					} else {
+					newRefStart = refPeriodEnd.getDateAfter(new Period(months * i, TimeUnit.MONTHS));
+					newRefEnd = refPeriodEnd.getDateAfter(new Period(months * (i + 1), TimeUnit.MONTHS));
+					if (d2.lt(newRefEnd))
+                        break;
+                    else {
 						sum += period;
 						i++;
 					}
@@ -324,9 +314,8 @@ public class ActualActual extends AbstractDayCounter {
 			while (temp.gt(dateStart)) {
 				temp = newD2.getDateAfter(Period.ONE_YEAR_BACKWARD);
 				if (temp.getDayOfMonth() == 28 && temp.getMonth() == 2
-						&& DateFactory.getFactory().isLeap(temp.getYear())) {
-					temp.increment(1);
-				}
+						&& DateFactory.getFactory().isLeap(temp.getYear()))
+                    temp.increment(1);
 				if (temp.ge(dateStart)) {
 					sum += 1.0;
 					newD2 = temp;
@@ -339,12 +328,11 @@ public class ActualActual extends AbstractDayCounter {
 				if (newD2.gt(29, Month.FEBRUARY, newD2.getYear())
 						&& dateStart.le(29, Month.FEBRUARY, newD2.getYear()))
 					den += 1.0;
-			} else if (DateFactory.getFactory().isLeap(dateStart.getYear())) {
-				if (newD2.gt(29, Month.FEBRUARY, dateStart.getYear())
+			} else if (DateFactory.getFactory().isLeap(dateStart.getYear()))
+                if (newD2.gt(29, Month.FEBRUARY, dateStart.getYear())
 						&& dateStart
 								.le(29, Month.FEBRUARY, dateStart.getYear()))
 					den += 1.0;
-			}
 
 			return sum + dayCount(dateStart, newD2) / den;
 		}

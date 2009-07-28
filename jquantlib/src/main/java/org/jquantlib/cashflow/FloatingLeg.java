@@ -100,7 +100,7 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
                             refStart, refEnd,
                             paymentDayCounter, isInArrears);
                     } catch (final Exception e) {
-                        throw new IllegalArgumentException("Couldn't construct new instance from generic type");
+                        throw new AssertionError("Couldn't construct new instance from generic type");
                     }
                 add((CashFlow)frc);
                 }
@@ -134,7 +134,7 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
                         refStart, refEnd,
                         paymentDayCounter, isInArrears);
                 } catch (final Exception e) {
-                    throw new IllegalArgumentException("Couldn't construct new instance from generic type");
+                    throw new AssertionError("Couldn't construct new instance from generic type");
                 }
             add((CashFlow)cfctc);
          }

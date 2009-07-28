@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Daniel Kong
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -34,64 +34,56 @@ import org.jquantlib.util.Visitor;
  */
 @SuppressWarnings("PMD.AbstractNaming")
 public abstract class Dividend extends CashFlow {
-	
+
 	protected Date date;
-	
+
 	public Dividend (final Date date){
 		super();
 		this.date = date;
 	}
 
-	
+
 	//
 	// overrides Event
 	//
-	
+
 	@Override
 	public Date date() {
 		return date;
 	}
-	
-	
+
+
 	//
 	// public abstract methods
 	//
-	
+
 	public abstract double getAmount(final double underlying);
-	
+
 
 	//
 	// public static methods
 	//
-	
-	public static List<? extends Dividend> DividendVector(final List<Date> dividendDates, final List<Double> dividends) {
-    
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-	    if (!(dividendDates.size() == dividends.size())) {
-            throw new ArithmeticException("size mismatch between dividend dates and amounts");
-        }
-        
-        final List<Dividend> items = new ArrayList<Dividend>(dividendDates.size());
-        for (int i=0;i<dividendDates.size();i++){
 
+	public static List<? extends Dividend> DividendVector(final List<Date> dividendDates, final List<Double> dividends) {
+	    assert dividendDates.size() == dividends.size() : "size mismatch between dividend dates and amounts";
+        final List<Dividend> items = new ArrayList<Dividend>(dividendDates.size());
+        for (int i=0;i<dividendDates.size();i++)
             items.add(new FixedDividend(dividends.get(i), dividendDates.get(i)));
-        }
         return items;
     }
 
-    
+
     //
     // implements TypedVisitable
     //
-    
+
     @Override
     public void accept(final TypedVisitor<Object> v) {
-        Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
+        final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null)
             v1.visit(this);
-        } else {
+        else
             super.accept(v);
-        }
     }
 
 }

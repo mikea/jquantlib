@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Daniel Kong
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -32,18 +32,18 @@ public class FractionalDividend extends Dividend {
 
 	protected double rate;
 	protected double nominal;
-	
+
 	public FractionalDividend(final double rate, final Date date){
 		super(date);
 		this.rate=rate;
 	}
-	
+
 	public FractionalDividend(final double rate, final double nominal, final Date date){
 		super(date);
 		this.rate=rate;
 		this.nominal=nominal;
 	}
-	
+
 	@Override
 	public double getAmount(final double underlying) {
 		return rate*underlying;
@@ -51,9 +51,7 @@ public class FractionalDividend extends Dividend {
 
 	@Override
 	public double amount() {
-		if(nominal==0.0){
-			throw new IllegalStateException("No nominal given!");			
-		}
+		assert !Double.isNaN(nominal) : "no nominal given";
 		return rate*nominal;
 	}
 

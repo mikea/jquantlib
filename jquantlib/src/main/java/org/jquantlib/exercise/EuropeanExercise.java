@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -46,19 +46,19 @@ import org.jquantlib.util.Date;
 
 /**
  * A European option can only be exercised at one (expiry) date.
- * 
+ *
  * @author Richard Gomes
  */
 public class EuropeanExercise extends Exercise {
 
 	/**
 	 * Defines the exercise date for an European Option.
-	 * 
+	 *
 	 * @param date is the exercise date
 	 */
     public EuropeanExercise(final Date date) {
 		super(Exercise.Type.EUROPEAN);
-		if (date==null) throw new NullPointerException();
+		assert date!=null : "empty exercise date"; // TODO: message
 		super.dates.add(date);
 	}
 

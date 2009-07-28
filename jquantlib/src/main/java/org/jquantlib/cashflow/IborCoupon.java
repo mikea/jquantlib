@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,7 @@ import org.jquantlib.util.Visitor;
 // TODO: code review :: please verify against original QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class IborCoupon extends FloatingRateCoupon {
-    
+
     /**
      * WORK IN PROGRESS
      */
@@ -44,85 +44,83 @@ public class IborCoupon extends FloatingRateCoupon {
     private final static String null_term_structure = "null term structure set to par coupon";
 
     public IborCoupon(
-            final Date paymentDate, 
-            final int nominal, 
-            final Date startDate, 
-            final Date endDate, 
-            final int fixingDays, 
+            final Date paymentDate,
+            final int nominal,
+            final Date startDate,
+            final Date endDate,
+            final int fixingDays,
             final InterestRateIndex index,
-            final double gearing, 
-            final double spread, 
-            final Date refPeriodStart, 
-            final Date refPeriodEnd, 
-            final DayCounter dayCounter, 
+            final double gearing,
+            final double spread,
+            final Date refPeriodStart,
+            final Date refPeriodEnd,
+            final DayCounter dayCounter,
             final boolean isInArrears) {
-        super(paymentDate, nominal, startDate, endDate, fixingDays, index, 
+        super(paymentDate, nominal, startDate, endDate, fixingDays, index,
                 gearing, spread, refPeriodStart, refPeriodEnd,
                 dayCounter, isInArrears);
     }
 
     public IborCoupon(
-            final Date paymentDate, 
-            final double nominal, 
-            final Date startDate, 
-            final Date endDate, 
-            final int fixingDays, 
+            final Date paymentDate,
+            final double nominal,
+            final Date startDate,
+            final Date endDate,
+            final int fixingDays,
             final IborIndex index,
-            final double gearing, 
-            final double spread, 
-            final Date refPeriodStart, 
-            final Date refPeriodEnd, 
-            final DayCounter dayCounter, 
+            final double gearing,
+            final double spread,
+            final Date refPeriodStart,
+            final Date refPeriodEnd,
+            final DayCounter dayCounter,
             final boolean isInArrears) {
-            super(paymentDate, nominal, startDate, endDate, fixingDays, index, 
-                    gearing, spread, refPeriodStart, refPeriodEnd,
-                    dayCounter, isInArrears);
-            
-            // TODO: code review :: please verify against original QL/C++ code
-            throw new UnsupportedOperationException("Missing constructors");
+        super(paymentDate, nominal, startDate, endDate, fixingDays, index,
+                gearing, spread, refPeriodStart, refPeriodEnd,
+                dayCounter, isInArrears);
+
+        // TODO: code review :: please verify against original QL/C++ code
+        throw new AssertionError("Missing constructors");
     }
 
+    @Override
     public double indexFixing() {
         // FIMXE: do this configuration using the settings object
         // #ifdef QL_USE_INDEXED_COUPON
         // return index_->fixing(fixingDate());
         // #else
-        if (isInArrears()) {
+        if (isInArrears())
             return index_.fixing(fixingDate());
-        } else {
-            Handle<YieldTermStructure> termStructure = index_.termStructure();
-            if (termStructure == null) {
+        else {
+            final Handle<YieldTermStructure> termStructure = index_.termStructure();
+            if (termStructure == null)
                 throw new IllegalArgumentException(null_term_structure);
-            }
-            Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-            Date fixing_date = fixingDate();
+            final Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+            final Date fixing_date = fixingDate();
             if (fixing_date.lt(today)) {
                 // must have been fixed
                 // FIXME ...
-                double pastFixing = 0;// IndexManager.getInstance().getHistory( index_.getName())[fixing_date.g];
-                if (pastFixing == 0) {
+                final double pastFixing = 0;// IndexManager.getInstance().getHistory( index_.getName())[fixing_date.g];
+                if (pastFixing == 0)
                     throw new IllegalArgumentException("Missing " + index_.name() + " fixing for " + fixing_date);
-                }
                 return pastFixing;
             }
-            if (fixing_date == today) {
+            if (fixing_date == today)
                 // might have been fixed
                 try {
                     // FIXME....
-                    double pastFixing = 0;// IndexManager.getInstance().getHistory(index_.name())[fixing_date];
+                    final double pastFixing = 0;// IndexManager.getInstance().getHistory(index_.name())[fixing_date];
                     if (pastFixing != 0)
                         return pastFixing;
                     else
                         ; // fall through and forecast
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     ; // fall through and forecast
                 }
-            }
-            Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.fixingDays(), TimeUnit.DAYS);
-            double startDiscount = termStructure.getLink().discount(fixingValueDate);
+            final Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.fixingDays(), TimeUnit.DAYS);
+            final double startDiscount = termStructure.getLink().discount(fixingValueDate);
             // ???
-            Date temp = index_.fixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
-            double endDiscount = termStructure.getLink().discount(
+            final Date temp = index_.fixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
+            final double endDiscount = termStructure.getLink().discount(
                     index_.fixingCalendar().advance(temp, index_.fixingDays(), TimeUnit.DAYS));
             return (startDiscount / endDiscount - 1.0) / accrualPeriod();
         }
@@ -132,15 +130,14 @@ public class IborCoupon extends FloatingRateCoupon {
     //
     // implements TypedVisitable
     //
-    
+
     @Override
     public void accept(final TypedVisitor<Object> v) {
-        Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
+        final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null)
             v1.visit(this);
-        } else {
+        else
             super.accept(v);
-        }
     }
 
 }

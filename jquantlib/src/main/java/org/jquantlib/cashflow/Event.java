@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,7 @@ import org.jquantlib.util.Visitor;
 
 /**
  * This class is the base class for all financial events.
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class Event implements Observable, TypedVisitable<Object> {
@@ -44,7 +44,7 @@ public abstract class Event implements Observable, TypedVisitable<Object> {
     //
     // private final fields
     //
-    
+
     /**
 	 * This private field is automatically initialized by constructor which
 	 * picks up it's value from {@link Settings} singleton. This procedure
@@ -58,39 +58,39 @@ public abstract class Event implements Observable, TypedVisitable<Object> {
 	//
 	// protected constructors
 	//
-	
-	protected Event() { 
+
+	protected Event() {
 	    // only descendent classes can instantiate
 	}
 
-	
+
 	//
 	// public abstract methods
 	//
-	
+
 	/**
 	 * Keeps the date at which the event occurs
 	 */
-	public abstract Date date() /* @ReadOnly */; 
+	public abstract Date date() /* @ReadOnly */;
 
-	
+
 	//
 	// public methods
 	//
-	
+
 	/**
 	 * Returns true if an event has already occurred before a date where the
 	 * current date may or may not be considered accordingly to defaults taken
 	 * from {@link Settings}
-	 * 
+	 *
 	 * @param d is a Date
 	 * @return true if an event has already occurred before a date
-	 * 
+	 *
 	 * @see Settings.todaysPayments
 	 * @see todaysPayments
 	 */
-	
-	
+
+
 	/**
 	 * Returns true if an event has already occurred before a date
 	 * <p>
@@ -108,33 +108,32 @@ public abstract class Event implements Observable, TypedVisitable<Object> {
 	/**
 	 * Returns true if an event has already occurred before a date where it is
 	 * explicitly defined whether the current date must considered.
-	 * 
+	 *
 	 * @param d is a Date
 	 * @return true if an event has already occurred before a date
 	 */
 	public boolean hasOccurred(final Date d, final boolean includeToday) /* @ReadOnly */{
-		if (includeToday) {
-			return date().compareTo(d) < 0;
-		} else {
-			return date().compareTo(d) <= 0;
-		}
+		if (includeToday)
+            return date().compareTo(d) < 0;
+        else
+            return date().compareTo(d) <= 0;
 	}
 
-	
+
 	//
 	// implements Observable
 	//
 
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
+	 *
 	 * @see Observable
 	 * @see DefaultObservable
 	 */
-	private DefaultObservable delegatedObservable = new DefaultObservable(this);
+	private final DefaultObservable delegatedObservable = new DefaultObservable(this);
 
     @Override
-	public void addObserver(Observer observer) {
+	public void addObserver(final Observer observer) {
 		delegatedObservable.addObserver(observer);
 	}
 
@@ -144,7 +143,7 @@ public abstract class Event implements Observable, TypedVisitable<Object> {
 	}
 
     @Override
-	public void deleteObserver(Observer observer) {
+	public void deleteObserver(final Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
 
@@ -154,10 +153,10 @@ public abstract class Event implements Observable, TypedVisitable<Object> {
 	}
 
     @Override
-	public void notifyObservers(Object arg) {
+	public void notifyObservers(final Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
-	
+
 	@Override
 	public void deleteObservers() {
 		delegatedObservable.deleteObservers();
@@ -172,15 +171,14 @@ public abstract class Event implements Observable, TypedVisitable<Object> {
 	//
 	// implements TypedVisitable
 	//
-	
+
 	@Override
 	public void accept(final TypedVisitor<Object> v) {
-		Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			throw new IllegalArgumentException("null event visitor"); //TODO: message
-		}
+		final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null)
+            v1.visit(this);
+        else
+            throw new AssertionError("null event visitor"); //TODO: message
 	}
-	
+
 }

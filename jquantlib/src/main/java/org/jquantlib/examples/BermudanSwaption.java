@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Daniel Kong
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,12 +15,14 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.examples;
+
+import static org.jquantlib.util.Month.FEBRUARY;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.time.AbstractCalendar;
@@ -28,57 +30,54 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.jquantlib.util.Month;
 import org.jquantlib.util.StopClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.jquantlib.util.Month.*;
-
 /**
  * This example prices a few bermudan swaptions using different short-rate models calibrated to market swaptions.
- * 
+ *
  * @see http://quantlib.org/reference/_bermudan_swaption_8cpp-example.html
- * 
+ *
  * @author Daniel Kong
  */
 //TODO: Work in progress
 public class BermudanSwaption {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(BermudanSwaption.class);
-	
+
 	public BermudanSwaption(){
-        if (System.getProperty("EXPERIMENTAL")==null) {
+        if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("Work in progress");
-        }
-		logger.info("\n\n::::: "+BermudanSwaption.class.getSimpleName()+" :::::");		
+		logger.info("\n\n::::: "+BermudanSwaption.class.getSimpleName()+" :::::");
 	}
-	
+
 	public void run() throws Exception{
-		StopClock clock = new StopClock();
+		final StopClock clock = new StopClock();
 		clock.startClock();
-		
-		Date todaysDate = DateFactory.getFactory().getDate(15, FEBRUARY, 2002);
-		
-		Calendar calendar = new AbstractCalendar(){
+
+		final Date todaysDate = DateFactory.getFactory().getDate(15, FEBRUARY, 2002);
+
+		// TODO: code review :: please verify against original QL/C++ code
+		final Calendar calendar = new AbstractCalendar(){
 			                    public String getName(){return "";}
-			                    public boolean isWeekend(Weekday w){throw new UnsupportedOperationException();}};
-		
-		Date settlementDate = DateFactory.getFactory().getDate(19, FEBRUARY, 2002);
+			                    public boolean isWeekend(final Weekday w){throw new UnsupportedOperationException();}};
+
+		final Date settlementDate = DateFactory.getFactory().getDate(19, FEBRUARY, 2002);
 		Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(todaysDate);
-		
+
 		//TODO: Work in progress
-		
-		
-		
+
+
+
 		clock.stopClock();
 		clock.log();
 	}
-	
-	public static void main (String [] args){
+
+	public static void main (final String [] args){
 		try{
-			new BermudanSwaption().run();			
-		}catch(Exception e){
+			new BermudanSwaption().run();
+		}catch(final Exception e){
 			logger.info(e.getMessage());
 		}
 	}

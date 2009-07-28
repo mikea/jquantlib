@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,13 +24,11 @@ package org.jquantlib.cashflow;
 import org.jquantlib.Configuration;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.instruments.Option;
-import org.jquantlib.lang.annotation.Rate;
 import org.jquantlib.pricingengines.BlackFormula;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.CapletVolatilityStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.Observable;
 
 /*
  * DONE!
@@ -38,10 +36,10 @@ import org.jquantlib.util.Observable;
 
 
 public class BlackIborCouponPricer extends IborCouponPricer {
-    
+
     private final static String missing_caplet_volatility = "missing caplet volatility";
 
-    public BlackIborCouponPricer(Handle<CapletVolatilityStructure> capletVol) {
+    public BlackIborCouponPricer(final Handle<CapletVolatilityStructure> capletVol) {
         super(capletVol);
     }
 
@@ -50,59 +48,64 @@ public class BlackIborCouponPricer extends IborCouponPricer {
     private double gearing_;
     private double spread_;
     private double spreadLegValue_;
-    
-    
-    public void initialize( FloatingRateCoupon coupon) {
+
+
+    @Override
+    public void initialize( final FloatingRateCoupon coupon) {
         coupon_ =  (IborCoupon)coupon;
         gearing_ = coupon_.gearing();
         spread_ = coupon_.spread();
-        Date paymentDate = coupon_.date();
-        InterestRateIndex index = coupon_.index();
-        Handle<YieldTermStructure> rateCurve = index.termStructure();
+        final Date paymentDate = coupon_.date();
+        final InterestRateIndex index = coupon_.index();
+        final Handle<YieldTermStructure> rateCurve = index.termStructure();
 
-        Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        final Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
 
-        if(paymentDate.gt(today)){
+        if(paymentDate.gt(today))
             discount_ = rateCurve.getLink().discount(paymentDate);
-        }
-        else{
+        else
             discount_ = 1.0;
-        }
         spreadLegValue_ = spread_ * coupon_.accrualPeriod()* discount_;
     }
 
+    @Override
     public double swapletPrice() {
         // past or future fixing is managed in InterestRateIndex::fixing()
-        double swapletPrice = adjustedFixing()* coupon_.accrualPeriod()* discount_;
+        final double swapletPrice = adjustedFixing()* coupon_.accrualPeriod()* discount_;
         return gearing_ * swapletPrice + spreadLegValue_;
     }
 
+    @Override
     public double swapletRate()  {
         return swapletPrice()/(coupon_.accrualPeriod()*discount_);
     }
 
-    public double capletPrice(double effectiveCap)  {
-        double capletPrice = optionletPrice(Option.Type.CALL, effectiveCap);
+    @Override
+    public double capletPrice(final double effectiveCap)  {
+        final double capletPrice = optionletPrice(Option.Type.CALL, effectiveCap);
         return gearing_ * capletPrice;
     }
 
-    public double capletRate(double effectiveCap) {
+    @Override
+    public double capletRate(final double effectiveCap) {
         return capletPrice(effectiveCap)/(coupon_.accrualPeriod()*discount_);
     }
 
-    public double floorletPrice(double effectiveFloor)  {
-        double floorletPrice = optionletPrice(Option.Type.PUT, effectiveFloor);
+    @Override
+    public double floorletPrice(final double effectiveFloor)  {
+        final double floorletPrice = optionletPrice(Option.Type.PUT, effectiveFloor);
         return gearing_ * floorletPrice;
     }
 
-    public double floorletRate(double effectiveFloor) {
+    @Override
+    public double floorletRate(final double effectiveFloor) {
         return floorletPrice(effectiveFloor)/
             (coupon_.accrualPeriod()*discount_);
     }
 
-    public double optionletPrice(Option.Type optionType,
-                                               double effStrike)  {
-        Date fixingDate = coupon_.fixingDate();
+    public double optionletPrice(final Option.Type optionType,
+                                               final double effStrike)  {
+        final Date fixingDate = coupon_.fixingDate();
         if (fixingDate.le(Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate())) {
             // the amount is determined
             double a, b;
@@ -114,13 +117,10 @@ public class BlackIborCouponPricer extends IborCouponPricer {
                 b = coupon_.indexFixing();
             }
             return Math.max(a - b, 0.0)* coupon_.accrualPeriod()*discount_;
-        } 
-        else {
-            if(capletVolatility()==null){
-                throw new IllegalArgumentException(missing_caplet_volatility);
-            }
+        } else {
+            assert capletVolatility()!=null : missing_caplet_volatility;
             // not yet determined, use Black model
-            double fixing =
+            final double fixing =
                  BlackFormula.blackFormula(
                        optionType,
                        effStrike,
@@ -135,28 +135,26 @@ public class BlackIborCouponPricer extends IborCouponPricer {
 
         double adjustement = 0.0;
 
-        double fixing = coupon_.indexFixing();
-        
-        if (!coupon_.isInArrears()) {
+        final double fixing = coupon_.indexFixing();
+
+        if (!coupon_.isInArrears())
             adjustement = 0.0;
-        } else {
+        else {
             // see Hull, 4th ed., page 550
-            if(capletVolatility() == null){
-                throw new IllegalArgumentException(missing_caplet_volatility);
-            };
-            Date d1 = coupon_.fixingDate(),
-                 referenceDate = capletVolatility().getLink().referenceDate();
-            if (d1.le(referenceDate)) {
+            assert capletVolatility() != null : missing_caplet_volatility;
+            final Date d1 = coupon_.fixingDate();
+            final Date referenceDate = capletVolatility().getLink().referenceDate();
+            if (d1.le(referenceDate))
                 adjustement = 0.0;
-            } else {
-                Date d2 = coupon_.index().maturityDate(d1);
-                double tau = coupon_.index().dayCounter().yearFraction(d1, d2);
-                double variance = capletVolatility().getLink().blackVariance(d1, fixing);
+            else {
+                final Date d2 = coupon_.index().maturityDate(d1);
+                final double tau = coupon_.index().dayCounter().yearFraction(d1, d2);
+                final double variance = capletVolatility().getLink().blackVariance(d1, fixing);
                 adjustement = fixing*fixing*variance*tau/(1.0+fixing*tau);
             }
         }
         return fixing + adjustement;
     }
 
-           
+
 }

@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -45,7 +45,7 @@ import org.jquantlib.util.Date;
 
 /**
  * An American option can be exercised at any time between two
- * predefined dates. In case the first date is omitted, the 
+ * predefined dates. In case the first date is omitted, the
  * option can be exercised at any time before the expiry date.
  *
  * @author Richard Gomes
@@ -53,9 +53,9 @@ import org.jquantlib.util.Date;
 public class AmericanExercise extends EarlyExercise {
 
 	/**
-	 * Constructs an AmericanExercise with two limiting dates define and a default payoff 
+	 * Constructs an AmericanExercise with two limiting dates define and a default payoff
 	 * equals <code>false</code>, which means there's no payoff at exercise Date.
-	 * 
+	 *
 	 * @param earliestDate
 	 * @param latestDate
 	 */
@@ -65,14 +65,14 @@ public class AmericanExercise extends EarlyExercise {
 
 	/**
 	 * Constructs an AmericanExercise with two limiting dates and a defined payoff.
-	 *  
+	 *
 	 * @param earliestDate is the earliest Date of exercise
 	 * @param latestDate is the latest Date of exercise
 	 * @param payoffAtExpiry is <code>true</code> if a payoff is expected to happen on exercise date
 	 */
-	public AmericanExercise(final Date earliestDate, final Date latestDate, boolean payoffAtExpiry) {
+	public AmericanExercise(final Date earliestDate, final Date latestDate, final boolean payoffAtExpiry) {
 		super(Exercise.Type.AMERICAN, payoffAtExpiry);
-		if (! (earliestDate.le(latestDate)) ) throw new IllegalArgumentException("earliest > latest exercise date");
+		assert earliestDate.le(latestDate) : "earliest > latest exercise date"; // TODO: message
 		super.dates.add(earliestDate);
 		super.dates.add(latestDate);
     }
