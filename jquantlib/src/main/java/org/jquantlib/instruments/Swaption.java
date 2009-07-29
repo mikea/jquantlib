@@ -25,37 +25,38 @@ import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.arguments.Arguments;
 
 /**
- * 
+ *
  * @author Praneet Tiwari
  */
 
 // ! %Swaption class
 /*
  * ! \ingroup instruments
- * 
+ *
  * \test - the correctness of the returned value is tested by checking that the price of a payer (resp. receiver) swaption decreases
  * (resp. increases) with the strike. - the correctness of the returned value is tested by checking that the price of a payer (resp.
  * receiver) swaption increases (resp. decreases) with the spread. - the correctness of the returned value is tested by checking it
  * against that of a swaption on a swap with no spread and a correspondingly adjusted fixed rate. - the correctness of the returned
  * value is tested by checking it against a known good value. - the correctness of the returned value of cash settled swaptions is
  * tested by checking the modified annuity against a value calculated without using the Swaption class.
- * 
- * 
+ *
+ *
  * \todo add greeks and explicit exercise lag
  */
 public class Swaption {// extends Option {
 
     // ! %settlement information
-    public Swaption(final VanillaSwap swap, final Exercise exercise, Settlement.Type delivery /* = Settlement::Physical */) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+    public Swaption(final VanillaSwap swap, final Exercise exercise, final Settlement.Type delivery /* = Settlement::Physical */) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
     // @Override
-    protected void setupArguments(Arguments arguments) {
+    protected void setupArguments(final Arguments arguments) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+
     /*****
      * class arguments extends VanillaSwap::arguments, public Option::arguments { public: arguments() :
      * settlementType(Settlement::Physical) {} boost::shared_ptr<VanillaSwap> swap; Settlement::Type settlementType; void validate()

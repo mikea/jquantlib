@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,14 +15,14 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.math.UnaryFunctionInteger;
+import org.jquantlib.math.Ops;
 
 
 /**
@@ -45,50 +45,50 @@ import org.jquantlib.math.UnaryFunctionInteger;
  */
 //TODO Test the correctness of the returned value against known good results.
 //TODO CumulativePoissonDistribution: Write a test case.
-public class CumulativePoissonDistribution implements UnaryFunctionInteger {
+public class CumulativePoissonDistribution implements Ops.IntToDouble {
 
 	//
 	// private static fields
 	//
-	
+
 	private static final double accuracy = 1.0e-15;
 	private static final int maxIteration = 100;
 
     //
 	// static fields
 	//
-	
+
 	private final double mu;
-    
+
 	//
 	// public constructors
 	//
-	
-	public CumulativePoissonDistribution(double mu) {
+
+	public CumulativePoissonDistribution(final double mu) {
 	    this.mu = mu;
 	}
 
-	
+
 	//
 	// implements UnaryFunctionInteger
 	//
-	
+
 	/**
 	 * @InheritDoc
-	 * 
+	 *
 	 * Computes the cumulative Poisson distribution by using the incomplete gamma function
 	 * .
-	 * @param k is the number of occurrences of an event 
+	 * @param k is the number of occurrences of an event
 	 * @return the cumulative Poisson distribution by using the incomplete gamma function
 	 */
 	@Override
-	public double evaluate (int k) /* @Read-only */ {
+	public double evaluate (final int k) /* @Read-only */ {
     	   if (k < 0) {
     	       throw new ArithmeticException("k must be >= 1, but is " + k);
     	   }
 
-    	   IncompleteGamma incmplgamma = new IncompleteGamma();
+    	   final IncompleteGamma incmplgamma = new IncompleteGamma();
            return 1.0 - incmplgamma.incompleteGammaFunction((double)k +1, mu, accuracy, maxIteration);
 	}
-	
+
 }

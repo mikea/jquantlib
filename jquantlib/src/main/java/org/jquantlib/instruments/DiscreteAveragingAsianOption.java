@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -49,7 +49,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.DiscreteAveragingAsianOptionArguments;
@@ -58,7 +57,7 @@ import org.jquantlib.util.Date;
 
 /**
  * Description of the terms and conditions of a discrete average out fixed strike option.
- * 
+ *
  * @author <Richard Gomes>
  */
 public class DiscreteAveragingAsianOption extends OneAssetStrikedOption {
@@ -74,7 +73,7 @@ public class DiscreteAveragingAsianOption extends OneAssetStrikedOption {
     public DiscreteAveragingAsianOption(final AverageType averageType, final /* @Real */ double runningAccumulator,
             final/* @Size */int pastFixings, final List<Date> fixingDates, final StochasticProcess process,
             final StrikedTypePayoff payoff, final Exercise exercise, final PricingEngine engine) {
-        
+
         super(process, payoff, exercise, engine);
         this.averageType = averageType;
         this.runningAccumulator = runningAccumulator;
@@ -85,15 +84,9 @@ public class DiscreteAveragingAsianOption extends OneAssetStrikedOption {
 
     @Override
     public void setupArguments(final Arguments args) /* @ReadOnly */ {
-
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
-        if (!(args instanceof DiscreteAveragingAsianOptionArguments)) {
-            throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
-        }
-        
+        assert args instanceof DiscreteAveragingAsianOptionArguments : WRONG_ARGUMENT_TYPE;
         super.setupArguments(args);
-        
-        DiscreteAveragingAsianOptionArguments moreArgs = (DiscreteAveragingAsianOptionArguments) args;
+        final DiscreteAveragingAsianOptionArguments moreArgs = (DiscreteAveragingAsianOptionArguments) args;
         moreArgs.averageType = averageType;
         moreArgs.runningAccumulator = runningAccumulator;
         moreArgs.pastFixings = pastFixings;

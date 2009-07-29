@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -49,12 +49,12 @@ import org.jquantlib.util.Visitor;
  * Binary <i>cash-or-nothing</i> payoff which pays off nothing if the underlying asset price {@latex$ S_{T}} finishes
  * below/above the strike price {@latex$ K}, or pays out a predetermined constant amount if the underlying asset finishes
  * above/below the strike price.
- * <p> 
- * Definitions of Binary path-independent payoffs can be found in 
+ * <p>
+ * Definitions of Binary path-independent payoffs can be found in
  * <i>M. Rubinstein, E. Reiner:"Unscrambling The Binary Code", Risk, Vol.4 no.9,1991</i>.
- * 
+ *
  * @see <a href="http://www.in-the-money.com/artandpap/Binary%20Options.doc">Binary Options</a>
- * 
+ *
  * @author Richard Gomes
  */
 public class CashOrNothingPayoff extends StrikedTypePayoff {
@@ -62,20 +62,20 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
     //
     // protected fields
     //
-    
+
     /**
-     * Represents the predetermined cash payoff 
+     * Represents the predetermined cash payoff
      */
     protected/* @Payoff */double cashPayoff;
 
-    
+
     //
     // public constructors
     //
-    
+
     /**
      * Constructs a typed {@link Payoff} with a fixed strike price and the policy of a <i>cash-or-nothing</i> payoff
-     * 
+     *
      * @param type is an {@link Option.Type}
      * @param strike is the strike price
      * @param cashPayoff is the cash payoff value
@@ -92,11 +92,11 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
 		return cashPayoff;
 	}
 
-	
+
     //
     // Overrides Payoff
     //
-    
+
     /**
      * {@inheritDoc}
      * <p>
@@ -108,28 +108,26 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
      */
 	@Override
 	public final/* @Price */double valueOf(final/* @Price */double price) {
-		if (type == Option.Type.CALL) {
-			return (price-strike > 0.0 ? cashPayoff : 0.0);
-		} else if (type == Option.Type.PUT) {
-			return (strike-price > 0.0 ? cashPayoff : 0.0);
-		} else {
-			throw new IllegalArgumentException(UNKNOWN_OPTION_TYPE);
-		}
+		if (type == Option.Type.CALL)
+            return (price-strike > 0.0 ? cashPayoff : 0.0);
+        else if (type == Option.Type.PUT)
+            return (strike-price > 0.0 ? cashPayoff : 0.0);
+        else
+            throw new AssertionError(UNKNOWN_OPTION_TYPE);
 	}
 
 
 	//
 	// implements TypedVisitable
 	//
-	
+
 	@Override
 	public void accept(final TypedVisitor<Payoff> v) {
 		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
+		if (v1 != null)
+            v1.visit(this);
+        else
+            super.accept(v);
 	}
 
 }

@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -55,7 +55,7 @@ import org.jquantlib.util.LazyObject;
  * @see NewInstrument
  * @see PricingEngine
  * @see <a href="http://quantlib.org/reference/group__instruments.html">QuantLib: Financial Instruments</a>
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class Instrument extends LazyObject {
@@ -99,15 +99,13 @@ public abstract class Instrument extends LazyObject {
 
     public final/*@Price*/double getNPV() /*@ReadOnly*/{
         calculate();
-        if (Double.isNaN(this.NPV))
-            throw new ArithmeticException("NPV not provided");
+        assert !Double.isNaN(this.NPV) : "NPV not provided";
         return NPV;
     }
 
     public final/*@Price*/double getErrorEstimate() /*@ReadOnly*/{
         calculate();
-        if (Double.isNaN(this.errorEstimate))
-            throw new ArithmeticException("error estimate not provided");
+        assert !Double.isNaN(this.errorEstimate) : "error estimate not provided";
         return errorEstimate;
     }
 
@@ -118,7 +116,7 @@ public abstract class Instrument extends LazyObject {
     /**
      * This method must leave the instrument in a consistent
      * state when the expiration condition is met.
-     * 
+     *
      * @see NewInstrument.setupExpired()
      */
     protected void setupExpired() /*@ReadOnly*/{
@@ -135,9 +133,8 @@ public abstract class Instrument extends LazyObject {
         if (isExpired()) {
             setupExpired();
             calculated = true;
-        } else {
+        } else
             super.calculate();
-        }
     }
 
 }

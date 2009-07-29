@@ -17,13 +17,14 @@ import org.jquantlib.util.DateFactory;
 
 // TODO: code review :: Please complete this class and perform another code review.
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: consider refactoring this class and make it an inner class
 public class MakeVanillaSwap {
-    
-    
-    private Period swapTenor_;
-    private IborIndex iborIndex_;
-    private /*Rate*/ double fixedRate_;
-    private Period forwardStart_;
+
+
+    private final Period swapTenor_;
+    private final IborIndex iborIndex_;
+    private final /*Rate*/ double fixedRate_;
+    private final Period forwardStart_;
 
     private Date effectiveDate_, terminationDate_;
     private Calendar fixedCalendar_, floatCalendar_;
@@ -46,17 +47,17 @@ public class MakeVanillaSwap {
             final IborIndex index) {
         this(swapTenor, index, 0.0, new Period(0,TimeUnit.DAYS));
     }
-    
+
     public MakeVanillaSwap (
             final Period swapTenor,
             final IborIndex index,
             final /*Rate*/ double fixedRate) {
         this(swapTenor, index, fixedRate, new Period(0,TimeUnit.DAYS));
     }
-    
+
     public MakeVanillaSwap(
-            final Period swapTenor, 
-            final IborIndex index, 
+            final Period swapTenor,
+            final IborIndex index,
             final /* @Rate */ double fixedRate,
             final Period forwardStart) {
         this.swapTenor_ = (swapTenor);
@@ -87,16 +88,16 @@ public class MakeVanillaSwap {
         floatDayCount_ = (index.dayCounter());
         engine_ = new DiscountingSwapEngine(index.termStructure());
     }
-    
+
 
 public VanillaSwap value() /* @ReadOnly */ {
 
     //TODO: Code review :: incomplete code
     if (true)
         throw new UnsupportedOperationException("Work in progress");
-    
+
     return null;
-    
+
     //
 //Date startDate;
 //if (effectiveDate_ != Date())
@@ -144,7 +145,7 @@ public VanillaSwap value() /* @ReadOnly */ {
 //usedFixedRate = temp.fairRate();
 }
 
-    
+
 //boost::shared_ptr<VanillaSwap> swap(new
 //VanillaSwap(type_, nominal_,
 //       fixedSchedule, usedFixedRate, fixedDayCount_,
@@ -155,8 +156,8 @@ public VanillaSwap value() /* @ReadOnly */ {
 //}
 
 
-    
-    public MakeVanillaSwap receiveFixed(boolean flag) {
+
+    public MakeVanillaSwap receiveFixed(final boolean flag) {
         // TODO: Code review :: incomplete code
         if (true)
             throw new UnsupportedOperationException("Work in progress");
@@ -166,12 +167,12 @@ public VanillaSwap value() /* @ReadOnly */ {
         return this;
     }
 
-    public MakeVanillaSwap withType(VanillaSwap.Type type) {
+    public MakeVanillaSwap withType(final VanillaSwap.Type type) {
         type_ = type;
         return this;
     }
 
-    public MakeVanillaSwap withNominal(/* Real */double n) {
+    public MakeVanillaSwap withNominal(/* Real */final double n) {
         nominal_ = n;
         return this;
     }
@@ -186,7 +187,7 @@ public VanillaSwap value() /* @ReadOnly */ {
         return this;
     }
 
-    public MakeVanillaSwap withRule(DateGenerationRule r) {
+    public MakeVanillaSwap withRule(final DateGenerationRule r) {
         fixedRule_ = r;
         floatRule_ = r;
         return this;
@@ -207,22 +208,22 @@ public VanillaSwap value() /* @ReadOnly */ {
         return this;
     }
 
-    public MakeVanillaSwap withFixedLegConvention(BusinessDayConvention bdc) {
+    public MakeVanillaSwap withFixedLegConvention(final BusinessDayConvention bdc) {
         fixedConvention_ = bdc;
         return this;
     }
 
-    public MakeVanillaSwap withFixedLegTerminationDateConvention(BusinessDayConvention bdc) {
+    public MakeVanillaSwap withFixedLegTerminationDateConvention(final BusinessDayConvention bdc) {
         fixedTerminationDateConvention_ = bdc;
         return this;
     }
 
-    public MakeVanillaSwap withFixedLegRule(DateGenerationRule r) {
+    public MakeVanillaSwap withFixedLegRule(final DateGenerationRule r) {
         fixedRule_ = r;
         return this;
     }
 
-    public MakeVanillaSwap withFixedLegEndOfMonth(boolean flag) {
+    public MakeVanillaSwap withFixedLegEndOfMonth(final boolean flag) {
         fixedEndOfMonth_ = flag;
         return this;
     }
@@ -252,22 +253,22 @@ public VanillaSwap value() /* @ReadOnly */ {
         return this;
     }
 
-    public MakeVanillaSwap withFloatingLegConvention(BusinessDayConvention bdc) {
+    public MakeVanillaSwap withFloatingLegConvention(final BusinessDayConvention bdc) {
         floatConvention_ = bdc;
         return this;
     }
 
-    public MakeVanillaSwap withFloatingLegTerminationDateConvention(BusinessDayConvention bdc) {
+    public MakeVanillaSwap withFloatingLegTerminationDateConvention(final BusinessDayConvention bdc) {
         floatTerminationDateConvention_ = bdc;
         return this;
     }
 
-    public MakeVanillaSwap withFloatingLegRule(DateGenerationRule r) {
+    public MakeVanillaSwap withFloatingLegRule(final DateGenerationRule r) {
         floatRule_ = r;
         return this;
     }
 
-    public MakeVanillaSwap withFloatingLegEndOfMonth(boolean flag) {
+    public MakeVanillaSwap withFloatingLegEndOfMonth(final boolean flag) {
         floatEndOfMonth_ = flag;
         return this;
     }
@@ -287,7 +288,7 @@ public VanillaSwap value() /* @ReadOnly */ {
         return this;
     }
 
-    public MakeVanillaSwap withFloatingLegSpread(/* Spread */double sp) {
+    public MakeVanillaSwap withFloatingLegSpread(/* Spread */final double sp) {
         floatSpread_ = sp;
         return this;
     }

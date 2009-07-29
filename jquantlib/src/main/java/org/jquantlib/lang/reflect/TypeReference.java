@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -37,34 +37,34 @@ import java.lang.reflect.Type;
  * <pre>
  * MyClass<String,Data> smap = new MyClass<String,Data>() {};
  * MyClass<Double,Data> dmap = new MyClass<Double,Data>() {};
- * </pre> 
+ * </pre>
  * ... and below you can see a typical retrieval of type information inside the class of our interest:
  * <pre>
  * class Myclass<K,V> extends TypeReference {
- * 
+ *
  *    Class<?> final keyClass;
  *    Class<?> final valClass;
- * 
+ *
  *    MyClass() {
  *        // retrieves first actual generic parameter
  *        keyClass = getGenericParameterClass();
  *        // retrieves second actual generic parameter
  *        valClass = getGenericParameterClass(1);
  *    }
- *    
+ *
  *    public put(K key, V val) {
  *        if (!keyClass.isAssignableFrom(key)) throw new ClassCastException("invalid key");
  *        if (!valClass.isAssignableFrom(val)) throw new ClassCastException("invalid value");
  *    }
  * </pre>
- * 
+ *
  * @note It's very important to notice that we <b>it is required</b> to create anonymous instances
  *       or at least instances of an extended class of the class you are interested to parameterize.
  *       The reason is that TypeToken and TypeReference uses the tricky Class.getGenericSuperClass(),
  *       which retrieves type information from the super class of the current caller instance.
- *       
+ *
  * @see TypeReference
- * 
+ *
  * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">SuperTypeTokens</a>
  * @see <a href="http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf">Generics Tutorial</a>
  * @author Richard Gomes
@@ -75,10 +75,9 @@ public abstract class TypeReference<T> {
     private volatile Constructor<?> constructor;
 
     protected TypeReference() {
-        Type superclass = getClass().getGenericSuperclass();
-        if (superclass instanceof Class) {
+        final Type superclass = getClass().getGenericSuperclass();
+        if (superclass instanceof Class)
             throw new IllegalArgumentException("Class should be anonymous or extended from a generic class");
-        }
         this.types = ((ParameterizedType) superclass).getActualTypeArguments();
     }
 
@@ -88,7 +87,7 @@ public abstract class TypeReference<T> {
     public Type getGenericType() {
         return getGenericType(0);
     }
-    
+
     /**
      * Gets the referenced type of the n-th generic parameter
      */
@@ -107,16 +106,13 @@ public abstract class TypeReference<T> {
      * Gets the referenced Class of the n-th generic parameter
      */
     public Class<?> getGenericParameterClass(final int n) {
-        if (n >= types.length) {
-            throw new IllegalArgumentException("Missing parameter");
-        }
-        Type type = types[n];
-        Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
-        if ((clazz.getModifiers() & Modifier.ABSTRACT) != 0)
-            throw new IllegalArgumentException("generic parameter must be a concrete class");
+        assert n < types.length : "Missing parameter";
+        final Type type = types[n];
+        final Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
+        assert ((clazz.getModifiers() & Modifier.ABSTRACT) == 0) : "generic parameter must be a concrete class";
         return clazz;
     }
-    
+
     /**
      * Instantiates a new instance of {@code T} using the first generic parameter
      */
@@ -124,15 +120,14 @@ public abstract class TypeReference<T> {
     public T newGenericInstance() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         return newGenericInstance(0);
     }
-    
+
     /**
      * Instantiates a new instance of {@code T} using the n-th generic parameter
      */
     @SuppressWarnings("unchecked")
     public T newGenericInstance(final int n) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        if (constructor == null) {
+        if (constructor == null)
             constructor = getGenericParameterClass(n).getConstructor();
-        }
         return (T) constructor.newInstance();
     }
 
@@ -141,47 +136,46 @@ public abstract class TypeReference<T> {
      */
     @SuppressWarnings("unchecked")
     public T newGenericInstance(final int n, final Object ... objects) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Type type = types[n];
-        Class<?> rawType = type instanceof Class<?> ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
+        final Type type = types[n];
+        final Class<?> rawType = type instanceof Class<?> ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
 
-        Class<?>[] types = new Class[objects.length];
-        for (int i=0; i<objects.length; i++) {
+        final Class<?>[] types = new Class[objects.length];
+        for (int i=0; i<objects.length; i++)
             types[i] = objects[i].getClass();
-        }
         constructor = rawType.getConstructor(types);
 
         return (T) constructor.newInstance(objects);
     }
 
     /**
-     * function identifies type of the typeNum -th generics in the paramNum parameter 
+     * function identifies type of the typeNum -th generics in the paramNum parameter
      * @param paramNum parameter number
      * @param typeNum generics type in the paramNum parameter
-     * @return Type of the 
+     * @return Type of the
      */
-    public Type getActualTypeParameters(int paramNum, int typeNum)
+    public Type getActualTypeParameters(final int paramNum, final int typeNum)
     {
-    	return ((ParameterizedType)getGenericType(paramNum)).getActualTypeArguments()[typeNum];   	
+    	return ((ParameterizedType)getGenericType(paramNum)).getActualTypeArguments()[typeNum];
     }
 
-    
-    public boolean equals(Object o) {
+
+    @Override
+    public boolean equals(final Object o) {
         if (o instanceof TypeReference) {
-            int len = ((TypeReference)o).types.length;
+            final int len = ((TypeReference)o).types.length;
             if (len!=types.length) return false;
-            for (int i=0; i<types.length; i++) {
-              if (! ((TypeReference) o).types[i].equals(this.types[i]) ) return false;  
-            }
+            for (int i=0; i<types.length; i++)
+                if (! ((TypeReference) o).types[i].equals(this.types[i]) ) return false;
             return true;
         }
         return false;
     }
 
+    @Override
     public int hashCode() {
         int hash = 0;
-        for (int i=0; i<types.length; i++) {
-            hash = (hash << 1) + types[i].hashCode();
-        }
+        for (final Type type : types)
+            hash = (hash << 1) + type.hashCode();
         return hash;
     }
 

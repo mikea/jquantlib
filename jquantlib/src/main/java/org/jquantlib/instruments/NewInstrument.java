@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -47,14 +47,14 @@ import org.jquantlib.util.LazyObject;
 
 /**
  * Defines a <i>new-style</i> {@link Instrument} which makes use of an external {@link PricingEngine}.
- * 
+ *
  * which must be properly initialized before any call to its calculate() method.
- * 
+ *
  * @see Instrument
  * @see NewInstrument
  * @see PricingEngine
  * @see <a href="http://quantlib.org/reference/group__instruments.html">QuantLib: Financial Instruments</a>
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class NewInstrument extends Instrument {
@@ -65,19 +65,19 @@ public abstract class NewInstrument extends Instrument {
 
     private static final String SHOULD_DEFINE_PRICING_ENGINE = "Should define pricing engine";
 
-    
+
     //
     // protected fields
     //
 
     /**
      * The value of this attribute and any other that derived classes might declare must be set during calculation.
-     * 
+     *
      * @see PricingEngine
      */
     protected PricingEngine engine;
 
-    
+
     //
     // abstract methods
     //
@@ -85,15 +85,15 @@ public abstract class NewInstrument extends Instrument {
     /**
      * Passes arguments to be used by a {@link PricingEngine}.
      * When a derived argument structure is defined for an instrument, this method should be overridden to fill it.
-     * 
+     *
      * @param arguments keeps values to be used by the external {@link PricingEngine}
-     * 
+     *
      * @see Arguments
      * @see PricingEngine
      */
     protected abstract void setupArguments(final Arguments arguments);
 
-    
+
     //
     // protected constructors
     //
@@ -108,9 +108,9 @@ public abstract class NewInstrument extends Instrument {
 
     /**
      * Constructor which initializes an {@link Instrument} with an external {@link PricingEngine}
-     * 
+     *
      * @param engine is the external {@link PricingEngine} to be used
-     * 
+     *
      * @see PricingEngine
      */
     protected NewInstrument(final PricingEngine engine) {
@@ -118,30 +118,28 @@ public abstract class NewInstrument extends Instrument {
         this.setPricingEngine(engine);
     }
 
-    
+
     //
     // public final methods
     //
 
     /**
      * This method defines an external {@link PricingEngine} to be used for a <i>new-style</i> {@link Instrument}.
-     * 
+     *
      * @param engine is the external {@link PricingEngine} to be used
-     * 
+     *
      * @see PricingEngine
      */
     public final void setPricingEngine(final PricingEngine engine) {
-        if (this.engine != null) {
+        if (this.engine != null)
             this.engine.deleteObserver(this);
-        }
         this.engine = engine;
-        if (this.engine != null) {
+        if (this.engine != null)
             this.engine.addObserver(this);
-        }
         update(this, null);
     }
 
-    
+
     //
     // protected methods
     //
@@ -149,9 +147,9 @@ public abstract class NewInstrument extends Instrument {
     /**
      * Obtains the {@link Results} populated by a {@link PricingEngine}.
      * When a derived result structure is defined for an instrument, this method should be overridden to read from it.
-     * 
+     *
      * @param results contains the {@link Results} object populated by a {@link PricingEngine}
-     * 
+     *
      * @see Results
      * @see PricingEngine
      */
@@ -160,26 +158,22 @@ public abstract class NewInstrument extends Instrument {
         super.errorEstimate = results.errorEstimate;
     }
 
-    
+
     //
     // overrides LazyObject
     //
-    
+
     /**
      * This method performs the actual calculations and set any needed results.
      * <p>
      * When a NewInstrument is used, the default implementation is responsible for calling the pricing engine, passing arguments to
      * it and retrieving results.
-     * 
+     *
      * @see LazyObject#performCalculations
      */
     @Override
     protected void performCalculations() {
-        // verify if a PricingEngine was previously defined
-        if (engine == null)
-            throw new NullPointerException(SHOULD_DEFINE_PRICING_ENGINE);
-
-        // go ahead
+        assert engine != null : SHOULD_DEFINE_PRICING_ENGINE;
         engine.reset();
         setupArguments(engine.getArguments());
         engine.getArguments().validate();
@@ -187,16 +181,16 @@ public abstract class NewInstrument extends Instrument {
         fetchResults(engine.getResults());
     }
 
-    
+
     //
     // Overrides Instrument
     //
-    
+
     /**
      * @InheritDoc
-     * 
+     *
      * This method must leave the instrument in a consistent state when the expiration condition is met.
-     * 
+     *
      * @see Instrument#setupExpired
      */
     @Override

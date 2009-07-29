@@ -261,7 +261,7 @@ public class VanillaSwap extends Swap {
             case 1:
                 return Type.Payer;
             default:
-                throw new IllegalArgumentException("value must be one of -1, 1");
+                throw new AssertionError("value must be one of -1, 1");
             }
         }
 

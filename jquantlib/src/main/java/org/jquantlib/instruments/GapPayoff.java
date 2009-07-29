@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -52,31 +52,31 @@ import org.jquantlib.util.Visitor;
  * the second and the first strike.</li>
  * <p>
  * <b>WARNING:</b> this payoff can be negative depending on the strikes
- * <p> 
- * Definitions of Binary path-independent payoffs can be found in 
+ * <p>
+ * Definitions of Binary path-independent payoffs can be found in
  * <i>M. Rubinstein, E. Reiner:"Unscrambling The Binary Code", Risk, Vol.4 no.9,1991</i>.
- * 
+ *
  * @see <a href="http://www.in-the-money.com/artandpap/Binary%20Options.doc">Binary Options</a>
- * 
+ *
  * @author Richard Gomes
  */
 public class GapPayoff extends StrikedTypePayoff {
-	
+
 	//
     // protected fields
     //
-    
+
     protected /*@Price*/ double secondStrike;
-	
+
 	//
 	// public constructors
 	//
-	
+
 	public GapPayoff(final Option.Type type, final /*@Price*/ double strike, final /*@Price*/ double secondStrike) {
 		super(type, strike);
 		this.secondStrike = secondStrike;
 	}
-	
+
     /**
      * @return the second strike value
      */
@@ -84,11 +84,11 @@ public class GapPayoff extends StrikedTypePayoff {
 		return secondStrike;
 	}
 
-	
+
 	//
 	// Overrides Payoff
 	//
-	
+
     /**
      * {@inheritDoc}
      * <p>
@@ -102,28 +102,26 @@ public class GapPayoff extends StrikedTypePayoff {
      */
 	@Override
 	public final /*@Price*/ double valueOf(final /*@Price*/ double price) {
-    	if (type==Option.Type.CALL) {
-    		return (price-strike >= 0.0 ? price-secondStrike : 0.0);
-    	} else if (type==Option.Type.PUT) {
-    		return (strike-price >= 0.0 ? secondStrike-price : 0.0);
-    	} else {
-    		throw new IllegalArgumentException(UNKNOWN_OPTION_TYPE);
-    	}
+    	if (type==Option.Type.CALL)
+            return (price-strike >= 0.0 ? price-secondStrike : 0.0);
+        else if (type==Option.Type.PUT)
+            return (strike-price >= 0.0 ? secondStrike-price : 0.0);
+        else
+            throw new AssertionError(UNKNOWN_OPTION_TYPE);
     }
 
 
 	//
 	// implements TypedVisitable
 	//
-	
+
 	@Override
 	public void accept(final TypedVisitor<Payoff> v) {
-		Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
+		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		if (v1 != null)
+            v1.visit(this);
+        else
+            super.accept(v);
 	}
 
 }

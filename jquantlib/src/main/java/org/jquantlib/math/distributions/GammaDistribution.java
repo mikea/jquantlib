@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -33,46 +33,46 @@ import org.jquantlib.math.Ops;
 /**
  * The gamma distribution is a two-parameter family of continuous probability distributions.
  * <p>
- * A gamma distribution is a general type of statistical distribution that is related to the beta 
- * distribution and arises naturally in processes for which the waiting times between Poisson 
+ * A gamma distribution is a general type of statistical distribution that is related to the beta
+ * distribution and arises naturally in processes for which the waiting times between Poisson
  * distributed events are relevant.
- * 
+ *
  * @see <a href="http://en.wikipedia.org/wiki/Gamma_distribution">Gamma Distribution</a>
  * @see <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma Distribution on Wolfram MathWorld</a>
- * 
+ *
  * @author Richard Gomes
  * @author Dominik Holenstein
  */
 public class GammaDistribution implements Ops.DoubleOp {
-	
+
 	//
 	// private field
 	//
-	
-	private double a;
-	
-	
+
+	private final double a;
+
+
 	//
 	// public constructor
 	//
-	
-	
+
+
 	/**
 	 * Intitializes <code>a_</code> and checks that <code>a_</code> is not smaller than 0.00.
 	 * @param a
 	 * @throws ArithmeticException if <code>a_</code> is smaller than 0.00
 	 */
-	public GammaDistribution(double a) {
+	public GammaDistribution(final double a) {
+	    assert a >= 0.0 : "invalid parameter for gamma distribution"; // TODO: message
 	    this.a = a;
-	    if (this.a < 0.0) throw new ArithmeticException("invalid parameter for gamma distribution");
 	}
-	
-	
+
+
 	//
 	// implements Ops.DoubleOp
 	//
-	
-	
+
+
 	/**
 	 * Computes the Gamma distribution.
 	 * @param x random variable
@@ -80,11 +80,11 @@ public class GammaDistribution implements Ops.DoubleOp {
 	 */
 	@Override
 	public double op(final double x) /* Read-only */ {
-     	
+
     	if (x <= 0.0) return 0.0;
 
-    	GammaFunction gf = new GammaFunction();
-        double gln = gf.logValue(a);
+    	final GammaFunction gf = new GammaFunction();
+        final double gln = gf.logValue(a);
 
         if (x < (a + 1.0)) {
     	    double ap = a;
@@ -94,9 +94,8 @@ public class GammaDistribution implements Ops.DoubleOp {
     	    	ap += 1.0;
     	    	del *= x / ap;
     	    	sum += del;
-    	    	if (Math.abs(del) < Math.abs(sum) * 3.0e-7) {
-    	    		return sum * Math.exp(-x + a * Math.log(x) - gln);
-    	    	}
+    	    	if (Math.abs(del) < Math.abs(sum) * 3.0e-7)
+                    return sum * Math.exp(-x + a * Math.log(x) - gln);
     	    }
         } else {
         	double b = x + 1.0 - a;
@@ -104,28 +103,25 @@ public class GammaDistribution implements Ops.DoubleOp {
         	double d = 1.0 / b;
         	double h = d;
         	for (int n = 1; n <= 100; n++) {
-        		double an = -1.0 * n * (n - a);
+        		final double an = -1.0 * n * (n - a);
         		b += 2.0;
         		d = an * d + b;
 
-        		if (Math.abs(d) < Constants.QL_EPSILON) {
-        			d = Constants.QL_EPSILON;
-        		}
+        		if (Math.abs(d) < Constants.QL_EPSILON)
+                    d = Constants.QL_EPSILON;
         		c = b + an / c;
-        		if (Math.abs(c) < Constants.QL_EPSILON) {
-        			c = Constants.QL_EPSILON;
-        		}
+        		if (Math.abs(c) < Constants.QL_EPSILON)
+                    c = Constants.QL_EPSILON;
         		d = 1.0 / d;
-        		double del = d * c;
+        		final double del = d * c;
         		h *= del;
-        		if (Math.abs(del - 1.0) < Constants.QL_EPSILON) {
-        			return h * Math.exp(-x + a * Math.log(x) - gln);
-        		}
+        		if (Math.abs(del - 1.0) < Constants.QL_EPSILON)
+                    return h * Math.exp(-x + a * Math.log(x) - gln);
         	}
         }
-        
+
         throw new ArithmeticException("too few iterations");
     }
-	
+
 }
 

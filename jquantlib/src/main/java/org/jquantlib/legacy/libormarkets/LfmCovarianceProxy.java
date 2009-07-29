@@ -7,12 +7,12 @@ import org.jquantlib.math.integrals.GaussKronrodAdaptive;
 import org.jquantlib.processes.LfmCovarianceParameterization;
 
 public class LfmCovarianceProxy extends LfmCovarianceParameterization {
-    
+
     protected LmVolatilityModel  volaModel_;
     protected LmCorrelationModel corrModel_;
-        
-    
-    public LfmCovarianceProxy(LmVolatilityModel volaModel, LmCorrelationModel corrModel){
+
+
+    public LfmCovarianceProxy(final LmVolatilityModel volaModel, final LmCorrelationModel corrModel){
         super(corrModel.size(), corrModel.factors());
         this.volaModel_ = volaModel;
         this.corrModel_ = corrModel;
@@ -21,36 +21,35 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
     public LmVolatilityModel volatilityModel(){
         return volaModel_;
     }
-    
+
     public LmCorrelationModel correlationModel(){
         return corrModel_;
     }
-    
-    public Matrix diffusion(/*@Time*/ double t, final Array x){
-        Matrix pca = corrModel_.pseudoSqrt(t, x);
+
+    @Override
+    public Matrix diffusion(/*@Time*/ final double t, final Array x){
+        final Matrix pca = corrModel_.pseudoSqrt(t, x);
         // TODO: code review :: use of clone()
-        Array  vol = volaModel_.volatility(t, x);
-        for (int i=0; i<size_; ++i) {
+        final Array  vol = volaModel_.volatility(t, x);
+        for (int i=0; i<size_; ++i)
             pca.getRow(i).mul(vol.get(i));
-        }
         return pca;
     }
-    
-    public Matrix covariance(/* @Time */double t, final Array x) {
-        // TODO: code review :: use of clone()
-        Array volatility = volaModel_.volatility(t, x);
-        Matrix correlation = corrModel_.correlation(t, x);
 
-        Matrix tmp = new Matrix(size_, size_);
-        for (int i = 0; i < size_; ++i) {
-            for (int j = 0; j < size_; ++j) {
+    @Override
+    public Matrix covariance(/* @Time */final double t, final Array x) {
+        // TODO: code review :: use of clone()
+        final Array volatility = volaModel_.volatility(t, x);
+        final Matrix correlation = corrModel_.correlation(t, x);
+
+        final Matrix tmp = new Matrix(size_, size_);
+        for (int i = 0; i < size_; ++i)
+            for (int j = 0; j < size_; ++j)
                 tmp.set(i, j, volatility.get(i) * correlation.get(i, j) * volatility.get(j));
-            }
-        }
 
         return tmp;
     }
-    
+
     static class Var_Helper implements Ops.DoubleOp {
 
         private final  int i_, j_;
@@ -58,7 +57,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
         private final LmCorrelationModel/* * */  corrModel_;
 
       public Var_Helper(final LfmCovarianceProxy proxy,
-                                                 int i, int j){
+                                                 final int i, final int j){
       this.i_ = i;
         this.j_ = j;
         this.volaModel_ = proxy.volaModel_;
@@ -68,9 +67,9 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
       public double op(final double t)  {
           /*@Volatility*/ double v1, v2;
 
-          if (i_ == j_) {
-              v1 = v2 = volaModel_.volatility(i_, t);
-          } else {
+          if (i_ == j_)
+            v1 = v2 = volaModel_.volatility(i_, t);
+        else {
               v1 = volaModel_.volatility(i_, t);
               v2 = volaModel_.volatility(j_, t);
           }
@@ -79,34 +78,29 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
       }
     }
 
-     public  double integratedCovariance(int i, int j, /*@Time*/double t, final Array x)  {
+     public  double integratedCovariance(final int i, final int j, /*@Time*/final double t, final Array x)  {
 
-          if (corrModel_.isTimeIndependent()) {
-              try {
+          if (corrModel_.isTimeIndependent())
+            try {
                   // if all objects support these methods
                   // thats by far the fastest way to get the
                   // integrated covariance
                   return corrModel_.correlation(i, j, 0.0, x) * volaModel_.integratedVariance(j, i, t, x);
               }
-              catch (Exception ex) {
+              catch (final Exception ex) {
                   // okay proceed with the
                   // slow numerical integration routine
               }
-          }
 
-          if(x.empty()){
-              throw new IllegalArgumentException("can not handle given x here");
-          }
+          assert !x.empty() : "can not handle given x here"; // TODO: message
 
           double tmp=0.0;
-          Var_Helper helper = new Var_Helper(this, i, j);
+          final Var_Helper helper = new Var_Helper(this, i, j);
 
-          GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
-          for (int k=0; k<64; ++k) {
-              tmp+=integrator.evaluate(helper, k*t/64., (k+1)*t/64.);
-          }
+          final GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
+          for (int k=0; k<64; ++k)
+            tmp+=integrator.evaluate(helper, k*t/64., (k+1)*t/64.);
           return tmp;
       }
 
-    
 }

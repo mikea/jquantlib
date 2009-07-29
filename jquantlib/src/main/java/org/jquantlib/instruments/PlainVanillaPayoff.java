@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -47,16 +47,16 @@ package org.jquantlib.instruments;
  * Pays off nothing if the underlying asset price {@latex$ S_{T}} finishes below/above the strike price {@latex$ K}, or pays
  * out a the difference between the asset price {@latex$ S_{T}} and the strike price {@latex$ K} if the underlying asset finishes
  * above/below the strike price.
- * 
+ *
  * @see <a href="http://www.in-the-money.com/artandpap/Binary%20Options.doc">Binary Options</a>
- * 
+ *
  * @author Richard Gomes
  */
 public class PlainVanillaPayoff extends StrikedTypePayoff {
 	public PlainVanillaPayoff(final Option.Type type, final /*@Price*/ double strike) {
 		super(type, strike);
 	}
-	
+
 	/**
      * Pays off nothing if the underlying asset price {@latex$ S_{T}} finishes below/above the strike price {@latex$ K}, or pays
      * out a the difference between the asset price {@latex$ S_{T}} and the strike price {@latex$ K} if the underlying asset finishes
@@ -65,14 +65,14 @@ public class PlainVanillaPayoff extends StrikedTypePayoff {
      * <li>PUT Option:  {@latex$ \max(K-S_{T},0)}</li>
      * where {@latex$ S_{T}} is the asset price at maturity and {@latex$ K} is the strike price.
 	 */
-	public final/*@Price*/double valueOf(final /*@Price*/ double price) {
-    	if (type==Option.Type.CALL) {
-    		return Math.max(price - strike, 0.0);
-    	} else if (type==Option.Type.PUT) {
-    		return Math.max(strike - price, 0.0);
-    	} else {
-    		throw new IllegalArgumentException(UNKNOWN_OPTION_TYPE);
-    	}
+	@Override
+    public final/*@Price*/double valueOf(final /*@Price*/ double price) {
+    	if (type==Option.Type.CALL)
+            return Math.max(price - strike, 0.0);
+        else if (type==Option.Type.PUT)
+            return Math.max(strike - price, 0.0);
+        else
+            throw new AssertionError(UNKNOWN_OPTION_TYPE);
     }
 
 }

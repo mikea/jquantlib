@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -23,7 +23,7 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.math.Factorial;
-import org.jquantlib.math.UnaryFunctionInteger;
+import org.jquantlib.math.Ops;
 
 /**
  * Binomial Distribution
@@ -35,38 +35,40 @@ import org.jquantlib.math.UnaryFunctionInteger;
  * <p>
  * The binomial distribution is the basis for the popular binomial test of statistical
  * significance. A binomial distribution should not be confused with a bimodal distribution.
- * 
+ *
  * @see <a href="http://en.wikipedia.org/wiki/Binomial_distribution">Binomial Distribution</a>
- * 
+ *
  * @author Richard Gomes
  * @author Dominik Holenstein
  */
-public class BinomialDistribution implements UnaryFunctionInteger {
+public class BinomialDistribution implements Ops.IntToDouble {
+
+    private static final String INVALID_PROBABILITY = "probability must be 0.0 <= p <= 1.0";
 
 	//
     // private static final methods
     //
-    
+
     private static final Factorial factorial = new Factorial();
-	
+
     //
     // private final fields
     //
-    
+
     private final int nExp;
-    
-    
+
+
     //
     // private fields
     //
-    
+
     private  double logP; //TODO: code review
     private  double logOneMinusP; //TODO: code review
 
     /**
 	 * Constructor of the Binomial Distribution taking two arguments for
 	 * initialization.
-	 * 
+	 *
 	 * @param p
 	 *            Probability of success of each trial
 	 * @param n
@@ -74,31 +76,25 @@ public class BinomialDistribution implements UnaryFunctionInteger {
 	 */
     //TODO: code review
 	public BinomialDistribution(final double p, final int n) {
+        assert p >= 0 && p <= 1.0 : INVALID_PROBABILITY;
 		this.nExp = n;
-
-		if (p == 0.0) {
-			this.logOneMinusP = 0.0;
-		} else if (p == 1.0) {
-			this.logP = 0.0;
-		} else {
-			if ((p < 0)) {
-				throw new ArithmeticException("negative p not allowed");
-			}
-			if ((p > 1.0)) {
-				throw new ArithmeticException("p > 1.0 not allowed");
-			}
+		if (p == 0.0)
+            this.logOneMinusP = 0.0;
+        else if (p == 1.0)
+            this.logP = 0.0;
+        else {
 			this.logP = Math.log(p);
 			this.logOneMinusP = Math.log(1.0 - p);
 		}
 	}
-	
+
 	//
 	// implements UnaryFunctionInteger
 	//
-	
+
 	/**
 	 * Computes the probability of <code>k</code> successful trials.
-	 * 
+	 *
 	 * @param k
 	 *            Number of successful trials
 	 * @return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp-k) * logOneMinusP);
@@ -106,26 +102,23 @@ public class BinomialDistribution implements UnaryFunctionInteger {
 	@Override
 	public double evaluate(final int k) {
 
-        if (k > nExp) {
-			return 0.0;
-        }
+        if (k > nExp)
+            return 0.0;
 
         // p == 1.0
-        if (logP == 0.0) {
-			return (k == nExp ? 1.0 : 0.0);
-		}
-        
+        if (logP == 0.0)
+            return (k == nExp ? 1.0 : 0.0);
+
         // p==0.0
-        if (logOneMinusP == 0.0) {
-			return (k == 0 ? 1.0 : 0.0);
-		}
-        
+        if (logOneMinusP == 0.0)
+            return (k == 0 ? 1.0 : 0.0);
+
         return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp - k) * logOneMinusP);
 	}
 
 	/**
 	 * Computes the natural logarithm of the binomial coefficient.
-	 * 
+	 *
 	 * @param n
 	 *            Number of total trials
 	 * @param k
@@ -134,22 +127,19 @@ public class BinomialDistribution implements UnaryFunctionInteger {
 	 */
 	private static double binomialCoefficientLn(final int n, final int k) {
 
-		if (!(n >= 0)) {
-			throw new ArithmeticException("n < 0 not allowed, " + n);
-		}
-		if (!(k >= 0)) {
-			throw new ArithmeticException("k < 0 not allowed, " + k);
-		}
-		if (!(n >= k)){
-			throw new ArithmeticException("n < k not allowed");
-		}
+		if (!(n >= 0))
+            throw new ArithmeticException("n < 0 not allowed, " + n);
+		if (!(k >= 0))
+            throw new ArithmeticException("k < 0 not allowed, " + k);
+		if (!(n >= k))
+            throw new ArithmeticException("n < k not allowed");
 
         return factorial.ln(n) - factorial.ln(k) - factorial.ln(n - k);
     }
-	
+
 	/**
 	 * Computes the binomial coefficient.
-	 * 
+	 *
 	 * @param n
 	 *            Number of total trials
 	 * @param k

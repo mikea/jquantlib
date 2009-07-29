@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -37,37 +37,37 @@ import java.lang.reflect.Type;
  * // Please read note below regarding usage of anonymous classes and derived classes.
  * Map<String,Data> smap = new MyHashMap<String,Data>() {}; // anonymous instance!
  * Map<Double,Data> dmap = new MyHashMap<Double,Data>() {}; // anonymous instance!
- * </pre> 
+ * </pre>
  * ... and below you can see a typical retrieval of type information inside the class of our interest:
  * <pre>
  * class MyHashMap<K,V> extends HashMap<K,V> {
- * 
+ *
  *    Class<?> final keyClass;
  *    Class<?> final valClass;
- * 
+ *
  *    MyHashMap() {
  *        // retrieves first generic parameter
  *        keyClass = TypeToken.getClazz(this.getClass());
  *        // retrieves second generic parameter
  *        valClass = TypeToken.getClazz(this.getClass(), 1);
  *    }
- *    
+ *
  *    public put(K key, V val) {
  *        if (!keyClass.isAssignableFrom(key)) throw new ClassCastException("invalid key");
  *        if (!valClass.isAssignableFrom(val)) throw new ClassCastException("invalid value");
  *    }
  * </pre>
- * 
+ *
  * @note It's very important to notice that we it is required to create <b>anonymous instances
  *       or instances of extended class of the class you are interested</b> to parameterise.
  *       The reason is that TypeToken and TypeReference use the tricky Class.getGenericSuperClass(),
  *       which retrieves type information from the super class of the current caller instance.
- *       
+ *
  * @see TypeReference
- * 
+ *
  * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">SuperTypeTokens</a>
  * @see <a href="http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf">Generics Tutorial</a>
- * 
+ *
  * @author Richard Gomes
  */
 //FIXME :: rename to SuperTypeToken
@@ -78,14 +78,10 @@ public class TypeToken {
     }
 
     static public Type getType(final Class<?> klass, final int pos) {
-        Type superclass = klass.getGenericSuperclass();
-        if (superclass instanceof Class) {
-            throw new IllegalArgumentException(ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED);
-        }
-        Type[] types = ((ParameterizedType) superclass).getActualTypeArguments();
-        if (pos >= types.length) {
-            throw new IllegalArgumentException(ReflectConstants.MISSING_GENERIC_PARAMETER_TYPE);
-        }
+        final Type superclass = klass.getGenericSuperclass();
+        assert !(superclass instanceof Class) : ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED;
+        final Type[] types = ((ParameterizedType) superclass).getActualTypeArguments();
+        assert pos < types.length : ReflectConstants.MISSING_GENERIC_PARAMETER_TYPE;
         return types[pos];
     }
 
@@ -94,10 +90,9 @@ public class TypeToken {
     }
 
     static public Class<?> getClazz(final Class<?> klass, final int pos) {
-        Type type = getType(klass, pos);
-        Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
-        if ((clazz.getModifiers() & Modifier.ABSTRACT) != 0)
-            throw new IllegalArgumentException(ReflectConstants.GENERIC_PARAMETER_MUST_BE_CONCRETE_CLASS);
+        final Type type = getType(klass, pos);
+        final Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
+        assert ((clazz.getModifiers() & Modifier.ABSTRACT) == 0) : ReflectConstants.GENERIC_PARAMETER_MUST_BE_CONCRETE_CLASS;
         return clazz;
     }
 

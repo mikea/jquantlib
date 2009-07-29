@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -44,41 +44,41 @@ import org.jquantlib.quotes.Quote;
 
 /**
  * Simple stock class
- * 
+ *
  * @author Richard Gomes
  */
 public class Stock extends Instrument {
-	
+
 	//
     // private final fields
     //
-    
+
     private final Handle<Quote> quote;
-	
+
 	//
     // public constructors
     //
-    
+
     public Stock(final Handle<Quote> quote) {
-		if (quote == null) throw new NullPointerException(); // FIXME: code review: should throw here?
+		assert quote != null : "null quote"; // FIXME: code review: should throw here?
 		this.quote = quote;
 		this.quote.addObserver(this);
 	}
-    
+
 	//
 	// overrides Instrument
 	//
-	
+
 	@Override
 	public boolean isExpired() /* @ReadOnly */ { return false; }
-    
+
 	//
     // overrides LazyObject
     //
-    
+
     @Override
     protected void performCalculations() /* @ReadOnly */ {
-		if (quote.empty()) throw new NullPointerException("null quote set");
+		assert !quote.empty() : "null quote set";
 		NPV = quote.getLink().evaluate();
 	}
 }

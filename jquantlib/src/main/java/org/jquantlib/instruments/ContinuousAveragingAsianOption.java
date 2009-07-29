@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -53,7 +53,7 @@ import org.jquantlib.processes.StochasticProcess;
 
 /**
  * Description of the terms and conditions of a discrete average out fixed strike option.
- * 
+ *
  * @author <Richard Gomes>
  */
 
@@ -64,27 +64,22 @@ public class ContinuousAveragingAsianOption extends OneAssetStrikedOption {
     @PackagePrivate
     protected AverageType averageType_;
 
-    public ContinuousAveragingAsianOption(AverageType averageType, final StochasticProcess process, final StrikedTypePayoff payoff,
+    public ContinuousAveragingAsianOption(final AverageType averageType, final StochasticProcess process, final StrikedTypePayoff payoff,
             final Exercise exercise, final PricingEngine engine) {
         super(process, payoff, exercise, engine);
         averageType_ = averageType;
     }
 
-    public ContinuousAveragingAsianOption(StochasticProcess process, Payoff payoff, Exercise exercise, PricingEngine engine) {
+    public ContinuousAveragingAsianOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
         super(process, payoff, exercise, engine);
     }
 
     @Override
-    public void setupArguments(Arguments arguments) /* @ReadOnly */{
-        super.setupArguments(arguments);
-
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (!(arguments instanceof ContinuousAveragingAsianOptionArguments)) {
-            throw new IllegalArgumentException(WRONG_ARGUMENT_TYPE);
-        }
-        ContinuousAveragingAsianOptionArguments moreArgs = (ContinuousAveragingAsianOptionArguments) arguments;
+    public void setupArguments(final Arguments args) /* @ReadOnly */{
+        super.setupArguments(args);
+        assert args instanceof ContinuousAveragingAsianOptionArguments : WRONG_ARGUMENT_TYPE;
+        final ContinuousAveragingAsianOptionArguments moreArgs = (ContinuousAveragingAsianOptionArguments) args;
         moreArgs.averageType = averageType_;
-
     }
 
 }

@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -69,10 +69,12 @@ import org.jquantlib.util.Date;
 
 public class OneAssetOption extends Option {
 
-    //
+    private static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
+
+
     // private fields
     //
-    
+
     // results
     private double delta;
     private double deltaForward;
@@ -84,15 +86,15 @@ public class OneAssetOption extends Option {
     private double rho;
     private double dividendRho;
     private double itmCashProbability;
-    
+
     // arguments
     protected StochasticProcess stochasticProcess;
-    
+
 
     //
     // public constructors
     //
-    
+
     public OneAssetOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
     	super(payoff, exercise, engine);
         this.stochasticProcess = process;
@@ -102,118 +104,116 @@ public class OneAssetOption extends Option {
     //
     // public methods
     //
-    
+
     public double delta() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(delta)) throw new IllegalArgumentException("delta not provided");
+        assert !Double.isNaN(delta) : "delta not provided";
         return delta;
     }
 
     public double deltaForward() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(deltaForward)) throw new IllegalArgumentException("forward delta not provided");
+        assert !Double.isNaN(deltaForward) : "forward delta not provided";
         return deltaForward;
     }
 
     public double elasticity() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(elasticity)) throw new IllegalArgumentException("elasticity not provided");
+        assert !Double.isNaN(elasticity) : "elasticity not provided";
         return elasticity;
     }
 
     public double gamma() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(gamma)) throw new IllegalArgumentException("gamma not provided");
+        assert !Double.isNaN(gamma) : "gamma not provided";
         return gamma;
     }
 
     public double theta() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(theta)) throw new IllegalArgumentException("theta not provided");
+        assert !Double.isNaN(theta) : "theta not provided";
         return theta;
     }
 
     public double thetaPerDay() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(thetaPerDay)) throw new IllegalArgumentException("theta per-day not provided");
+        assert !Double.isNaN(thetaPerDay) : "theta per-day not provided";
         return thetaPerDay;
     }
 
     public double vega() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(vega)) throw new IllegalArgumentException("vega not provided");
+        assert !Double.isNaN(vega) : "vega not provided";
         return vega;
     }
 
     public double rho() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(rho)) throw new IllegalArgumentException("rho not provided");
+        assert !Double.isNaN(rho) : "rho not provided";
         return rho;
     }
 
     public double dividendRho() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(dividendRho)) throw new IllegalArgumentException("dividend rho not provided");
+        assert !Double.isNaN(dividendRho) : "dividend rho not provided";
         return dividendRho;
     }
 
     public double itmCashProbability() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(itmCashProbability)) throw new IllegalArgumentException("in-the-money cash probability not provided");
+        assert !Double.isNaN(itmCashProbability) : "in-the-money cash probability not provided";
         return itmCashProbability;
     }
 
     /**
-     * Currently, this method returns the Black-Scholes implied volatility. 
+     * Currently, this method returns the Black-Scholes implied volatility.
      * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
-     *  
+     *
      * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
      * In these cases the calculation can fail and the result (if any) is almost meaningless.
-     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
+     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g.,
      * a target value lower than the intrinsic value in the case of American options.
      */
-    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue) /* @ReadOnly */ {
+    public /* @Volatility */ double impliedVolatility(/*@Price*/ final double targetValue) /* @ReadOnly */ {
         return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
     }
-    
-    /**
-     * Currently, this method returns the Black-Scholes implied volatility. 
-     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
-     *  
-     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
-     * In these cases the calculation can fail and the result (if any) is almost meaningless.
-     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
-     * a target value lower than the intrinsic value in the case of American options.
-     */
-    public /* @Volatility */ double impliedVolatility(/*@Price*/ double targetValue, double tolerance, int maxEvalutions) /* @ReadOnly */ {
-        return impliedVolatility(targetValue, tolerance, maxEvalutions, 1.0e-7, 4.0);
-    }
-    
 
     /**
-     * @Note Currently, this method returns the Black-Scholes implied volatility. 
+     * Currently, this method returns the Black-Scholes implied volatility.
      * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
-     *  
+     *
+     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
+     * In these cases the calculation can fail and the result (if any) is almost meaningless.
+     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g.,
+     * a target value lower than the intrinsic value in the case of American options.
+     */
+    public /* @Volatility */ double impliedVolatility(/*@Price*/ final double targetValue, final double tolerance, final int maxEvalutions) /* @ReadOnly */ {
+        return impliedVolatility(targetValue, tolerance, maxEvalutions, 1.0e-7, 4.0);
+    }
+
+
+    /**
+     * @Note Currently, this method returns the Black-Scholes implied volatility.
+     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
+     *
      * @Note Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
      * In these cases the calculation can fail and the result (if any) is almost meaningless.
-     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g., 
+     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g.,
      * a target value lower than the intrinsic value in the case of American options.
      */
     public final /* @Volatility */ double impliedVolatility(
-            final /*@Price*/ double targetValue, 
-            final double accuracy, 
+            final /*@Price*/ double targetValue,
+            final double accuracy,
             final int maxEvaluations,
             final /* @Volatility */ double minVol,
             final /* @Volatility */ double maxVol) /* @ReadOnly */ {
-        
         calculate();
-        if (isExpired()) throw new IllegalArgumentException("option expired");
-
-        /* @Volatility */ double guess = (minVol+maxVol)/2.0;
-        ImpliedVolHelper f = new ImpliedVolHelper(engine, targetValue);
-        AbstractSolver1D<Ops.DoubleOp> solver = new Brent();
+        assert !isExpired() : "option expired";
+        /* @Volatility */ final double guess = (minVol+maxVol)/2.0;
+        final ImpliedVolHelper f = new ImpliedVolHelper(engine, targetValue);
+        final AbstractSolver1D<Ops.DoubleOp> solver = new Brent();
         solver.setMaxEvaluations(maxEvaluations);
-        /* @Volatility */ double result = solver.solve(f, accuracy, guess, minVol, maxVol);
+        /* @Volatility */ final double result = solver.solve(f, accuracy, guess, minVol, maxVol);
         return result;
     }
 
@@ -221,41 +221,37 @@ public class OneAssetOption extends Option {
     //
     // overrides Instrument
     //
-    
+
     @Override
     public boolean isExpired() /* @ReadOnly */ {
-        Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
         return exercise.lastDate().le( evaluationDate );
     }
 
-    
+
     //
     // overrides NewInstrument
     //
-    
+
     /**
      * {@inheritDoc}
-     * 
-     * Passes the {@link StochasticProcess}, {@link Exercise} 
+     *
+     * Passes the {@link StochasticProcess}, {@link Exercise}
      */
     @Override
-    public void setupArguments(final Arguments arguments) /* @ReadOnly */ {
-        
-        if (! OneAssetOptionArguments.class.isAssignableFrom(arguments.getClass())) throw new ClassCastException(arguments.toString());
-        
-        final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments) arguments;
-        final OptionArguments         optionArguments   = (OptionArguments) arguments;
-
+    public void setupArguments(final Arguments args) /* @ReadOnly */ {
+        assert args instanceof OneAssetOptionArguments : WRONG_ARGUMENT_TYPE;
+        final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments) args;
+        final OptionArguments         optionArguments   = (OptionArguments) args;
         // set up stochastic process
         oneAssetArguments.stochasticProcess = stochasticProcess;
         // setup exercise dates
         optionArguments.exercise = exercise;
         // set up stopping times
-        int n = exercise.size();
-        List<Double> list = new ArrayDoubleList(n);
-        for (int i=0; i<n; ++i) {
+        final int n = exercise.size();
+        final List<Double> list = new ArrayDoubleList(n);
+        for (int i=0; i<n; ++i)
             list.add(/*@Time*/ stochasticProcess.getTime(exercise.date(i)));
-        }
         optionArguments.stoppingTimes = list;
     }
 
@@ -263,27 +259,22 @@ public class OneAssetOption extends Option {
      * {@inheritDoc}
      *
      * Obtains {@link Greeks} and {@link MoreGreeks} calculated by a {@link PricingEngine}
-     * 
+     *
      * @see Greeks
      * @see MoreGreeks
      * @see PricingEngine
      */
     @Override
     public void fetchResults(final Results results) /* @ReadOnly */ {
-        // obtain results from chained results
+        assert results instanceof MoreGreeks : WRONG_ARGUMENT_TYPE;
         super.fetchResults(results);
-        
         final MoreGreeks moreGreeks;
         final Greeks     greeks;
-        
+
         // bind a Results interface to specific classes
-        if (MoreGreeks.class.isAssignableFrom(results.getClass())) {
-            moreGreeks = (MoreGreeks) results;
-            greeks     = (Greeks) results;
-        } else {
-            throw new ClassCastException(results.getClass().getName());
-        }
-        
+        moreGreeks = (MoreGreeks) results;
+        greeks     = (Greeks) results;
+
         //
         // No check on Double.NaN values - just copy. this allows:
         // a) To decide in derived options what to do when null results are returned
@@ -319,39 +310,39 @@ public class OneAssetOption extends Option {
         itmCashProbability = 0.0;
     }
 
-    
+
     //
     // private inner classes
     //
-    
+
     /**
      * Helper class for implied volatility calculation
      */
     private static class ImpliedVolHelper implements Ops.DoubleOp {
-    	
+
         //
         // private final fields
         //
-        
+
         private final OneAssetOptionResults impliedResults;
         private final PricingEngine impliedEngine;
         private final Handle<Quote> vol;
         private final double targetValue;
-        
-        
+
+
         //
         // public constructors
         //
-        
+
         public ImpliedVolHelper(final PricingEngine engine, final double targetValue)  {
         	this.impliedEngine = engine;
         	this.targetValue = targetValue;
 
             // obtain arguments from pricing engine
-            Arguments tmpArgs = impliedEngine.getArguments();
-            if (! OneAssetOptionArguments.class.isAssignableFrom(tmpArgs.getClass())) throw new ClassCastException(tmpArgs.getClass().getName());
-            OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments)tmpArgs;
-            
+            final Arguments tmpArgs = impliedEngine.getArguments();
+            assert tmpArgs instanceof OneAssetOptionArguments : WRONG_ARGUMENT_TYPE;
+            final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments)tmpArgs;
+
         	// Make a new stochastic process in order not to modify the given one.
         	// stateVariable, dividendTS and riskFreeTS can be copied since
         	// they won't be modified.
@@ -359,50 +350,49 @@ public class OneAssetOption extends Option {
         	// Making it work for a generic process would need some reflection
         	// technique (which is possible, but requires some thought),
 			// hence its postponement.
-        	
+
         	// obtain original process from arguments
-            GeneralizedBlackScholesProcess originalProcess = (GeneralizedBlackScholesProcess)oneAssetArguments.stochasticProcess;
-        	if (originalProcess==null) throw new NullPointerException("Black-Scholes process required");
+            final GeneralizedBlackScholesProcess originalProcess = (GeneralizedBlackScholesProcess)oneAssetArguments.stochasticProcess;
+        	assert originalProcess!=null : "Black-Scholes process required";
 
         	// initialize arguments for calculation of implied volatility
-        	this.vol = new Handle
-        	<Quote>(new SimpleQuote(0.0));
-        	Handle<? extends Quote> stateVariable = originalProcess.stateVariable();
-        	Handle<YieldTermStructure> dividendYield = originalProcess.dividendYield();
-        	Handle<YieldTermStructure> riskFreeRate = originalProcess.riskFreeRate();
-        	Handle<BlackVolTermStructure> blackVol = originalProcess.blackVolatility();
+        	this.vol = new Handle<Quote>(new SimpleQuote(0.0));
+        	final Handle<? extends Quote> stateVariable = originalProcess.stateVariable();
+        	final Handle<YieldTermStructure> dividendYield = originalProcess.dividendYield();
+        	final Handle<YieldTermStructure> riskFreeRate = originalProcess.riskFreeRate();
+        	final Handle<BlackVolTermStructure> blackVol = originalProcess.blackVolatility();
 
         	// calculate implied volatility
-        	Handle<BlackVolTermStructure> volatility = new Handle<BlackVolTermStructure>(
+        	final Handle<BlackVolTermStructure> volatility = new Handle<BlackVolTermStructure>(
         													new BlackConstantVol(
-        															blackVol.getLink().referenceDate(), 
-        															vol, 
+        															blackVol.getLink().referenceDate(),
+        															vol,
         															blackVol.getLink().dayCounter()));
-        
+
         	// build a new stochastic process
-        	StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
+        	final StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
 
         	// set up a new stochastic process back to the engine's arguments
         	oneAssetArguments.stochasticProcess = process;
 
         	// obtain results from pricing engine and keep for further use
-        	if (! OneAssetOptionResults.class.isAssignableFrom(impliedEngine.getResults().getClass())) throw new ClassCastException(impliedEngine.getClass().getName());
+        	assert impliedEngine.getResults() instanceof OneAssetOptionResults : WRONG_ARGUMENT_TYPE;
         	impliedResults = (OneAssetOptionResults)impliedEngine.getResults();
         }
 
-		
+
         //
         // implements Ops.DoubleOp
         //
-        
+
         @Override
         public final double op(final /* @Volatility */ double x) /* @ReadOnly */ {
-			SimpleQuote quote = (SimpleQuote)vol.getLink();
+			final SimpleQuote quote = (SimpleQuote)vol.getLink();
 			quote.setValue(x);
 			this.impliedEngine.calculate();
 			return impliedResults.value - targetValue;
 		}
 
     }
-    
+
 }

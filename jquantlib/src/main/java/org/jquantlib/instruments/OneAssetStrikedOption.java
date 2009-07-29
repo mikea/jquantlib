@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -51,7 +51,7 @@ import org.jquantlib.processes.StochasticProcess;
 
 /**
  * Base class for options on a single asset with striked payoff
- * 
+ *
  * @author Richard Gomes
  */
 public class OneAssetStrikedOption extends OneAssetOption {
@@ -59,11 +59,11 @@ public class OneAssetStrikedOption extends OneAssetOption {
     // results
     private /* @Price */ double strikeSensitivity;
 
-    
+
     //
     // public constructors
     //
-    
+
 // FIXME: code review
 //    public OneAssetStrikedOption(
 //            final StochasticProcess process,
@@ -80,29 +80,29 @@ public class OneAssetStrikedOption extends OneAssetOption {
     	super(process, payoff, exercise, engine);
     }
 
-    
+
     //
     // public methods
     //
-    
+
     public /* @Price */ double getStrikeSensitivity() /* @ReadOnly */ {
         calculate();
-        if (Double.isNaN(strikeSensitivity)) throw new ArithmeticException("strike sensitivity not provided");
+        assert !Double.isNaN(strikeSensitivity) : "strike sensitivity not provided";
         return strikeSensitivity;
     }
-       
-    
+
+
     //
     // overrides OneAssetOption
     //
-    
+
     @Override
 	protected void setupExpired() /* @ReadOnly */ {
 		super.setupExpired();
 		strikeSensitivity = 0.0;
 	}
-	
-    @Override    
+
+    @Override
     public void setupArguments(final Arguments args) /* @ReadOnly */ {
 		super.setupArguments(args);
 		final OneAssetOptionArguments moreArgs = (OneAssetOptionArguments)args;
@@ -116,20 +116,19 @@ public class OneAssetStrikedOption extends OneAssetOption {
      * This programming style is not recommended and we should use getters/setters instead.
      * At the moment, we keep the original implementation.
 	 */
-    @Override    
+    @Override
 	public void fetchResults(final Results results) /* @ReadOnly */ {
         // obtain results from chained results
         super.fetchResults(results);
 
 		final MoreGreeks moreGreeks;
 
-    	if (MoreGreeks.class.isAssignableFrom(results.getClass())) {
-        	moreGreeks = (MoreGreeks) results;
-    	} else {
-    		throw new ClassCastException(results.getClass().getName());
-    	}
-    	
+    	if (MoreGreeks.class.isAssignableFrom(results.getClass()))
+            moreGreeks = (MoreGreeks) results;
+        else
+            throw new ClassCastException(results.getClass().getName());
+
 		strikeSensitivity = moreGreeks.strikeSensitivity;
 	}
-        
+
 }
