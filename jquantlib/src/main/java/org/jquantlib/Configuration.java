@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -112,7 +112,7 @@ public class Configuration {
      * 
      * @param prefs
      */
-    private Configuration(Preferences prefs) {
+    private Configuration(final Preferences prefs) {
         this.preferences = prefs;
         if (prefs != null) {
             this.extraSafetyChecks = prefs.getBoolean("ExtraSafetyChecks", defaultExtraSafefyChecks);
@@ -130,7 +130,7 @@ public class Configuration {
      * 
      * @return
      */
-    public static Configuration getSystemConfiguration(Preferences prefs) {
+    public static Configuration getSystemConfiguration(final Preferences prefs) {
         if (systemConfiguration == null) {
             synchronized (Configuration.class) {
                 if (systemConfiguration == null) {
@@ -149,7 +149,7 @@ public class Configuration {
      * 
      * @return
      */
-    public static Configuration newConfiguration(Preferences prefs) {
+    public static Configuration newConfiguration(final Preferences prefs) {
         if (allowUserConfigurations)
             return new Configuration(prefs);
         return null;

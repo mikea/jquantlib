@@ -36,18 +36,18 @@ import org.jquantlib.math.Ops;
 // TODO PoissonDistribution: check logMu_ -> is never used
 public class PoissonDistribution implements Ops.IntToDouble {
 
-	//
-    // private fields
+    //
+    // private final fields
     //
 
     private final double mu;
-	private double logMu;
+
 
     //
-	// public constructors
-	//
+    // public constructors
+    //
 
-	/**
+    /**
      * PoissonDistribution constructor
      * <p>
      * Initialize the mean value {@latex$ \mu}
@@ -55,11 +55,9 @@ public class PoissonDistribution implements Ops.IntToDouble {
      * @param the mean value {@latex$ \mu}
      */
     public PoissonDistribution(final double mu) {
-       this.mu = mu;
-       if (this.mu< 0.0) throw new ArithmeticException("mu must be non negative (" + this.mu + " not allowed)");
-       if (this.mu != 0.0) this.logMu = Math.log(this.mu);
+        assert mu >= 0.0 : "mu must be non negative"; // TODO: message
+        this.mu = mu;
     }
-
 
     //
     // implements UnaryFunctionInteger
@@ -76,7 +74,7 @@ public class PoissonDistribution implements Ops.IntToDouble {
      * @return Math.exp(k*Math.log(mu_) - logFactorial - mu_)
      */
     @Override
-    public double evaluate(final int k)/* @Read-only */ {
+    public double op(final int k)/* @Read-only */ {
         if (mu==0.0)
             if (k==0) return 1.0;
             else      return 0.0;

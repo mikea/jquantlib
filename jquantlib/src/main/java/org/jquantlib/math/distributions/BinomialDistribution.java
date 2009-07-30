@@ -45,7 +45,7 @@ public class BinomialDistribution implements Ops.IntToDouble {
 
     private static final String INVALID_PROBABILITY = "probability must be 0.0 <= p <= 1.0";
 
-	//
+    //
     // private static final methods
     //
 
@@ -66,41 +66,41 @@ public class BinomialDistribution implements Ops.IntToDouble {
     private  double logOneMinusP; //TODO: code review
 
     /**
-	 * Constructor of the Binomial Distribution taking two arguments for
-	 * initialization.
-	 *
-	 * @param p
-	 *            Probability of success of each trial
-	 * @param n
-	 *            Sequence of independent yes/no experiments
-	 */
+     * Constructor of the Binomial Distribution taking two arguments for
+     * initialization.
+     *
+     * @param p
+     *            Probability of success of each trial
+     * @param n
+     *            Sequence of independent yes/no experiments
+     */
     //TODO: code review
-	public BinomialDistribution(final double p, final int n) {
+    public BinomialDistribution(final double p, final int n) {
         assert p >= 0 && p <= 1.0 : INVALID_PROBABILITY;
-		this.nExp = n;
-		if (p == 0.0)
+        this.nExp = n;
+        if (p == 0.0) {
             this.logOneMinusP = 0.0;
-        else if (p == 1.0)
+        } else if (p == 1.0) {
             this.logP = 0.0;
-        else {
-			this.logP = Math.log(p);
-			this.logOneMinusP = Math.log(1.0 - p);
-		}
-	}
+        } else {
+            this.logP = Math.log(p);
+            this.logOneMinusP = Math.log(1.0 - p);
+        }
+    }
 
-	//
-	// implements UnaryFunctionInteger
-	//
+    //
+    // implements UnaryFunctionInteger
+    //
 
-	/**
-	 * Computes the probability of <code>k</code> successful trials.
-	 *
-	 * @param k
-	 *            Number of successful trials
-	 * @return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp-k) * logOneMinusP);
-	 */
-	@Override
-	public double evaluate(final int k) {
+    /**
+     * Computes the probability of <code>k</code> successful trials.
+     *
+     * @param k
+     *            Number of successful trials
+     * @return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp-k) * logOneMinusP);
+     */
+    @Override
+    public double op(final int k) {
 
         if (k > nExp)
             return 0.0;
@@ -114,39 +114,36 @@ public class BinomialDistribution implements Ops.IntToDouble {
             return (k == 0 ? 1.0 : 0.0);
 
         return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp - k) * logOneMinusP);
-	}
+    }
 
-	/**
-	 * Computes the natural logarithm of the binomial coefficient.
-	 *
-	 * @param n
-	 *            Number of total trials
-	 * @param k
-	 *            Number of successful trials
-	 * @return Natural logarithm of the binomial coefficient
-	 */
-	private static double binomialCoefficientLn(final int n, final int k) {
-
-		if (!(n >= 0))
-            throw new ArithmeticException("n < 0 not allowed, " + n);
-		if (!(k >= 0))
-            throw new ArithmeticException("k < 0 not allowed, " + k);
-		if (!(n >= k))
-            throw new ArithmeticException("n < k not allowed");
-
+    /**
+     * Computes the natural logarithm of the binomial coefficient.
+     *
+     * @param n
+     *            Number of total trials
+     * @param k
+     *            Number of successful trials
+     * @return Natural logarithm of the binomial coefficient
+     */
+    private double binomialCoefficientLn(final int n, final int k) {
+        assert n >= 0 : "n < 0 not allowed";
+        assert k >= 0 : "k < 0 not allowed";
+        assert n >= k : "n < k not allowed";
         return factorial.ln(n) - factorial.ln(k) - factorial.ln(n - k);
     }
 
-	/**
-	 * Computes the binomial coefficient.
-	 *
-	 * @param n
-	 *            Number of total trials
-	 * @param k
-	 *            Number of successful trials
-	 * @return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)))
-	 */
-	//private static double binomialCoefficient(final int n, final int k) {
-	//	return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)));
-	//}
+    /**
+     * Computes the binomial coefficient.
+     *
+     * @param n
+     *            Number of total trials
+     * @param k
+     *            Number of successful trials
+     * @return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)))
+     */
+    //XXX
+    private double binomialCoefficient(final int n, final int k) {
+    	return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)));
+    }
+    
 }

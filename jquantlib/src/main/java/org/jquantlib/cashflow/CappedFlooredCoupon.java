@@ -131,7 +131,7 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
 //           return cap_;
 //   if ( (gearing_ < 0) && isFloored_)
 //       return floor_;
-        return Constants.NULL_Double;
+        return Constants.NULL_REAL;
 }
 
     private /*@Rate*/ double floor() /* @ReadOnly */ {
@@ -142,7 +142,7 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
 //       return floor_;
 //   if ( (gearing_ < 0) && isCapped_)
 //       return cap_;
-        return Constants.NULL_Double;
+        return Constants.NULL_REAL;
 }
 
     private /*@Rate*/ double effectiveCap() /* @ReadOnly */ {
@@ -150,7 +150,7 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
         if (true)
             throw new UnsupportedOperationException("Work in progress");
 //   return (cap_ - spread())/gearing();
-        return Constants.NULL_Double;
+        return Constants.NULL_REAL;
 }
 
     private /*@Rate*/ double effectiveFloor() /* @ReadOnly */ {
@@ -158,7 +158,7 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
         if (true)
             throw new UnsupportedOperationException("Work in progress");
 //   return (floor_ - spread())/gearing();
-        return Constants.NULL_Double;
+        return Constants.NULL_REAL;
 }
 
     @Override

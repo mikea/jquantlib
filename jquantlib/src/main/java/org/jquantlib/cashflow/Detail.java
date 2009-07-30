@@ -41,13 +41,13 @@ public class Detail {
 
         public static/* Rate */double effectiveFixedRate(final Array spreads, final Array caps, final Array floors,
         /* Size */int i) {
-            /* Rate */double result = get(spreads, i, Constants.NULL_Double);
-            /* Rate */double floor = get(floors, i, Constants.NULL_Double);
-            if (floor != Constants.NULL_Double) {
+            /* Rate */double result = get(spreads, i, Constants.NULL_REAL);
+            /* Rate */double floor = get(floors, i, Constants.NULL_REAL);
+            if (floor != Constants.NULL_REAL) {
                 result = Math.max(floor, result);
             }
-            /* Rate */double cap = get(caps, i, Constants.NULL_Double);
-            if (cap != Constants.NULL_Double) {
+            /* Rate */double cap = get(caps, i, Constants.NULL_REAL);
+            if (cap != Constants.NULL_REAL) {
                 result = Math.min(cap, result);
             }
             return result;
@@ -55,8 +55,8 @@ public class Detail {
 
         public static boolean noOption(final Array caps, final Array floors,
         /* Size */int i) {
-            return (get(caps, i, Constants.NULL_Double) == Constants.NULL_Double)
-                    && (get(floors, i, /* Null<Rate>()) == Null<Rate>() */Constants.NULL_Double) ==Constants.NULL_Double);
+            return (get(caps, i, Constants.NULL_REAL) == Constants.NULL_REAL)
+                    && (get(floors, i, /* Null<Rate>()) == Null<Rate>() */Constants.NULL_REAL) ==Constants.NULL_REAL);
         }
 
 }

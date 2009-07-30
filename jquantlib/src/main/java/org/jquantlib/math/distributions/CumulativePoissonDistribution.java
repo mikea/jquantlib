@@ -47,48 +47,44 @@ import org.jquantlib.math.Ops;
 //TODO CumulativePoissonDistribution: Write a test case.
 public class CumulativePoissonDistribution implements Ops.IntToDouble {
 
-	//
-	// private static fields
-	//
+    //
+    // private static fields
+    //
 
-	private static final double accuracy = 1.0e-15;
-	private static final int maxIteration = 100;
+    private static final double accuracy = 1.0e-15;
+    private static final int maxIteration = 100;
 
     //
-	// static fields
-	//
+    // static fields
+    //
 
-	private final double mu;
+    private final double mu;
 
-	//
-	// public constructors
-	//
+    //
+    // public constructors
+    //
 
-	public CumulativePoissonDistribution(final double mu) {
-	    this.mu = mu;
-	}
+    public CumulativePoissonDistribution(final double mu) {
+        this.mu = mu;
+    }
 
 
-	//
-	// implements UnaryFunctionInteger
-	//
+    //
+    // implements UnaryFunctionInteger
+    //
 
-	/**
-	 * @InheritDoc
-	 *
-	 * Computes the cumulative Poisson distribution by using the incomplete gamma function
-	 * .
-	 * @param k is the number of occurrences of an event
-	 * @return the cumulative Poisson distribution by using the incomplete gamma function
-	 */
-	@Override
-	public double evaluate (final int k) /* @Read-only */ {
-    	   if (k < 0) {
-    	       throw new ArithmeticException("k must be >= 1, but is " + k);
-    	   }
-
-    	   final IncompleteGamma incmplgamma = new IncompleteGamma();
-           return 1.0 - incmplgamma.incompleteGammaFunction((double)k +1, mu, accuracy, maxIteration);
-	}
+    /**
+     * @InheritDoc
+     *
+     * Computes the cumulative Poisson distribution by using the incomplete gamma function
+     * .
+     * @param k is the number of occurrences of an event
+     * @return the cumulative Poisson distribution by using the incomplete gamma function
+     */
+    @Override
+    public double op(final int k) /* @Read-only */ {
+        final IncompleteGamma incompleteGamma = new IncompleteGamma();
+        return 1.0 - incompleteGamma.incompleteGammaFunction((double)k +1, mu, accuracy, maxIteration);
+    }
 
 }

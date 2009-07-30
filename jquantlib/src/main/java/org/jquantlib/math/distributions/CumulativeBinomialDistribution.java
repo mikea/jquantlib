@@ -49,13 +49,13 @@ public class CumulativeBinomialDistribution implements Ops.IntToDouble {
     //
 
     private static final double accuracy = 1e-16;
-	private static final int maxIteration = 100;
+    private static final int maxIteration = 100;
 
-	//
-	// private final fields
-	//
+    //
+    // private final fields
+    //
 
-	private final int n;
+    private final int n;
     private final double p;
 
     //
@@ -70,7 +70,7 @@ public class CumulativeBinomialDistribution implements Ops.IntToDouble {
     public CumulativeBinomialDistribution(final double p, final int n){
         assert p >= 0.0 && p <= 1.0 : INVALID_PROBABILITY;
         this.n = n; // total number of trials
-    	this.p = p; // probability of success on a single trial
+        this.p = p; // probability of success on a single trial
     }
 
     //
@@ -86,7 +86,7 @@ public class CumulativeBinomialDistribution implements Ops.IntToDouble {
      * @return 1.0 - Beta.incompleteBetaFunction(k+1, n_-k, p_, accuracy, maxIteration)
      */
     @Override
-    public double evaluate(final int k) {
+    public double op(final int k) {
         if (k >= n)
             return 1.0;
         else

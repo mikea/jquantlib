@@ -2,7 +2,7 @@
  Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -85,20 +85,20 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
     private static final double DEFAULT_RELATIVE_ACCURACY = 1e-4;
     private static final int DEFAULT_MAX_ITERATIONS = 100;
 
-    private VanillaOptionEngine baseEngine_;
-    private double relativeAccuracy_;
-    private int maxIterations_;
+    private final VanillaOptionEngine baseEngine_;
+    private final double relativeAccuracy_;
+    private final int maxIterations_;
 
-    
-    public JumpDiffusionEngine(VanillaOptionEngine baseEngine) {
+
+    public JumpDiffusionEngine(final VanillaOptionEngine baseEngine) {
         this(baseEngine, DEFAULT_RELATIVE_ACCURACY, DEFAULT_MAX_ITERATIONS);
     }
 
-    public JumpDiffusionEngine(VanillaOptionEngine baseEngine, double relativeAccuracy) {
+    public JumpDiffusionEngine(final VanillaOptionEngine baseEngine, final double relativeAccuracy) {
         this(baseEngine, relativeAccuracy, DEFAULT_MAX_ITERATIONS);
     }
 
-    public JumpDiffusionEngine(VanillaOptionEngine baseEngine, double relativeAccuracy_, int maxIterations) {
+    public JumpDiffusionEngine(final VanillaOptionEngine baseEngine, final double relativeAccuracy_, final int maxIterations) {
         this.baseEngine_ = baseEngine;
         this.maxIterations_ = maxIterations;
         this.relativeAccuracy_ = relativeAccuracy_;
@@ -107,53 +107,52 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
     }
 
 
-    
+
     @Override
     public void calculate() {
-        if (!(this.arguments.stochasticProcess instanceof Merton76Process)) {
+        if (!(this.arguments.stochasticProcess instanceof Merton76Process))
             throw new ArithmeticException("not a jump diffusion process");
-        }
 
         final Merton76Process jdProcess = (Merton76Process) arguments.stochasticProcess;
 
-        double /* @Real */jumpSquareVol = jdProcess.logJumpVolatility().getLink().evaluate()
-                * jdProcess.logJumpVolatility().getLink().evaluate();
+        final double /* @Real */jumpSquareVol = jdProcess.logJumpVolatility().getLink().evaluate()
+        * jdProcess.logJumpVolatility().getLink().evaluate();
 
-        double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().getLink().evaluate() + 0.5 * jumpSquareVol;
+        final double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().getLink().evaluate() + 0.5 * jumpSquareVol;
 
         // mean jump size
-        double /* @Real */k = Math.exp(muPlusHalfSquareVol) - 1.0;
-        double /* @Real */lambda = (k + 1.0) * jdProcess.jumpIntensity().getLink().evaluate();
+        final double /* @Real */k = Math.exp(muPlusHalfSquareVol) - 1.0;
+        final double /* @Real */lambda = (k + 1.0) * jdProcess.jumpIntensity().getLink().evaluate();
 
         // dummy strike
-        double /* @Real */variance = jdProcess.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), 1.0);
+        final double /* @Real */variance = jdProcess.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), 1.0);
 
-        DayCounter voldc = jdProcess.blackVolatility().getLink().dayCounter();
-        Date volRefDate = jdProcess.blackVolatility().getLink().referenceDate();
-        double /* @Time */t = voldc.yearFraction(volRefDate, arguments.exercise.lastDate());
+        final DayCounter voldc = jdProcess.blackVolatility().getLink().dayCounter();
+        final Date volRefDate = jdProcess.blackVolatility().getLink().referenceDate();
+        final double /* @Time */t = voldc.yearFraction(volRefDate, arguments.exercise.lastDate());
 
-        double /* @Rate */riskFreeRate = -Math.log(jdProcess.riskFreeRate().getLink().discount(arguments.exercise.lastDate())) / t;
+        final double /* @Rate */riskFreeRate = -Math.log(jdProcess.riskFreeRate().getLink().discount(arguments.exercise.lastDate())) / t;
 
-        Date rateRefDate = jdProcess.riskFreeRate().getLink().referenceDate();
+        final Date rateRefDate = jdProcess.riskFreeRate().getLink().referenceDate();
 
-        PoissonDistribution p = new PoissonDistribution(lambda * t);
+        final PoissonDistribution p = new PoissonDistribution(lambda * t);
 
         baseEngine_.reset();
 
-        OneAssetOptionArguments baseArguments = baseEngine_.getArguments();
+        final OneAssetOptionArguments baseArguments = baseEngine_.getArguments();
 
         baseArguments.payoff = arguments.payoff;
         baseArguments.exercise = arguments.exercise;
-        Handle<? extends Quote> stateVariable = jdProcess.stateVariable();
-        Handle<YieldTermStructure> dividendTS = jdProcess.dividendYield();
-        RelinkableHandle<YieldTermStructure> riskFreeTS = new RelinkableHandle<YieldTermStructure>(jdProcess.riskFreeRate()
+        final Handle<? extends Quote> stateVariable = jdProcess.stateVariable();
+        final Handle<YieldTermStructure> dividendTS = jdProcess.dividendYield();
+        final RelinkableHandle<YieldTermStructure> riskFreeTS = new RelinkableHandle<YieldTermStructure>(jdProcess.riskFreeRate()
                 .getLink());
-        RelinkableHandle<BlackVolTermStructure> volTS = new RelinkableHandle<BlackVolTermStructure>(jdProcess.blackVolatility()
+        final RelinkableHandle<BlackVolTermStructure> volTS = new RelinkableHandle<BlackVolTermStructure>(jdProcess.blackVolatility()
                 .getLink());
         baseArguments.stochasticProcess = new GeneralizedBlackScholesProcess(stateVariable, dividendTS, riskFreeTS, volTS);
         baseArguments.validate();
 
-        OneAssetOptionResults baseResults = baseEngine_.getResults();
+        final OneAssetOptionResults baseResults = baseEngine_.getResults();
 
         results.value = 0.0;
         results.delta = 0.0;
@@ -179,17 +178,17 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
             baseArguments.validate();
             baseEngine_.calculate();
 
-            weight = p.evaluate(i);
+            weight = p.op(i);
             results.value += weight * baseResults.value;
             results.delta += weight * baseResults.delta;
             results.gamma += weight * baseResults.gamma;
             results.vega += weight * (Math.sqrt(variance / t) / v) * baseResults.vega;
             // theta modified
             theta_correction = baseResults.vega * ((i * jumpSquareVol) / (2.0 * v * t * t)) + baseResults.rho * i
-                    * muPlusHalfSquareVol / (t * t);
+            * muPlusHalfSquareVol / (t * t);
             results.theta += weight * (baseResults.theta + theta_correction + lambda * baseResults.value);
             if (i != 0) {
-                results.theta -= (p.evaluate(i - 1) * lambda * baseResults.value);
+                results.theta -= (p.op(i-1) * lambda * baseResults.value);
             }
             // end theta calculation
             results.rho += weight * baseResults.rho;
@@ -217,11 +216,9 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
 
             lastContribution *= weight;
         }
-        if (i >= maxIterations_) {
+        if (i >= maxIterations_)
             throw new ArithmeticException(i + " iterations have been not enough to reach " + "the required " + relativeAccuracy_
                     + " accuracy. The " + i + " addendum was " + lastContribution + " while the running sum was " + results.value);
-
-        }
 
     }
 

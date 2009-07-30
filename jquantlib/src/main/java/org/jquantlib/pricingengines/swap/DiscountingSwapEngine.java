@@ -24,7 +24,7 @@ public class DiscountingSwapEngine extends SwapEngine implements Observer {
         assert !discountCurve.empty() : "no discounting term structure set";
 
         results.value = 0.0;
-        results.errorEstimate = Constants.NULL_Double;
+        results.errorEstimate = Constants.NULL_REAL;
         results.legNPV = new double[arguments.legs.size()];
         results.legBPS = new double[arguments.legs.size()];
         for (int i=0; i<arguments.legs.size(); ++i) {

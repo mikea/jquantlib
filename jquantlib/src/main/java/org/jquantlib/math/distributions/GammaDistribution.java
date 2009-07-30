@@ -45,82 +45,83 @@ import org.jquantlib.math.Ops;
  */
 public class GammaDistribution implements Ops.DoubleOp {
 
-	//
-	// private field
-	//
+    private static final String ACCURACY_NOT_REACHED = "accuracy not reached";
 
-	private final double a;
+    //
+    // private field
+    //
 
-
-	//
-	// public constructor
-	//
+    private final double a;
 
 
-	/**
-	 * Intitializes <code>a_</code> and checks that <code>a_</code> is not smaller than 0.00.
-	 * @param a
-	 * @throws ArithmeticException if <code>a_</code> is smaller than 0.00
-	 */
-	public GammaDistribution(final double a) {
-	    assert a >= 0.0 : "invalid parameter for gamma distribution"; // TODO: message
-	    this.a = a;
-	}
+    //
+    // public constructor
+    //
 
 
-	//
-	// implements Ops.DoubleOp
-	//
+    /**
+     * Intitializes <code>a_</code> and checks that <code>a_</code> is not smaller than 0.00.
+     * @param a
+     * @throws ArithmeticException if <code>a_</code> is smaller than 0.00
+     */
+    public GammaDistribution(final double a) {
+        assert a >= 0.0 : "invalid parameter for gamma distribution"; // TODO: message
+        this.a = a;
+    }
 
 
-	/**
-	 * Computes the Gamma distribution.
-	 * @param x random variable
-	 * @return Gamma distribution of <code>x</code>
-	 */
-	@Override
-	public double op(final double x) /* Read-only */ {
+    //
+    // implements Ops.DoubleOp
+    //
 
-    	if (x <= 0.0) return 0.0;
 
-    	final GammaFunction gf = new GammaFunction();
-        final double gln = gf.logValue(a);
+    /**
+     * Computes the Gamma distribution.
+     * @param x random variable
+     * @return Gamma distribution of <code>x</code>
+     */
+    @Override
+    public double op(final double x) /* Read-only */ {
+
+        if (x <= 0.0) return 0.0;
+
+        final double gln = new GammaFunction().logValue(a);
 
         if (x < (a + 1.0)) {
-    	    double ap = a;
-    	    double del = 1.0 / a;
-    	    double sum = del;
-    	    for (int n = 1; n <= 100; n++) {
-    	    	ap += 1.0;
-    	    	del *= x / ap;
-    	    	sum += del;
-    	    	if (Math.abs(del) < Math.abs(sum) * 3.0e-7)
+            double ap = a;
+            double del = 1.0 / a;
+            double sum = del;
+            for (int n = 1; n <= 100; n++) {
+                ap += 1.0;
+                del *= x / ap;
+                sum += del;
+                if (Math.abs(del) < Math.abs(sum) * 3.0e-7)
                     return sum * Math.exp(-x + a * Math.log(x) - gln);
-    	    }
+            }
         } else {
-        	double b = x + 1.0 - a;
-        	double c = Constants.QL_MAX_REAL;
-        	double d = 1.0 / b;
-        	double h = d;
-        	for (int n = 1; n <= 100; n++) {
-        		final double an = -1.0 * n * (n - a);
-        		b += 2.0;
-        		d = an * d + b;
+            double b = x + 1.0 - a;
+            double c = Constants.QL_MAX_REAL;
+            double d = 1.0 / b;
+            double h = d;
+            for (int n = 1; n <= 100; n++) {
+                final double an = -1.0 * n * (n - a);
+                b += 2.0;
+                d = an * d + b;
 
-        		if (Math.abs(d) < Constants.QL_EPSILON)
+                if (Math.abs(d) < Constants.QL_EPSILON)
                     d = Constants.QL_EPSILON;
-        		c = b + an / c;
-        		if (Math.abs(c) < Constants.QL_EPSILON)
+                c = b + an / c;
+                if (Math.abs(c) < Constants.QL_EPSILON)
                     c = Constants.QL_EPSILON;
-        		d = 1.0 / d;
-        		final double del = d * c;
-        		h *= del;
-        		if (Math.abs(del - 1.0) < Constants.QL_EPSILON)
+                d = 1.0 / d;
+                final double del = d * c;
+                h *= del;
+                if (Math.abs(del - 1.0) < Constants.QL_EPSILON)
                     return h * Math.exp(-x + a * Math.log(x) - gln);
-        	}
+            }
         }
 
-        throw new ArithmeticException("too few iterations");
+        throw new ArithmeticException(ACCURACY_NOT_REACHED); // TODO: message
     }
 
 }

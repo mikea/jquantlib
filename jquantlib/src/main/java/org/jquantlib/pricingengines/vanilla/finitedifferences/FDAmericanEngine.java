@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -34,13 +34,19 @@ public class FDAmericanEngine extends FDEngineAdapter<FDAmericanCondition> {
     //
     // public constructors
     //
-    
-    public FDAmericanEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints,
+
+    public FDAmericanEngine(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints,
             final boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);
     }
 
-    public FDAmericanEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints) {
+    public FDAmericanEngine(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints) {
         this(process, timeSteps, gridPoints, false);
     }
 

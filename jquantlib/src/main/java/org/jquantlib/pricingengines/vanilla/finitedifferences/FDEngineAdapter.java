@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -33,37 +33,40 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 //TODO: work in progress
 public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOptionEngine {
 
-	//
+    //
     // private fields
     //
-    
+
     private final FDVanillaEngine fdVanillaEngine;
 
-	
-	//
-	// public constructors
-	//
-	
-    public FDEngineAdapter(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints,
+
+    //
+    // public constructors
+    //
+
+    public FDEngineAdapter(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints,
             final boolean timeDependent) {
         try {
             final Class<T> rsgClass = (Class<T>) TypeToken.getClazz(this.getClass());
             final Constructor<T> c = rsgClass.getConstructor(
                     GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
             fdVanillaEngine = c.newInstance(process, timeSteps, gridPoints, timeDependent);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
-	
-    
+
+
     //
     // implements PricingEngine
     //
-    
-	@Override
-	public void calculate() {
-		fdVanillaEngine.setupArguments(arguments);
-		fdVanillaEngine.calculate(results);
-	}
+
+    @Override
+    public void calculate() {
+        fdVanillaEngine.setupArguments(arguments);
+        fdVanillaEngine.calculate(results);
+    }
 }

@@ -16,8 +16,8 @@ public class VanillaSwapResults extends SwapResults {
     @Override
     public void reset() {
         super.reset();
-        fairRate   = Constants.NULL_Double;
-        fairSpread = Constants.NULL_Double;
+        fairRate   = Constants.NULL_REAL;
+        fairSpread = Constants.NULL_REAL;
     }
 
 

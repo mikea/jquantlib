@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -31,34 +31,36 @@ import org.jquantlib.math.Ops;
  */
 public class NonCentralChiSquaredDistribution implements Ops.DoubleOp {
 
+    private static final String FAILED_TO_CONVERGE = "failed to converge";
+
 	//
 	// private fields
 	//
-	
+
 	/** degrees of freedom */
-	private double df;
-	
+	private final double df;
+
 	/** non-centrality parameter */
-	private double ncp;
-	
-	private GammaFunction gammaFunction_ = new GammaFunction();
-	
-	
+	private final double ncp;
+
+	private final GammaFunction gammaFunction_ = new GammaFunction();
+
+
 	//
 	// public constructor
 	//
-	
-	public NonCentralChiSquaredDistribution(double df, double ncp){
+
+	public NonCentralChiSquaredDistribution(final double df, final double ncp){
 		//TODO check on valid parameters
 		this.df = df;
 		this.ncp = ncp;
 	}
-	
-	
+
+
 	//
 	// implements Ops.DoubleOp
 	//
-	
+
 	@Override
 	public double op(final double x) /* @Read-only */ {
 		//C++ appears to be based on Algorithm AS 275 with perhaps one addition, see below
@@ -66,12 +68,12 @@ public class NonCentralChiSquaredDistribution implements Ops.DoubleOp {
 
         final double errmax = 1e-12;
         final int itrmax = 10000;
-        double lam = 0.5 * ncp;
+        final double lam = 0.5 * ncp;
 
         double u = Math.exp(-lam);
         double v = u;
-        double x2 = 0.5 * x;
-        double f2 = 0.5 * df;
+        final double x2 = 0.5 * x;
+        final double f2 = 0.5 * df;
 
         double t = 0.0;
         if (f2 * Constants.QL_EPSILON > 0.125 && Math.abs(x2 - f2) < Math.sqrt(Constants.QL_EPSILON) * f2) {
@@ -98,7 +100,7 @@ public class NonCentralChiSquaredDistribution implements Ops.DoubleOp {
         }
 
         while (n <= itrmax) {
-            double bound = t * x / f_x_2n;
+            final double bound = t * x / f_x_2n;
             if (bound > errmax) {
                 u *= lam / n;
                 v += u;
@@ -111,8 +113,8 @@ public class NonCentralChiSquaredDistribution implements Ops.DoubleOp {
                 return ans;
             }
         }
-        
-        //return ans; ?
-        throw new ArithmeticException("NonCentralChiSquared failed to converge: df " + df + " ncp: " + ncp + " x " + x);
+
+        throw new ArithmeticException(FAILED_TO_CONVERGE); // TODO: message
 	}
+
 }

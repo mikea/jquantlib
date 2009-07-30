@@ -151,7 +151,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 	
 
 	public /*@DiscountFactor*/ double discountGuess() /* @ReadOnly */ {
-	    return Constants.NULL_Double;
+	    return Constants.NULL_REAL;
 	}
 	
 	

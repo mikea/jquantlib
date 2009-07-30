@@ -41,7 +41,7 @@
 
 /**
  * 
- * Ported from 
+ * Ported from
  * <ul>
  * <li>test-suite/americanoption.cpp</li>
  * </ul>
@@ -52,6 +52,9 @@
 
 package org.jquantlib.testsuite.instruments;
 
+import static org.junit.Assert.fail;
+
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -66,6 +69,7 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.instruments.VanillaOption;
+import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.vanilla.BaroneAdesiWhaleyApproximationEngine;
 import org.jquantlib.pricingengines.vanilla.BjerksundStenslandApproximationEngine;
@@ -91,10 +95,10 @@ import org.slf4j.LoggerFactory;
 public class AmericanOptionTest {
 
     private final static Logger logger = LoggerFactory.getLogger(AmericanOptionTest.class);
-    
+
     private final Settings settings;
     private final Date today;
-    
+
 
     public AmericanOptionTest() {
         logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
@@ -116,7 +120,7 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
 
         settings.setEvaluationDate(today);
-        
+
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -127,31 +131,32 @@ public class AmericanOptionTest {
         final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
         final PricingEngine engine = new BjerksundStenslandApproximationEngine();
 
-        double /* @Real */tolerance = 1.0e-4;
+        final double /* @Real */tolerance = 1.0e-4;
 
-        for (int i = 0; i < values.length; i++) {
+        for (final AmericanOptionData value : values) {
 
-            final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+            final StrikedTypePayoff payoff = new PlainVanillaPayoff(value.type, value.strike);
 
-            final int daysToExpiry = (int) (values[i].t * 360 + 0.5);
+            final int daysToExpiry = (int) (value.t * 360 + 0.5);
             final Date exDate = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(daysToExpiry);
             final Exercise exercise = new AmericanExercise(today, exDate);
 
-            spot.setValue(values[i].s);
-            qRate.setValue(values[i].q);
-            rRate.setValue(values[i].r);
-            vol.setValue(values[i].v);
+            spot.setValue(value.s);
+            qRate.setValue(value.q);
+            rRate.setValue(value.r);
+            vol.setValue(value.v);
 
             final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
                     new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
-
             final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
-
             final double /* @Real */calculated = option.getNPV();
-            final double /* @Real */error = Math.abs(calculated - values[i].result);
+            final double /* @Real */error = Math.abs(calculated - value.result);
+
             if (error > tolerance) {
-                REPORT_FAILURE("value", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                        values[i].result, calculated, error, tolerance);
+                reportFailure(
+                        "value", payoff, exercise,
+                        value.s, value.q, value.r, today, value.v,
+                        value.result, calculated, error, tolerance);
             }
         }
 
@@ -220,30 +225,28 @@ public class AmericanOptionTest {
 
         final double /* @Real */tolerance = 3.0e-3;
 
-        for (int i = 0; i < values.length; i++) {
-
-            final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-
-            final Date exDate = today.getDateAfter(timeToDays(values[i].t));
-
+        for (final AmericanOptionData value : values) {
+            final StrikedTypePayoff payoff = new PlainVanillaPayoff(value.type, value.strike);
+            final Date exDate = today.getDateAfter(timeToDays(value.t));
             final Exercise exercise = new AmericanExercise(today, exDate);
 
-            spot.setValue(values[i].s);
-            qRate.setValue(values[i].q);
-            rRate.setValue(values[i].r);
-            vol.setValue(values[i].v);
+            spot.setValue(value.s);
+            qRate.setValue(value.q);
+            rRate.setValue(value.r);
+            vol.setValue(value.v);
 
             final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
                     new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
                             volTS));
-
             final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
-
             final double /* @Real */calculated = option.getNPV();
-            final double /* @Real */error = Math.abs(calculated - values[i].result);
+            final double /* @Real */error = Math.abs(calculated - value.result);
+
             if (error > tolerance) {
-                REPORT_FAILURE("value", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                        values[i].result, calculated, error, tolerance);
+                reportFailure(
+                        "value", payoff, exercise,
+                        value.s, value.q, value.r, today, value.v,
+                        value.result, calculated, error, tolerance);
             }
         }
     }
@@ -342,29 +345,29 @@ public class AmericanOptionTest {
 
         final double tolerance = 1.0e-3;
 
-        for (int i = 0; i < juValues.length; i++) {
+        for (final AmericanOptionData juValue : juValues) {
 
-            final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValues[i].type, juValues[i].strike);
-            final Date exDate = today.getDateAfter(timeToDays(juValues[i].t));
+            final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValue.type, juValue.strike);
+            final Date exDate = today.getDateAfter(timeToDays(juValue.t));
             final Exercise exercise = new AmericanExercise(today, exDate);
 
-            spot.setValue(juValues[i].s);
-            qRate.setValue(juValues[i].q);
-            rRate.setValue(juValues[i].r);
-            vol.setValue(juValues[i].v);
+            spot.setValue(juValue.s);
+            qRate.setValue(juValue.q);
+            rRate.setValue(juValue.r);
+            vol.setValue(juValue.v);
 
             final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
                     new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
                             volTS));
-
             final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
-
             final double calculated = option.getNPV();
+            final double error = Math.abs(calculated - juValue.result);
 
-            final double error = Math.abs(calculated - juValues[i].result);
             if (error > tolerance) {
-                REPORT_FAILURE("value", payoff, exercise, juValues[i].s, juValues[i].q, juValues[i].r, today, juValues[i].v,
-                        juValues[i].result, calculated, error, tolerance);
+                reportFailure(
+                        "value", payoff, exercise,
+                        juValue.s, juValue.q, juValue.r, today, juValue.v,
+                        juValue.result, calculated, error, tolerance);
             }
         }
     }
@@ -447,11 +450,11 @@ public class AmericanOptionTest {
 
         settings.setEvaluationDate(today);
 
-        double tolerance = 8.0e-2;
+        final double tolerance = 8.0e-2;
 
-        for (int i = 0; i < juValues.length; i++) {
+        for (final AmericanOptionData juValue : juValues) {
 
-            DayCounter dc = Actual360.getDayCounter();
+            final DayCounter dc = Actual360.getDayCounter();
 
             final SimpleQuote spot = new SimpleQuote(0.0);
             final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -460,30 +463,31 @@ public class AmericanOptionTest {
             final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
             final SimpleQuote vol = new SimpleQuote(0.0);
             final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
-            final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValues[i].type, juValues[i].strike);
-            final Date exDate = today.getDateAfter(timeToDays(juValues[i].t));
+            final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValue.type, juValue.strike);
+            final Date exDate = today.getDateAfter(timeToDays(juValue.t));
             final Exercise exercise = new AmericanExercise(today, exDate);
 
-            spot.setValue(juValues[i].s);
-            qRate.setValue(juValues[i].q);
-            rRate.setValue(juValues[i].r);
-            vol.setValue(juValues[i].v);
+            spot.setValue(juValue.s);
+            qRate.setValue(juValue.q);
+            rRate.setValue(juValue.r);
+            vol.setValue(juValue.v);
 
             final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
                     new Handle<Quote>(spot),
-                    new Handle<YieldTermStructure>(qTS), 
-                    new Handle<YieldTermStructure>(rTS), 
+                    new Handle<YieldTermStructure>(qTS),
+                    new Handle<YieldTermStructure>(rTS),
                     new Handle<BlackVolTermStructure>(volTS));
 
             final PricingEngine engine = new FDAmericanEngine(stochProcess, 100, 100);
             final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
-
             final double calculated = option.getNPV();
+            final double error = Math.abs(calculated - juValue.result);
 
-            final double error = Math.abs(calculated - juValues[i].result);
             if (error > tolerance) {
-                REPORT_FAILURE("value", payoff, exercise, juValues[i].s, juValues[i].q, juValues[i].r, today, juValues[i].v,
-                        juValues[i].result, calculated, error, tolerance);
+                reportFailure(
+                        "value", payoff, exercise,
+                        juValue.s, juValue.q, juValue.r, today, juValue.v,
+                        juValue.result, calculated, error, tolerance);
             }
 
         }
@@ -491,134 +495,35 @@ public class AmericanOptionTest {
 
     @Test
     public void testFdAmericanGreeks() {
-        // SavedSettings backup;
-
-        logger.info("Testing Greeks (delta, gamma, theta for American options...");
-
-        Map<String, Double> calculated = new HashMap<String, Double>();
-        Map<String, Double> expected = new HashMap<String, Double>();
-        Map<String, Double> tolerance = new HashMap<String, Double>();
-        tolerance.put("delta", 7.0e-4);
-        tolerance.put("gamma", 2.0e-4);
-        tolerance.put("theta", 1.0e-4);
-
-        Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
-        double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
-        double underlyings[] = { 100.0 };
-        double qRates[] = { 0.04, 0.05, 0.06 };
-        double rRates[] = { 0.01, 0.05, 0.15 };
-        int years[] = { 1, 2 };
-        double vols[] = { 0.11, 0.50, 1.20 };
-
-        DayCounter dc = Actual360.getDayCounter();
-        
-        settings.setEvaluationDate(today);
-
-        final SimpleQuote spot = new SimpleQuote(0.0);
-        final SimpleQuote qRate = new SimpleQuote(0.0);
-        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
-        final SimpleQuote rRate = new SimpleQuote(0.0);
-        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
-        final SimpleQuote vol = new SimpleQuote(0.0);
-        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
-
-        StrikedTypePayoff payoff = null;
-
-        for (int i = 0; i < types.length; i++) {
-            for (int j = 0; j < strikes.length; j++) {
-                for (int k = 0; k < years.length; k++) {
-
-                    Date exDate = today.getDateAfter(new Period(years[k], TimeUnit.YEARS));
-                    Exercise exercise = new AmericanExercise(today, exDate);
-                    payoff = new PlainVanillaPayoff(types[i], strikes[j]);
-
-                    final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
-                            new Handle<Quote>(spot),
-                            new Handle<YieldTermStructure>(qTS), 
-                            new Handle<YieldTermStructure>(rTS),
-                            new Handle<BlackVolTermStructure>(volTS));
-
-                    final PricingEngine engine = new FDAmericanEngine(stochProcess);
-                    final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
-
-                    for (int l = 0; l < underlyings.length; l++) {
-                        for (int m = 0; m < qRates.length; m++) {
-                            for (int n = 0; n < rRates.length; n++) {
-                                for (int p = 0; p < vols.length; p++) {
-                                    double u = underlyings[l];
-                                    double q = qRates[m], r = rRates[n];
-                                    double v = vols[p];
-                                    spot.setValue(u);
-                                    qRate.setValue(q);
-                                    rRate.setValue(r);
-                                    vol.setValue(v);
-                                    // FLOATING_POINT_EXCEPTION
-                                    double value = option.getNPV();
-                                    calculated.put("delta", option.delta());
-                                    calculated.put("gamma", option.gamma());
-                                    // calculated.put("theta", option.theta());
-
-                                    if (value > spot.evaluate() * 1.0e-5) {
-                                        // perturb spot and get delta and gamma
-                                        double du = u * 1.0e-4;
-                                        spot.setValue(u + du);
-                                        double value_p = option.getNPV(), delta_p = option.delta();
-                                        spot.setValue(u - du);
-                                        double value_m = option.getNPV(), delta_m = option.delta();
-                                        spot.setValue(u);
-                                        expected.put("delta", (value_p - value_m) / (2 * du));
-                                        expected.put("gamma", (delta_p - delta_m) / (2 * du));
-
-                                        // perturb date and get theta
-                                        final Date yesterday = today.getPreviousDay();
-                                        final Date tomorrow = today.getNextDay();
-                                        double dT = dc.yearFraction(yesterday, tomorrow);
-                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
-                                        value_m = option.getNPV();
-                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
-                                        value_p = option.getNPV();
-                                        expected.put("theta", (value_p - value_m) / dT);
-
-                                        // compare
-                                        for (Entry<String, Double> greek : calculated.entrySet()) {
-                                            double expct = expected.get(greek.getKey());
-                                            double calcl = calculated.get(greek.getKey());
-                                            double tol = tolerance.get(greek.getKey());
-                                            double error = Utilities.relativeError(expct, calcl, u);
-                                            if (error > tol) {
-                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        logger.info("Testing Greeks (delta, gamma, theta for American options using FDAmericanEngine");
+        testFdGreeks(FDAmericanEngine.class);
     }
 
     @Test
     public void testFdShoutGreeks() {
-        logger.info("Testing Greeks (delta, gamma, theta for American options...");
+        logger.info("Testing Greeks (delta, gamma, theta for American options using FDShoutEngine");
+        testFdGreeks(FDShoutEngine.class);
+    }
 
-        Map<String, Double> calculated = new HashMap<String, Double>();
-        Map<String, Double> expected = new HashMap<String, Double>();
-        Map<String, Double> tolerance = new HashMap<String, Double>();
+
+    private void testFdGreeks(final Class<? extends PricingEngine> klass) {
+        final Map<String, Double> calculated = new HashMap<String, Double>();
+        final Map<String, Double> expected = new HashMap<String, Double>();
+        final Map<String, Double> tolerance = new HashMap<String, Double>();
         tolerance.put("delta", 7.0e-4);
         tolerance.put("gamma", 2.0e-4);
         tolerance.put("theta", 1.0e-4);
 
-        Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
-        double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
-        double underlyings[] = { 100.0 };
-        double qRates[] = { 0.04, 0.05, 0.06 };
-        double rRates[] = { 0.01, 0.05, 0.15 };
-        int years[] = { 1, 2 };
-        double vols[] = { 0.11, 0.50, 1.20 };
+        final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        final double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
+        final double underlyings[] = { 100.0 };
+        final double qRates[] = { 0.04, 0.05, 0.06 };
+        final double rRates[] = { 0.01, 0.05, 0.15 };
+        final int years[] = { 1, 2 };
+        final double vols[] = { 0.11, 0.50, 1.20 };
 
-        DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = Actual360.getDayCounter();
+
         settings.setEvaluationDate(today);
 
         final SimpleQuote spot = new SimpleQuote(0.0);
@@ -629,48 +534,53 @@ public class AmericanOptionTest {
         final SimpleQuote vol = new SimpleQuote(0.0);
         final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
-        StrikedTypePayoff payoff = null;
+        for (final Type type : types) {
+            for (final double strike : strikes) {
+                for (final int year : years) {
 
-        for (int i = 0; i < types.length; i++) {
-            for (int j = 0; j < strikes.length; j++) {
-                for (int k = 0; k < years.length; k++) {
+                    final Date exDate = today.getDateAfter(new Period(year, TimeUnit.YEARS));
+                    final Exercise exercise = new AmericanExercise(today, exDate);
+                    final StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike);
 
-                    Date exDate = today.getDateAfter(new Period(years[k], TimeUnit.YEARS));
-
-                    Exercise exercise = new AmericanExercise(today, exDate);
-                    payoff = new PlainVanillaPayoff(types[i], strikes[j]);
-
-                    final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-                            new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS),
+                    final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
+                            new Handle<Quote>(spot),
+                            new Handle<YieldTermStructure>(qTS),
+                            new Handle<YieldTermStructure>(rTS),
                             new Handle<BlackVolTermStructure>(volTS));
 
-                    final PricingEngine engine = new FDShoutEngine(stochProcess);
+                    PricingEngine engine = null;
+                    try {
+                        final Constructor<? extends PricingEngine> c = klass.getConstructor(BlackScholesMertonProcess.class);
+                        engine = c.newInstance(stochProcess);
+                    } catch (final Exception e) {
+                        e.printStackTrace();
+                        fail("failed to create pricing engine");
+                    }
                     final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
-                    for (int l = 0; l < underlyings.length; l++) {
-                        for (int m = 0; m < qRates.length; m++) {
-                            for (int n = 0; n < rRates.length; n++) {
-                                for (int p = 0; p < vols.length; p++) {
-                                    double u = underlyings[l];
-                                    double q = qRates[m], r = rRates[n];
-                                    double v = vols[p];
+                    for (final double u : underlyings) {
+                        for (final double q : qRates) {
+                            for (final double r : rRates) {
+                                for (final double v : vols) {
                                     spot.setValue(u);
                                     qRate.setValue(q);
                                     rRate.setValue(r);
                                     vol.setValue(v);
                                     // FLOATING_POINT_EXCEPTION
-                                    double value = option.getNPV();
+                                    final double value = option.getNPV();
                                     calculated.put("delta", option.delta());
                                     calculated.put("gamma", option.gamma());
-                                    // calculated.put("theta", option.theta());
+                                    calculated.put("theta", option.theta());
 
                                     if (value > spot.evaluate() * 1.0e-5) {
                                         // perturb spot and get delta and gamma
-                                        double du = u * 1.0e-4;
+                                        final double du = u * 1.0e-4;
                                         spot.setValue(u + du);
-                                        double value_p = option.getNPV(), delta_p = option.delta();
+                                        double value_p = option.getNPV();
+                                        final double delta_p = option.delta();
                                         spot.setValue(u - du);
-                                        double value_m = option.getNPV(), delta_m = option.delta();
+                                        double value_m = option.getNPV();
+                                        final double delta_m = option.delta();
                                         spot.setValue(u);
                                         expected.put("delta", (value_p - value_m) / (2 * du));
                                         expected.put("gamma", (delta_p - delta_m) / (2 * du));
@@ -678,7 +588,7 @@ public class AmericanOptionTest {
                                         // perturb date and get theta
                                         final Date yesterday = today.getPreviousDay();
                                         final Date tomorrow = today.getNextDay();
-                                        double dT = dc.yearFraction(yesterday, tomorrow);
+                                        final double dT = dc.yearFraction(yesterday, tomorrow);
                                         Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
                                         value_m = option.getNPV();
                                         Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
@@ -686,13 +596,16 @@ public class AmericanOptionTest {
                                         expected.put("theta", (value_p - value_m) / dT);
 
                                         // compare
-                                        for (Entry<String, Double> greek : calculated.entrySet()) {
-                                            double expct = expected.get(greek.getKey());
-                                            double calcl = calculated.get(greek.getKey());
-                                            double tol = tolerance.get(greek.getKey());
-                                            double error = Utilities.relativeError(expct, calcl, u);
+                                        for (final Entry<String, Double> greek : calculated.entrySet()) {
+                                            final double expct = expected.get(greek.getKey());
+                                            final double calcl = calculated.get(greek.getKey());
+                                            final double tol = tolerance.get(greek.getKey());
+                                            final double error = Utilities.relativeError(expct, calcl, u);
                                             if (error > tol) {
-                                                REPORT_FAILURE(greek.getKey(), payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
+                                                reportFailure(
+                                                        greek.getKey(), payoff, exercise,
+                                                        u, q, r, today, v,
+                                                        expct, calcl, error, tol);
                                             }
                                         }
                                     }
@@ -705,21 +618,41 @@ public class AmericanOptionTest {
         }
     }
 
-    private void REPORT_FAILURE(String greekName, StrikedTypePayoff payoff, Exercise exercise, double s, double q, double r,
-            Date today, double v, double expected, double calculated, double error, double tolerance) {
+    private void reportFailure(
+            final String greekName,
+            final StrikedTypePayoff payoff,
+            final Exercise exercise,
+            final double s,
+            final double q,
+            final double r,
+            final Date today,
+            final double v,
+            final double expected,
+            final double calculated,
+            final double error,
+            final double tolerance) {
 
-        throw new RuntimeException(exercise.type() + " " + payoff.optionType() + " option with "
-                + payoff.getClass().getSimpleName() + " payoff:\n" + "    spot value:        " + s + "\n"
-                + "    strike:           " + payoff.strike() + "\n" + "    dividend yield:   " + q + "\n"
-                + "    risk-free rate:   " + r + "\n" + "    reference date:   " + today + "\n" + "    maturity:         "
-                + exercise.lastDate() + "\n" + "    volatility:       " + v + "\n\n" + "    expected   " + greekName + ": "
-                + expected + "\n" + "    calculated " + greekName + ": " + calculated + "\n" + "    error:            " + error
-                + "\n" + "    tolerance:        " + tolerance);
+        final StringBuilder sb = new StringBuilder();
+        sb.append(exercise.type()).append(' ');
+        sb.append(payoff.optionType()).append(" option with ").append(payoff.getClass().getSimpleName()).append(" payoff:\n");
+        sb.append("    spot value:     ").append(s).append('\n');
+        sb.append("    strike:         ").append(payoff.strike()).append('\n');
+        sb.append("    dividend yield: ").append(q).append('\n');
+        sb.append("    risk-free rate: ").append(r).append('\n');
+        sb.append("    reference date: ").append(today).append('\n');
+        sb.append("    maturity:       ").append(exercise.lastDate()).append('\n');
+        sb.append("    volatility:     ").append(v).append('\n');
+        sb.append("    expected ").append(greekName).append(":    ").append(expected).append('\n');
+        sb.append("    calculated ").append(greekName).append(":  ").append(calculated).append('\n');
+        sb.append("    error:     ").append(error).append('\n');
+        sb.append("    tolerance: ").append(tolerance).append('\n');
+        fail(sb.toString());
     }
 
-    private int timeToDays(/* @Time */double t) {
+    private int timeToDays(/* @Time */final double t) {
         return (int) (t * 360 + 0.5);
     }
+
 
     //
     // private inner classes
@@ -737,13 +670,13 @@ public class AmericanOptionTest {
         private final double /* @Real */result; // expected result
 
         public AmericanOptionData(
-                final Option.Type type, 
-                final double strike, 
-                final double s, 
-                final double q, 
-                final double r, 
-                final double t, 
-                final double v, 
+                final Option.Type type,
+                final double strike,
+                final double s,
+                final double q,
+                final double r,
+                final double t,
+                final double v,
                 final double result) {
             this.type = type;
             this.strike = strike;
@@ -757,7 +690,7 @@ public class AmericanOptionTest {
 
         @Override
         public String toString() {
-            StringBuilder builder = new StringBuilder();
+            final StringBuilder builder = new StringBuilder();
             builder.append("Type: " + type);
             builder.append(" Strike: " + strike);
             builder.append(" Spot: " + s);

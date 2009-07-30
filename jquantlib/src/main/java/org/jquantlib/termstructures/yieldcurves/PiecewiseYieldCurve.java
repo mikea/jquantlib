@@ -227,7 +227,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         // check that there is no instruments with invalid quote
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         for (final RateHelper instrument2 : instruments)
-            assert instrument2.referenceQuote() != Constants.NULL_Double : "instrument with null price";
+            assert instrument2.referenceQuote() != Constants.NULL_REAL : "instrument with null price";
 
         // setup vectors
         final int n = instruments.length;

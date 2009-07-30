@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -28,30 +28,35 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  */
 public class FDAmericanCondition extends FDStepConditionEngine {
 
-	public FDAmericanCondition(GeneralizedBlackScholesProcess process) {
-		this(process, 100, 100);
-	}
+    public FDAmericanCondition(final GeneralizedBlackScholesProcess process) {
+        this(process, 100, 100);
+    }
 
-	public FDAmericanCondition(GeneralizedBlackScholesProcess process,
-			int timeSteps, int gridPoints) {
-		this(process, timeSteps, gridPoints, false);
-	}
+    public FDAmericanCondition(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints) {
+        this(process, timeSteps, gridPoints, false);
+    }
 
-	public FDAmericanCondition(GeneralizedBlackScholesProcess process,
-			int timeSteps, int gridPoints, boolean value) {
-		super(process, timeSteps, gridPoints, value);
-	}
+    public FDAmericanCondition(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints,
+            final boolean value) {
+        super(process, timeSteps, gridPoints, value);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.jquantlib.pricingengines.vanilla.finitedifferences.FDStepConditionEngine
-	 * #initializeStepCondition()
-	 */
-	@Override
-	protected void initializeStepCondition() {
-		stepCondition = new AmericanCondition(intrinsicValues.values());
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.jquantlib.pricingengines.vanilla.finitedifferences.FDStepConditionEngine
+     * #initializeStepCondition()
+     */
+    @Override
+    protected void initializeStepCondition() {
+        stepCondition = new AmericanCondition(intrinsicValues.values());
+    }
 
 }

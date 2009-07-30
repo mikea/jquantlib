@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -31,26 +31,39 @@ import org.jquantlib.time.Frequency;
  */
 public class FDShoutCondition extends FDStepConditionEngine {
 
-	public FDShoutCondition(GeneralizedBlackScholesProcess process,
-			int timeSteps, int gridPoints, boolean timeDependent) {
-		super(process, 100, 100, false);
-	}
+    public FDShoutCondition(final GeneralizedBlackScholesProcess process) {
+        this(process, 100, 100);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.jquantlib.pricingengines.vanilla.finitedifferences.FDStepConditionEngine
-	 * #initializeStepCondition()
-	 */
-	@Override
-	protected void initializeStepCondition() {
-		double residualTime = getResidualTime();
-		InterestRate riskFreeRate = process.riskFreeRate().getLink().zeroRate(
-				residualTime, Compounding.CONTINUOUS, Frequency.ANNUAL, false);
+    public FDShoutCondition(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints) {
+        this(process, timeSteps, gridPoints, false);
+    }
 
-		stepCondition = new ShoutCondition(intrinsicValues.values(),
-				residualTime, riskFreeRate.rate());
-	}
+    public FDShoutCondition(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints,
+            final boolean value) {
+        super(process, timeSteps, gridPoints, value);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.jquantlib.pricingengines.vanilla.finitedifferences.FDStepConditionEngine
+     * #initializeStepCondition()
+     */
+    @Override
+    protected void initializeStepCondition() {
+        final double residualTime = getResidualTime();
+        final InterestRate riskFreeRate = process.riskFreeRate().getLink().zeroRate(
+                residualTime, Compounding.CONTINUOUS, Frequency.ANNUAL, false);
+
+        stepCondition = new ShoutCondition(intrinsicValues.values(), residualTime, riskFreeRate.rate());
+    }
 
 }

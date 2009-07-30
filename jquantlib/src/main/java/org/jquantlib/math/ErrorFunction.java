@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -23,8 +23,8 @@
 package org.jquantlib.math;
 
 /**
- * In mathematics, the error function (also called the Gauss error function) 
- * is a non-elementary function which occurs in probability, statistics and 
+ * In mathematics, the error function (also called the Gauss error function)
+ * is a non-elementary function which occurs in probability, statistics and
  * partial differential equations. It is defined as:
  * 
  * {@latex[
@@ -35,9 +35,8 @@ package org.jquantlib.math;
  * 
  * @author Richard Gomes
  */
-public class ErrorFunction {
+public class ErrorFunction implements Ops.DoubleOp {
 
-	
     //                 x
     //              2      |
     //     erf(x)  =  ---------  | exp(-t*t)dt
@@ -130,12 +129,9 @@ public class ErrorFunction {
     //      erfc/erf(NaN) is NaN
 
     private final static double tiny =  Constants.QL_EPSILON;
-    
-    private final static double  one =  1.00000000000000000000e+00; /* 0x3FF00000, 0x00000000 */
-        
+    private final static double one =  1.00000000000000000000e+00; /* 0x3FF00000, 0x00000000 */
     /* c = (float)0.84506291151 */
     private final static double erx =  8.45062911510467529297e-01; /* 0x3FEB0AC1, 0x60000000 */
-        
     //
     // Coefficients for approximation to  erf on [0,0.84375]
     //
@@ -151,7 +147,6 @@ public class ErrorFunction {
     private final static double qq3  =  5.08130628187576562776e-03; /* 0x3F74D022, 0xC4D36B0F */
     private final static double qq4  =  1.32494738004321644526e-04; /* 0x3F215DC9, 0x221C1A10 */
     private final static double qq5  = -3.96022827877536812320e-06; /* 0xBED09C43, 0x42A26120 */
-        
     //
     // Coefficients for approximation to  erf  in [0.84375,1.25]
     //
@@ -168,7 +163,6 @@ public class ErrorFunction {
     private final static double qa4  =  1.26171219808761642112e-01; /* 0x3FC02660, 0xE763351F */
     private final static double qa5  =  1.36370839120290507362e-02; /* 0x3F8BEDC2, 0x6B51DD1C */
     private final static double qa6  =  1.19844998467991074170e-02; /* 0x3F888B54, 0x5735151D */
-    
     //
     // Coefficients for approximation to  erfc in [1.25,1/0.35]
     //
@@ -188,7 +182,6 @@ public class ErrorFunction {
     private final static double sa6  =  1.08635005541779435134e+02; /* 0x405B28A3, 0xEE48AE2C */
     private final static double sa7  =  6.57024977031928170135e+00; /* 0x401A47EF, 0x8E484A93 */
     private final static double sa8  = -6.04244152148580987438e-02; /* 0xBFAEEFF2, 0xEE749A62 */
-        
     //
     // Coefficients for approximation to  erfc in [1/.35,28]
     //
@@ -208,67 +201,61 @@ public class ErrorFunction {
     private final static double sb7  = -2.24409524465858183362e+01; /* 0xC03670E2, 0x42712D62 */
 
 
-    private final static double DBL_MIN = Double.MIN_NORMAL;
-	
-	public double evaluate(double x){
+    public double op(final double x) {
 
-	        double R,S,P,Q,s,y,z,r, ax;
+        double R,S,P,Q,s,y,z,r, ax;
 
-	        /* not portable!
+        /* not portable!
 
-	        // The finite() function returns a non-zero value if value is
-	        // neither infinite nor a "not-a-number" (NaN) value,
-	        // and 0 otherwise.
-	        if (!_finite(x)) {
-	            //  The isnan() function returns a non-zero value if value is
-	            // "not-a-number" (NaN), and 0 otherwise.
-	            if (_isnan(x))
-	                return x;
-	            else
-	                return   ( x > 0 ? 1 : -1);
-	        }
+        // The finite() function returns a non-zero value if value is
+        // neither infinite nor a "not-a-number" (NaN) value,
+        // and 0 otherwise.
+        if (!_finite(x)) {
+            //  The isnan() function returns a non-zero value if value is
+            // "not-a-number" (NaN), and 0 otherwise.
+            if (_isnan(x))
+                return x;
+            else
+                return   ( x > 0 ? 1 : -1);
+        }
 
-	        */
+         */
 
-	        ax = Math.abs(x);
+        ax = Math.abs(x);
 
-	        if(ax < 0.84375) {      /* |x|<0.84375 */
-	            if(ax < 3.7252902984e-09) { /* |x|<2**-28 */
-	                if (ax < DBL_MIN*16)
-	                    return 0.125*(8.0*x+efx8*x);  /*avoid underflow */
-	                return x + efx*x;
-	            }
-	            z = x*x;
-	            r = pp0+z*(pp1+z*(pp2+z*(pp3+z*pp4)));
-	            s = one+z*(qq1+z*(qq2+z*(qq3+z*(qq4+z*qq5))));
-	            y = r/s;
-	            return x + x*y;
-	        }
-	        if(ax <1.25) {      /* 0.84375 <= |x| < 1.25 */
-	            s = ax-one;
-	            P = pa0+s*(pa1+s*(pa2+s*(pa3+s*(pa4+s*(pa5+s*pa6)))));
-	            Q = one+s*(qa1+s*(qa2+s*(qa3+s*(qa4+s*(qa5+s*qa6)))));
-	            if(x>=0) return erx + P/Q;
-	            return -erx - P/Q;
-	        }
-	        if (ax >= 6) {      /* inf>|x|>=6 */
-	            if(x>=0) return one-tiny; 
-	            return tiny-one;
-	        }
+        if(ax < 0.84375) {      /* |x|<0.84375 */
+            if(ax < 3.7252902984e-09) { /* |x|<2**-28 */
+                if (ax < Constants.DBL_MIN*16)
+                    return 0.125*(8.0*x+efx8*x);  /*avoid underflow */
+                return x + efx*x;
+            }
+            z = x*x;
+            r = pp0+z*(pp1+z*(pp2+z*(pp3+z*pp4)));
+            s = one+z*(qq1+z*(qq2+z*(qq3+z*(qq4+z*qq5))));
+            y = r/s;
+            return x + x*y;
+        }
+        if(ax <1.25) {      /* 0.84375 <= |x| < 1.25 */
+            s = ax-one;
+            P = pa0+s*(pa1+s*(pa2+s*(pa3+s*(pa4+s*(pa5+s*pa6)))));
+            Q = one+s*(qa1+s*(qa2+s*(qa3+s*(qa4+s*(qa5+s*qa6)))));
+            if(x>=0) return erx + P/Q; else return -erx - P/Q;
+        }
+        if (ax >= 6) {      /* inf>|x|>=6 */
+            if(x>=0) return one-tiny; else return tiny-one;
+        }
 
-	        /* Starts to lose accuracy when ax~5 */
-	        s = one/(ax*ax);
+        /* Starts to lose accuracy when ax~5 */
+        s = one/(ax*ax);
 
-	        if(ax < 2.85714285714285) { /* |x| < 1/0.35 */
-	            R = ra0+s*(ra1+s*(ra2+s*(ra3+s*(ra4+s*(ra5+s*(ra6+s*ra7))))));
-	            S=one+s*(sa1+s*(sa2+s*(sa3+s*(sa4+s*(sa5+s*(sa6+s*(sa7+s*sa8)))))));
-	        } else {    /* |x| >= 1/0.35 */
-	            R=rb0+s*(rb1+s*(rb2+s*(rb3+s*(rb4+s*(rb5+s*rb6)))));
-	            S=one+s*(sb1+s*(sb2+s*(sb3+s*(sb4+s*(sb5+s*(sb6+s*sb7))))));
-	        }
-	        r = Math.exp( -ax*ax-0.5625 +R/S);
-	        if(x>=0) return one-r/ax;
-	        
-	        return  r/ax-one;
-	    }
+        if(ax < 2.85714285714285) { /* |x| < 1/0.35 */
+            R = ra0+s*(ra1+s*(ra2+s*(ra3+s*(ra4+s*(ra5+s*(ra6+s*ra7))))));
+            S=one+s*(sa1+s*(sa2+s*(sa3+s*(sa4+s*(sa5+s*(sa6+s*(sa7+s*sa8)))))));
+        } else {    /* |x| >= 1/0.35 */
+            R=rb0+s*(rb1+s*(rb2+s*(rb3+s*(rb4+s*(rb5+s*rb6)))));
+            S=one+s*(sb1+s*(sb2+s*(sb3+s*(sb4+s*(sb5+s*(sb6+s*sb7))))));
+        }
+        r = Math.exp( -ax*ax-0.5625 +R/S);
+        if(x>=0) return one-r/ax; else return  r/ax-one;
+    }
 }

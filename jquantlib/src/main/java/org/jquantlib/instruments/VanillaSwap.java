@@ -156,8 +156,8 @@ public class VanillaSwap extends Swap {
         super.setupExpired();
         legBPS[0] = 0.0;
         legBPS[1] = 0.0;
-        fairRate   = Constants.NULL_Double;
-        fairSpread = Constants.NULL_Double;
+        fairRate   = Constants.NULL_REAL;
+        fairSpread = Constants.NULL_REAL;
     }
 
     @Override
@@ -204,7 +204,7 @@ public class VanillaSwap extends Swap {
             try {
                 arguments.floatingCoupons.set(i, coupon.amount());
             } catch (final Exception e) {
-                arguments.floatingCoupons.set(i, Constants.NULL_Double);
+                arguments.floatingCoupons.set(i, Constants.NULL_REAL);
             }
         }
     }
@@ -219,8 +219,8 @@ public class VanillaSwap extends Swap {
             fairRate = results.fairRate;
             fairSpread = results.fairSpread;
         } else {
-            fairRate   = Constants.NULL_Double;
-            fairSpread = Constants.NULL_Double;
+            fairRate   = Constants.NULL_REAL;
+            fairSpread = Constants.NULL_REAL;
         }
 
         if (Double.isNaN(fairRate))

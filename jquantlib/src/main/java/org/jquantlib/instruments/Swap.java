@@ -169,13 +169,13 @@ public class Swap extends NewInstrument {
             assert results.legNPV.length == legNPV.length : "wrong number of leg NPV returned";
             legNPV = results.legNPV;
         } else
-            Arrays.fill(legNPV, Constants.NULL_Double);
+            Arrays.fill(legNPV, Constants.NULL_REAL);
 
         if (results.legBPS.length > 0) {
             assert results.legBPS.length == legBPS.length : "wrong number of leg BPS returned";
             legBPS = results.legBPS;
         } else
-            Arrays.fill(legBPS, Constants.NULL_Double);
+            Arrays.fill(legBPS, Constants.NULL_REAL);
     }
 
 }

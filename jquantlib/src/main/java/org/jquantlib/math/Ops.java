@@ -36,7 +36,7 @@ public interface Ops {
      */
     //TODO : consider http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.BinaryDoubleOp.html
     public interface IntToDouble {
-        public double evaluate(int x);
+        public double op(int x);
         //boolean isFailed() // TODO is error handling needed?
     }
 

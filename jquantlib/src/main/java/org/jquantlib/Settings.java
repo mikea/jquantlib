@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -30,11 +30,11 @@ import org.jquantlib.util.DateFactory;
 
 /**
  * Settings for the application.
- * 
+ *
  * <p>
  * Settings are mutable values which have a life cycle of a certain operation of
  * sequence of operations defined by the application.
- * 
+ *
  */
 
 //
@@ -54,25 +54,26 @@ public class Settings {
     // private final static Logger logger = LoggerFactory.getLogger(Settings.class);
 
     private static boolean defaultTodaysPayments = false;
+    private static boolean defaultRefineHighPrecision = false;
 
     /**
      * This field determines whether payments expected to happen at the
      * <i>current evaluation date</i> are considered.
-     * 
+     *
      * @see #isTodaysPayments()
      */
     private boolean todaysPayments;
 
     /**
      * Define this if negative yield rates should be allowed. This might not be safe.
-     * 
+     *
      * @see #isNegativeRates
      */
     private boolean negativeRates;
 
     /**
      * This field keeps the current evaluation date.
-     * 
+     *
      * <p>
      * Notice that the current evaluation date <b>is not necessarily</b> the
      * current date or today's date in other words. In the specific situation
@@ -82,8 +83,17 @@ public class Settings {
     private Date evaluationDate;
 
     /**
+     * Chooses Halley's method
+     * <p>
+     * The relative error of the approximation has absolute value less than 1.15e-9.
+     * One iteration of Halley's rational method (third order) gives full machine precision.
+     */
+    private boolean refineHighPrecision;
+
+
+    /**
      * Default constructor
-     * 
+     *
      * @see defaultExtraSafefyChecks
      * @see defaultEnforcesTodaysHistoricFixings
      * @see defaultTodaysPayments
@@ -95,13 +105,14 @@ public class Settings {
     /**
      * This constructor is provided so that application settings can be
      * initialized via implementation independent Preferences.
-     * 
+     *
      * @param prefs
      *            is a Preferences object
      */
     @PackagePrivate Settings(final Preferences prefs) {
         if (prefs != null) {
             this.todaysPayments = prefs.getBoolean("TodaysPayments", defaultTodaysPayments);
+            this.refineHighPrecision = prefs.getBoolean("RefineHighPrecision", defaultRefineHighPrecision);
             this.evaluationDate = DateFactory.getFactory().getTodaysDate();
         } else {
             setDefaults();
@@ -111,11 +122,12 @@ public class Settings {
     private void setDefaults() {
         this.todaysPayments = defaultTodaysPayments;
         this.evaluationDate = DateFactory.getFactory().getTodaysDate();
+        this.refineHighPrecision = defaultRefineHighPrecision;
     }
 
     /**
      * @return the value of field todaysPayments
-     * 
+     *
      * @see #todaysPayments
      */
     public boolean isTodaysPayments() {
@@ -124,7 +136,7 @@ public class Settings {
 
     /**
      * @return the value of field negativeRates
-     * 
+     *
      * @see #{@link #negativeRates}
      */
     public boolean isNegativeRates() {
@@ -133,7 +145,7 @@ public class Settings {
 
     /**
      * @return the value of field evaluationDate
-     * 
+     *
      * @see #evaluationDate
      */
     public Date getEvaluationDate() {
@@ -142,7 +154,7 @@ public class Settings {
 
     /**
      * Changes the value of field todaysPayments
-     * 
+     *
      * @see #todaysPayments
      */
     public void setTodaysPayments(final boolean todaysPayments) {
@@ -151,17 +163,41 @@ public class Settings {
 
     /**
      * Changes the value of field evaluationDate.
-     * 
+     *
      * <p>
      * Notice that a successful change of evaluationDate notifies all its
      * listeners.
-     * 
+     *
      * @see #evaluationDate
      */
     public void setEvaluationDate(final Date evaluationDate) {
         this.evaluationDate.getUpdatable().update(evaluationDate);
-//        Exception e = new Exception();
-//        logger.debug(evaluationDate.toString(), e);
+        //        Exception e = new Exception();
+        //        logger.debug(evaluationDate.toString(), e);
+    }
+
+    /**
+     * @return the value of Halley's method high machine precision setting
+     * <p>
+     * The relative error of the approximation has absolute value less than 1.15e-9.
+     * One iteration of Halley's rational method (third order) gives full machine precision.
+     *
+     * @see #refineHighPrecision
+     */
+    public boolean isRefineHighPrecision() {
+        return refineHighPrecision;
+    }
+
+    /**
+     * Changes the value of Halley's method high machine precision setting
+     * <p>
+     * The relative error of the approximation has absolute value less than 1.15e-9.
+     * One iteration of Halley's rational method (third order) gives full machine precision.
+     *
+     * @see #refineHighPrecision
+     */
+    public void setRefineHighPrecision(final boolean refineHighPrecision) {
+        this.refineHighPrecision = refineHighPrecision;
     }
 
 }
@@ -176,7 +212,7 @@ modify the following definitions to suit your preferences.
 Do not modify this file if you are using a Linux/Unix system:
 it will not be read by the compiler. The definitions below
 will be provided by running ./configure instead.
-****************************************************************/
+ ****************************************************************/
 
 ///* Define this if error messages should include current function
 //information. */
