@@ -30,9 +30,9 @@ import static org.junit.Assert.fail;
 
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.Array;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.NormalDistribution;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.BSMOperator;
 import org.jquantlib.methods.finitedifferences.BSMTermOperator;
 import org.jquantlib.methods.finitedifferences.DPlusMinus;

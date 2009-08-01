@@ -24,7 +24,7 @@ When applicable, the original copyright notice follows this notice.
 
 
 import org.jquantlib.instruments.Option;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.util.Observable;
 
 /**

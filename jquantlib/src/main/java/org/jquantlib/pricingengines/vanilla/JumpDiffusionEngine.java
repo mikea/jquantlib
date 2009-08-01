@@ -102,21 +102,20 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
         this.baseEngine_ = baseEngine;
         this.maxIterations_ = maxIterations;
         this.relativeAccuracy_ = relativeAccuracy_;
-        if (this.baseEngine_ == null)
-            throw new ArithmeticException("null base engine");
+        assert this.baseEngine_ != null : "null base engine";
     }
 
 
 
     @Override
     public void calculate() {
-        if (!(this.arguments.stochasticProcess instanceof Merton76Process))
-            throw new ArithmeticException("not a jump diffusion process");
+
+        assert (this.arguments.stochasticProcess instanceof Merton76Process) : "not a jump diffusion process";
 
         final Merton76Process jdProcess = (Merton76Process) arguments.stochasticProcess;
 
-        final double /* @Real */jumpSquareVol = jdProcess.logJumpVolatility().getLink().evaluate()
-        * jdProcess.logJumpVolatility().getLink().evaluate();
+        final double /* @Real */jumpSquareVol =
+            jdProcess.logJumpVolatility().getLink().evaluate() * jdProcess.logJumpVolatility().getLink().evaluate();
 
         final double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().getLink().evaluate() + 0.5 * jumpSquareVol;
 
@@ -145,10 +144,10 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
         baseArguments.exercise = arguments.exercise;
         final Handle<? extends Quote> stateVariable = jdProcess.stateVariable();
         final Handle<YieldTermStructure> dividendTS = jdProcess.dividendYield();
-        final RelinkableHandle<YieldTermStructure> riskFreeTS = new RelinkableHandle<YieldTermStructure>(jdProcess.riskFreeRate()
-                .getLink());
-        final RelinkableHandle<BlackVolTermStructure> volTS = new RelinkableHandle<BlackVolTermStructure>(jdProcess.blackVolatility()
-                .getLink());
+        final RelinkableHandle<YieldTermStructure> riskFreeTS =
+            new RelinkableHandle<YieldTermStructure>(jdProcess.riskFreeRate().getLink());
+        final RelinkableHandle<BlackVolTermStructure> volTS =
+            new RelinkableHandle<BlackVolTermStructure>(jdProcess.blackVolatility().getLink());
         baseArguments.stochasticProcess = new GeneralizedBlackScholesProcess(stateVariable, dividendTS, riskFreeTS, volTS);
         baseArguments.validate();
 
@@ -165,8 +164,11 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
         double /* @Real */r, v, weight, lastContribution = 1.0;
         int i;
         double /* @Real */theta_correction;
+
+        // TODO: code review :: please verify against original QL/C++ code
         // Haug arbitrary criterium is:
         // for (i=0; i<11; i++) {
+
         for (i = 0; lastContribution > relativeAccuracy_ && i < maxIterations_; i++) {
 
             // constant vol/rate assumption. It should be relaxed
@@ -187,9 +189,8 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
             theta_correction = baseResults.vega * ((i * jumpSquareVol) / (2.0 * v * t * t)) + baseResults.rho * i
             * muPlusHalfSquareVol / (t * t);
             results.theta += weight * (baseResults.theta + theta_correction + lambda * baseResults.value);
-            if (i != 0) {
+            if (i != 0)
                 results.theta -= (p.op(i-1) * lambda * baseResults.value);
-            }
             // end theta calculation
             results.rho += weight * baseResults.rho;
             results.dividendRho += weight * baseResults.dividendRho;
@@ -216,9 +217,7 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
 
             lastContribution *= weight;
         }
-        if (i >= maxIterations_)
-            throw new ArithmeticException(i + " iterations have been not enough to reach " + "the required " + relativeAccuracy_
-                    + " accuracy. The " + i + " addendum was " + lastContribution + " while the running sum was " + results.value);
+        assert i < maxIterations_ : "accuracy not reached"; // TODO: message
 
     }
 

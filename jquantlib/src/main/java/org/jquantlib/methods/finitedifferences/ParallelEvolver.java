@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.jquantlib.lang.reflect.TypeToken;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * @author Srinivas Hasti
@@ -33,39 +33,34 @@ import org.jquantlib.math.Array;
 //Using Type token to dynamically create instance of MixedScheme requires
 //a extension class, so making this class abstract to force a type hierarchy
 public abstract class ParallelEvolver<S extends Operator, T extends MixedScheme<S>>  {
-	private List<T> evolvers;
+    private final List<T> evolvers;
 
-	public ParallelEvolver(List<S> L,
-			BoundaryConditionSet<BoundaryCondition<S>> bcs) {
-		evolvers = new Vector<T>(L.size());
-		for (int i = 0; i < L.size(); i++) {
-			evolvers.add(getEvolver(L.get(i), bcs.get(i)));
-		}
-	}
+    public ParallelEvolver(final List<S> L,
+            final BoundaryConditionSet<BoundaryCondition<S>> bcs) {
+        evolvers = new Vector<T>(L.size());
+        for (int i = 0; i < L.size(); i++)
+            evolvers.add(getEvolver(L.get(i), bcs.get(i)));
+    }
 
-	public List<Array> step(List<Array> a, double t) {
-		for (int i = 0; i < evolvers.size(); i++) {
-			a.set(i, evolvers.get(i).step(a.get(i), t));
-		}
-		
-		return a;
-	}
+    public List<Array> step(final List<Array> a, final double t) {
+        for (int i = 0; i < evolvers.size(); i++)
+            a.set(i, evolvers.get(i).step(a.get(i), t));
 
-	public void setStep(double dt) {
-		for (int i = 0; i < evolvers.size(); i++) {
-			evolvers.get(i).setStep(dt);
-		}
-	}
+        return a;
+    }
 
-	protected T getEvolver(final S l, final List<BoundaryCondition<S>> bcs) {
-		try {
-			
-			return (T) TypeToken.getClazz(this.getClass(), 1).getConstructor(
-					Operator.class, List.class).newInstance(l, bcs);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-	}
+    public void setStep(final double dt) {
+        for (int i = 0; i < evolvers.size(); i++)
+            evolvers.get(i).setStep(dt);
+    }
+
+    protected T getEvolver(final S l, final List<BoundaryCondition<S>> bcs) {
+        try {
+
+            return (T) TypeToken.getClazz(this.getClass(), 1).getConstructor(Operator.class, List.class).newInstance(l, bcs);
+        } catch (final Exception e) {
+            throw new AssertionError(e);
+        }
+    }
 
 }

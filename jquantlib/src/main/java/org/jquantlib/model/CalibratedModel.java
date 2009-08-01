@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.EndCriteria;
 import org.jquantlib.math.optimization.OptimizationMethod;
@@ -41,33 +41,33 @@ import org.jquantlib.util.Observable;
  */
 //TODO: comments, license, code review
 public abstract class CalibratedModel implements org.jquantlib.util.Observer, Observable {
-    
+
     private static final String parameter_array_to_small = "parameter array to small";
     private static final String parameter_array_to_big = "parameter array to big";
-    
-    private DefaultObservable delegatedObservable = new DefaultObservable(this);
+
+    private final DefaultObservable delegatedObservable = new DefaultObservable(this);
 
     protected List<Parameter> arguments_;
     protected Constraint constraint_;
-    
+
     protected CalibratedModel() {
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
     }
-    
-    public CalibratedModel(int nArguments){
+
+    public CalibratedModel(final int nArguments){
         arguments_ = new ArrayList<Parameter>(nArguments);
         constraint_ = new PrivateConstraint(arguments_);
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
     }
-    
-    
-    
+
+
+
     /**
      * Calibrate to a set of market instruments (caps/swaptions)
      * <p>
-     * An additional constraint can be passed which must be 
+     * An additional constraint can be passed which must be
      * satisfied in addition to the constraints of the model.
      * 
      * @param calibrationHelper
@@ -76,20 +76,20 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
      * @param constraint
      * @param weights
      */
-    public  void calibrate(List<CalibrationHelper> calibrationHelper,
-            OptimizationMethod method,
+    public  void calibrate(final List<CalibrationHelper> calibrationHelper,
+            final OptimizationMethod method,
             final EndCriteria endCriteria,
             final Constraint constraint,
             final List<Double> weights) {
-        
+
         throw new UnsupportedOperationException();
-        
+
     }
-    
+
     /**
      * Calibrate to a set of market instruments (caps/swaptions)
      * <p>
-     * An additional constraint can be passed which must be 
+     * An additional constraint can be passed which must be
      * satisfied in addition to the constraints of the model.
      * 
      * @param calibrationHelper
@@ -98,70 +98,63 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
      * @param constraint
      * @param weights
      */
-    public  void calibrate(List<CalibrationHelper> calibrationHelper,
-            OptimizationMethod method,
+    public  void calibrate(final List<CalibrationHelper> calibrationHelper,
+            final OptimizationMethod method,
             final EndCriteria endCriteria){
         //FIXME: what kind of constraint? so far constraint it abstract!?
         calibrate(calibrationHelper, method, endCriteria, new PrivateConstraint(null), new ArrayDoubleList() );
     }
-    
+
     public Constraint constraint(){
         return constraint_;
     }
-    
+
     public Array params()  {
         int size = 0, i;
-        for (i=0; i<arguments_.size(); i++){
+        for (i=0; i<arguments_.size(); i++)
             size += arguments_.get(i).getSize();
-        }
-        Array params = new Array(size);
+        final Array params = new Array(size);
         int k = 0;
-        for (i=0; i<arguments_.size(); i++) {
-            for (int j=0; j<arguments_.get(i).getSize(); j++, k++) {
+        for (i=0; i<arguments_.size(); i++)
+            for (int j=0; j<arguments_.get(i).getSize(); j++, k++)
                 params.set(k, arguments_.get(i).getParams().get(k));
-            }
-        }
         return params;
     }
 
+    // TODO: code review :: please verify against original QL/C++ code
     public void setParams(final Array params) {
         //Array::const_iterator p = params.begin();
         int p = 0;
-        for (int i=0; i<arguments_.size(); i++) {
+        for (int i=0; i<arguments_.size(); i++)
             for (int j=0; j<arguments_.get(i).getSize(); j++, p++) {
-                if(p==params.length){
-                    throw new IllegalArgumentException(parameter_array_to_small);
-                }
+                assert p>params.length : parameter_array_to_small;
                 arguments_.get(i).setParam(j, params.get(p));
             }
-        }
-        if(p!=params.length){
-            throw new IllegalArgumentException(parameter_array_to_big);
-        }
+        assert p == params.length : parameter_array_to_big;
         update();
     }
-    
+
     //FIXME: to be added
     public  void generateArguments(){
         throw new UnsupportedOperationException("work in progress");
     }
-    
+
     public void update(){
         generateArguments();
         notifyObservers();
     }
-    
+
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(final Observable o, final Object arg) {
         generateArguments();
         notifyObservers();
     }
-    
+
 
     @Override
-    public void addObserver(org.jquantlib.util.Observer observer) {
+    public void addObserver(final org.jquantlib.util.Observer observer) {
         delegatedObservable.addObserver(observer);
-        
+
     }
 
     @Override
@@ -170,9 +163,9 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     }
 
     @Override
-    public void deleteObserver(org.jquantlib.util.Observer observer) {
+    public void deleteObserver(final org.jquantlib.util.Observer observer) {
         delegatedObservable.deleteObserver(observer);
-        
+
     }
 
     @Override
@@ -188,79 +181,78 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     @Override
     public void notifyObservers() {
         delegatedObservable.notifyObservers();
-        
+
     }
 
     @Override
-    public void notifyObservers(Object arg) {
+    public void notifyObservers(final Object arg) {
         delegatedObservable.notifyObservers(arg);
-        
-    }
-    
-    private class CalibrationFunction extends org.jquantlib.math.optimization.CostFunction{
-        
-        private CalibratedModel model_;
-        private List<CalibrationHelper> instruments;
-        private List<Double> weights_;
 
-        public CalibrationFunction(CalibratedModel model, List<CalibrationHelper> instruments, List<Double> weights){
+    }
+
+    private class CalibrationFunction extends org.jquantlib.math.optimization.CostFunction{
+
+        private final CalibratedModel model_;
+        private final List<CalibrationHelper> instruments;
+        private final List<Double> weights_;
+
+        public CalibrationFunction(final CalibratedModel model, final List<CalibrationHelper> instruments, final List<Double> weights){
             this.model_ = model;
             this.instruments = instruments;
             this.weights_ = weights;
         }
-        
-        public double value(Array params) {
+
+        @Override
+        public double value(final Array params) {
             //FIXME: certainly not the way it is intended to be
             this.model_.setParams(params);
             double value = 0.0;
             for(int i = 0; i<instruments.size(); i++){
-                double diff = instruments.get(i).calibrationError();
+                final double diff = instruments.get(i).calibrationError();
                 value += diff*diff*weights_.get(i);
             }
             return Math.sqrt(value);
         }
 
         @Override
-        public Array values(Array params) {
+        public Array values(final Array params) {
             this.model_.setParams(params);
-            
-            Array values = new Array(instruments.size());
-            for(int i = 0; i<instruments.size(); i++){
+
+            final Array values = new Array(instruments.size());
+            for(int i = 0; i<instruments.size(); i++)
                 values.set(i, instruments.get(i).calibrationError()*Math.sqrt(weights_.get(i)));
-            }
-            
+
             return values;
         }
-        
+
+        @Override
         public double finiteDifferenceEpsilon(){
             return 1e-6;
         }
-        
+
     }
-    
-    
+
+
     private final class PrivateConstraint extends Constraint{
-        
-        public PrivateConstraint(List<Parameter> arguments) {
+
+        public PrivateConstraint(final List<Parameter> arguments) {
             arguments_ = arguments; // TODO: code review: using the outermost variable???
         }
-        
+
         @Override
         public boolean test(final Array array) /* @ReadOnly */ {
             int k = 0;
             for (int i = 0; i < arguments_.size(); i++) {
-                int size = arguments_.get(i).getSize();
-                Array testParams = new Array(size);
-                for (int j = 0; j < size; j++, k++) {
+                final int size = arguments_.get(i).getSize();
+                final Array testParams = new Array(size);
+                for (int j = 0; j < size; j++, k++)
                     testParams.set(j, array.get(k));
-                }
-                if (!arguments_.get(i).testParams(testParams)) {
+                if (!arguments_.get(i).testParams(testParams))
                     return false;
-                }
             }
             return true;
         }
     }
-    
+
 }
 

@@ -23,7 +23,7 @@ When applicable, the original copyright notice follows this notice.
 //reviewed
 package org.jquantlib.model.shortrate;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.model.Parameter;
 

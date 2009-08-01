@@ -23,7 +23,7 @@
 package org.jquantlib.methods.finitedifferences;
 
 import org.jquantlib.instruments.Option.Type;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * @author Srinivas Hasti

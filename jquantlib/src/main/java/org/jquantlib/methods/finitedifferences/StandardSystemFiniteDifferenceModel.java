@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * @author Srinivas Hasti

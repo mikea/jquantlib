@@ -1,9 +1,9 @@
 /*
- Copyright (C) 
+ Copyright (C)
  2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,27 +16,26 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.matrixutilities;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
-import org.jquantlib.math.Matrix;
 import org.jquantlib.math.optimization.CostFunction;
 
 //TODO: license, class comments
 class HypersphereCostFunction extends CostFunction {
-    
-    private int size_;
-    private boolean lowerDiagonal_;
-    private Matrix targetMatrix_;
-    private Array targetVariance_;
-    private  Matrix currentRoot_, tempMatrix_, currentMatrix_;
 
-    public HypersphereCostFunction(final Matrix targetMatrix, final Array targetVariance, boolean lowerDiagonal) {
+    private final int size_;
+    private final boolean lowerDiagonal_;
+    private final Matrix targetMatrix_;
+    private final Array targetVariance_;
+    private final  Matrix currentRoot_;
+    private Matrix tempMatrix_, currentMatrix_;
+
+    public HypersphereCostFunction(final Matrix targetMatrix, final Array targetVariance, final boolean lowerDiagonal) {
         this.size_ = targetMatrix.rows;
         this.lowerDiagonal_ = lowerDiagonal;
         this.targetMatrix_ = targetMatrix;
@@ -45,59 +44,48 @@ class HypersphereCostFunction extends CostFunction {
         tempMatrix_ = new Matrix(size_, size_);
         currentMatrix_ = new Matrix(size_, size_);
     }
- 
+
+    @Override
     public Array values(final Array array) {
         throw new UnsupportedOperationException("values method not implemented");
     }
-  
-  public double value(final Array x)  {
-      int i,j,k;
-      
-      currentRoot_.fill(1.0);
-      if (lowerDiagonal_) {
-          for (i=0; i<size_; i++) {
-              for (k=0; k<size_; k++) {
-                  if (k>i) {
-                      currentRoot_.set(i,k,0);
-                  } else {
-                      for (j=0; j<=k; j++) {
-                          if (j == k && k!=i){
-                              currentRoot_.set(i,k, currentMatrix_.get(i, k) * Math.cos(x.get(i*(i-1)/2+j)));
-                          }
-                           else if (j!=i){
-                              currentRoot_.set(i,k, currentRoot_.get(i, k)*
-                                  Math.sin(x.get(i*(i-1)/2+j)));
-                           }
-                      }
-                  }
-              }
-          }
-      } else {
-          for (i=0; i<size_; i++) {
-              for (k=0; k<size_; k++) {
-                  for (j=0; j<=k; j++) {
-                      if (j == k && k!=size_-1){
-                          currentRoot_.set(i, k, currentRoot_.get(i,k)
-                              *Math.cos(x.get(j*size_+i)));
-                      }
-                      else if (j!=size_-1){
-                          currentRoot_.set(i,k,currentRoot_.get(i, j)*Math.sin(x.get(j*size_+i)));
-                      }
-                  }
-              }
-          }
-      }
-      double temp, error=0;
-      tempMatrix_ = currentRoot_.transpose();
-      currentMatrix_ = currentRoot_.mul(tempMatrix_);
-      for (i=0;i<size_;i++) {
-          for (j=0;j<size_;j++) {
-              temp = currentMatrix_.get(i, j)*targetVariance_.get(i)*targetVariance_.get(j)-targetMatrix_.get(i, j);
-              error += temp*temp;
-          }
-      }
-      return error;
-  }
+
+    @Override
+    public double value(final Array x)  {
+        int i,j,k;
+
+        currentRoot_.fill(1.0);
+        if (lowerDiagonal_) {
+            for (i=0; i<size_; i++)
+                for (k=0; k<size_; k++)
+                    if (k>i)
+                        currentRoot_.set(i,k,0);
+                    else
+                        for (j=0; j<=k; j++)
+                            if (j == k && k!=i)
+                                currentRoot_.set(i,k, currentMatrix_.get(i, k) * Math.cos(x.get(i*(i-1)/2+j)));
+                            else if (j!=i)
+                                currentRoot_.set(i,k, currentRoot_.get(i, k)*
+                                        Math.sin(x.get(i*(i-1)/2+j)));
+        } else
+            for (i=0; i<size_; i++)
+                for (k=0; k<size_; k++)
+                    for (j=0; j<=k; j++)
+                        if (j == k && k!=size_-1)
+                            currentRoot_.set(i, k, currentRoot_.get(i,k)
+                                    *Math.cos(x.get(j*size_+i)));
+                        else if (j!=size_-1)
+                            currentRoot_.set(i,k,currentRoot_.get(i, j)*Math.sin(x.get(j*size_+i)));
+        double temp, error=0;
+        tempMatrix_ = currentRoot_.transpose();
+        currentMatrix_ = currentRoot_.mul(tempMatrix_);
+        for (i=0;i<size_;i++)
+            for (j=0;j<size_;j++) {
+                temp = currentMatrix_.get(i, j)*targetVariance_.get(i)*targetVariance_.get(j)-targetMatrix_.get(i, j);
+                error += temp*temp;
+            }
+        return error;
+    }
 }
 
 //TODO: create a
@@ -106,8 +94,8 @@ public class PseudoSqrt {
     public enum SalvagingAlgorithm {
         None, Spectral, Hypersphere, LowerDiagonal, Higham;
     }
-    
-  //! Returns the pseudo square root of a real symmetric matrix
+
+    //! Returns the pseudo square root of a real symmetric matrix
     /*! Given a matrix \f$ M \f$, the result \f$ S \f$ is defined
         as the matrix such that \f$ S S^T = M. \f$
         If the matrix is not positive semi definite, it can
@@ -134,11 +122,11 @@ public class PseudoSqrt {
           known good data.
         - the correctness of the results is tested by checking
           returned values against numerical calculations.
-    */
+     */
     public Matrix pseudoSqrt( final Matrix matrix){
         return pseudoSqrt(matrix, SalvagingAlgorithm.None);
     }
-    
+
 
 
     //! Returns the rank-reduced pseudo square root of a real symmetric matrix
@@ -153,71 +141,62 @@ public class PseudoSqrt {
         \pre the given matrix must be symmetric.
 
         \relates Matrix
-    */
+     */
     public static Matrix rankReducedSqrt(final Matrix matrix,
-                                             int maxRank,
-                                             int componentRetainedPercentage,
-                                             SalvagingAlgorithm sa){
-        int size = matrix.rows;
-        
+            final int maxRank,
+            final int componentRetainedPercentage,
+            final SalvagingAlgorithm sa){
+        final int size = matrix.rows;
+
         //TODO: do we already have this mechanism
         //#if defined(QL_EXTRA_SAFETY_CHECKS)
         checkSymmetry(matrix);
         //#else
-        if(size != matrix.cols) {
+        if(size != matrix.cols)
             throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
-        }
 
-        if(componentRetainedPercentage<=0.0){
+        if(componentRetainedPercentage<=0.0)
             throw new IllegalArgumentException("no eigenvalues retained");
-        }
 
-        if(componentRetainedPercentage>1.0){
+        if(componentRetainedPercentage>1.0)
             throw new IllegalArgumentException("percentage to be retained > 100%");
-        }
-                   
 
-        if(maxRank<1){
+
+        if(maxRank<1)
             throw new IllegalArgumentException("max rank required < 1");
-        }
         // spectral (a.k.a Principal Component) analysis
         SymmetricSchurDecomposition jd = new SymmetricSchurDecomposition(matrix);
         Array eigenValues = jd.eigenvalues();
 
         // salvaging algorithm
         switch (sa) {
-          case None:
+        case None:
             // eigenvalues are sorted in decreasing order
-            if(eigenValues.get(size-1)<-1e-16){
-                       throw new IllegalArgumentException("negative eigenvalue(s) ("
-                       + eigenValues.get(size-1)+")");
-                       }
+            if(eigenValues.get(size-1)<-1e-16)
+                throw new IllegalArgumentException("negative eigenvalue(s) ("
+                        + eigenValues.get(size-1)+")");
             break;
-          case Spectral:
+        case Spectral:
             // negative eigenvalues set to zero
-            for (int i=0; i<size; ++i){
+            for (int i=0; i<size; ++i)
                 eigenValues.set(i,Math.max(eigenValues.get(i), 0.0));
-            }
             break;
-          case Higham:
-              {
-                  int maxIterations = 40;
-                  double tolerance = 1e-6;
-                  Matrix adjustedMatrix = null;//highamImplementation(matrix, maxIterations, tolerance);
-                  jd = new SymmetricSchurDecomposition(adjustedMatrix);
-                  eigenValues = jd.eigenvalues();
-              }
-              break;
-          default:
-            throw new IllegalArgumentException("unknown or invalid salvaging algorithm");
+        case Higham:
+            final int maxIterations = 40;
+            final double tolerance = 1e-6;
+            final Matrix adjustedMatrix = null;//highamImplementation(matrix, maxIterations, tolerance);
+            jd = new SymmetricSchurDecomposition(adjustedMatrix);
+            eigenValues = jd.eigenvalues();
+            break;
+        default:
+            throw new AssertionError("unknown or invalid salvaging algorithm"); // TODO: message
         }
 
         // factor reduction
         double enough = componentRetainedPercentage * eigenValues.accumulate();
-        if (componentRetainedPercentage == 1.0) {
+        if (componentRetainedPercentage == 1.0)
             // numerical glitches might cause some factors to be discarded
             enough *= 1.1;
-        }
         // retain at least one factor
         double components = eigenValues.first();
         int retainedFactors = 1;
@@ -228,61 +207,53 @@ public class PseudoSqrt {
         // output is granted to have a rank<=maxRank
         retainedFactors=Math.min(retainedFactors, maxRank);
 
-        Matrix diagonal = new Matrix(size, retainedFactors, 0.0);
-        for (int i=0; i<retainedFactors; ++i){
+        final Matrix diagonal = new Matrix(size, retainedFactors);
+        for (int i=0; i<retainedFactors; ++i)
             diagonal.set(i,i, Math.sqrt(eigenValues.get(i)));
-        }
         // TODO: code review:: compare against C++ code
-        Matrix result = jd.eigenVectors().mul(jd.eigenVectors()).mul(diagonal);
+        final Matrix result = jd.eigenVectors().mul(jd.eigenVectors()).mul(diagonal);
 
         normalizePseudoRoot(matrix, result);
         return result;
-                                            }
-    
-    
-    public static void checkSymmetry(final Matrix matrix) {
-        int size = matrix.rows;
-        
-        if (size != matrix.cols){
-            throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
-            }
-        for (int i=0; i<size; ++i){
-            for (int j=0; j<i; ++j){
-                if(Closeness.isClose(matrix.get(i, j), matrix.get(j, i))){
-                    throw new IllegalArgumentException("non symmetric matrix: " +
-                           "[" + i + "][" + j + "]=" + matrix.get(i,j) +
-                           ", [" + j + "][" + i + "]=" + matrix.get(j,i));
-                }
-            }
-        }                
     }
 
-    public static void normalizePseudoRoot(final Matrix matrix, Matrix pseudo) {
-        int size = matrix.rows;
-        
-        if (size != pseudo.rows) {
+
+    public static void checkSymmetry(final Matrix matrix) {
+        final int size = matrix.rows;
+
+        if (size != matrix.cols)
+            throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
+        for (int i=0; i<size; ++i)
+            for (int j=0; j<i; ++j)
+                if(Closeness.isClose(matrix.get(i, j), matrix.get(j, i)))
+                    throw new IllegalArgumentException("non symmetric matrix: " +
+                            "[" + i + "][" + j + "]=" + matrix.get(i,j) +
+                            ", [" + j + "][" + i + "]=" + matrix.get(j,i));
+    }
+
+    public static void normalizePseudoRoot(final Matrix matrix, final Matrix pseudo) {
+        final int size = matrix.rows;
+
+        if (size != pseudo.rows)
             throw new IllegalArgumentException(
                     "matrix/pseudo mismatch: matrix rows are " + size + " while pseudo rows are " + pseudo.cols);
-        }
 
-        int pseudoCols = pseudo.cols;
+        final int pseudoCols = pseudo.cols;
 
         // row normalization
         for (int i=0; i<size; ++i) {
             double norm = 0.0;
-            for (int j=0; j<pseudoCols; ++j){
+            for (int j=0; j<pseudoCols; ++j)
                 norm += pseudo.get(i, j)*pseudo.get(j, i);
-            }
             if (norm>0.0) {
-                double normAdj = Math.sqrt(matrix.get(i,i)/norm);
-                for (int j=0; j<pseudoCols; ++j){
+                final double normAdj = Math.sqrt(matrix.get(i,i)/norm);
+                for (int j=0; j<pseudoCols; ++j)
                     pseudo.set(i, j, pseudo.get(i, j) * normAdj);
-                }
             }
         }
     }
-    
-/*
+
+    /*
     // Optimization function for hypersphere and lower-diagonal algorithm
     public  Matrix hypersphereOptimize(final Matrix targetMatrix,
                                             final Matrix currentRoot,
@@ -498,95 +469,92 @@ public class PseudoSqrt {
 
 }
 
-*/
-public static Matrix pseudoSqrt(final Matrix matrix,
-                                    SalvagingAlgorithm sa) {
-    int size = matrix.rows;
-    /*
+     */
+    public static Matrix pseudoSqrt(final Matrix matrix,
+            final SalvagingAlgorithm sa) {
+        final int size = matrix.rows;
+        /*
     #if defined(QL_EXTRA_SAFETY_CHECKS)
     checkSymmetry(matrix);
     #else
-    */
-    if (size != matrix.cols) {
-               throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
-    }
+         */
+        if (size != matrix.cols)
+            throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
 
-    // spectral (a.k.a Principal Component) analysis
-    SymmetricSchurDecomposition jd = new SymmetricSchurDecomposition(matrix);
-    Matrix diagonal = new Matrix(size, size, 0.0);
+        // spectral (a.k.a Principal Component) analysis
+        final SymmetricSchurDecomposition jd = new SymmetricSchurDecomposition(matrix);
+        final Matrix diagonal = new Matrix(size, size);
 
-    // salvaging algorithm
-    Matrix result = new Matrix(size, size);
-    boolean negative;
-    switch (sa) {
-      case None:
-        // eigenvalues are sorted in decreasing order
-        if (jd.eigenvalues().get(size-1)<-1e-16){
-                  throw new IllegalArgumentException( "negative eigenvalue(s) ("
-                    + /*std::scientific*/ + jd.eigenvalues().get(size-1)
-                  + ")");
-        }
-        result = new CholeskyDecomposition().CholeskyDecomposition(matrix, true);
-        break;
-      case Spectral:
-        // negative eigenvalues set to zero
-        for (int i=0; i<size; i++){
-            diagonal.set(i, i, Math.sqrt(Math.max((jd.eigenvalues().get(i)), 0.0)));
-        }
-        if(true)
-        throw new UnsupportedOperationException("work in progress");
-        //result = jd.eigenvectors() * diagonal;
-        normalizePseudoRoot(matrix, result);
-        break;
-      case Hypersphere:
-        // negative eigenvalues set to zero
-        negative=false;
-        for (int i=0; i<size; ++i){
-            diagonal.set(i, i, Math.sqrt(Math.max(jd.eigenvalues().get(i), 0.0)));
-            if (jd.eigenvalues().get(i)<0.0) {negative=true;}
-        }
-        if(true)
-        throw new UnsupportedOperationException("work in progress");
-        //result = jd.eigenvectors() * diagonal;
-        normalizePseudoRoot(matrix, result);
+        // salvaging algorithm
+        Matrix result = new Matrix(size, size);
+        boolean negative;
+        switch (sa) {
+        case None:
+            // eigenvalues are sorted in decreasing order
+            if (jd.eigenvalues().get(size-1)<-1e-16)
+                throw new IllegalArgumentException( "negative eigenvalue(s) ("
+                        + /*std::scientific*/ + jd.eigenvalues().get(size-1)
+                        + ")");
+            result = new CholeskyDecomposition().CholeskyDecomposition(matrix, true);
+            break;
+        case Spectral:
+            // negative eigenvalues set to zero
+            for (int i=0; i<size; i++)
+                diagonal.set(i, i, Math.sqrt(Math.max((jd.eigenvalues().get(i)), 0.0)));
+            if(true)
+                throw new UnsupportedOperationException("work in progress");
+            //result = jd.eigenvectors() * diagonal;
+            normalizePseudoRoot(matrix, result);
+            break;
+        case Hypersphere:
+            // negative eigenvalues set to zero
+            negative=false;
+            for (int i=0; i<size; ++i){
+                diagonal.set(i, i, Math.sqrt(Math.max(jd.eigenvalues().get(i), 0.0)));
+                if (jd.eigenvalues().get(i)<0.0)
+                    negative=true;
+            }
+            if(true)
+                throw new UnsupportedOperationException("work in progress");
+            //result = jd.eigenvectors() * diagonal;
+            normalizePseudoRoot(matrix, result);
 
-        if (negative){
-            throw new UnsupportedOperationException("work in progress");
+            if (negative)
+                throw new UnsupportedOperationException("work in progress");
             //result = hypersphereOptimize(matrix, result, false);
-        }
-        break;
-      case LowerDiagonal:
-        // negative eigenvalues set to zero
-        negative=false;
-        for (int i=0; i<size; ++i){
-            diagonal.set(i, i, Math.sqrt(Math.max(jd.eigenvalues().get(i), 0.0)));
-            if (jd.eigenvalues().get(i)<0.0) {negative=true;}
-        }
-        if(true)
-        throw new UnsupportedOperationException("work in progress");
-        //result = jd.eigenvectors() * diagonal;
-        normalizePseudoRoot(matrix, result);
+            break;
+        case LowerDiagonal:
+            // negative eigenvalues set to zero
+            negative=false;
+            for (int i=0; i<size; ++i){
+                diagonal.set(i, i, Math.sqrt(Math.max(jd.eigenvalues().get(i), 0.0)));
+                if (jd.eigenvalues().get(i)<0.0)
+                    negative=true;
+            }
+            if(true)
+                throw new UnsupportedOperationException("work in progress");
+            //result = jd.eigenvectors() * diagonal;
+            normalizePseudoRoot(matrix, result);
 
-        if (negative)
-            throw new UnsupportedOperationException("work in progress");
+            if (negative)
+                throw new UnsupportedOperationException("work in progress");
             //result = hypersphereOptimize(matrix, result, true);
-        break;
-      case Higham: {
-          int maxIterations = 40;
-          double tol = 1e-6;
-          if(true)
-          throw new UnsupportedOperationException("work in progress");
-          //result = highamImplementation(matrix, maxIterations, tol);
-          result = new CholeskyDecomposition().CholeskyDecomposition(result, true);
+            break;
+        case Higham:
+            final int maxIterations = 40;
+            final double tol = 1e-6;
+            if(true)
+                throw new UnsupportedOperationException("work in progress");
+            //result = highamImplementation(matrix, maxIterations, tol);
+            result = new CholeskyDecomposition().CholeskyDecomposition(result, true);
+            break;
+        default:
+            throw new AssertionError(unknown_salvaging_algorithm); // TODO: message
         }
-        break;
-      default:
-        throw new IllegalArgumentException(unknown_salvaging_algorithm);
+        return result;
     }
-    return result;
-}
 
-/*
+    /*
 const Disposable<Matrix> rankReducedSqrt(const Matrix& matrix,
                                          Size maxRank,
                                          Real componentRetainedPercentage,
@@ -668,8 +636,8 @@ const Disposable<Matrix> rankReducedSqrt(const Matrix& matrix,
     return result;
 }
 
-*/
+     */
 }
 
-  
-   
+
+

@@ -29,27 +29,25 @@ public class DiscrepancyStatistics extends GenericSequenceStatistics {
     private double bdiscr_, ddiscr_;
 
     public DiscrepancyStatistics() {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
-    public DiscrepancyStatistics(int dimension) {
+    public DiscrepancyStatistics(final int dimension) {
         super(dimension);
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         reset(dimension);
     }
 
-    public void add(double[] samples, int begin, int end) {
+    public void add(final double[] samples, final int begin, final int end) {
         add(samples, begin, end, 1.0);
     }
 
-    public void add(double[] samples, int begin, int end, double weight) {
+    public void add(final double[] samples, final int begin, final int end, final double weight) {
         super.add(samples, weight);
         int k, m;
-        double N = samples();
+        final double N = samples();
 
         double r_ik, r_jk, temp = 1.0;
         int it;
@@ -89,14 +87,11 @@ public class DiscrepancyStatistics extends GenericSequenceStatistics {
         adiscr_ += temp;
     }
 
+    @Override
     public void reset(int dimension) {
-        if (dimension == 0) { // if no size given,
+        assert dimension != 1 : dimension_not_allowed;
+        if (dimension == 0)
             dimension = dimension_; // keep the current one
-        }
-        if (dimension == 1) {
-            throw new IllegalArgumentException(dimension_not_allowed);
-        }
-
         super.reset(dimension);
 
         adiscr_ = 0.0;
@@ -104,11 +99,11 @@ public class DiscrepancyStatistics extends GenericSequenceStatistics {
         cdiscr_ = 0.0;
         ddiscr_ = 1.0 / Math.pow(3.0, dimension);
     }
-    
-    public double disrepancy(){
-        int N = samples();
+
+    public double discrepancy() {
+        final int N = samples();
         //outcommented c++ code
-        /* 
+        /*
         Size i;
         Real r_ik, r_jk, cdiscr = adiscr = 0.0, temp = 1.0;
 
@@ -117,6 +112,7 @@ public class DiscrepancyStatistics extends GenericSequenceStatistics {
             for (Size k=0; k<dimension_; k++) {
                 r_ik = stats_[k].sampleData()[i].first;
                 temp *= (1.0 - r_ik*r_ik);
+
             }
             cdiscr += temp;
         }
@@ -132,7 +128,7 @@ public class DiscrepancyStatistics extends GenericSequenceStatistics {
                 adiscr += temp;
             }
         }
-        */
+         */
         return Math.sqrt(adiscr_/(N*N)-bdiscr_/N*cdiscr_+ddiscr_);
     }
 

@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Anand Mani
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -59,51 +59,51 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
     //
     // private fields
     //
-    
-    private double f;
-	private double a;
-	private T delegate;
 
-	//
-	// public constructors
-	//
-	
-	@SuppressWarnings("unchecked")
-	public GarmanKlassOpenClose(final double y, final double marketOpenFraction, final double a) {
-		this.delegate = null;
+    private final double f;
+    private final double a;
+    private T delegate;
+
+    //
+    // public constructors
+    //
+
+    @SuppressWarnings("unchecked")
+    public GarmanKlassOpenClose(final double y, final double marketOpenFraction, final double a) {
+        this.delegate = null;
         try {
             delegate = (T) TypeToken.getClazz(this.getClass()).getConstructor(double.class).newInstance(y);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (final Exception e) {
+            throw new AssertionError(e);
         }
-		this.f = marketOpenFraction;
-		this.a = a;
-	}
+        this.f = marketOpenFraction;
+        this.a = a;
+    }
 
-	//
-	// implements LocalVolatilityEstimator
-	//
-	
-	@Override
-	public TimeSeries<Double> calculate(final TimeSeries<IntervalPrice> quoteSeries) {
-		final Date[] dates = quoteSeries.dates();
-		final Collection<IntervalPrice> values = quoteSeries.valuesIntervalPrice();
-		final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
-		// obtain first IntervalPrice
-		Iterator<IntervalPrice> it = values.iterator();
-		if (!it.hasNext()) return retval;
-		// process remaining IntervalPrices
-		IntervalPrice prev = it.next();
-		for (int i=1; it.hasNext(); i++) {
-			IntervalPrice curr = it.next();
-			double c0 = Math.log(prev.close());
-			double o1 = Math.log(curr.open());
-			double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * delegate.calculatePoint(curr) / (1 - this.f);
-			double s = Math.sqrt(sigma2 / delegate.getYearFraction());
-			retval.add(dates[i], s);
-			prev = curr;
-		}
-		return retval;
-	}
+    //
+    // implements LocalVolatilityEstimator
+    //
+
+    @Override
+    public TimeSeries<Double> calculate(final TimeSeries<IntervalPrice> quoteSeries) {
+        final Date[] dates = quoteSeries.dates();
+        final Collection<IntervalPrice> values = quoteSeries.valuesIntervalPrice();
+        final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
+        // obtain first IntervalPrice
+        final Iterator<IntervalPrice> it = values.iterator();
+        if (!it.hasNext()) return retval;
+        // process remaining IntervalPrices
+        IntervalPrice prev = it.next();
+        for (int i=1; it.hasNext(); i++) {
+            final IntervalPrice curr = it.next();
+            final double c0 = Math.log(prev.close());
+            final double o1 = Math.log(curr.open());
+            final double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * delegate.calculatePoint(curr) / (1 - this.f);
+            final double s = Math.sqrt(sigma2 / delegate.getYearFraction());
+            retval.add(dates[i], s);
+            prev = curr;
+        }
+        return retval;
+    }
 
 }

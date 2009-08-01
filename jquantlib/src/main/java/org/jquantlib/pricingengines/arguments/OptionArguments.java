@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.arguments;
 
@@ -48,27 +48,27 @@ import org.jquantlib.pricingengines.PricingEngine;
 /**
  * Keeps arguments used by {@link PricingEngine}s and necessary for Option valuation
  * 
- * @note Public fields as this class works pretty much as Data Transfer Objects 
+ * @note Public fields as this class works pretty much as Data Transfer Objects
  * 
  * @author Richard Gomes
  */
 //TODO :: remove std::vector<Time> stoppingTimes
 //TODO :: how to handle strike-less option (asian average strike, forward, etc.?
 public class OptionArguments extends Arguments {
-	
+
     //
     // public constructors
     //
-    
+
     public OptionArguments() {
         super();
     }
-    
-    
+
+
     //
     // public fields
     //
-    
+
     // FIXME: public fields here is a bad design technique :(
 
     /**
@@ -76,26 +76,26 @@ public class OptionArguments extends Arguments {
      * 
      * @see Payoff
      */
-	public Payoff payoff;
-	
-	/**
-	 * Represent the {@link Exercise} dates
-	 * 
-	 * @see Exercise
-	 */
-	public Exercise exercise;
-	
-	//TODO:Shouldn't be here. It should be moved elsewhere
-	public /*@Time*/ List<Double> stoppingTimes;
-	
+    public Payoff payoff;
 
-	//
-	// public methods
-	//
-	
-	@Override
-	public void validate() /*@ReadOnly*/ {
-		if (payoff == null) throw new IllegalArgumentException("No payoff given"); //TODO: message
-	}
-	
+    /**
+     * Represent the {@link Exercise} dates
+     * 
+     * @see Exercise
+     */
+    public Exercise exercise;
+
+    //TODO:Shouldn't be here. It should be moved elsewhere
+    public /*@Time*/ List<Double> stoppingTimes;
+
+
+    //
+    // public methods
+    //
+
+    @Override
+    public void validate() /*@ReadOnly*/ {
+        assert payoff != null : "No payoff given"; //TODO: message
+    }
+
 }

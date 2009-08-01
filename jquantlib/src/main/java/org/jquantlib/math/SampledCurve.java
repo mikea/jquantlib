@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -43,6 +43,7 @@ package org.jquantlib.math;
 import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.NaturalCubicSpline;
+import org.jquantlib.math.matrixutilities.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,51 +56,52 @@ import org.slf4j.LoggerFactory;
  */
 public class SampledCurve {
 
-	private final static Logger logger = LoggerFactory.getLogger(SampledCurve.class);
+    private final static Logger logger = LoggerFactory.getLogger(SampledCurve.class);
 
-	//
-	// private fields
-	//
-	
-	private Array grid;
-	private Array values;
+    //
+    // private fields
+    //
 
-	//
-	// Constructors
-	//
-	
-	public SampledCurve(int gridSize) {
-		this.grid   = new Array(gridSize);
-		this.values = new Array(gridSize);
-	}
+    private Array grid;
+    private Array values;
 
-	public SampledCurve(final Array grid) {
-	    // TODO: code review :: use of clone()
-	    this.grid   = grid;
-	    this.values = new Array(this.grid.length);
-	}
+    //
+    // Constructors
+    //
 
-	/**
-	 * Copy constructor
-	 * 
-	 * @param that
-	 */
-	public SampledCurve(final SampledCurve that) {
-	    // TODO: code review :: use of clone()
-		this.grid   = that.grid.clone();
-		this.values = that.values.clone();
-	}
-	
-	
-	//
-	// public methods
-	//
-	
-	public SampledCurve clone() {
-	    SampledCurve result = new SampledCurve(this);
-	    return result;
-	}
-	
+    public SampledCurve(final int gridSize) {
+        this.grid   = new Array(gridSize);
+        this.values = new Array(gridSize);
+    }
+
+    public SampledCurve(final Array grid) {
+        // TODO: code review :: use of clone()
+        this.grid   = grid;
+        this.values = new Array(this.grid.length);
+    }
+
+    /**
+     * Copy constructor
+     * 
+     * @param that
+     */
+    public SampledCurve(final SampledCurve that) {
+        // TODO: code review :: use of clone()
+        this.grid   = that.grid.clone();
+        this.values = that.values.clone();
+    }
+
+
+    //
+    // public methods
+    //
+
+    @Override
+    public SampledCurve clone() {
+        final SampledCurve result = new SampledCurve(this);
+        return result;
+    }
+
     public int size() {
         return grid.length;
     }
@@ -118,11 +120,11 @@ public class SampledCurve {
         return values;
     }
 
-    public double gridValue(int i) {
+    public double gridValue(final int i) {
         return grid.get(i);
     }
 
-    public double value(int i) {
+    public double value(final int i) {
         return values.get(i);
     }
 
@@ -146,12 +148,12 @@ public class SampledCurve {
 
     public <T extends Ops.DoubleOp> void sample(final T func) {
         for (int i = 0; i < this.grid.length; i++) {
-            double v = func.op(grid.get(i));
+            final double v = func.op(grid.get(i));
             this.values.set(i, v);
         }
     }
 
-    public void shiftGrid(double s) {
+    public void shiftGrid(final double s) {
         this.grid.addAssign(s);
     }
 
@@ -159,40 +161,39 @@ public class SampledCurve {
         this.grid.mulAssign(s);
     }
 
-	
+
     public double valueAtCenter() /* @Readonly */{
-        if (empty()) throw new ArithmeticException("empty sampled curve");
-        int jmid = size() / 2;
+        assert !empty() : "empty sampled curve"; // TODO: message
+        final int jmid = size() / 2;
         if (size() % 2 != 0)
             return values.get(jmid);
         else
             return (values.get(jmid) + values.get(jmid - 1)) / 2.0;
     }
 
-	public double firstDerivativeAtCenter() /* @Readonly */{
-		if (size() < 3) throw new ArithmeticException("the size of the curve must be at least 3");
-        int jmid = size() / 2;
-        if (size() % 2 != 0) {
+    public double firstDerivativeAtCenter() /* @Readonly */{
+        assert size() >= 3 : "the size of the curve must be at least 3"; // TODO: message
+        final int jmid = size() / 2;
+        if (size() % 2 != 0)
             return (values.get(jmid + 1) - values.get(jmid - 1)) / (grid.get(jmid + 1) - grid.get(jmid - 1));
-        } else {
+        else
             return (values.get(jmid) - values.get(jmid - 1)) / (grid.get(jmid) - grid.get(jmid - 1));
-        }
-	}
+    }
 
-	public double secondDerivativeAtCenter() /* @Readonly */{
-		if (size() < 4) throw new ArithmeticException("the size of the curve must be at least 4");
-		int jmid = size() / 2;
+    public double secondDerivativeAtCenter() /* @Readonly */{
+        assert size() >= 4 : "the size of the curve must be at least 4"; // TODO: message
+        final int jmid = size() / 2;
         if (size() % 2 != 0) {
-            double deltaPlus = (values.get(jmid + 1) - values.get(jmid)) / ((grid.get(jmid + 1) - grid.get(jmid)));
-            double deltaMinus = (values.get(jmid) - values.get(jmid - 1)) / ((grid.get(jmid) - grid.get(jmid - 1)));
-            double dS = (grid.get(jmid + 1) - grid.get(jmid - 1)) / 2.0;
+            final double deltaPlus = (values.get(jmid + 1) - values.get(jmid)) / ((grid.get(jmid + 1) - grid.get(jmid)));
+            final double deltaMinus = (values.get(jmid) - values.get(jmid - 1)) / ((grid.get(jmid) - grid.get(jmid - 1)));
+            final double dS = (grid.get(jmid + 1) - grid.get(jmid - 1)) / 2.0;
             return (deltaPlus - deltaMinus) / dS;
         } else {
-            double deltaPlus = (values.get(jmid + 1) - values.get(jmid - 1)) / ((grid.get(jmid + 1) - grid.get(jmid - 1)));
-            double deltaMinus = (values.get(jmid) - values.get(jmid - 2)) / (grid.get(jmid) - grid.get(jmid - 2));
+            final double deltaPlus = (values.get(jmid + 1) - values.get(jmid - 1)) / ((grid.get(jmid + 1) - grid.get(jmid - 1)));
+            final double deltaMinus = (values.get(jmid) - values.get(jmid - 2)) / (grid.get(jmid) - grid.get(jmid - 2));
             return (deltaPlus - deltaMinus) / (grid.get(jmid) - grid.get(jmid - 1));
         }
-	}
+    }
 
     public void regrid(final Array newGrid) {
         regrid(newGrid, new Identity());
@@ -207,7 +208,7 @@ public class SampledCurve {
     public void regrid(final Array newGrid, final Ops.DoubleOp f) {
         final Array transformed;
         final Array newValues;
-        
+
         if (f instanceof Identity) {
             transformed = this.grid;
             newValues = newGrid.clone();
@@ -218,11 +219,10 @@ public class SampledCurve {
 
         final CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(transformed, this.values);
         priceSpline.update();
-    
-        for (int i=0; i<newValues.length; i++) {
+
+        for (int i=0; i<newValues.length; i++)
             newValues.set(i, priceSpline.evaluate(newValues.get(i), true) );
-        }
-        
+
         this.grid.swap(newGrid);
         this.values.swap(newValues);
     }

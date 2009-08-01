@@ -30,7 +30,7 @@ package org.jquantlib.testsuite.operators;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
 import org.junit.Test;
 import org.slf4j.Logger;

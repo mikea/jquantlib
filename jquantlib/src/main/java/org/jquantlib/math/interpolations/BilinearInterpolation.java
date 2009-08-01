@@ -22,9 +22,9 @@
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
 import org.jquantlib.math.interpolations.factories.Bilinear;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 
 
 /**

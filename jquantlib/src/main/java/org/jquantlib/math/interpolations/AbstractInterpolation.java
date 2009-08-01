@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -45,61 +45,61 @@ import static org.jquantlib.math.Closeness.isClose;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 
 
 public abstract class AbstractInterpolation implements Interpolation {
 
-	//
-	// abstract methods
-	//
-    
     //
-	// These methods are used by their counterparts, e.g:
-	//   evaluateImpl is called by evaluate
-	//   primitiveImpl is called by primitive
-	//	 ... and so on.
-	//
-	protected abstract double evaluateImpl(final double x);
-	protected abstract double primitiveImpl(final double x);
-	protected abstract double derivativeImpl(final double x);
-	protected abstract double secondDerivativeImpl(final double x);
+    // abstract methods
+    //
 
-	
-	//
-	// private fields
-	//
-	
-	/**
-	 * This private field is automatically initialized by constructor which
-	 * picks up it's value from {@link Settings} singleton. This procedure
-	 * caches values from the singleton, intending to avoid contention in
-	 * heavily multi-threaded environments.
-	 */
-	//TODO: We should observe extraSafetyChecks
-	private boolean extraSafetyChecks = Configuration.getSystemConfiguration(null).isExtraSafetyChecks();
+    //
+    // These methods are used by their counterparts, e.g:
+    //   evaluateImpl is called by evaluate
+    //   primitiveImpl is called by primitive
+    //	 ... and so on.
+    //
+    protected abstract double opImpl(final double x);
+    protected abstract double primitiveImpl(final double x);
+    protected abstract double derivativeImpl(final double x);
+    protected abstract double secondDerivativeImpl(final double x);
 
-	
-	//
-	// protected fields
-	//
-	
-	/**
-	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
-	 */
-	protected Array vx;
 
-	/**
-	 * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i> 
-	 */
-	protected Array vy;
-	
-	
+    //
+    // private fields
+    //
+
+    /**
+     * This private field is automatically initialized by constructor which
+     * picks up it's value from {@link Settings} singleton. This procedure
+     * caches values from the singleton, intending to avoid contention in
+     * heavily multi-threaded environments.
+     */
+    //TODO: We should observe extraSafetyChecks
+    private final boolean extraSafetyChecks = Configuration.getSystemConfiguration(null).isExtraSafetyChecks();
+
+
+    //
+    // protected fields
+    //
+
+    /**
+     * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i>
+     */
+    protected Array vx;
+
+    /**
+     * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i>
+     */
+    protected Array vy;
+
+
     //
     // protected methods
     //
-    
+
     /**
      * This method verifies if
      * <li> extrapolation is enabled;</li>
@@ -109,11 +109,12 @@ public abstract class AbstractInterpolation implements Interpolation {
      * @param extrapolate
      * 
      * @throws IllegalStateException if extrapolation is not enabled.
-     * @throws IllegalArgumentException if <i>x</i> is our of range
+     * @throws IllegalArgumentException if <i>x</i> is out of range
      */
-    protected final void checkRange(final double x, boolean extrapolate) {
+    // TODO: code review :: please verify against original QL/C++ code
+    protected final void checkRange(final double x, final boolean extrapolate) {
         if (! (extrapolate || allowsExtrapolation() || isInRange(x)) ) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append("interpolation range is [");
             sb.append(xMin()).append(", ").append(xMax());
             sb.append("]: extrapolation at ");
@@ -123,111 +124,110 @@ public abstract class AbstractInterpolation implements Interpolation {
         }
     }
 
-    protected int locate(double x) /* @ReadOnly */ {
+    protected int locate(final double x) /* @ReadOnly */ {
         if (x <= vx.first())
             return 0;
         else if (x > vx.last())
             return vx.length-2;
         else
             return vx.upperBound(x) - 1;
-    }   
-
-
-	//
-	// implements Interpolation
-	//
-	
-	@Override
-	public final double xMin() /* @ReadOnly */ {
-		return  vx.first(); // get first element
-	}
-
-	@Override
-	public final double xMax() /* @ReadOnly */ {
-		return vx.last(); // get last element
-	}
-
-	@Override
-	public final Array xValues() {
-    	return vx.clone();
     }
-	
-	@Override
-	public final Array yValues() {
-    	return vy.clone();
+
+
+    //
+    // implements Interpolation
+    //
+
+    @Override
+    public final double xMin() /* @ReadOnly */ {
+        return  vx.first(); // get first element
     }
-	
-	@Override
-	public final double evaluate(final double x, boolean allowExtrapolation) {
-        checkRange(x, allowExtrapolation);
-		return evaluateImpl(x);
-	}
 
-	@Override
-	public final double primitive(final double x) {
-		return primitive(x, false);
-	}
-	
-	@Override
-	public final double primitive(final double x, boolean allowExtrapolation) {
-        checkRange(x, allowExtrapolation);
-		return primitiveImpl(x);
-	}
+    @Override
+    public final double xMax() /* @ReadOnly */ {
+        return vx.last(); // get last element
+    }
 
-	@Override
-	public final double derivative(final double x) {
-		return derivative(x, false);
-	}
-	
-	@Override
-	public final double derivative(final double x, boolean allowExtrapolation) {
-        checkRange(x, allowExtrapolation);
-		return derivativeImpl(x);
-	}
+    @Override
+    public final Array xValues() {
+        return vx.clone();
+    }
 
-	@Override
-	public final double secondDerivative(final double x) {
-		return secondDerivative(x, false);
-	}
-	
-	@Override
-	public final double secondDerivative(final double x, boolean allowExtrapolation) {
-        checkRange(x, allowExtrapolation);
-		return secondDerivativeImpl(x);
-	}
+    @Override
+    public final Array yValues() {
+        return vy.clone();
+    }
 
-	@Override
-	public final boolean isInRange(final double x) {
-        double x1 = xMin(), x2 = xMax();
+    @Override
+    public final double evaluate(final double x, final boolean allowExtrapolation) {
+        checkRange(x, allowExtrapolation);
+        return opImpl(x);
+    }
+
+    @Override
+    public final double primitive(final double x) {
+        return primitive(x, false);
+    }
+
+    @Override
+    public final double primitive(final double x, final boolean allowExtrapolation) {
+        checkRange(x, allowExtrapolation);
+        return primitiveImpl(x);
+    }
+
+    @Override
+    public final double derivative(final double x) {
+        return derivative(x, false);
+    }
+
+    @Override
+    public final double derivative(final double x, final boolean allowExtrapolation) {
+        checkRange(x, allowExtrapolation);
+        return derivativeImpl(x);
+    }
+
+    @Override
+    public final double secondDerivative(final double x) {
+        return secondDerivative(x, false);
+    }
+
+    @Override
+    public final double secondDerivative(final double x, final boolean allowExtrapolation) {
+        checkRange(x, allowExtrapolation);
+        return secondDerivativeImpl(x);
+    }
+
+    @Override
+    public final boolean isInRange(final double x) {
+        final double x1 = xMin(), x2 = xMax();
         return (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
     }
 
-	@Override
+    @Override
     public void update() {
-        if (vx.length < 2)
-            throw new IllegalArgumentException("not enough points to interpolate");
+        assert vx.length >= 2 : "not enough points to interpolate"; // TODO: message
         if (extraSafetyChecks) {
             double x1 = vx.first();
             double x2;
             for (int i = 1; i < vx.length; i++) {
                 x2 = vx.get(i);
-                if (x1>x2) throw new IllegalArgumentException("unsorted values on array X");
+                if (x1>x2) throw new AssertionError("unsorted values on array X");
                 x1=x2;
             }
         }
     }
-    
-    
+
+
     //
     // implements Ops.DoubleOp
     //
-    
+
     @Override
     public final double op(final double x) {
         return evaluate(x, false);
     }
 
-    
+
     //
     // implements Extrapolator
     //
@@ -237,8 +237,8 @@ public abstract class AbstractInterpolation implements Interpolation {
      * 
      * @see Extrapolator
      */
-    private DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
-    
+    private final DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
+
     @Override
     public final boolean allowsExtrapolation() {
         return delegatedExtrapolator.allowsExtrapolation();

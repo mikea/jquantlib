@@ -22,9 +22,9 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.model.shortrate;
 
 import java.util.ArrayList;
-import org.jquantlib.lang.annotation.Real;
+
 import org.jquantlib.lang.annotation.Time;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.model.Parameter;
 import org.jquantlib.quotes.Handle;
@@ -36,23 +36,21 @@ import org.jquantlib.termstructures.YieldTermStructure;
  */
 public class TermStructureFittingParameter extends Parameter {
 
-    public TermStructureFittingParameter(Parameter.Impl impl) {   
+    public TermStructureFittingParameter(final Parameter.Impl impl) {
         super(0, impl, new NoConstraint());
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
     // TODO: write this constructor
 
     public TermStructureFittingParameter(final Handle<YieldTermStructure> term) {
         super(0,
-        // boost::shared_ptr<Parameter::Impl>(new NumericalImpl(term)),
+                // boost::shared_ptr<Parameter::Impl>(new NumericalImpl(term)),
                 // new Parameter.Impl(),
                 new NumericalImpl(term), new NoConstraint());
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
     public static class NumericalImpl extends Parameter.Impl {
@@ -60,15 +58,14 @@ public class TermStructureFittingParameter extends Parameter {
         private ArrayList<Integer /* @Time */> times_;
         private ArrayList<Double /* @Real */> values_;
         private Handle<YieldTermStructure> termStructure_;
-        
+
         public NumericalImpl(){
-            if (System.getProperty("EXPERIMENTAL") == null) {
+            if (System.getProperty("EXPERIMENTAL") == null)
                 throw new UnsupportedOperationException("Work in progress");
-            }
         }
         @Override
-        public double value(Array params, double t) {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public double value(final Array params, final double t) {
+            throw new UnsupportedOperationException("Work in progress");
         }
 
         public NumericalImpl(final Handle<YieldTermStructure> termStructure) {
@@ -77,14 +74,14 @@ public class TermStructureFittingParameter extends Parameter {
             this.termStructure_ = termStructure;
         }
 
-        public void set(Integer /* @Time */t, Double /* @Real */x) {
+        public void set(final Integer /* @Time */t, final Double /* @Real */x) {
             // times_.push_back(t);
             // values_.push_back(x);
             times_.add(t);
             values_.add(x);
         }
 
-        public void change(Double /* @Real */x) {
+        public void change(final Double /* @Real */x) {
             // values_.back() = x;
             // TODO: fix this 1
             values_.set(1, x);
@@ -95,7 +92,7 @@ public class TermStructureFittingParameter extends Parameter {
             values_.clear();
         }
 
-        public Double /* @Real */value(final Array a, Time t) {
+        public Double /* @Real */value(final Array a, final Time t) {
             /*
              * std::vector<Time>::const_iterator result = std::find(times_.begin(), times_.end(), t);
              * QL_REQUIRE(result!=times_.end(), "fitting parameter not set!"); return values_[result - times_.begin()];

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -27,38 +27,38 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 //
 public abstract class PdeConstantCoeff<T extends Pde> extends PdeSecondOrderParabolic {
-	/* Real*/private double diffusion;
-	/* Real*/private double drift;
-	/* Real*/private double discount;
+    /* Real*/private final double diffusion;
+    /* Real*/private final double drift;
+    /* Real*/private final double discount;
 
-	public PdeConstantCoeff(final GeneralizedBlackScholesProcess process, /*Time*/double t, /*Real*/double x) {
-	    Class<T> clazz = (Class<T>) TypeToken.getClazz(this.getClass());
-	    T pde = getInstance(clazz, process);
-		diffusion = pde.diffusion(t, x);
-		drift = pde.drift(t, x);
-		discount = pde.discount(t, x);
-	}
+    public PdeConstantCoeff(final GeneralizedBlackScholesProcess process, /*Time*/final double t, /*Real*/final double x) {
+        final Class<T> clazz = (Class<T>) TypeToken.getClazz(this.getClass());
+        final T pde = getInstance(clazz, process);
+        diffusion = pde.diffusion(t, x);
+        drift = pde.drift(t, x);
+        discount = pde.discount(t, x);
+    }
 
-	@Override
-	public double diffusion(double t, double x) {
-		return diffusion;
-	}
+    @Override
+    public double diffusion(final double t, final double x) {
+        return diffusion;
+    }
 
-	@Override
-	public double discount(double t, double x) {
-		return discount;
-	}
+    @Override
+    public double discount(final double t, final double x) {
+        return discount;
+    }
 
-	@Override
-	public double drift(double t, double x) {
-		return drift;
-	}
-	
-	 protected T getInstance(Class<T> clazz, GeneralizedBlackScholesProcess process) {
-	        try {
-	            return (T) clazz.getConstructor(GeneralizedBlackScholesProcess.class).newInstance(process);
-	        } catch (Exception e) {
-	            throw new RuntimeException(e);
-	        }
-	    }
+    @Override
+    public double drift(final double t, final double x) {
+        return drift;
+    }
+
+    protected T getInstance(final Class<T> clazz, final GeneralizedBlackScholesProcess process) {
+        try {
+            return clazz.getConstructor(GeneralizedBlackScholesProcess.class).newInstance(process);
+        } catch (final Exception e) {
+            throw new AssertionError(e);
+        }
+    }
 }

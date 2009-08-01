@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -26,11 +26,11 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * 
  */
 public final class PdeTypeTokenUtil {
-    public static <T extends Object> T getPdeInstance(Class<T> clazz, GeneralizedBlackScholesProcess process) {
+    public static <T extends Object> T getPdeInstance(final Class<T> clazz, final GeneralizedBlackScholesProcess process) {
         try {
-            return (T) clazz.getConstructor(process.getClass()).newInstance(process);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return clazz.getConstructor(process.getClass()).newInstance(process);
+        } catch (final Exception e) {
+            throw new AssertionError(e);
         }
     }
 }

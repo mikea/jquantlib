@@ -22,8 +22,8 @@
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.factories.Linear;
+import org.jquantlib.math.matrixutilities.Array;
 
 
 
@@ -133,7 +133,7 @@ public class LinearInterpolation extends AbstractInterpolation {
     //
 
 	@Override
-	protected double evaluateImpl(final double x) /* @ReadOnly */ {
+	protected double opImpl(final double x) /* @ReadOnly */ {
         int i = locate(x);
         return vy.get(i) + (x - vx.get(i))*vs.get(i);
 	}

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes, Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.arguments;
 
@@ -45,36 +45,32 @@ public class ContinuousAveragingAsianOptionArguments extends OneAssetStrikedOpti
 
     // TODO: refactor messages
     private static final String UNSPECIFIED_AVERAGE_TYPE = "unspecified average type";
-    
+
     //
     // public fields
     //
-    
+
     // FIXME: public fields here is a bad design technique :(
     public AverageType averageType;
-    
+
 
     //
     // public constructors
     //
-    
+
     public ContinuousAveragingAsianOptionArguments() {
-	    super();
-	}
-    
-	
+        super();
+    }
+
+
     //
     // public methods
     //
-    
-    @Override
-	public void validate() /*@ReadOnly*/{
-        super.validate();
-        //TODO: check whether null instead of using -1 enum typ
-        if (averageType==null){
-        	throw new IllegalArgumentException(UNSPECIFIED_AVERAGE_TYPE);
-        }
 
+    @Override
+    public void validate() /*@ReadOnly*/{
+        super.validate();
+        assert averageType!=null : UNSPECIFIED_AVERAGE_TYPE;
     }
 
 }

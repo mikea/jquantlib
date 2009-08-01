@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -34,26 +34,41 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.math.optimization;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 public abstract class CostFunction {
 
-    // ! method to overload to compute the cost function values in x
+    /**
+     * Method to overload to compute the cost function values in x
+     * 
+     * @param x
+     * @return
+     */
     public abstract/* Disposable<Array> */Array values(final Array x);
 
-    // ! method to overload to compute the cost function value in x
+    /**
+     * Method to overload to compute the cost function value in x
+     * @param x
+     * @return
+     */
     public abstract double /* @Real */value(final Array x);
 
-    // ! method to overload to compute grad_f, the first derivative of
-    // the cost function with respect to x
-    public void gradient(Array grad, final Array x) {
-        double /* @Real */eps = finiteDifferenceEpsilon(), fp, fm;
+    /**
+     * Method to overload to compute grad_f, the first derivative of
+     * the cost function with respect to x
+     * 
+     * @param grad
+     * @param x
+     */
+    public void gradient(final Array grad, final Array x) {
+        final double /* @Real */eps = finiteDifferenceEpsilon();
+        double /* @Real */ fp, fm;
         // TODO: code review :: use of clone()
-        Array xx = x.clone();
+        final Array xx = x.clone();
         for (int /* @Size */i=0; i<x.length; i++) {
             // xx[i] += eps;
             xx.set(i, eps + xx.get(i));
@@ -68,15 +83,23 @@ public abstract class CostFunction {
         }
     }
 
-    // ! method to overload to compute grad_f, the first derivative of
-    // the cost function with respect to x and also the cost function
-
-    public double /* @Real */valueAndGradient(Array grad, final Array x) {
+    /**
+     * Method to overload to compute grad_f, the first derivative of
+     * the cost function with respect to x and also the cost function
+     * 
+     * @param grad
+     * @param x
+     * @return
+     */
+    public double /* @Real */valueAndGradient(final Array grad, final Array x) {
         gradient(grad, x);
         return value(x);
     }
 
-    // ! Default epsilon for finite difference method :
+    /**
+     *  Default epsilon for finite difference method :
+     * @return
+     */
     public double /* @Real */finiteDifferenceEpsilon() {
         return 1e-8;
     }

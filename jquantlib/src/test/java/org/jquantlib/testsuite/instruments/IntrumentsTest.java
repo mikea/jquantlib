@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,14 +35,12 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.testsuite.instruments;
 
 import static org.junit.Assert.fail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.instruments.Instrument;
 import org.jquantlib.instruments.Stock;
 import org.jquantlib.quotes.Quote;
@@ -50,52 +48,58 @@ import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.testsuite.util.Flag;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IntrumentsTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(IntrumentsTest.class);  
+    private final static Logger logger = LoggerFactory.getLogger(IntrumentsTest.class);
 
     public IntrumentsTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	}
-	
-	@Test
-	public void testObservable() {
+        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    }
 
-	    logger.info("Testing observability of instruments...");
+    @Test
+    public void testObservable() {
+
+        logger.info("Testing observability of instruments...");
 
 
-	    SimpleQuote me1 = new SimpleQuote(0.0);
-	    RelinkableHandle<Quote>  h = new RelinkableHandle<Quote>(me1);
-	    Instrument s = new Stock(h);
+        final SimpleQuote me1 = new SimpleQuote(0.0);
+        final RelinkableHandle<Quote>  h = new RelinkableHandle<Quote>(me1);
+        final Instrument s = new Stock(h);
 
-	    Flag f = new Flag();
-	    s.addObserver(f); //f.registerWith(s);
-	    
-	    s.getNPV();
-	    me1.setValue(3.14);
-	    if (!f.isUp())
-	    	fail("Observer was not notified of instrument change");
-	    
-	    s.getNPV();
-	    f.lower();
-	    SimpleQuote me2 = new SimpleQuote(0.0);
+        final Flag f = new Flag();
+        s.addObserver(f); //f.registerWith(s);
 
-	    h.setLink(me2);
-	    if (!f.isUp())
-	    	fail("Observer was not notified of instrument change");
+        s.getNPV();
+        me1.setValue(3.14);
+        if (!f.isUp()) {
+            fail("Observer was not notified of instrument change");
+        }
 
-	    f.lower();
-	    s.freeze();
-	    s.getNPV();
-	    me2.setValue(2.71);
-	    if (f.isUp())
-	    	fail("Observer was notified of frozen instrument change");
-	    
-	    s.getNPV();
-	    s.unfreeze();
-	    if (!f.isUp())
-	    	fail("Observer was not notified of instrument change");
-	}
+        s.getNPV();
+        f.lower();
+        final SimpleQuote me2 = new SimpleQuote(0.0);
+
+        h.setLink(me2);
+        if (!f.isUp()) {
+            fail("Observer was not notified of instrument change");
+        }
+
+        f.lower();
+        s.freeze();
+        s.getNPV();
+        me2.setValue(2.71);
+        if (f.isUp()) {
+            fail("Observer was notified of frozen instrument change");
+        }
+
+        s.getNPV();
+        s.unfreeze();
+        if (!f.isUp()) {
+            fail("Observer was not notified of instrument change");
+        }
+    }
 
 }

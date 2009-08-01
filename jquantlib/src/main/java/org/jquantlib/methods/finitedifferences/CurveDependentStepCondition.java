@@ -24,7 +24,7 @@ package org.jquantlib.methods.finitedifferences;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 //TODO: code review :: license, class comments, comments for access modifiers, put "final" everywhere
 public class CurveDependentStepCondition implements StepCondition<Array> {

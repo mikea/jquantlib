@@ -24,7 +24,7 @@ package org.jquantlib.assets;
 import java.util.List;
 
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * //! Discretized option on a given asset /*! \warning it is advised that

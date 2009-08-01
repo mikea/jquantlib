@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.instruments.StrikedTypePayoff;
-import org.jquantlib.math.Array;
 import org.jquantlib.math.SampledCurve;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.BoundaryCondition;
 import org.jquantlib.methods.finitedifferences.BoundaryConditionSet;
 import org.jquantlib.methods.finitedifferences.NullCondition;
@@ -42,83 +42,76 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * 
  */
 public abstract class FDStepConditionEngine extends FDVanillaEngine {
-	protected StepCondition<Array> stepCondition;
-	protected SampledCurve prices;
-	protected TridiagonalOperator controlOperator;
-	protected List<BoundaryCondition<TridiagonalOperator>> controlBCs;
-	protected SampledCurve controlPrices;
+    protected StepCondition<Array> stepCondition;
+    protected SampledCurve prices;
+    protected TridiagonalOperator controlOperator;
+    protected List<BoundaryCondition<TridiagonalOperator>> controlBCs;
+    protected SampledCurve controlPrices;
 
-	public FDStepConditionEngine(GeneralizedBlackScholesProcess process,
-			int timeSteps, int gridPoints, boolean timeDependent) {
-		super(process, timeSteps, gridPoints, timeDependent);
-		this.controlBCs = new ArrayList<BoundaryCondition<TridiagonalOperator>>();
-		this.controlPrices = new SampledCurve(gridPoints);
-	}
+    public FDStepConditionEngine(final GeneralizedBlackScholesProcess process,
+            final int timeSteps, final int gridPoints, final boolean timeDependent) {
+        super(process, timeSteps, gridPoints, timeDependent);
+        this.controlBCs = new ArrayList<BoundaryCondition<TridiagonalOperator>>();
+        this.controlPrices = new SampledCurve(gridPoints);
+    }
 
-	protected abstract void initializeStepCondition();
+    protected abstract void initializeStepCondition();
 
-	protected void calculate(Results r) {
-		OneAssetOptionResults results = (OneAssetOptionResults) (r);
-		setGridLimits();
-		initializeInitialCondition();
-		initializeOperator();
-		initializeBoundaryConditions();
-		initializeStepCondition();
+    @Override
+    protected void calculate(final Results r) {
+        final OneAssetOptionResults results = (OneAssetOptionResults) (r);
+        setGridLimits();
+        initializeInitialCondition();
+        initializeOperator();
+        initializeBoundaryConditions();
+        initializeStepCondition();
 
-		List<TridiagonalOperator> operatorSet = new ArrayList<TridiagonalOperator>();
-		List<Array> arraySet = new ArrayList<Array>();
-		BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>> bcSet = new BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>>();
-		StepConditionSet<Array> conditionSet = new StepConditionSet<Array>();
+        final List<TridiagonalOperator> operatorSet = new ArrayList<TridiagonalOperator>();
+        List<Array> arraySet = new ArrayList<Array>();
+        final BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>> bcSet = new BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>>();
+        final StepConditionSet<Array> conditionSet = new StepConditionSet<Array>();
 
-		prices =  new SampledCurve(intrinsicValues);
-		controlPrices = new SampledCurve(intrinsicValues);
-		controlOperator =  new TridiagonalOperator(finiteDifferenceOperator);
-		controlBCs.add(bcS.get(0));
-		controlBCs.add(bcS.get(1));
+        prices =  new SampledCurve(intrinsicValues);
+        controlPrices = new SampledCurve(intrinsicValues);
+        controlOperator =  new TridiagonalOperator(finiteDifferenceOperator);
+        controlBCs.add(bcS.get(0));
+        controlBCs.add(bcS.get(1));
 
-		operatorSet.add(finiteDifferenceOperator);
-		operatorSet.add(controlOperator);
+        operatorSet.add(finiteDifferenceOperator);
+        operatorSet.add(controlOperator);
 
-		arraySet.add(prices.values());
-		arraySet.add(controlPrices.values());
+        arraySet.add(prices.values());
+        arraySet.add(controlPrices.values());
 
-		bcSet.push_back(bcS);
-		bcSet.push_back(controlBCs);
+        bcSet.push_back(bcS);
+        bcSet.push_back(controlBCs);
 
-		conditionSet.push_back(stepCondition);
-		conditionSet.push_back(new NullCondition<Array>());
+        conditionSet.push_back(stepCondition);
+        conditionSet.push_back(new NullCondition<Array>());
 
-		StandardSystemFiniteDifferenceModel model = new StandardSystemFiniteDifferenceModel(operatorSet, bcSet);
-		arraySet = model.rollback(arraySet, getResidualTime(),0.0, timeSteps, conditionSet);
+        final StandardSystemFiniteDifferenceModel model = new StandardSystemFiniteDifferenceModel(operatorSet, bcSet);
+        arraySet = model.rollback(arraySet, getResidualTime(),0.0, timeSteps, conditionSet);
 
-		//TODO: code review: Verify use clone()
-		prices.setValues(arraySet.get(0).clone());
-		controlPrices.setValues(arraySet.get(1).clone());
+        //TODO: code review: Verify use clone()
+        prices.setValues(arraySet.get(0).clone());
+        controlPrices.setValues(arraySet.get(1).clone());
 
-		StrikedTypePayoff striked_payoff = (StrikedTypePayoff) (payoff);
-		if (striked_payoff == null)
-			throw new IllegalStateException("non-striked payoff given");
+        final StrikedTypePayoff striked_payoff = (StrikedTypePayoff) (payoff);
+        assert striked_payoff != null : "non-striked payoff given";
 
-		double variance = process.blackVolatility().getLink().blackVariance(
-				exerciseDate, striked_payoff.strike());
-		double dividendDiscount = process.dividendYield().getLink().discount(
-				exerciseDate);
-		double riskFreeDiscount = process.riskFreeRate().getLink().discount(
-				exerciseDate);
-		double spot = process.stateVariable().getLink().evaluate();
-		double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
+        final double variance = process.blackVolatility().getLink().blackVariance(exerciseDate, striked_payoff.strike());
+        final double dividendDiscount = process.dividendYield().getLink().discount(exerciseDate);
+        final double riskFreeDiscount = process.riskFreeRate().getLink().discount(exerciseDate);
+        final double spot = process.stateVariable().getLink().evaluate();
+        final double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
 
-		BlackCalculator black = new BlackCalculator(striked_payoff,
-				forwardPrice, Math.sqrt(variance), riskFreeDiscount);
+        final BlackCalculator black = new BlackCalculator(striked_payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-		results.value = prices.valueAtCenter() - controlPrices.valueAtCenter()
-				+ black.value();
-		results.delta = prices.firstDerivativeAtCenter()
-				- controlPrices.firstDerivativeAtCenter() + black.delta(spot);
-		results.gamma = prices.secondDerivativeAtCenter()
-				- controlPrices.secondDerivativeAtCenter() + black.gamma(spot);		
-		// TODO:
-		// results.additionalResults["priceCurve"] = prices;
-		results.addAdditionalResult("priceCurve",prices);
-	}
+        results.value = prices.valueAtCenter() - controlPrices.valueAtCenter() + black.value();
+        results.delta = prices.firstDerivativeAtCenter() - controlPrices.firstDerivativeAtCenter() + black.delta(spot);
+        results.gamma = prices.secondDerivativeAtCenter() - controlPrices.secondDerivativeAtCenter() + black.gamma(spot);
+        // TODO:
+        // results.additionalResults["priceCurve"] = prices;
+        results.addAdditionalResult("priceCurve",prices);
+    }
 }

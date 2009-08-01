@@ -24,8 +24,8 @@ package org.jquantlib.assets;
 
 import java.util.List;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.time.TimeGrid;
 

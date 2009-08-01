@@ -21,8 +21,8 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.TransformedGrid;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator.TimeSetter;
 
 public class GenericTimeSetter<T extends PdeSecondOrderParabolic> implements TimeSetter {

@@ -22,8 +22,8 @@
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 
 /**
  * @see Interpolator

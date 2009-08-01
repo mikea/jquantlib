@@ -37,10 +37,11 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 
-package org.jquantlib.math;
+package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
 
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.Ops.DoubleOp;
 import org.jquantlib.math.functions.Identity;
 

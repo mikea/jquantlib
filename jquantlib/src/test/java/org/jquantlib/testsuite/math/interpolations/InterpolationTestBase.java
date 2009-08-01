@@ -27,8 +27,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.exp;
 import static org.junit.Assert.assertFalse;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * @author Daniel Kong

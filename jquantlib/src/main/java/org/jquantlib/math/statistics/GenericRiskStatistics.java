@@ -41,17 +41,16 @@ import org.jquantlib.util.Pair;
 
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
-    
+
     private static final String no_data_below_the_target = "no data below the target";
     private static final String empty_sample_set = "empty sample set";
     private static final String unsufficient_samples_under_target = "samples under target <=1, unsufficient";
-    
+
     IStatistics statistics = null;
-    
-    public GenericRiskStatistics(IStatistics statistics){
-        if (System.getProperty("EXPERIMENTAL") == null) {
+
+    public GenericRiskStatistics(final IStatistics statistics){
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.statistics = statistics;
     }
 
@@ -61,14 +60,14 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
                               x < \langle x \rangle \right]. \f]
 
         See Markowitz (1959).
-    */
+     */
     public double semiVariance(){
-       return regret(statistics.mean());
+        return regret(statistics.mean());
     }
 
     /*! returns the semi deviation, defined as the
         square root of the semi variance.
-    */
+     */
     public double semiDeviation() {
         return Math.sqrt(semiVariance());
     }
@@ -76,14 +75,14 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
     /*! returns the variance of observations below 0.0,
         \f[ \frac{N}{N-1}
             \mathrm{E}\left[ x^2 \;|\; x < 0\right]. \f]
-    */
+     */
     public double downsideVariance(){
         return regret(0.0);
     }
 
     /*! returns the downside deviation, defined as the
         square root of the downside variance.
-    */
+     */
     public double downsideDeviation(){
         return Math.sqrt(downsideVariance());
     }
@@ -94,8 +93,8 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
                               x < t \right]. \f]
 
         See Dembo and Freeman, "The Rules Of Risk", Wiley (2001).
-    */
-    public double regret(double target){
+     */
+    public double regret(final double target){
         // average over the range below the target
 
         final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
@@ -103,32 +102,25 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
         functions.add(new Bind2nd(new Minus(), target));
         final Expression comp = new Expression(functions);
         final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
-        
-        Pair<Double, Integer> result = statistics.expectationValue(comp, less);
-        double x = result.getFirst();
+
+        final Pair<Double, Integer> result = statistics.expectationValue(comp, less);
+        final double x = result.getFirst();
         //argh.....
-        int N = result.getSecond().intValue();
-        
-        if(N<2){
-            throw new IllegalArgumentException(unsufficient_samples_under_target);
-        }
-        return (new Double(N)/(new Double(N)-1.0))*x;
+        final int n = result.getSecond().intValue();
+        assert n >= 2 : unsufficient_samples_under_target;
+        return (new Double(n)/(new Double(n)-1.0))*x;
     }
 
     //! potential upside (the reciprocal of VAR) at a given percentile
-    public double potentialUpside(double centile){
-        if (centile<0.9 || centile>=1.0){
-            throw new IllegalArgumentException("percentile (" + centile + ") out of range [0.9, 1.0)");
-        }
+    public double potentialUpside(final double centile){
+        assert centile >= 0.9 && centile < 1.0 : "percentile out of range [0.9, 1.0)"; // TODO: message
         // potential upside must be a gain, i.e., floored at 0.0
         return Math.max(statistics.percentile(centile), 0.0);
     }
 
     //! value-at-risk at a given percentile
-    public double valueAtRisk(double centile){
-        if (centile<0.9 || centile>=1.0){
-            throw new IllegalArgumentException("percentile (" + centile + ") out of range [0.9, 1.0)");
-        }
+    public double valueAtRisk(final double centile){
+        assert centile >= 0.9 && centile < 1.0 : "percentile out of range [0.9, 1.0)"; // TODO: message
         return - Math.min(statistics.percentile(1.0-centile), 0.0);
     }
 
@@ -144,31 +136,30 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
 
         See Artzner, Delbaen, Eber and Heath,
         "Coherent measures of risk", Mathematical Finance 9 (1999)
-    */
-    public double expectedShortfall(double centile){
+     */
+    public double expectedShortfall(final double centile){
         //Require...
-        if(centile<0.9 || centile>=1.0){
+        if(centile<0.9 || centile>=1.0)
             throw new IllegalArgumentException("percentile (" + centile + ") out of range [0.9, 1.0)");
-        }
         //Ensure...
-        if(statistics.getSampleSize() == 0){
+        // TODO: code review :: please verify against original QL/C++ code
+        if (statistics.getSampleSize() == 0){
             //not sure whether to throw an exception
             //throw new IllegalArgumentException(empty_sample_set);
         }
-        double target = -valueAtRisk(centile);
+        final double target = -valueAtRisk(centile);
 
         final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
-        Pair<Double, Integer> result = statistics.expectationValue(new Identity(), less);
-        
-        double x = result.getFirst();
-        Integer N = result.getSecond();
-        
-        if(N.intValue() ==  0.0){
+        final Pair<Double, Integer> result = statistics.expectationValue(new Identity(), less);
+
+        final double x = result.getFirst();
+        final Integer N = result.getSecond();
+
+        if(N.intValue() ==  0.0)
             throw new IllegalArgumentException(no_data_below_the_target);
-        }
         // must be a loss, i.e., capped at 0.0 and negated
         return -Math.min(x, 0.0);
-        
+
     }
 
     /*! probability of missing the given target, defined as
@@ -180,31 +171,29 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
             0 & x \geq t
             \end{array}
             \right. \f]
-    */
-    public double shortfall(double target){
-        if (statistics.getSampleSize()==0){
+     */
+    public double shortfall(final double target){
+        if (statistics.getSampleSize()==0)
             throw new IllegalArgumentException(empty_sample_set);
-        }
-        
+
         final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
         return statistics.expectationValue(new Clipped(less, new Constant(1.0)), new TruePredicate()).getFirst();
     }
 
     /*! averaged shortfallness, defined as
         \f[ \mathrm{E}\left[ t-x \;|\; x<t \right] \f]
-    */
-    public double averageShortfall(double target) {
+     */
+    public double averageShortfall(final double target) {
 
-        final Ops.DoubleOp minus = new Bind1st(target, new Minus()); 
+        final Ops.DoubleOp minus = new Bind1st(target, new Minus());
         final Ops.DoublePredicate less = new Bind1stPredicate(target, new LessThan());
-        Pair<Double, Integer> result = statistics.expectationValue(minus, less);
-        
-        double x = result.getFirst();
+        final Pair<Double, Integer> result = statistics.expectationValue(minus, less);
+
+        final double x = result.getFirst();
         //mmhh somewhere we have to change N to int
-        Integer N = result.getSecond();
-        if(N.intValue()==0){
+        final Integer N = result.getSecond();
+        if(N.intValue()==0)
             throw new IllegalArgumentException(no_data_below_the_target);
-        }
         return x;
     }
 }

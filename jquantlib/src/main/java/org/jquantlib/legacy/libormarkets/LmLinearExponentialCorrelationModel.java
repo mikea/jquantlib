@@ -1,8 +1,8 @@
 package org.jquantlib.legacy.libormarkets;
 
 import org.jquantlib.JQuantlib;
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
 import org.jquantlib.math.optimization.BoundaryConstraint;
 import org.jquantlib.math.optimization.PositiveConstraint;

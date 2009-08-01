@@ -22,8 +22,8 @@
 package org.jquantlib.methods.lattices;
 
 import org.jquantlib.assets.DiscretizedAsset;
-import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.pricingengines.hybrid.DiscretizedConvertible;
 
 /**

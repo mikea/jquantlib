@@ -22,11 +22,11 @@
 
 package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
 import org.jquantlib.math.interpolations.BilinearInterpolation;
 import org.jquantlib.math.interpolations.Interpolation2D;
 import org.jquantlib.math.interpolations.Interpolator2D;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 
 /**
  * This class provides bilinear interpolation factory and traits

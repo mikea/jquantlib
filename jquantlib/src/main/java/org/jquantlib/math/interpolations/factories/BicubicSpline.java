@@ -40,11 +40,11 @@
 
 package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
 import org.jquantlib.math.interpolations.BicubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolation2D;
 import org.jquantlib.math.interpolations.Interpolator2D;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -23,9 +23,9 @@
 package org.jquantlib.examples;
 
 import org.jquantlib.daycounters.Actual365Fixed;
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
 import org.jquantlib.math.distributions.NormalDistribution;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.processes.EulerDiscretization;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.processes.StochasticProcess1D;

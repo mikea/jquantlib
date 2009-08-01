@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,23 +15,23 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.processes;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.integrals.GaussKronrodAdaptive;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 
 public abstract class LfmCovarianceParameterization {
     protected int size_;
-    private int factors_;
+    private final int factors_;
 
-    public LfmCovarianceParameterization(int size, int factors) {
+    public LfmCovarianceParameterization(final int size, final int factors) {
         this.size_ = size;
         this.factors_ = factors;
     }
@@ -46,34 +46,33 @@ public abstract class LfmCovarianceParameterization {
 
     public abstract Matrix diffusion(/* @Time */double t, final Array x);
 
-    public Matrix diffusion(/* @Time */double t) {
+    public Matrix diffusion(/* @Time */final double t) {
         return diffusion(t, new Array());
     }
 
-    public Matrix covariance(/* @Time */double t, final Array x) {
-        Matrix sigma = this.diffusion(t, x);
+    public Matrix covariance(/* @Time */final double t, final Array x) {
+        final Matrix sigma = this.diffusion(t, x);
         return sigma.mul(sigma.transpose());
     }
 
-    public Matrix covariance(/* @Time */double t) {
+    public Matrix covariance(/* @Time */final double t) {
         return diffusion(t, new Array());
     }
 
-    public Matrix integratedCovariance(/* @Time */double t, final Array x) {
+    public Matrix integratedCovariance(/* @Time */final double t, final Array x) {
         // this implementation is not intended for production.
         // because it is too slow and too inefficient.
         // This method is useful for testing and R&D.
         // Please overload the method within derived classes.
-        if (x.empty()) {
+        if (x.empty())
             throw new IllegalArgumentException("can not handle given x here");
-        }
 
-        Matrix tmp = new Matrix(size_, size_, 0.0);
+        final Matrix tmp = new Matrix(size_, size_);
 
         for (int i = 0; i < size_; ++i) {
             for (int j = 0; j <= i; ++j) {
-                Var_Helper helper = new Var_Helper(this, i, j);
-                GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
+                final Var_Helper helper = new Var_Helper(this, i, j);
+                final GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
                 for(int k = 0; k<64; ++k){
                     tmp.set(i, j, tmp.get(i, j)+integrator.evaluate(helper, k*t/64.0,(k+1)*t/64.0));
                 }
@@ -84,16 +83,16 @@ public abstract class LfmCovarianceParameterization {
         return tmp;
     }
 
-    public Matrix integratedCovariance(/* @Time */double t) {
+    public Matrix integratedCovariance(/* @Time */final double t) {
         return integratedCovariance(t, new Array());
     }
 
     private static class Var_Helper implements Ops.DoubleOp {
 
-        private int i_, j_;
+        private final int i_, j_;
         private final LfmCovarianceParameterization param_;
 
-        public Var_Helper(LfmCovarianceParameterization param, int i, int j) {
+        public Var_Helper(final LfmCovarianceParameterization param, final int i, final int j) {
             this.i_ = i;
             this.j_ = j;
             this.param_ = param;

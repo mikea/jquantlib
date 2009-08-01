@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -72,7 +72,7 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
 
         if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
 
-        if (dimensionality < 1) throw new IllegalArgumentException("dimensionality must be greater than 0");
+        assert dimensionality >= 1 : "dimensionality must be greater than 0";
         this.dimension = dimensionality;
         this.rng = rng;
         this.sequence = new double[this.dimension];
@@ -95,8 +95,8 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
         // instantiate a generic RandomNumberGenerator
         try {
             this.rng = (RNG) TypeToken.getClazz(this.getClass()).getConstructor(long.class).newInstance(seed);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (final Exception e) {
+            throw new AssertionError(e);
         }
     }
 
@@ -119,7 +119,7 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
     public final Sample<double[]> nextSequence() /* @ReadOnly */{
         double weight = 1.0;
         for (int i = 0; i < this.dimension; i++) {
-            Sample<Double> sample = this.rng.next();
+            final Sample<Double> sample = this.rng.next();
             this.sequence[i] = sample.getValue();
             weight *= sample.getWeight();
         }
@@ -128,9 +128,8 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
 
     @Override
     public long[] nextInt32Sequence() /* @ReadOnly */{
-        for (int i = 0; i < this.dimension; i++) {
+        for (int i = 0; i < this.dimension; i++)
             this.int32Sequence[i] = this.rng.nextInt32();
-        }
         return this.int32Sequence;
     }
 }

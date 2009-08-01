@@ -3,7 +3,7 @@ package org.jquantlib.legacy.libormarkets;
 import java.util.List;
 
 import org.jquantlib.instruments.Option.Type;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.model.AffineModel;
 import org.jquantlib.model.CalibratedModel;
 

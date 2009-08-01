@@ -23,7 +23,7 @@
 package org.jquantlib.methods.finitedifferences;
 
 import org.jquantlib.instruments.Option;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 public class ShoutCondition extends CurveDependentStepCondition {
 	/* @Time */private final double resTime;

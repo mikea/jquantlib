@@ -28,8 +28,8 @@ import java.util.List;
 import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.lang.annotation.NonNegative;
 import org.jquantlib.lang.annotation.Time;
-import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
+import org.jquantlib.math.matrixutilities.Array;
 
 
 /**

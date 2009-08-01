@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -31,137 +31,131 @@ package org.jquantlib.math;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 //FIXME: refactor package "solvers1d"
 abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
-	
-	//
-	// Constants
-	//
-	
-	private static final int MAX_FUNCTION_EVALUATIONS = 100;
 
-	
-	//
-	// private fields
-	//
-	
-	private int maxEvaluations;
-	private boolean lowerBoundEnforced;
-	private boolean upperBoundEnforced;
+    //
+    // Constants
+    //
 
-	
-	//
-	// protected fields
-	//
-	
-	protected double root, xMin, xMax, fxMin, fxMax;
-	protected int evaluationNumber;
-	protected double lowerBound, upperBound;
+    private static final int MAX_FUNCTION_EVALUATIONS = 100;
 
-	
-	//
-	// public constructors
-	//
-	
-	public AbstractSolver1D() {
-		this.maxEvaluations = MAX_FUNCTION_EVALUATIONS;
-		this.lowerBoundEnforced = false;
-		this.upperBoundEnforced = false;
-	}
 
-	public AbstractSolver1D(final int maxEvalautions, final boolean lowerBoundEnforced, final boolean upperBoundenforeced) {
-		setMaxEvaluations(maxEvalautions);
-		this.lowerBoundEnforced = lowerBoundEnforced;
-		this.upperBoundEnforced = upperBoundenforeced;
-	}
+    //
+    // private fields
+    //
 
-	
-	//
-	// protected abstract methods
-	//
-	
-	abstract protected double solveImpl(final F f, double accuracy);
+    private int maxEvaluations;
+    private boolean lowerBoundEnforced;
+    private boolean upperBoundEnforced;
 
-	
-	//
-	// public methods
-	//
-	
-	/**
-	 * This method returns the zero of the function <code>f</code>,
-	 * determined with the given accuracy <code>epsilon</code>;
-	 * depending on the particular solver, this might mean that
-	 * the returned <code>x</code> is such that <code>|f(x)| < epsilon f</code>,
-	 * or that <code>f |x-\xi| < \epsilon \f$ where \f$ \xi \f$ </code>
-	 * is the real zero.
-	 * <p>
-	 * This method contains a bracketing routine to which an
-	 * initial guess must be supplied as well as a step used to
-	 * scan the range of the possible bracketing values.
-	 */
-	public double solve(final F f, double accuracy, double guess, double step) {
 
-		if (!(accuracy > 0.0)) {
-			throw new ArithmeticException("accuracy (" + accuracy + ") must be positive");
-		}
-		// check whether we really want to use epsilon
-		accuracy = Math.max(accuracy, Constants.QL_EPSILON);
+    //
+    // protected fields
+    //
 
-		final double growthFactor = 1.6;
-		int flipflop = -1;
+    protected double root, xMin, xMax, fxMin, fxMax;
+    protected int evaluationNumber;
+    protected double lowerBound, upperBound;
 
-		root = guess;
-		fxMax = f.op(root);
 
-		// monotonically crescent bias, as in optionValue(volatility)
-		if (fxMax == 0.0) 
-			return root;
-		else if (fxMax > 0.0) {
-			xMin = enforceBounds(root - step);
-			fxMin = f.op(xMin);
-			xMax = root;
-		} else {
-			xMin = root;
-			fxMin = fxMax;
-			xMax = enforceBounds(root + step);
-			fxMax = f.op(xMax);
-		}
+    //
+    // public constructors
+    //
 
-		evaluationNumber = 2;
-		while (evaluationNumber <= maxEvaluations) {
-			if (fxMin * fxMax <= 0.0) {//FIXME avoid product to check signs
-				if (fxMin == 0.0)
-					return xMin;
-				if (fxMax == 0.0)
-					return xMax;
-				root = (xMax + xMin) / 2.0;
-				return solveImpl(f, accuracy);
-			}
-			if (Math.abs(fxMin) < Math.abs(fxMax)) {
-				xMin = enforceBounds(xMin + growthFactor * (xMin - xMax));
-				fxMin = f.op(xMin);
-			} else if (Math.abs(fxMin) > Math.abs(fxMax)) {
-				xMax = enforceBounds(xMax + growthFactor * (xMax - xMin));
-				fxMax = f.op(xMax);
-			} else if (flipflop == -1) {
-				xMin = enforceBounds(xMin + growthFactor * (xMin - xMax));
-				fxMin = f.op(xMin);
-				evaluationNumber++;
-				flipflop = 1;
-			} else if (flipflop == 1) {
-				xMax = enforceBounds(xMax + growthFactor * (xMax - xMin));
-				fxMax = f.op(xMax);
-				flipflop = -1;
-			}
-			evaluationNumber++;
-		}
+    public AbstractSolver1D() {
+        this.maxEvaluations = MAX_FUNCTION_EVALUATIONS;
+        this.lowerBoundEnforced = false;
+        this.upperBoundEnforced = false;
+    }
 
-		//FIXME is it so exceptional, should we return s success/fail flag?
-		throw new ArithmeticException("unable to bracket root in "
-				+ maxEvaluations
-				+ " function evaluations (last bracket attempt: " + "f["
-				+ xMin + "," + xMax + "] " + "-> [" + fxMin + "," + fxMax
-				+ "])");
+    public AbstractSolver1D(final int maxEvalautions, final boolean lowerBoundEnforced, final boolean upperBoundenforeced) {
+        setMaxEvaluations(maxEvalautions);
+        this.lowerBoundEnforced = lowerBoundEnforced;
+        this.upperBoundEnforced = upperBoundenforeced;
+    }
 
-	}
+
+    //
+    // protected abstract methods
+    //
+
+    abstract protected double solveImpl(final F f, double accuracy);
+
+
+    //
+    // public methods
+    //
+
+    /**
+     * This method returns the zero of the function <code>f</code>,
+     * determined with the given accuracy <code>epsilon</code>;
+     * depending on the particular solver, this might mean that
+     * the returned <code>x</code> is such that <code>|f(x)| < epsilon f</code>,
+     * or that <code>f |x-\xi| < \epsilon \f$ where \f$ \xi \f$ </code>
+     * is the real zero.
+     * <p>
+     * This method contains a bracketing routine to which an
+     * initial guess must be supplied as well as a step used to
+     * scan the range of the possible bracketing values.
+     */
+    public double solve(final F f, double accuracy, final double guess, final double step) {
+
+        assert accuracy > 0.0 : "accuracy must be positive";
+        // check whether we really want to use epsilon
+        accuracy = Math.max(accuracy, Constants.QL_EPSILON);
+
+        final double growthFactor = 1.6;
+        int flipflop = -1;
+
+        root = guess;
+        fxMax = f.op(root);
+
+        // monotonically crescent bias, as in optionValue(volatility)
+        if (fxMax == 0.0)
+            return root;
+        else if (fxMax > 0.0) {
+            xMin = enforceBounds(root - step);
+            fxMin = f.op(xMin);
+            xMax = root;
+        } else {
+            xMin = root;
+            fxMin = fxMax;
+            xMax = enforceBounds(root + step);
+            fxMax = f.op(xMax);
+        }
+
+        evaluationNumber = 2;
+        while (evaluationNumber <= maxEvaluations) {
+            if (fxMin * fxMax <= 0.0) {//FIXME avoid product to check signs
+                if (fxMin == 0.0)
+                    return xMin;
+                if (fxMax == 0.0)
+                    return xMax;
+                root = (xMax + xMin) / 2.0;
+                return solveImpl(f, accuracy);
+            }
+            if (Math.abs(fxMin) < Math.abs(fxMax)) {
+                xMin = enforceBounds(xMin + growthFactor * (xMin - xMax));
+                fxMin = f.op(xMin);
+            } else if (Math.abs(fxMin) > Math.abs(fxMax)) {
+                xMax = enforceBounds(xMax + growthFactor * (xMax - xMin));
+                fxMax = f.op(xMax);
+            } else if (flipflop == -1) {
+                xMin = enforceBounds(xMin + growthFactor * (xMin - xMax));
+                fxMin = f.op(xMin);
+                evaluationNumber++;
+                flipflop = 1;
+            } else if (flipflop == 1) {
+                xMax = enforceBounds(xMax + growthFactor * (xMax - xMin));
+                fxMax = f.op(xMax);
+                flipflop = -1;
+            }
+            evaluationNumber++;
+        }
+
+        //FIXME is it so exceptional, should we return s success/fail flag?
+        // TODO: code review :: please verify against original QL/C++ code
+        throw new ArithmeticException("unable to bracket root after function evaluation"); // TODO: message
+    }
 
     /**
      * This method returns the zero of the function {@latex$ f }, determined with the given accuracy {@latex$ \epsilon };
@@ -169,94 +163,87 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
      * or that {@latex$ |x-\xi| < \epsilon } where {@latex$ \xi } is the real zero.
      * <p>
      * An initial guess must be supplied, as well as two values {@latex$ x_\mathrm{min} } and {@latex$ x_\mathrm{max} } which must
-     * bracket the zero (i.e., either {@latex$ f(x_\mathrm{min}) \leq 0 \leq f(x_\mathrm{max}) }, or 
+     * bracket the zero (i.e., either {@latex$ f(x_\mathrm{min}) \leq 0 \leq f(x_\mathrm{max}) }, or
      * {@latex$ f(x_\mathrm{max}) \leq 0 \leq f(x_\mathrm{min}) } must be true).
      * 
      * @param f is the function we wish to find a root
      * @param accuracy is the desired accuracy
-     * @param guess 
+     * @param guess
      * @param xMin
      * @param xMax
      * @return a zero of a function
      */
-	public double solve(final F f, double accuracy, final double guess, final double xMin, final double xMax) {
-	    // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-		if (!(accuracy > 0.0)) {
-			throw new IllegalArgumentException("accuracy must be positive");
-		}
-        if (!(xMin < xMax)) {
+    public double solve(final F f, double accuracy, final double guess, final double xMin, final double xMax) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (!(accuracy > 0.0))
+            throw new IllegalArgumentException("accuracy must be positive");
+        if (!(xMin < xMax))
             throw new IllegalArgumentException("invalid range: xMin >= xMax");
-        }
-        if (!(!lowerBoundEnforced || xMin >= lowerBound)) {
+        if (!(!lowerBoundEnforced || xMin >= lowerBound))
             throw new IllegalArgumentException("xMin < enforced low bound");
-        }
-        if (!(!upperBoundEnforced || xMax <= upperBound)) {
+        if (!(!upperBoundEnforced || xMax <= upperBound))
             throw new IllegalArgumentException("xMax > enforced hi bound");
-        }
-		
-		// check whether we really want to use epsilon
-		accuracy = Math.max(accuracy, Constants.QL_EPSILON);
 
-		this.xMin = xMin;
-		this.xMax = xMax;
+        // check whether we really want to use epsilon
+        accuracy = Math.max(accuracy, Constants.QL_EPSILON);
+
+        this.xMin = xMin;
+        this.xMax = xMax;
 
 
-		fxMin = f.op(this.xMin);
-		if (fxMin == 0.0) return this.xMin;
-		
-		fxMax = f.op(this.xMax);
-		if (fxMax == 0.0) return this.xMax;
-		
-		evaluationNumber = 2;
+        fxMin = f.op(this.xMin);
+        if (fxMin == 0.0) return this.xMin;
 
-		if (!(fxMin * fxMax < 0.0)) {
-			throw new ArithmeticException("root not bracketed: f[" + this.xMin + "," + this.xMax + "] -> [" + fxMin + "," + fxMax + "]");
-		}
+        fxMax = f.op(this.xMax);
+        if (fxMax == 0.0) return this.xMax;
 
-		if (!(guess > this.xMin)) {
-			throw new ArithmeticException("guess (" + guess + ") < xMin_ ("	+ this.xMin + ")");
-		}
+        evaluationNumber = 2;
 
-		if (!(guess < this.xMax)) {
-			throw new ArithmeticException("guess (" + guess + ") > xMax ("	+ this.xMax + ")");
-		}
+        if (!(fxMin * fxMax < 0.0))
+            throw new ArithmeticException("root not bracketed: f[" + this.xMin + "," + this.xMax + "] -> [" + fxMin + "," + fxMax + "]");
 
-		root = guess;
+        if (!(guess > this.xMin))
+            throw new ArithmeticException("guess (" + guess + ") < xMin_ ("	+ this.xMin + ")");
 
-		return solveImpl(f, accuracy);
-	}
+        if (!(guess < this.xMax))
+            throw new ArithmeticException("guess (" + guess + ") > xMax ("	+ this.xMax + ")");
 
-	public void setMaxEvaluations(int evaluations) {
-		this.maxEvaluations = Math.max(1, evaluations);
-	}
+        root = guess;
 
-	public int getMaxEvaluations() {
-		return this.maxEvaluations;
-	}
+        return solveImpl(f, accuracy);
+    }
 
-	public void setLowerBound(final double lowerBound) {
-		this.lowerBound = lowerBound;
-		this.lowerBoundEnforced = true;
-	}
+    public void setMaxEvaluations(final int evaluations) {
+        this.maxEvaluations = Math.max(1, evaluations);
+    }
 
-	public void setUpperBound(final double upperBound) {
-		this.upperBound = upperBound;
-		this.upperBoundEnforced = true;
-	}
+    public int getMaxEvaluations() {
+        return this.maxEvaluations;
+    }
 
-	public int getNumEvaluations() {
-		return evaluationNumber;
-	}
+    public void setLowerBound(final double lowerBound) {
+        this.lowerBound = lowerBound;
+        this.lowerBoundEnforced = true;
+    }
 
-	
-	//
-	// private methods
-	//
-	
-	private double enforceBounds(double x) {
-		if (lowerBoundEnforced && x < lowerBound) return lowerBound;
-		if (upperBoundEnforced && x > upperBound) return upperBound;
-		return x;
-	}
+    public void setUpperBound(final double upperBound) {
+        this.upperBound = upperBound;
+        this.upperBoundEnforced = true;
+    }
+
+    public int getNumEvaluations() {
+        return evaluationNumber;
+    }
+
+
+    //
+    // private methods
+    //
+
+    private double enforceBounds(final double x) {
+        if (lowerBoundEnforced && x < lowerBound) return lowerBound;
+        if (upperBoundEnforced && x > upperBound) return upperBound;
+        return x;
+    }
 
 }

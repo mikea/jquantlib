@@ -22,19 +22,17 @@
 
 package org.jquantlib.math.statistics;
 
-import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.InverseCumulativeNormal;
 import org.jquantlib.math.distributions.NormalDistribution;
 
 public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussianStatistics*/ {
 
-    private IStatistics statistics;
+    private final IStatistics statistics;
 
-    public GaussianStatistics(IStatistics statistics) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+    public GaussianStatistics(final IStatistics statistics) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.statistics = statistics;
     }
 
@@ -62,17 +60,17 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
      * See Dembo, Freeman "The Rules Of Risk", Wiley (2001)
      */
 
-    public double gaussianRegret(double target) {
-        double m = statistics.mean();
-        double std = statistics.standardDeviation();
-        double variance = std * std;
-        CumulativeNormalDistribution gIntegral = new CumulativeNormalDistribution(m, std);
-        NormalDistribution g = new NormalDistribution(m, std);
-        double firstTerm = variance + m * m - 2.0 * target * m + target * target;
-        double alfa = gIntegral.op(target);
-        double secondTerm = m - target;
-        double beta = variance * g.op(target);
-        double result = alfa * firstTerm - beta * secondTerm;
+    public double gaussianRegret(final double target) {
+        final double m = statistics.mean();
+        final double std = statistics.standardDeviation();
+        final double variance = std * std;
+        final CumulativeNormalDistribution gIntegral = new CumulativeNormalDistribution(m, std);
+        final NormalDistribution g = new NormalDistribution(m, std);
+        final double firstTerm = variance + m * m - 2.0 * target * m + target * target;
+        final double alfa = gIntegral.op(target);
+        final double secondTerm = m - target;
+        final double beta = variance * g.op(target);
+        final double result = alfa * firstTerm - beta * secondTerm;
         return result / alfa;
     }
 
@@ -80,39 +78,32 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
      * ! gaussian-assumption y-th percentile, defined as the value x such that \f[ y = \frac{1}{\sqrt{2 \pi}} \int_{-\infty}^{x}
      * \exp (-u^2/2) du \f]
      */
-    public double gaussianPercentile(double percentile) {
-        if (percentile <= 0.0) {
-            throw new IllegalArgumentException("percentile (" + percentile + ") must be > 0.0");
-        }
-        if (percentile >= 1.0) {
-            throw new IllegalArgumentException("percentile (" + percentile + ") must be < 1.0");
-        }
-        InverseCumulativeNormal gInverse = new InverseCumulativeNormal(statistics.mean(), statistics.standardDeviation());
+    public double gaussianPercentile(final double percentile) {
+        assert percentile > 0.0 : "percentile must be > 0.0";
+        assert percentile < 1.0 : "percentile must be < 1.0";
+        final InverseCumulativeNormal gInverse = new InverseCumulativeNormal(statistics.mean(), statistics.standardDeviation());
         return gInverse.op(percentile);
     }
 
     /* ! \pre percentile must be in range (0%-100%) extremes excluded */
-    public double gaussianTopPercentile(double percentile) {
+    public double gaussianTopPercentile(final double percentile) {
         return gaussianPercentile(1.0 - percentile);
     }
 
     // ! gaussian-assumption Potential-Upside at a given percentile
-    public double gaussianPotentialUpside(double percentile) {
-        if (percentile >= 1.0 || percentile < 0.9) {
-            throw new IllegalArgumentException("percentile (" + percentile + ") out of range [0.9, 1)");
-        }
-        double result = gaussianPercentile(percentile);
+    public double gaussianPotentialUpside(final double percentile) {
+        assert percentile >= 0.9 && percentile < 1.0 : "percentile out of range [0.9, 1)";
+        final double result = gaussianPercentile(percentile);
         // potential upside must be a gain, i.e., floored at 0.0
         return Math.max(result, 0.0);
     }
 
     /* ! \pre percentile must be in range [90%-100%) */
-    public double gaussianValueAtRisk(double percentile) {
+    public double gaussianValueAtRisk(final double percentile) {
 
-        if (percentile >= 1.0 || percentile < 0.9) {
+        if (percentile >= 1.0 || percentile < 0.9)
             throw new IllegalArgumentException("percentile (" + percentile + ") out of range [0.9, 1)");
-        }
-        double result = gaussianPercentile(1.0 - percentile);
+        final double result = gaussianPercentile(1.0 - percentile);
         // VAR must be a loss
         // this means that it has to be MIN(dist(1.0-percentile), 0.0)
         // VAR must also be a positive quantity, so -MIN(*)
@@ -130,32 +121,31 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
      * See Artzner, Delbaen, Eber and Heath, "Coherent measures of risk", Mathematical Finance 9 (1999)
      */
     /* ! \pre percentile must be in range [90%-100%) */
-    public double gaussianExpectedShortfall(double percentile) {
-        if (percentile >= 1.0 || percentile < 0.9) {
+    public double gaussianExpectedShortfall(final double percentile) {
+        if (percentile >= 1.0 || percentile < 0.9)
             throw new IllegalArgumentException("percentile (" + percentile + ") out of range [0.9, 1)");
-        }
-        double m = statistics.mean();
-        double std = statistics.standardDeviation();
-        InverseCumulativeNormal gInverse = new InverseCumulativeNormal(m, std);
-        double var = gInverse.op(1.0 - percentile);
-        NormalDistribution g = new NormalDistribution(m, std);
-        double result = m - std * std * g.op(var) / (1.0 - percentile);
+        final double m = statistics.mean();
+        final double std = statistics.standardDeviation();
+        final InverseCumulativeNormal gInverse = new InverseCumulativeNormal(m, std);
+        final double var = gInverse.op(1.0 - percentile);
+        final NormalDistribution g = new NormalDistribution(m, std);
+        final double result = m - std * std * g.op(var) / (1.0 - percentile);
         // expectedShortfall must be a loss
         // this means that it has to be MIN(result, 0.0)
         // expectedShortfall must also be a positive quantity, so -MIN(*)
         return -Math.min(result, 0.0);
     }
 
-    public double gaussianShortfall(double target) {
-        CumulativeNormalDistribution gIntegral = new CumulativeNormalDistribution(statistics.mean(), statistics.standardDeviation());
+    public double gaussianShortfall(final double target) {
+        final CumulativeNormalDistribution gIntegral = new CumulativeNormalDistribution(statistics.mean(), statistics.standardDeviation());
         return gIntegral.op(target);
     }
 
-    public double gaussianAverageShortfall(double target) {
-        double m = statistics.mean();
-        double std = statistics.standardDeviation();
-        CumulativeNormalDistribution gIntegral = new CumulativeNormalDistribution(m, std);
-        NormalDistribution g = new NormalDistribution(m, std);
+    public double gaussianAverageShortfall(final double target) {
+        final double m = statistics.mean();
+        final double std = statistics.standardDeviation();
+        final CumulativeNormalDistribution gIntegral = new CumulativeNormalDistribution(m, std);
+        final NormalDistribution g = new NormalDistribution(m, std);
         return ((target - m) + std * std * g.op(target) / gIntegral.op(target));
     }
 

@@ -22,8 +22,8 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.math.statistics;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 
 //TODO: code review: license, class comments, compare against C++ sources
 public class GenericSequenceStatistics /* TODO: implements ISequenceStatistics */ {
@@ -43,37 +43,34 @@ public class GenericSequenceStatistics /* TODO: implements ISequenceStatistics *
         dimension_ = 0;
     };
 
-    public GenericSequenceStatistics(int dimension) {
+    public GenericSequenceStatistics(final int dimension) {
         dimension_ = 0;
         reset(dimension_);
     }
-    
-    public void add(double [] data){
+
+    public void add(final double [] data){
         add(data, 1.0);
     }
-    
-    public void add(double [] data,
-            double  weight) {
-       if (dimension_ == 0) {
-           // stat wasn't initialized yet
-           reset(data.length);
-       }
 
-       if(data.length != dimension_){
-           throw new IllegalArgumentException(sample_size_mismatch);
-       }
-           
-       
-       //TODO: implement this one
-       /*
+    public void add(final double [] data,
+            final double  weight) {
+        if (dimension_ == 0)
+            // stat wasn't initialized yet
+            reset(data.length);
+
+        if(data.length != dimension_)
+            throw new IllegalArgumentException(sample_size_mismatch);
+
+
+        //TODO: implement this one
+        /*
        quadraticSum_ += weight * outerProduct(begin, end,
                                               begin, end);*/
 
-       for (int i=0; i<dimension_; i++){
-           stats_[i].add(data[i], weight);
-       }
-       
-       throw new UnsupportedOperationException("work in progress");
+        for (int i=0; i<dimension_; i++)
+            stats_[i].add(data[i], weight);
+
+        throw new UnsupportedOperationException("work in progress");
     }
 
     public int size() {
@@ -82,241 +79,209 @@ public class GenericSequenceStatistics /* TODO: implements ISequenceStatistics *
 
     // start void method macro ....
     public double[] mean() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].mean();
-        }
         return results_;
     }
 
     public double[] variance() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].variance();
-        }
         return results_;
     }
 
     public double[] standardDeviation() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].standardDeviation();
-        }
         return results_;
     }
 
     public double[] downsideVariance() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].downsideVariance();
-        }
         return results_;
     }
 
     public double[] downsideDeviation() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].downsideDeviation();
-        }
         return results_;
     }
 
     public double[] semiVariance() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].semiVariance();
-        }
         return results_;
     }
 
     public double[] semiDeviation() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].semiDeviation();
-        }
         return results_;
     }
 
     public double[] errorEstimate() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].errorEstimate();
-        }
         return results_;
     }
 
     public double[] skewness() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].skewness();
-        }
         return results_;
     }
 
     public double[] kurtosis() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].kurtosis();
-        }
         return results_;
     }
 
     public double[] min() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].min();
-        }
         return results_;
     }
 
     public double[] max() {
-        for (int i = 0; i < dimension_; i++) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].max();
-        }
         return results_;
     }
 
     // start single argument method macros
 
-    public double[] gaussianPercentile(double gaussianPercentile) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] gaussianPercentile(final double gaussianPercentile) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].gaussianPercentile(gaussianPercentile);
-        }
         return results_;
     }
 
-    public double[] gaussianPotentialUpside(double gaussianPotentialUpside) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] gaussianPotentialUpside(final double gaussianPotentialUpside) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].gaussianPotentialUpside(gaussianPotentialUpside);
-        }
         return results_;
     }
 
-    public double[] gaussianValueAtRisk(double gaussianValueAtRisk) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] gaussianValueAtRisk(final double gaussianValueAtRisk) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].gaussianPercentile(gaussianValueAtRisk);
-        }
         return results_;
     }
 
-    public double[] gaussianExpectedShortfall(double gaussianExpectedShortfall) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] gaussianExpectedShortfall(final double gaussianExpectedShortfall) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].gaussianExpectedShortfall(gaussianExpectedShortfall);
-        }
         return results_;
     }
 
-    public double[] gaussianShortfall(double gaussianShortfall) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] gaussianShortfall(final double gaussianShortfall) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].gaussianShortfall(gaussianShortfall);
-        }
         return results_;
     }
 
-    public double[] gaussianAverageShortfall(double gaussianAverageShortfall) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] gaussianAverageShortfall(final double gaussianAverageShortfall) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].gaussianPercentile(gaussianAverageShortfall);
-        }
         return results_;
     }
 
-    public double[] percentile(double percentile) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] percentile(final double percentile) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].gaussianPercentile(percentile);
-        }
         return results_;
     }
 
-    public double[] potentialUpside(double potentialUpside) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] potentialUpside(final double potentialUpside) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].potentialUpside(potentialUpside);
-        }
         return results_;
     }
 
-    public double[] valueAtRisk(double valueAtRisk) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] valueAtRisk(final double valueAtRisk) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].valueAtRisk(valueAtRisk);
-        }
         return results_;
     }
 
-    public double[] expectedShortfall(double expectedShortfall) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] expectedShortfall(final double expectedShortfall) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].expectedShortfall(expectedShortfall);
-        }
         return results_;
     }
 
-    public double[] regret(double regret) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] regret(final double regret) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].regret(regret);
-        }
         return results_;
     }
 
-    public double[] shortfall(double shortfall) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] shortfall(final double shortfall) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].gaussianPercentile(shortfall);
-        }
         return results_;
     }
 
-    public double[] averageShortfall(double averageShortfall) {
-        for (int i = 0; i < dimension_; i++) {
+    public double[] averageShortfall(final double averageShortfall) {
+        for (int i = 0; i < dimension_; i++)
             results_[i] = stats_[i].gaussianPercentile(averageShortfall);
-        }
         return results_;
     }
 
     public Matrix correlation() {
         final Matrix correlation = null; //TODO: code review ::  covariance();
         final Array variances = correlation.diagonal();
-        for (int i = 0; i < dimension_; i++) {
-            for (int j = 0; j < dimension_; j++) {
+        for (int i = 0; i < dimension_; i++)
+            for (int j = 0; j < dimension_; j++)
                 if (i == j) {
-                    if (variances.get(i) == 0.0) {
+                    if (variances.get(i) == 0.0)
                         correlation.set(i, j, 1.0);
-                    } else {
+                    else
                         correlation.set(i, j, correlation.get(i, j) * 1.0 / Math.sqrt(variances.get(i) * variances.get(j)));
-                    }
-                } else {
-                    if (variances.get(i) == 0.0 && variances.get(j) == 0) {
-                        correlation.set(i, j, 1.0);
-                    } else if (variances.get(i) == 0.0 || variances.get(j) == 0.0) {
-                        correlation.set(i, j, 1.0);
-                    } else {
-                        correlation.set(i, j, correlation.get(i, j) * 1.0 / Math.sqrt(variances.get(i) * variances.get(j)));
-                    }
-                }
-            } // j for
-        } // i for
+                } else if (variances.get(i) == 0.0 && variances.get(j) == 0)
+                    correlation.set(i, j, 1.0);
+                else if (variances.get(i) == 0.0 || variances.get(j) == 0.0)
+                    correlation.set(i, j, 1.0);
+                else
+                    correlation.set(i, j, correlation.get(i, j) * 1.0 / Math.sqrt(variances.get(i) * variances.get(j)));
 
         return correlation;
     }
 
     public Matrix covariance() {
-        double sampleWeight = weightSum();
-        if (sampleWeight <= 0.0) throw new IllegalArgumentException(unsufficient_sample_weight);
+        final double sampleWeight = weightSum();
+        assert sampleWeight > 0.0 : unsufficient_sample_weight;
 
-        double sampleNumber = samples();
-        if (sampleNumber <= 1.0) throw new IllegalArgumentException(unsufficient_sample_number);
+        final double sampleNumber = samples();
+        assert sampleNumber > 1.0 : unsufficient_sample_number;
 
-        Array m = null;// TODO: code review :: mean();
-        double inv = 1.0 / sampleWeight;
+        final Array m = null;// TODO: code review :: mean();
+        final double inv = 1.0 / sampleWeight;
 
-        // TODO: correct?
-        throw new UnsupportedOperationException("needs code review");
-//        final Matrix result = quadraticSum_.mul(inv);
-//        result.subAssign(result.outerProduct(m));
-//        result.mulAssign(sampleNumber / (sampleNumber - 1.0));
-//        return result;
+        // TODO: code review :: please verify against original QL/C++ code
+        throw new UnsupportedOperationException("work in progress");
+        //        final Matrix result = quadraticSum_.mul(inv);
+        //        result.subAssign(result.outerProduct(m));
+        //        result.mulAssign(sampleNumber / (sampleNumber - 1.0));
+        //        return result;
     }
 
     public void reset(int dimension) {
-        if (dimension == 0) // if no size given,
+        if (dimension == 0)
             dimension = dimension_; // keep the current one
-        if (dimension <= 0) {
+        if (dimension <= 0)
             throw new IllegalArgumentException(null_dimension);
-        }
-        if (dimension == dimension_) {
+        if (dimension == dimension_)
             for (int i = 0; i < dimension_; i++)
                 stats_[i].reset();
-        } else {
+        else {
             dimension_ = dimension;
             stats_ = new IStatistics[dimension];
             results_ = new double[dimension];
         }
-        quadraticSum_ = new Matrix(dimension_, dimension_, 0.0);
+        quadraticSum_ = new Matrix(dimension_, dimension_);
     }
 
     public double weightSum() {

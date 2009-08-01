@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.assets.DiscretizedAsset;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.time.TimeGrid;
@@ -34,66 +34,64 @@ import org.jquantlib.time.TimeGrid;
  */
 public class DiscretizedVanillaOption extends DiscretizedAsset {
 
-	// private VanillaOption.Arguments arguments_;
-	private final OneAssetOptionArguments arguments;
-	private final List<Double> stoppingTimes;
+    // private VanillaOption.Arguments arguments_;
+    private final OneAssetOptionArguments arguments;
+    private final List<Double> stoppingTimes;
 
-	public DiscretizedVanillaOption(final OneAssetOptionArguments args, final StochasticProcess process, final TimeGrid grid) {
-		this.arguments = args;
-		final int size = args.exercise.size();
-		this.stoppingTimes = new ArrayDoubleList();
-		for (int i = 0; i < size; ++i) {
-			stoppingTimes.add(i, process.getTime(args.exercise.date(i)));
-			if (!grid.empty()) {
-				// adjust to the given grid
-				stoppingTimes.add(i, grid.closestTime(stoppingTimes.get(i)));
-			}
-		}
-	}
+    public DiscretizedVanillaOption(final OneAssetOptionArguments args, final StochasticProcess process, final TimeGrid grid) {
+        this.arguments = args;
+        final int size = args.exercise.size();
+        this.stoppingTimes = new ArrayDoubleList();
+        for (int i = 0; i < size; ++i) {
+            stoppingTimes.add(i, process.getTime(args.exercise.date(i)));
+            if (!grid.empty())
+                // adjust to the given grid
+                stoppingTimes.add(i, grid.closestTime(stoppingTimes.get(i)));
+        }
+    }
 
-	public void reset(final int size) {
-		values = new Array(size);
-		adjustValues();
-	}
-	
-	protected void postAdjustValuesImpl() {
+    @Override
+    public void reset(final int size) {
+        values = new Array(size);
+        adjustValues();
+    }
 
-        double now = time();
+    @Override
+    protected void postAdjustValuesImpl() {
+
+        final double now = time();
         switch (arguments.exercise.type()) {
-          case AMERICAN:
-            if (now <= stoppingTimes.get(1) &&
-                now >= stoppingTimes.get(0))
+        case AMERICAN:
+            if (now <= stoppingTimes.get(1) && now >= stoppingTimes.get(0))
                 applySpecificCondition();
             break;
-          case EUROPEAN:
+        case EUROPEAN:
             if (isOnTime(stoppingTimes.get(0)))
                 applySpecificCondition();
             break;
-          case BERMUDAN:
-            for (int i=0; i<stoppingTimes.size(); i++) {
+        case BERMUDAN:
+            for (int i=0; i<stoppingTimes.size(); i++)
                 if (isOnTime(stoppingTimes.get(i)))
                     applySpecificCondition();
-            }
             break;
-          default:
-            throw new IllegalStateException("invalid option type");
+        default:
+            throw new AssertionError("invalid option type");
         }
     }
-	
-	void applySpecificCondition() {
-        Array grid = method().grid(time());
-        for (int j=0; j<values.length; j++) {
+
+    void applySpecificCondition() {
+        final Array grid = method().grid(time());
+        for (int j=0; j<values.length; j++)
             values.set(j, Math.max(values.get(j), arguments.payoff.valueOf(grid.get(j))));
-        }
     }
 
-	
 
-	/* (non-Javadoc)
-	 * @see org.jquantlib.assets.DiscretizedAsset#mandatoryTimes()
-	 */
-	@Override
-	public List<Double> mandatoryTimes() {
-		return stoppingTimes;
-	}
+
+    /* (non-Javadoc)
+     * @see org.jquantlib.assets.DiscretizedAsset#mandatoryTimes()
+     */
+    @Override
+    public List<Double> mandatoryTimes() {
+        return stoppingTimes;
+    }
 }

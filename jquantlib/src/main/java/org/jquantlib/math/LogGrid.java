@@ -23,6 +23,7 @@
 package org.jquantlib.math;
 
 import org.jquantlib.math.functions.Log;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * @author Srinivas Hasti

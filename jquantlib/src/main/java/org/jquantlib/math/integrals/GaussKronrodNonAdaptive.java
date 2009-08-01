@@ -1,9 +1,9 @@
 /*
- Copyright (C) 
+ Copyright (C)
  2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,7 +16,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -49,32 +49,30 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
         return relativeAccuracy_;
     }
 
-    public void setRelativeAccuracy(double relativeAccuracy) {
+    public void setRelativeAccuracy(final double relativeAccuracy) {
         this.relativeAccuracy_ = relativeAccuracy;
     }
 
-    public GaussKronrodNonAdaptive(double absoluteAccuracy, int maxEvaluations, double relativeAccuracy) {
+    public GaussKronrodNonAdaptive(final double absoluteAccuracy, final int maxEvaluations, final double relativeAccuracy) {
         super(absoluteAccuracy, maxEvaluations);
         this.relativeAccuracy_ = relativeAccuracy;
     }
 
+    @Override
     public double integrate(final Ops.DoubleOp f, final double a, final double b) {
-        double result;
-        // Size neval;
-        double fv1[] = new double[5];
-        double fv2[] = new double[5];
-        double fv3[] = new double[5];
-        double fv4[] = new double[5];
-        double savfun[] = new double[21]; /* array of function values which have been computed */
+        final double fv1[] = new double[5];
+        final double fv2[] = new double[5];
+        final double fv3[] = new double[5];
+        final double fv4[] = new double[5];
+        final double savfun[] = new double[21]; /* array of function values which have been computed */
         double res10, res21, res43, res87; /* 10, 21, 43 and 87 point results */
         double err;
         double resAbs; /* approximation to the integral of abs(f) */
         double resasc; /* approximation to the integral of abs(f-i/(b-a)) */
+        double result;
         int k;
 
-        if (a >= b) {
-            throw new IllegalArgumentException("b must be greater than a)");
-        }
+        assert a < b : "b must be greater than a";
 
         final double halfLength = 0.5 * (b - a);
         final double center = 0.5 * (b + a);
@@ -87,10 +85,10 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
         resAbs = w21b[5] * Math.abs(fCenter);
 
         for (k = 0; k < 5; k++) {
-            double abscissa = halfLength * x1[k];
-            double fval1 = f.op(center + abscissa);
-            double fval2 = f.op(center - abscissa);
-            double fval = fval1 + fval2;
+            final double abscissa = halfLength * x1[k];
+            final double fval1 = f.op(center + abscissa);
+            final double fval2 = f.op(center - abscissa);
+            final double fval = fval1 + fval2;
             res10 += w10[k] * fval;
             res21 += w21a[k] * fval;
             resAbs += w21a[k] * (Math.abs(fval1) + Math.abs(fval2));
@@ -100,10 +98,10 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
         }
 
         for (k = 0; k < 5; k++) {
-            double abscissa = halfLength * x2[k];
-            double fval1 = f.op(center + abscissa);
-            double fval2 = f.op(center - abscissa);
-            double fval = fval1 + fval2;
+            final double abscissa = halfLength * x2[k];
+            final double fval1 = f.op(center + abscissa);
+            final double fval2 = f.op(center - abscissa);
+            final double fval = fval1 + fval2;
             res21 += w21b[k] * fval;
             resAbs += w21b[k] * (Math.abs(fval1) + Math.abs(fval2));
             savfun[k + 5] = fval;
@@ -113,12 +111,13 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
 
         result = res21 * halfLength;
         resAbs *= halfLength;
-        double mean = 0.5 * res21;
+        final double mean = 0.5 * res21;
         resasc = w21b[5] * Math.abs(fCenter - mean);
 
-        for (k = 0; k < 5; k++)
-            resasc += (w21a[k] * (Math.abs(fv1[k] - mean) + Math.abs(fv2[k] - mean)) + w21b[k]
-                    * (Math.abs(fv3[k] - mean) + Math.abs(fv4[k] - mean)));
+        for (k = 0; k < 5; k++) {
+            resasc += w21a[k] * (Math.abs(fv1[k] - mean) + Math.abs(fv2[k] - mean))
+            + w21b[k] * (Math.abs(fv3[k] - mean) + Math.abs(fv4[k] - mean));
+        }
 
         err = rescaleError((res21 - res10) * halfLength, resAbs, resasc);
         resasc *= halfLength;
@@ -134,12 +133,13 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
 
         res43 = w43b[11] * fCenter;
 
-        for (k = 0; k < 10; k++)
+        for (k = 0; k < 10; k++) {
             res43 += savfun[k] * w43a[k];
+        }
 
         for (k = 0; k < 11; k++) {
-            double abscissa = halfLength * x3[k];
-            double fval = (f.op(center + abscissa) + f.op(center - abscissa));
+            final double abscissa = halfLength * x3[k];
+            final double fval = (f.op(center + abscissa) + f.op(center - abscissa));
             res43 += fval * w43b[k];
             savfun[k + 10] = fval;
         }
@@ -159,11 +159,12 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
 
         res87 = w87b[22] * fCenter;
 
-        for (k = 0; k < 21; k++)
+        for (k = 0; k < 21; k++) {
             res87 += savfun[k] * w87a[k];
+        }
 
         for (k = 0; k < 22; k++) {
-            double abscissa = halfLength * x4[k];
+            final double abscissa = halfLength * x4[k];
             res87 += w87b[k] * (f.op(center + abscissa) + f.op(center - abscissa));
         }
 
@@ -179,16 +180,18 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
     static double rescaleError(double err, final double resultAbs, final double resultAsc) {
         err = Math.abs(err);
         if (resultAsc != 0 && err != 0) {
-            double scale = Math.pow((200 * err / resultAsc), 1.5);
-            if (scale < 1)
+            final double scale = Math.pow((200 * err / resultAsc), 1.5);
+            if (scale < 1) {
                 err = resultAsc * scale;
-            else
+            } else {
                 err = resultAsc;
+            }
         }
         if (resultAbs > Constants.QL_MIN_POSITIVE_REAL / (50 * Constants.QL_EPSILON)) {
-            double min_err = 50 * Constants.QL_EPSILON * resultAbs;
-            if (min_err > err)
+            final double min_err = 50 * Constants.QL_EPSILON * resultAbs;
+            if (min_err > err) {
                 err = min_err;
+            }
         }
         return err;
     }

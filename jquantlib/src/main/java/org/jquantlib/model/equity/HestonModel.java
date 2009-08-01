@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,12 +15,23 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.model.equity;
+
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.optimization.Constraint;
+import org.jquantlib.math.optimization.PositiveConstraint;
+import org.jquantlib.model.CalibratedModel;
+import org.jquantlib.model.ConstantParameter;
+import org.jquantlib.processes.HestonProcess;
+import org.jquantlib.quotes.Quote;
+import org.jquantlib.quotes.RelinkableHandle;
+import org.jquantlib.quotes.SimpleQuote;
+
 
 //! Heston model for the stochastic volatility of an asset
 /*! References:
@@ -37,16 +48,8 @@ package org.jquantlib.model.equity;
  * Implementation of the Heston Model, see http://en.wikipedia.org/wiki/Heston_model
  */
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.optimization.Constraint;
-import org.jquantlib.math.optimization.PositiveConstraint;
-import org.jquantlib.model.CalibratedModel;
-import org.jquantlib.model.ConstantParameter;
-import org.jquantlib.processes.HestonProcess;
-import org.jquantlib.quotes.Quote;
-import org.jquantlib.quotes.RelinkableHandle;
-import org.jquantlib.quotes.SimpleQuote;
 
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class HestonModel extends CalibratedModel {
 
     protected RelinkableHandle<Quote> v0_, kappa_, theta_, sigma_, rho_;;
@@ -68,6 +71,7 @@ public class HestonModel extends CalibratedModel {
             throw new UnsupportedOperationException("Work in progress");
     }
 
+    @Override
     public void generateArguments() {
         v0_.setLink(new SimpleQuote((SimpleQuote) v0_.getLink()));
         kappa_.setLink(new SimpleQuote((SimpleQuote) kappa_.getLink()));
@@ -100,22 +104,27 @@ public class HestonModel extends CalibratedModel {
     public double v0() {
         return arguments_.get(4).getOperatorEq(0.0);
     }
-    
+
+
+    //
+    // private inner classes
+    //
+
+    // TODO: code review :: please verify against original QL/C++ code
     private class VolatilityConstraint extends Constraint {
+
         public VolatilityConstraint(){
-            if(true){
+            if(true)
                 throw new UnsupportedOperationException("Work in progress. Todo: check class hierarchy");
-            }
-            //super(new VolatilityConstraint());
         }
-        
+
         @Override
-        public boolean test(Array p) {
+        public boolean test(final Array p) {
             final double theta = p.get(0);
             final double kappa = p.get(1);
             final double sigma = p.get(2);
             return (sigma >= 0.0 && sigma*sigma < 2.0*kappa*theta);
         }
-        
+
     }
 }

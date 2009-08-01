@@ -49,23 +49,17 @@ final strictfp public class Constants {
     public final static double M_1_SQRT2PI = M_SQRT_2*M_1_SQRTPI;
     public final static double M_PI        = 3.141592653589793238462643383280;
 
-    public final static double QL_EPSILON  = Math.ulp(1.0);             // typically about 2.2e-16
-    public final static double QL_MAX_REAL = Double.MAX_VALUE;          // typically about 1.8e+308
-    public final static double QL_MIN_POSITIVE_REAL = Double.MIN_VALUE; // typically about 2.22E-308
+    public final static int    QL_MIN_INTEGER       =   Integer.MIN_VALUE;
+    public final static int    QL_MAX_INTEGER       =   Integer.MAX_VALUE;
+    public final static double QL_MIN_REAL          =  -Double.MAX_VALUE;
+    public final static double QL_MAX_REAL          =   Double.MAX_VALUE;
+    public final static double QL_MIN_POSITIVE_REAL =   Double.MIN_VALUE;
+    public final static double QL_EPSILON           =   Math.ulp(1.0);
 
-    public static final double NULL_INTEGER = Integer.MAX_VALUE;
+    public static final int    NULL_INTEGER         =   Integer.MAX_VALUE;
+    public static final double NULL_REAL            =   Double.NaN;  // TODO: http://bugs.jquantlib.org/view.php?id=298
 
-    public static final double DBL_MIN = Double.MIN_VALUE;
-    public static final double DBL_MAX = Double.MAX_VALUE;
-
-
-    /**
-     * Specifies a <b>double</b> value which must be considered a <i>null value</i> or a <i>not valid value</i>.
-     * 
-     * @note FOR THE TIME BEING we are adopting Double.NaN in order to keep what we decided to adopt since the beginning.
-     * At the moment it's not clear if we should change do Double.POSITIVE-INFINITY or Double.MAX_VALUE.
-     * In any case, a complete code review is needed as described by http://bugs.jquantlib.org/view.php?id=298.
-     */
-    public static final double NULL_REAL  = Double.NaN;  // TODO: http://bugs.jquantlib.org/view.php?id=298
+    public static final double DBL_MIN              =   Double.MIN_VALUE;
+    public static final double DBL_MAX              =   Double.MAX_VALUE;
 
 }

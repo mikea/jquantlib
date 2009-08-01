@@ -2,6 +2,18 @@ package org.jquantlib.math;
 
 public interface Ops {
 
+
+    /**
+     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     *
+     * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.Op.html">Op</a>
+     * @author Richard Gomes
+     */
+    public interface Op<A,R> {
+        public R op(A a);
+    }
+
+
     /**
      * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
      *
@@ -21,10 +33,9 @@ public interface Ops {
      * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.BinaryDoubleOp.html">BinaryDoubleOp</a>
      * @author Richard Gomes
      */
-    //TODO : consider http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.BinaryDoubleOp.html
     public interface BinaryDoubleOp {
         public double op(double x, double y);
-        //TODO: boolean isFailed() TODO error handling
+        //FIXME: boolean isFailed() TODO error handling
     }
 
 
@@ -37,8 +48,20 @@ public interface Ops {
     //TODO : consider http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.BinaryDoubleOp.html
     public interface IntToDouble {
         public double op(int x);
-        //boolean isFailed() // TODO is error handling needed?
+        //FIXME: boolean isFailed() // TODO is error handling needed?
     }
+
+
+    /**
+     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     *
+     * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/ObjectToDouble.html">ObjectToDouble</a>
+     * @author Richard Gomes
+     */
+    public interface ObjectToDouble<A> {
+        public double op(A a);
+    }
+
 
 
     /**

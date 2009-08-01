@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,98 +15,86 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.optimization;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 public class ProjectedCostFunction extends CostFunction {
-    
-    private int numberOfFreeParameters_;
-    private Array fixedParameters_;
-    private Array actualParameters_;
-    private boolean [] parametersFreedoms_;
-    private CostFunction costFunction_;
-    
 
-    public ProjectedCostFunction(CostFunction costFunction, Array parameterValues, boolean [] parametersFreedoms) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+    private int numberOfFreeParameters;
+    private final Array fixedParameters;
+    private final Array actualParameters;
+    private final boolean [] parametersFreedoms_;
+    private CostFunction costFunction;
+
+
+    public ProjectedCostFunction(final CostFunction costFunction, final Array parameterValues, final boolean [] parametersFreedoms) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
-        numberOfFreeParameters_ = 0;
+        this.numberOfFreeParameters = 0;
         // TODO: code review :: use of clone()
-        fixedParameters_  = parameterValues.clone();
-        actualParameters_ = parameterValues.clone();
-        parametersFreedoms_ = parametersFreedoms;
-        
-        if (fixedParameters_.length != parametersFreedoms_.length){
+        this.fixedParameters  = parameterValues.clone();
+        this.actualParameters = parameterValues.clone();
+        this.parametersFreedoms_ = parametersFreedoms;
+
+        if (fixedParameters.length != parametersFreedoms_.length)
             throw new IllegalArgumentException("fixedParameters_.size()!=parametersFreedoms_.size()");
-        }
         for(int i = 0; i<parametersFreedoms_.length; i++){
-            if(!parametersFreedoms_[i]){
-                numberOfFreeParameters_++;
-            }
-            if(!(numberOfFreeParameters_>0)){
+            if(!parametersFreedoms_[i])
+                numberOfFreeParameters++;
+            if(!(numberOfFreeParameters>0))
                 throw new ArithmeticException("numberOfFreeParameters==0");
-            }
-        }        
+        }
     }
-    
-    public void mapFreeParameters(Array parametersValues){
-        if(!(parametersValues.length == numberOfFreeParameters_)){
+
+    public void mapFreeParameters(final Array parametersValues){
+        if(!(parametersValues.length == numberOfFreeParameters))
             throw new IllegalArgumentException("parametersValues.size()!=numberOfFreeParameters");
-        }
         int i = 0;
-        for(int j = 0; j<actualParameters_.length; j++){
-            if(!parametersFreedoms_[j]){
-                actualParameters_.set(j, parametersValues.get(i++));
-        }
+        for(int j = 0; j<actualParameters.length; j++)
+            if(!parametersFreedoms_[j])
+                actualParameters.set(j, parametersValues.get(i++));
     }
-    }
-    
+
     @Override
-    public double value(Array freeParameters){
+    public double value(final Array freeParameters){
         mapFreeParameters(freeParameters);
-        return costFunction_.value(actualParameters_);
+        return costFunction.value(actualParameters);
     }
-        
+
     //FIXME: check Disposable template
-    public Array values(Array freeParameters){
+    @Override
+    public Array values(final Array freeParameters){
         mapFreeParameters(freeParameters);
-        return costFunction_.values(actualParameters_);
+        return costFunction.values(actualParameters);
     }
-    
+
     //FIXME: check Disposable template
-    public Array project(Array parameters){
-        if(!(parameters.length == parametersFreedoms_.length)){
-           throw new ArithmeticException("parameters.size()!=parametersFreedoms_.size()");
-        }
-        Array projectedParameters = new Array(numberOfFreeParameters_);
+    public Array project(final Array parameters){
+        if(!(parameters.length == parametersFreedoms_.length))
+            throw new ArithmeticException("parameters.size()!=parametersFreedoms_.size()");
+        final Array projectedParameters = new Array(numberOfFreeParameters);
         int i = 0;
-        for(int j=0; j<parametersFreedoms_.length; j++){
-            if(!parametersFreedoms_[j]){
+        for(int j=0; j<parametersFreedoms_.length; j++)
+            if(!parametersFreedoms_[j])
                 projectedParameters.set(i++,parameters.get(j));
-            }
-        }
         return projectedParameters;
     }
-    
+
     //FIXME: check Disposable template
-    public Array include(Array projectedParameters){
-        if(!(projectedParameters.length == numberOfFreeParameters_)){
+    public Array include(final Array projectedParameters){
+        if(!(projectedParameters.length == numberOfFreeParameters))
             throw new IllegalArgumentException("projectedParameters.size()!=numberOfFreeParameters");
-        }
         // TODO: code review :: use of clone()
-        Array y = fixedParameters_.clone();
+        final Array y = fixedParameters.clone();
         int i = 0;
-        for(int j = 0; j<y.length; j++){
-            if(!parametersFreedoms_[j]){
+        for(int j = 0; j<y.length; j++)
+            if(!parametersFreedoms_[j])
                 y.set(j, projectedParameters.get(i++));
-            }
-        }
         return y;
     }
 }

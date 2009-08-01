@@ -29,8 +29,8 @@ import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.IborCoupon;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.util.Date;
 
 /**

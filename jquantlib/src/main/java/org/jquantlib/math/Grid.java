@@ -39,6 +39,8 @@
 
 package org.jquantlib.math;
 
+import org.jquantlib.math.matrixutilities.Array;
+
 
 /**
  * @author Dominik Holenstein

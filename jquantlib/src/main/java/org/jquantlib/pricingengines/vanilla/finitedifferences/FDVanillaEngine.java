@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,8 +24,8 @@ import java.util.Vector;
 
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
-import org.jquantlib.math.Array;
 import org.jquantlib.math.SampledCurve;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.BoundaryCondition;
 import org.jquantlib.methods.finitedifferences.NeumannBC;
 import org.jquantlib.methods.finitedifferences.OperatorFactory;
@@ -44,134 +44,132 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  */
 public class FDVanillaEngine {
-	protected GeneralizedBlackScholesProcess process;
-	protected /* Size */ int timeSteps, gridPoints;
-	protected boolean timeDependent;
-	protected /* Real */ double requiredGridValue;
-	protected Date exerciseDate;
-	protected Payoff payoff;
-	protected TridiagonalOperator finiteDifferenceOperator;
-	protected SampledCurve intrinsicValues;
-	protected List<BoundaryCondition<TridiagonalOperator>> bcS;
-	// temporaries
-	protected /* Real */ double sMin, center, sMax;
+    protected GeneralizedBlackScholesProcess process;
+    protected /* Size */ int timeSteps, gridPoints;
+    protected boolean timeDependent;
+    protected /* Real */ double requiredGridValue;
+    protected Date exerciseDate;
+    protected Payoff payoff;
+    protected TridiagonalOperator finiteDifferenceOperator;
+    protected SampledCurve intrinsicValues;
+    protected List<BoundaryCondition<TridiagonalOperator>> bcS;
+    // temporaries
+    protected /* Real */ double sMin, center, sMax;
 
-	//private double gridLogSpacing; //Not used
-	private final static/* Real */double safetyZoneFactor = 1.1;
+    //private double gridLogSpacing; //Not used
+    private final static/* Real */double safetyZoneFactor = 1.1;
 
-	
-	//
-	// public constructors
-	//
-	public FDVanillaEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
-		this.process = process;
-		this.timeSteps = timeSteps;
-		this.gridPoints = gridPoints;
-		this.timeDependent = timeDependent;
-		this.intrinsicValues = new SampledCurve(gridPoints);
-		bcS = new Vector<BoundaryCondition<TridiagonalOperator>>();
-	}
-	
-	
-	//
-	// public methods
-	//
 
-	public Array grid() {
-		return intrinsicValues.grid();
-	}
+    //
+    // public constructors
+    //
+    public FDVanillaEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints, final boolean timeDependent) {
+        this.process = process;
+        this.timeSteps = timeSteps;
+        this.gridPoints = gridPoints;
+        this.timeDependent = timeDependent;
+        this.intrinsicValues = new SampledCurve(gridPoints);
+        bcS = new Vector<BoundaryCondition<TridiagonalOperator>>();
+    }
 
-	
-	//
-	// protected methods
-	//
-	
-	protected void setGridLimits() {
-		setGridLimits(process.stateVariable().getLink().evaluate(), getResidualTime());
-		ensureStrikeInGrid();
-	}
 
-	protected void setupArguments(Arguments a) {
-		OneAssetOptionArguments args = (OneAssetOptionArguments) a; 
-//XXX		process = (GeneralizedBlackScholesProcess) args.stochasticProcess;
-		exerciseDate = args.exercise.lastDate();
-		payoff = args.payoff;
-		requiredGridValue = ((StrikedTypePayoff) (payoff)).strike();
-	}
+    //
+    // public methods
+    //
 
-	protected void setGridLimits(/* Real */double center, /* Time */double t) {
-		if (center <= 0.0)
-			throw new IllegalStateException("negative or null underlying given");
-		this.center = center;
-		/* Size */int newGridPoints = safeGridPoints(gridPoints, t);
-		if (newGridPoints > intrinsicValues.size()) {
-			intrinsicValues = new SampledCurve(newGridPoints);
-		}
+    public Array grid() {
+        return intrinsicValues.grid();
+    }
 
-		/* Real */double volSqrtTime = Math.sqrt(process.blackVolatility().getLink().blackVariance(t, center));
 
-		// the prefactor fine tunes performance at small volatilities
-		/* Real */double prefactor = 1.0 + 0.02 / volSqrtTime;
-		/* Real */double minMaxFactor = Math.exp(4.0 * prefactor * volSqrtTime);
-		sMin = center / minMaxFactor; // underlying grid min value
-		sMax = center * minMaxFactor; // underlying grid max value
-	}
+    //
+    // protected methods
+    //
 
-	protected void ensureStrikeInGrid() {
-		// ensure strike is included in the grid
-		StrikedTypePayoff striked_payoff = (StrikedTypePayoff) (payoff);
-		if (striked_payoff == null)
-			return;
-		/* Real */double requiredGridValue = striked_payoff.strike();
+    protected void setGridLimits() {
+        setGridLimits(process.stateVariable().getLink().evaluate(), getResidualTime());
+        ensureStrikeInGrid();
+    }
 
-		if (sMin > requiredGridValue / safetyZoneFactor) {
-			sMin = requiredGridValue / safetyZoneFactor;
-			// enforce central placement of the underlying
-			sMax = center / (sMin / center);
-		}
-		if (sMax < requiredGridValue * safetyZoneFactor) {
-			sMax = requiredGridValue * safetyZoneFactor;
-			// enforce central placement of the underlying
-			sMin = center / (sMax / center);
-		}
-	}
+    protected void setupArguments(final Arguments a) {
+        final OneAssetOptionArguments args = (OneAssetOptionArguments) a;
+        //XXX		process = (GeneralizedBlackScholesProcess) args.stochasticProcess;
+        exerciseDate = args.exercise.lastDate();
+        payoff = args.payoff;
+        requiredGridValue = ((StrikedTypePayoff) (payoff)).strike();
+    }
 
-	protected void initializeInitialCondition() {
-		intrinsicValues.setLogGrid(sMin, sMax);
-		PayoffFunction function = new PayoffFunction(payoff);
-		intrinsicValues.sample(function);
-	}
+    protected void setGridLimits(/* Real */final double center, /* Time */final double t) {
+        assert center > 0.0 : "negative or null underlying given";
+        this.center = center;
+        /* Size */final int newGridPoints = safeGridPoints(gridPoints, t);
+        if (newGridPoints > intrinsicValues.size())
+            intrinsicValues = new SampledCurve(newGridPoints);
 
-	protected void initializeOperator() {
-		finiteDifferenceOperator = OperatorFactory.getOperator(process, intrinsicValues.grid(), getResidualTime(), timeDependent);
-	}
+        /* Real */final double volSqrtTime = Math.sqrt(process.blackVolatility().getLink().blackVariance(t, center));
 
-	protected void initializeBoundaryConditions() {
+        // the prefactor fine tunes performance at small volatilities
+        /* Real */final double prefactor = 1.0 + 0.02 / volSqrtTime;
+        /* Real */final double minMaxFactor = Math.exp(4.0 * prefactor * volSqrtTime);
+        sMin = center / minMaxFactor; // underlying grid min value
+        sMax = center * minMaxFactor; // underlying grid max value
+    }
 
-		bcS.add(new NeumannBC(intrinsicValues.value(1)
-				- intrinsicValues.value(0), NeumannBC.Side.LOWER));
+    protected void ensureStrikeInGrid() {
+        // ensure strike is included in the grid
+        final StrikedTypePayoff striked_payoff = (StrikedTypePayoff) (payoff);
+        if (striked_payoff == null)
+            return;
+        /* Real */final double requiredGridValue = striked_payoff.strike();
 
-		bcS.add(new NeumannBC(intrinsicValues.value(intrinsicValues.size() - 1)
-				- intrinsicValues.value(intrinsicValues.size() - 2),
-				NeumannBC.Side.UPPER));
-	}
+        if (sMin > requiredGridValue / safetyZoneFactor) {
+            sMin = requiredGridValue / safetyZoneFactor;
+            // enforce central placement of the underlying
+            sMax = center / (sMin / center);
+        }
+        if (sMax < requiredGridValue * safetyZoneFactor) {
+            sMax = requiredGridValue * safetyZoneFactor;
+            // enforce central placement of the underlying
+            sMin = center / (sMax / center);
+        }
+    }
 
-	protected/* Time */double getResidualTime() {
-		return process.getTime(exerciseDate);
-	}
+    protected void initializeInitialCondition() {
+        intrinsicValues.setLogGrid(sMin, sMax);
+        final PayoffFunction function = new PayoffFunction(payoff);
+        intrinsicValues.sample(function);
+    }
 
-	// safety check to be sure we have enough grid points.
-	protected/* Size */int safeGridPoints(/* Size */int gridPoints,
-	/* Time */double residualTime) {
-		final int minGridPoints = 10;
-		final int minGridPointsPerYear = 2;
-		return Math.max(
-						gridPoints,
-						residualTime > 1.0 
-						        ? (int) ((minGridPoints + (residualTime - 1.0) * minGridPointsPerYear))
-								: minGridPoints);
-	}
+    protected void initializeOperator() {
+        finiteDifferenceOperator = OperatorFactory.getOperator(process, intrinsicValues.grid(), getResidualTime(), timeDependent);
+    }
 
-	protected void calculate(Results r) { }
-	
+    protected void initializeBoundaryConditions() {
+
+        bcS.add(new NeumannBC(intrinsicValues.value(1)
+                - intrinsicValues.value(0), NeumannBC.Side.LOWER));
+
+        bcS.add(new NeumannBC(intrinsicValues.value(intrinsicValues.size() - 1)
+                - intrinsicValues.value(intrinsicValues.size() - 2),
+                NeumannBC.Side.UPPER));
+    }
+
+    protected/* Time */double getResidualTime() {
+        return process.getTime(exerciseDate);
+    }
+
+    // safety check to be sure we have enough grid points.
+    protected/* Size */int safeGridPoints(/* Size */final int gridPoints,
+            /* Time */final double residualTime) {
+        final int minGridPoints = 10;
+        final int minGridPointsPerYear = 2;
+        return Math.max(
+                gridPoints,
+                residualTime > 1.0
+                ? (int) ((minGridPoints + (residualTime - 1.0) * minGridPointsPerYear))
+                        : minGridPoints);
+    }
+
+    protected void calculate(final Results r) { }
+
 }

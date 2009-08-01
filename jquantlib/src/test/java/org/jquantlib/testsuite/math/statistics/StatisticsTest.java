@@ -2,7 +2,7 @@ package org.jquantlib.testsuite.math.statistics;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.statistics.IStatistics;
 import org.junit.Ignore;
 import org.junit.Test;

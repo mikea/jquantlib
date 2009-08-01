@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -32,7 +32,7 @@ import org.jquantlib.math.Ops;
  * <p>
  * The implementation of the algorithm was inspired by <br/>
  * <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes in C", 2nd Edition, Cambridge University Press</i>
- *	 
+ *	
  * @author Richard Gomes
  **/
 public class Brent extends AbstractSolver1D<Ops.DoubleOp> {
@@ -75,7 +75,7 @@ public class Brent extends AbstractSolver1D<Ops.DoubleOp> {
             xMid = (xMax - root) / 2.0;
             if (Math.abs(xMid) <= xAcc1 || froot == 0.0)
                 return root;
-            
+
             if (Math.abs(e) >= xAcc1 && Math.abs(fxMin) > Math.abs(froot)) {
                 // Attempt inverse quadratic interpolation
                 s = froot / fxMin;
@@ -108,15 +108,13 @@ public class Brent extends AbstractSolver1D<Ops.DoubleOp> {
 
             xMin = root;
             fxMin = froot;
-            if (Math.abs(d) > xAcc1) {
+            if (Math.abs(d) > xAcc1)
                 root += d;
-            } else {
+            else
                 root += sign(xAcc1, xMid);
-            }
             froot = f.op(root);
             evaluationNumber++;
         }
-
         throw new ArithmeticException("maximum number of function evaluations exceeded"); // TODO: message
     }
 

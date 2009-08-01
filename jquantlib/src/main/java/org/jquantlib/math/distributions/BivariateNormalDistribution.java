@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -51,8 +51,8 @@ import org.jquantlib.math.integrals.TabulatedGaussLegendre;
 /**
  * Cumulative bivariate normal distibution function (West 2004).
  * <p>
- * The bivariate normal distribution is a distribution of a pair of variables whose 
- * conditional distributions are normal and that satisfy certain other technical conditions. 
+ * The bivariate normal distribution is a distribution of a pair of variables whose
+ * conditional distributions are normal and that satisfy certain other technical conditions.
  * <p>
  * The implementation derives from the article <i>"Better Approximations To Cumulative
  * Normal Distibutions", Graeme West, Dec 2004</i> available at www.finmod.co.za.
@@ -79,39 +79,34 @@ import org.jquantlib.math.integrals.TabulatedGaussLegendre;
  */
 //TODO: code review :: seems like we should extend or implement something ?
 public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
-	
-	//
-	// private fields
-	//
-	
+
+    //
+    // private fields
+    //
+
     private final double correlation_;
     private final static CumulativeNormalDistribution cumnorm_ = new CumulativeNormalDistribution();
 
-    
+
     //
     // public constructor
     //
-    
+
     /**
      * Constructor of BivariateNormalDistribution to initialize the correlation.
      * The correlation <code>rho</code> must be >=-1.0 and <=1.0.
      * @param rho correlation
      */
-    public BivariateNormalDistribution(double rho) {
-        if (rho < -1.0) {
-            throw new ArithmeticException("rho must be >= -1.0 (" + rho + " not allowed)");
-        }
-        if (rho > 1.0) {
-            throw new ArithmeticException("rho must be <= 1.0 (" + rho + " not allowed)");
-        }
+    public BivariateNormalDistribution(final double rho) {
+        assert rho >= -1.0 && rho <= 1.0 : "rho must be >= -1.0 and <= 1.0"; // TODO: message
         correlation_ = rho;
     }
-    
-    
+
+
     //
     // implements Ops.BinaryDoubleOp
     //
-    
+
     /**
      * Computes the Bivariate Normal Distribution of the two variables <code>x</code> and <code>y</code>
      * which can be correlated in a particular manner.
@@ -132,15 +127,15 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
             gaussLegendreQuad.setOrder(12);
         }
 
-        double h = -x;
+        final double h = -x;
         double k = -y;
         double hk = h * k;
         double bvn = 0.0;
 
         if (Math.abs(correlation_) < 0.925) {
             if (Math.abs(correlation_) > 0) {
-                double asr = Math.asin(correlation_);
-                Eqn3 f = new Eqn3(h, k, asr);
+                final double asr = Math.asin(correlation_);
+                final Eqn3 f = new Eqn3(h, k, asr);
                 bvn = gaussLegendreQuad.evaluate(f);
                 bvn *= asr * (0.25 / Math.PI);
             }
@@ -151,22 +146,22 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
                 hk *= -1;
             }
             if (Math.abs(correlation_) < 1) {
-                double Ass = (1 - correlation_) * (1 + correlation_);
+                final double Ass = (1 - correlation_) * (1 + correlation_);
                 double a = Math.sqrt(Ass);
-                double bs = (h - k) * (h - k);
-                double c = (4 - hk) / 8;
-                double d = (12 - hk) / 16;
-                double asr = -(bs / Ass + hk) / 2;
+                final double bs = (h - k) * (h - k);
+                final double c = (4 - hk) / 8;
+                final double d = (12 - hk) / 16;
+                final double asr = -(bs / Ass + hk) / 2;
                 if (asr > -100) {
                     bvn = a * Math.exp(asr) * (1 - c * (bs - Ass) * (1 - d * bs / 5) / 3 + c * d * Ass * Ass / 5);
                 }
                 if (-hk < 100) {
-                    double B = Math.sqrt(bs);
+                    final double B = Math.sqrt(bs);
                     bvn -= Math.exp(-hk / 2) * Constants.M_SQRT2PI * cumnorm_.op(-B / a) * B
-                            * (1 - c * bs * (1 - d * bs / 5) / 3);
+                    * (1 - c * bs * (1 - d * bs / 5) / 3);
                 }
                 a /= 2;
-                Eqn6 f = new Eqn6(a, c, d, bs, hk);
+                final Eqn6 f = new Eqn6(a, c, d, bs, hk);
                 bvn += gaussLegendreQuad.evaluate(f);
                 bvn /= (-2.0 * Math.PI);
             }
@@ -192,42 +187,42 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
 
     private static class Eqn3 implements Ops.DoubleOp {
 
-    	private double hk_, asr_, hs_;
-    
-    	/**
-    	 * Equation 3, see Genz 2004.
-    	 * 
-    	 * @param h
-    	 * @param k
-    	 * @param asr ASIN of <code>correlation_</code>
-    	 * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
-    	 */
-    
-    	public Eqn3(double h, double k, double asr) {
-    	    hk_ = h * k;
-    	    hs_ = (h * h + k * k) / 2;
-    	    asr_ = asr;
-    	}
-    
+        private final double hk_, asr_, hs_;
 
-    	//
+        /**
+         * Equation 3, see Genz 2004.
+         * 
+         * @param h
+         * @param k
+         * @param asr ASIN of <code>correlation_</code>
+         * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
+         */
+
+        public Eqn3(final double h, final double k, final double asr) {
+            hk_ = h * k;
+            hs_ = (h * h + k * k) / 2;
+            asr_ = asr;
+        }
+
+
+        //
         // Implements Ops.DoubleOp
         //
-        
-    	/**
-    	 * Computes equation 3, see references
-    	 * 
-    	 * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">Genz 2004, The Transformed BVN Problem</a>
-    	 * 
-    	 * @param h
-    	 * @param k
-    	 * @param asr ASIN of <code>correlation_</code>
-    	 * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
-    	 */
-    	public double op(final double x) {
-    	    double sn = Math.sin(asr_ * (-x + 1) * 0.5);
-    	    return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn));
-    	}
+
+        /**
+         * Computes equation 3, see references
+         * 
+         * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">Genz 2004, The Transformed BVN Problem</a>
+         * 
+         * @param h
+         * @param k
+         * @param asr ASIN of <code>correlation_</code>
+         * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
+         */
+        public double op(final double x) {
+            final double sn = Math.sin(asr_ * (-x + 1) * 0.5);
+            return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn));
+        }
     }
 
 
@@ -239,7 +234,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
      */
     private static class Eqn6 implements Ops.DoubleOp {
 
-        private double a_, c_, d_, bs_, hk_;
+        private final double a_, c_, d_, bs_, hk_;
 
         /**
          * Constructor to initialize a, b, c, d, bs and hk.
@@ -250,7 +245,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
          * @param bs
          * @param hk
          */
-        public Eqn6(double a, double c, double d, double bs, double hk) {
+        public Eqn6(final double a, final double c, final double d, final double bs, final double hk) {
             a_ = a;
             c_ = c;
             d_ = d;
@@ -258,11 +253,11 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
             hk_ = hk;
         }
 
-        
+
         //
         // Implements Ops.DoubleOp
         //
-        
+
         /**
          * Computes equation 6, see references<br>
          * 
@@ -278,11 +273,10 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
         public double op(final double x) {
             double xs = a_ * (-x + 1);
             xs = Math.abs(xs * xs);
-            double rs = Math.sqrt(1 - xs);
-            double asr = -(bs_ / xs + hk_) / 2;
-            if (asr > -100.0) {
+            final double rs = Math.sqrt(1 - xs);
+            final double asr = -(bs_ / xs + hk_) / 2;
+            if (asr > -100.0)
                 return (a_ * Math.exp(asr) * (Math.exp(-hk_ * (1 - rs) / (2 * (1 + rs))) / rs - (1 + c_ * xs * (1 + d_ * xs))));
-            }
             return 0.0;
         }
     }

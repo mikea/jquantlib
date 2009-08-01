@@ -2,8 +2,8 @@ package org.jquantlib.cashflow;
 
 import java.util.ArrayList;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.Constants;
+import org.jquantlib.math.matrixutilities.Array;
 
 public class Detail {
 

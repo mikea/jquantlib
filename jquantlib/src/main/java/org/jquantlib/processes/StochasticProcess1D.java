@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -37,12 +37,12 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.processes;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 
 
 /**
@@ -50,37 +50,37 @@ import org.jquantlib.math.Matrix;
  * @author Richard Gomes
  */
 public abstract class StochasticProcess1D extends StochasticProcess {
-	
-    protected Discretization1D discretization1D; 
-	
-	/**
-	 * @param discretization is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
-	 */
+
+    protected Discretization1D discretization1D;
+
+    /**
+     * @param discretization is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
+     */
     protected StochasticProcess1D(final LinearDiscretization discretization) {
-    	super(discretization);
-    	this.discretization1D = discretization;
+        super(discretization);
+        this.discretization1D = discretization;
     }
 
     public StochasticProcess1D() {}
 
     /**
      * Returns the initial value of the state variable
-     */ 
+     */
     public abstract /*@Price*/ double x0();
 
     /**
      * 
-     * Returns the drift part of the equation 
+     * Returns the drift part of the equation
      * {@latex$ \mu(t, x_t) }
      */
     public abstract /*@Drift*/ double drift(final /*@Time*/ double t, final /*@Price*/ double x);
-    
+
     /**
      * Returns the diffusion part of the equation, i.e.
      * {@latex$ \sigma(t, x_t) }
      */
     public abstract /*@Diffusion*/ double diffusion(final /*@Time*/ double t, final /*@Price*/ double x);
-    
+
     /**
      * Returns the expectation
      * {@latex$ E(x_{t_0 + \Delta t} | x_{t_0} = x_0) }
@@ -92,7 +92,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     public final /*@Expectation*/ double expectation(final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt) {
         return apply(x0, discretization1D.driftDiscretization(this, t0, x0, dt)); // XXX
     }
-    
+
     /**
      * Returns the standard deviation
      * {@latex$ S(x_{t_0 + \Delta t} | x_{t_0} = x_0) }
@@ -104,7 +104,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     public final /*@StdDev*/ double stdDeviation(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt) {
         return discretization1D.diffusionDiscretization(this, t0, x0, dt); // XXX
     }
-    
+
     /**
      * Returns the variance
      * {@latex$ V(x_{t_0 + \Delta t} | x_{t_0} = x_0) }
@@ -116,7 +116,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     public final /*@Variance*/ double variance(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt) {
         return discretization1D.varianceDiscretization(this, t0, x0, dt); // XXX
     }
-    
+
     /**
      * Returns the asset value after a time interval {@latex$ \Delta t }
      * according to the given discretization. By default, it returns
@@ -127,7 +127,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * standard deviation.
      */
     public final /*@Price*/ double evolve(final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt, final double dw) {
-    	return apply(expectation(t0,x0,dt), stdDeviation(t0,x0,dt) * dw);
+        return apply(expectation(t0,x0,dt), stdDeviation(t0,x0,dt) * dw);
     }
 
     /**
@@ -138,65 +138,74 @@ public abstract class StochasticProcess1D extends StochasticProcess {
         return x0 + dx;
     }
 
-    
+
     // ======================================================================================================
-    
-    
+
+
     static private final String ARRAY_1D_REQUIRED = "1-D array required";
-    
+
+    @Override
     public final int getSize() {
         return 1;
     }
 
+    @Override
     public final /*@Price*/ Array initialValues() {
         return new Array().fill( x0() );
     }
 
-    public final /*@Price*/ Array drift(final /*@Time*/ double t, /*@Price*/ Array x) {
+    @Override
+    public final /*@Price*/ Array drift(final /*@Time*/ double t, /*@Price*/ final Array x) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-    	if (x.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new Array().fill( drift(t, x.first()) );
+        if (x.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+        return new Array().fill( drift(t, x.first()) );
     }
 
-    public final /*@Diffusion*/ Matrix diffusion(final /*@Time*/ double t, /*@Price*/ Array x) {
+    @Override
+    public final /*@Diffusion*/ Matrix diffusion(final /*@Time*/ double t, /*@Price*/ final Array x) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-    	if (x.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	double v = diffusion(t, x.first());
-    	return new Matrix(1, 1, v);
+        if (x.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+        final double v = diffusion(t, x.first());
+        return new Matrix(1, 1).fill(v);
     }
 
+    @Override
     public final /*@Expectation*/ Array expectation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new Array().fill( expectation(t0, x0.first(), dt) );
+        if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+        return new Array().fill( expectation(t0, x0.first(), dt) );
     }
-    
+
+    @Override
     public final /*@StdDev*/ Matrix stdDeviation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	double v = stdDeviation(t0, x0.first(), dt);
-    	return new Matrix(1, 1, v);
+        if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+        final double v = stdDeviation(t0, x0.first(), dt);
+        return new Matrix(1, 1).fill(v);
     }
 
+    @Override
     public final /*@Covariance*/ Matrix covariance(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	double v = discretization1D.varianceDiscretization(this, t0, x0.first(), dt);
-        return new Matrix(1, 1, v);
-    }
-
-    public final Array evolve(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt, final Array dw) {
-    	// TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	if (dw.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new Array().fill( evolve(t0, x0.first(), dt, dw.first()) );
+        final double v = discretization1D.varianceDiscretization(this, t0, x0.first(), dt);
+        return new Matrix(1, 1).fill(v);
     }
 
+    @Override
+    public final Array evolve(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt, final Array dw) {
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+        if (dw.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+        return new Array().fill( evolve(t0, x0.first(), dt, dw.first()) );
+    }
+
+    @Override
     public final /*@Price*/ Array apply(final /*@Price*/ Array x0, final Array dx) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-    	if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	if (dx.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
-    	return new Array().fill( apply(x0.first(), dx.first()) );
+        if (x0.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+        if (dx.length!=1) throw new IllegalArgumentException(ARRAY_1D_REQUIRED);
+        return new Array().fill( apply(x0.first(), dx.first()) );
     }
 
 }

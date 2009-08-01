@@ -2,7 +2,7 @@
  Copyright (C) 2009 Jose Coll
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines;
 
@@ -57,7 +57,7 @@ public class AmericanPayoffAtHit {
     //
     // private final fields
     //
-    
+
     private final /* @Price */ double spot;
     private final /* @Variance */ double variance;
     private final /* @Volatility */ double  stdDev;
@@ -66,30 +66,30 @@ public class AmericanPayoffAtHit {
     private final double alpha, beta, DalphaDd1, DbetaDd2;
     private final double cum_d1, cum_d2, n_d1, n_d2;
     private final boolean inTheMoney;
-    
-    
+
+
     //
     // private fields
     //
-    
+
     private transient double X, K;
     private transient double D1, D2;
-    
-    
+
+
     //
     // public constructors
     //
-    
+
     public AmericanPayoffAtHit(
-            final double spot, final double discount, final double dividendDiscount, final double variance, 
+            final double spot, final double discount, final double dividendDiscount, final double variance,
             final StrikedTypePayoff strikedTypePayoff) {
 
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (spot <= 0.0) throw new IllegalArgumentException("positive spot value required");
-        if (discount <= 0.0) throw new IllegalArgumentException("positive discount required");
-        if (dividendDiscount <= 0.0) throw new IllegalArgumentException("positive dividend discount required");
-        if (variance < 0.0) throw new IllegalArgumentException("non-negative variance required");
-        
+        assert spot > 0.0 : "positive spot value required";
+        assert discount > 0.0 : "positive discount required";
+        assert dividendDiscount > 0.0 : "positive dividend discount required";
+        assert variance >= 0.0 : "non-negative variance required";
+
         this.spot = spot;
         this.variance = variance;
         this.stdDev = Math.sqrt(variance);
@@ -97,20 +97,20 @@ public class AmericanPayoffAtHit {
         this.log_H_S = Math.log(strike / spot);
 
         final Option.Type optionType = strikedTypePayoff.optionType();
-        
+
         if (variance >= Math.E) {
             if (discount == 0.0 && dividendDiscount == 0.0) {
                 mu      = - 0.5;
                 lambda  = 0.5;
-            } else if (discount == 0.0) {
-                throw new IllegalArgumentException("null discount not handled yet");
-            } else {
+            } else if (discount == 0.0)
+                throw new AssertionError("null discount not handled yet");
+            else {
                 mu = Math.log(dividendDiscount / discount) / variance - 0.5;
                 lambda = Math.sqrt( mu * mu - 2.0 * Math.log(discount) / variance);
             }
             D1 = log_H_S / stdDev + lambda * stdDev;
-            D2 = D1 - 2.0 * lambda * stdDev; 
-            CumulativeNormalDistribution f = new CumulativeNormalDistribution();
+            D2 = D1 - 2.0 * lambda * stdDev;
+            final CumulativeNormalDistribution f = new CumulativeNormalDistribution();
             cum_d1 = f.op(D1);
             cum_d2 = f.op(D2);
             n_d1 = f.derivative(D1);
@@ -124,10 +124,10 @@ public class AmericanPayoffAtHit {
                 cum_d2 = 1.0;
             } else {
                 cum_d1 = 0.0;
-                cum_d2 = 0.0;                
+                cum_d2 = 0.0;
             }
             n_d1 = 0.0;
-            n_d2 = 0.0;            
+            n_d2 = 0.0;
         }
 
         // up-and-in cash-(at-hit)-or-nothing option
@@ -143,7 +143,7 @@ public class AmericanPayoffAtHit {
                 DalphaDd1 = 0.0;
                 beta      = 0.5;
                 DbetaDd2  = 0.0;
-            }            
+            }
         }
         // down-and-in cash-(at-hit)-or-nothing option
         // a.k.a. american put with cash-or-nothing payoff
@@ -158,15 +158,14 @@ public class AmericanPayoffAtHit {
                 DalphaDd1 = 0.0;
                 beta      = 0.5;
                 DbetaDd2  = 0.0;
-            }            
-        } else {
+            }
+        } else
             throw new IllegalArgumentException("invalid option type");
-        }
-        
+
         muPlusLambda = mu + lambda;
         muMinusLambda = mu - lambda;
-        inTheMoney = (optionType.equals(Type.CALL) && strike < spot) || 
-                     (optionType.equals(Type.PUT) && strike > spot);
+        inTheMoney = (optionType.equals(Type.CALL) && strike < spot) ||
+        (optionType.equals(Type.PUT) && strike > spot);
 
         //
         // TODO: code review
@@ -174,7 +173,7 @@ public class AmericanPayoffAtHit {
         // These two variables are laying around. Values are assigned but never used.
         //
         double DXDstrike, DKDstrike;
-        
+
         if (inTheMoney) {
             forward     = 1.0;
             X           = 1.0;
@@ -183,42 +182,42 @@ public class AmericanPayoffAtHit {
             forward = Math.pow(strike / spot, muPlusLambda);
             X       = Math.pow(strike / spot, muMinusLambda);
             //DXDstrike_ = ......; // TODO: code review :: please verify against original QL/C++ code
-        }  
-        
+        }
+
         // binary cash-or-nothing payoff ?
         if (strikedTypePayoff instanceof CashOrNothingPayoff) {
-            CashOrNothingPayoff coo = (CashOrNothingPayoff) strikedTypePayoff;
+            final CashOrNothingPayoff coo = (CashOrNothingPayoff) strikedTypePayoff;
             K = coo.getCashPayoff();
             DKDstrike = 0.0;
         }
-        
+
         // binary asset-or-nothing payoff ?
         if (strikedTypePayoff instanceof AssetOrNothingPayoff) {
-            AssetOrNothingPayoff aoo = (AssetOrNothingPayoff) strikedTypePayoff;
+            final AssetOrNothingPayoff aoo = (AssetOrNothingPayoff) strikedTypePayoff;
             if (inTheMoney) {
                 K = spot;
-                DKDstrike = 0.0;                
+                DKDstrike = 0.0;
             } else {
                 K = aoo.strike();
                 DKDstrike = 1.0;
             }
         }
     }
-    
+
 
     //
     // public methods
     //
-    
+
     public /* @Price */ double value() /* @ReadOnly */ {
         /* @Price */ final double result = K * (forward * alpha + X * beta);
         return result;
-    }       
-    
+    }
+
     public double delta() /* @ReadOnly */{
-        double tempDelta = - spot * stdDev;
-        double DalphaDs = DalphaDd1/tempDelta;
-        double DbetaDs  = DbetaDd2/tempDelta;
+        final double tempDelta = - spot * stdDev;
+        final double DalphaDs = DalphaDd1/tempDelta;
+        final double DbetaDs  = DbetaDd2/tempDelta;
 
         double DforwardDs, DXDs;
         if (inTheMoney) {
@@ -229,20 +228,20 @@ public class AmericanPayoffAtHit {
             DXDs       = -muMinusLambda * X       / spot;
         }
 
-        double delta = K * (
-              DalphaDs * forward + alpha * DforwardDs
-            + DbetaDs  * X       + beta  * DXDs
-            );
+        final double delta = K * (
+                DalphaDs * forward + alpha * DforwardDs
+                + DbetaDs  * X       + beta  * DXDs
+        );
         return delta;
     }
 
     public double gamma() /* @ReadOnly */{
-        
-        double tempDelta = - spot * stdDev;
-        double DalphaDs = DalphaDd1/tempDelta;
-        double DbetaDs  = DbetaDd2/tempDelta;
-        double D2alphaDs2 = -DalphaDs/spot*(1-D1/stdDev);
-        double D2betaDs2  = -DbetaDs /spot*(1-D2/stdDev);
+
+        final double tempDelta = - spot * stdDev;
+        final double DalphaDs = DalphaDd1/tempDelta;
+        final double DbetaDs  = DbetaDd2/tempDelta;
+        final double D2alphaDs2 = -DalphaDs/spot*(1-D1/stdDev);
+        final double D2betaDs2  = -DbetaDs /spot*(1-D2/stdDev);
 
         double DforwardDs, DXDs, D2forwardDs2, D2XDs2;
         if (inTheMoney) {
@@ -257,24 +256,21 @@ public class AmericanPayoffAtHit {
             D2XDs2       = muMinusLambda * X       / (spot*spot)*(1+muMinusLambda);
         }
 
-        double gamma = K * (
-              D2alphaDs2 * forward   + DalphaDs * DforwardDs
-            + DalphaDs   * DforwardDs + alpha   * D2forwardDs2
-            + D2betaDs2  * X         + DbetaDs  * DXDs
-            + DbetaDs    * DXDs       + beta    * D2XDs2
-            );        
-        
+        final double gamma = K * (
+                D2alphaDs2 * forward   + DalphaDs * DforwardDs
+                + DalphaDs   * DforwardDs + alpha   * D2forwardDs2
+                + D2betaDs2  * X         + DbetaDs  * DXDs
+                + DbetaDs    * DXDs       + beta    * D2XDs2
+        );
+
         return gamma;
-    } 
-    
+    }
+
     public double rho(final /* @Time */ double maturity) /* @ReadOnly */ {
 
-        if (maturity <= 0.0)
-            throw new IllegalArgumentException("negative maturity: " + maturity + " not allowed");
-
-        // actually D.Dr / T
-        double DalphaDr = -DalphaDd1/(lambda*stdDev) * (1.0 + mu);
-        double DbetaDr  =  DbetaDd2 /(lambda*stdDev) * (1.0 + mu);
+        assert maturity > 0.0 : "negative maturity not allowed"; // TODO: message
+        final double DalphaDr = -DalphaDd1/(lambda*stdDev) * (1.0 + mu);
+        final double DbetaDr  =  DbetaDd2 /(lambda*stdDev) * (1.0 + mu);
         double DforwardDr, DXDr;
         if (inTheMoney) {
             DforwardDr = 0.0;
@@ -285,11 +281,10 @@ public class AmericanPayoffAtHit {
         }
 
         return maturity * K * (
-              DalphaDr * forward
-            + alpha   * DforwardDr
-            + DbetaDr  * X
-            + beta    * DXDr
-            );      
-    }    
-    
+                DalphaDr * forward
+                + alpha   * DforwardDr
+                + DbetaDr  * X
+                + beta    * DXDr);
+    }
+
 }

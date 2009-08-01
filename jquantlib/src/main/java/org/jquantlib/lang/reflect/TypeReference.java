@@ -69,6 +69,8 @@ import java.lang.reflect.Type;
  * @see <a href="http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf">Generics Tutorial</a>
  * @author Richard Gomes
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: review convenience of this class and its methods
 public abstract class TypeReference<T> {
 
     private final Type[] types;
@@ -155,7 +157,7 @@ public abstract class TypeReference<T> {
      */
     public Type getActualTypeParameters(final int paramNum, final int typeNum)
     {
-    	return ((ParameterizedType)getGenericType(paramNum)).getActualTypeArguments()[typeNum];
+        return ((ParameterizedType)getGenericType(paramNum)).getActualTypeArguments()[typeNum];
     }
 
 

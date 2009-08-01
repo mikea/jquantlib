@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.math.integrals;
 
@@ -51,7 +51,7 @@ import org.jquantlib.math.Ops.DoubleOp;
  * is calculated by means of the trapezoid formula
  * 
  * {@latex[
- *    \int_{a}^{b} f \mathrm{d}x = \frac{1}{2} f(x_{0}) + f(x_{1}) + f(x_{2}) + \dots + f(x_{N-1}) + \frac{1}{2} f(x_{N}) 
+ *    \int_{a}^{b} f \mathrm{d}x = \frac{1}{2} f(x_{0}) + f(x_{1}) + f(x_{2}) + \dots + f(x_{N-1}) + \frac{1}{2} f(x_{N})
  * }
  * 
  * where {@latex$ x_0 = a }, {@latex$ x_N = b }, and {@latex$ x_i = a+i \Delta x } with {@latex$ \Delta x = (b-a)/N }.
@@ -62,103 +62,105 @@ import org.jquantlib.math.Ops.DoubleOp;
  * @author Richard Gomes
  */
 public class TrapezoidIntegral extends Integrator {
-	
-	static public enum Method { Default, MidPoint };
-	
-	//
-	// protected fields
-	//
-	
-	protected Method method;
-	
-	//
-	// public constructors
-	//
-	
-	public TrapezoidIntegral(double accuracy) {
-		this(accuracy, 1000); // FIXME: code review :: what's the default "maxEvaluations" value???
-	}
-		
-	public TrapezoidIntegral(double accuracy, int maxEvaluations) {
-		this(accuracy, TrapezoidIntegral.Method.Default, maxEvaluations);
-	}
-		
-	public TrapezoidIntegral(double accuracy, final TrapezoidIntegral.Method method, int maxEvaluations) {
-		super(accuracy, maxEvaluations);
-		this.method = method;
-	}
+
+    static public enum Method { Default, MidPoint };
+
+    //
+    // protected fields
+    //
+
+    protected Method method;
+
+    //
+    // public constructors
+    //
+
+    public TrapezoidIntegral(final double accuracy) {
+        this(accuracy, 1000); // FIXME: code review :: what's the default "maxEvaluations" value???
+    }
+
+    public TrapezoidIntegral(final double accuracy, final int maxEvaluations) {
+        this(accuracy, TrapezoidIntegral.Method.Default, maxEvaluations);
+    }
+
+    public TrapezoidIntegral(final double accuracy, final TrapezoidIntegral.Method method, final int maxEvaluations) {
+        super(accuracy, maxEvaluations);
+        this.method = method;
+    }
 
 
-	//
-	// protected final methods
-	//
-	
-	protected final double defaultIteration(final Ops.DoubleOp f, final double a, final double b, final double I, final int N) /* @ReadOnly */ {
-		double sum = 0.0;
-	    double dx = (b-a)/N;
-	    double x = a + dx/2.0;
-	    for (int i=0; i<N; x += dx, ++i)
-	    	sum += f.op(x);
-	    return (I + dx*sum)/2.0;
-	}
+    //
+    // protected final methods
+    //
 
-	protected final double midPointIteration(final Ops.DoubleOp f, final double a, final double b, final double I, final double N) /* @ReadOnly */ {
-		double sum = 0.0;
-	    double dx = (b-a)/N;
-	    double x = a + dx/6.0;
-	    double D = 2.0*dx/3.0;
-	    for (int i=0; i<N; x += dx, ++i)
-	    	sum += f.op(x) + f.op(x+D);
-	    return (I + dx*sum)/3.0;
-	}
-	
+    protected final double defaultIteration(final Ops.DoubleOp f, final double a, final double b, final double I, final int N) /* @ReadOnly */ {
+        double sum = 0.0;
+        final double dx = (b-a)/N;
+        double x = a + dx/2.0;
+        for (int i=0; i<N; x += dx, ++i) {
+            sum += f.op(x);
+        }
+        return (I + dx*sum)/2.0;
+    }
 
-	//
-	// protected virtual methods
-	//
-	
-	// TODO: code review:: why this method is virtual??
-	protected Method getMethod() /* @ReadOnly */ {
-		return method;
+    protected final double midPointIteration(final Ops.DoubleOp f, final double a, final double b, final double I, final double N) /* @ReadOnly */ {
+        double sum = 0.0;
+        final double dx = (b-a)/N;
+        double x = a + dx/6.0;
+        final double D = 2.0*dx/3.0;
+        for (int i=0; i<N; x += dx, ++i) {
+            sum += f.op(x) + f.op(x+D);
+        }
+        return (I + dx*sum)/3.0;
+    }
 
-		// FIXME: code review :: C++ code	
-		//		protected:
-		//	        // calculation parameters
-		//	        Method method() const { return method_; }
-		//	        Method& method() { return method_; }
-	}
 
-	@Override
-	protected double integrate(final DoubleOp f, double a, double b) /* @ReadOnly */ {
+    //
+    // protected virtual methods
+    //
 
-		// start from the coarsest trapezoid...
-		int N = 1;
-		double I = (f.op(a)+f.op(b))*(b-a)/2.0;
-		double newI;
-	      
-		// ...and refine it
-		int i = 1;
-	    do {
-	    	switch (method) {
-	        	case MidPoint:
-	        		newI = midPointIteration(f,a,b,I,N);
-	                N *= 3;
-	                break;
-	            default:
-	            	newI = defaultIteration(f,a,b,I,N);
-	                N *= 2;
-	                break;
-	    	}
-	            
-		    // good enough? Also, don't run away immediately
-		    if (Math.abs(I-newI) <= getAbsoluteAccuracy() && i > 5)
-		        return newI; // ok, exit
-		    
-	        // oh well. Another step.
-	        I = newI;
-	        i++;
-	    } while (i < this.getMaxEvaluations());
-	    throw new ArithmeticException("max number of iterations reached");
-	}
-	        
+    // TODO: code review:: why this method is virtual??
+    protected Method getMethod() /* @ReadOnly */ {
+        return method;
+
+        // FIXME: code review :: C++ code
+        //		protected:
+        //	        // calculation parameters
+        //	        Method method() const { return method_; }
+        //	        Method& method() { return method_; }
+    }
+
+    @Override
+    protected double integrate(final DoubleOp f, final double a, final double b) /* @ReadOnly */ {
+
+        // start from the coarsest trapezoid...
+        int N = 1;
+        double I = (f.op(a)+f.op(b))*(b-a)/2.0;
+        double newI;
+
+        // ...and refine it
+        int i = 1;
+        do {
+            switch (method) {
+            case MidPoint:
+                newI = midPointIteration(f,a,b,I,N);
+                N *= 3;
+                break;
+            default:
+                newI = defaultIteration(f,a,b,I,N);
+                N *= 2;
+                break;
+            }
+
+            // good enough? Also, don't run away immediately
+            if (Math.abs(I-newI) <= getAbsoluteAccuracy() && i > 5)
+                return newI; // ok, exit
+
+            // oh well. Another step.
+            I = newI;
+            i++;
+        } while (i < this.getMaxEvaluations());
+        throw new ArithmeticException("max number of iterations reached"); // TODO: message
+    }
+
 }

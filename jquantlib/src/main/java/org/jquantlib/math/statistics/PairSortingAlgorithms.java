@@ -33,24 +33,26 @@ import org.jquantlib.util.Pair;
  * @author Praneet Tiwari
  *  Sorts an ArrayList of Value weight pairs
  */
+
+// TODO: code review :: please verify against original QL/C++ code
+// class not found on QL 0.9.7
 public class PairSortingAlgorithms<F extends Number, S extends Number> {
-    
+
     public PairSortingAlgorithms(){
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
-    public ArrayList<Pair<Number, Number>> insertionSort(List<Pair<F, S>> unsortedArrayList) {
+    public ArrayList<Pair<Number, Number>> insertionSort(final List<Pair<F, S>> unsortedArrayList) {
         Number t, u;    // =  Number.;
-        int size = unsortedArrayList.size();
-        ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
-        Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
+        final int size = unsortedArrayList.size();
+        final ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
+        final Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
         Pair<F, S> fs = new Pair<F, S>(null, null);
 
         // there are no arrays of generics, just yet :-<
-        Number[] f = new Number[size];
-        Number[] g = new Number[size];
+        final Number[] f = new Number[size];
+        final Number[] g = new Number[size];
         int i = 0;
 
         while (lIterator.hasNext()) {
@@ -78,7 +80,7 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
 
         // convert the array into array list of Pair
         for (int k = 0; k < size; k++) {
-            Pair<Number, Number> tmp = new Pair<Number, Number>(f[k], g[k]);
+            final Pair<Number, Number> tmp = new Pair<Number, Number>(f[k], g[k]);
 
             // System.out.println("This is the object --->" + tmp.getFirst()+tmp.getSecond());
             sortedArrayList.add(tmp);
@@ -88,16 +90,16 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
     }
 
     // Quicksort
-    public ArrayList<Pair<Number, Number>> quickSort(ArrayList<Pair<F, S>> unsortedArrayList) {
-        Number t, u;    // =  Number.;
-        int size = unsortedArrayList.size();
-        ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
-        Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
+    public ArrayList<Pair<Number, Number>> quickSort(final ArrayList<Pair<F, S>> unsortedArrayList) {
+        final Number t, u;    // =  Number.;
+        final int size = unsortedArrayList.size();
+        final ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
+        final Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
         Pair<F, S> fs = new Pair<F, S>(null, null);;
 
         // there are no arrays of generics, just yet :-<
-        Number[] f = new Number[size];
-        Number[] g = new Number[size];
+        final Number[] f = new Number[size];
+        final Number[] g = new Number[size];
         int i = 0;
 
         while (lIterator.hasNext()) {
@@ -109,7 +111,7 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         quicksort(f, g, 0, f.length - 1);
 
         for (int k = 0; k < size; k++) {
-            Pair<Number, Number> tmp = new Pair<Number, Number>(f[k], g[k]);
+            final Pair<Number, Number> tmp = new Pair<Number, Number>(f[k], g[k]);
 
             // System.out.println("This is the object --->" + tmp.getFirst()+tmp.getSecond());
             sortedArrayList.add(tmp);
@@ -118,10 +120,11 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         return sortedArrayList;
     }
 
-    private void quicksort(Number[] values, Number[] weights, int left0, int right0) {
+    private void quicksort(final Number[] values, final Number[] weights, final int left0, final int right0) {
         int left, right;
         Number pivot, temp;
-        Number pivotW, tempW;
+        final Number pivotW;
+        Number tempW;
 
         left = left0;
         right = right0 + 1;
@@ -130,13 +133,11 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         right--;
 
         do {
-            while ((left <= right0) && (values[left].doubleValue() < (pivot).doubleValue())) {
+            while ((left <= right0) && (values[left].doubleValue() < (pivot).doubleValue()))
                 left++;
-            }
 
-            while (values[right].doubleValue() > (pivot).doubleValue()) {
+            while (values[right].doubleValue() > (pivot).doubleValue())
                 right--;
-            }
 
             if (left < right) {
                 temp = values[left];
@@ -155,26 +156,24 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         values[right] = temp;
         weights[right] = tempW;
 
-        if (left0 < right) {
+        if (left0 < right)
             quicksort(values, weights, left0, right);
-        }
 
-        if (left < right0) {
+        if (left < right0)
             quicksort(values, weights, left, right0);
-        }
     }
 
     // selection sort now
-    public ArrayList<Pair<Number, Number>> selectionSort(ArrayList<Pair<F, S>> unsortedArrayList) {
-        Number t, u;    // =  Number.;
-        int size = unsortedArrayList.size();
-        ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
-        Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
+    public ArrayList<Pair<Number, Number>> selectionSort(final ArrayList<Pair<F, S>> unsortedArrayList) {
+        final Number t, u;    // =  Number.;
+        final int size = unsortedArrayList.size();
+        final ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
+        final Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
         Pair<F, S> fs = new Pair<F, S>(null, null);;
 
         // there are no arrays of generics, just yet :-<
-        Number[] f = new Number[size];
-        Number[] g = new Number[size];
+        final Number[] f = new Number[size];
+        final Number[] g = new Number[size];
         int j = 0;
 
         while (lIterator.hasNext()) {
@@ -188,17 +187,15 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         for (int i = 0; i < f.length - 1; i++) {
             indexSmallest = i;
 
-            for (int index = i + 1; index < f.length; index++) {
-                if (f[index].doubleValue() < f[indexSmallest].doubleValue()) {
+            for (int index = i + 1; index < f.length; index++)
+                if (f[index].doubleValue() < f[indexSmallest].doubleValue())
                     indexSmallest = index;
-                }
-            }
 
             swap(f, g, i, indexSmallest);
         }
 
         for (int k = 0; k < size; k++) {
-            Pair<Number, Number> tmp = new Pair<Number, Number>(f[k], g[k]);
+            final Pair<Number, Number> tmp = new Pair<Number, Number>(f[k], g[k]);
 
             // System.out.println("This is the object --->" + tmp.getFirst()+tmp.getSecond());
             sortedArrayList.add(tmp);
@@ -207,29 +204,29 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         return sortedArrayList;
     }
 
-    private void swap(Number[] f, Number[] g, int i1, int i2) {    // swap items in array
-        Number tmp = f[i1];
+    private void swap(final Number[] f, final Number[] g, final int i1, final int i2) {    // swap items in array
+        final Number tmp = f[i1];
 
         f[i1] = f[i2];
         f[i2] = tmp;
 
-        Number tmpW = g[i1];
+        final Number tmpW = g[i1];
 
         g[i1] = g[i2];
         g[i2] = tmpW;
     }
 
     // heap sort now
-    public ArrayList<Pair<Number, Number>> heapSort(ArrayList<Pair<F, S>> unsortedArrayList) {
-        Number t, u;    // =  Number.;
-        int size = unsortedArrayList.size();
-        ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
-        Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
+    public ArrayList<Pair<Number, Number>> heapSort(final ArrayList<Pair<F, S>> unsortedArrayList) {
+        final Number t, u;    // =  Number.;
+        final int size = unsortedArrayList.size();
+        final ArrayList<Pair<Number, Number>> sortedArrayList = new ArrayList<Pair<Number, Number>>(size);
+        final Iterator<Pair<F, S>> lIterator = unsortedArrayList.iterator();
         Pair<F, S> fs = new Pair<F, S>(null, null);;
 
         // there are no arrays of generics, just yet :-<
-        Number[] f = new Number[size];
-        Number[] g = new Number[size];
+        final Number[] f = new Number[size];
+        final Number[] g = new Number[size];
         int i = 0;
 
         while (lIterator.hasNext()) {
@@ -246,7 +243,7 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         }
 
         for (int k = 0; k < size; k++) {
-            Pair<Number, Number> tmp = new Pair<Number, Number>(f[k], g[k]);
+            final Pair<Number, Number> tmp = new Pair<Number, Number>(f[k], g[k]);
 
             // System.out.println("This is the object --->" + tmp.getFirst()+tmp.getSecond());
             sortedArrayList.add(tmp);
@@ -255,84 +252,75 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         return sortedArrayList;
     }
 
-    private void heapify(Number[] f, Number[] g) {
-        for (int start = f.length / 2 - 1; start >= 0; start--) {
+    private void heapify(final Number[] f, final Number[] g) {
+        for (int start = f.length / 2 - 1; start >= 0; start--)
             heapSortWork(f, g, start, f.length - 1);
-        }
     }
 
-    private void heapSortWork(Number[] f, Number[] g, int root, int end) {
+    private void heapSortWork(final Number[] f, final Number[] g, int root, final int end) {
         while (root * 2 + 1 <= end) {
             int child = root * 2 + 1;
 
-            if ((child < end) && (f[child].doubleValue() < (f[child + 1].doubleValue()))) {
+            if ((child < end) && (f[child].doubleValue() < (f[child + 1].doubleValue())))
                 child += 1;
-            }
 
             if (f[root].doubleValue() < (f[child]).doubleValue()) {
                 swap(f, g, root, child);
                 root = child;
-            } else {
+            } else
                 break;
-            }
         }
     }
 
-    public static void main(String args[]) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+    public static void main(final String args[]) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         System.out.println("************************************ ");
 
-        ArrayList<Pair<Number, Number>> al = new ArrayList<Pair<Number, Number>>();
+        final ArrayList<Pair<Number, Number>> al = new ArrayList<Pair<Number, Number>>();
         ArrayList<Pair<Number, Number>> resArrayList = new ArrayList<Pair<Number, Number>>();
 
-//      Math.random();
+        //      Math.random();
         for (int i = 0; i < 14; i++) {
 
             // Pair<Number, Number> p = new Pair<Number, Number>(100-i, i*10);
-            Pair<Number, Number> p = new Pair<Number, Number>(Math.random(), Math.random());
+            final Pair<Number, Number> p = new Pair<Number, Number>(Math.random(), Math.random());
 
             al.add(p);
         }
 
-        for (int j = 0; j < al.size(); j++) {
+        for (int j = 0; j < al.size(); j++)
             System.out.println("Now Showing values before sorting at index " + j + " " + al.get(j).getFirst() + " " + al.get(j).getSecond());
-        }
 
         System.out.println("************************************ ");
         resArrayList = new PairSortingAlgorithms().insertionSort(al);
 
-        for (int j = 0; j < resArrayList.size(); j++) {
+        for (int j = 0; j < resArrayList.size(); j++)
             System.out.println("Now Showing values after insertion sort at index " + j + " " + resArrayList.get(j).getFirst() + " " + resArrayList.get(j).getSecond());
-        }
 
         System.out.println("************************************ ");
 
         // check quicksort now
         resArrayList = new PairSortingAlgorithms().quickSort(al);
 
-        for (int j = 0; j < resArrayList.size(); j++) {
+        for (int j = 0; j < resArrayList.size(); j++)
             System.out.println("Now Showing " + "values after quick sort at index " + j + " " + resArrayList.get(j).getFirst() + " " + resArrayList.get(j).getSecond());
-        }
 
         System.out.println("************************************ ");
 
         // check selection sort now
         resArrayList = new PairSortingAlgorithms().selectionSort(al);
 
-        for (int j = 0; j < resArrayList.size(); j++) {
+        for (int j = 0; j < resArrayList.size(); j++)
             System.out.println("Now Showing values after selection sort at index " + j + " " + resArrayList.get(j).getFirst() + " " + resArrayList.get(j).getSecond());
-        }
 
         System.out.println("************************************ ");
 
         // check heap sort now
         resArrayList = new PairSortingAlgorithms().heapSort(al);
 
-        for (int j = 0; j < resArrayList.size(); j++) {
+        for (int j = 0; j < resArrayList.size(); j++)
             System.out.println("Now Showing values after heap sort at index " + j + " " + resArrayList.get(j).getFirst() + " " + resArrayList.get(j).getSecond());
-        }
     }
 }    // class
- 
+

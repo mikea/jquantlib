@@ -24,9 +24,9 @@ package org.jquantlib.testsuite.math.interpolations;
 
 import static org.junit.Assert.assertFalse;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.NaturalCubicSpline;
+import org.jquantlib.math.matrixutilities.Array;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;

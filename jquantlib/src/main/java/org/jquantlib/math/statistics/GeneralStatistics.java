@@ -35,7 +35,7 @@ import org.jquantlib.math.functions.Minus;
 import org.jquantlib.math.functions.Sqr;
 import org.jquantlib.math.functions.TruePredicate;
 import org.jquantlib.util.Pair;
- 
+
 /**
  * Statistics tool
  * <p>
@@ -50,21 +50,20 @@ import org.jquantlib.util.Pair;
 //FIXME: changed to extending base class rather then implementing interface
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
-    
+
     private final static String empty_sample_set =  "empty sample set";
     private final static String unsufficient_sample_size = "sample number <=1, unsufficient";
     private final static String unsufficient_sample_size_2 = "Sample size cannot be less than 2";
     private final static String unsufficient_sample_size_3 = "Sample size cannot be less than 3";
     private final static String empyt_sample_set = "empty sample set";
     private final static String negative_weight_not_allowed = "negative weight not allowed";
-    
+
     private List <Pair<Double, Double>> samples;
     private boolean sorted = false;
 
     public GeneralStatistics() {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         reset();
     }
 
@@ -74,9 +73,8 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     }
 
     public final void sort() {
-        if (!sorted) {
+        if (!sorted)
             samples = new PairSortingAlgorithms().insertionSort(samples);
-        }
         sorted = true;
     }
 
@@ -92,15 +90,14 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         return samples;
     }
 
-    
+
     //reviewed!
     //! sum of data weights
     public final double weightSum() {
         double result = 0.0;
-        for (Pair<Double, Double> element : samples) {
+        for (final Pair<Double, Double> element : samples)
             // casting required, re-visit
             result += element.getSecond();
-        }
         return result;
     }
 
@@ -109,9 +106,8 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     \f[ \langle x \rangle = \frac{\sum w_i x_i}{\sum w_i}. \f]
      */
     public final double mean() {
-        int size = getSampleSize();
-        if (size == 0) throw new IllegalArgumentException(empty_sample_set);
-        
+        final int size = getSampleSize();
+        assert size > 0 : empty_sample_set;
         return expectationValue(new Identity(), new TruePredicate()).getFirst();
     }
 
@@ -127,33 +123,31 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
 
     The function returns a pair made of the result and
     the number of observations in the given range.
-    */
+     */
     public final Pair<Double, Integer> expectationValue(final Ops.DoubleOp f, final Ops.DoublePredicate inRange) {
         double num = 0.0;
         double den = 0.0;
         int N = 0;
-        for (Pair<Double, Double> element : samples) {
-            double w = (Double) element.getSecond();
-            double x = (Double) element.getFirst();
+        for (final Pair<Double, Double> element : samples) {
+            final double w = element.getSecond();
+            final double x = element.getFirst();
             Double evaluated = f.op(x);
-            
+
             //TODO:: argh we have to do this check :-( refactor E_ClippedFunction
-            if(evaluated == null){
+            if(evaluated == null)
                 evaluated = 0.0;
-            }
             if (inRange.op(x)) {
                 num += evaluated * w;
                 den += w;
                 N++;
             }
         }
-        if (N == 0) {
+        if (N == 0)
             return new Pair<Double, Integer>(0.0, 0);
-        } else {
+        else
             return new Pair<Double, Integer>(0.0, 0);
-        }
     }
-    
+
     /* Refactored!!!
     public Pair<Number, Number> expectationValue(String functype) {
         Double num = 0.0, den = 0.0;
@@ -176,27 +170,25 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         }
 
     }
-    */
-    
+     */
+
     /*! returns the variance, defined as
     \f[ \sigma^2 = \frac{N}{N-1} \left\langle \left(
     x-\langle x \rangle \right)^2 \right\rangle. \f]
      */
     // reviewed/ refactored
     public double variance() {
-        int N = getSampleSize();
-        if (N < 1) {
-            throw new IllegalArgumentException(unsufficient_sample_size);
-        }
+        final int n = getSampleSize();
+        assert n >= 1 : unsufficient_sample_size;
 
         final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
         functions.add(new Sqr());
         functions.add(new Bind2nd(new Minus(), mean()));
         final Expression comp = new Expression(functions);
-        
+
         // Evaluate the composed function in the specified range (ie. everyWhere).
-        double s2 = expectationValue(comp, new TruePredicate()).getFirst();
-        return s2*N/(N-1.0);
+        final double s2 = expectationValue(comp, new TruePredicate()).getFirst();
+        return s2*n/(n-1.0);
     }
 
     /* reviewed/refactored
@@ -215,8 +207,8 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         }
         return runningTotal / (n - 1);
     }
-    */
-    
+     */
+
 
     /*! returns the standard deviation \f$ \sigma \f$, defined as the
     square root of the variance.
@@ -241,22 +233,21 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
      */
     //reviewed/refactored
     public double skewness() {
-        int n = getSampleSize();
-        if (n <= 2) {
+        final int n = getSampleSize();
+        if (n <= 2)
             throw new IllegalArgumentException(unsufficient_sample_size_2);
-        }
-    
+
         final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
         functions.add(new Cube());
         functions.add(new Bind2nd(new Minus(), mean()));
         final Expression comp = new Expression(functions);
 
-        double x = expectationValue(comp, new TruePredicate()).getFirst();
-        double sigma = standardDeviation();
-        double _n = n;
+        final double x = expectationValue(comp, new TruePredicate()).getFirst();
+        final double sigma = standardDeviation();
+        final double _n = n;
         return (_n / ((_n - 1) * (_n - 2))) * x / (Math.pow(sigma, 3));
     }
-    
+
     /*
         public Double skewness() {
         int n = getSampleSize();
@@ -265,12 +256,12 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         }
         double mean = mean();
         double x = expectationValue(f, inRange)
-        
+
         for (Pair<Double, Double> element : samples) {
             Double x = (Double) element.getFirst();
             runningTotal += Math.pow((x - mean), 3);
         }
-       
+
         double sigma = standardDeviation();
 
         return (n / ((n - 1) * (n - 2))) * runningTotal / (Math.pow(sigma, 3));
@@ -285,26 +276,25 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
      */
     //reviewed
     public double kurtosis() {
-        int N = getSampleSize();
-        if (N <= 3) {
+        final int N = getSampleSize();
+        if (N <= 3)
             throw new IllegalArgumentException(unsufficient_sample_size_3);
-        }
 
         final List<DoubleOp> functions = new ArrayList<DoubleOp>();
         functions.add(new Fourth());
         functions.add(new Bind2nd(new Minus(), mean()));
         final Expression comp = new Expression(functions);
 
-        double x = expectationValue(comp, new TruePredicate()).getFirst();
-      
-        double _N = N;
-        double sigma2 = standardDeviation();
-        double c1 = (_N/(_N-1.0)) * (_N/(_N-2.0)) * ((N+1.0)/(_N-3.0));
-        double c2 = 3.0 * ((_N-1.0)/(_N-2.0)) * ((_N-1.0)/(_N-3.0));
-        
+        final double x = expectationValue(comp, new TruePredicate()).getFirst();
+
+        final double _N = N;
+        final double sigma2 = standardDeviation();
+        final double c1 = (_N/(_N-1.0)) * (_N/(_N-2.0)) * ((N+1.0)/(_N-3.0));
+        final double c2 = 3.0 * ((_N-1.0)/(_N-2.0)) * ((_N-1.0)/(_N-3.0));
+
         return c1*(x/(sigma2*sigma2))-c2;
     }
-    
+
     /*
      * public Double kurtosis() {
         int n = getSampleSize();
@@ -322,22 +312,20 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
         return unadjustedKurtosis - (3 * (Math.pow(n - 1, 2)) / ((n - 1) * (n - 2)));
     }
      */
-    
+
     /* ! returns the minimum sample value */
     //reviewed
     public double min() {
-        if (getSampleSize() <= 1) {
+        if (getSampleSize() <= 1)
             throw new IllegalArgumentException(empyt_sample_set);
-        }
         return MathUtil.min(samples);
     }
 
     /*! returns the maximum sample value */
     //reviewed
     public double max() {
-        if (getSampleSize() <= 1) {
+        if (getSampleSize() <= 1)
             throw new IllegalArgumentException(unsufficient_sample_size);
-        }
         return MathUtil.max(samples);
     }
 
@@ -349,22 +337,20 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     \pre \f$ y \f$ must be in the range \f$ (0-1]. \f$
      */
     //reviewed
-    public double percentile(double percent) {
-        if (percent < 0.0 || percent > 1.0) {
+    public double percentile(final double percent) {
+        if (percent < 0.0 || percent > 1.0)
             throw new IllegalArgumentException("percentile (" + percent + ") must be in (0.0, 1.0]");
-        }
-        double wt = weightSum();
-        if (wt < 0.0) {
+        final double wt = weightSum();
+        if (wt < 0.0)
             throw new IllegalArgumentException(empty_sample_set);
-        }
         sort();
-        double target = percent * wt;
+        final double target = percent * wt;
         double integral = 0.0;
         int k = 0;
         /* the sum of weight is non null, therefore there's
         at least one sample */
         while (integral < target && k < samples.size()) {
-            Pair<Double, Double> element = samples.get(k);
+            final Pair<Double, Double> element = samples.get(k);
             integral += element.getSecond().doubleValue();
             k++;
         }
@@ -380,26 +366,24 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     \pre \f$ y \f$ must be in the range \f$ (0-1]. \f$
      */
     //reviewed
-    public double topPercentile(Double percent) {
-        if (percent < 0.0 || percent > 1.0) {
+    public double topPercentile(final Double percent) {
+        if (percent < 0.0 || percent > 1.0)
             throw new IllegalArgumentException("percentile (" + percent + ") must be in (0.0, 1.0]");
-        }
-        double sampleWeight = weightSum();
-        if (sampleWeight < 0.0) {
+        final double sampleWeight = weightSum();
+        if (sampleWeight < 0.0)
             throw new IllegalArgumentException(empty_sample_set);
-        }
         sort();
-        
-        
+
+
         ////!!!! keeping fingers crossed that this does what's intended to to
         //there is no reverse iterator, do a manual copy instead
         //ArrayList<Pair<Double, Double>> samplesReverse = new ArrayList<Pair<Double, Double>>(samples.size());
         //dropping this approach for now approaching this another way
-        double target = percent * sampleWeight;
+        final double target = percent * sampleWeight;
         double integral = sampleWeight;
         int k = 0;
         while (integral < target && k < samples.size()) {
-            Pair<Double, Double> element = samples.get(k);
+            final Pair<Double, Double> element = samples.get(k);
             integral -= element.getSecond().doubleValue();
             k++;
         }
@@ -408,10 +392,9 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
 
     /*! \pre weights must be positive or null */
     //reviewd
-    public void add(double value, double weight/* = 1.0*/) {
-        if(weight < 0){
+    public void add(final double value, final double weight/* = 1.0*/) {
+        if(weight < 0)
             throw new IllegalArgumentException(negative_weight_not_allowed);
-        }
         samples.add(new Pair<Double, Double>(value, weight));
         sorted = false;
     }
@@ -439,13 +422,13 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
      */
 
     //use   rand() function to generate a sample
-    public static void main(String args[]) {
-        GeneralStatistics gs = new GeneralStatistics();
+    public static void main(final String args[]) {
+        final GeneralStatistics gs = new GeneralStatistics();
         System.out.println("******************************************************************************");
         System.out.println("A Small test case");
-        double checkF[] = new double[100];
+        final double checkF[] = new double[100];
         double f, g;
-        double checkG[] = new double[100];
+        final double checkG[] = new double[100];
         for (int i = 0; i < 100; i++) {
             f = Math.random();
             //g= Math.random();
@@ -456,13 +439,11 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
 
         }
         //generate csv values so that they can be copied to a spreadsheet and verified against standard results
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++)
             System.out.println(checkF[i] + "");
-        }
         System.out.println("");
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++)
             System.out.print(checkG[i] + ",");
-        }
         System.out.println("Statistics output");
         System.out.println("Mean is " + gs.mean());
         System.out.println("Max is " + gs.max());
@@ -475,7 +456,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     }
 
     @Override
-    public double averageShortfall(double target) {
+    public double averageShortfall(final double target) {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -493,55 +474,55 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     }
 
     @Override
-    public double expectedShortfall(double percentile) {
+    public double expectedShortfall(final double percentile) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double gaussianAverageShortfall(double target) {
+    public double gaussianAverageShortfall(final double target) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double gaussianExpectedShortfall(double percentile) {
+    public double gaussianExpectedShortfall(final double percentile) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double gaussianPercentile(double percentile) {
+    public double gaussianPercentile(final double percentile) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double gaussianPotentialUpside(double percentile) {
+    public double gaussianPotentialUpside(final double percentile) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double gaussianShortfall(double target) {
+    public double gaussianShortfall(final double target) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double gaussianValueAtRisk(double percentile) {
+    public double gaussianValueAtRisk(final double percentile) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double potentialUpside(double percentile) {
+    public double potentialUpside(final double percentile) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double regret(double target) {
+    public double regret(final double target) {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -565,13 +546,13 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     }
 
     @Override
-    public double shortfall(double target) {
+    public double shortfall(final double target) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public double valueAtRisk(double percentile) {
+    public double valueAtRisk(final double percentile) {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -580,85 +561,79 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     //
     // private inner classes
     //
-    
+
     // TODO: ideally, any class which implements Comparable<T> should be supported by min and max.
     // Have a look at class Std : methods min and max there should be merged with methods min and max
     // from class MathUtil below:
     //
-    
+
     private static class MathUtil {
 
-        public static Double min(List<Pair<Double, Double>> values) {
-            if (System.getProperty("EXPERIMENTAL") == null) {
+        public static Double min(final List<Pair<Double, Double>> values) {
+            if (System.getProperty("EXPERIMENTAL") == null)
                 throw new UnsupportedOperationException("Work in progress");
-            }
 
             // simplest algo in the first release
             Double std = 0.0;
 
-            for (Pair<Double, Double> element : values) {
-                if (std > (Double) element.getFirst()) {
-                    std = (Double) element.getFirst();
-                }
-            }
+            for (final Pair<Double, Double> element : values)
+                if (std > (Double) element.getFirst())
+                    std = element.getFirst();
 
             return std;
         }
 
-        public static Double max(List<Pair<Double, Double>> values) {
-            if (System.getProperty("EXPERIMENTAL") == null) {
+        public static Double max(final List<Pair<Double, Double>> values) {
+            if (System.getProperty("EXPERIMENTAL") == null)
                 throw new UnsupportedOperationException("Work in progress");
-            }
 
             // simplest algo in the first release
             Double std = 0.0;
 
-            for (Pair<Double, Double> element : values) {
-                if (std < (Double) element.getFirst()) {
-                    std = (Double) element.getFirst();
-                }
-            }
+            for (final Pair<Double, Double> element : values)
+                if (std < (Double) element.getFirst())
+                    std = element.getFirst();
 
             return std;
         }
 
-//        // more generic methods, don't know if they are useful...
-//        public static <T extends Number> T max(List<Pair<Number, Number>> values) {
-//            if (System.getProperty("EXPERIMENTAL") == null) {
-//                throw new UnsupportedOperationException("Work in progress");
-//            }
-//
-//            // simplest algo in the first release
-//            Number std = 0.0;
-//
-//            for (Pair<Number, Number> element : values) {
-//                if (std.doubleValue() > ((Number) element.getFirst()).doubleValue()) {
-//                    std = (Number) element.getFirst();
-//                }
-//            }
-//
-//            return (T) std;
-//        }
-//
-//        public static <T extends Number> T min(List<Pair<Number, Number>> values) {
-//            if (System.getProperty("EXPERIMENTAL") == null) {
-//                throw new UnsupportedOperationException("Work in progress");
-//            }
-//
-//            // simplest algo in the first release
-//            Number std = 0.0;
-//
-//            for (Pair<Number, Number> element : values) {
-//                if (std.doubleValue() < ((Number) element.getFirst()).doubleValue()) {
-//                    std = (Number) element.getFirst();
-//                }
-//            }
-//
-//            return (T) std;
-//        }
+        //        // more generic methods, don't know if they are useful...
+        //        public static <T extends Number> T max(List<Pair<Number, Number>> values) {
+        //            if (System.getProperty("EXPERIMENTAL") == null) {
+        //                throw new UnsupportedOperationException("Work in progress");
+        //            }
+        //
+        //            // simplest algo in the first release
+        //            Number std = 0.0;
+        //
+        //            for (Pair<Number, Number> element : values) {
+        //                if (std.doubleValue() > ((Number) element.getFirst()).doubleValue()) {
+        //                    std = (Number) element.getFirst();
+        //                }
+        //            }
+        //
+        //            return (T) std;
+        //        }
+        //
+        //        public static <T extends Number> T min(List<Pair<Number, Number>> values) {
+        //            if (System.getProperty("EXPERIMENTAL") == null) {
+        //                throw new UnsupportedOperationException("Work in progress");
+        //            }
+        //
+        //            // simplest algo in the first release
+        //            Number std = 0.0;
+        //
+        //            for (Pair<Number, Number> element : values) {
+        //                if (std.doubleValue() < ((Number) element.getFirst()).doubleValue()) {
+        //                    std = (Number) element.getFirst();
+        //                }
+        //            }
+        //
+        //            return (T) std;
+        //        }
 
     }
-    
+
 }
 
 

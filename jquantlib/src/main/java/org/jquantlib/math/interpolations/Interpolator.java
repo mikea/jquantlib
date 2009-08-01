@@ -22,7 +22,7 @@
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 
 

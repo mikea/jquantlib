@@ -25,8 +25,8 @@ package org.jquantlib.math.randomnumbers;
 /**
  * PMT : Primitive Polynomials Modulo Two
  * <p>
- * The encoding is as follows: Coefficients of each primitive polynomial are 
- * the bits of the given integer. The leading and trailing coefficients, which 
+ * The encoding is as follows: Coefficients of each primitive polynomial are
+ * the bits of the given integer. The leading and trailing coefficients, which
  * are 1 for all of the polynomials, have been omitted.
  * <pre>
  * Example: The polynomial
@@ -55,18 +55,20 @@ package org.jquantlib.math.randomnumbers;
  * encoded as  13  [ (1)1101(1) ]  in the array for degree 5.
  * </pre>
  * 
- * @note Replace this class by the 8129334 polinomials version 
+ * @note Replace this class by the 8129334 polinomials version
  * if you want absolutely all of the provided primitive polynomials modulo two.
  * 
  * @author Dominik Holenstein
  * @author Q. Boiler
  */
+// TODO: code review :: please verify against original QL/C++ code
+// This class requires additional analysis
 public class PrimitivePolynomials {
 
     //
     // constants
     //
-    
+
     private static final long N_PRIMITIVES_UP_TO_DEGREE_01 = 1;
     private static final long N_PRIMITIVES_UP_TO_DEGREE_02 = 2;
     private static final long N_PRIMITIVES_UP_TO_DEGREE_03 = 4;
@@ -97,32 +99,31 @@ public class PrimitivePolynomials {
     private static final long N_PRIMITIVES = N_PRIMITIVES_UP_TO_DEGREE_27;
 
     private static final long defaultPpmtMaxDim = N_PRIMITIVES_UP_TO_DEGREE_18;
-    
-    
-    
+
+
+
     //
     // private fields
     //
-    
+
     private final long ppmtMaxDim;
     private final int  nMaxDegree;
     private final long primitivePolynomials[][];
-    
-    
+
+
     //
     // public constructors
     //
-    
+
     public PrimitivePolynomials() {
         this(defaultPpmtMaxDim);
     }
-    
+
     public PrimitivePolynomials(final long ppmtMaxDim) {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
-        
+
         if (ppmtMaxDim <= N_PRIMITIVES_UP_TO_DEGREE_01) {
             this.ppmtMaxDim = N_PRIMITIVES_UP_TO_DEGREE_01;
             this.nMaxDegree = 1;
@@ -207,9 +208,8 @@ public class PrimitivePolynomials {
         } else if (ppmtMaxDim <= N_PRIMITIVES_UP_TO_DEGREE_27) {
             this.ppmtMaxDim = N_PRIMITIVES_UP_TO_DEGREE_27;
             this.nMaxDegree = 27;
-        } else {
-            throw new ArithmeticException("ppmtMaxDim cannot be greater tha N_PRIMITIVES");
-        }  
+        } else
+            throw new ArithmeticException("ppmtMaxDim cannot be greater than N_PRIMITIVES");
 
         this.primitivePolynomials = new long[this.nMaxDegree][];
         applyPrimitivePolynomialDegree00();
@@ -237,20 +237,20 @@ public class PrimitivePolynomials {
     //
     // public methods
     //
-    
+
     public final long get(final int i, final int j) /*@ReadOnly*/ {
         return primitivePolynomials[i][j];
     }
-    
+
     public final long getPpmtMaxDim() /*@ReadOnly*/ {
         return ppmtMaxDim;
     }
-    
-    
+
+
     //
     // private methods
     //
-    
+
     private void applyPrimitivePolynomialDegree00() {
         /**
          * <pre>
@@ -1731,9 +1731,8 @@ public class PrimitivePolynomials {
     }
 
     private void applyPrimitivePolynomialDegree18() throws ArithmeticException {
-        if (ppmtMaxDim > N_PRIMITIVES_UP_TO_DEGREE_18) {
+        if (ppmtMaxDim > N_PRIMITIVES_UP_TO_DEGREE_18)
             throw new ArithmeticException("too many polynomials requested. not provided by this file");
-        }
     }
 
 }

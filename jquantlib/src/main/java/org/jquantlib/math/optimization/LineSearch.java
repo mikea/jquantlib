@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,18 +15,18 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.optimization;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 public class LineSearch {
-    
+
     private final String cant_update_linesearch = "can't update linesearch";
-    
+
     // current values of the search direction
     protected Array searchDirection_;
     // new x and its gradient
@@ -35,82 +35,76 @@ public class LineSearch {
     protected double qt_, qpt_;
     // flag to know if linesearch succed
     protected boolean succeed_;
-    
+
     // Default constructor - there are no default param values in java :-(
     public LineSearch(){
         this(0.0);
     }
-    
+
     // Default constructor
-    public LineSearch(double init){
+    public LineSearch(final double init){
         qt_ = init;
         qpt_= init;
         succeed_ = true;
-        
-        if (System.getProperty("EXPERIMENTAL") == null) {
+
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
     }
-    
+
     // return last x value
     public Array lastX(){
         return xtd_;
     }
-    
+
     // return last cost function value
     public double lastFunctionValue(){
         return qt_;
     }
-    
+
     // return last gradient
     public Array lastGradient(){
         return gradient_;
     }
-    
+
     // return square norm of last gradient
     public double lastGradientNormNorm2(){
         return qpt_;
     }
-    
+
     // current value of the search direction
     public Array searchDirection(){
         return searchDirection_;
     }
-    
+
     //FIXME: to be reviewed.
     // Perform line search
-    /*virtual Real operator()(Problem& P, // Optimization problem
-            EndCriteria::Type& ecType,
-            const EndCriteria&,
-            const Real t_ini) = 0;  */
-    public double evaluate(Problem P, EndCriteria.CriteriaType ecType,EndCriteria endCriteria, double t_ini){
+    public double evaluate(final Problem P, final EndCriteria.CriteriaType ecType, final EndCriteria endCriteria, final double t_ini){
         throw new UnsupportedOperationException("Work in progress");
     }
-    
-    public double update(Array params, Array direction, double beta, Constraint constraint){
+
+    public double update(final Array params, final Array direction, final double beta, final Constraint constraint){
         double diff = beta;
         //TODO: check whether we implemented overloaded c++ operators correctly
         Array newParams = params.add(direction.mul(diff));
         boolean valid = constraint.test(newParams);
         int icount = 0;
         while(!valid){
-            if(icount > 200){
+            if(icount > 200)
                 throw new ArithmeticException("can't update lineSearch");
-            }
             diff *= 0.5;
             icount++;
             newParams = params.add(direction.mul(diff));
             valid = constraint.test(newParams);
         }
-        
+
         params.add(direction.mul(diff));
         return diff;
     }
-    
-    public void setSearchDirection(Array searchDirection){
+
+    public void setSearchDirection(final Array searchDirection){
         this.searchDirection_ = searchDirection;
     }
-    
-    
+
+
 
 }

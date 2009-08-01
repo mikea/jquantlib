@@ -51,9 +51,10 @@ When applicable, the original copyright notice follows this notice.
     We would appreciate acknowledgement if the software is incorporated in
     redistributable libraries or applications.
 
-*/
+ */
 
-package org.jquantlib.math;
+package org.jquantlib.math.matrixutilities;
+
 
 
 /**
@@ -63,19 +64,18 @@ package org.jquantlib.math;
  * 
  * @author Richard Gomes
  */
-//TODO: refactor this class to math.matrixutilities (or something like this) and refactor Array and Matrix too.
 public class SVD {
 
     private final Matrix A;
     private final Matrix U, V;
     private final Array s;
     private final boolean transpose;
-    
-    
+
+
     //
     // public constructor
     //
-    
+
     /**
      * The implementation requires that rows >= columns.
      * If this is not the case, we decompose M^T instead.
@@ -100,24 +100,24 @@ public class SVD {
         // we're sure that m_ >= A.cols
 
         s = new Array(A.cols);
-        U = new Matrix(A.rows,A.cols, 0.0);
+        U = new Matrix(A.rows, A.cols);
         V = new Matrix(A.cols,A.cols);
-        Array e = new Array(A.cols);
-        Array work = new Array(A.rows);
+        final Array e = new Array(A.cols);
+        final Array work = new Array(A.rows);
         int i, j, k;
 
         // Reduce A to bidiagonal form, storing the diagonal elements
         // in s and the super-diagonal elements in e.
 
-        int nct = Math.min(A.rows-1,A.cols);
-        int nrt = Math.max(0,A.cols-2);
+        final int nct = Math.min(A.rows-1,A.cols);
+        final int nrt = Math.max(0,A.cols-2);
         for (k = 0; k < Math.max(nct,nrt); k++) {
             if (k < nct) {
 
                 // Compute the transformation for the k-th column and
                 // place the k-th diagonal in s[k].
                 // Compute 2-norm of k-th column without under/overflow.
-                
+
                 s.data[k] = 0;
                 for (i = k; i < A.rows; i++) {
                     s.data[k] = hypot(s.data[k], A.data[A.address(i,k)]);
@@ -194,7 +194,7 @@ public class SVD {
                         }
                     }
                     for (j = k+1; j < A.cols; j++) {
-                        double t = -e.data[j]/e.data[k+1];
+                        final double t = -e.data[j]/e.data[k+1];
                         for (i = k+1; i < A.rows; i++) {
                             A.data[A.address(i,j)] += t*work.data[i];
                         }
@@ -278,9 +278,10 @@ public class SVD {
 
         // Main iteration loop for the singular values.
 
-        int p = A.cols, pp = p-1;
+        int p = A.cols;
+        final int pp = p-1;
         int iter = 0;
-        double eps = Math.pow(2.0, -52.0);
+        final double eps = Math.pow(2.0, -52.0);
         while (p > 0) {
             int kk;
             int kase;
@@ -314,7 +315,7 @@ public class SVD {
                     if (ks == kk) {
                         break;
                     }
-                    double t = (ks != p ? Math.abs(e.data[ks]) : 0.) + (ks != kk+1 ? Math.abs(e.data[ks-1]) : 0.0);
+                    final double t = (ks != p ? Math.abs(e.data[ks]) : 0.) + (ks != kk+1 ? Math.abs(e.data[ks-1]) : 0.0);
                     if (Math.abs(s.data[ks]) <= eps*t) {
                         s.data[ks] = 0.0;
                         break;
@@ -335,180 +336,180 @@ public class SVD {
 
             switch (kase) {
 
-                // Deflate negligible s(p).
+            // Deflate negligible s(p).
 
-              case 1: {
-                  double f = e.data[p-2];
-                  e.data[p-2] = 0.0;
-                  for (j = p-2; j >= kk; --j) {
-                      double t = hypot(s.data[j],f);
-                      double cs = s.data[j]/t;
-                      double sn = f/t;
-                      s.data[j] = t;
-                      if (j != kk) {
-                          f = -sn*e.data[j-1];
-                          e.data[j-1] = cs*e.data[j-1];
-                      }
-                      for (i = 0; i < A.cols; i++) {
-                          t = cs*V.data[V.address(i,j)] + sn*V.data[V.address(i,p-1)];
-                          V.data[V.address(i,p-1)] = -sn*V.data[V.address(i,j)] + cs*V.data[V.address(i,p-1)];
-                          V.data[V.address(i,j)] = t;
-                      }
-                  }
-              }
-                break;
+            case 1: {
+                double f = e.data[p-2];
+                e.data[p-2] = 0.0;
+                for (j = p-2; j >= kk; --j) {
+                    double t = hypot(s.data[j],f);
+                    final double cs = s.data[j]/t;
+                    final double sn = f/t;
+                    s.data[j] = t;
+                    if (j != kk) {
+                        f = -sn*e.data[j-1];
+                        e.data[j-1] = cs*e.data[j-1];
+                    }
+                    for (i = 0; i < A.cols; i++) {
+                        t = cs*V.data[V.address(i,j)] + sn*V.data[V.address(i,p-1)];
+                        V.data[V.address(i,p-1)] = -sn*V.data[V.address(i,j)] + cs*V.data[V.address(i,p-1)];
+                        V.data[V.address(i,j)] = t;
+                    }
+                }
+            }
+            break;
 
-                // Split at negligible s(k).
+            // Split at negligible s(k).
 
-              case 2: {
-                  double f = e.data[kk-1];
-                  e.data[kk-1] = 0.0;
-                  for (j = kk; j < p; j++) {
-                      double t = hypot(s.data[j],f);
-                      double cs = s.data[j]/t;
-                      double sn = f/t;
-                      s.data[j] = t;
-                      f = -sn*e.data[j];
-                      e.data[j] = cs*e.data[j];
-                      for (i = 0; i < A.rows; i++) {
-                          t = cs*U.data[U.address(i,j)] + sn*U.data[U.address(i,kk-1)];
-                          U.data[U.address(i,kk-1)] = -sn*U.data[U.address(i,j)] + cs*U.data[U.address(i,kk-1)];
-                          U.data[U.address(i,j)] = t;
-                      }
-                  }
-              }
-                break;
+            case 2: {
+                double f = e.data[kk-1];
+                e.data[kk-1] = 0.0;
+                for (j = kk; j < p; j++) {
+                    double t = hypot(s.data[j],f);
+                    final double cs = s.data[j]/t;
+                    final double sn = f/t;
+                    s.data[j] = t;
+                    f = -sn*e.data[j];
+                    e.data[j] = cs*e.data[j];
+                    for (i = 0; i < A.rows; i++) {
+                        t = cs*U.data[U.address(i,j)] + sn*U.data[U.address(i,kk-1)];
+                        U.data[U.address(i,kk-1)] = -sn*U.data[U.address(i,j)] + cs*U.data[U.address(i,kk-1)];
+                        U.data[U.address(i,j)] = t;
+                    }
+                }
+            }
+            break;
 
-                // Perform one qr step.
+            // Perform one qr step.
 
-              case 3: {
+            case 3: {
 
-                  // Calculate the shift.
-                  double scale = Math.max(
-                                     Math.max(
-                                         Math.max(
-                                             Math.max(Math.abs(s.data[p-1]),
-                                                    Math.abs(s.data[p-2])),
-                                             Math.abs(e.data[p-2])),
-                                         Math.abs(s.data[kk])),
-                                     Math.abs(e.data[kk]));
-                  double sp = s.data[p-1]/scale;
-                  double spm1 = s.data[p-2]/scale;
-                  double epm1 = e.data[p-2]/scale;
-                  double sk = s.data[kk]/scale;
-                  double ek = e.data[kk]/scale;
-                  double b = ((spm1 + sp)*(spm1 - sp) + epm1*epm1)/2.0;
-                  double c = (sp*epm1)*(sp*epm1);
-                  double shift = 0.0;
-                  if ((b != 0.0) | (c != 0.0)) {
-                      shift = Math.sqrt(b*b + c);
-                      if (b < 0.0) {
-                          shift = -shift;
-                      }
-                      shift = c/(b + shift);
-                  }
-                  double f = (sk + sp)*(sk - sp) + shift;
-                  double g = sk*ek;
+                // Calculate the shift.
+                final double scale = Math.max(
+                        Math.max(
+                                Math.max(
+                                        Math.max(Math.abs(s.data[p-1]),
+                                                Math.abs(s.data[p-2])),
+                                                Math.abs(e.data[p-2])),
+                                                Math.abs(s.data[kk])),
+                                                Math.abs(e.data[kk]));
+                final double sp = s.data[p-1]/scale;
+                final double spm1 = s.data[p-2]/scale;
+                final double epm1 = e.data[p-2]/scale;
+                final double sk = s.data[kk]/scale;
+                final double ek = e.data[kk]/scale;
+                final double b = ((spm1 + sp)*(spm1 - sp) + epm1*epm1)/2.0;
+                final double c = (sp*epm1)*(sp*epm1);
+                double shift = 0.0;
+                if ((b != 0.0) | (c != 0.0)) {
+                    shift = Math.sqrt(b*b + c);
+                    if (b < 0.0) {
+                        shift = -shift;
+                    }
+                    shift = c/(b + shift);
+                }
+                double f = (sk + sp)*(sk - sp) + shift;
+                double g = sk*ek;
 
-                  // Chase zeros.
+                // Chase zeros.
 
-                  for (j = kk; j < p-1; j++) {
-                      double t = hypot(f,g);
-                      double cs = f/t;
-                      double sn = g/t;
-                      if (j != kk) {
-                          e.data[j-1] = t;
-                      }
-                      f = cs*s.data[j] + sn*e.data[j];
-                      e.data[j] = cs*e.data[j] - sn*s.data[j];
-                      g = sn*s.data[j+1];
-                      s.data[j+1] = cs*s.data[j+1];
-                      for (i = 0; i < A.cols; i++) {
-                          t = cs*V.data[V.address(i,j)] + sn*V.data[V.address(i,j+1)];
-                          V.data[V.address(i,j+1)] = -sn*V.data[V.address(i,j)] + cs*V.data[V.address(i,j+1)];
-                          V.data[V.address(i,j)] = t;
-                      }
-                      t = hypot(f,g);
-                      cs = f/t;
-                      sn = g/t;
-                      s.data[j] = t;
-                      f = cs*e.data[j] + sn*s.data[j+1];
-                      s.data[j+1] = -sn*e.data[j] + cs*s.data[j+1];
-                      g = sn*e.data[j+1];
-                      e.data[j+1] = cs*e.data[j+1];
-                      if (j < A.rows-1) {
-                          for (i = 0; i < A.rows; i++) {
-                              t = cs*U.data[U.address(i,j)] + sn*U.data[U.address(i,j+1)];
-                              U.data[U.address(i,j+1)] = -sn*U.data[U.address(i,j)] + cs*U.data[U.address(i,j+1)];
-                              U.data[U.address(i,j)] = t;
-                          }
-                      }
-                  }
-                  e.data[p-2] = f;
-                  iter = iter + 1;
-              }
-                break;
+                for (j = kk; j < p-1; j++) {
+                    double t = hypot(f,g);
+                    double cs = f/t;
+                    double sn = g/t;
+                    if (j != kk) {
+                        e.data[j-1] = t;
+                    }
+                    f = cs*s.data[j] + sn*e.data[j];
+                    e.data[j] = cs*e.data[j] - sn*s.data[j];
+                    g = sn*s.data[j+1];
+                    s.data[j+1] = cs*s.data[j+1];
+                    for (i = 0; i < A.cols; i++) {
+                        t = cs*V.data[V.address(i,j)] + sn*V.data[V.address(i,j+1)];
+                        V.data[V.address(i,j+1)] = -sn*V.data[V.address(i,j)] + cs*V.data[V.address(i,j+1)];
+                        V.data[V.address(i,j)] = t;
+                    }
+                    t = hypot(f,g);
+                    cs = f/t;
+                    sn = g/t;
+                    s.data[j] = t;
+                    f = cs*e.data[j] + sn*s.data[j+1];
+                    s.data[j+1] = -sn*e.data[j] + cs*s.data[j+1];
+                    g = sn*e.data[j+1];
+                    e.data[j+1] = cs*e.data[j+1];
+                    if (j < A.rows-1) {
+                        for (i = 0; i < A.rows; i++) {
+                            t = cs*U.data[U.address(i,j)] + sn*U.data[U.address(i,j+1)];
+                            U.data[U.address(i,j+1)] = -sn*U.data[U.address(i,j)] + cs*U.data[U.address(i,j+1)];
+                            U.data[U.address(i,j)] = t;
+                        }
+                    }
+                }
+                e.data[p-2] = f;
+                iter = iter + 1;
+            }
+            break;
 
-                // Convergence.
+            // Convergence.
 
-              case 4: {
+            case 4: {
 
-                  // Make the singular values positive.
+                // Make the singular values positive.
 
-                  if (s.data[kk] <= 0.0) {
-                      s.data[kk] = (s.data[kk] < 0.0 ? -s.data[kk] : 0.0);
-                      for (i = 0; i <= pp; i++) {
-                          V.data[V.address(i,kk)] = -V.data[V.address(i,kk)];
-                      }
-                  }
+                if (s.data[kk] <= 0.0) {
+                    s.data[kk] = (s.data[kk] < 0.0 ? -s.data[kk] : 0.0);
+                    for (i = 0; i <= pp; i++) {
+                        V.data[V.address(i,kk)] = -V.data[V.address(i,kk)];
+                    }
+                }
 
-                  // Order the singular values.
+                // Order the singular values.
 
-                  while (kk < pp) {
-                      if (s.data[kk] >= s.data[kk+1]) {
-                          break;
-                      }
-                      s.swap(kk, kk+1);
-                      if (kk < A.cols-1) {
-                          for (i = 0; i < A.cols; i++) {
-                              V.swap(i,kk, i,kk+1);
-                          }
-                      }
-                      if (kk < A.rows-1) {
-                          for (i = 0; i < A.rows; i++) {
-                              U.swap(i,kk, i,kk+1);
-                          }
-                      }
-                      kk++;
-                  }
-                  iter = 0;
-                  --p;
-              }
-                break;
+                while (kk < pp) {
+                    if (s.data[kk] >= s.data[kk+1]) {
+                        break;
+                    }
+                    s.swap(kk, kk+1);
+                    if (kk < A.cols-1) {
+                        for (i = 0; i < A.cols; i++) {
+                            V.swap(i,kk, i,kk+1);
+                        }
+                    }
+                    if (kk < A.rows-1) {
+                        for (i = 0; i < A.rows; i++) {
+                            U.swap(i,kk, i,kk+1);
+                        }
+                    }
+                    kk++;
+                }
+                iter = 0;
+                --p;
+            }
+            break;
             }
         }
-        
+
     }
-    
-    
+
+
     //
     // public methods
     //
-    
+
     // results
-    
+
     public final Matrix U() /*@ReadOnly*/ {
         return (transpose ? V : U);
     }
-    
+
     public final Matrix V() /*@ReadOnly*/ {
         return (transpose ? U : V);
     }
-    
+
     public final Array singularValues() /*@ReadOnly*/ {
         return s;
     }
-    
+
     public /*@Disposable*/ Matrix S() /*@ReadOnly*/ {
         final Matrix S = new Matrix(A.cols,A.cols);
         int addr = 0;
@@ -518,15 +519,15 @@ public class SVD {
         }
         return S;
     }
-    
+
     public double norm2() {
         return s.data[0];
     }
-    
+
     public double cond() {
         return s.data[0] / s.data[A.cols-1];
     }
-    
+
     public int rank() {
         final double eps = Math.pow(2.0, -52.0);
         final double tol = A.rows * s.data[0] * eps;
@@ -538,29 +539,29 @@ public class SVD {
         }
         return r;
     }
-    
+
     // utilities
-    
+
     public Matrix inverse() {
-        final Matrix W = new Matrix(A.cols, A.cols, 0.0);
+        final Matrix W = new Matrix(A.cols, A.cols);
         int addr = 0;
         for (int i=0; i<A.cols; i++) {
-            double value = 1.0 / s.data[i];
+            final double value = 1.0 / s.data[i];
             W.set(addr, value);
             addr += A.cols+1;
         }
         return V().mul(W).mul(U().transpose());
     }
-    
+
     public /*@Disposable*/ Array solveFor(final Array array) /*@ReadOnly*/ {
         return inverse().mul(array);
     }
-    
+
 
     //
     // private methods
     //
-    
+
     /**
      * @returns hypotenuse of real (non-complex) scalars <code>a</code> and <code>b</code> by
      * avoiding underflow/overflow using {@latex$ a * \sqrt{ 1 + {b/a}^2}}, rather than

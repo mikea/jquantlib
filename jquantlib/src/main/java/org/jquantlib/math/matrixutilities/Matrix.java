@@ -38,7 +38,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
-package org.jquantlib.math;
+package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
 
@@ -146,102 +146,104 @@ import java.util.Arrays;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 // TODO: refactor Array and Matrix to math.matrixutilities (or something like this)
 public class Matrix {
-    
+
     //
     // constants
     //
-    
+
     private static final int blksize = 256; // seems to be a reasonably big enough block size
-    
-    
-	//
-	// public fields
-	//
-	
-	public int cols, rows;
+
+
+    //
+    // public fields
+    //
+
+    public int cols, rows;
     public int length;
 
 
-	//
-	// protected fields
-	//
+    //
+    // protected fields
+    //
 
-	protected double[] data;
+    protected double[] data;
 
-	
-	//
-	// public constructors
-	//
-	
-	/**
-	 * Default constructor
-	 * <p>
-	 * Builds an empty Matrix
-	 */
-	public Matrix() {
+
+    //
+    // public constructors
+    //
+
+    /**
+     * Default constructor
+     * <p>
+     * Builds an empty Matrix
+     */
+    public Matrix() {
         this.rows = 0;
         this.cols = 0;
         this.length = 0;
-		this.data = new double[0];
-	}
+        this.data = new double[0];
+    }
 
-	/**
-	 * Builds a Matrix of <code>rows</code> by <code>cols</code>
-	 * 
-	 * @param rows is the number of rows
-	 * @param cols is the number of columns
-	 */
-	public Matrix(final int rows, final int cols) {
+    /**
+     * Builds a Matrix of <code>rows</code> by <code>cols</code>
+     * 
+     * @param rows is the number of rows
+     * @param cols is the number of columns
+     */
+    public Matrix(final int rows, final int cols) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-	    if ((rows<=0 && cols>0) || (cols<=0 && rows>0)) throw new IllegalArgumentException(); // TODO: message
+        if ((rows<=0 && cols>0) || (cols<=0 && rows>0)) throw new IllegalArgumentException(); // TODO: message
 
-	    this.rows = rows;
+        this.rows = rows;
         this.cols = cols;
         this.length = rows*cols;
         this.data = new double[length];
-	}
+    }
+
+
+    //
+    //	/**
+    //     * Builds a Matrix of only one element which holds a <code>scalar</code> value
+    //     *
+    //     * @param scalar is the scalar value
+    //     */
+    //    public Matrix(final int rows, final int cols, final double scalar) {
+    //        this(rows, cols);
+    //        fill(scalar);
+    //    }
 
     /**
-     * Builds a Matrix of only one element which holds a <code>scalar</code> value
+     * Creates a Matrix given a double[][] array
      * 
-     * @param scalar is the scalar value
+     * @param data
      */
-    public Matrix(final int rows, final int cols, final double scalar) {
-        this(rows, cols);
-        fill(scalar);
-    }
-    
-	/**
-	 * Creates a Matrix given a double[][] array
-	 * 
-	 * @param data
-	 */
-	public Matrix(final double[][] data) {
+    public Matrix(final double[][] data) {
         this.rows = data.length;
         this.cols = data[0].length;
         this.length = rows*cols;
         this.data = new double[length];
-        
+
         for (int i=0; i<this.rows; i++) {
-            int base=address(i);
+            final int base=address(i);
             System.arraycopy(data[i], 0, this.data, base, this.cols);
         }
     }
-	
-	
+
+
     //
     // overrides Object
     //
-    
+
     /**
      * Returns a copy of <code>this</code> Matrix
      */
-	@Override
+    @Override
     public Matrix clone() {
         return this.copyOfRange(0, 0, this.rows, this.cols);
     }
-    
-	@Override
+
+    @Override
     public boolean equals(final Object o) {
         if (o == null || !(o instanceof Matrix)) return false;
         final Matrix another = (Matrix) o;
@@ -251,7 +253,7 @@ public class Matrix {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append('[').append('\n');
         for (int row = 0; row < this.rows; row++) {
             int addr = address(row);
@@ -270,15 +272,15 @@ public class Matrix {
 
 
     //
-	// package private methods
-	//
-	
+    // package private methods
+    //
+
     /**
      * This method returns the address of the first column in a given row
      * <p>
-	 * This method is used internally and is provided for performance reasons.
-	 */
-	/*@PackagePrivate*/ int address(final int row) {
+     * This method is used internally and is provided for performance reasons.
+     */
+    /*@PackagePrivate*/ int address(final int row) {
         return row*this.cols;
     }
 
@@ -291,24 +293,24 @@ public class Matrix {
         return row*this.cols + col;
     }
 
-    
+
     //
-	// public methods
-	//
-    
-    
+    // public methods
+    //
+
+
     // some convenience methods
-    
-    
+
+
     public Object toArray() {
-        double buffer[][] = new double[this.rows][this.cols];
+        final double buffer[][] = new double[this.rows][this.cols];
         return toArray(buffer);
     }
-    
-    public double[][] toArray(double[][] buffer) {
+
+    public double[][] toArray(final double[][] buffer) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != buffer.length || this.cols != buffer[0].length) throw new IllegalArgumentException(); //TODO:message
-        
+
         int addr = 0;
         for (int row=0; row<this.rows; row++) {
             System.arraycopy(this.data, addr, buffer[row], 0, this.cols);
@@ -316,7 +318,7 @@ public class Matrix {
         }
         return buffer;
     }
-    
+
     /**
      * @return true if the number of rows or number of columns of this {@link Matrix} is zero
      */
@@ -334,19 +336,19 @@ public class Matrix {
         Arrays.fill(data, scalar);
         return this;
     }
-    
-//XXX
-//    /**
-//     * Fills <code>this</code> Matrix with contents from <code>another</code> Matrix
-//     * 
-//     * @param another is the source Matrix where data is being copied from
-//     * @return <code>this</code>
-//     */
-//    public Matrix fill(final Matrix another) {
-//        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
-//        System.arraycopy(another.data, 0, this.data, 0, this.length);
-//        return this;
-//    }
+
+    //XXX
+    //    /**
+    //     * Fills <code>this</code> Matrix with contents from <code>another</code> Matrix
+    //     *
+    //     * @param another is the source Matrix where data is being copied from
+    //     * @return <code>this</code>
+    //     */
+    //    public Matrix fill(final Matrix another) {
+    //        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
+    //        System.arraycopy(another.data, 0, this.data, 0, this.length);
+    //        return this;
+    //    }
 
     /**
      * Returns Matrix containing a copy of a rectangular region
@@ -363,7 +365,7 @@ public class Matrix {
         if ((row < 0) || (col < 0)) throw new IllegalArgumentException(); //TODO: message
         if ((nrows <= 0) || (ncols <= 0)) throw new IllegalArgumentException(); //TODO: message
         if ((row+nrows > this.rows) || (col+ncols > this.cols)) throw new IllegalArgumentException(); //TODO: message
-        
+
         final Matrix result = new Matrix(nrows, ncols);
         if (col+ncols == this.cols) {
             System.arraycopy(this.data, 0, result.data, 0, this.length);
@@ -376,8 +378,8 @@ public class Matrix {
         }
         return result;
     }
-    
-    
+
+
     /**
      * Retrieves an elementof <code>this</code> Matrix which identified by <i>(row, col)</i>
      * 
@@ -399,7 +401,7 @@ public class Matrix {
         this.data[address(row, col)] = value;
     }
 
-    
+
     /**
      * Retrieves an element of <code>this</code> Matrix
      * <p>
@@ -433,36 +435,36 @@ public class Matrix {
         data[pos] = value;
     }
 
-    
+
     /**
-	 * This method returns the address of the first column in a given row
-	 * <p>
-	 * A typical usage of this method is when one would like to improve access to elements of a given row by reducing
-	 * the number of calculations needed to obtain the address of cells belonging to that row.
-	 * 
-     * @param row is the desired row which the address is requested for.  
-	 */
-	public int getAddress(final int row) {
+     * This method returns the address of the first column in a given row
+     * <p>
+     * A typical usage of this method is when one would like to improve access to elements of a given row by reducing
+     * the number of calculations needed to obtain the address of cells belonging to that row.
+     * 
+     * @param row is the desired row which the address is requested for.
+     */
+    public int getAddress(final int row) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-	    if (row < 0 || row > this.rows) throw new IllegalArgumentException(); //TODO: message
-	    return row*this.cols;
-	}
-	
+        if (row < 0 || row > this.rows) throw new IllegalArgumentException(); //TODO: message
+        return row*this.cols;
+    }
+
     /**
      * This method returns the address of a given cell identified by <i>(row, col)</i>
      * <p>
      * A typical usage of this method is when one would like to improve access to a given cell, basically
      * keeping its address for later use.
      * 
-     * @param row is the desired row which a cell belongs to.  
-     * @param col is the desired col which a cell belongs to.  
+     * @param row is the desired row which a cell belongs to.
+     * @param col is the desired col which a cell belongs to.
      */
-	public int getAddress(final int row, final int col) {
+    public int getAddress(final int row, final int col) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (col < 0 || row > this.cols) throw new IllegalArgumentException(); //TODO: message
         return getAddress(row)+col;
-	}
-	
+    }
+
     /**
      * Returns an Array which contains elements of a requested row
      * 
@@ -478,7 +480,7 @@ public class Matrix {
     public void setRow(final int row, final Array array) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.cols!=array.length) throw new IllegalArgumentException(); //TODO: message
-        
+
         System.arraycopy(array.data, 0, this.data, getAddress(row), this.cols);
     }
 
@@ -499,7 +501,7 @@ public class Matrix {
     public void setCol(final int col, final Array array) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows!=array.length) throw new IllegalArgumentException(); //TODO: message
-        
+
         if (this.cols == 1) {
             System.arraycopy(array.data, 0, this.data, 0, this.length);
         } else {
@@ -511,7 +513,7 @@ public class Matrix {
         }
     }
 
-    
+
     //
     //	Assignment operations
     //
@@ -522,8 +524,8 @@ public class Matrix {
     //	-=    subAssign  Matrix  Matrix   this
     //	*=    mulAssign  Matrix  scalar   this
     //	/=    divAssign  Matrix  scalar   this
-	
-	
+
+
     /**
      * Returns the result of an addition of <code>this</code> Matrix and <code>another</code> Matrix
      * 
@@ -572,9 +574,9 @@ public class Matrix {
      */
     public Matrix mulAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
-            int rowAddress = address(row);
+            final int rowAddress = address(row);
             for (int col = 0; col < cols; col++) {
-                int cellAddress = rowAddress + col;
+                final int cellAddress = rowAddress + col;
                 data[cellAddress] *= scalar;
             }
         }
@@ -589,17 +591,17 @@ public class Matrix {
      */
     public Matrix divAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
-            int rowAddress = address(row);
+            final int rowAddress = address(row);
             for (int col = 0; col < cols; col++) {
-                int cellAddress = rowAddress + col;
+                final int cellAddress = rowAddress + col;
                 data[cellAddress] /= scalar;
             }
         }
         return this;
     }
-    
-    
-    	
+
+
+
     //	Algebraic products
     //
     //	opr   method     this    right    result
@@ -619,7 +621,7 @@ public class Matrix {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
 
-        Matrix result = new Matrix(this.rows, this.cols);
+        final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
             for (int col=0; col<cols; col++) {
@@ -640,7 +642,7 @@ public class Matrix {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
 
-        Matrix result = new Matrix(this.rows, this.cols);
+        final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
             for (int col=0; col<cols; col++) {
@@ -650,8 +652,8 @@ public class Matrix {
         }
         return result;
     }
-    
-    
+
+
     /**
      * Returns the negative of <code>this</code> Matrix
      * 
@@ -660,7 +662,7 @@ public class Matrix {
     public Matrix negative() {
         return this.mulAssign(-1);
     }
-    
+
 
     /**
      * Returns the result of a multiplication of <code>this</code> Matrix by a <code>scalar</code>
@@ -669,7 +671,7 @@ public class Matrix {
      * @return a new instance
      */
     public Matrix mul(final double scalar) {
-        Matrix result = new Matrix(this.rows, this.cols);
+        final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
             for (int col=0; col<cols; col++) {
@@ -687,7 +689,7 @@ public class Matrix {
      * @return a new instance
      */
     public Matrix div(final double scalar) {
-        Matrix result = new Matrix(this.rows, this.cols);
+        final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
             for (int col=0; col<cols; col++) {
@@ -697,7 +699,7 @@ public class Matrix {
         }
         return result;
     }
-    	
+
 
     //
     //	Vetorial products
@@ -706,7 +708,7 @@ public class Matrix {
     //	----- ---------- ------- -------- ------
     //	*     mul        Matrix  Array    Array
     //	*     mul        Matrix  Matrix   Matrix
-    
+
     /**
      * Returns an Array which represents the multiplication of <code>this</code> Matrix by an Array
      * 
@@ -723,13 +725,13 @@ public class Matrix {
             double sum = 0.0;
             for (int row=0; row<this.rows; row++) {
                 sum  += this.data[addr] * array.data[col];
-                addr += this.cols; 
+                addr += this.cols;
             }
             result.data[col] = sum;
         }
         return result;
     }
-    
+
     /**
      * Returns a Matrix which represents the multiplication of <code>this</code> Matrix and <code>another</code> Matrix
      * 
@@ -739,12 +741,12 @@ public class Matrix {
     public Matrix mul(final Matrix another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.cols != another.rows) throw new IllegalArgumentException(); //TODO: message
-        
-        Matrix result = new Matrix(this.rows, another.cols);
+
+        final Matrix result = new Matrix(this.rows, another.cols);
         for (int col = 0; col < another.cols; col++) {
-            int caddr = another.address(0, col);
+            final int caddr = another.address(0, col);
             for (int row = 0; row < this.rows; row++) {
-                int raddr = address(row, 0);
+                final int raddr = address(row, 0);
                 int addr = caddr;
                 double sum = 0.0;
                 for (int i = 0; i < this.cols; i++) {
@@ -757,15 +759,15 @@ public class Matrix {
         return result;
     }
 
-    
-    //	
+
+    //
     //	Math functions
     //
     //	opr   method     this    right    result
     //	----- ---------- ------- -------- ------
     //  (none)
-    
-    
+
+
     //
     //	Miscellaneous
     //
@@ -773,9 +775,9 @@ public class Matrix {
     //	------------ ------- -------- ------
     //  swap         Matrix  Matrix   this
     //	transpose    Matrix           Matrix
-	//  diagonal     Matrix           Array
+    //  diagonal     Matrix           Array
     //	inverse      Matrix           Matrix
-	
+
     /**
      * Swaps contents of <code>this</code> Matrix by <code>another</code> Matrix
      * 
@@ -785,38 +787,38 @@ public class Matrix {
     public Matrix swap(final Matrix another) {
         int itmp;
         double [] dtmp;
-        
+
         // swaps rows, cols and length
         itmp = this.rows;   this.rows   = another.rows;   another.rows   = itmp;
         itmp = this.cols;   this.cols   = another.cols;   another.cols   = itmp;
         itmp = this.length; this.length = another.length; another.length = itmp;
         // swaps data
         dtmp = this.data;   this.data   = another.data;   another.data   = dtmp;
-        
-//
-//        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-//        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
-//        
-//        // allocate a temporary buffer for data transfer
-//        double[] buffer = new double[Math.min(this.length, blksize)]; 
-//
-//        // swaps blocks
-//        for (int row=0; row<length/blksize; row++) {
-//            int addr = row*blksize;
-//            System.arraycopy(this.data,    addr, buffer,          0, blksize);
-//            System.arraycopy(another.data, addr, this.data,    addr, blksize);
-//            System.arraycopy(buffer,          0, another.data, addr, blksize);
-//        }
-//
-//        // swaps last block
-//        final int addr = ((int)(length/blksize))*blksize;
-//        if (addr>=0 && addr<this.length) {
-//            final int remainder = this.length-addr;
-//            System.arraycopy(this.data,    addr, buffer,          0, remainder);
-//            System.arraycopy(another.data, addr, this.data,    addr, remainder);
-//            System.arraycopy(buffer,          0, another.data, addr, remainder);
-//        }
-        
+
+        //
+        //        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        //        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
+        //
+        //        // allocate a temporary buffer for data transfer
+        //        double[] buffer = new double[Math.min(this.length, blksize)];
+        //
+        //        // swaps blocks
+        //        for (int row=0; row<length/blksize; row++) {
+        //            int addr = row*blksize;
+        //            System.arraycopy(this.data,    addr, buffer,          0, blksize);
+        //            System.arraycopy(another.data, addr, this.data,    addr, blksize);
+        //            System.arraycopy(buffer,          0, another.data, addr, blksize);
+        //        }
+        //
+        //        // swaps last block
+        //        final int addr = ((int)(length/blksize))*blksize;
+        //        if (addr>=0 && addr<this.length) {
+        //            final int remainder = this.length-addr;
+        //            System.arraycopy(this.data,    addr, buffer,          0, remainder);
+        //            System.arraycopy(another.data, addr, this.data,    addr, remainder);
+        //            System.arraycopy(buffer,          0, another.data, addr, remainder);
+        //        }
+
         return this;
     }
 
@@ -830,15 +832,15 @@ public class Matrix {
      * @return this
      */
     public Matrix swap(final int pos1row, final int pos1col, final int pos2row, final int pos2col) {
-        int addr1 = address(pos1row, pos1col);
-        int addr2 = address(pos2row, pos2col);
-        double tmp = data[addr1];
+        final int addr1 = address(pos1row, pos1col);
+        final int addr2 = address(pos2row, pos2col);
+        final double tmp = data[addr1];
         data[addr1] = data[addr2];
         data[addr2] = tmp;
         return this;
     }
-    
-    
+
+
     /**
      * Returns the transpose of <code>this</code> Matrix
      * 
@@ -866,7 +868,7 @@ public class Matrix {
     public Array diagonal() {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != this.cols) throw new IllegalArgumentException(); //TODO: message
-        
+
         final Array result = new Array(this.cols);
         int addr = 0;
         for (int i = 0; i < this.cols; i++) {
@@ -875,7 +877,7 @@ public class Matrix {
         }
         return result;
     }
-    
+
     /**
      * Returns an inverse Matrix from <code>this</code> Matrix
      * 
@@ -884,43 +886,43 @@ public class Matrix {
     public Matrix inverse() {
         throw new UnsupportedOperationException();
 
-        
-//        
-//        Disposable<Matrix> inverse(const Matrix& m) {
-//            #if !defined(__GNUC__) || __GNUC__ > 3 || __GNUC_MINOR__ > 3
-//
-//            QL_REQUIRE(m.rows() == m.columns(), "matrix is not square");
-//
-//            boost::numeric::ublas::matrix<Real> a(m.rows(), m.columns());
-//
-//            std::copy(m.begin(), m.end(), a.data().begin());
-//
-//            boost::numeric::ublas::permutation_matrix<Size> pert(m.rows());
-//
-//            // lu decomposition
-//            const Size singular = lu_factorize(a, pert);
-//            QL_REQUIRE(singular == 0, "singular matrix given");
-//
-//            boost::numeric::ublas::matrix<Real>
-//                inverse = boost::numeric::ublas::identity_matrix<Real>(m.rows());
-//
-//            // backsubstitution
-//            boost::numeric::ublas::lu_substitute(a, pert, inverse);
-//
-//            Matrix retVal(m.rows(), m.columns());
-//            std::copy(inverse.data().begin(), inverse.data().end(),
-//                      retVal.begin());
-//
-//            return retVal;
-//
-//            #else
-//            QL_FAIL("this version of gcc does not support the Boost uBlas library");
-//            #endif
-//        }        
-//        
-        
+
+        //
+        //        Disposable<Matrix> inverse(const Matrix& m) {
+        //            #if !defined(__GNUC__) || __GNUC__ > 3 || __GNUC_MINOR__ > 3
+        //
+        //            QL_REQUIRE(m.rows() == m.columns(), "matrix is not square");
+        //
+        //            boost::numeric::ublas::matrix<Real> a(m.rows(), m.columns());
+        //
+        //            std::copy(m.begin(), m.end(), a.data().begin());
+        //
+        //            boost::numeric::ublas::permutation_matrix<Size> pert(m.rows());
+        //
+        //            // lu decomposition
+        //            const Size singular = lu_factorize(a, pert);
+        //            QL_REQUIRE(singular == 0, "singular matrix given");
+        //
+        //            boost::numeric::ublas::matrix<Real>
+        //                inverse = boost::numeric::ublas::identity_matrix<Real>(m.rows());
+        //
+        //            // backsubstitution
+        //            boost::numeric::ublas::lu_substitute(a, pert, inverse);
+        //
+        //            Matrix retVal(m.rows(), m.columns());
+        //            std::copy(inverse.data().begin(), inverse.data().end(),
+        //                      retVal.begin());
+        //
+        //            return retVal;
+        //
+        //            #else
+        //            QL_FAIL("this version of gcc does not support the Boost uBlas library");
+        //            #endif
+        //        }
+        //
+
     }
-    
+
 }
-	
-  
+
+

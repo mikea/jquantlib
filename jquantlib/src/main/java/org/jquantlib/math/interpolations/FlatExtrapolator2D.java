@@ -2,7 +2,7 @@
  Copyright (C) 2008 Anand Mani
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,15 +15,15 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 
 
 /**
@@ -39,27 +39,27 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
     //
     // private final fields
     //
-    
+
     private final Interpolation2D decorated;
-    
-    
+
+
     //
-	// private constructors
-	//
+    // private constructors
+    //
 
-	private FlatExtrapolator2D(final Interpolation2D decorated) {
-	    this.decorated = decorated;
-	    if (this.decorated==null) throw new NullPointerException();
-	}
+    private FlatExtrapolator2D(final Interpolation2D decorated) {
+        assert decorated != null : "null interpolation"; // TODO: message
+        this.decorated = decorated;
+    }
 
-	
-	//
-	// static public methods
-	//
-	
-	// FIXME: should be Interpolation2D, but the xMin(), xMax() etc are not in the interface.
+
+    //
+    // static public methods
+    //
+
+    // FIXME: should be Interpolation2D, but the xMin(), xMax() etc are not in the interface.
     public static Interpolation2D getInterpolation2D(final Interpolation2D decorated) {
-        FlatExtrapolator2D flatExtrapolation2D = new FlatExtrapolator2D(decorated);
+        final FlatExtrapolator2D flatExtrapolation2D = new FlatExtrapolator2D(decorated);
         return flatExtrapolation2D;
     }
 
@@ -67,7 +67,7 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
     //
     // overrides Interpolator2D
     //
-    
+
     @Override
     public double xMin() {
         return decorated.xMin();
@@ -102,19 +102,19 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
     public Matrix zData() {
         return decorated.zData();
     }
-    
+
     @Override
-    public int locateX(double x) {
+    public int locateX(final double x) {
         return decorated.locateX(x);
     }
 
     @Override
-    public int locateY(double y) {
+    public int locateY(final double y) {
         return decorated.locateY(y);
     }
 
     @Override
-    public boolean isInRange(double x, double y) {
+    public boolean isInRange(final double x, final double y) {
         return decorated.isInRange(x, y);
     }
 
@@ -129,11 +129,11 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
         decorated.reload();
     }
 
-    
+
     //
     // overrides Ops.BinaryDoubleOp
     //
-    
+
     @Override
     public double op(double x, double y) {
         x = bindX(x);
@@ -141,40 +141,40 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
         return decorated.op(x, y);
     }
 
-    
+
     //
     // overrides AbstractInterpolation2D
     //
-    
+
     /**
      * This method always throws UnsupportedOperationException
      * 
      * @throws UnsupportedOperationException
      */
     @Override
-    protected double evaluateImpl(double x, double y) {
+    protected double evaluateImpl(final double x, final double y) {
         throw new UnsupportedOperationException(); //TODO: message
     }
 
 
     //
-	// private methods
-	//
-	
-	private double bindX(double x) /* @ReadOnly */{
-		if (x < xMin())
-			return xMin();
-		if (x > xMax())
-			return xMax();
-		return x;
-	}
+    // private methods
+    //
 
-	private double bindY(double y) /* @ReadOnly */{
-		if (y < yMin())
-			return yMin();
-		if (y > yMax())
-			return yMax();
-		return y;
-	}
+    private double bindX(final double x) /* @ReadOnly */{
+        if (x < xMin())
+            return xMin();
+        if (x > xMax())
+            return xMax();
+        return x;
+    }
+
+    private double bindY(final double y) /* @ReadOnly */{
+        if (y < yMin())
+            return yMin();
+        if (y > yMax())
+            return yMax();
+        return y;
+    }
 
 }

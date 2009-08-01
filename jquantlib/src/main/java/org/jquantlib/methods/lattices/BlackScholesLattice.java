@@ -21,7 +21,7 @@
  */
 package org.jquantlib.methods.lattices;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.time.TimeGrid;
 
 /**

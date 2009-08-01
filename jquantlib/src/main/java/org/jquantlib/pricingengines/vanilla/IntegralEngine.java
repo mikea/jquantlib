@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -37,7 +37,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 
 package org.jquantlib.pricingengines.vanilla;
@@ -51,7 +51,7 @@ import org.jquantlib.pricingengines.OneAssetStrikedOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
- * Pricing engine for European vanilla options using integral approach 
+ * Pricing engine for European vanilla options using integral approach
  * 
  * @author Richard Gomes
  */
@@ -66,51 +66,43 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
     //
     // implements PricingEngine
     //
-    
+
     // TODO: define tolerance for calculate()
-	@Override
-	public void calculate() {
-	    
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
-    	if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
-			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
-		}
+    @Override
+    public void calculate() {
 
-		if (!(arguments.payoff instanceof StrikedTypePayoff)){
-			throw new ArithmeticException(NON_STRIKED_PAYOFF_GIVEN);
-		}
-		
-		final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
-		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_REQUIRED);
-		}
-		final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        assert arguments.exercise.type()==Exercise.Type.EUROPEAN : NOT_AN_AMERICAN_OPTION;
+        assert arguments.payoff instanceof StrikedTypePayoff : NON_STRIKED_PAYOFF_GIVEN;
+        final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
+        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : BLACK_SCHOLES_PROCESS_REQUIRED;
+        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
-		final double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
-		final double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
+        final double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
+        final double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
         final double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
         final double /* @Rate */drift = Math.log(dividendDiscount / riskFreeDiscount) - 0.5 * variance;
 
-		final Integrand f = new Integrand(arguments.payoff, process.stateVariable().getLink().evaluate(), drift, variance);
+        final Integrand f = new Integrand(arguments.payoff, process.stateVariable().getLink().evaluate(), drift, variance);
         final SegmentIntegral integrator = new SegmentIntegral(5000);
 
-		final double infinity = 10.0*Math.sqrt(variance);
-		results.value =
-			process.riskFreeRate().getLink().discount(arguments.exercise.lastDate()) /
-			Math.sqrt(2.0*Math.PI*variance) * integrator.evaluate(f, drift-infinity, drift+infinity);
-	}
+        final double infinity = 10.0*Math.sqrt(variance);
+        results.value =
+            process.riskFreeRate().getLink().discount(arguments.exercise.lastDate()) /
+            Math.sqrt(2.0*Math.PI*variance) * integrator.evaluate(f, drift-infinity, drift+infinity);
+    }
 
 
-	//
-	// private inner classes
-	//
-	
-	private static class Integrand implements Ops.DoubleOp {
+    //
+    // private inner classes
+    //
 
-        private Payoff payoff;
-        private double s0;
-        private double /* @Rate */ drift;
-        private double variance;
+    private static class Integrand implements Ops.DoubleOp {
+
+        private final Payoff payoff;
+        private final double s0;
+        private final double /* @Rate */ drift;
+        private final double variance;
 
         public Integrand(final Payoff payoff, final double s0, final double /* @Rate */drift, final double variance) {
             this.payoff = payoff;
@@ -120,11 +112,11 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
         }
 
         public double op(final double x) {
-            double temp = s0 * Math.exp(x);
-            double result = payoff.valueOf(temp);
+            final double temp = s0 * Math.exp(x);
+            final double result = payoff.valueOf(temp);
             return result * Math.exp(-(x - drift) * (x - drift) / (2.0 * variance));
         }
 
     }
-    
+
 }

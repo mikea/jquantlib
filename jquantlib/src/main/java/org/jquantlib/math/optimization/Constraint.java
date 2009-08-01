@@ -13,14 +13,14 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.math.optimization;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * Base constraint class
@@ -42,12 +42,12 @@ public abstract class Constraint {
         do {
             final Array newParams = params.add(direction.mul(diff));
             if (test(newParams)) break;
-            if (icount++ > 200) throw new RuntimeException("can't update parameter vector"); // TODO: message
+            if (icount++ > 200) throw new ArithmeticException("can't update parameter vector"); // TODO: message
             diff *= 0.5;
         } while (forever);
 
         params.addAssign(direction.mul(diff));
         return diff;
     }
-    
+
 }

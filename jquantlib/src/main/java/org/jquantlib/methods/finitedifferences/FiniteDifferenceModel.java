@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -29,7 +29,7 @@ import java.util.Set;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.lang.reflect.TypeToken;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * @author Srinivas Hasti
@@ -42,20 +42,20 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
     public FiniteDifferenceModel(final S L, final List<BoundaryCondition<S>> bcs, final List<Double> stoppingTimes) {
         this.evolver = getEvolver(L, bcs);
         // This takes care of removing duplicates
-        Set<Double> times = new HashSet<Double>(stoppingTimes);
+        final Set<Double> times = new HashSet<Double>(stoppingTimes);
         this.stoppingTimes = new ArrayDoubleList(times);
         // Now sort
         Collections.sort(stoppingTimes);
     }
-    
+
     public FiniteDifferenceModel(final S L, final List<BoundaryCondition<S>> bcs) {
-       this(L,bcs, new ArrayList<Double>());
+        this(L,bcs, new ArrayList<Double>());
     }
 
     public FiniteDifferenceModel(final T evolver, final List<Double> stoppingTimes) {
         this.evolver = evolver;
         // This takes care of removing duplicates
-        Set<Double> times = new HashSet<Double>(stoppingTimes);
+        final Set<Double> times = new HashSet<Double>(stoppingTimes);
         this.stoppingTimes = new ArrayDoubleList(times);
         // Now sort
         Collections.sort(stoppingTimes);
@@ -65,7 +65,7 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
         return evolver;
     }
 
-    public Array rollback(Array a, final /*@Time*/ double from, final /*@Time*/double to, final int steps) {
+    public Array rollback(final Array a, final /*@Time*/ double from, final /*@Time*/double to, final int steps) {
         return rollbackImpl(a, from, to, steps, null);
     }
 
@@ -81,14 +81,15 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
         if (from <= to)
             throw new IllegalStateException("trying to roll back from " + from + " to " + to);
 
-        /* @Time */double dt = (from - to) / steps;
+        /* @Time */final double dt = (from - to) / steps;
         double t = from;
         evolver.setStep(dt);
 
         for (int i = 0; i < steps; ++i, t -= dt) {
-            /* Time */double now = t, next = t - dt;
+            /* Time */double now = t;
+            final double next = t - dt;
             boolean hit = false;
-            for (int j = stoppingTimes.size() - 1; j >= 0; --j) {
+            for (int j = stoppingTimes.size() - 1; j >= 0; --j)
                 if (next <= stoppingTimes.get(j) && stoppingTimes.get(j) < now) {
                     // a stopping time was hit
                     hit = true;
@@ -101,7 +102,6 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
                     // ...and continue the cycle
                     now = stoppingTimes.get(j);
                 }
-            }
             // if we did hit...
             if (hit) {
                 // ...we might have to make a small step to
@@ -129,8 +129,8 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
     protected T getEvolver(final S l, final List<BoundaryCondition<S>> bcs) {
         try {
             return (T) TypeToken.getClazz(this.getClass(),1).getConstructor(Operator.class, List.class).newInstance(l, bcs);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (final Exception e) {
+            throw new AssertionError(e);
         }
     }
 }

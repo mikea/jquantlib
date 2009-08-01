@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -37,17 +37,17 @@ import org.jquantlib.math.Ops;
  */
 //TODO FalsePosition: Add test case.
 public class FalsePosition extends AbstractSolver1D<Ops.DoubleOp> {
-	
-	/**
-	 * Computes the roots of a function by using the False Position method.
-	 * @param f the function
-	 * @param xAccuracy the provided accuracy 
-	 * @returns <code>root_</code>
-	 */
-	@Override
-	protected double solveImpl(final Ops.DoubleOp f, final double xAccuracy) {
-		
-		double fl, fh, xl, xh, dx, del, froot;
+
+    /**
+     * Computes the roots of a function by using the False Position method.
+     * @param f the function
+     * @param xAccuracy the provided accuracy
+     * @returns <code>root_</code>
+     */
+    @Override
+    protected double solveImpl(final Ops.DoubleOp f, final double xAccuracy) {
+
+        double fl, fh, xl, xh, dx, del, froot;
 
         // Identify the limits so that xl corresponds to the low side
         if (fxMin < 0.0) {
@@ -78,12 +78,11 @@ public class FalsePosition extends AbstractSolver1D<Ops.DoubleOp> {
                 fh=froot;
             }
             dx=xh-xl;
-            
+
             // Convergence criterion
-            if (Math.abs(del) < xAccuracy || froot == 0.0)  {
+            if (Math.abs(del) < xAccuracy || froot == 0.0)
                 return root;
-            }
         }
-		throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");        
-	}
+        throw new ArithmeticException("maximum number of function evaluations exceeded"); // TODO: message
+    }
 }

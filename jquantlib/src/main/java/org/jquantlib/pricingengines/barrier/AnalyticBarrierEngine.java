@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -38,7 +38,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.barrier;
 
@@ -61,81 +61,73 @@ import org.jquantlib.time.Frequency;
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class AnalyticBarrierEngine extends BarrierOptionEngine {
-	
-    // TODO: refactor messages
-	private static final String BS_PROCESS_REQUIRED = "Black-Scholes process required";
-	private static final String NON_PLAIN_PAYOFF_GIVEN = "non-plain payoff given";
-	private static final String STRIKE_MUST_BE_POSITIVE = "strike must be positive";
-	private static final String UNKNOWN_TYPE = "unknown type";
 
-    
-	//
-	// private fields
-	//
-	
-	private final CumulativeNormalDistribution f;
-    
+    // TODO: refactor messages
+    private static final String BS_PROCESS_REQUIRED = "Black-Scholes process required";
+    private static final String NON_PLAIN_PAYOFF_GIVEN = "non-plain payoff given";
+    private static final String STRIKE_MUST_BE_POSITIVE = "strike must be positive";
+    private static final String UNKNOWN_TYPE = "unknown type";
+
+
+    //
+    // private fields
+    //
+
+    private final CumulativeNormalDistribution f;
+
     // these fields are initialised every time calculate() is called
     private transient GeneralizedBlackScholesProcess process;
     private transient PlainVanillaPayoff payoff;
 
-    
+
     //
     // public constructors
     //
-    
+
     public AnalyticBarrierEngine() {
         this.f = new CumulativeNormalDistribution();
     }
-    
+
 
     //
     // implements PricingEngine
     //
-    
-	@Override
-	public void calculate() {
 
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
-        if (!(getArguments().payoff instanceof PlainVanillaPayoff)){
-        	throw new ArithmeticException(NON_PLAIN_PAYOFF_GIVEN);
-        }
+    @Override
+    public void calculate() {
+
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        assert getArguments().payoff instanceof PlainVanillaPayoff : NON_PLAIN_PAYOFF_GIVEN;
         this.payoff = (PlainVanillaPayoff)getArguments().payoff;
-
-        if(!(payoff.strike()>0.0)){
-        	throw new ArithmeticException(STRIKE_MUST_BE_POSITIVE);
-        }
-
-        if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-        	throw new ArithmeticException(BS_PROCESS_REQUIRED);
-        }
+        assert payoff.strike()>0.0 : STRIKE_MUST_BE_POSITIVE;
+        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : BS_PROCESS_REQUIRED;
         this.process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         final double strike = payoff.strike();
         final BarrierType barrierType = arguments.barrierType;
 
         switch (payoff.optionType()) {
-          case CALL:
+        case CALL:
             switch (barrierType) {
-              case DownIn:
+            case DownIn:
                 if (strike >= barrier())
                     results.value = C(1,1) + E(1);
                 else
                     results.value = A(1) - B(1) + D(1,1) + E(1);
                 break;
-              case  UpIn:
+            case  UpIn:
                 if (strike >= barrier())
                     results.value = A(1) + E(-1);
                 else
                     results.value = B(1) - C(-1,1) + D(-1,1) + E(-1);
                 break;
-              case  DownOut:
+            case  DownOut:
                 if (strike >= barrier())
                     results.value = A(1) - C(1,1) + F(1);
                 else
                     results.value = B(1) - D(1,1) + F(1);
                 break;
-              case  UpOut:
+            case  UpOut:
                 if (strike >= barrier())
                     results.value = F(-1);
                 else
@@ -143,27 +135,27 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
                 break;
             }
             break;
-          case PUT:
+        case PUT:
             switch (barrierType) {
-              case  DownIn:
+            case  DownIn:
                 if (strike >= barrier())
                     results.value = B(-1) - C(1,-1) + D(1,-1) + E(1);
                 else
                     results.value = A(-1) + E(1);
                 break;
-              case  UpIn:
+            case  UpIn:
                 if (strike >= barrier())
                     results.value = A(-1) - B(-1) + D(-1,-1) + E(-1);
                 else
                     results.value = C(-1,-1) + E(-1);
                 break;
-              case  DownOut:
+            case  DownOut:
                 if (strike >= barrier())
                     results.value = A(-1) - B(-1) + C(1,-1) - D(1,-1) + F(1);
                 else
                     results.value = F(1);
                 break;
-              case  UpOut:
+            case  UpOut:
                 if (strike >= barrier())
                     results.value = B(-1) - D(-1,-1) + F(-1);
                 else
@@ -171,17 +163,17 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
                 break;
             }
             break;
-          default:
-            throw new ArithmeticException(UNKNOWN_TYPE); 
+        default:
+            throw new AssertionError(UNKNOWN_TYPE);
         }
-		
-	}
+
+    }
 
 
-	//
-	// private methods
-	//
-	
+    //
+    // private methods
+    //
+
     private double  underlying()  {
         return this.process.initialValues(). first();
     }
@@ -211,8 +203,8 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     }
 
     private double /*@Rate*/  riskFreeRate()  {
-        InterestRate rate =  this.process.riskFreeRate().getLink().zeroRate(residualTime(), Compounding.CONTINUOUS,
-                                                 Frequency.NO_FREQUENCY, false);
+        final InterestRate rate =  this.process.riskFreeRate().getLink().zeroRate(residualTime(), Compounding.CONTINUOUS,
+                Frequency.NO_FREQUENCY, false);
         return rate.rate();
     }
 
@@ -221,7 +213,7 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     }
 
     private double /*@Rate*/  dividendYield()  {
-        InterestRate yield = this.process.dividendYield().getLink().zeroRate(
+        final InterestRate yield = this.process.dividendYield().getLink().zeroRate(
                 residualTime(), Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, false);
         return yield.rate();
     }
@@ -231,7 +223,7 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     }
 
     private double /*@Rate*/  mu()  {
-        double /*@Volatility*/ vol = volatility();
+        final double /*@Volatility*/ vol = volatility();
         return (riskFreeRate() - dividendYield())/(vol * vol) - 0.5;
     }
 
@@ -241,81 +233,79 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
 
     //TODO: consider change method name to lowercase
     @SuppressWarnings("PMD.MethodNamingConventions")
-    private double  A(double phi)  {
-        double x1 = Math.log(underlying()/strike())/stdDeviation() + muSigma();
-        double N1 = f.op(phi*x1);
-        double N2 = f.op(phi*(x1-stdDeviation()));
+    private double  A(final double phi)  {
+        final double x1 = Math.log(underlying()/strike())/stdDeviation() + muSigma();
+        final double N1 = f.op(phi*x1);
+        final double N2 = f.op(phi*(x1-stdDeviation()));
         return phi*(underlying() * dividendDiscount() * N1 - strike() * riskFreeDiscount() * N2);
     }
 
     //TODO: consider change method name to lowercase
     @SuppressWarnings("PMD.MethodNamingConventions")
     private double  B(final double phi)  {
-        double x2 = Math.log(underlying()/barrier())/stdDeviation() + muSigma();
-        double N1 = f.op(phi*x2);
-        double N2 = f.op(phi*(x2-stdDeviation()));
+        final double x2 = Math.log(underlying()/barrier())/stdDeviation() + muSigma();
+        final double N1 = f.op(phi*x2);
+        final double N2 = f.op(phi*(x2-stdDeviation()));
         return phi*(underlying() * dividendDiscount() * N1 - strike() * riskFreeDiscount() * N2);
     }
 
     //TODO: consider change method name to lowercase
     @SuppressWarnings("PMD.MethodNamingConventions")
-    private double  C(double eta, final double phi)  {
-        double HS = barrier()/underlying();
-        double powHS0 = Math.pow(HS, 2 * mu());
-        double powHS1 = powHS0 * HS * HS;
-        double y1 = Math.log(barrier()*HS/strike())/stdDeviation() + muSigma();
-        double N1 = f.op(eta*y1);
-        double N2 = f.op(eta*(y1-stdDeviation()));
+    private double  C(final double eta, final double phi)  {
+        final double HS = barrier()/underlying();
+        final double powHS0 = Math.pow(HS, 2 * mu());
+        final double powHS1 = powHS0 * HS * HS;
+        final double y1 = Math.log(barrier()*HS/strike())/stdDeviation() + muSigma();
+        final double N1 = f.op(eta*y1);
+        final double N2 = f.op(eta*(y1-stdDeviation()));
         return phi*(underlying() * dividendDiscount() * powHS1 * N1 - strike() * riskFreeDiscount() * powHS0 * N2);
     }
-    
+
     //TODO: consider change method name to lowercase
     @SuppressWarnings("PMD.MethodNamingConventions")
-    private double  D(double eta, double phi)  {
-        double HS = barrier()/underlying();
-        double powHS0 = Math.pow(HS, 2 * mu());
-        double powHS1 = powHS0 * HS * HS;
-        double y2 = Math.log(barrier()/underlying())/stdDeviation() + muSigma();
-        double N1 = f.op(eta*y2);
-        double N2 = f.op(eta*(y2-stdDeviation()));
+    private double  D(final double eta, final double phi)  {
+        final double HS = barrier()/underlying();
+        final double powHS0 = Math.pow(HS, 2 * mu());
+        final double powHS1 = powHS0 * HS * HS;
+        final double y2 = Math.log(barrier()/underlying())/stdDeviation() + muSigma();
+        final double N1 = f.op(eta*y2);
+        final double N2 = f.op(eta*(y2-stdDeviation()));
         return phi*(underlying() * dividendDiscount() * powHS1 * N1 - strike() * riskFreeDiscount() * powHS0 * N2);
     }
-    
+
     //TODO: consider change method name to lowercase
     @SuppressWarnings("PMD.MethodNamingConventions")
-    private double  E(double eta)  {
+    private double  E(final double eta)  {
         if (rebate() > 0) {
-            double powHS0 = Math.pow(barrier()/underlying(), 2 * mu());
-            double x2 = Math.log(underlying()/barrier())/stdDeviation() + muSigma();
-            double y2 = Math.log(barrier()/underlying())/stdDeviation() + muSigma();
-            double N1 = f.op(eta*(x2 - stdDeviation()));
-            double N2 = f.op(eta*(y2 - stdDeviation()));
+            final double powHS0 = Math.pow(barrier()/underlying(), 2 * mu());
+            final double x2 = Math.log(underlying()/barrier())/stdDeviation() + muSigma();
+            final double y2 = Math.log(barrier()/underlying())/stdDeviation() + muSigma();
+            final double N1 = f.op(eta*(x2 - stdDeviation()));
+            final double N2 = f.op(eta*(y2 - stdDeviation()));
             return rebate() * riskFreeDiscount() * (N1 - powHS0 * N2);
-        } else {
+        } else
             return 0.0;
-        }
     }
 
     //TODO: consider change method name to lowercase
     @SuppressWarnings("PMD.MethodNamingConventions")
-    private double  F(double eta)  {
+    private double  F(final double eta)  {
         if (rebate() > 0) {
-            double /*@Rate*/ m = mu();
-            double /*@Volatility*/ vol = volatility();
-            double lambda = Math.sqrt(m*m + 2.0*riskFreeRate()/(vol * vol));
-            double HS = barrier()/underlying();
-            double powHSplus = Math.pow(HS, m + lambda);
-            double powHSminus = Math.pow(HS, m - lambda);
+            final double /*@Rate*/ m = mu();
+            final double /*@Volatility*/ vol = volatility();
+            final double lambda = Math.sqrt(m*m + 2.0*riskFreeRate()/(vol * vol));
+            final double HS = barrier()/underlying();
+            final double powHSplus = Math.pow(HS, m + lambda);
+            final double powHSminus = Math.pow(HS, m - lambda);
 
-            double sigmaSqrtT = stdDeviation();
-            double z = Math.log(barrier()/underlying())/sigmaSqrtT + lambda*sigmaSqrtT;
+            final double sigmaSqrtT = stdDeviation();
+            final double z = Math.log(barrier()/underlying())/sigmaSqrtT + lambda*sigmaSqrtT;
 
-            double N1 = f.op(eta * z);
-            double N2 = f.op(eta * (z - 2.0 * lambda * sigmaSqrtT));
+            final double N1 = f.op(eta * z);
+            final double N2 = f.op(eta * (z - 2.0 * lambda * sigmaSqrtT));
             return rebate() * (powHSplus * N1 + powHSminus * N2);
-        } else {
+        } else
             return 0.0;
-        }
     }
 
 }

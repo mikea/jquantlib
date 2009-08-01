@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.math.randomnumbers;
 
@@ -50,18 +50,18 @@ import org.jquantlib.lang.reflect.TypeToken;
  * @param <URSG> represents the UniformRandomSequenceGenerator<T>
  * @param <IC> represents the InverseCumulative
  */
-public class GenericLowDiscrepancy<RSG extends UniformRandomSequenceGenerator, IC extends InverseCumulative> { 
+public class GenericLowDiscrepancy<RSG extends UniformRandomSequenceGenerator, IC extends InverseCumulative> {
 
     //
     // static private fields
     //
-    
+
     //
     // FIXME:: code review :: it's not clear how should this variable be used.
     // Declared as private final till we discover what's the trick with it.
     //
-    static private final boolean allowsErrorEstimate = false; 
-    
+    static private final boolean allowsErrorEstimate = false;
+
     //
     // FIXME: QuantLib:: This variable apparently is never initialized!!!
     //
@@ -73,50 +73,43 @@ public class GenericLowDiscrepancy<RSG extends UniformRandomSequenceGenerator, I
     // So, we declare this variable as private final and initialize with null.
     // This can change as soon as we find what's the trick with it.
     //
-    static final private GenericLowDiscrepancy icInstance = null; 
-    
+    static final private GenericLowDiscrepancy icInstance = null;
+
 
     protected InverseCumulativeRsg<RSG, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
-        
-        if (System.getProperty("EXPERIMENTAL")==null) {
+
+        if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("Work in progress");
-        }
-        
+
+        // instantiate a RandomSequenceGenerator given its generic type (first generic parameter)
+        final RSG rsg;
         try {
-            // instantiate a RandomSequenceGenerator given its generic type (first generic parameter)
-            final RSG rsg;
-            try {
-                // obtain RSG Class from first generic parameter
-                final Class<RSG> rsgClass = (Class<RSG>) TypeToken.getClazz(GenericLowDiscrepancy.class, 0);
-                final Constructor<RSG> c = rsgClass.getConstructor(int.class, long.class);
-                rsg = c.newInstance(dimension, seed);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            // instantiate a InverseCumulative given its generic type (second generic parameter)
-            final IC ic;
-            try {
-                // obtain IC Class from second generic parameter
-                final Class<IC> icClass = (Class<IC>) TypeToken.getClazz(GenericPseudoRandom.class, 1);
-                final Constructor<IC> c;
-                if (icInstance!=null) {
-                    c = icClass.getConstructor(rsg.getClass(), icClass.getClass());
-                    ic = c.newInstance(rsg, icInstance);
-                } else {
-                    c = icClass.getConstructor(rsg.getClass());
-                    ic = c.newInstance(rsg);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            return (InverseCumulativeRsg<RSG, IC>) ic;
-            
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            // obtain RSG Class from first generic parameter
+            final Class<RSG> rsgClass = (Class<RSG>) TypeToken.getClazz(GenericLowDiscrepancy.class, 0);
+            final Constructor<RSG> c = rsgClass.getConstructor(int.class, long.class);
+            rsg = c.newInstance(dimension, seed);
+        } catch (final Exception e) {
+            throw new AssertionError(e);
         }
+
+        // instantiate a InverseCumulative given its generic type (second generic parameter)
+        final IC ic;
+        try {
+            // obtain IC Class from second generic parameter
+            final Class<IC> icClass = (Class<IC>) TypeToken.getClazz(GenericPseudoRandom.class, 1);
+            final Constructor<IC> c;
+            if (icInstance!=null) {
+                c = icClass.getConstructor(rsg.getClass(), icClass.getClass());
+                ic = c.newInstance(rsg, icInstance);
+            } else {
+                c = icClass.getConstructor(rsg.getClass());
+                ic = c.newInstance(rsg);
+            }
+        } catch (final Exception e) {
+            throw new AssertionError(e);
+        }
+        return (InverseCumulativeRsg<RSG, IC>) ic;
     }
 
 }

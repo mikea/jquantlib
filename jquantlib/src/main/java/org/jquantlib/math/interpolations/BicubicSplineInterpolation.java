@@ -43,9 +43,9 @@ package org.jquantlib.math.interpolations;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
 import org.jquantlib.math.interpolations.factories.BicubicSpline;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

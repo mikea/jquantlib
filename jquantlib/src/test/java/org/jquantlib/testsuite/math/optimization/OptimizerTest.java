@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.lang.annotation.Real;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.CostFunction;
 import org.jquantlib.math.optimization.EndCriteria;

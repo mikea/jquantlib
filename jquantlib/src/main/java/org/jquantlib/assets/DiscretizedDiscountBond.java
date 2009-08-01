@@ -24,7 +24,7 @@ package org.jquantlib.assets;
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.lattices.Lattice;
 
 /**

@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.instruments;
 
@@ -49,36 +49,39 @@ import org.jquantlib.quotes.Quote;
  */
 public class Stock extends Instrument {
 
-	//
+    private static final String NULL_QUOTE = "null quote";
+
+    //
     // private final fields
     //
 
     private final Handle<Quote> quote;
 
-	//
+    //
     // public constructors
     //
 
     public Stock(final Handle<Quote> quote) {
-		assert quote != null : "null quote"; // FIXME: code review: should throw here?
-		this.quote = quote;
-		this.quote.addObserver(this);
-	}
+        assert quote != null : NULL_QUOTE;
+        this.quote = quote;
+        this.quote.addObserver(this);
+    }
 
-	//
-	// overrides Instrument
-	//
+    //
+    // overrides Instrument
+    //
 
-	@Override
-	public boolean isExpired() /* @ReadOnly */ { return false; }
+    @Override
+    public boolean isExpired() /* @ReadOnly */ { return false; }
 
-	//
+    //
     // overrides LazyObject
     //
 
     @Override
     protected void performCalculations() /* @ReadOnly */ {
-		assert !quote.empty() : "null quote set";
-		NPV = quote.getLink().evaluate();
-	}
+        assert !quote.empty() : NULL_QUOTE;
+        NPV = quote.getLink().evaluate();
+    }
+
 }

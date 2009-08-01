@@ -40,9 +40,9 @@
 
 package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.math.matrixutilities.Array;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

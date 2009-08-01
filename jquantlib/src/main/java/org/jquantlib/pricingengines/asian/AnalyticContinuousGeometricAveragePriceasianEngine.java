@@ -4,7 +4,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -17,7 +17,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -38,7 +38,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.asian;
 
@@ -64,68 +64,60 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
     //
     // implements PricingEngine
     //
-    
-	@Override
-	public void calculate() /*@ReadOnly*/ {
 
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
-		if (!(arguments.averageType==AverageType.Geometric)){
-			throw new IllegalArgumentException("not a geometric average option");
-		}
+    @Override
+    public void calculate() /*@ReadOnly*/ {
 
-		if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
-			throw new IllegalArgumentException("not an European Option");
-		}
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        assert arguments.averageType==AverageType.Geometric : "not a geometric average option";
+        assert arguments.exercise.type()==Exercise.Type.EUROPEAN : "not an European Option";
+        final Date exercise = arguments.exercise.lastDate();
+        assert arguments.payoff instanceof PlainVanillaPayoff : "non-plain payoff given";
+        final PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
+        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : "Black-Scholes process required";
 
-		Date exercise = arguments.exercise.lastDate();
-		
-		if (!(arguments.payoff instanceof PlainVanillaPayoff)){
-			throw new IllegalArgumentException("non-plain payoff given");
-		}
-		PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
-		
-		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new IllegalArgumentException("Black-Scholes process required");
-		}
+        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
+        /*@Volatility*/ final double volatility = process.blackVolatility().getLink().blackVol(exercise, payoff.strike());
+        /*@Real*/ final double variance = process.blackVolatility().getLink().blackVariance(exercise, payoff.strike());
+        /*@DiscountFactor*/ final double  riskFreeDiscount = process.riskFreeRate().getLink().discount(exercise);
+        final DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
+        final DayCounter divdc = process.dividendYield().getLink().dayCounter();
+        final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
 
-		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
-		/*@Volatility*/ double volatility = process.blackVolatility().getLink().blackVol(exercise, payoff.strike());
-		/*@Real*/ double variance = process.blackVolatility().getLink().blackVariance(exercise, payoff.strike());
-		/*@DiscountFactor*/ double  riskFreeDiscount = process.riskFreeRate().getLink().discount(exercise);
-		DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
-		DayCounter divdc = process.dividendYield().getLink().dayCounter();
-		DayCounter voldc = process.blackVolatility().getLink().dayCounter();
+        /*@Spread*/ final double dividendYield = 0.5 * (
+                process.riskFreeRate().getLink().zeroRate(
+                        exercise,
+                        rfdc,
+                        Compounding.CONTINUOUS,
+                        Frequency.NO_FREQUENCY).rate() + process.dividendYield().getLink().zeroRate(
+                                exercise,
+                                divdc,
+                                Compounding.CONTINUOUS,
+                                Frequency.NO_FREQUENCY).rate() + volatility*volatility/6.0);
 
-		/*@Spread*/ double dividendYield = 0.5 * (
-				process.riskFreeRate().getLink().zeroRate(exercise, rfdc,
-						Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate() +
-						process.dividendYield().getLink().zeroRate(exercise, divdc,
-									Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate() +
-									volatility*volatility/6.0);
+        /*@Time*/ final double t_q = divdc.yearFraction(
+                process.dividendYield().getLink().referenceDate(), exercise);
+        /*@DiscountFactor*/ final double dividendDiscount = Math.exp(-dividendYield*t_q);
+        /*@Real*/ final double spot = process.stateVariable().getLink().evaluate();
+        /*@Real*/ final double forward = spot * dividendDiscount / riskFreeDiscount;
 
-		/*@Time*/ double t_q = divdc.yearFraction(
-				process.dividendYield().getLink().referenceDate(), exercise);
-		/*@DiscountFactor*/ double dividendDiscount = Math.exp(-dividendYield*t_q);
-		/*@Real*/ double spot = process.stateVariable().getLink().evaluate();
-		/*@Real*/ double forward = spot * dividendDiscount / riskFreeDiscount;
+        final BlackCalculator black = new BlackCalculator(payoff, forward, Math.sqrt(variance/3.0),riskFreeDiscount);
+        results.value = black.value();
+        results.delta = black.delta(spot);
+        results.gamma = black.gamma(spot);
+        results.dividendRho = black.dividendRho(t_q)/2.0;
 
-		BlackCalculator black = new BlackCalculator(payoff, forward, Math.sqrt(variance/3.0),riskFreeDiscount);
-		results.value = black.value();
-		results.delta = black.delta(spot);
-		results.gamma = black.gamma(spot);
-		results.dividendRho = black.dividendRho(t_q)/2.0;
+        /*@Time*/ final double t_r = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(),
+                arguments.exercise.lastDate());
+        results.rho = black.rho(t_r) + 0.5 * black.dividendRho(t_q);
 
-		/*@Time*/ double t_r = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(),
-				arguments.exercise.lastDate());
-		results.rho = black.rho(t_r) + 0.5 * black.dividendRho(t_q);
-
-		/*@Time*/ double t_v = voldc.yearFraction(
-				process.blackVolatility().getLink().referenceDate(),
-				arguments.exercise.lastDate());
-		results.vega = black.vega(t_v)/Math.sqrt(3.0) +
-						black.dividendRho(t_q)*volatility/6.0;
-		results.theta = black.theta(spot, t_v);
-		//results_.theta = Null<Real>();
-	}
+        /*@Time*/ final double t_v = voldc.yearFraction(
+                process.blackVolatility().getLink().referenceDate(),
+                arguments.exercise.lastDate());
+        results.vega = black.vega(t_v)/Math.sqrt(3.0) +
+        black.dividendRho(t_q)*volatility/6.0;
+        results.theta = black.theta(spot, t_v);
+        //results_.theta = Null<Real>();
+    }
 
 }

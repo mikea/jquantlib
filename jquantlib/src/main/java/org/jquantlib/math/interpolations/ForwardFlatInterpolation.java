@@ -22,8 +22,8 @@
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.factories.ForwardFlat;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * Forward-flat interpolation between discrete points
@@ -123,7 +123,7 @@ public class ForwardFlatInterpolation extends AbstractInterpolation {
 	//
 
     @Override
-	protected double evaluateImpl(final double x) /* @ReadOnly */{
+	protected double opImpl(final double x) /* @ReadOnly */{
 		int n = vx.length;
 		if (x >= vx.get(n-1))
 			return vy.get(n-1);

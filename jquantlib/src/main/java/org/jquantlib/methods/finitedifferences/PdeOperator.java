@@ -23,7 +23,7 @@
 package org.jquantlib.methods.finitedifferences;
 
 import org.jquantlib.lang.reflect.TypeToken;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 public abstract class PdeOperator<T extends PdeSecondOrderParabolic> extends TridiagonalOperator {

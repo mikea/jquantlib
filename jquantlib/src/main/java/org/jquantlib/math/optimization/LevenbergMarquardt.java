@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
 
 //! Levenberg-Marquardt optimization method

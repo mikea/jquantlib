@@ -23,8 +23,8 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.Ops;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TreeLattice1D;

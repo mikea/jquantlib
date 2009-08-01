@@ -39,12 +39,13 @@ package org.jquantlib.model.shortrate;
  * The correct way to obtain the desired behavior would be: \code Disposable<Foo> bar(Foo& f) { Foo temp = f; return temp; }
  * \endcode
  */
+// TODO: code review :: Consider removal of this class :S
 public class Disposable<T> {
-    
+
     public Disposable() {
         throw new UnsupportedOperationException();
     }
-    
+
     // public Disposable(T t);
     // public Disposable(final Disposable<T>& t);
     // public Disposable<T>& operator=(const Disposable<T>& t);

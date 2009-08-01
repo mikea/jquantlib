@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -33,19 +33,19 @@ import org.jquantlib.math.distributions.Derivative;
  * @author Dominik Holenstein
  */
 public class NewtonSafe extends AbstractSolver1D<Derivative> {
-	
-	 /**
-	 * Computes the roots of a function by using the Newton Safe method.
-	 * @param f the function
-	 * @param xAccuracy the provided accuracy 
-	 * @returns <code>root_</code>
-	 */
-	@Override
-	protected double solveImpl(final Derivative f, final double xAccuracy) {
+
+    /**
+     * Computes the roots of a function by using the Newton Safe method.
+     * @param f the function
+     * @param xAccuracy the provided accuracy
+     * @returns <code>root_</code>
+     */
+    @Override
+    protected double solveImpl(final Derivative f, final double xAccuracy) {
 
         double froot, dfroot, dx, dxold;
         double xh, xl;
-        
+
         // Orient the search so that f(xl) < 0
         if (fxMin < 0.0) {
             xl=xMin;
@@ -70,8 +70,8 @@ public class NewtonSafe extends AbstractSolver1D<Derivative> {
         while (evaluationNumber<= getMaxEvaluations()) {
             // Bisect if (out of range || not decreasing fast enough)
             if ((((root-xh)*dfroot-froot)*
-                 ((root-xl)*dfroot-froot) > 0.0)
-                || (Math.abs(2.0*froot) > Math.abs(dxold*dfroot))) {
+                    ((root-xl)*dfroot-froot) > 0.0)
+                    || (Math.abs(2.0*froot) > Math.abs(dxold*dfroot))) {
 
                 dxold = dx;
                 dx = (xh-xl)/2.0;
@@ -82,21 +82,18 @@ public class NewtonSafe extends AbstractSolver1D<Derivative> {
                 root -= dx;
             }
             // Convergence criterion
-            if (Math.abs(dx) < xAccuracy){
-            	return root;
-            }
-            
+            if (Math.abs(dx) < xAccuracy)
+                return root;
+
             froot = f.op(root);
             dfroot = f.derivative(root);
             evaluationNumber++;
-            
-            if (froot < 0.0){
-            	xl=root;
-            }  
-            else {
-            	xh=root;
-            }
+
+            if (froot < 0.0)
+                xl=root;
+            else
+                xh=root;
         }
-        throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");     
+        throw new ArithmeticException("maximum number of function evaluations exceeded"); // TODO: message
     }
 }

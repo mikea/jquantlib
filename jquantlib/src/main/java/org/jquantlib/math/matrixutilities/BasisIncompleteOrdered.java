@@ -43,8 +43,6 @@ package org.jquantlib.math.matrixutilities;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
 
 /**
  * @author M. Do

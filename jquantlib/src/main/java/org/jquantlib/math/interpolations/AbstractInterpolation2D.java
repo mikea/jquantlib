@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,8 +24,8 @@ package org.jquantlib.math.interpolations;
 
 import static org.jquantlib.math.Closeness.isClose;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 
 
 public abstract class AbstractInterpolation2D implements Interpolation2D {
@@ -33,51 +33,51 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     //
     // protected fields
     //
-    
-    /**
-	 * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i> 
-	 */
-	protected Array vx;
 
-	/**
-     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i> 
-	 */
-	protected Array vy;
-	
     /**
-     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i> 
+     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i>
      */
-	protected Matrix mz;
-	
+    protected Array vx;
 
-	//
-	// protected abstract methods
-	//
-	
-	protected abstract double evaluateImpl(final double x, final double y);
-	
+    /**
+     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i>
+     */
+    protected Array vy;
 
-	//
-	// public methods
-	//
-	
-	/**
-	 * This method intentionally throws UnsupportedOperationException in order to
-	 * oblige derived classes to reimplement it if needed.
-	 * 
-	 * @throws UnsupportedOperationException
-	 */
-	public void calculate() {
-	    throw new UnsupportedOperationException(); //FIXME: message
-	}
-	
-	
-	//
+    /**
+     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i>
+     */
+    protected Matrix mz;
+
+
+    //
+    // protected abstract methods
+    //
+
+    protected abstract double evaluateImpl(final double x, final double y);
+
+
+    //
+    // public methods
+    //
+
+    /**
+     * This method intentionally throws UnsupportedOperationException in order to
+     * oblige derived classes to reimplement it if needed.
+     * 
+     * @throws UnsupportedOperationException
+     */
+    public void calculate() {
+        throw new UnsupportedOperationException();
+    }
+
+
+    //
     // protected methods
     //
-    
-    
-	/**
+
+
+    /**
      * This method verifies if
      * <li> extrapolation is enabled;</li>
      * <li> requested <i>x</i> is valid</li>
@@ -88,10 +88,11 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
      * @throws IllegalStateException if extrapolation is not enabled.
      * @throws IllegalArgumentException if <i>x</i> is our of range
      */
+    // TODO: code review :: please verify against original QL/C++ code
     // FIXME: code review : verify if parameter 'extrapolate' is really needed
-    protected final void checkRange(final double x, final double y, boolean extrapolate) {
+    protected final void checkRange(final double x, final double y, final boolean extrapolate) {
         if (! (extrapolate || allowsExtrapolation() || isInRange(x, y)) ) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append("interpolation range is [");
             sb.append(xMin()).append(", ").append(xMax());
             sb.append("] x [");
@@ -103,16 +104,17 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         }
     }
 
-    
+
     //
     // implements Interpolation
     //
-    
+
     /**
      * {@inheritDoc}
      * 
      * @deprecated
      */
+    @Deprecated
     @Override
     public void update() {
         reload();
@@ -122,31 +124,28 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     //
     // Overrides AbstractInterpolation
     //
-    
+
     @Override
     public void reload() {
-        if (vx.length < 2 || vy.length < 2)
-            throw new IllegalArgumentException("not enough points to interpolate");
+        assert vx.length >= 2 && vy.length >= 2 : "not enough points to interpolate"; // TODO: message
         for (int i = 0; i < vx.length-1; i++) {
-            if ( vx.get(i) > vx.get(i+1) )
-                throw new IllegalArgumentException("unsorted values on array X");
-            if ( vy.get(i) > vy.get(i+1) )
-                throw new IllegalArgumentException("unsorted values on array Y");
+            assert vx.get(i) <= vx.get(i+1) : "unsorted values on array X";
+            assert vy.get(i) <= vy.get(i+1) : "unsorted values on array Y";
         }
     }
 
-    
+
     //
     // implements Ops.BinaryDoubleOp
     //
-    
+
     @Override
     public double op(final double x, final double y) {
         checkRange(x, y, this.allowsExtrapolation());
         return evaluateImpl(x, y);
     }
-    
-  
+
+
     //
     // implements Extrapolator
     //
@@ -156,8 +155,8 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
      * 
      * @see Extrapolator
      */
-    private DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
-    
+    private final DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
+
     @Override
     public final boolean allowsExtrapolation() {
         return delegatedExtrapolator.allowsExtrapolation();
@@ -175,48 +174,48 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 
 
     //
-	// implements Interpolation2D
-	//
-	
-	@Override
-	public double xMin() {
-		return vx.first();
-	}
+    // implements Interpolation2D
+    //
 
     @Override
-	public double xMax() {
-		return vx.last();
-	}
-
-    @Override
-	public double yMin() {
-		return  vy.first();
-	}
-
-    @Override
-	public double yMax() {
-		return vy.last();
-	}
-
-    @Override
-	public Array xValues() {
-    	return vx.clone();
-    }
-	
-    @Override
-	public Array yValues() {
-    	return vy.clone();
+    public double xMin() {
+        return vx.first();
     }
 
     @Override
-	public Matrix zData() {
+    public double xMax() {
+        return vx.last();
+    }
+
+    @Override
+    public double yMin() {
+        return  vy.first();
+    }
+
+    @Override
+    public double yMax() {
+        return vy.last();
+    }
+
+    @Override
+    public Array xValues() {
+        return vx.clone();
+    }
+
+    @Override
+    public Array yValues() {
+        return vy.clone();
+    }
+
+    @Override
+    public Matrix zData() {
         return mz.clone();
-    	// FIXME: code review :: return (double[][])Arrays.trimToCapacity(mz, mz.length);
+        // FIXME: code review :: return (double[][])Arrays.trimToCapacity(mz, mz.length);
     }
 
     @Override
     // FIXME: code review here: compare against original C++ code
-    public int locateX(double x) /* @ReadOnly */ {
+    public int locateX(final double x) /* @ReadOnly */ {
         if (x <= vx.first())
             return 0;
         else if (x > vx.last())
@@ -224,10 +223,10 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         else
             return vx.upperBound(x) - 1;
     }
-    
+
     @Override
     // FIXME: code review here: compare against original C++ code
-    public int locateY(double y) /* @ReadOnly */ {
+    public int locateY(final double y) /* @ReadOnly */ {
         if (y <= vy.first())
             return 0;
         else if (y > vy.last())
@@ -235,16 +234,16 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         else
             return vy.upperBound(y) - 1;
     }
-    
+
     @Override
     public boolean isInRange(final double x, final double y) {
-        double x1 = xMin(), x2 = xMax();
-        boolean xIsInrange = (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
+        final double x1 = xMin(), x2 = xMax();
+        final boolean xIsInrange = (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
         if (!xIsInrange) return false;
 
-        double y1 = yMin(), y2 = yMax();
+        final double y1 = yMin(), y2 = yMax();
         return (y >= y1 && y <= y2) || isClose(y,y1) || isClose(y,y2);
     }
 
-    
+
 }

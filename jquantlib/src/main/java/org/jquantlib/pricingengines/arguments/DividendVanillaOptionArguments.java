@@ -2,7 +2,7 @@
  Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 package org.jquantlib.pricingengines.arguments;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class DividendVanillaOptionArguments extends OneAssetOptionArguments{
     //
     // public fields
     //
-    
+
     // FIXME: public fields here is a bad design technique :(
 
     public List<? extends Dividend> cashFlow;
@@ -57,23 +57,15 @@ public class DividendVanillaOptionArguments extends OneAssetOptionArguments{
     //
     // public methods
     //
-    
+
     @Override
     public void validate() {
         super.validate();
-        Date exerciseDate = exercise.lastDate();
+        final Date exerciseDate = exercise.lastDate();
 
-        for (int i = 0; i < cashFlow.size(); i++) {
-            if (!(cashFlow.get(i).date().le(exerciseDate))) {
-                throw new ArithmeticException(
-                "the " + i + " dividend date ("
-                       + cashFlow.get(i).date()
-                       + ") is later than the exercise date ("
-                       + exerciseDate + ")"
-                       );
-                }
-        }
+        for (int i = 0; i < cashFlow.size(); i++)
+            assert cashFlow.get(i).date().le(exerciseDate) : "dividend date later than the exercise date";
 
     }
-    
+
 }

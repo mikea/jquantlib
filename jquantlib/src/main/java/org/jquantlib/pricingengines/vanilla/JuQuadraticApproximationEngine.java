@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 package org.jquantlib.pricingengines.vanilla;
 
 import org.jquantlib.daycounters.DayCounter;
@@ -55,12 +55,12 @@ import org.slf4j.LoggerFactory;
 /**
  * An Approximate Formula for Pricing American Options, Journal of Derivatives Winter 1999,  Ju, N.
  * <p>
- * Known issue, the case of zero interest rates causes a division by zero     
- *      
+ * Known issue, the case of zero interest rates causes a division by zero
+ * 
  * @author <Richard Gomes>
  */
 public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
-    
+
     final static Logger logger = LoggerFactory.getLogger(JuQuadraticApproximationEngine.class);
 
     // TODO: refactor messages
@@ -72,70 +72,55 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
     private static final String UNKNOWN_OPTION_TYPE = "unknown Option type";
     private static final String DIVIDING_BY_ZERO_INTEREST_RATE = "dividing by zero interst rate";
 
-    
+
     //
     // public constructors
     //
-    
+
     public JuQuadraticApproximationEngine() {
         super();
     }
 
-    
+
     //
     // implements PricingEngine
     //
-    
-	@Override
-	public void calculate() {
-	    
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
-		if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
-			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
-		}
 
-		//checking type before cast!
-		if (!(arguments.exercise instanceof AmericanExercise)){
-			throw new ArithmeticException(NON_AMERICAN_EXERCISE_GIVEN);
-		}
-		
-		AmericanExercise ex = (AmericanExercise)arguments.exercise;
-		if (ex.payoffAtExpiry()){
-			throw new ArithmeticException(PAYOFF_AT_EXPIRY_NOT_HANDLED);
-		}
-		if (!(arguments.payoff instanceof StrikedTypePayoff)){
-			throw new ArithmeticException(NON_STRIKE_PAYOFF_GIVEN);
-		}
-		StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
+    @Override
+    public void calculate() {
 
-		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_REQUIRED);
-		}
-		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        assert arguments.exercise.type()==Exercise.Type.AMERICAN : NOT_AN_AMERICAN_OPTION;
+        assert arguments.exercise instanceof AmericanExercise : NON_AMERICAN_EXERCISE_GIVEN;
+        final AmericanExercise ex = (AmericanExercise)arguments.exercise;
+        assert !ex.payoffAtExpiry() : PAYOFF_AT_EXPIRY_NOT_HANDLED;
+        assert arguments.payoff instanceof StrikedTypePayoff : NON_STRIKE_PAYOFF_GIVEN;
+        final StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
+        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : BLACK_SCHOLES_PROCESS_REQUIRED;
+        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
-		double /* @Real */variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
-        double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
-        double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(ex.lastDate());
-        double /* @Real */spot = process.stateVariable().getLink().evaluate();
-        double /* @Real */forwardPrice = spot * dividendDiscount / riskFreeDiscount;
-        BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
+        final double /* @Real */variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
+        final double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
+        final double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(ex.lastDate());
+        final double /* @Real */spot = process.stateVariable().getLink().evaluate();
+        final double /* @Real */forwardPrice = spot * dividendDiscount / riskFreeDiscount;
+        final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-		if (dividendDiscount>=1.0 && payoff.optionType()==Option.Type.CALL) {
-			// early exercise never optimal
-			results.value        = black.value();
-			results.delta        = black.delta(spot);
-			results.deltaForward = black.deltaForward();
-			results.elasticity   = black.elasticity(spot);
-			results.gamma        = black.gamma(spot);
+        if (dividendDiscount>=1.0 && payoff.optionType()==Option.Type.CALL) {
+            // early exercise never optimal
+            results.value        = black.value();
+            results.delta        = black.delta(spot);
+            results.deltaForward = black.deltaForward();
+            results.elasticity   = black.elasticity(spot);
+            results.gamma        = black.gamma(spot);
 
-			DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
-			DayCounter divdc = process.dividendYield().getLink().dayCounter();
-			DayCounter voldc = process.blackVolatility().getLink().dayCounter();
-			double /*@Time*/ t = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(),
-                            arguments.exercise.lastDate());
-			results.rho = black.rho(t);	
+            final DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
+            final DayCounter divdc = process.dividendYield().getLink().dayCounter();
+            final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
+            double /*@Time*/ t = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
+            results.rho = black.rho(t);
 
-			t = divdc.yearFraction(process.dividendYield().getLink().referenceDate(), arguments.exercise.lastDate());
+            t = divdc.yearFraction(process.dividendYield().getLink().referenceDate(), arguments.exercise.lastDate());
             results.dividendRho = black.dividendRho(t);
 
             t = voldc.yearFraction(process.blackVolatility().getLink().referenceDate(), arguments.exercise.lastDate());
@@ -143,94 +128,92 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
             results.theta = black.theta(spot, t);
             results.thetaPerDay = black.thetaPerDay(spot, t);
 
-			results.strikeSensitivity  = black.strikeSensitivity();
-			results.itmCashProbability = black.itmCashProbability();
-		} else {
-			// early exercise can be optimal
-			CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
-			NormalDistribution normalDist = new NormalDistribution();	
+            results.strikeSensitivity  = black.strikeSensitivity();
+            results.itmCashProbability = black.itmCashProbability();
+        } else {
+            // early exercise can be optimal
+            final CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
+            final NormalDistribution normalDist = new NormalDistribution();
 
-			double /*@Real*/ tolerance = 1e-6;
-			double /*@Real*/ Sk = BaroneAdesiWhaleyApproximationEngine.criticalPrice(payoff, riskFreeDiscount, dividendDiscount, variance, tolerance);
+            final double /*@Real*/ tolerance = 1e-6;
+            final double /*@Real*/ Sk = BaroneAdesiWhaleyApproximationEngine.criticalPrice(payoff, riskFreeDiscount, dividendDiscount, variance, tolerance);
 
-			double /*@Real*/ forwardSk = Sk * dividendDiscount / riskFreeDiscount;
+            final double /*@Real*/ forwardSk = Sk * dividendDiscount / riskFreeDiscount;
 
-			double /*@Real*/ alpha = -2.0*Math.log(riskFreeDiscount)/(variance);
-			double /*@Real*/ beta = 2.0*Math.log(dividendDiscount/riskFreeDiscount)/
-									(variance);
-			double /*@Real*/ h = 1 - riskFreeDiscount;
-			double /*@Real*/ phi;
-			
-			switch (payoff.optionType()) {
-			case CALL:
-				phi = 1;
-				break;
-			case PUT:
-				phi = -1;
-				break;
-			default:
-				throw new ArithmeticException(UNKNOWN_OPTION_TYPE);
-			}
-			
-			// TODO: study how zero interest rate could be handled
-			if(h == 0.0){
-			    throw new ArithmeticException(DIVIDING_BY_ZERO_INTEREST_RATE);
-			}
+            final double /*@Real*/ alpha = -2.0*Math.log(riskFreeDiscount)/(variance);
+            final double /*@Real*/ beta = 2.0*Math.log(dividendDiscount/riskFreeDiscount)/
+            (variance);
+            final double /*@Real*/ h = 1 - riskFreeDiscount;
+            double /*@Real*/ phi;
 
-			/*
+            switch (payoff.optionType()) {
+            case CALL:
+                phi = 1;
+                break;
+            case PUT:
+                phi = -1;
+                break;
+            default:
+                throw new AssertionError(UNKNOWN_OPTION_TYPE);
+            }
+
+            // TODO: study how zero interest rate could be handled
+            assert h != 0.0 : DIVIDING_BY_ZERO_INTEREST_RATE;
+
+            // TODO: code review :: please verify against original QL/C++ code
+            /*
                 Workaround ????
 			    if(h == 0.0){
 			        logger.warn("h equals zero, use MIN_VALUE");
 			        h = Double.MIN_VALUE;
 			    }
-			*/
-			
-			double /* @Real */temp_root = Math.sqrt((beta - 1) * (beta - 1) + (4 * alpha) / h);
-            double /* @Real */lambda = (-(beta - 1) + phi * temp_root) / 2;
-            double /* @Real */lambda_prime = -phi * alpha / (h * h * temp_root);
+             */
 
-            double /* @Real */black_Sk = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSk, Math.sqrt(variance)) * riskFreeDiscount;
-            double /* @Real */hA = phi * (Sk - payoff.strike()) - black_Sk;
+            final double /* @Real */temp_root = Math.sqrt((beta - 1) * (beta - 1) + (4 * alpha) / h);
+            final double /* @Real */lambda = (-(beta - 1) + phi * temp_root) / 2;
+            final double /* @Real */lambda_prime = -phi * alpha / (h * h * temp_root);
 
-            double /* @Real */d1_Sk = (Math.log(forwardSk / payoff.strike()) + 0.5 * variance) / Math.sqrt(variance);
-            double /* @Real */d2_Sk = d1_Sk - Math.sqrt(variance);
-            double /* @Real */part1 = forwardSk * normalDist.op(d1_Sk) / (alpha * Math.sqrt(variance));
-            double /* @Real */part2 = -phi * forwardSk * cumNormalDist.op(phi * d1_Sk) * Math.log(dividendDiscount) / Math.log(riskFreeDiscount);
-            double /* @Real */part3 = +phi * payoff.strike() * cumNormalDist.op(phi * d2_Sk);
-            double /* @Real */V_E_h = part1 + part2 + part3;
+            final double /* @Real */black_Sk = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSk, Math.sqrt(variance)) * riskFreeDiscount;
+            final double /* @Real */hA = phi * (Sk - payoff.strike()) - black_Sk;
 
-            double /* @Real */b = (1 - h) * alpha * lambda_prime / (2 * (2 * lambda + beta - 1));
-            double /* @Real */c = -((1 - h) * alpha / (2 * lambda + beta - 1)) * (V_E_h / (hA) + 1 / h + lambda_prime / (2 * lambda + beta - 1));
-            double /* @Real */temp_spot_ratio = Math.log(spot / Sk);
-            double /* @Real */chi = temp_spot_ratio * (b * temp_spot_ratio + c);
+            final double /* @Real */d1_Sk = (Math.log(forwardSk / payoff.strike()) + 0.5 * variance) / Math.sqrt(variance);
+            final double /* @Real */d2_Sk = d1_Sk - Math.sqrt(variance);
+            final double /* @Real */part1 = forwardSk * normalDist.op(d1_Sk) / (alpha * Math.sqrt(variance));
+            final double /* @Real */part2 = -phi * forwardSk * cumNormalDist.op(phi * d1_Sk) * Math.log(dividendDiscount) / Math.log(riskFreeDiscount);
+            final double /* @Real */part3 = +phi * payoff.strike() * cumNormalDist.op(phi * d2_Sk);
+            final double /* @Real */V_E_h = part1 + part2 + part3;
 
-			if (phi * (Sk - spot) > 0) {
+            final double /* @Real */b = (1 - h) * alpha * lambda_prime / (2 * (2 * lambda + beta - 1));
+            final double /* @Real */c = -((1 - h) * alpha / (2 * lambda + beta - 1)) * (V_E_h / (hA) + 1 / h + lambda_prime / (2 * lambda + beta - 1));
+            final double /* @Real */temp_spot_ratio = Math.log(spot / Sk);
+            final double /* @Real */chi = temp_spot_ratio * (b * temp_spot_ratio + c);
+
+            if (phi * (Sk - spot) > 0)
                 results.value = black.value() + hA * Math.pow((spot / Sk), lambda) / (1 - chi);
-            } else {
+            else
                 results.value = phi * (spot - payoff.strike());
+
+            if (Double.isNaN(results.value)){
+                final double hh = 0.0;
+                final double gg = hh; //TODO: code review: variable never read?
             }
+            final double /* @Real */temp_chi_prime = (2 * b / spot) * Math.log(spot / Sk);
+            final double /* @Real */chi_prime = temp_chi_prime + c / spot;
+            final double /* @Real */chi_double_prime = 2 * b / (spot * spot) - temp_chi_prime / spot - c / (spot * spot);
+            results.delta = phi * dividendDiscount * cumNormalDist.op(phi * d1_Sk)
+            + (lambda / (spot * (1 - chi)) + chi_prime / ((1 - chi)*(1 - chi))) *
+            (phi * (Sk - payoff.strike()) - black_Sk) * Math.pow((spot/Sk), lambda);
 
-			if (Double.isNaN(results.value)){
-				double hh = 0.0;
-				double gg = hh; //TODO: code review: variable never read?
-			}
-			double /* @Real */temp_chi_prime = (2 * b / spot) * Math.log(spot / Sk);
-            double /* @Real */chi_prime = temp_chi_prime + c / spot;
-            double /* @Real */chi_double_prime = 2 * b / (spot * spot) - temp_chi_prime / spot - c / (spot * spot);
-			results.delta = phi * dividendDiscount * cumNormalDist.op(phi * d1_Sk)
-							+ (lambda / (spot * (1 - chi)) + chi_prime / ((1 - chi)*(1 - chi))) *
-							(phi * (Sk - payoff.strike()) - black_Sk) * Math.pow((spot/Sk), lambda);
+            results.gamma = phi * dividendDiscount * normalDist.op(phi*d1_Sk) /
+            (spot * Math.sqrt(variance))
+            + (2 * lambda * chi_prime / (spot * (1 - chi) * (1 - chi))
+                    + 2 * chi_prime * chi_prime / ((1 - chi) * (1 - chi) * (1 - chi))
+                    + chi_double_prime / ((1 - chi) * (1 - chi))
+                    + lambda * (1 - lambda) / (spot * spot * (1 - chi)))
+                    * (phi * (Sk - payoff.strike()) - black_Sk)
+                    * Math.pow((spot/Sk), lambda);
+        }
 
-			results.gamma = phi * dividendDiscount * normalDist.op(phi*d1_Sk) /
-                             (spot * Math.sqrt(variance))
-                             + (2 * lambda * chi_prime / (spot * (1 - chi) * (1 - chi))
-                            		 + 2 * chi_prime * chi_prime / ((1 - chi) * (1 - chi) * (1 - chi))
-                            		 + chi_double_prime / ((1 - chi) * (1 - chi))
-                            		 + lambda * (1 - lambda) / (spot * spot * (1 - chi)))
-                            		 * (phi * (Sk - payoff.strike()) - black_Sk)
-                            		 * Math.pow((spot/Sk), lambda);
-			}
+    } // end of "early exercise can be optimal"
 
-		} // end of "early exercise can be optimal"
-
-	}
+}

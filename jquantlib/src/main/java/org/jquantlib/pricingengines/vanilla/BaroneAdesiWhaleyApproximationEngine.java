@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 
 package org.jquantlib.pricingengines.vanilla;
@@ -67,53 +67,40 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
     private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
     private static final String UNKNOWN_OPTION_TYPE = "unknown Option type";
 
-    
+
     //
     // public constructors
     //
-    
+
     public BaroneAdesiWhaleyApproximationEngine() {
         super();
     }
 
-    
+
     //
     // implements PricingEngine
     //
-    
-	@Override
-	public void calculate() {
-	    
-	    // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
-	    if (!(arguments.exercise.type()==Exercise.Type.AMERICAN)){
-			throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
-		}
 
-		if (!(arguments.exercise instanceof AmericanExercise)){
-			throw new ArithmeticException(NON_AMERICAN_EXERCISE_GIVEN);
-		}
-		
-		AmericanExercise ex = (AmericanExercise)arguments.exercise;
-		if (ex.payoffAtExpiry()){
-			throw new ArithmeticException(PAYOFF_AT_EXPIRY_NOT_HANDLED);
-		}
-		if (!(arguments.payoff instanceof StrikedTypePayoff)){
-			throw new ArithmeticException(NON_STRIKE_PAYOFF_GIVEN);
-		}
-		StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
+    @Override
+    public void calculate() {
 
-		if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess)){
-			throw new ArithmeticException(BLACK_SCHOLES_PROCESS_REQUIRED);
-		}
-		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        assert arguments.exercise.type()==Exercise.Type.AMERICAN : NOT_AN_AMERICAN_OPTION;
+        assert arguments.exercise instanceof AmericanExercise : NON_AMERICAN_EXERCISE_GIVEN;
+        final AmericanExercise ex = (AmericanExercise)arguments.exercise;
+        assert !ex.payoffAtExpiry() : PAYOFF_AT_EXPIRY_NOT_HANDLED;
+        assert arguments.payoff instanceof StrikedTypePayoff : NON_STRIKE_PAYOFF_GIVEN;
+        final StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
+        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : BLACK_SCHOLES_PROCESS_REQUIRED;
+        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
-        
-        double /*@Real*/ variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
-        double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
-        double /*@DiscountFactor*/ riskFreeDiscount = process.riskFreeRate().getLink().discount(ex.lastDate());
-        double /*@Real*/ spot = process.stateVariable().getLink().evaluate();
-        double /*@Real*/ forwardPrice = spot * dividendDiscount / riskFreeDiscount;
-        BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
+
+        final double /*@Real*/ variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
+        final double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
+        final double /*@DiscountFactor*/ riskFreeDiscount = process.riskFreeRate().getLink().discount(ex.lastDate());
+        final double /*@Real*/ spot = process.stateVariable().getLink().evaluate();
+        final double /*@Real*/ forwardPrice = spot * dividendDiscount / riskFreeDiscount;
+        final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
         if (dividendDiscount>=1.0 && payoff.optionType()==Option.Type.CALL) {
             // early exercise never optimal
@@ -123,9 +110,9 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             results.elasticity   = black.elasticity(spot);
             results.gamma        = black.gamma(spot);
 
-            DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
-            DayCounter divdc = process.dividendYield().getLink().dayCounter();
-            DayCounter voldc = process.blackVolatility().getLink().dayCounter();
+            final DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
+            final DayCounter divdc = process.dividendYield().getLink().dayCounter();
+            final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
             double /*@Time*/ t = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
             results.rho = black.rho(t);
 
@@ -141,89 +128,87 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             results.itmCashProbability = black.itmCashProbability();
         } else {
             // early exercise can be optimal
-            CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
-            double /*@Real*/ tolerance = 1e-6;
-            double /*@Real*/ Sk = criticalPrice(payoff, riskFreeDiscount, dividendDiscount, variance, tolerance);
-            double /*@Real*/ forwardSk = Sk * dividendDiscount / riskFreeDiscount;
-            double /*@Real*/ d1 = (Math.log(forwardSk/payoff.strike()) + 0.5*variance)/Math.sqrt(variance);
-            double /*@Real*/ n = 2.0*Math.log(dividendDiscount/riskFreeDiscount)/variance;
-            double /*@Real*/ K = -2.0*Math.log(riskFreeDiscount)/(variance*(1.0-riskFreeDiscount));
+            final CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
+            final double /*@Real*/ tolerance = 1e-6;
+            final double /*@Real*/ Sk = criticalPrice(payoff, riskFreeDiscount, dividendDiscount, variance, tolerance);
+            final double /*@Real*/ forwardSk = Sk * dividendDiscount / riskFreeDiscount;
+            final double /*@Real*/ d1 = (Math.log(forwardSk/payoff.strike()) + 0.5*variance)/Math.sqrt(variance);
+            final double /*@Real*/ n = 2.0*Math.log(dividendDiscount/riskFreeDiscount)/variance;
+            final double /*@Real*/ K = -2.0*Math.log(riskFreeDiscount)/(variance*(1.0-riskFreeDiscount));
             double /*@Real*/ Q, a;
             switch (payoff.optionType()) {
-                case CALL:
-                    Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
-                    a =  (Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(d1));
-                    if (spot<Sk) {
-                        results.value = black.value() + a * Math.pow((spot/Sk), Q);
-                    } else {
-                        results.value = spot - payoff.strike();
-                    }
-                    break;
-                case PUT:
-                    Q = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
-                    a = -(Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(-d1));
-                    if (spot>Sk) {
-                        results.value = black.value() +
-                            a * Math.pow((spot/Sk), Q);
-                    } else {
-                        results.value = payoff.strike() - spot;
-                    }
-                    break;
-                default:
-                  throw new ArithmeticException(UNKNOWN_OPTION_TYPE);
+            case CALL:
+                Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
+                a =  (Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(d1));
+                if (spot<Sk)
+                    results.value = black.value() + a * Math.pow((spot/Sk), Q);
+                else
+                    results.value = spot - payoff.strike();
+                break;
+            case PUT:
+                Q = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
+                a = -(Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(-d1));
+                if (spot>Sk)
+                    results.value = black.value() +
+                    a * Math.pow((spot/Sk), Q);
+                else
+                    results.value = payoff.strike() - spot;
+                break;
+            default:
+                throw new AssertionError(UNKNOWN_OPTION_TYPE);
             }
         } // end of "early exercise can be optimal"
-		
-	}
-	
-	
-	//
-	// private methods
-	//
-	
-    private double  criticalPrice(
-            StrikedTypePayoff payoff,
-            double /*@DiscountFactor*/ riskFreeDiscount,
-            double /*@DiscountFactor*/ dividendDiscount,
-            double variance) {
-    	return criticalPrice(payoff, riskFreeDiscount, dividendDiscount, variance, 1.0e-6);
+
     }
-    
-    
+
+
+    //
+    // private methods
+    //
+
+    private double  criticalPrice(
+            final StrikedTypePayoff payoff,
+            final double /*@DiscountFactor*/ riskFreeDiscount,
+            final double /*@DiscountFactor*/ dividendDiscount,
+            final double variance) {
+        return criticalPrice(payoff, riskFreeDiscount, dividendDiscount, variance, 1.0e-6);
+    }
+
+
     //
     // package protected methods
     //
     // TODO: study if a refactoring is a good idea, in order to remove the package private access modifier
     //
-    
+
     @PackagePrivate static double  criticalPrice(
-            StrikedTypePayoff payoff,
-            double /*@DiscountFactor*/ riskFreeDiscount,
-            double /*@DiscountFactor*/ dividendDiscount,
-            double variance,
-            double tolerance) {
-    	
+            final StrikedTypePayoff payoff,
+            final double /*@DiscountFactor*/ riskFreeDiscount,
+            final double /*@DiscountFactor*/ dividendDiscount,
+            final double variance,
+            final double tolerance) {
+
         // Calculation of seed value, Si
-        double /*@Real*/ n= 2.0*Math.log(dividendDiscount/riskFreeDiscount)/(variance);
-        double /*@Real*/ m=-2.0*Math.log(riskFreeDiscount)/(variance);
-        double /*@Real*/ bT = Math.log(dividendDiscount/riskFreeDiscount);
+        final double /*@Real*/ n= 2.0*Math.log(dividendDiscount/riskFreeDiscount)/(variance);
+        final double /*@Real*/ m=-2.0*Math.log(riskFreeDiscount)/(variance);
+        final double /*@Real*/ bT = Math.log(dividendDiscount/riskFreeDiscount);
 
         double /*@Real*/ qu, Su, h, Si;
         switch (payoff.optionType()) {
-          case CALL:
+        case CALL:
             qu = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0)) + 4.0*m))/2.0;
             Su = payoff.strike() / (1.0 - 1.0/qu);
             h = -(bT + 2.0*Math.sqrt(variance)) * payoff.strike() / (Su - payoff.strike());
             Si = payoff.strike() + (Su - payoff.strike()) * (1.0 - Math.exp(h));
             break;
-          case PUT:
+        case PUT:
             qu = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0)) + 4.0*m))/2.0;
             Su = payoff.strike() / (1.0 - 1.0/qu);
             h = (bT - 2.0*Math.sqrt(variance)) * payoff.strike() / (payoff.strike() - Su);
             Si = Su + (payoff.strike() - Su) * Math.exp(h);
             break;
-          default:
-            throw new ArithmeticException(UNKNOWN_OPTION_TYPE);
+        default:
+            throw new AssertionError(UNKNOWN_OPTION_TYPE);
         }
 
 
@@ -231,46 +216,46 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
         double /*@Real*/ Q, LHS, RHS, bi;
         double /*@Real*/ forwardSi = Si * dividendDiscount / riskFreeDiscount;
         double /*@Real*/ d1 = (Math.log(forwardSi/payoff.strike()) + 0.5*variance) / Math.sqrt(variance);
-        CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
-        double /*@Real*/ K = (riskFreeDiscount!=1.0 ? -2.0*Math.log(riskFreeDiscount)/ (variance*(1.0-riskFreeDiscount)) : 0.0);
-        double /*@Real*/ temp = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
+        final CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
+        final double /*@Real*/ K = (riskFreeDiscount!=1.0 ? -2.0*Math.log(riskFreeDiscount)/ (variance*(1.0-riskFreeDiscount)) : 0.0);
+        final double /*@Real*/ temp = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
         switch (payoff.optionType()) {
-          case CALL:
+        case CALL:
             Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0)) + 4 * K)) / 2;
             LHS = Si - payoff.strike();
             RHS = temp + (1 - dividendDiscount * cumNormalDist.op(d1)) * Si / Q;
             bi =  dividendDiscount * cumNormalDist.op(d1) * (1 - 1/Q)
-               + (1 - dividendDiscount * cumNormalDist.derivative(d1) / Math.sqrt(variance)) / Q;
+            + (1 - dividendDiscount * cumNormalDist.derivative(d1) / Math.sqrt(variance)) / Q;
             while (Math.abs(LHS - RHS)/payoff.strike() > tolerance) {
                 Si = (payoff.strike() + RHS - bi * Si) / (1 - bi);
                 forwardSi = Si * dividendDiscount / riskFreeDiscount;
                 d1 = (Math.log(forwardSi/payoff.strike())+0.5*variance)/Math.sqrt(variance);
                 LHS = Si - payoff.strike();
-                double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
+                final double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
                 RHS = temp2 + (1 - dividendDiscount * cumNormalDist.op(d1)) * Si / Q;
                 bi = dividendDiscount * cumNormalDist.op(d1) * (1 - 1 / Q)
-                   + (1 - dividendDiscount * cumNormalDist.derivative(d1) / Math.sqrt(variance)) / Q;
+                + (1 - dividendDiscount * cumNormalDist.derivative(d1) / Math.sqrt(variance)) / Q;
             }
             break;
-          case PUT:
+        case PUT:
             Q = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0)) + 4 * K)) / 2;
             LHS = payoff.strike() - Si;
             RHS = temp - (1 - dividendDiscount * cumNormalDist.op(-d1)) * Si / Q;
             bi = -dividendDiscount * cumNormalDist.op(-d1) * (1 - 1/Q)
-               - (1 + dividendDiscount * cumNormalDist.derivative(-d1) / Math.sqrt(variance)) / Q;
+            - (1 + dividendDiscount * cumNormalDist.derivative(-d1) / Math.sqrt(variance)) / Q;
             while (Math.abs(LHS - RHS)/payoff.strike() > tolerance) {
                 Si = (payoff.strike() - RHS + bi * Si) / (1 + bi);
                 forwardSi = Si * dividendDiscount / riskFreeDiscount;
                 d1 = (Math.log(forwardSi/payoff.strike())+0.5*variance)/Math.sqrt(variance);
                 LHS = payoff.strike() - Si;
-                double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
+                final double /*@Real*/ temp2 = BlackFormula.blackFormula(payoff.optionType(), payoff.strike(), forwardSi, Math.sqrt(variance))*riskFreeDiscount;
                 RHS = temp2 - (1 - dividendDiscount * cumNormalDist.op(-d1)) * Si / Q;
                 bi = -dividendDiscount * cumNormalDist.op(-d1) * (1 - 1 / Q)
-                   - (1 + dividendDiscount * cumNormalDist.derivative(-d1) / Math.sqrt(variance)) / Q;
+                - (1 + dividendDiscount * cumNormalDist.derivative(-d1) / Math.sqrt(variance)) / Q;
             }
             break;
-          default:
-            throw new ArithmeticException(UNKNOWN_OPTION_TYPE);
+        default:
+            throw new AssertionError(UNKNOWN_OPTION_TYPE);
         }
 
         return Si;

@@ -1,9 +1,9 @@
 package org.jquantlib.legacy.libormarkets;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.integrals.GaussKronrodAdaptive;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.processes.LfmCovarianceParameterization;
 
 public class LfmCovarianceProxy extends LfmCovarianceParameterization {

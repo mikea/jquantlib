@@ -23,7 +23,7 @@ package org.jquantlib.model.shortrate;
 
 import java.util.ArrayList;
 import org.jquantlib.lang.annotation.Time;
-import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TreeLattice2D;
 import org.jquantlib.methods.lattices.TrinomialTree;

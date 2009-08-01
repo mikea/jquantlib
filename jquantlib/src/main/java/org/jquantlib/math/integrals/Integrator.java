@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -34,38 +34,37 @@ import org.jquantlib.math.Ops;
 public abstract class Integrator {
 
     //
-	// private fields
-	//
-	
-	private double absoluteAccuracy;
+    // private fields
+    //
+
+    private double absoluteAccuracy;
     private double absoluteError;
     private int maxEvaluations;
     private int numberOfEvaluations;
-	
-    
-	//
-	// public constructors
-	//
-	
-	public Integrator(final double absoluteAccuracy, final int maxEvaluations) {
-		if (absoluteAccuracy <= Constants.QL_EPSILON)
-			throw new IllegalArgumentException("required tolerance(" + absoluteAccuracy + ") must be > "+Constants.QL_EPSILON);
 
-		this.absoluteAccuracy = absoluteAccuracy;
-		this.maxEvaluations = maxEvaluations;
-	}
-	
+
+    //
+    // public constructors
+    //
+
+    public Integrator(final double absoluteAccuracy, final int maxEvaluations) {
+        assert absoluteAccuracy > Constants.QL_EPSILON : "required tolerance must be > epsilon";
+
+        this.absoluteAccuracy = absoluteAccuracy;
+        this.maxEvaluations = maxEvaluations;
+    }
+
     //
     // protected abstract methods
     //
-    
+
     protected abstract double integrate(final Ops.DoubleOp f, final double a, final double b) /* @ReadOnly */;
 
-	
+
     //
     // protected final methods
     //
-    
+
     protected final void setAbsoluteError(final double error) /* @ReadOnly */ {
         absoluteError = error;
     }
@@ -82,23 +81,23 @@ public abstract class Integrator {
     //
     // protected virtual methods
     //
-    
+
     protected int getNumberOfEvaluations() /* @ReadOnly */ {
         return this.numberOfEvaluations;
     }
 
 
-	//
-	// public final methods
-	//
-	
-	public double evaluate(final Ops.DoubleOp f, final double a, final double b) /* @ReadOnly */{
-		if (a == b) return 0.0;
-		if (a > b) return -1 * evaluate(f, b, a);
-		this.numberOfEvaluations = 0;
-		return integrate(f, a, b);
-	}
-    
+    //
+    // public final methods
+    //
+
+    public double evaluate(final Ops.DoubleOp f, final double a, final double b) /* @ReadOnly */{
+        if (a == b) return 0.0;
+        if (a > b) return -1 * evaluate(f, b, a);
+        this.numberOfEvaluations = 0;
+        return integrate(f, a, b);
+    }
+
     public final void setAbsoluteAccuracy(final double accuracy) {
         absoluteAccuracy= accuracy;
     }
@@ -119,11 +118,11 @@ public abstract class Integrator {
         return absoluteError;
     }
 
-    
+
     //
     // public virtual methods
     //
-    
+
     public boolean isIntegrationSuccess() /* @ReadOnly */ {
         return numberOfEvaluations <= maxEvaluations && absoluteError <= absoluteAccuracy;
     }

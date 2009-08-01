@@ -30,10 +30,10 @@ import java.util.List;
 
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Swaption;
-import org.jquantlib.math.Array;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.model.AffineModel;
 import org.jquantlib.model.Parameter;

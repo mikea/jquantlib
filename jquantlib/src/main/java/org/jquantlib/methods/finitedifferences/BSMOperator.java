@@ -22,8 +22,8 @@
 
 package org.jquantlib.methods.finitedifferences;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.LogGrid;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**

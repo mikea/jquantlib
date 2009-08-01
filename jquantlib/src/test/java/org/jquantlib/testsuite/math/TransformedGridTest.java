@@ -2,10 +2,10 @@ package org.jquantlib.testsuite.math;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.Grid;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.TransformedGrid;
+import org.jquantlib.math.matrixutilities.Array;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.asian;
 
@@ -73,150 +73,140 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
     private static final String NOT_AN_EUROPEAN_OPTION = "not an European Option";
     private static final String NON_STRIKED_PAYOFF_GIVEN = "non-striked payoff given";
     private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
-	
+
 
     //
     // public constructors
     //
-    
+
     public AnalyticDiscreteGeometricAveragePriceAsianEngine() {
         super();
     }
-    
-    
+
+
     //
     // implements PricingEngine
     //
-    
-	@Override
-	public void calculate() /*@ReadOnly*/{
 
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
-        if (!(arguments.exercise.type()==Exercise.Type.EUROPEAN)){
-            throw new ArithmeticException(NOT_AN_EUROPEAN_OPTION);
-        }
+    @Override
+    public void calculate() /*@ReadOnly*/{
 
-        StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
-        if (!(arguments.payoff instanceof StrikedTypePayoff)) {
-            throw new IllegalArgumentException(NON_STRIKED_PAYOFF_GIVEN);
-        }
-        
-        GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
-        if (process == null)
-            throw new NullPointerException(BLACK_SCHOLES_PROCESS_REQUIRED);
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        assert arguments.exercise.type()==Exercise.Type.EUROPEAN : NOT_AN_EUROPEAN_OPTION;
+        final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
+        assert arguments.payoff instanceof StrikedTypePayoff : NON_STRIKED_PAYOFF_GIVEN;
+
+        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
+        assert process != null : BLACK_SCHOLES_PROCESS_REQUIRED;
 
         /*
          * This engine cannot really check for the averageType==Geometric
-         * since it can be used as control variate for the Arithmetic version 
-         *  
+         * since it can be used as control variate for the Arithmetic version
+         * 
          * QL_REQUIRE(arguments_.averageType == Average::Geometric, "not a geometric average option");
          */
-        
-		/*@Real*/ double runningLog;
-		/*@Size*/ int pastFixings;
-		if (arguments.averageType == AverageType.Geometric) {
-			if (!(arguments.runningAccumulator>0.0)){
-				throw new IllegalArgumentException(
-                    "positive running product required: "
-                    + arguments.runningAccumulator + " not allowed");
-			}
-			runningLog = Math.log(arguments.runningAccumulator);
-			pastFixings = arguments.pastFixings;
-		} else {  // it is being used as control variate
-			runningLog = 1.0;
-			pastFixings = 0;
-		}
 
-		Date referenceDate = process.riskFreeRate().getLink().referenceDate();
-		DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
-		DayCounter divdc = process.dividendYield().getLink().dayCounter();
-		DayCounter voldc = process.blackVolatility().getLink().dayCounter();
+        double runningLog;
+        int pastFixings;
+        if (arguments.averageType == AverageType.Geometric) {
+            if (!(arguments.runningAccumulator>0.0))
+                throw new IllegalArgumentException(
+                        "positive running product required: "
+                        + arguments.runningAccumulator + " not allowed");
+            runningLog = Math.log(arguments.runningAccumulator);
+            pastFixings = arguments.pastFixings;
+        } else {  // it is being used as control variate
+            runningLog = 1.0;
+            pastFixings = 0;
+        }
 
-		// TODO: consider double[] instead
-	    List<Double> fixingTimes = new ArrayDoubleList();
-	    /*@Size*/ int i;
-	    for (i=0; i<arguments.fixingDates.size(); i++) {
-	    	if (arguments.fixingDates.get(i).ge(referenceDate)) {
-	    		/*@Time*/ double t = voldc.yearFraction(referenceDate,
-	    				arguments.fixingDates.get(i));
-	    		fixingTimes.add(Double.valueOf(t));
-	    	}
-	    }
+        final Date referenceDate = process.riskFreeRate().getLink().referenceDate();
+        final DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
+        final DayCounter divdc = process.dividendYield().getLink().dayCounter();
+        final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
 
-	    /*@Size*/ int remainingFixings = fixingTimes.size();
-	    /*@Size*/ int numberOfFixings = pastFixings + remainingFixings;
-	    /*@Real*/ double N = numberOfFixings;
+        // TODO: consider double[] instead
+        final List<Double> fixingTimes = new ArrayDoubleList();
+        /*@Size*/ int i;
+        for (i=0; i<arguments.fixingDates.size(); i++)
+            if (arguments.fixingDates.get(i).ge(referenceDate)) {
+                /*@Time*/ final double t = voldc.yearFraction(referenceDate,
+                        arguments.fixingDates.get(i));
+                fixingTimes.add(Double.valueOf(t));
+            }
 
-	    /*@Real*/ double pastWeight = pastFixings/N;
-	    /*@Real*/ double futureWeight = 1.0-pastWeight;
+        /*@Size*/ final int remainingFixings = fixingTimes.size();
+        /*@Size*/ final int numberOfFixings = pastFixings + remainingFixings;
+        /*@Real*/ final double N = numberOfFixings;
 
-	    double timeSum = 0.0;
-	    for (int k=0; k<fixingTimes.size(); k++) {
-	        timeSum += fixingTimes.get(k);
-	    }
-	    
-	    /*@Volatility*/ double vola = process.blackVolatility().getLink().blackVol(arguments.exercise.lastDate(), payoff.strike());
-	    
-	    /*@Real*/ double temp = 0.0;
-	    for (i=pastFixings+1; i<numberOfFixings; i++) {
-	    	temp += fixingTimes.get(i-pastFixings-1)*(N-i);
-	    }
-	    
-	    /*@Real*/ double variance = vola*vola /N/N * (timeSum+ 2.0*temp);
-	    /*@Real*/ double dsigG_dsig = Math.sqrt((timeSum + 2.0*temp))/N;
-	    /*@Real*/ double sigG = vola * dsigG_dsig;
-	    /*@Real*/ double dmuG_dsig = -(vola * timeSum)/N;
+        /*@Real*/ final double pastWeight = pastFixings/N;
+        /*@Real*/ final double futureWeight = 1.0-pastWeight;
 
-	    Date exDate = arguments.exercise.lastDate();
-	    /*@Rate*/ double dividendRate = process.dividendYield().getLink().
-	    				zeroRate(exDate, divdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
-	    /*@Rate*/ double riskFreeRate = process.riskFreeRate().getLink().
-         					zeroRate(exDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
-	    /*@Rate*/ double nu = riskFreeRate - dividendRate - 0.5*vola*vola;
-		
-	    /*@Real*/ double  s = process.stateVariable().getLink().evaluate();
-	    
-	    /*@Real*/ double muG = pastWeight * runningLog +
-         						futureWeight * Math.log(s) + nu*timeSum/N;
-	    /*@Real*/ double forwardPrice = Math.exp(muG + variance / 2.0);
+        double timeSum = 0.0;
+        for (int k=0; k<fixingTimes.size(); k++)
+            timeSum += fixingTimes.get(k);
 
-	    /*@DiscountFactor*/ double riskFreeDiscount = process.riskFreeRate().getLink().
-	    								discount(arguments.exercise.lastDate());
+        /*@Volatility*/ final double vola = process.blackVolatility().getLink().blackVol(arguments.exercise.lastDate(), payoff.strike());
 
-	    BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
+        /*@Real*/ double temp = 0.0;
+        for (i=pastFixings+1; i<numberOfFixings; i++)
+            temp += fixingTimes.get(i-pastFixings-1)*(N-i);
 
-	    results.value = black.value();
-	    results.delta = futureWeight*black.delta(forwardPrice)*forwardPrice/s;
-	    results.gamma = forwardPrice*futureWeight/(s*s)*(black.gamma(forwardPrice)*futureWeight*forwardPrice
-	            - pastWeight*black.delta(forwardPrice) );
+        /*@Real*/ final double variance = vola*vola /N/N * (timeSum+ 2.0*temp);
+        /*@Real*/ final double dsigG_dsig = Math.sqrt((timeSum + 2.0*temp))/N;
+        /*@Real*/ final double sigG = vola * dsigG_dsig;
+        /*@Real*/ final double dmuG_dsig = -(vola * timeSum)/N;
 
-		/*@Real*/ double Nx_1, nx_1;
-		CumulativeNormalDistribution CND = new CumulativeNormalDistribution();
-		NormalDistribution ND = new NormalDistribution();
-		
-		if (sigG > Constants.QL_EPSILON) {
-			/*@Real*/ double x_1  = (muG-Math.log(payoff.strike())+variance)/sigG;
-			Nx_1 = CND.op(x_1);
-			nx_1 = ND.op(x_1);
-		} else {
-			Nx_1 = (muG > Math.log(payoff.strike()) ? 1.0 : 0.0);
-			nx_1 = 0.0;
-		}
-		results.vega = forwardPrice * riskFreeDiscount * ( (dmuG_dsig + sigG * dsigG_dsig)*Nx_1 + nx_1*dsigG_dsig );
+        final Date exDate = arguments.exercise.lastDate();
+        /*@Rate*/ final double dividendRate = process.dividendYield().getLink().
+        zeroRate(exDate, divdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        /*@Rate*/ final double riskFreeRate = process.riskFreeRate().getLink().
+        zeroRate(exDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        /*@Rate*/ final double nu = riskFreeRate - dividendRate - 0.5*vola*vola;
 
-		if (payoff.optionType() == Option.Type.PUT)
-			results.vega -= riskFreeDiscount * forwardPrice * (dmuG_dsig + sigG * dsigG_dsig);
+        /*@Real*/ final double  s = process.stateVariable().getLink().evaluate();
 
-		/*@Time*/ double tRho = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
-		results.rho = black.rho(tRho)*timeSum/(N*tRho) - (tRho-timeSum/N)*results.value;
+        /*@Real*/ final double muG = pastWeight * runningLog +
+        futureWeight * Math.log(s) + nu*timeSum/N;
+        /*@Real*/ final double forwardPrice = Math.exp(muG + variance / 2.0);
 
-		/*@Time*/ double tDiv = divdc.yearFraction(
-                        process.dividendYield().getLink().referenceDate(),
-                        arguments.exercise.lastDate());
+        /*@DiscountFactor*/ final double riskFreeDiscount = process.riskFreeRate().getLink().
+        discount(arguments.exercise.lastDate());
 
-		results.dividendRho = black.dividendRho(tDiv)*timeSum/(N*tDiv);
-		results.strikeSensitivity = black.strikeSensitivity();
-		results.theta = Greeks.blackScholesTheta(process, results.value, results.delta, results.gamma);
-	}
-	
+        final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
+
+        results.value = black.value();
+        results.delta = futureWeight*black.delta(forwardPrice)*forwardPrice/s;
+        results.gamma = forwardPrice*futureWeight/(s*s)*(black.gamma(forwardPrice)*futureWeight*forwardPrice
+                - pastWeight*black.delta(forwardPrice) );
+
+        /*@Real*/ double Nx_1, nx_1;
+        final CumulativeNormalDistribution CND = new CumulativeNormalDistribution();
+        final NormalDistribution ND = new NormalDistribution();
+
+        if (sigG > Constants.QL_EPSILON) {
+            /*@Real*/ final double x_1  = (muG-Math.log(payoff.strike())+variance)/sigG;
+            Nx_1 = CND.op(x_1);
+            nx_1 = ND.op(x_1);
+        } else {
+            Nx_1 = (muG > Math.log(payoff.strike()) ? 1.0 : 0.0);
+            nx_1 = 0.0;
+        }
+        results.vega = forwardPrice * riskFreeDiscount * ( (dmuG_dsig + sigG * dsigG_dsig)*Nx_1 + nx_1*dsigG_dsig );
+
+        if (payoff.optionType() == Option.Type.PUT)
+            results.vega -= riskFreeDiscount * forwardPrice * (dmuG_dsig + sigG * dsigG_dsig);
+
+        /*@Time*/ final double tRho = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
+        results.rho = black.rho(tRho)*timeSum/(N*tRho) - (tRho-timeSum/N)*results.value;
+
+        /*@Time*/ final double tDiv = divdc.yearFraction(
+                process.dividendYield().getLink().referenceDate(),
+                arguments.exercise.lastDate());
+
+        results.dividendRho = black.dividendRho(tDiv)*timeSum/(N*tDiv);
+        results.strikeSensitivity = black.strikeSensitivity();
+        results.theta = Greeks.blackScholesTheta(process, results.value, results.delta, results.gamma);
+    }
+
 }

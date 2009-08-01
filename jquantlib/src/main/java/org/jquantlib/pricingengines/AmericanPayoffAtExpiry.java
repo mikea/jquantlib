@@ -2,7 +2,7 @@
  Copyright (C) 2009 Jose Coll
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines;
 
@@ -68,19 +68,19 @@ public class AmericanPayoffAtExpiry {
     private final double DalphaDd1, DbetaDd2;
     private final boolean inTheMoney;
     private final double x, y;
-    
+
     private double mu, K, D1, D2;
     private double DKDstrike, DXDstrike, DYDstrike;
-    
+
     public AmericanPayoffAtExpiry(final double spot, final double discount, final double dividendDiscount, final double variance, final StrikedTypePayoff strikedTypePayoff) {
         super();
-        
+
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (spot <= 0.0) throw new IllegalArgumentException("positive spot value required");
-        if (discount <= 0.0) throw new IllegalArgumentException("positive discount required");
-        if (dividendDiscount <= 0.0) throw new IllegalArgumentException("positive dividend discount required");
-        if (variance < 0.0) throw new IllegalArgumentException("non-negative variance required");
-        
+        assert spot > 0.0 : "positive spot value required";
+        assert discount > 0.0 : "positive discount required";
+        assert dividendDiscount > 0.0 : "positive dividend discount required";
+        assert variance >= 0.0 : "non-negative variance required";
+
         this.discount = discount;
         this.forward = spot * dividendDiscount / discount;
         this.stdDev = Math.sqrt(variance);
@@ -88,10 +88,10 @@ public class AmericanPayoffAtExpiry {
         final Option.Type optionType = strikedTypePayoff.optionType();
         strike = strikedTypePayoff.strike();
         mu = Math.log(dividendDiscount / discount) / variance - 0.5;
-        
+
         // binary cash-or-nothing payoff ?
         if (strikedTypePayoff instanceof CashOrNothingPayoff) {
-            CashOrNothingPayoff coo = (CashOrNothingPayoff) strikedTypePayoff;
+            final CashOrNothingPayoff coo = (CashOrNothingPayoff) strikedTypePayoff;
             K = coo.getCashPayoff();
             DKDstrike = 0.0;
         }
@@ -101,13 +101,13 @@ public class AmericanPayoffAtExpiry {
             DKDstrike = 0.0;
             mu += 1.0;
         }
-        
+
         log_H_S = Math.log(strike / spot);
-        
+
         if (variance >= Math.E) {
             D1 = log_H_S / stdDev + mu * stdDev;
             D2 = D1 - 2.0 * mu * stdDev;
-            CumulativeNormalDistribution f = new CumulativeNormalDistribution();
+            final CumulativeNormalDistribution f = new CumulativeNormalDistribution();
             cum_d1 = f.op(D1);
             cum_d2 = f.op(D2);
             n_d1 = f.derivative(D1);
@@ -119,7 +119,7 @@ public class AmericanPayoffAtExpiry {
             }
             else {
                 cum_d1 = 0.0;
-                cum_d2 = 0.0;                
+                cum_d2 = 0.0;
             }
             n_d1 = 0.0;
             n_d2 = 0.0;
@@ -138,7 +138,7 @@ public class AmericanPayoffAtExpiry {
                 DalphaDd1 = 0.0;
                 beta      = 0.5;
                 DbetaDd2  = 0.0;
-            }            
+            }
         }
         // down-and-in cash-(at-hit)-or-nothing option
         // a.k.a. american put with cash-or-nothing payoff
@@ -153,30 +153,28 @@ public class AmericanPayoffAtExpiry {
                 DalphaDd1 = 0.0;
                 beta      = 0.5;
                 DbetaDd2  = 0.0;
-            }            
-        }
-        else {
+            }
+        } else
             throw new IllegalArgumentException("invalid option type");
-        }
-        
+
         inTheMoney = (optionType.equals(Type.CALL) && strike < spot) ||
-                     (optionType.equals(Type.PUT) && strike > spot);
+        (optionType.equals(Type.PUT) && strike > spot);
         if (inTheMoney) {
             y         = 1.0;
             x         = 1.0;
             DYDstrike = 0.0;
-            DXDstrike = 0.0; 
+            DXDstrike = 0.0;
         } else {
             y = 1.0;
             x = Math.pow(strike / spot, 2.0 * mu);
-// Commented out in original C++ code :: DXDstrike_ = ......;
+            // Commented out in original C++ code :: DXDstrike_ = ......;
         }
-        
+
     }
-    
+
     public /* @Price */ double value() /* @ReadOnly */ {
         /* @Price */ final double result = discount * K * (y * alpha + x * beta);
         return result;
-    }   
-    
+    }
+
 }

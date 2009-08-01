@@ -24,7 +24,7 @@ package org.jquantlib.model;
 
 //reviewed once: uh
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.NoConstraint;
 

@@ -24,8 +24,8 @@ package org.jquantlib.testsuite.math.optimization;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.Closeness;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.PositiveConstraint;
 import org.junit.Test;
 import org.slf4j.Logger;

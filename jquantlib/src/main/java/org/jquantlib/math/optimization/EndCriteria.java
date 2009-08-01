@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -37,197 +37,188 @@ import org.slf4j.LoggerFactory;
  * @author Joon Tiang Heng
  */
 // FIXME: needs code review and better documentation
-public class EndCriteria { 
-	
+public class EndCriteria {
+
     private final static Logger logger = LoggerFactory.getLogger(EndCriteria.class);
-	
-	
+
+
     public enum CriteriaType {
-				   None,
-                   MaxIterations,
-                   StationaryPoint,
-                   StationaryFunctionValue,
-                   StationaryFunctionAccuracy,
-                   ZeroGradientNorm,
-                   Unknown};
-      
-    //! Maximum number of iterations
-    protected final int maxIterations_;
-    
-    //! Maximun number of iterations in stationary state
-    protected final int maxStationaryStateIterations_;//mutable
-    
-    //! root, function and gradient epsilons
-    protected final double rootEpsilon_, functionEpsilon_, gradientNormEpsilon_;
-    
-    
-    private CriteriaType ecType;
-    private int statStateIterations;
-    
+        None,
+        MaxIterations,
+        StationaryPoint,
+        StationaryFunctionValue,
+        StationaryFunctionAccuracy,
+        ZeroGradientNorm,
+        Unknown};
 
-							 
-	//! Initialization constructor						 
-	public EndCriteria(final int maxIterations,
-                       final int maxStationaryStateIterations,
-                       final double rootEpsilon,
-                       final double functionEpsilon,
-                       final double gradientNormEpsilon) {
-		
-		maxIterations_ = maxIterations;
-		rootEpsilon_ = rootEpsilon;
-		functionEpsilon_ = functionEpsilon;
+        //! Maximum number of iterations
+        protected final int maxIterations_;
 
-		maxStationaryStateIterations_ = (maxStationaryStateIterations != 0) 
-				? maxStationaryStateIterations 
-				: Math.min(maxIterations/2, 100);
-		
-		gradientNormEpsilon_ = (Double.isNaN(gradientNormEpsilon)) ? functionEpsilon_ : gradientNormEpsilon;  
-		
-        if (maxStationaryStateIterations_ < 1) {
-        	throw new IllegalArgumentException("maxStationaryStateIterations_ must be greater than one");
-        }
-        
-        if (maxStationaryStateIterations_ > maxIterations_) {
-        	throw new IllegalArgumentException("maxStationaryStateIterations_ must be less than maxIterations_");
-        }
-	}
-	
-	/*! Test if the number of iteration is below MaxIterations */
-	/* TODO: The intention was to modify the passed reference ecType and not this.ecType. however, the question is how 
-	 * this should be done without changing the method signature?
-	 */
-    public boolean checkMaxIterations(
-    		final int iteration, 
-    		final CriteriaType ecType) {
-        if (iteration < maxIterations_)
-            return false;
-        //this is wrong!!!!!!!!!!!!!!!
-        this.ecType = CriteriaType.MaxIterations;
-        return true;
-    }
+        //! Maximun number of iterations in stationary state
+        protected final int maxStationaryStateIterations_;//mutable
 
-    
-	/*! Test if the root variation is below rootEpsilon */
-    public boolean checkStationaryPoint(
-    		final double xOld, 
-    		final double xNew, 
-    		final int statStateIterations, 
-    		final CriteriaType ecType) {
-        if (Math.abs(xNew-xOld) >= rootEpsilon_) {
-            this.statStateIterations = 0;
-            return false;
-        }
-        this.statStateIterations++;
-        if (statStateIterations <= maxStationaryStateIterations_)
-            return false;
-        this.ecType = CriteriaType.StationaryPoint;
-        return true;
-    }
-    
-	/*! Test if the function variation is below functionEpsilon */
-    public boolean checkStationaryFunctionValue(
-    		final double fxOld, 
-    		final double fxNew, 
-    		final int statStateIterations, 
-    		final CriteriaType ecType) {
-        if (Math.abs(fxNew-fxOld) >= functionEpsilon_) {
-            this.statStateIterations = 0;
-			
-            return false;
-        }
-        this.statStateIterations++;
-        if (statStateIterations <= maxStationaryStateIterations_)
-            return false;
-        this.ecType = CriteriaType.StationaryFunctionValue;
-        return true;
-    }
-    
-	/*! Test if the function value is below functionEpsilon */
-    public boolean checkStationaryFunctionAccuracy(
-    		final double f, 
-    		final boolean positiveOptimization, 
-    		final CriteriaType ecType) {
-        if (!positiveOptimization)
-            return false;
-        if (f >= functionEpsilon_)
-            return false;
-        this.ecType = CriteriaType.StationaryFunctionAccuracy;
-        return true;
-    }
+        //! root, function and gradient epsilons
+        protected final double rootEpsilon_, functionEpsilon_, gradientNormEpsilon_;
 
-   
-	/*! Test if the gradient norm value is below gradientNormEpsilon */
-    public boolean checkZeroGradientNorm(
-    		final double gradientNorm,
-    		final CriteriaType ecType) {
-        if (gradientNorm >= gradientNormEpsilon_)
-            return false;
-        this.ecType = CriteriaType.ZeroGradientNorm;
-        return true;
-    }
-    
-	/**
-	 *  Test if the number of iterations is not too big 
+
+        private CriteriaType ecType;
+        private int statStateIterations;
+
+
+
+        //! Initialization constructor
+        public EndCriteria(final int maxIterations,
+                final int maxStationaryStateIterations,
+                final double rootEpsilon,
+                final double functionEpsilon,
+                final double gradientNormEpsilon) {
+
+            this.maxIterations_ = maxIterations;
+            this.rootEpsilon_ = rootEpsilon;
+            this.functionEpsilon_ = functionEpsilon;
+            this.maxStationaryStateIterations_ = (maxStationaryStateIterations != 0) ? maxStationaryStateIterations : Math.min(maxIterations/2, 100);
+            this.gradientNormEpsilon_ = (Double.isNaN(gradientNormEpsilon)) ? functionEpsilon_ : gradientNormEpsilon;
+
+            assert this.maxStationaryStateIterations_ >= 1 : "maxStationaryStateIterations must be greater than one";
+            assert this.maxStationaryStateIterations_ <= this.maxIterations_ : "maxStationaryStateIterations_ must be less than maxIterations_";
+        }
+
+        /*! Test if the number of iteration is below MaxIterations */
+        /* TODO: The intention was to modify the passed reference ecType and not this.ecType. however, the question is how
+         * this should be done without changing the method signature?
+         */
+        public boolean checkMaxIterations(
+                final int iteration,
+                final CriteriaType ecType) {
+            if (iteration < maxIterations_)
+                return false;
+            //this is wrong!!!!!!!!!!!!!!!
+            this.ecType = CriteriaType.MaxIterations;
+            return true;
+        }
+
+
+        /*! Test if the root variation is below rootEpsilon */
+        public boolean checkStationaryPoint(
+                final double xOld,
+                final double xNew,
+                final int statStateIterations,
+                final CriteriaType ecType) {
+            if (Math.abs(xNew-xOld) >= rootEpsilon_) {
+                this.statStateIterations = 0;
+                return false;
+            }
+            this.statStateIterations++;
+            if (statStateIterations <= maxStationaryStateIterations_)
+                return false;
+            this.ecType = CriteriaType.StationaryPoint;
+            return true;
+        }
+
+        /*! Test if the function variation is below functionEpsilon */
+        public boolean checkStationaryFunctionValue(
+                final double fxOld,
+                final double fxNew,
+                final int statStateIterations,
+                final CriteriaType ecType) {
+            if (Math.abs(fxNew-fxOld) >= functionEpsilon_) {
+                this.statStateIterations = 0;
+
+                return false;
+            }
+            this.statStateIterations++;
+            if (statStateIterations <= maxStationaryStateIterations_)
+                return false;
+            this.ecType = CriteriaType.StationaryFunctionValue;
+            return true;
+        }
+
+        /*! Test if the function value is below functionEpsilon */
+        public boolean checkStationaryFunctionAccuracy(
+                final double f,
+                final boolean positiveOptimization,
+                final CriteriaType ecType) {
+            if (!positiveOptimization)
+                return false;
+            if (f >= functionEpsilon_)
+                return false;
+            this.ecType = CriteriaType.StationaryFunctionAccuracy;
+            return true;
+        }
+
+
+        /*! Test if the gradient norm value is below gradientNormEpsilon */
+        public boolean checkZeroGradientNorm(
+                final double gradientNorm,
+                final CriteriaType ecType) {
+            if (gradientNorm >= gradientNormEpsilon_)
+                return false;
+            this.ecType = CriteriaType.ZeroGradientNorm;
+            return true;
+        }
+
+        /**
+         *  Test if the number of iterations is not too big
             and if a minimum point is not reached */
-	//no operator method, have to use a method in place 
-    public boolean bracket_operator(
-    		final int iteration,
-    		final int statStateIterations,
-    		final boolean positiveOptimization,
-    		final double fold,
-    		final double normgold,
-    		final double fnew,
-    		final double normgnew,
-    		final CriteriaType ecType) {
-        return
+        //no operator method, have to use a method in place
+        public boolean bracket_operator(
+                final int iteration,
+                final int statStateIterations,
+                final boolean positiveOptimization,
+                final double fold,
+                final double normgold,
+                final double fnew,
+                final double normgnew,
+                final CriteriaType ecType) {
+            return
             checkMaxIterations(iteration, ecType) ||
             checkStationaryFunctionValue(fold, fnew, statStateIterations, ecType) ||
             checkStationaryFunctionAccuracy(fnew, positiveOptimization, ecType) ||
             checkZeroGradientNorm(normgnew, ecType);
-    }
-
-    // Inspectors
-    
-    public final int getMaxIterations() /*@ReadOnly*/ {
-        return maxIterations_;
-    }
-
-    public final int getMaxStationaryStateIterations() /*@ReadOnly*/ {
-        return maxStationaryStateIterations_;
-    }
-
-    public final double getRootEpsilon() /*@ReadOnly*/ {
-        return rootEpsilon_;
-    }
-
-    public final double getFunctionEpsilon() /*@ReadOnly*/ {
-        return functionEpsilon_;
-    }
-
-    public final double getGradientNormEpsilon() /*@ReadOnly*/ {
-        return gradientNormEpsilon_;
-    }
-
-    public final String toString(final CriteriaType ec) /*@ReadOnly*/ {
-        switch (ec) {
-        case None:
-            return "None";
-        case MaxIterations:
-            return "MaxIterations";
-        case StationaryPoint:
-            return "StationaryPoint";
-        case StationaryFunctionValue:
-            return "StationaryFunctionValue";
-        case StationaryFunctionAccuracy:
-            return "StationaryFunctionAccuracy";
-        case ZeroGradientNorm:
-            return "ZeroGradientNorm";
-        case Unknown:
-            return "Unknown";
-        default:
-            throw new RuntimeException("unknown EndCriteria::Type (" + ec + ")");
         }
-    }
+
+        // Inspectors
+
+        public final int getMaxIterations() /*@ReadOnly*/ {
+            return maxIterations_;
+        }
+
+        public final int getMaxStationaryStateIterations() /*@ReadOnly*/ {
+            return maxStationaryStateIterations_;
+        }
+
+        public final double getRootEpsilon() /*@ReadOnly*/ {
+            return rootEpsilon_;
+        }
+
+        public final double getFunctionEpsilon() /*@ReadOnly*/ {
+            return functionEpsilon_;
+        }
+
+        public final double getGradientNormEpsilon() /*@ReadOnly*/ {
+            return gradientNormEpsilon_;
+        }
+
+        public final String toString(final CriteriaType ec) /*@ReadOnly*/ {
+            switch (ec) {
+            case None:
+                return "None";
+            case MaxIterations:
+                return "MaxIterations";
+            case StationaryPoint:
+                return "StationaryPoint";
+            case StationaryFunctionValue:
+                return "StationaryFunctionValue";
+            case StationaryFunctionAccuracy:
+                return "StationaryFunctionAccuracy";
+            case ZeroGradientNorm:
+                return "ZeroGradientNorm";
+            case Unknown:
+                return "Unknown";
+            default:
+                throw new AssertionError("unknown EndCriteria::Type (" + ec + ")");
+            }
+        }
 
 }
 
@@ -252,10 +243,10 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
- 
+
 package org.jquantlib.model.shortrate;
 
-*//**
+ *//**
  * 
  * @author Praneet Tiwari
  *//*
@@ -297,34 +288,34 @@ public abstract class EndCriteria {
         this.gradientNormEpsilon = gradientNormEpsilon;
     }
 
-    
-     * ! Test if the number of iterations is not too big and if a minimum point is not reached bool operator()(const Size iteration,
-     * Size& statState, const bool positiveOptimization, const Real fold, const Real normgold, const Real fnew, const Real normgnew,
-     * EndCriteria::Type& ecType) const;
-     
-     ! Test if the number of iteration is below MaxIterations 
+
+  * ! Test if the number of iterations is not too big and if a minimum point is not reached bool operator()(const Size iteration,
+  * Size& statState, const bool positiveOptimization, const Real fold, const Real normgold, const Real fnew, const Real normgnew,
+  * EndCriteria::Type& ecType) const;
+
+     ! Test if the number of iteration is below MaxIterations
     public abstract boolean checkMaxIterations(double  @Size iteration, EndCriteria.Type ecType);
 
-     ! Test if the root variation is below rootEpsilon 
+     ! Test if the root variation is below rootEpsilon
 
     public abstract boolean checkStationaryPoint(double  @Real xOld, double  @Real xNew,
             Double  @Real statStateIterations, EndCriteria.Type ecType);
 
-     ! Test if the function variation is below functionEpsilon 
+     ! Test if the function variation is below functionEpsilon
 
     public abstract boolean checkStationaryFunctionValue(double  @Real fxOld, double  @Real fxNew,
             Double  @Real statStateIterations, EndCriteria.Type ecType);
 
-     ! Test if the function value is below functionEpsilon 
+     ! Test if the function value is below functionEpsilon
 
     public abstract boolean checkStationaryFunctionAccuracy(double  @Real f, boolean positiveOptimization,
             EndCriteria.Type ecType);
 
-     ! Test if the gradient norm variation is below gradientNormEpsilon 
+     ! Test if the gradient norm variation is below gradientNormEpsilon
     // bool checkZerGradientNormValue(const Real gNormOld,
     // const Real gNormNew,
     // EndCriteria::Type& ecType) const;
-     ! Test if the gradient norm value is below gradientNormEpsilon 
+     ! Test if the gradient norm value is below gradientNormEpsilon
 
     public abstract boolean checkZeroGradientNorm(double  @Real gNorm, EndCriteria.Type ecType);
 }*/

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -34,22 +34,22 @@ import org.jquantlib.math.Ops;
  * @author Dominik Holenstein
  */
 public class Ridder extends AbstractSolver1D<Ops.DoubleOp> {
-	
-	/**
-	 * Computes the roots of a function by using the method due to Ridder.
-	 * @param f the function
-	 * @param xAccuracy the provided accuracy 
-	 * @returns <code>root_</code>
-	 */
-	@Override
-	protected double solveImpl(final Ops.DoubleOp f, final double xAccuracy){
+
+    /**
+     * Computes the roots of a function by using the method due to Ridder.
+     * @param f the function
+     * @param xAccuracy the provided accuracy
+     * @returns <code>root_</code>
+     */
+    @Override
+    protected double solveImpl(final Ops.DoubleOp f, final double xAccuracy){
 
         double fxMid, froot, s, xMid, nextRoot;
 
         // test on Black-Scholes implied volatility show that
         // Ridder solver algorithm actually provides an
         // accuracy 100 times below promised
-        double xAccuracy_ = xAccuracy/100.0;
+        final double xAccuracy_ = xAccuracy/100.0;
 
         // Any highly unlikely value, to simplify logic below
         root = Constants.QL_MIN_POSITIVE_REAL;
@@ -60,14 +60,12 @@ public class Ridder extends AbstractSolver1D<Ops.DoubleOp> {
             fxMid=f.op(xMid);
             evaluationNumber++;
             s = Math.sqrt(fxMid*fxMid-fxMin*fxMax);
-            if (s == 0.0) {
-            	return root;
-            }
+            if (s == 0.0)
+                return root;
             // Updating formula
             nextRoot = xMid + (xMid - xMin) * ((fxMin >= fxMax ? 1.0 : -1.0) * fxMid / s);
-            if (Math.abs(nextRoot-root) <= xAccuracy_){
-            	return root;
-            }
+            if (Math.abs(nextRoot-root) <= xAccuracy_)
+                return root;
 
             root=nextRoot;
             // Second of two function evaluations per iteration
@@ -88,17 +86,15 @@ public class Ridder extends AbstractSolver1D<Ops.DoubleOp> {
             } else if (sign(fxMax,froot) != fxMax) {
                 xMin=root;
                 fxMin=froot;
-            } else {
-                throw new ArithmeticException("never get here.");
-            }
+            } else
+                throw new AssertionError("never get here."); // TODO: message
 
-            if (Math.abs(xMax-xMin) <= xAccuracy_) {
-            	return root;
-            }
+            if (Math.abs(xMax-xMin) <= xAccuracy_)
+                return root;
         }
-        throw new ArithmeticException("maximum number of function evaluations ("+ getMaxEvaluations() + ") exceeded");        
+        throw new ArithmeticException("maximum number of function evaluations exceeded"); // TODO: message
     }
-      
+
     private double sign(final double a, final double b) {
         return b >= 0.0 ? Math.abs(a) : -Math.abs(a);
     }

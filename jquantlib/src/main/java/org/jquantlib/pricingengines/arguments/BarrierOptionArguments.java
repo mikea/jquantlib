@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.arguments;
 
@@ -49,70 +49,52 @@ import org.jquantlib.instruments.BarrierType;
  *
  */
 public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
-    
+
     // TODO: refactor messages
     private static final String UNKNOWN_TYPE = "unknown type";
 
     //
     // public fields
     //
-    
+
     // FIXME: public fields here is a bad design technique :(
     public BarrierType barrierType;
-	public double barrier, rebate;
+    public double barrier, rebate;
 
 
-	//
-	// public methods
-	//
-	
-	/**
-	 * This method performs additional validation of needed to conform to the barrier type.
-	 * The validation is done by comparing the underlying price against the barrier type. 
-	 * 
-	 * @see org.jquantlib.pricingengines.arguments.OneAssetStrikedOptionArguments#validate()
-	 */
-	@Override
-	public void validate() {
-		super.validate();
+    //
+    // public methods
+    //
 
-		// assuming, as always, that the underlying is the first of
-		// the state variables...
-		double underlying = stochasticProcess.initialValues().first();
-		switch (barrierType) {
-		case DownIn:
-			if (!(underlying >= barrier)) {
-				throw new ArithmeticException("underlying (" + underlying
-						+ ") < barrier (" + barrier
-						+ "): down-and-in barrier undefined");
-			}
+    /**
+     * This method performs additional validation of needed to conform to the barrier type.
+     * The validation is done by comparing the underlying price against the barrier type.
+     * 
+     * @see org.jquantlib.pricingengines.arguments.OneAssetStrikedOptionArguments#validate()
+     */
+    @Override
+    public void validate() {
+        super.validate();
 
-			break;
-		case UpIn:
-			if (!(underlying <= barrier)) {
-				throw new ArithmeticException("underlying (" + underlying
-						+ ") > barrier (" + barrier
-						+ "): up-and-in barrier undefined");
-			}
-			break;
-		case DownOut:
-			if (!(underlying >= barrier)) {
-				throw new ArithmeticException("underlying (" + underlying
-						+ ") < barrier (" + barrier
-						+ "): down-and-out barrier undefined");
-			}
+        // assuming, as always, that the underlying is the first of
+        // the state variables...
+        final double underlying = stochasticProcess.initialValues().first();
+        switch (barrierType) {
+        case DownIn:
+            assert underlying >= barrier : "underlying < barrier: down-and-in barrier undefined";
+            break;
+        case UpIn:
+            assert underlying <= barrier : "underlying > barrier : up-and-in barrier undefined";
+            break;
+        case DownOut:
+            assert underlying >= barrier : "underlying < barrier : down-and-out barrier undefined";
+            break;
+        case UpOut:
+            assert underlying <= barrier : "underlying > barrier : up-and-out barrier undefined";
+            break;
+        default:
+            throw new AssertionError(UNKNOWN_TYPE);
+        }
 
-			break;
-		case UpOut:
-			if (!(underlying <= barrier)) {
-				throw new ArithmeticException("underlying (" + underlying
-						+ ") > barrier (" + barrier
-						+ "): up-and-out barrier undefined");
-			}
-			break;
-		default:
-			throw new ArithmeticException(UNKNOWN_TYPE);
-		}
-
-	}
+    }
 }

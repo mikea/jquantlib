@@ -92,16 +92,19 @@ public class IborCoupon extends FloatingRateCoupon {
             return index_.fixing(fixingDate());
         else {
             final Handle<YieldTermStructure> termStructure = index_.termStructure();
-            if (termStructure == null)
-                throw new IllegalArgumentException(null_term_structure);
+            assert termStructure != null : null_term_structure;
             final Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
             final Date fixing_date = fixingDate();
             if (fixing_date.lt(today)) {
                 // must have been fixed
                 // FIXME ...
+
+                //TODO: Code review :: incomplete code
+                if (true)
+                    throw new UnsupportedOperationException("Work in progress");
+
                 final double pastFixing = 0;// IndexManager.getInstance().getHistory( index_.getName())[fixing_date.g];
-                if (pastFixing == 0)
-                    throw new IllegalArgumentException("Missing " + index_.name() + " fixing for " + fixing_date);
+                assert pastFixing > 0 : "Missing fixing";
                 return pastFixing;
             }
             if (fixing_date == today)
@@ -116,13 +119,13 @@ public class IborCoupon extends FloatingRateCoupon {
                 } catch (final Exception e) {
                     ; // fall through and forecast
                 }
-            final Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.fixingDays(), TimeUnit.DAYS);
-            final double startDiscount = termStructure.getLink().discount(fixingValueDate);
-            // ???
-            final Date temp = index_.fixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
-            final double endDiscount = termStructure.getLink().discount(
-                    index_.fixingCalendar().advance(temp, index_.fixingDays(), TimeUnit.DAYS));
-            return (startDiscount / endDiscount - 1.0) / accrualPeriod();
+                final Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.fixingDays(), TimeUnit.DAYS);
+                final double startDiscount = termStructure.getLink().discount(fixingValueDate);
+                // ???
+                final Date temp = index_.fixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
+                final double endDiscount = termStructure.getLink().discount(
+                        index_.fixingCalendar().advance(temp, index_.fixingDays(), TimeUnit.DAYS));
+                return (startDiscount / endDiscount - 1.0) / accrualPeriod();
         }
     }
 

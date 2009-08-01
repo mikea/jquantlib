@@ -51,11 +51,10 @@ public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOptionEng
             final boolean timeDependent) {
         try {
             final Class<T> rsgClass = (Class<T>) TypeToken.getClazz(this.getClass());
-            final Constructor<T> c = rsgClass.getConstructor(
-                    GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
+            final Constructor<T> c = rsgClass.getConstructor(GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
             fdVanillaEngine = c.newInstance(process, timeSteps, gridPoints, timeDependent);
         } catch (final Exception e) {
-            throw new RuntimeException(e);
+            throw new AssertionError(e);
         }
     }
 

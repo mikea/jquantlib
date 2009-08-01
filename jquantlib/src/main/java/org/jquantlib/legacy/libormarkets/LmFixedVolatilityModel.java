@@ -23,7 +23,7 @@
 
 package org.jquantlib.legacy.libormarkets;
 
-import org.jquantlib.math.Array;
+import org.jquantlib.math.matrixutilities.Array;
 
 public class LmFixedVolatilityModel extends LmVolatilityModel {
 

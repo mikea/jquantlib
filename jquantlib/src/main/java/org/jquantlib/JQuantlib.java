@@ -22,7 +22,7 @@
  */
 package org.jquantlib;
 
-import org.jquantlib.math.Matrix;
+import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.math.matrixutilities.PseudoSqrt;
 import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
 

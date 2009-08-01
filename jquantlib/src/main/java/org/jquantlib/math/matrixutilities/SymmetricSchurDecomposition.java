@@ -1,5 +1,5 @@
 /*
- Copyright (C) 
+ Copyright (C)
  2009 Ueli Hofstetter
 
  This file is part of JQuantLib, a free-software/open-source library
@@ -14,7 +14,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -40,11 +40,8 @@
 package org.jquantlib.math.matrixutilities;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.jquantlib.math.Array;
-import org.jquantlib.math.Matrix;
 import org.jquantlib.util.Pair;
 
 //! symmetric threshold Jacobi algorithm.
@@ -64,46 +61,44 @@ import org.jquantlib.util.Pair;
 
     \test the correctness of the returned values is tested by
           checking their properties.
-*/
+ */
 //TODO: code review
 public class SymmetricSchurDecomposition {
-    
+
     private Array diagonal_;
     private Matrix eigenVectors_;
-    private void jacobiRotate_(Matrix m, double rot, double dil, int j1, int k1, int j2, int k2){
+    private void jacobiRotate_(final Matrix m, final double rot, final double dil, final int j1, final int k1, final int j2, final int k2){
         double x1, x2;
         x1 = m.get(j1, k1);
         x2 = m.get(j1, k2);
         m.set(j1, k1, x1 - dil*(x2 + x1*rot));
         m.set(j2, k2, x2 - dil*(x2 + x2*rot));
     }
-    
+
     public Matrix eigenVectors(){
         return eigenVectors_;
     }
-    
+
     /*! \pre s must be symmetric */
     public SymmetricSchurDecomposition(final Matrix s){
-        if(s.rows <= 0 && s.cols > 0){
-            throw new IllegalArgumentException("null matrix given");
-        }
-        if(s.rows!=s.cols){
-            throw new IllegalArgumentException("input matrix must be square");
-        }
+        assert s.rows > 0 && s.cols > 0 : "null matrix given";
+        assert s.rows == s.cols : "input matrix must be square";
 
-        int size = s.rows;
+        final int size = s.rows;
         for (int q=0; q<size; q++) {
             diagonal_.set(q, s.get(q,q));
             eigenVectors_.set(q, q, 1.0);
         }
-        
-        Matrix ss = s;
-        Array tmpDiag = diagonal_.abs();
-        List<Double> tmpAccumulate = new ArrayList<Double>(size);
-        Collections.fill(tmpAccumulate, 0.0);
-        double threshold, epsPrec = 1e-15;
+
+        final Matrix ss = s;
+        final Array tmpDiag = diagonal_.abs();
+        final Array tmpAccumulate = new Array(size);
+
+        double threshold;
+        final double epsPrec = 1e-15;
         boolean keeplooping = true;
-        int maxIterations = 100, ite = 1;
+        final int maxIterations = 100;
+        int ite = 1;
         do {
             //main loop
             double sum = 0;
@@ -118,19 +113,22 @@ public class SymmetricSchurDecomposition {
             } else {
                 /* To speed up computation a threshold is introduced to
                    make sure it is worthy to perform the Jacobi rotation
-                */
-                if (ite<5) threshold = 0.2*sum/(size*size);
-                else       threshold = 0.0;
+                 */
+                if (ite<5) {
+                    threshold = 0.2*sum/(size*size);
+                } else {
+                    threshold = 0.0;
+                }
 
                 int j, k, l;
                 for (j=0; j<size-1; j++) {
                     for (k=j+1; k<size; k++) {
                         double sine, rho, cosin, heig, tang, beta;
-                        double smll = Math.abs(ss.get(j, k));
+                        final double smll = Math.abs(ss.get(j, k));
                         if(ite> 5 &&
-                           smll<epsPrec*Math.abs(diagonal_.get(j)) &&
-                           smll<epsPrec*Math.abs(diagonal_.get(k))) {
-                                ss.set(j, j, 0);
+                                smll<epsPrec*Math.abs(diagonal_.get(j)) &&
+                                smll<epsPrec*Math.abs(diagonal_.get(k))) {
+                            ss.set(j, j, 0);
                         } else if (Math.abs(ss.get(j, k))>threshold) {
                             heig = diagonal_.get(k)-diagonal_.get(j);
                             if (smll<epsPrec*Math.abs(heig)) {
@@ -138,7 +136,7 @@ public class SymmetricSchurDecomposition {
                             } else {
                                 beta = 0.5*heig/ss.get(j,k);
                                 tang = 1.0/(Math.abs(beta)+
-                                    Math.sqrt(1+beta*beta));
+                                        Math.sqrt(1+beta*beta));
                                 if (beta<0){
                                     tang = -tang;
                                 }
@@ -152,20 +150,24 @@ public class SymmetricSchurDecomposition {
                             diagonal_.set(j, diagonal_.get(j)-heig);
                             diagonal_.set(k, diagonal_.get(k)+heig);
                             ss.set(j, k, 0.0);
-                            for (l=0; l+1<=j; l++)
+                            for (l=0; l+1<=j; l++) {
                                 jacobiRotate_(ss, rho, sine, l, j, l, k);
-                            for (l=j+1; l<=k-1; l++)
+                            }
+                            for (l=j+1; l<=k-1; l++) {
                                 jacobiRotate_(ss, rho, sine, j, l, l, k);
-                            for (l=k+1; l<size; l++)
+                            }
+                            for (l=k+1; l<size; l++) {
                                 jacobiRotate_(ss, rho, sine, j, l, k, l);
-                            for (l=0;   l<size; l++)
+                            }
+                            for (l=0;   l<size; l++) {
                                 jacobiRotate_(eigenVectors_,
-                                                  rho, sine, l, j, l, k);
+                                        rho, sine, l, j, l, k);
+                            }
                         }
                     }
                 }
                 for (k=0; k<size; k++) {
-                    double value = tmpDiag.get(k) + tmpAccumulate.get(k);
+                    final double value = tmpDiag.get(k) + tmpAccumulate.get(k);
                     tmpDiag.set(k, value);
                     diagonal_.set(k,  value);
                     tmpAccumulate.set(k,0.0);
@@ -173,27 +175,25 @@ public class SymmetricSchurDecomposition {
             }
         } while (++ite<=maxIterations && keeplooping);
 
-        if(ite>maxIterations){
+        if(ite>maxIterations)
             throw new IllegalArgumentException("Too many iterations reached");
-        }
-                   
+
         // sort (eigenvalues, eigenvectors)
-        List<Pair<Double, List<Double>>> temp = new ArrayList<Pair<Double, List<Double>>>(size);
-        List<Double> eigenVector = new ArrayList<Double>(size);
+        final List<Pair<Double, List<Double>>> temp = new ArrayList<Pair<Double, List<Double>>>(size);
+        final List<Double> eigenVector = new ArrayList<Double>(size);
         int row, col;
-        for (col=0; col<size; col++) {
+        for (col=0; col<size; col++)
             throw new UnsupportedOperationException("work in progress");
-            /*
+        /*
             std::copy(eigenVectors_.column_begin(col),
                       eigenVectors_.column_end(col), eigenVector.begin());
             temp[col] = std::make_pair<Real, std::vector<Real> >(
                 diagonal_[col], eigenVector);
-            */
-        }
+         */
         /*
         std::sort(temp.begin(), temp.end(),
             std::greater<std::pair<Real, std::vector<Real> > >());*/
-        double maxEv = temp.get(0).getFirst();
+        final double maxEv = temp.get(0).getFirst();
         for (col=0; col<size; col++) {
             // check for round-off errors
             diagonal_.set(col, Math.abs(temp.get(col).getFirst()/maxEv)<1e-16 ? 0.0 :temp.get(col).getFirst());
@@ -206,7 +206,7 @@ public class SymmetricSchurDecomposition {
             }
         }
     }
-    
+
     public Array eigenvalues(){
         return diagonal_;
     }

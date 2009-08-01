@@ -45,6 +45,7 @@ import org.jquantlib.util.Observer;
  * 
  * \ingroup shortrate
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class Vasicek extends OneFactorAffineModel {
 
     // check this value, arbitrary for now
@@ -71,12 +72,11 @@ public class Vasicek extends OneFactorAffineModel {
         return sigma_.getOperatorEq(0.0);
     }
 
-    public Vasicek(double /* @Rate */r0, double /* @Real */a, double /* @Real */b, double /* @Real */sigma,
-            double /* @Real */lambda) {
+    public Vasicek(final double /* @Rate */r0, final double /* @Real */a, final double /* @Real */b, final double /* @Real */sigma,
+            final double /* @Real */lambda) {
         super(4);
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.r0_ = r0;
         a_ = arguments_.get(0);
         b_ = arguments_.get(1);
@@ -90,23 +90,22 @@ public class Vasicek extends OneFactorAffineModel {
         lambda_ = new ConstantParameter(lambda, new NoConstraint());
     }
 
-    public double /* @Real */discountBondOption(Option.Type type, double /* @Real */strike, double /* @Time */maturity,
-            double /* @Time */bondMaturity) {
+    public double /* @Real */discountBondOption(final Option.Type type, final double /* @Real */strike, final double /* @Time */maturity,
+            final double /* @Time */bondMaturity) {
         double /* @Real */v;
-        double /* @Real */_a = a();
+        final double /* @Real */_a = a();
 
         /****** disable these checks for a while* v = 0.0; *************/
         // if (std::fabs(maturity) < QL_EPSILON) {
-        if (Math.abs(maturity) < QL_EPSILON) {
+        if (Math.abs(maturity) < QL_EPSILON)
             v = 0.0;
-        } else if (_a < Math.sqrt(QL_EPSILON)) {
+        else if (_a < Math.sqrt(QL_EPSILON))
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(maturity);
-        } else {
+        else
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(0.5 * (1.0 - Math.exp(-2.0 * _a * maturity)) / _a);
-        }
 
-        double /* @Real */f = discountBond(0.0, bondMaturity, r0_);
-        double /* @Real */k = discountBond(0.0, maturity, r0_) * strike;
+        final double /* @Real */f = discountBond(0.0, bondMaturity, r0_);
+        final double /* @Real */k = discountBond(0.0, maturity, r0_) * strike;
 
         return blackFormula(type, k, f, v);
 
@@ -124,7 +123,7 @@ public class Vasicek extends OneFactorAffineModel {
      */
     class Dynamics extends ShortRateDynamics {
 
-        public Dynamics(double /* @Real */a, double /* @Real */b, double /* @Real */sigma, double /* @Real */r0) {
+        public Dynamics(final double /* @Real */a, final double /* @Real */b, final double /* @Real */sigma, final double /* @Real */r0) {
             super(new OrnsteinUhlenbeckProcess(a, sigma, r0 - b, 0.0));
 
             a_ = (a);
@@ -132,45 +131,46 @@ public class Vasicek extends OneFactorAffineModel {
             r0_ = (r0);
         }
 
-        public double /* @Real */variable(double /* @Time */t, double /* @Rate */r) {
+        @Override
+        public double /* @Real */variable(final double /* @Time */t, final double /* @Rate */r) {
             return r - b_;
         }
 
         @Override
-        public double /* @Real */shortRate(double /* @Time */t, double /* @Real */x) {
+        public double /* @Real */shortRate(final double /* @Time */t, final double /* @Real */x) {
             return x + b_;
         }
 
-        private double /* @Real */a_, b_, r0_;
+        private final double /* @Real */a_, b_, r0_;
     }
 
     // the real heart of Vasicek, A & B
-    public double /* @Real */A(double /* @Time */t, double /* @Time */T) {
-        double /* @Real */_a = a();
-        if (_a < Math.sqrt(QL_EPSILON)) {
+    @Override
+    public double /* @Real */A(final double /* @Time */t, final double /* @Time */T) {
+        final double /* @Real */_a = a();
+        if (_a < Math.sqrt(QL_EPSILON))
             return 0.0;
-        } else {
-            double /* @Real */sigma2 = sigma() * sigma();
-            double /* @Real */bt = B(t, T);
+        else {
+            final double /* @Real */sigma2 = sigma() * sigma();
+            final double /* @Real */bt = B(t, T);
             return Math.exp((b() + lambda() * sigma() / _a - 0.5 * sigma2 / (_a * _a)) * (bt - (T - t)) - 0.25 * sigma2 * bt * bt
                     / _a);
         }
     }
 
     @Override
-    public double /* @Real */B(double /* @Time */t, double /* @Time */T) {
-        double /* @Real */_a = a();
-        if (_a < Math.sqrt(QL_EPSILON)) {
+    public double /* @Real */B(final double /* @Time */t, final double /* @Time */T) {
+        final double /* @Real */_a = a();
+        if (_a < Math.sqrt(QL_EPSILON))
             return (T - t);
-        } else {
+        else
             return (1.0 - Math.exp(-_a * (T - t))) / _a;
-        }
     }
 
 
 
     @Override
-    public void addObserver(Observer observer) {
+    public void addObserver(final Observer observer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -185,7 +185,7 @@ public class Vasicek extends OneFactorAffineModel {
     }
 
     @Override
-    public void deleteObserver(Observer observer) {
+    public void deleteObserver(final Observer observer) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -200,7 +200,7 @@ public class Vasicek extends OneFactorAffineModel {
     }
 
     @Override
-    public void notifyObservers(Object arg) {
+    public void notifyObservers(final Object arg) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

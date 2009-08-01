@@ -22,10 +22,10 @@
 
 package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.math.Array;
 import org.jquantlib.math.interpolations.ForwardFlatInterpolation;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * This class provides linear interpolation factory and traits

@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.arguments;
 
@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.instruments.AverageType;
+import org.jquantlib.math.Constants;
 import org.jquantlib.util.Date;
 
 /**
@@ -52,60 +53,48 @@ import org.jquantlib.util.Date;
  * @author <Richard Gomes>
  */
 public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArguments {
-    
-    //TODO: code review :: are these definitions really necessary?
-	private final static double NULLREAL = Double.MAX_VALUE;
-	private final static int NULLSIZE = Integer.MAX_VALUE;
-	
+
     public AverageType averageType;
     public /*@Real*/ double runningAccumulator;
     public /*@Size*/ int pastFixings;
     public List<Date> fixingDates;
 
-    
+
     //
     // public constructors
     //
-    
+
     public DiscreteAveragingAsianOptionArguments() {
         averageType = null;
-        runningAccumulator = NULLREAL; //FIXME is there central values?
-        pastFixings = NULLSIZE; //FIXME is there central values?
+        runningAccumulator = Constants.NULL_REAL; //FIXME is there central values?
+        pastFixings = Constants.NULL_INTEGER; //FIXME is there central values?
         fixingDates = new ArrayList<Date>();
-	}
+    }
 
-	
+
     //
     // public methods
     //
-    
-    @Override
-	public void validate() /*/@ReadOnly*/{
-        super.validate();
-        if (averageType==null) 
-        	throw new IllegalArgumentException("unspecified average type");
 
-        if (pastFixings==NULLSIZE) throw new IllegalArgumentException("null past-fixing number");
-        
-        if (runningAccumulator==NULLREAL) throw new IllegalArgumentException("null running product");
-        
+    @Override
+    public void validate() /*/@ReadOnly*/{
+        super.validate();
+        assert averageType!=null : "unspecified average type";
+        assert pastFixings!=Constants.NULL_INTEGER : "null past-fixing number";
+        assert runningAccumulator != Constants.NULL_REAL : "null running product";
+
+        // TODO: code review :: please verify against original QL/C++ code
         switch (averageType) {
-            case Arithmetic:
-                if (runningAccumulator>=0.0){
-                	throw new IllegalArgumentException("non negative running sum required: "
-                            	+ runningAccumulator + " not allowed");
-                }
-                break;
-            case Geometric:
-               if (!(runningAccumulator>0.0)){
-            	   throw new IllegalArgumentException("positive running product required: "
-            			   	+ runningAccumulator + " not allowed");
-               }
-            	break;
-            default:
-                throw new IllegalArgumentException("invalid average type");
+        case Arithmetic:
+            assert runningAccumulator >= 0.0 : "non negative running sum required: not allowed";
+            break;
+        case Geometric:
+            assert runningAccumulator > 0.0 : "positive running product required: not allowed";
+            break;
+        default:
+            throw new AssertionError("invalid average type");
         }
 
-	}
+    }
 
 }
