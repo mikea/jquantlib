@@ -176,12 +176,39 @@ public class Money {
         }
     }
 
+    
+    //
+    //    Assignment operations
+    //
+    //    opr   method     this    right    result
+    //    ----- ---------- ------- -------- ------
+    //    +=    addAssign  Money   Money   this
+    //    -=    addAssign  Money   Money   this
+    
+    
+    //
+    //    Operations
+    //
+    //    opr   method     this    right    result
+    //    ----- ---------- ------- -------- ------
+    //    /     addAssign  Money   Money   this
+    //    ==    equals     Money   Money   boolean
+    
     public void convertToBase() {
         assert (!Money.baseCurrency.empty()) : "no base currency set";
         convertTo(Money.baseCurrency);
     }
+    
+    
+    
 
-    // +=(const Money& m)
+
+
+    /**
+     * += Operator
+     * @param money The money to be added.
+     * @return This money instance increased by the specified amount.
+     */
     public Money addAssign(final Money money) {
         if (this.currency_.equals(money.currency_)) {
             this.value_ += money.value_;
@@ -202,7 +229,11 @@ public class Money {
         return this;
     }
 
-    // Money& Money::operator-=(const Money& m)
+    /**
+     * -= Operator
+     * @param money The money to be subtracted.
+     * @return This money instance decreased by the specified amount.
+     */
     public Money subAssign(final Money money) {
         if (currency_.equals(money.currency_)) {
             value_ -= money.value_;
@@ -222,7 +253,12 @@ public class Money {
         return this;
     }
 
-    // Decimal operator/
+    /**
+     * Returns the the value of this instance divided by another instance.
+     * @Note: This instance remains unchanged!
+     * @param money The amount this instance should be divided to.
+     * @return The amount of this divided by money.
+     */
     public double div(final Money money) {
         if (currency().equals(money.currency())) {
             return value_ / money.value();
@@ -243,6 +279,11 @@ public class Money {
         }
     }
 
+    /**
+     * Operator ==
+     * @param money The instance this instance should be compared to.
+     * @return Whether this instance is equal to another instance
+     */
     public boolean equals(final Money money) {
         if (currency().equals(money.currency())) {
             return value() == money.value();
