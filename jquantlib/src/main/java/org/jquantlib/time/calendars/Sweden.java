@@ -35,7 +35,6 @@ package org.jquantlib.time.calendars;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
-import org.jquantlib.time.calendars.Poland.Market;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 

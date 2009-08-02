@@ -23,18 +23,8 @@
 
 package org.jquantlib.testsuite.math.interpolations;
 
-import static java.lang.Math.abs;
-import static org.junit.Assert.assertFalse;
-
-import org.jquantlib.math.interpolations.AbstractInterpolation2D;
 import org.jquantlib.math.interpolations.Interpolation;
-import org.jquantlib.math.interpolations.Interpolator;
-
-
-import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

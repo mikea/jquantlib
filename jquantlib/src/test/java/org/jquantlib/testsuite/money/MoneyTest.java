@@ -23,10 +23,10 @@ package org.jquantlib.testsuite.money;
 
 import static org.junit.Assert.*;
 
-import org.jquantlib.Currency;
-import org.jquantlib.ExchangeRate;
-import org.jquantlib.Money;
+import org.jquantlib.currencies.Currency;
+import org.jquantlib.currencies.ExchangeRate;
 import org.jquantlib.currencies.ExchangeRateManager;
+import org.jquantlib.currencies.Money;
 import org.jquantlib.currencies.America.USDCurrency;
 import org.jquantlib.currencies.Europe.EURCurrency;
 import org.jquantlib.currencies.Europe.GBPCurrency;

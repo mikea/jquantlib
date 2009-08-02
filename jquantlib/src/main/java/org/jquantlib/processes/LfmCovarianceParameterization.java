@@ -64,21 +64,17 @@ public abstract class LfmCovarianceParameterization {
         // because it is too slow and too inefficient.
         // This method is useful for testing and R&D.
         // Please overload the method within derived classes.
-        if (x.empty())
-            throw new IllegalArgumentException("can not handle given x here");
+        assert !x.empty() : "can not handle given x here";
 
         final Matrix tmp = new Matrix(size_, size_);
-
-        for (int i = 0; i < size_; ++i) {
+        for (int i = 0; i < size_; ++i)
             for (int j = 0; j <= i; ++j) {
                 final Var_Helper helper = new Var_Helper(this, i, j);
                 final GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
-                for(int k = 0; k<64; ++k){
+                for(int k = 0; k<64; ++k)
                     tmp.set(i, j, tmp.get(i, j)+integrator.evaluate(helper, k*t/64.0,(k+1)*t/64.0));
-                }
                 tmp.set(j,i, tmp.get(i, j));
             }
-        }
 
         return tmp;
     }

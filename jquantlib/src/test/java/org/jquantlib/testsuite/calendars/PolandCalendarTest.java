@@ -33,7 +33,6 @@ import static org.jquantlib.util.Month.NOVEMBER;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Poland;

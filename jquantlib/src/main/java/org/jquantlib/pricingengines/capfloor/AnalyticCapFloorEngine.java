@@ -1,6 +1,5 @@
 package org.jquantlib.pricingengines.capfloor;
 
-import org.jquantlib.pricingengines.GenericEngine;
 
 public class AnalyticCapFloorEngine{
     

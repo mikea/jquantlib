@@ -17,7 +17,6 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Italy;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -62,7 +62,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  *     reproducing results available in literature.</li>
  * <li>the correctness of the returned <i>greeks</i> in case of <i>cash-or-nothing</i> binary payoff
  *     is tested by reproducing numerical derivatives.</li>
- *     
+ * 
  * @see PricingEngine
  * 
  * @author <Richard Gomes>
@@ -75,70 +75,65 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
     private static final String NON_STRIKED_PAYOFF_GIVEN = "non-striked payoff given";
     private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
 
-    
+
     //
     // public constructors
     //
-    
+
     public AnalyticEuropeanEngine() {
         super();
     }
 
-    
+
     //
     // implements PricingEngine
     //
-    
+
     @Override
     public void calculate() /* @ReadOnly */{
 
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291 
-		if (arguments.exercise.type() != Exercise.Type.EUROPEAN)
-			throw new IllegalArgumentException(NOT_AN_EUROPEAN_OPTION);
+        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+        assert arguments.exercise.type() == Exercise.Type.EUROPEAN : NOT_AN_EUROPEAN_OPTION;
+        final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
+        assert payoff != null : NON_STRIKED_PAYOFF_GIVEN;
+        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
+        assert process != null : BLACK_SCHOLES_PROCESS_REQUIRED;
 
-		StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
-		if (payoff == null)
-			throw new NullPointerException(NON_STRIKED_PAYOFF_GIVEN);
+        /* @Variance */final double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
 
-		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
-		if (process == null)
-			throw new NullPointerException(BLACK_SCHOLES_PROCESS_REQUIRED);
+        /* @DiscountFactor */final double dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
+        /* @DiscountFactor */final double riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
+        /* @Price */final double spot = process.stateVariable().getLink().evaluate();
+        /* @Price */final double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
+        final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-		/* @Variance */double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
+        results.value = black.value();
+        results.delta = black.delta(spot);
+        results.deltaForward = black.deltaForward();
+        results.elasticity = black.elasticity(spot);
+        results.gamma = black.gamma(spot);
 
-		/* @DiscountFactor */double dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
-		/* @DiscountFactor */double riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
-		/* @Price */double spot = process.stateVariable().getLink().evaluate();
-		/* @Price */double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
-		BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
+        final DayCounter rfdc = process.riskFreeRate().getLink().dayCounter();
+        final DayCounter divdc = process.dividendYield().getLink().dayCounter();
+        final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
+        /* @Time */double t = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
+        results.rho = black.rho(t);
 
-		results.value = black.value();
-		results.delta = black.delta(spot);
-		results.deltaForward = black.deltaForward();
-		results.elasticity = black.elasticity(spot);
-		results.gamma = black.gamma(spot);
+        t = divdc.yearFraction(process.dividendYield().getLink().referenceDate(), arguments.exercise.lastDate());
+        results.dividendRho = black.dividendRho(t);
 
-		DayCounter rfdc = process.riskFreeRate().getLink().dayCounter();
-		DayCounter divdc = process.dividendYield().getLink().dayCounter();
-		DayCounter voldc = process.blackVolatility().getLink().dayCounter();
-		/* @Time */double t = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
-		results.rho = black.rho(t);
+        t = voldc.yearFraction(process.blackVolatility().getLink().referenceDate(), arguments.exercise.lastDate());
+        results.vega = black.vega(t);
+        try {
+            results.theta = black.theta(spot, t);
+            results.thetaPerDay = black.thetaPerDay(spot, t);
+        } catch (final Exception e) {
+            results.theta = Double.NaN;
+            results.thetaPerDay = Double.NaN;
+        }
 
-		t = divdc.yearFraction(process.dividendYield().getLink().referenceDate(), arguments.exercise.lastDate());
-		results.dividendRho = black.dividendRho(t);
-
-		t = voldc.yearFraction(process.blackVolatility().getLink().referenceDate(), arguments.exercise.lastDate());
-		results.vega = black.vega(t);
-		try {
-			results.theta = black.theta(spot, t);
-			results.thetaPerDay = black.thetaPerDay(spot, t);
-		} catch (Exception e) {
-			results.theta = Double.NaN;
-			results.thetaPerDay = Double.NaN;
-		}
-
-		results.strikeSensitivity = black.strikeSensitivity();
-		results.itmCashProbability = black.itmCashProbability();
-	}
+        results.strikeSensitivity = black.strikeSensitivity();
+        results.itmCashProbability = black.itmCashProbability();
+    }
 
 }

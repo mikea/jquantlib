@@ -29,7 +29,6 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.BoundaryConstraint;
 import org.jquantlib.math.optimization.CompositeConstraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -24,8 +24,6 @@ package org.jquantlib.testsuite.date;
 
 import static org.junit.Assert.fail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -36,6 +34,8 @@ import org.jquantlib.util.DateParser;
 import org.jquantlib.util.Month;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test various Dates

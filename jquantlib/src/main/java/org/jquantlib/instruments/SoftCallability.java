@@ -22,8 +22,6 @@
 package org.jquantlib.instruments;
 
 import org.jquantlib.cashflow.Callability;
-import org.jquantlib.cashflow.Callability.Price;
-import org.jquantlib.cashflow.Callability.Type;
 import org.jquantlib.util.Date;
 
 /**

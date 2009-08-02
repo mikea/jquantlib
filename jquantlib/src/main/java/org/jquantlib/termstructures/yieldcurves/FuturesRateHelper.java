@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -44,81 +44,92 @@ import org.jquantlib.util.Observable;
 //TODO: Complete
 public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 
-	private double yearFraction;
-	private Handle<Quote> convAdj;
+    private final double yearFraction;
+    private Handle<Quote> convAdj;
 
-	public FuturesRateHelper(Handle<Quote> price, Date immDate, int nMonths,
-			Calendar calendar, BusinessDayConvention convention,
-			boolean endOfMonth, DayCounter dayCounter, Handle<Quote> convAdj) {
-		super(price, null, null, null);
+    public FuturesRateHelper(
+            final Handle<Quote> price,
+            final Date immDate,
+            final int nMonths,
+            final Calendar calendar,
+            final BusinessDayConvention convention,
+            final boolean endOfMonth,
+            final DayCounter dayCounter,
+            final Handle<Quote> convAdj) {
+        super(price, null, null, null);
+        assert IMM.getDefaultIMM().isIMMdate(immDate, false) : "not a valid IMM date"; // TODO: message
+        earliestDate = immDate;
+        latestDate = calendar.advance(
+                immDate,
+                new Period(nMonths, TimeUnit.MONTHS),
+                convention,
+                endOfMonth);
+        yearFraction = dayCounter.yearFraction(earliestDate, latestDate);
 
-		if (!IMM.getDefaultIMM().isIMMdate(immDate, false))
-			throw new IllegalArgumentException(" is not a valid IMM date");
+        // registerWith(convAdj_);
+    }
 
-		earliestDate = immDate;
-		latestDate = calendar.advance(immDate, new Period(nMonths,
-				TimeUnit.MONTHS), convention, endOfMonth);
-		yearFraction = dayCounter.yearFraction(earliestDate, latestDate);
+    public FuturesRateHelper(
+            final double price,
+            final Date immDate,
+            final int nMonths,
+            final Calendar calendar,
+            final BusinessDayConvention convention,
+            final boolean endOfMonth,
+            final DayCounter dayCounter,
+            final double conv) {
+        super(price);
+        assert IMM.getDefaultIMM().isIMMdate(immDate, false) : "not a valid IMM date"; // TODO: message
+        convAdj = new Handle<Quote>(new SimpleQuote(conv));
+        earliestDate = immDate;
+        latestDate = calendar.advance(
+                immDate,
+                new Period(nMonths, TimeUnit.MONTHS),
+                convention,
+                endOfMonth);
+        yearFraction = dayCounter.yearFraction(earliestDate, latestDate);
+    }
 
-		// registerWith(convAdj_);
-	}
+    public FuturesRateHelper(
+            final double price,
+            final Date immDate,
+            final IborIndex i,
+            final double conv) {
+        super(price);
+        assert IMM.getDefaultIMM().isIMMdate(immDate, false) : "not a valid IMM date"; // TODO: message
+        convAdj = new Handle<Quote>(new SimpleQuote(conv));
+        earliestDate = immDate;
+        final Calendar cal = i.fixingCalendar();
+        latestDate = cal.advance(immDate, i.tenor(), i.getConvention());
+        yearFraction = i.dayCounter().yearFraction(earliestDate,
+                latestDate);
+    }
 
-	public FuturesRateHelper(double price, Date immDate, int nMonths,
-			Calendar calendar, BusinessDayConvention convention,
-			boolean endOfMonth, DayCounter dayCounter, double conv) {
-		super(price);
-		convAdj = new Handle<Quote>(new SimpleQuote(conv));
-		if (!IMM.getDefaultIMM().isIMMdate(immDate, false))
-			throw new IllegalArgumentException(" is not a valid IMM date");
+    @Override
+    public double impliedQuote() {
+        assert termStructure!=null : "term structure not set";
+        final double forwardRate = termStructure.discount(earliestDate) / (termStructure.discount(latestDate) - 1.0) / yearFraction;
+        final double convA = convAdj.empty() ? 0.0 : convAdj.getLink().evaluate();
+        assert convA >= 0.0 : "negative futures convexity adjustment";
+        final double futureRate = forwardRate + convA;
+        return 100.0 * (1.0 - futureRate);
+    }
 
-		earliestDate = immDate;
-		latestDate = calendar.advance(immDate, new Period(nMonths,
-				TimeUnit.MONTHS), convention, endOfMonth);
-		yearFraction = dayCounter.yearFraction(earliestDate, latestDate);
-	}
+    public double getConvexityAdjustment() {
+        return convAdj.empty() ? 0.0 : convAdj.getLink().evaluate();
+    }
 
-	public FuturesRateHelper(double price, Date immDate, IborIndex i,
-			double conv) {
-		super(price);
-		convAdj = new Handle<Quote>(new SimpleQuote(conv));
-		if (!IMM.getDefaultIMM().isIMMdate(immDate, false))
-			throw new IllegalArgumentException(" is not a valid IMM date");
-		earliestDate = immDate;
-		Calendar cal = i.fixingCalendar();
-		latestDate = cal.advance(immDate, i.tenor(), i.getConvention());
-		yearFraction = i.dayCounter().yearFraction(earliestDate,
-				latestDate);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jquantlib.util.Observer#update(org.jquantlib.util.Observable,
+     *      java.lang.Object)
+     */
+    @Override
+    //TODO: MOVE TO BASE CLASS
+    public void update(final Observable o, final Object arg) {
+        // TODO Auto-generated method stub
 
-	public double impliedQuote() {
-		if (termStructure == null)
-			throw new IllegalStateException("term structure not set");
-		double forwardRate = termStructure.discount(earliestDate)
-				/ (termStructure.discount(latestDate) - 1.0) / yearFraction;
-		double convA = convAdj.empty() ? 0.0 : convAdj.getLink()
-				.evaluate();
-		if (convA < 0.0)
-			throw new IllegalStateException("Negative (" + convA
-					+ ") futures convexity adjustment");
-		double futureRate = forwardRate + convA;
-		return 100.0 * (1.0 - futureRate);
-	}
-
-	public double getConvexityAdjustment() {
-		return convAdj.empty() ? 0.0 : convAdj.getLink().evaluate();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jquantlib.util.Observer#update(org.jquantlib.util.Observable,
-	 *      java.lang.Object)
-	 */
-	@Override
-	//TODO: MOVE TO BASE CLASS
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
-	}
+    }
 
 }

@@ -20,7 +20,6 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import org.joda.primitives.list.DoubleList;
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**

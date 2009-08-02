@@ -26,8 +26,6 @@
  */
 package org.jquantlib.testsuite.pricers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.Option;
@@ -36,6 +34,8 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //TODO:  Import all the testcase when MC is available
 //FIXME: Rename to OldPricerTest

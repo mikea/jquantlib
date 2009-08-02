@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.termstructures.yieldcurves;
 
@@ -137,10 +137,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         final Class<?> cparam = root.get(0).getElement();
         final Class<?> iparam = root.get(1).getElement();
 
-        if (cparam==null || iparam==null) throw new IllegalArgumentException("class parameter(s) not specified");
-        if (interpolator==null) throw new NullPointerException("interpolation is null");
-        if (!interpolator.getClass().isAssignableFrom(iparam))
-            throw new ClassCastException("interpolator does not match parameterized type");
+        assert cparam!=null && iparam!=null : "class parameter(s) not specified"; // TODO: message
+        assert interpolator!=null : "interpolation is null"; // TODO: message
+        assert interpolator.getClass().isAssignableFrom(iparam) : "interpolator does not match parameterized type"; // TODO: message
 
         if (Discount.class.isAssignableFrom(cparam)) {
             this.baseCurve = new InterpolatedDiscountCurve(referenceDate, dayCounter, interpolator);
@@ -152,7 +151,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             this.baseCurve = new InterpolatedZeroCurve(referenceDate, dayCounter, interpolator);
             this.traits = new ZeroYield();
         } else
-            throw new UnsupportedOperationException("only Discount, ForwardRate and ZeroYield are supported");
+            throw new AssertionError("only Discount, ForwardRate and ZeroYield are supported");
 
         this.instruments = instruments;
         this.accuracy = accuracy;
@@ -175,10 +174,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         final Class<?> cparam = root.get(0).getElement();
         final Class<?> iparam = root.get(1).getElement();
 
-        if (cparam==null || iparam==null) throw new IllegalArgumentException("class parameter(s) not specified");
-        if (interpolator==null) throw new NullPointerException("interpolation is null");
-        if (!interpolator.getClass().isAssignableFrom(iparam))
-            throw new ClassCastException("interpolator does not match parameterized type");
+        assert cparam!=null && iparam!=null : "class parameter(s) not specified"; // TODO: message
+        assert interpolator!=null : "interpolation is null"; // TODO: message
+        assert interpolator.getClass().isAssignableFrom(iparam) : "interpolator does not match parameterized type"; // TODO: message
 
         if (Discount.class.isAssignableFrom(cparam)) {
             this.baseCurve = new InterpolatedDiscountCurve(settlementDays, calendar, dayCounter, interpolator);
@@ -190,7 +188,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             this.baseCurve = new InterpolatedZeroCurve(settlementDays, calendar, dayCounter, interpolator);
             this.traits = new ZeroYield();
         } else
-            throw new UnsupportedOperationException("only Discount, ForwardRate and ZeroYield are supported");
+            throw new AssertionError("only Discount, ForwardRate and ZeroYield are supported");
 
         this.instruments = instruments;
         this.accuracy = accuracy;
@@ -283,7 +281,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                     final ObjectiveFunction<C, I> f = new ObjectiveFunction<C, I>(this, instrument, i);
                     this.data.set(i, solver.solve(f, accuracy, guess, min, max));
                 } catch (final Exception e) {
-                    throw new IllegalArgumentException("could not bootstrap");
+                    throw new AssertionError("could not bootstrap");
                 }
             }
             // check exit conditions
@@ -296,8 +294,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             if (improvement <= n * accuracy) // convergence reached
                 break;
 
-            if (iteration > maxIterations)
-                throw new IllegalArgumentException("convergence not reached");
+            assert iteration <= maxIterations : "convergence not reached"; // TODO: message
         }
     }
 
@@ -571,19 +568,16 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                 final I interpolator) {
             super(dates[0], cal, dayCounter);
 
-            // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-            // in particular, we are verifying dates.length after calling the super(...)
-            if (dates.length <= 1) throw new IllegalArgumentException("too few dates");
-            if (dates.length != discounts.length) throw new IllegalArgumentException("dates/discount factors count mismatch");
-            if (discounts.first() != 1.0) throw new IllegalArgumentException("the first discount must be == 1.0 to flag the corrsponding date as settlement date");
+            assert dates.length > 1 : "too few dates"; // TODO: message
+            assert dates.length == discounts.length : "dates/discount factors count mismatch"; // TODO: message
+            assert discounts.first() == 1.0 : "the first discount must be == 1.0 to flag the corrsponding date as settlement date"; // TODO: message
 
             isNegativeRates = settings.isNegativeRates();
 
             container.times = new Array(dates.length);
             for (int i = 1; i < dates.length; i++) {
-                if (dates[i].le(dates[i-1]))
-                    throw new IllegalArgumentException("invalid date");
-                if (!isNegativeRates && (discounts.get(i) < 0.0)) throw new IllegalArgumentException("negative discount");
+                assert dates[i].gt(dates[i-1]) : "dates must be in ascending order";
+                assert isNegativeRates || discounts.get(i) >= 0.0 : "negative discount";
                 final double value = dayCounter.yearFraction(dates[0], dates[i]);
                 times.set(i, value);
             }
@@ -669,55 +663,53 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
      */
     private final class InterpolatedForwardCurve extends ForwardRateStructure implements YieldTraits<I> {
 
-	    private boolean      isNegativeRates;
+        private boolean      isNegativeRates;
 
-	    public InterpolatedForwardCurve(final DayCounter dayCounter, final I interpolator) {
-	        super(dayCounter);
-	        container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
-	    }
+        public InterpolatedForwardCurve(final DayCounter dayCounter, final I interpolator) {
+            super(dayCounter);
+            container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
+        }
 
-	    public InterpolatedForwardCurve(final Date referenceDate, final DayCounter dayCounter, final I interpolator) {
-	        super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review:: default calendar
-	        container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
-	    }
+        public InterpolatedForwardCurve(final Date referenceDate, final DayCounter dayCounter, final I interpolator) {
+            super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review:: default calendar
+            container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
+        }
 
-	    public InterpolatedForwardCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter, final I interpolator) {
-	        super(settlementDays, calendar, dayCounter);
-	        container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
-	    }
+        public InterpolatedForwardCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter, final I interpolator) {
+            super(settlementDays, calendar, dayCounter);
+            container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
+        }
 
-	    //TODO: who's calling this constructor???
-	    public InterpolatedForwardCurve(final Date[] dates, final /* @Rate */ Array forwards, final DayCounter dayCounter, final I interpolator) {
-	        // FIXME: code review: calendar
-	        // FIXME: must check dates
-	        super(dates[0], Target.getCalendar(), dayCounter);
+        //TODO: who's calling this constructor???
+        public InterpolatedForwardCurve(final Date[] dates, final /* @Rate */ Array forwards, final DayCounter dayCounter, final I interpolator) {
+            // FIXME: code review: calendar
+            // FIXME: must check dates
+            super(dates[0], Target.getCalendar(), dayCounter);
 
-	        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-	        // in particular, we are verifying dates.length after calling the super(...)
-	        if (dates.length <= 1) throw new IllegalArgumentException("too few dates");
-            if (dates.length != forwards.length) throw new IllegalArgumentException("dates/yields count mismatch");
+            // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
+            // in particular, we are verifying dates.length after calling the super(...)
+            assert dates.length > 1 : "too few dates"; // TODO: message
+            assert dates.length == forwards.length : "dates/yields count mismatch"; // TODO: message
 
-	        isNegativeRates = settings.isNegativeRates();
-
-	        container.times = new Array(dates.length);
-	        for (int i = 1; i < dates.length; i++) {
-	            if (dates[i].le(dates[i-1]))
-	                throw new IllegalArgumentException("invalid date");
-	            if (!isNegativeRates && (forwards.get(i) < 0.0)) throw new IllegalArgumentException("negative forward");
-	            final double value = dayCounter.yearFraction(dates[0], dates[i]);
-	            times.set(i, value);
-	        }
+            isNegativeRates = settings.isNegativeRates();
+            container.times = new Array(dates.length);
+            for (int i = 1; i < dates.length; i++) {
+                assert dates[i].gt(dates[i-1]) : "dates must be in ascending order"; // TODO: message
+                assert isNegativeRates || forwards.get(i) >= 0.0 : "negative forward";
+                final double value = dayCounter.yearFraction(dates[0], dates[i]);
+                times.set(i, value);
+            }
 
             container.dates = dates.clone();
             container.data = forwards.clone();
             container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
-	        container.interpolation = container.interpolator.interpolate(container.times, container.data);
-	        container.interpolation.update();
-	    }
+            container.interpolation = container.interpolator.interpolate(container.times, container.data);
+            container.interpolation.update();
+        }
 
-	    //
-	    // implements TraitsCurve
-	    //
+        //
+        // implements TraitsCurve
+        //
 
         @Override
         public final Date maxDate() /* @ReadOnly */{
@@ -742,25 +734,25 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             return results;
         }
 
-	    // exclusive to discount curve
-	    public /* @DiscountFactor */Array discounts() /* @ReadOnly */ {
+        // exclusive to discount curve
+        public /* @DiscountFactor */Array discounts() /* @ReadOnly */ {
             throw new UnsupportedOperationException();
         }
 
-	    // exclusive to forward curve
-	    public /* @Rate */Array forwards() /* @ReadOnly */ {
-	        return data.clone();
-	    }
+        // exclusive to forward curve
+        public /* @Rate */Array forwards() /* @ReadOnly */ {
+            return data.clone();
+        }
 
-	    // exclusive to zero rate
-	    public /* @Rate */Array zeroRates() /* @ReadOnly */{
+        // exclusive to zero rate
+        public /* @Rate */Array zeroRates() /* @ReadOnly */{
             throw new UnsupportedOperationException();
         }
 
 
-	    //
+        //
         // The following methods should be protected in order to mimick the way it is done in C++
-	    //
+        //
 
         @Override
         public /* @DiscountFactor */ double discountImpl(final/* @Time */double t) /* @ReadOnly */ {
@@ -780,7 +772,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                 return interpolation.primitive(t, true) / t;
         }
 
-	}
+    }
 
 
 

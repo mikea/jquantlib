@@ -23,7 +23,6 @@
 package org.jquantlib.util;
 
 import org.jquantlib.time.Weekday;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

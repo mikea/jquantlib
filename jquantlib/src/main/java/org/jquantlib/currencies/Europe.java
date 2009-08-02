@@ -37,7 +37,6 @@
 */
 package org.jquantlib.currencies;
 
-import org.jquantlib.Currency;
 import org.jquantlib.math.Rounding;
 
 public class Europe {
@@ -103,7 +102,7 @@ public class Europe {
     };
 
     /**
-     * Danish krone The ISO three-letter code is DKK; the numeric code is 208. It is divided in 100 øre.
+     * Danish krone The ISO three-letter code is DKK; the numeric code is 208. It is divided in 100 ï¿½re.
      * 
      * @category currencies
      */
@@ -211,7 +210,7 @@ public class Europe {
     };
 
     /**
-     * Norwegian krone The ISO three-letter code is NOK; the numeric code is 578. It is divided in 100 øre.
+     * Norwegian krone The ISO three-letter code is NOK; the numeric code is 578. It is divided in 100 ï¿½re.
      * 
      * @category currencies
      */
@@ -261,7 +260,7 @@ public class Europe {
     };
 
     /**
-     * Swedish krona The ISO three-letter code is SEK; the numeric code is 752. It is divided in 100 öre.
+     * Swedish krona The ISO three-letter code is SEK; the numeric code is 752. It is divided in 100 ï¿½re.
      * 
      * @category currencies
      */
@@ -377,7 +376,7 @@ public class Europe {
     };
 
     /**
-     * Finnish markka The ISO three-letter code was FIM; the numeric code was 246.It was divided in 100 penniä. Obsoleted by the
+     * Finnish markka The ISO three-letter code was FIM; the numeric code was 246.It was divided in 100 penniï¿½. Obsoleted by the
      * Euro since 1999
      * 
      * @category currencies

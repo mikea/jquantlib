@@ -24,7 +24,6 @@ package org.jquantlib.util;
 
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

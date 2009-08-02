@@ -39,7 +39,7 @@
 
 package org.jquantlib.quotes;
 
-import java.util.List; // FIXME :: performance
+import java.util.List;
 
 import org.jquantlib.math.FunctionDouble;
 import org.jquantlib.util.DefaultObservable;

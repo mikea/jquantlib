@@ -46,8 +46,7 @@
 
 package org.jquantlib.currencies;
 
-import org.jquantlib.Currency;
-import org.jquantlib.Currency.Data;
+import org.jquantlib.currencies.Currency.Data;
 import org.jquantlib.math.Rounding;
 
 public class Asia {

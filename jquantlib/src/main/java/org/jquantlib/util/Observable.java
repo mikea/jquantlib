@@ -22,7 +22,7 @@
 
 package org.jquantlib.util;
 
-import java.util.List; //FIXME: performance
+import java.util.List;
 
 /**
  * This interface is intended to provide more flexibility to complex object

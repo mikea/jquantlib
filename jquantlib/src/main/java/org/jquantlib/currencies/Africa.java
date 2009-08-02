@@ -37,7 +37,6 @@
 */
 package org.jquantlib.currencies;
 
-import org.jquantlib.Currency;
 import org.jquantlib.math.Rounding;
 
 public class Africa {

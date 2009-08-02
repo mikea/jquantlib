@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -63,161 +63,159 @@ import org.jquantlib.util.Observable;
  * <p>
  * This class describes the stochastic process governed by
  * <p>
- * {@latex[ dS(t, S) = (r(t) - q(t) - \frac \sigma(t, S)^2}{2}) dt + \sigma
- * dW_t. }
+ * {@latex[ dS(t, S) = (r(t) - q(t) - \frac \sigma(t, S)^2}{2}) dt + \sigma dW_t. }
  * 
  * @author Richard Gomes
  */
 public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
-	private Handle<? extends Quote> x0;
-	private Handle<YieldTermStructure> riskFreeRate;
-	private Handle<YieldTermStructure> dividendYield;
-	private Handle<BlackVolTermStructure> blackVolatility;
-	private RelinkableHandle<LocalVolTermStructure> localVolatility;
-	private boolean updated;
+    private final Handle<? extends Quote> x0;
+    private final Handle<YieldTermStructure> riskFreeRate;
+    private final Handle<YieldTermStructure> dividendYield;
+    private final Handle<BlackVolTermStructure> blackVolatility;
+    private final RelinkableHandle<LocalVolTermStructure> localVolatility;
+    private boolean updated;
 
-	/**
-	 * @param discretization
-	 *            is an Object that <b>must</b> implement {@link Discretization}
-	 *            <b>and</b> {@link Discretization1D}.
-	 */
-	public GeneralizedBlackScholesProcess(final Handle<? extends Quote> x0,
-			final Handle<YieldTermStructure> dividendTS,
-			final Handle<YieldTermStructure> riskFreeTS,
-			final Handle<BlackVolTermStructure> blackVolTS) {
-		this(x0, dividendTS, riskFreeTS, blackVolTS, new EulerDiscretization());
-	}
+    /**
+     * @param discretization
+     *            is an Object that <b>must</b> implement {@link Discretization}
+     *            <b>and</b> {@link Discretization1D}.
+     */
+    public GeneralizedBlackScholesProcess(final Handle<? extends Quote> x0,
+            final Handle<YieldTermStructure> dividendTS,
+            final Handle<YieldTermStructure> riskFreeTS,
+            final Handle<BlackVolTermStructure> blackVolTS) {
+        this(x0, dividendTS, riskFreeTS, blackVolTS, new EulerDiscretization());
+    }
 
-	/**
-	 * @param discretization
-	 *            is an Object that <b>must</b> implement {@link Discretization}
-	 *            <b>and</b> {@link Discretization1D}.
-	 */
-	public GeneralizedBlackScholesProcess(final Handle<? extends Quote> x0,
-			final Handle<YieldTermStructure> dividendTS,
-			final Handle<YieldTermStructure> riskFreeTS,
-			final Handle<BlackVolTermStructure> blackVolTS,
-			final LinearDiscretization discretization) {
-		super(discretization);
-		this.x0 = x0;
-		this.riskFreeRate = riskFreeTS;
-		this.dividendYield = dividendTS;
-		this.blackVolatility = blackVolTS;
-		this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(LocalVolTermStructure.class);
-		this.updated = false;
-		this.x0.addObserver(this);
-		this.riskFreeRate.addObserver(this);
-		this.dividendYield.addObserver(this);
-		this.blackVolatility.addObserver(this);
-	}
+    /**
+     * @param discretization
+     *            is an Object that <b>must</b> implement {@link Discretization}
+     *            <b>and</b> {@link Discretization1D}.
+     */
+    public GeneralizedBlackScholesProcess(final Handle<? extends Quote> x0,
+            final Handle<YieldTermStructure> dividendTS,
+            final Handle<YieldTermStructure> riskFreeTS,
+            final Handle<BlackVolTermStructure> blackVolTS,
+            final LinearDiscretization discretization) {
+        super(discretization);
+        this.x0 = x0;
+        this.riskFreeRate = riskFreeTS;
+        this.dividendYield = dividendTS;
+        this.blackVolatility = blackVolTS;
+        this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(LocalVolTermStructure.class);
+        this.updated = false;
+        this.x0.addObserver(this);
+        this.riskFreeRate.addObserver(this);
+        this.dividendYield.addObserver(this);
+        this.blackVolatility.addObserver(this);
+    }
 
-	@Override
-	public/* @Price */double x0() {
-		return x0.getLink().evaluate();
-	}
+    @Override
+    public/* @Price */double x0() {
+        return x0.getLink().evaluate();
+    }
 
-	@Override
-	public/* @Drift */double drift(final/* @Time */double t, final/* @Price */double x) {
-		/* @Diffusion */double sigma = diffusion(t, x);
-		// we could be more anticipatory if we know the right dt
-		// for which the drift will be used
-		/* @Time */double t1 = t + 0.0001;
-		YieldTermStructure yts = riskFreeRate.getLink();
-		/* @Rate */double r = yts.forwardRate(t, t1, Compounding.CONTINUOUS,
-				Frequency.NO_FREQUENCY, true).rate();
+    @Override
+    public/* @Drift */double drift(final/* @Time */double t, final/* @Price */double x) {
+        /* @Diffusion */final double sigma = diffusion(t, x);
+        // we could be more anticipatory if we know the right dt
+        // for which the drift will be used
+        /* @Time */final double t1 = t + 0.0001;
+        final YieldTermStructure yts = riskFreeRate.getLink();
+        /* @Rate */final double r = yts.forwardRate(t, t1, Compounding.CONTINUOUS,
+                Frequency.NO_FREQUENCY, true).rate();
 
-		YieldTermStructure divTs = dividendYield.getLink();
-		double d = divTs.forwardRate(t, t1, Compounding.CONTINUOUS,
-				Frequency.NO_FREQUENCY, true).rate();
-		return r - d - 0.5 * sigma * sigma;
-	}
+        final YieldTermStructure divTs = dividendYield.getLink();
+        final double d = divTs.forwardRate(t, t1, Compounding.CONTINUOUS,
+                Frequency.NO_FREQUENCY, true).rate();
+        return r - d - 0.5 * sigma * sigma;
+    }
 
-	@Override
-	public/* @Diffusion */double diffusion(final/* @Time */double t,
-			final/* @Price */double x) {
-		/* @Volatility */double vol = localVolatility().getLink().localVol(t,
-				x, true);
-		return vol;
-	}
+    @Override
+    public/* @Diffusion */double diffusion(final/* @Time */double t,
+            final/* @Price */double x) {
+        /* @Volatility */final double vol = localVolatility().getLink().localVol(t,
+                x, true);
+        return vol;
+    }
 
-	@Override
-	public final/* @Price */double apply(final/* @Price */double x0,
-			final/* @Time */double dx) {
-		// result = x0 * e^dx
-		double result = x0 * Math.exp(dx);
-		return result;
-	}
+    @Override
+    public final/* @Price */double apply(final/* @Price */double x0,
+            final/* @Time */double dx) {
+        // result = x0 * e^dx
+        final double result = x0 * Math.exp(dx);
+        return result;
+    }
 
-	@Override
-	public final/* @Time */double getTime(final Date d) {
-		YieldTermStructure yts = riskFreeRate.getLink();
-		return yts.dayCounter().yearFraction(yts.referenceDate(), d);
-	}
+    @Override
+    public final/* @Time */double getTime(final Date d) {
+        final YieldTermStructure yts = riskFreeRate.getLink();
+        return yts.dayCounter().yearFraction(yts.referenceDate(), d);
+    }
 
-	// FIXME: code review
-	public final void update(Observable o, Object arg) {
-		updated = false;
-		super.update(o, arg);
-	}
+    // FIXME: code review
+    @Override
+    public final void update(final Observable o, final Object arg) {
+        updated = false;
+        super.update(o, arg);
+    }
 
-	public final Handle<? extends Quote> stateVariable() {
-		return x0;
-	}
+    public final Handle<? extends Quote> stateVariable() {
+        return x0;
+    }
 
-	public final Handle<YieldTermStructure> dividendYield() {
-		return dividendYield;
-	}
+    public final Handle<YieldTermStructure> dividendYield() {
+        return dividendYield;
+    }
 
-	public final Handle<YieldTermStructure> riskFreeRate() {
-		return riskFreeRate;
-	}
+    public final Handle<YieldTermStructure> riskFreeRate() {
+        return riskFreeRate;
+    }
 
-	public final Handle<BlackVolTermStructure> blackVolatility() {
-		return blackVolatility;
-	}
+    public final Handle<BlackVolTermStructure> blackVolatility() {
+        return blackVolatility;
+    }
 
-	public final Handle<LocalVolTermStructure> localVolatility() {
-		if (!updated) {
-			Class<? extends BlackVolTermStructure> klass = blackVolatility.getLink().getClass();
+    public final Handle<LocalVolTermStructure> localVolatility() {
+        if (!updated) {
+            final Class<? extends BlackVolTermStructure> klass = blackVolatility.getLink().getClass();
 
-			// constant Black vol?
-			if (BlackConstantVol.class.isAssignableFrom(klass)) {
-				// ok, the local vol is constant too.
-				BlackConstantVol constVol = (BlackConstantVol) blackVolatility.getLink();
-				localVolatility.setLink(new LocalConstantVol(
-				        constVol.referenceDate(), 
-				        constVol.blackVol(/*@Time*/0.0, /*@Price*/x0.getLink().evaluate()), constVol.dayCounter()));
-				updated = true;
-				return localVolatility;
-			}
+            // constant Black vol?
+            if (BlackConstantVol.class.isAssignableFrom(klass)) {
+                // ok, the local volatility is constant too.
+                final BlackConstantVol constVol = (BlackConstantVol) blackVolatility.getLink();
+                localVolatility.setLink(new LocalConstantVol(
+                        constVol.referenceDate(),
+                        constVol.blackVol(/*@Time*/0.0, /*@Price*/x0.getLink().evaluate()), constVol.dayCounter()));
+                updated = true;
+                return localVolatility;
+            }
 
-			// ok, so it's not constant. Maybe it's strike-independent?
-			if (BlackVarianceCurve.class.isAssignableFrom(klass)) {
-				Handle<BlackVarianceCurve> volCurve = new Handle<BlackVarianceCurve>(
-						(BlackVarianceCurve) blackVolatility().getLink());
-				localVolatility.setLink(new LocalVolCurve(volCurve));
-				updated = true;
-				return localVolatility;
-			}
+            // ok, so it's not constant. Maybe it's strike-independent?
+            if (BlackVarianceCurve.class.isAssignableFrom(klass)) {
+                final Handle<BlackVarianceCurve> volCurve = new Handle<BlackVarianceCurve>(
+                        (BlackVarianceCurve) blackVolatility().getLink());
+                localVolatility.setLink(new LocalVolCurve(volCurve));
+                updated = true;
+                return localVolatility;
+            }
 
-			// ok, so it's strike-dependent. Never mind.
-			if (LocalVolSurface.class.isAssignableFrom(klass)) {
-				localVolatility.setLink(new LocalVolSurface(blackVolatility,
-						riskFreeRate, dividendYield, x0));
-				updated = true;
-				return localVolatility;
-			}
+            // ok, so it's strike-dependent. Never mind.
+            if (LocalVolSurface.class.isAssignableFrom(klass)) {
+                localVolatility.setLink(new LocalVolSurface(blackVolatility, riskFreeRate, dividendYield, x0));
+                updated = true;
+                return localVolatility;
+            }
 
-			// Note: The previous LocalVolSurface case was a catch-all
-			// condition.
-			// We decided to explicitly test the interface and throw an
-			// exception if we are not able
-			// to identify the correct interface to be used.
-			throw new UnsupportedOperationException(); // FIXME: message
-		} else {
-			return localVolatility;
-		}
-	}
+            // Note: The previous LocalVolSurface case was a catch-all
+            // condition.
+            // We decided to explicitly test the interface and throw an
+            // exception if we are not able
+            // to identify the correct interface to be used.
+            throw new AssertionError("unrecognized volatility curve"); // FIXME: message
+        } else
+            return localVolatility;
+    }
 
 }

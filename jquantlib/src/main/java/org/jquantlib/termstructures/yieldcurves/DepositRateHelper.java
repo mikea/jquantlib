@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -43,116 +43,119 @@ import org.jquantlib.util.Date;
 // TODO: code review :: please verify against original QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class DepositRateHelper<T extends TermStructure> extends
-		RelativeDateRateHelper<T> {
+RelativeDateRateHelper<T> {
 
-	private Date fixingDate;
-	private IborIndex iborIndex;
-	private RelinkableHandle<YieldTermStructure> termStructureHandle;
+    private Date fixingDate;
+    private final IborIndex iborIndex;
+    private RelinkableHandle<YieldTermStructure> termStructureHandle;
 
-	/**
-	 * 
-	 * @param rate
-	 * @param tenor
-	 * @param fixingDays
-	 * @param calendar
-	 * @param convention
-	 * @param endOfMonth
-	 * @param dayCounter
-	 */
-	public DepositRateHelper(Handle<Quote> rate, Period tenor, int fixingDays,
-			Calendar calendar, BusinessDayConvention convention,
-			boolean endOfMonth, DayCounter dayCounter) {
-		super(rate, null, null, null);
-		
-		if (0==0) throw new UnsupportedOperationException("not implemented yet");
-		
-		iborIndex = new IborIndex(
-				"no-fix", // never take fixing into account
-				tenor, fixingDays, calendar, null, convention, endOfMonth,
-				dayCounter, termStructureHandle);
-		initializeDates();
+    /**
+     * 
+     * @param rate
+     * @param tenor
+     * @param fixingDays
+     * @param calendar
+     * @param convention
+     * @param endOfMonth
+     * @param dayCounter
+     */
+    public DepositRateHelper(final Handle<Quote> rate, final Period tenor, final int fixingDays,
+            final Calendar calendar, final BusinessDayConvention convention,
+            final boolean endOfMonth, final DayCounter dayCounter) {
+        super(rate, null, null, null);
 
-	}
+        //TODO: Code review :: incomplete code
+        if (true)
+            throw new UnsupportedOperationException("Work in progress");
 
-	/**
-	 * 
-	 * @param rate
-	 * @param tenor
-	 * @param fixingDays
-	 * @param calendar
-	 * @param convention
-	 * @param endOfMonth
-	 * @param dayCounter
-	 */
-	public DepositRateHelper(double rate, Period tenor, int fixingDays,
-			Calendar calendar, BusinessDayConvention convention,
-			boolean endOfMonth, DayCounter dayCounter) {
-		super(rate);
-		iborIndex = new IborIndex(
-				"no-fix", // never take fixing into account
-				tenor, fixingDays, calendar, null, convention, endOfMonth,
-				dayCounter, termStructureHandle);
-		initializeDates();
-	}
+        iborIndex = new IborIndex(
+                "no-fix", // never take fixing into account
+                tenor, fixingDays, calendar, null, convention, endOfMonth,
+                dayCounter, termStructureHandle);
+        initializeDates();
 
-	/**
-	 * 
-	 * @param rate
-	 * @param ibor
-	 */
-	public DepositRateHelper(Handle<Quote> rate, IborIndex ibor) {
-		super(rate, null, null, null); // TODO
-		iborIndex = new IborIndex(
-				"no-fix", // never take fixing into account
-				ibor.tenor(), ibor.fixingDays(),
-				ibor.fixingCalendar(), null, ibor.getConvention(), ibor
-						.isEndOfMonth(), ibor.dayCounter(),
-				termStructureHandle);
-		initializeDates();
+    }
 
-	}
+    /**
+     * 
+     * @param rate
+     * @param tenor
+     * @param fixingDays
+     * @param calendar
+     * @param convention
+     * @param endOfMonth
+     * @param dayCounter
+     */
+    public DepositRateHelper(final double rate, final Period tenor, final int fixingDays,
+            final Calendar calendar, final BusinessDayConvention convention,
+            final boolean endOfMonth, final DayCounter dayCounter) {
+        super(rate);
+        iborIndex = new IborIndex(
+                "no-fix", // never take fixing into account
+                tenor, fixingDays, calendar, null, convention, endOfMonth,
+                dayCounter, termStructureHandle);
+        initializeDates();
+    }
 
-	/**
-	 * 
-	 * @param rate
-	 * @param ibor
-	 */
-	public DepositRateHelper(double rate, IborIndex ibor) {
-		super(rate); // TODO
-		iborIndex = new IborIndex(
-				"no-fix", // never take fixing into account
-				ibor.tenor(), ibor.fixingDays(),
-				ibor.fixingCalendar(), null, ibor.getConvention(), ibor
-						.isEndOfMonth(), ibor.dayCounter(),
-				termStructureHandle);
+    /**
+     * 
+     * @param rate
+     * @param ibor
+     */
+    public DepositRateHelper(final Handle<Quote> rate, final IborIndex ibor) {
+        super(rate, null, null, null); // TODO
+        iborIndex = new IborIndex(
+                "no-fix", // never take fixing into account
+                ibor.tenor(), ibor.fixingDays(),
+                ibor.fixingCalendar(), null, ibor.getConvention(), ibor
+                .isEndOfMonth(), ibor.dayCounter(),
+                termStructureHandle);
+        initializeDates();
 
-	}
+    }
 
-	/**
-	 * 
-	 */
-	protected void initializeDates() {
-		earliestDate = iborIndex.fixingCalendar().advance(evaluationDate,
-				iborIndex.fixingDays(), TimeUnit.DAYS);
-		latestDate = iborIndex.maturityDate(earliestDate);
-		fixingDate = iborIndex.fixingDate(earliestDate);
+    /**
+     * 
+     * @param rate
+     * @param ibor
+     */
+    public DepositRateHelper(final double rate, final IborIndex ibor) {
+        super(rate); // TODO
+        iborIndex = new IborIndex(
+                "no-fix", // never take fixing into account
+                ibor.tenor(), ibor.fixingDays(),
+                ibor.fixingCalendar(), null, ibor.getConvention(), ibor
+                .isEndOfMonth(), ibor.dayCounter(),
+                termStructureHandle);
 
-	}
+    }
 
-	/**
-	 * 
-	 */
-	public double impliedQuote() {
-		if (termStructure == null)
-			throw new IllegalStateException("term structure not set");
-		return iborIndex.fixing(fixingDate, true);
-	}
+    /**
+     * 
+     */
+    @Override
+    protected void initializeDates() {
+        earliestDate = iborIndex.fixingCalendar().advance(evaluationDate,
+                iborIndex.fixingDays(), TimeUnit.DAYS);
+        latestDate = iborIndex.maturityDate(earliestDate);
+        fixingDate = iborIndex.fixingDate(earliestDate);
 
-	/**
-	 * 
-	 * @param termStructureHandle
-	 */
-	public void setTermStructureHandle(YieldTermStructure term) {
-		termStructureHandle.setLink(term);
-	}
+    }
+
+    /**
+     * 
+     */
+    @Override
+    public double impliedQuote() {
+        assert termStructure != null : "term structure not set";
+        return iborIndex.fixing(fixingDate, true);
+    }
+
+    /**
+     * 
+     * @param termStructureHandle
+     */
+    public void setTermStructureHandle(final YieldTermStructure term) {
+        termStructureHandle.setLink(term);
+    }
 }

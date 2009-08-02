@@ -23,12 +23,10 @@
 
 package org.jquantlib.legacy.libormarkets;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.JQuantlib;
-import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;

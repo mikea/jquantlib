@@ -37,7 +37,7 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-package org.jquantlib;
+package org.jquantlib.currencies;
 
 import java.io.PrintStream;
 
@@ -61,7 +61,7 @@ public class Currency implements Cloneable {
         private int numeric;
         /** Symbol, e.g, "$"*/
         private String symbol;
-        /** Fraction symbol, e.g, "¢"*/
+        /** Fraction symbol, e.g, "ï¿½"*/
         private String  fractionSymbol;
         /** The number of fractionary parts in a unit, e.g, 100*/
         private int fractionsPerUnit;

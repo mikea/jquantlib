@@ -22,12 +22,13 @@
 
 package org.jquantlib.testsuite.math.distributions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.Assert.fail;
+
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.distributions.InverseCumulativePoisson;
 import org.junit.Test;
-import static org.junit.Assert.fail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 

@@ -40,8 +40,6 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 package org.jquantlib.math.matrixutilities;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**

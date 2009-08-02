@@ -19,10 +19,9 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib;
+package org.jquantlib.currencies;
 
 
-import org.jquantlib.currencies.ExchangeRateManager;
 import org.jquantlib.math.Closeness;
 
 /**

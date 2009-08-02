@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.instruments.Option;
-import org.jquantlib.instruments.Swaption;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
@@ -46,7 +45,6 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.util.Observer;
 
 /**
  * Two-additive-factor gaussian model class.

@@ -28,8 +28,8 @@ import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.MAY;
 
 import org.jquantlib.time.Calendar;
-import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.time.Weekday;
+import org.jquantlib.time.WesternCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.Month;
 

@@ -2,12 +2,12 @@ package org.jquantlib.testsuite.calendars;
 
 import static org.jquantlib.util.Month.APRIL;
 import static org.jquantlib.util.Month.DECEMBER;
+import static org.jquantlib.util.Month.FEBRUARY;
 import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.MARCH;
 import static org.jquantlib.util.Month.MAY;
-import static org.jquantlib.util.Month.FEBRUARY;
-import static org.jquantlib.util.Month.SEPTEMBER;
 import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.util.Month.SEPTEMBER;
 
 import java.util.List;
 import java.util.Vector;

@@ -25,7 +25,6 @@ package org.jquantlib.testsuite.lang;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.lang.reflect.TypeToken;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

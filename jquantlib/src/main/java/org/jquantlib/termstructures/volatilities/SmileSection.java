@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -41,7 +41,7 @@ public abstract class SmileSection implements Observable {
     // ! interest rate volatility smile section
     /* ! This abstract class provides volatility smile section interface */
 
-    public SmileSection(Date d) {
+    public SmileSection(final Date d) {
         // this(d,Actual365Fixed.getDayCounter(), DateFactory.getFactory().getTodaysDate());
     }
 
@@ -65,35 +65,31 @@ public abstract class SmileSection implements Observable {
         return dc_;
     }
 
-    public SmileSection(Date d, DayCounter dc, Date referenceDate) {
+    public SmileSection(final Date d, final DayCounter dc, final Date referenceDate) {
         exerciseDate_ = d;
         dc_ = dc;
         // FIXME: should be compared to new Date()...
-        Date refDate = (!referenceDate.eq(DateFactory.getFactory().getTodaysDate())) ? referenceDate : Configuration
-                .getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        if (d.ge(refDate)) {
-            throw new IllegalArgumentException("expiry date (" + d + ") must be greater than reference date (" + refDate + ")");
-        }
+        final Date refDate = (!referenceDate.eq(DateFactory.getFactory().getTodaysDate())) ? referenceDate
+                : Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        assert d.gt(refDate) : "expiry date must be greater than reference date"; // TODO: message
         exerciseTime_ = dc_.yearFraction(refDate, d);
     }
 
-    public SmileSection(double exerciseTime, DayCounter dc) {
+    public SmileSection(final double exerciseTime, final DayCounter dc) {
+        assert dc!=null : "day counter must be informed"; // TODO: message
+        assert exerciseTime >= 0.0 : "expiry time must be positive"; // TODO: message
         this.dc_ = dc;
         this.exerciseTime_ = exerciseTime;
-        if (exerciseTime_ < 0.0) {
-            throw new IllegalArgumentException("expiry time must be positive: " + exerciseTime_ + " not allowed");
-        }
-
     }
 
-    public SmileSection(double timeToExpiry) {
+    public SmileSection(final double timeToExpiry) {
         this(timeToExpiry, Actual365Fixed.getDayCounter());
     }
 
     @Override
-    public void addObserver(Observer observer) {
+    public void addObserver(final Observer observer) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -103,15 +99,15 @@ public abstract class SmileSection implements Observable {
     }
 
     @Override
-    public void deleteObserver(Observer observer) {
+    public void deleteObserver(final Observer observer) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void deleteObservers() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -123,13 +119,13 @@ public abstract class SmileSection implements Observable {
     @Override
     public void notifyObservers() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
-    public void notifyObservers(Object arg) {
+    public void notifyObservers(final Object arg) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

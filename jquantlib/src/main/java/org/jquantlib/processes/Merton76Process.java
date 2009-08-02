@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -58,19 +58,19 @@ public class Merton76Process extends StochasticProcess1D {
     //
     // private fields
     //
-    
-    private GeneralizedBlackScholesProcess blackProcess;
-    private Handle<? extends Quote> jumpIntensity, logMeanJump, logJumpVolatility;
+
+    private final GeneralizedBlackScholesProcess blackProcess;
+    private final Handle<? extends Quote> jumpIntensity, logMeanJump, logJumpVolatility;
 
 
     //
     // public constructors
     //
-    
+
     public Merton76Process(final Handle< ? extends Quote > stateVariable, final Handle<YieldTermStructure> dividendTS,
             final Handle<YieldTermStructure> riskFreeTS, final Handle<BlackVolTermStructure> blackVolTS,
             final Handle<? extends Quote> jumpInt, final Handle<? extends Quote> logJMean, final Handle<? extends Quote> logJVol) {
-        
+
         // FIXME allow discretisation as parameter...
         super(new EulerDiscretization());
         this.blackProcess = new BlackScholesMertonProcess(stateVariable, dividendTS, riskFreeTS, blackVolTS, new EulerDiscretization());
@@ -88,7 +88,7 @@ public class Merton76Process extends StochasticProcess1D {
     //
     // public methods
     //
-    
+
     public Handle<? extends Quote> stateVariable() {
         return blackProcess.stateVariable();
     }
@@ -121,34 +121,36 @@ public class Merton76Process extends StochasticProcess1D {
     //
     // Overrides StochasticProcess1D
     //
-    
+
     @Override
     public double /* @Real */x0() {
         return blackProcess.x0();
     }
 
+    // TODO: code review :: please verify against original QL/C++ code
+
     @Override
-    public double /* @Real */drift(double /* @Time */t, double /* @Real */x) {
-        throw new ArithmeticException("not implemented");
+    public double /* @Real */drift(final double /* @Time */t, final double /* @Real */x) {
+        throw new AssertionError("not implemented");
     }
 
     @Override
-    public double /* @Real */diffusion(double /* @Time */t, double /* @Real */x) {
-        throw new ArithmeticException("not implemented");
+    public double /* @Real */diffusion(final double /* @Time */t, final double /* @Real */x) {
+        throw new AssertionError("not implemented");
     }
 
     @Override
-    public double /* @Real */apply(double /* @Real */x, double /* @Real */y) {
-        throw new ArithmeticException("not implemented");
+    public double /* @Real */apply(final double /* @Real */x, final double /* @Real */y) {
+        throw new AssertionError("not implemented");
     }
 
 
     //
     // Overrides StochasticProcess1D
     //
-    
+
     @Override
-    public double /* @Time */getTime(Date d) {
+    public double /* @Time */getTime(final Date d) {
         return blackProcess.getTime(d);
     }
 

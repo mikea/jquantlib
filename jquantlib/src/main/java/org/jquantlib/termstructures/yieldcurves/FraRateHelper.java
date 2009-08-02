@@ -2,7 +2,7 @@
  Copyright (C) 2007 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -42,86 +42,101 @@ import org.jquantlib.util.Date;
 // TODO: code review :: please verify against original QL/C++ code
 public class FraRateHelper extends RelativeDateRateHelper {
 
-	private Date fixingDate;
-	private int monthsToStart;
-	private IborIndex iborIndex;
-	private RelinkableHandle<YieldTermStructure> termStructureHandle;
+    private Date fixingDate;
+    private final int monthsToStart;
+    private final IborIndex iborIndex;
+    private RelinkableHandle<YieldTermStructure> termStructureHandle;
 
-	public FraRateHelper(Handle<Quote> rate, int monthsToStart,
-			int monthsToEnd, int fixingDays, Calendar calendar,
-			BusinessDayConvention convention, boolean endOfMonth,
-			DayCounter dayCounter) {
-		this.quote = rate;
-		this.monthsToStart = monthsToStart;
-		if (monthsToEnd <= monthsToStart)
-			throw new IllegalArgumentException(
-					"monthsToEnd must be greater than monthsToStart");
-		iborIndex = new IborIndex("no-fix", new Period(monthsToEnd
-				- monthsToStart, TimeUnit.MONTHS), fixingDays, calendar, null,
-				convention, endOfMonth, dayCounter, termStructureHandle);
-		initializeDates();
+    public FraRateHelper(
+            final Handle<Quote> rate,
+            final int monthsToStart,
+            final int monthsToEnd,
+            final int fixingDays,
+            final Calendar calendar,
+            final BusinessDayConvention convention,
+            final boolean endOfMonth,
+            final DayCounter dayCounter) {
+        assert monthsToEnd > monthsToStart : "monthsToEnd must be greater than monthsToStart"; // TODO: message
+        this.quote = rate;
+        this.monthsToStart = monthsToStart;
+        iborIndex = new IborIndex(
+                "no-fix",
+                new Period(monthsToEnd - monthsToStart, TimeUnit.MONTHS),
+                fixingDays,
+                calendar,
+                null,
+                convention,
+                endOfMonth,
+                dayCounter,
+                termStructureHandle);
+        initializeDates();
 
-	}
+    }
 
-	public FraRateHelper(double rate, int monthsToStart, int monthsToEnd,
-			int fixingDays, Calendar calendar,
-			BusinessDayConvention convention, boolean endOfMonth,
-			DayCounter dayCounter) {
-		super(rate);
-		this.monthsToStart = monthsToStart;
-		if (monthsToEnd <= monthsToStart)
-			throw new IllegalArgumentException(
-					"monthsToEnd must be grater than monthsToStart");
-		iborIndex = new IborIndex(
-				"no-fix", // never take fixing into account
-				new Period(monthsToEnd - monthsToStart, TimeUnit.MONTHS),
-				fixingDays, calendar, null, convention, endOfMonth, dayCounter,
-				termStructureHandle);
-		initializeDates();
-	}
+    public FraRateHelper(final double rate, final int monthsToStart, final int monthsToEnd,
+            final int fixingDays, final Calendar calendar,
+            final BusinessDayConvention convention, final boolean endOfMonth,
+            final DayCounter dayCounter) {
+        super(rate);
+        assert monthsToEnd > monthsToStart : "monthsToEnd must be greater than monthsToStart"; // TODO: message
+        this.monthsToStart = monthsToStart;
+        iborIndex = new IborIndex(
+                "no-fix", // never take fixing into account
+                new Period(monthsToEnd - monthsToStart, TimeUnit.MONTHS),
+                fixingDays,
+                calendar,
+                null,
+                convention,
+                endOfMonth,
+                dayCounter,
+                termStructureHandle);
+        initializeDates();
+    }
 
-	public FraRateHelper(Handle<Quote> rate, int monthsToStart, IborIndex i) {
-		this.quote = rate;
-		this.monthsToStart = monthsToStart;
-		iborIndex = new IborIndex(
-				"no-fix", // never take fixing into account
-				i.tenor(), i.fixingDays(), i.fixingCalendar(), null, i
-						.getConvention(), i.isEndOfMonth(), i.dayCounter(),
-				termStructureHandle);
-		initializeDates();
+    public FraRateHelper(final Handle<Quote> rate, final int monthsToStart, final IborIndex i) {
+        this.quote = rate;
+        this.monthsToStart = monthsToStart;
+        iborIndex = new IborIndex(
+                "no-fix", // never take fixing into account
+                i.tenor(), i.fixingDays(), i.fixingCalendar(), null, i
+                .getConvention(), i.isEndOfMonth(), i.dayCounter(),
+                termStructureHandle);
+        initializeDates();
 
-	}
+    }
 
-	public FraRateHelper(double rate, int monthsToStart, IborIndex i) {
-		super(rate);
-		this.monthsToStart = monthsToStart;
-		iborIndex = new IborIndex(
-				"no-fix", // never take fixing into account
-				i.tenor(), i.fixingDays(), i.fixingCalendar(), null, i
-						.getConvention(), i.isEndOfMonth(), i.dayCounter(),
-				termStructureHandle);
-		initializeDates();
-	}
-	
-	public double impliedQuote()  {
-        if(termStructure == null) throw new IllegalStateException("term structure not set");
+    public FraRateHelper(final double rate, final int monthsToStart, final IborIndex i) {
+        super(rate);
+        this.monthsToStart = monthsToStart;
+        iborIndex = new IborIndex(
+                "no-fix", // never take fixing into account
+                i.tenor(), i.fixingDays(), i.fixingCalendar(), null, i
+                .getConvention(), i.isEndOfMonth(), i.dayCounter(),
+                termStructureHandle);
+        initializeDates();
+    }
+
+    @Override
+    public double impliedQuote()  {
+        assert termStructure != null : "term structure not set"; // TODO: message
         return iborIndex.fixing(fixingDate, true);
     }
 
-    public void setTermStructure(YieldTermStructure t) {
+    public void setTermStructure(final YieldTermStructure t) {
         // no need to register---the index is not lazy
         termStructureHandle.setLink(t);
         super.setTermStructure(t);
     }
 
+    @Override
     protected void initializeDates() {
-        Date settlement = iborIndex.fixingCalendar().advance(
-            evaluationDate, new Period(iborIndex.fixingDays(),TimeUnit.DAYS), BusinessDayConvention.FOLLOWING, false);
+        final Date settlement = iborIndex.fixingCalendar().advance(
+                evaluationDate, new Period(iborIndex.fixingDays(),TimeUnit.DAYS), BusinessDayConvention.FOLLOWING, false);
         earliestDate = iborIndex.fixingCalendar().advance(
-                               settlement,
-                               new Period(monthsToStart,TimeUnit.MONTHS),
-                               iborIndex.getConvention(),
-                               iborIndex.isEndOfMonth());
+                settlement,
+                new Period(monthsToStart,TimeUnit.MONTHS),
+                iborIndex.getConvention(),
+                iborIndex.isEndOfMonth());
         latestDate = iborIndex.maturityDate(earliestDate);
         fixingDate = iborIndex.fixingDate(earliestDate);
     }

@@ -23,6 +23,7 @@
 package org.jquantlib.indexes;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.currencies.Currency;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -42,73 +43,50 @@ import org.jquantlib.util.Observer;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class InterestRateIndex extends Index implements Observer {
 
-
-
-    // TODO: code review :: Please review this class! :S
-    // This is a time being implementation
-    protected static abstract class Currency {
-
-        protected Currency(final String currency) {
-            //TODO: Code review :: incomplete code
-            if (true)
-                throw new UnsupportedOperationException("Work in progress");
-        }
-
-    }
-
-    protected static class EURCurrency extends Currency {
-        public EURCurrency() {
-            super("EUR");
-        }
-    }
-
-
-
-
     private final String familyName;
-	private final Period tenor;
-	private final int fixingDays;
-	private final Calendar fixingCalendar;
-	private final Currency currency;
+    private final Period tenor;
+    private final int fixingDays;
+    private final Calendar fixingCalendar;
+    private final Currency currency;
 
-	// TODO: code review :: please verify against original QL/C++ code
-	protected DayCounter dayCounter;
+    // TODO: code review :: please verify against original QL/C++ code
+    protected DayCounter dayCounter;
 
 
-	public InterestRateIndex(
-	            final String familyName,
-	            final Period tenor,
-	            final /*@Natural*/ int fixingDays,
-	            final Calendar fixingCalendar,
-	            final Currency currency,
-	            final DayCounter dayCounter) {
+    public InterestRateIndex(
+            final String familyName,
+            final Period tenor,
+            final /*@Natural*/ int fixingDays,
+            final Calendar fixingCalendar,
+            final Currency currency,
+            final DayCounter dayCounter) {
 
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
 
-		this.familyName = familyName;
-		this.tenor = tenor;
-		this.fixingDays = fixingDays;
-		this.fixingCalendar = fixingCalendar;
-		this.currency = currency;
-		this.dayCounter = dayCounter;
+        this.familyName = familyName;
+        this.tenor = tenor;
+        this.fixingDays = fixingDays;
+        this.fixingCalendar = fixingCalendar;
+        this.currency = currency;
+        this.dayCounter = dayCounter;
 
-		assert fixingDays <= 2 : "wrong number of fixing days"; // TODO: message
+        assert fixingDays <= 2 : "wrong number of fixing days"; // TODO: message
 
-		// tenor.normalize(); //TODO :: code review
-		Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
-		IndexManager.getInstance().notifier(name()).addObserver(this);
-	}
+        // tenor.normalize(); //TODO :: code review
+        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
+        IndexManager.getInstance().notifier(name()).addObserver(this);
+    }
 
 
-	//adoption for 0.9.7 switched parameters...
-	public InterestRateIndex(
-	            final String familyName,
-	            final Period tenor,
-	            /*@Natural*/ final int settlementDays,
-	            final Currency currency,
-	            final Calendar calendar,
-	            final DayCounter fixedLegDayCounter) {
+    //adoption for 0.9.7 switched parameters...
+    public InterestRateIndex(
+            final String familyName,
+            final Period tenor,
+            /*@Natural*/ final int settlementDays,
+            final Currency currency,
+            final Calendar calendar,
+            final DayCounter fixedLegDayCounter) {
         this(familyName, tenor, settlementDays, calendar, currency, fixedLegDayCounter);
     }
 
@@ -120,112 +98,112 @@ public abstract class InterestRateIndex extends Index implements Observer {
     protected abstract double forecastFixing(Date fixingDate);
 
 
-	//
-	// public abstract methods
-	//
+    //
+    // public abstract methods
+    //
 
-	public abstract Handle<YieldTermStructure> termStructure();
+    public abstract Handle<YieldTermStructure> termStructure();
     public abstract Date maturityDate(Date valueDate);
 
 
-	//
-	// public methods
-	//
-
-	@Override
-	//FIXME: a detailed code review is needed here!
-	public double fixing(final Date fixingDate, final boolean forecastTodaysFixing) {
-	    // TODO: code review :: please verify against original QL/C++ code
-		assert isValidFixingDate(fixingDate) : "Fixing date is not valid";
-		final Date today = org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		final boolean enforceTodaysHistoricFixings = Configuration.getSystemConfiguration(null).isEnforcesTodaysHistoricFixings();
-		if (fixingDate.le(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
-			// must have been fixed
-			final Double pastFixing = IndexManager.getInstance().get(name()).find(fixingDate);
-			assert pastFixing != null : "Missing fixing for " + fixingDate;
-			return pastFixing;
-		}
-		if ((fixingDate.equals(today)) && !forecastTodaysFixing)
-            // might have been fixed
-			try {
-				final Double pastFixing = IndexManager.getInstance().get(name()).find(fixingDate);
-				if (pastFixing != null)
-					return pastFixing;
-				else
-					; // fall through and forecast
-			} catch (final Exception e) {
-				; // fall through and forecast
-			}
-		// forecast
-		return forecastFixing(fixingDate);
-	}
-
-	   @Override
-    public double fixing(final Date fixingDate) {
-	       return fixing(fixingDate, false);
-	    }
-
-	@Override
-	public String name() {
-		final StringBuilder builder = new StringBuilder(familyName);
-		if (tenor.units() == TimeUnit.DAYS) {
-			if (fixingDays == 0)
-				builder.append("ON");
-			else if (fixingDays == 2)
-				builder.append("SN");
-			else
-				builder.append("TN");
-		} else
-			builder.append(tenor.getShortFormat());
-		builder.append(dayCounter.name());
-		return builder.toString();
-	}
-
-	public Date fixingDate(final Date valueDate) {
-		final Date fixingDate = fixingCalendar().advance(valueDate, (fixingDays), TimeUnit.DAYS);
-		assert isValidFixingDate(fixingDate) : "fixing date is not valid"; // TODO: message
-		return fixingDate;
-	}
-
-	@Override
-	public boolean isValidFixingDate(final Date fixingDate) {
-		return fixingCalendar.isBusinessDay(fixingDate);
-	}
-
-	public String familyName() {
-		return familyName;
-	}
-
-	public Period tenor() {
-		return tenor;
-	}
-
-	public int fixingDays() {
-		return fixingDays;
-	}
+    //
+    // public methods
+    //
 
     @Override
-	public Calendar fixingCalendar() {
-		return fixingCalendar;
-	}
+    //FIXME: a detailed code review is needed here!
+    public double fixing(final Date fixingDate, final boolean forecastTodaysFixing) {
+        // TODO: code review :: please verify against original QL/C++ code
+        assert isValidFixingDate(fixingDate) : "Fixing date is not valid";
+        final Date today = org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        final boolean enforceTodaysHistoricFixings = Configuration.getSystemConfiguration(null).isEnforcesTodaysHistoricFixings();
+        if (fixingDate.le(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
+            // must have been fixed
+            final Double pastFixing = IndexManager.getInstance().get(name()).find(fixingDate);
+            assert pastFixing != null : "Missing fixing for " + fixingDate;
+            return pastFixing;
+        }
+        if ((fixingDate.equals(today)) && !forecastTodaysFixing)
+            // might have been fixed
+            try {
+                final Double pastFixing = IndexManager.getInstance().get(name()).find(fixingDate);
+                if (pastFixing != null)
+                    return pastFixing;
+                else
+                    ; // fall through and forecast
+            } catch (final Exception e) {
+                ; // fall through and forecast
+            }
+            // forecast
+            return forecastFixing(fixingDate);
+    }
 
-	public Currency currency() {
-		return currency;
-	}
+    @Override
+    public double fixing(final Date fixingDate) {
+        return fixing(fixingDate, false);
+    }
 
-	public DayCounter dayCounter() {
-		return dayCounter;
-	}
+    @Override
+    public String name() {
+        final StringBuilder builder = new StringBuilder(familyName);
+        if (tenor.units() == TimeUnit.DAYS) {
+            if (fixingDays == 0)
+                builder.append("ON");
+            else if (fixingDays == 2)
+                builder.append("SN");
+            else
+                builder.append("TN");
+        } else
+            builder.append(tenor.getShortFormat());
+        builder.append(dayCounter.name());
+        return builder.toString();
+    }
 
-	public Date valueDate(final Date fixingDate) {
-		assert isValidFixingDate(fixingDate) : "Fixing date is not valid"; // TODO: message
-		return fixingCalendar().advance(fixingDate, fixingDays, TimeUnit.DAYS);
-	}
+    public Date fixingDate(final Date valueDate) {
+        final Date fixingDate = fixingCalendar().advance(valueDate, (fixingDays), TimeUnit.DAYS);
+        assert isValidFixingDate(fixingDate) : "fixing date is not valid"; // TODO: message
+        return fixingDate;
+    }
 
-	@Override
-	public void update(final Observable o, final Object arg) {
-	    notifyObservers(arg);
-	}
+    @Override
+    public boolean isValidFixingDate(final Date fixingDate) {
+        return fixingCalendar.isBusinessDay(fixingDate);
+    }
+
+    public String familyName() {
+        return familyName;
+    }
+
+    public Period tenor() {
+        return tenor;
+    }
+
+    public int fixingDays() {
+        return fixingDays;
+    }
+
+    @Override
+    public Calendar fixingCalendar() {
+        return fixingCalendar;
+    }
+
+    public Currency currency() {
+        return currency;
+    }
+
+    public DayCounter dayCounter() {
+        return dayCounter;
+    }
+
+    public Date valueDate(final Date fixingDate) {
+        assert isValidFixingDate(fixingDate) : "Fixing date is not valid"; // TODO: message
+        return fixingCalendar().advance(fixingDate, fixingDays, TimeUnit.DAYS);
+    }
+
+    @Override
+    public void update(final Observable o, final Object arg) {
+        notifyObservers(arg);
+    }
 
 
 }

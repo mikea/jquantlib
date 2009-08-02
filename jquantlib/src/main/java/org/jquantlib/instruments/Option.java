@@ -39,13 +39,8 @@
 
 package org.jquantlib.instruments;
 
-import org.jquantlib.Configuration;
-import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.util.Date;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for Options

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
-import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.CostFunction;
@@ -34,12 +33,9 @@ import org.jquantlib.math.optimization.EndCriteria;
 import org.jquantlib.math.optimization.LevenbergMarquardt;
 import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.math.optimization.OptimizationMethod;
-import org.jquantlib.math.optimization.Problem;
 import org.jquantlib.math.optimization.Simplex;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.fail;
 
 public class OptimizerTest {
 

@@ -23,6 +23,7 @@
 package org.jquantlib.indexes;
 
 
+import org.jquantlib.currencies.Currency;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -41,57 +42,57 @@ import org.jquantlib.util.Date;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class IborIndex extends InterestRateIndex {
 
-	private final BusinessDayConvention convention;
-	private final Handle<YieldTermStructure> handle;
-	private final boolean endOfMonth;
+    private final BusinessDayConvention convention;
+    private final Handle<YieldTermStructure> handle;
+    private final boolean endOfMonth;
 
-	public IborIndex(
-    	        final String familyName,
-    			final Period tenor,
-    			final /*@Natural*/ int fixingDays,
-    			final Calendar fixingCalendar,
-    			final Currency currency,
-    			final BusinessDayConvention convention,
-    			final boolean endOfMonth,
-    			final DayCounter dayCounter,
-    			final Handle<YieldTermStructure> handle) {
-		super(familyName, tenor, fixingDays, fixingCalendar, currency, dayCounter);
-		this.convention = convention;
-		this.handle = handle;
-		this.endOfMonth = endOfMonth;
-		if (handle != null)
+    public IborIndex(
+            final String familyName,
+            final Period tenor,
+            final /*@Natural*/ int fixingDays,
+            final Calendar fixingCalendar,
+            final Currency currency,
+            final BusinessDayConvention convention,
+            final boolean endOfMonth,
+            final DayCounter dayCounter,
+            final Handle<YieldTermStructure> handle) {
+        super(familyName, tenor, fixingDays, fixingCalendar, currency, dayCounter);
+        this.convention = convention;
+        this.handle = handle;
+        this.endOfMonth = endOfMonth;
+        if (handle != null)
             handle.getLink().addObserver(this);
-	}
+    }
 
-	public IborIndex(
-    	        final String familyName,
-    	        final Period tenor,
-    	        final /*@Natural*/ int fixingDays,
-    			final Calendar fixingCalendar,
-    			final Currency currency,
-    			final BusinessDayConvention convention,
-    			final boolean endOfMonth,
-    			final DayCounter dayCounter) {
-		super(familyName, tenor, fixingDays, fixingCalendar, currency, dayCounter);
-		this.convention = convention;
+    public IborIndex(
+            final String familyName,
+            final Period tenor,
+            final /*@Natural*/ int fixingDays,
+            final Calendar fixingCalendar,
+            final Currency currency,
+            final BusinessDayConvention convention,
+            final boolean endOfMonth,
+            final DayCounter dayCounter) {
+        super(familyName, tenor, fixingDays, fixingCalendar, currency, dayCounter);
+        this.convention = convention;
         this.handle = null;
-		this.endOfMonth = endOfMonth;
-	}
+        this.endOfMonth = endOfMonth;
+    }
 
 
-	public IborIndex clone(final Handle<YieldTermStructure> handle) {
-	    final IborIndex clone = new IborIndex(
-	            this.familyName(),
-	            this.tenor(),
-	            this.fixingDays(),
-	            this.fixingCalendar(),
-	            this.currency(),
-	            this.convention,
-	            this.endOfMonth,
-	            this.dayCounter,
-	            handle);
-	    return clone;
-	}
+    public IborIndex clone(final Handle<YieldTermStructure> handle) {
+        final IborIndex clone = new IborIndex(
+                this.familyName(),
+                this.tenor(),
+                this.fixingDays(),
+                this.fixingCalendar(),
+                this.currency(),
+                this.convention,
+                this.endOfMonth,
+                this.dayCounter,
+                handle);
+        return clone;
+    }
 
 
 
@@ -134,49 +135,49 @@ public class IborIndex extends InterestRateIndex {
 
 
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.jquantlib.indexes.InterestRateIndex#forecastFixing(org.jquantlib.util.Date)
-	 */
-	@Override
-	protected double forecastFixing(final Date fixingDate) {
-	    // TODO: code review :: please verify against original QL/C++ code
-		assert handle.empty() : "no forecasting term structure set to " + name(); // TODO: message
-		final Date fixingValueDate = valueDate(fixingDate);
-		final Date endValueDate = maturityDate(fixingValueDate);
-		final double fixingDiscount = handle.getLink().discount(fixingValueDate);
-		final double endDiscount = handle.getLink().discount(endValueDate);
-		final double fixingPeriod = dayCounter().yearFraction(fixingValueDate, endValueDate);
-		return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jquantlib.indexes.InterestRateIndex#forecastFixing(org.jquantlib.util.Date)
+     */
+    @Override
+    protected double forecastFixing(final Date fixingDate) {
+        // TODO: code review :: please verify against original QL/C++ code
+        assert handle.empty() : "no forecasting term structure set to " + name(); // TODO: message
+        final Date fixingValueDate = valueDate(fixingDate);
+        final Date endValueDate = maturityDate(fixingValueDate);
+        final double fixingDiscount = handle.getLink().discount(fixingValueDate);
+        final double endDiscount = handle.getLink().discount(endValueDate);
+        final double fixingPeriod = dayCounter().yearFraction(fixingValueDate, endValueDate);
+        return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.jquantlib.indexes.InterestRateIndex#getTermStructure()
-	 */
-	@Override
-	public Handle<YieldTermStructure> termStructure() {
-		return handle;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jquantlib.indexes.InterestRateIndex#getTermStructure()
+     */
+    @Override
+    public Handle<YieldTermStructure> termStructure() {
+        return handle;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.jquantlib.indexes.InterestRateIndex#maturityDate(org.jquantlib.util.Date)
-	 */
-	@Override
-	public Date maturityDate(final Date valueDate) {
-		return fixingCalendar().advance(valueDate, tenor(), convention, endOfMonth);
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jquantlib.indexes.InterestRateIndex#maturityDate(org.jquantlib.util.Date)
+     */
+    @Override
+    public Date maturityDate(final Date valueDate) {
+        return fixingCalendar().advance(valueDate, tenor(), convention, endOfMonth);
+    }
 
-	public BusinessDayConvention getConvention() {
-		return convention;
-	}
+    public BusinessDayConvention getConvention() {
+        return convention;
+    }
 
-	public boolean isEndOfMonth() {
-		return endOfMonth;
-	}
+    public boolean isEndOfMonth() {
+        return endOfMonth;
+    }
 
 }

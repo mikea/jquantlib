@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -66,161 +66,156 @@ import org.jquantlib.util.Visitor;
 // TODO: check time extrapolation
 public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
-	public enum Extrapolation {
-		ConstantExtrapolation, InterpolatorDefaultExtrapolation
-	};
+    public enum Extrapolation {
+        ConstantExtrapolation, InterpolatorDefaultExtrapolation
+    };
 
 
-	//
-	// private fields
-	//
-	
-	private DayCounter dayCounter;
-	private Date maxDate;
-	private /* @Time */ Array times;
-	private /* @Price */ Array strikes;
-	private /* @Variance */ Matrix variances;
-	private Interpolation2D varianceSurface;
-	private Extrapolation lowerExtrapolation;
-	private Extrapolation upperExtrapolation;
-	private Interpolator2D factory;
+    //
+    // private fields
+    //
 
-	
-	//
-	// public constructors
-	//
-	
-	public BlackVarianceSurface(final Date referenceDate, final Date[] dates, 
-	        final/* @Price */ Array strikes, final/* @Volatility */ Matrix blackVolMatrix, final DayCounter dayCounter) {
-	    
-		this(referenceDate, dates, strikes, blackVolMatrix, dayCounter, 
-		        Extrapolation.InterpolatorDefaultExtrapolation,
-				Extrapolation.InterpolatorDefaultExtrapolation);
-	}
-
-	public BlackVarianceSurface(final Date referenceDate, final Date[] dates, 
-	        final/* @Price */ Array strikes, final/* @Volatility */ Matrix blackVolMatrix, final DayCounter dayCounter, 
-			final Extrapolation lowerExtrapolation, final Extrapolation upperExtrapolation) {
-	    
-		super(referenceDate);
-		this.dayCounter = dayCounter;
-		this.maxDate = dates[dates.length-1]; // TODO: code review: index seems to be wrong
-		// TODO: code review :: use of clone()
-		this.strikes = strikes.clone();
-		this.lowerExtrapolation = lowerExtrapolation;
-		this.upperExtrapolation = upperExtrapolation;
-
-		// TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-		if ((dates.length != blackVolMatrix.cols))
-			throw new IllegalArgumentException("mismatch between date vector and vol matrix colums");
-		if ((strikes.length != blackVolMatrix.rows))
-			throw new IllegalArgumentException("mismatch between money-strike vector and vol matrix rows");
-		if ((dates[0].le(referenceDate)))
-			throw new IllegalArgumentException("cannot have dates[0] <= referenceDate");
-
-		this.times = new Array(dates.length+1); // TODO: verify if length is correct
-		this.times.set(0, 0.0);
-		
-		this.variances = new Matrix(strikes.length, dates.length+1); // TODO: verify if length is correct
-		this.variances.fill(0.0);
-		
-		this.strikes = new Array(strikes.length+1); // TODO: verify if length is correct
-		this.strikes.set(0, 0.0);
-		for(int i = 1; i < strikes.length+1; i++){
-			this.strikes.set(i, strikes.get(i-1));
-		}
-		
-		for (int j = 1; j <= blackVolMatrix.cols; j++) {
-			times.set(j, timeFromReference(dates[j-1]));
-			if (!(times.get(j) > times.get(j-1)))
-				throw new IllegalArgumentException("dates must be sorted unique!");
-			for (int i = 0; i < blackVolMatrix.rows; i++) {
-			    double elem = blackVolMatrix.get(i, j-1);
-			    double ijvar = times.get(j) * elem * elem;
-				variances.set(i, j, ijvar); 
-				if (!(ijvar >= variances.get(i, j-1)))
-					throw new IllegalArgumentException("variance must be non-decreasing");
-			}
-		}
-		// default: bilinear interpolation
-		factory = BilinearInterpolation.getInterpolator();
-	}
+    private final DayCounter dayCounter;
+    private final Date maxDate;
+    private final /* @Time */ Array times;
+    private /* @Price */ Array strikes;
+    private final /* @Variance */ Matrix variances;
+    private Interpolation2D varianceSurface;
+    private final Extrapolation lowerExtrapolation;
+    private final Extrapolation upperExtrapolation;
+    private final Interpolator2D factory;
 
 
-	//
-	// public methods
-	//
-	
-	public void setInterpolation(final Interpolator i) {
+    //
+    // public constructors
+    //
+
+    public BlackVarianceSurface(final Date referenceDate, final Date[] dates,
+            final/* @Price */ Array strikes, final/* @Volatility */ Matrix blackVolMatrix, final DayCounter dayCounter) {
+
+        this(referenceDate, dates, strikes, blackVolMatrix, dayCounter,
+                Extrapolation.InterpolatorDefaultExtrapolation,
+                Extrapolation.InterpolatorDefaultExtrapolation);
+    }
+
+    public BlackVarianceSurface(
+            final Date referenceDate,
+            final Date[] dates,
+            final/* @Price */ Array strikes,
+            final/* @Volatility */ Matrix blackVolMatrix,
+            final DayCounter dayCounter,
+            final Extrapolation lowerExtrapolation,
+            final Extrapolation upperExtrapolation) {
+
+        super(referenceDate);
+        assert dates.length == blackVolMatrix.cols : "mismatch between date vector and vol matrix colums";
+        assert strikes.length == blackVolMatrix.rows : "mismatch between money-strike vector and vol matrix rows";
+        assert dates[0].gt(referenceDate) : "cannot have dates[0] <= referenceDate";
+
+        this.dayCounter = dayCounter;
+        this.maxDate = dates[dates.length-1]; // TODO: code review: index seems to be wrong
+        // TODO: code review :: use of clone()
+        this.strikes = strikes.clone();
+        this.lowerExtrapolation = lowerExtrapolation;
+        this.upperExtrapolation = upperExtrapolation;
+
+
+        this.times = new Array(dates.length+1); // TODO: verify if length is correct
+        this.variances = new Matrix(strikes.length, dates.length+1); // TODO: verify if length is correct
+        this.strikes = new Array(strikes.length+1); // TODO: verify if length is correct
+
+        for(int i = 1; i < strikes.length+1; i++)
+            this.strikes.set(i, strikes.get(i-1));
+
+        for (int j = 1; j <= blackVolMatrix.cols; j++) {
+            times.set(j, timeFromReference(dates[j-1]));
+            if (!(times.get(j) > times.get(j-1)))
+                throw new AssertionError("dates must be sorted unique!");
+            for (int i = 0; i < blackVolMatrix.rows; i++) {
+                final double elem = blackVolMatrix.get(i, j-1);
+                final double ijvar = times.get(j) * elem * elem;
+                variances.set(i, j, ijvar);
+                assert ijvar >= variances.get(i, j-1) : "variance must be non-decreasing";
+            }
+        }
+        // default: bilinear interpolation
+        factory = BilinearInterpolation.getInterpolator();
+    }
+
+
+    //
+    // public methods
+    //
+
+    public void setInterpolation(final Interpolator i) {
         varianceSurface = factory.interpolate(times, strikes, variances);
         varianceSurface.enableExtrapolation();
         varianceSurface.reload();
         notifyObservers();
     }
 
-	
-	//
-	// Overrides TermStructure
-	//
-	
-	@Override
-	public final DayCounter dayCounter() {
-		return dayCounter;
-	}
+
+    //
+    // Overrides TermStructure
+    //
 
     @Override
-	public final Date maxDate() {
-		return maxDate;
-	}
+    public final DayCounter dayCounter() {
+        return dayCounter;
+    }
+
+    @Override
+    public final Date maxDate() {
+        return maxDate;
+    }
 
 
     //
     // Overrides BlackVolTermStructure
     //
-    
-    @Override
-	public final /* @Price */ double minStrike() {
-		return strikes.first();
-	}
 
     @Override
-	public final /* @Price */ double maxStrike() {
-		return strikes.last();
-	}
+    public final /* @Price */ double minStrike() {
+        return strikes.first();
+    }
 
     @Override
-	protected final/* @Variance */double blackVarianceImpl(/* @Time */double t, /* @Price */double strike) /* @ReadOnly */{
+    public final /* @Price */ double maxStrike() {
+        return strikes.last();
+    }
 
-		if (t == 0.0)
-			return 0.0;
+    @Override
+    protected final/* @Variance */double blackVarianceImpl(/* @Time */final double t, /* @Price */double strike) /* @ReadOnly */{
 
-		// enforce constant extrapolation when required
-		if (strike < strikes.first() && lowerExtrapolation == Extrapolation.ConstantExtrapolation) strike = strikes.first();
-		if (strike > strikes.last()  && upperExtrapolation == Extrapolation.ConstantExtrapolation) strike = strikes.last();
+        if (t == 0.0)
+            return 0.0;
 
-		if (t <= times.last())
-			return varianceSurface.op(t, strike);
-		else {
-		    // TODO: code review :: please verify against original QL/C++ code
-			// t>times_.back() || extrapolate
-			/* @Time */double lastTime = times.last();
-			return varianceSurface.op(lastTime, strike) * t / lastTime;
-		}
-	}
+        // enforce constant extrapolation when required
+        if (strike < strikes.first() && lowerExtrapolation == Extrapolation.ConstantExtrapolation) strike = strikes.first();
+        if (strike > strikes.last()  && upperExtrapolation == Extrapolation.ConstantExtrapolation) strike = strikes.last();
 
-    
-	//
-	// implements TypedVisitable
-	//
-	
-	@Override
-	public void accept(final TypedVisitor<TermStructure> v) {
-		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
-	}
+        if (t <= times.last())
+            return varianceSurface.op(t, strike);
+        else {
+            // TODO: code review :: please verify against original QL/C++ code
+            // t>times_.back() || extrapolate
+            /* @Time */final double lastTime = times.last();
+            return varianceSurface.op(lastTime, strike) * t / lastTime;
+        }
+    }
+
+
+    //
+    // implements TypedVisitable
+    //
+
+    @Override
+    public void accept(final TypedVisitor<TermStructure> v) {
+        final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null)
+            v1.visit(this);
+        else
+            super.accept(v);
+    }
 
 }

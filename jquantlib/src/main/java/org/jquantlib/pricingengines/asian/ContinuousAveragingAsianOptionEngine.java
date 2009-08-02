@@ -42,7 +42,6 @@ package org.jquantlib.pricingengines.asian;
 
 import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.arguments.ContinuousAveragingAsianOptionArguments;
-import org.jquantlib.pricingengines.arguments.DiscreteAveragingAsianOptionArguments;
 import org.jquantlib.pricingengines.results.OneAssetOptionResults;
 
 /**

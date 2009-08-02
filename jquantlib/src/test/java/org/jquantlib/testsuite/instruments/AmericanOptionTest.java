@@ -103,8 +103,7 @@ public class AmericanOptionTest {
     public AmericanOptionTest() {
         logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        //XXX this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
-        this.today = settings.getEvaluationDate();
+        this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
     }
 
     @Test
@@ -152,12 +151,11 @@ public class AmericanOptionTest {
             final double /* @Real */calculated = option.getNPV();
             final double /* @Real */error = Math.abs(calculated - value.result);
 
-            if (error > tolerance) {
+            if (error > tolerance)
                 reportFailure(
                         "value", payoff, exercise,
                         value.s, value.q, value.r, today, value.v,
                         value.result, calculated, error, tolerance);
-            }
         }
 
     }
@@ -242,12 +240,11 @@ public class AmericanOptionTest {
             final double /* @Real */calculated = option.getNPV();
             final double /* @Real */error = Math.abs(calculated - value.result);
 
-            if (error > tolerance) {
+            if (error > tolerance)
                 reportFailure(
                         "value", payoff, exercise,
                         value.s, value.q, value.r, today, value.v,
                         value.result, calculated, error, tolerance);
-            }
         }
     }
 
@@ -363,12 +360,11 @@ public class AmericanOptionTest {
             final double calculated = option.getNPV();
             final double error = Math.abs(calculated - juValue.result);
 
-            if (error > tolerance) {
+            if (error > tolerance)
                 reportFailure(
                         "value", payoff, exercise,
                         juValue.s, juValue.q, juValue.r, today, juValue.v,
                         juValue.result, calculated, error, tolerance);
-            }
         }
     }
 
@@ -483,12 +479,11 @@ public class AmericanOptionTest {
             final double calculated = option.getNPV();
             final double error = Math.abs(calculated - juValue.result);
 
-            if (error > tolerance) {
+            if (error > tolerance)
                 reportFailure(
                         "value", payoff, exercise,
                         juValue.s, juValue.q, juValue.r, today, juValue.v,
                         juValue.result, calculated, error, tolerance);
-            }
 
         }
     }
@@ -534,8 +529,8 @@ public class AmericanOptionTest {
         final SimpleQuote vol = new SimpleQuote(0.0);
         final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
-        for (final Type type : types) {
-            for (final double strike : strikes) {
+        for (final Type type : types)
+            for (final double strike : strikes)
                 for (final int year : years) {
 
                     final Date exDate = today.getDateAfter(new Period(year, TimeUnit.YEARS));
@@ -558,9 +553,9 @@ public class AmericanOptionTest {
                     }
                     final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
-                    for (final double u : underlyings) {
-                        for (final double q : qRates) {
-                            for (final double r : rRates) {
+                    for (final double u : underlyings)
+                        for (final double q : qRates)
+                            for (final double r : rRates)
                                 for (final double v : vols) {
                                     spot.setValue(u);
                                     qRate.setValue(q);
@@ -601,21 +596,15 @@ public class AmericanOptionTest {
                                             final double calcl = calculated.get(greek.getKey());
                                             final double tol = tolerance.get(greek.getKey());
                                             final double error = Utilities.relativeError(expct, calcl, u);
-                                            if (error > tol) {
+                                            if (error > tol)
                                                 reportFailure(
                                                         greek.getKey(), payoff, exercise,
                                                         u, q, r, today, v,
                                                         expct, calcl, error, tol);
-                                            }
                                         }
                                     }
                                 }
-                            }
-                        }
-                    }
                 }
-            }
-        }
     }
 
     private void reportFailure(

@@ -1,7 +1,5 @@
 package org.jquantlib.testsuite.math.randomnumbers;
 
-import org.jquantlib.math.optimization.NoConstraint;
-import org.jquantlib.math.randomnumbers.PseudoRandom;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

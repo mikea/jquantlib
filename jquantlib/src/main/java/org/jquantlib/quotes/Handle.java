@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.quotes;
 
@@ -63,209 +63,206 @@ import org.jquantlib.util.WeakReferenceObservable;
 
 public class Handle<T extends Observable> implements Observable {
 
-	protected Link link;
+    protected Link link;
 
-    public Handle(Class<T> klass) {
+    public Handle(final Class<T> klass) {
         this.link = new Link(null, true);
     }
-    
+
     public Handle(final T observable) {
         this.link = new Link(observable, true);
     }
-    
-    public Handle(final T observable, boolean registerAsObserver) {
-    	this.link = new Link(observable, registerAsObserver);
+
+    public Handle(final T observable, final boolean registerAsObserver) {
+        this.link = new Link(observable, registerAsObserver);
     }
-    
+
     public Handle(final Handle<T> another) {
-    	this.link = another.link;
+        this.link = another.link;
     }
-    
-	public final boolean empty() /* @ReadOnly */ {
-		return link.isEmpty();
-	}
+
+    public final boolean empty() /* @ReadOnly */ {
+        return link.isEmpty();
+    }
 
     public final T getLink() {
-    	return link.getLink();
+        return link.getLink();
     }
-    
+
     public void setLink(final T observable) {
-    	this.setLink(observable, true);
+        this.setLink(observable, true);
     }
-    
-    public void setLink(final T observable, boolean registerAsObserver) {
-    	link.setLink(observable, registerAsObserver);
+
+    public void setLink(final T observable, final boolean registerAsObserver) {
+        link.setLink(observable, registerAsObserver);
     }
-    
 
-	//
-	// implements Observable interface
-	//
 
-    private Observable delegatedObservable = new WeakReferenceObservable(this);
-	
-    @Override
-    public final void addObserver(Observer observer) {
-    	delegatedObservable.addObserver(observer);
-	}
+    //
+    // implements Observable interface
+    //
+
+    private final Observable delegatedObservable = new WeakReferenceObservable(this);
 
     @Override
-	public final int countObservers() {
-		return delegatedObservable.countObservers();
-	}
+    public final void addObserver(final Observer observer) {
+        delegatedObservable.addObserver(observer);
+    }
 
     @Override
-	public final void deleteObserver(Observer observer) {
-		delegatedObservable.deleteObserver(observer);
-	}
+    public final int countObservers() {
+        return delegatedObservable.countObservers();
+    }
 
     @Override
-	public final void notifyObservers() {
-		delegatedObservable.notifyObservers();
-	}
+    public final void deleteObserver(final Observer observer) {
+        delegatedObservable.deleteObserver(observer);
+    }
 
     @Override
-	public final void notifyObservers(Object arg) {
-		delegatedObservable.notifyObservers(arg);
-	}
+    public final void notifyObservers() {
+        delegatedObservable.notifyObservers();
+    }
 
     @Override
-	public final void deleteObservers() {
-		delegatedObservable.deleteObservers();
-	}
+    public final void notifyObservers(final Object arg) {
+        delegatedObservable.notifyObservers(arg);
+    }
 
     @Override
-	public final List<Observer> getObservers() {
-		return delegatedObservable.getObservers();
-	}
+    public final void deleteObservers() {
+        delegatedObservable.deleteObservers();
+    }
+
+    @Override
+    public final List<Observer> getObservers() {
+        return delegatedObservable.getObservers();
+    }
 
 
-	//
+    //
     // inner classes
     //
-    
+
     private class Link implements Observable, Observer {
         // TODO: refactor messages?
-    	static private final String EMPTY_HANDLE = "empty Handle cannot be dereferenced";
-    	
-		//
-    	// private fields
-    	//
-    	
-    	private T observable	   = null;
-		private boolean isObserver = false;
-		
+        static private final String EMPTY_HANDLE = "empty Handle cannot be dereferenced";
 
-		//
-		// public constructors
-		//
-		
-//XXX
-//		public Link() {
-//			this(null);
-//		}
-//
-//		public Link(T observable) {
-//			setLink(observable);
-//		}
+        //
+        // private fields
+        //
 
-		public Link(T observable, boolean registerAsObserver) {
-			setLink(observable, registerAsObserver);
-		}
+        private T observable	   = null;
+        private boolean isObserver = false;
 
 
-		//
-		// public methods
-		//
-		
-		// TODO: code review :: please verify against original QL/C++ code
-		public final boolean isEmpty() /* @ReadOnly */ {
-			return (this.observable==null);
-		}
+        //
+        // public constructors
+        //
 
-		public final T getLink() /* @ReadOnly */ {
-			return this.observable;
-		}
+        //XXX
+        //		public Link() {
+        //			this(null);
+        //		}
+        //
+        //		public Link(T observable) {
+        //			setLink(observable);
+        //		}
 
-//XXX		
-//		public final void setLink(final T observable) {
-//			setLink(observable, true);
-//		}
-		
-		public final void setLink(final T observable, boolean registerAsObserver) {
-			// remove this from observable
-			if ((this.observable!=observable) || (this.isObserver!=registerAsObserver)) {
-				if (this.observable!=null && this.isObserver) {
-					this.observable.deleteObserver(this);
-				}
-				this.observable = observable;
-				this.isObserver = registerAsObserver;
-				if (this.observable!=null && this.isObserver) {
-					this.observable.addObserver(this);
-				}
-				if (this.observable!=null) {
-					this.observable.notifyObservers();
-				}
-			}
-		}
-		
-		
-		//
-		// Implements Observer
-		//
-		
-	    @Override
-		public final void update(Observable o, Object arg) {
-			delegatedObservable.notifyObservers(arg);
-		}
+        public Link(final T observable, final boolean registerAsObserver) {
+            setLink(observable, registerAsObserver);
+        }
 
-		
-		//
-		// implements Observable
-		//
-		
-	    @Override
-	    public final void addObserver(Observer observer) {
-	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
-	    	observable.addObserver(observer);
-		}
 
-	    @Override
-		public final int countObservers() {
-	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
-			return observable.countObservers();
-		}
+        //
+        // public methods
+        //
 
-	    @Override
-		public final void deleteObserver(Observer observer) {
-	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
-			observable.deleteObserver(observer);
-		}
+        // TODO: code review :: please verify against original QL/C++ code
+        public final boolean isEmpty() /* @ReadOnly */ {
+            return (this.observable==null);
+        }
 
-	    @Override
-		public final void notifyObservers() {
-	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
-			observable.notifyObservers();
-		}
+        public final T getLink() /* @ReadOnly */ {
+            return this.observable;
+        }
 
-	    @Override
-		public final void notifyObservers(Object arg) {
-	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
-			observable.notifyObservers(arg);
-		}
+        //XXX
+        //		public final void setLink(final T observable) {
+        //			setLink(observable, true);
+        //		}
 
-	    @Override
-		public final void deleteObservers() {
-	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
-			observable.deleteObservers();
-		}
+        public final void setLink(final T observable, final boolean registerAsObserver) {
+            // remove this from observable
+            if ((this.observable!=observable) || (this.isObserver!=registerAsObserver)) {
+                if (this.observable!=null && this.isObserver)
+                    this.observable.deleteObserver(this);
+                this.observable = observable;
+                this.isObserver = registerAsObserver;
+                if (this.observable!=null && this.isObserver)
+                    this.observable.addObserver(this);
+                if (this.observable!=null)
+                    this.observable.notifyObservers();
+            }
+        }
 
-	    @Override
-		public final List<Observer> getObservers() {
-	    	if (observable==null) throw new IllegalStateException(EMPTY_HANDLE);
-			return observable.getObservers();
-		}
-		
-	}
-    
+
+        //
+        // Implements Observer
+        //
+
+        @Override
+        public final void update(final Observable o, final Object arg) {
+            delegatedObservable.notifyObservers(arg);
+        }
+
+
+        //
+        // implements Observable
+        //
+
+        @Override
+        public final void addObserver(final Observer observer) {
+            assert observable!=null : EMPTY_HANDLE;
+            observable.addObserver(observer);
+        }
+
+        @Override
+        public final int countObservers() {
+            assert observable!=null : EMPTY_HANDLE;
+            return observable.countObservers();
+        }
+
+        @Override
+        public final void deleteObserver(final Observer observer) {
+            assert observable!=null : EMPTY_HANDLE;
+            observable.deleteObserver(observer);
+        }
+
+        @Override
+        public final void notifyObservers() {
+            assert observable!=null : EMPTY_HANDLE;
+            observable.notifyObservers();
+        }
+
+        @Override
+        public final void notifyObservers(final Object arg) {
+            assert observable!=null : EMPTY_HANDLE;
+            observable.notifyObservers(arg);
+        }
+
+        @Override
+        public final void deleteObservers() {
+            assert observable!=null : EMPTY_HANDLE;
+            observable.deleteObservers();
+        }
+
+        @Override
+        public final List<Observer> getObservers() {
+            assert observable!=null : EMPTY_HANDLE;
+            return observable.getObservers();
+        }
+
+    }
+
 }

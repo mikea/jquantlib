@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -25,6 +25,7 @@ package org.jquantlib.termstructures.volatilities;
 import static org.jquantlib.math.Closeness.isClose;
 
 import org.jquantlib.lang.annotation.Rate;
+import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.math.Constants;
 
@@ -37,30 +38,31 @@ import org.jquantlib.math.Constants;
  */
 public class Sabr {
 
-	/**
-	 * Computes the Black equivalent volatility without validating parameters
-	 * 
-	 * @param strike
-	 * @param forward
-	 * @param expiryTime
-	 * @param alpha
-	 * @param beta
-	 * @param nu
-	 * @param rho
-	 * 
-	 * @return Black equivalent volatility
-	 * 
-	 * @see #validateSabrParameters(Real, Real, Real, Real)
-	 * @see #sabrVolatility(Rate, Rate, Time, Real, Real, Real, Real)
-	 */
-    public double unsafeSabrVolatility(double strike,
-            double forward,
-            double expiryTime,
-            double alpha,
-            double beta,
-            double nu,
-            double rho) {
-    
+    /**
+     * Computes the Black equivalent volatility without validating parameters
+     * 
+     * @param strike
+     * @param forward
+     * @param expiryTime
+     * @param alpha
+     * @param beta
+     * @param nu
+     * @param rho
+     * 
+     * @return Black equivalent volatility
+     * 
+     * @see #validateSabrParameters(Real, Real, Real, Real)
+     * @see #sabrVolatility(Rate, Rate, Time, Real, Real, Real, Real)
+     */
+    public double unsafeSabrVolatility(
+            final double strike,
+            final double forward,
+            final double expiryTime,
+            final double alpha,
+            final double beta,
+            final double nu,
+            final double rho) {
+
         final double oneMinusBeta = 1.0-beta;
         final double A = Math.pow(forward*strike, oneMinusBeta);
         final double sqrtA= Math.sqrt(A);
@@ -77,27 +79,26 @@ public class Sabr {
         final double tmp = (Math.sqrt(B)+z-rho)/(1.0-rho);
         final double xx = Math.log(tmp);
         final double D = sqrtA*(1.0+C/24.0+C*C/1920.0);
-        final double d = 1.0 + expiryTime *
-            (oneMinusBeta*oneMinusBeta*alpha*alpha/(24.0*A)
-                                + 0.25*rho*beta*nu*alpha/sqrtA
-                                    +(2.0-3.0*rho*rho)*(nu*nu/24.0));
+        final double d = 1.0 + expiryTime * (oneMinusBeta*oneMinusBeta*alpha*alpha/(24.0*A)
+                + 0.25*rho*beta*nu*alpha/sqrtA
+                +(2.0-3.0*rho*rho)*(nu*nu/24.0));
 
         double multiplier;
         // computations become precise enough if the square of z worth
         // slightly more than the precision machine (hence the m)
         final double m = 10;
-        if (Math.abs(z*z)>Constants.QL_EPSILON * m) 
+        if (Math.abs(z*z)>Constants.QL_EPSILON * m)
             multiplier = z/xx;
         else {
-            double talpha = (0.5-rho*rho)/(1.0-rho);
-            double tbeta = alpha - .5;
-            double tgamma = rho/(1-rho);
+            final double talpha = (0.5-rho*rho)/(1.0-rho);
+            final double tbeta = alpha - .5;
+            final double tgamma = rho/(1-rho);
             multiplier = 1.0 - beta*z + (tgamma - talpha + tbeta*tbeta*.5)*z*z;
         }
         return (alpha/D)*multiplier*d;
 
     }
-    
+
     /**
      * checks that the parameters are valid; specifically,
      * <ol>
@@ -111,35 +112,24 @@ public class Sabr {
      * @param nu
      * @param rho
      */
-    public void validateSabrParameters(double alpha,
-            double beta,
-            double nu,
-            double rho) {
-    	//FIXME don't spent time constructing string until the error is real...
-    	if (!(alpha>0.0)){
-    		throw new ArithmeticException("alpha must be positive: "
-    							+ alpha + " not allowed");
-    	}
-
-    	if (!(beta>=0.0 && beta<=1.0)){
-    		throw new ArithmeticException("beta must be in (0.0, 1.0): "
-                    + beta + " not allowed");
-    	}
-    	if (!(nu>=0.0)){
-    		throw new ArithmeticException("nu must be non negative: "
-        			+ nu + " not allowed");
-    	}
-    	if (!(rho*rho<1.0)){
-        	throw new ArithmeticException("rho square must be less than one: "
-                    + rho + " not allowed");
-    	}
+    public void validateSabrParameters(
+            final double alpha,
+            final double beta,
+            final double nu,
+            final double rho) {
+        //FIXME don't spent time constructing string until the error is real...
+        // TODO: code review :: please verify against original QL/C++ code
+        assert alpha>0.0 : "alpha must be positive"; // TODO: message
+        assert beta>=0.0 && beta<=1.0 : "beta must be in (0.0, 1.0)"; // TODO: message
+        assert nu>=0.0 : "nu must be non negative"; // TODO: message
+        assert rho*rho<1.0 : "rho square must be less than one"; // TODO: message
     }
 
     /**
      * 
-     * Computes the S.A.B.R. volatility 
+     * Computes the S.A.B.R. volatility
      * <p>
-     * Checks S.A.B.R. model parameters using {@code #validateSabrParameters(Real, Real, Real, Real)} 
+     * Checks S.A.B.R. model parameters using {@code #validateSabrParameters(Real, Real, Real, Real)}
      * <p>
      * Checks the terms and conditions;
      * <ol>
@@ -159,32 +149,20 @@ public class Sabr {
      * @see #unsafeSabrVolatility(Rate, Rate, Time, Real, Real, Real, Real)
      * @see #validateSabrParameters(Real, Real, Real, Real)
      */
-    public double sabrVolatility(double strike,
-            double forward,
-            double expiryTime,
-            double alpha,
-            double beta,
-            double nu,
-            double rho) {
-    	if (!(strike>0.0)){
-    		throw new ArithmeticException("strike must be positive: "
-    					+ strike + " not allowed");
-    	}
-    	
-    	if (!(forward>0.0)){
-    		throw new ArithmeticException("forward must be positive: "
-                    + forward + " not allowed");
-    	}
-    	
-    	if (!(expiryTime>=0.0)){
-    		throw new ArithmeticException("expiry time must be non-negative: "
-                    + expiryTime + " not allowed");
-    	}
-
-    	validateSabrParameters(alpha, beta, nu, rho);
-    	return unsafeSabrVolatility(strike, forward, expiryTime,
-                        alpha, beta, nu, rho);
+    public double sabrVolatility(
+            final double strike,
+            final double forward,
+            final double expiryTime,
+            final double alpha,
+            final double beta,
+            final double nu,
+            final double rho) {
+        assert strike>0.0 : "strike must be positive"; // TODO: message
+        assert forward>0.0 : "forward must be positive"; // TODO: message
+        assert expiryTime>=0.0 : "expiry time must be non-negative"; // TODO: message
+        validateSabrParameters(alpha, beta, nu, rho);
+        return unsafeSabrVolatility(strike, forward, expiryTime, alpha, beta, nu, rho);
     }
-    
+
 }
 

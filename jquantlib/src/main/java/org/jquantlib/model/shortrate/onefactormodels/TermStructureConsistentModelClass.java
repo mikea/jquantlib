@@ -24,6 +24,7 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.model.shortrate.onefactormodels;
 
 import java.util.List;
+
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.DefaultObservable;

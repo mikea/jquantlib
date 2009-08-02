@@ -45,8 +45,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jquantlib.Configuration;
-import org.jquantlib.Currency;
-import org.jquantlib.ExchangeRate;
 import org.jquantlib.currencies.America.PEHCurrency;
 import org.jquantlib.currencies.America.PEICurrency;
 import org.jquantlib.currencies.America.PENCurrency;

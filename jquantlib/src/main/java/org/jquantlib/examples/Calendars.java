@@ -20,19 +20,20 @@ When applicable, the original copyright notice follows this notice.
  */ 
 package org.jquantlib.examples; 
 
-import java.util.ArrayList; 
-import java.util.List; 
-import org.jquantlib.time.BusinessDayConvention; 
-import org.jquantlib.time.Calendar; 
-import org.jquantlib.time.Period; 
-import org.jquantlib.time.TimeUnit; 
-import org.jquantlib.time.calendars.JointCalendar; 
-import org.jquantlib.time.calendars.UnitedStates; 
-import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule; 
-import org.jquantlib.time.calendars.UnitedStates.Market; 
-import org.jquantlib.util.Date; 
-import org.jquantlib.util.DateFactory; 
-import org.jquantlib.util.StopClock; 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jquantlib.time.BusinessDayConvention;
+import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Period;
+import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.calendars.JointCalendar;
+import org.jquantlib.time.calendars.UnitedStates;
+import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule;
+import org.jquantlib.time.calendars.UnitedStates.Market;
+import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
+import org.jquantlib.util.StopClock;
 
 /** 
  * This class explores the functionalities provided by Calendar interface.

@@ -41,7 +41,7 @@
 
 package org.jquantlib.time;
 
-import java.util.List; //FIXME: performance
+import java.util.List;
 
 import org.jquantlib.util.Date;
 

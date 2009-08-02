@@ -20,7 +20,7 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib;
+package org.jquantlib.currencies;
 
 import org.jquantlib.math.Constants;
 import org.jquantlib.util.Pair;

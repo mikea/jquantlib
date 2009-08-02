@@ -44,8 +44,6 @@ import static java.lang.Math.abs;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.Business252;
 import org.jquantlib.daycounters.DayCounter;
@@ -57,6 +55,8 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test Day Counters

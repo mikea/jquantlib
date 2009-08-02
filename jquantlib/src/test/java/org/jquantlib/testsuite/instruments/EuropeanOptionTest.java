@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.testsuite.instruments;
 
@@ -60,6 +60,7 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.instruments.VanillaOption;
+import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.lang.annotation.NonNegative;
 import org.jquantlib.methods.lattices.AdditiveEQPBinomialTree;
 import org.jquantlib.methods.lattices.CoxRossRubinstein;
@@ -85,7 +86,6 @@ import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.time.Period;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -102,36 +102,35 @@ public class EuropeanOptionTest {
     private final static Logger logger = LoggerFactory.getLogger(EuropeanOptionTest.class);
 
     private final Settings settings;
-    private final Date today;      
-    
+    private final Date today;
+
     public EuropeanOptionTest() {
         logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-        
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         this.today = settings.getEvaluationDate();
     }
-    
-    
+
+
     private static class EuropeanOptionData {
-        private Option.Type type;            // option type
-        private /*@Price*/ double strike;    // option strike price
-        private double s;                    // spot // FIXME: any specific @annotation?
-        private /*@Price*/ double  q;        // dividend
-        private /*@Rate*/ double  r;         // risk-free rate
-        private /*@Time*/ double  t;         // time to maturity
-        private /*@Volatility*/ double v;    // volatility
-        private /*@Price*/ double result;    // expected result
-        private double tol;                  // tolerance // FIXME: any specific @annotation?
-        
+        private final Option.Type type;            // option type
+        private final /*@Price*/ double strike;    // option strike price
+        private final double s;                    // spot // FIXME: any specific @annotation?
+        private final /*@Price*/ double  q;        // dividend
+        private final /*@Rate*/ double  r;         // risk-free rate
+        private final /*@Time*/ double  t;         // time to maturity
+        private final /*@Volatility*/ double v;    // volatility
+        private final /*@Price*/ double result;    // expected result
+        private final double tol;                  // tolerance // FIXME: any specific @annotation?
+
         public EuropeanOptionData(
-                    Option.Type type, 
-                    /*@Price*/ double strike, 
-                    double s, /*@Price*/ double  q,
-                    /*@Rate*/ double  r,
-                    /*@Time*/ double  t,
-                    /*@Volatility*/ double v,
-                    /*@Price*/ double result,
-                    double tol) {
+                final Option.Type type,
+                /*@Price*/ final double strike,
+                final double s, /*@Price*/ final double  q,
+                /*@Rate*/ final double  r,
+                /*@Time*/ final double  t,
+                /*@Volatility*/ final double v,
+                /*@Price*/ final double result,
+                final double tol) {
             this.type = type;
             this.strike = strike;
             this.s = s;
@@ -143,8 +142,9 @@ public class EuropeanOptionTest {
             this.tol = tol;
         }
 
+        @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             sb.append('[');
             sb.append(type).append(", ");
             sb.append(strike).append(", ");
@@ -160,112 +160,112 @@ public class EuropeanOptionTest {
         }
     }
 
-    private enum EngineType { 
-                    Analytic,
-                    JR, CRR, EQP, TGEO, TIAN, LR, JOSHI,
-                    FiniteDifferences,
-                    Integral,
-                    PseudoMonteCarlo, QuasiMonteCarlo; }
+    private enum EngineType {
+        Analytic,
+        JR, CRR, EQP, TGEO, TIAN, LR, JOSHI,
+        FiniteDifferences,
+        Integral,
+        PseudoMonteCarlo, QuasiMonteCarlo; }
 
-    
-    
-    
+
+
+
     private VanillaOption makeOption(
-                            final StrikedTypePayoff payoff,
-                            final Exercise exercise,
-                            final Handle<SimpleQuote> u,
-                            final Handle<YieldTermStructure> q,
-                            final Handle<YieldTermStructure> r,
-                            final Handle<BlackVolTermStructure> vol,
-                            final EngineType engineType,
-                            final int binomialSteps,
-                            final int samples) {
+            final StrikedTypePayoff payoff,
+            final Exercise exercise,
+            final Handle<SimpleQuote> u,
+            final Handle<YieldTermStructure> q,
+            final Handle<YieldTermStructure> r,
+            final Handle<BlackVolTermStructure> vol,
+            final EngineType engineType,
+            final int binomialSteps,
+            final int samples) {
 
         PricingEngine engine = null;
-        GeneralizedBlackScholesProcess stochProcess = new BlackScholesMertonProcess(u, q, r, vol);
-        
+        final GeneralizedBlackScholesProcess stochProcess = new BlackScholesMertonProcess(u, q, r, vol);
+
         switch (engineType) {
-          case Analytic:
+        case Analytic:
             engine = new AnalyticEuropeanEngine();
             break;
-          case JR:
+        case JR:
             engine = new BinomialVanillaEngine<JarrowRudd>(binomialSteps) {};
             break;
-          case CRR:
+        case CRR:
             engine = new BinomialVanillaEngine<CoxRossRubinstein>(binomialSteps) {};
             break;
-          case EQP:
+        case EQP:
             engine = new BinomialVanillaEngine<AdditiveEQPBinomialTree>(binomialSteps) {};
             break;
-          case TGEO:
+        case TGEO:
             engine = new BinomialVanillaEngine<Trigeorgis>(binomialSteps) {};
             break;
-          case TIAN:
+        case TIAN:
             engine = new BinomialVanillaEngine<Tian>(binomialSteps) {};
             break;
-          case LR:
+        case LR:
             engine = new BinomialVanillaEngine<LeisenReimer>(binomialSteps) {};
             break;
-          case JOSHI:
+        case JOSHI:
             engine = new BinomialVanillaEngine<Joshi4>(binomialSteps) {};
             break;
-          case FiniteDifferences:
+        case FiniteDifferences:
             engine = new FDEuropeanEngine(stochProcess, binomialSteps,samples);
             break;
-          case Integral:
-              engine = new IntegralEngine();
-              break;
-//        case PseudoMonteCarlo:
-//          engine = MakeMCEuropeanEngine<PseudoRandom>().withSteps(1)
-//                                                       .withSamples(samples)
-//                                                       .withSeed(42);
-//          break;
-//        case QuasiMonteCarlo:
-//          engine = MakeMCEuropeanEngine<LowDiscrepancy>().withSteps(1)
-//                                                         .withSamples(samples);
-//          break;
-          default:
+        case Integral:
+            engine = new IntegralEngine();
+            break;
+            //        case PseudoMonteCarlo:
+            //          engine = MakeMCEuropeanEngine<PseudoRandom>().withSteps(1)
+            //                                                       .withSamples(samples)
+            //                                                       .withSeed(42);
+            //          break;
+            //        case QuasiMonteCarlo:
+            //          engine = MakeMCEuropeanEngine<LowDiscrepancy>().withSteps(1)
+            //                                                         .withSamples(samples);
+            //          break;
+        default:
             throw new UnsupportedOperationException("unknown engine type: "+engineType);
-        }      
+        }
 
         return new EuropeanOption(stochProcess, payoff, exercise, engine);
     }
 
-    
-    
-    
-//  std::string engineTypeToString(EngineType type) {
-//      switch (type) {
-//        case Analytic:
-//          return "analytic";
-//        case JR:
-//          return "Jarrow-Rudd";
-//        case CRR:
-//          return "Cox-Ross-Rubinstein";
-//        case EQP:
-//          return "EQP";
-//        case TGEO:
-//          return "Trigeorgis";
-//        case TIAN:
-//          return "Tian";
-//        case LR:
-//          return "LeisenReimer";
-//        case JOSHI:
-//          return "Joshi";
-//        case FiniteDifferences:
-//          return "FiniteDifferences";
-//      case Integral:
-//          return "Integral";
-//        case PseudoMonteCarlo:
-//          return "MonteCarlo";
-//        case QuasiMonteCarlo:
-//          return "Quasi-MonteCarlo";
-//        default:
-//          QL_FAIL("unknown engine type");
-//      }
-//  }
 
-    private int timeToDays(/*@Time*/ double t) {
+
+
+    //  std::string engineTypeToString(EngineType type) {
+    //      switch (type) {
+    //        case Analytic:
+    //          return "analytic";
+    //        case JR:
+    //          return "Jarrow-Rudd";
+    //        case CRR:
+    //          return "Cox-Ross-Rubinstein";
+    //        case EQP:
+    //          return "EQP";
+    //        case TGEO:
+    //          return "Trigeorgis";
+    //        case TIAN:
+    //          return "Tian";
+    //        case LR:
+    //          return "LeisenReimer";
+    //        case JOSHI:
+    //          return "Joshi";
+    //        case FiniteDifferences:
+    //          return "FiniteDifferences";
+    //      case Integral:
+    //          return "Integral";
+    //        case PseudoMonteCarlo:
+    //          return "MonteCarlo";
+    //        case QuasiMonteCarlo:
+    //          return "Quasi-MonteCarlo";
+    //        default:
+    //          QL_FAIL("unknown engine type");
+    //      }
+    //  }
+
+    private int timeToDays(/*@Time*/ final double t) {
         return (int) (t*360+0.5);
     }
 
@@ -278,93 +278,93 @@ public class EuropeanOptionTest {
         /**
          *  The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
          */
-        EuropeanOptionData values[] = new EuropeanOptionData[] {
-          // pag 2-8
-          //                              type,     strike,   spot,    q,    r,    t,  vol,   value,    tol
-          new EuropeanOptionData( Option.Type.CALL,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,   19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL,  19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL,   1.60,   1.56, 0.08, 0.06, 0.50, 0.12,  0.0291, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,   70.00,  75.00, 0.05, 0.10, 0.50, 0.35,  4.0870, 1.0e-4),
-          // pag 24
-          new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  0.0205, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  9.9413, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.25,  0.3150, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3556, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.35,  0.9474, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1381, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.15,  0.8069, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.5769, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.25,  2.7026, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 12.7857, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.35,  4.9329, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
-          new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.3086, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  9.9210, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  0.0408, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.25, 10.2155, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.25,  0.4551, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.35, 10.8479, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.35,  1.2376, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.15, 10.3192, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.15,  1.0646, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.25, 12.2149, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.25,  3.2734, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.35, 14.4452, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
-          new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.35,  5.7963, 1.0e-4),
-          // pag 27
-          new EuropeanOptionData( Option.Type.CALL,  40.00,  42.00, 0.08, 0.04, 0.75, 0.35,  5.0975, 1.0e-4)
+        final EuropeanOptionData values[] = new EuropeanOptionData[] {
+                // pag 2-8
+                //                              type,     strike,   spot,    q,    r,    t,  vol,   value,    tol
+                new EuropeanOptionData( Option.Type.CALL,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,   19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL,  19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL,   1.60,   1.56, 0.08, 0.06, 0.50, 0.12,  0.0291, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,   70.00,  75.00, 0.05, 0.10, 0.50, 0.35,  4.0870, 1.0e-4),
+                // pag 24
+                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  0.0205, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  9.9413, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.25,  0.3150, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3556, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.35,  0.9474, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1381, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.15,  0.8069, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.5769, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.25,  2.7026, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 12.7857, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.35,  4.9329, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
+                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.3086, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  9.9210, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  0.0408, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.25, 10.2155, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.25,  0.4551, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.35, 10.8479, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.35,  1.2376, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.15, 10.3192, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.15,  1.0646, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.25, 12.2149, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.25,  3.2734, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.35, 14.4452, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
+                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.35,  5.7963, 1.0e-4),
+                // pag 27
+                new EuropeanOptionData( Option.Type.CALL,  40.00,  42.00, 0.08, 0.04, 0.75, 0.35,  5.0975, 1.0e-4)
         };
 
-        DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = Actual360.getDayCounter();
 
-        Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
-        Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
-        Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
-        PricingEngine engine = new AnalyticEuropeanEngine();
+        final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
+        final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+        final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
+        final PricingEngine engine = new AnalyticEuropeanEngine();
 
-        StopClock clock = new StopClock();
+        final StopClock clock = new StopClock();
         clock.reset();
         clock.startClock();
 
         for (int i=0; i<values.length-1; i++) {
 
             logger.debug(values[i].toString());
-            
-            StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-            Date exDate = today.getDateAfter( timeToDays(values[i].t) );
-            Exercise exercise = new EuropeanExercise(exDate);
+
+            final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+            final Date exDate = today.getDateAfter( timeToDays(values[i].t) );
+            final Exercise exercise = new EuropeanExercise(exDate);
 
             spot. getLink().setValue(values[i].s);
             qRate.getLink().setValue(values[i].q);
             rRate.getLink().setValue(values[i].r);
             vol.  getLink().setValue(values[i].v);
 
-            StochasticProcess process = new BlackScholesMertonProcess(spot, qTS, rTS, volTS);
+            final StochasticProcess process = new BlackScholesMertonProcess(spot, qTS, rTS, volTS);
 
-            EuropeanOption option = new EuropeanOption(process, payoff, exercise, engine);
+            final EuropeanOption option = new EuropeanOption(process, payoff, exercise, engine);
 
-            double calculated = option.getNPV();
-            double error = Math.abs(calculated-values[i].result);
-            double tolerance = values[i].tol;
-            
-            StringBuilder sb = new StringBuilder();
+            final double calculated = option.getNPV();
+            final double error = Math.abs(calculated-values[i].result);
+            final double tolerance = values[i].tol;
+
+            final StringBuilder sb = new StringBuilder();
             sb.append("error ").append(error).append(" .gt. tolerance ").append(tolerance).append('\n');
             sb.append("    calculated ").append(calculated).append('\n');
             sb.append("    type ").append(values[i].type).append('\n');
@@ -376,37 +376,37 @@ public class EuropeanOptionTest {
             sb.append("    v ").append(values[i].v).append('\n');
             sb.append("    result ").append(values[i].result).append('\n');
             sb.append("    tol ").append(values[i].tol); // .append('\n');
-            
+
             if (error<=tolerance)
                 logger.info(" error="+error);
             else
-                fail(exercise + " " + payoff.optionType() + " option with " + payoff + " payoff:\n" 
-                + "    spot value:       " + values[i].s + "\n"
-                + "    strike:           " + payoff.strike() + "\n" 
-                + "    dividend yield:   " + values[i].q + "\n" 
-                + "    risk-free rate:   " + values[i].r + "\n" 
-                + "    reference date:   " + today + "\n" 
-                + "    maturity:         " + values[i].t + "\n" 
-                + "    volatility:       " + values[i].v + "\n\n" 
-                + "    expected:         " + values[i].result + "\n" 
-                + "    calculated:       " + calculated + "\n"
-                + "    error:            " + error + "\n" 
-                + "    tolerance:        " + tolerance);
+                fail(exercise + " " + payoff.optionType() + " option with " + payoff + " payoff:\n"
+                        + "    spot value:       " + values[i].s + "\n"
+                        + "    strike:           " + payoff.strike() + "\n"
+                        + "    dividend yield:   " + values[i].q + "\n"
+                        + "    risk-free rate:   " + values[i].r + "\n"
+                        + "    reference date:   " + today + "\n"
+                        + "    maturity:         " + values[i].t + "\n"
+                        + "    volatility:       " + values[i].v + "\n\n"
+                        + "    expected:         " + values[i].result + "\n"
+                        + "    calculated:       " + calculated + "\n"
+                        + "    error:            " + error + "\n"
+                        + "    tolerance:        " + tolerance);
         }
         clock.stopClock();
         clock.log();
     }
-    
-    @Test 
+
+    @Test
     public void testGreekValues(){
         logger.info("Testing European option greek values...");
-        
+
         //
         // The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag 11-16
         //
 
-        final EuropeanOptionData values[] = { 
-            //        type, strike,   spot,    q,    r,        t,  vol,  value delta
+        final EuropeanOptionData values[] = {
+                //        type, strike,   spot,    q,    r,        t,  vol,  value delta
                 new EuropeanOptionData(Option.Type.CALL, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36,  0.5946, 0),
                 new EuropeanOptionData(Option.Type.PUT,  100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -0.3566, 0),
                 new EuropeanOptionData(Option.Type.PUT,100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -4.8775, 0 ),
@@ -418,225 +418,212 @@ public class EuropeanOptionTest {
                 new EuropeanOptionData(Option.Type.PUT,  405.00, 430.00, 0.05, 0.07, 1.0/12.0, 0.20, -0.0855, 0),
                 new EuropeanOptionData(Option.Type.CALL,  75.00,  72.00, 0.00, 0.09, 1.000000, 0.19, 38.7325, 0),
                 new EuropeanOptionData(Option.Type.PUT,  490.00, 500.00, 0.05, 0.08, 0.250000, 0.15, 42.2254, 0)
-                };
-        
-           final DayCounter dc = Actual360.getDayCounter();
-           final Date today = DateFactory.getFactory().getTodaysDate();
+        };
 
-           final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-           final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-           final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
+        final DayCounter dc = Actual360.getDayCounter();
+        final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
 
-           final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-           final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
-           final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-           final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
-           final PricingEngine engine = new AnalyticEuropeanEngine();
-           final Handle<StochasticProcess> stochProcess = new Handle<StochasticProcess>(new BlackScholesMertonProcess(spot, qTS, rTS, volTS));
-           
-           StrikedTypePayoff payoff;
-           Date exDate;
-           Exercise exercise;
-           Handle<VanillaOption> option;
-           double calculated;
-           double tolerance = 1e-4;
-           double error;
-           
-           int i = -1;
-           
-           // testing delta 1
-           i++; 
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().delta();
-           error = Math.abs(calculated - values[i].result);
-           
-           if (error > tolerance) {
-                REPORT_FAILURE("delta", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                        values[i].result, calculated, error, tolerance);
-            }
-                      
-           //testing delta 2
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().delta();
-           error = Math.abs(calculated - values[i].result);
-           if(error>tolerance){
-               REPORT_FAILURE("delta", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-                     
-           //testing elasticity
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().elasticity();
-           error = Math.abs(Math.abs(calculated - values[i].result));
-           if(error>tolerance){
-               REPORT_FAILURE("elasticity", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-       
-           // testing gamma 1
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().gamma();
-           error = Math.abs(Math.abs(calculated - values[i].result));
-           if(error>tolerance){
-               REPORT_FAILURE("gamma", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-           
-           // testing gamma 2
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().gamma();
-           error = Math.abs(Math.abs(calculated - values[i].result));
-           if(error>tolerance){
-               REPORT_FAILURE("gamma", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-           
-           //testing vega 1
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().vega();
-           error = Math.abs(Math.abs(calculated - values[i].result));
-           if(error>tolerance){
-               REPORT_FAILURE("vega", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-           
-           //testing vega 2
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().vega();
-           error = Math.abs(Math.abs(calculated - values[i].result));
-           if(error>tolerance){
-               REPORT_FAILURE("vega", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-  
-           //testing theta
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().theta();
-           error = Math.abs(Math.abs(calculated - values[i].result));
-           if(error>tolerance){
-               REPORT_FAILURE("theta", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-           
-           
-           //testing theta per day
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().thetaPerDay();
-           error = Math.abs(Math.abs(calculated - values[i].result));
-           if(error>tolerance){
-               REPORT_FAILURE("theta per day", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-           
-           
-           //testing rho
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().rho();
-           error = Math.abs(Math.abs(calculated - values[i].result));
-           if(error>tolerance){
-               REPORT_FAILURE("rho", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-           
-           //testing dividend rho
-           i++;
-           payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
-           exDate = today.getDateAfter(timeToDays(values[i].t));
-           exercise = new EuropeanExercise(exDate);
-           spot.getLink().setValue(values[i].s);
-           qRate.getLink().setValue(values[i].q);
-           rRate.getLink().setValue(values[i].r);
-           vol.getLink().setValue(values[i].v);
-           option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
-           calculated = option.getLink().dividendRho();
-           error = Math.abs(Math.abs(calculated - values[i].result));
-           if(error>tolerance){
-               REPORT_FAILURE("dividend rho", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
-                       values[i].result, calculated, error, tolerance);
-           }
-        }
-    
-    
+        final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+        final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
+        final PricingEngine engine = new AnalyticEuropeanEngine();
+        final Handle<StochasticProcess> stochProcess = new Handle<StochasticProcess>(new BlackScholesMertonProcess(spot, qTS, rTS, volTS));
+
+        StrikedTypePayoff payoff;
+        Date exDate;
+        Exercise exercise;
+        Handle<VanillaOption> option;
+        double calculated;
+        final double tolerance = 1e-4;
+        double error;
+
+        int i = -1;
+
+        // testing delta 1
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().delta();
+        error = Math.abs(calculated - values[i].result);
+
+        if (error > tolerance)
+            REPORT_FAILURE("delta", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+        //testing delta 2
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().delta();
+        error = Math.abs(calculated - values[i].result);
+        if(error>tolerance)
+            REPORT_FAILURE("delta", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+        //testing elasticity
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().elasticity();
+        error = Math.abs(Math.abs(calculated - values[i].result));
+        if(error>tolerance)
+            REPORT_FAILURE("elasticity", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+        // testing gamma 1
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().gamma();
+        error = Math.abs(Math.abs(calculated - values[i].result));
+        if(error>tolerance)
+            REPORT_FAILURE("gamma", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+        // testing gamma 2
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().gamma();
+        error = Math.abs(Math.abs(calculated - values[i].result));
+        if(error>tolerance)
+            REPORT_FAILURE("gamma", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+        //testing vega 1
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().vega();
+        error = Math.abs(Math.abs(calculated - values[i].result));
+        if(error>tolerance)
+            REPORT_FAILURE("vega", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+        //testing vega 2
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().vega();
+        error = Math.abs(Math.abs(calculated - values[i].result));
+        if(error>tolerance)
+            REPORT_FAILURE("vega", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+        //testing theta
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().theta();
+        error = Math.abs(Math.abs(calculated - values[i].result));
+        if(error>tolerance)
+            REPORT_FAILURE("theta", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+
+        //testing theta per day
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().thetaPerDay();
+        error = Math.abs(Math.abs(calculated - values[i].result));
+        if(error>tolerance)
+            REPORT_FAILURE("theta per day", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+
+        //testing rho
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().rho();
+        error = Math.abs(Math.abs(calculated - values[i].result));
+        if(error>tolerance)
+            REPORT_FAILURE("rho", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+
+        //testing dividend rho
+        i++;
+        payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
+        exDate = today.getDateAfter(timeToDays(values[i].t));
+        exercise = new EuropeanExercise(exDate);
+        spot.getLink().setValue(values[i].s);
+        qRate.getLink().setValue(values[i].q);
+        rRate.getLink().setValue(values[i].r);
+        vol.getLink().setValue(values[i].v);
+        option = new Handle<VanillaOption>(new EuropeanOption(stochProcess.getLink(), payoff, exercise, engine));
+        calculated = option.getLink().dividendRho();
+        error = Math.abs(Math.abs(calculated - values[i].result));
+        if(error>tolerance)
+            REPORT_FAILURE("dividend rho", payoff, exercise, values[i].s, values[i].q, values[i].r, today, values[i].v,
+                    values[i].result, calculated, error, tolerance);
+    }
+
+
     @Test
     public void testGreeks() {
         logger.info("Testing analytic European option greeks...");
@@ -651,7 +638,7 @@ public class EuropeanOptionTest {
 
         final Map<String,Double> expected = new HashMap<String, Double>();
         final Map<String,Double> calculated = new HashMap<String, Double>();
-        
+
         final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
         final double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
         final double underlyings[] = { 100.0 };
@@ -661,7 +648,7 @@ public class EuropeanOptionTest {
         final double vols[] = { 0.11, 0.50, 1.20 };
 
         final DayCounter dc = Actual360.getDayCounter();
-        
+
         final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
         final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
         final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
@@ -672,133 +659,122 @@ public class EuropeanOptionTest {
 
         StrikedTypePayoff payoff = null;
 
-        for (int i=0; i<types.length; i++) {
-          for (int j=0; j<strikes.length; j++) {
-            for (int k=0; k<residualTimes.length; k++) {
-            
-                final Date exDate = today.getDateAfter( timeToDays(residualTimes[k]) ); //TODO: code review
-                final Exercise exercise = new EuropeanExercise(exDate);
+        for (final Type type : types)
+            for (final double strike : strikes)
+                for (final double residualTime : residualTimes) {
 
-                for (int kk=0; kk<4; kk++) {
-                  // option to check
-                  if (kk==0) {
-                        payoff = new PlainVanillaPayoff(types[i], strikes[j]);                    
-                  } else if (kk==1) {
-                      //FIXME check constructor
-                      payoff = new CashOrNothingPayoff(types[i], strikes[j], 100);
-                  } else if (kk==2) {
-                      payoff = new AssetOrNothingPayoff(types[i], strikes[j]);
-                  } else if (kk==3) {
-                      payoff = new GapPayoff(types[i], strikes[j], 100);
-                  }
+                    final Date exDate = today.getDateAfter( timeToDays(residualTime) ); //TODO: code review
+                    final Exercise exercise = new EuropeanExercise(exDate);
 
-                  StochasticProcess process = new BlackScholesMertonProcess(spot, qTS, rTS, volTS);
+                    for (int kk=0; kk<4; kk++) {
+                        // option to check
+                        if (kk==0)
+                            payoff = new PlainVanillaPayoff(type, strike);
+                        else if (kk==1)
+                            //FIXME check constructor
+                            payoff = new CashOrNothingPayoff(type, strike, 100);
+                        else if (kk==2)
+                            payoff = new AssetOrNothingPayoff(type, strike);
+                        else if (kk==3)
+                            payoff = new GapPayoff(type, strike, 100);
 
-                  if (payoff==null) throw new IllegalArgumentException();
-                  EuropeanOption option = new EuropeanOption(process, payoff, exercise, new AnalyticEuropeanEngine());
+                        final StochasticProcess process = new BlackScholesMertonProcess(spot, qTS, rTS, volTS);
 
-                  
-                  for (int l=0; l<underlyings.length; l++) {
-                    for (int m=0; m<qRates.length; m++) {
-                      for (int n=0; n<rRates.length; n++) {
-                        for (int p=0; p<vols.length; p++) {
-                          double u = underlyings[l];
-                          double q = qRates[m];
-                          double r = rRates[n];
-                          double v = vols[p];
-                          //something wrong here for vanilla payoff?
-                          spot.getLink().setValue(u);
-                          qRate.getLink().setValue(q);
-                          rRate.getLink().setValue(r);
-                          vol.getLink().setValue(v);
+                        if (payoff==null) throw new IllegalArgumentException();
+                        final EuropeanOption option = new EuropeanOption(process, payoff, exercise, new AnalyticEuropeanEngine());
 
-                          double value = option.getNPV();
-                          calculated.put("delta", option.delta());
-                          calculated.put("gamma", option.gamma());
-                          calculated.put("theta", option.theta());
-                          calculated.put("rho", option.rho());
-                          calculated.put("divRho", option.dividendRho());
-                          calculated.put("vega", option.vega());
 
-                          if (value > spot.getLink().evaluate()*1.0e-5) {
-                              // perturb spot and get delta and gamma
-                              double du = u*1.0e-4;
-                              spot.getLink().setValue(u+du);
-                              double value_p = option.getNPV();
-                              double delta_p = option.delta();
-                              spot.getLink().setValue(u-du);
+                        for (final double u : underlyings)
+                            for (final double q : qRates)
+                                for (final double r : rRates)
+                                    for (final double v : vols) {
+                                        //something wrong here for vanilla payoff?
+                                        spot.getLink().setValue(u);
+                                        qRate.getLink().setValue(q);
+                                        rRate.getLink().setValue(r);
+                                        vol.getLink().setValue(v);
 
-                              double value_m = option.getNPV();
-                              double delta_m = option.delta();
-                              spot.getLink().setValue(u);
-                              expected.put("delta", (value_p - value_m)/(2*du));
-                              expected.put("gamma", (delta_p - delta_m)/(2*du));
+                                        final double value = option.getNPV();
+                                        calculated.put("delta", option.delta());
+                                        calculated.put("gamma", option.gamma());
+                                        calculated.put("theta", option.theta());
+                                        calculated.put("rho", option.rho());
+                                        calculated.put("divRho", option.dividendRho());
+                                        calculated.put("vega", option.vega());
 
-                              // perturb rates and get rho and dividend rho
-                              double dr = r*1.0e-4;
-                              rRate.getLink().setValue(r+dr);
-                              value_p = option.getNPV();
-                              rRate.getLink().setValue(r-dr);
-                              value_m = option.getNPV();
-                              rRate.getLink().setValue(r);
-                              expected.put("rho", (value_p - value_m)/(2*dr));
+                                        if (value > spot.getLink().evaluate()*1.0e-5) {
+                                            // perturb spot and get delta and gamma
+                                            final double du = u*1.0e-4;
+                                            spot.getLink().setValue(u+du);
+                                            double value_p = option.getNPV();
+                                            final double delta_p = option.delta();
+                                            spot.getLink().setValue(u-du);
 
-                              double dq = q*1.0e-4;
-                              qRate.getLink().setValue(q+dq);
-                              value_p = option.getNPV();
-                              qRate.getLink().setValue(q-dq);
-                              value_m = option.getNPV();
-                              qRate.getLink().setValue(q);
-                              expected.put("divRho",(value_p - value_m)/(2*dq));
+                                            double value_m = option.getNPV();
+                                            final double delta_m = option.delta();
+                                            spot.getLink().setValue(u);
+                                            expected.put("delta", (value_p - value_m)/(2*du));
+                                            expected.put("gamma", (delta_p - delta_m)/(2*du));
 
-                              // perturb volatility and get vega
-                              double dv = v*1.0e-4;
-                              vol.getLink().setValue(v+dv);
-                              value_p = option.getNPV();
-                              vol.getLink().setValue(v-dv);
-                              value_m = option.getNPV();
-                              vol.getLink().setValue(v);
-                              expected.put("vega",(value_p - value_m)/(2*dv));
+                                            // perturb rates and get rho and dividend rho
+                                            final double dr = r*1.0e-4;
+                                            rRate.getLink().setValue(r+dr);
+                                            value_p = option.getNPV();
+                                            rRate.getLink().setValue(r-dr);
+                                            value_m = option.getNPV();
+                                            rRate.getLink().setValue(r);
+                                            expected.put("rho", (value_p - value_m)/(2*dr));
 
-                            // perturb date and get theta
-                            final Date yesterday = today.getPreviousDay();
-                            final Date tomorrow  = today.getNextDay();
-                            double dT = dc.yearFraction(yesterday, tomorrow);
-                            settings.setEvaluationDate(yesterday);
-                            value_m = option.getNPV();
-                            settings.setEvaluationDate(tomorrow);
-                            value_p = option.getNPV();
-                            expected.put("theta", (value_p - value_m)/dT);
+                                            final double dq = q*1.0e-4;
+                                            qRate.getLink().setValue(q+dq);
+                                            value_p = option.getNPV();
+                                            qRate.getLink().setValue(q-dq);
+                                            value_m = option.getNPV();
+                                            qRate.getLink().setValue(q);
+                                            expected.put("divRho",(value_p - value_m)/(2*dq));
 
-                            settings.setEvaluationDate(today);
+                                            // perturb volatility and get vega
+                                            final double dv = v*1.0e-4;
+                                            vol.getLink().setValue(v+dv);
+                                            value_p = option.getNPV();
+                                            vol.getLink().setValue(v-dv);
+                                            value_m = option.getNPV();
+                                            vol.getLink().setValue(v);
+                                            expected.put("vega",(value_p - value_m)/(2*dv));
 
-                              // compare
-                              for (Entry<String, Double> it: calculated.entrySet()){
+                                            // perturb date and get theta
+                                            final Date yesterday = today.getPreviousDay();
+                                            final Date tomorrow  = today.getNextDay();
+                                            final double dT = dc.yearFraction(yesterday, tomorrow);
+                                            settings.setEvaluationDate(yesterday);
+                                            value_m = option.getNPV();
+                                            settings.setEvaluationDate(tomorrow);
+                                            value_p = option.getNPV();
+                                            expected.put("theta", (value_p - value_m)/dT);
 
-                                  String greek = it.getKey();
-                                  Double expct = expected.get(greek);
-                                  Double calcl = calculated.get(greek);
-                                  Double tol   = tolerance.get(greek);
+                                            settings.setEvaluationDate(today);
 
-                                  double error = Utilities.relativeError(expct,calcl,u);
-                                  if (error>tol) {
-                                      REPORT_FAILURE(greek, payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
-                                  }
+                                            // compare
+                                            for (final Entry<String, Double> it: calculated.entrySet()){
 
-                              }
-                          }
-                        }
-                      }
+                                                final String greek = it.getKey();
+                                                final Double expct = expected.get(greek);
+                                                final Double calcl = calculated.get(greek);
+                                                final Double tol   = tolerance.get(greek);
+
+                                                final double error = Utilities.relativeError(expct,calcl,u);
+                                                if (error>tol)
+                                                    REPORT_FAILURE(greek, payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
+
+                                            }
+                                        }
+                                    }
                     }
-                  }
                 }
-            }
-          }
-        }
 
     }
 
-    
+
     @Test
     public void testImpliedVol() {
 
@@ -808,172 +784,152 @@ public class EuropeanOptionTest {
         final double tolerance = 1.0e-6;
 
         // test options
-        Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
-        double strikes[] = { 90.0, 99.5, 100.0, 100.5, 110.0 };
-        int lengths[] = { 36, 180, 360, 1080 };
+        final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        final double strikes[] = { 90.0, 99.5, 100.0, 100.5, 110.0 };
+        final int lengths[] = { 36, 180, 360, 1080 };
 
         // test data
-        double underlyings[] = { 90.0, 95.0, 99.9, 100.0, 100.1, 105.0, 110.0 };
-        double qRates[] = { 0.01, 0.05, 0.10 };
-        double rRates[] = { 0.01, 0.05, 0.10 };
-        double vols[] = { 0.01, 0.20, 0.30, 0.70, 0.90 };
+        final double underlyings[] = { 90.0, 95.0, 99.9, 100.0, 100.1, 105.0, 110.0 };
+        final double qRates[] = { 0.01, 0.05, 0.10 };
+        final double rRates[] = { 0.01, 0.05, 0.10 };
+        final double vols[] = { 0.01, 0.20, 0.30, 0.70, 0.90 };
 
-        DayCounter dc = Actual360.getDayCounter();
-        Date today = DateFactory.getFactory().getTodaysDate();
+        final DayCounter dc = Actual360.getDayCounter();
+        final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
+        final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today,qRate, dc));
+        final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
 
-        Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
-        Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today,qRate, dc));
-        Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+        for (final Type type : types)
+            for (final double strike2 : strikes)
+                for (final int length : lengths) {
+                    // option to check
+                    final Date exDate = today.getDateAfter( length );
+                    final Exercise exercise = new EuropeanExercise(exDate);
+                    final StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike2);
+                    final VanillaOption option = makeOption(payoff, exercise, spot, qTS, rTS, volTS, EngineType.Analytic, 0, 0);
 
-        for (int i=0; i<types.length; i++) {
-          for (int j=0; j<strikes.length; j++) {
-            for (int k=0; k<lengths.length; k++) {
-              // option to check
-              Date exDate = today.getDateAfter( lengths[k] );
+                    for (final double u : underlyings)
+                        for (final double q : qRates)
+                            for (final double r : rRates)
+                                for (final double v : vols) {
+                                    spot.getLink().setValue(u);
+                                    qRate.getLink().setValue(q);
+                                    rRate.getLink().setValue(r);
+                                    vol.getLink().setValue(v);
 
-              Exercise exercise = new EuropeanExercise(exDate);
+                                    final double value = option.getNPV();
+                                    double implVol = 0.0; // just to remove a warning...
+                                    if (value != 0.0) {
+                                        // shift guess somehow
+                                        vol.getLink().setValue(v*0.5);
+                                        if (Math.abs(value-option.getNPV()) <= 1.0e-12)
+                                            // flat price vs vol --- pointless (and
+                                            // numerically unstable) to solve
+                                            continue;
 
-              StrikedTypePayoff payoff = new PlainVanillaPayoff(types[i], strikes[j]);
-              
-              final VanillaOption option = makeOption(payoff, exercise, spot, qTS, rTS, volTS, EngineType.Analytic, 0, 0);
+                                        implVol = option.impliedVolatility(value, 1.0e-6, 200, 1.0e-8, 4.0);
 
-              for (int l=0; l<underlyings.length; l++) {
-                for (int m=0; m<qRates.length; m++) {
-                  for (int n=0; n<rRates.length; n++) {
-                    for (int p=0; p<vols.length; p++) {
-                      double u = underlyings[l];
-                      double q = qRates[m],
-                           r = rRates[n];
-                      double v = vols[p];
-                      spot.getLink().setValue(u);
-                      qRate.getLink().setValue(q);
-                      rRate.getLink().setValue(r);
-                      vol.getLink().setValue(v);
-
-                      double value = option.getNPV();
-                      double implVol = 0.0; // just to remove a warning...
-                      if (value != 0.0) {
-                          // shift guess somehow
-                          vol.getLink().setValue(v*0.5);
-                          if (Math.abs(value-option.getNPV()) <= 1.0e-12) {
-                              // flat price vs vol --- pointless (and
-                              // numerically unstable) to solve
-                              continue;
-                          }
-                     
-                          implVol = option.impliedVolatility(value, 1.0e-6, 200, 1.0e-8, 4.0);
-
-                          if (Math.abs(implVol-v) > tolerance) {
-                              // the difference might not matter
-                              vol.getLink().setValue(implVol);
-                              double value2 = option.getNPV();
-                              double error = Utilities.relativeError(value,value2,u);
-                              if (error > tolerance) {
-                                  fail(
-                                      types[i] + " option :\n"
-                                      + "    spot value:          " + u + "\n"
-                                      + "    strike:              "
-                                      + strikes[j] + "\n"
-                                      + "    dividend yield:      "
-                                      + (q) + "\n"
-                                      + "    risk-free rate:      "
-                                      + (r) + "\n"
-                                      + "    maturity:            "
-                                      + exDate + "\n\n"
-                                      + "    original volatility: "
-                                      + (v) + "\n"
-                                      + "    price:               "
-                                      + value + "\n"
-                                      + "    implied volatility:  "
-                                      + (implVol)
-                                      + "\n"
-                                      + "    corresponding price: "
-                                      + value2 + "\n"
-                                      + "    error:               " + error);
-                              }
-                          }
-                      }
-                    }
-                  }
+                                        if (Math.abs(implVol-v) > tolerance) {
+                                            // the difference might not matter
+                                            vol.getLink().setValue(implVol);
+                                            final double value2 = option.getNPV();
+                                            final double error = Utilities.relativeError(value,value2,u);
+                                            if (error > tolerance)
+                                                fail(
+                                                        type + " option :\n"
+                                                        + "    spot value:          " + u + "\n"
+                                                        + "    strike:              "
+                                                        + strike2 + "\n"
+                                                        + "    dividend yield:      "
+                                                        + (q) + "\n"
+                                                        + "    risk-free rate:      "
+                                                        + (r) + "\n"
+                                                        + "    maturity:            "
+                                                        + exDate + "\n\n"
+                                                        + "    original volatility: "
+                                                        + (v) + "\n"
+                                                        + "    price:               "
+                                                        + value + "\n"
+                                                        + "    implied volatility:  "
+                                                        + (implVol)
+                                                        + "\n"
+                                                        + "    corresponding price: "
+                                                        + value2 + "\n"
+                                                        + "    error:               " + error);
+                                        }
+                                    }
+                                }
                 }
-              }
-            }
-          }
-        }
     }
-     
+
     @Test
     public void testImpliedVolContainment(){
         logger.info("Testing self-containment of implied volatility calculation... running");
-        
-        int maxEvaluations = 100;
-        double tolerance = 1.0e-6;
-        
+
+        final int maxEvaluations = 100;
+        final double tolerance = 1.0e-6;
+
         // test options
-        
-        DayCounter dc = Actual360.getDayCounter();
-        
+
+        final DayCounter dc = Actual360.getDayCounter();
+
         //does not really have to be a handle
-        Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(100.0));
-        Handle<Quote> underlying = new Handle<Quote>(spot.getLink());
+        final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(100.0));
+        final Handle<Quote> underlying = new Handle<Quote>(spot.getLink());
         //does not really have to be a handle
-        Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.05));
-        Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
+        final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.05));
+        final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, qRate, dc));
         //does not really have to be a handle
-        Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.03));
-        Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
+        final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.03));
+        final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(today, rRate, dc));
         //does not really have to be a handle
-        Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.20));
-        Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(vol, dc));
-    
-        Date exerciseDate = today.getDateAfter(Period.ONE_YEAR_FORWARD);
-        Exercise exercise = new EuropeanExercise(exerciseDate);
-        StrikedTypePayoff payoff = new PlainVanillaPayoff(Option.Type.CALL, 100);
-        
-        StochasticProcess process = new BlackScholesMertonProcess(underlying, qTS, rTS, volTS);
-        
+        final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.20));
+        final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(vol, dc));
+
+        final Date exerciseDate = today.getDateAfter(Period.ONE_YEAR_FORWARD);
+        final Exercise exercise = new EuropeanExercise(exerciseDate);
+        final StrikedTypePayoff payoff = new PlainVanillaPayoff(Option.Type.CALL, 100);
+
+        final StochasticProcess process = new BlackScholesMertonProcess(underlying, qTS, rTS, volTS);
+
         // link to the same stochastic process, which shouldn't be changed
         // by calling methods of either option
 
-        VanillaOption option1 = new EuropeanOption(process, payoff, exercise);
-        VanillaOption option2 = new EuropeanOption(process, payoff, exercise);
+        final VanillaOption option1 = new EuropeanOption(process, payoff, exercise);
+        final VanillaOption option2 = new EuropeanOption(process, payoff, exercise);
 
         // test
-        double refValue = option2.getNPV();
+        final double refValue = option2.getNPV();
 
-        Flag f = new Flag();
+        final Flag f = new Flag();
         option2.addObserver(f);
 
         option1.impliedVolatility(refValue*1.5, tolerance, maxEvaluations);
 
-        if (f.isUp()){
+        if (f.isUp())
             fail("implied volatility calculation triggered a change in another instrument");
-        }
 
         option2.recalculate();
-        if (Math.abs(option2.getNPV() - refValue) >= 1.0e-8){
+        if (Math.abs(option2.getNPV() - refValue) >= 1.0e-8)
             fail("implied volatility calculation changed the value "
-                        + "of another instrument: \n"
-                        + "previous value: " + refValue + "\n"
-                        + "current value:  " + option2.getNPV());
-        }
+                    + "of another instrument: \n"
+                    + "previous value: " + refValue + "\n"
+                    + "current value:  " + option2.getNPV());
 
         vol.getLink().setValue(vol.getLink().evaluate()*1.5);
 
-        if (!f.isUp()){
+        if (!f.isUp())
             fail("volatility change not notified");
-        }
 
-        if (Math.abs(option2.getNPV() - refValue) <= 1.0e-8){
+        if (Math.abs(option2.getNPV() - refValue) <= 1.0e-8)
             fail("volatility change did not cause the value to change");
-        }
     }
 
-    
+
 
     private void testEngineConsistency(final EngineType engine,
             final int binomialSteps, final int samples,
@@ -1012,27 +968,24 @@ public class EuropeanOptionTest {
         final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
         final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
 
-        for (int i = 0; i < types.length; i++) {
-            for (int j = 0; j < strikes.length; j++) {
-                for (int k = 0; k < lengths.length; k++) {
+        for (final Type type : types)
+            for (final double strike3 : strikes)
+                for (final int length2 : lengths) {
 
-                    Date exDate = today.getDateAfter(timeToDays(lengths[k]));
-                    Exercise exercise = new EuropeanExercise(exDate);
+                    final Date exDate = today.getDateAfter(timeToDays(length2));
+                    final Exercise exercise = new EuropeanExercise(exDate);
 
-                    StrikedTypePayoff payoff = new PlainVanillaPayoff(types[i], strikes[j]);
+                    final StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike3);
 
                     // reference option
-                    VanillaOption refOption = makeOption(payoff, exercise, spot, qTS, rTS, volTS, EngineType.Analytic, 0, 0);
+                    final VanillaOption refOption = makeOption(payoff, exercise, spot, qTS, rTS, volTS, EngineType.Analytic, 0, 0);
                     // option to check
-                    VanillaOption option = makeOption(payoff, exercise, spot, qTS, rTS, volTS, engine, binomialSteps, samples);
+                    final VanillaOption option = makeOption(payoff, exercise, spot, qTS, rTS, volTS, engine, binomialSteps, samples);
 
-                    for (int l = 0; l < underlyings.length; l++) {
-                        for (int m = 0; m < qRates.length; m++) {
-                            for (int n = 0; n < rRates.length; n++) {
-                                for (int p = 0; p < vols.length; p++) {
-                                    double u = underlyings[l];
-                                    double /* @Rate */q = qRates[m], r = rRates[n];
-                                    double /* @Volatility */v = vols[p];
+                    for (final double u : underlyings)
+                        for (final double q : qRates)
+                            for (final double r : rRates)
+                                for (final double v : vols) {
                                     spot.getLink().setValue(u);
                                     qRate.getLink().setValue(q);
                                     rRate.getLink().setValue(r);
@@ -1041,9 +994,9 @@ public class EuropeanOptionTest {
                                     expected.clear();
                                     calculated.clear();
 
-                                    double refNPV = refOption.getNPV();
-                                    double optNPV = option.getNPV();
-                                    
+                                    final double refNPV = refOption.getNPV();
+                                    final double optNPV = option.getNPV();
+
                                     expected.put("value", refNPV);
                                     calculated.put("value", optNPV);
 
@@ -1056,29 +1009,23 @@ public class EuropeanOptionTest {
                                         calculated.put("theta", option.theta());
                                     }
 
-                                    for (Entry<String, Double> entry : calculated.entrySet()) {
-                                        String greek = entry.getKey();
-                                        double expct = expected.get(greek), calcl = calculated.get(greek), tol = tolerance.get(greek);
-                                        double error = Utilities.relativeError(expct, calcl, u);
-                                        if (error > tol) {
+                                    for (final Entry<String, Double> entry : calculated.entrySet()) {
+                                        final String greek = entry.getKey();
+                                        final double expct = expected.get(greek), calcl = calculated.get(greek), tol = tolerance.get(greek);
+                                        final double error = Utilities.relativeError(expct, calcl, u);
+                                        if (error > tol)
                                             REPORT_FAILURE(greek, payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
-                                        }
                                     }
                                 }
-                            }
-                        }
-                    }
                 }
-            }
-        }
     }
 
-    
+
     @Test
     public void testJRBinomialEngines() {
 
         logger.info("Testing JR binomial European engines against analytic results...");
-            
+
         final EngineType engine = EngineType.JR;
         final int timeSteps = 251;
         final int samples = 0;
@@ -1089,13 +1036,13 @@ public class EuropeanOptionTest {
         relativeTol.put("theta", 0.03);
         testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
-    
-    
+
+
     @Test
     public void testCRRBinomialEngines() {
 
         logger.info("Testing CRR binomial European engines against analytic results...");
-            
+
         final EngineType engine = EngineType.CRR;
         final int timeSteps = 501;
         final int samples = 0;
@@ -1106,13 +1053,13 @@ public class EuropeanOptionTest {
         relativeTol.put("theta", 0.03);
         testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
-    
-    
+
+
     @Test
     public void testEQPBinomialEngines() {
 
         logger.info("Testing EQP binomial European engines against analytic results...");
-            
+
         final EngineType engine = EngineType.EQP;
         final int timeSteps = 501;
         final int samples = 0;
@@ -1123,13 +1070,13 @@ public class EuropeanOptionTest {
         relativeTol.put("theta", 0.03);
         testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
-    
-    
+
+
     @Test
     public void testTGEOBinomialEngines() {
 
         logger.info("Testing TGEO binomial European engines against analytic results...");
-            
+
         final EngineType engine = EngineType.TGEO;
         final int timeSteps = 251;
         final int samples = 0;
@@ -1140,13 +1087,13 @@ public class EuropeanOptionTest {
         relativeTol.put("theta", 0.03);
         testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
-    
-    
+
+
     @Test
     public void testTIANBinomialEngines() {
 
         logger.info("Testing TIAN binomial European engines against analytic results...");
-            
+
         final EngineType engine = EngineType.TIAN;
         final int timeSteps = 251;
         final int samples = 0;
@@ -1157,13 +1104,13 @@ public class EuropeanOptionTest {
         relativeTol.put("theta", 0.03);
         testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
-    
-    
+
+
     @Test
     public void testLRBinomialEngines() {
 
         logger.info("Testing LR binomial European engines against analytic results...");
-            
+
         final EngineType engine = EngineType.LR;
         final int timeSteps = 251;
         final int samples = 0;
@@ -1174,13 +1121,13 @@ public class EuropeanOptionTest {
         relativeTol.put("theta", 0.03);
         testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
-    
-    
+
+
     @Test
     public void testJOSHIBinomialEngines() {
 
         logger.info("Testing Joshi binomial European engines against analytic results...");
-            
+
         final EngineType engine = EngineType.JOSHI;
         final int timeSteps = 251;
         final int samples = 0;
@@ -1191,13 +1138,13 @@ public class EuropeanOptionTest {
         relativeTol.put("theta", 0.03);
         testEngineConsistency(engine, timeSteps, samples, relativeTol, true);
     }
-    
-    
+
+
     @Test
     public void testFdEngines() {
 
         logger.info("Testing finite-differences European engines against analytic results...");
-        
+
         final EngineType engine = EngineType.FiniteDifferences;
         final @NonNegative int timeSteps = 300;
         final @NonNegative int gridPoints = 300;
@@ -1214,7 +1161,7 @@ public class EuropeanOptionTest {
     public void testIntegralEngines() {
 
         logger.info("Testing integral engines against analytic results...");
-            
+
 
         final EngineType engine = EngineType.Integral;
         final int timeSteps = 300;
@@ -1223,133 +1170,133 @@ public class EuropeanOptionTest {
         relativeTol.put("value", 0.0001);
         testEngineConsistency(engine, timeSteps, gridPoints, relativeTol);
     }
-    
-    
-//
-//  void EuropeanOptionTest::testMcEngines() {
-//
-//      BOOST_MESSAGE("Testing Monte Carlo European engines "
-//                    "against analytic results...");
-//
-//      EngineType engine = PseudoMonteCarlo;
-//      Size steps = Null<Size>();
-//      Size samples = 40000;
-//      std::map<std::string,Real> relativeTol;
-//      relativeTol["value"] = 0.01;
-//      testEngineConsistency(engine,steps,samples,relativeTol);
-//  }
-
-//  void EuropeanOptionTest::testQmcEngines() {
-//
-//      BOOST_MESSAGE("Testing Quasi Monte Carlo European engines "
-//                    "against analytic results...");
-//
-//      EngineType engine = QuasiMonteCarlo;
-//      Size steps = Null<Size>();
-//      Size samples = 4095; // 2^12-1
-//      std::map<std::string,Real> relativeTol;
-//      relativeTol["value"] = 0.01;
-//      testEngineConsistency(engine,steps,samples,relativeTol);
-//  }
-
-//  void EuropeanOptionTest::testPriceCurve() {
-//
-//      BOOST_MESSAGE("Testing European price curves...");
-//
-//      /* The data below are from
-//         "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
-//      */
-//      EuropeanOptionData values[] = {
-//        // pag 2-8
-//        //        type, strike,   spot,    q,    r,    t,  vol,   value
-//        { Option.Type.Call,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 0.0},
-//        { Option.Type.Put,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 0.0},
-//      };
-//
-//      DayCounter dc = Actual360();
-//      Date today = Date::todaysDate();
-//      Size timeSteps = 300;
-//      Size gridPoints = 300;
-//
-//      boost::shared_ptr<SimpleQuote> spot(new SimpleQuote(0.0));
-//      boost::shared_ptr<SimpleQuote> qRate(new SimpleQuote(0.0));
-//      boost::shared_ptr<YieldTermStructure> qTS = flatRate(today, qRate, dc);
-//      boost::shared_ptr<SimpleQuote> rRate(new SimpleQuote(0.0));
-//      boost::shared_ptr<YieldTermStructure> rTS = flatRate(today, rRate, dc);
-//      boost::shared_ptr<SimpleQuote> vol(new SimpleQuote(0.0));
-//      boost::shared_ptr<BlackVolTermStructure> volTS = flatVol(today, vol, dc);
-//      boost::shared_ptr<PricingEngine>
-//          engine(new FDEuropeanEngine(timeSteps, gridPoints));
-//
-//      for (Size i=0; i<LENGTH(values); i++) {
-//
-//          boost::shared_ptr<StrikedTypePayoff> payoff(new
-//              PlainVanillaPayoff(values[i].type, values[i].strike));
-//          Date exDate = today + timeToDays(values[i].t);
-//          boost::shared_ptr<Exercise> exercise(new EuropeanExercise(exDate));
-//
-//          spot ->setValue(values[i].s);
-//          qRate->setValue(values[i].q);
-//          rRate->setValue(values[i].r);
-//          vol  ->setValue(values[i].v);
-//
-//          boost::shared_ptr<StochasticProcess> stochProcess(new
-//              BlackScholesMertonProcess(Handle<Quote>(spot),
-//                                        Handle<YieldTermStructure>(qTS),
-//                                        Handle<YieldTermStructure>(rTS),
-//                                        Handle<BlackVolTermStructure>(volTS)));
-//
-//          EuropeanOption option(stochProcess, payoff, exercise, engine);
-//          SampledCurve price_curve = option.result<SampledCurve>("priceCurve");
-//          if (price_curve.empty()) {
-//              REPORT_FAILURE("no price curve", payoff, exercise, values[i].s,
-//                             values[i].q, values[i].r, today,
-//                             values[i].v, values[i].result, 0.0,
-//                             0.0, 0.0);
-//              continue;
-//          }
-//
-//          // Ignore the end points
-//          Size start = price_curve.size() / 4;
-//          Size end = price_curve.size() * 3 / 4;
-//          for (Size i=start; i < end; i++) {
-//              spot->setValue(price_curve.gridValue(i));
-//              boost::shared_ptr<StochasticProcess> stochProcess1(
-//                        new BlackScholesMertonProcess(
-//                                         Handle<Quote>(spot),
-//                                         Handle<YieldTermStructure>(qTS),
-//                                         Handle<YieldTermStructure>(rTS),
-//                                         Handle<BlackVolTermStructure>(volTS)));
-//
-//              EuropeanOption option1(stochProcess, payoff, exercise, engine);
-//              Real calculated = option1.NPV();
-//              Real error = std::fabs(calculated-price_curve.value(i));
-//              Real tolerance = 1e-3;
-//              if (error>tolerance) {
-//                  REPORT_FAILURE("price curve error", payoff, exercise,
-//                                 price_curve.gridValue(i),
-//                                 values[i].q, values[i].r, today,
-//                                 values[i].v,
-//                                 price_curve.value(i), calculated,
-//                                 error, tolerance);
-//                  break;
-//              }
-//          }
-//      }
-//
-//  }
 
 
-    private void REPORT_FAILURE(final String greekName, final StrikedTypePayoff payoff, final Exercise exercise, 
-            final double s, final double q, final double r, final Date today, 
+    //
+    //  void EuropeanOptionTest::testMcEngines() {
+    //
+    //      BOOST_MESSAGE("Testing Monte Carlo European engines "
+    //                    "against analytic results...");
+    //
+    //      EngineType engine = PseudoMonteCarlo;
+    //      Size steps = Null<Size>();
+    //      Size samples = 40000;
+    //      std::map<std::string,Real> relativeTol;
+    //      relativeTol["value"] = 0.01;
+    //      testEngineConsistency(engine,steps,samples,relativeTol);
+    //  }
+
+    //  void EuropeanOptionTest::testQmcEngines() {
+    //
+    //      BOOST_MESSAGE("Testing Quasi Monte Carlo European engines "
+    //                    "against analytic results...");
+    //
+    //      EngineType engine = QuasiMonteCarlo;
+    //      Size steps = Null<Size>();
+    //      Size samples = 4095; // 2^12-1
+    //      std::map<std::string,Real> relativeTol;
+    //      relativeTol["value"] = 0.01;
+    //      testEngineConsistency(engine,steps,samples,relativeTol);
+    //  }
+
+    //  void EuropeanOptionTest::testPriceCurve() {
+    //
+    //      BOOST_MESSAGE("Testing European price curves...");
+    //
+    //      /* The data below are from
+    //         "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
+    //      */
+    //      EuropeanOptionData values[] = {
+    //        // pag 2-8
+    //        //        type, strike,   spot,    q,    r,    t,  vol,   value
+    //        { Option.Type.Call,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 0.0},
+    //        { Option.Type.Put,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 0.0},
+    //      };
+    //
+    //      DayCounter dc = Actual360();
+    //      Date today = Date::todaysDate();
+    //      Size timeSteps = 300;
+    //      Size gridPoints = 300;
+    //
+    //      boost::shared_ptr<SimpleQuote> spot(new SimpleQuote(0.0));
+    //      boost::shared_ptr<SimpleQuote> qRate(new SimpleQuote(0.0));
+    //      boost::shared_ptr<YieldTermStructure> qTS = flatRate(today, qRate, dc);
+    //      boost::shared_ptr<SimpleQuote> rRate(new SimpleQuote(0.0));
+    //      boost::shared_ptr<YieldTermStructure> rTS = flatRate(today, rRate, dc);
+    //      boost::shared_ptr<SimpleQuote> vol(new SimpleQuote(0.0));
+    //      boost::shared_ptr<BlackVolTermStructure> volTS = flatVol(today, vol, dc);
+    //      boost::shared_ptr<PricingEngine>
+    //          engine(new FDEuropeanEngine(timeSteps, gridPoints));
+    //
+    //      for (Size i=0; i<LENGTH(values); i++) {
+    //
+    //          boost::shared_ptr<StrikedTypePayoff> payoff(new
+    //              PlainVanillaPayoff(values[i].type, values[i].strike));
+    //          Date exDate = today + timeToDays(values[i].t);
+    //          boost::shared_ptr<Exercise> exercise(new EuropeanExercise(exDate));
+    //
+    //          spot ->setValue(values[i].s);
+    //          qRate->setValue(values[i].q);
+    //          rRate->setValue(values[i].r);
+    //          vol  ->setValue(values[i].v);
+    //
+    //          boost::shared_ptr<StochasticProcess> stochProcess(new
+    //              BlackScholesMertonProcess(Handle<Quote>(spot),
+    //                                        Handle<YieldTermStructure>(qTS),
+    //                                        Handle<YieldTermStructure>(rTS),
+    //                                        Handle<BlackVolTermStructure>(volTS)));
+    //
+    //          EuropeanOption option(stochProcess, payoff, exercise, engine);
+    //          SampledCurve price_curve = option.result<SampledCurve>("priceCurve");
+    //          if (price_curve.empty()) {
+    //              REPORT_FAILURE("no price curve", payoff, exercise, values[i].s,
+    //                             values[i].q, values[i].r, today,
+    //                             values[i].v, values[i].result, 0.0,
+    //                             0.0, 0.0);
+    //              continue;
+    //          }
+    //
+    //          // Ignore the end points
+    //          Size start = price_curve.size() / 4;
+    //          Size end = price_curve.size() * 3 / 4;
+    //          for (Size i=start; i < end; i++) {
+    //              spot->setValue(price_curve.gridValue(i));
+    //              boost::shared_ptr<StochasticProcess> stochProcess1(
+    //                        new BlackScholesMertonProcess(
+    //                                         Handle<Quote>(spot),
+    //                                         Handle<YieldTermStructure>(qTS),
+    //                                         Handle<YieldTermStructure>(rTS),
+    //                                         Handle<BlackVolTermStructure>(volTS)));
+    //
+    //              EuropeanOption option1(stochProcess, payoff, exercise, engine);
+    //              Real calculated = option1.NPV();
+    //              Real error = std::fabs(calculated-price_curve.value(i));
+    //              Real tolerance = 1e-3;
+    //              if (error>tolerance) {
+    //                  REPORT_FAILURE("price curve error", payoff, exercise,
+    //                                 price_curve.gridValue(i),
+    //                                 values[i].q, values[i].r, today,
+    //                                 values[i].v,
+    //                                 price_curve.value(i), calculated,
+    //                                 error, tolerance);
+    //                  break;
+    //              }
+    //          }
+    //      }
+    //
+    //  }
+
+
+    private void REPORT_FAILURE(final String greekName, final StrikedTypePayoff payoff, final Exercise exercise,
+            final double s, final double q, final double r, final Date today,
             final double v, final double expected, final double calculated, final double error, final double tolerance) {
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append(exercise).append(" ");
         sb.append(payoff.optionType()).append(" option with ");
         sb.append(payoff.getClass().getName() + " payoff:\n");
         sb.append("    spot value:       " + s + "\n");
-        
+
         sb.append("    strike:           " + payoff.strike() + "\n");
         sb.append("    dividend yield:   " + q + "\n");
         sb.append("    risk-free rate:   " + r + "\n");
@@ -1362,5 +1309,5 @@ public class EuropeanOptionTest {
         sb.append("    tolerance:        " + tolerance);
         fail(sb.toString());
     }
-    
+
 }

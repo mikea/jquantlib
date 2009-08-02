@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.jquantlib.Currency;
+import org.jquantlib.currencies.Currency;
 import org.jquantlib.currencies.Europe.CHFCurrency;
 import org.jquantlib.currencies.Europe.EURCurrency;
 import org.jquantlib.math.Rounding;

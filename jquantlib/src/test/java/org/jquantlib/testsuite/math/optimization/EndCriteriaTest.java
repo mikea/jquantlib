@@ -23,10 +23,7 @@
 package org.jquantlib.testsuite.math.optimization;
 import static org.junit.Assert.fail;
 
-import org.jquantlib.math.Closeness;
-import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.EndCriteria;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

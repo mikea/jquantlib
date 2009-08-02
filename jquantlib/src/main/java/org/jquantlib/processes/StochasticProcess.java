@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -37,7 +37,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.processes;
 
@@ -56,75 +56,74 @@ import org.jquantlib.util.Observer;
  * {@latex[ d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t }
  * 
  * @author Richard Gomes
- */ 
+ */
 public abstract class StochasticProcess implements Observable, Observer {
 
-	//
+    //
     // private fields
     //
-    
+
     private Discretization discretization;
-	
-	
-	//
-	// protected constructors
-	//
-	
-	//FIXME: code review :: constructor added in order to get Praneet's work compiling
-	protected StochasticProcess() {
-	    if (System.getProperty("EXPERIMENTAL") == null) {
+
+
+    //
+    // protected constructors
+    //
+
+    //FIXME: code review :: constructor added in order to get Praneet's work compiling
+    protected StochasticProcess() {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
-	}
-	
-	/**
-	 * @param discretization is an Object that <b>must</b> implement {@link Discretization}.
-	 */
-    protected StochasticProcess(final /*LinearDiscretization*/ Discretization discretization) {
-    	super();
-    	if (discretization==null) throw new NullPointerException(); // FIXME: message
-    	this.discretization = discretization;
     }
-    
-    
+
+    /**
+     * @param discretization is an Object that <b>must</b> implement {@link Discretization}.
+     */
+    protected StochasticProcess(final /*LinearDiscretization*/ Discretization discretization) {
+        super();
+        assert discretization!=null : "null discretization"; // FIXME: message
+        this.discretization = discretization;
+    }
+
+
     //
     // abstract methods
     //
-    
+
     /**
      * Returns the number of dimensions of the stochastic process
      */
     public abstract int getSize();
-    
-    
+
+
     //
     // public methods
     //
-    
+
     /**
      * Returns the number of independent factors of the process
      */
     public int factors() {
-    	return getSize();
+        return getSize();
     }
-        
+
     /**
      * Returns the initial values of the state variables
      */
     public abstract Array initialValues() /*@ReadOnly*/; // FIXME: add typecast
-        
+
     /**
      * Returns the drift part of the equation, i.e.,
      * {@latex$ \mu(t, \mathrm{x}_t) }
      */
     public abstract Array drift(final /*@Time*/ double t, final Array x) /*@ReadOnly*/;
-        
+
     /**
      * Returns the diffusion part of the equation, i.e.
      * {@latex$ \sigma(t, \mathrm{x}_t) }
      */
     public abstract Matrix diffusion(final /*@Time*/ double t, final Array x) /*@ReadOnly*/;
-        
+
     /**
      * Returns the expectation
      * {@latex$ S(\mathrm{x}_{t_0 + \Delta t} | \mathrm{x}_{t_0} = \mathrm{x}_0) }
@@ -134,9 +133,9 @@ public abstract class StochasticProcess implements Observable, Observer {
      * particular discretization.
      */
     public Array expectation(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt) /*@ReadOnly*/ {
-    	return apply(x0, discretization.driftDiscretization(this, t0, x0, dt));
+        return apply(x0, discretization.driftDiscretization(this, t0, x0, dt));
     }
-    
+
     /**
      * Returns the standard deviation
      * {@latex$ S(\mathrm{x}_{t_0 + \Delta t} | \mathrm{x}_{t_0} = \mathrm{x}_0) }
@@ -146,9 +145,9 @@ public abstract class StochasticProcess implements Observable, Observer {
      * particular discretization.
      */
     public Matrix stdDeviation(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt) /*@ReadOnly*/ {
-    	return discretization.diffusionDiscretization(this, t0, x0, dt); // XXX
+        return discretization.diffusionDiscretization(this, t0, x0, dt); // XXX
     }
-    
+
     /**
      * Returns the covariance
      * {@latex$ V(\mathrm{x}_{t_0 + \Delta t} | \mathrm{x}_{t_0} = \mathrm{x}_0) }
@@ -158,9 +157,9 @@ public abstract class StochasticProcess implements Observable, Observer {
      * particular discretization.
      */
     public Matrix covariance(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt) /*@ReadOnly*/ {
-    	return discretization.covarianceDiscretization(this, t0, x0, dt); // XXX
+        return discretization.covarianceDiscretization(this, t0, x0, dt); // XXX
     }
-    
+
     /**
      * Returns the asset value after a time interval {@latex$ \Delta t }
      * according to the given discretization. By default, it returns
@@ -172,86 +171,86 @@ public abstract class StochasticProcess implements Observable, Observer {
      * standard deviation.
      */
     public Array evolve(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt, final Array dw) /*@ReadOnly*/ {
-    	return apply(expectation(t0,x0,dt), stdDeviation(t0,x0,dt).mul(dw));
+        return apply(expectation(t0,x0,dt), stdDeviation(t0,x0,dt).mul(dw));
     }
-    
+
     /**
      * Applies a change to the asset value.
      * 
      * @returns {@latex$ \mathrm{x} + \Delta \mathrm{x} }.
      */
     public Array apply(final Array x0, final Array dx) /*@ReadOnly*/ {
-    	return x0.add(dx);
+        return x0.add(dx);
     }
 
     /**
      * Returns the time value corresponding to the given date
      * in the reference system of the stochastic process.
      * 
-     * @note As a number of processes might not need this 
+     * @note As a number of processes might not need this
      * functionality, a default implementation is given
      * which raises an exception.
      */
     public /*@Time*/ double getTime(final Date date) /*@ReadOnly*/ {
-    	throw new UnsupportedOperationException("date/time conversion not supported");
-    }
-    
-    
-	//
-	// implements Observer
-	//
-	
-    @Override
-    public void update(Observable o, Object arg) {
-    	notifyObservers();
+        throw new UnsupportedOperationException("date/time conversion not supported");
     }
 
-    
-	//
-	// implements Observable
-	//
-	
-	/**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
-	 * @see Observable
-	 * @see DefaultObservable
-	 */
-    private Observable delegatedObservable = new DefaultObservable(this);
+
+    //
+    // implements Observer
+    //
 
     @Override
-	public void addObserver(Observer observer) {
-		delegatedObservable.addObserver(observer);
-	}
+    public void update(final Observable o, final Object arg) {
+        notifyObservers();
+    }
+
+
+    //
+    // implements Observable
+    //
+
+    /**
+     * Implements multiple inheritance via delegate pattern to an inner class
+     * 
+     * @see Observable
+     * @see DefaultObservable
+     */
+    private final Observable delegatedObservable = new DefaultObservable(this);
 
     @Override
-	public int countObservers() {
-		return delegatedObservable.countObservers();
-	}
+    public void addObserver(final Observer observer) {
+        delegatedObservable.addObserver(observer);
+    }
 
     @Override
-	public void deleteObserver(Observer observer) {
-		delegatedObservable.deleteObserver(observer);
-	}
+    public int countObservers() {
+        return delegatedObservable.countObservers();
+    }
 
     @Override
-	public void notifyObservers() {
-		delegatedObservable.notifyObservers();
-	}
+    public void deleteObserver(final Observer observer) {
+        delegatedObservable.deleteObserver(observer);
+    }
 
     @Override
-	public void notifyObservers(Object arg) {
-		delegatedObservable.notifyObservers(arg);
-	}
+    public void notifyObservers() {
+        delegatedObservable.notifyObservers();
+    }
 
     @Override
-	public void deleteObservers() {
-		delegatedObservable.deleteObservers();
-	}
+    public void notifyObservers(final Object arg) {
+        delegatedObservable.notifyObservers(arg);
+    }
 
     @Override
-	public List<Observer> getObservers() {
-		return delegatedObservable.getObservers();
-	}
+    public void deleteObservers() {
+        delegatedObservable.deleteObservers();
+    }
+
+    @Override
+    public List<Observer> getObservers() {
+        return delegatedObservable.getObservers();
+    }
 
 }

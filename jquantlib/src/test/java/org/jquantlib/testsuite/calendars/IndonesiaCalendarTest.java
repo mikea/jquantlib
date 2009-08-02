@@ -27,8 +27,8 @@ import static org.jquantlib.util.Month.AUGUST;
 import static org.jquantlib.util.Month.DECEMBER;
 import static org.jquantlib.util.Month.FEBRUARY;
 import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.JULY;
+import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.MARCH;
 import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.NOVEMBER;
@@ -38,8 +38,6 @@ import static org.jquantlib.util.Month.SEPTEMBER;
 import java.util.List;
 import java.util.Vector;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Indonesia;
 import org.jquantlib.util.Date;
@@ -47,6 +45,8 @@ import org.jquantlib.util.DateFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jia Jia
