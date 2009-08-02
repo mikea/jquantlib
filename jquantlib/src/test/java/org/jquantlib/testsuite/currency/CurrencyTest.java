@@ -18,6 +18,7 @@
 
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
+ 
  */
 package org.jquantlib.testsuite.currency;
 
