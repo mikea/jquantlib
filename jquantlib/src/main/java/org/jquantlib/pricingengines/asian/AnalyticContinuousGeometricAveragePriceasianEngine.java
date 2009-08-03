@@ -67,8 +67,6 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
 
     @Override
     public void calculate() /*@ReadOnly*/ {
-
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         assert arguments.averageType==AverageType.Geometric : "not a geometric average option";
         assert arguments.exercise.type()==Exercise.Type.EUROPEAN : "not an European Option";
         final Date exercise = arguments.exercise.lastDate();

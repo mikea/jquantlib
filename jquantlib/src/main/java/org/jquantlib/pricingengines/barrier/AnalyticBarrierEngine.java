@@ -95,8 +95,6 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
 
     @Override
     public void calculate() {
-
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         assert getArguments().payoff instanceof PlainVanillaPayoff : NON_PLAIN_PAYOFF_GIVEN;
         this.payoff = (PlainVanillaPayoff)getArguments().payoff;
         assert payoff.strike()>0.0 : STRIKE_MUST_BE_POSITIVE;

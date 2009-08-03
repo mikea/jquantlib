@@ -63,12 +63,10 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
      */
     @Override
     public void calculate() {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         assert arguments.exercise.type() == Exercise.Type.EUROPEAN : "not an European option";
         assert arguments.payoff instanceof StrikedTypePayoff : "non-striked payoff given";
         final StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
         assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : "Black-Scholes process required";
-
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         final Date settlementDate = process.riskFreeRate().getLink().referenceDate();

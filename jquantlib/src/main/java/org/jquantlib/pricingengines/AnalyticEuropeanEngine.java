@@ -91,8 +91,6 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 
     @Override
     public void calculate() /* @ReadOnly */{
-
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         assert arguments.exercise.type() == Exercise.Type.EUROPEAN : NOT_AN_EUROPEAN_OPTION;
         final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
         assert payoff != null : NON_STRIKED_PAYOFF_GIVEN;

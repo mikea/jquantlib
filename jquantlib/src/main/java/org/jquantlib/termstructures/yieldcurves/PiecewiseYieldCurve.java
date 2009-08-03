@@ -223,9 +223,8 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     @Override
     public void performCalculations() /* @ReadOnly */ {
         // check that there is no instruments with invalid quote
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         for (final RateHelper instrument2 : instruments)
-            assert instrument2.referenceQuote() != Constants.NULL_REAL : "instrument with null price";
+            assert instrument2.referenceQuote() != Constants.NULL_REAL : "instrument with null price"; // TODO: message
 
         // setup vectors
         final int n = instruments.length;
@@ -683,11 +682,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         //TODO: who's calling this constructor???
         public InterpolatedForwardCurve(final Date[] dates, final /* @Rate */ Array forwards, final DayCounter dayCounter, final I interpolator) {
             // FIXME: code review: calendar
-            // FIXME: must check dates
             super(dates[0], Target.getCalendar(), dayCounter);
-
-            // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-            // in particular, we are verifying dates.length after calling the super(...)
             assert dates.length > 1 : "too few dates"; // TODO: message
             assert dates.length == forwards.length : "dates/yields count mismatch"; // TODO: message
 

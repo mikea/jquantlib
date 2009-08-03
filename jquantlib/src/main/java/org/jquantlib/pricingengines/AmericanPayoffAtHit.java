@@ -83,8 +83,6 @@ public class AmericanPayoffAtHit {
     public AmericanPayoffAtHit(
             final double spot, final double discount, final double dividendDiscount, final double variance,
             final StrikedTypePayoff strikedTypePayoff) {
-
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         assert spot > 0.0 : "positive spot value required";
         assert discount > 0.0 : "positive discount required";
         assert dividendDiscount > 0.0 : "positive dividend discount required";

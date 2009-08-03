@@ -92,18 +92,18 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     //
 
     public FloatingRateCoupon(
-                final Date paymentDate,
-                final double nominal,
-                final Date startDate,
-                final Date endDate,
-                final int fixingDays,
-                final InterestRateIndex index,
-                final double gearing,
-                final double spread,
-                final Date refPeriodStart,
-                final Date refPeriodEnd,
-                final DayCounter dayCounter,
-                final boolean isInArrears) {
+            final Date paymentDate,
+            final double nominal,
+            final Date startDate,
+            final Date endDate,
+            final int fixingDays,
+            final InterestRateIndex index,
+            final double gearing,
+            final double spread,
+            final Date refPeriodStart,
+            final Date refPeriodEnd,
+            final DayCounter dayCounter,
+            final boolean isInArrears) {
         super(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd);
 
         // TODO: code review :: please verify against original QL/C++ code
@@ -130,12 +130,8 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     //
 
     public void setPricer(final FloatingRateCouponPricer pricer){
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if(pricer == null)
-            throw new IllegalArgumentException(no_adequate_pricer_given);
-
-        if (this.pricer != null)
-            this.pricer.deleteObserver(this);
+        assert pricer != null : no_adequate_pricer_given;
+        if (this.pricer != null) this.pricer.deleteObserver(this);
         this.pricer = pricer;
         this.pricer.addObserver(this);
         update();
@@ -183,7 +179,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
 
     // TODO: code review :: Please review this method! What's the need of it???
     public double convexityAdjustmentImpl(final double f)  {
-       return (gearing() == 0.0 ? 0.0 : adjustedFixing()-f);
+        return (gearing() == 0.0 ? 0.0 : adjustedFixing()-f);
     }
 
     public double convexityAdjustment() {
@@ -219,26 +215,26 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         return this.pricer.swapletRate();
     }
 
-	@Override
-	public double accruedAmount(final Date date) {
-		// TODO: code review :: please verify against original QL/C++ code
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public double accruedAmount(final Date date) {
+        // TODO: code review :: please verify against original QL/C++ code
+        throw new UnsupportedOperationException();
+    }
 
 
-	//
-	// implements Observer
-	//
+    //
+    // implements Observer
+    //
 
-	@Override
+    @Override
     public void update(final Observable o, final Object arg) {
         notifyObservers();
     }
 
 
-	//
-	// implements TypedVisitable
-	//
+    //
+    // implements TypedVisitable
+    //
 
     @Override
     public void accept(final TypedVisitor<Object> v) {

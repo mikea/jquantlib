@@ -86,14 +86,20 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
     // private methods
     //
 
-    private double /*@Real*/ phi(final double /*@Real*/ S, final double /*@Real*/ gamma, final double /*@Real*/ H,
-            final double /*@Real*/ I, final double /*@Real*/ rT, final double /*Real*/ bT, final double /*@Real*/ variance) {
+    private double /*@Real*/ phi(
+            final double /*@Real*/ S,
+            final double /*@Real*/ gamma,
+            final double /*@Real*/ H,
+            final double /*@Real*/ I,
+            final double /*@Real*/ rT,
+            final double /*Real*/ bT,
+            final double /*@Real*/ variance) {
 
         final double /* @Real */lambda = (-rT + gamma * bT + 0.5 * gamma * (gamma - 1.0) * variance);
         final double /* @Real */d = -(Math.log(S / H) + (bT + (gamma - 0.5) * variance)) / Math.sqrt(variance);
         final double /* @Real */kappa = 2.0 * bT / variance + (2.0 * gamma - 1.0);
-        return Math.exp(lambda) * Math.pow(S, gamma)
-        * (cumNormalDist.op(d) - Math.pow((I / S), kappa) * cumNormalDist.op(d - 2.0 * Math.log(I / S) / Math.sqrt(variance)));
+        return Math.exp(lambda) * Math.pow(S, gamma) * (cumNormalDist.op(d)
+                - Math.pow((I / S), kappa) * cumNormalDist.op(d - 2.0 * Math.log(I / S) / Math.sqrt(variance)));
     }
 
     private double /*@Real*/ americanCallApproximation(
@@ -138,24 +144,13 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
 
     @Override
     public void calculate() /*@ReadOnly*/{
-
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (!(arguments.exercise.type()==Exercise.Type.AMERICAN))
-            throw new ArithmeticException(NOT_AN_AMERICAN_OPTION);
-
-        // check type before cast!
-        if (!(arguments.exercise instanceof AmericanExercise))
-            throw new ArithmeticException(NON_AMERICAN_EXERCISE_GIVEN);
-
+        assert arguments.exercise.type()==Exercise.Type.AMERICAN : NOT_AN_AMERICAN_OPTION;
+        assert arguments.exercise instanceof AmericanExercise : NON_AMERICAN_EXERCISE_GIVEN;
         final AmericanExercise ex = (AmericanExercise)arguments.exercise;
-        if (ex.payoffAtExpiry())
-            throw new ArithmeticException(PAYOFF_AT_EXPIRY_NOT_HANDLED);
-        if (!(arguments.payoff instanceof PlainVanillaPayoff))
-            throw new ArithmeticException(NON_PLAIN_PAYOFF_GIVEN);
+        assert !ex.payoffAtExpiry() : PAYOFF_AT_EXPIRY_NOT_HANDLED;
+        assert arguments.payoff instanceof PlainVanillaPayoff : NON_PLAIN_PAYOFF_GIVEN;
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
-
-        if (!(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess))
-            throw new ArithmeticException(BLACK_SCHOLES_PROCESS_REQUIRED);
+        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : BLACK_SCHOLES_PROCESS_REQUIRED;
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         final double /* @Real */variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
@@ -178,8 +173,7 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
         if (dividendDiscount>=1.0) {
             // early exercise is never optimal - use Black formula
             final double /*@Real*/ forwardPrice = spot * dividendDiscount / riskFreeDiscount;
-            final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance),
-                    riskFreeDiscount);
+            final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
             results.value        = black.value();
             results.delta        = black.delta(spot);

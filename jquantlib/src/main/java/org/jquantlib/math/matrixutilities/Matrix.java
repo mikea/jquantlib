@@ -192,9 +192,7 @@ public class Matrix {
      * @param cols is the number of columns
      */
     public Matrix(final int rows, final int cols) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if ((rows<=0 && cols>0) || (cols<=0 && rows>0)) throw new IllegalArgumentException(); // TODO: message
-
+        assert rows>0 && cols>0 : "invalid arguments"; // TODO: message
         this.rows = rows;
         this.cols = cols;
         this.length = rows*cols;
@@ -308,9 +306,7 @@ public class Matrix {
     }
 
     public double[][] toArray(final double[][] buffer) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.rows != buffer.length || this.cols != buffer[0].length) throw new IllegalArgumentException(); //TODO:message
-
+        assert this.rows == buffer.length && this.cols == buffer[0].length : "buffer dimensions mismatch"; //TODO: message
         int addr = 0;
         for (int row=0; row<this.rows; row++) {
             System.arraycopy(this.data, addr, buffer[row], 0, this.cols);
@@ -361,15 +357,11 @@ public class Matrix {
      * @return a new instance
      */
     public Matrix copyOfRange(final int row, final int col, final int nrows, final int ncols) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if ((row < 0) || (col < 0)) throw new IllegalArgumentException(); //TODO: message
-        if ((nrows <= 0) || (ncols <= 0)) throw new IllegalArgumentException(); //TODO: message
-        if ((row+nrows > this.rows) || (col+ncols > this.cols)) throw new IllegalArgumentException(); //TODO: message
-
+        assert row >= 0 && col >= 0 && nrows >= 0 && ncols >= 0 && row+nrows <= this.rows && col+ncols <= this.cols : "invalid arguments"; //TODO: message
         final Matrix result = new Matrix(nrows, ncols);
-        if (col+ncols == this.cols) {
+        if (col+ncols == this.cols)
             System.arraycopy(this.data, 0, result.data, 0, this.length);
-        } else {
+        else {
             int addr = 0;
             for (int i=0; i<nrows; i++) {
                 System.arraycopy(data, address(row+i, col), data, addr, ncols);
@@ -445,8 +437,7 @@ public class Matrix {
      * @param row is the desired row which the address is requested for.
      */
     public int getAddress(final int row) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (row < 0 || row > this.rows) throw new IllegalArgumentException(); //TODO: message
+        assert row >= 0 && row < this.rows : "array is incompatible"; // TODO: message
         return row*this.cols;
     }
 
@@ -460,8 +451,7 @@ public class Matrix {
      * @param col is the desired col which a cell belongs to.
      */
     public int getAddress(final int row, final int col) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (col < 0 || row > this.cols) throw new IllegalArgumentException(); //TODO: message
+        assert col >= 0 && col < this.cols : "array is incompatible"; // TODO: message
         return getAddress(row)+col;
     }
 
@@ -478,17 +468,15 @@ public class Matrix {
     }
 
     public void setRow(final int row, final Array array) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.cols!=array.length) throw new IllegalArgumentException(); //TODO: message
-
+        assert this.cols == array.length : "array is incompatible"; // TODO: message
         System.arraycopy(array.data, 0, this.data, getAddress(row), this.cols);
     }
 
     public Array getCol(final int col) {
         final Array array = new Array(this.rows);
-        if (this.cols == 1) {
+        if (this.cols == 1)
             System.arraycopy(this.data, 0, array.data, 0, this.length);
-        } else {
+        else {
             int addr = getAddress(0, col);
             for (int row = 0; row < this.rows; row++) {
                 array.data[row] = this.data[addr];
@@ -499,12 +487,10 @@ public class Matrix {
     }
 
     public void setCol(final int col, final Array array) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.rows!=array.length) throw new IllegalArgumentException(); //TODO: message
-
-        if (this.cols == 1) {
+        assert this.rows == array.length : "array is incompatible"; // TODO: message
+        if (this.cols == 1)
             System.arraycopy(array.data, 0, this.data, 0, this.length);
-        } else {
+        else {
             int addr = getAddress(0, col);
             for (int row = 0; row < this.rows; row++) {
                 this.data[addr] = array.data[row];
@@ -533,9 +519,7 @@ public class Matrix {
      * @return this
      */
     public Matrix addAssign(final Matrix another) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
-
+        assert this.rows == another.rows && this.cols == another.cols : "matrices are incompatible"; // TODO: message
         for (int row=0; row<rows; row++) {
             int addr = address(row);
             for (int col=0; col<cols; col++) {
@@ -553,9 +537,7 @@ public class Matrix {
      * @return this
      */
     public Matrix subAssign(final Matrix another) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
-
+        assert this.rows == another.rows && this.cols == another.cols : "matrices are incompatible"; // TODO: message
         for (int row=0; row<rows; row++) {
             int addr = address(row);
             for (int col=0; col<cols; col++) {
@@ -618,9 +600,7 @@ public class Matrix {
      * @return a new instance
      */
     public Matrix add(final Matrix another) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
-
+        assert this.rows == another.rows && this.cols == another.cols : "matrices are incompatible"; // TODO: message
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
@@ -639,9 +619,7 @@ public class Matrix {
      * @return a new instance
      */
     public Matrix sub(final Matrix another) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
-
+        assert this.rows == another.rows && this.cols == another.cols : "matrices are incompatible"; // TODO: message
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
@@ -716,9 +694,7 @@ public class Matrix {
      * @return a new Array which contains the result
      */
     public Array mul(final Array array) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.cols != array.length) throw new IllegalArgumentException(); //TODO: message
-
+        assert this.cols == array.length : "array is incompatible"; // TODO: message
         final Array result = new Array(this.cols);
         for (int col=0; col<this.cols; col++) {
             int addr = address(0, col);
@@ -739,9 +715,7 @@ public class Matrix {
      * @return a new Matrix which contains the result
      */
     public Matrix mul(final Matrix another) {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.cols != another.rows) throw new IllegalArgumentException(); //TODO: message
-
+        assert this.cols == another.rows : "matrices are incompatible"; // TODO: message
         final Matrix result = new Matrix(this.rows, another.cols);
         for (int col = 0; col < another.cols; col++) {
             final int caddr = another.address(0, col);
@@ -794,31 +768,6 @@ public class Matrix {
         itmp = this.length; this.length = another.length; another.length = itmp;
         // swaps data
         dtmp = this.data;   this.data   = another.data;   another.data   = dtmp;
-
-        //
-        //        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        //        if (this.rows != another.rows || this.cols != another.cols) throw new IllegalArgumentException(); //TODO: message
-        //
-        //        // allocate a temporary buffer for data transfer
-        //        double[] buffer = new double[Math.min(this.length, blksize)];
-        //
-        //        // swaps blocks
-        //        for (int row=0; row<length/blksize; row++) {
-        //            int addr = row*blksize;
-        //            System.arraycopy(this.data,    addr, buffer,          0, blksize);
-        //            System.arraycopy(another.data, addr, this.data,    addr, blksize);
-        //            System.arraycopy(buffer,          0, another.data, addr, blksize);
-        //        }
-        //
-        //        // swaps last block
-        //        final int addr = ((int)(length/blksize))*blksize;
-        //        if (addr>=0 && addr<this.length) {
-        //            final int remainder = this.length-addr;
-        //            System.arraycopy(this.data,    addr, buffer,          0, remainder);
-        //            System.arraycopy(another.data, addr, this.data,    addr, remainder);
-        //            System.arraycopy(buffer,          0, another.data, addr, remainder);
-        //        }
-
         return this;
     }
 
@@ -866,9 +815,7 @@ public class Matrix {
      * @return a new instance which contains the result of this operation
      */
     public Array diagonal() {
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (this.rows != this.cols) throw new IllegalArgumentException(); //TODO: message
-
+        assert this.rows == this.cols : "matrix must be square"; //TODO: message
         final Array result = new Array(this.cols);
         int addr = 0;
         for (int i = 0; i < this.cols; i++) {

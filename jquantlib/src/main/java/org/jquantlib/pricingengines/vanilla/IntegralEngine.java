@@ -70,8 +70,6 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
     // TODO: define tolerance for calculate()
     @Override
     public void calculate() {
-
-        // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         assert arguments.exercise.type()==Exercise.Type.EUROPEAN : NOT_AN_AMERICAN_OPTION;
         assert arguments.payoff instanceof StrikedTypePayoff : NON_STRIKED_PAYOFF_GIVEN;
         final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;

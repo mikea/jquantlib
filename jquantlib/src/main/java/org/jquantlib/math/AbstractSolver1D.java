@@ -175,14 +175,10 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
      */
     public double solve(final F f, double accuracy, final double guess, final double xMin, final double xMax) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        if (!(accuracy > 0.0))
-            throw new IllegalArgumentException("accuracy must be positive");
-        if (!(xMin < xMax))
-            throw new IllegalArgumentException("invalid range: xMin >= xMax");
-        if (!(!lowerBoundEnforced || xMin >= lowerBound))
-            throw new IllegalArgumentException("xMin < enforced low bound");
-        if (!(!upperBoundEnforced || xMax <= upperBound))
-            throw new IllegalArgumentException("xMax > enforced hi bound");
+        assert accuracy > 0.0 : "accuracy must be positive"; // TODO: message
+        assert xMin < xMax : "invalid range: xMin >= xMax";
+        assert !lowerBoundEnforced || xMin >= lowerBound : "xMin < enforced low bound";
+        assert !upperBoundEnforced || xMax <= upperBound : "xMax > enforced hi bound";
 
         // check whether we really want to use epsilon
         accuracy = Math.max(accuracy, Constants.QL_EPSILON);
@@ -199,14 +195,10 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
 
         evaluationNumber = 2;
 
-        if (!(fxMin * fxMax < 0.0))
-            throw new ArithmeticException("root not bracketed: f[" + this.xMin + "," + this.xMax + "] -> [" + fxMin + "," + fxMax + "]");
-
-        if (!(guess > this.xMin))
-            throw new ArithmeticException("guess (" + guess + ") < xMin_ ("	+ this.xMin + ")");
-
-        if (!(guess < this.xMax))
-            throw new ArithmeticException("guess (" + guess + ") > xMax ("	+ this.xMax + ")");
+        // TODO: code review :: please verify against original QL/C++ code
+        assert fxMin * fxMax < 0.0 : "root not bracketed"; // TODO: message
+        assert guess > this.xMin : "guess must be greather than xMin";
+        assert guess < this.xMax : "guess must be lesser than xMax";
 
         root = guess;
 
