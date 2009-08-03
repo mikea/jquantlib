@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -54,7 +54,7 @@ import org.jquantlib.math.functions.Identity;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 //TODO: consider refactor Array and Matrix to math.matrixutilities (or something like this)
 public class Array extends Matrix {
-    
+
     /**
      * Default constructor
      * <p>
@@ -93,8 +93,8 @@ public class Array extends Matrix {
     public Array clone() {
         return this.copyOfRange(0, this.length);
     }
-    
-    
+
+
     @Override
     public boolean equals(final Object o) {
         if (o == null || !(o instanceof Array)) return false;
@@ -105,30 +105,34 @@ public class Array extends Matrix {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
 
         sb.append("[");
         sb.append(this.data[0]);
-        for (int col = 1; col < this.cols; col++) {
+        for (int col = 1; col < this.cols; col++)
             sb.append(", ").append(this.data[col]);
-        }
         sb.append(']').append('\n');
         return sb.toString();
     }
 
-    
+
     //
     // public methods
     //
 
     // some convenience methods
-    
+
+    public int size() {
+        return this.length;
+    }
+
+    @Override
     public Object toArray() {
-        double buffer[] = new double[this.length];
+        final double buffer[] = new double[this.length];
         return toArray(buffer);
     }
-    
-    public double[] toArray(double[] buffer) {
+
+    public double[] toArray(final double[] buffer) {
         if (this.length != buffer.length) throw new IllegalArgumentException(); //TODO:message
         System.arraycopy(this.data, 0, buffer, 0, this.length);
         return buffer;
@@ -145,25 +149,25 @@ public class Array extends Matrix {
         return this;
     }
 
-//XXX    
-//    /**
-//     * Fills <code>this</code> Array with contents from <code>another</code> Array
-//     * 
-//     * @param another is the source Array where data is being copied from
-//     * @return <code>this</code>
-//     */
-//    public Array fill(final Array another) {
-//        return (Array) super.fill(another);
-//    }
+    //XXX
+    //    /**
+    //     * Fills <code>this</code> Array with contents from <code>another</code> Array
+    //     *
+    //     * @param another is the source Array where data is being copied from
+    //     * @return <code>this</code>
+    //     */
+    //    public Array fill(final Array another) {
+    //        return (Array) super.fill(another);
+    //    }
 
     public double first() {
         return data[0];
     }
-    
+
     public double last() {
         return data[data.length-1];
     }
-    
+
     /**
      * Returns an Array containing a copy of region
      * 
@@ -177,14 +181,14 @@ public class Array extends Matrix {
         if (pos < 0) throw new IllegalArgumentException(); //TODO: message
         if (len <= 0) throw new IllegalArgumentException(); //TODO: message
         if (pos+len > this.length) throw new IllegalArgumentException(); //TODO: message
-        
+
         final Array result = new Array(len);
         System.arraycopy(this.data, pos, result.data, 0, len);
         return result;
     }
 
     /**
-     * Accumulate values in a range. 
+     * Accumulate values in a range.
      * 
      * @note Mimics std::accumulate
      * 
@@ -195,7 +199,7 @@ public class Array extends Matrix {
     }
 
     /**
-     * Accumulate values in a range. 
+     * Accumulate values in a range.
      * 
      * @note Mimics std::accumulate
      * 
@@ -206,18 +210,17 @@ public class Array extends Matrix {
      */
     public double accumulate(final int from, final int to, final double init) {
         double sum = init;
-        for (int i=from; i<to; i++) {
+        for (int i=from; i<to; i++)
             sum += this.data[i];
-        }
         return sum;
     }
 
     public double min() {
         return min(0, this.length);
     }
-    
+
     /**
-     * Return the minimum element in a range using comparison functor. 
+     * Return the minimum element in a range using comparison functor.
      * 
      * @note Mimics std::min_element
      * 
@@ -226,18 +229,18 @@ public class Array extends Matrix {
     public double min(final int from, final int to) {
         double result = this.data[from];
         for (int i=from+1; i<to; i++) {
-            double tmp = this.data[i]; 
+            final double tmp = this.data[i];
             if (tmp < result) result = tmp;
         }
         return result;
     }
- 
+
     public double max() {
         return max(0, this.length);
     }
 
     /**
-     * Return the maximum element in a range using comparison functor. 
+     * Return the maximum element in a range using comparison functor.
      * 
      * @note Mimics std::max_element
      * 
@@ -246,7 +249,7 @@ public class Array extends Matrix {
     public double max(final int from, final int to) {
         double result = this.data[from];
         for (int i=from+1; i<to; i++) {
-            double tmp = data[i]; 
+            final double tmp = data[i];
             if (tmp > result) result = tmp;
         }
         return result;
@@ -256,9 +259,9 @@ public class Array extends Matrix {
         Arrays.sort(data);
         return this;
     }
-    
+
     /**
-     * Return differences between adjacent values. 
+     * Return differences between adjacent values.
      * 
      * @note Mimics std::adjacent_difference
      * 
@@ -267,9 +270,9 @@ public class Array extends Matrix {
     public final Array adjacentDifference() {
         return adjacentDifference(0);
     }
-    
+
     /**
-     * Return differences between adjacent values. 
+     * Return differences between adjacent values.
      * 
      * @note Mimics std::adjacent_difference
      * 
@@ -279,10 +282,10 @@ public class Array extends Matrix {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         final Array diff = new Array(this.length-from);
         for (int i = from; i < this.length; i++) {
-            final double curr = this.data[i]; 
-            if (i == from) {
+            final double curr = this.data[i];
+            if (i == from)
                 diff.data[i-from] = curr;
-            } else {
+            else {
                 final double prev = this.data[i-1];
                 diff.data[i-from] = curr - prev;
             }
@@ -312,25 +315,24 @@ public class Array extends Matrix {
         int len = to - from;
         int half;
         int middle;
-        
+
         while (len > 0) {
             half = len >> 1;
             middle = from;
             middle = middle + half;
-            
+
             if (data[middle] < val) {
                 from = middle;
                 from++;
                 len = len - half -1;
-            } else {
+            } else
                 len = half;
-            }
         }
         return from;
     }
 
     /**
-     * Finds the last position in which val could be inserted without changing the ordering. 
+     * Finds the last position in which val could be inserted without changing the ordering.
      * 
      * @note Mimics std::upper_bound
      *
@@ -338,10 +340,10 @@ public class Array extends Matrix {
      */
     public int upperBound(final double val) {
         return upperBound(0, this.length-1, val);
-    }   
+    }
 
     /**
-     * Finds the last position in which val could be inserted without changing the ordering. 
+     * Finds the last position in which val could be inserted without changing the ordering.
      * 
      * @note Mimics std::upper_bound
      *
@@ -351,26 +353,26 @@ public class Array extends Matrix {
         int len = to - from;
         int half;
         int middle;
-        
+
         while (len > 0) {
             half = len >> 1;
-            middle = from;
-            middle = middle + half;
-            
-            if (val < data[middle]){
-                len = half;
-            } else {
-                from = middle;
-                from++;
-                len = len - half -1;
-            }
+        middle = from;
+        middle = middle + half;
+
+        if (val < data[middle])
+            len = half;
+        else {
+            from = middle;
+            from++;
+            len = len - half -1;
+        }
         }
         return from;
     }
 
-    
+
     /**
-     * Applies a transformation function to all elements of <code>this</code> Array 
+     * Applies a transformation function to all elements of <code>this</code> Array
      *
      * @return this
      */
@@ -379,7 +381,7 @@ public class Array extends Matrix {
     }
 
     /**
-     * Applies a transformation function to a range of elements of <code>this</code> Array 
+     * Applies a transformation function to a range of elements of <code>this</code> Array
      *
      * @return this
      */
@@ -389,16 +391,15 @@ public class Array extends Matrix {
         if (f == null) throw new NullPointerException();
 
         if (f instanceof Identity) return this;
-        
-        for (int i = from; i < to; i++) {
+
+        for (int i = from; i < to; i++)
             data[i] = f.op(data[i]);
-        }
         return this;
     }
 
 
-    
-    
+
+
     //
     //    Assignment operations
     //
@@ -415,30 +416,28 @@ public class Array extends Matrix {
     //    /=    divAssign  Array   Array    this
 
     public Array addAssign(final double scalar) {
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             data[i] += scalar;
-        }
         return this;
     }
 
     public Array subAssign(final double scalar) {
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             data[i] -= scalar;
-        }
         return this;
     }
 
+    @Override
     public Array mulAssign(final double scalar) {
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             data[i] *= scalar;
-        }
         return this;
     }
 
+    @Override
     public Array divAssign(final double scalar) {
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             data[i] /= scalar;
-        }
         return this;
     }
 
@@ -446,19 +445,18 @@ public class Array extends Matrix {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
 
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             data[i] += another.data[i];
-        }
         return this;
     }
 
+    @Override
     public Array subAssign(final Matrix another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != another.rows || this.length != another.length) throw new IllegalArgumentException(); //TODO: message
 
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             data[i] -= another.data[i];
-        }
         return this;
     }
 
@@ -466,24 +464,22 @@ public class Array extends Matrix {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
 
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             data[i] *= another.data[i];
-        }
         return this;
-    }    
+    }
 
 
     public Array divAssign(final Matrix another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != another.rows || this.length != another.length) throw new IllegalArgumentException(); //TODO: message
 
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             data[i] /= another.data[i];
-        }
         return this;
     }
 
-    
+
     //
     //    Algebraic products
     //
@@ -502,33 +498,31 @@ public class Array extends Matrix {
 
     public Array add(final double scalar) {
         final Array result = new Array(this.length);
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             result.data[i] = this.data[i] + scalar;
-        }
         return result;
     }
 
     public Array sub(final double scalar) {
         final Array result = new Array(this.length);
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             result.data[i] = this.data[i] - scalar;
-        }
         return result;
     }
 
+    @Override
     public Array mul(final double scalar) {
         final Array result = new Array(this.length);
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             result.data[i] = this.data[i] * scalar;
-        }
         return result;
     }
 
+    @Override
     public Array div(final double scalar) {
         final Array result = new Array(this.length);
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             result.data[i] = this.data[i] / scalar;
-        }
         return result;
     }
 
@@ -537,33 +531,32 @@ public class Array extends Matrix {
         if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
 
         final Array result = new Array(this.length);
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             result.data[i] = this.data[i] + another.data[i];
-        }
         return result;
     }
 
+    @Override
     public Array sub(final Matrix another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.rows != another.rows || this.length != another.length) throw new IllegalArgumentException(); //TODO: message
 
         final Array result = new Array(this.length);
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             result.data[i] = this.data[i] - another.data[i];
-        }
         return result;
     }
 
+    @Override
     public Array mul(final Array another) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
 
         final Array result = new Array(this.length);
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             result.data[i] = this.data[i] * another.data[i];
-        }
         return result;
-    }    
+    }
 
 
     public Array div(final Matrix another) {
@@ -571,13 +564,12 @@ public class Array extends Matrix {
         if (this.rows != another.rows || this.length != another.length) throw new IllegalArgumentException(); //TODO: message
 
         final Array result = new Array(this.length);
-        for (int i=0; i<length; i++) {
+        for (int i=0; i<length; i++)
             result.data[i] = this.data[i] / another.data[i];
-        }
         return result;
     }
 
-    
+
     //
     //    Vetorial products
     //
@@ -585,6 +577,7 @@ public class Array extends Matrix {
     //    ----- ---------- ------- -------- ------
     //    *     mul        Array   Matrix   Array
 
+    @Override
     public Array mul(final Matrix matrix) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
         if (this.length != matrix.rows) throw new IllegalArgumentException(); //TODO: message
@@ -595,14 +588,14 @@ public class Array extends Matrix {
             double sum = 0.0;
             for (int col=0; col<matrix.cols; col++) {
                 sum += this.data[i] * matrix.data[addr];
-                addr++; 
+                addr++;
             }
             result.data[i] = sum;
         }
         return result;
     }
 
-    
+
     //
     //    Math functions
     //
@@ -615,38 +608,34 @@ public class Array extends Matrix {
 
     public Array abs() {
         final Array result = new Array(this.length);
-        for (int i=0; i<this.length; i++) {
+        for (int i=0; i<this.length; i++)
             result.data[i] = Math.abs(data[i]);
-        }
         return result;
     }
-    
+
     public Array sqrt() {
         final Array result = new Array(this.length);
-        for (int i=0; i<this.length; i++) {
+        for (int i=0; i<this.length; i++)
             result.data[i] = Math.sqrt(data[i]);
-        }
         return result;
     }
-    
+
     public Array log() {
         final Array result = new Array(this.length);
-        for (int i=0; i<this.length; i++) {
+        for (int i=0; i<this.length; i++)
             result.data[i] = Math.log(data[i]);
-        }
         return result;
     }
-    
+
     public Array exp() {
         final Array result = new Array(this.length);
-        for (int i=0; i<this.length; i++) {
+        for (int i=0; i<this.length; i++)
             result.data[i] = Math.exp(data[i]);
-        }
         return result;
     }
-    
 
-    
+
+
     //
     //    Miscellaneous
     //
@@ -655,21 +644,21 @@ public class Array extends Matrix {
     //    swap         Array   Array    this
     //    outerProduct Array   Array    Matrix
     //    dotProduct   Array   Array    double
-    
+
     public Array swap(final Array another) {
         super.swap(another);
         return this;
     }
 
-    public Array swap(final int pos1, int pos2) {
-        double tmp = data[pos1];
+    public Array swap(final int pos1, final int pos2) {
+        final double tmp = data[pos1];
         data[pos1] = data[pos2];
         data[pos2] = tmp;
         return this;
     }
-    
+
     /**
-     * Returns the <b>dot product</b> (also known as <b>scalar product</b>) of 
+     * Returns the <b>dot product</b> (also known as <b>scalar product</b>) of
      * <code>this</code> Array and <code>another</code> Array.
      * <p>
      * The definition of dot product is
@@ -685,7 +674,7 @@ public class Array extends Matrix {
         if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
         return innerProduct(another, 0, length);
     }
-    
+
     /**
      * The inner product generalizes the dot product to abstract vector spaces and is normally denoted by {@latex$ <a , b>}.
      * <p>
@@ -702,8 +691,8 @@ public class Array extends Matrix {
         if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
         return innerProduct(another, 0, length);
     }
-    
-    
+
+
     /**
      * The inner product generalizes the dot product to abstract vector spaces and is normally denoted by {@latex$ <a , b>}.
      * <p>
@@ -719,24 +708,23 @@ public class Array extends Matrix {
      */
     public double innerProduct(final Array another, final int from, final int to) {
         double sum = 0.0;
-        for (int i=from; i<to; i++) {
+        for (int i=from; i<to; i++)
             sum += this.data[i] * another.data[i];
-        }
         return sum;
     }
-    
-    
+
+
     /**
      * Performs the <b>outer product</b> of <code>this</code> Array and <code>another</code> Array
      * <p>
      * The definition of outer product is:<br/>
-     * Given a vector $\mathbf{u} = (u_1, u_2, \dots, u_m)$ with <i>m</i> elements and 
-     *       a vector $\mathbf{v} = (v_1, v_2, \dots, v_n)$ with <i>n</i> elements, 
+     * Given a vector $\mathbf{u} = (u_1, u_2, \dots, u_m)$ with <i>m</i> elements and
+     *       a vector $\mathbf{v} = (v_1, v_2, \dots, v_n)$ with <i>n</i> elements,
      * their outer product $\mathbf{u} \otimes \mathbf{v}$ is defined as
      * {@latex[ $\mathbf{u} \otimes \mathbf{v} = \left[\begin{array}{c c c c}
-     *    u_1v_1 & u_1v_2 & \dots  & u_1v_n \\ 
-     *    u_2v_1 & u_2v_2 & \dots  & u_2v_n \\ 
-     *    \vdots & \vdots & \ddots & \vdots \\ 
+     *    u_1v_1 & u_1v_2 & \dots  & u_1v_n \\
+     *    u_2v_1 & u_2v_2 & \dots  & u_2v_n \\
+     *    \vdots & \vdots & \ddots & \vdots \\
      *    u_mv_1 & u_mv_2 & \dots  & u_mv_n
      *  \end{array}\right] }
      * 
@@ -751,12 +739,11 @@ public class Array extends Matrix {
 
         final Matrix result = new Matrix(this.length, another.length);
         for (int row=0; row<this.length; row++) {
-            int addr = result.getAddress(row);
-            for (int col=0; col<another.length; col++) {
+            final int addr = result.getAddress(row);
+            for (int col=0; col<another.length; col++)
                 result.data[addr+col] = this.data[row] * another.data[col];
-            }
         }
         return result;
     }
-    
+
 }
