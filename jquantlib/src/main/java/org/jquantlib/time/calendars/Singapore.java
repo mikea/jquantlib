@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Joon Tiang
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -69,219 +69,220 @@ import org.jquantlib.util.Month;
  * @author Joon Tiang
  */
 public class Singapore extends DelegateCalendar {
-		
-	private final static Singapore SGX_CALENDAR = new Singapore(Market.SGX);
-			
-	private Singapore(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case SGX:
-			delegate = new SingaporeSettlementCalendar();
-			break;
-		
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-		// FIXME
-		setDelegate(delegate);
-	}
-	
-	public static Singapore getCalendar(Market market) {
-		switch (market) {
-		case SGX:
-			return SGX_CALENDAR;
-		
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-	}
+
+    private final static Singapore SGX_CALENDAR = new Singapore(Market.SGX);
+
+    private Singapore(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case SGX:
+            delegate = new SingaporeSettlementCalendar();
+            break;
+
+        default:
+            throw new AssertionError("unknown market");
+        }
+        // FIXME
+        setDelegate(delegate);
+    }
+
+    public static Singapore getCalendar(final Market market) {
+        switch (market) {
+        case SGX:
+            return SGX_CALENDAR;
+
+        default:
+            throw new AssertionError("unknown market");
+        }
+    }
 
 
-	//
-	// public enums
-	//
+    //
+    // public enums
+    //
 
-	// FIXME: Settlement calendar is missing
-	public enum Market {
-		/**
-		 * Singapore Stock Exchange
-		 */
-		SGX
-	}
+    // FIXME: Settlement calendar is missing
+    public enum Market {
+        /**
+         * Singapore Stock Exchange
+         */
+        SGX
+    }
 
 
-	//
-	// private inner classes
-	//
+    //
+    // private inner classes
+    //
 
-	private static final class SingaporeSettlementCalendar extends WesternCalendar {
-		
-		public boolean isBusinessDay(Date date) {
-	        final Weekday w = date.getWeekday();
-	        final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-	        final Month m = date.getMonthEnum();
-	        final int y = date.getYear();
-	        final int em = easterMonday(y);
+    private static final class SingaporeSettlementCalendar extends WesternCalendar {
 
-	        if (isWeekend(w)
-	            // New Year's Day
-	            || (d == 1 && m == JANUARY)
-	            // Good Friday
-	            || (dd == em-3)
-	            // Labor Day
-	            || (d == 1 && m == MAY)
-	            // National Day
-	            || (d == 9 && m == AUGUST)
-	            // Christmas Day
-	            || (d == 25 && m == DECEMBER)
-	            
-	            // *** variable holidays ***
-	            
-	            || (y == 2004 && 
-	            		(
-	            	            // Chinese New Year
-	            				((d == 22 || d == 23) && m == JANUARY)
-	            	            // Hari Raya Haji
-	            				|| ((d == 1 || d == 2) && m == FEBRUARY)
-	            	            // Vesak Poya Day
-	            				|| (d == 2 && m == JUNE)
-	            	            // Deepavali
-	            				|| (d == 11 && m == NOVEMBER)
-	            	            // Diwali
-	            					// weekend??
-	            	            // Hari Raya Puasa
-	            	            || ((d == 14 || d == 15) && m == NOVEMBER)
-	            		))
-	            
-	            || (y == 2005 &&
-	            		(
-	            	            // Chinese New Year
-	            				((d == 9 || d == 10) && m == FEBRUARY)
-	            	            // Hari Raya Haji
-	            				|| (d == 21 && m == JANUARY)
-	            	            // Vesak Poya Day
-	            				|| (d == 22 && m == MAY)
-	            	            // Deepavali
-	            						// weekend??
-	            	            // Diwali
-	            				|| (d == 1 && m == NOVEMBER)
-	            	            // Hari Raya Puasa
-	            				|| (d == 3 && m == NOVEMBER)
-	            		))
-	            || (y == 2006 &&
-	            		(
-	            	            // Chinese New Year
-	            				((d == 30 || d == 31) && m == JANUARY)
-	            	            // Hari Raya Haji
-	            				|| (d == 10 && m == JANUARY)
-	            	            // Vesak Poya Day
-	            	            || (d == 12 && m == MAY)
-	            	            // Deepavali
-	            	            	// weekend ??
-	            	            // Diwali
-	            	            	// weekend ??
-	            	            // Hari Raya Puasa
-	            	            || (d == 24 && m == OCTOBER)
-	            		))
-	            
-	            || (y == 2007 &&
-	            		(
-	            	            // Chinese New Year
-	            				((d == 19 || d == 20) && m == FEBRUARY)
-	            	            // Hari Raya Haji
-	            				|| (d == 2 && m == JANUARY)
-	            				|| (d == 20 && m == DECEMBER)
-	            	            // Vesak Poya Day
-	            				|| (d == 31 && m == MAY)
-	            	            // Deepavali
-	            				|| (d == 8 && m == NOVEMBER)
-	            	            // Diwali
-	            					// weekend??
-	            	            // Hari Raya Puasa
-	            				|| (d == 13 && m == OCTOBER)
-	            		))
-	            
-	            || (y == 2008 &&
-	            		(
-	            	            // Chinese New Year
-	            				((d == 7 || d == 8) && m == FEBRUARY)
-	            	            // Hari Raya Haji
-	            				|| (d == 8 && m == DECEMBER)
-	            	            // Vesak Poya Day
-	            				|| (d == 19 && m == MAY)
-	            	            // Deepavali
-	            				|| (d == 27 && m == OCTOBER)
-	            	            // Diwali
-	            					// weekend
-	            	            // Hari Raya Puasa
-	            				|| (d == 1 && m == OCTOBER)
-	            		))
-	            
-	            || (y == 2009 &&
-	            		(
-	            	            // Chinese New Year
-	            				((d == 26 || d == 27) && m == JANUARY)
-	            	            // Hari Raya Haji
-	            				|| (d == 27 && m == NOVEMBER)
-	            	            // Vesak Poya Day
-	            				|| (d == 9 && m == MAY)
-	            	            // Deepavali
-	            				|| (d == 15 && m == NOVEMBER)
-	            	            // Diwali
-	            					// weekend??
-	            	            // Hari Raya Puasa
-	            				|| (d == 20 && m == SEPTEMBER)
-	            		))
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final Month m = date.getMonthEnum();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
 
-//XXX
-//	            // Chinese New Year
-//	            || ((d == 22 || d == 23) && m == JANUARY && y == 2004)
-//	            || ((d == 9 || d == 10) && m == FEBRUARY && y == 2005)
-//	            || ((d == 30 || d == 31) && m == JANUARY && y == 2006)
-//	            || ((d == 19 || d == 20) && m == FEBRUARY && y == 2007)
-//	            || ((d == 7 || d == 8) && m == FEBRUARY && y == 2008)
-//
-//	            // Hari Raya Haji
-//	            || ((d == 1 || d == 2) && m == FEBRUARY && y == 2004)
-//	            || (d == 21 && m == JANUARY && y == 2005)
-//	            || (d == 10 && m == JANUARY && y == 2006)
-//	            || (d == 2 && m == JANUARY && y == 2007)
-//	            || (d == 20 && m == DECEMBER && y == 2007)
-//	            || (d == 8 && m == DECEMBER && y == 2008)
-//
-//	            // Vesak Poya Day
-//	            || (d == 2 && m == JUNE && y == 2004)
-//	            || (d == 22 && m == MAY && y == 2005)
-//	            || (d == 12 && m == MAY && y == 2006)
-//	            || (d == 31 && m == MAY && y == 2007)
-//	            || (d == 18 && m == MAY && y == 2008)
-//
-//	            // Deepavali
-//	            || (d == 11 && m == NOVEMBER && y == 2004)
-//	            || (d == 8 && m == NOVEMBER && y == 2007)
-//	            || (d == 28 && m == OCTOBER && y == 2008)
-//
-//	            // Diwali
-//	            || (d == 1 && m == NOVEMBER && y == 2005)
-//
-//	            // Hari Raya Puasa
-//	            || ((d == 14 || d == 15) && m == NOVEMBER && y == 2004)
-//	            || (d == 3 && m == NOVEMBER && y == 2005)
-//	            || (d == 24 && m == OCTOBER && y == 2006)
-//	            || (d == 13 && m == OCTOBER && y == 2007)
-//	            || (d == 1 && m == OCTOBER && y == 2008)
-//	            
-	            )
-	            return false;
-	        
-	        return true;
+            if (isWeekend(w)
+                    // New Year's Day
+                    || (d == 1 && m == JANUARY)
+                    // Good Friday
+                    || (dd == em-3)
+                    // Labor Day
+                    || (d == 1 && m == MAY)
+                    // National Day
+                    || (d == 9 && m == AUGUST)
+                    // Christmas Day
+                    || (d == 25 && m == DECEMBER)
 
-		}
+                    // *** variable holidays ***
 
-		public String getName() {
-	       return "Singapore exchange";
-	    }
-	    
-	}
+                    || (y == 2004 &&
+                            (
+                                    // Chinese New Year
+                                    ((d == 22 || d == 23) && m == JANUARY)
+                                    // Hari Raya Haji
+                                    || ((d == 1 || d == 2) && m == FEBRUARY)
+                                    // Vesak Poya Day
+                                    || (d == 2 && m == JUNE)
+                                    // Deepavali
+                                    || (d == 11 && m == NOVEMBER)
+                                    // Diwali
+                                    // weekend??
+                                    // Hari Raya Puasa
+                                    || ((d == 14 || d == 15) && m == NOVEMBER)
+                            ))
+
+                            || (y == 2005 &&
+                                    (
+                                            // Chinese New Year
+                                            ((d == 9 || d == 10) && m == FEBRUARY)
+                                            // Hari Raya Haji
+                                            || (d == 21 && m == JANUARY)
+                                            // Vesak Poya Day
+                                            || (d == 22 && m == MAY)
+                                            // Deepavali
+                                            // weekend??
+                                            // Diwali
+                                            || (d == 1 && m == NOVEMBER)
+                                            // Hari Raya Puasa
+                                            || (d == 3 && m == NOVEMBER)
+                                    ))
+                                    || (y == 2006 &&
+                                            (
+                                                    // Chinese New Year
+                                                    ((d == 30 || d == 31) && m == JANUARY)
+                                                    // Hari Raya Haji
+                                                    || (d == 10 && m == JANUARY)
+                                                    // Vesak Poya Day
+                                                    || (d == 12 && m == MAY)
+                                                    // Deepavali
+                                                    // weekend ??
+                                                    // Diwali
+                                                    // weekend ??
+                                                    // Hari Raya Puasa
+                                                    || (d == 24 && m == OCTOBER)
+                                            ))
+
+                                            || (y == 2007 &&
+                                                    (
+                                                            // Chinese New Year
+                                                            ((d == 19 || d == 20) && m == FEBRUARY)
+                                                            // Hari Raya Haji
+                                                            || (d == 2 && m == JANUARY)
+                                                            || (d == 20 && m == DECEMBER)
+                                                            // Vesak Poya Day
+                                                            || (d == 31 && m == MAY)
+                                                            // Deepavali
+                                                            || (d == 8 && m == NOVEMBER)
+                                                            // Diwali
+                                                            // weekend??
+                                                            // Hari Raya Puasa
+                                                            || (d == 13 && m == OCTOBER)
+                                                    ))
+
+                                                    || (y == 2008 &&
+                                                            (
+                                                                    // Chinese New Year
+                                                                    ((d == 7 || d == 8) && m == FEBRUARY)
+                                                                    // Hari Raya Haji
+                                                                    || (d == 8 && m == DECEMBER)
+                                                                    // Vesak Poya Day
+                                                                    || (d == 19 && m == MAY)
+                                                                    // Deepavali
+                                                                    || (d == 27 && m == OCTOBER)
+                                                                    // Diwali
+                                                                    // weekend
+                                                                    // Hari Raya Puasa
+                                                                    || (d == 1 && m == OCTOBER)
+                                                            ))
+
+                                                            || (y == 2009 &&
+                                                                    (
+                                                                            // Chinese New Year
+                                                                            ((d == 26 || d == 27) && m == JANUARY)
+                                                                            // Hari Raya Haji
+                                                                            || (d == 27 && m == NOVEMBER)
+                                                                            // Vesak Poya Day
+                                                                            || (d == 9 && m == MAY)
+                                                                            // Deepavali
+                                                                            || (d == 15 && m == NOVEMBER)
+                                                                            // Diwali
+                                                                            // weekend??
+                                                                            // Hari Raya Puasa
+                                                                            || (d == 20 && m == SEPTEMBER)
+                                                                    ))
+
+                                                                    //XXX
+                                                                    //	            // Chinese New Year
+                                                                    //	            || ((d == 22 || d == 23) && m == JANUARY && y == 2004)
+                                                                    //	            || ((d == 9 || d == 10) && m == FEBRUARY && y == 2005)
+                                                                    //	            || ((d == 30 || d == 31) && m == JANUARY && y == 2006)
+                                                                    //	            || ((d == 19 || d == 20) && m == FEBRUARY && y == 2007)
+                                                                    //	            || ((d == 7 || d == 8) && m == FEBRUARY && y == 2008)
+                                                                    //
+                                                                    //	            // Hari Raya Haji
+                                                                    //	            || ((d == 1 || d == 2) && m == FEBRUARY && y == 2004)
+                                                                    //	            || (d == 21 && m == JANUARY && y == 2005)
+                                                                    //	            || (d == 10 && m == JANUARY && y == 2006)
+                                                                    //	            || (d == 2 && m == JANUARY && y == 2007)
+                                                                    //	            || (d == 20 && m == DECEMBER && y == 2007)
+                                                                    //	            || (d == 8 && m == DECEMBER && y == 2008)
+                                                                    //
+                                                                    //	            // Vesak Poya Day
+                                                                    //	            || (d == 2 && m == JUNE && y == 2004)
+                                                                    //	            || (d == 22 && m == MAY && y == 2005)
+                                                                    //	            || (d == 12 && m == MAY && y == 2006)
+                                                                    //	            || (d == 31 && m == MAY && y == 2007)
+                                                                    //	            || (d == 18 && m == MAY && y == 2008)
+                                                                    //
+                                                                    //	            // Deepavali
+                                                                    //	            || (d == 11 && m == NOVEMBER && y == 2004)
+                                                                    //	            || (d == 8 && m == NOVEMBER && y == 2007)
+                                                                    //	            || (d == 28 && m == OCTOBER && y == 2008)
+                                                                    //
+                                                                    //	            // Diwali
+                                                                    //	            || (d == 1 && m == NOVEMBER && y == 2005)
+                                                                    //
+                                                                    //	            // Hari Raya Puasa
+                                                                    //	            || ((d == 14 || d == 15) && m == NOVEMBER && y == 2004)
+                                                                    //	            || (d == 3 && m == NOVEMBER && y == 2005)
+                                                                    //	            || (d == 24 && m == OCTOBER && y == 2006)
+                                                                    //	            || (d == 13 && m == OCTOBER && y == 2007)
+                                                                    //	            || (d == 1 && m == OCTOBER && y == 2008)
+                                                                    //
+            )
+                return false;
+
+            return true;
+
+        }
+
+        public String getName() {
+            return "Singapore exchange";
+        }
+
+    }
 
 }

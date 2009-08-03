@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Renjith Nair
-  
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -27,7 +27,7 @@
  copy of the license along with this program; if not, please email
  <quantlib-dev@lists.sf.net>. The license is also available online at
  <http://quantlib.org/license.shtml>.
-*/
+ */
 
 
 package org.jquantlib.time.calendars;
@@ -55,84 +55,85 @@ import org.jquantlib.util.Month;
  * </ul>
  * Holidays falling on a Saturday or Sunday are moved to the following Monday.
  * @author Renjith Nair
-*/
+ */
 
 public class Ukraine extends DelegateCalendar {
-	private final static Ukraine USE_CALENDAR = new Ukraine(Market.USE);
+    private final static Ukraine USE_CALENDAR = new Ukraine(Market.USE);
 
-	private Ukraine(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case USE:
-			delegate = new UkraineUSECalendar();
-			break;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-		setDelegate(delegate);
-	}
+    private Ukraine(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case USE:
+            delegate = new UkraineUSECalendar();
+            break;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+        setDelegate(delegate);
+    }
 
-	public static Ukraine getCalendar(Market market) {
-		switch (market) {
-		case USE:
-			return USE_CALENDAR;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-	}
-
-	
-	//
-	// public enums
-	//
-	
-	//FIXME: Settlement calendar is missing
-	public static enum Market {
-		/**
-		 * Ukraine stock-exchange
-		 */
-		USE
-	}
+    public static Ukraine getCalendar(final Market market) {
+        switch (market) {
+        case USE:
+            return USE_CALENDAR;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+    }
 
 
-	private static final class UkraineUSECalendar extends WesternCalendar {
-	
-		public String getName() {
-			return "Ukraine stock-exchange";
-		}
-	
-		public boolean isBusinessDay(Date date) {
-			Weekday w = date.getWeekday();
-			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-			int m = date.getMonth();
-			int y = date.getYear();
-			int em = easterMonday(y);	
-			if (isWeekend(w)
-		            // New Year's Day (possibly moved to Monday)
-		            || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY))
-		                && m == Month.JANUARY.toInteger())
-		            // Orthodox Christmas
-		            || ((d == 7 || ((d == 8 || d == 9) && w == Weekday.MONDAY))
-		                && m == Month.JANUARY.toInteger())
-		            // Women's Day
-		            || ((d == 8 || ((d == 9 || d == 10) && w == Weekday.MONDAY))
-		                && m == Month.MARCH.toInteger())
-		            // Orthodox Easter Monday
-		            || (dd == em)
-		            // Holy Trinity Day
-		            || (dd == em+49)
-		            // Workers Solidarity Days
-		            || ((d == 1 || d == 2 || (d == 3 && w ==  Weekday.MONDAY)) && m == Month.MAY.toInteger())
-		            // Victory Day
-		            || ((d == 9 || ((d == 10 || d == 11) && w ==  Weekday.MONDAY)) && m == Month.MAY.toInteger())
-		            // Constitution Day
-		            || (d == 28 && m == Month.JUNE.toInteger())
-		            // Independence Day
-		            || (d == 24 && m == Month.AUGUST.toInteger()))
-		            return false;		
-			return true;
-		}
-		               
-	}
-	
+    //
+    // public enums
+    //
+
+    //FIXME: Settlement calendar is missing
+    public static enum Market {
+        /**
+         * Ukraine stock-exchange
+         */
+        USE
+    }
+
+
+    private static final class UkraineUSECalendar extends WesternCalendar {
+
+        public String getName() {
+            return "Ukraine stock-exchange";
+        }
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final int m = date.getMonth();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+            if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY))
+                            && m == Month.JANUARY.toInteger())
+                            // Orthodox Christmas
+                            || ((d == 7 || ((d == 8 || d == 9) && w == Weekday.MONDAY))
+                                    && m == Month.JANUARY.toInteger())
+                                    // Women's Day
+                                    || ((d == 8 || ((d == 9 || d == 10) && w == Weekday.MONDAY))
+                                            && m == Month.MARCH.toInteger())
+                                            // Orthodox Easter Monday
+                                            || (dd == em)
+                                            // Holy Trinity Day
+                                            || (dd == em+49)
+                                            // Workers Solidarity Days
+                                            || ((d == 1 || d == 2 || (d == 3 && w ==  Weekday.MONDAY)) && m == Month.MAY.toInteger())
+                                            // Victory Day
+                                            || ((d == 9 || ((d == 10 || d == 11) && w ==  Weekday.MONDAY)) && m == Month.MAY.toInteger())
+                                            // Constitution Day
+                                            || (d == 28 && m == Month.JUNE.toInteger())
+                                            // Independence Day
+                                            || (d == 24 && m == Month.AUGUST.toInteger()))
+                return false;
+            return true;
+        }
+
+    }
+
 }

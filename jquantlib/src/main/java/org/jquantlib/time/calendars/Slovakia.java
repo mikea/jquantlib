@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008
-  
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -67,99 +67,100 @@ import org.jquantlib.util.Month;
  * @author Richard Gomes
  */
 public class Slovakia extends DelegateCalendar {
-	
-	private final static Slovakia BSSE_CALENDAR = new Slovakia(Market.BSSE);
 
-	private Slovakia(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case BSSE:
-			delegate = new SlovakiaBSSECalendar();
-			break;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-		setDelegate(delegate);
-	}
+    private final static Slovakia BSSE_CALENDAR = new Slovakia(Market.BSSE);
 
-	public static Slovakia getCalendar(Market market) {
-		switch (market) {
-		case BSSE:
-			return BSSE_CALENDAR;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-	}
+    private Slovakia(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case BSSE:
+            delegate = new SlovakiaBSSECalendar();
+            break;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+        setDelegate(delegate);
+    }
 
-
-	//
-	// public enums
-	//
-
-	//FIXME: Settlement calendar is missing
-	public enum Market {
-		/**
-		 * Bratislava stock exchange of Slovakia
-		 */
-		BSSE
-	};
+    public static Slovakia getCalendar(final Market market) {
+        switch (market) {
+        case BSSE:
+            return BSSE_CALENDAR;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+    }
 
 
-	//
-	// private inner classes
-	//
+    //
+    // public enums
+    //
 
-	private static final class SlovakiaBSSECalendar extends WesternCalendar {
+    //FIXME: Settlement calendar is missing
+    public enum Market {
+        /**
+         * Bratislava stock exchange of Slovakia
+         */
+        BSSE
+    };
 
-		public String getName() {
-			return "Bratislava stock exchange";
-		}
 
-		public boolean isBusinessDay(Date date) {
-			Weekday w = date.getWeekday();
-	        int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-	        Month m = date.getMonthEnum();
-	        int y = date.getYear();
-	        int em = easterMonday(y);
-			
-			if (isWeekend(w)
-		        // New Year's Day
-	            || (d == 1 && m == JANUARY)
-	            // Epiphany
-	            || (d == 6 && m == JANUARY)
-	            // Good Friday
-	            || (dd == em-3)
-	            // Easter Monday
-	            || (dd == em)
-	            // May Day
-	            || (d == 1 && m == MAY)
-	            // Liberation of the Republic
-	            || (d == 8 && m == MAY)
-	            // SS. Cyril and Methodius
-	            || (d == 5 && m == JULY)
-	            // Slovak National Uprising
-	            || (d == 29 && m == AUGUST)
-	            // Constitution of the Slovak Republic
-	            || (d == 1 && m == SEPTEMBER)
-	            // Our Lady of the Seven Sorrows
-	            || (d == 15 && m == SEPTEMBER)
-	            // All Saints Day
-	            || (d == 1 && m == NOVEMBER)
-	            // Freedom and Democracy of the Slovak Republic
-	            || (d == 17 && m == NOVEMBER)
-	            // Christmas Eve
-	            || (d == 24 && m == DECEMBER)
-	            // Christmas
-	            || (d == 25 && m == DECEMBER)
-	            // St. Stephen
-	            || (d == 26 && m == DECEMBER)
-	            
-	            // unidentified closing days for stock exchange
-	            || (y >= 2004 && ((d >= 24 && d <= 31 && m == DECEMBER) || (d >= 1 && d <= 6 && m == JANUARY)))
-	            )
-		            return false;
-		        return true;
-		}
-	}
+    //
+    // private inner classes
+    //
+
+    private static final class SlovakiaBSSECalendar extends WesternCalendar {
+
+        public String getName() {
+            return "Bratislava stock exchange";
+        }
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final Month m = date.getMonthEnum();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+
+            if (isWeekend(w)
+                    // New Year's Day
+                    || (d == 1 && m == JANUARY)
+                    // Epiphany
+                    || (d == 6 && m == JANUARY)
+                    // Good Friday
+                    || (dd == em-3)
+                    // Easter Monday
+                    || (dd == em)
+                    // May Day
+                    || (d == 1 && m == MAY)
+                    // Liberation of the Republic
+                    || (d == 8 && m == MAY)
+                    // SS. Cyril and Methodius
+                    || (d == 5 && m == JULY)
+                    // Slovak National Uprising
+                    || (d == 29 && m == AUGUST)
+                    // Constitution of the Slovak Republic
+                    || (d == 1 && m == SEPTEMBER)
+                    // Our Lady of the Seven Sorrows
+                    || (d == 15 && m == SEPTEMBER)
+                    // All Saints Day
+                    || (d == 1 && m == NOVEMBER)
+                    // Freedom and Democracy of the Slovak Republic
+                    || (d == 17 && m == NOVEMBER)
+                    // Christmas Eve
+                    || (d == 24 && m == DECEMBER)
+                    // Christmas
+                    || (d == 25 && m == DECEMBER)
+                    // St. Stephen
+                    || (d == 26 && m == DECEMBER)
+
+                    // unidentified closing days for stock exchange
+                    || (y >= 2004 && ((d >= 24 && d <= 31 && m == DECEMBER) || (d >= 1 && d <= 6 && m == JANUARY)))
+            )
+                return false;
+            return true;
+        }
+    }
 
 }

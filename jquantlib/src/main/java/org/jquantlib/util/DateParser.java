@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -33,8 +33,8 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class DateParser {
-	
-	private final static Logger logger = LoggerFactory.getLogger(DateParser.class);
+
+    private final static Logger logger = LoggerFactory.getLogger(DateParser.class);
 
     /**
      * Convert ISO format strings to Date. Ex: 2008-03-31
@@ -42,16 +42,15 @@ public class DateParser {
      * @param str
      * @return Date
      */
-    public static Date parseISO(String str) {
+    public static Date parseISO(final String str) {
         if (str.length() == 10 && str.charAt(4) == '-' && str.charAt(7) == '-') {
-            int year = Integer.parseInt(str.substring(0, 4));
-            int month = Integer.parseInt(str.substring(5, 7));
-            int day = Integer.parseInt(str.substring(8, 10));
+            final int year = Integer.parseInt(str.substring(0, 4));
+            final int month = Integer.parseInt(str.substring(5, 7));
+            final int day = Integer.parseInt(str.substring(8, 10));
             logger.debug(DateFactory.getFactory().getDate(day, Month.valueOf(month), year).toString());
             return DateFactory.getFactory().getDate(day, Month.valueOf(month), year);
-        } else {
-        	throw new IllegalArgumentException("Invalid format " + str);	
-        }
+        } else
+            throw new AssertionError("Invalid format");
     }
 
     /**
@@ -63,7 +62,7 @@ public class DateParser {
      * @param fmt
      * @return Date
      */
-    public static Date parse(String str, String fmt) {
+    public static Date parse(final String str, final String fmt) {
         String[] slist = null;
         String[] flist = null;
         int d = 0, m = 0, y = 0;
@@ -71,12 +70,10 @@ public class DateParser {
         slist = str.split(str, '/');
         flist = str.split(fmt, '/');
 
-        if (slist.length != flist.length)
-            throw new IllegalArgumentException("String " + str
-                    + " didn't match with reference format " + fmt);
+        assert slist.length == flist.length : "String didn't match with reference format";
 
         for (int i = 0; i < flist.length; i++) {
-            String sub = flist[i];
+            final String sub = flist[i];
             if (sub.equalsIgnoreCase("dd"))
                 d = Integer.parseInt(slist[i]);
             else if (sub.equalsIgnoreCase("mm"))

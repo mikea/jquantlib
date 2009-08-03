@@ -1,9 +1,9 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
  Copyright (C) 2008 Dominik Holenstein
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,7 +16,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -112,295 +112,297 @@ import org.jquantlib.util.Month;
  */
 
 public class UnitedStates extends DelegateCalendar {
-	private final static UnitedStates SETTLEMENT_CALENDAR = new UnitedStates(Market.SETTLEMENT);
-	private final static UnitedStates NYSE_CALENDAR = new UnitedStates(Market.NYSE);
-	private final static UnitedStates GOVBOND_CALENDAR = new UnitedStates(Market.GOVERNMENTBOND);
-	private final static UnitedStates NERC_CALENDAR = new UnitedStates(Market.NERC);
+    private final static UnitedStates SETTLEMENT_CALENDAR = new UnitedStates(Market.SETTLEMENT);
+    private final static UnitedStates NYSE_CALENDAR = new UnitedStates(Market.NYSE);
+    private final static UnitedStates GOVBOND_CALENDAR = new UnitedStates(Market.GOVERNMENTBOND);
+    private final static UnitedStates NERC_CALENDAR = new UnitedStates(Market.NERC);
 
-	private UnitedStates(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case SETTLEMENT:
-			delegate = new USSettlementCalendar();
-			break;
-		case NYSE:
-			delegate = new NyseCalendar();
-			break;
-		case GOVERNMENTBOND:
-			delegate = new USGovernmentBondCalendar();
-			break;
-		case NERC:
-			delegate = new USNercCalendar();
-			break;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-		setDelegate(delegate);
-	}
+    private UnitedStates(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case SETTLEMENT:
+            delegate = new USSettlementCalendar();
+            break;
+        case NYSE:
+            delegate = new NyseCalendar();
+            break;
+        case GOVERNMENTBOND:
+            delegate = new USGovernmentBondCalendar();
+            break;
+        case NERC:
+            delegate = new USNercCalendar();
+            break;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+        setDelegate(delegate);
+    }
 
-	public static UnitedStates getCalendar(Market market) {
-		switch (market) {
-		case SETTLEMENT:
-			return SETTLEMENT_CALENDAR;
-		case NYSE:
-			return NYSE_CALENDAR;
-		case GOVERNMENTBOND:
-			return GOVBOND_CALENDAR;
-		case NERC:
-			return NERC_CALENDAR;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-	}
-
-	
-	//
-	// public enums
-	//
-	
-	public static enum Market {
-		/**
-		 * generic settlement calendar
-		 */
-		SETTLEMENT,
-		
-		/**
-		 * New York stock exchange calendar
-		 */
-		NYSE, 
-		
-		/**
-		 * government-bond calendar
-		 */
-		GOVERNMENTBOND, 
-		
-		/**
-		 * off-peak days for NERC
-		 */
-		NERC
-	}
+    public static UnitedStates getCalendar(final Market market) {
+        switch (market) {
+        case SETTLEMENT:
+            return SETTLEMENT_CALENDAR;
+        case NYSE:
+            return NYSE_CALENDAR;
+        case GOVERNMENTBOND:
+            return GOVBOND_CALENDAR;
+        case NERC:
+            return NERC_CALENDAR;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+    }
 
 
-	//
-	// private inner classes
-	//
+    //
+    // public enums
+    //
 
-	private static final class USSettlementCalendar extends WesternCalendar {
-	
-		public String getName() {
-			return "US settlement";
-		}
-	
-		public boolean isBusinessDay(Date date) {
-			Weekday w = date.getWeekday();
-			int d = date.getDayOfMonth();
-			int dd = date.getDayOfYear();
-			int m = date.getMonth();
-			int y = date.getYear();
-			int em = easterMonday(y);
-			
-			if (isWeekend(w)
-			// New Year's Day (possibly moved to Monday if on Sunday)
-					|| ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-							.toInteger())
-					// (or to Friday if on Saturday)
-					|| (d == 31 && w == Weekday.FRIDAY && m == Month.DECEMBER
-							.toInteger())
-					// Martin Luther King's birthday (third Monday in January)
-					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY.toInteger())
-					// Washington's birthday (third Monday in February)
-					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY.toInteger())
-					// Good Friday
-					|| ((dd == em - 3) && (y >= 2008))
-					// Memorial Day (last Monday in May)
-					|| (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-							.toInteger())
-					// Independence Day (Monday if Sunday or Friday if Saturday)
-					|| ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
-							.toInteger())
-					// Labor Day (first Monday in September)
-					|| (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-							.toInteger())
-					// Columbus Day (second Monday in October)
-					|| ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER
-							.toInteger())
-					// Veteran's Day (Monday if Sunday or Friday if Saturday)
-					|| ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
-							.toInteger())
-					// Thanksgiving Day (fourth Thursday in November)
-					|| ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-							.toInteger())
-					// Christmas (Monday if Sunday or Friday if Saturday)
-					|| ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
-							.toInteger()))
-				return false;
-			return true;
-		}
-	}
-	
-	private static final class NyseCalendar extends WesternCalendar {
-	
-		public String getName() {
-			return "New York stock exchange";
-		}
-	
-		public boolean isBusinessDay(Date date) {
-			Weekday w = date.getWeekday();
-			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-			int m = date.getMonth();
-			int y = date.getYear();
-			int em = easterMonday(y);
-			if (isWeekend(w)
-			// New Year's Day (possibly moved to Monday if on Sunday)
-					|| ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-							.toInteger())
-					// Washington's birthday (third Monday in February)
-					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
-							.toInteger())
-					// Good Friday
-					|| (dd == em - 3)
-					// Memorial Day (last Monday in May)
-					|| (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-							.toInteger())
-					// Independence Day (Monday if Sunday or Friday if Saturday)
-					|| ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
-							.toInteger())
-					// Labor Day (first Monday in September)
-					|| (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-							.toInteger())
-					// Thanksgiving Day (fourth Thursday in November)
-					|| ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-							.toInteger())
-					// Christmas (Monday if Sunday or Friday if Saturday)
-					|| ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
-							.toInteger()))
-				return false;
-	
-			if (y >= 1998) {
-				if (// Martin Luther King's birthday (third Monday in January)
-				((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY
-						.toInteger())
-						// President Reagan's funeral
-						|| (y == 2004 && m == Month.JUNE.toInteger() && d == 11)
-						// September 11, 2001
-						|| (y == 2001 && m == Month.SEPTEMBER.toInteger() && (11 <= d && d <= 14))
-						// President Ford's funeral
-						|| (y == 2007 && m == Month.JANUARY.toInteger() && d == 2))
-					return false;
-			} else if (y <= 1980) {
-				if (// Presidential election days
-				((y % 4 == 0) && m == Month.NOVEMBER.toInteger() && d <= 7 && w == Weekday.TUESDAY)
-						// 1977 Blackout
-						|| (y == 1977 && m == Month.JULY.toInteger() && d == 14)
-						// Funeral of former President Lyndon B. Johnson.
-						|| (y == 1973 && m == Month.JANUARY.toInteger() && d == 25)
-						// Funeral of former President Harry S. Truman
-						|| (y == 1972 && m == Month.DECEMBER.toInteger() && d == 28)
-						// National Day of Participation for the lunar
-						// exploration.
-						|| (y == 1969 && m == Month.JULY.toInteger() && d == 21)
-						// Funeral of former President Eisenhower.
-						|| (y == 1969 && m == Month.MARCH.toInteger() && d == 31)
-						// Closed all day - heavy snow.
-						|| (y == 1969 && m == Month.FEBRUARY.toInteger() && d == 10)
-						// Day after Independence Day.
-						|| (y == 1968 && m == Month.JULY.toInteger() && d == 5)
-						// June 12-Dec. 31, 1968
-						// Four day week (closed on Wednesdays) - Paperwork
-						// Crisis
-						|| (y == 1968 && dd >= 163 && w == Weekday.WEDNESDAY))
-					return false;
-			} else {
-				if (// Nixon's funeral
-				(y == 1994 && m == Month.APRIL.toInteger() && d == 27))
-					return false;
-			}
-			return true;
-		}
-	}
-	
-	private static final class USGovernmentBondCalendar extends WesternCalendar {
-	
-		public String getName() {
-			return "US government bond market";
-		}
-	
-		public boolean isBusinessDay(Date date) {
-			Weekday w = date.getWeekday();
-			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-			int m = date.getMonth();
-			int y = date.getYear();
-			int em = easterMonday(y);
-			if (isWeekend(w)
-			// New Year's Day (possibly moved to Monday if on Sunday)
-					|| ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-							.toInteger())
-					// Martin Luther King's birthday (third Monday in January)
-					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY
-							.toInteger())
-					// Washington's birthday (third Monday in February)
-					|| ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
-							.toInteger())
-					// Good Friday
-					|| (dd == em - 3)
-					// Memorial Day (last Monday in May)
-					|| (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-							.toInteger())
-					// Independence Day (Monday if Sunday or Friday if Saturday)
-					|| ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
-							.toInteger())
-					// Labor Day (first Monday in September)
-					|| (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-							.toInteger())
-					// Columbus Day (second Monday in October)
-					|| ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER
-							.toInteger())
-					// Veteran's Day (Monday if Sunday or Friday if Saturday)
-					|| ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
-							.toInteger())
-					// Thanksgiving Day (fourth Thursday in November)
-					|| ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-							.toInteger())
-					// Christmas (Monday if Sunday or Friday if Saturday)
-					|| ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
-							.toInteger()))
-				return false;
-			return true;
-		}
-	}
-	
-	private static final class USNercCalendar extends WesternCalendar {
-	
-		public String getName() {
-			return "North American Energy Reliability Council";
-		}
-	
-		public boolean isBusinessDay(Date date) {
-			Weekday w = date.getWeekday();
-			int d = date.getDayOfMonth();
-			int m = date.getMonth();
-			if (isWeekend(w)
-			// New Year's Day (possibly moved to Monday if on Sunday)
-					|| ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-							.toInteger())
-					// Memorial Day (last Monday in May)
-					|| (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-							.toInteger())
-					// Independence Day (Monday if Sunday)
-					|| ((d == 4 || (d == 5 && w == Weekday.MONDAY)) && m == Month.JULY
-							.toInteger())
-					// Labor Day (first Monday in September)
-					|| (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-							.toInteger())
-					// Thanksgiving Day (fourth Thursday in November)
-					|| ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-							.toInteger())
-					// Christmas (Monday if Sunday)
-					|| ((d == 25 || (d == 26 && w == Weekday.MONDAY)) && m == Month.DECEMBER
-							.toInteger()))
-				return false;
-			return true;
-		}
-	}
+    public static enum Market {
+        /**
+         * generic settlement calendar
+         */
+        SETTLEMENT,
+
+        /**
+         * New York stock exchange calendar
+         */
+        NYSE,
+
+        /**
+         * government-bond calendar
+         */
+        GOVERNMENTBOND,
+
+        /**
+         * off-peak days for NERC
+         */
+        NERC
+    }
+
+
+    //
+    // private inner classes
+    //
+
+    private static final class USSettlementCalendar extends WesternCalendar {
+
+        public String getName() {
+            return "US settlement";
+        }
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth();
+            final int dd = date.getDayOfYear();
+            final int m = date.getMonth();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+
+            if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday if on Sunday)
+                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
+                            .toInteger())
+                            // (or to Friday if on Saturday)
+                            || (d == 31 && w == Weekday.FRIDAY && m == Month.DECEMBER
+                                    .toInteger())
+                                    // Martin Luther King's birthday (third Monday in January)
+                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY.toInteger())
+                                    // Washington's birthday (third Monday in February)
+                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY.toInteger())
+                                    // Good Friday
+                                    || ((dd == em - 3) && (y >= 2008))
+                                    // Memorial Day (last Monday in May)
+                                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
+                                            .toInteger())
+                                            // Independence Day (Monday if Sunday or Friday if Saturday)
+                                            || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
+                                                    .toInteger())
+                                                    // Labor Day (first Monday in September)
+                                                    || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
+                                                            .toInteger())
+                                                            // Columbus Day (second Monday in October)
+                                                            || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER
+                                                                    .toInteger())
+                                                                    // Veteran's Day (Monday if Sunday or Friday if Saturday)
+                                                                    || ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
+                                                                            .toInteger())
+                                                                            // Thanksgiving Day (fourth Thursday in November)
+                                                                            || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
+                                                                                    .toInteger())
+                                                                                    // Christmas (Monday if Sunday or Friday if Saturday)
+                                                                                    || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
+                                                                                            .toInteger()))
+                return false;
+            return true;
+        }
+    }
+
+    private static final class NyseCalendar extends WesternCalendar {
+
+        public String getName() {
+            return "New York stock exchange";
+        }
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final int m = date.getMonth();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+            if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday if on Sunday)
+                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
+                            .toInteger())
+                            // Washington's birthday (third Monday in February)
+                            || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
+                                    .toInteger())
+                                    // Good Friday
+                                    || (dd == em - 3)
+                                    // Memorial Day (last Monday in May)
+                                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
+                                            .toInteger())
+                                            // Independence Day (Monday if Sunday or Friday if Saturday)
+                                            || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
+                                                    .toInteger())
+                                                    // Labor Day (first Monday in September)
+                                                    || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
+                                                            .toInteger())
+                                                            // Thanksgiving Day (fourth Thursday in November)
+                                                            || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
+                                                                    .toInteger())
+                                                                    // Christmas (Monday if Sunday or Friday if Saturday)
+                                                                    || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
+                                                                            .toInteger()))
+                return false;
+
+            if (y >= 1998) {
+                if (// Martin Luther King's birthday (third Monday in January)
+                        ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY
+                                .toInteger())
+                                // President Reagan's funeral
+                                || (y == 2004 && m == Month.JUNE.toInteger() && d == 11)
+                                // September 11, 2001
+                                || (y == 2001 && m == Month.SEPTEMBER.toInteger() && (11 <= d && d <= 14))
+                                // President Ford's funeral
+                                || (y == 2007 && m == Month.JANUARY.toInteger() && d == 2))
+                    return false;
+            } else if (y <= 1980) {
+                if (// Presidential election days
+                        ((y % 4 == 0) && m == Month.NOVEMBER.toInteger() && d <= 7 && w == Weekday.TUESDAY)
+                        // 1977 Blackout
+                        || (y == 1977 && m == Month.JULY.toInteger() && d == 14)
+                        // Funeral of former President Lyndon B. Johnson.
+                        || (y == 1973 && m == Month.JANUARY.toInteger() && d == 25)
+                        // Funeral of former President Harry S. Truman
+                        || (y == 1972 && m == Month.DECEMBER.toInteger() && d == 28)
+                        // National Day of Participation for the lunar
+                        // exploration.
+                        || (y == 1969 && m == Month.JULY.toInteger() && d == 21)
+                        // Funeral of former President Eisenhower.
+                        || (y == 1969 && m == Month.MARCH.toInteger() && d == 31)
+                        // Closed all day - heavy snow.
+                        || (y == 1969 && m == Month.FEBRUARY.toInteger() && d == 10)
+                        // Day after Independence Day.
+                        || (y == 1968 && m == Month.JULY.toInteger() && d == 5)
+                        // June 12-Dec. 31, 1968
+                        // Four day week (closed on Wednesdays) - Paperwork
+                        // Crisis
+                        || (y == 1968 && dd >= 163 && w == Weekday.WEDNESDAY))
+                    return false;
+            } else if (// Nixon's funeral
+                    (y == 1994 && m == Month.APRIL.toInteger() && d == 27))
+                return false;
+            return true;
+        }
+    }
+
+    private static final class USGovernmentBondCalendar extends WesternCalendar {
+
+        public String getName() {
+            return "US government bond market";
+        }
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final int m = date.getMonth();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+            if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday if on Sunday)
+                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
+                            .toInteger())
+                            // Martin Luther King's birthday (third Monday in January)
+                            || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY
+                                    .toInteger())
+                                    // Washington's birthday (third Monday in February)
+                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
+                                            .toInteger())
+                                            // Good Friday
+                                            || (dd == em - 3)
+                                            // Memorial Day (last Monday in May)
+                                            || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
+                                                    .toInteger())
+                                                    // Independence Day (Monday if Sunday or Friday if Saturday)
+                                                    || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
+                                                            .toInteger())
+                                                            // Labor Day (first Monday in September)
+                                                            || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
+                                                                    .toInteger())
+                                                                    // Columbus Day (second Monday in October)
+                                                                    || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER
+                                                                            .toInteger())
+                                                                            // Veteran's Day (Monday if Sunday or Friday if Saturday)
+                                                                            || ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
+                                                                                    .toInteger())
+                                                                                    // Thanksgiving Day (fourth Thursday in November)
+                                                                                    || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
+                                                                                            .toInteger())
+                                                                                            // Christmas (Monday if Sunday or Friday if Saturday)
+                                                                                            || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
+                                                                                                    .toInteger()))
+                return false;
+            return true;
+        }
+    }
+
+    private static final class USNercCalendar extends WesternCalendar {
+
+        public String getName() {
+            return "North American Energy Reliability Council";
+        }
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth();
+            final int m = date.getMonth();
+            if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday if on Sunday)
+                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
+                            .toInteger())
+                            // Memorial Day (last Monday in May)
+                            || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
+                                    .toInteger())
+                                    // Independence Day (Monday if Sunday)
+                                    || ((d == 4 || (d == 5 && w == Weekday.MONDAY)) && m == Month.JULY
+                                            .toInteger())
+                                            // Labor Day (first Monday in September)
+                                            || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
+                                                    .toInteger())
+                                                    // Thanksgiving Day (fourth Thursday in November)
+                                                    || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
+                                                            .toInteger())
+                                                            // Christmas (Monday if Sunday)
+                                                            || ((d == 25 || (d == 26 && w == Weekday.MONDAY)) && m == Month.DECEMBER
+                                                                    .toInteger()))
+                return false;
+            return true;
+        }
+    }
 
 }

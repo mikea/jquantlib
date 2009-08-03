@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Anand Mani
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -65,91 +65,92 @@ import org.jquantlib.util.Month;
  */
 public class NewZealand extends DelegateCalendar {
 
-	private static final NewZealand NZX_CALENDAR = new NewZealand(Market.NZX);
+    private static final NewZealand NZX_CALENDAR = new NewZealand(Market.NZX);
 
 
-	private NewZealand(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case NZX:
-			delegate = new NewZealandNZXCalendar();
-			break;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-		setDelegate(delegate);
-	}
+    private NewZealand(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case NZX:
+            delegate = new NewZealandNZXCalendar();
+            break;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+        setDelegate(delegate);
+    }
 
-	public static NewZealand getCalendar(Market market) {
-		switch (market) {
-		case NZX:
-			return NZX_CALENDAR;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-	}
+    public static NewZealand getCalendar(final Market market) {
+        switch (market) {
+        case NZX:
+            return NZX_CALENDAR;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+    }
 
 
-	//
-	// public enums
-	//
-	
-	//FIXME: Settlement calendar is missing
-	public enum Market {
-		/**
-		 * New Zealand Stock Exchange
-		 */
-		NZX
-	}
+    //
+    // public enums
+    //
 
-	
-	//
-	// private inner classes
-	//
+    //FIXME: Settlement calendar is missing
+    public enum Market {
+        /**
+         * New Zealand Stock Exchange
+         */
+        NZX
+    }
 
-	private static final class NewZealandNZXCalendar extends WesternCalendar {
 
-		public String getName() {
-			return "OsloBors";
-		}
+    //
+    // private inner classes
+    //
 
-		public boolean isBusinessDay(Date date) {
-			final Weekday w = date.getWeekday();
-			final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-			final Month m = date.getMonthEnum();
-			final int y = date.getYear();
-			final int em = easterMonday(y);
-			
-			if (isWeekend(w)
-					// New Year's Day (possibly moved to Monday or Tuesday)
-					|| ((d == 1 || (d == 3 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
-					// Day after New Year's Day (possibly moved to Mon or Tuesday)
-					|| ((d == 2 || (d == 4 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
+    private static final class NewZealandNZXCalendar extends WesternCalendar {
 
-	// Do not seem to be observed by NZX :: see http://bugs.jquantlib.org/view.php?id=72 				
-//					// Anniversary Day, Monday nearest January 22nd
-					|| ((d >= 19 && d <= 25) && w == MONDAY && m == JANUARY)
+        public String getName() {
+            return "OsloBors";
+        }
 
-					// Waitangi Day. February 6th
-					|| (d == 6 && m == FEBRUARY)
-					// Good Friday
-					|| (dd == em - 3)
-					// Easter Monday
-					|| (dd == em)
-					// ANZAC Day. April 25th
-					|| (d == 25 && m == APRIL)
-					// Queen's Birthday, first Monday in June
-					|| (d <= 7 && w == MONDAY && m == JUNE)
-					// Labour Day, fourth Monday in October
-					|| ((d >= 22 && d <= 28) && w == MONDAY && m == OCTOBER)
-					// Christmas, December 25th (possibly Monday or Tuesday)
-					|| ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
-					// Boxing Day, December 26th (possibly Monday or Tuesday)
-					|| ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
-				return false;
-			
-			return true;
-		}
-	}
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final Month m = date.getMonthEnum();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+
+            if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday or Tuesday)
+                    || ((d == 1 || (d == 3 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
+                    // Day after New Year's Day (possibly moved to Mon or Tuesday)
+                    || ((d == 2 || (d == 4 && (w == MONDAY || w == TUESDAY))) && m == JANUARY)
+
+                    // Do not seem to be observed by NZX :: see http://bugs.jquantlib.org/view.php?id=72
+                    //					// Anniversary Day, Monday nearest January 22nd
+                    || ((d >= 19 && d <= 25) && w == MONDAY && m == JANUARY)
+
+                    // Waitangi Day. February 6th
+                    || (d == 6 && m == FEBRUARY)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter Monday
+                    || (dd == em)
+                    // ANZAC Day. April 25th
+                    || (d == 25 && m == APRIL)
+                    // Queen's Birthday, first Monday in June
+                    || (d <= 7 && w == MONDAY && m == JUNE)
+                    // Labour Day, fourth Monday in October
+                    || ((d >= 22 && d <= 28) && w == MONDAY && m == OCTOBER)
+                    // Christmas, December 25th (possibly Monday or Tuesday)
+                    || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+                    // Boxing Day, December 26th (possibly Monday or Tuesday)
+                    || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
+                return false;
+
+            return true;
+        }
+    }
 
 }

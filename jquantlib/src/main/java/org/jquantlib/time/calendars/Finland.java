@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -57,88 +57,89 @@ import org.jquantlib.util.Month;
  */
 public class Finland extends DelegateCalendar {
 
-	private final static Finland HSE_CALENDAR = new Finland(Market.HSE);
+    private final static Finland HSE_CALENDAR = new Finland(Market.HSE);
 
-	private Finland(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case HSE:
-			delegate = new FinlandHSECalendar();
-			break;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-		setDelegate(delegate);
-	}
+    private Finland(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case HSE:
+            delegate = new FinlandHSECalendar();
+            break;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+        setDelegate(delegate);
+    }
 
-	public static Finland getCalendar(Market market) {
-		switch (market) {
-		case HSE:
-			return HSE_CALENDAR;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-	}
+    public static Finland getCalendar(final Market market) {
+        switch (market) {
+        case HSE:
+            return HSE_CALENDAR;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+    }
 
 
-	//
-	// public enums
-	//
-	
-	// FIXME: Settlement calendar is missing
+    //
+    // public enums
+    //
 
-	public enum Market {
-		/**
-		 * Helsinki Stock Exchange
-		 */
-		HSE 
-	}
+    // FIXME: Settlement calendar is missing
 
-	
-	//
-	// private inner classes
-	//
+    public enum Market {
+        /**
+         * Helsinki Stock Exchange
+         */
+        HSE
+    }
 
-	private static final class FinlandHSECalendar extends WesternCalendar {
 
-		public String getName() {
-			return "HSE";
-		}
+    //
+    // private inner classes
+    //
 
-		public boolean isBusinessDay(Date date) {
-	        Weekday w = date.getWeekday();
-	        int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-	        Month m = date.getMonthEnum();
-	        int y = date.getYear();
-	        int em = easterMonday(y);
-	        if (isWeekend(w)
-	            // New Year's Day
-	            || (d == 1 && m == JANUARY)
-	            // Epiphany
-	            || (d == 6 && m == JANUARY)
-	            // Good Friday
-	            || (dd == em-3)
-	            // Easter Monday
-	            || (dd == em)
-	            // Ascension Thursday
-	            || (dd == em+38)
-	            // Labour Day
-	            || (d == 1 && m == MAY)
-	            // Midsummer Eve (Friday between June 18-24)
-	            || (w == FRIDAY && (d >= 18 && d <= 24) && m == JUNE)
-	            // Independence Day
-	            || (d == 6 && m == DECEMBER)
-	            // Christmas Eve
-	            || (d == 24 && m == DECEMBER)
-	            // Christmas
-	            || (d == 25 && m == DECEMBER)
-	            // Boxing Day
-	            || (d == 26 && m == DECEMBER)
-				// New year's eve
-				|| (d == 31 && m == DECEMBER))
-	            return false;
-			return true;
-		}
-	}
+    private static final class FinlandHSECalendar extends WesternCalendar {
+
+        public String getName() {
+            return "HSE";
+        }
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final Month m = date.getMonthEnum();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+            if (isWeekend(w)
+                    // New Year's Day
+                    || (d == 1 && m == JANUARY)
+                    // Epiphany
+                    || (d == 6 && m == JANUARY)
+                    // Good Friday
+                    || (dd == em-3)
+                    // Easter Monday
+                    || (dd == em)
+                    // Ascension Thursday
+                    || (dd == em+38)
+                    // Labour Day
+                    || (d == 1 && m == MAY)
+                    // Midsummer Eve (Friday between June 18-24)
+                    || (w == FRIDAY && (d >= 18 && d <= 24) && m == JUNE)
+                    // Independence Day
+                    || (d == 6 && m == DECEMBER)
+                    // Christmas Eve
+                    || (d == 24 && m == DECEMBER)
+                    // Christmas
+                    || (d == 25 && m == DECEMBER)
+                    // Boxing Day
+                    || (d == 26 && m == DECEMBER)
+                    // New year's eve
+                    || (d == 31 && m == DECEMBER))
+                return false;
+            return true;
+        }
+    }
 
 }

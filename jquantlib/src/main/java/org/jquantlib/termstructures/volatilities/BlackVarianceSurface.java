@@ -129,8 +129,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
         for (int j = 1; j <= blackVolMatrix.cols; j++) {
             times.set(j, timeFromReference(dates[j-1]));
-            if (!(times.get(j) > times.get(j-1)))
-                throw new AssertionError("dates must be sorted unique!");
+            assert times.get(j) > times.get(j-1) : "dates must be sorted unique!";
             for (int i = 0; i < blackVolMatrix.rows; i++) {
                 final double elem = blackVolMatrix.get(i, j-1);
                 final double ijvar = times.get(j) * elem * elem;

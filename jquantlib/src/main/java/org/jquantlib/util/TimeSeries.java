@@ -2,7 +2,7 @@
  Copyright (C) 2007 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -33,12 +33,11 @@ import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.IntervalPrice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.MessageFormatter;
 
 /**
  * Container for historical data
  * <p>
- * This class acts as a generic repository for a set of historical data. 
+ * This class acts as a generic repository for a set of historical data.
  * Any single datum can be accessed through its date, while
  * sets of consecutive data can be accessed through iterators.
  * 
@@ -50,73 +49,68 @@ import org.slf4j.helpers.MessageFormatter;
 public class TimeSeries<T> {
 
     private final static Logger logger = LoggerFactory.getLogger(TimeSeries.class);
-    
-    
+
+
     //
     // private fields
     //
-    
+
     private final Series delegate;
-    
-    
+
+
     //
     // public constructors
     //
-    
+
     public TimeSeries() {
         final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-    	if (Double.class.isAssignableFrom(klass)) {
+        if (Double.class.isAssignableFrom(klass))
             this.delegate = new TimeSeriesDouble();
-        } else if (IntervalPrice.class.isAssignableFrom(klass)) {
+        else if (IntervalPrice.class.isAssignableFrom(klass))
             this.delegate = new TimeSeriesIntervalPrice();
-        } else {
-            throw new UnsupportedOperationException("only Double and IntervalPrice are supported");
-        }
+        else
+            throw new AssertionError("only Double and IntervalPrice are supported");
     }
 
     public TimeSeries(final Date[] dates, final double[] values) {
         final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-    	if (Double.class.isAssignableFrom(klass)) {
+        if (Double.class.isAssignableFrom(klass))
             this.delegate = new TimeSeriesDouble(dates, values);
-        } else {
-            throw new UnsupportedOperationException("only double[] is supported");
-        }
+        else
+            throw new AssertionError("only double[] is supported");
     }
-    
+
     public TimeSeries(final Date[] dates, final Double[] values) {
         final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-    	if (Double.class.isAssignableFrom(klass)) {
+        if (Double.class.isAssignableFrom(klass))
             this.delegate = new TimeSeriesDouble(dates, values);
-        } else {
-            throw new UnsupportedOperationException("only Double[] is supported");
-        }
+        else
+            throw new AssertionError("only Double[] is supported");
     }
 
     public TimeSeries(final Date[] dates, final IntervalPrice[] values) {
         final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-    	if (IntervalPrice.class.isAssignableFrom(klass)) {
-            this.delegate = new TimeSeriesIntervalPrice(dates, (IntervalPrice[])values);
-        } else {
-            throw new UnsupportedOperationException("only IntervalPrice[] is supported");
-        }
-    }
-    
-    public TimeSeries(final Date startingDate, final List<T> values) {
-        final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-    	if (Double.class.isAssignableFrom(klass)) {
-            this.delegate = new TimeSeriesDouble(startingDate, (List<Double>)values);
-        } else if (IntervalPrice.class.isAssignableFrom(klass)) {
-            this.delegate = new TimeSeriesIntervalPrice(startingDate, (List<IntervalPrice>)values);
-        } else {
-            throw new UnsupportedOperationException("only List<Double> and List<IntervalPrice> are supported");
-        }
+        if (IntervalPrice.class.isAssignableFrom(klass))
+            this.delegate = new TimeSeriesIntervalPrice(dates, values);
+        else
+            throw new AssertionError("only IntervalPrice[] is supported");
     }
 
-    
+    public TimeSeries(final Date startingDate, final List<T> values) {
+        final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+        if (Double.class.isAssignableFrom(klass))
+            this.delegate = new TimeSeriesDouble(startingDate, (List<Double>)values);
+        else if (IntervalPrice.class.isAssignableFrom(klass))
+            this.delegate = new TimeSeriesIntervalPrice(startingDate, (List<IntervalPrice>)values);
+        else
+            throw new AssertionError("only List<Double> and List<IntervalPrice> are supported");
+    }
+
+
     //
     // public methods
     //
-    
+
     /**
      * @return the first date for which a historical datum exists
      */
@@ -148,13 +142,13 @@ public class TimeSeries<T> {
     public Date[] dates() {
         return delegate.dates();
     }
-    
+
     public void add(final Date date, final double dt) {
-    	((TimeSeriesDouble)delegate).add(date, dt) ;
+        ((TimeSeriesDouble)delegate).add(date, dt) ;
     }
 
     public void add(final Date date, final IntervalPrice dt) {
-        ((TimeSeriesIntervalPrice)delegate).addIntervalPrice(date, (IntervalPrice)dt) ;
+        ((TimeSeriesIntervalPrice)delegate).addIntervalPrice(date, dt) ;
     }
 
     public double find(final Date d) /*@ReadOnly*/ {
@@ -162,24 +156,24 @@ public class TimeSeries<T> {
     }
 
     public IntervalPrice findIntervalPrice(final Date d) /*@ReadOnly*/ {
-    	return ((TimeSeriesIntervalPrice)delegate).findIntervalPrice(d);
+        return ((TimeSeriesIntervalPrice)delegate).findIntervalPrice(d);
     }
 
     public double[] values() {
         return ((TimeSeriesDouble)delegate).values();
     }
-    
+
     public Collection<IntervalPrice> valuesIntervalPrice() {
         return ((TimeSeriesIntervalPrice)delegate).valuesIntervalPrice();
     }
-    
+
 
     //
     // private interfaces
     //
-    
+
     private interface Series {
-        
+
         /**
          * @return the first date for which a historical datum exists
          */
@@ -204,77 +198,73 @@ public class TimeSeries<T> {
          * @return a list of dates stored in this historical series
          */
         public Date[] dates();
-        
+
     }
-        
+
     private interface SeriesDouble extends Series {
-        
+
         /**
          * Adds a single double to this series
          */
         public void add(final Date date, final double dt);
-        
+
         /**
          * @param d is a {@link Date} we are interested on
          * @return the double value associated to a {@link Date} informed
          */
         public double find(final Date d) /*@ReadOnly*/;
-        
+
         /**
          * @return a double[] stored
          */
         public double[] values();
-        
+
     }
-    
+
     private interface SeriesIntervalPrice extends Series {
-        
+
         /**
          * Adds a single data to this series
          */
         public void addIntervalPrice(final Date date, final IntervalPrice dt);
-        
+
         /**
          * @param d is a {@link Date} we are interested on
          * @return the value associated to a {@link Date} informed
          */
         public IntervalPrice findIntervalPrice(final Date d) /*@ReadOnly*/;
-        
+
         /**
          * @return the full {@link Collection} of values stored
          */
         public Collection<IntervalPrice> valuesIntervalPrice();
-        
+
     }
-    
-    
+
+
     //
     // private inner classes
     //
 
     /**
-     * This TimeSeries implementation is a specialised to work with {@link IntervalPrice} 
+     * This TimeSeries implementation is a specialised to work with {@link IntervalPrice}
      */
     private static class TimeSeriesIntervalPrice implements SeriesIntervalPrice {
-        
+
         private final NavigableMap<Date, IntervalPrice> map;
-        
+
 
         public TimeSeriesIntervalPrice() {
             this.map = new TreeMap<Date, IntervalPrice>();
         }
-        
+
         public TimeSeriesIntervalPrice(final Date[] dates, final IntervalPrice[] values) {
             this();
-            if ( dates.length != values.length) {
-                String msg = MessageFormatter.arrayFormat("size mismatch({}, {})", new Object[] { dates.length, values.length } );
-                throw new IllegalArgumentException(msg);
-            }
-            for (int i = 0; i < dates.length; i++) {
+            assert dates.length == values.length : "sizes mismatch";
+            for (int i = 0; i < dates.length; i++)
                 this.addIntervalPrice(dates[i], values[i]) ;
-            }
         }
-        
+
         public TimeSeriesIntervalPrice(final Date startingDate, final List<IntervalPrice> values) {
             this();
             Date tmp = startingDate;
@@ -306,9 +296,9 @@ public class TimeSeries<T> {
 
         @Override
         public Date[] dates() {
-            return (Date[])map.keySet().toArray(new Date[0]);
+            return map.keySet().toArray(new Date[0]);
         }
-        
+
         @Override
         public void addIntervalPrice(final Date date, final IntervalPrice dt) {
             map.put(date, dt) ;
@@ -323,49 +313,41 @@ public class TimeSeries<T> {
         public Collection<IntervalPrice> valuesIntervalPrice() {
             return map.values();
         }
-        
+
     }
-    
+
 
     /**
-     * This TimeSeries implementation is specialised to work with a single price value 
+     * This TimeSeries implementation is specialised to work with a single price value
      */
     private static class TimeSeriesDouble implements SeriesDouble {
-        
+
         //XXX: private final NavigableMap<Date, Double> map;
         private final List<Date>   dates;
         private final ArrayDoubleList values;
-        
+
         //
         // public constructors
         //
-        
+
         public TimeSeriesDouble() {
             //XXX: this.map = new TreeMap<Date, T>();
             this.dates  = new ArrayList<Date>();
             this.values = new ArrayDoubleList();
         }
-        
+
         public TimeSeriesDouble(final Date[] dates, final double[] values) {
             this();
-            if ( dates.length != values.length) {
-                String msg = MessageFormatter.arrayFormat("size mismatch({}, {})", new Object[] { dates.length, values.length } );
-                throw new IllegalArgumentException(msg);
-            }
-            for (int i = 0; i < dates.length; i++) {
+            assert dates.length == values.length : "sizes mismatch";
+            for (int i = 0; i < dates.length; i++)
                 this.add(dates[i], values[i]) ;
-            }
         }
 
         public TimeSeriesDouble(final Date[] dates, final Double[] values) {
             this();
-            if ( dates.length != values.length) {
-                String msg = MessageFormatter.arrayFormat("size mismatch({}, {})", new Object[] { dates.length, values.length } );
-                throw new IllegalArgumentException(msg);
-            }
-            for (int i = 0; i < dates.length; i++) {
+            assert dates.length == values.length : "sizes mismatch";
+            for (int i = 0; i < dates.length; i++)
                 this.add(dates[i], values[i]) ;
-            }
         }
 
         public TimeSeriesDouble(final Date startingDate, final List<Double> values) {
@@ -405,7 +387,7 @@ public class TimeSeries<T> {
             //XXX: return (Date[])map.keySet().toArray(new Date[0]);
             return dates.toArray(new Date[dates.size()]);
         }
-        
+
         @Override
         public void add(final Date date, final double dt) {
             //XXX: map.put(date, dt) ;
@@ -416,13 +398,13 @@ public class TimeSeries<T> {
         @Override
         public double find(final Date d) /*@ReadOnly*/ {
             //XXX: return map.get(d);
-            int index = dates.indexOf(d);
+            final int index = dates.indexOf(d);
             return values.getDouble(index);
         }
 
         @Override
         public double[] values() {
-        	//XXX: return map.values();
+            //XXX: return map.values();
             return values.toDoubleArray();
         }
     }

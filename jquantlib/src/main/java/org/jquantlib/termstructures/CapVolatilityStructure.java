@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -31,24 +31,24 @@ import org.jquantlib.util.Date;
 
 public abstract class CapVolatilityStructure extends AbstractTermStructure {
 
-    public CapVolatilityStructure(DayCounter dc) {
+    public CapVolatilityStructure(final DayCounter dc) {
         super(dc == null ? Actual365Fixed.getDayCounter() : dc);
     }
 
-    public CapVolatilityStructure(Date referenceDate, Calendar cal, DayCounter dc) {
+    public CapVolatilityStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
         super(referenceDate, cal == null ? new NullCalendar() : cal, dc == null ? Actual365Fixed.getDayCounter() : dc);
     }
 
-    public CapVolatilityStructure(int settlementDays, Calendar cal, DayCounter dc) {
+    public CapVolatilityStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
         super(settlementDays, cal == null ? new NullCalendar() : cal, dc == null ? Actual365Fixed.getDayCounter() : dc);
     }
 
-    public double volatility(Date end, double strike) {
+    public double volatility(final Date end, final double strike) {
         return volatility(end, strike, false);
     }
 
-    public double volatility(Date end, double strike, boolean extrapolate) {
-        double t = timeFromReference(end);
+    public double volatility(final Date end, final double strike, final boolean extrapolate) {
+        final double t = timeFromReference(end);
         checkRange(t, strike, extrapolate);
         return volatilityImpl(t, strike);
 
@@ -61,32 +61,29 @@ public abstract class CapVolatilityStructure extends AbstractTermStructure {
     public abstract double volatilityImpl(double length, double strike);
 
     // ! returns the volatility for a given cap/floor length and strike rate
-    public double volatility(Period optionTenor, double strike, boolean extrapolate) {
-        Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.FOLLOWING); // FIXME: Original
-                                                                                                               // C++ comment
+    public double volatility(final Period optionTenor, final double strike, final boolean extrapolate) {
+        final Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.FOLLOWING); // FIXME: Original
+        // C++ comment
         return volatility(exerciseDate, strike, extrapolate);
     }
 
-    public double volatility(Period length, double strike) {
+    public double volatility(final Period length, final double strike) {
         return volatility(length, strike, false);
     }
 
     // ! returns the volatility for a given end time and strike rate
-    public double volatility(double t, double strike, boolean extrapolate) {
+    public double volatility(final double t, final double strike, final boolean extrapolate) {
         checkRange(t, strike, extrapolate);
         return volatilityImpl(t, strike);
     }
 
-    public double volatility(double t, double strike) {
+    public double volatility(final double t, final double strike) {
         return volatility(t, strike, false);
     }
 
-    private void checkRange(double t, double k, boolean extrapolate) {
+    private void checkRange(final double t, final double k, final boolean extrapolate) {
         super.checkRange(t, extrapolate);
-        if (!extrapolate && !allowsExtrapolation() && (k >= minStrike() && k <= maxStrike())) {
-            throw new IllegalArgumentException("strike (" + k + ") is outside the curve domain [" + minStrike() + "," + maxStrike()
-                    + "]");
-        }
+        assert extrapolate||allowsExtrapolation()||(k >= minStrike() && k <= maxStrike()) : "strike is outside curve domain";
     }
 
 }

@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -56,87 +56,88 @@ import org.jquantlib.util.Month;
  */
 
 public class Denmark extends DelegateCalendar {
-	private static Denmark CSECalendar = new Denmark(Market.CSE);
+    private static Denmark CSECalendar = new Denmark(Market.CSE);
 
-	private Denmark(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case CSE:
-			delegate = new CSECalendar();
-			break;
-		default:
-			throw new IllegalArgumentException("unknown Market");
-		}
-		setDelegate(delegate);
-	}
+    private Denmark(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case CSE:
+            delegate = new CSECalendar();
+            break;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+        setDelegate(delegate);
+    }
 
-	//
-	// public enums
-	//
+    //
+    // public enums
+    //
 
-	// FIXME: Settlement calendar is missing
-	public enum Market {
-		/**
-		 * Copenhagen Stock Exchange
-		 */
-		CSE
-	}
+    // FIXME: Settlement calendar is missing
+    public enum Market {
+        /**
+         * Copenhagen Stock Exchange
+         */
+        CSE
+    }
 
-	public static Denmark getCalendar(Market market) {
-		switch (market) {
-		case CSE:
-			return CSECalendar;
-		default:
-			throw new IllegalArgumentException("unkonwn Market");
-		}
-	}
+    public static Denmark getCalendar(final Market market) {
+        switch (market) {
+        case CSE:
+            return CSECalendar;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+    }
 
-	private static final class CSECalendar extends WesternCalendar {
+    private static final class CSECalendar extends WesternCalendar {
 
-		@Override
-		public String getName() {
-			return "CSE";
-		}
+        @Override
+        public String getName() {
+            return "CSE";
+        }
 
-		public boolean isBusinessDay(Date date) {
-			Weekday w = date.getWeekday();
-			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-			Month m = date.getMonthEnum();
-			int y = date.getYear();
-			int em = easterMonday(y);
-			// exact matching of days except for Easter Monday
-			if (isWeekend(w)
-			// Maunday Thursday
-					|| (dd == em - 4)
-					// Good Friday
-					|| (dd == em - 3)
-					// Easter Monday
-					|| (dd == em)
-					// General Prayer Day
-					|| (dd == em + 25)
-					// Ascension
-					|| (dd == em + 38)
-					// Whit Monday
-					|| (dd == em + 49)
-					// New Year's Day
-					|| (d == 1 && m == JANUARY)
-					// Constitution Day, June 5th
-					|| (d == 5 && m == JUNE)
-					// Christmas
-					|| (d == 25 && m == DECEMBER)
-					// Boxing Day
-					|| (d == 26 && m == DECEMBER)
-					// below added according to http://nordic.nasdaqomxtrader.com/trading/tradinghours/
-					// Christmas eve
-					|| (d == 24 && m == DECEMBER && (y == 2008 || y == 2009 || y == 2007))
-					// new year eve
-					|| (d == 31 && m ==DECEMBER && (y == 2008 || y == 2009 || y == 2007))
-					
-					|| (d == 22 && m == MAY && y == 2009))
-				return false;
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final Month m = date.getMonthEnum();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+            // exact matching of days except for Easter Monday
+            if (isWeekend(w)
+                    // Maunday Thursday
+                    || (dd == em - 4)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter Monday
+                    || (dd == em)
+                    // General Prayer Day
+                    || (dd == em + 25)
+                    // Ascension
+                    || (dd == em + 38)
+                    // Whit Monday
+                    || (dd == em + 49)
+                    // New Year's Day
+                    || (d == 1 && m == JANUARY)
+                    // Constitution Day, June 5th
+                    || (d == 5 && m == JUNE)
+                    // Christmas
+                    || (d == 25 && m == DECEMBER)
+                    // Boxing Day
+                    || (d == 26 && m == DECEMBER)
+                    // below added according to http://nordic.nasdaqomxtrader.com/trading/tradinghours/
+                    // Christmas eve
+                    || (d == 24 && m == DECEMBER && (y == 2008 || y == 2009 || y == 2007))
+                    // new year eve
+                    || (d == 31 && m ==DECEMBER && (y == 2008 || y == 2009 || y == 2007))
 
-			return true;
+                    || (d == 22 && m == MAY && y == 2009))
+                return false;
 
-		}
-	}
+            return true;
+
+        }
+    }
 }

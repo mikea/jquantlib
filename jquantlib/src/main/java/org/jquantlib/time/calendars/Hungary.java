@@ -2,7 +2,7 @@
  Copyright (C) 2008 Jia Jia
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -56,89 +56,90 @@ import org.jquantlib.util.Month;
  * 
  */
 public class Hungary extends DelegateCalendar {
-	
-	private final static Hungary SETTLEMENT_CALENDAR = new Hungary(Market.SETTLEMENT);
-			
-	private Hungary(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case SETTLEMENT:
-			delegate = new SettlementCalendar();
-			break;
-		
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-		setDelegate(delegate);
-	}
-	
-	public static Hungary getCalendar(Market market) {
-		switch (market) {
-		case SETTLEMENT:
-			return SETTLEMENT_CALENDAR;
-		
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-	}
 
-	
-	//
-	// public enums
-	//
-	
-	// FIXME: exchange calendar is missing
-	public enum Market {
-	    /**
-	     * Hungary settlement calendar
-	     */
-		SETTLEMENT
-	}
-		
-	
-	//
-	// private inner classes
-	//
-	
+    private final static Hungary SETTLEMENT_CALENDAR = new Hungary(Market.SETTLEMENT);
 
-	private static final class SettlementCalendar extends WesternCalendar {
-	    
-		public boolean isBusinessDay(Date date) {
-	        Weekday w = date.getWeekday();
-	        int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-	        Month m = date.getMonthEnum();
-	        int y = date.getYear();
-	        int em = easterMonday(y);
+    private Hungary(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case SETTLEMENT:
+            delegate = new SettlementCalendar();
+            break;
 
-	        if (isWeekend(w)
-	                // Easter Monday
-	                || (dd == em)
-	                // Whit Monday
-	                || (dd == em+49)
-	                // New Year's Day
-	                || (d == 1  && m == JANUARY)
-	                // National Day
-	                || (d == 15  && m == MARCH)
-	                // Labour Day
-	                || (d == 1  && m == MAY)
-	                // Constitution Day
-	                || (d == 20  && m == AUGUST)
-	                // Republic Day
-	                || (d == 23  && m == OCTOBER)
-	                // All Saints Day
-	                || (d == 1  && m == NOVEMBER)
-	                // Christmas
-	                || (d == 25 && m == DECEMBER)
-	                // 2nd Day of Christmas
-	                || (d == 26 && m == DECEMBER))
-	                return false;
-	            return true;
-		}
-		
-	    public String getName() {
-	       return "Hungary";
-	    }
-	    
-	}
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+        setDelegate(delegate);
+    }
+
+    public static Hungary getCalendar(final Market market) {
+        switch (market) {
+        case SETTLEMENT:
+            return SETTLEMENT_CALENDAR;
+
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+    }
+
+
+    //
+    // public enums
+    //
+
+    // FIXME: exchange calendar is missing
+    public enum Market {
+        /**
+         * Hungary settlement calendar
+         */
+        SETTLEMENT
+    }
+
+
+    //
+    // private inner classes
+    //
+
+
+    private static final class SettlementCalendar extends WesternCalendar {
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final Month m = date.getMonthEnum();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+
+            if (isWeekend(w)
+                    // Easter Monday
+                    || (dd == em)
+                    // Whit Monday
+                    || (dd == em+49)
+                    // New Year's Day
+                    || (d == 1  && m == JANUARY)
+                    // National Day
+                    || (d == 15  && m == MARCH)
+                    // Labour Day
+                    || (d == 1  && m == MAY)
+                    // Constitution Day
+                    || (d == 20  && m == AUGUST)
+                    // Republic Day
+                    || (d == 23  && m == OCTOBER)
+                    // All Saints Day
+                    || (d == 1  && m == NOVEMBER)
+                    // Christmas
+                    || (d == 25 && m == DECEMBER)
+                    // 2nd Day of Christmas
+                    || (d == 26 && m == DECEMBER))
+                return false;
+            return true;
+        }
+
+        public String getName() {
+            return "Hungary";
+        }
+
+    }
 
 }

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -39,7 +39,7 @@ public class InterestRate {
     // private fields
     //
 
-    private/* @Rate */double rate;
+    private final /* @Rate */double rate;
     private DayCounter dc;
     private Compounding compound;
     private boolean freqMakesSense;
@@ -89,8 +89,7 @@ public class InterestRate {
 
         if (this.compound == Compounding.COMPOUNDED || this.compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
             freqMakesSense = true;
-            if (!(freq != Frequency.ONCE && freq != Frequency.NO_FREQUENCY))
-                throw new IllegalArgumentException("frequency not allowed for this interest rate");
+            assert freq != Frequency.ONCE && freq != Frequency.NO_FREQUENCY : "frequency not allowed for this interest rate";
             this.freq = freq.toInteger();
         }
     }
@@ -107,34 +106,33 @@ public class InterestRate {
      * @category inspectors
      */
     public final/* @CompoundFactor */double compoundFactor(final/* @Time */double time) {
-        /* @Time */double t = time;
-        if (t < 0.0)
-            throw new IllegalArgumentException("negative time not allowed");
-        if (Double.isNaN(rate))
-            throw new IllegalArgumentException("null interest rate");
+        /* @Time */final double t = time;
+        assert t >= 0.0 : "negative time not allowed";
+        assert !Double.isNaN(rate) : "null interest rate";
+
+        // TODO: code review :: please verify against original QL/C++ code
         // if (rate<0.0) throw new IllegalArgumentException("null interest rate");
 
-        /* @Rate */double r = rate;
+        /* @Rate */final double r = rate;
 
-        if (compound == Compounding.SIMPLE) {
+        if (compound == Compounding.SIMPLE)
             // 1+r*t
             return 1.0 + r * t;
-        } else if (compound == Compounding.COMPOUNDED) {
+        else if (compound == Compounding.COMPOUNDED)
             // (1+r/f)^(f*t)
             return Math.pow((1 + r / freq), (freq * t));
-        } else if (compound == Compounding.CONTINUOUS) {
+        else if (compound == Compounding.CONTINUOUS)
             // e^(r*t)
             return Math.exp((r * t));
-        } else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
+        else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
             if (t < (1 / (double) freq))
                 // 1+r*t
                 return 1.0 + r * t;
             else
                 // (1+(r/f))^(f*t)
                 return Math.pow((1 + r / freq), (freq * t));
-        } else {
-            throw new IllegalArgumentException("unknown compounding convention");
-        }
+        } else
+            throw new AssertionError("unknown compounding convention");
     }
 
     // --- inspectors
@@ -176,7 +174,7 @@ public class InterestRate {
      * @category discount/compound factor calculations
      */
     public final/* @DiscountFactor */double discountFactor(final/* @Time */double t) {
-        /* @DiscountFactor */double factor = compoundFactor(t);
+        /* @DiscountFactor */final double factor = compoundFactor(t);
         return 1.0d / factor;
     }
 
@@ -211,7 +209,7 @@ public class InterestRate {
      * @category discount/compound factor calculations
      */
     public final/* @DiscountFactor */double discountFactor(final Date d1, final Date d2, final Date refStart, final Date refEnd) {
-        /* @Time */double t = this.dc.yearFraction(d1, d2, refStart, refEnd);
+        /* @Time */final double t = this.dc.yearFraction(d1, d2, refStart, refEnd);
         return discountFactor(t);
     }
 
@@ -240,12 +238,15 @@ public class InterestRate {
      * Returns equivalent rate for a compounding period between two dates. The resulting rate is calculated taking the required
      * day-counting rule into account.
      */
-    public final InterestRate equivalentRate(final Date d1, final Date d2, final DayCounter resultDC, final Compounding comp,
+    public final InterestRate equivalentRate(
+            final Date d1,
+            final Date d2,
+            final DayCounter resultDC,
+            final Compounding comp,
             final Frequency freq) {
-        if (d1.le(d2))
-            throw new IllegalArgumentException("d1 (" + d1 + ") later than or equal to d2 (" + d2 + ")");
-        /* @Time */double t1 = this.dc.yearFraction(d1, d2);
-        /* @Time */double t2 = resultDC.yearFraction(d1, d2);
+        assert d1.lt(d2) : "d1 later than or equal to d2";
+        /* @Time */final double t1 = this.dc.yearFraction(d1, d2);
+        /* @Time */final double t2 = resultDC.yearFraction(d1, d2);
         return impliedRate(compoundFactor(t1), t2, resultDC, comp, freq);
     }
 
@@ -258,12 +259,10 @@ public class InterestRate {
     static public InterestRate impliedRate(final/* @CompoundFactor */double c, final/* @Time */double time,
             final DayCounter resultDC, final Compounding comp, final Frequency freq) {
 
-        /* @Time */double t = time;
-        double f = freq.toInteger();
-        if (c <= 0.0)
-            throw new IllegalArgumentException("positive compound factor required");
-        if (t <= 0.0)
-            throw new IllegalArgumentException("positive time required");
+        /* @Time */final double t = time;
+        final double f = freq.toInteger();
+        assert c > 0.0 : "positive compound factor required";
+        assert t > 0.0 : "positive time required";
 
         /* @Rate */double rate;
         switch (comp) {
@@ -288,7 +287,7 @@ public class InterestRate {
                 rate = (Math.pow(c, (1 / (f * t))) - 1) * f;
             break;
         default:
-            throw new IllegalArgumentException("unknown compounding convention (" + comp + ")");
+            throw new AssertionError("unknown compounding convention");
         }
         return new InterestRate(rate, resultDC, comp, freq);
     }
@@ -309,37 +308,34 @@ public class InterestRate {
      */
     static public InterestRate impliedRate(final/* @CompoundFactor */double compound, final Date d1, final Date d2,
             final DayCounter resultDC, final Compounding comp, final Frequency freq) {
-        if (d2.le(d1))
-            throw new IllegalArgumentException("d1 (" + d1 + ") later than or equal to d2 (" + d2 + ")");
-        /* @Time */double t = resultDC.yearFraction(d1, d2);
+        assert d1.le(d2) : "d1 later than or equal to d2";
+        /* @Time */final double t = resultDC.yearFraction(d1, d2);
         return impliedRate(compound, t, resultDC, comp, freq);
     }
 
+    @Override
     public String toString() {
         if (rate == 0.0)
             return "null interest rate";
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append(rate).append(' ').append(dc).append(' ');
-        if (compound == Compounding.SIMPLE) {
+        if (compound == Compounding.SIMPLE)
             sb.append("simple compounding");
-        } else if (compound == Compounding.COMPOUNDED) {
-            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger())) {
+        else if (compound == Compounding.COMPOUNDED) {
+            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger()))
                 throw new IllegalArgumentException(freq + " frequency not allowed for this interest rate");
-            } else {
+            else
                 sb.append(freq + " compounding");
-            }
-        } else if (compound == Compounding.CONTINUOUS) {
+        } else if (compound == Compounding.CONTINUOUS)
             sb.append("continuous compounding");
-        } else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
-            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger())) {
+        else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
+            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger()))
                 throw new IllegalArgumentException(freq + " frequency not allowed for this interest rate");
-            } else {
+            else
                 sb.append("simple compounding up to " + (12 / freq) + " months, then " + freq + " compounding");
-            }
-        } else {
-            throw new IllegalArgumentException("unknown compounding convention (" + compound + ")");
-        }
+        } else
+            throw new AssertionError("unknown compounding convention (" + compound + ")");
         return sb.toString();
     }
 

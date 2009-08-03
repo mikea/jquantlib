@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008
-  
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -45,29 +45,29 @@ import org.jquantlib.util.Month;
 /**
  * Indonesian calendars
  * <p>
- * Holidays for the Jakarta stock exchange 
- * <ul> 
+ * Holidays for the Jakarta stock exchange
+ * <ul>
  * <li>Saturdays</li>
- * <li>Sundays</li> 
- * <li>Good Friday</li> 
- * <li>New Year's Day, January 1st</li> 
- * <li>Ascension of Jesus Christ</li> 
- * <li>Independence Day, August 17th</li> 
- * <li>Christmas, December 25th</li> 
+ * <li>Sundays</li>
+ * <li>Good Friday</li>
+ * <li>New Year's Day, January 1st</li>
+ * <li>Ascension of Jesus Christ</li>
+ * <li>Independence Day, August 17th</li>
+ * <li>Christmas, December 25th</li>
  * </ul>
- * <p> 
+ * <p>
  * Other holidays for which no rule is given (data available for 2005-2007 only:)
- * <ul> 
- * <li>Idul Adha</li> 
- * <li>Ied Adha</li> 
+ * <ul>
+ * <li>Idul Adha</li>
+ * <li>Ied Adha</li>
  * <li>Imlek</li>
- * <li>Moslem's New Year Day</li> 
- * <li>Nyepi (Saka's New Year)</li> 
- * <li>Birthday of Prophet Muhammad SAW</li> 
+ * <li>Moslem's New Year Day</li>
+ * <li>Nyepi (Saka's New Year)</li>
+ * <li>Birthday of Prophet Muhammad SAW</li>
  * <li>Waisak</li>
- * <li>Ascension of Prophet Muhammad SAW</li> 
- * <li>Idul Fitri</li> 
- * <li>Ied Fitri</li> <li>Other national leaves</li> 
+ * <li>Ascension of Prophet Muhammad SAW</li>
+ * <li>Idul Fitri</li>
+ * <li>Ied Fitri</li> <li>Other national leaves</li>
  * </ul>
  * 
  * @category calendars
@@ -81,7 +81,7 @@ public class Indonesia extends DelegateCalendar {
 
     private final static Indonesia BEJ_CALENDAR = new Indonesia(Market.BEJ);
 
-    private Indonesia(Market market) {
+    private Indonesia(final Market market) {
         Calendar delegate;
         switch (market) {
         case BEJ:
@@ -90,58 +90,59 @@ public class Indonesia extends DelegateCalendar {
             break;
 
         default:
-            throw new IllegalArgumentException("unknown market");
+            throw new AssertionError("unknown market"); // TODO: message
         }
         setDelegate(delegate);
     }
 
-    public static Indonesia getCalendar(Market market) {
+    public static Indonesia getCalendar(final Market market) {
         switch (market) {
         case BEJ:
         case JSX:
             return BEJ_CALENDAR;
 
         default:
-            throw new IllegalArgumentException("unknown market");
+            throw new AssertionError("unknown market"); // TODO: message
         }
     }
 
-    
-	//
-	// public enums
-	//
-	
+
+    //
+    // public enums
+    //
+
     public enum Market {
         /**
          * Jakarta stock exchange
          */
-    	BEJ, 
+        BEJ,
         /**
          * Jakarta stock exchange
          */
-    	JSX
+        JSX
     }
-    
-    
+
+
     //
     // private inner classes
     //
-    
+
     private static final class IndonesiaBEJCalendar extends WesternCalendar {
 
         public String getName() {
             return "Jakarta stock exchange";
         }
 
-        public boolean isBusinessDay(Date date) {
-            Weekday w = date.getWeekday();
-            int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            Month m = date.getMonthEnum();
-            int y = date.getYear();
-            int em = easterMonday(y);
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final Month m = date.getMonthEnum();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
 
             if (isWeekend(w)
-            		// New Year's Day
+                    // New Year's Day
                     || (d == 1 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
@@ -152,12 +153,12 @@ public class Indonesia extends DelegateCalendar {
                     // Christmas
                     || (d == 25 && m == DECEMBER))
                 return false;
-            
-            if (y == 2005) {
+
+            if (y == 2005)
                 if (
-                		// Idul Adha
-                		(d == 21 && m == JANUARY)
-                		// Imlek
+                        // Idul Adha
+                        (d == 21 && m == JANUARY)
+                        // Imlek
                         || (d == 9 && m == FEBRUARY)
                         // Moslem's New Year Day
                         || (d == 10 && m == FEBRUARY)
@@ -174,13 +175,12 @@ public class Indonesia extends DelegateCalendar {
                         // National leaves
                         || ((d == 2 || d == 7 || d == 8) && m == NOVEMBER) || (d == 26 && m == DECEMBER))
                     return false;
-            }
-            
-            if (y == 2006) {
+
+            if (y == 2006)
                 if (
-                		// Idul Adha
-                		(d == 10 && m == JANUARY)
-                		// Moslem's New Year Day
+                        // Idul Adha
+                        (d == 10 && m == JANUARY)
+                        // Moslem's New Year Day
                         || (d == 31 && m == JANUARY)
                         // Nyepi
                         || (d == 30 && m == MARCH)
@@ -193,12 +193,11 @@ public class Indonesia extends DelegateCalendar {
                         // National leaves
                         || ((d == 23 || d == 26 || d == 27) && m == OCTOBER))
                     return false;
-            }
-            
-            if (y == 2007) {
+
+            if (y == 2007)
                 if (
-                		// Nyepi
-                		(d == 19 && m == MARCH)
+                        // Nyepi
+                        (d == 19 && m == MARCH)
                         // Waisak
                         || (d == 1 && m == JUNE)
                         // Ied Adha
@@ -207,13 +206,12 @@ public class Indonesia extends DelegateCalendar {
                         || (d == 18 && m == MAY) || ((d == 12 || d == 15 || d == 16) && m == OCTOBER)
                         || ((d == 21 || d == 24) && m == OCTOBER))
                     return false;
-            }
-            
-            if (y == 2008) {
+
+            if (y == 2008)
                 if (
-                		// Islamic New Year 1429 H
-                		(d == 10 && m == JANUARY)
-                		// National Leave
+                        // Islamic New Year 1429 H
+                        (d == 10 && m == JANUARY)
+                        // National Leave
                         || (d == 11 && m == JANUARY)
                         // Chinese New Year
                         || (d == 7 && m == FEBRUARY)
@@ -241,13 +239,11 @@ public class Indonesia extends DelegateCalendar {
                         || (d == 31 && m == DECEMBER))
                     return false;
 
-            }
-            
-            if (y == 2009) {
+            if (y == 2009)
                 if (
-                		// Public Holiday
-                		(d == 2 && m == JANUARY)
-                		// Chinese New Year
+                        // Public Holiday
+                        (d == 2 && m == JANUARY)
+                        // Chinese New Year
                         || (d == 26 && m == JANUARY)
                         // Saka's New Year
                         || (d == 26 && m == MARCH)
@@ -268,8 +264,7 @@ public class Indonesia extends DelegateCalendar {
                         // Trading Holiday
                         || (d == 31 && m == DECEMBER))
                     return false;
-            }
-            
+
             return true;
         }
     }

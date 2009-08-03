@@ -1,9 +1,9 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
  Copyright (C) 2008 Dominik Holenstein
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,7 +16,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -48,9 +48,9 @@ public class JointCalendar extends AbstractCalendar {
     // ! rules for joining calendars
     public static enum JointCalendarRule {
         JOIN_HOLIDAYS, /*
-                         * !< A date is a holiday for the joint calendar if it
-                         * is a holiday for any of the given calendars
-                         */
+         * !< A date is a holiday for the joint calendar if it
+         * is a holiday for any of the given calendars
+         */
         JOIN_BUSINESSDAYS
         /*
          * !< A date is a business day for the joint calendar if it is a
@@ -58,10 +58,10 @@ public class JointCalendar extends AbstractCalendar {
          */
     };
 
-    private JointCalendarRule joinRule;
-    private Calendar[]        calendars;
+    private final JointCalendarRule joinRule;
+    private final Calendar[]        calendars;
 
-    public JointCalendar(JointCalendarRule rule, Calendar... calendar) {
+    public JointCalendar(final JointCalendarRule rule, final Calendar... calendar) {
         this.calendars = calendar;
         this.joinRule = rule;
     }
@@ -72,20 +72,19 @@ public class JointCalendar extends AbstractCalendar {
      * @see org.jquantlib.time.Calendar#getName()
      */
     public String getName() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         switch (joinRule) {
-            case JOIN_HOLIDAYS:
-                builder.append("JoinHolidays(");
-                break;
-            case JOIN_BUSINESSDAYS:
-                builder.append("JoinBusinessDays()");
-                break;
-            default:
-                throw new IllegalStateException("unknown joint calendar rule");
+        case JOIN_HOLIDAYS:
+            builder.append("JoinHolidays(");
+            break;
+        case JOIN_BUSINESSDAYS:
+            builder.append("JoinBusinessDays()");
+            break;
+        default:
+            throw new AssertionError("unknown joint calendar rule"); // TODO: message
         }
-        for (Calendar cal : calendars) {
+        for (final Calendar cal : calendars)
             builder.append(cal.getName() + ",");
-        }
         builder.insert(builder.length() - 1, ")");
         return builder.toString();
     }
@@ -95,24 +94,21 @@ public class JointCalendar extends AbstractCalendar {
      * 
      * @see org.jquantlib.time.Calendar#isBusinessDay(org.jquantlib.util.Date)
      */
-    public boolean isBusinessDay(Date d) {
+    @Override
+    public boolean isBusinessDay(final Date d) {
         switch (joinRule) {
-            case JOIN_HOLIDAYS:
-                for (Calendar cal : calendars) {
-                    if (cal.isHoliday(d)) {
-                        return false;
-                    }
-                }
-                return true;
-            case JOIN_BUSINESSDAYS:
-                for (Calendar cal : calendars) {
-                    if (!cal.isHoliday(d)) {
-                        return true;
-                    }
-                }
-                return false;
-            default:
-                throw new IllegalStateException("unknown joint calendar rule");
+        case JOIN_HOLIDAYS:
+            for (final Calendar cal : calendars)
+                if (cal.isHoliday(d))
+                    return false;
+            return true;
+        case JOIN_BUSINESSDAYS:
+            for (final Calendar cal : calendars)
+                if (!cal.isHoliday(d))
+                    return true;
+            return false;
+        default:
+            throw new AssertionError("unknown joint calendar rule"); // TODO: message
         }
     }
 
@@ -121,24 +117,20 @@ public class JointCalendar extends AbstractCalendar {
      * 
      * @see org.jquantlib.time.Calendar#isWeekend(org.jquantlib.time.Weekday)
      */
-    public boolean isWeekend(Weekday w) {
+    public boolean isWeekend(final Weekday w) {
         switch (joinRule) {
-            case JOIN_HOLIDAYS:
-                for (Calendar cal : calendars) {
-                    if (cal.isWeekend(w)) {
-                        return true;
-                    }
-                }
-                return false;
-            case JOIN_BUSINESSDAYS:
-                for (Calendar cal : calendars) {
-                    if (!cal.isWeekend(w)) {
-                        return false;
-                    }
-                }
-                return true;
-            default:
-                throw new IllegalStateException("unknown joint calendar rule");
+        case JOIN_HOLIDAYS:
+            for (final Calendar cal : calendars)
+                if (cal.isWeekend(w))
+                    return true;
+            return false;
+        case JOIN_BUSINESSDAYS:
+            for (final Calendar cal : calendars)
+                if (!cal.isWeekend(w))
+                    return false;
+            return true;
+        default:
+            throw new AssertionError("unknown joint calendar rule"); // TODO: message
         }
     }
 }

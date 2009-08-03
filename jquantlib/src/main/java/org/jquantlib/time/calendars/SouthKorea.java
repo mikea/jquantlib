@@ -2,7 +2,7 @@
  Copyright (C) 2008 Jia Jia
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -68,40 +68,40 @@ import org.jquantlib.util.Month;
  * 
  */
 public class SouthKorea extends DelegateCalendar {
-	
+
     private final static SouthKorea KRX_Calendar = new SouthKorea(Market.KRX);
 
-    private SouthKorea(Market market) {
+    private SouthKorea(final Market market) {
         Calendar delegate;
         switch (market) {
         case KRX:
             delegate = new SouthKoreaKRXCalendar();
             break;
         default:
-            throw new IllegalArgumentException("unknown market");
+            throw new AssertionError("unknown market"); // TODO: message
         }
         setDelegate(delegate);
     }
 
-    public static SouthKorea getCalendar(Market market) {
+    public static SouthKorea getCalendar(final Market market) {
         switch (market) {
         case KRX:
             return KRX_Calendar;
         default:
-            throw new IllegalArgumentException("unknown market");
+            throw new AssertionError("unknown market"); // TODO: message
         }
     }
 
-    
+
     //
     // public enums
     //
-    
-	//FIXME: Settlement calendar is missing
+
+    //FIXME: Settlement calendar is missing
     public enum Market {
-    	/**
-    	 * Korea Exchange
-    	 */
+        /**
+         * Korea Exchange
+         */
         KRX
     }
 
@@ -109,17 +109,18 @@ public class SouthKorea extends DelegateCalendar {
     //
     // private inner classes
     //
-    
+
     private static final class SouthKoreaKRXCalendar extends WesternCalendar {
         public String getName() {
             return "Korea exchange";
         }
 
+        @Override
         public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-            Weekday w = date.getWeekday();
-            int d = date.getDayOfMonth();
-            Month m = date.getMonthEnum();
-            int y = date.getYear();
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth();
+            final Month m = date.getMonthEnum();
+            final int y = date.getYear();
 
             if (isWeekend(w)
                     // New Year's Day

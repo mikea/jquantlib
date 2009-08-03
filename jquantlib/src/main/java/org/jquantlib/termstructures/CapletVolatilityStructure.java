@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -32,69 +32,67 @@ public abstract class CapletVolatilityStructure extends AbstractTermStructure {
 
     protected abstract double volatilityImpl(double length,
             double strike);
-    
-    public CapletVolatilityStructure(DayCounter dc) {
+
+    public CapletVolatilityStructure(final DayCounter dc) {
         super(dc);
     }
 
-    public CapletVolatilityStructure(Date referenceDate, Calendar cal, DayCounter dc) {
+    public CapletVolatilityStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
         super(referenceDate, cal, dc);
     }
 
-    public CapletVolatilityStructure(int settlementDays, Calendar cal, DayCounter dc) {
+    public CapletVolatilityStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
         super(settlementDays, cal, dc);
     }
 
 
-    public double volatility(Date start, double strike, boolean extrapolate) {
-        double t = timeFromReference(start);
+    public double volatility(final Date start, final double strike, final boolean extrapolate) {
+        final double t = timeFromReference(start);
         checkRange(t, strike, extrapolate);
         return volatilityImpl(t, strike);
     }
 
-    public double volatility(double t, double strike, boolean extrapolate) {
+    public double volatility(final double t, final double strike, final boolean extrapolate) {
         checkRange(t, strike, extrapolate);
         return volatilityImpl(t, strike);
     }
 
-    public double volatility(Period optionTenor, double strike, boolean extrapolate) {
-        Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.FOLLOWING); // FIXME
+    public double volatility(final Period optionTenor, final double strike, final boolean extrapolate) {
+        final Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.FOLLOWING); // FIXME
         return volatility(exerciseDate, strike, extrapolate);
     }
 
-    public double blackVariance(Date start, double strike, boolean extrapolate) {
-        double t = timeFromReference(start);
+    public double blackVariance(final Date start, final double strike, final boolean extrapolate) {
+        final double t = timeFromReference(start);
         checkRange(t, strike, extrapolate);
-        double vol = volatilityImpl(t, strike);
+        final double vol = volatilityImpl(t, strike);
         return vol * vol * t;
     }
-    
-    public double blackVariance(Date start, double strike) {
+
+    public double blackVariance(final Date start, final double strike) {
         return blackVariance(start, strike, false);
     }
 
-    public double blackVariance(double t, double strike, boolean extrapolate) {
+    public double blackVariance(final double t, final double strike, final boolean extrapolate) {
         checkRange(t, strike, extrapolate);
-        double vol = volatilityImpl(t, strike);
+        final double vol = volatilityImpl(t, strike);
         return vol * vol * t;
     }
-    
-    public double blackVariance(double t, double strike) {
+
+    public double blackVariance(final double t, final double strike) {
         return blackVariance(t, strike, false);
     }
 
-    public double blackVariance(Period optionTenor, double strike, boolean extrapolate) {
-        Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.FOLLOWING); // FIXME
+    public double blackVariance(final Period optionTenor, final double strike, final boolean extrapolate) {
+        final Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.FOLLOWING); // FIXME
         return blackVariance(exerciseDate, strike, extrapolate);
 
     }
 
-    public void checkRange(double t, double k, boolean extrapolate) {
+    // TODO: code review :: please verify against original QL/C++ code
+    public void checkRange(final double t, final double k, final boolean extrapolate) {
         super.checkRange(t, extrapolate);
-        if (!extrapolate && !allowsExtrapolation() && !(k >= minStrike() && k <= maxStrike())) {
-            throw new IllegalArgumentException("strike (" + k + ") is outside the curve domain [" + minStrike() + "," + maxStrike()
-                    + "]");
-        }
+        assert extrapolate||allowsExtrapolation()||(k >= minStrike() && k <= maxStrike()) : "strike is outside curve domain"; // TODO: message
     }
 
     @Override
@@ -103,10 +101,10 @@ public abstract class CapletVolatilityStructure extends AbstractTermStructure {
         return null;
     }
 
-    
+
     public abstract double minStrike();
 
     public abstract double maxStrike();
 
-    
+
 }

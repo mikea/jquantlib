@@ -45,6 +45,7 @@ import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolations.DefaultExtrapolator;
 import org.jquantlib.math.interpolations.Extrapolator;
 import org.jquantlib.time.Calendar;
@@ -297,18 +298,17 @@ public abstract class AbstractTermStructure implements TermStructure {
     /**
      * This method performs date-range check
      */
-    protected final void checkRange(final Date date, final boolean extrapolate) {
-        checkRange(timeFromReference(date), extrapolate);
+    protected void checkRange(final Date d, final boolean extrapolate) /* @ReadOnly */ {
+        assert d.gt(referenceDate()) : "date before reference date"; // TODO: message
+        assert extrapolate || allowsExtrapolation() || d.lt(maxDate()) : "date is past max curve";
     }
 
     /**
      * This method performs date-range check
      */
-    protected final void checkRange(final /*@Time*/ double time, final boolean extrapolate) {
-        /*@Time*/ final double t = time;
-        if (t<0.0) throw new IllegalArgumentException("negative double given");
-        if (! (extrapolate || allowsExtrapolation() || (t<=maxTime())) )
-            throw new IllegalArgumentException("double ("+time+") is past max curve double ("+maxTime()+")");
+    protected void checkRange(/*@Time*/ final double t, final boolean extrapolate) /* @ReadOnly */ {
+        assert t >= 0.0 : "negative time given"; // TODO: message
+        assert extrapolate||allowsExtrapolation()||t<=maxTime()||Closeness.isCloseEnough(t, maxTime()) : "time is past max curve";
     }
 
 
@@ -321,7 +321,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      */
     @Override
     public Calendar calendar() /* @ReadOnly */ {
-        if (this.calendar == null) throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);
+        assert this.calendar != null : THIS_METHOD_MUST_BE_OVERRIDDEN;
         return calendar;
     }
 
@@ -338,7 +338,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      */
     @Override
     public DayCounter dayCounter() {
-        if (this.dayCounter == null) throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);
+        assert this.dayCounter != null : THIS_METHOD_MUST_BE_OVERRIDDEN;
         return dayCounter;
     }
 
@@ -361,9 +361,8 @@ public abstract class AbstractTermStructure implements TermStructure {
                 updated = true;
             }
 
-        if (referenceDate==null) // i.e: Case 3
-            throw new IllegalStateException(THIS_METHOD_MUST_BE_OVERRIDDEN);
-
+        // i.e: Case 3
+        assert referenceDate!=null : THIS_METHOD_MUST_BE_OVERRIDDEN;
         return referenceDate;
     }
 

@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -58,11 +58,11 @@ import org.slf4j.LoggerFactory;
  */
 @NotThreadSafe
 public class DefaultObservable implements Observable {
-	
-	//
-	// logger
-	//
-	private final static Logger logger = LoggerFactory.getLogger(DefaultObservable.class);
+
+    //
+    // logger
+    //
+    private final static Logger logger = LoggerFactory.getLogger(DefaultObservable.class);
 
     //
     // private final fields
@@ -75,16 +75,17 @@ public class DefaultObservable implements Observable {
     // public constructors
     //
 
-    public DefaultObservable(Observable observable) {
-    	//this.observers = new ObjectArrayList<Observer>(); // EuropeanOptionTest fails !!!
-    	//this.observers = new LinkedList<Observer>(); // EuropeanOptionTest fails !!!
-    	//this.observers = new ArrayList<Observer>(); // EuropeanOptionTest fails !!!
-    	//this.observers = Collections.synchronizedList(new ArrayList<Observer>());
-    	//this.observers = Collections.synchronizedList(new ObjectArrayList<Observer>()); // EuropeanOptionTest fails !!!
-    	this.observers = new CopyOnWriteArrayList<Observer>();
-    	
-        if (observable == null)
-            throw new NullPointerException("observable is null");
+    public DefaultObservable(final Observable observable) {
+        assert observable != null : "observable is null";
+
+        // TODO: code review :: Please review this class! :S
+        //this.observers = new ObjectArrayList<Observer>(); // EuropeanOptionTest fails !!!
+        //this.observers = new LinkedList<Observer>(); // EuropeanOptionTest fails !!!
+        //this.observers = new ArrayList<Observer>(); // EuropeanOptionTest fails !!!
+        //this.observers = Collections.synchronizedList(new ArrayList<Observer>());
+        //this.observers = Collections.synchronizedList(new ObjectArrayList<Observer>()); // EuropeanOptionTest fails !!!
+        this.observers = new CopyOnWriteArrayList<Observer>();
+
         this.observable = observable;
     }
 
@@ -93,8 +94,7 @@ public class DefaultObservable implements Observable {
     //
 
     public void addObserver(final Observer observer) {
-        if (observer == null)
-            throw new NullPointerException("observer is null");
+        assert observable != null : "observable is null";
         observers.add(observer);
     }
 
@@ -118,10 +118,9 @@ public class DefaultObservable implements Observable {
         notifyObservers(null);
     }
 
-    public void notifyObservers(Object arg) {
-        for (Observer observer : observers) {
+    public void notifyObservers(final Object arg) {
+        for (final Observer observer : observers)
             wrappedNotify(observer, observable, arg);
-        }
     }
 
     //
@@ -134,7 +133,7 @@ public class DefaultObservable implements Observable {
      * implementations are:
      * <li>remote notification;</li>
      * <li>notification via SwingUtilities.invokeLater</li>
-     * <li>others...</li> 
+     * <li>others...</li>
      * 
      * <p>
      * The default notification simply does
@@ -146,7 +145,7 @@ public class DefaultObservable implements Observable {
      * @param observable
      * @param arg
      */
-    protected void wrappedNotify(Observer observer, Observable observable, Object arg) {
+    protected void wrappedNotify(final Observer observer, final Observable observable, final Object arg) {
         observer.update(observable, arg);
     }
 

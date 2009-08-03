@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,11 +15,11 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
- 
+
 package org.jquantlib.time.calendars;
 
 import static org.jquantlib.time.Weekday.FRIDAY;
@@ -48,69 +48,70 @@ Other holidays for which no rule is given (data available for 2004-2005 only:)
          <li>Eid Al-Fitr</li>
     </ul>
 
-    @Author 
-*/
+    @Author
+ */
 
 // FIXME
 public class SaudiArabia extends DelegateCalendar{
 
-	public enum Market { TADAWUL    //!< Tadawul financial market
+    public enum Market { TADAWUL    //!< Tadawul financial market
     };
-		
-	private final static SaudiArabia TADAWUL_CALENDAR = new SaudiArabia(
-			Market.TADAWUL);
-	private SaudiArabia(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case TADAWUL:
-			delegate = new SaudiArabiaSettlementCalendar();
-			break;
-		
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-		// FIXME
-		setDelegate(delegate);
-	}
 
-	public static SaudiArabia getCalendar(Market market) {
-		switch (market) {
-		case TADAWUL:
-			return TADAWUL_CALENDAR;
-		
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-	}
-	
-	
-}	
-	final class SaudiArabiaSettlementCalendar extends AbstractCalendar {
-	    public boolean isWeekend(Weekday w){
-	        return w == THURSDAY || w == FRIDAY;
-	    }
-		public boolean isBusinessDay(Date date) {
-			Weekday w = date.getWeekday();
-			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-			Month m = date.getMonthEnum();
-			int y = date.getYear();
-        
-			if (isWeekend(w)
-            // National Day
-            || (d == 23 && m == SEPTEMBER)
-            // Eid Al-Adha
-            || (d >= 1 && d <= 6 && m == FEBRUARY && y==2004)
-            || (d >= 21 && d <= 25 && m == JANUARY && y==2005)
-            // Eid Al-Fitr
-            || (d >= 25 && d <= 29 && m == NOVEMBER && y==2004)
-            || (d >= 14 && d <= 18 && m == NOVEMBER && y==2005)
-            )
-			return false;
-			
-			return true;
-		}
-		public String getName() {
-			return "Tadawul";
-		}
+    private final static SaudiArabia TADAWUL_CALENDAR = new SaudiArabia(
+            Market.TADAWUL);
+    private SaudiArabia(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case TADAWUL:
+            delegate = new SaudiArabiaSettlementCalendar();
+            break;
+
+        default:
+            throw new AssertionError("unknown market");
+        }
+        // FIXME
+        setDelegate(delegate);
     }
+
+    public static SaudiArabia getCalendar(final Market market) {
+        switch (market) {
+        case TADAWUL:
+            return TADAWUL_CALENDAR;
+
+        default:
+            throw new AssertionError("unknown market");
+        }
+    }
+
+
+}
+final class SaudiArabiaSettlementCalendar extends AbstractCalendar {
+    public boolean isWeekend(final Weekday w){
+        return w == THURSDAY || w == FRIDAY;
+    }
+    @Override
+    public boolean isBusinessDay(final Date date) {
+        final Weekday w = date.getWeekday();
+        final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+        final Month m = date.getMonthEnum();
+        final int y = date.getYear();
+
+        if (isWeekend(w)
+                // National Day
+                || (d == 23 && m == SEPTEMBER)
+                // Eid Al-Adha
+                || (d >= 1 && d <= 6 && m == FEBRUARY && y==2004)
+                || (d >= 21 && d <= 25 && m == JANUARY && y==2005)
+                // Eid Al-Fitr
+                || (d >= 25 && d <= 29 && m == NOVEMBER && y==2004)
+                || (d >= 14 && d <= 18 && m == NOVEMBER && y==2005)
+        )
+            return false;
+
+        return true;
+    }
+    public String getName() {
+        return "Tadawul";
+    }
+}
 

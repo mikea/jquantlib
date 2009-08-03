@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Renjith Nair
-  
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -27,7 +27,7 @@
  copy of the license along with this program; if not, please email
  <quantlib-dev@lists.sf.net>. The license is also available online at
  <http://quantlib.org/license.shtml>.
-*/
+ */
 
 
 package org.jquantlib.time.calendars;
@@ -56,93 +56,94 @@ import org.jquantlib.util.Month;
  * <li>St. Stephen, December 26th</li>
  * </ul>
  * ingroup calendars
-*/
+ */
 public class CzechRepublic extends DelegateCalendar {
-	private final static CzechRepublic PSE_CALENDAR = new CzechRepublic(Market.PSE);
+    private final static CzechRepublic PSE_CALENDAR = new CzechRepublic(Market.PSE);
 
-	private CzechRepublic(Market market) {
-		Calendar delegate;
-		switch (market) {
-		case PSE:
-			delegate = new CzechRepublicPSECalendar();
-			break;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-		setDelegate(delegate);
-	}
+    private CzechRepublic(final Market market) {
+        Calendar delegate;
+        switch (market) {
+        case PSE:
+            delegate = new CzechRepublicPSECalendar();
+            break;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+        setDelegate(delegate);
+    }
 
-	public static CzechRepublic getCalendar(Market market) {
-		switch (market) {
-		case PSE:
-			return PSE_CALENDAR;
-		default:
-			throw new IllegalArgumentException("unknown market");
-		}
-	}
-	
-	
-	//
-	// public enums
-	//
-	
-	//FIXME: Settlement calendar is missing
-	public static enum Market {
-		/**
-		 * Prague stock exchange of CzechRepublic
-		 */
-		PSE
-	}
+    public static CzechRepublic getCalendar(final Market market) {
+        switch (market) {
+        case PSE:
+            return PSE_CALENDAR;
+        default:
+            throw new AssertionError("unknown market"); // TODO: message
+        }
+    }
 
 
-	//
-	// private inner classes
-	//
-	
-	private static final class CzechRepublicPSECalendar extends WesternCalendar {
-	
-		public String getName() {
-			return "Prague stock exchange of CzechRepublic";
-		}
-	
-		public boolean isBusinessDay(Date date) {
-			Weekday w = date.getWeekday();
-			int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-			int m = date.getMonth();
-			int y = date.getYear();
-			int em = easterMonday(y);
-	
-			if (isWeekend(w)
-		            // New Year's Day
-		            || (d == 1 && m == Month.JANUARY.toInteger())
-		            // Easter Monday
-		            || (dd == em)
-		            // Labour Day
-		            || (d == 1 && m == Month.MAY.toInteger())
-		            // Liberation Day
-		            || (d == 8 && m == Month.MAY.toInteger())
-		            // SS. Cyril and Methodius
-		            || (d == 5 && m == Month.JULY.toInteger())
-		            // Jan Hus Day
-		            || (d == 6 && m == Month.JULY.toInteger())
-		            // Czech Statehood Day
-		            || (d == 28 && m == Month.SEPTEMBER.toInteger())
-		            // Independence Day
-		            || (d == 28 && m == Month.OCTOBER.toInteger())
-		            // Struggle for Freedom and Democracy Day
-		            || (d == 17 && m == Month.NOVEMBER.toInteger())
-		            // Christmas Eve
-		            || (d == 24 && m == Month.DECEMBER.toInteger())
-		            // Christmas
-		            || (d == 25 && m == Month.DECEMBER.toInteger())
-		            // St. Stephen
-		            || (d == 26 && m == Month.DECEMBER.toInteger())
-		            // unidentified closing days for stock exchange
-		            || (d == 2 && m == Month.JANUARY.toInteger() && y == 2004)
-		            || (d == 31 && m == Month.DECEMBER.toInteger() && y == 2004))
-		            return false;
-		        return true;
-		}
-	}
+    //
+    // public enums
+    //
+
+    //FIXME: Settlement calendar is missing
+    public static enum Market {
+        /**
+         * Prague stock exchange of CzechRepublic
+         */
+        PSE
+    }
+
+
+    //
+    // private inner classes
+    //
+
+    private static final class CzechRepublicPSECalendar extends WesternCalendar {
+
+        public String getName() {
+            return "Prague stock exchange of CzechRepublic";
+        }
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.getWeekday();
+            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
+            final int m = date.getMonth();
+            final int y = date.getYear();
+            final int em = easterMonday(y);
+
+            if (isWeekend(w)
+                    // New Year's Day
+                    || (d == 1 && m == Month.JANUARY.toInteger())
+                    // Easter Monday
+                    || (dd == em)
+                    // Labour Day
+                    || (d == 1 && m == Month.MAY.toInteger())
+                    // Liberation Day
+                    || (d == 8 && m == Month.MAY.toInteger())
+                    // SS. Cyril and Methodius
+                    || (d == 5 && m == Month.JULY.toInteger())
+                    // Jan Hus Day
+                    || (d == 6 && m == Month.JULY.toInteger())
+                    // Czech Statehood Day
+                    || (d == 28 && m == Month.SEPTEMBER.toInteger())
+                    // Independence Day
+                    || (d == 28 && m == Month.OCTOBER.toInteger())
+                    // Struggle for Freedom and Democracy Day
+                    || (d == 17 && m == Month.NOVEMBER.toInteger())
+                    // Christmas Eve
+                    || (d == 24 && m == Month.DECEMBER.toInteger())
+                    // Christmas
+                    || (d == 25 && m == Month.DECEMBER.toInteger())
+                    // St. Stephen
+                    || (d == 26 && m == Month.DECEMBER.toInteger())
+                    // unidentified closing days for stock exchange
+                    || (d == 2 && m == Month.JANUARY.toInteger() && y == 2004)
+                    || (d == 31 && m == Month.DECEMBER.toInteger() && y == 2004))
+                return false;
+            return true;
+        }
+    }
 
 }
