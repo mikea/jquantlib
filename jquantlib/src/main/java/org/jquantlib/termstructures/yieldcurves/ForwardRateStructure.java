@@ -159,7 +159,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
 	 * 
-	 * @param settlementDays
+	 * @param settlementDays_
 	 * @param cal
 	 * @param dc
 	 */
