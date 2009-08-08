@@ -58,7 +58,8 @@ final strictfp public class Constants {
 
     public static final int    NULL_INTEGER         =   Integer.MAX_VALUE;
     public static final double NULL_REAL            =   Double.NaN;  // TODO: http://bugs.jquantlib.org/view.php?id=298
-
+    public static final double NULL_TIME            =   NULL_REAL;
+    
     public static final double DBL_MIN              =   Double.MIN_VALUE;
     public static final double DBL_MAX              =   Double.MAX_VALUE;
 
