@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * @author Ueli Hofstetter
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public class Leg extends ArrayList<CashFlow> {
+public class Leg extends ArrayList<CashFlow> implements Cloneable {
 
     //
     // public constructors
@@ -50,6 +50,10 @@ public class Leg extends ArrayList<CashFlow> {
     public CashFlow last() {
         assert this.size() > 0 : "no cashflows"; // TODO: message
         return this.get(this.size()-1);
+    }
+    
+    public Leg clone(){
+		throw new UnsupportedOperationException();
     }
 
 }

@@ -24,6 +24,7 @@ package org.jquantlib.cashflow;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
@@ -137,7 +138,9 @@ public abstract class Coupon extends CashFlow {
     
     @Override
     public Date date() {
-        return paymentDate;
+    	//FIXME: return a clone!!!!!
+    	return DateFactory.getFactory().getDate(paymentDate.getDayOfMonth(), paymentDate.getMonth(), paymentDate.getYear());
+        //return paymentDate;
     }
 
     
