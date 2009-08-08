@@ -66,9 +66,9 @@ public class ConvertibleBond extends Bond {
 		this.callability = callability;
 		this.creditSpread = creditSpread;
 		
-		this.issueDate = issueDate;
+		this.issueDate_ = issueDate;
         this.datedDate = schedule.date(0);
-        this.maturityDate = schedule.date(schedule.size()-1);
+        this.maturityDate_ = schedule.date(schedule.size()-1);
         frequency = schedule.tenor().frequency();
 
         setPricingEngine(engine);

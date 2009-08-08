@@ -129,7 +129,7 @@ public class ConvertibleBondOption extends OneAssetStrikedOption{
             }
         }
 
-        final List<CashFlow> cashFlows = bond.getCashFlows();
+        final List<CashFlow> cashFlows = bond.cashFlows();
 
         moreArgs.couponTimes.clear();
         moreArgs.couponAmounts.clear();
