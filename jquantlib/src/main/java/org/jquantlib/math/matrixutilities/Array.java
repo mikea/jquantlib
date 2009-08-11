@@ -41,6 +41,9 @@ package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.Ops.DoubleOp;
 import org.jquantlib.math.functions.Identity;
@@ -48,11 +51,10 @@ import org.jquantlib.math.functions.Identity;
 
 /**
  * 1-D array used in linear algebra.
- * 
+ *
  * @author Richard Gomes
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-//TODO: consider refactor Array and Matrix to math.matrixutilities (or something like this)
+@QualityAssurance(quality = Quality.Q2_RESEMBLANCE, version = Version.V097, reviewers = { "Richard Gomes" })
 public class Array extends Matrix {
 
     /**
@@ -66,7 +68,7 @@ public class Array extends Matrix {
 
     /**
      * Builds an Array of <code>cols</code>
-     * 
+     *
      * @param cols is the number of columns
      */
     public Array(final int length) {
@@ -76,7 +78,7 @@ public class Array extends Matrix {
 
     /**
      * Creates an Array given a double[] array
-     * 
+     *
      * @param data
      */
     public Array(final double[] array) {
@@ -140,7 +142,7 @@ public class Array extends Matrix {
 
     /**
      * Fills all elements of this {@link Array} with a given scalar
-     * 
+     *
      * @param scalar is the value to be used to fill in
      */
     @Override
@@ -170,10 +172,10 @@ public class Array extends Matrix {
 
     /**
      * Returns an Array containing a copy of region
-     * 
+     *
      * @param pos is the initial position
      * @param len is the quantity of elements
-     * 
+     *
      * @return a new Array containing a copy of region
      */
     public Array copyOfRange(final int pos, final int len) {
@@ -185,9 +187,9 @@ public class Array extends Matrix {
 
     /**
      * Accumulate values in a range.
-     * 
+     *
      * @note Mimics std::accumulate
-     * 
+     *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
     public double accumulate() {
@@ -196,12 +198,12 @@ public class Array extends Matrix {
 
     /**
      * Accumulate values in a range.
-     * 
+     *
      * @note Mimics std::accumulate
-     * 
+     *
      * @param from is the initial inclusive index
      * @param to   is the final exclusive index
-     * 
+     *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
     public double accumulate(final int from, final int to, final double init) {
@@ -218,9 +220,9 @@ public class Array extends Matrix {
 
     /**
      * Return the minimum element in a range using comparison functor.
-     * 
+     *
      * @note Mimics std::min_element
-     * 
+     *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
      */
     public double min(final int from, final int to) {
@@ -239,9 +241,9 @@ public class Array extends Matrix {
 
     /**
      * Return the maximum element in a range using comparison functor.
-     * 
+     *
      * @note Mimics std::max_element
-     * 
+     *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a>
      */
     public double max(final int from, final int to) {
@@ -261,9 +263,9 @@ public class Array extends Matrix {
 
     /**
      * Return differences between adjacent values.
-     * 
+     *
      * @note Mimics std::adjacent_difference
-     * 
+     *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
     public final Array adjacentDifference() {
@@ -272,9 +274,9 @@ public class Array extends Matrix {
 
     /**
      * Return differences between adjacent values.
-     * 
+     *
      * @note Mimics std::adjacent_difference
-     * 
+     *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
     public final Array adjacentDifference(final int from) {
@@ -294,7 +296,7 @@ public class Array extends Matrix {
 
     /**
      * Finds the first position in which val could be inserted without changing the ordering.
-     * 
+     *
      * @note Mimics std::lower_bound
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
@@ -305,7 +307,7 @@ public class Array extends Matrix {
 
     /**
      * Finds the first position in which val could be inserted without changing the ordering.
-     * 
+     *
      * @note Mimics std::lower_bound
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
@@ -332,7 +334,7 @@ public class Array extends Matrix {
 
     /**
      * Finds the last position in which val could be inserted without changing the ordering.
-     * 
+     *
      * @note Mimics std::upper_bound
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
@@ -343,7 +345,7 @@ public class Array extends Matrix {
 
     /**
      * Finds the last position in which val could be inserted without changing the ordering.
-     * 
+     *
      * @note Mimics std::upper_bound
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
@@ -640,10 +642,10 @@ public class Array extends Matrix {
      * <p>
      * The definition of dot product is
      * {@latex[ \mathbf{a}\cdot \mathbf{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + \cdots + a_nb_n }
-     * 
+     *
      * @param another Matrix
      * @return the dot product between this Matrix and another Matrix
-     * 
+     *
      * @see <a href="http://en.wikipedia.org/wiki/Dot_product">Dot Product</a>
      */
     public double dotProduct(final Array another) {
@@ -656,10 +658,10 @@ public class Array extends Matrix {
      * <p>
      * As we are working in space {@latex$ \Re} (real numbers), it's sufficient to understand that both <b>inner product</b> and
      * <b>dot operator</b> give equivalent results.
-     * 
+     *
      * @param another Matrix
      * @return the inner product between this Matrix and another Matrix
-     * 
+     *
      * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
      */
     public double innerProduct(final Array another) {
@@ -673,12 +675,12 @@ public class Array extends Matrix {
      * <p>
      * As we are working in space {@latex$ \Re} (real numbers), it's sufficient to understand that both <b>inner product</b> and
      * <b>dot operator</b> give equivalent results.
-     * 
+     *
      * @param another Matrix
      * @param from is the start element
      * @param to is the end element
      * @return the inner product between this Matrix and another Matrix
-     * 
+     *
      * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
      */
     public double innerProduct(final Array another, final int from, final int to) {
@@ -702,10 +704,10 @@ public class Array extends Matrix {
      *    \vdots & \vdots & \ddots & \vdots \\
      *    u_mv_1 & u_mv_2 & \dots  & u_mv_n
      *  \end{array}\right] }
-     * 
+     *
      * @param another Array
      * @return the outer product of <code>this</code> Array and <code>another</code> Array
-     * 
+     *
      * @see <a href="http://en.wikipedia.org/wiki/Outer_product">Outer product</a>
      */
     public Matrix outerProduct(final Array another) {

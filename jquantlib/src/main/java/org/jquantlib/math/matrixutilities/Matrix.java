@@ -42,6 +42,10 @@ package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
+
 /**
  * Bidimensional matrix operations
  * <p>
@@ -143,8 +147,7 @@ import java.util.Arrays;
  *
  * @author Richard Gomes
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-// TODO: refactor Array and Matrix to math.matrixutilities (or something like this)
+@QualityAssurance(quality = Quality.Q0_UNFINISHED, version = Version.V097, reviewers = { "Richard Gomes" })
 public class Matrix {
 
     //
@@ -187,7 +190,7 @@ public class Matrix {
 
     /**
      * Builds a Matrix of <code>rows</code> by <code>cols</code>
-     * 
+     *
      * @param rows is the number of rows
      * @param cols is the number of columns
      */
@@ -200,20 +203,9 @@ public class Matrix {
     }
 
 
-    //
-    //	/**
-    //     * Builds a Matrix of only one element which holds a <code>scalar</code> value
-    //     *
-    //     * @param scalar is the scalar value
-    //     */
-    //    public Matrix(final int rows, final int cols, final double scalar) {
-    //        this(rows, cols);
-    //        fill(scalar);
-    //    }
-
     /**
      * Creates a Matrix given a double[][] array
-     * 
+     *
      * @param data
      */
     public Matrix(final double[][] data) {
@@ -324,7 +316,7 @@ public class Matrix {
 
     /**
      * Fills all elements of this Matrix with a given scalar
-     * 
+     *
      * @param scalar is the value to be used to fill in
      * @return this
      */
@@ -348,12 +340,12 @@ public class Matrix {
 
     /**
      * Returns Matrix containing a copy of a rectangular region
-     * 
+     *
      * @param row is the initial row
      * @param col is the initial column
      * @param nrows is the number of rows to be copied
      * @param ncols is the number of columns to be copied
-     * 
+     *
      * @return a new instance
      */
     public Matrix copyOfRange(final int row, final int col, final int nrows, final int ncols) {
@@ -374,7 +366,7 @@ public class Matrix {
 
     /**
      * Retrieves an elementof <code>this</code> Matrix which identified by <i>(row, col)</i>
-     * 
+     *
      * @param row coordinate
      * @param col coordinate
      * @return the contents of a given cell
@@ -385,7 +377,7 @@ public class Matrix {
 
     /**
      * Stores a value into an element of <code>this</code> Matrix which is identified by <i>(row, col)</i>
-     * 
+     *
      * @param row coordinate
      * @param col coordinate
      */
@@ -399,11 +391,11 @@ public class Matrix {
      * <p>
      * This method is provided for performance reasons.
      * See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for more details
-     * 
+     *
      * @param row coordinate
      * @param col coordinate
      * @return the contents of a given cell
-     * 
+     *
      * @see #getAddress(int)
      * @see #getAddress(int, int)
      */
@@ -416,10 +408,10 @@ public class Matrix {
      * <p>
      * This method is provided for performance reasons.
      * See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for more details
-     * 
+     *
      * @param row coordinate
      * @param col coordinate
-     * 
+     *
      * @see #getAddress(int)
      * @see #getAddress(int, int)
      */
@@ -433,7 +425,7 @@ public class Matrix {
      * <p>
      * A typical usage of this method is when one would like to improve access to elements of a given row by reducing
      * the number of calculations needed to obtain the address of cells belonging to that row.
-     * 
+     *
      * @param row is the desired row which the address is requested for.
      */
     public int getAddress(final int row) {
@@ -446,7 +438,7 @@ public class Matrix {
      * <p>
      * A typical usage of this method is when one would like to improve access to a given cell, basically
      * keeping its address for later use.
-     * 
+     *
      * @param row is the desired row which a cell belongs to.
      * @param col is the desired col which a cell belongs to.
      */
@@ -457,7 +449,7 @@ public class Matrix {
 
     /**
      * Returns an Array which contains elements of a requested row
-     * 
+     *
      * @param another
      * @return a new Array instance
      */
@@ -514,7 +506,7 @@ public class Matrix {
 
     /**
      * Returns the result of an addition of <code>this</code> Matrix and <code>another</code> Matrix
-     * 
+     *
      * @param another
      * @return this
      */
@@ -532,7 +524,7 @@ public class Matrix {
 
     /**
      * Returns the result of a subtraction of <code>this</code> Matrix and <code>another</code> Matrix
-     * 
+     *
      * @param another
      * @return this
      */
@@ -550,7 +542,7 @@ public class Matrix {
 
     /**
      * Returns the result of a multiplication of <code>this</code> Matrix by a <code>scalar</code>
-     * 
+     *
      * @param scalar
      * @return this
      */
@@ -567,7 +559,7 @@ public class Matrix {
 
     /**
      * Returns the result of a division of <code>this</code> Matrix by a <code>scalar</code>
-     * 
+     *
      * @param scalar
      * @return this
      */
@@ -595,7 +587,7 @@ public class Matrix {
 
     /**
      * Returns the result of addition of <code>this</code> Matrix and <code>another</code> Matrix
-     * 
+     *
      * @param another
      * @return a new instance
      */
@@ -614,7 +606,7 @@ public class Matrix {
 
     /**
      * Returns the result of a subtraction of <code>this</code> Matrix and <code>another</code> Matrix
-     * 
+     *
      * @param another
      * @return a new instance
      */
@@ -634,7 +626,7 @@ public class Matrix {
 
     /**
      * Returns the negative of <code>this</code> Matrix
-     * 
+     *
      * @return this
      */
     public Matrix negative() {
@@ -644,7 +636,7 @@ public class Matrix {
 
     /**
      * Returns the result of a multiplication of <code>this</code> Matrix by a <code>scalar</code>
-     * 
+     *
      * @param scalar
      * @return a new instance
      */
@@ -662,7 +654,7 @@ public class Matrix {
 
     /**
      * Returns the result of a division of <code>this</code> Matrix by a <code>scalar</code>
-     * 
+     *
      * @param scalar
      * @return a new instance
      */
@@ -689,7 +681,7 @@ public class Matrix {
 
     /**
      * Returns an Array which represents the multiplication of <code>this</code> Matrix by an Array
-     * 
+     *
      * @param array is the input Array which participates in the operation
      * @return a new Array which contains the result
      */
@@ -710,7 +702,7 @@ public class Matrix {
 
     /**
      * Returns a Matrix which represents the multiplication of <code>this</code> Matrix and <code>another</code> Matrix
-     * 
+     *
      * @param another
      * @return a new Matrix which contains the result
      */
@@ -754,7 +746,7 @@ public class Matrix {
 
     /**
      * Swaps contents of <code>this</code> Matrix by <code>another</code> Matrix
-     * 
+     *
      * @param another
      * @return this
      */
@@ -773,7 +765,7 @@ public class Matrix {
 
     /**
      * Swaps elements given their coordinates
-     * 
+     *
      * @param pos1row : element1 row
      * @param pos1col : element1 col
      * @param pos2row : element2 row
@@ -792,7 +784,7 @@ public class Matrix {
 
     /**
      * Returns the transpose of <code>this</code> Matrix
-     * 
+     *
      * @return a new instance which contains the result of this operation
      */
     public Matrix transpose() {
@@ -811,7 +803,7 @@ public class Matrix {
 
     /**
      * Returns a diagonal from <code>this</code> Matrix, if it is square
-     * 
+     *
      * @return a new instance which contains the result of this operation
      */
     public Array diagonal() {
@@ -827,7 +819,7 @@ public class Matrix {
 
     /**
      * Returns an inverse Matrix from <code>this</code> Matrix
-     * 
+     *
      * @return a new instance which contains the result of this operation
      */
     public Matrix inverse() {
