@@ -23,74 +23,11 @@
 package org.jquantlib.math.matrixutilities;
 
 import org.jquantlib.math.Closeness;
-import org.jquantlib.math.optimization.CostFunction;
 
-//TODO: license, class comments
-class HypersphereCostFunction extends CostFunction {
-
-    private final int size_;
-    private final boolean lowerDiagonal_;
-    private final Matrix targetMatrix_;
-    private final Array targetVariance_;
-    private final  Matrix currentRoot_;
-    private Matrix tempMatrix_, currentMatrix_;
-
-    public HypersphereCostFunction(final Matrix targetMatrix, final Array targetVariance, final boolean lowerDiagonal) {
-        this.size_ = targetMatrix.rows;
-        this.lowerDiagonal_ = lowerDiagonal;
-        this.targetMatrix_ = targetMatrix;
-        this.targetVariance_ = targetVariance;
-        currentRoot_ = new Matrix(size_, size_);
-        tempMatrix_ = new Matrix(size_, size_);
-        currentMatrix_ = new Matrix(size_, size_);
-    }
-
-    @Override
-    public Array values(final Array array) {
-        throw new UnsupportedOperationException("values method not implemented");
-    }
-
-    @Override
-    public double value(final Array x)  {
-        int i,j,k;
-
-        currentRoot_.fill(1.0);
-        if (lowerDiagonal_) {
-            for (i=0; i<size_; i++)
-                for (k=0; k<size_; k++)
-                    if (k>i)
-                        currentRoot_.set(i,k,0);
-                    else
-                        for (j=0; j<=k; j++)
-                            if (j == k && k!=i)
-                                currentRoot_.set(i,k, currentMatrix_.get(i, k) * Math.cos(x.get(i*(i-1)/2+j)));
-                            else if (j!=i)
-                                currentRoot_.set(i,k, currentRoot_.get(i, k)*
-                                        Math.sin(x.get(i*(i-1)/2+j)));
-        } else
-            for (i=0; i<size_; i++)
-                for (k=0; k<size_; k++)
-                    for (j=0; j<=k; j++)
-                        if (j == k && k!=size_-1)
-                            currentRoot_.set(i, k, currentRoot_.get(i,k)
-                                    *Math.cos(x.get(j*size_+i)));
-                        else if (j!=size_-1)
-                            currentRoot_.set(i,k,currentRoot_.get(i, j)*Math.sin(x.get(j*size_+i)));
-        double temp, error=0;
-        tempMatrix_ = currentRoot_.transpose();
-        currentMatrix_ = currentRoot_.mul(tempMatrix_);
-        for (i=0;i<size_;i++)
-            for (j=0;j<size_;j++) {
-                temp = currentMatrix_.get(i, j)*targetVariance_.get(i)*targetVariance_.get(j)-targetMatrix_.get(i, j);
-                error += temp*temp;
-            }
-        return error;
-    }
-}
-
-//TODO: create a
 public class PseudoSqrt {
+
     private final static String unknown_salvaging_algorithm = "unknown salvaging algorithm";
+
     public enum SalvagingAlgorithm {
         None, Spectral, Hypersphere, LowerDiagonal, Higham;
     }
@@ -486,7 +423,7 @@ public class PseudoSqrt {
         final Matrix diagonal = new Matrix(size, size);
 
         // salvaging algorithm
-        Matrix result = new Matrix(size, size);
+        final Matrix result;
         boolean negative;
         switch (sa) {
         case None:
@@ -495,7 +432,7 @@ public class PseudoSqrt {
                 throw new IllegalArgumentException( "negative eigenvalue(s) ("
                         + /*std::scientific*/ + jd.eigenvalues().get(size-1)
                         + ")");
-            result = new CholeskyDecomposition().CholeskyDecomposition(matrix, true);
+            result = matrix.cholesky();
             break;
         case Spectral:
             // negative eigenvalues set to zero
@@ -545,8 +482,9 @@ public class PseudoSqrt {
             final double tol = 1e-6;
             if(true)
                 throw new UnsupportedOperationException("work in progress");
+            // TODO: code review :: please verify against original QL/C++ code
             //result = highamImplementation(matrix, maxIterations, tol);
-            result = new CholeskyDecomposition().CholeskyDecomposition(result, true);
+            // result = new CholeskyDecomposition().CholeskyDecomposition(result, true);
             break;
         default:
             throw new AssertionError(unknown_salvaging_algorithm); // TODO: message

@@ -26,6 +26,12 @@ public @interface QualityAssurance {
          */
         NONE,
 
+
+        /**
+         * Not based on QuantLib
+         */
+        OTHER,
+
         /**
          * QuantLib v0.8.1
          */
@@ -35,6 +41,7 @@ public @interface QualityAssurance {
          * QuantLib v0.9.7
          */
         V097
+
     }
 
     public enum Quality {

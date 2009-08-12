@@ -41,6 +41,7 @@ package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
 
+import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -179,7 +180,7 @@ public class Array extends Matrix {
      * @return a new Array containing a copy of region
      */
     public Array copyOfRange(final int pos, final int len) {
-        assert pos >= 0 && len > 0 && pos+len <= this.length: "invalid arguments"; //TODO: message
+        QL.require(pos >= 0 && len > 0 && pos+len <= this.length,  INVALID_ARGUMENTS); //TODO: message
         final Array result = new Array(len);
         System.arraycopy(this.data, pos, result.data, 0, len);
         return result;
@@ -207,7 +208,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
     public double accumulate(final int from, final int to, final double init) {
-        assert from >=0 && from <=to && to <=this.length : "invalid arguments"; // TODO: message
+        QL.require(from >=0 && from <=to && to <=this.length ,  INVALID_ARGUMENTS);
         double sum = init;
         for (int i=from; i<to; i++)
             sum += this.data[i];
@@ -226,7 +227,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
      */
     public double min(final int from, final int to) {
-        assert from >=0 && from <=to && to <=this.length : "invalid arguments"; // TODO: message
+        QL.require(from >=0 && from <=to && to <=this.length ,  INVALID_ARGUMENTS);
         double result = this.data[from];
         for (int i=from+1; i<to; i++) {
             final double tmp = this.data[i];
@@ -247,7 +248,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a>
      */
     public double max(final int from, final int to) {
-        assert from >=0 && from <=to && to <=this.length : "invalid arguments"; // TODO: message
+        QL.require(from >=0 && from <=to && to <=this.length ,  INVALID_ARGUMENTS);
         double result = this.data[from];
         for (int i=from+1; i<to; i++) {
             final double tmp = data[i];
@@ -280,7 +281,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
     public final Array adjacentDifference(final int from) {
-        assert from>=0 && from <= this.length : "invalid arguments"; // TODO: message
+        QL.require(from>=0 && from <= this.length ,  INVALID_ARGUMENTS);
         final Array diff = new Array(this.length-from);
         for (int i = from; i < this.length; i++) {
             final double curr = this.data[i];
@@ -387,7 +388,7 @@ public class Array extends Matrix {
      * @return this
      */
     public Array transform(final int from, final int to, final Ops.DoubleOp f) {
-        assert from>=0 && from<=to && to<=this.length && f!=null: "invalid arguments"; // TODO: message
+        QL.require(from>=0 && from<=to && to<=this.length && f!=null,  INVALID_ARGUMENTS);
         if (f instanceof Identity) return this;
         for (int i = from; i < to; i++)
             data[i] = f.op(data[i]);
@@ -439,7 +440,7 @@ public class Array extends Matrix {
     }
 
     public Array addAssign(final Array another) {
-        assert this.length == another.length : "array is incompatible"; // TODO: message
+        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
         for (int i=0; i<length; i++)
             data[i] += another.data[i];
         return this;
@@ -447,14 +448,14 @@ public class Array extends Matrix {
 
     @Override
     public Array subAssign(final Matrix another) {
-        assert this.rows == another.rows && this.length == another.length : "matrix is incompatible"; // TODO: message
+        QL.require(this.rows == another.rows && this.length == another.length ,  MATRIX_IS_INCOMPATIBLE);
         for (int i=0; i<length; i++)
             data[i] -= another.data[i];
         return this;
     }
 
     public Array mulAssign(final Array another) {
-        assert this.length == another.length : "array is incompatible"; // TODO: message
+        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
         for (int i=0; i<length; i++)
             data[i] *= another.data[i];
         return this;
@@ -462,7 +463,7 @@ public class Array extends Matrix {
 
 
     public Array divAssign(final Matrix another) {
-        assert this.rows == another.rows && this.length == another.length : "matrix is incompatible"; // TODO: message
+        QL.require(this.rows == another.rows && this.length == another.length ,  MATRIX_IS_INCOMPATIBLE);
         for (int i=0; i<length; i++)
             data[i] /= another.data[i];
         return this;
@@ -516,7 +517,7 @@ public class Array extends Matrix {
     }
 
     public Array add(final Array another) {
-        assert this.length == another.length : "array is incompatible"; // TODO: message
+        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
         final Array result = new Array(this.length);
         for (int i=0; i<length; i++)
             result.data[i] = this.data[i] + another.data[i];
@@ -525,7 +526,7 @@ public class Array extends Matrix {
 
     @Override
     public Array sub(final Matrix another) {
-        assert this.rows == another.rows && this.length == another.length : "matrix is incompatible"; // TODO: message
+        QL.require(this.rows == another.rows && this.length == another.length ,  MATRIX_IS_INCOMPATIBLE);
         final Array result = new Array(this.length);
         for (int i=0; i<length; i++)
             result.data[i] = this.data[i] - another.data[i];
@@ -534,7 +535,7 @@ public class Array extends Matrix {
 
     @Override
     public Array mul(final Array another) {
-        assert this.length == another.length : "array is incompatible"; // TODO: message
+        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
         final Array result = new Array(this.length);
         for (int i=0; i<length; i++)
             result.data[i] = this.data[i] * another.data[i];
@@ -543,7 +544,7 @@ public class Array extends Matrix {
 
 
     public Array div(final Matrix another) {
-        assert this.rows == another.rows && this.length == another.length : "matrix is incompatible"; // TODO: message
+        QL.require(this.rows == another.rows && this.length == another.length ,  MATRIX_IS_INCOMPATIBLE);
         final Array result = new Array(this.length);
         for (int i=0; i<length; i++)
             result.data[i] = this.data[i] / another.data[i];
@@ -560,7 +561,7 @@ public class Array extends Matrix {
 
     @Override
     public Array mul(final Matrix matrix) {
-        assert this.length == matrix.rows : "matrix is incompatible"; // TODO: message
+        QL.require(this.length == matrix.rows ,  MATRIX_IS_INCOMPATIBLE);
         final Array result = new Array(this.cols);
         for (int i=0; i<this.length; i++) {
             int addr = matrix.address(i);
@@ -649,7 +650,7 @@ public class Array extends Matrix {
      * @see <a href="http://en.wikipedia.org/wiki/Dot_product">Dot Product</a>
      */
     public double dotProduct(final Array another) {
-        assert this.length == another.length : "array is incompatible"; // TODO: message
+        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
         return innerProduct(another, 0, length);
     }
 
@@ -665,7 +666,7 @@ public class Array extends Matrix {
      * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
      */
     public double innerProduct(final Array another) {
-        assert this.length == another.length : "array is incompatible"; // TODO: message
+        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
         return innerProduct(another, 0, length);
     }
 

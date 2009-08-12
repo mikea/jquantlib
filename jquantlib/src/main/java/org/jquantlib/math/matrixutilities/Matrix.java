@@ -42,6 +42,7 @@ package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
 
+import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -147,8 +148,22 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  *
  * @author Richard Gomes
  */
-@QualityAssurance(quality = Quality.Q0_UNFINISHED, version = Version.V097, reviewers = { "Richard Gomes" })
+@QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.V097, reviewers = { "Richard Gomes" })
 public class Matrix {
+
+    //
+    // error messages
+    //
+
+    protected final static String INVALID_ARGUMENTS = "invalid arguments";
+    protected final static String WRONG_BUFFER_LENGTH = "wrong buffer length";
+    protected final static String MATRIX_IS_INCOMPATIBLE = "matrix is incompatible";
+    protected final static String ARRAY_IS_INCOMPATIBLE = "array is incompatible";
+    protected final static String MATRIX_MUST_BE_SQUARE = "matrix must be square";
+
+
+
+
 
     //
     // constants
@@ -193,9 +208,10 @@ public class Matrix {
      *
      * @param rows is the number of rows
      * @param cols is the number of columns
+     * @throws IllegalArgumentException if parameters are less than zero
      */
     public Matrix(final int rows, final int cols) {
-        assert rows>0 && cols>0 : "invalid arguments"; // TODO: message
+        QL.require(rows>0 && cols>0 ,  INVALID_ARGUMENTS);
         this.rows = rows;
         this.cols = cols;
         this.length = rows*cols;
@@ -221,6 +237,20 @@ public class Matrix {
     }
 
 
+    /**
+     * Creates a Matrix given a double[][] array
+     *
+     * @param data
+     */
+    public Matrix(final Matrix m) {
+        this.rows = m.rows;
+        this.cols = m.cols;
+        this.length = m.length;
+        this.data = new double[length];
+        System.arraycopy(m.data, 0, this.data, 0, this.length);
+    }
+
+
     //
     // overrides Object
     //
@@ -230,7 +260,7 @@ public class Matrix {
      */
     @Override
     public Matrix clone() {
-        return this.copyOfRange(0, 0, this.rows, this.cols);
+        return new Matrix(this);
     }
 
     @Override
@@ -262,29 +292,6 @@ public class Matrix {
 
 
     //
-    // package private methods
-    //
-
-    /**
-     * This method returns the address of the first column in a given row
-     * <p>
-     * This method is used internally and is provided for performance reasons.
-     */
-    /*@PackagePrivate*/ int address(final int row) {
-        return row*this.cols;
-    }
-
-    /**
-     * This method returns the address of a given cell identified by <i>(row, col)</i>
-     * <p>
-     * This method is used internally and is provided for performance reasons.
-     */
-    /*@PackagePrivate*/ int address(final int row, final int col) {
-        return row*this.cols + col;
-    }
-
-
-    //
     // public methods
     //
 
@@ -298,7 +305,7 @@ public class Matrix {
     }
 
     public double[][] toArray(final double[][] buffer) {
-        assert this.rows == buffer.length && this.cols == buffer[0].length : "buffer dimensions mismatch"; //TODO: message
+        QL.require(this.rows == buffer.length && this.cols == buffer[0].length ,  WRONG_BUFFER_LENGTH); //TODO: message
         int addr = 0;
         for (int row=0; row<this.rows; row++) {
             System.arraycopy(this.data, addr, buffer[row], 0, this.cols);
@@ -325,44 +332,18 @@ public class Matrix {
         return this;
     }
 
-    //XXX
-    //    /**
-    //     * Fills <code>this</code> Matrix with contents from <code>another</code> Matrix
-    //     *
-    //     * @param another is the source Matrix where data is being copied from
-    //     * @return <code>this</code>
-    //     */
-    //    public Matrix fill(final Matrix another) {
-    //        if (this.length != another.length) throw new IllegalArgumentException(); //TODO: message
-    //        System.arraycopy(another.data, 0, this.data, 0, this.length);
-    //        return this;
-    //    }
-
     /**
-     * Returns Matrix containing a copy of a rectangular region
+     * Fills <code>this</code> Matrix with contents from <code>another</code> Matrix
      *
-     * @param row is the initial row
-     * @param col is the initial column
-     * @param nrows is the number of rows to be copied
-     * @param ncols is the number of columns to be copied
-     *
-     * @return a new instance
+     * @param another is the source Matrix where data is being copied from
+     * @return <code>this</code>
      */
-    public Matrix copyOfRange(final int row, final int col, final int nrows, final int ncols) {
-        assert row >= 0 && col >= 0 && nrows >= 0 && ncols >= 0 && row+nrows <= this.rows && col+ncols <= this.cols : "invalid arguments"; //TODO: message
-        final Matrix result = new Matrix(nrows, ncols);
-        if (col+ncols == this.cols)
-            System.arraycopy(this.data, 0, result.data, 0, this.length);
-        else {
-            int addr = 0;
-            for (int i=0; i<nrows; i++) {
-                System.arraycopy(data, address(row+i, col), data, addr, ncols);
-                addr += ncols;
-            }
-        }
-        return result;
+    public Matrix fill(final Matrix another) {
+        if (this.length != another.length)
+            throw new IllegalArgumentException(); // TODO: message
+        System.arraycopy(another.data, 0, this.data, 0, this.length);
+        return this;
     }
-
 
     /**
      * Retrieves an elementof <code>this</code> Matrix which identified by <i>(row, col)</i>
@@ -429,7 +410,7 @@ public class Matrix {
      * @param row is the desired row which the address is requested for.
      */
     public int getAddress(final int row) {
-        assert row >= 0 && row < this.rows : "array is incompatible"; // TODO: message
+        QL.require(row >= 0 && row < this.rows ,  ARRAY_IS_INCOMPATIBLE);
         return row*this.cols;
     }
 
@@ -443,7 +424,7 @@ public class Matrix {
      * @param col is the desired col which a cell belongs to.
      */
     public int getAddress(final int row, final int col) {
-        assert col >= 0 && col < this.cols : "array is incompatible"; // TODO: message
+        QL.require(col >= 0 && col < this.cols ,  ARRAY_IS_INCOMPATIBLE);
         return getAddress(row)+col;
     }
 
@@ -460,7 +441,7 @@ public class Matrix {
     }
 
     public void setRow(final int row, final Array array) {
-        assert this.cols == array.length : "array is incompatible"; // TODO: message
+        QL.require(this.cols == array.length ,  ARRAY_IS_INCOMPATIBLE);
         System.arraycopy(array.data, 0, this.data, getAddress(row), this.cols);
     }
 
@@ -479,7 +460,7 @@ public class Matrix {
     }
 
     public void setCol(final int col, final Array array) {
-        assert this.rows == array.length : "array is incompatible"; // TODO: message
+        QL.require(this.rows == array.length ,  ARRAY_IS_INCOMPATIBLE);
         if (this.cols == 1)
             System.arraycopy(array.data, 0, this.data, 0, this.length);
         else {
@@ -511,7 +492,7 @@ public class Matrix {
      * @return this
      */
     public Matrix addAssign(final Matrix another) {
-        assert this.rows == another.rows && this.cols == another.cols : "matrices are incompatible"; // TODO: message
+        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
             for (int col=0; col<cols; col++) {
@@ -529,7 +510,7 @@ public class Matrix {
      * @return this
      */
     public Matrix subAssign(final Matrix another) {
-        assert this.rows == another.rows && this.cols == another.cols : "matrices are incompatible"; // TODO: message
+        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
             for (int col=0; col<cols; col++) {
@@ -592,7 +573,7 @@ public class Matrix {
      * @return a new instance
      */
     public Matrix add(final Matrix another) {
-        assert this.rows == another.rows && this.cols == another.cols : "matrices are incompatible"; // TODO: message
+        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
@@ -611,7 +592,7 @@ public class Matrix {
      * @return a new instance
      */
     public Matrix sub(final Matrix another) {
-        assert this.rows == another.rows && this.cols == another.cols : "matrices are incompatible"; // TODO: message
+        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = address(row);
@@ -686,7 +667,7 @@ public class Matrix {
      * @return a new Array which contains the result
      */
     public Array mul(final Array array) {
-        assert this.cols == array.length : "array is incompatible"; // TODO: message
+        QL.require(this.cols == array.length ,  ARRAY_IS_INCOMPATIBLE);
         final Array result = new Array(this.cols);
         for (int col=0; col<this.cols; col++) {
             int addr = address(0, col);
@@ -707,7 +688,7 @@ public class Matrix {
      * @return a new Matrix which contains the result
      */
     public Matrix mul(final Matrix another) {
-        assert this.cols == another.rows : "matrices are incompatible"; // TODO: message
+        QL.require(this.cols == another.rows ,  MATRIX_IS_INCOMPATIBLE);
         final Matrix result = new Matrix(this.rows, another.cols);
         for (int col = 0; col < another.cols; col++) {
             final int caddr = another.address(0, col);
@@ -727,11 +708,63 @@ public class Matrix {
 
 
     //
-    //	Math functions
+    // Decompositions
     //
-    //	opr   method     this    right    result
-    //	----- ---------- ------- -------- ------
-    //  (none)
+    //  lu           Matrix           LUDecomposition
+    //  qr           Matrix           QRDecomposition
+    //  cholensky    Matrix           CholeskyDecomposition
+    //  svd          Matrix           SingularValueDecomposition
+    //  eigenvalue   Matrix           EigenvalueDecomposition
+
+    /**
+     * LU Decomposition
+     *
+     * @param m is a rectangular Matrix
+     * @return Structure to access L, U and piv.
+     */
+    public LUDecomposition lu() {
+        return new LUDecomposition(this);
+    }
+
+    /**
+     * QR Decomposition
+     *
+     * @return QRDecomposition
+     * @see QRDecomposition
+     */
+    public QRDecomposition qr() {
+        return new QRDecomposition(this);
+    }
+
+    /**
+     * Cholesky Decomposition
+     *
+     * @return CholeskyDecomposition
+     * @see CholeskyDecomposition
+     */
+    public CholeskyDecomposition cholesky() {
+        return new CholeskyDecomposition(this);
+    }
+
+    /**
+     * Singular Value Decomposition
+     *
+     * @return SingularValueDecomposition
+     * @see SingularValueDecomposition
+     */
+    public SingularValueDecomposition svd() {
+        return new SingularValueDecomposition(this);
+    }
+
+    /**
+     * Eigenvalue Decomposition
+     *
+     * @return EigenvalueDecomposition
+     * @see EigenvalueDecomposition
+     */
+    public EigenvalueDecomposition eigenvalue() {
+        return new EigenvalueDecomposition(this);
+    }
 
 
     //
@@ -739,10 +772,97 @@ public class Matrix {
     //
     //	method       this    right    result
     //	------------ ------- -------- ------
-    //  swap         Matrix  Matrix   this
+    //  identity     Matrix           this
     //	transpose    Matrix           Matrix
     //  diagonal     Matrix           Array
+    //  determinant  Matrix           double
     //	inverse      Matrix           Matrix
+    //  solve        Matrix           Matrix
+    //  swap         Matrix  Matrix   this
+    //
+
+
+    /**
+     * Makes sure <code>this</code> Matrix is square makes it an identity matrix.
+     *
+     * @return An m-by-n matrix with ones on the diagonal and zeros elsewhere.
+     */
+    public Matrix identity() {
+        QL.require(this.rows == this.cols, MATRIX_MUST_BE_SQUARE);
+
+        this.fill(0.0);
+        int addr = 0;
+        for (int i = 0; i < rows; i++) {
+            data[addr] = 1.0;
+            addr += rows+1;
+        }
+        return this;
+    }
+
+
+    /**
+     * Returns the transpose of <code>this</code> Matrix
+     *
+     * @return a new instance which contains the result of this operation
+     */
+    public Matrix transpose() {
+        final Matrix result = new Matrix(this.cols, this.rows);
+        for (int row=0; row<this.rows; row++) {
+            int raddr = this.address(row, 0);
+            int caddr = result.address(0, row);
+            for (int col=0; col<this.cols; col++) {
+                result.data[caddr] = this.data[raddr];
+                caddr += result.cols;
+                raddr++;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns a diagonal from <code>this</code> Matrix, if it is square
+     *
+     * @return a new instance which contains the result of this operation
+     */
+    public Array diagonal() {
+        QL.require(this.rows == this.cols ,  MATRIX_MUST_BE_SQUARE); //TODO: message
+        final Array result = new Array(this.cols);
+        int addr = 0;
+        for (int i = 0; i < this.cols; i++) {
+            result.data[i] = this.data[addr];
+            addr += this.cols + 1;
+        }
+        return result;
+    }
+
+    /**
+     * Determinant
+     *
+     * @return determinant of matrix
+     * @exception IllegalArgumentException Matrix must be square
+     */
+    public double det() {
+        return new LUDecomposition(this).det();
+    }
+
+    /**
+     * Returns an inverse Matrix from <code>this</code> Matrix
+     *
+     * @return a new instance which contains the result of this operation
+     */
+    public Matrix inverse() {
+        return solve(new Matrix(rows, rows).identity());
+    }
+
+    /**
+     * Solve A*X = B
+     *
+     * @param m right hand side
+     * @return solution if A is square, least squares solution otherwise
+     */
+    public Matrix solve (final Matrix m) {
+       return (rows == cols ? (new LUDecomposition(this)).solve(m) : (new QRDecomposition(this)).solve(m));
+    }
 
     /**
      * Swaps contents of <code>this</code> Matrix by <code>another</code> Matrix
@@ -782,84 +902,153 @@ public class Matrix {
     }
 
 
+    //
+    // protected methods
+    //
+
     /**
-     * Returns the transpose of <code>this</code> Matrix
-     *
-     * @return a new instance which contains the result of this operation
+     * This method returns the address of the first column in a given row
+     * <p>
+     * This method is used internally and is provided for performance reasons.
      */
-    public Matrix transpose() {
-        final Matrix result = new Matrix(this.cols, this.rows);
-        for (int row=0; row<this.rows; row++) {
-            int raddr = this.address(row, 0);
-            int caddr = result.address(0, row);
-            for (int col=0; col<this.cols; col++) {
-                result.data[caddr] = this.data[raddr];
-                caddr += result.cols;
-                raddr++;
+    protected int address(final int row) {
+        return row*this.cols;
+    }
+
+    /**
+     * This method returns the address of a given cell identified by <i>(row, col)</i>
+     * <p>
+     * This method is used internally and is provided for performance reasons.
+     */
+    protected int address(final int row, final int col) {
+        return row*this.cols + col;
+    }
+
+    /**
+     * Get a submatrix
+     *
+     * @param row0 Initial row index
+     * @param row1 Final row index
+     * @param col0 Initial column index
+     * @param col1 Final column index
+     * @return A(i0:i1,j0:j1)
+     * @exception IllegalArgumentException Submatrix indices
+     */
+    protected Matrix getMatrix(final int row0, final int row1, final int col0, final int col1) {
+        QL.require(row0 >= 0 && row1 > row0 && row1 < this.rows, INVALID_ARGUMENTS);
+        QL.require(col0 >= 0 && col1 > col0 && col1 < this.cols, INVALID_ARGUMENTS);
+
+        final Matrix result = new Matrix(row1-row0+1, col1-col0+1);
+        if (col1-col0 == this.cols-1) {
+            if (row1-row0 == this.rows-1)
+                System.arraycopy(this.data, 0, result.data, 0, this.length);
+            else
+                System.arraycopy(this.data, this.address(row0), result.data, 0, result.length);
+        } else {
+            final int ncols = col1-col0+1;
+            int addr = 0;
+            for (int i = row0; i <= row1; i++) {
+                System.arraycopy(this.data, address(i, col0), result.data, addr, ncols);
+                addr += ncols;
             }
         }
         return result;
     }
 
     /**
-     * Returns a diagonal from <code>this</code> Matrix, if it is square
+     * Get a submatrix
      *
-     * @return a new instance which contains the result of this operation
+     * @param r Array of row indices.
+     * @param c Array of column indices.
+     * @return A(r(:),c(:))
+     * @exception IllegalArgumentException Submatrix indices
      */
-    public Array diagonal() {
-        assert this.rows == this.cols : "matrix must be square"; //TODO: message
-        final Array result = new Array(this.cols);
-        int addr = 0;
-        for (int i = 0; i < this.cols; i++) {
-            result.data[i] = this.data[addr];
-            addr += this.cols + 1;
+    protected Matrix getMatrix(final int[] r, final int[] c) {
+        for (final int row : r) {
+            QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS);
+        }
+        for (final int col : c) {
+            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS);
+        }
+
+        final Matrix result = new Matrix(r.length, c.length);
+        for (int i=0; i<r.length; i++) {
+            final int row = r[i];
+            for (int j=0; j<c.length; j++) {
+                final int col = c[j];
+                result.set(i, j, this.get(row, col));
+            }
         }
         return result;
     }
 
     /**
-     * Returns an inverse Matrix from <code>this</code> Matrix
+     * Get a submatrix
      *
-     * @return a new instance which contains the result of this operation
+     * @param i0 Initial row index
+     * @param i1 Final row index
+     * @param c Array of column indices.
+     * @return A(i0:i1,c(:))
+     * @exception IllegalArgumentException Submatrix indices
      */
-    public Matrix inverse() {
-        throw new UnsupportedOperationException();
+
+    protected Matrix getMatrix(final int row0, final int row1, final int[] c) {
+        QL.require(row0 >= 0 && row1 > row0 && row1 < this.rows, INVALID_ARGUMENTS);
+        for (final int col : c) {
+            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS);
+        }
+
+        final Matrix result = new Matrix(row1-row0+1, c.length);
+        for (int i = row0; i <= row1; i++) {
+            for (int j = 0; j < c.length; j++) {
+                result.set( i-row0, j, this.get(i, c[j]) );
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get a submatrix
+     *
+     * @param r Array of row indices.
+     * @param i0 Initial column index
+     * @param i1 Final column index
+     * @return A(r(:),j0:j1)
+     * @exception IllegalArgumentException Submatrix indices
+     */
+    protected Matrix getMatrix(final int[] r, final int col0, final int col1) {
+        for (final int row : r) {
+            QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS);
+        }
+        QL.require(col0 >= 0 && col1 > col0 && col1 < this.cols, INVALID_ARGUMENTS);
+
+        final Matrix result = new Matrix(r.length, col1-col0+1);
+        final int ncols = col1-col0+1;
+
+        int addr = 0;
+        for (final int row : r) {
+            System.arraycopy(this.data, address(row, col0), result.data, addr, ncols);
+            addr += ncols;
+        }
+        return result;
+    }
 
 
-        //
-        //        Disposable<Matrix> inverse(const Matrix& m) {
-        //            #if !defined(__GNUC__) || __GNUC__ > 3 || __GNUC_MINOR__ > 3
-        //
-        //            QL_REQUIRE(m.rows() == m.columns(), "matrix is not square");
-        //
-        //            boost::numeric::ublas::matrix<Real> a(m.rows(), m.columns());
-        //
-        //            std::copy(m.begin(), m.end(), a.data().begin());
-        //
-        //            boost::numeric::ublas::permutation_matrix<Size> pert(m.rows());
-        //
-        //            // lu decomposition
-        //            const Size singular = lu_factorize(a, pert);
-        //            QL_REQUIRE(singular == 0, "singular matrix given");
-        //
-        //            boost::numeric::ublas::matrix<Real>
-        //                inverse = boost::numeric::ublas::identity_matrix<Real>(m.rows());
-        //
-        //            // backsubstitution
-        //            boost::numeric::ublas::lu_substitute(a, pert, inverse);
-        //
-        //            Matrix retVal(m.rows(), m.columns());
-        //            std::copy(inverse.data().begin(), inverse.data().end(),
-        //                      retVal.begin());
-        //
-        //            return retVal;
-        //
-        //            #else
-        //            QL_FAIL("this version of gcc does not support the Boost uBlas library");
-        //            #endif
-        //        }
-        //
-
+    /**
+     * sqrt(a^2 + b^2) without under/overflow.
+     */
+    protected double hypot(final double a, final double b) {
+        double r;
+        if (Math.abs(a) > Math.abs(b)) {
+            r = b / a;
+            r = Math.abs(a) * Math.sqrt(1 + r * r);
+        } else if (b != 0) {
+            r = a / b;
+            r = Math.abs(b) * Math.sqrt(1 + r * r);
+        } else {
+            r = 0.0;
+        }
+        return r;
     }
 
 }

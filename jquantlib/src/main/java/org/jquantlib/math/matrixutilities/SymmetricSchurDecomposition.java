@@ -42,47 +42,36 @@ package org.jquantlib.math.matrixutilities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.util.Pair;
 
-//! symmetric threshold Jacobi algorithm.
-/*! Given a real symmetric matrix S, the Schur decomposition
-    finds the eigenvalues and eigenvectors of S. If D is the
-    diagonal matrix formed by the eigenvalues and U the
-    unitarian matrix of the eigenvectors we can write the
-    Schur decomposition as
-    \f[ S = U \cdot D \cdot U^T \, ,\f]
-    where \f$ \cdot \f$ is the standard matrix product
-    and  \f$ ^T  \f$ is the transpose operator.
-    This class implements the Schur decomposition using the
-    symmetric threshold Jacobi algorithm. For details on the
-    different Jacobi transfomations see "Matrix computation,"
-    second edition, by Golub and Van Loan,
-    The Johns Hopkins University Press
-
-    \test the correctness of the returned values is tested by
-          checking their properties.
+/**
+ * Symmetric threshold Jacobi algorithm
+ * <p>
+ * Given a real symmetric matrix S, the Schur decomposition finds the eigenvalues and eigenvectors of S.
+ * If D is the diagonal matrix formed by the eigenvalues and U the unitarian matrix of the
+ * eigenvectors we can write the Schur decomposition as
+ * {@latex[ S = U \cdot D \cdot U^T }
+ * where {@latex$ \cdot } is the standard matrix product and {@latex$ ^T } is the transpose operator.
+ * <p>
+ * This class implements the Schur decomposition using the symmetric threshold Jacobi algorithm. For details on the different Jacobi
+ * transfomations.
+ *
+ * @see "Matrix computation," second edition, by Golub and Van Loan, The Johns Hopkins University Press
+ *
+ * @author Ueli Hofstetter
  */
-//TODO: code review
-public class SymmetricSchurDecomposition {
+@QualityAssurance(quality = Quality.Q0_UNFINISHED, version = Version.V097, reviewers = { "Richard Gomes" })
+public class SymmetricSchurDecomposition extends Matrix {
 
     private Array diagonal_;
     private Matrix eigenVectors_;
-    private void jacobiRotate_(final Matrix m, final double rot, final double dil, final int j1, final int k1, final int j2, final int k2){
-        double x1, x2;
-        x1 = m.get(j1, k1);
-        x2 = m.get(j1, k2);
-        m.set(j1, k1, x1 - dil*(x2 + x1*rot));
-        m.set(j2, k2, x2 - dil*(x2 + x2*rot));
-    }
 
-    public Matrix eigenVectors(){
-        return eigenVectors_;
-    }
-
-    /*! \pre s must be symmetric */
-    public SymmetricSchurDecomposition(final Matrix s){
-        assert s.rows > 0 && s.cols > 0 : "null matrix given";
-        assert s.rows == s.cols : "input matrix must be square";
+    public SymmetricSchurDecomposition(final Matrix s) {
+        QL.require(s.rows == s.cols, MATRIX_MUST_BE_SQUARE);
 
         final int size = s.rows;
         for (int q=0; q<size; q++) {
@@ -182,6 +171,7 @@ public class SymmetricSchurDecomposition {
         final List<Pair<Double, List<Double>>> temp = new ArrayList<Pair<Double, List<Double>>>(size);
         final List<Double> eigenVector = new ArrayList<Double>(size);
         int row, col;
+
         for (col=0; col<size; col++)
             throw new UnsupportedOperationException("work in progress");
         /*
@@ -207,8 +197,30 @@ public class SymmetricSchurDecomposition {
         }
     }
 
+
+    //
+    // public methods
+    //
+
+    public Matrix eigenVectors(){
+        return eigenVectors_;
+    }
+
     public Array eigenvalues(){
         return diagonal_;
+    }
+
+
+    //
+    // private methods
+    //
+
+    private void jacobiRotate_(final Matrix m, final double rot, final double dil, final int j1, final int k1, final int j2, final int k2){
+        double x1, x2;
+        x1 = m.get(j1, k1);
+        x2 = m.get(j1, k2);
+        m.set(j1, k1, x1 - dil*(x2 + x1*rot));
+        m.set(j2, k2, x2 - dil*(x2 + x2*rot));
     }
 
 }
