@@ -162,16 +162,6 @@ public class Matrix {
     protected final static String MATRIX_MUST_BE_SQUARE = "matrix must be square";
 
 
-
-
-
-    //
-    // constants
-    //
-
-    private static final int blksize = 256; // seems to be a reasonably big enough block size
-
-
     //
     // public fields
     //
@@ -231,7 +221,7 @@ public class Matrix {
         this.data = new double[length];
 
         for (int i=0; i<this.rows; i++) {
-            final int base=address(i);
+            final int base=addr(i,0);
             System.arraycopy(data[i], 0, this.data, base, this.cols);
         }
     }
@@ -276,7 +266,7 @@ public class Matrix {
         final StringBuffer sb = new StringBuffer();
         sb.append('[').append('\n');
         for (int row = 0; row < this.rows; row++) {
-            int addr = address(row);
+            int addr = addr(row,0);
             sb.append(" [");
             sb.append(this.data[addr]);
             for (int col = 1; col < this.cols; col++) {
@@ -297,6 +287,9 @@ public class Matrix {
 
 
     // some convenience methods
+
+    public final int rows()    { return rows; }
+    public final int columns() { return cols; }
 
 
     public Object toArray() {
@@ -353,7 +346,7 @@ public class Matrix {
      * @return the contents of a given cell
      */
     public double get(final int row, final int col) {
-        return data[address(row, col)];
+        return data[addr(row, col)];
     }
 
     /**
@@ -363,94 +356,33 @@ public class Matrix {
      * @param col coordinate
      */
     public void set(final int row, final int col, final double value) {
-        this.data[address(row, col)] = value;
-    }
-
-
-    /**
-     * Retrieves an element of <code>this</code> Matrix
-     * <p>
-     * This method is provided for performance reasons.
-     * See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for more details
-     *
-     * @param row coordinate
-     * @param col coordinate
-     * @return the contents of a given cell
-     *
-     * @see #getAddress(int)
-     * @see #getAddress(int, int)
-     */
-    public double get(final int pos) {
-        return data[pos];
-    }
-
-    /**
-     * Stores a value into an element of <code>this</code> Matrix
-     * <p>
-     * This method is provided for performance reasons.
-     * See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for more details
-     *
-     * @param row coordinate
-     * @param col coordinate
-     *
-     * @see #getAddress(int)
-     * @see #getAddress(int, int)
-     */
-    public void set(final int pos, final double value) {
-        data[pos] = value;
-    }
-
-
-    /**
-     * This method returns the address of the first column in a given row
-     * <p>
-     * A typical usage of this method is when one would like to improve access to elements of a given row by reducing
-     * the number of calculations needed to obtain the address of cells belonging to that row.
-     *
-     * @param row is the desired row which the address is requested for.
-     */
-    public int getAddress(final int row) {
-        QL.require(row >= 0 && row < this.rows ,  ARRAY_IS_INCOMPATIBLE);
-        return row*this.cols;
-    }
-
-    /**
-     * This method returns the address of a given cell identified by <i>(row, col)</i>
-     * <p>
-     * A typical usage of this method is when one would like to improve access to a given cell, basically
-     * keeping its address for later use.
-     *
-     * @param row is the desired row which a cell belongs to.
-     * @param col is the desired col which a cell belongs to.
-     */
-    public int getAddress(final int row, final int col) {
-        QL.require(col >= 0 && col < this.cols ,  ARRAY_IS_INCOMPATIBLE);
-        return getAddress(row)+col;
+        this.data[addr(row, col)] = value;
     }
 
     /**
      * Returns an Array which contains elements of a requested row
      *
-     * @param another
+     * @param row is the requested row
      * @return a new Array instance
      */
     public Array getRow(final int row) {
         final Array vector = new Array(this.cols);
-        System.arraycopy(this.data, getAddress(row), vector.data, 0, this.cols);
+        System.arraycopy(this.data, this.addr(row,0), vector.data, 0, this.cols);
         return vector;
     }
 
-    public void setRow(final int row, final Array array) {
-        QL.require(this.cols == array.length ,  ARRAY_IS_INCOMPATIBLE);
-        System.arraycopy(array.data, 0, this.data, getAddress(row), this.cols);
-    }
-
+    /**
+     * Returns an Array which contains elements of a requested column
+     *
+     * @param col is the requested column
+     * @return a new Array instance
+     */
     public Array getCol(final int col) {
         final Array array = new Array(this.rows);
         if (this.cols == 1)
             System.arraycopy(this.data, 0, array.data, 0, this.length);
         else {
-            int addr = getAddress(0, col);
+            int addr = addr(0, col);
             for (int row = 0; row < this.rows; row++) {
                 array.data[row] = this.data[addr];
                 addr += this.cols;
@@ -459,12 +391,29 @@ public class Matrix {
         return array;
     }
 
+    /**
+     * Overwrites contents of a certain row
+     *
+     * @param row is the requested row to be overwritten
+     * @param array contains the elements to be copied
+     */
+    public void setRow(final int row, final Array array) {
+        QL.require(this.cols == array.length ,  ARRAY_IS_INCOMPATIBLE);
+        System.arraycopy(array.data, 0, this.data, this.addr(row,0), this.cols);
+    }
+
+    /**
+     * Overwrites contents of a certain column
+     *
+     * @param col is the requested column to be overwritten
+     * @param array contains the elements to be copied
+     */
     public void setCol(final int col, final Array array) {
         QL.require(this.rows == array.length ,  ARRAY_IS_INCOMPATIBLE);
         if (this.cols == 1)
             System.arraycopy(array.data, 0, this.data, 0, this.length);
         else {
-            int addr = getAddress(0, col);
+            int addr = addr(0, col);
             for (int row = 0; row < this.rows; row++) {
                 this.data[addr] = array.data[row];
                 addr += this.cols;
@@ -494,7 +443,7 @@ public class Matrix {
     public Matrix addAssign(final Matrix another) {
         QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
         for (int row=0; row<rows; row++) {
-            int addr = address(row);
+            int addr = addr(row,0);
             for (int col=0; col<cols; col++) {
                 this.data[addr] += another.data[addr];
                 addr++;
@@ -512,7 +461,7 @@ public class Matrix {
     public Matrix subAssign(final Matrix another) {
         QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
         for (int row=0; row<rows; row++) {
-            int addr = address(row);
+            int addr = addr(row,0);
             for (int col=0; col<cols; col++) {
                 this.data[addr] -= another.data[addr];
                 addr++;
@@ -529,7 +478,7 @@ public class Matrix {
      */
     public Matrix mulAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
-            final int rowAddress = address(row);
+            final int rowAddress = addr(row,0);
             for (int col = 0; col < cols; col++) {
                 final int cellAddress = rowAddress + col;
                 data[cellAddress] *= scalar;
@@ -546,7 +495,7 @@ public class Matrix {
      */
     public Matrix divAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
-            final int rowAddress = address(row);
+            final int rowAddress = addr(row,0);
             for (int col = 0; col < cols; col++) {
                 final int cellAddress = rowAddress + col;
                 data[cellAddress] /= scalar;
@@ -576,7 +525,7 @@ public class Matrix {
         QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
-            int addr = address(row);
+            int addr = addr(row,0);
             for (int col=0; col<cols; col++) {
                 result.data[addr] = this.data[addr] + another.data[addr];
                 addr++;
@@ -595,7 +544,7 @@ public class Matrix {
         QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
-            int addr = address(row);
+            int addr = addr(row,0);
             for (int col=0; col<cols; col++) {
                 result.data[addr] = this.data[addr] - another.data[addr];
                 addr++;
@@ -624,7 +573,7 @@ public class Matrix {
     public Matrix mul(final double scalar) {
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
-            int addr = address(row);
+            int addr = addr(row,0);
             for (int col=0; col<cols; col++) {
                 result.data[addr] = data[addr] * scalar;
                 addr++;
@@ -642,7 +591,7 @@ public class Matrix {
     public Matrix div(final double scalar) {
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
-            int addr = address(row);
+            int addr = addr(row,0);
             for (int col=0; col<cols; col++) {
                 result.data[addr] = data[addr] / scalar;
                 addr++;
@@ -670,7 +619,7 @@ public class Matrix {
         QL.require(this.cols == array.length ,  ARRAY_IS_INCOMPATIBLE);
         final Array result = new Array(this.cols);
         for (int col=0; col<this.cols; col++) {
-            int addr = address(0, col);
+            int addr = addr(0, col);
             double sum = 0.0;
             for (int row=0; row<this.rows; row++) {
                 sum  += this.data[addr] * array.data[col];
@@ -691,9 +640,9 @@ public class Matrix {
         QL.require(this.cols == another.rows ,  MATRIX_IS_INCOMPATIBLE);
         final Matrix result = new Matrix(this.rows, another.cols);
         for (int col = 0; col < another.cols; col++) {
-            final int caddr = another.address(0, col);
+            final int caddr = another.addr(0, col);
             for (int row = 0; row < this.rows; row++) {
-                final int raddr = address(row, 0);
+                final int raddr = addr(row, 0);
                 int addr = caddr;
                 double sum = 0.0;
                 for (int i = 0; i < this.cols; i++) {
@@ -747,13 +696,23 @@ public class Matrix {
     }
 
     /**
+     * Symmetric Schur Decomposition
+     *
+     * @return SymmetricSchurDecomposition
+     * @see SymmetricSchurDecomposition
+     */
+    public SymmetricSchurDecomposition schur() {
+        return new SymmetricSchurDecomposition(this);
+    }
+
+    /**
      * Singular Value Decomposition
      *
      * @return SingularValueDecomposition
-     * @see SingularValueDecomposition
+     * @see SVD
      */
-    public SingularValueDecomposition svd() {
-        return new SingularValueDecomposition(this);
+    public SVD svd() {
+        return new SVD(this);
     }
 
     /**
@@ -772,7 +731,6 @@ public class Matrix {
     //
     //	method       this    right    result
     //	------------ ------- -------- ------
-    //  identity     Matrix           this
     //	transpose    Matrix           Matrix
     //  diagonal     Matrix           Array
     //  determinant  Matrix           double
@@ -783,24 +741,6 @@ public class Matrix {
 
 
     /**
-     * Makes sure <code>this</code> Matrix is square makes it an identity matrix.
-     *
-     * @return An m-by-n matrix with ones on the diagonal and zeros elsewhere.
-     */
-    public Matrix identity() {
-        QL.require(this.rows == this.cols, MATRIX_MUST_BE_SQUARE);
-
-        this.fill(0.0);
-        int addr = 0;
-        for (int i = 0; i < rows; i++) {
-            data[addr] = 1.0;
-            addr += rows+1;
-        }
-        return this;
-    }
-
-
-    /**
      * Returns the transpose of <code>this</code> Matrix
      *
      * @return a new instance which contains the result of this operation
@@ -808,8 +748,8 @@ public class Matrix {
     public Matrix transpose() {
         final Matrix result = new Matrix(this.cols, this.rows);
         for (int row=0; row<this.rows; row++) {
-            int raddr = this.address(row, 0);
-            int caddr = result.address(0, row);
+            int raddr = this.addr(row, 0);
+            int caddr = result.addr(0, row);
             for (int col=0; col<this.cols; col++) {
                 result.data[caddr] = this.data[raddr];
                 caddr += result.cols;
@@ -851,7 +791,7 @@ public class Matrix {
      * @return a new instance which contains the result of this operation
      */
     public Matrix inverse() {
-        return solve(new Matrix(rows, rows).identity());
+        return solve(new Identity(rows));
     }
 
     /**
@@ -893,8 +833,8 @@ public class Matrix {
      * @return this
      */
     public Matrix swap(final int pos1row, final int pos1col, final int pos2row, final int pos2col) {
-        final int addr1 = address(pos1row, pos1col);
-        final int addr2 = address(pos2row, pos2col);
+        final int addr1 = addr(pos1row, pos1col);
+        final int addr2 = addr(pos2row, pos2col);
         final double tmp = data[addr1];
         data[addr1] = data[addr2];
         data[addr2] = tmp;
@@ -907,20 +847,11 @@ public class Matrix {
     //
 
     /**
-     * This method returns the address of the first column in a given row
-     * <p>
-     * This method is used internally and is provided for performance reasons.
-     */
-    protected int address(final int row) {
-        return row*this.cols;
-    }
-
-    /**
      * This method returns the address of a given cell identified by <i>(row, col)</i>
      * <p>
      * This method is used internally and is provided for performance reasons.
      */
-    protected int address(final int row, final int col) {
+    protected int addr(final int row, final int col) {
         return row*this.cols + col;
     }
 
@@ -943,12 +874,12 @@ public class Matrix {
             if (row1-row0 == this.rows-1)
                 System.arraycopy(this.data, 0, result.data, 0, this.length);
             else
-                System.arraycopy(this.data, this.address(row0), result.data, 0, result.length);
+                System.arraycopy(this.data, this.addr(row0, 0), result.data, 0, result.length);
         } else {
             final int ncols = col1-col0+1;
             int addr = 0;
             for (int i = row0; i <= row1; i++) {
-                System.arraycopy(this.data, address(i, col0), result.data, addr, ncols);
+                System.arraycopy(this.data, addr(i, col0), result.data, addr, ncols);
                 addr += ncols;
             }
         }
@@ -1027,7 +958,7 @@ public class Matrix {
 
         int addr = 0;
         for (final int row : r) {
-            System.arraycopy(this.data, address(row, col0), result.data, addr, ncols);
+            System.arraycopy(this.data, addr(row, col0), result.data, addr, ncols);
             addr += ncols;
         }
         return result;
@@ -1037,7 +968,7 @@ public class Matrix {
     /**
      * sqrt(a^2 + b^2) without under/overflow.
      */
-    protected double hypot(final double a, final double b) {
+    public static double hypot(final double a, final double b) {
         double r;
         if (Math.abs(a) > Math.abs(b)) {
             r = b / a;

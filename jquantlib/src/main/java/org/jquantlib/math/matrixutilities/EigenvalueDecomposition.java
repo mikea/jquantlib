@@ -43,38 +43,37 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.OTHER, reviewers = { "Richard Gomes" })
-public class EigenvalueDecomposition extends Matrix {
+public class EigenvalueDecomposition {
 
-    /**
-     * Symmetry flag.
-     */
+    //
+    // private fields
+    //
+
+    /** Row and column dimension (square matrix). */
+    private final int n;
+
+    /** Symmetry flag. */
     private boolean issymmetric;
 
-    /**
-     * Arrays for internal storage of eigenvalues.
-     */
+    /** Arrays for internal storage of eigenvalues. */
     private final double[] d, e;
 
-    /**
-     * Array for internal storage of eigenvectors.
-     */
+    /** Array for internal storage of eigenvectors. */
     private final Matrix V;
 
-    /**
-     * Array for internal storage of nonsymmetric Hessenberg form.
-     */
+    /** Array for internal storage of nonsymmetric Hessenberg form. */
     private Matrix H;
 
-    /**
-     * Working storage for nonsymmetric algorithm.
-     */
+    /** Working storage for nonsymmetric algorithm. */
     private double[] ort;
+
 
     //
     // private transient fields
     //
 
     private transient double cdivr, cdivi;
+
 
     //
     // public constructors
@@ -88,24 +87,24 @@ public class EigenvalueDecomposition extends Matrix {
      */
 
     public EigenvalueDecomposition(final Matrix A) {
-        super(A);
-        QL.require(rows == cols, MATRIX_MUST_BE_SQUARE);
+        QL.require(A.rows == A.cols, Matrix.MATRIX_MUST_BE_SQUARE);
 
-        V = new Matrix(cols, cols);
-        d = new double[cols];
-        e = new double[cols];
+        this.n = A.cols;
+        V = new Matrix(n, n);
+        d = new double[n];
+        e = new double[n];
 
         issymmetric = true;
-        for (int j = 0; (j < cols) & issymmetric; j++) {
-            for (int i = 0; (i < cols) & issymmetric; i++) {
-                issymmetric = (this.data[this.address(i, j)] == this.data[this.address(j, i)]);
+        for (int j = 0; (j < n) & issymmetric; j++) {
+            for (int i = 0; (i < n) & issymmetric; i++) {
+                issymmetric = (A.data[A.addr(i, j)] == A.data[A.addr(j, i)]);
             }
         }
 
         if (issymmetric) {
-            for (int i = 0; i < cols; i++) {
-                for (int j = 0; j < cols; j++) {
-                    V.data[V.address(i, j)] = this.data[this.address(i, j)];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    V.data[V.addr(i, j)] = A.data[A.addr(i, j)];
                 }
             }
 
@@ -116,12 +115,12 @@ public class EigenvalueDecomposition extends Matrix {
             tql2();
 
         } else {
-            H = new Matrix(cols, cols);
-            ort = new double[cols];
+            H = new Matrix(n, n);
+            ort = new double[n];
 
-            for (int j = 0; j < cols; j++) {
-                for (int i = 0; i < cols; i++) {
-                    H.data[H.address(i, j)] = this.data[this.address(i, j)];
+            for (int j = 0; j < n; j++) {
+                for (int i = 0; i < n; i++) {
+                    H.data[H.addr(i, j)] = A.data[A.addr(i, j)];
                 }
             }
 
@@ -170,16 +169,16 @@ public class EigenvalueDecomposition extends Matrix {
      * @return D
      */
     public Matrix getD() {
-        final Matrix D = new Matrix(cols, cols);
-        for (int i = 0; i < cols; i++) {
-            for (int j = 0; j < cols; j++) {
-                D.data[D.address(i, j)] = 0.0;
+        final Matrix D = new Matrix(n, n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                D.data[D.addr(i, j)] = 0.0;
             }
-            D.data[D.address(i, i)] = d[i];
+            D.data[D.addr(i, i)] = d[i];
             if (e[i] > 0) {
-                D.data[D.address(i, i + 1)] = e[i];
+                D.data[D.addr(i, i + 1)] = e[i];
             } else if (e[i] < 0) {
-                D.data[D.address(i, i - 1)] = e[i];
+                D.data[D.addr(i, i - 1)] = e[i];
             }
         }
         return D;
@@ -200,13 +199,13 @@ public class EigenvalueDecomposition extends Matrix {
         // Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
         // Fortran subroutine in EISPACK.
 
-        for (int j = 0; j < cols; j++) {
-            d[j] = V.data[V.address(cols - 1, j)];
+        for (int j = 0; j < n; j++) {
+            d[j] = V.data[V.addr(n - 1, j)];
         }
 
         // Householder reduction to tridiagonal form.
 
-        for (int i = cols - 1; i > 0; i--) {
+        for (int i = n - 1; i > 0; i--) {
 
             // Scale to avoid under/overflow.
 
@@ -218,9 +217,9 @@ public class EigenvalueDecomposition extends Matrix {
             if (scale == 0.0) {
                 e[i] = d[i - 1];
                 for (int j = 0; j < i; j++) {
-                    d[j] = V.data[V.address(i - 1, j)];
-                    V.data[V.address(i, j)] = 0.0;
-                    V.data[V.address(j, i)] = 0.0;
+                    d[j] = V.data[V.addr(i - 1, j)];
+                    V.data[V.addr(i, j)] = 0.0;
+                    V.data[V.addr(j, i)] = 0.0;
                 }
             } else {
 
@@ -246,11 +245,11 @@ public class EigenvalueDecomposition extends Matrix {
 
                 for (int j = 0; j < i; j++) {
                     f = d[j];
-                    V.data[V.address(j, i)] = f;
-                    g = e[j] + V.data[V.address(j, j)] * f;
+                    V.data[V.addr(j, i)] = f;
+                    g = e[j] + V.data[V.addr(j, j)] * f;
                     for (int k = j + 1; k <= i - 1; k++) {
-                        g += V.data[V.address(k, j)] * d[k];
-                        e[k] += V.data[V.address(k, j)] * f;
+                        g += V.data[V.addr(k, j)] * d[k];
+                        e[k] += V.data[V.addr(k, j)] * f;
                     }
                     e[j] = g;
                 }
@@ -267,10 +266,10 @@ public class EigenvalueDecomposition extends Matrix {
                     f = d[j];
                     g = e[j];
                     for (int k = j; k <= i - 1; k++) {
-                        V.data[V.address(k, j)] -= (f * e[k] + g * d[k]);
+                        V.data[V.addr(k, j)] -= (f * e[k] + g * d[k]);
                     }
-                    d[j] = V.data[V.address(i - 1, j)];
-                    V.data[V.address(i, j)] = 0.0;
+                    d[j] = V.data[V.addr(i - 1, j)];
+                    V.data[V.addr(i, j)] = 0.0;
                 }
             }
             d[i] = h;
@@ -278,33 +277,33 @@ public class EigenvalueDecomposition extends Matrix {
 
         // Accumulate transformations.
 
-        for (int i = 0; i < cols - 1; i++) {
-            V.data[V.address(cols - 1, i)] = V.data[V.address(i, i)];
-            V.data[V.address(i, i)] = 1.0;
+        for (int i = 0; i < n - 1; i++) {
+            V.data[V.addr(n - 1, i)] = V.data[V.addr(i, i)];
+            V.data[V.addr(i, i)] = 1.0;
             final double h = d[i + 1];
             if (h != 0.0) {
                 for (int k = 0; k <= i; k++) {
-                    d[k] = V.data[V.address(k, i + 1)] / h;
+                    d[k] = V.data[V.addr(k, i + 1)] / h;
                 }
                 for (int j = 0; j <= i; j++) {
                     double g = 0.0;
                     for (int k = 0; k <= i; k++) {
-                        g += V.data[V.address(k, i + 1)] * V.data[V.address(k, j)];
+                        g += V.data[V.addr(k, i + 1)] * V.data[V.addr(k, j)];
                     }
                     for (int k = 0; k <= i; k++) {
-                        V.data[V.address(k, j)] -= g * d[k];
+                        V.data[V.addr(k, j)] -= g * d[k];
                     }
                 }
             }
             for (int k = 0; k <= i; k++) {
-                V.data[V.address(k, i + 1)] = 0.0;
+                V.data[V.addr(k, i + 1)] = 0.0;
             }
         }
-        for (int j = 0; j < cols; j++) {
-            d[j] = V.data[V.address(cols - 1, j)];
-            V.data[V.address(cols - 1, j)] = 0.0;
+        for (int j = 0; j < n; j++) {
+            d[j] = V.data[V.addr(n - 1, j)];
+            V.data[V.addr(n - 1, j)] = 0.0;
         }
-        V.data[V.address(cols - 1, cols - 1)] = 1.0;
+        V.data[V.addr(n - 1, n - 1)] = 1.0;
         e[0] = 0.0;
     }
 
@@ -318,21 +317,21 @@ public class EigenvalueDecomposition extends Matrix {
         // Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
         // Fortran subroutine in EISPACK.
 
-        for (int i = 1; i < cols; i++) {
+        for (int i = 1; i < n; i++) {
             e[i - 1] = e[i];
         }
-        e[cols - 1] = 0.0;
+        e[n - 1] = 0.0;
 
         double f = 0.0;
         double tst1 = 0.0;
         final double eps = Math.pow(2.0, -52.0);
-        for (int l = 0; l < cols; l++) {
+        for (int l = 0; l < n; l++) {
 
             // Find small subdiagonal element
 
             tst1 = Math.max(tst1, Math.abs(d[l]) + Math.abs(e[l]));
             int m = l;
-            while (m < cols) {
+            while (m < n) {
                 if (Math.abs(e[m]) <= eps * tst1) {
                     break;
                 }
@@ -351,7 +350,7 @@ public class EigenvalueDecomposition extends Matrix {
 
                     double g = d[l];
                     double p = (d[l + 1] - g) / (2.0 * e[l]);
-                    double r = hypot(p, 1.0);
+                    double r = Matrix.hypot(p, 1.0);
                     if (p < 0) {
                         r = -r;
                     }
@@ -359,7 +358,7 @@ public class EigenvalueDecomposition extends Matrix {
                     d[l + 1] = e[l] * (p + r);
                     final double dl1 = d[l + 1];
                     double h = g - d[l];
-                    for (int i = l + 2; i < cols; i++) {
+                    for (int i = l + 2; i < n; i++) {
                         d[i] -= h;
                     }
                     f = f + h;
@@ -379,7 +378,7 @@ public class EigenvalueDecomposition extends Matrix {
                         s2 = s;
                         g = c * e[i];
                         h = c * p;
-                        r = hypot(p, e[i]);
+                        r = Matrix.hypot(p, e[i]);
                         e[i + 1] = s * r;
                         s = e[i] / r;
                         c = p / r;
@@ -388,10 +387,10 @@ public class EigenvalueDecomposition extends Matrix {
 
                         // Accumulate transformation.
 
-                        for (int k = 0; k < cols; k++) {
-                            h = V.data[V.address(k, i + 1)];
-                            V.data[V.address(k, i + 1)] = s * V.data[V.address(k, i)] + c * h;
-                            V.data[V.address(k, i)] = c * V.data[V.address(k, i)] - s * h;
+                        for (int k = 0; k < n; k++) {
+                            h = V.data[V.addr(k, i + 1)];
+                            V.data[V.addr(k, i + 1)] = s * V.data[V.addr(k, i)] + c * h;
+                            V.data[V.addr(k, i)] = c * V.data[V.addr(k, i)] - s * h;
                         }
                     }
                     p = -s * s2 * c3 * el1 * e[l] / dl1;
@@ -408,10 +407,10 @@ public class EigenvalueDecomposition extends Matrix {
 
         // Sort eigenvalues and corresponding vectors.
 
-        for (int i = 0; i < cols - 1; i++) {
+        for (int i = 0; i < n - 1; i++) {
             int k = i;
             double p = d[i];
-            for (int j = i + 1; j < cols; j++) {
+            for (int j = i + 1; j < n; j++) {
                 if (d[j] < p) {
                     k = j;
                     p = d[j];
@@ -420,10 +419,10 @@ public class EigenvalueDecomposition extends Matrix {
             if (k != i) {
                 d[k] = d[i];
                 d[i] = p;
-                for (int j = 0; j < cols; j++) {
-                    p = V.data[V.address(j, i)];
-                    V.data[V.address(j, i)] = V.data[V.address(j, k)];
-                    V.data[V.address(j, k)] = p;
+                for (int j = 0; j < n; j++) {
+                    p = V.data[V.addr(j, i)];
+                    V.data[V.addr(j, i)] = V.data[V.addr(j, k)];
+                    V.data[V.addr(j, k)] = p;
                 }
             }
         }
@@ -440,7 +439,7 @@ public class EigenvalueDecomposition extends Matrix {
         // Fortran subroutines in EISPACK.
 
         final int low = 0;
-        final int high = cols - 1;
+        final int high = n - 1;
 
         for (int m = low + 1; m <= high - 1; m++) {
 
@@ -448,7 +447,7 @@ public class EigenvalueDecomposition extends Matrix {
 
             double scale = 0.0;
             for (int i = m; i <= high; i++) {
-                scale = scale + Math.abs(H.data[H.address(i, m - 1)]);
+                scale = scale + Math.abs(H.data[H.addr(i, m - 1)]);
             }
             if (scale != 0.0) {
 
@@ -456,7 +455,7 @@ public class EigenvalueDecomposition extends Matrix {
 
                 double h = 0.0;
                 for (int i = high; i >= m; i--) {
-                    ort[i] = H.data[H.address(i, m - 1)] / scale;
+                    ort[i] = H.data[H.addr(i, m - 1)] / scale;
                     h += ort[i] * ort[i];
                 }
                 double g = Math.sqrt(h);
@@ -469,54 +468,54 @@ public class EigenvalueDecomposition extends Matrix {
                 // Apply Householder similarity transformation
                 // H = (I-u*u'/h)*H*(I-u*u')/h)
 
-                for (int j = m; j < cols; j++) {
+                for (int j = m; j < n; j++) {
                     double f = 0.0;
                     for (int i = high; i >= m; i--) {
-                        f += ort[i] * H.data[H.address(i, j)];
+                        f += ort[i] * H.data[H.addr(i, j)];
                     }
                     f = f / h;
                     for (int i = m; i <= high; i++) {
-                        H.data[H.address(i, j)] -= f * ort[i];
+                        H.data[H.addr(i, j)] -= f * ort[i];
                     }
                 }
 
                 for (int i = 0; i <= high; i++) {
                     double f = 0.0;
                     for (int j = high; j >= m; j--) {
-                        f += ort[j] * H.data[H.address(i, j)];
+                        f += ort[j] * H.data[H.addr(i, j)];
                     }
                     f = f / h;
                     for (int j = m; j <= high; j++) {
-                        H.data[H.address(i, j)] -= f * ort[j];
+                        H.data[H.addr(i, j)] -= f * ort[j];
                     }
                 }
                 ort[m] = scale * ort[m];
-                H.data[H.address(m, m - 1)] = scale * g;
+                H.data[H.addr(m, m - 1)] = scale * g;
             }
         }
 
         // Accumulate transformations (Algol's ortran).
 
-        for (int i = 0; i < cols; i++) {
-            for (int j = 0; j < cols; j++) {
-                V.data[V.address(i, j)] = (i == j ? 1.0 : 0.0);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                V.data[V.addr(i, j)] = (i == j ? 1.0 : 0.0);
             }
         }
 
         for (int m = high - 1; m >= low + 1; m--) {
-            if (H.data[H.address(m, m - 1)] != 0.0) {
+            if (H.data[H.addr(m, m - 1)] != 0.0) {
                 for (int i = m + 1; i <= high; i++) {
-                    ort[i] = H.data[H.address(i, m - 1)];
+                    ort[i] = H.data[H.addr(i, m - 1)];
                 }
                 for (int j = m; j <= high; j++) {
                     double g = 0.0;
                     for (int i = m; i <= high; i++) {
-                        g += ort[i] * V.data[V.address(i, j)];
+                        g += ort[i] * V.data[V.addr(i, j)];
                     }
                     // Double division avoids possible underflow
-                    g = (g / ort[m]) / H.data[H.address(m, m - 1)];
+                    g = (g / ort[m]) / H.data[H.addr(m, m - 1)];
                     for (int i = m; i <= high; i++) {
-                        V.data[V.address(i, j)] += g * ort[i];
+                        V.data[V.addr(i, j)] += g * ort[i];
                     }
                 }
             }
@@ -557,7 +556,7 @@ public class EigenvalueDecomposition extends Matrix {
 
         // Initialize
 
-        final int nn = this.cols;
+        final int nn = this.n;
         int n = nn - 1;
         final int low = 0;
         final int high = nn - 1;
@@ -570,11 +569,11 @@ public class EigenvalueDecomposition extends Matrix {
         double norm = 0.0;
         for (int i = 0; i < nn; i++) {
             if (i < low | i > high) {
-                d[i] = H.data[H.address(i, i)];
+                d[i] = H.data[H.addr(i, i)];
                 e[i] = 0.0;
             }
             for (int j = Math.max(i - 1, 0); j < nn; j++) {
-                norm = norm + Math.abs(H.data[H.address(i, j)]);
+                norm = norm + Math.abs(H.data[H.addr(i, j)]);
             }
         }
 
@@ -587,11 +586,11 @@ public class EigenvalueDecomposition extends Matrix {
 
             int l = n;
             while (l > low) {
-                s = Math.abs(H.data[H.address(l - 1, l - 1)]) + Math.abs(H.data[H.address(l, l)]);
+                s = Math.abs(H.data[H.addr(l - 1, l - 1)]) + Math.abs(H.data[H.addr(l, l)]);
                 if (s == 0.0) {
                     s = norm;
                 }
-                if (Math.abs(H.data[H.address(l, l - 1)]) < eps * s) {
+                if (Math.abs(H.data[H.addr(l, l - 1)]) < eps * s) {
                     break;
                 }
                 l--;
@@ -601,8 +600,8 @@ public class EigenvalueDecomposition extends Matrix {
             // One root found
 
             if (l == n) {
-                H.data[H.address(n, n)] = H.data[H.address(n, n)] + exshift;
-                d[n] = H.data[H.address(n, n)];
+                H.data[H.addr(n, n)] = H.data[H.addr(n, n)] + exshift;
+                d[n] = H.data[H.addr(n, n)];
                 e[n] = 0.0;
                 n--;
                 iter = 0;
@@ -610,13 +609,13 @@ public class EigenvalueDecomposition extends Matrix {
                 // Two roots found
 
             } else if (l == n - 1) {
-                w = H.data[H.address(n, n - 1)] * H.data[H.address(n - 1, n)];
-                p = (H.data[H.address(n - 1, n - 1)] - H.data[H.address(n, n)]) / 2.0;
+                w = H.data[H.addr(n, n - 1)] * H.data[H.addr(n - 1, n)];
+                p = (H.data[H.addr(n - 1, n - 1)] - H.data[H.addr(n, n)]) / 2.0;
                 q = p * p + w;
                 z = Math.sqrt(Math.abs(q));
-                H.data[H.address(n, n)] = H.data[H.address(n, n)] + exshift;
-                H.data[H.address(n - 1, n - 1)] = H.data[H.address(n - 1, n - 1)] + exshift;
-                x = H.data[H.address(n, n)];
+                H.data[H.addr(n, n)] = H.data[H.addr(n, n)] + exshift;
+                H.data[H.addr(n - 1, n - 1)] = H.data[H.addr(n - 1, n - 1)] + exshift;
+                x = H.data[H.addr(n, n)];
 
                 // Real pair
 
@@ -633,7 +632,7 @@ public class EigenvalueDecomposition extends Matrix {
                     }
                     e[n - 1] = 0.0;
                     e[n] = 0.0;
-                    x = H.data[H.address(n, n - 1)];
+                    x = H.data[H.addr(n, n - 1)];
                     s = Math.abs(x) + Math.abs(z);
                     p = x / s;
                     q = z / s;
@@ -644,25 +643,25 @@ public class EigenvalueDecomposition extends Matrix {
                     // Row modification
 
                     for (int j = n - 1; j < nn; j++) {
-                        z = H.data[H.address(n - 1, j)];
-                        H.data[H.address(n - 1, j)] = q * z + p * H.data[H.address(n, j)];
-                        H.data[H.address(n, j)] = q * H.data[H.address(n, j)] - p * z;
+                        z = H.data[H.addr(n - 1, j)];
+                        H.data[H.addr(n - 1, j)] = q * z + p * H.data[H.addr(n, j)];
+                        H.data[H.addr(n, j)] = q * H.data[H.addr(n, j)] - p * z;
                     }
 
                     // Column modification
 
                     for (int i = 0; i <= n; i++) {
-                        z = H.data[H.address(i, n - 1)];
-                        H.data[H.address(i, n - 1)] = q * z + p * H.data[H.address(i, n)];
-                        H.data[H.address(i, n)] = q * H.data[H.address(i, n)] - p * z;
+                        z = H.data[H.addr(i, n - 1)];
+                        H.data[H.addr(i, n - 1)] = q * z + p * H.data[H.addr(i, n)];
+                        H.data[H.addr(i, n)] = q * H.data[H.addr(i, n)] - p * z;
                     }
 
                     // Accumulate transformations
 
                     for (int i = low; i <= high; i++) {
-                        z = V.data[V.address(i, n - 1)];
-                        V.data[V.address(i, n - 1)] = q * z + p * V.data[V.address(i, n)];
-                        V.data[V.address(i, n)] = q * V.data[V.address(i, n)] - p * z;
+                        z = V.data[V.addr(i, n - 1)];
+                        V.data[V.addr(i, n - 1)] = q * z + p * V.data[V.addr(i, n)];
+                        V.data[V.addr(i, n)] = q * V.data[V.addr(i, n)] - p * z;
                     }
 
                     // Complex pair
@@ -682,12 +681,12 @@ public class EigenvalueDecomposition extends Matrix {
 
                 // Form shift
 
-                x = H.data[H.address(n, n)];
+                x = H.data[H.addr(n, n)];
                 y = 0.0;
                 w = 0.0;
                 if (l < n) {
-                    y = H.data[H.address(n - 1, n - 1)];
-                    w = H.data[H.address(n, n - 1)] * H.data[H.address(n - 1, n)];
+                    y = H.data[H.addr(n - 1, n - 1)];
+                    w = H.data[H.addr(n, n - 1)] * H.data[H.addr(n - 1, n)];
                 }
 
                 // Wilkinson's original ad hoc shift
@@ -695,9 +694,9 @@ public class EigenvalueDecomposition extends Matrix {
                 if (iter == 10) {
                     exshift += x;
                     for (int i = low; i <= n; i++) {
-                        H.data[H.address(i, i)] -= x;
+                        H.data[H.addr(i, i)] -= x;
                     }
-                    s = Math.abs(H.data[H.address(n, n - 1)]) + Math.abs(H.data[H.address(n - 1, n - 2)]);
+                    s = Math.abs(H.data[H.addr(n, n - 1)]) + Math.abs(H.data[H.addr(n - 1, n - 2)]);
                     x = y = 0.75 * s;
                     w = -0.4375 * s * s;
                 }
@@ -714,7 +713,7 @@ public class EigenvalueDecomposition extends Matrix {
                         }
                         s = x - w / ((y - x) / 2.0 + s);
                         for (int i = low; i <= n; i++) {
-                            H.data[H.address(i, i)] -= s;
+                            H.data[H.addr(i, i)] -= s;
                         }
                         exshift += s;
                         x = y = w = 0.964;
@@ -727,12 +726,12 @@ public class EigenvalueDecomposition extends Matrix {
 
                 int m = n - 2;
                 while (m >= l) {
-                    z = H.data[H.address(m, m)];
+                    z = H.data[H.addr(m, m)];
                     r = x - z;
                     s = y - z;
-                    p = (r * s - w) / H.data[H.address(m + 1, m)] + H.data[H.address(m, m + 1)];
-                    q = H.data[H.address(m + 1, m + 1)] - z - r - s;
-                    r = H.data[H.address(m + 2, m + 1)];
+                    p = (r * s - w) / H.data[H.addr(m + 1, m)] + H.data[H.addr(m, m + 1)];
+                    q = H.data[H.addr(m + 1, m + 1)] - z - r - s;
+                    r = H.data[H.addr(m + 2, m + 1)];
                     s = Math.abs(p) + Math.abs(q) + Math.abs(r);
                     p = p / s;
                     q = q / s;
@@ -740,8 +739,8 @@ public class EigenvalueDecomposition extends Matrix {
                     if (m == l) {
                         break;
                     }
-                    if (Math.abs(H.data[H.address(m, m - 1)]) * (Math.abs(q) + Math.abs(r)) < eps
-                            * (Math.abs(p) * (Math.abs(H.data[H.address(m - 1, m - 1)]) + Math.abs(z) + Math.abs(H.data[H.address(
+                    if (Math.abs(H.data[H.addr(m, m - 1)]) * (Math.abs(q) + Math.abs(r)) < eps
+                            * (Math.abs(p) * (Math.abs(H.data[H.addr(m - 1, m - 1)]) + Math.abs(z) + Math.abs(H.data[H.addr(
                                     m + 1, m + 1)])))) {
                         break;
                     }
@@ -749,9 +748,9 @@ public class EigenvalueDecomposition extends Matrix {
                 }
 
                 for (int i = m + 2; i <= n; i++) {
-                    H.data[H.address(i, i - 2)] = 0.0;
+                    H.data[H.addr(i, i - 2)] = 0.0;
                     if (i > m + 2) {
-                        H.data[H.address(i, i - 3)] = 0.0;
+                        H.data[H.addr(i, i - 3)] = 0.0;
                     }
                 }
 
@@ -760,9 +759,9 @@ public class EigenvalueDecomposition extends Matrix {
                 for (int k = m; k <= n - 1; k++) {
                     final boolean notlast = (k != n - 1);
                     if (k != m) {
-                        p = H.data[H.address(k, k - 1)];
-                        q = H.data[H.address(k + 1, k - 1)];
-                        r = (notlast ? H.data[H.address(k + 2, k - 1)] : 0.0);
+                        p = H.data[H.addr(k, k - 1)];
+                        q = H.data[H.addr(k + 1, k - 1)];
+                        r = (notlast ? H.data[H.addr(k + 2, k - 1)] : 0.0);
                         x = Math.abs(p) + Math.abs(q) + Math.abs(r);
                         if (x != 0.0) {
                             p = p / x;
@@ -779,9 +778,9 @@ public class EigenvalueDecomposition extends Matrix {
                     }
                     if (s != 0) {
                         if (k != m) {
-                            H.data[H.address(k, k - 1)] = -s * x;
+                            H.data[H.addr(k, k - 1)] = -s * x;
                         } else if (l != m) {
-                            H.data[H.address(k, k - 1)] = -H.data[H.address(k, k - 1)];
+                            H.data[H.addr(k, k - 1)] = -H.data[H.addr(k, k - 1)];
                         }
                         p = p + s;
                         x = p / s;
@@ -793,37 +792,37 @@ public class EigenvalueDecomposition extends Matrix {
                         // Row modification
 
                         for (int j = k; j < nn; j++) {
-                            p = H.data[H.address(k, j)] + q * H.data[H.address(k + 1, j)];
+                            p = H.data[H.addr(k, j)] + q * H.data[H.addr(k + 1, j)];
                             if (notlast) {
-                                p = p + r * H.data[H.address(k + 2, j)];
-                                H.data[H.address(k + 2, j)] = H.data[H.address(k + 2, j)] - p * z;
+                                p = p + r * H.data[H.addr(k + 2, j)];
+                                H.data[H.addr(k + 2, j)] = H.data[H.addr(k + 2, j)] - p * z;
                             }
-                            H.data[H.address(k, j)] = H.data[H.address(k, j)] - p * x;
-                            H.data[H.address(k + 1, j)] = H.data[H.address(k + 1, j)] - p * y;
+                            H.data[H.addr(k, j)] = H.data[H.addr(k, j)] - p * x;
+                            H.data[H.addr(k + 1, j)] = H.data[H.addr(k + 1, j)] - p * y;
                         }
 
                         // Column modification
 
                         for (int i = 0; i <= Math.min(n, k + 3); i++) {
-                            p = x * H.data[H.address(i, k)] + y * H.data[H.address(i, k + 1)];
+                            p = x * H.data[H.addr(i, k)] + y * H.data[H.addr(i, k + 1)];
                             if (notlast) {
-                                p = p + z * H.data[H.address(i, k + 2)];
-                                H.data[H.address(i, k + 2)] = H.data[H.address(i, k + 2)] - p * r;
+                                p = p + z * H.data[H.addr(i, k + 2)];
+                                H.data[H.addr(i, k + 2)] = H.data[H.addr(i, k + 2)] - p * r;
                             }
-                            H.data[H.address(i, k)] = H.data[H.address(i, k)] - p;
-                            H.data[H.address(i, k + 1)] = H.data[H.address(i, k + 1)] - p * q;
+                            H.data[H.addr(i, k)] = H.data[H.addr(i, k)] - p;
+                            H.data[H.addr(i, k + 1)] = H.data[H.addr(i, k + 1)] - p * q;
                         }
 
                         // Accumulate transformations
 
                         for (int i = low; i <= high; i++) {
-                            p = x * V.data[V.address(i, k)] + y * V.data[V.address(i, k + 1)];
+                            p = x * V.data[V.addr(i, k)] + y * V.data[V.addr(i, k + 1)];
                             if (notlast) {
-                                p = p + z * V.data[V.address(i, k + 2)];
-                                V.data[V.address(i, k + 2)] = V.data[V.address(i, k + 2)] - p * r;
+                                p = p + z * V.data[V.addr(i, k + 2)];
+                                V.data[V.addr(i, k + 2)] = V.data[V.addr(i, k + 2)] - p * r;
                             }
-                            V.data[V.address(i, k)] = V.data[V.address(i, k)] - p;
-                            V.data[V.address(i, k + 1)] = V.data[V.address(i, k + 1)] - p * q;
+                            V.data[V.addr(i, k)] = V.data[V.addr(i, k)] - p;
+                            V.data[V.addr(i, k + 1)] = V.data[V.addr(i, k + 1)] - p * q;
                         }
                     } // (s != 0)
                 } // k loop
@@ -844,12 +843,12 @@ public class EigenvalueDecomposition extends Matrix {
 
             if (q == 0) {
                 int l = n;
-                H.data[H.address(n, n)] = 1.0;
+                H.data[H.addr(n, n)] = 1.0;
                 for (int i = n - 1; i >= 0; i--) {
-                    w = H.data[H.address(i, i)] - p;
+                    w = H.data[H.addr(i, i)] - p;
                     r = 0.0;
                     for (int j = l; j <= n; j++) {
-                        r = r + H.data[H.address(i, j)] * H.data[H.address(j, n)];
+                        r = r + H.data[H.addr(i, j)] * H.data[H.addr(j, n)];
                     }
                     if (e[i] < 0.0) {
                         z = w;
@@ -858,32 +857,32 @@ public class EigenvalueDecomposition extends Matrix {
                         l = i;
                         if (e[i] == 0.0) {
                             if (w != 0.0) {
-                                H.data[H.address(i, n)] = -r / w;
+                                H.data[H.addr(i, n)] = -r / w;
                             } else {
-                                H.data[H.address(i, n)] = -r / (eps * norm);
+                                H.data[H.addr(i, n)] = -r / (eps * norm);
                             }
 
                             // Solve real equations
 
                         } else {
-                            x = H.data[H.address(i, i + 1)];
-                            y = H.data[H.address(i + 1, i)];
+                            x = H.data[H.addr(i, i + 1)];
+                            y = H.data[H.addr(i + 1, i)];
                             q = (d[i] - p) * (d[i] - p) + e[i] * e[i];
                             t = (x * s - z * r) / q;
-                            H.data[H.address(i, n)] = t;
+                            H.data[H.addr(i, n)] = t;
                             if (Math.abs(x) > Math.abs(z)) {
-                                H.data[H.address(i + 1, n)] = (-r - w * t) / x;
+                                H.data[H.addr(i + 1, n)] = (-r - w * t) / x;
                             } else {
-                                H.data[H.address(i + 1, n)] = (-s - y * t) / z;
+                                H.data[H.addr(i + 1, n)] = (-s - y * t) / z;
                             }
                         }
 
                         // Overflow control
 
-                        t = Math.abs(H.data[H.address(i, n)]);
+                        t = Math.abs(H.data[H.addr(i, n)]);
                         if ((eps * t) * t > 1) {
                             for (int j = i; j <= n; j++) {
-                                H.data[H.address(j, n)] = H.data[H.address(j, n)] / t;
+                                H.data[H.addr(j, n)] = H.data[H.addr(j, n)] / t;
                             }
                         }
                     }
@@ -896,25 +895,25 @@ public class EigenvalueDecomposition extends Matrix {
 
                 // Last vector component imaginary so matrix is triangular
 
-                if (Math.abs(H.data[H.address(n, n - 1)]) > Math.abs(H.data[H.address(n - 1, n)])) {
-                    H.data[H.address(n - 1, n - 1)] = q / H.data[H.address(n, n - 1)];
-                    H.data[H.address(n - 1, n)] = -(H.data[H.address(n, n)] - p) / H.data[H.address(n, n - 1)];
+                if (Math.abs(H.data[H.addr(n, n - 1)]) > Math.abs(H.data[H.addr(n - 1, n)])) {
+                    H.data[H.addr(n - 1, n - 1)] = q / H.data[H.addr(n, n - 1)];
+                    H.data[H.addr(n - 1, n)] = -(H.data[H.addr(n, n)] - p) / H.data[H.addr(n, n - 1)];
                 } else {
-                    cdiv(0.0, -H.data[H.address(n - 1, n)], H.data[H.address(n - 1, n - 1)] - p, q);
-                    H.data[H.address(n - 1, n - 1)] = cdivr;
-                    H.data[H.address(n - 1, n)] = cdivi;
+                    cdiv(0.0, -H.data[H.addr(n - 1, n)], H.data[H.addr(n - 1, n - 1)] - p, q);
+                    H.data[H.addr(n - 1, n - 1)] = cdivr;
+                    H.data[H.addr(n - 1, n)] = cdivi;
                 }
-                H.data[H.address(n, n - 1)] = 0.0;
-                H.data[H.address(n, n)] = 1.0;
+                H.data[H.addr(n, n - 1)] = 0.0;
+                H.data[H.addr(n, n)] = 1.0;
                 for (int i = n - 2; i >= 0; i--) {
                     double ra, sa, vr, vi;
                     ra = 0.0;
                     sa = 0.0;
                     for (int j = l; j <= n; j++) {
-                        ra = ra + H.data[H.address(i, j)] * H.data[H.address(j, n - 1)];
-                        sa = sa + H.data[H.address(i, j)] * H.data[H.address(j, n)];
+                        ra = ra + H.data[H.addr(i, j)] * H.data[H.addr(j, n - 1)];
+                        sa = sa + H.data[H.addr(i, j)] * H.data[H.addr(j, n)];
                     }
-                    w = H.data[H.address(i, i)] - p;
+                    w = H.data[H.addr(i, i)] - p;
 
                     if (e[i] < 0.0) {
                         z = w;
@@ -924,42 +923,42 @@ public class EigenvalueDecomposition extends Matrix {
                         l = i;
                         if (e[i] == 0) {
                             cdiv(-ra, -sa, w, q);
-                            H.data[H.address(i, n - 1)] = cdivr;
-                            H.data[H.address(i, n)] = cdivi;
+                            H.data[H.addr(i, n - 1)] = cdivr;
+                            H.data[H.addr(i, n)] = cdivi;
                         } else {
 
                             // Solve complex equations
 
-                            x = H.data[H.address(i, i + 1)];
-                            y = H.data[H.address(i + 1, i)];
+                            x = H.data[H.addr(i, i + 1)];
+                            y = H.data[H.addr(i + 1, i)];
                             vr = (d[i] - p) * (d[i] - p) + e[i] * e[i] - q * q;
                             vi = (d[i] - p) * 2.0 * q;
                             if (vr == 0.0 & vi == 0.0) {
                                 vr = eps * norm * (Math.abs(w) + Math.abs(q) + Math.abs(x) + Math.abs(y) + Math.abs(z));
                             }
                             cdiv(x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi);
-                            H.data[H.address(i, n - 1)] = cdivr;
-                            H.data[H.address(i, n)] = cdivi;
+                            H.data[H.addr(i, n - 1)] = cdivr;
+                            H.data[H.addr(i, n)] = cdivi;
                             if (Math.abs(x) > (Math.abs(z) + Math.abs(q))) {
-                                H.data[H.address(i + 1, n - 1)] = (-ra - w * H.data[H.address(i, n - 1)] + q
-                                        * H.data[H.address(i, n)])
+                                H.data[H.addr(i + 1, n - 1)] = (-ra - w * H.data[H.addr(i, n - 1)] + q
+                                        * H.data[H.addr(i, n)])
                                         / x;
-                                H.data[H.address(i + 1, n)] = (-sa - w * H.data[H.address(i, n)] - q * H.data[H.address(i, n - 1)])
+                                H.data[H.addr(i + 1, n)] = (-sa - w * H.data[H.addr(i, n)] - q * H.data[H.addr(i, n - 1)])
                                         / x;
                             } else {
-                                cdiv(-r - y * H.data[H.address(i, n - 1)], -s - y * H.data[H.address(i, n)], z, q);
-                                H.data[H.address(i + 1, n - 1)] = cdivr;
-                                H.data[H.address(i + 1, n)] = cdivi;
+                                cdiv(-r - y * H.data[H.addr(i, n - 1)], -s - y * H.data[H.addr(i, n)], z, q);
+                                H.data[H.addr(i + 1, n - 1)] = cdivr;
+                                H.data[H.addr(i + 1, n)] = cdivi;
                             }
                         }
 
                         // Overflow control
 
-                        t = Math.max(Math.abs(H.data[H.address(i, n - 1)]), Math.abs(H.data[H.address(i, n)]));
+                        t = Math.max(Math.abs(H.data[H.addr(i, n - 1)]), Math.abs(H.data[H.addr(i, n)]));
                         if ((eps * t) * t > 1) {
                             for (int j = i; j <= n; j++) {
-                                H.data[H.address(j, n - 1)] = H.data[H.address(j, n - 1)] / t;
-                                H.data[H.address(j, n)] = H.data[H.address(j, n)] / t;
+                                H.data[H.addr(j, n - 1)] = H.data[H.addr(j, n - 1)] / t;
+                                H.data[H.addr(j, n)] = H.data[H.addr(j, n)] / t;
                             }
                         }
                     }
@@ -972,7 +971,7 @@ public class EigenvalueDecomposition extends Matrix {
         for (int i = 0; i < nn; i++) {
             if (i < low | i > high) {
                 for (int j = i; j < nn; j++) {
-                    V.data[V.address(i, j)] = H.data[H.address(i, j)];
+                    V.data[V.addr(i, j)] = H.data[H.addr(i, j)];
                 }
             }
         }
@@ -983,9 +982,9 @@ public class EigenvalueDecomposition extends Matrix {
             for (int i = low; i <= high; i++) {
                 z = 0.0;
                 for (int k = low; k <= Math.min(j, high); k++) {
-                    z = z + V.data[V.address(i, k)] * H.data[H.address(k, j)];
+                    z = z + V.data[V.addr(i, k)] * H.data[H.addr(k, j)];
                 }
-                V.data[V.address(i, j)] = z;
+                V.data[V.addr(i, j)] = z;
             }
         }
     }

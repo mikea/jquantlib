@@ -88,6 +88,17 @@ public class Array extends Matrix {
     }
 
 
+    /**
+     * Creates a Matrix given a double[][] array
+     *
+     * @param data
+     */
+    public Array(final Array a) {
+        super(a);
+    }
+
+
+
     //
     // Overrides Object
     //
@@ -120,6 +131,35 @@ public class Array extends Matrix {
 
 
     //
+    // overrides Matrix
+    //
+    // Not only these methods override methods from Matrix.
+    // These methods are separated in this section in order to emphasise their importance.
+    //
+
+    @Override
+    public Array getRow(final int row) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Array getCol(final int col) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public double get(final int row, final int col) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void set(final int row, final int col, final double value) {
+        throw new UnsupportedOperationException();
+    }
+
+
+
+    //
     // public methods
     //
 
@@ -129,16 +169,37 @@ public class Array extends Matrix {
         return this.length;
     }
 
-    @Override
-    public Object toArray() {
-        final double buffer[] = new double[this.length];
-        return toArray(buffer);
+    /**
+     * Retrieves an element of <code>this</code> Matrix
+     * <p>
+     * This method is provided for performance reasons. See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for
+     * more details
+     *
+     * @param row coordinate
+     * @param col coordinate
+     * @return the contents of a given cell
+     *
+     * @see #getAddress(int)
+     * @see #getAddress(int, int)
+     */
+    public double get(final int pos) {
+        return data[pos];
     }
 
-    public double[] toArray(final double[] buffer) {
-        if (this.length != buffer.length) throw new IllegalArgumentException(); //TODO:message
-        System.arraycopy(this.data, 0, buffer, 0, this.length);
-        return buffer;
+    /**
+     * Stores a value into an element of <code>this</code> Matrix
+     * <p>
+     * This method is provided for performance reasons. See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for
+     * more details
+     *
+     * @param row coordinate
+     * @param col coordinate
+     *
+     * @see #getAddress(int)
+     * @see #getAddress(int, int)
+     */
+    public void set(final int pos, final double value) {
+        data[pos] = value;
     }
 
     /**
@@ -152,16 +213,17 @@ public class Array extends Matrix {
         return this;
     }
 
-    //XXX
-    //    /**
-    //     * Fills <code>this</code> Array with contents from <code>another</code> Array
-    //     *
-    //     * @param another is the source Array where data is being copied from
-    //     * @return <code>this</code>
-    //     */
-    //    public Array fill(final Array another) {
-    //        return (Array) super.fill(another);
-    //    }
+    @Override
+    public Object toArray() {
+        final double buffer[] = new double[this.length];
+        return toArray(buffer);
+    }
+
+    public double[] toArray(final double[] buffer) {
+        if (this.length != buffer.length) throw new IllegalArgumentException(); //TODO:message
+        System.arraycopy(this.data, 0, buffer, 0, this.length);
+        return buffer;
+    }
 
     public double first() {
         return data[0];
@@ -524,8 +586,7 @@ public class Array extends Matrix {
         return result;
     }
 
-    @Override
-    public Array sub(final Matrix another) {
+    public Array sub(final Array another) {
         QL.require(this.rows == another.rows && this.length == another.length ,  MATRIX_IS_INCOMPATIBLE);
         final Array result = new Array(this.length);
         for (int i=0; i<length; i++)
@@ -564,7 +625,7 @@ public class Array extends Matrix {
         QL.require(this.length == matrix.rows ,  MATRIX_IS_INCOMPATIBLE);
         final Array result = new Array(this.cols);
         for (int i=0; i<this.length; i++) {
-            int addr = matrix.address(i);
+            int addr = matrix.addr(i,0);
             double sum = 0.0;
             for (int col=0; col<matrix.cols; col++) {
                 sum += this.data[i] * matrix.data[addr];
@@ -714,11 +775,31 @@ public class Array extends Matrix {
     public Matrix outerProduct(final Array another) {
         final Matrix result = new Matrix(this.length, another.length);
         for (int row=0; row<this.length; row++) {
-            final int addr = result.getAddress(row);
+            final int addr = result.addr(row, 0);
             for (int col=0; col<another.length; col++)
                 result.data[addr+col] = this.data[row] * another.data[col];
         }
         return result;
+    }
+
+
+    //
+    // protected methods
+    //
+
+
+    /**
+     * This method returns the address of the first column in a given row
+     * <p>
+     * This method is used internally and is provided for performance reasons.
+     */
+    protected int addr(final int row) {
+        return row;
+    }
+
+    @Override
+    protected int addr(final int row, final int col) {
+        throw new UnsupportedOperationException();
     }
 
 }

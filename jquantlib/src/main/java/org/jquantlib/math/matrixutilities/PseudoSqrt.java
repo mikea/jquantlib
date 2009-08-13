@@ -148,7 +148,7 @@ public class PseudoSqrt {
         for (int i=0; i<retainedFactors; ++i)
             diagonal.set(i,i, Math.sqrt(eigenValues.get(i)));
         // TODO: code review:: compare against C++ code
-        final Matrix result = jd.eigenVectors().mul(jd.eigenVectors()).mul(diagonal);
+        final Matrix result = jd.eigenvectors().mul(jd.eigenvectors()).mul(diagonal);
 
         normalizePseudoRoot(matrix, result);
         return result;
@@ -432,7 +432,7 @@ public class PseudoSqrt {
                 throw new IllegalArgumentException( "negative eigenvalue(s) ("
                         + /*std::scientific*/ + jd.eigenvalues().get(size-1)
                         + ")");
-            result = matrix.cholesky();
+            result = matrix.cholesky().L();
             break;
         case Spectral:
             // negative eigenvalues set to zero

@@ -42,7 +42,7 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.OTHER, reviewers = { "Richard Gomes" })
-public class LUDecomposition extends Matrix {
+public class LUDecomposition {
 
     private final static String MATRIX_IS_SINGULAR = "Matrix is singular";
 
@@ -50,8 +50,13 @@ public class LUDecomposition extends Matrix {
     // private fields
     //
 
-    private int pivsign;
+    private final int m;
+    private final int n;
+    private final Matrix LU;
     private final int piv[];
+
+    private int pivsign;
+
 
     //
     // public constructors
@@ -64,53 +69,56 @@ public class LUDecomposition extends Matrix {
      * @return Structure to access L, U and piv.
      */
     public LUDecomposition(final Matrix A) {
-        super(A);
+        this.m = A.rows;
+        this.n = A.cols;
+        this.LU = A.clone();
 
         // initialize pivots
-        this.piv = new int[rows];
-        for (int i = 0; i < rows; i++) {
+        this.piv = new int[m];
+        for (int i = 0; i < m; i++) {
             piv[i] = i;
         }
         this.pivsign = 1;
-        final double[] LUcolj = new double[rows];
+
+        final double[] LUcolj = new double[m];
 
         // Outer loop.
 
-        for (int j = 0; j < cols; j++) {
+        for (int j = 0; j < n; j++) {
 
             // Make a copy of the j-th column to localize references.
 
-            for (int i = 0; i < rows; i++) {
-                LUcolj[i] = this.data[this.address(i, j)];
+            for (int i = 0; i < m; i++) {
+                LUcolj[i] = LU.data[LU.addr(i, j)];
             }
 
             // Apply previous transformations.
 
-            for (int i = 0; i < rows; i++) {
+            for (int i = 0; i < m; i++) {
                 // Most of the time is spent in the following dot product.
 
                 final int kmax = Math.min(i, j);
                 double s = 0.0;
                 for (int k = 0; k < kmax; k++) {
-                    s += this.data[this.address(i, k)] * LUcolj[k];
+                    s += LU.data[LU.addr(i, k)] * LUcolj[k];
                 }
 
-                this.data[this.address(i, j)] = LUcolj[i] -= s;
+                LU.data[LU.addr(i, j)] = LUcolj[i] -= s;
             }
 
             // Find pivot and exchange if necessary.
 
             int p = j;
-            for (int i = j + 1; i < rows; i++) {
+            for (int i = j + 1; i < m; i++) {
                 if (Math.abs(LUcolj[i]) > Math.abs(LUcolj[p])) {
                     p = i;
                 }
             }
             if (p != j) {
-                for (int k = 0; k < cols; k++) {
-                    final double t = this.data[this.address(p, k)];
-                    this.data[this.address(p, k)] = this.data[this.address(j, k)];
-                    this.data[this.address(j, k)] = t;
+                for (int k = 0; k < n; k++) {
+                    final double t = LU.data[LU.addr(p, k)];
+                    LU.data[LU.addr(p, k)] = LU.data[LU.addr(j, k)];
+                    LU.data[LU.addr(j, k)] = t;
                 }
                 final int k = piv[p];
                 piv[p] = piv[j];
@@ -120,9 +128,9 @@ public class LUDecomposition extends Matrix {
 
             // Compute multipliers.
 
-            if (j < rows & this.data[this.address(j, j)] != 0.0) {
-                for (int i = j + 1; i < rows; i++) {
-                    this.data[this.address(i, j)] /= this.data[this.address(j, j)];
+            if (j < m & LU.data[LU.addr(j, j)] != 0.0) {
+                for (int i = j + 1; i < m; i++) {
+                    LU.data[LU.addr(i, j)] /= LU.data[LU.addr(j, j)];
                 }
             }
         }
@@ -138,8 +146,8 @@ public class LUDecomposition extends Matrix {
      * @return true if U, and hence A, is nonsingular.
      */
     public boolean isNonSingular() {
-        for (int j = 0; j < cols; j++) {
-            if (this.data[this.address(j, j)] == 0)
+        for (int j = 0; j < n; j++) {
+            if (LU.data[LU.addr(j, j)] == 0)
                 return false;
         }
         return true;
@@ -150,17 +158,17 @@ public class LUDecomposition extends Matrix {
      *
      * @return L
      */
-    public Matrix getL() {
-        final Matrix L = new Matrix(rows, cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+    public Matrix L() {
+        final Matrix L = new Matrix(m, n);
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 if (i > j) {
-                    L.data[L.address(i, j)] = this.data[this.address(i, j)];
+                    L.data[L.addr(i, j)] = LU.data[LU.addr(i, j)];
                 } else if (i == j) {
-                    L.data[L.address(i, j)] = 1.0;
+                    L.data[L.addr(i, j)] = 1.0;
 //XXX - not needed
 //                } else {
-//                    L.data[L.address(i, j)] = 0.0;
+//                    L.data[L.addr(i, j)] = 0.0;
                 }
             }
         }
@@ -172,15 +180,15 @@ public class LUDecomposition extends Matrix {
      *
      * @return U
      */
-    public Matrix getU() {
-        final Matrix U = new Matrix(cols, cols);
-        for (int i = 0; i < cols; i++) {
-            for (int j = 0; j < cols; j++) {
+    public Matrix U() {
+        final Matrix U = new Matrix(n, n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
                 if (i <= j) {
-                    U.data[U.address(i, j)] = this.data[this.address(i, j)];
+                    U.data[U.addr(i, j)] = LU.data[LU.addr(i, j)];
 //XXX - not needed
 //                } else {
-//                    U.data[U.address(i, j)] = 0.0;
+//                    U.data[U.addr(i, j)] = 0.0;
                 }
             }
         }
@@ -193,8 +201,8 @@ public class LUDecomposition extends Matrix {
      * @return piv
      */
     public int[] getPivot() {
-        final int[] p = new int[rows];
-        for (int i = 0; i < rows; i++) {
+        final int[] p = new int[m];
+        for (int i = 0; i < m; i++) {
             p[i] = piv[i];
         }
         return p;
@@ -206,8 +214,8 @@ public class LUDecomposition extends Matrix {
      * @return (double) piv
      */
     public double[] getDoublePivot() {
-        final double[] vals = new double[rows];
-        for (int i = 0; i < rows; i++) {
+        final double[] vals = new double[m];
+        for (int i = 0; i < m; i++) {
             vals[i] = piv[i];
         }
         return vals;
@@ -219,13 +227,12 @@ public class LUDecomposition extends Matrix {
      * @return det(A)
      * @exception IllegalArgumentException Matrix must be square
      */
-    @Override
     public double det() {
-        QL.require(rows == cols, MATRIX_MUST_BE_SQUARE);
+        QL.require(m == n, Matrix.MATRIX_MUST_BE_SQUARE);
 
         double d = pivsign;
-        for (int j = 0; j < cols; j++) {
-            d *= this.data[this.address(j, j)];
+        for (int j = 0; j < n; j++) {
+            d *= LU.data[LU.addr(j, j)];
         }
         return d;
     }
@@ -233,14 +240,13 @@ public class LUDecomposition extends Matrix {
     /**
      * Solve A*X = B
      *
-     * @param B a Matrix with as many rows as A and any number of columns.
+     * @param B a Matrix with as many m as A and any number of columns.
      * @return X so that L*U*X = B(piv,:)
      * @exception IllegalArgumentException Matrix row dimensions must agree.
      * @exception RuntimeException Matrix is singular.
      */
-    @Override
     public Matrix solve(final Matrix B) {
-        QL.require(B.rows == this.rows, MATRIX_IS_INCOMPATIBLE);
+        QL.require(B.rows == this.m, Matrix.MATRIX_IS_INCOMPATIBLE);
         if (!this.isNonSingular())
             throw new RuntimeException(MATRIX_IS_SINGULAR);
 
@@ -249,21 +255,21 @@ public class LUDecomposition extends Matrix {
         final Matrix X = B.getMatrix(piv, 0, nx-1);
 
         // Solve L*Y = B(piv,:)
-        for (int k = 0; k < cols; k++) {
-            for (int i = k + 1; i < cols; i++) {
+        for (int k = 0; k < n; k++) {
+            for (int i = k + 1; i < n; i++) {
                 for (int j = 0; j < nx; j++) {
-                    X.data[X.address(i, j)] -= X.data[X.address(k, j)] * this.data[this.address(i, k)];
+                    X.data[X.addr(i, j)] -= X.data[X.addr(k, j)] * LU.data[LU.addr(i, k)];
                 }
             }
         }
         // Solve U*X = Y;
-        for (int k = cols - 1; k >= 0; k--) {
+        for (int k = n - 1; k >= 0; k--) {
             for (int j = 0; j < nx; j++) {
-                X.data[X.address(k, j)] /= this.data[this.address(k, k)];
+                X.data[X.addr(k, j)] /= LU.data[LU.addr(k, k)];
             }
             for (int i = 0; i < k; i++) {
                 for (int j = 0; j < nx; j++) {
-                    X.data[X.address(i, j)] -= X.data[X.address(k, j)] * this.data[this.address(i, k)];
+                    X.data[X.addr(i, j)] -= X.data[X.addr(k, j)] * LU.data[LU.addr(i, k)];
                 }
             }
         }

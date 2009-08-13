@@ -15,6 +15,10 @@ public class QL {
         }
     }
 
+    public static void ensure(final boolean condition, final String message) {
+        require(condition, message);
+    }
+
     public static void fail(final String message) {
         final RuntimeException e = new IllegalArgumentException(message);
         logger.error(message, e);

@@ -1,6 +1,5 @@
 /*
- Copyright (C)
- 2009 Ueli Hofstetter
+ Copyright (C) 2009 Richard Gomes
 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
@@ -39,188 +38,175 @@
  */
 package org.jquantlib.math.matrixutilities;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
-import org.jquantlib.util.Pair;
 
 /**
  * Symmetric threshold Jacobi algorithm
  * <p>
- * Given a real symmetric matrix S, the Schur decomposition finds the eigenvalues and eigenvectors of S.
- * If D is the diagonal matrix formed by the eigenvalues and U the unitarian matrix of the
- * eigenvectors we can write the Schur decomposition as
- * {@latex[ S = U \cdot D \cdot U^T }
- * where {@latex$ \cdot } is the standard matrix product and {@latex$ ^T } is the transpose operator.
+ * Given a real symmetric matrix S, the Schur decomposition finds the eigenvalues and eigenvectors of S. If D is the diagonal matrix
+ * formed by the eigenvalues and U the unitarian matrix of the eigenvectors we can write the Schur decomposition as {@latex[ S = U
+ * \cdot D \cdot U^T } where {@latex$ \cdot } is the standard matrix product and {@latex$ ^T } is the transpose operator.
  * <p>
  * This class implements the Schur decomposition using the symmetric threshold Jacobi algorithm. For details on the different Jacobi
  * transfomations.
  *
  * @see "Matrix computation," second edition, by Golub and Van Loan, The Johns Hopkins University Press
  *
- * @author Ueli Hofstetter
+ * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q0_UNFINISHED, version = Version.V097, reviewers = { "Richard Gomes" })
-public class SymmetricSchurDecomposition extends Matrix {
+public class SymmetricSchurDecomposition {
 
-    private Array diagonal_;
-    private Matrix eigenVectors_;
+    private static final double epsPrec = 1e-15;
+    private static final int maxIterations = 100;
 
-    public SymmetricSchurDecomposition(final Matrix s) {
-        QL.require(s.rows == s.cols, MATRIX_MUST_BE_SQUARE);
+    private final int size;
+    private final Matrix A;
+    private final Array diag;
 
-        final int size = s.rows;
-        for (int q=0; q<size; q++) {
-            diagonal_.set(q, s.get(q,q));
-            eigenVectors_.set(q, q, 1.0);
+
+    public SymmetricSchurDecomposition(final Matrix m) {
+        QL.require(m.rows == m.cols, Matrix.MATRIX_MUST_BE_SQUARE);
+
+        this.size = m.rows;
+        this.A = new Matrix(m.rows, m.cols);
+        this.diag = new Array(size);
+
+        final double tmpDiag[] = new double[size];
+        final double tmpSum[] = new double[size];
+
+        final Matrix s = m.clone();
+
+        for (int q = 0; q < size; q++) {
+            diag.data[diag.addr(q)] = s.data[s.addr(q, q)];
+            A.data[A.addr(q, q)] = 1.0;
         }
 
-        final Matrix ss = s;
-        final Array tmpDiag = diagonal_.abs();
-        final Array tmpAccumulate = new Array(size);
-
-        double threshold;
-        final double epsPrec = 1e-15;
         boolean keeplooping = true;
-        final int maxIterations = 100;
         int ite = 1;
+        double threshold;
         do {
-            //main loop
+            // main loop
             double sum = 0;
-            for (int a=0; a<size-1; a++) {
-                for (int b=a+1; b<size; b++) {
-                    sum += Math.abs(ss.get(a,b));
+            for (int a = 0; a < size - 1; a++) {
+                for (int b = a + 1; b < size; b++) {
+                    sum += Math.abs(s.data[s.addr(a, b)]);
                 }
             }
 
-            if (sum==0) {
+            if (sum == 0) {
                 keeplooping = false;
             } else {
-                /* To speed up computation a threshold is introduced to
-                   make sure it is worthy to perform the Jacobi rotation
+                /*
+                 * To speed up computation a threshold is introduced to make sure it is worthy to perform the Jacobi rotation
                  */
-                if (ite<5) {
-                    threshold = 0.2*sum/(size*size);
-                } else {
+                if (ite < 5)
+                    threshold = 0.2 * sum / (size * size);
+                else
                     threshold = 0.0;
-                }
 
                 int j, k, l;
-                for (j=0; j<size-1; j++) {
-                    for (k=j+1; k<size; k++) {
+                for (j = 0; j < size - 1; j++) {
+                    for (k = j + 1; k < size; k++) {
                         double sine, rho, cosin, heig, tang, beta;
-                        final double smll = Math.abs(ss.get(j, k));
-                        if(ite> 5 &&
-                                smll<epsPrec*Math.abs(diagonal_.get(j)) &&
-                                smll<epsPrec*Math.abs(diagonal_.get(k))) {
-                            ss.set(j, j, 0);
-                        } else if (Math.abs(ss.get(j, k))>threshold) {
-                            heig = diagonal_.get(k)-diagonal_.get(j);
-                            if (smll<epsPrec*Math.abs(heig)) {
-                                tang = ss.get(j, k)/heig;
+                        final double smll = Math.abs(s.data[s.addr(j, k)]);
+                        if (ite > 5 && smll < epsPrec * Math.abs(diag.data[diag.addr(j)])
+                                && smll < epsPrec * Math.abs(diag.data[diag.addr(k)])) {
+                            s.data[s.addr(j, k)] = 0;
+                        } else if (Math.abs(s.data[s.addr(j, k)]) > threshold) {
+                            heig = diag.data[diag.addr(k)] - diag.data[diag.addr(j)];
+                            if (smll < epsPrec * Math.abs(heig)) {
+                                tang = s.data[s.addr(j, k)] / heig;
                             } else {
-                                beta = 0.5*heig/ss.get(j,k);
-                                tang = 1.0/(Math.abs(beta)+
-                                        Math.sqrt(1+beta*beta));
-                                if (beta<0){
+                                beta = 0.5 * heig / s.data[s.addr(j, k)];
+                                tang = 1.0 / (Math.abs(beta) + Math.sqrt(1 + beta * beta));
+                                if (beta < 0)
                                     tang = -tang;
-                                }
                             }
-                            cosin = 1/Math.sqrt(1+tang*tang);
-                            sine = tang*cosin;
-                            rho = sine/(1+cosin);
-                            heig = tang*ss.get(j, k);
-                            tmpAccumulate.set(j, tmpAccumulate.get(j) - heig);
-                            tmpAccumulate.set(k, tmpAccumulate.get(k) + heig);
-                            diagonal_.set(j, diagonal_.get(j)-heig);
-                            diagonal_.set(k, diagonal_.get(k)+heig);
-                            ss.set(j, k, 0.0);
-                            for (l=0; l+1<=j; l++) {
-                                jacobiRotate_(ss, rho, sine, l, j, l, k);
-                            }
-                            for (l=j+1; l<=k-1; l++) {
-                                jacobiRotate_(ss, rho, sine, j, l, l, k);
-                            }
-                            for (l=k+1; l<size; l++) {
-                                jacobiRotate_(ss, rho, sine, j, l, k, l);
-                            }
-                            for (l=0;   l<size; l++) {
-                                jacobiRotate_(eigenVectors_,
-                                        rho, sine, l, j, l, k);
-                            }
+                            cosin = 1 / Math.sqrt(1 + tang * tang);
+                            sine = tang * cosin;
+                            rho = sine / (1 + cosin);
+                            heig = tang * s.data[s.addr(j, k)];
+                            tmpSum[j] -= heig;
+                            tmpSum[k] += heig;
+                            diag.data[diag.addr(j)] -= heig;
+                            diag.data[diag.addr(k)] += heig;
+                            s.data[s.addr(j, k)] = 0.0;
+                            for (l = 0; l + 1 <= j; l++)
+                                jacobiRotate(s, rho, sine, l, j, l, k);
+                            for (l = j + 1; l <= k - 1; l++)
+                                jacobiRotate(s, rho, sine, j, l, l, k);
+                            for (l = k + 1; l < size; l++)
+                                jacobiRotate(s, rho, sine, j, l, k, l);
+                            for (l = 0; l < size; l++)
+                                jacobiRotate(A, rho, sine, l, j, l, k);
                         }
                     }
                 }
-                for (k=0; k<size; k++) {
-                    final double value = tmpDiag.get(k) + tmpAccumulate.get(k);
-                    tmpDiag.set(k, value);
-                    diagonal_.set(k,  value);
-                    tmpAccumulate.set(k,0.0);
+                for (k = 0; k < size; k++) {
+                    tmpDiag[k] += tmpSum[k];
+                    diag.data[diag.addr(k)] = tmpDiag[k];
+                    tmpSum[k] = 0.0;
                 }
             }
-        } while (++ite<=maxIterations && keeplooping);
+        } while (++ite <= maxIterations && keeplooping);
 
-        if(ite>maxIterations)
-            throw new IllegalArgumentException("Too many iterations reached");
+        QL.ensure(ite <= maxIterations, "Too many iterations reached");
 
         // sort (eigenvalues, eigenvectors)
-        final List<Pair<Double, List<Double>>> temp = new ArrayList<Pair<Double, List<Double>>>(size);
-        final List<Double> eigenVector = new ArrayList<Double>(size);
-        int row, col;
+        final SortedMap<Double, Array> map = new TreeMap<Double, Array>();
+        for (int col = 0; col < size; col++) {
+            final Array eigenVector = A.getCol(col);
+            map.put(diag.data[diag.addr(col)], eigenVector);
+        }
 
-        for (col=0; col<size; col++)
-            throw new UnsupportedOperationException("work in progress");
-        /*
-            std::copy(eigenVectors_.column_begin(col),
-                      eigenVectors_.column_end(col), eigenVector.begin());
-            temp[col] = std::make_pair<Real, std::vector<Real> >(
-                diagonal_[col], eigenVector);
-         */
-        /*
-        std::sort(temp.begin(), temp.end(),
-            std::greater<std::pair<Real, std::vector<Real> > >());*/
-        final double maxEv = temp.get(0).getFirst();
-        for (col=0; col<size; col++) {
-            // check for round-off errors
-            diagonal_.set(col, Math.abs(temp.get(col).getFirst()/maxEv)<1e-16 ? 0.0 :temp.get(col).getFirst());
+        final int col = 0;
+        final double maxEv = map.firstKey();
+        for (final Double key : map.keySet()) {
+            final Array eigenVector = map.get(key);
+            diag.data[diag.addr(col)] = Math.abs(key / maxEv) < 1e-16 ? 0.0 : key;
             double sign = 1.0;
-            if (temp.get(col).getSecond().get(0)<0.0){
+            if (eigenVector.get(0) < 0.0)
                 sign = -1.0;
-            }
-            for (row=0; row<size; row++) {
-                eigenVectors_.set(row, col,  sign * temp.get(col).getSecond().get(row));
+            for (int row = 0; row < size; row++) {
+                A.data[A.addr(row, col)] = sign * eigenVector.get(row);
             }
         }
-    }
 
+    }
 
     //
     // public methods
     //
 
-    public Matrix eigenVectors(){
-        return eigenVectors_;
+    public Matrix eigenvectors() {
+        return A.clone();
     }
 
-    public Array eigenvalues(){
-        return diagonal_;
+    public Array eigenvalues() {
+        return diag.clone();
     }
-
 
     //
     // private methods
     //
 
-    private void jacobiRotate_(final Matrix m, final double rot, final double dil, final int j1, final int k1, final int j2, final int k2){
+    /**
+     * This routines implements the Jacobi, a.k.a. Givens, rotation
+     */
+    private void jacobiRotate(final Matrix m, final double rot, final double dil, final int j1, final int k1, final int j2,
+            final int k2) /* @ReadOnly */{
         double x1, x2;
-        x1 = m.get(j1, k1);
-        x2 = m.get(j1, k2);
-        m.set(j1, k1, x1 - dil*(x2 + x1*rot));
-        m.set(j2, k2, x2 - dil*(x2 + x2*rot));
+        x1 = m.data[m.addr(j1, k1)];
+        x2 = m.data[m.addr(j2, k2)];
+        m.data[m.addr(j1, k1)] = x1 - dil * (x2 + x1 * rot);
+        m.data[m.addr(j2, k2)] = x2 + dil * (x1 - x2 * rot);
     }
 
 }

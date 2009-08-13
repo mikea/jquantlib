@@ -42,7 +42,7 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.OTHER, reviewers = { "Richard Gomes" })
-public class QRDecomposition extends Matrix {
+public class QRDecomposition {
 
     private final static String MATRIX_IS_RANK_DEFICIENT = "Matrix is rank deficient";
 
@@ -50,7 +50,9 @@ public class QRDecomposition extends Matrix {
     // private fields
     //
 
-    // Array for internal storage of diagonal of R.
+    private final int m;
+    private final int n;
+    private final Matrix QR;
     private final double[] Rdiag;
 
     //
@@ -64,43 +66,47 @@ public class QRDecomposition extends Matrix {
      * @return Structure to access R and the Householder vectors and compute Q.
      */
     public QRDecomposition(final Matrix A) {
-        super(A);
+        this.m = A.rows;
+        this.n = A.cols;
+        this.QR = A.clone();
 
-        this.Rdiag = new double[cols];
+        this.Rdiag = new double[this.n];
 
         // Main loop.
-        for (int k = 0; k < cols; k++) {
+        for (int k = 0; k < this.n; k++) {
             // Compute 2-norm of k-th column without under/overflow.
             double nrm = 0;
-            for (int i = k; i < rows; i++) {
-                nrm = hypot(nrm, this.data[this.address(i, k)]);
+            for (int i = k; i < this.m; i++) {
+                nrm = Matrix.hypot(nrm, QR.data[QR.addr(i, k)]);
             }
 
             if (nrm != 0.0) {
                 // Form k-th Householder vector.
-                if (this.data[this.address(k, k)] < 0) {
+                if (QR.data[QR.addr(k, k)] < 0) {
                     nrm = -nrm;
                 }
-                for (int i = k; i < rows; i++) {
-                    this.data[this.address(i, k)] /= nrm;
+                for (int i = k; i < this.m; i++) {
+                    QR.data[QR.addr(i, k)] /= nrm;
                 }
-                this.data[this.address(k, k)] += 1.0;
+                QR.data[QR.addr(k, k)] += 1.0;
 
                 // Apply transformation to remaining columns.
-                for (int j = k + 1; j < cols; j++) {
+                for (int j = k + 1; j < this.n; j++) {
                     double s = 0.0;
-                    for (int i = k; i < rows; i++) {
-                        s += this.data[this.address(i, k)] * this.data[this.address(i, j)];
+                    for (int i = k; i < this.m; i++) {
+                        s += QR.data[QR.addr(i, k)] * QR.data[QR.addr(i, j)];
                     }
-                    s = -s / this.data[this.address(k, k)];
-                    for (int i = k; i < rows; i++) {
-                        this.data[this.address(i, j)] += s * this.data[this.address(i, k)];
+                    s = -s / QR.data[QR.addr(k, k)];
+                    for (int i = k; i < this.m; i++) {
+                        QR.data[QR.addr(i, j)] += s * QR.data[QR.addr(i, k)];
                     }
                 }
             }
             Rdiag[k] = -nrm;
         }
+
     }
+
 
     //
     // public methods
@@ -112,7 +118,7 @@ public class QRDecomposition extends Matrix {
      * @return true if R, and hence A, has full rank.
      */
     public boolean isFullRank() {
-        for (int j = 0; j < cols; j++) {
+        for (int j = 0; j < this.n; j++) {
             if (Rdiag[j] == 0)
                 return false;
         }
@@ -124,15 +130,15 @@ public class QRDecomposition extends Matrix {
      *
      * @return Lower trapezoidal matrix whose columns define the reflections
      */
-    public Matrix getH() {
-        final Matrix H = new Matrix(rows, cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+    public Matrix H() {
+        final Matrix H = new Matrix(this.m, this.n);
+        for (int i = 0; i < this.m; i++) {
+            for (int j = 0; j < this.n; j++) {
                 if (i >= j) {
-                    H.data[H.address(i, j)] = this.data[this.address(i, j)];
+                    H.data[H.addr(i, j)] = QR.data[QR.addr(i, j)];
 //XXX - not needed
 //                } else {
-//                    H.data[H.address(i, j)] = 0.0;
+//                    H.data[H.addr(i, j)] = 0.0;
                 }
             }
         }
@@ -144,16 +150,17 @@ public class QRDecomposition extends Matrix {
      *
      * @return R
      */
-    public Matrix getR() {
-        final Matrix R = new Matrix(cols, cols);
-        for (int i = 0; i < cols; i++) {
-            for (int j = 0; j < cols; j++) {
+    public Matrix R() {
+        final Matrix R = new Matrix(this.n, this.n);
+        for (int i = 0; i < this.n; i++) {
+            for (int j = 0; j < this.n; j++) {
                 if (i < j) {
-                    R.data[R.address(i, j)] = this.data[this.address(i, j)];
+                    R.data[R.addr(i, j)] = QR.data[QR.addr(i, j)];
                 } else if (i == j) {
-                    R.data[R.address(i, j)] = Rdiag[i];
-                } else {
-                    R.data[R.address(i, j)] = 0.0;
+                    R.data[R.addr(i, j)] = Rdiag[i];
+//XXX - not needed
+//                } else {
+//                    R.data[R.addr(i, j)] = 0.0;
                 }
             }
         }
@@ -165,25 +172,28 @@ public class QRDecomposition extends Matrix {
      *
      * @return Q
      */
-    public Matrix getQ() {
-        final Matrix Q = new Matrix(rows, cols);
-        for (int k = cols - 1; k >= 0; k--) {
-            for (int i = 0; i < rows; i++) {
-                Q.data[Q.address(i, k)] = 0.0;
-            }
-            Q.data[Q.address(k, k)] = 1.0;
-            for (int j = k; j < cols; j++) {
-                if (this.data[this.address(k, k)] != 0) {
-                    double s = 0.0;
-                    for (int i = k; i < rows; i++) {
-                        s += this.data[this.address(i, k)] * Q.data[Q.address(i, j)];
-                    }
-                    s = -s / this.data[this.address(k, k)];
-                    for (int i = k; i < rows; i++) {
-                        Q.data[Q.address(i, j)] += s * this.data[this.address(i, k)];
-                    }
-                }
-            }
+    public Matrix Q() {
+        final Matrix Q = new Matrix(this.m, this.n);
+        for (int k = n-1; k >= 0; k--) {
+           for (int i = 0; i < m; i++) {
+              Q.data[Q.addr(i,k)] = 0.0;
+           }
+
+           System.out.printf("m= %d    n=%d\n", m, n);
+
+           Q.data[Q.addr(k,k)] = 1.0;
+           for (int j = k; j < n; j++) {
+              if (QR.data[QR.addr(k,k)] != 0) {
+                 double s = 0.0;
+                 for (int i = k; i < m; i++) {
+                    s += QR.data[QR.addr(i,k)] * Q.data[Q.addr(i,j)];
+                 }
+                 s = -s/QR.data[QR.addr(k,k)];
+                 for (int i = k; i < m; i++) {
+                    Q.data[Q.addr(i,j)] += s * QR.data[QR.addr(i,k)];
+                 }
+              }
+           }
         }
         return Q;
     }
@@ -191,14 +201,13 @@ public class QRDecomposition extends Matrix {
     /**
      * Least squares solution of A*X = B
      *
-     * @param B a Matrix with as many rows as A and any number of columns.
+     * @param B a Matrix with as many this.m as A and any number of columns.
      * @return X that minimizes the two norm of Q*R*X-B.
      * @exception IllegalArgumentException Matrix row dimensions must agree.
      * @exception RuntimeException Matrix is rank deficient.
      */
-    @Override
     public Matrix solve(final Matrix B) {
-        QL.require(B.rows == this.rows, MATRIX_IS_INCOMPATIBLE);
+        QL.require(B.rows == this.m, Matrix.MATRIX_IS_INCOMPATIBLE);
         if (!this.isFullRank())
             throw new RuntimeException(MATRIX_IS_RANK_DEFICIENT);
 
@@ -207,26 +216,26 @@ public class QRDecomposition extends Matrix {
         final Matrix X = B.clone();
 
         // Compute Y = transpose(Q)*B
-        for (int k = 0; k < cols; k++) {
+        for (int k = 0; k < this.n; k++) {
             for (int j = 0; j < nx; j++) {
                 double s = 0.0;
-                for (int i = k; i < rows; i++) {
-                    s += this.data[this.address(i, k)] * X.data[X.address(i, j)];
+                for (int i = k; i < this.m; i++) {
+                    s += QR.data[QR.addr(i, k)] * X.data[X.addr(i, j)];
                 }
-                s = -s / this.data[this.address(k, k)];
-                for (int i = k; i < rows; i++) {
-                    X.data[X.address(i, j)] += s * this.data[this.address(i, k)];
+                s = -s / QR.data[QR.addr(k, k)];
+                for (int i = k; i < this.m; i++) {
+                    X.data[X.addr(i, j)] += s * QR.data[QR.addr(i, k)];
                 }
             }
         }
         // Solve R*X = Y;
-        for (int k = cols - 1; k >= 0; k--) {
+        for (int k = this.n - 1; k >= 0; k--) {
             for (int j = 0; j < nx; j++) {
-                X.data[X.address(k, j)] /= Rdiag[k];
+                X.data[X.addr(k, j)] /= Rdiag[k];
             }
             for (int i = 0; i < k; i++) {
                 for (int j = 0; j < nx; j++) {
-                    X.data[X.address(i, j)] -= X.data[X.address(k, j)] * this.data[this.address(i, k)];
+                    X.data[X.addr(i, j)] -= X.data[X.addr(k, j)] * QR.data[QR.addr(i, k)];
                 }
             }
         }

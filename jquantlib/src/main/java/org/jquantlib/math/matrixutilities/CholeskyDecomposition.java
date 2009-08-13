@@ -38,15 +38,24 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * @see <a href="http://math.nist.gov/javanumerics/jama/">JAMA</a>
  */
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.OTHER, reviewers = { "Richard Gomes" })
-public class CholeskyDecomposition extends Matrix {
+public class CholeskyDecomposition {
 
     private final static String MATRIX_IS_NOT_SIMMETRIC_POSITIVE = "Matrix is not symmetric positive definite.";
+
+
+    //
+    // private fields
+    //
+
+    /** Row and column dimension (square matrix). */
+    private final int n;
 
     /** Matrix for internal storage of decomposition. */
     private final Matrix L;
 
     /** Symmetric and positive definite flag. */
     private boolean isspd;
+
 
     //
     // public constructors
@@ -59,29 +68,29 @@ public class CholeskyDecomposition extends Matrix {
      * @return Structure to access L and isspd flag.
      */
     public CholeskyDecomposition(final Matrix A) {
-        super(A);
-        QL.require(rows == cols, MATRIX_MUST_BE_SQUARE);
+        QL.require(A.rows == A.cols, Matrix.MATRIX_MUST_BE_SQUARE);
 
-        L = new Matrix(rows, rows);
-        isspd = (rows == cols);
+        this.n = A.rows;
+        this.L = new Matrix(n, n);
+        this.isspd = (A.rows == A.cols);
 
         // Main loop.
-        for (int j = 0; j < cols; j++) {
+        for (int j = 0; j < n; j++) {
             double d = 0.0;
             for (int k = 0; k < j; k++) {
                 double s = 0.0;
                 for (int i = 0; i < k; i++) {
-                    s += L.data[L.address(k, i)] * L.data[L.address(j, i)];
+                    s += L.data[L.addr(k, i)] * L.data[L.addr(j, i)];
                 }
-                L.data[L.address(j, k)] = s = (this.data[this.address(j, k)] - s) / L.data[L.address(k, k)];
+                L.data[L.addr(j, k)] = s = (A.data[A.addr(j, k)] - s) / L.data[L.addr(k, k)];
                 d = d + s * s;
-                isspd = isspd & (this.data[this.address(k, j)] == this.data[this.address(j, k)]);
+                isspd = isspd & (A.data[A.addr(k, j)] == A.data[A.addr(j, k)]);
             }
-            d = this.data[this.address(j, j)] - d;
+            d = A.data[A.addr(j, j)] - d;
             isspd = isspd & (d > 0.0);
-            L.data[L.address(j, j)] = Math.sqrt(Math.max(d, 0.0));
-            for (int k = j + 1; k < cols; k++) {
-                L.data[L.address(j, k)] = 0.0;
+            L.data[L.addr(j, j)] = Math.sqrt(Math.max(d, 0.0));
+            for (int k = j + 1; k < n; k++) {
+                L.data[L.addr(j, k)] = 0.0;
             }
         }
     }
@@ -104,7 +113,7 @@ public class CholeskyDecomposition extends Matrix {
      *
      * @return L
      */
-    public Matrix getL() {
+    public Matrix L() {
         return L.clone();
     }
 
@@ -117,9 +126,8 @@ public class CholeskyDecomposition extends Matrix {
      * @exception RuntimeException Matrix is not symmetric positive definite.
      */
 
-    @Override
     public Matrix solve(final Matrix B) {
-        QL.require(B.rows == this.rows, MATRIX_IS_INCOMPATIBLE);
+        QL.require(B.rows == this.n, Matrix.MATRIX_IS_INCOMPATIBLE);
         if (!this.isSPD())
             throw new RuntimeException(MATRIX_IS_NOT_SIMMETRIC_POSITIVE);
 
@@ -128,22 +136,22 @@ public class CholeskyDecomposition extends Matrix {
         final Matrix X = B.clone();
 
         // Solve L*Y = B;
-        for (int k = 0; k < cols; k++) {
+        for (int k = 0; k < n; k++) {
             for (int j = 0; j < nx; j++) {
                 for (int i = 0; i < k; i++) {
-                    X.data[X.address(k, j)] -= X.data[X.address(i, j)] * L.data[L.address(k, i)];
+                    X.data[X.addr(k, j)] -= X.data[X.addr(i, j)] * L.data[L.addr(k, i)];
                 }
-                X.data[X.address(k, j)] /= L.data[L.address(k, k)];
+                X.data[X.addr(k, j)] /= L.data[L.addr(k, k)];
             }
         }
 
         // Solve L'*X = Y;
-        for (int k = cols - 1; k >= 0; k--) {
+        for (int k = n - 1; k >= 0; k--) {
             for (int j = 0; j < nx; j++) {
-                for (int i = k + 1; i < cols; i++) {
-                    X.data[X.address(k, j)] -= X.data[X.address(i, j)] * L.data[L.address(i, k)];
+                for (int i = k + 1; i < n; i++) {
+                    X.data[X.addr(k, j)] -= X.data[X.addr(i, j)] * L.data[L.addr(i, k)];
                 }
-                X.data[X.address(k, j)] /= L.data[L.address(k, k)];
+                X.data[X.addr(k, j)] /= L.data[L.addr(k, k)];
             }
         }
 
