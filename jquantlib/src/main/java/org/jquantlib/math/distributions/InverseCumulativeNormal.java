@@ -23,6 +23,8 @@
 package org.jquantlib.math.distributions;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.randomnumbers.InverseCumulative;
@@ -108,7 +110,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
     }
 
     public InverseCumulativeNormal(final double average, final double sigma) {
-        assert sigma > 0.0 : SIGMA_MUST_BE_POSITIVE;
+        QL.require(sigma > 0.0 , SIGMA_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
         this.average = average;
         this.sigma = sigma;
         this.highPrecision = Configuration.getSystemConfiguration(null).getGlobalSettings().isRefineHighPrecision();
@@ -126,7 +128,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
      */
     @Override
     public double op(double x)/* @ReadOnly */{
-        assert sigma > 0.0 : SIGMA_MUST_BE_POSITIVE;
+        QL.require(sigma > 0.0 , SIGMA_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
 
         double z;
         double r;
@@ -138,7 +140,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
             } else if (Math.abs(x) < Constants.QL_EPSILON) {
                 x = 0.0;
             } else
-                throw new AssertionError(SIGMA_MUST_BE_POSITIVE);
+                throw new LibraryException(SIGMA_MUST_BE_POSITIVE); // QA:[RG]::verified
         }
 
         if (x < xlow) {

@@ -22,16 +22,17 @@
 
 package org.jquantlib.pricingengines.arguments;
 
+import org.jquantlib.QL;
 import org.jquantlib.processes.StochasticProcess;
 
 /**
  * Arguments for single-asset option calculation
- * 
+ *
  * @note This inner class must be kept <b>private</b> as its fields and
  *       ancertor's fields are exposed. This programming style is not
  *       recommended and we should use getters/setters instead. At the moment,
  *       we keep the original implementation.
- * 
+ *
  * @author Richard Gomes
  */
 // TODO: code review :: object model needs to be validated and eventually refactored
@@ -61,7 +62,7 @@ public class OneAssetOptionArguments extends OptionArguments {
     public void validate() /*@ReadOnly*/ {
         super.validate();
         // we assume the underlying value to be the first state variable
-        assert stochasticProcess.initialValues().first() > 0.0 : "Negative or zero underlying given";
+        QL.require(stochasticProcess.initialValues().first() > 0.0 , "Negative or zero underlying given"); // QA:[RG]::verified // TODO: message
     }
 
 }

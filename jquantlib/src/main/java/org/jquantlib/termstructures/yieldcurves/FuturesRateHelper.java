@@ -22,6 +22,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
@@ -39,7 +40,7 @@ import org.jquantlib.util.Observable;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 //TODO: Complete
 public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
@@ -57,7 +58,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final DayCounter dayCounter,
             final Handle<Quote> convAdj) {
         super(price, null, null, null);
-        assert IMM.getDefaultIMM().isIMMdate(immDate, false) : "not a valid IMM date"; // TODO: message
+        QL.require(IMM.getDefaultIMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         earliestDate = immDate;
         latestDate = calendar.advance(
                 immDate,
@@ -79,7 +80,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final DayCounter dayCounter,
             final double conv) {
         super(price);
-        assert IMM.getDefaultIMM().isIMMdate(immDate, false) : "not a valid IMM date"; // TODO: message
+        QL.require(IMM.getDefaultIMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         convAdj = new Handle<Quote>(new SimpleQuote(conv));
         earliestDate = immDate;
         latestDate = calendar.advance(
@@ -96,7 +97,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final IborIndex i,
             final double conv) {
         super(price);
-        assert IMM.getDefaultIMM().isIMMdate(immDate, false) : "not a valid IMM date"; // TODO: message
+        QL.require(IMM.getDefaultIMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         convAdj = new Handle<Quote>(new SimpleQuote(conv));
         earliestDate = immDate;
         final Calendar cal = i.fixingCalendar();
@@ -107,10 +108,10 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 
     @Override
     public double impliedQuote() {
-        assert termStructure!=null : "term structure not set";
+        QL.require(termStructure!=null , "term structure not set"); // QA:[RG]::verified // TODO: message
         final double forwardRate = termStructure.discount(earliestDate) / (termStructure.discount(latestDate) - 1.0) / yearFraction;
         final double convA = convAdj.empty() ? 0.0 : convAdj.getLink().evaluate();
-        assert convA >= 0.0 : "negative futures convexity adjustment";
+        QL.ensure(convA >= 0.0 , "negative futures convexity adjustment"); // QA:[RG]::verified // TODO: message
         final double futureRate = forwardRate + convA;
         return 100.0 * (1.0 - futureRate);
     }
@@ -121,7 +122,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jquantlib.util.Observer#update(org.jquantlib.util.Observable,
      *      java.lang.Object)
      */

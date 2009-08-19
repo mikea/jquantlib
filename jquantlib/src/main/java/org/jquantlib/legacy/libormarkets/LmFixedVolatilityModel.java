@@ -23,6 +23,7 @@
 
 package org.jquantlib.legacy.libormarkets;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 
 public class LmFixedVolatilityModel extends LmVolatilityModel {
@@ -36,8 +37,8 @@ public class LmFixedVolatilityModel extends LmVolatilityModel {
         this.volatilities_ = volatilities;
         this.startTimes_ = startTimes;
 
-        assert startTimes_.size()>1 : "too few dates"; // TODO: message
-        assert volatilities_.size() == startTimes_.size() : "volatility array and fixing time array have to have the same size"; // TODO: message
+        QL.require(startTimes_.size()>1 , "too few dates"); // QA:[RG]::verified // TODO: message
+        QL.require(volatilities_.size() == startTimes_.size() , "volatility array and fixing time array have to have the same size"); // QA:[RG]::verified // TODO: message
 
         for (int i = 1; i < startTimes_.size(); i++)
             if(startTimes_.get(i) <= startTimes_.get(i-1))
@@ -51,7 +52,7 @@ public class LmFixedVolatilityModel extends LmVolatilityModel {
 
     @Override
     public Array volatility(final double t, final Array x) {
-        assert (t < startTimes_.first() || t > startTimes_.last()) : "invalid time given for volatility model";
+        QL.require((t < startTimes_.first() || t > startTimes_.last()) , "invalid time given for volatility model"); // QA:[RG]::verified // TODO: message
         final int ti = (int) (startTimes_.upperBound(t) - startTimes_.first() - 1);
 
         final Array tmp = new Array(size_);

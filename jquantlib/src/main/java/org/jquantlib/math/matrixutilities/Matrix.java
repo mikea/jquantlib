@@ -251,7 +251,7 @@ public class Matrix extends Cells {
     }
 
     public double[][] toArray(final double[][] buffer) {
-        QL.require(this.rows == buffer.length && this.cols == buffer[0].length, WRONG_BUFFER_LENGTH); //TODO: message
+        QL.require(this.rows == buffer.length && this.cols == buffer[0].length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
         int addr = 0;
         for (int row=0; row<this.rows; row++) {
             System.arraycopy(this.data, addr, buffer[row], 0, this.cols);
@@ -362,7 +362,7 @@ public class Matrix extends Cells {
      * @param array contains the elements to be copied
      */
     public void setCol(final int col, final Array array) {
-        QL.require(this.rows == array.size ,  ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.rows == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         if (this.cols == 1)
             System.arraycopy(array.data, 0, this.data, 0, this.size);
         else {
@@ -395,7 +395,7 @@ public class Matrix extends Cells {
      * @return this
      */
     public Matrix addAssign(final Matrix another) {
-        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int row=0; row<rows; row++) {
             int addr = addr(row,0);
             for (int col=0; col<cols; col++) {
@@ -413,7 +413,7 @@ public class Matrix extends Cells {
      * @return this
      */
     public Matrix subAssign(final Matrix another) {
-        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int row=0; row<rows; row++) {
             int addr = addr(row,0);
             for (int col=0; col<cols; col++) {
@@ -479,7 +479,7 @@ public class Matrix extends Cells {
      * @return a new instance
      */
     public Matrix add(final Matrix another) {
-        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = addr(row,0);
@@ -498,7 +498,7 @@ public class Matrix extends Cells {
      * @return a new instance
      */
     public Matrix sub(final Matrix another) {
-        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Matrix result = new Matrix(this.rows, this.cols);
         for (int row=0; row<rows; row++) {
             int addr = addr(row,0);
@@ -574,7 +574,7 @@ public class Matrix extends Cells {
      * @return a new Array which contains the result
      */
     public Array mul(final Array array) {
-        QL.require(this.cols == array.size ,  ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.cols == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.cols);
         for (int col=0; col<this.cols; col++) {
             int addr = addr(0, col);
@@ -595,7 +595,7 @@ public class Matrix extends Cells {
      * @return a new Matrix which contains the result
      */
     public Matrix mul(final Matrix another) {
-        QL.require(this.cols == another.rows ,  MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.cols == another.rows ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Matrix result = new Matrix(this.rows, another.cols);
         for (int col = 0; col < another.cols; col++) {
             final int caddr = another.addr(0, col);
@@ -901,7 +901,7 @@ public class Matrix extends Cells {
      * @return a new instance which contains the result of this operation
      */
     public Array diagonal() {
-        QL.require(this.rows == this.cols ,  MATRIX_MUST_BE_SQUARE); //TODO: message
+        QL.require(this.rows == this.cols ,  MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
         final Array result = new Array(this.cols);
         int addr = 0;
         for (int i = 0; i < this.cols; i++) {
@@ -964,8 +964,8 @@ public class Matrix extends Cells {
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int row0, final int row1, final int col0, final int col1) {
-        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS);
-        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS);
+        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
 
         final Matrix result = new Matrix(row1-row0, col1-col0);
         if (col1-col0 == this.cols) {
@@ -995,9 +995,9 @@ public class Matrix extends Cells {
      */
 
     public Matrix range(final int row0, final int row1, final int[] c) {
-        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS);
+        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
         for (final int col : c) {
-            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS);
+            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
 
         final Matrix result = new Matrix(row1-row0, c.length);
@@ -1019,10 +1019,10 @@ public class Matrix extends Cells {
      */
     public Matrix range(final int[] r, final int[] c) {
         for (final int row : r) {
-            QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS);
+            QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
         for (final int col : c) {
-            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS);
+            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
 
         final Matrix result = new Matrix(r.length, c.length);
@@ -1047,9 +1047,9 @@ public class Matrix extends Cells {
      */
     public Matrix range(final int[] r, final int col0, final int col1) {
         for (final int row : r) {
-            QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS);
+            QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
-        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS);
+        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
 
         final Matrix result = new Matrix(r.length, col1-col0);
         final int ncols = col1-col0;
@@ -1084,8 +1084,8 @@ public class Matrix extends Cells {
      * @exception IllegalArgumentException when indices are out of range
      */
     public Array rangeRow(final int row, final int col0, final int col1) {
-        QL.require(row >= 0 && row < this.rows, INVALID_ARGUMENTS);
-        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS);
+        QL.require(row >= 0 && row < this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
 
         final Array result = new Array(col1-col0);
         final int ncols = col1-col0;
@@ -1115,8 +1115,8 @@ public class Matrix extends Cells {
      * @exception IllegalArgumentException when indices are out of range
      */
     public Array rangeCol(final int col, final int row0, final int row1) {
-        QL.require(col >= 0 && col < this.cols, INVALID_ARGUMENTS);
-        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS);
+        QL.require(col >= 0 && col < this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
 
         final Array result = new Array(row1-row0);
         final int nrows = row1-row0;
@@ -1184,7 +1184,7 @@ public class Matrix extends Cells {
          * @throws IllegalArgumentException when indices are out of range
          */
         public RowIterator(final int row, final int col0, final int col1) {
-            QL.require(row>=0 && row<rows && col0 >=0 && col1>=col0 && col1 <= cols, INVALID_ARGUMENTS);
+            QL.require(row>=0 && row<rows && col0 >=0 && col1>=col0 && col1 <= cols, INVALID_ARGUMENTS); // QA:[RG]::verified
             this.row = row;
             this.col0 = col0;
             this.col1 = col1;
@@ -1405,7 +1405,7 @@ public class Matrix extends Cells {
          * @throws IllegalArgumentException when indices are out of range
          */
         public ColumnIterator(final int col, final int row0, final int row1) {
-            QL.require(col>=0 && col<cols && row0 >=0 && row1>=row0 && row1 <= rows, INVALID_ARGUMENTS);
+            QL.require(col>=0 && col<cols && row0 >=0 && row1>=row0 && row1 <= rows, INVALID_ARGUMENTS); // QA:[RG]::verified
             this.col = col;
             this.row0 = row0;
             this.row1 = row1;

@@ -57,6 +57,7 @@
 
 package org.jquantlib.pricingengines.vanilla;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.PoissonDistribution;
@@ -76,7 +77,7 @@ import org.jquantlib.util.Date;
 
 /**
  * Jump-diffusion engine for vanilla options
- * 
+ *
  * @author <Richard Gomes>
  */
 public class JumpDiffusionEngine extends VanillaOptionEngine {
@@ -102,21 +103,18 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
         this.baseEngine_ = baseEngine;
         this.maxIterations_ = maxIterations;
         this.relativeAccuracy_ = relativeAccuracy_;
-        assert this.baseEngine_ != null : "null base engine";
+        QL.require(this.baseEngine_ != null , "null base engine"); // QA:[RG]::verified // TODO: message
     }
 
 
 
     @Override
     public void calculate() {
-
-        assert (this.arguments.stochasticProcess instanceof Merton76Process) : "not a jump diffusion process";
+        QL.require((this.arguments.stochasticProcess instanceof Merton76Process) , "not a jump diffusion process"); // QA:[RG]::verified // TODO: message
 
         final Merton76Process jdProcess = (Merton76Process) arguments.stochasticProcess;
-
         final double /* @Real */jumpSquareVol =
             jdProcess.logJumpVolatility().getLink().evaluate() * jdProcess.logJumpVolatility().getLink().evaluate();
-
         final double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().getLink().evaluate() + 0.5 * jumpSquareVol;
 
         // mean jump size
@@ -165,7 +163,7 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
         int i;
         double /* @Real */theta_correction;
 
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         // Haug arbitrary criterium is:
         // for (i=0; i<11; i++) {
 
@@ -217,8 +215,8 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
 
             lastContribution *= weight;
         }
-        assert i < maxIterations_ : "accuracy not reached"; // TODO: message
 
+        QL.ensure(i < maxIterations_ , "accuracy not reached"); // QA:[RG]::verified // TODO: message
     }
 
 }

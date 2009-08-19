@@ -24,6 +24,7 @@
 package org.jquantlib.cashflow;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.quotes.Handle;
@@ -72,7 +73,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
 
     private FloatingRateCouponPricer pricer;
 
-    //TODO: code review :: please verify comment below against original QL/C++ code
+    //TODO: code review :: please verify comment below against QL/C++ code
     //XXX (Rate fixing) const;
 
 
@@ -80,10 +81,10 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     // protected fields
     //
 
-    //TODO: code review :: please verify against original QL/C++ code
+    //TODO: code review :: please verify against QL/C++ code
     protected final double gearing_;
 
-    //TODO: code review :: please verify against original QL/C++ code
+    //TODO: code review :: please verify against QL/C++ code
     protected final InterestRateIndex index_;
 
 
@@ -106,8 +107,11 @@ public class FloatingRateCoupon extends Coupon implements Observer {
             final boolean isInArrears) {
         super(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd);
 
-        // TODO: code review :: please verify against original QL/C++ code
-        assert gearing > 0 : null_gearing;
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
+        // TODO: code review :: please verify against QL/C++ code
+        QL.require(gearing > 0 , null_gearing); // QA:[RG]::verified
 
         this.index_ = index;
         this.fixingDays = (fixingDays == 0 ? index.fixingDays() : fixingDays);
@@ -130,7 +134,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     //
 
     public void setPricer(final FloatingRateCouponPricer pricer){
-        assert pricer != null : no_adequate_pricer_given;
+        QL.require(pricer != null , no_adequate_pricer_given);
         if (this.pricer != null) this.pricer.deleteObserver(this);
         this.pricer = pricer;
         this.pricer.addObserver(this);
@@ -207,17 +211,15 @@ public class FloatingRateCoupon extends Coupon implements Observer {
 
     @Override
     public  double rate() {
-        if(this.pricer == null)
-            throw new IllegalArgumentException(pricer_not_set);
-
-        // TODO: code review :: please verify against original QL/C++ code
+        QL.require(this.pricer != null, pricer_not_set);
+        // TODO: code review :: please verify against QL/C++ code
         this.pricer.initialize(this);
         return this.pricer.swapletRate();
     }
 
     @Override
     public double accruedAmount(final Date date) {
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         throw new UnsupportedOperationException();
     }
 

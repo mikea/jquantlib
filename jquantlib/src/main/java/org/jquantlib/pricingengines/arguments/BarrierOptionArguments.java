@@ -40,11 +40,13 @@
 
 package org.jquantlib.pricingengines.arguments;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.BarrierType;
+import org.jquantlib.lang.exceptions.LibraryException;
 
 /**
  * This class defines validation for option arguments
- * 
+ *
  * @author <Richard Gomes>
  *
  */
@@ -69,7 +71,7 @@ public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
     /**
      * This method performs additional validation of needed to conform to the barrier type.
      * The validation is done by comparing the underlying price against the barrier type.
-     * 
+     *
      * @see org.jquantlib.pricingengines.arguments.OneAssetStrikedOptionArguments#validate()
      */
     @Override
@@ -81,19 +83,19 @@ public class BarrierOptionArguments extends OneAssetStrikedOptionArguments {
         final double underlying = stochasticProcess.initialValues().first();
         switch (barrierType) {
         case DownIn:
-            assert underlying >= barrier : "underlying < barrier: down-and-in barrier undefined";
+            QL.require(underlying >= barrier , "underlying < barrier: down-and-in barrier undefined"); // QA:[RG]::verified // TODO: message
             break;
         case UpIn:
-            assert underlying <= barrier : "underlying > barrier : up-and-in barrier undefined";
+            QL.require(underlying <= barrier , "underlying > barrier : up-and-in barrier undefined"); // QA:[RG]::verified // TODO: message
             break;
         case DownOut:
-            assert underlying >= barrier : "underlying < barrier : down-and-out barrier undefined";
+            QL.require(underlying >= barrier , "underlying < barrier : down-and-out barrier undefined"); // QA:[RG]::verified // TODO: message
             break;
         case UpOut:
-            assert underlying <= barrier : "underlying > barrier : up-and-out barrier undefined";
+            QL.require(underlying <= barrier , "underlying > barrier : up-and-out barrier undefined"); // QA:[RG]::verified // TODO: message
             break;
         default:
-            throw new AssertionError(UNKNOWN_TYPE);
+            throw new LibraryException(UNKNOWN_TYPE); // QA:[RG]::verified
         }
 
     }

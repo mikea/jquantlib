@@ -41,6 +41,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
@@ -87,7 +88,7 @@ public class OneAssetStrikedOption extends OneAssetOption {
 
     public /* @Price */ double getStrikeSensitivity() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(strikeSensitivity) : "strike sensitivity not provided";
+        QL.require(!Double.isNaN(strikeSensitivity) , "strike sensitivity not provided"); // QA:[RG]::verified // TODO: message
         return strikeSensitivity;
     }
 

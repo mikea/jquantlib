@@ -23,6 +23,7 @@
 
 package org.jquantlib.time.calendars;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -50,7 +51,7 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th (moved to Monday if Sunday or Friday if
  * Saturday)</li>
  * </ul>
- * 
+ *
  * Holidays for the stock exchange (data from http://www.nyse.com):
  * <ul>
  * <li>Saturdays</li>
@@ -71,7 +72,7 @@ import org.jquantlib.util.Month;
  * Saturday)</li>
  * <li>Special historic closings (see http://www.nyse.com/pdfs/closings.pdf)</li>
  * </ul>
- * 
+ *
  * Holidays for the government bond market (data from
  * http://www.bondmarkets.com):
  * <ul>
@@ -93,7 +94,7 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th (moved to Monday if Sunday or Friday if
  * Saturday)</li>
  * </ul>
- * 
+ *
  * Holidays for the North American Energy Reliability Council (data from
  * http://www.nerc.com/~oc/offpeaks.html):
  * <ul>
@@ -107,7 +108,7 @@ import org.jquantlib.util.Month;
  * <li>Thanksgiving Day, fourth Thursday in November</li>
  * <li>Christmas, December 25th (moved to Monday if Sunday)</li>
  * </ul>
- * 
+ *
  * @author Srinivas Hasti
  */
 
@@ -133,7 +134,7 @@ public class UnitedStates extends DelegateCalendar {
             delegate = new USNercCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -149,7 +150,7 @@ public class UnitedStates extends DelegateCalendar {
         case NERC:
             return NERC_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

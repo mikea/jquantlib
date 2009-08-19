@@ -2,6 +2,7 @@ package org.jquantlib.instruments;
 
 import java.util.ArrayList;
 
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.FixedRateCoupon;
 import org.jquantlib.cashflow.FixedRateLeg;
@@ -10,6 +11,7 @@ import org.jquantlib.cashflow.IborLeg;
 import org.jquantlib.cashflow.Leg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.VanillaSwapArguments;
@@ -89,7 +91,7 @@ public class VanillaSwap extends Swap {
             .withNotionals(nominal)
             .withPaymentDayCounter(floatingDayCount)
             .withPaymentAdjustment(paymentConvention)
-            .withFixingDays(iborIndex.fixingDays())   // TODO: code review :: please verify against original QL/C++ code
+            .withFixingDays(iborIndex.fixingDays())   // TODO: code review :: please verify against QL/C++ code
             .withSpreads(spread).Leg();
 
         for (final CashFlow item : floatingLeg) item.addObserver(this);
@@ -107,13 +109,13 @@ public class VanillaSwap extends Swap {
 
     public /*@Rate*/ double  fairRate() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(fairRate) : "result not available";
+        QL.require(!Double.isNaN(fairRate) , "result not available"); // QA:[RG]::verified // TODO: message
         return fairRate;
     }
 
     public /*@Spread*/ double fairSpread() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(fairSpread) : "result not available";
+        QL.require(!Double.isNaN(fairSpread) , "result not available"); // QA:[RG]::verified // TODO: message
         return fairSpread;
     }
 
@@ -129,25 +131,25 @@ public class VanillaSwap extends Swap {
 
     public /*@Price*/ double fixedLegBPS() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(legBPS[0]) : "result not available";
+        QL.require(!Double.isNaN(legBPS[0]) , "result not available"); // QA:[RG]::verified // TODO: message
         return legBPS[0];
     }
 
     public /*@Price*/ double floatingLegBPS() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(legBPS[1]) : "result not available";
+        QL.require(!Double.isNaN(legBPS[1]) , "result not available");
         return legBPS[1];
     }
 
     public /*@Price*/ double fixedLegNPV() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(legNPV[0]) : "result not available";
+        QL.require(!Double.isNaN(legNPV[0]) , "result not available"); // QA:[RG]::verified // TODO: message
         return legNPV[0];
     }
 
     public /*@Price*/ double floatingLegNPV() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(legNPV[1]) : "result not available";
+        QL.require(!Double.isNaN(legNPV[1]) , "result not available"); // QA:[RG]::verified // TODO: message
         return legNPV[1];
     }
 
@@ -261,7 +263,7 @@ public class VanillaSwap extends Swap {
             case 1:
                 return Type.Payer;
             default:
-                throw new AssertionError("value must be one of -1, 1");
+                throw new LibraryException("value must be one of -1, 1"); // QA:[RG]::verified // TODO: message
             }
         }
 

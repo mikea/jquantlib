@@ -21,6 +21,10 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.statistics;
 
+import org.jquantlib.QL;
+
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: please verify against QL/C++ code
 public class DiscrepancyStatistics extends GenericSequenceStatistics {
 
     private static final String dimension_not_allowed = "dimension==1 not allowed";
@@ -89,7 +93,7 @@ public class DiscrepancyStatistics extends GenericSequenceStatistics {
 
     @Override
     public void reset(int dimension) {
-        assert dimension != 1 : dimension_not_allowed;
+        QL.require(dimension != 1 , dimension_not_allowed);  // QA:[RG]::verified // TODO: message
         if (dimension == 0)
             dimension = dimension_; // keep the current one
         super.reset(dimension);

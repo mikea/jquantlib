@@ -26,19 +26,22 @@ package org.jquantlib.time;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.slf4j.helpers.MessageFormatter;
 
 
 /**
- * 
+ *
  * @author Srinivas Hasti
  *
  */
 // TODO: needs comments and code review
 public abstract class AbstractCalendar implements Calendar {
 
+    protected static final String UNKNOWN_MARKET = "unknown market";
     protected static final String YEAR_OUT_OF_RANGE = "Year out of range";
 
     /**
@@ -67,7 +70,7 @@ public abstract class AbstractCalendar implements Calendar {
 
     /**
      * Check whether holiday is artificially added
-     * 
+     *
      * @param date
      * @return true if its added holiday false if its not added
      */
@@ -77,7 +80,7 @@ public abstract class AbstractCalendar implements Calendar {
 
     /**
      * This base class only checks in list added by addHoliday(Date) call.
-     * 
+     *
      * {@inheritDoc}
      */
     public boolean isBusinessDay(final Date date) {
@@ -90,7 +93,7 @@ public abstract class AbstractCalendar implements Calendar {
     /**
      * Advances the given date of the given number of business days and returns the result.
      * Uses the default BusinessDayConvention BusinessDayConvention.Following
-     * 
+     *
      * @return Date is date adjusted to next n-th business day
      */
     public final Date adjust(final Date d) {
@@ -100,11 +103,11 @@ public abstract class AbstractCalendar implements Calendar {
     /**
      * Advances the given date of the given number of business days and returns the result. Returned reference is same as original
      * date reference passed in
-     * 
+     *
      * @return Date is date adjusted to next n-th business day
      */
     public final Date adjust(final Date d, final BusinessDayConvention c) {
-        assert d != null : "date not specified";
+        QL.require(d != null , "date not specified"); // QA:[RG]::verified // TODO: message
 
         if (c == BusinessDayConvention.UNADJUSTED)
             return d;
@@ -122,7 +125,7 @@ public abstract class AbstractCalendar implements Calendar {
             if (c == BusinessDayConvention.MODIFIED_PRECEDING && d1.getMonth() != d.getMonth())
                 return adjust(d, BusinessDayConvention.FOLLOWING);
         } else
-            throw new AssertionError("unknown business-day convention");
+            throw new LibraryException("unknown business-day convention"); // QA:[RG]::verified
         return d1;
     }
 
@@ -139,7 +142,7 @@ public abstract class AbstractCalendar implements Calendar {
     }
 
     /**
-     * 
+     *
      * @param d
      * @return
      */
@@ -152,7 +155,7 @@ public abstract class AbstractCalendar implements Calendar {
     }
 
     /**
-     * 
+     *
      * @param d
      * @param n
      * @param unit
@@ -164,7 +167,7 @@ public abstract class AbstractCalendar implements Calendar {
     }
 
     public final Date advance(final Date date, final int units, final TimeUnit unit, final BusinessDayConvention c, final boolean endOfMonth) {
-        assert date != null : "date not specified";
+        QL.require(date != null , "date not specified"); // QA:[RG]::verified // TODO: message
 
         Date d1 = DateFactory.getFactory().getDate(date.getDayOfMonth(), date.getMonthEnum(), date.getYear());
         int n = units;

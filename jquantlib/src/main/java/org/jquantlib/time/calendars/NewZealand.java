@@ -31,6 +31,7 @@ import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.OCTOBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -56,11 +57,11 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th (possibly moved to Monday or Tuesday)</li>
  * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
  * </ul>
- * 
+ *
  * @category calendars
- * 
+ *
  * @see <a href="http://www.nzx.com">New Zealand Stock Exchange</a>
- * 
+ *
  * @author Anand Mani
  */
 public class NewZealand extends DelegateCalendar {
@@ -75,7 +76,7 @@ public class NewZealand extends DelegateCalendar {
             delegate = new NewZealandNZXCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -85,7 +86,7 @@ public class NewZealand extends DelegateCalendar {
         case NZX:
             return NZX_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

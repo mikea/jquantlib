@@ -40,6 +40,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.QL;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.results.Results;
@@ -173,7 +174,7 @@ public abstract class NewInstrument extends Instrument {
      */
     @Override
     protected void performCalculations() {
-        assert engine != null : SHOULD_DEFINE_PRICING_ENGINE;
+        QL.require(engine != null , SHOULD_DEFINE_PRICING_ENGINE); // QA:[RG]::verified
         engine.reset();
         setupArguments(engine.getArguments());
         engine.getArguments().validate();

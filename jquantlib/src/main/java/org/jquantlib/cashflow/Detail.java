@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.matrixutilities.Array;
 
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 public class Detail {
 
         //TODO ... do we really need this one... its a one to one translation from

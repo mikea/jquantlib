@@ -27,6 +27,7 @@ import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.MAY;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -51,7 +52,7 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th</li>
  * <li>Boxing Day, December 26th</li>
  * </ul>
- * 
+ *
  * @author Jia Jia
  */
 
@@ -65,7 +66,7 @@ public class Denmark extends DelegateCalendar {
             delegate = new CSECalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -87,7 +88,7 @@ public class Denmark extends DelegateCalendar {
         case CSE:
             return CSECalendar;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

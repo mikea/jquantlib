@@ -22,6 +22,7 @@
 
 package org.jquantlib.cashflow;
 
+import org.jquantlib.QL;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.CapletVolatilityStructure;
 
@@ -43,7 +44,7 @@ public abstract class IborCouponPricer extends FloatingRateCouponPricer {
     public void setCapletVolatility(final Handle<CapletVolatilityStructure> capletVol){
         capletVol_.deleteObserver(this);
         capletVol_ = capletVol;
-        assert capletVol_ != null : no_adequate_capletVol_given;
+        QL.require(capletVol_ != null , no_adequate_capletVol_given); // QA:[RG]::verified
         capletVol.addObserver(this);
         update();
     }

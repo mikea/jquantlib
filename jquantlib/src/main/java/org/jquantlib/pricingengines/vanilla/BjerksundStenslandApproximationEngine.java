@@ -39,6 +39,7 @@
 
 package org.jquantlib.pricingengines.vanilla;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.Exercise;
@@ -51,12 +52,12 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
  * Bjerksund and Stensland approximation engine
- * 
+ *
  * @author <Richard Gomes>
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 // review JSR-308 annotations too
-public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
+public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
 
     // TODO: refactor messages
     private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";
@@ -121,7 +122,7 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
         // investigate what happen to I for dD->0.0
         final double /*@Real*/ i = B0 + (BInfinity - B0) * (1 - Math.exp(ht));
 
-        assert i>=x : BJERKSUND_NOT_APPLICABLE;
+        QL.require(i>=x , BJERKSUND_NOT_APPLICABLE); // QA:[RG]::verified
 
         if (s >= i)
             return s - x;
@@ -144,19 +145,20 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine{
 
     @Override
     public void calculate() /*@ReadOnly*/{
-        assert arguments.exercise.type()==Exercise.Type.AMERICAN : NOT_AN_AMERICAN_OPTION;
-        assert arguments.exercise instanceof AmericanExercise : NON_AMERICAN_EXERCISE_GIVEN;
+        QL.require(arguments.exercise.type()==Exercise.Type.AMERICAN , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
+        QL.require(arguments.exercise instanceof AmericanExercise , NON_AMERICAN_EXERCISE_GIVEN); // QA:[RG]::verified
         final AmericanExercise ex = (AmericanExercise)arguments.exercise;
-        assert !ex.payoffAtExpiry() : PAYOFF_AT_EXPIRY_NOT_HANDLED;
-        assert arguments.payoff instanceof PlainVanillaPayoff : NON_PLAIN_PAYOFF_GIVEN;
+        QL.require(!ex.payoffAtExpiry() , PAYOFF_AT_EXPIRY_NOT_HANDLED); // QA:[RG]::verified
+        QL.require(arguments.payoff instanceof PlainVanillaPayoff , NON_PLAIN_PAYOFF_GIVEN); // QA:[RG]::verified
         PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
-        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : BLACK_SCHOLES_PROCESS_REQUIRED;
+        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         final double /* @Real */variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
         double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
         double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(ex.lastDate());
         double /* @Real */spot = process.stateVariable().getLink().evaluate();
+        QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         double /* @Real */strike = payoff.strike();
 
         if (payoff.optionType()==Option.Type.PUT) {

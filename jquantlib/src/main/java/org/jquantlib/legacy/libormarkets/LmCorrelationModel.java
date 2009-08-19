@@ -1,9 +1,9 @@
 /*
- Copyright (C) 
+ Copyright (C)
  2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,7 +16,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -26,9 +26,9 @@ package org.jquantlib.legacy.libormarkets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.JQuantlib;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
+import org.jquantlib.math.matrixutilities.PseudoSqrt;
 import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
 import org.jquantlib.model.Parameter;
 
@@ -37,7 +37,7 @@ public abstract class LmCorrelationModel {
     protected int size_;
     protected List<Parameter> arguments_;
 
-    public LmCorrelationModel(int size, int nArguments) {
+    public LmCorrelationModel(final int size, final int nArguments) {
         this.size_ = size;
         this.arguments_ = new ArrayList<Parameter>(nArguments);
     }
@@ -55,16 +55,16 @@ public abstract class LmCorrelationModel {
     }
 
     public Matrix pseudoSqrt(
-    /* @Time */double t, final Array x) {
-        return JQuantlib.pseudoSqrt(this.correlation(t, x), SalvagingAlgorithm.Spectral);
+    /* @Time */final double t, final Array x) {
+        return PseudoSqrt.pseudoSqrt(this.correlation(t, x), SalvagingAlgorithm.Spectral);
     }
 
-    public double correlation(int i, int j, /* @Time */double t, final Array x) {
+    public double correlation(final int i, final int j, /* @Time */final double t, final Array x) {
         // inefficient implementation, please overload in derived classes
         return correlation(t, x).get(i, j);
     }
 
-    public double correlation(int i, int j, /* @Time */double t) {
+    public double correlation(final int i, final int j, /* @Time */final double t) {
         // inefficient implementation, please overload in derived classes
         return correlation(t, new Array()).get(i, j);
     }
@@ -73,7 +73,7 @@ public abstract class LmCorrelationModel {
     /* @Time */double t, final Array x);
 
     public Matrix correlation(
-    /* @Time */double t) {
+    /* @Time */final double t) {
         return correlation(t, new Array());
     }
 

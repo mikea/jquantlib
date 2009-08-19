@@ -22,6 +22,7 @@
 
 package org.jquantlib.math.integrals;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Ops;
 
 /**
@@ -172,7 +173,7 @@ public class TabulatedGaussLegendre {
             order_=order; x_=x20; w_=w20; n_=n20;
             break;
         default:
-            throw new AssertionError("order not supported"); // TODO: message
+            throw new LibraryException("order not supported"); // QA:[RG]::verified // TODO: message
         }
     }
 

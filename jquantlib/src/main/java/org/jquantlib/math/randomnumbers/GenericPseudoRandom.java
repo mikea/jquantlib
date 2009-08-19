@@ -43,12 +43,13 @@ package org.jquantlib.math.randomnumbers;
 
 import java.lang.reflect.Constructor;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 
 /**
  * @param <RNG> represents the RandomNumberGenerator<T>
  * @param <IC> represents the InverseCumulative
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC extends InverseCumulative> {
@@ -94,7 +95,7 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
             final Constructor<RNG> c = rngClass.getConstructor(long.class);
             rng = c.newInstance(seed);
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
 
         // instantiate a RandomSequenceGenerator given a RNG type
@@ -105,7 +106,7 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
             final Constructor<RandomSequenceGenerator<RNG>> c = rsgClass.getConstructor(int.class, rng.getClass());
             rsg = c.newInstance(dimension, rng);
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
 
         // instantiate a InverseCumulative given its generic type (second generic parameter)
@@ -122,7 +123,7 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
                 ic = c.newInstance(rsg);
             }
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
         return (InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC>) ic;
     }

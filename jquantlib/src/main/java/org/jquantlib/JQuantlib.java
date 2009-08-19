@@ -1,9 +1,8 @@
 /*
- Copyright (C) 
- 2009 Ueli Hofstetter
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,28 +15,13 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib;
 
-import org.jquantlib.math.matrixutilities.Matrix;
-import org.jquantlib.math.matrixutilities.PseudoSqrt;
-import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
 
-//intended to serve as public interface for all functions in quantlib namespace
 public class JQuantlib {
-    
-    public static Matrix pseudoSqrt(final Matrix matrix,
-                                    SalvagingAlgorithm sa){
-        return PseudoSqrt.pseudoSqrt(matrix, sa);
-    }
-    
-    public static Matrix rankReducedSqrt(final Matrix matrix,
-            int maxRank,
-            int componentRetainedPercentage,
-            SalvagingAlgorithm sa){
-        return PseudoSqrt.rankReducedSqrt(matrix, maxRank, componentRetainedPercentage, sa);
-    }
+
 }

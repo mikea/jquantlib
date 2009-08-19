@@ -38,11 +38,13 @@
  */
 package org.jquantlib.pricingengines.vanilla;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.StrikedTypePayoff;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.jquantlib.pricingengines.BlackCalculator;
@@ -56,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * An Approximate Formula for Pricing American Options, Journal of Derivatives Winter 1999,  Ju, N.
  * <p>
  * Known issue, the case of zero interest rates causes a division by zero
- * 
+ *
  * @author <Richard Gomes>
  */
 public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
@@ -88,19 +90,20 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 
     @Override
     public void calculate() {
-        assert arguments.exercise.type()==Exercise.Type.AMERICAN : NOT_AN_AMERICAN_OPTION;
-        assert arguments.exercise instanceof AmericanExercise : NON_AMERICAN_EXERCISE_GIVEN;
+        QL.require(arguments.exercise.type()==Exercise.Type.AMERICAN , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
+        QL.require(arguments.exercise instanceof AmericanExercise , NON_AMERICAN_EXERCISE_GIVEN); // QA:[RG]::verified
         final AmericanExercise ex = (AmericanExercise)arguments.exercise;
-        assert !ex.payoffAtExpiry() : PAYOFF_AT_EXPIRY_NOT_HANDLED;
-        assert arguments.payoff instanceof StrikedTypePayoff : NON_STRIKE_PAYOFF_GIVEN;
+        QL.require(!ex.payoffAtExpiry() , PAYOFF_AT_EXPIRY_NOT_HANDLED); // QA:[RG]::verified
+        QL.require(arguments.payoff instanceof StrikedTypePayoff , NON_STRIKE_PAYOFF_GIVEN); // QA:[RG]::verified
         final StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
-        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : BLACK_SCHOLES_PROCESS_REQUIRED;
+        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         final double /* @Real */variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
         final double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
         final double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(ex.lastDate());
         final double /* @Real */spot = process.stateVariable().getLink().evaluate();
+        QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         final double /* @Real */forwardPrice = spot * dividendDiscount / riskFreeDiscount;
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
@@ -152,20 +155,11 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
                 phi = -1;
                 break;
             default:
-                throw new AssertionError(UNKNOWN_OPTION_TYPE);
+                throw new LibraryException(UNKNOWN_OPTION_TYPE); // QA:[RG]::verified
             }
 
             // TODO: study how zero interest rate could be handled
-            assert h != 0.0 : DIVIDING_BY_ZERO_INTEREST_RATE;
-
-            // TODO: code review :: please verify against original QL/C++ code
-            /*
-                Workaround ????
-			    if(h == 0.0){
-			        logger.warn("h equals zero, use MIN_VALUE");
-			        h = Double.MIN_VALUE;
-			    }
-             */
+            QL.ensure(h != 0.0 , DIVIDING_BY_ZERO_INTEREST_RATE); // QA:[RG]::verified
 
             final double /* @Real */temp_root = Math.sqrt((beta - 1) * (beta - 1) + (4 * alpha) / h);
             final double /* @Real */lambda = (-(beta - 1) + phi * temp_root) / 2;

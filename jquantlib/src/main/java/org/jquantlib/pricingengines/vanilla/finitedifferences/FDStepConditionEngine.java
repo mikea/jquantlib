@@ -22,6 +22,7 @@ package org.jquantlib.pricingengines.vanilla.finitedifferences;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.math.SampledCurve;
 import org.jquantlib.math.matrixutilities.Array;
@@ -39,7 +40,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 public abstract class FDStepConditionEngine extends FDVanillaEngine {
     protected StepCondition<Array> stepCondition;
@@ -97,7 +98,7 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
         controlPrices.setValues(arraySet.get(1).clone());
 
         final StrikedTypePayoff striked_payoff = (StrikedTypePayoff) (payoff);
-        assert striked_payoff != null : "non-striked payoff given";
+        QL.require(striked_payoff != null , "non-striked payoff given"); // QA:[RG]::verified // TODO: message
 
         final double variance = process.blackVolatility().getLink().blackVariance(exerciseDate, striked_payoff.strike());
         final double dividendDiscount = process.dividendYield().getLink().discount(exerciseDate);

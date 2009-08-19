@@ -41,15 +41,16 @@ package org.jquantlib.pricingengines.arguments;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.pricingengines.PricingEngine;
 
 /**
  * Keeps arguments used by {@link PricingEngine}s and necessary for Option valuation
- * 
+ *
  * @note Public fields as this class works pretty much as Data Transfer Objects
- * 
+ *
  * @author Richard Gomes
  */
 //TODO :: remove std::vector<Time> stoppingTimes
@@ -73,14 +74,14 @@ public class OptionArguments extends Arguments {
 
     /**
      * Represents the {@link Payoff} policy to be used
-     * 
+     *
      * @see Payoff
      */
     public Payoff payoff;
 
     /**
      * Represent the {@link Exercise} dates
-     * 
+     *
      * @see Exercise
      */
     public Exercise exercise;
@@ -95,7 +96,7 @@ public class OptionArguments extends Arguments {
 
     @Override
     public void validate() /*@ReadOnly*/ {
-        assert payoff != null : "No payoff given"; //TODO: message
+        QL.require(payoff != null , "No payoff given"); // QA:[RG]::verified //TODO: message
     }
 
 }

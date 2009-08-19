@@ -22,10 +22,12 @@
 
 package org.jquantlib.math.statistics;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.InverseCumulativeNormal;
 import org.jquantlib.math.distributions.NormalDistribution;
-
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: please verify against QL/C++ code
 public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussianStatistics*/ {
 
     private final IStatistics statistics;
@@ -56,7 +58,7 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
     // inline definitions
     /*
      * ! returns the variance of observations below target \f[ \frac{\sum w_i (min(0, x_i-target))^2 }{\sum w_i}. \f]
-     * 
+     *
      * See Dembo, Freeman "The Rules Of Risk", Wiley (2001)
      */
 
@@ -79,8 +81,8 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
      * \exp (-u^2/2) du \f]
      */
     public double gaussianPercentile(final double percentile) {
-        assert percentile > 0.0 : "percentile must be > 0.0";
-        assert percentile < 1.0 : "percentile must be < 1.0";
+        QL.require(percentile > 0.0 , "percentile must be > 0.0"); // QA:[RG]::verified // TODO: message
+        QL.require(percentile < 1.0 , "percentile must be < 1.0"); // QA:[RG]::verified // TODO: message
         final InverseCumulativeNormal gInverse = new InverseCumulativeNormal(statistics.mean(), statistics.standardDeviation());
         return gInverse.op(percentile);
     }
@@ -92,7 +94,7 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
 
     // ! gaussian-assumption Potential-Upside at a given percentile
     public double gaussianPotentialUpside(final double percentile) {
-        assert percentile >= 0.9 && percentile < 1.0 : "percentile out of range [0.9, 1)";
+        QL.require(percentile >= 0.9 && percentile < 1.0 , "percentile out of range [0.9, 1)"); // QA:[RG]::verified // TODO: message
         final double result = gaussianPercentile(percentile);
         // potential upside must be a gain, i.e., floored at 0.0
         return Math.max(result, 0.0);
@@ -113,11 +115,11 @@ public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussian
     // ! gaussian-assumption Expected Shortfall at a given percentile
     /*
      * ! Assuming a gaussian distribution it returns the expected loss in case that the loss exceeded a VaR threshold,
-     * 
+     *
      * \f[ \mathrm{E}\left[ x \;|\; x < \mathrm{VaR}(p) \right], \f]
-     * 
+     *
      * that is the average of observations below the given percentile \f$ p \f$. Also know as conditional value-at-risk.
-     * 
+     *
      * See Artzner, Delbaen, Eber and Heath, "Coherent measures of risk", Mathematical Finance 9 (1999)
      */
     /* ! \pre percentile must be in range [90%-100%) */

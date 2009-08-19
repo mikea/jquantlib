@@ -39,7 +39,7 @@ import org.jquantlib.util.Observable;
  * 
  * @author Srinivas Hasti
  */
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class RelativeDateRateHelper<T extends TermStructure> extends RateHelper<T> {
 
@@ -57,7 +57,7 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
     protected RelativeDateRateHelper() {
         super();
         
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
         this.evaluationDate.addObserver(this);
     }

@@ -39,8 +39,10 @@
 
 package org.jquantlib.termstructures;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
@@ -51,7 +53,7 @@ import org.jquantlib.util.Date;
 /**
  * This abstract class defines the interface of concrete rate structures which
  * will be derived from this one.
- * 
+ *
  * <p>
  * Rates are assumed to be annual continuous compounding.
  */
@@ -66,9 +68,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
 
     /**
      * See the TermStructure documentation for issues regarding constructors.
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @see TermStructure#TermStructure() documentation for issues regarding constructors.
      */
     protected AbstractYieldTermStructure() {
@@ -79,12 +81,12 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      * See the TermStructure documentation for issues regarding constructors.
      * <p>
      * Initialize with a {@link DayCounter} with <b>no explicit reference date</b>.
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @note Term structures initialized by means of this constructor must manage
      * their own reference date by overriding the getReferenceDate() method.
-     * 
+     *
      * @see TermStructure#TermStructure() documentation for issues regarding
      *      constructors.
      */
@@ -96,9 +98,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      * See the TermStructure documentation for issues regarding constructors.
      * <p>
      * Initialize with a fixed reference date
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @note TermStructure#TermStructure() documentation for issues regarding constructors.
      */
     protected AbstractYieldTermStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
@@ -107,9 +109,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
 
     /**
      * See the TermStructure documentation for issues regarding constructors.
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @param referenceDate
      * @param cal
      * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
@@ -120,9 +122,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
 
     /**
      * See the TermStructure documentation for issues regarding constructors.
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @param referenceDate
      * @param dc
      * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
@@ -133,9 +135,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
 
     /**
      * See the TermStructure documentation for issues regarding constructors.
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @param referenceDate
      * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
      */
@@ -145,9 +147,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
 
     /**
      * Calculate the reference date based on the global evaluation date
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @note TermStructure#TermStructure() documentation for issues regarding
      *      constructors.
      */
@@ -157,9 +159,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
 
     /**
      * See the TermStructure documentation for issues regarding constructors.
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @param settlementDays
      * @param cal
      * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
@@ -170,9 +172,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
 
     /**
      * See the TermStructure documentation for issues regarding constructors.
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @param settlementDays
      * @param dc
      * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
@@ -183,9 +185,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
 
     /**
      * See the TermStructure documentation for issues regarding constructors.
-     * 
+     *
      * @category constructors
-     * 
+     *
      * @param settlementDays
      * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
      */
@@ -200,7 +202,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
 
     /**
      * See the TermStructure documentation for issues regarding constructors.
-     * 
+     *
      * @category calculations
      */
     protected abstract /*DiscountFactor*/ double discountImpl(final /*@Time*/ double t);
@@ -300,7 +302,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
             /*@CompoundFactor*/ final double compound = discount1 / discount2;
             return InterestRate.impliedRate(compound, d1, d2, dayCounter, comp, freq);
         } else
-            throw new AssertionError("d1 later than d2");
+            throw new LibraryException("d1 later than d2"); // QA:[RG]::verified // TODO: message
     }
 
     /* (non-Javadoc)
@@ -328,7 +330,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
         /*@Time*/ final double t1 = time1;
         /*@Time*/ double t2 = time2;
         if (t2==t1) t2 = t1+0.0001;
-        assert t1 <= t2 : "time1 must be <= time2";
+        QL.require(t1 <= t2 , "time1 must be <= time2"); // QA:[RG]::verified // TODO: message
         /*@DiscountFactor*/ final double discount1 = discount(t1, extrapolate);
         /*@DiscountFactor*/ final double discount2 = discount(t2, extrapolate);
         /*@CompoundFactor*/ final double compound = discount1 / discount2;
@@ -420,7 +422,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      */
     @Override
     public /*@Rate*/ double parRate(final /*@Time*/ double[] times, final Frequency frequency, final boolean extrapolate) {
-        assert times.length >= 2 : "at least two times are required";
+        QL.require(times.length >= 2 , "at least two times are required"); // QA:[RG]::verified // TODO: message
         /*@Time*/ final double last = times[times.length - 1];
         checkRange(last, extrapolate);
         /*@DiscountFactor*/ double sum = 0.0;

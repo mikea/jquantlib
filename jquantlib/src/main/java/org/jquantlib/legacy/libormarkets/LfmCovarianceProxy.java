@@ -1,5 +1,6 @@
 package org.jquantlib.legacy.libormarkets;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.integrals.GaussKronrodAdaptive;
 import org.jquantlib.math.matrixutilities.Array;
@@ -92,7 +93,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
                   // slow numerical integration routine
               }
 
-          assert !x.empty() : "can not handle given x here"; // TODO: message
+          QL.require(!x.empty() , "can not handle given x here"); // QA:[RG]::verified // TODO: message
 
           double tmp=0.0;
           final Var_Helper helper = new Var_Helper(this, i, j);

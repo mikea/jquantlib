@@ -228,7 +228,7 @@ public class Array extends Cells {
      * @return a new Array containing a copy of region
      */
     public Array range(final int pos0, final int pos1) {
-        QL.require(pos0 >= 0 && pos1 > pos0 && pos1 <= this.size,  INVALID_ARGUMENTS); //TODO: message
+        QL.require(pos0 >= 0 && pos1 > pos0 && pos1 <= this.size,  INVALID_ARGUMENTS); // QA:[RG]::verified
         final int ncols = pos1-pos0;
         final Array result = new Array(ncols);
         System.arraycopy(this.data, pos0, result.data, 0, ncols);
@@ -257,7 +257,7 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
     public double accumulate(final int from, final int to, final double init) {
-        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS);
+        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
         double sum = init;
         for (int i=from; i<to; i++)
             sum += this.data[i];
@@ -276,7 +276,7 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
      */
     public double min(final int from, final int to) {
-        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS);
+        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
         double result = this.data[from];
         for (int i=from+1; i<to; i++) {
             final double tmp = this.data[i];
@@ -297,7 +297,7 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a>
      */
     public double max(final int from, final int to) {
-        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS);
+        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
         double result = this.data[from];
         for (int i=from+1; i<to; i++) {
             final double tmp = data[i];
@@ -330,7 +330,7 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
     public final Array adjacentDifference(final int from) {
-        QL.require(from>=0 && from <= this.size ,  INVALID_ARGUMENTS);
+        QL.require(from>=0 && from <= this.size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
         final Array diff = new Array(this.size-from);
         for (int i = from; i < this.size; i++) {
             final double curr = this.data[i];
@@ -437,7 +437,7 @@ public class Array extends Cells {
      * @return this
      */
     public Array transform(final int from, final int to, final Ops.DoubleOp f) {
-        QL.require(from>=0 && from<=to && to<=this.size && f!=null,  INVALID_ARGUMENTS);
+        QL.require(from>=0 && from<=to && to<=this.size && f!=null,  INVALID_ARGUMENTS); // QA:[RG]::verified
         if (f instanceof Identity) return this;
         for (int i = from; i < to; i++)
             data[i] = f.op(data[i]);
@@ -481,7 +481,7 @@ public class Array extends Cells {
      * @return this
      */
     public Array subAssign(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++) {
             this.data[i] -= another.data[i];
         }
@@ -502,21 +502,21 @@ public class Array extends Cells {
     }
 
     public Array addAssign(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
             data[i] += another.data[i];
         return this;
     }
 
     public Array subAssign(final Matrix another) {
-        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
             data[i] -= another.data[i];
         return this;
     }
 
     public Array mulAssign(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
             data[i] *= another.data[i];
         return this;
@@ -524,7 +524,7 @@ public class Array extends Cells {
 
 
     public Array divAssign(final Matrix another) {
-        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
             data[i] /= another.data[i];
         return this;
@@ -577,7 +577,7 @@ public class Array extends Cells {
     }
 
     public Array add(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.size);
         for (int i=0; i<size; i++)
             result.data[i] = this.data[i] + another.data[i];
@@ -585,7 +585,7 @@ public class Array extends Cells {
     }
 
     public Array sub(final Array another) {
-        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.size);
         for (int i=0; i<size; i++)
             result.data[i] = this.data[i] - another.data[i];
@@ -593,7 +593,7 @@ public class Array extends Cells {
     }
 
     public Array mul(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.size);
         for (int i=0; i<size; i++)
             result.data[i] = this.data[i] * another.data[i];
@@ -602,7 +602,7 @@ public class Array extends Cells {
 
 
     public Array div(final Matrix another) {
-        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.size);
         for (int i=0; i<size; i++)
             result.data[i] = this.data[i] / another.data[i];
@@ -618,7 +618,7 @@ public class Array extends Cells {
     //    *     mul        Array   Matrix   Array
 
     public Array mul(final Matrix matrix) {
-        QL.require(this.size == matrix.rows, MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.size == matrix.rows, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.cols);
         for (int i=0; i<this.size; i++) {
             int addr = matrix.addr(i,0);
@@ -714,7 +714,7 @@ public class Array extends Cells {
      * @see <a href="http://en.wikipedia.org/wiki/Dot_product">Dot Product</a>
      */
     public double dotProduct(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         return innerProduct(another, 0, size);
     }
 
@@ -730,7 +730,7 @@ public class Array extends Cells {
      * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
      */
     public double innerProduct(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         return innerProduct(another, 0, size);
     }
 

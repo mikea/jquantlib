@@ -23,9 +23,11 @@
 package org.jquantlib.cashflow;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.indexes.InterestRateIndex;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.TimeUnit;
@@ -33,7 +35,7 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class IborCoupon extends FloatingRateCoupon {
 
@@ -78,8 +80,8 @@ public class IborCoupon extends FloatingRateCoupon {
                 gearing, spread, refPeriodStart, refPeriodEnd,
                 dayCounter, isInArrears);
 
-        // TODO: code review :: please verify against original QL/C++ code
-        throw new AssertionError("Missing constructors");
+        // TODO: code review :: please verify against QL/C++ code
+        throw new LibraryException("Missing constructors"); // QA:[RG]::verified // TODO: message
     }
 
     @Override
@@ -92,7 +94,7 @@ public class IborCoupon extends FloatingRateCoupon {
             return index_.fixing(fixingDate());
         else {
             final Handle<YieldTermStructure> termStructure = index_.termStructure();
-            assert termStructure != null : null_term_structure;
+            QL.require(termStructure != null , null_term_structure);  // QA:[RG]::verified // TODO: message
             final Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
             final Date fixing_date = fixingDate();
             if (fixing_date.lt(today)) {
@@ -100,11 +102,11 @@ public class IborCoupon extends FloatingRateCoupon {
                 // FIXME ...
 
                 //TODO: Code review :: incomplete code
-                if (true)
+                if (System.getProperty("EXPERIMENTAL") == null)
                     throw new UnsupportedOperationException("Work in progress");
 
                 final double pastFixing = 0;// IndexManager.getInstance().getHistory( index_.getName())[fixing_date.g];
-                assert pastFixing > 0 : "Missing fixing";
+                QL.require(pastFixing > 0 , "Missing fixing");  // QA:[RG]::verified // TODO: message
                 return pastFixing;
             }
             if (fixing_date == today)

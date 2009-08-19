@@ -22,6 +22,7 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.math.statistics;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
@@ -252,15 +253,15 @@ public class GenericSequenceStatistics /* TODO: implements ISequenceStatistics *
 
     public Matrix covariance() {
         final double sampleWeight = weightSum();
-        assert sampleWeight > 0.0 : unsufficient_sample_weight;
+        QL.require(sampleWeight > 0.0 , unsufficient_sample_weight); // QA:[RG]::verified
 
         final double sampleNumber = samples();
-        assert sampleNumber > 1.0 : unsufficient_sample_number;
+        QL.require(sampleNumber > 1.0 , unsufficient_sample_number); // QA:[RG]::verified
 
         final Array m = null;// TODO: code review :: mean();
         final double inv = 1.0 / sampleWeight;
 
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         throw new UnsupportedOperationException("work in progress");
         //        final Matrix result = quadraticSum_.mul(inv);
         //        result.subAssign(result.outerProduct(m));

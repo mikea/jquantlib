@@ -26,6 +26,7 @@ package org.jquantlib.time;
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
+import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.NonNegative;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.math.Closeness;
@@ -62,10 +63,13 @@ public class TimeGrid {
      * @param steps
      */
     public TimeGrid(@Time @NonNegative final double end, @NonNegative final int steps) {
+
+        // THIS COMMENT COMES FROM QuantLib/C++ code
+        //
         // We seem to assume that the grid begins at 0.
         // Let's enforce the assumption for the time being
         // (even though I'm not sure that I agree.)
-        assert end > 0.0 : "negative times not allowed"; // FIXME: message
+        QL.require(end > 0.0 , "negative times not allowed"); // QA:[RG]::verified // FIXME: message
 
         /*@Time*/ final double dt = end/steps;
         this.times = new Array(steps+1);
@@ -94,12 +98,12 @@ public class TimeGrid {
         this.mandatoryTimes = array.clone();
         mandatoryTimes.sort();
 
+        // THIS COMMENT COMES FROM QuantLib/C++ code
+        //
         // We seem to assume that the grid begins at 0.
         // Let's enforce the assumption for the time being
         // (even though I'm not sure that I agree.)
-
-        if (mandatoryTimes.first() < 0.0)
-            throw new ArithmeticException("negative times not allowed");
+        QL.require(mandatoryTimes.first() < 0.0 , "negative times not allowed"); // QA:[RG]::verified // TODO: message
 
         final List<Double> e = new ArrayDoubleList(mandatoryTimes.size());
         double prev = mandatoryTimes.get(0);
@@ -143,10 +147,12 @@ public class TimeGrid {
         mandatoryTimes = array.clone();
         mandatoryTimes.sort();
 
+        // THIS COMMENT COMES FROM QuantLib/C++ code
+        //
         // We seem to assume that the grid begins at 0.
         // Let's enforce the assumption for the time being
         // (even though I'm not sure that I agree.)
-        assert mandatoryTimes.first() >= 0.0 : "negative times not allowed";
+        QL.require(mandatoryTimes.first() >= 0.0 , "negative times not allowed"); // QA:[RG]::verified // TODO: message
 
         double dtMax;
         // The resulting timegrid have points at times listed in the input

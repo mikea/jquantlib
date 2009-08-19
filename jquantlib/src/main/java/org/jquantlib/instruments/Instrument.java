@@ -40,6 +40,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.QL;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.util.LazyObject;
 
@@ -99,13 +100,13 @@ public abstract class Instrument extends LazyObject {
 
     public final/*@Price*/double getNPV() /*@ReadOnly*/{
         calculate();
-        assert !Double.isNaN(this.NPV) : "NPV not provided";
+        QL.require(!Double.isNaN(this.NPV) , "NPV not provided");  // QA:[RG]::verified // TODO: message
         return NPV;
     }
 
     public final/*@Price*/double getErrorEstimate() /*@ReadOnly*/{
         calculate();
-        assert !Double.isNaN(this.errorEstimate) : "error estimate not provided";
+        QL.require(!Double.isNaN(this.errorEstimate) , "error estimate not provided"); // QA:[RG]::verified // TODO: message
         return errorEstimate;
     }
 

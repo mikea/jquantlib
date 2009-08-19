@@ -45,6 +45,9 @@ package org.jquantlib.time;
 import java.util.Formatter;
 import java.util.Locale;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
+
 /**
  * Time period to represent time by days, month and years as specified by
  * TimeUnit.
@@ -157,7 +160,7 @@ public class Period {
             length = 1; // FIXME: review
             break;
         default:
-            throw new AssertionError(UNKNOWN_FREQUENCY);
+            throw new LibraryException(UNKNOWN_FREQUENCY); // QA:[RG]::verified
         }
     }
 
@@ -191,10 +194,10 @@ public class Period {
 
         switch (units) {
         case YEARS:
-            assert length == 1 : CANNOT_INSTANTIATE;
+            QL.require(length == 1 , CANNOT_INSTANTIATE); // QA:[RG]::verified
             return Frequency.ANNUAL;
         case MONTHS:
-            assert (12 % length) == 0 && (length <= 12) : CANNOT_INSTANTIATE;
+            QL.require((12 % length) == 0 && (length <= 12) , CANNOT_INSTANTIATE); // QA:[RG]::verified
             return Frequency.valueOf(12 / length);
         case WEEKS:
             if (length == 1)
@@ -202,12 +205,12 @@ public class Period {
             else if (length == 2)
                 return Frequency.BI_WEEKLY;
             else
-                throw new AssertionError(CANNOT_INSTANTIATE);
+                throw new LibraryException(CANNOT_INSTANTIATE); // QA:[RG]::verified
         case DAYS:
-            assert length == 1 : CANNOT_INSTANTIATE;
+            QL.require(length == 1 , CANNOT_INSTANTIATE); // QA:[RG]::verified
             return Frequency.DAILY;
         default:
-            throw new AssertionError(UNKNOWN_TIME_UNIT);
+            throw new LibraryException(UNKNOWN_TIME_UNIT); // QA:[RG]::verified
         }
     }
 
@@ -293,11 +296,11 @@ public class Period {
                 if (this.length < p2.length * 28)
                     return true;
                 else
-                    throw new AssertionError(UNDECIDABLE_COMPARISON);
+                    throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
             case YEARS:
                 return (this.length < p2.length * 365);
             default:
-                throw new AssertionError(UNKNOWN_UNITS);
+                throw new LibraryException(UNKNOWN_UNITS); // QA:[RG]::verified
             }
         case WEEKS:
             switch (p2.units) {
@@ -309,14 +312,14 @@ public class Period {
                 if (this.length * 7 < p2.length * 28)
                     return true;
                 else
-                    throw new AssertionError(UNDECIDABLE_COMPARISON);
+                    throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
             case YEARS:
                 if (this.length * 7 < p2.length * 365)
                     return true;
                 else
-                    throw new AssertionError(UNDECIDABLE_COMPARISON);
+                    throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
             default:
-                throw new AssertionError(UNKNOWN_UNITS);
+                throw new LibraryException(UNKNOWN_UNITS); // QA:[RG]::verified
             }
         case MONTHS:
             switch (p2.units) {
@@ -328,18 +331,18 @@ public class Period {
                 else if ((this.length != 0) && p2.length < 28)
                     return false;
                 else
-                    throw new AssertionError(UNDECIDABLE_COMPARISON);
+                    throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
             case WEEKS:
                 if (this.length * 31 < p2.length * 7)
                     return true;
                 else
-                    throw new AssertionError(UNDECIDABLE_COMPARISON);
+                    throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
             case MONTHS:
                 return (this.length < p2.length);
             case YEARS:
                 return (this.length < p2.length * 12);
             default:
-                throw new AssertionError(UNKNOWN_UNITS);
+                throw new LibraryException(UNKNOWN_UNITS); // QA:[RG]::verified
             }
         case YEARS:
             switch (p2.units) {
@@ -350,21 +353,21 @@ public class Period {
                 else if ((this.length != 0) && p2.length < 365)
                     return false;
                 else
-                    throw new AssertionError(UNDECIDABLE_COMPARISON);
+                    throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
             case WEEKS:
                 if (this.length * 366 < p2.length * 7)
                     return true;
                 else
-                    throw new AssertionError(UNDECIDABLE_COMPARISON);
+                    throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
             case MONTHS:
                 return (this.length * 12 < p2.length);
             case YEARS:
                 return (this.length < p2.length);
             default:
-                throw new AssertionError(UNKNOWN_UNITS);
+                throw new LibraryException(UNKNOWN_UNITS); // QA:[RG]::verified
             }
         default:
-            throw new AssertionError(UNKNOWN_UNITS);
+            throw new LibraryException(UNKNOWN_UNITS); // QA:[RG]::verified
         }
     }
 
@@ -438,7 +441,7 @@ public class Period {
             case YEARS:
                 break;
             default:
-                assert false : UNKNOWN_TIME_UNIT;
+                QL.require(false , UNKNOWN_TIME_UNIT); // QA:[RG]::verified
             }
     }
 

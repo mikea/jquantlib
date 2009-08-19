@@ -22,7 +22,9 @@
 
 package org.jquantlib.termstructures;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitable;
@@ -36,7 +38,7 @@ import org.jquantlib.util.Visitor;
  * structures which will be derived from this one.
  * <p>
  * Volatilities are assumed to be expressed on an annual basis.
- * 
+ *
  * @author Richard Gomes
  */
 // FIXME: code review
@@ -139,12 +141,12 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
 
     private final void checkRange(final /*@Time*/ double time, final /*@Price*/ double strike, final boolean extrapolate) {
         super.checkRange(time, extrapolate);
-        assert extrapolate || allowsExtrapolation() || (strike >= minStrike()) && (strike <= maxStrike()) : "strike is outside curve domain";
+        QL.require(extrapolate || allowsExtrapolation() || (strike >= minStrike()) && (strike <= maxStrike()) , "strike is outside curve domain"); // QA:[RG]::verified // TODO: message
     }
 
     /**
      * Future (a.k.a. forward) volatility
-     * 
+     *
      * @param date1
      * @param date2
      * @param strike
@@ -152,7 +154,7 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
      * @return
      */
     public final /*@Volatility*/ double blackForwardVol(final Date date1, final Date date2, final /*@Price*/ double strike, final boolean extrapolate) {
-        assert date1.le(date2): "date1 later than date2";
+        QL.require(date1.le(date2), "date1 later than date2"); // QA:[RG]::verified // TODO: message
         /*@Time*/ final double time1 = timeFromReference(date1);
         /*@Time*/ final double time2 = timeFromReference(date2);
         return blackForwardVol(time1, time2, strike, extrapolate);
@@ -160,7 +162,7 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
 
     /**
      * Future (a.k.a. forward) volatility
-     * 
+     *
      * @param time1
      * @param time2
      * @param strike
@@ -170,7 +172,7 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
     public final /*@Volatility*/ double blackForwardVol(final /*@Time*/ double time1, final /*@Time*/ double time2, final /*@Price*/ double strike, final boolean extrapolate) {
         /*@Time*/ final double t1 = time1;
         /*@Time*/ final double t2 = time2;
-        assert t1 <= t2 : "t1 later than t2";
+        QL.require(t1 <= t2 , "t1 later than t2"); // QA:[RG]::verified // TODO: message
         checkRange(time2, strike, extrapolate);
         if (t1==t2) {
             if (t1==0.0) {
@@ -181,20 +183,20 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
                 final double epsilon = Math.min(1.0e-5, t1);
                 /*@Variance*/ final double var1 = blackVarianceImpl(t1-epsilon, strike);
                 /*@Variance*/ final double var2 = blackVarianceImpl(t1+epsilon, strike);
-                assert var2 >= var1 : "variances must be non-decreasing"; // TODO: message
+                QL.require(var2 >= var1 , "variances must be non-decreasing"); // QA:[RG]::verified // TODO: message
                 return  Math.sqrt((var2-var1) / (2*epsilon));
             }
         } else {
             /*@Variance*/ final double var1 = blackVarianceImpl(time1, strike);
             /*@Variance*/ final double var2 = blackVarianceImpl(time2, strike);
-            assert var2 >= var1 : "variances must be non-decreasing"; // TODO: message
+            QL.require(var2 >= var1 , "variances must be non-decreasing"); // QA:[RG]::verified // TODO: message
             return  Math.sqrt((var2-var1)/(t2-t1));
         }
     }
 
     /**
      * Future (a.k.a. forward) variance
-     * 
+     *
      * @param date1
      * @param date2
      * @param strike
@@ -202,7 +204,7 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
      * @return
      */
     public final /*@Variance*/ double blackForwardVariance(final Date date1, final Date date2, final /*@Price*/ double strike, final boolean extrapolate) {
-        assert date1.le(date2) : "date1 later than date2";
+        QL.require(date1.le(date2) , "date1 later than date2"); // QA:[RG]::verified // TODO: message
         /*@Time*/ final double time1 = timeFromReference(date1);
         /*@Time*/ final double time2 = timeFromReference(date2);
         return blackForwardVariance(time1, time2, strike, extrapolate);
@@ -210,7 +212,7 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
 
     /**
      * Future (a.k.a. forward) variance
-     * 
+     *
      * @param time1
      * @param time2
      * @param strike
@@ -220,11 +222,11 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
     public final /*@Variance*/ double blackForwardVariance(final /*@Time*/ double time1, final /*@Time*/ double time2, final /*@Price*/ double strike, final boolean extrapolate) {
         /*@Time*/ final double t1 = time1;
         /*@Time*/ final double t2 = time2;
-        assert t1<=t2 : "t1 later than t2";
+        QL.require(t1<=t2 , "t1 later than t2"); // QA:[RG]::verified // TODO: message
         checkRange(time2, strike, extrapolate);
         /*@Variance*/ final double v1 = blackVarianceImpl(time1, strike);
         /*@Variance*/ final double v2 = blackVarianceImpl(time2, strike);
-        assert v2 >= v1 : "variances must be non-decreasing";
+        QL.require(v2 >= v1 , "variances must be non-decreasing"); // QA:[RG]::verified // TODO: message
         return v2-v1;
     }
 
@@ -238,7 +240,7 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
         if (v1 != null)
             v1.visit(this);
         else
-            throw new AssertionError("not a Black-volatility term structure visitor");
+            throw new LibraryException("not a Black-volatility term structure visitor"); // QA:[RG]::verified // TODO: message
     }
 
 }

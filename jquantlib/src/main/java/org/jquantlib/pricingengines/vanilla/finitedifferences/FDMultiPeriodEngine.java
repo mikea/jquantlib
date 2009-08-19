@@ -23,6 +23,7 @@ package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.Event;
 import org.jquantlib.math.SampledCurve;
 import org.jquantlib.math.matrixutilities.Array;
@@ -115,8 +116,8 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         final double dateTolerance = 1e-6;
 
         if (dateNumber > 0) {
-            // TODO: code review :: please verify against original QL/C++ code
-            assert getDividendTime(0) > 0 : "first date cannot be negative";
+            // TODO: code review :: please verify against QL/C++ code
+            QL.require(getDividendTime(0) > 0 , "first date cannot be negative"); // QA:[RG]::verified // TODO: message
             if (getDividendTime(0) < getResidualTime() * dateTolerance) {
                 firstDateIsZero = true;
                 firstIndex = 0;
@@ -133,7 +134,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
 
             if (dateNumber >= 2)
                 for (int j = 1; j < dateNumber; j++)
-                    assert getDividendTime(j - 1) < getDividendTime(j) : "dates must be in strictly increasing order";
+                    QL.require(getDividendTime(j - 1) < getDividendTime(j) , "dates must be in strictly increasing order"); // QA:[RG]::verified // TODO: message
         }
 
         double dt = getResidualTime()/(timeStepPerPeriod*(dateNumber+1));

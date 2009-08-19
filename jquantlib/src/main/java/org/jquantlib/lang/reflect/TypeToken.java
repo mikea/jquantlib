@@ -26,6 +26,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import org.jquantlib.QL;
+
 
 /**
  * This class provides other classes the ability to retrieve runtime type information
@@ -79,9 +81,9 @@ public class TypeToken {
 
     static public Type getType(final Class<?> klass, final int pos) {
         final Type superclass = klass.getGenericSuperclass();
-        assert !(superclass instanceof Class) : ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED;
+        QL.require(!(superclass instanceof Class) , ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED); // QA:[RG]::verified
         final Type[] types = ((ParameterizedType) superclass).getActualTypeArguments();
-        assert pos < types.length : ReflectConstants.MISSING_GENERIC_PARAMETER_TYPE;
+        QL.require(pos < types.length , ReflectConstants.MISSING_GENERIC_PARAMETER_TYPE); // QA:[RG]::verified
         return types[pos];
     }
 
@@ -92,7 +94,7 @@ public class TypeToken {
     static public Class<?> getClazz(final Class<?> klass, final int pos) {
         final Type type = getType(klass, pos);
         final Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
-        assert ((clazz.getModifiers() & Modifier.ABSTRACT) == 0) : ReflectConstants.GENERIC_PARAMETER_MUST_BE_CONCRETE_CLASS;
+        QL.require(((clazz.getModifiers() & Modifier.ABSTRACT) == 0) , ReflectConstants.GENERIC_PARAMETER_MUST_BE_CONCRETE_CLASS); // QA:[RG]::verified
         return clazz;
     }
 

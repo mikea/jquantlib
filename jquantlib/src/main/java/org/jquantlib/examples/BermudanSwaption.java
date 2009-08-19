@@ -52,27 +52,34 @@ public class BermudanSwaption {
 		logger.info("\n\n::::: "+BermudanSwaption.class.getSimpleName()+" :::::");
 	}
 
-	public void run() throws Exception{
-		final StopClock clock = new StopClock();
-		clock.startClock();
+    public void run() throws Exception {
+        if (System.getProperty("EXPERIMENTAL")==null)
+            throw new UnsupportedOperationException("Work in progress");
 
-		final Date todaysDate = DateFactory.getFactory().getDate(15, FEBRUARY, 2002);
+        final StopClock clock = new StopClock();
+        clock.startClock();
 
-		// TODO: code review :: please verify against original QL/C++ code
-		final Calendar calendar = new AbstractCalendar(){
-			                    public String getName(){return "";}
-			                    public boolean isWeekend(final Weekday w){throw new UnsupportedOperationException();}};
+        final Date todaysDate = DateFactory.getFactory().getDate(15, FEBRUARY, 2002);
 
-		final Date settlementDate = DateFactory.getFactory().getDate(19, FEBRUARY, 2002);
-		Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(todaysDate);
+        // TODO: code review :: please verify against QL/C++ code
+        final Calendar calendar = new AbstractCalendar() {
+            public String getName() {
+                return "";
+            }
 
-		//TODO: Work in progress
+            public boolean isWeekend(final Weekday w) {
+                throw new UnsupportedOperationException();
+            }
+        };
 
+        final Date settlementDate = DateFactory.getFactory().getDate(19, FEBRUARY, 2002);
+        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(todaysDate);
 
+        // TODO: code review :: please verify against QL/C++ code
 
-		clock.stopClock();
-		clock.log();
-	}
+        clock.stopClock();
+        clock.log();
+    }
 
 	public static void main (final String [] args){
 		try{

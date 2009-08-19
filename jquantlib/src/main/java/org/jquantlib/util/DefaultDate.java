@@ -46,6 +46,8 @@ package org.jquantlib.util;
 import java.util.Formatter;
 import java.util.Locale;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
@@ -54,20 +56,20 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Date and time related classes, typedefs and enumerations
- * 
+ *
  * <p>
  * This class provides methods to inspect dates as well as methods and operators
  * which implement a limited date algebra (increasing and decreasing dates, and
  * calculating their difference).
- * 
+ *
  * @note This class extends Observable and is potentially harmful to performance
  *       due to the large number of Date objects that can be observable at the
  *       same time on some families of applications. A simple solution for this
  *       problem could be the implementation of an interface which enables this
  *       object to turn on and turn off the notification of its observers.
- * 
+ *
  * @see Observable
- * 
+ *
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
@@ -191,8 +193,8 @@ public class DefaultDate extends BaseDate {
 
     /**
      * This constructor is intended to be used by Date class itself.
-     * 
-     * 
+     *
+     *
      * @param value
      *            is a serial which corresponds to a Date
      */
@@ -202,7 +204,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Creates a new Date
-     * 
+     *
      * @param day
      *            is the day of month
      * @param month
@@ -216,7 +218,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Creates a new Date
-     * 
+     *
      * @param day
      *            is the day of month
      * @param month
@@ -230,7 +232,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Create Date instance form the given date
-     * 
+     *
      * @param date
      */
     public DefaultDate(final DefaultDate date) {
@@ -240,7 +242,7 @@ public class DefaultDate extends BaseDate {
     /**
      * This method is intended to calculate the integer value of a (day, month,
      * year)
-     * 
+     *
      * @param d
      *            is the day as a number
      * @param m
@@ -250,12 +252,12 @@ public class DefaultDate extends BaseDate {
      * @return
      */
     static private final int fromDMY(final int d, final int m, final int y) {
-        assert y > 1900 && y < 2100 : "year out of bound. It must be in [1901,2099]";
-        assert m > 0 && m < 13 : "month outside January-December range [1,12]";
+        QL.require(y > 1900 && y < 2100 , "year out of bound. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
+        QL.require(m > 0 && m < 13 , "month outside January-December range [1,12]"); // QA:[RG]::verified // TODO: message
         final boolean leap = isLeap(y);
         final int len = getMonthLength(m, leap);
         final int offset = getMonthOffset(m, leap);
-        assert d > 0 && d <= len : "day outside month day-range";
+        QL.ensure(d > 0 && d <= len , "day outside month day-range"); // QA:[RG]::verified // TODO: message
         final int result = d + offset + getYearOffset(y);
         return result;
     }
@@ -354,7 +356,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Returns a new Date which represents the current date of the system
-     * 
+     *
      * @return a new Date object which represents the current Date
      */
     static public final Date getTodaysDate() {
@@ -367,7 +369,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Returns the minimum Date allowed
-     * 
+     *
      * @return the minimum Date allowed
      */
     public static final Date getMinDate() {
@@ -376,7 +378,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Returns the maximum Date allowed
-     * 
+     *
      * @return the maximum Date allowed
      */
     public static final Date getMaxDate() {
@@ -389,7 +391,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Tests if a certain year is a leap year
-     * 
+     *
      * @param y
      *            is the year
      * @return <code>true</code> if a leap year; <code>false</code>
@@ -410,7 +412,7 @@ public class DefaultDate extends BaseDate {
     /**
      * Returns a new Date which is the n-th week day of a month/year represented
      * by current date
-     * 
+     *
      * @param nth
      *            is the desired week
      * @param dayOfWeek
@@ -427,7 +429,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Returns a new Date which is the n-th week day of a certain month/year
-     * 
+     *
      * @param nth
      *            is the desired week
      * @param dayOfWeek
@@ -444,7 +446,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Returns a new Date which is the n-th week day of a certain month/year
-     * 
+     *
      * @param nth
      *            is the desired week
      * @param dayOfWeek
@@ -456,8 +458,8 @@ public class DefaultDate extends BaseDate {
      * @return a new Date which is the n-th week day of a certain month/year
      */
     public static final DefaultDate getNthWeekday(final int nth, final Weekday dayOfWeek, final int month, final int year) {
-        assert nth > 0 : "zeroth day of week in a given (month, year) is undefined"; //TODO: message
-        assert nth < 6 : "no more than 5 weekday in a given (month, year)"; //TODO: message
+        QL.require(nth > 0 , "zeroth day of week in a given (month, year) is undefined"); // QA:[RG]::verified //TODO: message
+        QL.require(nth < 6 , "no more than 5 weekday in a given (month, year)"); // QA:[RG]::verified //TODO: message
         final int m = month;
         final int y = year;
         final int dow = dayOfWeek.toInteger();
@@ -468,7 +470,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Returns the length of a certain month
-     * 
+     *
      * @param m
      *            is the desired month, as a number
      * @param leapYear
@@ -481,7 +483,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Returns the offset of a certain month
-     * 
+     *
      * @param m
      *            is the desired month, as a number. If you specify 13, you will
      *            get the number of days of a year
@@ -496,7 +498,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * Returns the offset of a certain year
-     * 
+     *
      * @param y
      *            is the desired year
      * @return the offset of a certain year
@@ -552,7 +554,7 @@ public class DefaultDate extends BaseDate {
     /**
      * Returns the String representing this Date in a long format. This is the
      * same format as returned by getLongFormat method
-     * 
+     *
      * @return the String representing this Date in a long format
      * @see DefaultDate#getLongFormat
      */
@@ -595,7 +597,7 @@ public class DefaultDate extends BaseDate {
     }
 
     private final void checkSerialNumber() {
-        assert value >= MinimumSerialNumber && value <= MaximumSerialNumber : "Date's serial number is outside allowed range";
+        QL.ensure(value >= MinimumSerialNumber && value <= MaximumSerialNumber , "Date's serial number is outside allowed range"); // QA:[RG]::verified // TODO: message
     }
 
     private final int getAdvancedDateValue(final DefaultDate date, final int n, final TimeUnit units) {
@@ -617,7 +619,7 @@ public class DefaultDate extends BaseDate {
                 y -= 1;
             }
 
-            assert y >= 1900 && y <= 2099 : "year out of bounds. It must be in [1901,2099]";
+            QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
             final int length = getMonthLength(m, isLeap(y));
             if (d > length)
                 d = length;
@@ -630,7 +632,7 @@ public class DefaultDate extends BaseDate {
             final int m = date.getMonth();
             final int y = date.getYear() + n;
 
-            assert y >= 1900 && y <= 2099 : "year out of bounds. It must be in [1901,2099]";
+            QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
             if (d == 29 && m == Month.FEBRUARY.toInteger() && !isLeap(y))
                 d = 28;
 
@@ -639,7 +641,7 @@ public class DefaultDate extends BaseDate {
             return result;
         }
         default:
-            throw new AssertionError("undefined time units");
+            throw new LibraryException("undefined time units"); // QA:[RG]::verified // TODO: message
         }
     }
 
@@ -689,7 +691,7 @@ public class DefaultDate extends BaseDate {
 
     /**
      * @return an accessor object which provides controlled update access to this object.
-     * 
+     *
      * @see Updatable
      */
     public final Updatable<Date> getUpdatable() {
@@ -709,9 +711,9 @@ public class DefaultDate extends BaseDate {
 
     /**
      * This inner class provides controlled update access to a Date object.
-     * 
+     *
      * @see Date
-     * 
+     *
      * @author Richard Gomes
      */
     private static final class UpdatableDate implements Updatable<Date> {
@@ -723,8 +725,8 @@ public class DefaultDate extends BaseDate {
         }
 
         public final void update(final Date source) {
-            assert source != null : "date must be specified"; // TODO: message
-            assert !this.target.equals(NULL_DATE) : "not updatable";
+            QL.require(source != null , "date must be specified"); // QA:[RG]::verified // TODO: message
+            QL.require(!this.target.equals(NULL_DATE) , "not updatable"); // QA:[RG]::verified // TODO: message
             target.value = ((DefaultDate)source).value;
             target.notifyObservers();
         }
@@ -735,7 +737,7 @@ public class DefaultDate extends BaseDate {
         /**
          * Returns a instance that is the Maximum date that can be represented by
          * the Date implementation.
-         * 
+         *
          * @return Maximum date represented by the implementation
          */
         @Override
@@ -746,7 +748,7 @@ public class DefaultDate extends BaseDate {
         /**
          * Returns a instance that is the Minimum date that can be represented by
          * the current Date implementation.
-         * 
+         *
          * @return Minimum date represented by the implementation
          */
         @Override
@@ -756,7 +758,7 @@ public class DefaultDate extends BaseDate {
 
         /**
          * Returns todays date represented by the system
-         * 
+         *
          * @return
          */
         @Override
@@ -766,7 +768,7 @@ public class DefaultDate extends BaseDate {
 
         /**
          * Returns a Date represented by parameters specified
-         * 
+         *
          * @param day
          * @param month
          * @param year
@@ -779,7 +781,7 @@ public class DefaultDate extends BaseDate {
 
         /**
          * Returns a Date represented by parameters specified
-         * 
+         *
          * @param day
          * @param month
          * @param year
@@ -796,7 +798,7 @@ public class DefaultDate extends BaseDate {
         }
 
         /**
-         * 
+         *
          * @param str
          * @return
          */
@@ -806,7 +808,7 @@ public class DefaultDate extends BaseDate {
         }
 
         /**
-         * 
+         *
          * @param str
          * @param fmt
          * @return

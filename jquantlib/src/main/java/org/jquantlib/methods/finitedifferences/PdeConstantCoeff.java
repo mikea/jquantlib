@@ -21,6 +21,7 @@
  */
 package org.jquantlib.methods.finitedifferences;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
@@ -58,7 +59,7 @@ public abstract class PdeConstantCoeff<T extends Pde> extends PdeSecondOrderPara
         try {
             return clazz.getConstructor(GeneralizedBlackScholesProcess.class).newInstance(process);
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
     }
 }

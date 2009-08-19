@@ -24,6 +24,8 @@ package org.jquantlib.cashflow;
 
 import java.util.ArrayList;
 
+import org.jquantlib.QL;
+
 /**
  * @author Ueli Hofstetter
  */
@@ -43,17 +45,19 @@ public class Leg extends ArrayList<CashFlow> implements Cloneable {
     }
 
     public CashFlow first() {
-        assert this.size() > 0 : "no cashflows"; // TODO: message
+        QL.require(this.size() > 0 , "no cashflows");  // QA:[RG]::verified // TODO: message
         return this.get(0);
     }
 
     public CashFlow last() {
-        assert this.size() > 0 : "no cashflows"; // TODO: message
+        QL.require(this.size() > 0 , "no cashflows");  // QA:[RG]::verified // TODO: message
         return this.get(this.size()-1);
     }
-    
-    public Leg clone(){
-		throw new UnsupportedOperationException();
+
+    @Override
+    public Leg clone() {
+        // TODO: code review :: please verify against QL/C++ code
+        throw new UnsupportedOperationException("Work in progress");
     }
 
 }

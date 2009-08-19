@@ -20,6 +20,8 @@
 
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * <li>y=f(x) (dependent variable) stationary point</li>
  * <li>stationary gradient</li>
  * </ul>
- * 
+ *
  * @author Joon Tiang Heng
  */
 // FIXME: needs code review and better documentation
@@ -79,8 +81,8 @@ public class EndCriteria {
             this.maxStationaryStateIterations_ = (maxStationaryStateIterations != 0) ? maxStationaryStateIterations : Math.min(maxIterations/2, 100);
             this.gradientNormEpsilon_ = (Double.isNaN(gradientNormEpsilon)) ? functionEpsilon_ : gradientNormEpsilon;
 
-            assert this.maxStationaryStateIterations_ >= 1 : "maxStationaryStateIterations must be greater than one";
-            assert this.maxStationaryStateIterations_ <= this.maxIterations_ : "maxStationaryStateIterations_ must be less than maxIterations_";
+            QL.require(this.maxStationaryStateIterations_ >= 1 , "maxStationaryStateIterations must be greater than one"); // QA:[RG]::verified // TODO: message
+            QL.require(this.maxStationaryStateIterations_ <= this.maxIterations_ , "maxStationaryStateIterations_ must be less than maxIterations_"); // QA:[RG]::verified // TODO: message
         }
 
         /*! Test if the number of iteration is below MaxIterations */
@@ -216,7 +218,7 @@ public class EndCriteria {
             case Unknown:
                 return "Unknown";
             default:
-                throw new AssertionError("unknown EndCriteria::Type (" + ec + ")");
+                throw new LibraryException("unknown EndCriteria"); // QA:[RG]::verified // TODO: message
             }
         }
 
@@ -247,7 +249,7 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.model.shortrate;
 
  *//**
- * 
+ *
  * @author Praneet Tiwari
  *//*
 public abstract class EndCriteria {

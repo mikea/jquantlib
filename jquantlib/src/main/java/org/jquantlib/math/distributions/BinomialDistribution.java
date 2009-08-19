@@ -22,6 +22,7 @@
 
 package org.jquantlib.math.distributions;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Factorial;
 import org.jquantlib.math.Ops;
 
@@ -76,7 +77,7 @@ public class BinomialDistribution implements Ops.IntToDouble {
      */
     //TODO: code review
     public BinomialDistribution(final double p, final int n) {
-        assert p >= 0 && p <= 1.0 : INVALID_PROBABILITY;
+        QL.require(p >= 0 && p <= 1.0 , INVALID_PROBABILITY); // QA:[RG]::verified
         this.nExp = n;
         if (p == 0.0) {
             this.logOneMinusP = 0.0;
@@ -126,9 +127,9 @@ public class BinomialDistribution implements Ops.IntToDouble {
      * @return Natural logarithm of the binomial coefficient
      */
     private double binomialCoefficientLn(final int n, final int k) {
-        assert n >= 0 : "n < 0 not allowed";
-        assert k >= 0 : "k < 0 not allowed";
-        assert n >= k : "n < k not allowed";
+        QL.require(n >= 0 , "n < 0 not allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(k >= 0 , "k < 0 not allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(n >= k , "n < k not allowed"); // QA:[RG]::verified // TODO: message
         return factorial.ln(n) - factorial.ln(k) - factorial.ln(n - k);
     }
 
@@ -145,5 +146,5 @@ public class BinomialDistribution implements Ops.IntToDouble {
     private double binomialCoefficient(final int n, final int k) {
     	return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)));
     }
-    
+
 }

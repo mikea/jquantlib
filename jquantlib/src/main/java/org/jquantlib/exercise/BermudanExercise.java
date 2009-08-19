@@ -43,6 +43,7 @@ package org.jquantlib.exercise;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.util.Date;
 
 /**
@@ -86,7 +87,7 @@ public class BermudanExercise extends EarlyExercise {
 	 */
 	public BermudanExercise(final Date[] dates, final boolean payoffAtExpiry) {
 		super(Exercise.Type.BERMUDAN, payoffAtExpiry);
-		assert dates!=null && dates.length>0 : "empty exercise dates"; // TODO: message
+		QL.require(dates!=null && dates.length>0 , "empty exercise dates");  // QA:[RG]::verified // TODO: message
 		if (dates.length==1) {
 			super.type = Exercise.Type.EUROPEAN;
 			super.payoffAtExpiry = false;

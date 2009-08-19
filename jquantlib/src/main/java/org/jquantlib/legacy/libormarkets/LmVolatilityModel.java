@@ -26,6 +26,7 @@ package org.jquantlib.legacy.libormarkets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.model.Parameter;
 
@@ -64,7 +65,7 @@ public abstract class LmVolatilityModel {
     public abstract Array volatility(double t, Array x);
 
     public double integratedVariance(final int i, final int ii, final double t, final Array list){
-        throw new AssertionError(integrated_variance_not_supported);
+        throw new LibraryException(integrated_variance_not_supported); // QA:[RG]::verified
     }
 
     public void setParams(final List<Parameter> arguments){

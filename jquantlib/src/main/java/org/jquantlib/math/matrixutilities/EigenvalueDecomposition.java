@@ -87,7 +87,7 @@ public class EigenvalueDecomposition {
      */
 
     public EigenvalueDecomposition(final Matrix A) {
-        QL.require(A.rows == A.cols, Matrix.MATRIX_MUST_BE_SQUARE);
+        QL.require(A.rows == A.cols, Matrix.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
 
         this.n = A.cols;
         V = new Matrix(n, n);

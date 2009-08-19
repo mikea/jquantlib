@@ -28,6 +28,7 @@ import static org.jquantlib.util.Month.DECEMBER;
 import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.MAY;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -37,7 +38,7 @@ import org.jquantlib.util.Month;
 /**
  * @author Srinivas Hasti
  * @author Dominik Holenstein
- * 
+ *
  */
 public class Switzerland extends DelegateCalendar {
     private final static Switzerland SETTLEMENT_CALENDAR = new Switzerland(Market.Settlement);
@@ -53,7 +54,7 @@ public class Switzerland extends DelegateCalendar {
             delegate = new SWXStockExchangeCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -65,7 +66,7 @@ public class Switzerland extends DelegateCalendar {
         case SWX:
             return SWX_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

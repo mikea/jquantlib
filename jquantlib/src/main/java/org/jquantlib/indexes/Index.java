@@ -24,6 +24,7 @@ package org.jquantlib.indexes;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Constants;
 import org.jquantlib.time.Calendar;
@@ -141,8 +142,8 @@ public abstract class Index implements Observable {
 
 		IndexManager.getInstance().put(tag, h);
 
-		assert noInvalidFixing : "at least one invalid fixing provided"; // TODO: message
-		assert noDuplicatedFixing : "at least one duplicated fixing provided"; // TODO: message
+		QL.ensure(noInvalidFixing , "at least one invalid fixing provided");  // QA:[RG]::verified // TODO: message
+		QL.ensure(noDuplicatedFixing , "at least one duplicated fixing provided");  // QA:[RG]::verified // TODO: message
 	}
 
 	/**

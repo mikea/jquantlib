@@ -32,6 +32,7 @@
 
 package org.jquantlib.time.calendars;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -67,7 +68,7 @@ public class CzechRepublic extends DelegateCalendar {
             delegate = new CzechRepublicPSECalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -77,7 +78,7 @@ public class CzechRepublic extends DelegateCalendar {
         case PSE:
             return PSE_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

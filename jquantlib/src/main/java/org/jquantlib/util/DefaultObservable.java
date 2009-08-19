@@ -28,6 +28,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.jcip.annotations.NotThreadSafe;
 
+import org.jquantlib.QL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,17 +43,17 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This implementation notifies the observers in a synchronous fashion. Note that this can cause trouble if you notify the observers
  * while in a transactional context because once the notification is done it cannot be rolled back.
- * 
+ *
  * @note This class is not thread safe
- * 
+ *
  * @see <a href="http://www.jroller.com/martin_fischer/entry/a_generic_java_observer_pattern"> Martin Fischer: Observer and
  *      Observable interfaces</a>
  * @see <a href="http://jdj.sys-con.com/read/35878.htm">Improved Observer/Observable</a>
- * 
+ *
  * @see Observable
  * @see Observer
  * @see WeakReferenceObservable
- * 
+ *
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
@@ -76,14 +77,9 @@ public class DefaultObservable implements Observable {
     //
 
     public DefaultObservable(final Observable observable) {
-        assert observable != null : "observable is null";
+        QL.require(observable != null , "observable is null"); // QA:[RG]::verified // TODO: message
 
-        // TODO: code review :: Please review this class! :S
-        //this.observers = new ObjectArrayList<Observer>(); // EuropeanOptionTest fails !!!
-        //this.observers = new LinkedList<Observer>(); // EuropeanOptionTest fails !!!
-        //this.observers = new ArrayList<Observer>(); // EuropeanOptionTest fails !!!
-        //this.observers = Collections.synchronizedList(new ArrayList<Observer>());
-        //this.observers = Collections.synchronizedList(new ObjectArrayList<Observer>()); // EuropeanOptionTest fails !!!
+        // TODO: code review :: Please review if CopyOnWriteArrayList is the best option
         this.observers = new CopyOnWriteArrayList<Observer>();
 
         this.observable = observable;
@@ -94,7 +90,7 @@ public class DefaultObservable implements Observable {
     //
 
     public void addObserver(final Observer observer) {
-        assert observable != null : "observable is null";
+        QL.require(observable != null , "observable is null"); // QA:[RG]::verified // TODO: message
         observers.add(observer);
     }
 
@@ -119,8 +115,22 @@ public class DefaultObservable implements Observable {
     }
 
     public void notifyObservers(final Object arg) {
-        for (final Observer observer : observers)
-            wrappedNotify(observer, observable, arg);
+        boolean successful = true;
+        for (final Observer observer : observers) {
+            try {
+                wrappedNotify(observer, observable, arg);
+            } catch (final Exception e) {
+                // quite a dilemma. If we don't catch the exception,
+                // other observers will not receive the notification
+                // and might be left in an incorrect state. If we do
+                // catch it and continue the loop (as we do here) we
+                // lose the exception. The least evil might be to try
+                // and notify all observers, while raising an
+                // exception if something bad happened.
+                successful = false;
+            }
+        }
+        QL.ensure(successful, "could not notify one or more observers"); // QA:[RG]::verified // TODO: message
     }
 
     //
@@ -134,13 +144,13 @@ public class DefaultObservable implements Observable {
      * <li>remote notification;</li>
      * <li>notification via SwingUtilities.invokeLater</li>
      * <li>others...</li>
-     * 
+     *
      * <p>
      * The default notification simply does
      * <pre>
      * observer.update(observable, arg);
      * </pre>
-     * 
+     *
      * @param observer
      * @param observable
      * @param arg

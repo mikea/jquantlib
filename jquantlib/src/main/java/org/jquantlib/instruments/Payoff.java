@@ -40,6 +40,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
@@ -81,7 +82,7 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
 		if (v1 != null)
             v1.visit(this);
         else
-            throw new AssertionError("null payoff visitor"); //TODO: message
+            throw new LibraryException("null payoff visitor"); // QA:[RG]::verified //TODO: message
 	}
 
 }

@@ -22,6 +22,7 @@
 
 package org.jquantlib.math.distributions;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
 
@@ -65,7 +66,7 @@ public class GammaDistribution implements Ops.DoubleOp {
      * @throws ArithmeticException if <code>a_</code> is smaller than 0.00
      */
     public GammaDistribution(final double a) {
-        assert a >= 0.0 : "invalid parameter for gamma distribution"; // TODO: message
+        QL.require(a >= 0.0 , "invalid parameter for gamma distribution"); // QA:[RG]::verified // TODO: message
         this.a = a;
     }
 

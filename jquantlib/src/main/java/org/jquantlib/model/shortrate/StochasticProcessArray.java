@@ -25,6 +25,7 @@ package org.jquantlib.model.shortrate;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.math.matrixutilities.PseudoSqrt;
@@ -37,7 +38,7 @@ import org.jquantlib.util.Date;
  *
  * @author Praneet Tiwari
  */
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class StochasticProcessArray extends StochasticProcess {
 
@@ -48,14 +49,15 @@ public class StochasticProcessArray extends StochasticProcess {
     protected Matrix sqrtCorrelation_;
 
     public StochasticProcessArray(final List<StochasticProcess1D> processes, final Matrix correlation) {
-        this.processes_ = processes;
-        this.sqrtCorrelation_ = PseudoSqrt.pseudoSqrt(correlation, SalvagingAlgorithm.Spectral);
+
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
 
-        assert !processes.isEmpty() : no_process_given;
-        assert correlation.rows() == processes.size() : mismatch_processnumber_sizecorrelationmatrix;
+        QL.require(!processes.isEmpty() , no_process_given); // QA:[RG]::verified // TODO: message
+        QL.require(correlation.rows() == processes.size() , mismatch_processnumber_sizecorrelationmatrix); // QA:[RG]::verified // TODO: message
 
+        this.processes_ = processes;
+        this.sqrtCorrelation_ = PseudoSqrt.pseudoSqrt(correlation, SalvagingAlgorithm.Spectral);
         for (int i=0; i<processes_.size(); i++)
             processes_.get(i).addObserver(this);
     }

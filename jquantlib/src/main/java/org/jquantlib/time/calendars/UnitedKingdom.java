@@ -23,6 +23,7 @@
 
 package org.jquantlib.time.calendars;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -43,7 +44,7 @@ import org.jquantlib.util.Month;
  * <li>Christmas Day, December 25th (possibly moved to Monday or Tuesday)</li>
  * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
  * </ul>
- * 
+ *
  * Holidays for the stock exchange:
  * <ul>
  * <li>Saturdays</li>
@@ -57,7 +58,7 @@ import org.jquantlib.util.Month;
  * <li>Christmas Day, December 25th (possibly moved to Monday or Tuesday)</li>
  * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
  * </ul>
- * 
+ *
  * Holidays for the metals exchange:
  * <ul>
  * <li>Saturdays</li>
@@ -71,7 +72,7 @@ import org.jquantlib.util.Month;
  * <li>Christmas Day, December 25th (possibly moved to Monday or Tuesday)</li>
  * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
  * </ul>
- * 
+ *
  * @author Srinivas Hasti TODO add LIFFE
  */
 
@@ -93,7 +94,7 @@ public class UnitedKingdom extends DelegateCalendar {
             delegate = new UKMetalsCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -107,7 +108,7 @@ public class UnitedKingdom extends DelegateCalendar {
         case METALS:
             return METALS_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

@@ -40,6 +40,7 @@
 
 package org.jquantlib.termstructures.volatilities;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
@@ -62,7 +63,7 @@ import org.jquantlib.util.Visitor;
  * setInterpolation() method.
  * <p>
  * For strike dependence, see BlackVarianceSurface.
- * 
+ *
  * @author Richard Gomes
  */
 // TODO check time extrapolation
@@ -97,11 +98,11 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
             final boolean forceMonotoneVariance) {
         super(referenceDate);
 
-        assert dates.length==blackVolCurve.length : "mismatch between date vector and black vol vector";
+        QL.require(dates.length==blackVolCurve.length , "mismatch between date vector and black vol vector"); // QA:[RG]::verified // TODO: message
         // cannot have dates[0]==referenceDate, since the
         // value of the volatility at dates[0] would be lost
         // (variance at referenceDate must be zero)
-        assert dates[0].gt(referenceDate) : "cannot have dates[0] <= referenceDate"; // TODO: message
+        QL.require(dates[0].gt(referenceDate) , "cannot have dates[0] <= referenceDate"); // QA:[RG]::verified // TODO: message
 
         this.dayCounter = dayCounter;
         this.dates = dates.clone();
@@ -113,10 +114,10 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
         times.set(0, 0.0);
         for (int j=1; j<=blackVolCurve.length; j++) {
             times.set(j, timeFromReference(this.dates[j-1]));
-            assert times.get(j)>times.get(j-1) : "times must be sorted unique"; // TODO: message
+            QL.require(times.get(j)>times.get(j-1) , "times must be sorted unique"); // QA:[RG]::verified // TODO: message
             final double value = times.get(j) * blackVolCurve[j-1]*blackVolCurve[j-1];
             variances.set(j, value);
-            assert variances.get(j)>=variances.get(j-1) || !forceMonotoneVariance : "variance must be non-decreasing";
+            QL.require(variances.get(j)>=variances.get(j-1) || !forceMonotoneVariance , "variance must be non-decreasing"); // QA:[RG]::verified // TODO: message
         }
 
         // default: linear interpolation

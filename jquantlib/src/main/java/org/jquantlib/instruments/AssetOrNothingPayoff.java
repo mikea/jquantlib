@@ -42,6 +42,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
@@ -94,7 +95,7 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
         else if (type == Option.Type.PUT)
             return (strike - assetPrice > 0.0) ? assetPrice : 0.0;
         else
-            throw new AssertionError("unknown/illegal option type");
+            throw new LibraryException("unknown/illegal option type"); // QA:[RG]::verified // TODO: message
 	}
 
 

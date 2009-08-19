@@ -6,7 +6,7 @@ package org.jquantlib.model.marketmodels;
  *
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 public abstract class BrownianGenerator {
     
     public BrownianGenerator(){

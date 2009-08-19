@@ -8,8 +8,8 @@ import org.jquantlib.time.Schedule;
 
 public class IborLeg {
     // ! helper class building a sequence of capped/floored ibor-rate coupons
-    private Schedule schedule_;
-    private IborIndex index_;
+    private final Schedule schedule_;
+    private final IborIndex index_;
     private Array notionals_;
     private DayCounter paymentDayCounter_;
     private BusinessDayConvention paymentAdjustment_;
@@ -27,12 +27,12 @@ public class IborLeg {
         zeroPayments_ = (false);
     }
 
-    public final IborLeg withNotionals(/* Real */double notional) {
+    public final IborLeg withNotionals(/* Real */final double notional) {
         notionals_ = new Array(new double[] { notional });// std::vector<Real>(1,notional);
         return this;
     }
 
-    public final IborLeg withNotionals(Array notionals) {
+    public final IborLeg withNotionals(final Array notionals) {
         notionals_ = notionals;
         return this;
     }
@@ -42,12 +42,12 @@ public class IborLeg {
         return this;
     }
 
-    public final IborLeg withPaymentAdjustment(BusinessDayConvention convention) {
+    public final IborLeg withPaymentAdjustment(final BusinessDayConvention convention) {
         paymentAdjustment_ = convention;
         return this;
     }
 
-    public final IborLeg withFixingDays(/* Natural */double fixingDays) {
+    public final IborLeg withFixingDays(/* Natural */final double fixingDays) {
         fixingDays_ = new Array(new double[] { fixingDays });// std::vector<Natural>(1,fixingDays);
         return this;
     }
@@ -57,27 +57,27 @@ public class IborLeg {
         return this;
     }
 
-    public IborLeg withGearings(/* Real */double gearing) {
+    public IborLeg withGearings(/* Real */final double gearing) {
         gearings_ = new Array(new double[] { gearing });
         return this;
     }
 
-    public IborLeg withGearings(Array gearings) {
+    public IborLeg withGearings(final Array gearings) {
         gearings_ = gearings;
         return this;
     }
 
-    public IborLeg withSpreads(/* Spread */double spread) {
+    public IborLeg withSpreads(/* Spread */final double spread) {
         spreads_ = new Array(new double[] { spread });
         return this;
     }
 
-    public IborLeg withSpreads(Array spreads) {
+    public IborLeg withSpreads(final Array spreads) {
         spreads_ = spreads;
         return this;
     }
 
-    public IborLeg withCaps(/* @Rate */double cap) {
+    public IborLeg withCaps(/* @Rate */final double cap) {
         caps_ = new Array(1).fill(cap);
         return this;
     }
@@ -87,7 +87,7 @@ public class IborLeg {
         return this;
     }
 
-    public IborLeg withFloors(/* @Rate */double floor) {
+    public IborLeg withFloors(/* @Rate */final double floor) {
         floors_ = new Array(1).fill(floor);
         return this;
     }
@@ -97,28 +97,28 @@ public class IborLeg {
         return this;
     }
 
-    public IborLeg inArrears(boolean flag) {
+    public IborLeg inArrears(final boolean flag) {
         inArrears_ = flag;
         return this;
     }
 
-    public IborLeg withZeroPayments(boolean flag) {
+    public IborLeg withZeroPayments(final boolean flag) {
         zeroPayments_ = flag;
         return this;
     }
 
     public Leg Leg() {
 
-        Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
+        final Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
          notionals_, schedule_, index_, paymentDayCounter_,
          paymentAdjustment_, fixingDays_, gearings_, spreads_,
          caps_, floors_, inArrears_, zeroPayments_);
-        
+
          if (caps_.empty() && floors_.empty() && !inArrears_) {
              //TODO: Code review :: incomplete code
-            if (true)
-                throw new UnsupportedOperationException("Work in progress");
-            
              // TODO: PricerSetter.getInstance().setCouponPricer(cashflows, new BlackIborCouponPricer()));
          }
         return cashflows;

@@ -42,6 +42,8 @@
 
 package org.jquantlib.time;
 
+import org.jquantlib.lang.exceptions.LibraryException;
+
 /**
  * Frequency of events
  */
@@ -90,7 +92,7 @@ public enum Frequency {
         case 365:
             return Frequency.DAILY;
         default:
-            throw new AssertionError("value must be one of -1,0,1,2,3,4,6,12,26,52,365");
+            throw new LibraryException("value must be one of -1,0,1,2,3,4,6,12,26,52,365"); // QA:[RG]::verified // TODO: message
         }
     }
 

@@ -42,6 +42,7 @@ package org.jquantlib.quotes;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 import org.jquantlib.util.WeakReferenceObservable;
@@ -52,10 +53,10 @@ import org.jquantlib.util.WeakReferenceObservable;
  * All copies of an instance of this class refer to the same observable by means
  * of a relinkable weak reference. When such pointer is relinked to another
  * observable, the change will be propagated to all the copies.
- * 
+ *
  * @author Richard Gomes
  */
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 
 //TODO: ideally T should extend Ops.DoubleOp, Observable
@@ -178,7 +179,7 @@ public class Handle<T extends Observable> implements Observable {
         // public methods
         //
 
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         public final boolean isEmpty() /* @ReadOnly */ {
             return (this.observable==null);
         }
@@ -223,43 +224,43 @@ public class Handle<T extends Observable> implements Observable {
 
         @Override
         public final void addObserver(final Observer observer) {
-            assert observable!=null : EMPTY_HANDLE;
+            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
             observable.addObserver(observer);
         }
 
         @Override
         public final int countObservers() {
-            assert observable!=null : EMPTY_HANDLE;
+            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
             return observable.countObservers();
         }
 
         @Override
         public final void deleteObserver(final Observer observer) {
-            assert observable!=null : EMPTY_HANDLE;
+            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
             observable.deleteObserver(observer);
         }
 
         @Override
         public final void notifyObservers() {
-            assert observable!=null : EMPTY_HANDLE;
+            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
             observable.notifyObservers();
         }
 
         @Override
         public final void notifyObservers(final Object arg) {
-            assert observable!=null : EMPTY_HANDLE;
+            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
             observable.notifyObservers(arg);
         }
 
         @Override
         public final void deleteObservers() {
-            assert observable!=null : EMPTY_HANDLE;
+            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
             observable.deleteObservers();
         }
 
         @Override
         public final List<Observer> getObservers() {
-            assert observable!=null : EMPTY_HANDLE;
+            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
             return observable.getObservers();
         }
 

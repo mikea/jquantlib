@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.assets.DiscretizedAsset;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
 import org.jquantlib.processes.StochasticProcess;
@@ -75,7 +76,7 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
                     applySpecificCondition();
             break;
         default:
-            throw new AssertionError("invalid option type");
+            throw new LibraryException("invalid option type"); // QA:[RG]::verified
         }
     }
 

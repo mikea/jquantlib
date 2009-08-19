@@ -25,6 +25,7 @@ package org.jquantlib.processes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.IborCoupon;
 import org.jquantlib.daycounters.DayCounter;
@@ -90,13 +91,13 @@ public class LiborForwardModelProcess extends StochasticProcess {
         final DayCounter dayCounter = index_.dayCounter();
         final List<CashFlow> flows = null /* cashFlows() */; // FIXME: translate cashFlows();
 
-        assert this.size_ == flows.size() : wrong_number_of_cashflows;
+        QL.require(this.size_ == flows.size() , wrong_number_of_cashflows); // QA:[RG]::verified // TODO: message
 
         final Date settlement = index_.termStructure().getLink().referenceDate();
         final Date startDate = ((IborCoupon) flows.get(0)).fixingDate();
         for (int i = 0; i < size_; ++i) {
             final IborCoupon coupon = (IborCoupon) flows.get(i);
-            assert coupon.date().eq(coupon.accrualEndDate()) : irregular_coupon_types;
+            QL.require(coupon.date().eq(coupon.accrualEndDate()) , irregular_coupon_types); // QA:[RG]::verified // TODO: message
 
             initialValues_.set(i, coupon.rate());
             accrualPeriod_.set(i, coupon.accrualPeriod());

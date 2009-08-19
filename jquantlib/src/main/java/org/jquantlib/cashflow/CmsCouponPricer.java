@@ -22,6 +22,7 @@
 
 package org.jquantlib.cashflow;
 
+import org.jquantlib.QL;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.SwaptionVolatilityStructure;
 
@@ -43,7 +44,7 @@ public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
     public void setSwaptionVolatility(final Handle<SwaptionVolatilityStructure> swaptionVol) {
         swaptionVol_.deleteObserver(this);
         swaptionVol_ = swaptionVol;
-        assert swaptionVol_!=null && swaptionVol_.getLink() != null : no_adequate_swaptionVol_given;
+        QL.require(swaptionVol_!=null && swaptionVol_.getLink() != null , no_adequate_swaptionVol_given); // QA:[RG]::verified // TODO: message
         swaptionVol_.addObserver(this);
         update();
     }

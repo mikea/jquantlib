@@ -22,8 +22,12 @@
  */
 package org.jquantlib.math.matrixutilities;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Closeness;
 
+// TODO: OSGi :: remove statics
+// TODO: code review :: please verify against QL/C++ code
 public class PseudoSqrt {
 
     private final static String unknown_salvaging_algorithm = "unknown salvaging algorithm";
@@ -83,24 +87,15 @@ public class PseudoSqrt {
             final int maxRank,
             final int componentRetainedPercentage,
             final SalvagingAlgorithm sa){
+
+        QL.require(matrix.rows == matrix.columns(), Cells.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
+        QL.require(checkSymmetry(matrix), Cells.MATRIX_MUST_BE_SYMMETRIC); // QA:[RG]::verified
+        QL.require(componentRetainedPercentage>0.0, "no eigenvalues retained"); // QA:[RG]::verified // TODO: message
+        QL.require(componentRetainedPercentage<=1.0, "percentage to be retained > 100%"); // QA:[RG]::verified // TODO: message
+        QL.require(maxRank>=1, "max rank required < 1"); // QA:[RG]::verified // TODO: message
+
         final int size = matrix.rows;
 
-        //TODO: do we already have this mechanism
-        //#if defined(QL_EXTRA_SAFETY_CHECKS)
-        checkSymmetry(matrix);
-        //#else
-        if(size != matrix.cols)
-            throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
-
-        if(componentRetainedPercentage<=0.0)
-            throw new IllegalArgumentException("no eigenvalues retained");
-
-        if(componentRetainedPercentage>1.0)
-            throw new IllegalArgumentException("percentage to be retained > 100%");
-
-
-        if(maxRank<1)
-            throw new IllegalArgumentException("max rank required < 1");
         // spectral (a.k.a Principal Component) analysis
         SymmetricSchurDecomposition jd = new SymmetricSchurDecomposition(matrix);
         Array eigenValues = jd.eigenvalues();
@@ -126,7 +121,7 @@ public class PseudoSqrt {
             eigenValues = jd.eigenvalues();
             break;
         default:
-            throw new AssertionError("unknown or invalid salvaging algorithm"); // TODO: message
+            throw new LibraryException("unknown or invalid salvaging algorithm"); // QA:[RG]::verified // TODO: message
         }
 
         // factor reduction
@@ -154,19 +149,6 @@ public class PseudoSqrt {
         return result;
     }
 
-
-    public static void checkSymmetry(final Matrix matrix) {
-        final int size = matrix.rows;
-
-        if (size != matrix.cols)
-            throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
-        for (int i=0; i<size; ++i)
-            for (int j=0; j<i; ++j)
-                if(Closeness.isClose(matrix.get(i, j), matrix.get(j, i)))
-                    throw new IllegalArgumentException("non symmetric matrix: " +
-                            "[" + i + "][" + j + "]=" + matrix.get(i,j) +
-                            ", [" + j + "][" + i + "]=" + matrix.get(j,i));
-    }
 
     public static void normalizePseudoRoot(final Matrix matrix, final Matrix pseudo) {
         final int size = matrix.rows;
@@ -407,16 +389,11 @@ public class PseudoSqrt {
 }
 
      */
-    public static Matrix pseudoSqrt(final Matrix matrix,
-            final SalvagingAlgorithm sa) {
+    public static Matrix pseudoSqrt(final Matrix matrix, final SalvagingAlgorithm sa) {
+        QL.require(matrix.rows() == matrix.columns(), Cells.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
+        QL.require(checkSymmetry(matrix), Cells.MATRIX_MUST_BE_SYMMETRIC); // QA:[RG]::verified
+
         final int size = matrix.rows;
-        /*
-    #if defined(QL_EXTRA_SAFETY_CHECKS)
-    checkSymmetry(matrix);
-    #else
-         */
-        if (size != matrix.cols)
-            throw new IllegalArgumentException("non square matrix: " + size + " rows, " + matrix.cols + " columns");
 
         // spectral (a.k.a Principal Component) analysis
         final SymmetricSchurDecomposition jd = new SymmetricSchurDecomposition(matrix);
@@ -482,12 +459,12 @@ public class PseudoSqrt {
             final double tol = 1e-6;
             if(true)
                 throw new UnsupportedOperationException("work in progress");
-            // TODO: code review :: please verify against original QL/C++ code
+            // TODO: code review :: please verify against QL/C++ code
             //result = highamImplementation(matrix, maxIterations, tol);
             // result = new CholeskyDecomposition().CholeskyDecomposition(result, true);
             break;
         default:
-            throw new AssertionError(unknown_salvaging_algorithm); // TODO: message
+            throw new LibraryException(unknown_salvaging_algorithm); // QA:[RG]::verified // TODO: message
         }
         return result;
     }
@@ -575,6 +552,21 @@ const Disposable<Matrix> rankReducedSqrt(const Matrix& matrix,
 }
 
      */
+
+
+    //
+    // private methods
+    //
+
+    private static boolean checkSymmetry(final Matrix matrix) {
+        final int size = matrix.rows;
+        for (int i=0; i<size; ++i)
+            for (int j=0; j<i; ++j)
+                if (Closeness.isClose(matrix.get(i, j), matrix.get(j, i)))
+                    return false;
+        return true;
+    }
+
 }
 
 

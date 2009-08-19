@@ -41,6 +41,7 @@
 
 package org.jquantlib.processes;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
@@ -156,48 +157,48 @@ public abstract class StochasticProcess1D extends StochasticProcess {
 
     @Override
     public final /*@Price*/ Array drift(final /*@Time*/ double t, /*@Price*/ final Array x) {
-        assert x.size()==1 : ARRAY_1D_REQUIRED;
+        QL.require(x.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         return new Array().fill( drift(t, x.first()) );
     }
 
     @Override
     public final /*@Diffusion*/ Matrix diffusion(final /*@Time*/ double t, /*@Price*/ final Array x) {
-        assert x.size()==1 : ARRAY_1D_REQUIRED;
+        QL.require(x.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         final double v = diffusion(t, x.first());
         return new Matrix(1, 1).fill(v);
     }
 
     @Override
     public final /*@Expectation*/ Array expectation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
-        assert x0.size()==1 : ARRAY_1D_REQUIRED;
+        QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         return new Array().fill( expectation(t0, x0.first(), dt) );
     }
 
     @Override
     public final /*@StdDev*/ Matrix stdDeviation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
-        assert x0.size()==1 : ARRAY_1D_REQUIRED;
+        QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         final double v = stdDeviation(t0, x0.first(), dt);
         return new Matrix(1, 1).fill(v);
     }
 
     @Override
     public final /*@Covariance*/ Matrix covariance(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
-        assert x0.size()==1 : ARRAY_1D_REQUIRED;
+        QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         final double v = discretization1D.varianceDiscretization(this, t0, x0.first(), dt);
         return new Matrix(1, 1).fill(v);
     }
 
     @Override
     public final Array evolve(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt, final Array dw) {
-        assert x0.size()==1 : ARRAY_1D_REQUIRED;
-        assert dw.size()==1 : ARRAY_1D_REQUIRED;
+        QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
+        QL.require(dw.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         return new Array().fill( evolve(t0, x0.first(), dt, dw.first()) );
     }
 
     @Override
     public final /*@Price*/ Array apply(final /*@Price*/ Array x0, final Array dx) {
-        assert x0.size()==1 : ARRAY_1D_REQUIRED;
-        assert dx.size()==1 : ARRAY_1D_REQUIRED;
+        QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
+        QL.require(dx.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         return new Array().fill( apply(x0.first(), dx.first()) );
     }
 

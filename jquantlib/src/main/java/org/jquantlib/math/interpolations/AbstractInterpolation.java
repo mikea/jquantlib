@@ -43,8 +43,7 @@ package org.jquantlib.math.interpolations;
 
 import static org.jquantlib.math.Closeness.isClose;
 
-import org.jquantlib.Configuration;
-import org.jquantlib.Settings;
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 
 
@@ -65,20 +64,6 @@ public abstract class AbstractInterpolation implements Interpolation {
     protected abstract double primitiveImpl(final double x);
     protected abstract double derivativeImpl(final double x);
     protected abstract double secondDerivativeImpl(final double x);
-
-
-    //
-    // private fields
-    //
-
-    /**
-     * This private field is automatically initialized by constructor which
-     * picks up it's value from {@link Settings} singleton. This procedure
-     * caches values from the singleton, intending to avoid contention in
-     * heavily multi-threaded environments.
-     */
-    //TODO: We should observe extraSafetyChecks
-    private final boolean extraSafetyChecks = Configuration.getSystemConfiguration(null).isExtraSafetyChecks();
 
 
     //
@@ -111,7 +96,7 @@ public abstract class AbstractInterpolation implements Interpolation {
      * @throws IllegalStateException if extrapolation is not enabled.
      * @throws IllegalArgumentException if <i>x</i> is out of range
      */
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     protected final void checkRange(final double x, final boolean extrapolate) {
         if (! (extrapolate || allowsExtrapolation() || isInRange(x)) ) {
             final StringBuilder sb = new StringBuilder();
@@ -199,22 +184,28 @@ public abstract class AbstractInterpolation implements Interpolation {
 
     @Override
     public final boolean isInRange(final double x) {
+        QL.assertion(extraSafetyChecks(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
         final double x1 = xMin(), x2 = xMax();
         return (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
     }
 
     @Override
     public void update() {
-        assert vx.size() >= 2 : "not enough points to interpolate"; // TODO: message
-        if (extraSafetyChecks) {
-            double x1 = vx.first();
-            double x2;
-            for (int i = 1; i < vx.size(); i++) {
-                x2 = vx.get(i);
-                if (x1>x2) throw new AssertionError("unsorted values on array X");
-                x1=x2;
-            }
+        QL.require(vx.size() >= 2 , "not enough points to interpolate"); // QA:[RG]::verified // TODO: message
+        QL.assertion(extraSafetyChecks(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
+    }
+
+
+    //
+    // private methods
+    //
+
+    private boolean extraSafetyChecks() {
+        for (int i=0; i<vx.size()-1; i++) {
+            if (vx.get(i) > vx.get(i+1))
+                return false;
         }
+        return true;
     }
 
 

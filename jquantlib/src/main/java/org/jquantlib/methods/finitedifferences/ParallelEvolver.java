@@ -22,12 +22,13 @@ package org.jquantlib.methods.finitedifferences;
 import java.util.List;
 import java.util.Vector;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 // TODO: Code review
 //Using Type token to dynamically create instance of MixedScheme requires
@@ -59,7 +60,7 @@ public abstract class ParallelEvolver<S extends Operator, T extends MixedScheme<
 
             return (T) TypeToken.getClazz(this.getClass(), 1).getConstructor(Operator.class, List.class).newInstance(l, bcs);
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
     }
 

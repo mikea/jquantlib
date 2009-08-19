@@ -21,8 +21,10 @@ package org.jquantlib.pricingengines.vanilla;
 
 import java.lang.reflect.Constructor;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.lattices.BinomialTree;
@@ -85,7 +87,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         // obtain a BinomialTree concrete implementation from a generic type (first generic parameter)
         this.clazz = (Class<T>) TypeToken.getClazz(this.getClass());
         this.timeSteps_ = timeSteps;
-        assert timeSteps_ > 0 : "timeSteps must be positive";
+        QL.require(timeSteps_ > 0 , "timeSteps must be positive"); // QA:[RG]::verified // TODO: message
     }
 
 
@@ -102,7 +104,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
             final Constructor c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
             return clazz.cast(c.newInstance(bs, maturity, timeSteps, strike));
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
     }
 
@@ -114,7 +116,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
     @Override
     public void calculate() /*@ReadOnly*/ {
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) this.arguments.stochasticProcess;
-        assert process!=null : "Black-Scholes process required";
+        QL.require(process!=null , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
 
         final DayCounter rfdc = process.riskFreeRate().getLink().dayCounter();
         final DayCounter divdc = process.dividendYield().getLink().dayCounter();
@@ -122,7 +124,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         final Calendar volcal = process.blackVolatility().getLink().calendar();
 
         final double s0 = process.stateVariable().getLink().evaluate();
-        assert s0 > 0.0 : "negative or null underlying given";
+        QL.require(s0 > 0.0 , "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         final double v = process.blackVolatility().getLink().blackVol(arguments.exercise.lastDate(), s0);
         final Date maturityDate = arguments.exercise.lastDate();
         final double r = process.riskFreeRate().getLink().zeroRate(maturityDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
@@ -134,7 +136,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         final Handle<YieldTermStructure> flatDividends = new Handle<YieldTermStructure>(new FlatForward(referenceDate, q, divdc));
         final Handle<BlackVolTermStructure> flatVol = new Handle<BlackVolTermStructure>(new BlackConstantVol(referenceDate, volcal, v, voldc));
         final PlainVanillaPayoff payoff = (PlainVanillaPayoff) arguments.payoff;
-        assert payoff!=null : "non-plain payoff given";
+        QL.require(payoff!=null , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
 
         final double maturity = rfdc.yearFraction(referenceDate, maturityDate);
         final StochasticProcess1D bs = new GeneralizedBlackScholesProcess(process.stateVariable(), flatDividends, flatRiskFree, flatVol);
@@ -151,7 +153,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         option.rollback(grid.at(2));
         // TODO: code review :: verifuy use of clone()
         final Array va2 = option.values().clone();
-        assert va2.size() == 3 : "expect 3 nodes in grid at second step";
+        QL.require(va2.size() == 3 , "expect 3 nodes in grid at second step"); // QA:[RG]::verified // TODO: message
         final double p2h = va2.get(2); // high-price
         final double s2 = lattice.underlying(2, 2); // high price
 
@@ -159,7 +161,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         option.rollback(grid.at(1));
         // TODO: code review :: verifuy use of clone()
         final Array va = option.values().clone();
-        assert va.size() == 2 : "expect 2 nodes in grid at first step";
+        QL.require(va.size() == 2 , "expect 2 nodes in grid at first step"); // QA:[RG]::verified // TODO: message
         final double p1 = va.get(1);
 
         // Finally, rollback to t=0

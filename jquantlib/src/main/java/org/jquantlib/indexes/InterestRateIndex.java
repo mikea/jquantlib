@@ -23,6 +23,7 @@
 package org.jquantlib.indexes;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.currencies.Currency;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
@@ -39,7 +40,7 @@ import org.jquantlib.util.Observer;
  * @author Srinivas Hasti
  *
  */
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class InterestRateIndex extends Index implements Observer {
 
@@ -49,7 +50,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
     private final Calendar fixingCalendar;
     private final Currency currency;
 
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     protected DayCounter dayCounter;
 
 
@@ -71,7 +72,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
         this.currency = currency;
         this.dayCounter = dayCounter;
 
-        assert fixingDays <= 2 : "wrong number of fixing days"; // TODO: message
+        QL.require(fixingDays <= 2 , "wrong number of fixing days");  // QA:[RG]::verified // TODO: message
 
         // tenor.normalize(); //TODO :: code review
         Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
@@ -113,14 +114,14 @@ public abstract class InterestRateIndex extends Index implements Observer {
     @Override
     //FIXME: a detailed code review is needed here!
     public double fixing(final Date fixingDate, final boolean forecastTodaysFixing) {
-        // TODO: code review :: please verify against original QL/C++ code
-        assert isValidFixingDate(fixingDate) : "Fixing date is not valid";
+        // TODO: code review :: please verify against QL/C++ code
+        QL.require(isValidFixingDate(fixingDate) , "Fixing date is not valid"); // QA:[RG]::verified // TODO: message
         final Date today = org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
         final boolean enforceTodaysHistoricFixings = Configuration.getSystemConfiguration(null).isEnforcesTodaysHistoricFixings();
         if (fixingDate.le(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
             // must have been fixed
             final Double pastFixing = IndexManager.getInstance().get(name()).find(fixingDate);
-            assert pastFixing != null : "Missing fixing for " + fixingDate;
+            QL.require(pastFixing != null , "Missing fixing for " + fixingDate); // QA:[RG]::verified // TODO: message
             return pastFixing;
         }
         if ((fixingDate.equals(today)) && !forecastTodaysFixing)
@@ -161,7 +162,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 
     public Date fixingDate(final Date valueDate) {
         final Date fixingDate = fixingCalendar().advance(valueDate, (fixingDays), TimeUnit.DAYS);
-        assert isValidFixingDate(fixingDate) : "fixing date is not valid"; // TODO: message
+        QL.ensure(isValidFixingDate(fixingDate) , "fixing date is not valid"); // TODO: message
         return fixingDate;
     }
 
@@ -196,7 +197,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
     }
 
     public Date valueDate(final Date fixingDate) {
-        assert isValidFixingDate(fixingDate) : "Fixing date is not valid"; // TODO: message
+        QL.require(isValidFixingDate(fixingDate) , "Fixing date is not valid"); // QA:[RG]::verified // TODO: message
         return fixingCalendar().advance(fixingDate, fixingDays, TimeUnit.DAYS);
     }
 

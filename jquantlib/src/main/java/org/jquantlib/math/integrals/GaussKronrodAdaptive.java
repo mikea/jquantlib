@@ -21,6 +21,7 @@
  */
 package org.jquantlib.math.integrals;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 
 /**
@@ -34,7 +35,7 @@ import org.jquantlib.math.Ops;
  * The function returns the final approximation, result, an estimate of the absolute error, abserr and the number of function
  * evaluations used, neval. The Gauss-Kronrod rules are designed in such a way that each rule uses all the results of its
  * predecessors, in order to minimize the total number of function evaluations.
- * 
+ *
  * @author Ueli Hofstetter
  */
 public class GaussKronrodAdaptive extends KronrodIntegral {
@@ -70,7 +71,7 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
 
     public GaussKronrodAdaptive(final double absoluteAccuracy, final int maxEvaluations) {
         super(absoluteAccuracy, maxEvaluations);
-        assert maxEvaluations >= 15 : "required maxEvaluations must be >= 15"; // TODO: message
+        QL.require(maxEvaluations >= 15 , "required maxEvaluations must be >= 15"); // QA:[RG]::verified // TODO: message
     }
 
     @Override
@@ -120,7 +121,7 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
         if (Math.abs(k15 - g7) < tolerance)
             return k15;
         else {
-            assert getNumberOfEvaluations() + 30 <= getMaxEvaluations() : "maximum number of function evaluations exceeded";
+            QL.require(getNumberOfEvaluations() + 30 <= getMaxEvaluations() , "maximum number of function evaluations exceeded"); // QA:[RG]::verified // TODO: message
             return integrateRecursively(f, a, center, tolerance / 2) + integrateRecursively(f, center, b, tolerance / 2);
         }
     }

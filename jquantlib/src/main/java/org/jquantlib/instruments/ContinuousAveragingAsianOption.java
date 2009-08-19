@@ -44,6 +44,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.pricingengines.PricingEngine;
@@ -77,7 +78,7 @@ public class ContinuousAveragingAsianOption extends OneAssetStrikedOption {
     @Override
     public void setupArguments(final Arguments args) /* @ReadOnly */{
         super.setupArguments(args);
-        assert args instanceof ContinuousAveragingAsianOptionArguments : WRONG_ARGUMENT_TYPE;
+        QL.require(args instanceof ContinuousAveragingAsianOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         final ContinuousAveragingAsianOptionArguments moreArgs = (ContinuousAveragingAsianOptionArguments) args;
         moreArgs.averageType = averageType_;
     }

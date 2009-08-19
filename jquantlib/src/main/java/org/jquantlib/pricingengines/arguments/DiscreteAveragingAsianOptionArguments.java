@@ -43,13 +43,15 @@ package org.jquantlib.pricingengines.arguments;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.AverageType;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
 import org.jquantlib.util.Date;
 
 /**
  * Description of the terms and conditions of a discrete average out fixed strike option.
- * 
+ *
  * @author <Richard Gomes>
  */
 public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArguments {
@@ -79,20 +81,20 @@ public class DiscreteAveragingAsianOptionArguments extends OneAssetOptionArgumen
     @Override
     public void validate() /*/@ReadOnly*/{
         super.validate();
-        assert averageType!=null : "unspecified average type";
-        assert pastFixings!=Constants.NULL_INTEGER : "null past-fixing number";
-        assert runningAccumulator != Constants.NULL_REAL : "null running product";
+        QL.require(averageType!=null , "unspecified average type"); // QA:[RG]::verified // TODO: message
+        QL.require(pastFixings!=Constants.NULL_INTEGER , "null past-fixing number"); // QA:[RG]::verified // TODO: message
+        QL.require(runningAccumulator != Constants.NULL_REAL , "null running product"); // QA:[RG]::verified // TODO: message
 
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         switch (averageType) {
         case Arithmetic:
-            assert runningAccumulator >= 0.0 : "non negative running sum required: not allowed";
+            QL.require(runningAccumulator >= 0.0 , "non negative running sum required: not allowed"); // QA:[RG]::verified // TODO: message
             break;
         case Geometric:
-            assert runningAccumulator > 0.0 : "positive running product required: not allowed";
+            QL.require(runningAccumulator > 0.0 , "positive running product required: not allowed"); // QA:[RG]::verified // TODO: message
             break;
         default:
-            throw new AssertionError("invalid average type");
+            throw new LibraryException("invalid average type"); // QA:[RG]::verified // TODO: message
         }
 
     }

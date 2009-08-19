@@ -41,6 +41,7 @@
 
 package org.jquantlib.exercise;
 
+import org.jquantlib.QL;
 import org.jquantlib.util.Date;
 
 /**
@@ -72,11 +73,12 @@ public class AmericanExercise extends EarlyExercise {
 	 */
 	public AmericanExercise(final Date earliestDate, final Date latestDate, final boolean payoffAtExpiry) {
 		super(Exercise.Type.AMERICAN, payoffAtExpiry);
-		assert earliestDate.le(latestDate) : "earliest > latest exercise date"; // TODO: message
+		QL.require(earliestDate.le(latestDate) , "earliest > latest exercise date");  // QA:[RG]::verified // TODO: message
 		super.dates.add(earliestDate);
 		super.dates.add(latestDate);
     }
 
+// TODO: code review :: please verify against QL/C++ code
 // TODO: check that everywhere the American condition is applied from earliestDate and not earlier
 
 //	public AmericanExercise(final Date latestDate) {

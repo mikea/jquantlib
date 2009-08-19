@@ -22,12 +22,13 @@
 
 package org.jquantlib.math.integrals;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
 
 /**
  * This is the abstract base class for all integrators
- * 
+ *
  * @author Richard Gomes
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
@@ -48,7 +49,7 @@ public abstract class Integrator {
     //
 
     public Integrator(final double absoluteAccuracy, final int maxEvaluations) {
-        assert absoluteAccuracy > Constants.QL_EPSILON : "required tolerance must be > epsilon";
+        QL.require(absoluteAccuracy > Constants.QL_EPSILON , "required tolerance must be > epsilon"); // QA:[RG]::verified // TODO: message
 
         this.absoluteAccuracy = absoluteAccuracy;
         this.maxEvaluations = maxEvaluations;

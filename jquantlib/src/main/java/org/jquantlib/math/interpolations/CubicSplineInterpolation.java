@@ -40,6 +40,7 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
 import org.jquantlib.math.matrixutilities.Array;
@@ -250,7 +251,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
             // ignoring end condition value
             throw new UnsupportedOperationException("this end condition is not implemented yet");
         default:
-            throw new AssertionError("unknown end condition"); //TODO: message
+            throw new LibraryException("unknown end condition"); // QA:[RG]::verified //TODO: message
         }
 
         // right condition
@@ -274,7 +275,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
             // ignoring end condition value
             throw new UnsupportedOperationException("this end condition is not implemented yet");
         default:
-            throw new AssertionError("unknown end condition"); //TODO: message
+            throw new LibraryException("unknown end condition"); // QA:[RG]::verified //TODO: message
         }
 
         // solve the system

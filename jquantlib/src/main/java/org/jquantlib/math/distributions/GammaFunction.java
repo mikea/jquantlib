@@ -22,6 +22,8 @@
 
 package org.jquantlib.math.distributions;
 
+import org.jquantlib.QL;
+
 /**
  * In mathematics, the Gamma function
  * is an extension of the factorial function to real and complex numbers.
@@ -59,7 +61,7 @@ public class GammaFunction {
      * @return <code>-temp+Math.log(2.5066282746310005*ser/x)</code>
      */
     public double logValue(final double x) /* Read-only */{
-        assert x > 0.0 : "positive argument required"; // TODO: message
+        QL.require(x > 0.0 , "positive argument required"); // QA:[RG]::verified // TODO: message
     	double temp = x + 5.5;
     	temp -= (x + 0.5) * Math.log(temp);
     	double ser = 1.000000000190015;

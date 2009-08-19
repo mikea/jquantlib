@@ -22,6 +22,7 @@
 
 package org.jquantlib.daycounters;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.Date;
 
 /**
@@ -43,9 +44,9 @@ import org.jquantlib.util.Date;
  * <p>
  * Italian convention: starting dates or ending dates that occur on February and
  * are grater than 27 become equal to 30 for computational sake.
- * 
+ *
  * @see <a href="http://en.wikipedia.org/wiki/Day_count_convention">Day count convention</a>
- * 
+ *
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
@@ -92,7 +93,7 @@ public class Thirty360 extends AbstractDayCounter {
         case ITALIAN:
             return THIRTY360_IT;
         default:
-            throw new AssertionError(); //TODO: message
+            throw new LibraryException("no conversion specified"); // QA:[RG]::verified //TODO: message
         }
     }
 
@@ -124,7 +125,7 @@ public class Thirty360 extends AbstractDayCounter {
             delegate = new IT();
             break;
         default:
-            throw new AssertionError(); // TODO: message
+            throw new LibraryException("no conversion specified"); // QA:[RG]::verified // TODO: message
         }
     }
 
@@ -178,9 +179,9 @@ public class Thirty360 extends AbstractDayCounter {
 
     /**
      * Abstraction of Thirty360 class
-     * 
+     *
      * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a>
-     * 
+     *
      * @author Richard Gomes
      */
     private interface Thirty360Abstraction {
@@ -190,9 +191,9 @@ public class Thirty360 extends AbstractDayCounter {
 
     /**
      * Implementation of Thirty360 class abstraction according to US convention
-     * 
+     *
      * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a>
-     * 
+     *
      * @author Richard Gomes
      */
     private final class US implements Thirty360Abstraction {
@@ -214,9 +215,9 @@ public class Thirty360 extends AbstractDayCounter {
 
     /**
      * Implementation of Thirty360 class abstraction according to European convention
-     * 
+     *
      * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a>
-     * 
+     *
      * @author Richard Gomes
      */
     private final class EU implements Thirty360Abstraction {
@@ -234,9 +235,9 @@ public class Thirty360 extends AbstractDayCounter {
 
     /**
      * Implementation of Thirty360 class abstraction according to Italian convention
-     * 
+     *
      * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a>
-     * 
+     *
      * @author Richard Gomes
      */
     private final class IT implements Thirty360Abstraction {

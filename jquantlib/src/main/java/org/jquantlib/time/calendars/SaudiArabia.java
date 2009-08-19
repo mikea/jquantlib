@@ -29,6 +29,7 @@ import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
@@ -67,7 +68,7 @@ public class SaudiArabia extends DelegateCalendar{
             break;
 
         default:
-            throw new AssertionError("unknown market");
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         // FIXME
         setDelegate(delegate);
@@ -79,7 +80,7 @@ public class SaudiArabia extends DelegateCalendar{
             return TADAWUL_CALENDAR;
 
         default:
-            throw new AssertionError("unknown market");
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

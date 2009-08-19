@@ -1,8 +1,8 @@
 package org.jquantlib.legacy.libormarkets;
 
-import org.jquantlib.JQuantlib;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
+import org.jquantlib.math.matrixutilities.PseudoSqrt;
 import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
 import org.jquantlib.math.optimization.BoundaryConstraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
@@ -27,7 +27,7 @@ public class LmLinearExponentialCorrelationModel extends LmCorrelationModel {
     private Matrix corrMatrix_, pseudoSqrt_;
     private int factors_;
 
-    public LmLinearExponentialCorrelationModel(int size, double rho, double beta, int factors) {
+    public LmLinearExponentialCorrelationModel(final int size, final double rho, final double beta, int factors) {
         super(size, 2);
         corrMatrix_ = new Matrix(size, size);
         factors = factors != 0 ? 0 : size;
@@ -36,45 +36,51 @@ public class LmLinearExponentialCorrelationModel extends LmCorrelationModel {
         generateArguments();
     }
 
-    public LmLinearExponentialCorrelationModel(int size, double rho, double beta) {
+    public LmLinearExponentialCorrelationModel(final int size, final double rho, final double beta) {
         this(size, rho, beta, 0);
     }
 
+    @Override
     public Matrix correlation(final /* @ Time */double time, final Array x) {
         // TODO: code review :: use of clone()
         return corrMatrix_;
     }
 
-    public double correlation(int i, int j, /* @ Time */double time, final Array x) {
+    @Override
+    public double correlation(final int i, final int j, /* @ Time */final double time, final Array x) {
         return corrMatrix_.get(i, j);
     }
 
+    @Override
     public boolean isTimeIndependent() {
         return true;
     }
 
+    @Override
     public int factors() {
         return factors_;
     }
 
+    @Override
     public Matrix pseudoSqrt(final /* @ Time */double time, final Array x) {
         // TODO: code review :: use of clone()
         return pseudoSqrt_;
     }
 
+    @Override
     public void generateArguments() {
         final double rho = arguments_.get(0).getOperatorEq(0.0);
         final double beta = arguments_.get(1).getOperatorEq(0.0);
 
         for (int i = 0; i < size_; ++i) {
             for (int j = i; j < size_; ++j) {
-                double value = rho + (1 - rho) * Math.exp(-beta * Math.abs(i - j));
+                final double value = rho + (1 - rho) * Math.exp(-beta * Math.abs(i - j));
                 corrMatrix_.set(i, j, value);
                 corrMatrix_.set(j, i, value);
             }
         }
 
-        pseudoSqrt_ = JQuantlib.rankReducedSqrt(corrMatrix_, factors_, 1, SalvagingAlgorithm.None);
+        pseudoSqrt_ = PseudoSqrt.rankReducedSqrt(corrMatrix_, factors_, 1, SalvagingAlgorithm.None);
         corrMatrix_ = pseudoSqrt_.mul(pseudoSqrt_).mul(pseudoSqrt_.transpose());
     }
 }

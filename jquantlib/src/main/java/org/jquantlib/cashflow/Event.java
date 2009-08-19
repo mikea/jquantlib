@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
@@ -178,7 +179,7 @@ public abstract class Event implements Observable, TypedVisitable<Object> {
 		if (v1 != null)
             v1.visit(this);
         else
-            throw new AssertionError("null event visitor"); //TODO: message
+            throw new LibraryException("null event visitor"); // QA:[RG]::verified //TODO: message
 	}
 
 }

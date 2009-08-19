@@ -25,6 +25,7 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.lang.exceptions.LibraryException;
 
 /**
  * LU Decomposition.
@@ -228,7 +229,7 @@ public class LUDecomposition {
      * @exception IllegalArgumentException Matrix must be square
      */
     public double det() {
-        QL.require(m == n, Matrix.MATRIX_MUST_BE_SQUARE);
+        QL.require(m == n, Matrix.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
 
         double d = pivsign;
         for (int j = 0; j < n; j++) {
@@ -243,12 +244,12 @@ public class LUDecomposition {
      * @param B a Matrix with as many m as A and any number of columns.
      * @return X so that L*U*X = B(piv,:)
      * @exception IllegalArgumentException Matrix row dimensions must agree.
-     * @exception RuntimeException Matrix is singular.
+     * @exception LibraryException Matrix is singular.
      */
     public Matrix solve(final Matrix B) {
-        QL.require(B.rows == this.m, Matrix.MATRIX_IS_INCOMPATIBLE);
+        QL.require(B.rows == this.m, Matrix.MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         if (!this.isNonSingular())
-            throw new RuntimeException(MATRIX_IS_SINGULAR);
+            throw new LibraryException(MATRIX_IS_SINGULAR);
 
         // Copy right hand side with pivoting
         final Matrix X = B.range(piv, 0, B.cols);

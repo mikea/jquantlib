@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.Leg;
@@ -109,7 +110,7 @@ public class Swap extends NewInstrument {
     //
 
     public Date startDate() /* @ReadOnly */{
-        assert legs.size() > 0 : "no legs given";
+        QL.require(legs.size() > 0 , "no legs given"); // QA:[RG]::verified // TODO: message
         Date d = CashFlows.getInstance().startDate(this.legs.get(0));
         for (int j = 1; j < this.legs.size(); j++)
             d = Std.getInstance().min(d, CashFlows.getInstance().startDate(this.legs.get(j)));
@@ -117,7 +118,7 @@ public class Swap extends NewInstrument {
     }
 
     public Date maturityDate() /* @ReadOnly */{
-        assert legs.size() > 0 : "no legs given";
+        QL.require(legs.size() > 0 , "no legs given"); // QA:[RG]::verified // TODO: message
         Date d = CashFlows.getInstance().maturityDate(this.legs.get(0));
         for (int j = 1; j < this.legs.size(); j++)
             d = Std.getInstance().max(d, CashFlows.getInstance().maturityDate(this.legs.get(j)));
@@ -166,13 +167,13 @@ public class Swap extends NewInstrument {
         final SwapResults results = (SwapResults) r;
 
         if (results.legNPV.length > 0) {
-            assert results.legNPV.length == legNPV.length : "wrong number of leg NPV returned";
+            QL.require(results.legNPV.length == legNPV.length , "wrong number of leg NPV returned"); // QA:[RG]::verified // TODO: message
             legNPV = results.legNPV;
         } else
             Arrays.fill(legNPV, Constants.NULL_REAL);
 
         if (results.legBPS.length > 0) {
-            assert results.legBPS.length == legBPS.length : "wrong number of leg BPS returned";
+            QL.require(results.legBPS.length == legBPS.length , "wrong number of leg BPS returned"); // QA:[RG]::verified // TODO: message
             legBPS = results.legBPS;
         } else
             Arrays.fill(legBPS, Constants.NULL_REAL);

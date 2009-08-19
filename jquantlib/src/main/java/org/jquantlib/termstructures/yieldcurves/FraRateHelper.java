@@ -22,6 +22,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
@@ -36,10 +37,10 @@ import org.jquantlib.util.Date;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 public class FraRateHelper extends RelativeDateRateHelper {
 
     private Date fixingDate;
@@ -56,7 +57,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
             final BusinessDayConvention convention,
             final boolean endOfMonth,
             final DayCounter dayCounter) {
-        assert monthsToEnd > monthsToStart : "monthsToEnd must be greater than monthsToStart"; // TODO: message
+        QL.require(monthsToEnd > monthsToStart , "monthsToEnd must be greater than monthsToStart"); // QA:[RG]::verified // TODO: message
         this.quote = rate;
         this.monthsToStart = monthsToStart;
         iborIndex = new IborIndex(
@@ -78,7 +79,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
             final BusinessDayConvention convention, final boolean endOfMonth,
             final DayCounter dayCounter) {
         super(rate);
-        assert monthsToEnd > monthsToStart : "monthsToEnd must be greater than monthsToStart"; // TODO: message
+        QL.require(monthsToEnd > monthsToStart , "monthsToEnd must be greater than monthsToStart"); // QA:[RG]::verified // TODO: message
         this.monthsToStart = monthsToStart;
         iborIndex = new IborIndex(
                 "no-fix", // never take fixing into account
@@ -118,7 +119,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
     @Override
     public double impliedQuote()  {
-        assert termStructure != null : "term structure not set"; // TODO: message
+        QL.require(termStructure != null , "term structure not set"); // QA:[RG]::verified // TODO: message
         return iborIndex.fixing(fixingDate, true);
     }
 

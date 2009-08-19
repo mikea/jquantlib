@@ -61,7 +61,7 @@ package org.jquantlib.math.randomnumbers;
  * @author Dominik Holenstein
  * @author Q. Boiler
  */
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // This class requires additional analysis
 public class PrimitivePolynomials {
 

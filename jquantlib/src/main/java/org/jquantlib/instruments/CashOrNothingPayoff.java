@@ -42,6 +42,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
@@ -113,7 +114,7 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
         else if (type == Option.Type.PUT)
             return (strike-price > 0.0 ? cashPayoff : 0.0);
         else
-            throw new AssertionError(UNKNOWN_OPTION_TYPE);
+            throw new LibraryException(UNKNOWN_OPTION_TYPE); // QA:[RG]::verified
 	}
 
 

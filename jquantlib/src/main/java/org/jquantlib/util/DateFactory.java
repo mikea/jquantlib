@@ -22,6 +22,7 @@
 
 package org.jquantlib.util;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Weekday;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * is used.
  *
  * @author Srinivas Hasti
- * 
+ *
  */
 //TODO: OSGi
 public abstract class DateFactory {
@@ -48,17 +49,17 @@ public abstract class DateFactory {
 
     /**
      * Sets the dateUtil to be used
-     * 
+     *
      * @param dateUtil
      */
     public static void setFactory(final DateFactory dateUtil) {
-        assert DateFactory.dateFactory == null : "Dateutil already set ";
+        QL.require(DateFactory.dateFactory == null , "Dateutil already set "); // QA:[RG]::verified // TODO: message
         DateFactory.dateFactory = dateUtil;
     }
 
     /**
      * To get the date util
-     * 
+     *
      * @return
      */
     public static DateFactory getFactory() {
@@ -69,7 +70,7 @@ public abstract class DateFactory {
     /**
      * Returns a instance that is the Maximum date that can be represented by
      * the Date implementation.
-     * 
+     *
      * @return Maximum date represented by the implementation
      */
     public Date getMaxDate(){
@@ -79,7 +80,7 @@ public abstract class DateFactory {
     /**
      * Returns a instance that is the Minimum date that can be represented by
      * the current Date implementation.
-     * 
+     *
      * @return Minimum date represented by the implementation
      */
     public Date getMinDate(){
@@ -88,7 +89,7 @@ public abstract class DateFactory {
 
     /**
      * Returns todays date represented by the system
-     * 
+     *
      * @return
      */
     public Date getTodaysDate(){
@@ -97,7 +98,7 @@ public abstract class DateFactory {
 
     /**
      * Returns a Date represented by parameters specified
-     * 
+     *
      * @param day
      * @param month
      * @param year
@@ -109,7 +110,7 @@ public abstract class DateFactory {
 
     /**
      * Returns a Date represented by parameters specified
-     * 
+     *
      * @param day
      * @param month
      * @param year
@@ -121,7 +122,7 @@ public abstract class DateFactory {
 
     /**
      * Returns a new Date which is the n-th week day of a certain month/year
-     * 
+     *
      * @param nth
      *            is the desired week
      * @param dayOfWeek
@@ -138,7 +139,7 @@ public abstract class DateFactory {
 
 
     /**
-     * 
+     *
      * @param str
      * @return
      */
@@ -147,7 +148,7 @@ public abstract class DateFactory {
     }
 
     /**
-     * 
+     *
      * @param str
      * @param fmt
      * @return
@@ -158,7 +159,7 @@ public abstract class DateFactory {
 
     /**
      * Check whether given year is leap year or not
-     * 
+     *
      * @param year
      * @return
      */

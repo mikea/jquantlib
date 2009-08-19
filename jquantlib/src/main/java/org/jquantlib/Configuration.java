@@ -34,17 +34,17 @@ import java.util.prefs.Preferences;
  * Singleton pattern is used for the system wide configuration. In an
  * application server environment, singleton instance could be by class loader
  * depending on scope of the JQuantLib library to the module.
- * 
+ *
  * <p>
  * Each configuration can have one or more Settings. By default every
  * configuration contains a global Settings that can be shared by multiple
  * computations. Multiple Settings creation can be enabled by calling
  * enableMultipleSettings.
- * 
+ *
  * <p>
  * System wide configurations are intended to be constant during the entire life
  * cycle of the application.
- * 
+ *
  * @note In heavily multi-threaded environments threads must cache
  *       configurations from this singleton.
  */
@@ -68,7 +68,7 @@ public class Configuration {
      * <p>
      * In an application server environment, it could be by class loader depending on scope of the
      * jquantlib library to the module.
-     * 
+     *
      * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
      */
     private volatile static Configuration systemConfiguration = null;
@@ -99,25 +99,21 @@ public class Configuration {
     // TODO: Explain these
     private static boolean defaultExtraSafefyChecks = true;
     private static boolean defaultEnforcesTodaysHistoricFixings = false;
+
     /**
-     * To enforce extra validations
-     */
-    private boolean extraSafetyChecks;
-    /**
-     * 
+     *
      */
     private boolean enforcesTodaysHistoricFixings;
 
     /**
-     * 
+     *
      * @param prefs
      */
     private Configuration(final Preferences prefs) {
         this.preferences = prefs;
         if (prefs != null) {
-            this.extraSafetyChecks = prefs.getBoolean("ExtraSafetyChecks", defaultExtraSafefyChecks);
-            this.enforcesTodaysHistoricFixings = prefs.getBoolean("EnforcesTodaysHistoricFixings",
-                    defaultEnforcesTodaysHistoricFixings);
+            this.enforcesTodaysHistoricFixings =
+                prefs.getBoolean("EnforcesTodaysHistoricFixings", defaultEnforcesTodaysHistoricFixings);
         }
         this.globalSettings = new Settings(prefs);
     }
@@ -127,7 +123,7 @@ public class Configuration {
      * singleton instance is initialized with the preferences passed in. For
      * subsequent calls, preferences argument is ignored. Configuration returned
      * is a singleton instance, so it can be shared by multiple clients.
-     * 
+     *
      * @return
      */
     public static Configuration getSystemConfiguration(final Preferences prefs) {
@@ -146,7 +142,7 @@ public class Configuration {
      * to true. null is returned when allowUserConfigurations is set to false.
      * Its the client responsibility to hold onto the configuration instance for
      * all its usage.
-     * 
+     *
      * @return
      */
     public static Configuration newConfiguration(final Preferences prefs) {
@@ -164,7 +160,7 @@ public class Configuration {
 
     /**
      * Returns preferences set on the Configuration.
-     * 
+     *
      * @return
      */
     public Preferences getPreferences() {
@@ -183,7 +179,7 @@ public class Configuration {
 
     /**
      * Returns the global settings of the Configuration.
-     * 
+     *
      * @return
      */
     public Settings getGlobalSettings() {
@@ -194,7 +190,7 @@ public class Configuration {
      * To create a new Settings instance. Returns null if enableMultipleSettings
      * is not set. Settings returned should be cached by the client for its
      * usage.
-     * 
+     *
      * @return
      */
     public Settings newSettings() {
@@ -204,21 +200,10 @@ public class Configuration {
     }
 
     /**
-     * Whether to enforce extra checks on the calculations or not.
-     * 
-     * //TODO: Q ? Should this be at Settings level ?
-     * 
-     * @return
-     */
-    public boolean isExtraSafetyChecks() {
-        return extraSafetyChecks;
-    }
-
-    /**
      * Enforce today's historic fixings
-     * 
+     *
      * //TODO: Q ? Should this be at Settings level ?
-     * 
+     *
      * @return
      */
     public boolean isEnforcesTodaysHistoricFixings() {

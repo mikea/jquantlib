@@ -40,6 +40,7 @@
 
 package org.jquantlib.pricingengines;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.AssetOrNothingPayoff;
 import org.jquantlib.instruments.CashOrNothingPayoff;
 import org.jquantlib.instruments.GapPayoff;
@@ -47,6 +48,7 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.util.TypedVisitor;
@@ -54,11 +56,11 @@ import org.jquantlib.util.Visitor;
 
 /**
  * Black 1976 calculator class
- * 
+ *
  * @note <b>BUG:</b> When the variance is null, division by zero occur during
  *       the calculation of delta, delta forward, gamma, gamma forward, rho,
  *       dividend rho, vega, and strike sensitivity.
- * 
+ *
  * @author Richard Gomes
  */
 // FIXME When the variance is null, division by zero occur during calculations
@@ -105,9 +107,9 @@ public class BlackCalculator {
         this.discount = discount;
         this.variance = stdDev * stdDev;
 
-        assert forward > 0.0 : "positive forward value required";
-        assert stdDev >= 0.0 : "non-negative standard deviation required";
-        assert discount > 0.0 : "positive discount required";
+        QL.require(forward > 0.0 , "positive forward value required");
+        QL.require(stdDev >= 0.0 , "non-negative standard deviation required");
+        QL.require(discount > 0.0 , "positive discount required");
 
         if (stdDev >= Constants.QL_EPSILON) {
             if (strike == 0.0) {
@@ -158,7 +160,7 @@ public class BlackCalculator {
             beta = 1.0 - cum_d2;// N(-d2)
             dBeta_dD2 = -n_d2;// -n( d2)
         } else
-            throw new AssertionError("invalid option type");
+            throw new LibraryException("invalid option type"); // QA:[RG]::verified // TODO: message
 
         // now dispatch on type.
 
@@ -181,7 +183,7 @@ public class BlackCalculator {
      */
     public/* @Price */double delta(final double spot) /* @ReadOnly */{
 
-        assert spot > 0.0 : "positive spot value required";
+        QL.require(spot > 0.0 , "positive spot value required");
         final double DforwardDs = forward / spot;
         final double temp = stdDev * spot;
         final double DalphaDs = dAlpha_dD1 / temp;
@@ -244,7 +246,7 @@ public class BlackCalculator {
      */
     public double gamma(final double spot) /* @ReadOnly */{
 
-        assert spot > 0.0 : "positive spot value required";
+        QL.require(spot > 0.0 , "positive spot value required");
         final double DforwardDs = forward / spot;
         final double temp = stdDev * spot;
         final double DalphaDs = dAlpha_dD1 / temp;
@@ -281,10 +283,10 @@ public class BlackCalculator {
      */
     public double theta(final double spot, final/* @Time */double maturity) /* @ReadOnly */{
 
-        assert maturity > 0.0 : "non negative maturity required";
+        QL.require(maturity > 0.0 , "non negative maturity required");
         if (maturity == 0.0) return 0.0;
 
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
 
         // =====================================================================
         //
@@ -310,7 +312,7 @@ public class BlackCalculator {
      * Sensitivity to volatility.
      */
     public double vega(final/* @Time */double maturity) /* @ReadOnly */{
-        assert maturity >= 0.0 : "negative maturity not allowed";
+        QL.require(maturity >= 0.0 , "negative maturity not allowed");
 
         final double temp = Math.log(strike / forward) / variance;
         // actually DalphaDsigma / SQRT(T)
@@ -325,7 +327,7 @@ public class BlackCalculator {
      * Sensitivity to discounting rate.
      */
     public double rho(final/* @Time */double maturity) /* @ReadOnly */{
-        assert maturity >= 0.0 : "negative maturity not allowed";
+        QL.require(maturity >= 0.0 , "negative maturity not allowed");
 
         // actually DalphaDr / T
         final double DalphaDr = dAlpha_dD1 / stdDev;
@@ -339,7 +341,7 @@ public class BlackCalculator {
      * Sensitivity to dividend/growth rate.
      */
     public double dividendRho(final/* @Time */double maturity) /* @ReadOnly */{
-        assert maturity >= 0.0 : "negative maturity not allowed";
+        QL.require(maturity >= 0.0 , "negative maturity not allowed");
 
         // actually DalphaDq / T
         final double DalphaDq = -dAlpha_dD1 / stdDev;
@@ -352,7 +354,7 @@ public class BlackCalculator {
     /**
      * Probability of being in the money in the bond martingale measure, i.e.
      * N(d2).
-     * 
+     *
      * <p>
      * It is a risk-neutral probability, not the real world one.
      */
@@ -363,7 +365,7 @@ public class BlackCalculator {
     /**
      * Probability of being in the money in the asset martingale measure, i.e.
      * N(d1).
-     * 
+     *
      * <p>
      * It is a risk-neutral probability, not the real world one.
      */

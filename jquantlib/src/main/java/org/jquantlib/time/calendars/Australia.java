@@ -31,6 +31,7 @@ import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.OCTOBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -73,7 +74,7 @@ public class Australia extends DelegateCalendar {
             delegate = new AustraliaExchangeCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -85,7 +86,7 @@ public class Australia extends DelegateCalendar {
         case ASX:
             return EXCHANGE_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

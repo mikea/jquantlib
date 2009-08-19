@@ -40,6 +40,7 @@ package org.jquantlib.pricingengines.arguments;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.util.Date;
 
@@ -64,8 +65,7 @@ public class DividendVanillaOptionArguments extends OneAssetOptionArguments{
         final Date exerciseDate = exercise.lastDate();
 
         for (int i = 0; i < cashFlow.size(); i++)
-            assert cashFlow.get(i).date().le(exerciseDate) : "dividend date later than the exercise date";
-
+            QL.require(cashFlow.get(i).date().le(exerciseDate) , "dividend date later than the exercise date"); // QA:[RG]::verified // TODO: message
     }
 
 }

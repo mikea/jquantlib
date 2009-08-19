@@ -1,5 +1,6 @@
 package org.jquantlib.pricingengines.swap;
 
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.math.Constants;
 import org.jquantlib.pricingengines.SwapEngine;
@@ -15,13 +16,13 @@ public class DiscountingSwapEngine extends SwapEngine implements Observer {
     public DiscountingSwapEngine(final Handle<YieldTermStructure> discountCurve) /* @ReadOnly */ {
         this.discountCurve = discountCurve;
 
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         this.discountCurve.getLink().addObserver(this);
     }
 
     @Override
     public void calculate() /* @ReadOnly */ {
-        assert !discountCurve.empty() : "no discounting term structure set";
+        QL.require(!discountCurve.empty() , "no discounting term structure set"); // QA:[RG]::verified // TODO: message
 
         results.value = 0.0;
         results.errorEstimate = Constants.NULL_REAL;
@@ -35,7 +36,7 @@ public class DiscountingSwapEngine extends SwapEngine implements Observer {
      }
 
     @Override
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     public void update(final Observable o, final Object arg) {
         // TODO: Code review :: incomplete code
         if (true)

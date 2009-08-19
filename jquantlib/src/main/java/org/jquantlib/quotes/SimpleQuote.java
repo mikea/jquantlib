@@ -22,6 +22,8 @@
 
 package org.jquantlib.quotes;
 
+import org.jquantlib.QL;
+
 // TODO: comments
 public class SimpleQuote extends Quote {
 
@@ -63,7 +65,7 @@ public class SimpleQuote extends Quote {
 
     @Override
     public final double evaluate() {
-        assert !Double.isNaN(value) : "invalid simple quote: no value available";
+        QL.require(!Double.isNaN(value) , "invalid simple quote: no value available"); // QA:[RG]::verified // TODO: message
         return value;
     }
 

@@ -22,13 +22,14 @@
 
 package org.jquantlib.currencies;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
 import org.jquantlib.util.Pair;
 
 
 public class ExchangeRate {
-    
-    public enum Type { 
+
+    public enum Type {
         Direct,  /** given directly by the user */
         Derived  /** derived from exchange rates between
                       other currencies */
@@ -43,26 +44,26 @@ public class ExchangeRate {
     private     Type type_;
     /** The pair of chained ExchangeRates.*/
     public     Pair<ExchangeRate,ExchangeRate> rateChain_;
-    
+
     /**
      * Creates a new ExchangeRate instance.
      */
     public ExchangeRate(){
         this.rate_=Constants.NULL_REAL;
     }
-    
+
    /**
     * Creates clone of an existing ExchangeRate instance.
     * @param toCopy the ExchangeRate to be cloned.
     */
-    public ExchangeRate(ExchangeRate toCopy){
+    public ExchangeRate(final ExchangeRate toCopy){
         //shouldn't matter
         source_ = toCopy.source_;
         target_ = toCopy.target_;
         rate_ = toCopy.rate_;
         type_ = toCopy.type_;
     }
-    
+
     /**
      * Creates a new ExchangeRate instance
      * @param source The source currency of this ExchangeRate Currency
@@ -71,14 +72,14 @@ public class ExchangeRate {
      */
     public  ExchangeRate(final Currency  source,
                                       final Currency  target,
-                                      /*@Decimal*/double rate){
+                                      /*@Decimal*/final double rate){
         this.source_=(source);
         this.target_=(target);
         this.rate_=(rate);
         this.type_=(Type.Direct) ;
     }
-    
-    
+
+
     //accessors
     public Currency source() {
         return source_;
@@ -95,45 +96,38 @@ public class ExchangeRate {
     public /*@Decimal*/ double rate()   {
         return rate_;
     }
-    
+
     /**
      * Apply this ExchangeRate an amount of cash. A new money instance will be returned.
      * The input remains unchanged.
      * @param amount The money instance the exchange rate should be applied to. Money
      * @return A new money instance where this ExchangeRate has been applied to. Money
      */
-    public Money exchange(final Money  amount)   {
+    public Money exchange(final Money amount) {
         switch (type_) {
-          case Direct:
-            if (amount.currency().equals(source_)){
-                return new Money(amount.value()*rate_, target_);
+        case Direct:
+            if (amount.currency().equals(source_)) {
+                return new Money(amount.value() * rate_, target_);
+            } else if (amount.currency().equals(target_)) {
+                return new Money(amount.value() / rate_, source_);
+            } else {
+                throw new LibraryException("exchange rate not applicable"); // QA:[RG]::verified // TODO: message
             }
-            else if (amount.currency().equals(target_)){
-                return new Money(amount.value()/rate_, source_);
+        case Derived:
+            if (amount.currency() == rateChain_.getFirst().source() || amount.currency() == rateChain_.getFirst().target()) {
+                return rateChain_.getSecond().exchange(rateChain_.getFirst().exchange(amount));
+            } else if (amount.currency() == rateChain_.getSecond().source() || amount.currency() == rateChain_.getSecond().target()) {
+                return rateChain_.getFirst().exchange(rateChain_.getSecond().exchange(amount));
+            } else {
+                throw new LibraryException("exchange rate not applicable"); // QA:[RG]::verified // TODO: message
             }
-            else
-                throw new AssertionError("exchange rate not applicable");
-          case Derived:
-            if (amount.currency() == rateChain_.getFirst().source() ||
-                amount.currency() == rateChain_.getFirst().target()){
-                return rateChain_.getSecond().exchange(
-                                         rateChain_.getFirst().exchange(amount));
-            }
-            else if (amount.currency() == rateChain_.getSecond().source() ||
-                       amount.currency() == rateChain_.getSecond().target()){
-                return rateChain_.getFirst().exchange(
-                                         rateChain_.getSecond().exchange(amount));
-            }
-            else{
-                throw new AssertionError("exchange rate not applicable");
-            }
-          default:
-            throw new AssertionError("unknown exchange-rate type");
+        default:
+            throw new LibraryException("unknown exchange-rate type"); // QA:[RG]::verified // TODO: message
         }
     }
 
     /**
-     * Returns a new ExchangeRate with a initialized ratechain. The ratechain will 
+     * Returns a new ExchangeRate with a initialized ratechain. The ratechain will
      * be initialized by copies of r1 and r1.
      * @param r1 The first ExchangeRate to be used in the ratechain ExchangeRate
      * @param r2 The second ExchangeRate to be used inthe ratechain ExchangeRate
@@ -141,7 +135,7 @@ public class ExchangeRate {
      */
     public static ExchangeRate chain(final ExchangeRate  r1,
                                      final ExchangeRate  r2) {
-        ExchangeRate result = new ExchangeRate();
+        final ExchangeRate result = new ExchangeRate();
         result.type_ = ExchangeRate.Type.Derived;
         result.rateChain_ = new Pair<ExchangeRate, ExchangeRate>( new ExchangeRate(r1), new ExchangeRate(r2));
         if (r1.source_.equals(r2.source_)) {
@@ -161,7 +155,7 @@ public class ExchangeRate {
             result.target_ = r2.source_;
             result.rate_ = r1.rate_/r2.rate_;
         } else {
-            throw new AssertionError("exchange rates not chainable");
+            throw new LibraryException("exchange rates not chainable"); // QA:[RG]::verified // TODO: message
         }
         return result;
     }

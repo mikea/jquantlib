@@ -22,6 +22,7 @@
 
 package org.jquantlib.math.distributions;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 
 /**
@@ -79,7 +80,7 @@ public class NormalDistribution implements Derivative {
 	 * @param sigma
 	 */
 	public NormalDistribution(final double average, final double sigma) {
-        assert sigma > 0.0 : "sigma must be greater than 0.0"; // TODO: message
+        QL.require(sigma > 0.0 , "sigma must be greater than 0.0"); // QA:[RG]::verified // TODO: message
 
 		this.average = average;
 		this.sigma = sigma;

@@ -25,6 +25,7 @@ package org.jquantlib.cashflow;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
@@ -65,7 +66,7 @@ public abstract class Dividend extends CashFlow {
 	//
 
 	public static List<? extends Dividend> DividendVector(final List<Date> dividendDates, final List<Double> dividends) {
-	    assert dividendDates.size() == dividends.size() : "size mismatch between dividend dates and amounts";
+	    QL.require(dividendDates.size() == dividends.size() , "size mismatch between dividend dates and amounts");  // QA:[RG]::verified // TODO: message
         final List<Dividend> items = new ArrayList<Dividend>(dividendDates.size());
         for (int i=0;i<dividendDates.size();i++)
             items.add(new FixedDividend(dividends.get(i), dividendDates.get(i)));

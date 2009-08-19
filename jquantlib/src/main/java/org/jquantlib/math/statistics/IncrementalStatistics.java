@@ -25,6 +25,8 @@ package org.jquantlib.math.statistics;
 
 import java.util.List;
 
+import org.jquantlib.QL;
+
 public class IncrementalStatistics /*implements IStatistics*/ {
 
     private static final String unsufficient_sample_weight = "sampleWeight_=0, unsufficient";
@@ -61,12 +63,12 @@ public class IncrementalStatistics /*implements IStatistics*/ {
 
 
     public void add(final double value, final double weight) {
-        if (weight < 0.0)
-            throw new IllegalArgumentException("negative weight (" + weight + ") not allowed");
+        QL.require(weight >= 0.0, unsufficient_sample_weight); // QA:[RG]::verified
 
         final int oldSamples = sampleNumber_;
         sampleNumber_++;
-        assert sampleNumber_ > oldSamples : max_number_of_samples_reached;
+
+        QL.require(sampleNumber_ > oldSamples, max_number_of_samples_reached);
 
         sampleWeight_ += weight;
 

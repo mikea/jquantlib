@@ -22,6 +22,8 @@
 package org.jquantlib.currencies;
 
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Closeness;
 
 /**
@@ -54,18 +56,19 @@ public class Money {
         this.value_ = (0.0);
     }
 
-    public Money(final Currency currency, /* Decimal */double value) {
+    public Money(final Currency currency, /* Decimal */final double value) {
         this.value_ = (value);
         this.currency_ = (currency);
     }
 
-    public Money(/* Decimal */double value, final Currency currency) {
+    public Money(/* Decimal */final double value, final Currency currency) {
         this.value_ = (value);
         this.currency_ = (currency.clone());
     }
 
+    @Override
     public Money clone() {
-        Money money = new Money();
+        final Money money = new Money();
         money.currency_ = currency_.clone();
         money.value_ = value_;
         return money;
@@ -98,13 +101,13 @@ public class Money {
     }
 
     // *=
-    public Money mulAssign(/* Decimal */double x) {
+    public Money mulAssign(/* Decimal */final double x) {
         value_ *= x;
         return this;
     }
 
     // /=
-    public Money divAssign(/* Decimal */double x) {
+    public Money divAssign(/* Decimal */final double x) {
         value_ /= x;
         return this;
     }
@@ -113,27 +116,27 @@ public class Money {
 
     // +
     public Money add(final Money money) {
-        Money tmp = clone();
+        final Money tmp = clone();
         tmp.addAssign(money);
         return tmp;
     }
 
     // -
     public Money sub(final Money money) {
-        Money tmp = clone();
+        final Money tmp = clone();
         tmp.subAssign(money);
         return tmp;
     }
 
     // *
-    public Money mul(/* Decimal */double x) {
-        Money tmp = clone();
+    public Money mul(/* Decimal */final double x) {
+        final Money tmp = clone();
         tmp.mulAssign(x);
         return tmp;
     }
 
-    public Money div(/* Decimal */double x) {
-        Money tmp = clone();
+    public Money div(/* Decimal */final double x) {
+        final Money tmp = clone();
         tmp.value_ /= x;
         return tmp;
     }
@@ -153,29 +156,29 @@ public class Money {
     }
 
     // FIXME: suspicious....
-    public Money operatorMultiply(/* Decimal */double value, final Currency c) {
+    public Money operatorMultiply(/* Decimal */final double value, final Currency c) {
         return new Money(value, c);
     }
 
-    public static Money multiple(final Currency c, /* Decimal */double value) {
+    public static Money multiple(final Currency c, /* Decimal */final double value) {
         return new Money(value, c);
     }
 
-    public static Money multiple( /* Decimal */double value, final Currency c) {
+    public static Money multiple( /* Decimal */final double value, final Currency c) {
         return new Money(value, c);
     }
 
     public void convertTo(final Currency target) {
         if (currency().notEquals(target)) {
-            ExchangeRate rate = ExchangeRateManager.getInstance().lookup(currency(), target);
+            final ExchangeRate rate = ExchangeRateManager.getInstance().lookup(currency(), target);
             // FIXME ... evt. Money should be modified in ExchangeRate directly
-            Money money = rate.exchange(this).rounded();
+            final Money money = rate.exchange(this).rounded();
             this.currency_ = money.currency_;
             this.value_ = money.value_;
         }
     }
 
-    
+
     //
     //    Assignment operations
     //
@@ -183,8 +186,8 @@ public class Money {
     //    ----- ---------- ------- -------- ------
     //    +=    addAssign  Money   Money   this
     //    -=    addAssign  Money   Money   this
-    
-    
+
+
     //
     //    Operations
     //
@@ -192,14 +195,14 @@ public class Money {
     //    ----- ---------- ------- -------- ------
     //    /     addAssign  Money   Money   this
     //    ==    equals     Money   Money   boolean
-    
+
     public void convertToBase() {
-        assert (!Money.baseCurrency.empty()) : "no base currency set";
+        QL.require((!Money.baseCurrency.empty()) , "no base currency set");  // QA:[RG]::verified // TODO: message
         convertTo(Money.baseCurrency);
     }
-    
-    
-    
+
+
+
 
 
 
@@ -213,17 +216,17 @@ public class Money {
             this.value_ += money.value_;
         } else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) {
             this.convertToBase();
-            Money tmp = money.clone();
+            final Money tmp = money.clone();
             tmp.convertToBase();
             // recursive invocation
             this.addAssign(tmp);
         } else if (Money.conversionType == Money.ConversionType.AutomatedConversion) {
-            Money tmp = money.clone();
+            final Money tmp = money.clone();
             tmp.convertTo(currency_);
             // recursive invocation
             this.addAssign(tmp);
         } else {
-            throw new AssertionError("currency mismatch and no conversion specified");
+            throw new LibraryException("currency mismatch and no conversion specified"); // QA:[RG]::verified // TODO: message
         }
         return this;
     }
@@ -238,16 +241,16 @@ public class Money {
             value_ -= money.value_;
         } else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) {
             this.convertToBase();
-            Money tmp = money.clone();
+            final Money tmp = money.clone();
             tmp.convertToBase();
             // recursive ...
             this.subAssign(tmp);
         } else if (Money.conversionType == Money.ConversionType.AutomatedConversion) {
-            Money tmp = money.clone();
+            final Money tmp = money.clone();
             tmp.convertTo(currency_);
             this.subAssign(tmp);
         } else {
-            throw new AssertionError("currency mismatch and no conversion specified");
+            throw new LibraryException("currency mismatch and no conversion specified"); // QA:[RG]::verified // TODO: message
         }
         return this;
     }
@@ -262,19 +265,19 @@ public class Money {
         if (currency().equals(money.currency())) {
             return value_ / money.value();
         } else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) {
-            Money tmp1 = this.clone();
+            final Money tmp1 = this.clone();
             tmp1.convertToBase();
-            Money tmp2 = money.clone();
+            final Money tmp2 = money.clone();
             tmp2.convertToBase();
             // recursive
             return this.div(tmp2);
         } else if (Money.conversionType == Money.ConversionType.AutomatedConversion) {
-            Money tmp = money.clone();
+            final Money tmp = money.clone();
             tmp.convertTo(money.currency());
             // recursive
             return this.div(tmp);
         } else {
-            throw new AssertionError("currency mismatch and no conversion specified");
+            throw new LibraryException("currency mismatch and no conversion specified"); // QA:[RG]::verified // TODO: message
         }
     }
 
@@ -287,18 +290,18 @@ public class Money {
         if (currency().equals(money.currency())) {
             return value() == money.value();
         } else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) {
-            Money tmp1 = this.clone();
+            final Money tmp1 = this.clone();
             tmp1.convertToBase();
-            Money tmp2 = money.clone();
+            final Money tmp2 = money.clone();
             tmp2.convertToBase();
             // recursive...
             return tmp1.equals(tmp2);
         } else if (Money.conversionType == Money.ConversionType.AutomatedConversion) {
-            Money tmp = money.clone();
+            final Money tmp = money.clone();
             tmp.convertTo(this.currency());
             return this.equals(tmp);
         } else {
-            throw new AssertionError("currency mismatch and no conversion specified");
+            throw new LibraryException("currency mismatch and no conversion specified"); // QA:[RG]::verified // TODO: message
         }
     }
 
@@ -306,17 +309,17 @@ public class Money {
         if (this.currency().equals(money.currency())) {
             return value() < money.value();
         } else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) {
-            Money tmp1 = this.clone();
+            final Money tmp1 = this.clone();
             tmp1.convertToBase();
-            Money tmp2 = money;
+            final Money tmp2 = money;
             tmp2.convertToBase();
             return tmp1.less(tmp2);
         } else if (Money.conversionType == Money.ConversionType.AutomatedConversion) {
-            Money tmp = money;
+            final Money tmp = money;
             tmp.convertTo(currency());
             return this.less(tmp);
         } else {
-            throw new AssertionError("currency mismatch and no conversion specified");
+            throw new LibraryException("currency mismatch and no conversion specified"); // QA:[RG]::verified // TODO: message
         }
     }
 
@@ -324,57 +327,58 @@ public class Money {
         if (currency().equals(money.currency())) {
             return value() <= money.value();
         } else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) {
-            Money tmp1 = this.clone();
+            final Money tmp1 = this.clone();
             tmp1.convertToBase();
-            Money tmp2 = money;
+            final Money tmp2 = money;
             tmp2.convertToBase();
             return tmp1.less(tmp2);
         } else if (Money.conversionType == Money.ConversionType.AutomatedConversion) {
-            Money tmp = money.clone();
+            final Money tmp = money.clone();
             ;
             tmp.convertTo(this.currency());
             return this.less(tmp);
         } else {
-            throw new AssertionError("currency mismatch and no conversion specified");
+            throw new LibraryException("currency mismatch and no conversion specified"); // QA:[RG]::verified // TODO: message
         }
     }
 
-    public boolean close(final Money money, /* Size */int n) {
+    public boolean close(final Money money, /* Size */final int n) {
         if (currency().equals(money.currency())) {
             return Closeness.isClose(value(), money.value(), n);
         } else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) {
-            Money tmp1 = this.clone();
+            final Money tmp1 = this.clone();
             tmp1.convertToBase();
-            Money tmp2 = money.clone();
+            final Money tmp2 = money.clone();
             tmp2.convertToBase();
             return tmp1.close(tmp2, n);
         } else if (Money.conversionType == Money.ConversionType.AutomatedConversion) {
-            Money tmp = money.clone();
+            final Money tmp = money.clone();
             tmp.convertTo(this.currency());
             return this.close(tmp, n);
         } else {
-            throw new AssertionError("currency mismatch and no conversion specified");
+            throw new LibraryException("currency mismatch and no conversion specified"); // QA:[RG]::verified // TODO: message
         }
     }
 
-    public boolean close_enough(final Money money, /* Size */int n) {
+    public boolean close_enough(final Money money, /* Size */final int n) {
         if (currency().equals(money.currency())) {
             return Closeness.isCloseEnough(value(), money.value(), n);
         } else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) {
-            Money tmp1 = this.clone();
+            final Money tmp1 = this.clone();
             tmp1.convertToBase();
-            Money tmp2 = money;
+            final Money tmp2 = money;
             tmp2.convertToBase();
             return tmp1.close_enough(tmp2, n);
         } else if (Money.conversionType == Money.ConversionType.AutomatedConversion) {
-            Money tmp = money;
+            final Money tmp = money;
             tmp.convertTo(currency());
             return this.close_enough(tmp, n);
         } else {
-            throw new AssertionError("currency mismatch and no conversion specified");
+            throw new LibraryException("currency mismatch and no conversion specified"); // QA:[RG]::verified // TODO: message
         }
     }
 
+    @Override
     public String toString() {
         // TODO: check how to handle formatting...
         return rounded().value() + " " + currency().symbol() + "(" + currency().code() + ")";

@@ -28,6 +28,7 @@ import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.NOVEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -52,11 +53,11 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th</li>
  * <li>2nd Day of Christmas, December 26th</li>
  * </ul>
- * 
+ *
  * @category calendars
- * 
+ *
  * @see <a href="http://www.gpw.pl/">Warsaw Stock Exchange</a>
- * 
+ *
  * @author Anand Mani
  * @author Renjith Nair
  * @author Richard Gomes
@@ -76,7 +77,7 @@ public class Poland extends DelegateCalendar {
             delegate = new PolandWSECalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -88,7 +89,7 @@ public class Poland extends DelegateCalendar {
         case WSE:
             return WSE_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

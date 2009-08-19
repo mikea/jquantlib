@@ -24,6 +24,7 @@ package org.jquantlib.math.statistics;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.functions.Bind1st;
 import org.jquantlib.math.functions.Bind1stPredicate;
@@ -105,22 +106,23 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
 
         final Pair<Double, Integer> result = statistics.expectationValue(comp, less);
         final double x = result.getFirst();
-        //argh.....
+
+        // TODO: code review :: please verify against QL/C++ code
         final int n = result.getSecond().intValue();
-        assert n >= 2 : unsufficient_samples_under_target;
+        QL.require(n >= 2 , unsufficient_samples_under_target); // QA:[RG]::verified
         return (new Double(n)/(new Double(n)-1.0))*x;
     }
 
     //! potential upside (the reciprocal of VAR) at a given percentile
     public double potentialUpside(final double centile){
-        assert centile >= 0.9 && centile < 1.0 : "percentile out of range [0.9, 1.0)"; // TODO: message
+        QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)"); // QA:[RG]::verified // TODO: message
         // potential upside must be a gain, i.e., floored at 0.0
         return Math.max(statistics.percentile(centile), 0.0);
     }
 
     //! value-at-risk at a given percentile
     public double valueAtRisk(final double centile){
-        assert centile >= 0.9 && centile < 1.0 : "percentile out of range [0.9, 1.0)"; // TODO: message
+        QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)"); // QA:[RG]::verified // TODO: message
         return - Math.min(statistics.percentile(1.0-centile), 0.0);
     }
 
@@ -142,7 +144,7 @@ public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
         if(centile<0.9 || centile>=1.0)
             throw new IllegalArgumentException("percentile (" + centile + ") out of range [0.9, 1.0)");
         //Ensure...
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         if (statistics.getSampleSize() == 0){
             //not sure whether to throw an exception
             //throw new IllegalArgumentException(empty_sample_set);

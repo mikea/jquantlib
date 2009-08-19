@@ -41,6 +41,7 @@
 
 package org.jquantlib.processes;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
@@ -59,12 +60,12 @@ import org.jquantlib.util.Observable;
 
 /**
  * Generalized Black-Scholes stochastic process
- * 
+ *
  * <p>
  * This class describes the stochastic process governed by
  * <p>
  * {@latex[ dS(t, S) = (r(t) - q(t) - \frac \sigma(t, S)^2}{2}) dt + \sigma dW_t. }
- * 
+ *
  * @author Richard Gomes
  */
 public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
@@ -213,7 +214,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
             // We decided to explicitly test the interface and throw an
             // exception if we are not able
             // to identify the correct interface to be used.
-            throw new AssertionError("unrecognized volatility curve"); // FIXME: message
+            throw new LibraryException("unrecognized volatility curve"); // QA:[RG]::verified // FIXME: message
         } else
             return localVolatility;
     }

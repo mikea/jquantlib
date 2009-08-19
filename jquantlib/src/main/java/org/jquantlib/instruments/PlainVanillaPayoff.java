@@ -41,6 +41,8 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.lang.exceptions.LibraryException;
+
 /**
  * Plain-vanilla payoff
  * <p>
@@ -72,7 +74,7 @@ public class PlainVanillaPayoff extends StrikedTypePayoff {
         else if (type==Option.Type.PUT)
             return Math.max(strike - price, 0.0);
         else
-            throw new AssertionError(UNKNOWN_OPTION_TYPE);
+            throw new LibraryException(UNKNOWN_OPTION_TYPE); // QA:[RG]::verified
     }
 
 }

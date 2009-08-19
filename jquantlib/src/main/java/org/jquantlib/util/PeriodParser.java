@@ -22,6 +22,7 @@
 
 package org.jquantlib.util;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.slf4j.Logger;
@@ -30,10 +31,11 @@ import org.slf4j.LoggerFactory;
 /**
  * To convert short and long format string representations
  * to period object.
- * 
+ *
  * @author Srinivas Hasti
- * 
+ *
  */
+// TODO: code review :: please verify against QL/C++ code
 public final class PeriodParser {
 
     //
@@ -43,29 +45,25 @@ public final class PeriodParser {
 
     /**
      * To convert the string to Period.
-     * 
+     *
      * @param str
      * @return period derived from str
      */
     public static Period parse(final String str) {
         TimeUnit units = null;
         int index = -1;
-        if ((index = str.indexOf('d')) > 0
-                || (index = str.indexOf('D')) > 0) {
+        if ((index = str.indexOf('d')) > 0 || (index = str.indexOf('D')) > 0) {
             units = TimeUnit.DAYS;
-            enforceUnit(index,str,units);
-        } else if ((index = str.indexOf('w')) > 0
-                || (index = str.indexOf('W')) > 0) {
+            enforceUnit(index, str, units);
+        } else if ((index = str.indexOf('w')) > 0 || (index = str.indexOf('W')) > 0) {
             units = TimeUnit.WEEKS;
-            enforceUnit(index,str,units);
-        } else if ((index = str.indexOf('m')) > 0
-                || (index = str.indexOf('M')) > 0) {
+            enforceUnit(index, str, units);
+        } else if ((index = str.indexOf('m')) > 0 || (index = str.indexOf('M')) > 0) {
             units = TimeUnit.MONTHS;
-            enforceUnit(index,str,units);
-        } else if ((index = str.indexOf('y')) > 0
-                || (index = str.indexOf('Y')) > 0) {
+            enforceUnit(index, str, units);
+        } else if ((index = str.indexOf('y')) > 0 || (index = str.indexOf('Y')) > 0) {
             units = TimeUnit.YEARS;
-            enforceUnit(index,str,units);
+            enforceUnit(index, str, units);
         }
 
         final String length = str.substring(0, index).trim();
@@ -79,7 +77,7 @@ public final class PeriodParser {
         if (unitStr.length()==0) return;
 
         //Now enforce my unit
-        assert unitStr.equalsIgnoreCase(units.toString()) : "unable to convert to period";
+        QL.require(unitStr.equalsIgnoreCase(units.toString()) , "unable to convert to period");
     }
 
 }

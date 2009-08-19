@@ -21,6 +21,8 @@
  */
 package org.jquantlib.math;
 
+import org.jquantlib.lang.exceptions.LibraryException;
+
 /**
  * Basic rounding class.
  */
@@ -32,7 +34,7 @@ public class Rounding {
 
     /**
      * ! The rounding methods follow the OMG specification available at ftp://ftp.omg.org/pub/docs/formal/00-06-29.pdf
-     * 
+     *
      *  Warning the names of the Floor and Ceiling methods might be misleading. Check the provided reference.
      */
     public enum Type {
@@ -68,11 +70,11 @@ public class Rounding {
         this.type_ = Type.None;
     }
 
-    public Rounding(int precision) {
+    public Rounding(final int precision) {
         this(precision, Type.Closest, 5);
     }
 
-    public Rounding(int precision, Type type /* = Closest */, int digit /* = 5 */) {
+    public Rounding(final int precision, final Type type /* = Closest */, final int digit /* = 5 */) {
 
         this.precision_ = (precision);
         this.type_ = (type);
@@ -90,19 +92,19 @@ public class Rounding {
     public int roundingDigit() {
         return digit_;
     }
-    
-    
-    final public /*Decimal*/ double operator(/*Decimal*/double value)  {
+
+
+    final public /*Decimal*/ double operator(/*Decimal*/final double value)  {
 
         if (type_ == Rounding.Type.None){
             return value;
         }
 
-        /*Real*/ double mult = Math.pow(10.0,precision_);
-        boolean neg = (value < 0.0);
+        /*Real*/ final double mult = Math.pow(10.0,precision_);
+        final boolean neg = (value < 0.0);
         /*Real*/ double lvalue = Math.abs(value)*mult;
-        /*Real*/ double integral = (double)((int)lvalue);
-        /*Real*/ double modVal = (double)(lvalue-(int)lvalue );
+        /*Real*/ final double integral = ((int)lvalue);
+        /*Real*/ final double modVal = (lvalue-(int)lvalue );
         lvalue -= modVal;
         switch (type_) {
           case Down:
@@ -129,55 +131,55 @@ public class Rounding {
             }
             break;
           default:
-            throw new AssertionError("unknown rounding method");
+            throw new LibraryException("unknown rounding method"); // QA:[RG]::verified // TODO: message
         }
         return (neg) ? -(lvalue/mult) : lvalue/mult;
     }
 
-    
-    
-    
+
+
+
 
     // ! Up-rounding.
     public static class UpRounding extends Rounding {
-        public UpRounding(int precision) {
+        public UpRounding(final int precision) {
             this(precision, 5);
         }
 
-        public UpRounding(int precision, int digit) {
+        public UpRounding(final int precision, final int digit) {
             super(precision, Type.Up, digit);
         }
     };
 
     // ! Down-rounding.
     public static class DownRounding extends Rounding {
-        public DownRounding(int precision) {
+        public DownRounding(final int precision) {
             this(precision, 5);
         }
 
-        public DownRounding(int precision, int digit) {
+        public DownRounding(final int precision, final int digit) {
             super(precision, Type.Down, digit);
         }
     };
 
     // ! Closest rounding.
     public static class ClosestRounding extends Rounding {
-        public ClosestRounding(int precision) {
+        public ClosestRounding(final int precision) {
             this(precision, 5);
         }
 
-        public ClosestRounding(int precision, int digit) {
+        public ClosestRounding(final int precision, final int digit) {
             super(precision, Type.Closest, digit);
         }
     };
 
     // ! Ceiling truncation.
     public static class CeilingTruncation extends Rounding {
-        public CeilingTruncation(int precision) {
+        public CeilingTruncation(final int precision) {
             this(precision, 5);
         }
 
-        public CeilingTruncation(int precision, int digit) {
+        public CeilingTruncation(final int precision, final int digit) {
             super(precision, Type.Ceiling, digit);
         }
     };
@@ -185,11 +187,11 @@ public class Rounding {
     // ! %Floor truncation.
 
     public static class FloorTruncation extends Rounding {
-        public FloorTruncation(int precision) {
+        public FloorTruncation(final int precision) {
             this(precision, 5);
         }
 
-        public FloorTruncation(int precision, int digit) {
+        public FloorTruncation(final int precision, final int digit) {
             super(precision, Type.Floor, digit);
         }
     };

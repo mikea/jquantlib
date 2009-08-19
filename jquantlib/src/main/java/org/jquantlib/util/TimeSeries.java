@@ -29,6 +29,8 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.IntervalPrice;
 import org.slf4j.Logger;
@@ -40,9 +42,9 @@ import org.slf4j.LoggerFactory;
  * This class acts as a generic repository for a set of historical data.
  * Any single datum can be accessed through its date, while
  * sets of consecutive data can be accessed through iterators.
- * 
+ *
  * @see TimeSeriesDouble
- * 
+ *
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
@@ -69,7 +71,7 @@ public class TimeSeries<T> {
         else if (IntervalPrice.class.isAssignableFrom(klass))
             this.delegate = new TimeSeriesIntervalPrice();
         else
-            throw new AssertionError("only Double and IntervalPrice are supported");
+            throw new LibraryException("only Double and IntervalPrice are supported"); // QA:[RG]::verified // TODO: message
     }
 
     public TimeSeries(final Date[] dates, final double[] values) {
@@ -77,7 +79,7 @@ public class TimeSeries<T> {
         if (Double.class.isAssignableFrom(klass))
             this.delegate = new TimeSeriesDouble(dates, values);
         else
-            throw new AssertionError("only double[] is supported");
+            throw new LibraryException("only double[] is supported"); // QA:[RG]::verified // TODO: message
     }
 
     public TimeSeries(final Date[] dates, final Double[] values) {
@@ -85,7 +87,7 @@ public class TimeSeries<T> {
         if (Double.class.isAssignableFrom(klass))
             this.delegate = new TimeSeriesDouble(dates, values);
         else
-            throw new AssertionError("only Double[] is supported");
+            throw new LibraryException("only Double[] is supported"); // QA:[RG]::verified // TODO: message
     }
 
     public TimeSeries(final Date[] dates, final IntervalPrice[] values) {
@@ -93,7 +95,7 @@ public class TimeSeries<T> {
         if (IntervalPrice.class.isAssignableFrom(klass))
             this.delegate = new TimeSeriesIntervalPrice(dates, values);
         else
-            throw new AssertionError("only IntervalPrice[] is supported");
+            throw new LibraryException("only IntervalPrice[] is supported"); // QA:[RG]::verified // TODO: message
     }
 
     public TimeSeries(final Date startingDate, final List<T> values) {
@@ -103,7 +105,7 @@ public class TimeSeries<T> {
         else if (IntervalPrice.class.isAssignableFrom(klass))
             this.delegate = new TimeSeriesIntervalPrice(startingDate, (List<IntervalPrice>)values);
         else
-            throw new AssertionError("only List<Double> and List<IntervalPrice> are supported");
+            throw new LibraryException("only List<Double> and List<IntervalPrice> are supported"); // QA:[RG]::verified // TODO: message
     }
 
 
@@ -260,7 +262,7 @@ public class TimeSeries<T> {
 
         public TimeSeriesIntervalPrice(final Date[] dates, final IntervalPrice[] values) {
             this();
-            assert dates.length == values.length : "sizes mismatch";
+            QL.require(dates.length == values.length , "sizes mismatch"); // QA:[RG]::verified // TODO: message
             for (int i = 0; i < dates.length; i++)
                 this.addIntervalPrice(dates[i], values[i]) ;
         }
@@ -338,14 +340,14 @@ public class TimeSeries<T> {
 
         public TimeSeriesDouble(final Date[] dates, final double[] values) {
             this();
-            assert dates.length == values.length : "sizes mismatch";
+            QL.require(dates.length == values.length , "sizes mismatch"); // QA:[RG]::verified // TODO: message
             for (int i = 0; i < dates.length; i++)
                 this.add(dates[i], values[i]) ;
         }
 
         public TimeSeriesDouble(final Date[] dates, final Double[] values) {
             this();
-            assert dates.length == values.length : "sizes mismatch";
+            QL.require(dates.length == values.length , "sizes mismatch"); // QA:[RG]::verified // TODO: message
             for (int i = 0; i < dates.length; i++)
                 this.add(dates[i], values[i]) ;
         }

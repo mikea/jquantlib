@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.EndCriteria;
@@ -56,10 +57,11 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     }
 
     public CalibratedModel(final int nArguments){
-        arguments_ = new ArrayList<Parameter>(nArguments);
-        constraint_ = new PrivateConstraint(arguments_);
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
+
+        arguments_ = new ArrayList<Parameter>(nArguments);
+        constraint_ = new PrivateConstraint(arguments_);
     }
 
 
@@ -121,16 +123,16 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
         return params;
     }
 
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     public void setParams(final Array params) {
         //Array::const_iterator p = params.begin();
         int p = 0;
         for (int i=0; i<arguments_.size(); i++)
             for (int j=0; j<arguments_.get(i).getSize(); j++, p++) {
-                assert p>params.size() : parameter_array_to_small;
+                QL.require(p>params.size() , parameter_array_to_small); // QA:[RG]::verified // TODO: message
                 arguments_.get(i).setParam(j, params.get(p));
             }
-        assert p == params.size() : parameter_array_to_big;
+        QL.require(p == params.size() , parameter_array_to_big); // QA:[RG]::verified // TODO: message
         update();
     }
 
@@ -181,7 +183,6 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     @Override
     public void notifyObservers() {
         delegatedObservable.notifyObservers();
-
     }
 
     @Override

@@ -35,6 +35,7 @@ import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -69,11 +70,11 @@ import org.jquantlib.util.Month;
  * <li>Idul Fitri</li>
  * <li>Ied Fitri</li> <li>Other national leaves</li>
  * </ul>
- * 
+ *
  * @category calendars
- * 
+ *
  * @see <a href="http://www.idx.co.id/">Indonesia Stock Exchange</a>
- * 
+ *
  * @author Joon Tiang
  * @author Jia Jia
  */
@@ -90,7 +91,7 @@ public class Indonesia extends DelegateCalendar {
             break;
 
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -102,7 +103,7 @@ public class Indonesia extends DelegateCalendar {
             return BEJ_CALENDAR;
 
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

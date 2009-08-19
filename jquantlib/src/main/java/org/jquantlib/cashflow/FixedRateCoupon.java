@@ -37,7 +37,7 @@ public class FixedRateCoupon extends Coupon {
     private InterestRate rate;
     private DayCounter dayCounter;
 
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     @Deprecated // diverges from 0.9.7
     public FixedRateCoupon(double nominal, 
             final Date paymentDate, 

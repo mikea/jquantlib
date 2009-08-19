@@ -24,7 +24,9 @@
 package org.jquantlib.cashflow;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.solvers1D.Brent;
@@ -103,8 +105,8 @@ public class CashFlows {
 			if (c != null)
 				d = Std.getInstance().min(c.accrualStartDate(), d);
 		}
-		// TODO: code review :: please verify against original QL/C++ code
-		assert d.le(DateFactory.getFactory().getMaxDate()) : not_enough_information_available;
+		// TODO: code review :: please verify against QL/C++ code
+		QL.ensure(d.le(DateFactory.getFactory().getMaxDate()) , not_enough_information_available); // QA:[RG]::verified
 		return d;
 	}
 
@@ -112,8 +114,8 @@ public class CashFlows {
 		Date d = DateFactory.getFactory().getMinDate();
 		for (int i = 0; i < cashflows.size(); i++)
 			d = Std.getInstance().max(d, cashflows.get(i).date());
-		// TODO: code review :: please verify against original QL/C++ code
-		assert d.le(DateFactory.getFactory().getMinDate()) : no_cashflows;
+		// TODO: code review :: please verify against QL/C++ code
+		QL.require(d.le(DateFactory.getFactory().getMinDate()) , no_cashflows);
 		return d;
 	}
 
@@ -269,7 +271,6 @@ public class CashFlows {
 		Date date = settlementDate;
 		if (date.eq(DateFactory.getFactory().getTodaysDate())) {
 			date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-			;
 		}
 
 		// depending on the sign of the market price, check that cash
@@ -286,7 +287,7 @@ public class CashFlows {
 					lastSign = thisSign;
 			}
 
-		assert signChanges > 0 : infeasible_cashflow;
+		QL.ensure(signChanges > 0 , infeasible_cashflow); // QA:[RG]::verified
 
 		/*
 		 * THIS COMMENT COMES UNMODIFIED FROM QL/C++ SOURCES
@@ -343,7 +344,7 @@ public class CashFlows {
 		case Macaulay:
 			return macaulayDuration(leg, y, date);
 		default:
-			throw new AssertionError(unknown_duration_type);
+			throw new LibraryException(unknown_duration_type); // QA:[RG]::verified
 		}
 	}
 
@@ -390,7 +391,7 @@ public class CashFlows {
 					break;
 				case SIMPLE_THEN_COMPOUNDED:
 				default:
-					throw new IllegalArgumentException(unsupported_compounding_type);
+					throw new LibraryException(unsupported_compounding_type); // QA:[RG]::verified
 				}
 			}
 
@@ -457,7 +458,7 @@ public class CashFlows {
 					break;
 				case SIMPLE_THEN_COMPOUNDED:
 				default:
-					throw new IllegalArgumentException(unsupported_compounding_type);
+					throw new LibraryException(unsupported_compounding_type); // QA:[RG]::verified
 				}
 			}
 
@@ -471,11 +472,8 @@ public class CashFlows {
 
 		final double y = rate.rate();
 		final int N = rate.frequency().toInteger();
-		if (!rate.compounding().equals(Compounding.COMPOUNDED))
-			throw new IllegalArgumentException(compounded_rate_required);
-		if (N < 1)
-			throw new IllegalArgumentException(unsupported_frequency);
-
+		QL.require(rate.compounding().equals(Compounding.COMPOUNDED), compounded_rate_required);
+		QL.require(N>=1, unsupported_frequency);
 		return (1 + y / N) * modifiedDuration(cashflows, rate, settlementDate);
 	}
 
@@ -609,8 +607,7 @@ public class CashFlows {
                 final Coupon cp = (Coupon) (iteratorLeg.get(i));
                 if (cp != null) {
                     if (firstCouponFound) {
-                        assert nominal == cp.nominal() && accrualPeriod == cp.accrualPeriod() && dc == cp.dayCounter() : "cannot aggregate two different coupons on "
-                                + paymentDate;
+                        QL.require(nominal == cp.nominal() && accrualPeriod == cp.accrualPeriod() && dc == cp.dayCounter() , "cannot aggregate two different coupons");  // QA:[RG]::verified // TODO: message
                     }
                 } else {
                     firstCouponFound = true;
@@ -621,7 +618,7 @@ public class CashFlows {
                 result += cp.rate();
             }
         }
-        assert (firstCouponFound) : "next cashflow (" + paymentDate + ") is not a coupon";
+        QL.ensure((firstCouponFound) , "next cashflow (" + paymentDate + ") is not a coupon"); // QA:[RG]::verified // TODO: message
         return result;
     }
 
@@ -757,7 +754,7 @@ public class CashFlows {
 			if (klass == Coupon.class)
 				return new CouponVisitor();
 
-			throw new AssertionError(UNKNOWN_VISITABLE);
+			throw new LibraryException(UNKNOWN_VISITABLE); // QA:[RG]::verified
 		}
 
 	}

@@ -34,7 +34,7 @@ import org.jquantlib.util.Pair;
  *  Sorts an ArrayList of Value weight pairs
  */
 
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // class not found on QL 0.9.7
 public class PairSortingAlgorithms<F extends Number, S extends Number> {
 

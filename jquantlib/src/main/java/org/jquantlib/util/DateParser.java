@@ -22,42 +22,44 @@
 
 package org.jquantlib.util;
 
+import org.jquantlib.QL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
  * Helper class to parse Strings to Date
- * 
+ *
  * @author Srinivas Hasti
- * 
+ *
  */
+// TODO: OSGi :: remove statics
 public class DateParser {
 
     private final static Logger logger = LoggerFactory.getLogger(DateParser.class);
 
     /**
      * Convert ISO format strings to Date. Ex: 2008-03-31
-     * 
+     *
      * @param str
      * @return Date
      */
     public static Date parseISO(final String str) {
-        if (str.length() == 10 && str.charAt(4) == '-' && str.charAt(7) == '-') {
-            final int year = Integer.parseInt(str.substring(0, 4));
-            final int month = Integer.parseInt(str.substring(5, 7));
-            final int day = Integer.parseInt(str.substring(8, 10));
-            logger.debug(DateFactory.getFactory().getDate(day, Month.valueOf(month), year).toString());
-            return DateFactory.getFactory().getDate(day, Month.valueOf(month), year);
-        } else
-            throw new AssertionError("Invalid format");
+        QL.require(str.length() == 10 && str.charAt(4) == '-' && str.charAt(7) == '-', "invalid format"); // QA:[RG]::verified // TODO: message
+
+        final int year = Integer.parseInt(str.substring(0, 4));
+        final int month = Integer.parseInt(str.substring(5, 7));
+        final int day = Integer.parseInt(str.substring(8, 10));
+
+        logger.debug(DateFactory.getFactory().getDate(day, Month.valueOf(month), year).toString());
+        return DateFactory.getFactory().getDate(day, Month.valueOf(month), year);
     }
 
     /**
      * Convert the String with separator '/' to Date using the format specified.
-     * 
+     *
      * For example: "2008/03/31", "yyyy/MM/dd"
-     * 
+     *
      * @param str
      * @param fmt
      * @return Date
@@ -70,7 +72,8 @@ public class DateParser {
         slist = str.split(str, '/');
         flist = str.split(fmt, '/');
 
-        assert slist.length == flist.length : "String didn't match with reference format";
+        if (slist.length != flist.length)
+            return Date.NULL_DATE;
 
         for (int i = 0; i < flist.length; i++) {
             final String sub = flist[i];
@@ -84,7 +87,9 @@ public class DateParser {
                     y += 2000;
             }
         }
+
         logger.debug(DateFactory.getFactory().getDate(d, Month.valueOf(m), y).toString());
         return DateFactory.getFactory().getDate(d, Month.valueOf(m), y);
     }
+
 }

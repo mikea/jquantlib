@@ -22,6 +22,7 @@
 
 package org.jquantlib.indexes;
 
+import org.jquantlib.QL;
 import org.jquantlib.currencies.Europe.EURCurrency;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.quotes.Handle;
@@ -54,7 +55,7 @@ public class Euribor extends IborIndex {
                 euriborEOM(tenor),
                 Actual360.getDayCounter(),
                 h);
-        assert tenor().units() != TimeUnit.DAYS : "for daily tenors dedicated DailyTenor constructor must be used";
+        QL.require(tenor().units() != TimeUnit.DAYS , "for daily tenors dedicated DailyTenor constructor must be used"); // QA:[RG]::verified // TODO: message
     }
 
 

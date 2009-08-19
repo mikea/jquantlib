@@ -24,6 +24,7 @@ package org.jquantlib.termstructures.yieldcurves;
 
 // FIXME: move to org.jquantlib.termstructures.yieldcurves
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
@@ -40,17 +41,16 @@ import org.jquantlib.util.Date;
 /**
  * @author Srinivas Hasti
  */
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public class DepositRateHelper<T extends TermStructure> extends
-RelativeDateRateHelper<T> {
+public class DepositRateHelper<T extends TermStructure> extends RelativeDateRateHelper<T> {
 
     private Date fixingDate;
     private final IborIndex iborIndex;
     private RelinkableHandle<YieldTermStructure> termStructureHandle;
 
     /**
-     * 
+     *
      * @param rate
      * @param tenor
      * @param fixingDays
@@ -77,7 +77,7 @@ RelativeDateRateHelper<T> {
     }
 
     /**
-     * 
+     *
      * @param rate
      * @param tenor
      * @param fixingDays
@@ -98,7 +98,7 @@ RelativeDateRateHelper<T> {
     }
 
     /**
-     * 
+     *
      * @param rate
      * @param ibor
      */
@@ -115,7 +115,7 @@ RelativeDateRateHelper<T> {
     }
 
     /**
-     * 
+     *
      * @param rate
      * @param ibor
      */
@@ -131,7 +131,7 @@ RelativeDateRateHelper<T> {
     }
 
     /**
-     * 
+     *
      */
     @Override
     protected void initializeDates() {
@@ -143,16 +143,16 @@ RelativeDateRateHelper<T> {
     }
 
     /**
-     * 
+     *
      */
     @Override
     public double impliedQuote() {
-        assert termStructure != null : "term structure not set";
+        QL.require(termStructure != null , "term structure not set"); // QA:[RG]::verified // TODO: message
         return iborIndex.fixing(fixingDate, true);
     }
 
     /**
-     * 
+     *
      * @param termStructureHandle
      */
     public void setTermStructureHandle(final YieldTermStructure term) {

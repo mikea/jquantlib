@@ -23,6 +23,7 @@ package org.jquantlib.assets;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.math.matrixutilities.Array;
 
@@ -50,7 +51,7 @@ public class DiscretizedOption extends DiscretizedAsset {
 
 	@Override
     public void reset(final int size) {
-	    assert method() == underlying.method() : "option and underlying were initialized on different methods";
+	    QL.require(method() == underlying.method() , "option and underlying were initialized on different methods");
 		values = new Array(size);
 		adjustValues();
 	}
@@ -99,7 +100,7 @@ public class DiscretizedOption extends DiscretizedAsset {
 			}
 			break;
 		default:
-			assert false : "invalid exercise type";
+			QL.assertion("invalid exercise type"); // QA:[RG]::verified // TODO: message
 		}
 		underlying.postAdjustValues();
 	}

@@ -9,7 +9,7 @@ import java.util.Collection;
  *
  * @author Praneet Tiwari
  */
-//TODO: code review :: please verify against original QL/C++ code
+//TODO: code review :: please verify against QL/C++ code
 //class not found on QL 0.9.7
 public class SortingAlgorithms {//<T extends Number, C extends Collection> {
 

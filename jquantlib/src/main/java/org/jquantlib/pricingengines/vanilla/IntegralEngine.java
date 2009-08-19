@@ -42,6 +42,7 @@
 
 package org.jquantlib.pricingengines.vanilla;
 
+import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
@@ -52,7 +53,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
  * Pricing engine for European vanilla options using integral approach
- * 
+ *
  * @author Richard Gomes
  */
 public class IntegralEngine extends OneAssetStrikedOptionEngine {
@@ -70,10 +71,10 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
     // TODO: define tolerance for calculate()
     @Override
     public void calculate() {
-        assert arguments.exercise.type()==Exercise.Type.EUROPEAN : NOT_AN_AMERICAN_OPTION;
-        assert arguments.payoff instanceof StrikedTypePayoff : NON_STRIKED_PAYOFF_GIVEN;
+        QL.require(arguments.exercise.type()==Exercise.Type.EUROPEAN , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified // TODO: message
+        QL.require(arguments.payoff instanceof StrikedTypePayoff , NON_STRIKED_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
         final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
-        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : BLACK_SCHOLES_PROCESS_REQUIRED;
+        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified // TODO: message
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         final double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());

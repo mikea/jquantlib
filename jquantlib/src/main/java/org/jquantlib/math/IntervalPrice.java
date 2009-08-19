@@ -41,6 +41,7 @@ package org.jquantlib.math;
 
 import java.util.Iterator;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Interval Price
- * 
+ *
  * @author Anand Mani
  */
 public class IntervalPrice {
@@ -109,7 +110,7 @@ public class IntervalPrice {
         case Low:
             return this.low;
         default:
-            throw new AssertionError(UNKNOWN_PRICE_TYPE);
+            throw new LibraryException(UNKNOWN_PRICE_TYPE); // QA:[RG]::verified
         }
     }
 
@@ -128,7 +129,7 @@ public class IntervalPrice {
             this.low = value;
             break;
         default:
-            throw new AssertionError(UNKNOWN_PRICE_TYPE);
+            throw new LibraryException(UNKNOWN_PRICE_TYPE); // QA:[RG]::verified
         }
     }
 
@@ -153,7 +154,7 @@ public class IntervalPrice {
 
         final int dsize = d.length;
         if (open.length != dsize || close.length != dsize || high.length != dsize || low.length != dsize)
-            throw new AssertionError("array sizes mismatch");
+            throw new LibraryException("array sizes mismatch"); // QA:[RG]::verified
 
         final TimeSeries<IntervalPrice> retval = new TimeSeries<IntervalPrice>();
         for (int i=0; i< dsize; i++)

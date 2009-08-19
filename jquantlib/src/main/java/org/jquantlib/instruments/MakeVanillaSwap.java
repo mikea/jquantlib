@@ -161,7 +161,7 @@ public VanillaSwap value() /* @ReadOnly */ {
         // TODO: Code review :: incomplete code
         if (true)
             throw new UnsupportedOperationException("Work in progress");
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         // The line below is certainly wrong!
         type_ = flag ? VanillaSwap.Type.Receiver : VanillaSwap.Type.Receiver;
         return this;

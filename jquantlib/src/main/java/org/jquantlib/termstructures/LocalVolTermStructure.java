@@ -40,8 +40,10 @@
 
 package org.jquantlib.termstructures;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
@@ -145,7 +147,7 @@ public abstract class LocalVolTermStructure extends AbstractTermStructure implem
         super.checkRange(t, extrapolate);
         /*@Price*/ final double minStrike = minStrike();
         /*@Price*/ final double maxStrike = maxStrike();
-        assert extrapolate||allowsExtrapolation()||(strike>=minStrike&&strike<=maxStrike) : "strike is outside curve domain"; // TODO: message
+        QL.require(extrapolate||allowsExtrapolation()||(strike>=minStrike&&strike<=maxStrike) , "strike is outside curve domain"); // QA:[RG]::verified // TODO: message
     }
 
     //
@@ -158,7 +160,7 @@ public abstract class LocalVolTermStructure extends AbstractTermStructure implem
         if (v1 != null)
             v1.visit(this);
         else
-            throw new AssertionError("not a local-volatility term structure visitor"); // TODO: message
+            throw new LibraryException("not a local-volatility term structure visitor"); // QA:[RG]::verified // TODO: message
     }
 
 }

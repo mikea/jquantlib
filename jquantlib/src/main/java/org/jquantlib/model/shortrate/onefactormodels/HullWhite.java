@@ -25,6 +25,7 @@ package org.jquantlib.model.shortrate.onefactormodels;
 
 import static org.jquantlib.pricingengines.BlackFormula.blackFormula;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.matrixutilities.Array;
@@ -41,18 +42,18 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeGrid;
 
 /**
- * 
+ *
  * @author Praneet Tiwari
  */
 // ! Single-factor Hull-White (extended %Vasicek) model class.
 /*
  * ! This class implements the standard single-factor Hull-White model defined by \f[ dr_t = (\theta(t) - \alpha r_t)dt + \sigma
  * dW_t \f] where \f$ \alpha \f$ and \f$ \sigma \f$ are constants.
- * 
+ *
  * \test calibration results are tested against cached values
- * 
+ *
  * \bug When the term structure is relinked, the r0 parameter of the underlying Vasicek model is not updated.
- * 
+ *
  * \ingroup shortrate
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
@@ -153,13 +154,17 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
     \note t and T should be expressed in yearfraction using
           deposit day counter, F_quoted is futures' market price.
      */
-    public static double /* @Rate */convexityBias(final double /* @Real */futuresPrice, final double /* @Time */t, final double /* @Time */T,
-            final double /* @Real */sigma, final double /* @Real */a) {
+    public static double /* @Rate */convexityBias(
+            final double /* @Real */futuresPrice,
+            final double /* @Time */t,
+            final double /* @Time */T,
+            final double /* @Real */sigma,
+            final double /* @Real */a) {
 
-        assert futuresPrice >= 0.0 : "negative futures price not allowed";
-        assert t >= 0.0 : "negative t not allowed";
-        assert T >= t : "T must not be less than t";
-        assert a >= 0.0 : "negative a not allowed";
+        QL.require(futuresPrice >= 0.0 , "negative futures price not allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(t >= 0.0 , "negative t not allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(T >= t , "T must not be less than t"); // QA:[RG]::verified // TODO: message
+        QL.require(a >= 0.0 , "negative a not allowed"); // QA:[RG]::verified // TODO: message
 
         final double /* @Time */deltaT = (T - t);
         final double /* @Real */tempDeltaT = (1. - Math.exp(-a * deltaT)) / a;

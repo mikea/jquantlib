@@ -26,6 +26,7 @@ import static org.jquantlib.util.Month.DECEMBER;
 import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.MAY;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -50,9 +51,9 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th</li>
  * <li>Boxing Day, December 26th</li>
  * </ul>
- * 
+ *
  * @category calendars
- * 
+ *
  * @author Anand Mani
  */
 public class Norway extends DelegateCalendar {
@@ -67,7 +68,7 @@ public class Norway extends DelegateCalendar {
             delegate = new OsloBorsCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -77,7 +78,7 @@ public class Norway extends DelegateCalendar {
         case OsloBors:
             return OSLOBORS_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

@@ -24,6 +24,7 @@ package org.jquantlib.termstructures;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -40,7 +41,7 @@ import org.jquantlib.util.Observer;
  * an instrument contains an instance of the actual instrument class to ensure consistency between the algorithms used during
  * bootstrapping and later instrument pricing. This is not yet fully enforced in the available rate helpers, though - only
  * SwapRateHelper and FixedCouponBondHelper contain their corresponding instrument for the time being.
- * 
+ *
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
@@ -99,7 +100,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 
     /**
      * The earliest date at which discounts are needed by the helper in order to provide a quote.
-     * 
+     *
      * @return the earliest relevant date
      */
     public final Date earliestDate() {
@@ -109,7 +110,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
     /**
      * The latest date at which discounts are needed by the helper in order to provide a quote. It does not necessarily equal the
      * maturity of the underlying instrument.
-     * 
+     *
      * @return the latest relevant date
      */
     public final Date latestDate() {
@@ -119,7 +120,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 
     /**
      * Sets the term structure to be used for pricing
-     * 
+     *
      * @note Comments kept for JQuantLib developers only as they refer to original C++ code:
      * Being a pointer and not a shared_ptr, the term
      * structure is not guaranteed to remain allocated
@@ -129,11 +130,11 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
      * rate helpers be used only in term structure
      * constructors, setting the term structure to
      * <b>this</b>, i.e., the one being constructed.
-     * 
+     *
      * @param termStructure
      */
     public final void setTermStructure(final T termStructure) {
-        assert termStructure != null : "null term structure given"; // FIXME: message
+        QL.require(termStructure != null , "null term structure given"); // QA:[RG]::verified // FIXME: message
         this.termStructure = termStructure;
     }
 
@@ -178,7 +179,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 
     /**
      * Implements multiple inheritance via delegate pattern to an inner class
-     * 
+     *
      * @see Observable
      */
     private final Observable	delegatedObservable	= new DefaultObservable(this);

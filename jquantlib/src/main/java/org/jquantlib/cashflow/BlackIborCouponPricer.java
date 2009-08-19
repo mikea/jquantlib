@@ -22,6 +22,7 @@
 package org.jquantlib.cashflow;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.pricingengines.BlackFormula;
@@ -118,7 +119,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
             }
             return Math.max(a - b, 0.0)* coupon_.accrualPeriod()*discount_;
         } else {
-            assert capletVolatility()!=null : missing_caplet_volatility;
+            QL.require(capletVolatility()!=null , missing_caplet_volatility); // QA:[RG]::verified // TODO: message
             // not yet determined, use Black model
             final double fixing =
                  BlackFormula.blackFormula(
@@ -141,7 +142,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
             adjustement = 0.0;
         else {
             // see Hull, 4th ed., page 550
-            assert capletVolatility() != null : missing_caplet_volatility;
+            QL.require(capletVolatility() != null , missing_caplet_volatility); // QA:[RG]::verified // TODO: message
             final Date d1 = coupon_.fixingDate();
             final Date referenceDate = capletVolatility().getLink().referenceDate();
             if (d1.le(referenceDate))

@@ -42,6 +42,7 @@
 
 package org.jquantlib.exercise;
 
+import org.jquantlib.QL;
 import org.jquantlib.util.Date;
 
 /**
@@ -58,7 +59,7 @@ public class EuropeanExercise extends Exercise {
 	 */
     public EuropeanExercise(final Date date) {
 		super(Exercise.Type.EUROPEAN);
-		assert date!=null : "empty exercise date"; // TODO: message
+		QL.require(date!=null , "empty exercise date");  // QA:[RG]::verified // TODO: message
 		super.dates.add(date);
 	}
 

@@ -21,6 +21,7 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.randomnumbers;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.methods.montecarlo.Sample;
 
@@ -78,7 +79,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  * For more info on Sobol' sequences see also "Monte Carlo
  * Methods in Financial Engineering," by P. Glasserman, 2004,
  * Springer, section 5.2.3
- * 
+ *
  * @author Dominik Holenstein
  * @author Q.Boiler
  */
@@ -1402,13 +1403,13 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 
         if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
 
-        assert dimensionality > 0 : "dimensionality must be greater than 0"; // TODO: message
+        QL.require(dimensionality > 0 , "dimensionality must be greater than 0"); // QA:[RG]::verified // TODO: message
 
         // In QuantLib/C++ PrimitivePolinomials is initialized in a template given its maximum dimensionality
         // defined via macros. In Java we allocate at runtime.
         final PrimitivePolynomials pp = new PrimitivePolynomials();
 
-        assert dimensionality <= pp.getPpmtMaxDim() : "dimensionality exceeds available primitive polynomials module two"; // TODO: message
+        QL.require(dimensionality <= pp.getPpmtMaxDim() , "dimensionality exceeds available primitive polynomials module two"); // QA:[RG]::verified // TODO: message
 
         this.dimensionality = dimensionality;
         this.sequenceCounter = 0;

@@ -23,6 +23,7 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate.onefactormodels;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.PositiveConstraint;
@@ -44,9 +45,9 @@ import org.jquantlib.time.TimeGrid;
  * This class implements the standard Black-Karasinski model defined by
  * {@latex[ d\ln r_t = (\theta(t) - \alpha \ln r_t)dt + \sigma dW_t }
  * where {@latex$ \alpha } and {@latex$ \sigma } are constants.
- * 
+ *
  * @category shortrate
- * 
+ *
  * @author Praneet Tiwari
  */
 public class BlackKarasinski extends OneFactorModel implements TermStructureConsistentModel {
@@ -121,7 +122,7 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
 
     @Override
     public ShortRateDynamics dynamics() {
-        throw new AssertionError(no_defined_process_for_bk);
+        throw new LibraryException(no_defined_process_for_bk); // QA:[RG]::verified
     }
 
     @Override

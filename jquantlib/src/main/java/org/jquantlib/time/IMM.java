@@ -43,6 +43,7 @@
 package org.jquantlib.time;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
@@ -50,9 +51,9 @@ import org.jquantlib.util.Month;
 
 /**
  * Main cycle of the International %Money Market (a.k.a. %IMM) months
- * 
+ *
  * @see <a href="http://en.wikipedia.org/wiki/International_Monetary_Market">International Monetary Market</a>
- * 
+ *
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
@@ -68,7 +69,7 @@ public class IMM {
 
     /**
      * To create a IMM with user Settings and Configuration
-     * 
+     *
      * @param config
      * @param settings
      */
@@ -95,7 +96,7 @@ public class IMM {
 
     /**
      * Checks if Date is an IMM date or not
-     * 
+     *
      * @param date
      * @return
      */
@@ -106,7 +107,7 @@ public class IMM {
     /**
      * Returns whether or not the given date is an IMM date. For non main cycle,
      * third Wednesday in a month is returned true,
-     * 
+     *
      * @param date
      * @param mainCycle
      * @return
@@ -128,7 +129,7 @@ public class IMM {
 
     /**
      * Checks if Strings specifies a IMM code or not
-     * 
+     *
      * @param in
      * @return
      */
@@ -138,7 +139,7 @@ public class IMM {
 
     /**
      * Returns whether or not the given string is an IMM code
-     * 
+     *
      * @param in
      * @param mainCycle
      * @return
@@ -162,7 +163,7 @@ public class IMM {
 
     /**
      * Returns Date from IMM code
-     * 
+     *
      * @param immCode
      * @return
      */
@@ -174,14 +175,14 @@ public class IMM {
      * Returns the IMM date for the given IMM code (e.g. March 20th, 2013 for H3).
      * When <code>Date.NULL_DATE</code> is passed, <code>Settings.getEvaluationDate</code> is used as
      * a reference date.
-     * 
+     *
      * @param immCode
      * @param refDate
      * @return
      */
     // FIXME: this method is potentially harmful in heavily multi-threaded environments
     public Date date(final String immCode, final Date refDate) {
-        assert isIMMcode(immCode, false) : "not a valid IMM code";
+        QL.require(isIMMcode(immCode, false) , "not a valid IMM code"); // QA:[RG]::verified // TODO: message
 
         Date referenceDate;
         if (Date.NULL_DATE.equals(refDate))
@@ -208,7 +209,7 @@ public class IMM {
 
     /**
      * Returns next main cycle IMM Date using Settings.getEvaluationDate as reference date.
-     * 
+     *
      * @return
      */
     public Date nextDate() {
@@ -217,8 +218,8 @@ public class IMM {
 
     /**
      *  Returns next main cycle IMM Date from the specified date.
-     * 
-     * 
+     *
+     *
      * @param date
      * @return
      */
@@ -229,7 +230,7 @@ public class IMM {
     /**
      * next IMM date following the given date. * When <code>Date.NULL_DATE</code> is passed, <code>Settings.getEvaluationDate</code> is used as
      * a reference date.
-     * 
+     *
      * @param date
      * @param mainCycle
      * @return the 1st delivery date for next contract listed in the
@@ -268,7 +269,7 @@ public class IMM {
 
     /**
      * Returns next main cycle IMM date from the given IMM code
-     * 
+     *
      * @param immCode
      * @return
      */
@@ -279,7 +280,7 @@ public class IMM {
 
     /**
      * Returns next IMM date from the given IMM code
-     * 
+     *
      * @param immCode
      * @param mainCycle
      * @return
@@ -291,7 +292,7 @@ public class IMM {
 
     /**
      * Next IMM date following the given IMM code
-     * 
+     *
      * @param IMMcode
      * @param mainCycle
      * @param referenceDate
@@ -307,7 +308,7 @@ public class IMM {
 
     /**
      * Returns next main cycle IMM code from the reference date
-     * 
+     *
      * @return
      */
     public String nextCode() {
@@ -326,7 +327,7 @@ public class IMM {
 
     /**
      * Returns next cycle IMM code
-     * 
+     *
      * @param d
      * @param mainCycle
      * @return the IMM code for next contract listed in the
@@ -342,7 +343,7 @@ public class IMM {
 
     /**
      * Returns next main cycle IMM code from the given IMM Code.
-     * 
+     *
      * @param immCode
      * @return
      */
@@ -352,7 +353,7 @@ public class IMM {
 
     /**
      * Returns next IMM code from the given IMM code
-     * 
+     *
      * @param immCode
      * @param mainCycle
      * @return
@@ -364,7 +365,7 @@ public class IMM {
 
     /**
      * Return next IMM code from the given IMM code and reference date
-     * 
+     *
      * @param immCode
      * @param mainCycle
      * @param referenceDate
@@ -382,13 +383,13 @@ public class IMM {
 
     /**
      * Returns the IMM code for the given date (e.g. H3 for March 20th, 2013).
-     * 
+     *
      * @param date
      * @return
      */
     // FIXME: this method is potentially harmful in heavily multi-threaded environments
     public  String code(final Date date) {
-        assert isIMMdate(date, false) : "not an IMM date";
+        QL.require(isIMMdate(date, false) , "not an IMM date"); // QA:[RG]::verified // TODO: message
 
         final int y = date.getYear() % 10;
         final char code = date.getMonthEnum().getImmChar();
@@ -397,9 +398,7 @@ public class IMM {
 
         final String imm = sb.toString();
 
-        // TODO: review usage of QL_EXTRA_SAFETY_CHECKS
-        if (configuration.isExtraSafetyChecks())
-            assert isIMMcode(imm, false) : "the result is an invalid IMM code";
+        QL.ensure(isIMMcode(imm, false) , "the result is an invalid IMM code"); // QA:[RG]::verified
         return imm;
     }
 

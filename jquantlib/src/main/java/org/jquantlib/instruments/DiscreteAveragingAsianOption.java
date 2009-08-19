@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
@@ -84,7 +85,7 @@ public class DiscreteAveragingAsianOption extends OneAssetStrikedOption {
 
     @Override
     public void setupArguments(final Arguments args) /* @ReadOnly */ {
-        assert args instanceof DiscreteAveragingAsianOptionArguments : WRONG_ARGUMENT_TYPE;
+        QL.require(args instanceof DiscreteAveragingAsianOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         super.setupArguments(args);
         final DiscreteAveragingAsianOptionArguments moreArgs = (DiscreteAveragingAsianOptionArguments) args;
         moreArgs.averageType = averageType;

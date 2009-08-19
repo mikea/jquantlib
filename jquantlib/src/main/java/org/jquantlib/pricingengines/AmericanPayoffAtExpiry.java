@@ -39,6 +39,7 @@
 
 package org.jquantlib.pricingengines;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.AssetOrNothingPayoff;
 import org.jquantlib.instruments.CashOrNothingPayoff;
 import org.jquantlib.instruments.Option;
@@ -48,7 +49,7 @@ import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 
 /**
  * Analytical formulae for american exercise with payoff at expiry
- * 
+ *
  * @author Jose Coll
  */
 
@@ -74,10 +75,10 @@ public class AmericanPayoffAtExpiry {
 
     public AmericanPayoffAtExpiry(final double spot, final double discount, final double dividendDiscount, final double variance, final StrikedTypePayoff strikedTypePayoff) {
         super();
-        assert spot > 0.0 : "positive spot value required";
-        assert discount > 0.0 : "positive discount required";
-        assert dividendDiscount > 0.0 : "positive dividend discount required";
-        assert variance >= 0.0 : "non-negative variance required";
+        QL.require(spot > 0.0 , "positive spot value required"); // QA:[RG]::verified // TODO: message
+        QL.require(discount > 0.0 , "positive discount required"); // QA:[RG]::verified // TODO: message
+        QL.require(dividendDiscount > 0.0 , "positive dividend discount required"); // QA:[RG]::verified // TODO: message
+        QL.require(variance >= 0.0 , "non-negative variance required"); // QA:[RG]::verified // TODO: message
 
         this.discount = discount;
         this.forward = spot * dividendDiscount / discount;

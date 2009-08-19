@@ -41,6 +41,7 @@
 
 package org.jquantlib.processes;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
@@ -49,8 +50,8 @@ import org.jquantlib.util.Date;
 
 /**
  * Merton-76 jump diffusion process
- * 
- * 
+ *
+ *
  * @author <Richard Gomes>
  */
 public class Merton76Process extends StochasticProcess1D {
@@ -127,21 +128,21 @@ public class Merton76Process extends StochasticProcess1D {
         return blackProcess.x0();
     }
 
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
 
     @Override
     public double /* @Real */drift(final double /* @Time */t, final double /* @Real */x) {
-        throw new AssertionError("not implemented");
+        throw new LibraryException("not implemented"); // QA:[RG]::verified // TODO: message
     }
 
     @Override
     public double /* @Real */diffusion(final double /* @Time */t, final double /* @Real */x) {
-        throw new AssertionError("not implemented");
+        throw new LibraryException("not implemented"); // QA:[RG]::verified // TODO: message
     }
 
     @Override
     public double /* @Real */apply(final double /* @Real */x, final double /* @Real */y) {
-        throw new AssertionError("not implemented");
+        throw new LibraryException("not implemented"); // QA:[RG]::verified // TODO: message
     }
 
 

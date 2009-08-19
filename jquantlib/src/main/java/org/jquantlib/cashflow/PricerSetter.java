@@ -2,6 +2,8 @@ package org.jquantlib.cashflow;
 
 import java.util.List;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
@@ -39,8 +41,8 @@ public class PricerSetter implements TypedVisitor<Object> {
     }
 
     public void setCouponPricers(final Leg leg, final List<FloatingRateCouponPricer> pricers) {
-        assert leg.size()>0 : "no cashflows";
-        assert leg.size() == pricers.size() : "mismatch between leg size and number of pricers";
+        QL.require(leg.size()>0 , "no cashflows");
+        QL.require(leg.size() == pricers.size() , "mismatch between leg size and number of pricers");
         final int nCashFlows = leg.size();
         final int nPricers = pricers.size();
         for (int i=0; i<nCashFlows; i++) {
@@ -79,7 +81,7 @@ public class PricerSetter implements TypedVisitor<Object> {
         //            return new SubPeriodsCouponVisitor();
 
 
-        throw new AssertionError(UNKNOWN_VISITABLE);
+        throw new LibraryException(UNKNOWN_VISITABLE); // QA:[RG]::verified
     }
 
 
@@ -108,7 +110,7 @@ public class PricerSetter implements TypedVisitor<Object> {
                 final IborCoupon c = (IborCoupon) o;
                 c.setPricer(pricer);
             } else
-                assert false : INCOMPATIBLE_PRICER;
+                QL.require(false , INCOMPATIBLE_PRICER);
         }
     }
 

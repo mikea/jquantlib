@@ -23,7 +23,9 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate.onefactormodels;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.Option;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.NonCentralChiSquaredDistribution;
 import org.jquantlib.math.matrixutilities.Array;
@@ -38,15 +40,15 @@ import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 
 /**
- * 
+ *
  * @author Praneet Tiwari
  */
 // ! Cox-Ingersoll-Ross model class.
 /*
  * ! This class implements the Cox-Ingersoll-Ross model defined by \f[ dr_t = k(\theta - r_t)dt + \sqrt{r_t}\sigma dW_t . \f]
- * 
+ *
  * \bug this class was not tested enough to guarantee its functionality.
- * 
+ *
  * \ingroup shortrate
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
@@ -111,7 +113,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
             final double /* @Real */strike,
             final double /* @Time */t,
             final double /* @Time */s) {
-        assert strike > 0.0 : strike_must_be_positive;
+        QL.require(strike > 0.0 , strike_must_be_positive); // QA:[RG]::verified // TODO: message
         final double /* @DiscountFactor */discountT = discountBond(0.0, t, x0());
         final double /* @DiscountFactor */discountS = discountBond(0.0, s, x0());
 
@@ -122,7 +124,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
             case PUT:
                 return Math.max(strike - discountS, 0.0);
             default:
-                throw new AssertionError(unsupported_option_type);
+                throw new LibraryException(unsupported_option_type); // QA:[RG]::verified
             }
 
         final double /* @Real */sigma2 = sigma() * sigma();

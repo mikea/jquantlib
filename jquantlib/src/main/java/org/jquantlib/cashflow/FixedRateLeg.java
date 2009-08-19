@@ -1,5 +1,6 @@
 package org.jquantlib.cashflow;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
@@ -8,7 +9,7 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.util.Date;
 
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class FixedRateLeg {
 
@@ -76,8 +77,8 @@ public class FixedRateLeg {
 
 
     public Leg Leg() {
-        assert couponRates_ != null && couponRates_.length>0 : "coupon rates not specified";
-        assert notionals_   != null && notionals_.length>0 : "nominals not specified";
+        QL.require(couponRates_ != null && couponRates_.length>0 , "coupon rates not specified"); // QA:[RG]::verified // TODO: message
+        QL.require(notionals_   != null && notionals_.length>0 , "nominals not specified"); // QA:[RG]::verified // TODO: message
 
         final Leg leg = new Leg();
 
@@ -90,8 +91,8 @@ public class FixedRateLeg {
         InterestRate rate = couponRates_[0];
         /*@Real*/ double nominal = notionals_[0];
         if (schedule_.isRegular(1)) {
-            // TODO: code review :: please verify against original QL/C++ code
-            assert firstPeriodDayCounter_!=null && !firstPeriodDayCounter_.equals(paymentDayCounter_) : "regular first coupon does not allow a first-period day count";
+            // TODO: code review :: please verify against QL/C++ code
+            QL.require(firstPeriodDayCounter_!=null && !firstPeriodDayCounter_.equals(paymentDayCounter_) , "regular first coupon does not allow a first-period day count"); // QA:[RG]::verified // TODO: message
             leg.add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, end));
         } else {
             Date ref = end.decrement(schedule_.tenor());

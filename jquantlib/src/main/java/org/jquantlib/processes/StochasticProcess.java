@@ -43,6 +43,7 @@ package org.jquantlib.processes;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.util.Date;
@@ -54,7 +55,7 @@ import org.jquantlib.util.Observer;
  * Multi-dimensional stochastic process class.
  * <p>
  * {@latex[ d\mathrm{x}_t = \mu(t,x_t)\mathrm{d}t + \sigma(t,\mathrm{x}_t) \cdot d\mathrm{W}_t }
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class StochasticProcess implements Observable, Observer {
@@ -81,7 +82,7 @@ public abstract class StochasticProcess implements Observable, Observer {
      */
     protected StochasticProcess(final /*LinearDiscretization*/ Discretization discretization) {
         super();
-        assert discretization!=null : "null discretization"; // FIXME: message
+        QL.require(discretization!=null , "null discretization"); // QA:[RG]::verified // FIXME: message
         this.discretization = discretization;
     }
 
@@ -176,7 +177,7 @@ public abstract class StochasticProcess implements Observable, Observer {
 
     /**
      * Applies a change to the asset value.
-     * 
+     *
      * @returns {@latex$ \mathrm{x} + \Delta \mathrm{x} }.
      */
     public Array apply(final Array x0, final Array dx) /*@ReadOnly*/ {
@@ -186,7 +187,7 @@ public abstract class StochasticProcess implements Observable, Observer {
     /**
      * Returns the time value corresponding to the given date
      * in the reference system of the stochastic process.
-     * 
+     *
      * @note As a number of processes might not need this
      * functionality, a default implementation is given
      * which raises an exception.
@@ -212,7 +213,7 @@ public abstract class StochasticProcess implements Observable, Observer {
 
     /**
      * Implements multiple inheritance via delegate pattern to an inner class
-     * 
+     *
      * @see Observable
      * @see DefaultObservable
      */

@@ -79,7 +79,7 @@ public class CumulativeNormalDistribution extends NormalDistribution implements 
      */
     @Override
     public double op(double z) /* @Read-only */ {
-        // assert !(z >= average && 2.0*average-z > average) : "not a real number";
+        // QL.require(!(z >= average && 2.0*average-z > average) , "not a real number");
         z = (z - average) / sigma;
         double result = 0.5 * ( 1.0 + errorFunction.op( z*Constants.M_SQRT_2 ) );
         if (result<=1e-8) { //TODO: investigate the threshold level

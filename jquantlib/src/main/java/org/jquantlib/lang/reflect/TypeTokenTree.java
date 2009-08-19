@@ -3,6 +3,8 @@ package org.jquantlib.lang.reflect;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import org.jquantlib.QL;
+
 /**
  * TypeTokenTree is a helper class intended to return a {@link TypeNode} root.
  * <p>
@@ -76,7 +78,7 @@ public class TypeTokenTree {
 
     private TypeNode retrieve(final Class<?> klass) {
         final Type superclass = klass.getGenericSuperclass();
-        assert !(superclass instanceof Class) : ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED;
+        QL.require(!(superclass instanceof Class) , ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED); // QA:[RG]::verified
         final TypeNode node = new TypeNode(klass);
         for (final Type t : ((ParameterizedType) superclass).getActualTypeArguments() )
             node.add(retrieve(t));

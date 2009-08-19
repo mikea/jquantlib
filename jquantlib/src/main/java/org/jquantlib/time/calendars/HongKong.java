@@ -33,6 +33,7 @@ import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -58,7 +59,7 @@ import org.jquantlib.util.Month;
  * Other holidays for which no rule is given (data available for 2004-2007 only:)
  *   <li>Lunar New Year</li> <li>Chinese New Year</li> <li>Buddha's birthday</li> <li>Tuen NG Festival</li> <li>Mid-autumn Festival</li>
  *   <li>Chung Yeung Festival</li>
- * 
+ *
  * @author Richard Gomes
  */
 public class HongKong extends DelegateCalendar {
@@ -73,7 +74,7 @@ public class HongKong extends DelegateCalendar {
             break;
 
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         // FIXME
         setDelegate(delegate);
@@ -85,7 +86,7 @@ public class HongKong extends DelegateCalendar {
             return HKEX_CALENDAR;
 
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 
@@ -215,7 +216,8 @@ public class HongKong extends DelegateCalendar {
                         //---           || (d == 12 && m == MAY)        // Buddha's birthday
                         || (d == 28 && m == MAY)        // Tuen NG festival
                         || (d == 26 && m == OCTOBER));  // Chung Yeung Festival
-            else throw new AssertionError(YEAR_OUT_OF_RANGE);
+            else
+                throw new LibraryException(YEAR_OUT_OF_RANGE); // QA:[RG]::verified
         }
 
         public String getName() {

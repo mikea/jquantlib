@@ -21,13 +21,14 @@ package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import java.lang.reflect.Constructor;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 //TODO: class comments
 //TODO: work in progress
@@ -54,7 +55,7 @@ public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOptionEng
             final Constructor<T> c = rsgClass.getConstructor(GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
             fdVanillaEngine = c.newInstance(process, timeSteps, gridPoints, timeDependent);
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
     }
 

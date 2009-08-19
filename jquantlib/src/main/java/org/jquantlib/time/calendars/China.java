@@ -31,6 +31,7 @@ import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -48,16 +49,16 @@ import org.jquantlib.util.Month;
  * <li>Labour Day, first week in May</li>
  * <li>National Day, one week from October 1st</li>
  * </ul>
- * 
+ *
  * Other holidays for which no rule is given:
  * <ul>
  * <li>Lunar New Year (data available for 2004 only)</li>
  * <li>Spring Festival</li>
  * <li>Last day of Lunar Year</li>
  * </ul>
- * 
+ *
  * @see <a href="http://www.sse.com.cn/sseportal/webapp/cm/keyWordSearchEn?KeyWord=holiday&page=1&x=0&y=0">SSE Holidays</a>
- * 
+ *
  * @author Tim Swetonic
  * @author Jia Jia
  * @author Renjith Nair
@@ -74,7 +75,7 @@ public class China extends DelegateCalendar {
             delegate = new ChinaSSECalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -84,7 +85,7 @@ public class China extends DelegateCalendar {
         case SSE:
             return SSE_Calendar;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

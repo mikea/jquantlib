@@ -23,6 +23,7 @@
 package org.jquantlib.math.distributions;
 
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Factorial;
 import org.jquantlib.math.UnaryFunction;
@@ -78,13 +79,13 @@ public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
 
     /**
      * Computes the inverse cumulative poisson distribution.
-     * 
+     *
      * @param x
      * @returns the inverse of the cumulative poisson distribution of input <code>x</code>
      */
     @Override
     public Double evaluate (final Double x) /* @Read-only */ {
-        assert x >= 0.0 && x <= 1.0 : "undefined outside interval [0,1]"; // TODO: message
+        QL.require(x >= 0.0 && x <= 1.0 , "undefined outside interval [0,1]"); // QA:[RG]::verified // TODO: message
 
         if (x == 1.0)
             return Constants.QL_MAX_REAL;

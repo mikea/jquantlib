@@ -34,6 +34,7 @@ import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -58,7 +59,7 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th (possibly moved to Monday or Tuesday)</li>
  * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
  * </ul>
- * 
+ *
  * Holidays for the Toronto stock exchange (TSX):
  * <ul>
  * <li>Saturdays</li>
@@ -75,9 +76,9 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th (possibly moved to Monday or Tuesday)</li>
  * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
  * </ul>
- * 
+ *
  * @author Srinivas Hasti
- * 
+ *
  */
 public class Canada extends DelegateCalendar {
 
@@ -94,7 +95,7 @@ public class Canada extends DelegateCalendar {
             delegate = new TsxCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -106,7 +107,7 @@ public class Canada extends DelegateCalendar {
         case TSX:
             return TSX_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

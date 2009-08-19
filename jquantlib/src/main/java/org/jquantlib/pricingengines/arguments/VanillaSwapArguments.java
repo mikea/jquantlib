@@ -2,6 +2,7 @@ package org.jquantlib.pricingengines.arguments;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.VanillaSwap.Type;
 import org.jquantlib.util.Date;
 
@@ -31,14 +32,14 @@ public class VanillaSwapArguments extends SwapArguments {
     @Override
     public void validate() /* @ReadOnly */ {
         super.validate();
-        assert !Double.isNaN(nominal) : "nominal null or not set";
-        assert fixedResetDates.size() == fixedPayDates.size() : "number of fixed start dates different from number of fixed payment dates";
-        assert fixedPayDates.size() == fixedCoupons.size() : "number of fixed payment dates different from number of fixed coupon amounts";
-        assert floatingResetDates.size() == floatingPayDates.size() : "number of floating start dates different from number of floating payment dates";
-        assert floatingFixingDates.size() == floatingPayDates.size() : "number of floating fixing dates different from number of floating payment dates";
-        assert floatingAccrualTimes.size() == floatingPayDates.size() : "number of floating accrual Times different from number of floating payment dates";
-        assert floatingSpreads.size() == floatingPayDates.size() : "number of floating spreads different from number of floating payment dates";
-        assert floatingPayDates.size() == floatingCoupons.size() : "number of floating payment dates different from number of floating coupon amounts";
+        QL.require(!Double.isNaN(nominal) , "nominal null or not set"); // QA:[RG]::verified // TODO: message
+        QL.require(fixedResetDates.size() == fixedPayDates.size() , "number of fixed start dates different from number of fixed payment dates");
+        QL.require(fixedPayDates.size() == fixedCoupons.size() , "number of fixed payment dates different from number of fixed coupon amounts");
+        QL.require(floatingResetDates.size() == floatingPayDates.size() , "number of floating start dates different from number of floating payment dates");
+        QL.require(floatingFixingDates.size() == floatingPayDates.size() , "number of floating fixing dates different from number of floating payment dates");
+        QL.require(floatingAccrualTimes.size() == floatingPayDates.size() , "number of floating accrual Times different from number of floating payment dates");
+        QL.require(floatingSpreads.size() == floatingPayDates.size() , "number of floating spreads different from number of floating payment dates");
+        QL.require(floatingPayDates.size() == floatingCoupons.size() , "number of floating payment dates different from number of floating coupon amounts");
     }
 
 }

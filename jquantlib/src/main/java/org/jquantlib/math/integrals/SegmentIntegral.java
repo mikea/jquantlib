@@ -39,6 +39,7 @@
 
 package org.jquantlib.math.integrals;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 
 /**
@@ -46,12 +47,12 @@ import org.jquantlib.math.Ops;
  * <p>
  * Given a number {@latex$ N } of intervals, the integral of a function {@latex$ f } between {@latex$ a } and {@latex$ b }
  * is calculated by means of the trapezoid formula
- * 
+ *
  * {@latex[
  *  \int_{a}^{b} f \mathrm{d}x = \frac{1}{2} f(x_{0}) + f(x_{1}) + f(x_{2}) + \dots + f(x_{N-1}) + \frac{1}{2} f(x_{N})
  * } where {@latex$ x_0 = a }, {@latex$ x_N = b }, and {@latex$ x_i = a+i \Delta x } with
  * {@latex$ \Delta x = (b-a)/N }.
- * 
+ *
  */
 //TODO: Add test case.
 //TEST the correctness of the result is tested by checking it against known good values.
@@ -65,7 +66,7 @@ public class SegmentIntegral extends Integrator {
 
     public SegmentIntegral(final int intervals) {
         super(1, 1);
-        assert intervals >= 1 : "at least 1 interval needed";
+        QL.require(intervals >= 1 , "at least 1 interval needed"); // QA:[RG]::verified // TODO: message
         this.intervals = intervals;
     }
 

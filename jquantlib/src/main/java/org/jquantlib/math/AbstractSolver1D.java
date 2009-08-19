@@ -22,6 +22,8 @@
 
 package org.jquantlib.math;
 
+import org.jquantlib.QL;
+
 
 
 
@@ -99,7 +101,7 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
      */
     public double solve(final F f, double accuracy, final double guess, final double step) {
 
-        assert accuracy > 0.0 : "accuracy must be positive";
+        QL.require(accuracy > 0.0 , "accuracy must be positive"); // QA:[RG]::verified // TODO: message
         // check whether we really want to use epsilon
         accuracy = Math.max(accuracy, Constants.QL_EPSILON);
 
@@ -153,7 +155,7 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
         }
 
         //FIXME is it so exceptional, should we return s success/fail flag?
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         throw new ArithmeticException("unable to bracket root after function evaluation"); // TODO: message
     }
 
@@ -165,7 +167,7 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
      * An initial guess must be supplied, as well as two values {@latex$ x_\mathrm{min} } and {@latex$ x_\mathrm{max} } which must
      * bracket the zero (i.e., either {@latex$ f(x_\mathrm{min}) \leq 0 \leq f(x_\mathrm{max}) }, or
      * {@latex$ f(x_\mathrm{max}) \leq 0 \leq f(x_\mathrm{min}) } must be true).
-     * 
+     *
      * @param f is the function we wish to find a root
      * @param accuracy is the desired accuracy
      * @param guess
@@ -175,10 +177,10 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
      */
     public double solve(final F f, double accuracy, final double guess, final double xMin, final double xMax) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        assert accuracy > 0.0 : "accuracy must be positive"; // TODO: message
-        assert xMin < xMax : "invalid range: xMin >= xMax";
-        assert !lowerBoundEnforced || xMin >= lowerBound : "xMin < enforced low bound";
-        assert !upperBoundEnforced || xMax <= upperBound : "xMax > enforced hi bound";
+        QL.require(accuracy > 0.0 , "accuracy must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(xMin < xMax , "invalid range: xMin >= xMax"); // QA:[RG]::verified // TODO: message
+        QL.require(!lowerBoundEnforced || xMin >= lowerBound , "xMin < enforced low bound"); // QA:[RG]::verified // TODO: message
+        QL.require(!upperBoundEnforced || xMax <= upperBound , "xMax > enforced hi bound"); // QA:[RG]::verified // TODO: message
 
         // check whether we really want to use epsilon
         accuracy = Math.max(accuracy, Constants.QL_EPSILON);
@@ -195,10 +197,10 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
 
         evaluationNumber = 2;
 
-        // TODO: code review :: please verify against original QL/C++ code
-        assert fxMin * fxMax < 0.0 : "root not bracketed"; // TODO: message
-        assert guess > this.xMin : "guess must be greather than xMin";
-        assert guess < this.xMax : "guess must be lesser than xMax";
+        // TODO: code review :: please verify against QL/C++ code
+        QL.require(fxMin * fxMax < 0.0 , "root not bracketed"); // QA:[RG]::verified // TODO: message
+        QL.require(guess > this.xMin , "guess must be greather than xMin"); // QA:[RG]::verified // TODO: message
+        QL.require(guess < this.xMax , "guess must be lesser than xMax"); // QA:[RG]::verified // TODO: message
 
         root = guess;
 

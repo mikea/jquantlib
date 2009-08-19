@@ -39,16 +39,18 @@
 
 package org.jquantlib.pricingengines;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.AssetOrNothingPayoff;
 import org.jquantlib.instruments.CashOrNothingPayoff;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.instruments.Option.Type;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 
 /**
  * Analytic formula for American exercise payoff at-hit options
- * 
+ *
  * @author Jose Coll
  */
 
@@ -83,10 +85,10 @@ public class AmericanPayoffAtHit {
     public AmericanPayoffAtHit(
             final double spot, final double discount, final double dividendDiscount, final double variance,
             final StrikedTypePayoff strikedTypePayoff) {
-        assert spot > 0.0 : "positive spot value required";
-        assert discount > 0.0 : "positive discount required";
-        assert dividendDiscount > 0.0 : "positive dividend discount required";
-        assert variance >= 0.0 : "non-negative variance required";
+        QL.require(spot > 0.0 , "positive spot value required"); // QA:[RG]::verified // TODO: message
+        QL.require(discount > 0.0 , "positive discount required"); // QA:[RG]::verified // TODO: message
+        QL.require(dividendDiscount > 0.0 , "positive dividend discount required"); // QA:[RG]::verified // TODO: message
+        QL.require(variance >= 0.0 , "non-negative variance required"); // QA:[RG]::verified // TODO: message
 
         this.spot = spot;
         this.variance = variance;
@@ -101,7 +103,7 @@ public class AmericanPayoffAtHit {
                 mu      = - 0.5;
                 lambda  = 0.5;
             } else if (discount == 0.0)
-                throw new AssertionError("null discount not handled yet");
+                throw new LibraryException("null discount not handled yet"); // QA:[RG]::verified // TODO: message
             else {
                 mu = Math.log(dividendDiscount / discount) / variance - 0.5;
                 lambda = Math.sqrt( mu * mu - 2.0 * Math.log(discount) / variance);
@@ -179,7 +181,7 @@ public class AmericanPayoffAtHit {
         } else {
             forward = Math.pow(strike / spot, muPlusLambda);
             X       = Math.pow(strike / spot, muMinusLambda);
-            //DXDstrike_ = ......; // TODO: code review :: please verify against original QL/C++ code
+            //DXDstrike_ = ......; // TODO: code review :: please verify against QL/C++ code
         }
 
         // binary cash-or-nothing payoff ?
@@ -265,8 +267,7 @@ public class AmericanPayoffAtHit {
     }
 
     public double rho(final /* @Time */ double maturity) /* @ReadOnly */ {
-
-        assert maturity > 0.0 : "negative maturity not allowed"; // TODO: message
+        QL.require(maturity > 0.0 , "negative maturity not allowed"); // QA:[RG]::verified // TODO: message
         final double DalphaDr = -DalphaDd1/(lambda*stdDev) * (1.0 + mu);
         final double DbetaDr  =  DbetaDd2 /(lambda*stdDev) * (1.0 + mu);
         double DforwardDr, DXDr;

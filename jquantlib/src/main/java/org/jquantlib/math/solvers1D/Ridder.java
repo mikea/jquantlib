@@ -22,6 +22,7 @@
 
 package org.jquantlib.math.solvers1D;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
@@ -30,7 +31,7 @@ import org.jquantlib.math.Ops;
  * Method by 1d solver.
  *
  * @see Book: <i>Press, Teukolsky, Vetterling, and Flannery, "Numerical Recipes in C", 2nd edition, Cambridge University Press</i>
- * 
+ *
  * @author Dominik Holenstein
  */
 public class Ridder extends AbstractSolver1D<Ops.DoubleOp> {
@@ -87,7 +88,7 @@ public class Ridder extends AbstractSolver1D<Ops.DoubleOp> {
                 xMin=root;
                 fxMin=froot;
             } else
-                throw new AssertionError("never get here."); // TODO: message
+                throw new LibraryException("internal error"); // QA:[RG]::verified // TODO: message
 
             if (Math.abs(xMax-xMin) <= xAccuracy_)
                 return root;

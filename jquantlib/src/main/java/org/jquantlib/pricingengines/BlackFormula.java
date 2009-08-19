@@ -44,6 +44,7 @@
 
 package org.jquantlib.pricingengines;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.lang.annotation.DiscountFactor;
@@ -56,9 +57,9 @@ import org.jquantlib.math.distributions.Derivative;
 import org.jquantlib.math.solvers1D.NewtonSafe;
 
 /**
- * 
+ *
  * Black 1976 formula
- * 
+ *
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
@@ -67,7 +68,7 @@ public class BlackFormula {
 
     /**
      * Black 1976 formula
-     * 
+     *
      * @Note instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
@@ -82,7 +83,7 @@ public class BlackFormula {
 
     /**
      * Black 1976 formula
-     * 
+     *
      * @Note: Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
@@ -97,9 +98,9 @@ public class BlackFormula {
     }
 
     /**
-     * 
+     *
      * Black 1976 formula
-     * 
+     *
      * @Note: Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
@@ -111,11 +112,11 @@ public class BlackFormula {
             @DiscountFactor final double discount,
             @Price final double displacement) {
 
-        assert strike >= 0.0       : "strike must be non-negative"; // TODO: message
-        assert forward > 0.0       : "forward must be positive"; // TODO: message
-        assert stddev >= 0.0       : "stddev must be non-negative"; // TODO: message
-        assert discount > 0.0      : "discount must be positive"; // TODO: message
-        assert displacement >= 0.0 : "displacement must be non-negative"; // TODO: message
+        QL.require(strike >= 0.0       , "strike must be non-negative"); // QA:[RG]::verified // TODO: message
+        QL.require(forward > 0.0       , "forward must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(stddev >= 0.0       , "stddev must be non-negative"); // QA:[RG]::verified // TODO: message
+        QL.require(discount > 0.0      , "discount must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(displacement >= 0.0 , "displacement must be non-negative"); // QA:[RG]::verified // TODO: message
 
         forward = forward + displacement;
         strike = strike + displacement;
@@ -143,7 +144,7 @@ public class BlackFormula {
 
     /**
      * Black 1976 formula
-     * 
+     *
      * @Note instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
@@ -158,7 +159,7 @@ public class BlackFormula {
 
     /**
      * Black 1976 formula
-     * 
+     *
      * @Note: Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
@@ -173,9 +174,9 @@ public class BlackFormula {
     }
 
     /**
-     * 
+     *
      * Black 1976 formula
-     * 
+     *
      * @Note: Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
@@ -247,11 +248,11 @@ public class BlackFormula {
             @DiscountFactor final double discount,
             @Price final double displacement) {
 
-        assert strike >= 0.0       : "strike must be non-negative"; // TODO: message
-        assert forward > 0.0       : "forward must be positive"; // TODO: message
-        assert displacement >= 0.0 : "displacement must be non-negative"; // TODO: message
-        assert blackPrice >= 0.0   : "blackPrice must be non-negative"; // TODO: message
-        assert discount > 0.0      : "discount must be positive"; // TODO: message
+        QL.require(strike >= 0.0       , "strike must be non-negative"); // TODO: message
+        QL.require(forward > 0.0       , "forward must be positive"); // TODO: message
+        QL.require(displacement >= 0.0 , "displacement must be non-negative"); // TODO: message
+        QL.require(blackPrice >= 0.0   , "blackPrice must be non-negative"); // TODO: message
+        QL.require(discount > 0.0      , "discount must be positive"); // TODO: message
 
         double stddev;
         forward = forward + displacement;
@@ -449,11 +450,11 @@ public class BlackFormula {
         final int maxIterations=100;
         //---
 
-        assert strike >= 0.0       : "strike must be non-negative"; // TODO: message
-        assert forward > 0.0       : "forward must be positive"; // TODO: message
-        assert displacement >= 0.0 : "displacement must be non-negative"; // TODO: message
-        assert blackPrice >= 0.0   : "blackPrice must be non-negative"; // TODO: message
-        assert discount > 0.0      : "discount must be positive"; // TODO: message
+        QL.require(strike >= 0.0       , "strike must be non-negative"); // TODO: message
+        QL.require(forward > 0.0       , "forward must be positive"); // TODO: message
+        QL.require(displacement >= 0.0 , "displacement must be non-negative"); // TODO: message
+        QL.require(blackPrice >= 0.0   , "blackPrice must be non-negative"); // TODO: message
+        QL.require(discount > 0.0      , "discount must be positive"); // TODO: message
 
         strike = strike + displacement;
         forward = forward + displacement;
@@ -561,7 +562,7 @@ public class BlackFormula {
      * Black 1976 probability of being in the money (in the bond martingale
      * measure), i.e. N(d2). It is a risk-neutral probability, not the real
      * world one.
-     * 
+     *
      * @Note Instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
@@ -578,7 +579,7 @@ public class BlackFormula {
      * Black 1976 probability of being in the money (in the bond martingale
      * measure), i.e. N(d2). It is a risk-neutral probability, not the real
      * world one.
-     * 
+     *
      * @Note Instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
@@ -607,7 +608,7 @@ public class BlackFormula {
      * Black 1976 probability of being in the money (in the bond martingale
      * measure), i.e. N(d2). It is a risk-neutral probability, not the real
      * world one.
-     * 
+     *
      * @Note Instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
@@ -629,7 +630,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula for standard deviation derivative
      * <p>
-     * 
+     *
      * @Note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
@@ -647,7 +648,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula for standard deviation derivative
      * <p>
-     * 
+     *
      * @Note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
@@ -666,7 +667,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula for standard deviation derivative
      * <p>
-     * 
+     *
      * @Note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
@@ -680,11 +681,11 @@ public class BlackFormula {
             @DiscountFactor final double discount,
             @Price final double displacement) {
 
-        assert strike >= 0.0       : "strike must be non-negative"; // TODO: message
-        assert forward > 0.0       : "forward must be positive"; // TODO: message
-        assert stddev >= 0.0       : "blackPrice must be non-negative"; // TODO: message
-        assert discount > 0.0      : "discount must be positive"; // TODO: message
-        assert displacement >= 0.0 : "displacement must be non-negative"; // TODO: message
+        QL.require(strike >= 0.0       , "strike must be non-negative"); // QA:[RG]::verified // TODO: message
+        QL.require(forward > 0.0       , "forward must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(stddev >= 0.0       , "blackPrice must be non-negative"); // QA:[RG]::verified // TODO: message
+        QL.require(discount > 0.0      , "discount must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(displacement >= 0.0 , "displacement must be non-negative"); // QA:[RG]::verified // TODO: message
 
         forward = forward + displacement;
         strike = strike + displacement;
@@ -702,7 +703,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula for standard deviation derivative
      * <p>
-     * 
+     *
      * @Note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
@@ -720,7 +721,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula for standard deviation derivative
      * <p>
-     * 
+     *
      * @Note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
@@ -739,7 +740,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula for standard deviation derivative
      * <p>
-     * 
+     *
      * @Note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
@@ -763,7 +764,7 @@ public class BlackFormula {
     /**
      * Black style formula when forward is normal rather than log-normal. This
      * is essentially the model of Bachelier.
-     * 
+     *
      * @Note Bachelier model needs absolute volatility, not percentage
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
@@ -780,7 +781,7 @@ public class BlackFormula {
     /**
      * Black style formula when forward is normal rather than log-normal. This
      * is essentially the model of Bachelier.
-     * 
+     *
      * @Note Bachelier model needs absolute volatility, not percentage
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
@@ -792,8 +793,8 @@ public class BlackFormula {
             @StdDev final double stddev,
             final @DiscountFactor double discount) {
 
-        assert stddev >= 0.0 : "blackPrice must be non-negative"; // TODO: message
-        assert discount > 0.0 : "discount must be positive"; // TODO: message
+        QL.require(stddev >= 0.0 , "blackPrice must be non-negative"); // QA:[RG]::verified // TODO: message
+        QL.require(discount > 0.0 , "discount must be positive"); // QA:[RG]::verified // TODO: message
 
         final double d = (forward - strike) * optionType.ordinal(), h = d / stddev;
         if (stddev == 0.0) return discount * Math.max(d, 0.0);
@@ -813,7 +814,7 @@ public class BlackFormula {
     /**
      * Black style formula when forward is normal rather than log-normal. This
      * is essentially the model of Bachelier.
-     * 
+     *
      * @Note Bachelier model needs absolute volatility, not percentage
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
@@ -830,7 +831,7 @@ public class BlackFormula {
     /**
      * Black style formula when forward is normal rather than log-normal. This
      * is essentially the model of Bachelier.
-     * 
+     *
      * @Note Bachelier model needs absolute volatility, not percentage
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
@@ -871,10 +872,10 @@ public class BlackFormula {
                 final double undiscountedBlackPrice,
                 final double displacement) {
 
-            assert strike >= 0.0       : "strike must be non-negative"; // TODO: message
-            assert forward > 0.0       : "forward must be positive"; // TODO: message
-            assert displacement >= 0.0 : "displacement must be non-negative"; // TODO: message
-            assert undiscountedBlackPrice >= 0.0 : "undiscounted Black price must be non-negative";
+            QL.require(strike >= 0.0       , "strike must be non-negative"); // QA:[RG]::verified // TODO: message
+            QL.require(forward > 0.0       , "forward must be positive"); // QA:[RG]::verified // TODO: message
+            QL.require(displacement >= 0.0 , "displacement must be non-negative"); // QA:[RG]::verified // TODO: message
+            QL.require(undiscountedBlackPrice >= 0.0 , "undiscounted Black price must be non-negative"); // QA:[RG]::verified // TODO: message
 
             this.halfOptionType_ = (0.5 * optionType.toInteger());
             this.signedStrike_ = (optionType.toInteger() * (strike + displacement));
@@ -887,12 +888,7 @@ public class BlackFormula {
         }
 
         public double op(@NonNegative final double stddev) {
-
-            // TODO: code review :: please verify against original QL/C++ code
-            //XXX : Remove QL_EXTRA_SAFETY_CHECKS block
-            assert stddev >= 0.0 : "stddev must be non-negative";
-            //----
-
+            QL.require(stddev >= 0.0 , "stddev must be non-negative"); // QA:[RG]::verified // TODO: message
             if (stddev == 0.0) return Math.max(signedForward_ - signedStrike_, 0.0d) - undiscountedBlackPrice_;
 
             final double temp = halfOptionType_ * stddev;
@@ -905,11 +901,7 @@ public class BlackFormula {
         }
 
         public double derivative(@NonNegative final double stddev) {
-
-            // TODO: code review :: please verify against original QL/C++ code
-            //XXX :; Remove QL_EXTRA_SAFETY_CHECKS block
-            assert stddev >= 0.0 : "stddev must be non-negative";
-            //----
+            QL.require(stddev >= 0.0 , "stddev must be non-negative"); // QA:[RG]::verified // TODO: message
 
             final double signedD1 = signedMoneyness_ / stddev + halfOptionType_ * stddev;
             return signedForward_ * N_.derivative(signedD1);

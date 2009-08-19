@@ -24,6 +24,7 @@ package org.jquantlib.methods.finitedifferences;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.matrixutilities.Array;
 
 //TODO: code review :: license, class comments, comments for access modifiers, put "final" everywhere
@@ -48,7 +49,7 @@ public class CurveDependentStepCondition implements StepCondition<Array> {
     }
 
     protected double applyToValue(final double a, final double b) {
-        throw new RuntimeException("not yet implemented");
+        throw new LibraryException("not yet implemented"); // QA:[RG]::verified // TODO: message
     }
 
     @Override

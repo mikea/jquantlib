@@ -43,6 +43,7 @@ package org.jquantlib.pricingengines.asian;
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.AverageType;
@@ -64,7 +65,7 @@ import org.jquantlib.util.Date;
  * <p>
  * This class implements a discrete geometric average price Asian option, with European exercise. The formula is from "Asian
  * Option", E. Levy (1997) in "Exotic Options: The State of the Art", edited by L. Clewlow, C. Strickland, pag 65-97
- * 
+ *
  * @author <Richard Gomes>
  */
 public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAveragingAsianOptionEngine {
@@ -90,17 +91,17 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 
     @Override
     public void calculate() /*@ReadOnly*/{
-        assert arguments.exercise.type()==Exercise.Type.EUROPEAN : NOT_AN_EUROPEAN_OPTION;
+        QL.require(arguments.exercise.type()==Exercise.Type.EUROPEAN , NOT_AN_EUROPEAN_OPTION); // QA:[RG]::verified // TODO: message
         final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
-        assert arguments.payoff instanceof StrikedTypePayoff : NON_STRIKED_PAYOFF_GIVEN;
+        QL.require(arguments.payoff instanceof StrikedTypePayoff , NON_STRIKED_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
 
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
-        assert process != null : BLACK_SCHOLES_PROCESS_REQUIRED;
+        QL.require(process != null , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified // TODO: message
 
         /*
          * This engine cannot really check for the averageType==Geometric
          * since it can be used as control variate for the Arithmetic version
-         * 
+         *
          * QL_REQUIRE(arguments_.averageType == Average::Geometric, "not a geometric average option");
          */
 

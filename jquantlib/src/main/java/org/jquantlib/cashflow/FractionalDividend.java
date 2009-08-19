@@ -22,6 +22,7 @@
 
 package org.jquantlib.cashflow;
 
+import org.jquantlib.QL;
 import org.jquantlib.util.Date;
 
 /**
@@ -51,7 +52,7 @@ public class FractionalDividend extends Dividend {
 
 	@Override
 	public double amount() {
-		assert !Double.isNaN(nominal) : "no nominal given";
+		QL.require(!Double.isNaN(nominal) , "no nominal given"); // QA:[RG]::verified // TODO: message
 		return rate*nominal;
 	}
 

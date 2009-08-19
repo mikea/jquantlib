@@ -26,6 +26,7 @@ package org.jquantlib.termstructures.yieldcurves;
 // FIXME: move to org.jquantlib.termstructures.yieldcurves
 
 
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.FloatingRateCoupon;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
@@ -204,7 +205,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
      * @param t
      */
     public void setTermStructure(final YieldTermStructure t) {
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         // ---- termStructureHandle.linkTo( shared_ptr<YieldTermStructure>(t, no_deletion), false);
          termStructureHandle.setLink(t, false);
 
@@ -217,7 +218,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
      */
      @Override
     public /*@Price*/ double impliedQuote() /* @ReadOnly */ {
-         assert termStructure != null : "term structure not set";
+         QL.require(termStructure != null , "term structure not set"); // QA:[RG]::verified // TODO: message
 
          // we didn't register as observers - force calculation
          swap.recalculate();
@@ -249,7 +250,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
      //
 
      // TODO: code review :: object model needs to be validated and eventually refactored
-     // TODO: code review :: please verify against original QL/C++ code
+     // TODO: code review :: please verify against QL/C++ code
 //     public void accept(final TypedVisitor<Event> v) {
 //         Visitor<Event> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
 //         if (v1 != null) {

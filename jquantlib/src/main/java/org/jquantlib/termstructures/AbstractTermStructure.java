@@ -42,6 +42,7 @@ package org.jquantlib.termstructures;
 import java.util.List;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
@@ -59,27 +60,27 @@ import org.jquantlib.util.Observer;
 
 /**
  * Basic term-structure functionality.
- * 
+ *
  * <p><b>More Details about constructors:</b>
  * <p>There are three ways in which a term structure can keep
  * track of its reference date:
  * <li>such date is fixed;</li>
  * <li>such date is determined by advancing the current date of a given number of business days;</li>
  * <li>such date is based on the reference date of some other structure.</li>
- * 
+ *
  * <p>Case 1: The constructor taking a date is to be used.
  * The default implementation of {@link TermStructure#referenceDate()} will
  * then return such date.
- * 
+ *
  * <p>Case 2: The constructor taking a number of days and a calendar is to be used
  * so that {@link TermStructure#referenceDate()} will return a date calculated based on the
  * current evaluation date and the term structure and observers will be notified when the
  * evaluation date changes.
- * 
+ *
  * <p>Case 3: The {@link TermStructure#referenceDate()} method must
  * be overridden in derived classes so that it fetches and
  * return the appropriate date.
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class AbstractTermStructure implements TermStructure {
@@ -102,12 +103,12 @@ public abstract class AbstractTermStructure implements TermStructure {
      * <p>Case 1: The constructor taking a date is to be used.
      * The default implementation of {@link TermStructure#referenceDate()} will
      * then return such date.
-     * 
+     *
      * <p>Case 2: The constructor taking a number of days and a calendar is to be used
      * so that {@link TermStructure#referenceDate()} will return a date calculated based on the
      * current evaluation date and the term structure and observers will be notified when the
      * evaluation date changes.
-     * 
+     *
      * <p>Case 3: The {@link TermStructure#referenceDate()} method must
      * be overridden in derived classes so that it fetches and
      * return the appropriate date.
@@ -120,7 +121,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      * calendar variable and providing their own version of {@link #calendar()} method. When extended
      * classes fail to provide their version of {@link #calendar()} method, <i><b>this</b>.getCalendar</i>
      * must throw an {@link IllegalStateException} because the private variable calendar was never initialised.
-     * 
+     *
      * @see #calendar
      */
     private final Calendar calendar;
@@ -131,7 +132,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      * dayCounter variable and providing their own version of {@link #dayCounter()} method. When extended
      * classes fail to provide their version of {@link #dayCounter()} method, <i><b>this</b>.getDayCounter</i>
      * must throw an {@link IllegalStateException} because the private variable dayCounter was never initialised.
-     * 
+     *
      * @see #getDayCounter
      */
     private final DayCounter dayCounter;
@@ -172,7 +173,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      * <p>This constructor requires an override of method {@link TermStructure#referenceDate()} in
      * derived classes so that it fetches and return the appropriate reference date.
      * This is the <i>Case 3</i> described on the top of this class.
-     * 
+     *
      * @see TermStructure documentation for more details about constructors.
      */
     public AbstractTermStructure() {
@@ -183,12 +184,12 @@ public abstract class AbstractTermStructure implements TermStructure {
      * <p>This constructor requires an override of method {@link TermStructure#referenceDate()} in
      * derived classes so that it fetches and return the appropriate reference date.
      * This is the <i>Case 3</i> described on the top of this class.
-     * 
+     *
      * @see TermStructure documentation for more details about constructors.
      */
     //TODO : What's the calendar in this case?
     public AbstractTermStructure(final DayCounter dc) {
-        assert dc!=null : "day counter must be informed"; // TODO: message
+        QL.require(dc!=null , "day counter must be informed"); // QA:[RG]::verified // TODO: message
         this.calendar = null;
         this.settlementDays = 0;
         this.dayCounter = dc;
@@ -205,12 +206,12 @@ public abstract class AbstractTermStructure implements TermStructure {
 
     /**
      * Initialize with a fixed reference date
-     * 
+     *
      * <p>This constructor takes a date to be used.
      * The default implementation of {@link TermStructure#referenceDate()} will
      * then return such date.
      * This is the <i>Case 1</i> described on the top of this class.
-     * 
+     *
      * @see TermStructure documentation for more details about constructors.
      */
     public AbstractTermStructure(final Date referenceDate, final Calendar calendar) {
@@ -219,18 +220,18 @@ public abstract class AbstractTermStructure implements TermStructure {
 
     /**
      * Initialize with a fixed reference date
-     * 
+     *
      * <p>This constructor takes a date to be used.
      * The default implementation of {@link TermStructure#referenceDate()} will
      * then return such date.
      * This is the <i>Case 1</i> described on the top of this class.
-     * 
+     *
      * @see TermStructure documentation for more details about constructors.
      */
     public AbstractTermStructure(final Date referenceDate, final Calendar calendar, final DayCounter dc) {
-        assert referenceDate!=null : "reference date must be informed"; // TODO: message
-        assert calendar!=null : "calendar must be informed"; // TODO: message
-        assert dc!=null : "day counter must be informed"; // TODO: message
+        QL.require(referenceDate!=null , "reference date must be informed"); // QA:[RG]::verified // TODO: message
+        QL.require(calendar!=null , "calendar must be informed"); // QA:[RG]::verified // TODO: message
+        QL.require(dc!=null , "day counter must be informed"); // QA:[RG]::verified // TODO: message
 
         this.settlementDays = 0;
         this.calendar = calendar;
@@ -249,13 +250,13 @@ public abstract class AbstractTermStructure implements TermStructure {
 
     /**
      * Calculate the reference date based on the global evaluation date
-     * 
+     *
      * <p>This constructor takes a number of days and a calendar to be used
      * so that {@link TermStructure#referenceDate()} will return a date calculated based on the
      * current evaluation date and the term structure. This class will be notified when the
      * evaluation date changes.
      * This is the <i>Case 2</i> described on the top of this class.
-     * 
+     *
      * @see TermStructure documentation for more details about constructors.
      */
     public AbstractTermStructure(final int settlementDays, final Calendar calendar) {
@@ -265,13 +266,13 @@ public abstract class AbstractTermStructure implements TermStructure {
 
     /**
      * Calculate the reference date based on the global evaluation date
-     * 
+     *
      * <p>This constructor takes a number of days and a calendar to be used
      * so that {@link TermStructure#referenceDate()} will return a date calculated based on the
      * current evaluation date and the term structure. This class will be notified when the
      * evaluation date changes.
      * This is the <i>Case 2</i> described on the top of this class.
-     * 
+     *
      * @see TermStructure documentation for more details about constructors.
      */
     public AbstractTermStructure(final int settlementDays, final Calendar calendar, final DayCounter dc) {
@@ -299,16 +300,16 @@ public abstract class AbstractTermStructure implements TermStructure {
      * This method performs date-range check
      */
     protected void checkRange(final Date d, final boolean extrapolate) /* @ReadOnly */ {
-        assert d.gt(referenceDate()) : "date before reference date"; // TODO: message
-        assert extrapolate || allowsExtrapolation() || d.lt(maxDate()) : "date is past max curve";
+        QL.require(d.gt(referenceDate()) , "date before reference date"); // QA:[RG]::verified // TODO: message
+        QL.require(extrapolate || allowsExtrapolation() || d.lt(maxDate()) , "date is past max curve"); // QA:[RG]::verified // TODO: message
     }
 
     /**
      * This method performs date-range check
      */
     protected void checkRange(/*@Time*/ final double t, final boolean extrapolate) /* @ReadOnly */ {
-        assert t >= 0.0 : "negative time given"; // TODO: message
-        assert extrapolate||allowsExtrapolation()||t<=maxTime()||Closeness.isCloseEnough(t, maxTime()) : "time is past max curve";
+        QL.require(t >= 0.0 , "negative time given"); // QA:[RG]::verified // TODO: message
+        QL.require(extrapolate||allowsExtrapolation()||t<=maxTime()||Closeness.isCloseEnough(t, maxTime()) , "time is past max curve"); // QA:[RG]::verified // TODO: message
     }
 
 
@@ -321,7 +322,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      */
     @Override
     public Calendar calendar() /* @ReadOnly */ {
-        assert this.calendar != null : THIS_METHOD_MUST_BE_OVERRIDDEN;
+        QL.require(this.calendar != null , THIS_METHOD_MUST_BE_OVERRIDDEN); // QA:[RG]::verified // TODO: message
         return calendar;
     }
 
@@ -338,7 +339,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      */
     @Override
     public DayCounter dayCounter() {
-        assert this.dayCounter != null : THIS_METHOD_MUST_BE_OVERRIDDEN;
+        QL.require(this.dayCounter != null , THIS_METHOD_MUST_BE_OVERRIDDEN); // QA:[RG]::verified // TODO: message
         return dayCounter;
     }
 
@@ -362,7 +363,7 @@ public abstract class AbstractTermStructure implements TermStructure {
             }
 
         // i.e: Case 3
-        assert referenceDate!=null : THIS_METHOD_MUST_BE_OVERRIDDEN;
+        QL.require(referenceDate!=null , THIS_METHOD_MUST_BE_OVERRIDDEN); // QA:[RG]::verified // TODO: message
         return referenceDate;
     }
 
@@ -373,7 +374,7 @@ public abstract class AbstractTermStructure implements TermStructure {
 
     /**
      * Implements multiple inheritance via delegate pattern to a inner class
-     * 
+     *
      * @see Extrapolator
      */
     private final DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
@@ -415,7 +416,7 @@ public abstract class AbstractTermStructure implements TermStructure {
 
     /**
      * Implements multiple inheritance via delegate pattern to an inner class
-     * 
+     *
      * @see Observable
      * @see DefaultObservable
      */

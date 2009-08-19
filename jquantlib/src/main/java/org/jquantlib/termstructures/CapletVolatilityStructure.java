@@ -22,6 +22,7 @@
 
 package org.jquantlib.termstructures;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
@@ -89,10 +90,10 @@ public abstract class CapletVolatilityStructure extends AbstractTermStructure {
 
     }
 
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     public void checkRange(final double t, final double k, final boolean extrapolate) {
         super.checkRange(t, extrapolate);
-        assert extrapolate||allowsExtrapolation()||(k >= minStrike() && k <= maxStrike()) : "strike is outside curve domain"; // TODO: message
+        QL.require(extrapolate||allowsExtrapolation()||(k >= minStrike() && k <= maxStrike()) , "strike is outside curve domain"); // QA:[RG]::verified // TODO: message
     }
 
     @Override

@@ -108,7 +108,7 @@ public class StatisticsTest {
         //check(new Statistics(), "Statistics");
     }
 
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     public void checkSequence(final IStatistics statistics, final String name, final int dimension){
         /*
         GenericSequenceStatistics ss = new GenericSequenceStatistics(statistics, dimension);

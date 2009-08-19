@@ -22,6 +22,8 @@
 
 package org.jquantlib.daycounters;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
@@ -83,7 +85,7 @@ public class ActualActual extends AbstractDayCounter {
         case EURO:
             return AFB_DAYCOUNTER;
         default:
-            throw new AssertionError("unknown act/act convention"); // TODO: message
+            throw new LibraryException("unknown act/act convention"); // QA:[RG]::verified// TODO: message
         }
     }
 
@@ -121,7 +123,7 @@ public class ActualActual extends AbstractDayCounter {
 			delegate = new AFB();
 			break;
 		default:
-			throw new AssertionError("unknown act/act convention"); // TODO: message
+			throw new LibraryException("unknown act/act convention"); // QA:[RG]::verified // TODO: message
 		}
 	}
 
@@ -178,7 +180,7 @@ public class ActualActual extends AbstractDayCounter {
 			Date refPeriodStart = (!d3.equals(Date.NULL_DATE) ? d3 : d1);
 			Date refPeriodEnd = (!d4.equals(Date.NULL_DATE) ? d4 : d2);
 
-			assert refPeriodEnd.gt(refPeriodStart) && refPeriodEnd.gt(d1) : "invalid reference period"; // TODO: message
+			QL.ensure(refPeriodEnd.gt(refPeriodStart) && refPeriodEnd.gt(d1) , "invalid reference period");  // QA:[RG]::verified // TODO: message
 
 			// estimate roughly the length in months of a period
 			int months = (int) (0.5 + 12 * (refPeriodStart.getDayCount(refPeriodEnd)) / 365.0);
@@ -225,11 +227,11 @@ public class ActualActual extends AbstractDayCounter {
 								refPeriodStart);
 				}
 			} else {
-			    // TODO: code review :: please verify against original QL/C++ code
+			    // TODO: code review :: please verify against QL/C++ code
 
 				// here refPeriodEnd is the last notional payment date
 				// d1 < refPeriodEnd < d2 AND refPeriodStart < refPeriodEnd
-				assert refPeriodStart.le(d1) : "invalid dates";
+				QL.require(refPeriodStart.le(d1) , "invalid dates");
 
 				// now it is: refPeriodStart <= d1 < refPeriodEnd < d2
 

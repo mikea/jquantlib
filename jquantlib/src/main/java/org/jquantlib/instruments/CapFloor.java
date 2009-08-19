@@ -3,6 +3,7 @@ package org.jquantlib.instruments;
 import java.util.List;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.FloatingRateCoupon;
@@ -28,7 +29,7 @@ import org.jquantlib.util.DateFactory;
 //- the correctness of the returned value is tested by checking
 //it against a known good value.
 
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CapFloor extends NewInstrument {
 
@@ -58,7 +59,7 @@ public class CapFloor extends NewInstrument {
 
 
    if (type_ == Type.Cap || type_ == Type.Collar) {
-            assert capRates_.size()>0 : "no cap rates given";
+            QL.require(capRates_.size()>0 , "no cap rates given"); // QA:[RG]::verified // TODO: message
             // capRates_.reserve(floatingLeg_.size());
             while (capRates_.size() < floatingLeg_.size())
                 // this looks kind of suspicious...
@@ -66,7 +67,7 @@ public class CapFloor extends NewInstrument {
         }
 
         if (type_ == Type.Floor || type_ == Type.Collar) {
-            assert floorRates_.size()>0 : "no floor rates given";
+            QL.require(floorRates_.size()>0 , "no floor rates given"); // QA:[RG]::verified // TODO: message
             // floorRates_.reserve(floatingLeg_.size());
             while (floorRates_.size() < floatingLeg_.size())
                 floorRates_.add(floorRates_.get(floorRates_.size() - 1));
@@ -91,7 +92,7 @@ public class CapFloor extends NewInstrument {
 
         setPricingEngine(engine);
 
-        assert strikes.size()>0 : "no strikes given";
+        QL.require(strikes.size()>0 , "no strikes given"); // QA:[RG]::verified // TODO: message
         if (type_ == Type.Cap) {
             capRates_ = strikes;
             //capRates_.reserve(floatingLeg_.size());
@@ -103,7 +104,7 @@ public class CapFloor extends NewInstrument {
             while (floorRates_.size() < floatingLeg_.size())
                 floorRates_.add(floorRates_.get(floorRates_.size()-1));
         } else
-            assert false : "only Cap/Floor types allowed in this constructor";
+            QL.assertion("only Cap/Floor types allowed in this constructor"); // QA:[RG]::verified // TODO: message
 
         for (final CashFlow cashFlow : floatingLeg_)
             cashFlow.addObserver(this);

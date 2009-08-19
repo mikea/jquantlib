@@ -27,6 +27,7 @@ import static org.jquantlib.util.Month.JANUARY;
 import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.OCTOBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -35,7 +36,7 @@ import org.jquantlib.util.Month;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 public class Germany extends DelegateCalendar {
     private final static Germany SETTLEMENT_CALENDAR = new Germany(Market.SETTLEMENT);
@@ -59,7 +60,7 @@ public class Germany extends DelegateCalendar {
             delegate = new EurexCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -75,7 +76,7 @@ public class Germany extends DelegateCalendar {
         case EUREX:
             return EUREX_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

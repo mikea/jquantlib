@@ -39,6 +39,7 @@
 
 package org.jquantlib.pricingengines.arguments;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.AverageType;
 
 public class ContinuousAveragingAsianOptionArguments extends OneAssetStrikedOptionArguments {
@@ -70,7 +71,7 @@ public class ContinuousAveragingAsianOptionArguments extends OneAssetStrikedOpti
     @Override
     public void validate() /*@ReadOnly*/{
         super.validate();
-        assert averageType!=null : UNSPECIFIED_AVERAGE_TYPE;
+        QL.require(averageType!=null , UNSPECIFIED_AVERAGE_TYPE); // QA:[RG]::verified
     }
 
 }

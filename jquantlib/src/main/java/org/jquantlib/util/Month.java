@@ -22,6 +22,7 @@
 
 package org.jquantlib.util;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.IMM;
 
 /**
@@ -49,7 +50,7 @@ public enum Month {
 
     /**
      * Returns the ordinal number of this Month
-     * 
+     *
      * @return the ordinal number of this Month
      */
     public int toInteger() {
@@ -58,7 +59,7 @@ public enum Month {
 
     /**
      * Returns a new Month given it's ordinal number
-     * 
+     *
      * @param month is the ordinal number
      * @return a new Month given it's ordinal number
      */
@@ -102,14 +103,14 @@ public enum Month {
             returnMonth =  Month.DECEMBER;
             break;
         default:
-            throw new AssertionError("value must be [1,12]");
+            throw new LibraryException("value must be [1,12]"); // QA:[RG]::verified // TODO: message
         }
         return returnMonth;
     }
 
     /**
      * Returns the IMM char for this Month
-     * 
+     *
      * @return the IMM char for this Month
      * @see IMM
      */
@@ -153,14 +154,14 @@ public enum Month {
             returnChar =  'Z';
             break;
         default:
-            throw new AssertionError("value must be [1,12]");
+            throw new LibraryException("value must be [1,12]"); // QA:[RG]::verified // TODO: message
         }
         return returnChar;
     }
 
     /**
      * Returns a new month given it's IMM code
-     * 
+     *
      * @param immCode is the IMM code
      * @return a new month given it's IMM code
      */
@@ -180,7 +181,7 @@ public enum Month {
         case 'X': returnMonth = Month.NOVEMBER;break;
         case 'Z': returnMonth = Month.DECEMBER;break;
         default:
-            throw new AssertionError("value must be one of F,G,H,J,K,M,N,Q,U,V,X,Z");
+            throw new LibraryException("value must be one of F,G,H,J,K,M,N,Q,U,V,X,Z"); // QA:[RG]::verified // TODO: message
         }
         return returnMonth;
     }
@@ -226,7 +227,7 @@ public enum Month {
             returnString = "December";
             break;
         default:
-            throw new AssertionError("value must be [1,12]");
+            throw new LibraryException("value must be [1,12]"); // QA:[RG]::verified // TODO: message
         }
         return returnString;
     }

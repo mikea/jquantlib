@@ -49,15 +49,13 @@ public class MatrixTest {
 
     private final static Logger logger = LoggerFactory.getLogger(MatrixTest.class);
 
-    private final int N;
+    //XXX private final int N;
     private final Matrix M1, M2, M3, M4, M5, M6, M7;
     private final Matrix I;
 
 
     public MatrixTest() {
         logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-
-        N = 3;
 
         M1 = new Matrix(new double[][] {
             { 1.0,  0.9,  0.7 },
@@ -71,7 +69,7 @@ public class MatrixTest {
             { 0.7,  0.3,  1.0 }
         });
 
-        I = new Identity(N);
+        I = new Identity(3);
 
         M3 = new Matrix(new double[][] {
             { 1,   2,   3,   4 },
@@ -855,6 +853,8 @@ public class MatrixTest {
             final Matrix eigenVectors = schur.eigenvectors();
             double minHolder = Constants.QL_MAX_REAL;
 
+            final int N = M.columns();
+
             for (int i=0; i<N; i++) {
                 final Array v = new Array(N);
                 for (int j=0; j<N; j++)
@@ -862,7 +862,8 @@ public class MatrixTest {
                 // check definition
                 final Array a = M.mul(v);
                 final Array b = v.mul(eigenValues.get(i));
-                if (norm(a.sub(b)) > 1.0e-15)
+                final double tol = norm(a.sub(b));
+                if (tol > 1.0e-15)
                     fail("Eigenvector definition not satisfied");
                 // check decreasing ordering
                 if (eigenValues.get(i) >= minHolder) {
@@ -873,7 +874,9 @@ public class MatrixTest {
 
             // check normalization
             final Matrix m = eigenVectors.mul(eigenVectors.transpose());
-            if (norm(m.sub(I)) > 1.0e-15)
+            final Identity ID = new Identity(N);
+            final double tol = norm(m.sub(ID));
+            if (tol > 1.0e-15)
                 fail("Eigenvector not normalized");
         }
     }
@@ -944,13 +947,17 @@ public class MatrixTest {
                     fail("S not consistent with s");
             }
 
+            Identity ID;
+
             // tests
             final Matrix U_Utranspose = U.transpose().mul(U);
-            if (norm(U_Utranspose.sub(I)) > tol)
+            ID = new Identity(U_Utranspose.columns());
+            if (norm(U_Utranspose.sub(ID)) > tol)
                 fail("U not orthogonal");
 
             final Matrix V_Vtranspose = V.transpose().mul(V);
-            if (norm(V_Vtranspose.sub(I)) > tol)
+            ID = new Identity(V_Vtranspose.columns());
+            if (norm(V_Vtranspose.sub(ID)) > tol)
                 fail("V not orthogonal");
 
             final Matrix A_reconstructed = U.mul(S).mul(V.transpose());
@@ -978,21 +985,22 @@ public class MatrixTest {
             int ipvt[];
             double tol;
 
+            Matrix mul1;
+            Matrix mul2;
+
+
+            // QR decomposition without column pivoting
             qr = A.qr();
-            H = qr.H();
             Q = qr.Q();
             R = qr.R();
 
-            ipvt = qr.pivot();
-
-            tol = norm(Q.mul(R).sub(A)); // norm(Q*R - A)
+            mul1 = Q.mul(R);
+            tol = norm(mul1.sub(A)); // norm(Q*R - A)
             if (tol > tolerance)
                 fail("Q*R does not match matrix A");
 
 
-
-
-
+            // QR decomposition with column pivoting
             qr = A.qr(true);
             H = qr.H();
             Q = qr.Q();
@@ -1007,10 +1015,11 @@ public class MatrixTest {
                 P.set(ipvt[i], i, 1.0);
             }
 
-            tol = norm(Q.mul(R).sub(A.mul(P))); // norm(Q*R - A*P)
+            mul1 = Q.mul(R);
+            mul2 = A.mul(P);
+            tol = norm( mul1.sub(mul2) ); // norm(Q*R - A*P)
             if (tol > tolerance)
                 fail("Q*R does not match matrix A*P");
-
         }
     }
 

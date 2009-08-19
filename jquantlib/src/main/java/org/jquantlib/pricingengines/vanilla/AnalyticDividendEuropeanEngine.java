@@ -39,6 +39,7 @@
 
 package org.jquantlib.pricingengines.vanilla;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.StrikedTypePayoff;
@@ -49,7 +50,7 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 
 /**
- * 
+ *
  * @author <Richard Gomes>
  */
 public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine {
@@ -63,10 +64,10 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
      */
     @Override
     public void calculate() {
-        assert arguments.exercise.type() == Exercise.Type.EUROPEAN : "not an European option";
-        assert arguments.payoff instanceof StrikedTypePayoff : "non-striked payoff given";
+        QL.require(arguments.exercise.type() == Exercise.Type.EUROPEAN , "not an European option"); // QA:[RG]::verified // TODO: message
+        QL.require(arguments.payoff instanceof StrikedTypePayoff , "non-striked payoff given"); // QA:[RG]::verified // TODO: message
         final StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
-        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : "Black-Scholes process required";
+        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         final Date settlementDate = process.riskFreeRate().getLink().referenceDate();
@@ -77,6 +78,7 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
                 riskless += arguments.cashFlow.get(i).amount() *
                 process.riskFreeRate().getLink().discount(arguments.cashFlow.get(i).date());
         final double /*@Real*/ spot = process.stateVariable().getLink().evaluate() - riskless;
+        QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
 
         final double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
         final double /*@DiscountFactor*/ riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());

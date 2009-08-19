@@ -33,6 +33,7 @@ import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -55,7 +56,7 @@ import org.jquantlib.util.Month;
  * <li>National Fondation Day, October 3th</li>
  * <li>Christmas Day, December 25th</li>
  * </ul>
- * 
+ *
  * Other holidays for which no rule is given (data available for 2004-2007 only:)
  * <ul>
  * <li>Lunar New Year</li>
@@ -63,9 +64,9 @@ import org.jquantlib.util.Month;
  * <li>Buddha's birthday</li>
  * <li>Harvest Moon Day</li>
  * </ul>
- * 
+ *
  * @author Jia Jia
- * 
+ *
  */
 public class SouthKorea extends DelegateCalendar {
 
@@ -78,7 +79,7 @@ public class SouthKorea extends DelegateCalendar {
             delegate = new SouthKoreaKRXCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -88,7 +89,7 @@ public class SouthKorea extends DelegateCalendar {
         case KRX:
             return KRX_Calendar;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

@@ -1,5 +1,6 @@
 package org.jquantlib.termstructures;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.termstructures.volatilities.SmileSection;
 import org.jquantlib.time.BusinessDayConvention;
@@ -45,7 +46,7 @@ public abstract class SwaptionVolatilityStructure extends AbstractTermStructure 
     // overloaded (at least) in SwaptionVolCube2
     /*
      * public SmileSection smileSection( Date optionDate, Period swapTenor) {
-     * 
+     *
      * } Pair<Double, Double> p = null;//convertDates(optionDate, swapTenor); return smileSectionImpl(p.first, p.second); }
      */
 
@@ -155,8 +156,8 @@ public abstract class SwaptionVolatilityStructure extends AbstractTermStructure 
 
     public Pair<Double, Double> convertDates(final Date optionDate, final Period swapTenor) {
         final Date end = optionDate.increment(swapTenor);
-        // TODO: code review :: please verify against original QL/C++ code
-        assert end.gt(optionDate) : "negative swap tenorgiven";
+        // TODO: code review :: please verify against QL/C++ code
+        QL.require(end.gt(optionDate) , "negative swap tenorgiven"); // QA:[RG]::verified // TODO: message
         final double optionTime = timeFromReference(optionDate);
         final double timeLength = dayCounter().yearFraction(optionDate, end);
         return new Pair<Double, Double>(optionTime, timeLength);

@@ -30,6 +30,7 @@ import static org.jquantlib.util.Month.JUNE;
 import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.NOVEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -71,9 +72,9 @@ import org.jquantlib.util.Month;
  * </ul>
  *
  * @category calendars
- * 
+ *
  * @see <a href="http://www.borsaitalia.it">Borsa Italiana</a>
- * 
+ *
  * @author Srinivas Hasti
  */
 public class Italy extends DelegateCalendar {
@@ -91,7 +92,7 @@ public class Italy extends DelegateCalendar {
             delegate = new ItalyExchangeCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -103,7 +104,7 @@ public class Italy extends DelegateCalendar {
         case EXCHANGE:
             return EXCHANGE_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

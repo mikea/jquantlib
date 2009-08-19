@@ -1,5 +1,6 @@
 package org.jquantlib.cashflow;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.math.Constants;
@@ -71,7 +72,7 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
 
 
         if (isCapped_ && isFloored_)
-            assert cap >= floor : "cap level less than floor level";
+            QL.require(cap >= floor , "cap level less than floor level"); // QA:[RG]::verified // TODO: message
 
         // registerWith(underlying);
         underlying.addObserver(this);

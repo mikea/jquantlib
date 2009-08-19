@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.Ops;
@@ -107,61 +108,61 @@ public class OneAssetOption extends Option {
 
     public double delta() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(delta) : "delta not provided";
+        QL.ensure(!Double.isNaN(delta) , "delta not provided"); // QA:[RG]::verified // TODO: message
         return delta;
     }
 
     public double deltaForward() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(deltaForward) : "forward delta not provided";
+        QL.ensure(!Double.isNaN(deltaForward) , "forward delta not provided"); // QA:[RG]::verified // TODO: message
         return deltaForward;
     }
 
     public double elasticity() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(elasticity) : "elasticity not provided";
+        QL.ensure(!Double.isNaN(elasticity) , "elasticity not provided"); // QA:[RG]::verified // TODO: message
         return elasticity;
     }
 
     public double gamma() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(gamma) : "gamma not provided";
+        QL.ensure(!Double.isNaN(gamma) , "gamma not provided"); // QA:[RG]::verified // TODO: message
         return gamma;
     }
 
     public double theta() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(theta) : "theta not provided";
+        QL.ensure(!Double.isNaN(theta) , "theta not provided"); // QA:[RG]::verified // TODO: message
         return theta;
     }
 
     public double thetaPerDay() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(thetaPerDay) : "theta per-day not provided";
+        QL.ensure(!Double.isNaN(thetaPerDay) , "theta per-day not provided"); // QA:[RG]::verified // TODO: message
         return thetaPerDay;
     }
 
     public double vega() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(vega) : "vega not provided";
+        QL.ensure(!Double.isNaN(vega) , "vega not provided"); // QA:[RG]::verified // TODO: message
         return vega;
     }
 
     public double rho() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(rho) : "rho not provided";
+        QL.ensure(!Double.isNaN(rho) , "rho not provided"); // QA:[RG]::verified // TODO: message
         return rho;
     }
 
     public double dividendRho() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(dividendRho) : "dividend rho not provided";
+        QL.ensure(!Double.isNaN(dividendRho) , "dividend rho not provided"); // QA:[RG]::verified // TODO: message
         return dividendRho;
     }
 
     public double itmCashProbability() /* @ReadOnly */ {
         calculate();
-        assert !Double.isNaN(itmCashProbability) : "in-the-money cash probability not provided";
+        QL.ensure(!Double.isNaN(itmCashProbability) , "in-the-money cash probability not provided"); // QA:[RG]::verified // TODO: message
         return itmCashProbability;
     }
 
@@ -208,7 +209,7 @@ public class OneAssetOption extends Option {
             final /* @Volatility */ double minVol,
             final /* @Volatility */ double maxVol) /* @ReadOnly */ {
         calculate();
-        assert !isExpired() : "option expired";
+        QL.require(!isExpired() , "option expired"); // QA:[RG]::verified // TODO: message
         /* @Volatility */ final double guess = (minVol+maxVol)/2.0;
         final ImpliedVolHelper f = new ImpliedVolHelper(engine, targetValue);
         final AbstractSolver1D<Ops.DoubleOp> solver = new Brent();
@@ -240,7 +241,7 @@ public class OneAssetOption extends Option {
      */
     @Override
     public void setupArguments(final Arguments args) /* @ReadOnly */ {
-        assert args instanceof OneAssetOptionArguments : WRONG_ARGUMENT_TYPE;
+        QL.require(args instanceof OneAssetOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments) args;
         final OptionArguments         optionArguments   = (OptionArguments) args;
         // set up stochastic process
@@ -266,7 +267,7 @@ public class OneAssetOption extends Option {
      */
     @Override
     public void fetchResults(final Results results) /* @ReadOnly */ {
-        assert results instanceof MoreGreeks : WRONG_ARGUMENT_TYPE;
+        QL.require(results instanceof MoreGreeks , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         super.fetchResults(results);
         final MoreGreeks moreGreeks;
         final Greeks     greeks;
@@ -340,7 +341,7 @@ public class OneAssetOption extends Option {
 
             // obtain arguments from pricing engine
             final Arguments tmpArgs = impliedEngine.getArguments();
-            assert tmpArgs instanceof OneAssetOptionArguments : WRONG_ARGUMENT_TYPE;
+            QL.require(tmpArgs instanceof OneAssetOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
             final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments)tmpArgs;
 
         	// Make a new stochastic process in order not to modify the given one.
@@ -353,7 +354,7 @@ public class OneAssetOption extends Option {
 
         	// obtain original process from arguments
             final GeneralizedBlackScholesProcess originalProcess = (GeneralizedBlackScholesProcess)oneAssetArguments.stochasticProcess;
-        	assert originalProcess!=null : "Black-Scholes process required";
+        	QL.require(originalProcess!=null , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
 
         	// initialize arguments for calculation of implied volatility
         	this.vol = new Handle<Quote>(new SimpleQuote(0.0));
@@ -376,7 +377,7 @@ public class OneAssetOption extends Option {
         	oneAssetArguments.stochasticProcess = process;
 
         	// obtain results from pricing engine and keep for further use
-        	assert impliedEngine.getResults() instanceof OneAssetOptionResults : WRONG_ARGUMENT_TYPE;
+        	QL.require(impliedEngine.getResults() instanceof OneAssetOptionResults , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         	impliedResults = (OneAssetOptionResults)impliedEngine.getResults();
         }
 

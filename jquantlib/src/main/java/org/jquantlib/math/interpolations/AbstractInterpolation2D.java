@@ -24,6 +24,7 @@ package org.jquantlib.math.interpolations;
 
 import static org.jquantlib.math.Closeness.isClose;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
@@ -88,7 +89,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
      * @throws IllegalStateException if extrapolation is not enabled.
      * @throws IllegalArgumentException if <i>x</i> is our of range
      */
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     // FIXME: code review : verify if parameter 'extrapolate' is really needed
     protected final void checkRange(final double x, final double y, final boolean extrapolate) {
         if (! (extrapolate || allowsExtrapolation() || isInRange(x, y)) ) {
@@ -127,10 +128,10 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 
     @Override
     public void reload() {
-        assert vx.size() >= 2 && vy.size() >= 2 : "not enough points to interpolate"; // TODO: message
+        QL.require(vx.size() >= 2 && vy.size() >= 2 , "not enough points to interpolate"); // QA:[RG]::verified // TODO: message
         for (int i = 0; i < vx.size()-1; i++) {
-            assert vx.get(i) <= vx.get(i+1) : "unsorted values on array X";
-            assert vy.get(i) <= vy.get(i+1) : "unsorted values on array Y";
+            QL.require(vx.get(i) <= vx.get(i+1) , "unsorted values on array X"); // QA:[RG]::verified // TODO: message
+            QL.require(vy.get(i) <= vy.get(i+1) , "unsorted values on array Y"); // QA:[RG]::verified // TODO: message
         }
     }
 
@@ -237,13 +238,34 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 
     @Override
     public boolean isInRange(final double x, final double y) {
+        QL.assertion(extraSafetyChecksX(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
         final double x1 = xMin(), x2 = xMax();
         final boolean xIsInrange = (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
         if (!xIsInrange) return false;
 
+        QL.assertion(extraSafetyChecksY(), "unsorted values on array Y"); // QA:[RG]::verified // TODO: message
         final double y1 = yMin(), y2 = yMax();
         return (y >= y1 && y <= y2) || isClose(y,y1) || isClose(y,y2);
     }
 
+    //
+    // private methods
+    //
+
+    private boolean extraSafetyChecksX() {
+        for (int i=0; i<vx.size()-1; i++) {
+            if (vx.get(i) > vx.get(i+1))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean extraSafetyChecksY() {
+        for (int i=0; i<vy.size()-1; i++) {
+            if (vy.get(i) > vy.get(i+1))
+                return false;
+        }
+        return true;
+    }
 
 }

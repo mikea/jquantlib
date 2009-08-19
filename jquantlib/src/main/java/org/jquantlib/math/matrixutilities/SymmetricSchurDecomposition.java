@@ -72,7 +72,7 @@ public class SymmetricSchurDecomposition {
 
 
     public SymmetricSchurDecomposition(final Matrix m) {
-        QL.require(m.rows == m.cols, Matrix.MATRIX_MUST_BE_SQUARE);
+        QL.require(m.rows == m.cols, Matrix.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
 
         this.size = m.rows;
         this.A = new Matrix(m.rows, m.cols);

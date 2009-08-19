@@ -39,16 +39,18 @@
 
 package org.jquantlib.math.randomnumbers;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**
  * Random sequence generator based on a pseudo-random number generator
- * 
+ *
  * @note Do not use with low-discrepancy sequence generator.
- * 
+ *
  * @param <RNG> is a subclass of {@link RandomNumberGenerator}
- * 
+ *
  * @author Richard Gomes
  */
 // FIXME: code review :: possibly rename this class ???
@@ -72,7 +74,7 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
 
         if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
 
-        assert dimensionality >= 1 : "dimensionality must be greater than 0";
+        QL.require(dimensionality >= 1 , "dimensionality must be greater than 0"); // QA:[RG]::verified // TODO: message
         this.dimension = dimensionality;
         this.rng = rng;
         this.sequence = new double[this.dimension];
@@ -96,7 +98,7 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
         try {
             this.rng = (RNG) TypeToken.getClazz(this.getClass()).getConstructor(long.class).newInstance(seed);
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
     }
 

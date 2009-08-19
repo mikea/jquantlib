@@ -40,6 +40,7 @@
 
 package org.jquantlib.termstructures.volatilities;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolations.BilinearInterpolation;
 import org.jquantlib.math.interpolations.Interpolation2D;
@@ -108,9 +109,9 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
             final Extrapolation upperExtrapolation) {
 
         super(referenceDate);
-        assert dates.length == blackVolMatrix.columns() : "mismatch between date vector and vol matrix colums";
-        assert strikes.size() == blackVolMatrix.rows() : "mismatch between money-strike vector and vol matrix rows";
-        assert dates[0].gt(referenceDate) : "cannot have dates[0] <= referenceDate";
+        QL.require(dates.length == blackVolMatrix.columns() , "mismatch between date vector and vol matrix colums"); // QA:[RG]::verified // TODO: message
+        QL.require(strikes.size() == blackVolMatrix.rows() , "mismatch between money-strike vector and vol matrix rows"); // QA:[RG]::verified // TODO: message
+        QL.require(dates[0].gt(referenceDate) , "cannot have dates[0] <= referenceDate"); // QA:[RG]::verified // TODO: message
 
         this.dayCounter = dayCounter;
         this.maxDate = dates[dates.length-1]; // TODO: code review: index seems to be wrong
@@ -129,12 +130,12 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
         for (int j = 1; j <= blackVolMatrix.columns(); j++) {
             times.set(j, timeFromReference(dates[j-1]));
-            assert times.get(j) > times.get(j-1) : "dates must be sorted unique!";
+            QL.require(times.get(j) > times.get(j-1) , "dates must be sorted unique!"); // QA:[RG]::verified // TODO: message
             for (int i = 0; i < blackVolMatrix.rows(); i++) {
                 final double elem = blackVolMatrix.get(i, j-1);
                 final double ijvar = times.get(j) * elem * elem;
                 variances.set(i, j, ijvar);
-                assert ijvar >= variances.get(i, j-1) : "variance must be non-decreasing";
+                QL.require(ijvar >= variances.get(i, j-1) , "variance must be non-decreasing"); // QA:[RG]::verified // TODO: message
             }
         }
         // default: bilinear interpolation
@@ -196,7 +197,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
         if (t <= times.last())
             return varianceSurface.op(t, strike);
         else {
-            // TODO: code review :: please verify against original QL/C++ code
+            // TODO: code review :: please verify against QL/C++ code
             // t>times_.back() || extrapolate
             /* @Time */final double lastTime = times.last();
             return varianceSurface.op(lastTime, strike) * t / lastTime;

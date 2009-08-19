@@ -23,6 +23,7 @@
 
 package org.jquantlib.time.calendars;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -31,7 +32,7 @@ import org.jquantlib.util.Month;
 
 /**
  * Argentinian calendar
- * 
+ *
  * <strong>Banking holidays:</strong>
  * <ul>
  * <li>Saturdays</li>
@@ -56,7 +57,7 @@ import org.jquantlib.util.Month;
  * <li>Passion of Christ</li>
  * <li>Corpus Christi</li>
  * </ul>
- * 
+ *
  * Holidays for the MERVAL stock exchange
  * <ul>
  * <li>Saturdays</li>
@@ -76,7 +77,7 @@ import org.jquantlib.util.Month;
  * <li>Christmas, December 25th</li>
  * <li>New Year's Eve, December 31th</li>
  * </ul>
- * 
+ *
  * @author Srinivas Hasti
  * @author Dominik Holenstein
  * @author Richard Gomes
@@ -98,7 +99,7 @@ public class Argentina extends DelegateCalendar {
             delegate = new ArgentinaMervalExchangeCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -110,7 +111,7 @@ public class Argentina extends DelegateCalendar {
         case MERVAL:
             return MERVAL_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

@@ -110,7 +110,7 @@ public class HestonModel extends CalibratedModel {
     // private inner classes
     //
 
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     private class VolatilityConstraint extends Constraint {
 
         public VolatilityConstraint(){

@@ -23,25 +23,26 @@
 
 package org.jquantlib.time.calendars;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 
 /**
- * 
+ *
  * Depending on the chosen rule, this calendar has a set of business days given
  * by either the union or the intersection of the sets of business days of the
  * given calendars.
- * 
+ *
  * JOIN_HOLIDAYS - A date is a holiday for the joint calendar if it is a
  * holiday for any of the given calendars
- * 
+ *
  * JOIN_BUSINESSDAYS - A date is a business day for the joint calendar if it is
  * a business day for any of the given calendars
- * 
+ *
  * @author Srinivas Hasti
- * 
+ *
  */
 public class JointCalendar extends AbstractCalendar {
 
@@ -68,7 +69,7 @@ public class JointCalendar extends AbstractCalendar {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jquantlib.time.Calendar#getName()
      */
     public String getName() {
@@ -81,7 +82,7 @@ public class JointCalendar extends AbstractCalendar {
             builder.append("JoinBusinessDays()");
             break;
         default:
-            throw new AssertionError("unknown joint calendar rule"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         for (final Calendar cal : calendars)
             builder.append(cal.getName() + ",");
@@ -91,7 +92,7 @@ public class JointCalendar extends AbstractCalendar {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jquantlib.time.Calendar#isBusinessDay(org.jquantlib.util.Date)
      */
     @Override
@@ -108,13 +109,13 @@ public class JointCalendar extends AbstractCalendar {
                     return true;
             return false;
         default:
-            throw new AssertionError("unknown joint calendar rule"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jquantlib.time.Calendar#isWeekend(org.jquantlib.time.Weekday)
      */
     public boolean isWeekend(final Weekday w) {
@@ -130,7 +131,7 @@ public class JointCalendar extends AbstractCalendar {
                     return false;
             return true;
         default:
-            throw new AssertionError("unknown joint calendar rule"); // TODO: message
+            throw new LibraryException("unknown joint calendar rule"); // QA:[RG]::verified // TODO: message
         }
     }
 }

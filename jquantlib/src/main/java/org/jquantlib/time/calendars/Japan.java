@@ -37,6 +37,7 @@ import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -75,9 +76,9 @@ import org.jquantlib.util.Month;
  * the bank holidays associated with the new year.
  *
  * @category calendars
- * 
+ *
  * @see <a href="http://www.tse.or.jp">Tokyo Stock Exchange</a>
- * 
+ *
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
@@ -92,7 +93,7 @@ public class Japan extends DelegateCalendar {
             delegate = new JapanSettlementCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -102,7 +103,7 @@ public class Japan extends DelegateCalendar {
         case SETTLEMENT:
             return SETTLEMENT_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

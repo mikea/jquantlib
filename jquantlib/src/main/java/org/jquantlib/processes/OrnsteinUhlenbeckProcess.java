@@ -21,18 +21,19 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.processes;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 
 
 /**
- * 
+ *
  * @author Praneet Tiwari
  */
 
 // ! Ornstein-Uhlenbeck process class
 /*
  * ! This class describes the Ornstein-Uhlenbeck process governed by \f[ dx = a (r - x_t) dt + \sigma dW_t. \f]
- * 
+ *
  * \ingroup processes
  */
 
@@ -53,8 +54,8 @@ public class OrnsteinUhlenbeckProcess extends StochasticProcess1D {
         // StochasticProcess1D
         super();
 
-        assert speed >= 0.0 : negative_speed_given;
-        assert vol >= 0.0 : negative_volatility_given;
+        QL.require(speed >= 0.0 , negative_speed_given); // QA:[RG]::verified // TODO: message
+        QL.require(vol >= 0.0 , negative_volatility_given); // QA:[RG]::verified // TODO: message
 
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");

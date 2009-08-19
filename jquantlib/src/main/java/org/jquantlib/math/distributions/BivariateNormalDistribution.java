@@ -42,6 +42,7 @@
 
 package org.jquantlib.math.distributions;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.integrals.TabulatedGaussLegendre;
@@ -74,7 +75,7 @@ import org.jquantlib.math.integrals.TabulatedGaussLegendre;
  * <li>The implementation of the cumulative normal distribution is {@code CumulativeNormalDistribution}</li>
  * <li> The arrays XX and W are zero-based</li>
  * </ol>
- * 
+ *
  * @author Richard Gomes
  */
 //TODO: code review :: seems like we should extend or implement something ?
@@ -98,7 +99,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
      * @param rho correlation
      */
     public BivariateNormalDistribution(final double rho) {
-        assert rho >= -1.0 && rho <= 1.0 : "rho must be >= -1.0 and <= 1.0"; // TODO: message
+        QL.require(rho >= -1.0 && rho <= 1.0 , "rho must be >= -1.0 and <= 1.0"); // QA:[RG]::verified // TODO: message
         correlation_ = rho;
     }
 
@@ -110,7 +111,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
     /**
      * Computes the Bivariate Normal Distribution of the two variables <code>x</code> and <code>y</code>
      * which can be correlated in a particular manner.
-     * 
+     *
      * @param x
      *                First variable
      * @param y
@@ -181,7 +182,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
 
     /**
      * Relates to equation 3, see references
-     * 
+     *
      * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">Genz 2004, The Transformed BVN Problem</a>
      */
 
@@ -191,7 +192,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
 
         /**
          * Equation 3, see Genz 2004.
-         * 
+         *
          * @param h
          * @param k
          * @param asr ASIN of <code>correlation_</code>
@@ -211,9 +212,9 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
 
         /**
          * Computes equation 3, see references
-         * 
+         *
          * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node4.html#L1P">Genz 2004, The Transformed BVN Problem</a>
-         * 
+         *
          * @param h
          * @param k
          * @param asr ASIN of <code>correlation_</code>
@@ -228,9 +229,9 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
 
     /**
      * Relates to equation 6, see references
-     * 
+     *
      * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Genz 2004, Numerical Integration Results</a>
-     * 
+     *
      */
     private static class Eqn6 implements Ops.DoubleOp {
 
@@ -238,7 +239,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
 
         /**
          * Constructor to initialize a, b, c, d, bs and hk.
-         * 
+         *
          * @param a
          * @param c
          * @param d
@@ -260,15 +261,15 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
 
         /**
          * Computes equation 6, see references<br>
-         * 
+         *
          * @see <a href="http://www.math.wsu.edu/faculty/genz/papers/bvnt/node5.html#L3">Genz 2004, Numerical Integration
          *      Results</a>
-         * 
+         *
          * @param x
          * @return <code>if (asr > -100.0) </code> return (a_ * Math.exp(asr) * (Math.exp(-hk_ * (1 - rs) / (2 * (1 + rs))) / rs -
          *         (1 + c_ * xs * (1 + d_ * xs))))<br>
          *         <code>else</code> return 0.00
-         * 
+         *
          */
         public double op(final double x) {
             double xs = a_ * (-x + 1);

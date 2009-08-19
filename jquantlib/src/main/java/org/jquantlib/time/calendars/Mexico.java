@@ -22,6 +22,7 @@
 
 package org.jquantlib.time.calendars;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -50,11 +51,11 @@ import org.jquantlib.util.Month;
  * <li>Our Lady of Guadalupe, December 12th</li>
  * <li>Christmas, December 25th</li>
  * </ul>
- * 
+ *
  * @category calendars
- * 
+ *
  * @see <a href="http://www.bmv.com.mx/">Bolsa Mexicana de Valores</a>
- * 
+ *
  * @author Q Boiler
  */
 public class Mexico extends DelegateCalendar {
@@ -72,7 +73,7 @@ public class Mexico extends DelegateCalendar {
             delegate = new BMVExchangeCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -84,7 +85,7 @@ public class Mexico extends DelegateCalendar {
         case BMV:
             return BMV_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

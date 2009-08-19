@@ -43,9 +43,11 @@
 
 package org.jquantlib.time;
 
+import org.jquantlib.lang.exceptions.LibraryException;
+
 /**
  * Day's serial number MOD 7
- * 
+ *
  * <p>
  * WEEKDAY Excel function is the same except for Sunday = 7.
  */
@@ -60,7 +62,7 @@ public enum Weekday {
 
     /**
      * Returns a new Weekday object given its cardinality
-     * 
+     *
      * @param value
      *            is the cardinality from 1 (Sunday) till 7 (Saturday)
      * @return a new Weekday object given its cardinality
@@ -82,13 +84,13 @@ public enum Weekday {
         case 7:
             return Weekday.SATURDAY;
         default:
-            throw new AssertionError("value must be [1,7]");
+            throw new LibraryException("value must be [1,7]"); // QA:[RG]::verified // TODO: message
         }
     }
 
     /**
      * Returns the week day as a number where Sunday (1) till Saturday (7)
-     * 
+     *
      * @return the week day as a number where Sunday (1) till Saturday (7)
      */
     public int toInteger() {
@@ -97,7 +99,7 @@ public enum Weekday {
 
     /**
      * Returns the name of weekdays in long format
-     * 
+     *
      * @see Weekday#getLongFormat
      * @return the name of weekdays in long format
      */
@@ -119,12 +121,12 @@ public enum Weekday {
         case 7:
             return "Saturday";
         }
-        throw new AssertionError("value must be [1,7]");
+        throw new LibraryException("value must be [1,7]"); // QA:[RG]::verified // TODO: message
     }
 
     /**
      * Returns the name of weekdays in long format
-     * 
+     *
      * @see Weekday#toString
      * @return the name of weekdays in long format
      */
@@ -134,7 +136,7 @@ public enum Weekday {
 
     /**
      * Returns the name of weekdays in short format (3 letters)
-     * 
+     *
      * @return the name of weekdays in short format (3 letters)
      */
     public String getShortFormat() {
@@ -143,7 +145,7 @@ public enum Weekday {
 
     /**
      * Returns the name of weekdays in shortest format. (2 letters)
-     * 
+     *
      * @return the name of weekdays in shortest format (2 letters)
      */
     public String getShortestFormat() {

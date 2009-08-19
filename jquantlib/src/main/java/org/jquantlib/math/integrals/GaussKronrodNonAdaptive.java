@@ -22,6 +22,7 @@
  */
 package org.jquantlib.math.integrals;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
 
@@ -72,7 +73,7 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
         double result;
         int k;
 
-        assert a < b : "b must be greater than a";
+        QL.require(a < b , "b must be greater than a"); // QA:[RG]::verified // TODO: message
 
         final double halfLength = 0.5 * (b - a);
         final double center = 0.5 * (b + a);

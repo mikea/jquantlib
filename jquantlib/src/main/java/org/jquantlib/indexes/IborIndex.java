@@ -23,8 +23,10 @@
 package org.jquantlib.indexes;
 
 
+import org.jquantlib.QL;
 import org.jquantlib.currencies.Currency;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
@@ -38,7 +40,7 @@ import org.jquantlib.util.Date;
  * @author Srinivas Hasti
  *
  */
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class IborIndex extends InterestRateIndex {
 
@@ -105,7 +107,7 @@ public class IborIndex extends InterestRateIndex {
         case YEARS:
             return BusinessDayConvention.MODIFIED_FOLLOWING;
         default:
-            throw new AssertionError("invalid time units"); // TODO: message
+            throw new LibraryException("invalid time units"); // QA:[RG]::verified // TODO: message
         }
     }
 
@@ -118,7 +120,7 @@ public class IborIndex extends InterestRateIndex {
         case YEARS:
             return true;
         default:
-            throw new AssertionError("invalid time units"); // TODO: message
+            throw new LibraryException("invalid time units");  // QA:[RG]::verified // TODO: message
         }
     }
 
@@ -142,8 +144,8 @@ public class IborIndex extends InterestRateIndex {
      */
     @Override
     protected double forecastFixing(final Date fixingDate) {
-        // TODO: code review :: please verify against original QL/C++ code
-        assert handle.empty() : "no forecasting term structure set to " + name(); // TODO: message
+        // TODO: code review :: please verify against QL/C++ code
+        QL.require(handle.empty() , "no forecasting term structure set to " + name());  // QA:[RG]::verified // TODO: message
         final Date fixingValueDate = valueDate(fixingDate);
         final Date endValueDate = maturityDate(fixingValueDate);
         final double fixingDiscount = handle.getLink().discount(fixingValueDate);

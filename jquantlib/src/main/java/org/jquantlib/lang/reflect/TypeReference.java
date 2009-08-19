@@ -28,6 +28,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import org.jquantlib.QL;
+
 /**
  * This class provides derived classes the ability to retrieve runtime type information
  * from generic parametric types specified at creation time.
@@ -108,10 +110,10 @@ public abstract class TypeReference<T> {
      * Gets the referenced Class of the n-th generic parameter
      */
     public Class<?> getGenericParameterClass(final int n) {
-        assert n < types.length : "Missing parameter";
+        QL.require(n < types.length , "Missing parameter"); // QA:[RG]::verified // TODO: message
         final Type type = types[n];
         final Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
-        assert ((clazz.getModifiers() & Modifier.ABSTRACT) == 0) : "generic parameter must be a concrete class";
+        QL.require(((clazz.getModifiers() & Modifier.ABSTRACT) == 0) , "generic parameter must be a concrete class"); // QA:[RG]::verified // TODO: message
         return clazz;
     }
 

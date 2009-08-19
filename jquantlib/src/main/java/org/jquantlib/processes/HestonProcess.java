@@ -22,6 +22,7 @@
 
 package org.jquantlib.processes;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.matrixutilities.Array;
@@ -273,7 +274,7 @@ public class HestonProcess extends StochasticProcess {
             retVal[0] = x00 * Math.exp(dy + rhov_ / sigmav_ * (retVal[1] - x01));
             break;
         default:
-            throw new AssertionError("unknown discretization schema");
+            throw new LibraryException("unknown discretization schema"); // QA:[RG]::verified // TODO: message
         }
 
         return new Array( retVal );

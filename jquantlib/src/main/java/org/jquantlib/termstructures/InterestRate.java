@@ -22,14 +22,16 @@
 
 package org.jquantlib.termstructures;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 
 /**
  * This class encapsulate the interest rate compounding algebra. It manages day-counting conventions, compounding conventions,
  * conversion between different conventions, discount/compound factor calculations, and implied/equivalent rate calculations.
- * 
+ *
  * @author Richard Gomes
  */
 // TODO: Converted rates are checked against known good results
@@ -51,7 +53,7 @@ public class InterestRate {
 
     /**
      * Default constructor returning a null interest rate.
-     * 
+     *
      * @category constructors
      */
     public InterestRate() {
@@ -60,11 +62,11 @@ public class InterestRate {
 
     /**
      * Standard constructor. Assumes a {@link Frequency}.Annual
-     * 
+     *
      * @param r represents the rate
      * @param dc is a {@link DayCounter}
      * @param comp is a {@link Compounding}
-     * 
+     *
      * @category constructors
      */
     public InterestRate(final/* @Rate */double r, final DayCounter dc, final Compounding comp) {
@@ -73,12 +75,12 @@ public class InterestRate {
 
     /**
      * Standard constructor.
-     * 
+     *
      * @param r represents the rate
      * @param dc is a {@link DayCounter}
      * @param comp is a {@link Compounding}
      * @param freq represents a {@link Frequency}
-     * 
+     *
      * @category constructors
      */
     public InterestRate(final/* @Rate */double r, final DayCounter dc, final Compounding comp, final Frequency freq) {
@@ -89,7 +91,7 @@ public class InterestRate {
 
         if (this.compound == Compounding.COMPOUNDED || this.compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
             freqMakesSense = true;
-            assert freq != Frequency.ONCE && freq != Frequency.NO_FREQUENCY : "frequency not allowed for this interest rate";
+            QL.require(freq != Frequency.ONCE && freq != Frequency.NO_FREQUENCY , "frequency not allowed for this interest rate"); // QA:[RG]::verified // TODO: message
             this.freq = freq.toInteger();
         }
     }
@@ -100,17 +102,17 @@ public class InterestRate {
 
     /**
      * @return the compound (a.k.a capitalization) factor implied by the rate compounded at time t.
-     * 
+     *
      * @note Time must be measured using InterestRate's own day counter.
-     * 
+     *
      * @category inspectors
      */
     public final/* @CompoundFactor */double compoundFactor(final/* @Time */double time) {
         /* @Time */final double t = time;
-        assert t >= 0.0 : "negative time not allowed";
-        assert !Double.isNaN(rate) : "null interest rate";
+        QL.require(t >= 0.0 , "negative time not allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(!Double.isNaN(rate) , "null interest rate"); // QA:[RG]::verified // TODO: message
 
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
         // if (rate<0.0) throw new IllegalArgumentException("null interest rate");
 
         /* @Rate */final double r = rate;
@@ -132,14 +134,14 @@ public class InterestRate {
                 // (1+(r/f))^(f*t)
                 return Math.pow((1 + r / freq), (freq * t));
         } else
-            throw new AssertionError("unknown compounding convention");
+            throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
     }
 
     // --- inspectors
 
     /**
      * @return the {@link DayCounter}
-     * 
+     *
      * @category inspectors
      */
     public final DayCounter dayCounter() {
@@ -148,7 +150,7 @@ public class InterestRate {
 
     /**
      * @return the {@link Compounding}
-     * 
+     *
      * @category inspectors
      */
     public final Compounding compounding() {
@@ -157,7 +159,7 @@ public class InterestRate {
 
     /**
      * @return the {@link Frequency}
-     * 
+     *
      * @category inspectors
      */
     public final Frequency frequency() {
@@ -168,9 +170,9 @@ public class InterestRate {
 
     /**
      * @return discount factor implied by the rate compounded at time t.
-     * 
+     *
      * @param t time must be measured using InterestRate's own day counter.
-     * 
+     *
      * @category discount/compound factor calculations
      */
     public final/* @DiscountFactor */double discountFactor(final/* @Time */double t) {
@@ -180,10 +182,10 @@ public class InterestRate {
 
     /**
      * @return discount factor implied by the rate compounded between two dates
-     * 
+     *
      * @param d1 is the start date
      * @param d2 is the end date
-     * 
+     *
      * @category discount/compound factor calculations
      */
     public final/* @DiscountFactor */double discountFactor(final Date d1, final Date d2) {
@@ -192,11 +194,11 @@ public class InterestRate {
 
     /**
      * @return compound factor implied by the rate compounded between two dates
-     * 
+     *
      * @param d1 is the start date
      * @param d2 is the end date
      * @param refStart
-     * 
+     *
      * @category discount/compound factor calculations
      */
     public final/* @DiscountFactor */double discountFactor(final Date d1, final Date d2, final Date refStart) {
@@ -205,7 +207,7 @@ public class InterestRate {
 
     /**
      * @return the compound (a.k.a capitalization) factor implied by the rate compounded between two dates.
-     * 
+     *
      * @category discount/compound factor calculations
      */
     public final/* @DiscountFactor */double discountFactor(final Date d1, final Date d2, final Date refStart, final Date refEnd) {
@@ -220,10 +222,10 @@ public class InterestRate {
     /**
      * Returns equivalent interest rate for a compounding period t. The resulting InterestRate shares the same implicit day-counting
      * rule of the original InterestRate instance.
-     * 
+     *
      * <p>
      * Time must be measured using the InterestRate's own day counter.
-     * 
+     *
      * @return equivalent interest rate for a compounding period t.
      */
     public final InterestRate equivalentRate(final/* @Time */double t, final Compounding comp, final Frequency freq) {
@@ -244,7 +246,7 @@ public class InterestRate {
             final DayCounter resultDC,
             final Compounding comp,
             final Frequency freq) {
-        assert d1.lt(d2) : "d1 later than or equal to d2";
+        QL.require(d1.lt(d2) , "d1 later than or equal to d2"); // QA:[RG]::verified // TODO: message
         /* @Time */final double t1 = this.dc.yearFraction(d1, d2);
         /* @Time */final double t2 = resultDC.yearFraction(d1, d2);
         return impliedRate(compoundFactor(t1), t2, resultDC, comp, freq);
@@ -253,7 +255,7 @@ public class InterestRate {
     /**
      * Implied interest rate for a given compound factor at a given time. The resulting InterestRate has the day-counter provided as
      * input.
-     * 
+     *
      * @note Time must be measured using the day-counter provided as input.
      */
     static public InterestRate impliedRate(final/* @CompoundFactor */double c, final/* @Time */double time,
@@ -261,8 +263,8 @@ public class InterestRate {
 
         /* @Time */final double t = time;
         final double f = freq.toInteger();
-        assert c > 0.0 : "positive compound factor required";
-        assert t > 0.0 : "positive time required";
+        QL.require(c > 0.0 , "positive compound factor required"); // QA:[RG]::verified // TODO: message
+        QL.require(t > 0.0 , "positive time required"); // QA:[RG]::verified // TODO: message
 
         /* @Rate */double rate;
         switch (comp) {
@@ -287,7 +289,7 @@ public class InterestRate {
                 rate = (Math.pow(c, (1 / (f * t))) - 1) * f;
             break;
         default:
-            throw new AssertionError("unknown compounding convention");
+            throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
         }
         return new InterestRate(rate, resultDC, comp, freq);
     }
@@ -308,7 +310,7 @@ public class InterestRate {
      */
     static public InterestRate impliedRate(final/* @CompoundFactor */double compound, final Date d1, final Date d2,
             final DayCounter resultDC, final Compounding comp, final Frequency freq) {
-        assert d1.le(d2) : "d1 later than or equal to d2";
+        QL.require(d1.le(d2) , "d1 later than or equal to d2"); // QA:[RG]::verified // TODO: message
         /* @Time */final double t = resultDC.yearFraction(d1, d2);
         return impliedRate(compound, t, resultDC, comp, freq);
     }
@@ -335,7 +337,7 @@ public class InterestRate {
             else
                 sb.append("simple compounding up to " + (12 / freq) + " months, then " + freq + " compounding");
         } else
-            throw new AssertionError("unknown compounding convention (" + compound + ")");
+            throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
         return sb.toString();
     }
 

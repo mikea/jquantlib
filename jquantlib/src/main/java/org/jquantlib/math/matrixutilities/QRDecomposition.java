@@ -24,6 +24,7 @@ package org.jquantlib.math.matrixutilities;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.matrixutilities.Matrix.RowIterator;
 
 /**
@@ -83,7 +84,7 @@ public class QRDecomposition {
 
     private final int m;
     private final int n;
-    private final Matrix A;
+    private final Matrix AT;
 
     /**
      * rdiag is an output array of length n which contains the diagonal elements of R.
@@ -122,17 +123,17 @@ public class QRDecomposition {
      * @note Based on code translated by Steve Verrill on November 17, 2000 from the FORTRAN MINPACK source produced by Garbow,
      *       Hillstrom, and More.
      *
-     *@param a is an m by n array. On input A contains the matrix for which the QR factorization is to be computed. On output the
+     *@param A is an m by n array. On input A contains the matrix for which the QR factorization is to be computed. On output the
      *            strict upper trapezoidal part of A contains the strict upper trapezoidal part of R, and the lower trapezoidal part
      *            of A contains a factored form of Q.
      *@param pivot pivot is a logical input variable. If pivot is set true, then column pivoting is enforced. If pivot is set
      *            false, then no column pivoting is done.
      */
-    public QRDecomposition(final Matrix a, final boolean pivot) {
+    public QRDecomposition(final Matrix A, final boolean pivot) {
 
-        this.A = a.transpose();
         this.m = A.rows;
         this.n = A.cols;
+        this.AT = A.transpose();
 
         this.rdiag = new double[this.n];
         this.ipvt = new int[n];
@@ -149,7 +150,7 @@ public class QRDecomposition {
         // Compute the initial column norms and initialize several arrays.
         for (j = 0; j < n; j++) {
             for (i = 0; i < m; i++) {
-                tempvec[i] = A.data[A.addr(i, j)];
+                tempvec[i] = AT.data[AT.addr(i, j)];
             }
             acnorm[j] = norm(m, tempvec);
             rdiag[j] = acnorm[j];
@@ -170,9 +171,9 @@ public class QRDecomposition {
                 }
                 if (kmax != j) {
                     for (i = 0; i < m; i++) {
-                        temp = A.data[A.addr(i, j)];
-                        A.data[A.addr(i, j)] = A.data[A.addr(i, kmax)];
-                        A.data[A.addr(i, kmax)] = temp;
+                        temp = AT.data[AT.addr(i, j)];
+                        AT.data[AT.addr(i, j)] = AT.data[AT.addr(i, kmax)];
+                        AT.data[AT.addr(i, kmax)] = temp;
                     }
                     rdiag[kmax] = rdiag[j];
                     wa[kmax] = wa[j];
@@ -184,16 +185,16 @@ public class QRDecomposition {
 
             // Compute the Householder transformation to reduce the j-th column of A to a multiple of the j-th unit vector.
             for (i = j; i < m; i++) {
-                tempvec[i-j] = A.data[A.addr(i, j)];
+                tempvec[i-j] = AT.data[AT.addr(i, j)];
             }
             ajnorm = norm(m-j, tempvec);
             if (ajnorm != 0.0) {
-                if (A.data[A.addr(j, j)] < 0.0)
+                if (AT.data[AT.addr(j, j)] < 0.0)
                     ajnorm = -ajnorm;
                 for (i = j; i < m; i++) {
-                    A.data[A.addr(i, j)] /= ajnorm;
+                    AT.data[AT.addr(i, j)] /= ajnorm;
                 }
-                A.data[A.addr(j, j)] += 1.0;
+                AT.data[AT.addr(j, j)] += 1.0;
 
                 // Apply the transformation to the remaining columns and update the norms.
                 jp1 = j + 1;
@@ -201,21 +202,21 @@ public class QRDecomposition {
                     for (k = jp1; k < n; k++) {
                         sum = 0.0;
                         for (i = j; i < m; i++) {
-                            sum += A.data[A.addr(i, j)] * A.data[A.addr(i, k)];
+                            sum += AT.data[AT.addr(i, j)] * AT.data[AT.addr(i, k)];
                         }
-                        temp = sum / A.data[A.addr(j, j)];
+                        temp = sum / AT.data[AT.addr(j, j)];
                         for (i = j; i < m; i++) {
-                            A.data[A.addr(i, k)] -= temp * A.data[A.addr(i, j)];
+                            AT.data[AT.addr(i, k)] -= temp * AT.data[AT.addr(i, j)];
                         }
 
                         if (pivot && rdiag[k] != 0.0) {
-                            temp = A.data[A.addr(j, k)] / rdiag[k];
+                            temp = AT.data[AT.addr(j, k)] / rdiag[k];
                             rdiag[k] *= Math.sqrt(Math.max(0.0, 1.0 - temp * temp));
 
                             fac = rdiag[k] / wa[k];
                             if (0.05 * fac * fac <= epsmch) {
                                 for (i = jp1; i < m; i++) {
-                                    tempvec[i-j] = A.data[A.addr(i, k)];
+                                    tempvec[i-j] = AT.data[AT.addr(i, k)];
                                 }
 
                                 rdiag[k] = norm(m-j, tempvec);
@@ -267,7 +268,7 @@ public class QRDecomposition {
         for (int i=0; i<this.m; i++) {
             for (int j=0; j<this.n; j++) {
                 if (i>=j) {
-                    H.data[H.addr(i, j)] = A.data[A.addr(i, j)];
+                    H.data[H.addr(i, j)] = AT.data[AT.addr(i, j)];
                 }
             }
         }
@@ -287,7 +288,7 @@ public class QRDecomposition {
         }
         for (int i=0; i<n; i++) {
             if (i<m) {
-                Matrix.copy(A.columnIterator(i, i+1), R.rowIterator(i, i+1));
+                Matrix.copy(AT.columnIterator(i, i+1), R.rowIterator(i, i+1));
             }
         }
 
@@ -307,11 +308,11 @@ public class QRDecomposition {
             w.data[k] = 1.0;
 
             for (int j=0; j<Math.min(n, m); j++) {
-                final double t3 = A.data[A.addr(j, j)];
+                final double t3 = AT.data[AT.addr(j, j)];
                 if (t3!=0.0) {
-                    final double t = A.rangeRow(j, j).innerProduct(w.range(j)) / t3;
+                    final double t = AT.rangeRow(j, j).innerProduct(w.range(j)) / t3;
                     for (int i=j; i<m; i++) {
-                        w.data[i] -= A.data[A.addr(j, i)] * t;
+                        w.data[i] -= AT.data[AT.addr(j, i)] * t;
                     }
                 }
                 Q.data[Q.addr(k, j)] = w.data[j];
@@ -333,7 +334,7 @@ public class QRDecomposition {
      * @param B a Matrix with as many this.m as A and any number of columns.
      * @return X that minimizes the two norm of Q*R*X-B.
      * @exception IllegalArgumentException Matrix row dimensions must agree.
-     * @exception RuntimeException Matrix is rank deficient.
+     * @exception LibraryException Matrix is rank deficient.
      *
      * @note This implementation is based on JAMA as it does not depend on trigonometric functions
      */
@@ -342,7 +343,7 @@ public class QRDecomposition {
 
 //        QL.require(B.rows == this.m, Matrix.MATRIX_IS_INCOMPATIBLE);
 //        if (!this.isFullRank())
-//            throw new RuntimeException(MATRIX_IS_RANK_DEFICIENT);
+//            throw new LibraryException(MATRIX_IS_RANK_DEFICIENT);
 //
 //        // Copy right hand side
 //        final int nx = B.cols;

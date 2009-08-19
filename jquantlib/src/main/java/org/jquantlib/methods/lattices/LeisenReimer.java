@@ -74,7 +74,7 @@ public class LeisenReimer extends BinomialTree {
 	 * </pre>
 	 * where n must be odd
 	 */
-	// TODO: code review :: please verify against original QL/C++ code
+	// TODO: code review :: please verify against QL/C++ code
 	// Possibly create a math-utilities class and move into there.
 	private double PeizerPrattMethod2Inversion(final double z, final int n) {
 

@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -28,7 +28,7 @@ import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 
 /**
- * 
+ *
  * @author Srinivas Hasti
  */
 public abstract class DelegateCalendar extends AbstractCalendar {
@@ -36,9 +36,10 @@ public abstract class DelegateCalendar extends AbstractCalendar {
     private Calendar delegate;
 
     protected DelegateCalendar() {
+        // only descendant classes can instantiate
     }
 
-    protected void setDelegate(Calendar calendar) {
+    protected void setDelegate(final Calendar calendar) {
         this.delegate = calendar;
     }
 
@@ -47,11 +48,12 @@ public abstract class DelegateCalendar extends AbstractCalendar {
         return delegate.getName();
     }
 
-    public boolean isBusinessDay(Date d) {
+    @Override
+    public boolean isBusinessDay(final Date d) {
         return delegate.isBusinessDay(d);
     }
 
-    public boolean isWeekend(Weekday w) {
+    public boolean isWeekend(final Weekday w) {
         return delegate.isWeekend(w);
     }
 

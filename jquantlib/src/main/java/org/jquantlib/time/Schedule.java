@@ -29,13 +29,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayBooleanList;
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 // FIXME: this class needs code review :: http://bugs.jquantlib.org/view.php?id=59
 public class Schedule {
@@ -114,11 +116,11 @@ public class Schedule {
                 true,
                 true);
 
-        assert effectiveDate != null && effectiveDate != Date.NULL_DATE : "effective date is null";
-        assert terminationDate != null && terminationDate != Date.NULL_DATE : "terminationDate date is null";
-        assert effectiveDate.lt(terminationDate) : "effective date later than or equal to termination date ";
+        QL.require(effectiveDate != null && effectiveDate != Date.NULL_DATE , "effective date is null"); // QA:[RG]::verified // TODO: message
+        QL.require(terminationDate != null && terminationDate != Date.NULL_DATE , "terminationDate date is null"); // QA:[RG]::verified // TODO: message
+        QL.require(effectiveDate.lt(terminationDate) , "effective date later than or equal to termination date "); // QA:[RG]::verified // TODO: message
 
-        // TODO: code review :: please verify against original QL/C++ code
+        // TODO: code review :: please verify against QL/C++ code
 
         //
         // Suspicious code
@@ -134,35 +136,35 @@ public class Schedule {
         if (tenor.length() == 0)
             rule = DateGenerationRule.ZERO;
         else
-            assert tenor.length() >= 0 : "non positive tenor";
+            QL.require(tenor.length() >= 0 , "non positive tenor"); // QA:[RG]::verified // TODO: message
 
             if (firstDate != Date.NULL_DATE && firstDate != null)
                 switch (rule) {
                 case BACKWARD:
                 case FORWARD:
-                    assert firstDate.ge(effectiveDate) || firstDate.lt(terminationDate) : "first date out of date range"; // TODO: message
+                    QL.require(firstDate.ge(effectiveDate) || firstDate.lt(terminationDate) , "first date out of date range"); // QA:[RG]::verified // TODO: message
                     break;
                 case THIRD_WEDNESDAY:
-                    assert IMM.getDefaultIMM().isIMMdate(firstDate, false) : "first date is not an IMM date"; // TODO: message
+                    QL.require(IMM.getDefaultIMM().isIMMdate(firstDate, false) , "first date is not an IMM date"); // QA:[RG]::verified // TODO: message
                     break;
                 case ZERO:
-                    throw new AssertionError("first date incompatible with date generation rule"); // TODO: message
+                    throw new LibraryException("first date incompatible with date generation rule"); // QA:[RG]::verified // TODO: message
                 default:
-                    throw new AssertionError("unknown rule"); // TODO: message
+                    throw new LibraryException("unknown rule"); // QA:[RG]::verified // TODO: message
                 }
 
             if (nextToLastDate != Date.NULL_DATE && nextToLastDate != null)
                 switch (rule) {
                 case BACKWARD:
                 case FORWARD:
-                    assert nextToLastDate.gt(effectiveDate) || nextToLastDate.lt(terminationDate) : "next to last date out of date range"; // TODO: message
+                    QL.require(nextToLastDate.gt(effectiveDate) || nextToLastDate.lt(terminationDate) , "next to last date out of date range"); // QA:[RG]::verified // TODO: message
                     break;
                 case THIRD_WEDNESDAY:
-                    assert IMM.getDefaultIMM().isIMMdate(nextToLastDate, false) : "first date is not an IMM date"; // TODO: message
+                    QL.require(IMM.getDefaultIMM().isIMMdate(nextToLastDate, false) , "first date is not an IMM date"); // QA:[RG]::verified // TODO: message
                 case ZERO:
-                    throw new IllegalStateException("next to last date incompatible with date generation rule"); // TODO: message
+                    throw new LibraryException("next to last date incompatible with date generation rule"); // QA:[RG]::verified // TODO: message
                 default:
-                    throw new IllegalStateException("unknown rule"); // TODO: message
+                    throw new LibraryException("unknown rule"); // QA:[RG]::verified // TODO: message
                 }
 
             // calendar needed for endOfMonth adjustment
@@ -186,7 +188,10 @@ public class Schedule {
                 if (nextToLastDate != Date.NULL_DATE && nextToLastDate != null) {
                     // Add it after 1'st element
                     dates_.add(1, nextToLastDate);
-                    final Date temp = nullCalendar.advance(seed, new Period(-periods * tenor.length(), tenor.units()), convention,
+                    final Date temp = nullCalendar.advance(
+                            seed,
+                            new Period(-periods * tenor.length(), tenor.units()),
+                            convention,
                             endOfMonth);
                     if (!temp.equals(nextToLastDate))
                         isRegular.add(0, false);
@@ -221,7 +226,8 @@ public class Schedule {
                 break;
 
             case THIRD_WEDNESDAY:
-                assert !endOfMonth : "endOfMonth convention incompatible with date generation rule";
+                QL.require(!endOfMonth , "endOfMonth convention incompatible with date generation rule"); // QA:[RG]::verified // TODO: message
+
             // fall through
             case FORWARD:
 
@@ -267,7 +273,7 @@ public class Schedule {
                 break;
 
             default:
-                throw new AssertionError("unknown DateGeneration");
+                throw new LibraryException("unknown DateGeneration"); // QA:[RG]::verified // TODO: message
             }
 
             // adjustments
@@ -289,7 +295,7 @@ public class Schedule {
 
     }
 
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     // remove as soon as possible
     public Schedule(final Date startDate,
             final Date maturity,
@@ -354,14 +360,14 @@ public class Schedule {
         return null;
     }
 
-    // TODO: code review :: please verify against original QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     public boolean isRegular(final int i) {
-        assert fullInterface : "full interface not available";
-    if (isRegular.size() > 0) {
-        assert i <= isRegular.size() || i >= 0 : "index must be in [1, regularSize]";
-        return isRegular.get(i - 1);
-    }
-    return false;
+        QL.require(fullInterface, "full interface not available"); // QA:[RG]::verified // TODO: message
+        if (isRegular.size() > 0) {
+            QL.require(i <= isRegular.size() || i >= 0, "index must be in [1, regularSize]"); // QA:[RG]::verified // TODO: message
+            return isRegular.get(i - 1);
+        }
+        return false;
     }
 
     public Calendar getCalendar(){
@@ -373,9 +379,9 @@ public class Schedule {
         return dates_.get(i);
     }
 
-    public Period tenor(){
-        assert fullInterface : full_interface_not_available;
-    return tenor;
+    public Period tenor() {
+        QL.require(fullInterface, full_interface_not_available); // QA:[RG]::verified // TODO: message
+        return tenor;
     }
 
     public BusinessDayConvention businessDayConvention(){
@@ -390,31 +396,31 @@ public class Schedule {
     /*
      * Date Schedule::previousDate(const Date& refDate) const { std::vector<Date>::const_iterator res = lower_bound(refDate); if
      * (res!=dates_.begin()) return *(--res); else return Date(); }
-     * 
+     *
      * bool Schedule::isRegular(Size i) const { QL_REQUIRE(fullInterface_, "full interface not available"); QL_REQUIRE(i<=isRegular_.size() &&
      * i>0, "index (" << i << ") must be in [1, " << isRegular_.size() <<"]"); return isRegular_[i-1]; }
-     * 
-     * 
+     *
+     *
      * MakeSchedule::MakeSchedule(const Date& effectiveDate, const Date& terminationDate, const Period& tenor, const Calendar&
      * calendar, BusinessDayConvention convention) : calendar_(calendar), effectiveDate_(effectiveDate),
      * terminationDate_(terminationDate), tenor_(tenor), convention_(convention), terminationDateConvention_(convention),
      * rule_(DateGeneration::Backward), endOfMonth_(false), firstDate_(Date()), nextToLastDate_(Date()) {}
-     * 
+     *
      * MakeSchedule& MakeSchedule::withTerminationDateConvention( BusinessDayConvention conv) { terminationDateConvention_ = conv;
      * return *this; }
-     * 
+     *
      * MakeSchedule& MakeSchedule::withRule(DateGeneration::Rule r) { rule_ = r; return *this; }
-     * 
+     *
      * MakeSchedule& MakeSchedule::forwards() { rule_ = DateGeneration::Forward; return *this; }
-     * 
+     *
      * MakeSchedule& MakeSchedule::backwards() { rule_ = DateGeneration::Backward; return *this; }
-     * 
+     *
      * MakeSchedule& MakeSchedule::endOfMonth(bool flag) { endOfMonth_ = flag; return *this; }
-     * 
+     *
      * MakeSchedule& MakeSchedule::withFirstDate(const Date& d) { firstDate_ = d; return *this; }
-     * 
+     *
      * MakeSchedule& MakeSchedule::withNextToLastDate(const Date& d) { nextToLastDate_ = d; return *this; }
-     * 
+     *
      * MakeSchedule::operator Schedule() const { return Schedule(effectiveDate_, terminationDate_, tenor_, calendar_, convention_,
      * terminationDateConvention_, rule_, endOfMonth_, firstDate_, nextToLastDate_); }
      */

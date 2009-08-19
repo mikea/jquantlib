@@ -40,6 +40,7 @@
 
 package org.jquantlib.instruments;
 
+import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
@@ -104,7 +105,7 @@ public class BarrierOption extends OneAssetStrikedOption {
 
     @Override
     public void setupArguments(final Arguments args) {
-        assert args instanceof BarrierOptionArguments : WRONG_ARGUMENT_TYPE;
+        QL.require(args instanceof BarrierOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
 
         final BarrierOptionArguments moreArgs = (BarrierOptionArguments) args;
         moreArgs.barrierType = barrierType;

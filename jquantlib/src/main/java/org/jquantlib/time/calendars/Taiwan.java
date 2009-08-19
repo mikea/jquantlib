@@ -30,6 +30,7 @@ import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -46,7 +47,7 @@ import org.jquantlib.util.Month;
  * <li>Labor Day, May 1st</li>
  * <li>Double Tenth National Day, October 10th</li>
  * </ul>
- * 
+ *
  * Other holidays for which no rule is given (data available for 2002-2007
  * only:)
  * <ul>
@@ -55,14 +56,14 @@ import org.jquantlib.util.Month;
  * <li>Dragon Boat Festival</li>
  * <li>Moon Festival</li>
  * </ul>
- * 
+ *
  * @category calendars
- * 
+ *
  * @see <a href="http://www.tse.com.tw/en/trading/trading_days.php">Taiwan Stock Exchange</a>
- * 
+ *
  * @author Renjith Nair
  * @author Jia Jia
- * 
+ *
  */
 public class Taiwan extends DelegateCalendar {
 
@@ -75,7 +76,7 @@ public class Taiwan extends DelegateCalendar {
             delegate = new TaiwanTSECalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -85,7 +86,7 @@ public class Taiwan extends DelegateCalendar {
         case TSE:
             return TSE_Calendar;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

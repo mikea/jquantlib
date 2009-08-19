@@ -42,8 +42,10 @@
 
 package org.jquantlib.pricingengines.barrier;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.BarrierType;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.termstructures.Compounding;
@@ -54,9 +56,9 @@ import org.jquantlib.time.Frequency;
  * Pricing engine for barrier options using analytical formulae
  * <p>
  * The formulas are taken from "Option pricing formulas", E.G. Haug, McGraw-Hill, p.69 and following.
- * 
+ *
  * @category barrierengines
- * 
+ *
  * @author <Richard Gomes>
  */
 @SuppressWarnings("PMD.TooManyMethods")
@@ -95,10 +97,10 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
 
     @Override
     public void calculate() {
-        assert getArguments().payoff instanceof PlainVanillaPayoff : NON_PLAIN_PAYOFF_GIVEN;
+        QL.require(getArguments().payoff instanceof PlainVanillaPayoff , NON_PLAIN_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
         this.payoff = (PlainVanillaPayoff)getArguments().payoff;
-        assert payoff.strike()>0.0 : STRIKE_MUST_BE_POSITIVE;
-        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : BS_PROCESS_REQUIRED;
+        QL.require(payoff.strike()>0.0 , STRIKE_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
+        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BS_PROCESS_REQUIRED); // QA:[RG]::verified // TODO: message
         this.process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         final double strike = payoff.strike();
@@ -162,7 +164,7 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
             }
             break;
         default:
-            throw new AssertionError(UNKNOWN_TYPE);
+            throw new LibraryException(UNKNOWN_TYPE); // QA:[RG]::verified
         }
 
     }

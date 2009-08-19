@@ -25,6 +25,7 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.lang.exceptions.LibraryException;
 
 /**
  * Cholesky Decomposition.
@@ -68,7 +69,7 @@ public class CholeskyDecomposition {
      * @return Structure to access L and isspd flag.
      */
     public CholeskyDecomposition(final Matrix A) {
-        QL.require(A.rows == A.cols, Matrix.MATRIX_MUST_BE_SQUARE);
+        QL.require(A.rows == A.cols, Matrix.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
 
         this.n = A.rows;
         this.L = new Matrix(n, n);
@@ -123,13 +124,13 @@ public class CholeskyDecomposition {
      * @param m a Matrix with as many rows as A and any number of columns.
      * @return X so that L*L'*X = B
      * @exception IllegalArgumentException Matrix row dimensions must agree.
-     * @exception RuntimeException Matrix is not symmetric positive definite.
+     * @exception LibraryException Matrix is not symmetric positive definite.
      */
 
     public Matrix solve(final Matrix B) {
-        QL.require(B.rows == this.n, Matrix.MATRIX_IS_INCOMPATIBLE);
+        QL.require(B.rows == this.n, Matrix.MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         if (!this.isSPD())
-            throw new RuntimeException(MATRIX_IS_NOT_SIMMETRIC_POSITIVE);
+            throw new LibraryException(MATRIX_IS_NOT_SIMMETRIC_POSITIVE);
 
         // Copy right hand side.
         final int nx = B.cols;

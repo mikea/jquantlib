@@ -24,6 +24,7 @@ package org.jquantlib.termstructures.volatilities;
 
 import static org.jquantlib.math.Closeness.isClose;
 
+import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.Rate;
 import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.Time;
@@ -32,7 +33,7 @@ import org.jquantlib.math.Constants;
 
 /**
  * Implements the Black equivalent volatility for the S.A.B.R. model.
- * 
+ *
  * @author <Richard Gomes>
  *
  */
@@ -40,7 +41,7 @@ public class Sabr {
 
     /**
      * Computes the Black equivalent volatility without validating parameters
-     * 
+     *
      * @param strike
      * @param forward
      * @param expiryTime
@@ -48,9 +49,9 @@ public class Sabr {
      * @param beta
      * @param nu
      * @param rho
-     * 
+     *
      * @return Black equivalent volatility
-     * 
+     *
      * @see #validateSabrParameters(Real, Real, Real, Real)
      * @see #sabrVolatility(Rate, Rate, Time, Real, Real, Real, Real)
      */
@@ -118,15 +119,15 @@ public class Sabr {
             final double nu,
             final double rho) {
         //FIXME don't spent time constructing string until the error is real...
-        // TODO: code review :: please verify against original QL/C++ code
-        assert alpha>0.0 : "alpha must be positive"; // TODO: message
-        assert beta>=0.0 && beta<=1.0 : "beta must be in (0.0, 1.0)"; // TODO: message
-        assert nu>=0.0 : "nu must be non negative"; // TODO: message
-        assert rho*rho<1.0 : "rho square must be less than one"; // TODO: message
+        // TODO: code review :: please verify against QL/C++ code
+        QL.require(alpha>0.0 , "alpha must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(beta>=0.0 && beta<=1.0 , "beta must be in (0.0, 1.0)"); // QA:[RG]::verified // TODO: message
+        QL.require(nu>=0.0 , "nu must be non negative"); // QA:[RG]::verified // TODO: message
+        QL.require(rho*rho<1.0 , "rho square must be less than one"); // QA:[RG]::verified // TODO: message
     }
 
     /**
-     * 
+     *
      * Computes the S.A.B.R. volatility
      * <p>
      * Checks S.A.B.R. model parameters using {@code #validateSabrParameters(Real, Real, Real, Real)}
@@ -145,7 +146,7 @@ public class Sabr {
      * @param nu
      * @param rho
      * @return
-     * 
+     *
      * @see #unsafeSabrVolatility(Rate, Rate, Time, Real, Real, Real, Real)
      * @see #validateSabrParameters(Real, Real, Real, Real)
      */
@@ -157,9 +158,9 @@ public class Sabr {
             final double beta,
             final double nu,
             final double rho) {
-        assert strike>0.0 : "strike must be positive"; // TODO: message
-        assert forward>0.0 : "forward must be positive"; // TODO: message
-        assert expiryTime>=0.0 : "expiry time must be non-negative"; // TODO: message
+        QL.require(strike>0.0 , "strike must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(forward>0.0 , "forward must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(expiryTime>=0.0 , "expiry time must be non-negative"); // QA:[RG]::verified // TODO: message
         validateSabrParameters(alpha, beta, nu, rho);
         return unsafeSabrVolatility(strike, forward, expiryTime, alpha, beta, nu, rho);
     }

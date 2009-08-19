@@ -42,6 +42,7 @@ package org.jquantlib.model.volatility;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.IntervalPrice;
 import org.jquantlib.util.Date;
@@ -50,7 +51,7 @@ import org.jquantlib.util.TimeSeries;
 /**
  * This template factors out common functionality found in classes which rely on the difference between the previous day's close
  * price and today's open price.
- * 
+ *
  * @author Anand Mani
  * @author Richard Gomes
  */
@@ -74,7 +75,7 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
         try {
             delegate = (T) TypeToken.getClazz(this.getClass()).getConstructor(double.class).newInstance(y);
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
         this.f = marketOpenFraction;
         this.a = a;

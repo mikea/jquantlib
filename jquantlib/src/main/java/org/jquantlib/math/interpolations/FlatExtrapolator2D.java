@@ -22,6 +22,7 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
@@ -48,7 +49,7 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
     //
 
     private FlatExtrapolator2D(final Interpolation2D decorated) {
-        assert decorated != null : "null interpolation"; // TODO: message
+        QL.require(decorated != null , "null interpolation"); // QA:[RG]::verified // TODO: message
         this.decorated = decorated;
     }
 
@@ -148,7 +149,7 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
 
     /**
      * This method always throws UnsupportedOperationException
-     * 
+     *
      * @throws UnsupportedOperationException
      */
     @Override

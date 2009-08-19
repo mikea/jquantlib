@@ -22,6 +22,7 @@
 
 package org.jquantlib.math;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.distributions.GammaFunction;
 
 /**
@@ -112,8 +113,8 @@ public class RegularisedIncompleteBeta {
 
         checkMaxIterations(maxIterations_);
 
-        assert a > 0.0 : "a must be greater than zero";
-        assert b > 0.0 : "b must be greater than zero";
+        QL.require(a > 0.0 , "a must be greater than zero"); // QA:[RG]::verified // TODO: message
+        QL.require(b > 0.0 , "b must be greater than zero"); // QA:[RG]::verified // TODO: message
 
         if (x == 0.0)
             return 0.0;
@@ -121,7 +122,7 @@ public class RegularisedIncompleteBeta {
         if (x == 1.0)
             return 1.0;
 
-        assert x>0.0 && x<1.0 : "x must be in [0,1]";
+        QL.require(x>0.0 && x<1.0 , "x must be in [0,1]"); // QA:[RG]::verified // TODO: message
 
         final double result = Math.exp(_gammaFunction.logValue(a+b) -
                 _gammaFunction.logValue(a) - _gammaFunction.logValue(b) +
@@ -139,7 +140,7 @@ public class RegularisedIncompleteBeta {
      * @throws IllegalArgumentException if <code>maxIterations<1</code>
      */
     private void checkMaxIterations(final int maxIterations){
-        assert maxIterations>0 : "Expected maxIterations must be greater 0";
+        QL.require(maxIterations>0 , "Expected maxIterations must be greater 0"); // QA:[RG]::verified // TODO: message
     }
 
 }

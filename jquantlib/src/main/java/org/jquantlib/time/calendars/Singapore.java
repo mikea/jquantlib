@@ -32,6 +32,7 @@ import static org.jquantlib.util.Month.NOVEMBER;
 import static org.jquantlib.util.Month.OCTOBER;
 import static org.jquantlib.util.Month.SEPTEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -61,11 +62,11 @@ import org.jquantlib.util.Month;
  * <li>Diwali</li>
  * <li>Hari Raya Puasa</li>
  * </ul>
- * 
+ *
  * @category calendars
- * 
+ *
  * @see <a href="http://www.ses.com.sg/">Stock Exchange of Singapore</a>
- * 
+ *
  * @author Joon Tiang
  */
 public class Singapore extends DelegateCalendar {
@@ -80,7 +81,7 @@ public class Singapore extends DelegateCalendar {
             break;
 
         default:
-            throw new AssertionError("unknown market");
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         // FIXME
         setDelegate(delegate);
@@ -92,7 +93,7 @@ public class Singapore extends DelegateCalendar {
             return SGX_CALENDAR;
 
         default:
-            throw new AssertionError("unknown market");
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

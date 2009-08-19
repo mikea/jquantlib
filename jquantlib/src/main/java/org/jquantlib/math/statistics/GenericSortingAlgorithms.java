@@ -30,7 +30,7 @@ import java.util.Collection;
  * @author Praneet Tiwari
  */
 
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 // This class does not belong to QuantLib/C++  :: candidate for removal
 public class GenericSortingAlgorithms {
 

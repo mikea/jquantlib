@@ -41,6 +41,7 @@ package org.jquantlib.instruments;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.pricingengines.PricingEngine;
@@ -66,7 +67,7 @@ public class DividendVanillaOption extends VanillaOption {
 
     @Override
     public void setupArguments(final Arguments args) {
-        assert args instanceof DividendVanillaOptionArguments : WRONG_ARGUMENT_TYPE;
+        QL.require(args instanceof DividendVanillaOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         super.setupArguments(args);
         final DividendVanillaOptionArguments arguments = (DividendVanillaOptionArguments)args;
         arguments.cashFlow = cashFlow_;

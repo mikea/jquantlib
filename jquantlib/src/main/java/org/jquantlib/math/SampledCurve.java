@@ -40,6 +40,7 @@
 
 package org.jquantlib.math;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.NaturalCubicSpline;
@@ -163,7 +164,7 @@ public class SampledCurve {
 
 
     public double valueAtCenter() /* @Readonly */{
-        assert !empty() : "empty sampled curve"; // TODO: message
+        QL.require(!empty() , "empty sampled curve"); // QA:[RG]::verified // TODO: message
         final int jmid = size() / 2;
         if (size() % 2 != 0)
             return values.get(jmid);
@@ -172,7 +173,7 @@ public class SampledCurve {
     }
 
     public double firstDerivativeAtCenter() /* @Readonly */{
-        assert size() >= 3 : "the size of the curve must be at least 3"; // TODO: message
+        QL.require(size() >= 3 , "the size of the curve must be at least 3"); // QA:[RG]::verified // TODO: message
         final int jmid = size() / 2;
         if (size() % 2 != 0)
             return (values.get(jmid + 1) - values.get(jmid - 1)) / (grid.get(jmid + 1) - grid.get(jmid - 1));
@@ -181,7 +182,7 @@ public class SampledCurve {
     }
 
     public double secondDerivativeAtCenter() /* @Readonly */{
-        assert size() >= 4 : "the size of the curve must be at least 4"; // TODO: message
+        QL.require(size() >= 4 , "the size of the curve must be at least 4"); // QA:[RG]::verified // TODO: message
         final int jmid = size() / 2;
         if (size() % 2 != 0) {
             final double deltaPlus = (values.get(jmid + 1) - values.get(jmid)) / ((grid.get(jmid + 1) - grid.get(jmid)));

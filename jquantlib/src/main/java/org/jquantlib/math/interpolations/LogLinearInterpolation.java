@@ -22,6 +22,7 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.interpolations.factories.LogLinear;
 import org.jquantlib.math.matrixutilities.Array;
 
@@ -130,7 +131,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 
         logY = new Array(vx.size());
         for (int i=0; i<vx.size(); i++){
-            assert vx.get(i) > 0.0 : "negative or null value "; // TODO: message
+            QL.require(vx.get(i) > 0.0 , "negative or null value "); // QA:[RG]::verified // TODO: message
             final double value = Math.log(vy.get(i));
             logY.set(i, value);
         }

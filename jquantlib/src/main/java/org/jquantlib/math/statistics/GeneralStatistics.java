@@ -24,6 +24,7 @@ package org.jquantlib.math.statistics;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.Ops.DoubleOp;
 import org.jquantlib.math.functions.Bind2nd;
@@ -44,11 +45,12 @@ import org.jquantlib.util.Pair;
  * <p>
  * It doesn't suffer the numerical instability problem of IncrementalStatistics. The downside is that it stores all samples, thus
  * increasing the memory requirements.
- * 
+ *
  * @author Praneet Tiwari
  */
 //FIXME: changed to extending base class rather then implementing interface
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: please verify against QL/C++ code
 public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
 
     private final static String empty_sample_set =  "empty sample set";
@@ -107,22 +109,17 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
      */
     public final double mean() {
         final int size = getSampleSize();
-        assert size > 0 : empty_sample_set;
+        QL.require(size > 0 , empty_sample_set); // QA:[RG]::verified
         return expectationValue(new Identity(), new TruePredicate()).getFirst();
     }
 
-    //reviewed/refactored
-    /*! Expectation value of a function \f$ f \f$ on a given
-    range \f$ \mathcal{R} \f$, i.e.,
-    \f[ \mathrm{E}\left[f \;|\; \mathcal{R}\right] =
-        \frac{\sum_{x_i \in \mathcal{R}} f(x_i) w_i}{
-              \sum_{x_i \in \mathcal{R}} w_i}. \f]
-    The range is passed as a boolean function returning
-    <tt>true</tt> if the argument belongs to the range
-    or <tt>false</tt> otherwise.
-
-    The function returns a pair made of the result and
-    the number of observations in the given range.
+    /**
+     * Expectation value of a function {@latex$ f } on a given range {@latex$ \mathcal{R} }, i.e.,
+     * {@latex[ \mathrm{E}\left[f \;|\; \mathcal{R}\right] = \frac{\sum_{x_i \in \mathcal{R}} f(x_i) w_i}{ \sum_{x_i \in \mathcal{R}} w_i} }.
+     * The range is passed as a boolean function returning <code>true</code> if the argument belongs to the range or
+     * <code>false</code> otherwise.
+     *
+     * The function returns a pair made of the result and the number of observations in the given range.
      */
     public final Pair<Double, Integer> expectationValue(final Ops.DoubleOp f, final Ops.DoublePredicate inRange) {
         double num = 0.0;
@@ -133,7 +130,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
             final double x = element.getFirst();
             Double evaluated = f.op(x);
 
-            //TODO:: argh we have to do this check :-( refactor E_ClippedFunction
+            // TODO: code review :: please verify against QL/C++ code
             if(evaluated == null)
                 evaluated = 0.0;
             if (inRange.op(x)) {
@@ -179,7 +176,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     // reviewed/ refactored
     public double variance() {
         final int n = getSampleSize();
-        assert n >= 1 : unsufficient_sample_size;
+        QL.require(n >= 1 , unsufficient_sample_size);
 
         final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
         functions.add(new Sqr());

@@ -41,10 +41,11 @@ package org.jquantlib.math.randomnumbers;
 
 import java.lang.reflect.Constructor;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 
 /**
- * 
+ *
  * @author Richard Gomes
  * @param <T> represents the sample type
  * @param <URSG> represents the UniformRandomSequenceGenerator<T>
@@ -90,7 +91,7 @@ public class GenericLowDiscrepancy<RSG extends UniformRandomSequenceGenerator, I
             final Constructor<RSG> c = rsgClass.getConstructor(int.class, long.class);
             rsg = c.newInstance(dimension, seed);
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
 
         // instantiate a InverseCumulative given its generic type (second generic parameter)
@@ -107,7 +108,7 @@ public class GenericLowDiscrepancy<RSG extends UniformRandomSequenceGenerator, I
                 ic = c.newInstance(rsg);
             }
         } catch (final Exception e) {
-            throw new AssertionError(e);
+            throw new LibraryException(e); // QA:[RG]::verified
         }
         return (InverseCumulativeRsg<RSG, IC>) ic;
     }

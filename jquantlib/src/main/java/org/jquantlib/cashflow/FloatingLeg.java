@@ -1,7 +1,9 @@
 package org.jquantlib.cashflow;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.InterestRateIndex;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.time.BusinessDayConvention;
@@ -41,12 +43,12 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
         //
 
         final int n = schedule.size() - 1;
-        assert nominals.size() <= n : "too many nominals";
-        assert gearings.size() <= n : "too many gearings";
-        assert spreads.size() <= n  : "too many spreads";
-        assert caps.size() <= n     : "too many caps";
-        assert floors.size() <= n   : "too many floors";
-        assert !isZero || !isInArrears : "features in-arrears and zero are not compatible";
+        QL.require(nominals.size() <= n , "too many nominals"); // QA:[RG]::verified // TODO: message
+        QL.require(gearings.size() <= n , "too many gearings"); // QA:[RG]::verified // TODO: message
+        QL.require(spreads.size() <= n  , "too many spreads"); // QA:[RG]::verified // TODO: message
+        QL.require(caps.size() <= n     , "too many caps"); // QA:[RG]::verified // TODO: message
+        QL.require(floors.size() <= n   , "too many floors"); // QA:[RG]::verified // TODO: message
+        QL.require(!isZero || !isInArrears , "features in-arrears and zero are not compatible"); // QA:[RG]::verified // TODO: message
 
         // the following is not always correct (orignial c++ comment)
         final Calendar calendar = schedule.getCalendar();
@@ -100,7 +102,7 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
                             refStart, refEnd,
                             paymentDayCounter, isInArrears);
                     } catch (final Exception e) {
-                        throw new AssertionError("Couldn't construct new instance from generic type");
+                        throw new LibraryException("Couldn't construct new instance from generic type"); // QA:[RG]::verified // TODO: message
                     }
                 add((CashFlow)frc);
                 }
@@ -134,7 +136,7 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
                         refStart, refEnd,
                         paymentDayCounter, isInArrears);
                 } catch (final Exception e) {
-                    throw new AssertionError("Couldn't construct new instance from generic type");
+                    throw new LibraryException("Couldn't construct new instance from generic type"); // QA:[RG]::verified // TODO: message
                 }
             add((CashFlow)cfctc);
          }

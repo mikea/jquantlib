@@ -22,6 +22,7 @@ package org.jquantlib.pricingengines.vanilla.finitedifferences;
 import java.util.List;
 import java.util.Vector;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.math.SampledCurve;
@@ -40,7 +41,7 @@ import org.jquantlib.util.Date;
  * Finite-differences pricing engine for BSM one asset options
  * <p>
  * The name is a misnomer as this is a base class for any finite difference scheme.  Its main job is to handle grid layout.
- * 
+ *
  * @author Srinivas Hasti
  */
 public class FDVanillaEngine {
@@ -100,7 +101,7 @@ public class FDVanillaEngine {
     }
 
     protected void setGridLimits(/* Real */final double center, /* Time */final double t) {
-        assert center > 0.0 : "negative or null underlying given";
+        QL.require(center > 0.0 , "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         this.center = center;
         /* Size */final int newGridPoints = safeGridPoints(gridPoints, t);
         if (newGridPoints > intrinsicValues.size())

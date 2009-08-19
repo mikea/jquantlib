@@ -22,6 +22,7 @@
 
 package org.jquantlib.cashflow;
 
+import org.jquantlib.QL;
 import org.jquantlib.util.Date;
 
 /**
@@ -40,6 +41,7 @@ public class Callability extends Event {
         this.price=price;
         this.type=type;
         this.date=date;
+
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
 	}
@@ -74,7 +76,7 @@ public class Callability extends Event {
         }
 
         public double amount() {
-            assert !Double.isNaN(amount) : "no amount given";
+            QL.require(!Double.isNaN(amount) , "no amount given"); // QA:[RG]::verified // TODO: message
             return amount;
         }
 

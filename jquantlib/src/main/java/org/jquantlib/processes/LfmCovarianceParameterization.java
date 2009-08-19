@@ -22,6 +22,7 @@
 
 package org.jquantlib.processes;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.integrals.GaussKronrodAdaptive;
 import org.jquantlib.math.matrixutilities.Array;
@@ -64,7 +65,7 @@ public abstract class LfmCovarianceParameterization {
         // because it is too slow and too inefficient.
         // This method is useful for testing and R&D.
         // Please overload the method within derived classes.
-        assert !x.empty() : "can not handle given x here";
+        QL.require(!x.empty() , "can not handle given x here"); // QA:[RG]::verified // TODO: message
 
         final Matrix tmp = new Matrix(size_, size_);
         for (int i = 0; i < size_; ++i)

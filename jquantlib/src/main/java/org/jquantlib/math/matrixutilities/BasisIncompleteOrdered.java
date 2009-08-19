@@ -53,40 +53,43 @@ package org.jquantlib.math.matrixutilities;
 // This class belongs to QuantLib0.9.x and should not be translated whilst we still work on QuantLib 0.8.1.
 // This note can be removed when JQuantLib evolves and the original (C++) class BasisIncompleteOrdered
 // becomes completely translated an integrated to all dependencies.
-// 
 //
+//
+
+// TODO: code review :: please verify against QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class BasisIncompleteOrdered {
 
     public BasisIncompleteOrdered() {
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
     }
-    
+
 //	private final int euclideanDimension;
 //	private final List<Array> currentBasis;
-//	
+//
 //	public BasisIncompleteOrdered(final int euclideanDimension) {
-//	    
+//
 //	    if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("not implemented");
 //	    this.euclideanDimension = euclideanDimension;
 //	    this.currentBasis = new ArrayList<Array>();
 //	}
-//	
+//
 //	public boolean addVector(final Array newVector1) {
 //		if (newVector1.length != euclideanDimension) {
-//			throw new RuntimeException("BasisIncompleteOrdered : missized vector passed");
+//			throw new LibraryException("BasisIncompleteOrdered : missized vector passed");
 //		}
 //
 //		if (currentBasis.size() == euclideanDimension) {
 //			return false;
 //		}
-//		
+//
 //		for (int j = 0; j < currentBasis.size(); ++j) {
 //			double innerProd = newVector1.dotProduct(currentBasis.get(j));
 //			Array data = newVector1;
 //
 //			// TODO:: code review against C++ sources
-//			
+//
 //			Array currentBasisAtJ = currentBasis.get(j);
 //			for (int k = 0; k < euclideanDimension; ++k) {
 //			    double value = data.get(k) - currentBasis.get(j) * innerProd;

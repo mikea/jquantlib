@@ -31,6 +31,7 @@ import static org.jquantlib.util.Month.JULY;
 import static org.jquantlib.util.Month.MAY;
 import static org.jquantlib.util.Month.NOVEMBER;
 
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
@@ -56,7 +57,7 @@ import org.jquantlib.util.Month;
  * <li>Carnival</li>
  * <li>Corpus Christi</li>
  * </ul>
- * 
+ *
  * Holidays for the Bovespa stock exchange
  * <ul>
  * <li>Saturdays</li>
@@ -77,7 +78,7 @@ import org.jquantlib.util.Month;
  * <li>Corpus Christi</li>
  * <li>the last business day of the year</li>
  * </ul>
- * 
+ *
  * @author Srinivas Hasti
  * @author Dominik Holenstein
  */
@@ -96,7 +97,7 @@ public class Brazil extends DelegateCalendar {
             delegate = new BrazilExchangeCalendar();
             break;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
         setDelegate(delegate);
     }
@@ -108,7 +109,7 @@ public class Brazil extends DelegateCalendar {
         case BOVESPA:
             return EXCHANGE_CALENDAR;
         default:
-            throw new AssertionError("unknown market"); // TODO: message
+            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
         }
     }
 

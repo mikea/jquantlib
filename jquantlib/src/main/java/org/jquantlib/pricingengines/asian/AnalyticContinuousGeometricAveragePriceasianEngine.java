@@ -43,6 +43,7 @@
 package org.jquantlib.pricingengines.asian;
 
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.AverageType;
@@ -67,12 +68,12 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
 
     @Override
     public void calculate() /*@ReadOnly*/ {
-        assert arguments.averageType==AverageType.Geometric : "not a geometric average option";
-        assert arguments.exercise.type()==Exercise.Type.EUROPEAN : "not an European Option";
+        QL.require(arguments.averageType==AverageType.Geometric , "not a geometric average option"); // QA:[RG]::verified // TODO: message
+        QL.require(arguments.exercise.type()==Exercise.Type.EUROPEAN , "not an European Option"); // QA:[RG]::verified // TODO: message
         final Date exercise = arguments.exercise.lastDate();
-        assert arguments.payoff instanceof PlainVanillaPayoff : "non-plain payoff given";
+        QL.require(arguments.payoff instanceof PlainVanillaPayoff , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
         final PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
-        assert arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess : "Black-Scholes process required";
+        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
 
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
         /*@Volatility*/ final double volatility = process.blackVolatility().getLink().blackVol(exercise, payoff.strike());
@@ -97,6 +98,7 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
                 process.dividendYield().getLink().referenceDate(), exercise);
         /*@DiscountFactor*/ final double dividendDiscount = Math.exp(-dividendYield*t_q);
         /*@Real*/ final double spot = process.stateVariable().getLink().evaluate();
+        QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         /*@Real*/ final double forward = spot * dividendDiscount / riskFreeDiscount;
 
         final BlackCalculator black = new BlackCalculator(payoff, forward, Math.sqrt(variance/3.0),riskFreeDiscount);

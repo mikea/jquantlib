@@ -24,6 +24,7 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.model.shortrate.onefactormodels;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.NonCentralChiSquaredDistribution;
@@ -51,7 +52,7 @@ import org.jquantlib.time.TimeGrid;
 
     \ingroup shortrate
  */
-
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
 
     private static final String strike_must_be_positive = "strike must be positive";
@@ -94,7 +95,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
             final double strike,
             final double t,
             final double s){
-        assert strike > 0.0 : strike_must_be_positive;
+        QL.require(strike > 0.0 , strike_must_be_positive); // QA:[RG]::verified // TODO: message
         final double discountT = termstructureConsistentModel.termStructure().getLink().discount(t);
         final double discountS = termstructureConsistentModel.termStructure().getLink().discount(s);
         if(t<Constants.QL_EPSILON)
@@ -104,7 +105,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
             case PUT:
                 return Math.max(strike - discountS, 0);
             default:
-                throw new AssertionError(unsupported_option_type);
+                QL.assertion(unsupported_option_type);
             }
         final double sigma2 = sigma() * sigma();
         final double h = Math.sqrt(k() * k() + 2 * sigma2);

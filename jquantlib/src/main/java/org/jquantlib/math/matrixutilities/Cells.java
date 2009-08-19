@@ -13,6 +13,7 @@ public class Cells {
     protected final static String MATRIX_IS_INCOMPATIBLE = "matrix is incompatible";
     protected final static String ARRAY_IS_INCOMPATIBLE = "array is incompatible";
     protected final static String MATRIX_MUST_BE_SQUARE = "matrix must be square";
+    protected final static String MATRIX_MUST_BE_SYMMETRIC = "matrix must be symmetric";
 
 
     //
@@ -38,7 +39,7 @@ public class Cells {
      * @throws IllegalArgumentException if parameters are less than zero
      */
     protected Cells(final int rows, final int cols) {
-        QL.require(rows>0 && cols>0 ,  INVALID_ARGUMENTS);
+        QL.require(rows>0 && cols>0 ,  INVALID_ARGUMENTS); // QA:[RG]::verified
         this.rows = rows;
         this.cols = cols;
         this.size = rows*cols;

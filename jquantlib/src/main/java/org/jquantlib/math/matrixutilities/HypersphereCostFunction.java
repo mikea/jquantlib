@@ -24,7 +24,7 @@ package org.jquantlib.math.matrixutilities;
 
 import org.jquantlib.math.optimization.CostFunction;
 
-// TODO: code review :: please verify against original QL/C++ code
+// TODO: code review :: please verify against QL/C++ code
 //TODO: license, class comments
 class HypersphereCostFunction extends CostFunction {
 
