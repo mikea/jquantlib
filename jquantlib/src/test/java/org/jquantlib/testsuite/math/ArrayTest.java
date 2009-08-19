@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * @author Richard Gomes
  */
 public class ArrayTest {
@@ -110,11 +110,11 @@ public class ArrayTest {
     }
 
     @Test
-    public void copyOfRange() {
+    public void range() {
         final Array aA = new Array(new double[] { 9.0, 8.0, 1.0, 2.0, 3.0, 4.0, 8.0, 9.0 });
         final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
 
-        final Array result = aA.copyOfRange(2, 4);
+        final Array result = aA.range(2, 6);
         if (result == aA)
             fail("'copyOfRange' must return a new instance");
         if (result == aB)
@@ -141,8 +141,8 @@ public class ArrayTest {
 
         final Array result = aA.exp();
         if (result == aA) fail("'exp' must return a new instance");
-        if (result.length!=aA.length) fail("'exp' failed");
-        for (int i=0; i<aA.length; i++)
+        if (result.size() != aA.size()) fail("'exp' failed");
+        for (int i=0; i<aA.size(); i++)
             if (result.get(i) != Math.exp(aA.get(i)))
                 fail("'exp' failed");
     }
@@ -181,8 +181,8 @@ public class ArrayTest {
 
         final Array result = aA.log();
         if (result == aA) fail("'log' must return a new instance");
-        if (result.length!=aA.length) fail("'log' failed");
-        for (int i=0; i<aA.length; i++)
+        if (result.size() != aA.size()) fail("'log' failed");
+        for (int i=0; i<aA.size(); i++)
             if (result.get(i) != Math.log(aA.get(i)))
                 fail("'log' failed");
     }
@@ -275,12 +275,12 @@ public class ArrayTest {
         final double[] doubles = new double[] { 1.0, 2.0, 3.0, 4.0 };
 
         double[] result = (double[]) aA.toArray();
-        for (int i=0; i<aA.cols; i++)
+        for (int i=0; i<aA.size(); i++)
             if (result[i] != doubles[i])
                 fail("toArray failed");
 
         result = aA.toArray(new double[4]);
-        for (int i=0; i<aA.cols; i++)
+        for (int i=0; i<aA.size(); i++)
             if (result[i] != doubles[i])
                 fail("toArray failed");
     }

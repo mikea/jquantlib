@@ -70,7 +70,7 @@ public class DiscretizedOption extends DiscretizedAsset {
 	}
 
 	protected void applyExerciseCondition() {
-		for (int i = 0; i < values.length; i++)
+		for (int i = 0; i < values.size(); i++)
 			values.set(i, Math.max(underlying.values().get(i), values.get(i)));
 	}
 

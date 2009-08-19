@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -33,59 +33,59 @@ public class CurveDependentStepCondition implements StepCondition<Array> {
         double getValue(Array a, int i);
     }
 
-    private CurveWrapper curveItem;
+    private final CurveWrapper curveItem;
 
-    public CurveDependentStepCondition(Option.Type type, double strike) {
+    public CurveDependentStepCondition(final Option.Type type, final double strike) {
         curveItem = new PayoffWrapper(type, strike);
     }
 
-    public CurveDependentStepCondition(Payoff p) {
+    public CurveDependentStepCondition(final Payoff p) {
         curveItem = new PayoffWrapper(p);
     }
 
-    public CurveDependentStepCondition(Array a) {
+    public CurveDependentStepCondition(final Array a) {
         curveItem = new ArrayWrapper(a);
     }
 
-    protected double applyToValue(double a, double b) {
+    protected double applyToValue(final double a, final double b) {
         throw new RuntimeException("not yet implemented");
     }
 
     @Override
-    public void applyTo(Array a, double t) {
-        for (int i = 0; i < a.length; i++) {
+    public void applyTo(final Array a, final double t) {
+        for (int i = 0; i < a.size(); i++) {
             a.set(i, applyToValue(a.get(i), getValue(a, i)));
         }
     }
 
-    protected double getValue(Array a, int index) {
+    protected double getValue(final Array a, final int index) {
         return curveItem.getValue(a, index);
     }
 
     static class ArrayWrapper implements CurveWrapper {
-        private Array values;
+        private final Array values;
 
-        public ArrayWrapper(Array values) {
+        public ArrayWrapper(final Array values) {
             this.values = values;
         }
 
-        public double getValue(Array a, int i) {
+        public double getValue(final Array a, final int i) {
             return values.get(i);
         }
     };
 
     static class PayoffWrapper implements CurveWrapper {
-        private Payoff payoff;
+        private final Payoff payoff;
 
-        public PayoffWrapper(Payoff p) {
+        public PayoffWrapper(final Payoff p) {
             this.payoff = p;
         }
 
-        public PayoffWrapper(Option.Type type, double strike) {
+        public PayoffWrapper(final Option.Type type, final double strike) {
             payoff = new PlainVanillaPayoff(type, strike);
         }
 
-        public double getValue(Array a, int i) {
+        public double getValue(final Array a, final int i) {
             return payoff.valueOf(a.get(i));
         }
     };

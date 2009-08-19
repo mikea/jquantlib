@@ -60,12 +60,12 @@ import org.slf4j.LoggerFactory;
  * <p>
  * See R. L. Dougherty, A. Edelman, and J. M. Hyman, "Nonnegativity-, Monotonicity-, or Convexity-Preserving Cubic and Quintic
  * Hermite Interpolation" Mathematics Of Computation, v. 52, n. 186, April 1989, pp. 471-494.
- * 
+ *
  * @see CubicSpline
- * 
+ *
  * @author Richard Gomes
  * @author Daniel Kong
- * 
+ *
  */
 // TEST : needs code review and test classes
 public class CubicSplineInterpolation extends AbstractInterpolation {
@@ -137,7 +137,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
      * This is a factory method intended to create this interpolation.
      * <p>
      * Interpolations are not instantiated directly by applications, but via a factory class.
-     * 
+     *
      * @see CubicSpline
      */
     static public Interpolator getInterpolator(
@@ -160,7 +160,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
      * Constructor for a CubicSpline interpolation.
      * <p>
      * Interpolations are not instantiated directly by applications, but via a factory class.
-     * 
+     *
      * @see CubicSpline
      */
     private CubicSplineInterpolation(
@@ -204,7 +204,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
      */
     @Override
@@ -393,10 +393,10 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
 
     /**
      * This class is a default implementation for {@link CubicSplineInterpolation} instances.
-     * 
+     *
      * @author Richard Gomes
      * @author Daniel Kong
-     * 
+     *
      */
     private class CubicSplineInterpolationImpl implements Interpolator {
         private final CubicSplineInterpolation delegate;
@@ -407,14 +407,14 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
 
         @Override
         public final Interpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
-            return interpolate(x.length, x, y);
+            return interpolate(x.size(), x, y);
         }
 
         @Override
         public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
-            delegate.vx = x.copyOfRange(0, size);
-            delegate.vy = y.copyOfRange(0, size);
-            n = vx.length;
+            delegate.vx = x.range(0, size);
+            delegate.vy = y.range(0, size);
+            n = vx.size();
             vp = new Array(n-1);
             va = new Array(n-1);
             vb = new Array(n-1);

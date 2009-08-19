@@ -46,7 +46,7 @@ public class Simplex extends OptimizationMethod {
     public double extrapolate(final Problem P, final int iHighest, double factor){
         Array pTry = new Array();
         do{
-            final double dimensions = values.length - 1;
+            final double dimensions = values.size() - 1;
             final double factor1 = (1.0 - factor)/dimensions;
             final double factor2 = factor1 - factor;
             pTry = sum.mul(factor1).sub(vertices.get(iHighest).mul(factor2));
@@ -72,7 +72,7 @@ public class Simplex extends OptimizationMethod {
         int iterationNumber_ = 0;
 
         final boolean forever = true;
-        final int n = x_.length;
+        final int n = x_.size();
         int i;
 
         vertices = new ArrayList<Array>(n+1);

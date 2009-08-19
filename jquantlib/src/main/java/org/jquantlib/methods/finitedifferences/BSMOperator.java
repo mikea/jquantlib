@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -27,26 +27,26 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
- * 
+ *
  * @author Srinivas Hasti
- * 
+ *
  */
 public class BSMOperator extends TridiagonalOperator {
 
-	public BSMOperator(int size, double dx, double r, double q, double sigma) {
+	public BSMOperator(final int size, final double dx, final double r, final double q, final double sigma) {
 		super(size);
-		double sigma2 = sigma * sigma;
-		double nu = r - q - sigma2 / 2;
-		double pd = -(sigma2 / dx - nu) / (2 * dx);
-		double pu = -(sigma2 / dx + nu) / (2 * dx);
-		double pm = sigma2 / (dx * dx) + r;
+		final double sigma2 = sigma * sigma;
+		final double nu = r - q - sigma2 / 2;
+		final double pd = -(sigma2 / dx - nu) / (2 * dx);
+		final double pu = -(sigma2 / dx + nu) / (2 * dx);
+		final double pm = sigma2 / (dx * dx) + r;
 		setMidRows(pd, pm, pu);
 	}
 
-	public BSMOperator(Array grid, GeneralizedBlackScholesProcess process, double residualTime) {
-		super(grid.length);
-		LogGrid logGrid = new LogGrid(grid);
-		PdeConstantCoeff<PdeBSM> cc = new PdeConstantCoeff<PdeBSM>(
+	public BSMOperator(final Array grid, final GeneralizedBlackScholesProcess process, final double residualTime) {
+		super(grid.size());
+		final LogGrid logGrid = new LogGrid(grid);
+		final PdeConstantCoeff<PdeBSM> cc = new PdeConstantCoeff<PdeBSM>(
 				process, residualTime, process.stateVariable().getLink().evaluate()){};
 		cc.generateOperator(residualTime, logGrid, this);
 	}

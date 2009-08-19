@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -25,22 +25,22 @@ import org.jquantlib.math.matrixutilities.Array;
 
 public class DirichletBC implements BoundaryCondition<TridiagonalOperator> {
 
-    private/* @Real */double value;
-    private Side side;
+    private final /* @Real */double value;
+    private final Side side;
 
-    public DirichletBC(double value, Side side) {
+    public DirichletBC(final double value, final Side side) {
         this.value = value;
         this.side = side;
     }
 
     @Override
-    public void applyAfterApplying(Array u) {
+    public void applyAfterApplying(final Array u) {
         switch (side) {
         case LOWER:
             u.set(0, value);
             break;
         case UPPER:
-            u.set(u.length - 1, value);
+            u.set(u.size() - 1, value);
             break;
         default:
             throw new IllegalStateException("unknown side for Neumann boundary condition");
@@ -48,12 +48,12 @@ public class DirichletBC implements BoundaryCondition<TridiagonalOperator> {
     }
 
     @Override
-    public void applyAfterSolving(Array array) {
-     
+    public void applyAfterSolving(final Array array) {
+
     }
 
     @Override
-    public void applyBeforeApplying(TridiagonalOperator operator) {
+    public void applyBeforeApplying(final TridiagonalOperator operator) {
         switch (side) {
         case LOWER:
             operator.setFirstRow(1.0, 0.0);
@@ -67,7 +67,7 @@ public class DirichletBC implements BoundaryCondition<TridiagonalOperator> {
     }
 
     @Override
-    public void applyBeforeSolving(TridiagonalOperator operator, Array rhs) {
+    public void applyBeforeSolving(final TridiagonalOperator operator, final Array rhs) {
         switch (side) {
         case LOWER:
             operator.setFirstRow(1.0, 0.0);
@@ -75,7 +75,7 @@ public class DirichletBC implements BoundaryCondition<TridiagonalOperator> {
             break;
         case UPPER:
             operator.setLastRow(0.0, 1.0);
-            rhs.set(rhs.length - 1, value);
+            rhs.set(rhs.size() - 1, value);
             break;
         default:
             throw new IllegalStateException("unknown side for Neumann boundary condition");
@@ -83,6 +83,6 @@ public class DirichletBC implements BoundaryCondition<TridiagonalOperator> {
     }
 
     @Override
-    public void setTime(double t) {
+    public void setTime(final double t) {
     }
 }

@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Daniel Kong
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -37,29 +37,29 @@ import org.slf4j.LoggerFactory;
  **/
 
 public class BackwardInterpolationTest {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(BackwardInterpolationTest.class);
-	
+
 	private static final Array x = new Array( new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
 	private static final Array y = new Array( new double[] { 5.0, 4.0, 3.0, 2.0, 1.0 });
 	private static Interpolation interpolation;
 	private static int length;
 	private static double tolerance;
-	
+
 	public BackwardInterpolationTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 
-        interpolation = new BackwardFlat().interpolate(x, y);     
-        length = x.length;
+        interpolation = new BackwardFlat().interpolate(x, y);
+        length = x.size();
         tolerance = 1.0e-12;
 	}
-	
+
 	@Test
 	public void checkAtOriginalPoints(){
 		for(int i=0; i<length; i++){
-			double d = x.get(i);
-			double calculated = interpolation.op(d);
-			double expected = y.get(i);
+			final double d = x.get(i);
+			final double calculated = interpolation.op(d);
+			final double expected = y.get(i);
 			assertFalse("failed to reproduce "+i+" datum"
 						+"\n expected:     "+expected
 						+"\n calculated:   "+calculated
@@ -67,14 +67,14 @@ public class BackwardInterpolationTest {
 						abs(expected-calculated) > tolerance);
 		}
 	}
-	
+
 	@Test
 	public void checkAtMiddlePoints(){
 		for(int i=0; i<length-1; i++){
-			double d = (x.get(i)+x.get(i+1))/2;
-			double calculated = interpolation.op(d);
-			double expected = y.get(i+1);
-			
+			final double d = (x.get(i)+x.get(i+1))/2;
+			final double calculated = interpolation.op(d);
+			final double expected = y.get(i+1);
+
 			assertFalse("failed to interpolate correctly at "+d
 						+"\n expected:     "+expected
 						+"\n calculated:   "+calculated
@@ -82,7 +82,7 @@ public class BackwardInterpolationTest {
 						abs(expected-calculated) > tolerance);
 		}
 	}
-	
+
 	@Test
 	public void checkOutsideOriginalRange(){
 		interpolation.enableExtrapolation();
@@ -102,9 +102,9 @@ public class BackwardInterpolationTest {
 			    	+"\n calculated:   "+calculated
 			    	+"\n error:        "+abs(expected-calculated),
 			    	abs(expected-calculated) > tolerance);
-		
+
 	}
-	
+
 	@Test
 	public void checkPrimitiveAtOriginalPoints(){
 		double calculated = interpolation.primitive(x.first());
@@ -126,15 +126,15 @@ public class BackwardInterpolationTest {
 			            abs(expected-calculated) > tolerance);
 		}
 	}
-	
+
 	@Test
 	public void checkPrimitiveAtMiddlePoints(){
 		double sum = 0.0;
 		for(int i=0; i<length-1; i++){
-			double d = (x.get(i)+x.get(i+1))/2;
+			final double d = (x.get(i)+x.get(i+1))/2;
 			sum += (x.get(i+1)-x.get(i))*y.get(i+1)/2;
-			double calculated = interpolation.primitive(d);
-			double expected=sum;
+			final double calculated = interpolation.primitive(d);
+			final double expected=sum;
 			sum += (x.get(i+1)-x.get(i))*y.get(i+1)/2;
 			assertFalse("failed to calculate primitive at "+x.get(i)
 			            +"\n expected:     "+expected
@@ -143,5 +143,5 @@ public class BackwardInterpolationTest {
 			            abs(expected-calculated) > tolerance);
 		}
 	}
-		
+
 }

@@ -56,7 +56,7 @@ import org.jquantlib.math.functions.Identity;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q2_RESEMBLANCE, version = Version.V097, reviewers = { "Richard Gomes" })
-public class Array extends Matrix {
+public class Array extends Cells {
 
     /**
      * Default constructor
@@ -84,7 +84,7 @@ public class Array extends Matrix {
      */
     public Array(final double[] array) {
         super(1, array.length);
-        System.arraycopy(array, 0, this.data, 0, this.length);
+        System.arraycopy(array, 0, this.data, 0, this.size);
     }
 
 
@@ -94,7 +94,8 @@ public class Array extends Matrix {
      * @param data
      */
     public Array(final Array a) {
-        super(a);
+        super(1, a.cols);
+        System.arraycopy(a.data, 0, this.data, 0, this.size);
     }
 
 
@@ -105,7 +106,7 @@ public class Array extends Matrix {
 
     @Override
     public Array clone() {
-        return this.copyOfRange(0, this.length);
+        return this.range(0, this.size);
     }
 
 
@@ -131,43 +132,19 @@ public class Array extends Matrix {
 
 
     //
-    // overrides Matrix
-    //
-    // Not only these methods override methods from Matrix.
-    // These methods are separated in this section in order to emphasise their importance.
-    //
-
-    @Override
-    public Array getRow(final int row) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Array getCol(final int col) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public double get(final int row, final int col) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void set(final int row, final int col, final double value) {
-        throw new UnsupportedOperationException();
-    }
-
-
-
-    //
     // public methods
     //
 
     // some convenience methods
 
     public int size() {
-        return this.length;
+        return this.size;
     }
+
+    public boolean empty() {
+        return this.size <= 0;
+    }
+
 
     /**
      * Retrieves an element of <code>this</code> Matrix
@@ -207,21 +184,19 @@ public class Array extends Matrix {
      *
      * @param scalar is the value to be used to fill in
      */
-    @Override
     public Array fill(final double scalar) {
         Arrays.fill(data, scalar);
         return this;
     }
 
-    @Override
     public Object toArray() {
-        final double buffer[] = new double[this.length];
+        final double buffer[] = new double[this.size];
         return toArray(buffer);
     }
 
     public double[] toArray(final double[] buffer) {
-        if (this.length != buffer.length) throw new IllegalArgumentException(); //TODO:message
-        System.arraycopy(this.data, 0, buffer, 0, this.length);
+        if (this.size != buffer.length) throw new IllegalArgumentException(); //TODO:message
+        System.arraycopy(this.data, 0, buffer, 0, this.size);
         return buffer;
     }
 
@@ -234,17 +209,29 @@ public class Array extends Matrix {
     }
 
     /**
-     * Returns an Array containing a copy of region
+     * Returns an Array containing a copy of region [pos0,)
      *
-     * @param pos is the initial position
-     * @param len is the quantity of elements
+     * @param pos0 is the initial position, inclusive
      *
      * @return a new Array containing a copy of region
      */
-    public Array copyOfRange(final int pos, final int len) {
-        QL.require(pos >= 0 && len > 0 && pos+len <= this.length,  INVALID_ARGUMENTS); //TODO: message
-        final Array result = new Array(len);
-        System.arraycopy(this.data, pos, result.data, 0, len);
+    public Array range(final int pos) {
+        return range(pos, this.size);
+    }
+
+    /**
+     * Returns an Array containing a copy of region [pos0, pos1)
+     *
+     * @param pos0 is the initial position, inclusive
+     * @param pos1 is the final position, exclusive
+     *
+     * @return a new Array containing a copy of region
+     */
+    public Array range(final int pos0, final int pos1) {
+        QL.require(pos0 >= 0 && pos1 > pos0 && pos1 <= this.size,  INVALID_ARGUMENTS); //TODO: message
+        final int ncols = pos1-pos0;
+        final Array result = new Array(ncols);
+        System.arraycopy(this.data, pos0, result.data, 0, ncols);
         return result;
     }
 
@@ -256,7 +243,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
     public double accumulate() {
-        return accumulate(0, this.length, 0.0);
+        return accumulate(0, this.size, 0.0);
     }
 
     /**
@@ -270,7 +257,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
     public double accumulate(final int from, final int to, final double init) {
-        QL.require(from >=0 && from <=to && to <=this.length ,  INVALID_ARGUMENTS);
+        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS);
         double sum = init;
         for (int i=from; i<to; i++)
             sum += this.data[i];
@@ -278,7 +265,7 @@ public class Array extends Matrix {
     }
 
     public double min() {
-        return min(0, this.length);
+        return min(0, this.size);
     }
 
     /**
@@ -289,7 +276,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
      */
     public double min(final int from, final int to) {
-        QL.require(from >=0 && from <=to && to <=this.length ,  INVALID_ARGUMENTS);
+        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS);
         double result = this.data[from];
         for (int i=from+1; i<to; i++) {
             final double tmp = this.data[i];
@@ -299,7 +286,7 @@ public class Array extends Matrix {
     }
 
     public double max() {
-        return max(0, this.length);
+        return max(0, this.size);
     }
 
     /**
@@ -310,7 +297,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a>
      */
     public double max(final int from, final int to) {
-        QL.require(from >=0 && from <=to && to <=this.length ,  INVALID_ARGUMENTS);
+        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS);
         double result = this.data[from];
         for (int i=from+1; i<to; i++) {
             final double tmp = data[i];
@@ -343,9 +330,9 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
     public final Array adjacentDifference(final int from) {
-        QL.require(from>=0 && from <= this.length ,  INVALID_ARGUMENTS);
-        final Array diff = new Array(this.length-from);
-        for (int i = from; i < this.length; i++) {
+        QL.require(from>=0 && from <= this.size ,  INVALID_ARGUMENTS);
+        final Array diff = new Array(this.size-from);
+        for (int i = from; i < this.size; i++) {
             final double curr = this.data[i];
             if (i == from)
                 diff.data[i-from] = curr;
@@ -365,7 +352,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
      */
     public int lowerBound(final double val) {
-        return lowerBound(0, this.length-1, val);
+        return lowerBound(0, this.size-1, val);
     }
 
     /**
@@ -403,7 +390,7 @@ public class Array extends Matrix {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
      */
     public int upperBound(final double val) {
-        return upperBound(0, this.length-1, val);
+        return upperBound(0, this.size-1, val);
     }
 
     /**
@@ -441,7 +428,7 @@ public class Array extends Matrix {
      * @return this
      */
     public Array transform(final DoubleOp func) {
-        return transform(0, this.length, func);
+        return transform(0, this.size, func);
     }
 
     /**
@@ -450,7 +437,7 @@ public class Array extends Matrix {
      * @return this
      */
     public Array transform(final int from, final int to, final Ops.DoubleOp f) {
-        QL.require(from>=0 && from<=to && to<=this.length && f!=null,  INVALID_ARGUMENTS);
+        QL.require(from>=0 && from<=to && to<=this.size && f!=null,  INVALID_ARGUMENTS);
         if (f instanceof Identity) return this;
         for (int i = from; i < to; i++)
             data[i] = f.op(data[i]);
@@ -465,68 +452,80 @@ public class Array extends Matrix {
     //
     //    opr   method     this    right    result
     //    ----- ---------- ------- -------- ------
-    //    =     assign     Array            Array  (1)
     //    +=    addAssign  Array   scalar   this
     //    +=    addAssign  Array   Array    this
     //    -=    subAssign  Array   scalar   this
-    //    -=    mulAssign  Array   Array    this
+    //    -=    subAssign  Array   Array    this
     //    *=    mulAssign  Array   scalar   this
     //    *=    mulAssign  Array   Array    this
     //    /=    divAssign  Array   scalar   this
     //    /=    divAssign  Array   Array    this
+    //
 
     public Array addAssign(final double scalar) {
-        for (int i=0; i<length; i++)
+        for (int i=0; i<size; i++)
             data[i] += scalar;
         return this;
     }
 
     public Array subAssign(final double scalar) {
-        for (int i=0; i<length; i++)
+        for (int i=0; i<size; i++)
             data[i] -= scalar;
         return this;
     }
 
-    @Override
+    /**
+     * Returns the result of a subtraction of <code>this</code> Array and <code>another</code> Array
+     *
+     * @param another
+     * @return this
+     */
+    public Array subAssign(final Array another) {
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        for (int i=0; i<size; i++) {
+            this.data[i] -= another.data[i];
+        }
+        return this;
+    }
+
+
     public Array mulAssign(final double scalar) {
-        for (int i=0; i<length; i++)
+        for (int i=0; i<size; i++)
             data[i] *= scalar;
         return this;
     }
 
-    @Override
     public Array divAssign(final double scalar) {
-        for (int i=0; i<length; i++)
+        for (int i=0; i<size; i++)
             data[i] /= scalar;
         return this;
     }
 
     public Array addAssign(final Array another) {
-        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
-        for (int i=0; i<length; i++)
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        for (int i=0; i<size; i++)
             data[i] += another.data[i];
         return this;
     }
 
-    @Override
     public Array subAssign(final Matrix another) {
-        QL.require(this.rows == another.rows && this.length == another.length ,  MATRIX_IS_INCOMPATIBLE);
-        for (int i=0; i<length; i++)
+        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE);
+        for (int i=0; i<size; i++)
             data[i] -= another.data[i];
         return this;
     }
 
     public Array mulAssign(final Array another) {
-        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
-        for (int i=0; i<length; i++)
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        for (int i=0; i<size; i++)
             data[i] *= another.data[i];
         return this;
     }
 
 
     public Array divAssign(final Matrix another) {
-        QL.require(this.rows == another.rows && this.length == another.length ,  MATRIX_IS_INCOMPATIBLE);
-        for (int i=0; i<length; i++)
+        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE);
+        for (int i=0; i<size; i++)
             data[i] /= another.data[i];
         return this;
     }
@@ -547,67 +546,65 @@ public class Array extends Matrix {
     //    *     mul        Array   Array     Array
     //    /     div        Array   scalar    Array
     //    /     div        Array   Array     Array
+    //
 
     public Array add(final double scalar) {
-        final Array result = new Array(this.length);
-        for (int i=0; i<length; i++)
+        final Array result = new Array(this.size);
+        for (int i=0; i<size; i++)
             result.data[i] = this.data[i] + scalar;
         return result;
     }
 
     public Array sub(final double scalar) {
-        final Array result = new Array(this.length);
-        for (int i=0; i<length; i++)
+        final Array result = new Array(this.size);
+        for (int i=0; i<size; i++)
             result.data[i] = this.data[i] - scalar;
         return result;
     }
 
-    @Override
     public Array mul(final double scalar) {
-        final Array result = new Array(this.length);
-        for (int i=0; i<length; i++)
+        final Array result = new Array(this.size);
+        for (int i=0; i<size; i++)
             result.data[i] = this.data[i] * scalar;
         return result;
     }
 
-    @Override
     public Array div(final double scalar) {
-        final Array result = new Array(this.length);
-        for (int i=0; i<length; i++)
+        final Array result = new Array(this.size);
+        for (int i=0; i<size; i++)
             result.data[i] = this.data[i] / scalar;
         return result;
     }
 
     public Array add(final Array another) {
-        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
-        final Array result = new Array(this.length);
-        for (int i=0; i<length; i++)
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        final Array result = new Array(this.size);
+        for (int i=0; i<size; i++)
             result.data[i] = this.data[i] + another.data[i];
         return result;
     }
 
     public Array sub(final Array another) {
-        QL.require(this.rows == another.rows && this.length == another.length ,  MATRIX_IS_INCOMPATIBLE);
-        final Array result = new Array(this.length);
-        for (int i=0; i<length; i++)
+        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE);
+        final Array result = new Array(this.size);
+        for (int i=0; i<size; i++)
             result.data[i] = this.data[i] - another.data[i];
         return result;
     }
 
-    @Override
     public Array mul(final Array another) {
-        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
-        final Array result = new Array(this.length);
-        for (int i=0; i<length; i++)
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        final Array result = new Array(this.size);
+        for (int i=0; i<size; i++)
             result.data[i] = this.data[i] * another.data[i];
         return result;
     }
 
 
     public Array div(final Matrix another) {
-        QL.require(this.rows == another.rows && this.length == another.length ,  MATRIX_IS_INCOMPATIBLE);
-        final Array result = new Array(this.length);
-        for (int i=0; i<length; i++)
+        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE);
+        final Array result = new Array(this.size);
+        for (int i=0; i<size; i++)
             result.data[i] = this.data[i] / another.data[i];
         return result;
     }
@@ -620,11 +617,10 @@ public class Array extends Matrix {
     //    ----- ---------- ------- -------- ------
     //    *     mul        Array   Matrix   Array
 
-    @Override
     public Array mul(final Matrix matrix) {
-        QL.require(this.length == matrix.rows ,  MATRIX_IS_INCOMPATIBLE);
+        QL.require(this.size == matrix.rows, MATRIX_IS_INCOMPATIBLE);
         final Array result = new Array(this.cols);
-        for (int i=0; i<this.length; i++) {
+        for (int i=0; i<this.size; i++) {
             int addr = matrix.addr(i,0);
             double sum = 0.0;
             for (int col=0; col<matrix.cols; col++) {
@@ -648,29 +644,29 @@ public class Array extends Matrix {
     //    exp   exp        Array            Array
 
     public Array abs() {
-        final Array result = new Array(this.length);
-        for (int i=0; i<this.length; i++)
+        final Array result = new Array(this.size);
+        for (int i=0; i<this.size; i++)
             result.data[i] = Math.abs(data[i]);
         return result;
     }
 
     public Array sqrt() {
-        final Array result = new Array(this.length);
-        for (int i=0; i<this.length; i++)
+        final Array result = new Array(this.size);
+        for (int i=0; i<this.size; i++)
             result.data[i] = Math.sqrt(data[i]);
         return result;
     }
 
     public Array log() {
-        final Array result = new Array(this.length);
-        for (int i=0; i<this.length; i++)
+        final Array result = new Array(this.size);
+        for (int i=0; i<this.size; i++)
             result.data[i] = Math.log(data[i]);
         return result;
     }
 
     public Array exp() {
-        final Array result = new Array(this.length);
-        for (int i=0; i<this.length; i++)
+        final Array result = new Array(this.size);
+        for (int i=0; i<this.size; i++)
             result.data[i] = Math.exp(data[i]);
         return result;
     }
@@ -686,17 +682,24 @@ public class Array extends Matrix {
     //    outerProduct Array   Array    Matrix
     //    dotProduct   Array   Array    double
 
+    /**
+     * Swaps contents of <code>this</code> Matrix by <code>another</code> Matrix
+     *
+     * @param another
+     * @return this
+     */
     public Array swap(final Array another) {
         super.swap(another);
         return this;
     }
 
-    public Array swap(final int pos1, final int pos2) {
-        final double tmp = data[pos1];
-        data[pos1] = data[pos2];
-        data[pos2] = tmp;
-        return this;
-    }
+//XXX
+//    public Array swap(final int pos1, final int pos2) {
+//        final double tmp = data[pos1];
+//        data[pos1] = data[pos2];
+//        data[pos2] = tmp;
+//        return this;
+//    }
 
     /**
      * Returns the <b>dot product</b> (also known as <b>scalar product</b>) of
@@ -711,8 +714,8 @@ public class Array extends Matrix {
      * @see <a href="http://en.wikipedia.org/wiki/Dot_product">Dot Product</a>
      */
     public double dotProduct(final Array another) {
-        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
-        return innerProduct(another, 0, length);
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        return innerProduct(another, 0, size);
     }
 
     /**
@@ -727,8 +730,8 @@ public class Array extends Matrix {
      * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
      */
     public double innerProduct(final Array another) {
-        QL.require(this.length == another.length ,  ARRAY_IS_INCOMPATIBLE);
-        return innerProduct(another, 0, length);
+        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE);
+        return innerProduct(another, 0, size);
     }
 
 
@@ -773,10 +776,10 @@ public class Array extends Matrix {
      * @see <a href="http://en.wikipedia.org/wiki/Outer_product">Outer product</a>
      */
     public Matrix outerProduct(final Array another) {
-        final Matrix result = new Matrix(this.length, another.length);
-        for (int row=0; row<this.length; row++) {
+        final Matrix result = new Matrix(this.size, another.size);
+        for (int row=0; row<this.size; row++) {
             final int addr = result.addr(row, 0);
-            for (int col=0; col<another.length; col++)
+            for (int col=0; col<another.size; col++)
                 result.data[addr+col] = this.data[row] * another.data[col];
         }
         return result;
@@ -795,11 +798,6 @@ public class Array extends Matrix {
      */
     protected int addr(final int row) {
         return row;
-    }
-
-    @Override
-    protected int addr(final int row, final int col) {
-        throw new UnsupportedOperationException();
     }
 
 }

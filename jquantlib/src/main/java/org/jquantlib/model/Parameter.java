@@ -1,5 +1,5 @@
 /*
-Copyright (C) 
+Copyright (C)
 2008 Praneet Tiwari
 
 This source code is release under the BSD License.
@@ -29,7 +29,7 @@ import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.NoConstraint;
 
 /**
- * 
+ *
  * @author Praneet Tiwari
  */
 // ! Base class for model arguments
@@ -44,18 +44,18 @@ public abstract class Parameter {
         public abstract double value(final Array params, /* Time */double t);
     }
 
-    protected Parameter(int size, final Impl impl, final Constraint c) {
+    protected Parameter(final int size, final Impl impl, final Constraint c) {
         this.constraint = c;
         this.impl = impl;
         params = new Array(size);
-        
+
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
     }
 
     public Parameter() {
         constraint = new NoConstraint();
-        
+
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
     }
@@ -64,7 +64,7 @@ public abstract class Parameter {
         return params;
     }
 
-    public void setParam(int /* @Size */i, double x) {
+    public void setParam(final int /* @Size */i, final double x) {
         params.set(i, x);
     }
 
@@ -76,12 +76,12 @@ public abstract class Parameter {
     /*
      * Real operator()(Time t) const { return impl_->value(params_, t); }
      */
-    public double /* @Real */getOperatorEq(double /* @Time */t) {
+    public double /* @Real */getOperatorEq(final double /* @Time */t) {
         return impl.value(params, t);
     }
 
     public int /* @Size */getSize() {
-        return params.length;
+        return params.size();
     }
 
     public Impl getImplementation() {

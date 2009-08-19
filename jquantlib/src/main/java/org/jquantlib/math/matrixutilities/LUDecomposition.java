@@ -36,7 +36,7 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * use of the LU decomposition is in the solution of square systems of simultaneous linear equations. This will fail if
  * isNonsingular() returns false.
  *
- * @Note: This class was adapted from JAMA
+ * @Note: This class is adapted from JAMA
  * @see <a href="http://math.nist.gov/javanumerics/jama/">JAMA</a>
  *
  * @author Richard Gomes
@@ -69,9 +69,9 @@ public class LUDecomposition {
      * @return Structure to access L, U and piv.
      */
     public LUDecomposition(final Matrix A) {
-        this.m = A.rows;
-        this.n = A.cols;
         this.LU = A.clone();
+        this.m = LU.rows;
+        this.n = LU.cols;
 
         // initialize pivots
         this.piv = new int[m];
@@ -251,24 +251,23 @@ public class LUDecomposition {
             throw new RuntimeException(MATRIX_IS_SINGULAR);
 
         // Copy right hand side with pivoting
-        final int nx = B.cols;
-        final Matrix X = B.getMatrix(piv, 0, nx-1);
+        final Matrix X = B.range(piv, 0, B.cols);
 
         // Solve L*Y = B(piv,:)
         for (int k = 0; k < n; k++) {
             for (int i = k + 1; i < n; i++) {
-                for (int j = 0; j < nx; j++) {
+                for (int j = 0; j < B.cols; j++) {
                     X.data[X.addr(i, j)] -= X.data[X.addr(k, j)] * LU.data[LU.addr(i, k)];
                 }
             }
         }
         // Solve U*X = Y;
         for (int k = n - 1; k >= 0; k--) {
-            for (int j = 0; j < nx; j++) {
+            for (int j = 0; j < B.cols; j++) {
                 X.data[X.addr(k, j)] /= LU.data[LU.addr(k, k)];
             }
             for (int i = 0; i < k; i++) {
-                for (int j = 0; j < nx; j++) {
+                for (int j = 0; j < B.cols; j++) {
                     X.data[X.addr(i, j)] -= X.data[X.addr(k, j)] * LU.data[LU.addr(i, k)];
                 }
             }

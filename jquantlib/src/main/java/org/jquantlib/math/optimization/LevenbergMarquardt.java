@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -31,10 +31,10 @@ import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
 */
 
 public class LevenbergMarquardt extends OptimizationMethod {
-    
-    private double epsfcn_, xtol_, gtol_;
+
+    private final double epsfcn_, xtol_, gtol_;
     private Integer info_;
-    
+
     public LevenbergMarquardt() {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
@@ -43,45 +43,45 @@ public class LevenbergMarquardt extends OptimizationMethod {
         this.xtol_ = 1.0e-8;
         this.gtol_ = 1.0e-8;
     }
-    
-    public LevenbergMarquardt(double epsfcn, double xtol, double gtol){
+
+    public LevenbergMarquardt(final double epsfcn, final double xtol, final double gtol){
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
         this.epsfcn_ = epsfcn;
         this.xtol_ = xtol;
         this.gtol_ = gtol;
-        
+
     }
 
     @Override
-    public CriteriaType minimize(Problem P, EndCriteria endCriteria) {
-        EndCriteria.CriteriaType ecType = EndCriteria.CriteriaType.None;
+    public CriteriaType minimize(final Problem P, final EndCriteria endCriteria) {
+        final EndCriteria.CriteriaType ecType = EndCriteria.CriteriaType.None;
         P.reset();
-        Array x_ = P.currentValue();
+        final Array x_ = P.currentValue();
         // TODO: this is probably incorrect, check the consequences
         ProblemData.getProblemData().setProblem(P);
         ProblemData.getProblemData().setInitCostValues(P.costFunction().values(x_));
-        
-        int m = ProblemData.getProblemData().initCostValues_.length;
-        int n = x_.length;
-        
-        Array  xx = new Array();
+
+        final int m = ProblemData.getProblemData().initCostValues_.size();
+        final int n = x_.size();
+
+        final Array  xx = new Array();
         //TODO: correct?
         xx.addAssign(x_);
-        
-        Array fvec;
-        Array diag;
-        
-        int mode = 1;
-        double factor = 1;
-        int nprint = 0;
-        int info = 0;
-        int nfev = 0;
-        
-        Array fjac = new Array();
-        int ldfjac = m;
-        
+
+        final Array fvec;
+        final Array diag;
+
+        final int mode = 1;
+        final double factor = 1;
+        final int nprint = 0;
+        final int info = 0;
+        final int nfev = 0;
+
+        final Array fjac = new Array();
+        final int ldfjac = m;
+
         //TODO: to be completed....
         /*
         boost::scoped_array<int> ipvt(new int[n]);
@@ -126,8 +126,8 @@ public class LevenbergMarquardt extends OptimizationMethod {
         */
         return ecType;
     }
-    
-    public void fcn(int x1, int n, double x2, double fvec, int x3) {
+
+    public void fcn(final int x1, final int n, final double x2, final double fvec, final int x3) {
         /*
         void LevenbergMarquardt::fcn(int, int n, double* x, double* fvec, int*) {
         Array xt(n);
@@ -143,8 +143,8 @@ public class LevenbergMarquardt extends OptimizationMethod {
         }
         */
     }
-    
-    // TODO: this class is no longer used in newer releases, it seems there's a 
+
+    // TODO: this class is no longer used in newer releases, it seems there's a
     // better approach to do this... to be investigated...
     // class is needed to make the Levenberg-Marquardt
     // algorithm sessionId() safe (or multi threading safe).
@@ -159,7 +159,7 @@ public class LevenbergMarquardt extends OptimizationMethod {
     };
     */
     static class ProblemData{
-        
+
         static ProblemData p = null;
         public static ProblemData getProblemData(){
             if(p == null){
@@ -167,25 +167,25 @@ public class LevenbergMarquardt extends OptimizationMethod {
             }
             return p;
         }
-        
+
         private ProblemData(){}
-        
+
         public Problem problem(){
             return thisP_;
         }
         public Array initCostValues(){
             return initCostValues_;
         }
-        public void setProblem(Problem problem){
+        public void setProblem(final Problem problem){
              this.thisP_ = problem;
         }
-        public void setInitCostValues(Array initCostValues){
+        public void setInitCostValues(final Array initCostValues){
             this.initCostValues_ = initCostValues;
         }
-        
-        
+
+
         private Problem thisP_;
         private Array initCostValues_;
-        
+
     }
 }

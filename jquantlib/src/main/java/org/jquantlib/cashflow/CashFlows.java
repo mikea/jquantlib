@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
 
@@ -23,7 +24,6 @@
 package org.jquantlib.cashflow;
 
 import org.jquantlib.Configuration;
-import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
@@ -42,11 +42,11 @@ import org.jquantlib.util.stdlibc.Std;
 
 /**
  * Cashflow-analysis functions
- * 
+ *
  * @author Ueli Hofstetter
+ * @author Richard Gomes
  */
-// TODO: code review :: license, class comments, comments for access modifiers,
-// comments for @Override
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CashFlows {
 
 	private final String not_enough_information_available = "not enough information available";
@@ -63,8 +63,8 @@ public class CashFlows {
 	 * Singleton instance for the whole application.
 	 * <p>
 	 * In an application server environment, it could be by class loader
-	 * depending on scope of the jquantlib library to the module.
-	 * 
+	 * depending on scope of the JQuantLib library to the module.
+	 *
 	 * @see <a
 	 *      href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The
 	 *      "Double-Checked Locking is Broken" Declaration </a>
@@ -122,7 +122,7 @@ public class CashFlows {
 	 * <p>
 	 * The NPV is the sum of the cash flows, each discounted according to the
 	 * given term structure.
-	 * 
+	 *
 	 * @param cashflows
 	 * @param discountCurve
 	 * @param settlementDate
@@ -225,7 +225,6 @@ public class CashFlows {
 		Date date = settlementDate;
 		if (date.eq(DateFactory.getFactory().getTodaysDate())) {
 			date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-			;
 		}
 
 		final YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
@@ -291,9 +290,9 @@ public class CashFlows {
 
 		/*
 		 * THIS COMMENT COMES UNMODIFIED FROM QL/C++ SOURCES
-		 * 
+		 *
 		 * The following is commented out due to the lack of a QL_WARN macro
-		 * 
+		 *
 		 * if (signChanges > 1) { // Danger of non-unique solution // Check the
 		 * aggregate cash flows (Norstrom) Real aggregateCashFlow = marketPrice;
 		 * signChanges = 0; for (Size i = 0; i < cashflows.size(); ++i) { Real
@@ -314,30 +313,26 @@ public class CashFlows {
 				1.0e-10, 10000, 0.05);
 	}
 
-	/**
-	 * Cash-flow duration.
-	 * <p>
-	 * The simple duration of a string of cash flows is defined as {@latex[ D_
-	 * \mathrm{simple}} = \frac{\sum t_i c_i B(t_i)}{\sum c_i B(t_i)} } where
-	 * {@latex$ c_i } is the amount of the {@latex$ i }-th cash flow, {@latex$
-	 * t_i } is its payment time, and {@latex$ B(t_i) } is the corresponding
-	 * discount according to the passed yield.
-	 * <p>
-	 * The modified duration is defined as {@latex[ D_ \mathrm{modified}} =
-	 * -\frac{1}{P} \frac{\partial P}{\partial y} } where {@latex$ P }is the
-	 * present value of the cash flows according to the given IRR {@latex$ y }.
-	 * <p>
-	 * The Macaulay duration is defined for a compounded IRR as {@latex[ D_
-	 * \mathrm{Macaulay}} = \left( 1 + \frac{y}{N} \right) D_{\mathrm{modified}}
-	 * } where {@latex$ y } is the IRR and {@latex$ N } is the number of cash
-	 * flows per year.
-	 */
+    /**
+     * Cash-flow duration.
+     * <p>
+     * The simple duration of a string of cash flows is defined as
+     * {@latex[ D_ \mathrm simple}} = \frac{\sum t_i c_i B(t_i)}{\sumc_i B(t_i)} } where {@latex$ c_i } is the amount of
+     * the {@latex$ i }-th cash flow, {@latex$ t_i } is its payment time, and {@latex$ B(t_i) } is the corresponding
+     * discount according to the passed yield.
+     * <p>
+     * The modified duration is defined as {@latex[ D_ \mathrm modified}} = -\frac{1}{P} \frac{\partial P}{\partial y} } where
+     * {@latex$ P }is the present value of the cash flows according to the given IRR {@latex$ y }.
+     * <p>
+     * The Macaulay duration is defined for a compounded IRR as
+     * {@latex[ D_ \mathrm Macaulay}} = \left( 1 + \frac{y}{N} \right) D_{\mathrm{modified}} } where
+     * {@latex$ y } is the IRR and {@latex$ N } is the number of cash flows per year.
+     */
 	public double duration(final Leg leg, final InterestRate y, final Duration duration, final Date settlementDate) {
 
 		Date date = settlementDate;
 		if (date.eq(DateFactory.getFactory().getTodaysDate())) {
 			date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-			;
 		}
 
 		switch (duration) {
@@ -359,16 +354,14 @@ public class CashFlows {
 	/**
 	 * Cash-flow convexity
 	 * <p>
-	 * The convexity of a string of cash flows is defined as {@latex[ C = \frac
-	 * 1}{P} \frac{\partial^2 P}{\partial y^2} } where {@latex$ P } is the
-	 * present value of the cash flows according to the given IRR {@latex$ y }.
+	 * The convexity of a string of cash flows is defined as {@latex[ C = \frac 1}{P} \frac{\partial^2 P}{\partial y^2} } where
+	 * {@latex$ P } is the present value of the cash flows according to the given IRR {@latex$ y }.
 	 */
 	public double convexity(final Leg cashFlows, final InterestRate rate, final Date settlementDate) {
 
 		Date date = settlementDate;
 		if (date.eq(DateFactory.getFactory().getTodaysDate())) {
 			date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-			;
 		}
 
 		final DayCounter dayCounter = rate.dayCounter();
@@ -401,15 +394,20 @@ public class CashFlows {
 				}
 			}
 
-		if (P == 0.0)
-			// no cashflows
-			return 0.0;
+		if (P == 0.0) return 0.0; // no cashflows
 		return d2Pdy2 / P;
 	}
 
 	public double convexity(final Leg leg, final InterestRate y) {
 		return convexity(leg, y, DateFactory.getFactory().getTodaysDate());
 	}
+
+
+
+
+
+
+
 
 	private double simpleDuration(final Leg cashflows, final InterestRate rate, final Date settlementDate) {
 
@@ -490,6 +488,180 @@ public class CashFlows {
 			return -1;
 	}
 
+    final public int previousCashFlow(final Leg leg) {
+        return previousCashFlow(leg, Date.NULL_DATE);
+    }
+
+    final public int previousCashFlow(final Leg leg, Date refDate) {
+        if (refDate == Date.NULL_DATE) {
+            refDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        }
+
+        if (!(leg.get(0).hasOccurred(refDate))) {
+            return leg.size();
+        }
+
+        final int i = nextCashFlowIndex(leg, refDate);
+        final Date beforeLastPaymentDate = leg.get(i - 1).date();// (*--i)->date()-1;
+        return nextCashFlowIndex(leg, beforeLastPaymentDate);
+    }
+
+    final public double previousCouponRate(final Leg cashFlows) {
+        return previousCouponRate(cashFlows, Date.NULL_DATE);
+    }
+
+    final public double previousCouponRate(final Leg cashFlows, final Date settlement) {
+        final int cf = previousCashFlow(cashFlows, settlement);
+        return couponRate(cashFlows, cashFlows, cf);
+    }
+
+    final public double nextCouponRate(final Leg leg) {
+        return nextCouponRate(leg, Date.NULL_DATE);
+    }
+
+    final public double nextCouponRate(final Leg cashFlows, final Date settlement) {
+        final int cf = nextCashFlowIndex(cashFlows, settlement);
+        return couponRate(cashFlows, cashFlows, cf);
+    }
+
+    /**
+     * NOTE: should return null when no cashflow could be found!
+     *
+     * @param cashFlows
+     * @param settlement
+     * @return
+     */
+    final public CashFlow nextCashFlow(final Leg cashFlows, Date settlement) {
+        if (settlement == Date.NULL_DATE) {
+            settlement = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        }
+        for (int i = 0; i < cashFlows.size(); ++i) {
+            // the first coupon paying after d is the one we're after
+            if (!cashFlows.get(i).hasOccurred(settlement))
+                return cashFlows.get(i);
+        }
+        return null;// cashFlows.get(cashFlows.size());
+    }
+
+    /**
+     * NOTE: returns the index! for cashflow.end() the returned index would
+     * throw a index out of bounds exception
+     *
+     * @param cashFlows
+     * @param settlement
+     * @return
+     */
+    final public int nextCashFlowIndex(final Leg cashFlows, Date settlement) {
+        if (settlement == Date.NULL_DATE) {
+            settlement = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        }
+        for (int i = 0; i < cashFlows.size(); ++i) {
+            // the first coupon paying after d is the one we're after
+            if (!cashFlows.get(i).hasOccurred(settlement))
+                return i;
+        }
+        return cashFlows.size();
+    }
+
+    final public CashFlow nextCashFlow(final Leg cashFlows) {
+        return nextCashFlow(cashFlows, Date.NULL_DATE);
+    }
+
+    /**
+     * Yield value of a basis point The yield value of a one basis point change
+     * in price is the derivative of the yield with respect to the price
+     * multiplied by 0.01
+     *
+     * @param leg
+     * @param y
+     * @param settlmentDate
+     * @return
+     */
+    final public double yieldValueBasisPoint(final Leg leg, final InterestRate y, final Date settlementDate) {
+        final double shift = 0.01;
+
+        final double dirtyPrice = npv(leg, y, settlementDate);
+        final double modifiedDuration = duration(leg, y, Duration.Modified, settlementDate);
+
+        return (1.0 / (-dirtyPrice * modifiedDuration)) * shift;
+    }
+
+    final public double yieldValueBasisPoint(final Leg leg, final InterestRate y) {
+        return yieldValueBasisPoint(leg, y, Date.NULL_DATE);
+
+    }
+
+    // utility functions
+    final public double couponRate(final Leg leg, final Leg iteratorLeg, final int iteratorIndex) {
+        if (iteratorLeg.size() <= iteratorIndex) {
+            return 0.0;
+        }
+
+        final Date paymentDate = iteratorLeg.get(iteratorIndex).date();
+        boolean firstCouponFound = false;
+        /* @Real */double nominal = Constants.NULL_REAL;
+        /* @Time */double accrualPeriod = Constants.NULL_TIME;
+        DayCounter dc = null;
+        /* @Rate */double result = 0.0;
+
+        for (int i = iteratorIndex; i < leg.size(); i++) {
+            if (iteratorLeg.get(i).date().eq(paymentDate)) {
+                final Coupon cp = (Coupon) (iteratorLeg.get(i));
+                if (cp != null) {
+                    if (firstCouponFound) {
+                        assert nominal == cp.nominal() && accrualPeriod == cp.accrualPeriod() && dc == cp.dayCounter() : "cannot aggregate two different coupons on "
+                                + paymentDate;
+                    }
+                } else {
+                    firstCouponFound = true;
+                    nominal = cp.nominal();
+                    accrualPeriod = cp.accrualPeriod();
+                    dc = cp.dayCounter();
+                }
+                result += cp.rate();
+            }
+        }
+        assert (firstCouponFound) : "next cashflow (" + paymentDate + ") is not a coupon";
+        return result;
+    }
+
+
+    //
+    // private methods
+    //
+
+
+    /**
+     * Basis-point value Obtained by setting dy = 0.0001 in the 2nd-order Taylor
+     * series expansion.
+     *
+     * @param leg
+     * @param y
+     * @param settlementDate
+     * @return
+     */
+    final private double basisPointValue(final Leg leg, final InterestRate y, final Date settlementDate) {
+        /* @Real */final double shift = 0.0001;
+        /* @Real */final double dirtyPrice = npv(leg, y, settlementDate);
+        /* @Real */final double modifiedDuration = duration(leg, y, Duration.Modified, settlementDate);
+        /* @Real */final double convexity = convexity(leg, y, settlementDate);
+
+        /* @Real */double delta = -modifiedDuration * dirtyPrice;
+
+        /* @Real */double gamma = (convexity / 100.0) * dirtyPrice;
+
+        delta *= shift;
+        gamma *= shift * shift;
+
+        return delta + 0.5 * gamma;
+    }
+
+    final private double basisPointValue(final Leg leg, final InterestRate y) {
+        return basisPointValue(leg, y, Date.NULL_DATE);
+    }
+
+
+
 	//
 	// public Enums
 	//
@@ -500,6 +672,7 @@ public class CashFlows {
 	public enum Duration {
 		Simple, Macaulay, Modified
 	}
+
 
 	//
 	// private inner classes
@@ -555,6 +728,25 @@ public class CashFlows {
 		}
 
 		//
+		// private inner classes
+		//
+
+        private class CashFlowVisitor implements Visitor<Object> {
+            @Override
+            public void visit(final Object o) {
+                // nothing
+            }
+        }
+
+        private class CouponVisitor implements Visitor<Object> {
+            @Override
+            public void visit(final Object o) {
+                final Coupon c = (Coupon) o;
+                result += c.accrualPeriod() * c.nominal() * termStructure.getLink().discount(c.date());
+            }
+        }
+
+		//
 		// implements TypedVisitor
 		//
 
@@ -568,190 +760,6 @@ public class CashFlows {
 			throw new AssertionError(UNKNOWN_VISITABLE);
 		}
 
-		//
-		// private inner classes
-		//
-
-		private class CashFlowVisitor implements Visitor<Object> {
-			@Override
-			public void visit(final Object o) {
-				// nothing
-			}
-		}
-
-		private class CouponVisitor implements Visitor<Object> {
-			@Override
-			public void visit(final Object o) {
-				final Coupon c = (Coupon) o;
-				result += c.accrualPeriod() * c.nominal() * termStructure.getLink().discount(c.date());
-			}
-		}
-
 	}
 
-	final public int previousCashFlow(final Leg leg) {
-		return previousCashFlow(leg, Date.NULL_DATE);
-	}
-
-	final public int previousCashFlow(final Leg leg, Date refDate) {
-		if (refDate == Date.NULL_DATE) {
-			refDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		}
-
-		if (!(leg.get(0).hasOccurred(refDate))) {
-			return leg.size();
-		}
-
-		int i = nextCashFlowIndex(leg, refDate);
-		Date beforeLastPaymentDate = leg.get(i - 1).date();// (*--i)->date()-1;
-		return nextCashFlowIndex(leg, beforeLastPaymentDate);
-	}
-
-	final public double previousCouponRate(Leg cashFlows) {
-		return previousCouponRate(cashFlows, Date.NULL_DATE);
-	}
-
-	final public double previousCouponRate(Leg cashFlows, Date settlement) {
-		int cf = previousCashFlow(cashFlows, settlement);
-		return couponRate(cashFlows, cashFlows, cf);
-	}
-
-	final public double nextCouponRate(final Leg leg) {
-		return nextCouponRate(leg, Date.NULL_DATE);
-	}
-
-	final public double nextCouponRate(Leg cashFlows, Date settlement) {
-		int cf = nextCashFlowIndex(cashFlows, settlement);
-		return couponRate(cashFlows, cashFlows, cf);
-	}
-
-	/**
-	 * NOTE: should return null when no cashflow could be found!
-	 * 
-	 * @param cashFlows
-	 * @param settlement
-	 * @return
-	 */
-	final public CashFlow nextCashFlow(Leg cashFlows, Date settlement) {
-		if (settlement == Date.NULL_DATE) {
-			settlement = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		}
-		for (int i = 0; i < cashFlows.size(); ++i) {
-			// the first coupon paying after d is the one we're after
-			if (!cashFlows.get(i).hasOccurred(settlement))
-				return cashFlows.get(i);
-		}
-		return null;// cashFlows.get(cashFlows.size());
-	}
-
-	/**
-	 * NOTE: returns the index! for cashflow.end() the returned index would
-	 * throw a index out of bounds exception
-	 * 
-	 * @param cashFlows
-	 * @param settlement
-	 * @return
-	 */
-	final public int nextCashFlowIndex(Leg cashFlows, Date settlement) {
-		if (settlement == Date.NULL_DATE) {
-			settlement = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		}
-		for (int i = 0; i < cashFlows.size(); ++i) {
-			// the first coupon paying after d is the one we're after
-			if (!cashFlows.get(i).hasOccurred(settlement))
-				return i;
-		}
-		return cashFlows.size();
-	}
-
-	final public CashFlow nextCashFlow(Leg cashFlows) {
-		return nextCashFlow(cashFlows, Date.NULL_DATE);
-	}
-
-	/**
-	 * Basis-point value Obtained by setting dy = 0.0001 in the 2nd-order Taylor
-	 * series expansion.
-	 * 
-	 * @param leg
-	 * @param y
-	 * @param settlementDate
-	 * @return
-	 */
-	final double basisPointValue(final Leg leg, final InterestRate y, Date settlementDate) {
-		/* @Real */double shift = 0.0001;
-		/* @Real */double dirtyPrice = npv(leg, y, settlementDate);
-		/* @Real */double modifiedDuration = duration(leg, y, Duration.Modified, settlementDate);
-		/* @Real */double convexity = convexity(leg, y, settlementDate);
-
-		/* @Real */double delta = -modifiedDuration * dirtyPrice;
-
-		/* @Real */double gamma = (convexity / 100.0) * dirtyPrice;
-
-		delta *= shift;
-		gamma *= shift * shift;
-
-		return delta + 0.5 * gamma;
-	}
-
-	final double basisPointValue(final Leg leg, final InterestRate y) {
-		return basisPointValue(leg, y, Date.NULL_DATE);
-	}
-
-	/**
-	 * Yield value of a basis point The yield value of a one basis point change
-	 * in price is the derivative of the yield with respect to the price
-	 * multiplied by 0.01
-	 * 
-	 * @param leg
-	 * @param y
-	 * @param settlmentDate
-	 * @return
-	 */
-	final public double yieldValueBasisPoint(final Leg leg, final InterestRate y, Date settlementDate) {
-		double shift = 0.01;
-
-		double dirtyPrice = npv(leg, y, settlementDate);
-		double modifiedDuration = duration(leg, y, Duration.Modified, settlementDate);
-
-		return (1.0 / (-dirtyPrice * modifiedDuration)) * shift;
-	}
-
-	final public double yieldValueBasisPoint(final Leg leg, final InterestRate y) {
-		return yieldValueBasisPoint(leg, y, Date.NULL_DATE);
-
-	}
-
-	// //utility functions
-	final public double couponRate(final Leg leg, Leg iteratorLeg, int iteratorIndex) {
-		if (iteratorLeg.size() <= iteratorIndex) {
-			return 0.0;
-		}
-
-		Date paymentDate = iteratorLeg.get(iteratorIndex).date();
-		boolean firstCouponFound = false;
-		/* @Real */double nominal = Constants.NULL_REAL;
-		/* @Time */double accrualPeriod = Constants.NULL_TIME;
-		DayCounter dc = null;
-		/* @Rate */double result = 0.0;
-
-		for (int i = iteratorIndex; i < leg.size(); i++) {
-			if (iteratorLeg.get(i).date().eq(paymentDate)) {
-				Coupon cp = (Coupon) (iteratorLeg.get(i));
-				if (cp != null) {
-					if (firstCouponFound) {
-						assert nominal == cp.nominal() && accrualPeriod == cp.accrualPeriod() && dc == cp.dayCounter() : "cannot aggregate two different coupons on "
-								+ paymentDate;
-					}
-				} else {
-					firstCouponFound = true;
-					nominal = cp.nominal();
-					accrualPeriod = cp.accrualPeriod();
-					dc = cp.dayCounter();
-				}
-				result += cp.rate();
-			}
-		}
-		assert (firstCouponFound) : "next cashflow (" + paymentDate + ") is not a coupon";
-		return result;
-	}
 }

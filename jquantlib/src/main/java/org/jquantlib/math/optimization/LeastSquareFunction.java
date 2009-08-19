@@ -34,7 +34,7 @@ public class LeastSquareFunction extends CostFunction  {
         final Array target = new Array(lsp_.size());
         final Array fct2fit = new Array(lsp_.size());
         // size of gradient matrix
-        final Matrix grad_fct2fit  = new Matrix(lsp_.size(), x.length);
+        final Matrix grad_fct2fit  = new Matrix(lsp_.size(), x.size());
         // compute its values
         lsp_.targetValueAndGradient(x, grad_fct2fit, target, fct2fit);
         // do the difference
@@ -50,7 +50,7 @@ public class LeastSquareFunction extends CostFunction  {
         final Array target = new Array(lsp_.size());
         final Array fct2fit = new Array(lsp_.size());
         // size of gradient matrix
-        final Matrix grad_fct2fit  = new Matrix(lsp_.size (), x.length);
+        final Matrix grad_fct2fit  = new Matrix(lsp_.size (), x.size());
         // compute its values
         lsp_.targetValueAndGradient(x, grad_fct2fit, target, fct2fit);
         // do the difference

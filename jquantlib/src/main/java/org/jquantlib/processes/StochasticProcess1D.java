@@ -46,7 +46,7 @@ import org.jquantlib.math.matrixutilities.Matrix;
 
 
 /**
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class StochasticProcess1D extends StochasticProcess {
@@ -69,7 +69,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     public abstract /*@Price*/ double x0();
 
     /**
-     * 
+     *
      * Returns the drift part of the equation
      * {@latex$ \mu(t, x_t) }
      */
@@ -156,48 +156,48 @@ public abstract class StochasticProcess1D extends StochasticProcess {
 
     @Override
     public final /*@Price*/ Array drift(final /*@Time*/ double t, /*@Price*/ final Array x) {
-        assert x.length==1 : ARRAY_1D_REQUIRED;
+        assert x.size()==1 : ARRAY_1D_REQUIRED;
         return new Array().fill( drift(t, x.first()) );
     }
 
     @Override
     public final /*@Diffusion*/ Matrix diffusion(final /*@Time*/ double t, /*@Price*/ final Array x) {
-        assert x.length==1 : ARRAY_1D_REQUIRED;
+        assert x.size()==1 : ARRAY_1D_REQUIRED;
         final double v = diffusion(t, x.first());
         return new Matrix(1, 1).fill(v);
     }
 
     @Override
     public final /*@Expectation*/ Array expectation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
-        assert x0.length==1 : ARRAY_1D_REQUIRED;
+        assert x0.size()==1 : ARRAY_1D_REQUIRED;
         return new Array().fill( expectation(t0, x0.first(), dt) );
     }
 
     @Override
     public final /*@StdDev*/ Matrix stdDeviation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
-        assert x0.length==1 : ARRAY_1D_REQUIRED;
+        assert x0.size()==1 : ARRAY_1D_REQUIRED;
         final double v = stdDeviation(t0, x0.first(), dt);
         return new Matrix(1, 1).fill(v);
     }
 
     @Override
     public final /*@Covariance*/ Matrix covariance(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
-        assert x0.length==1 : ARRAY_1D_REQUIRED;
+        assert x0.size()==1 : ARRAY_1D_REQUIRED;
         final double v = discretization1D.varianceDiscretization(this, t0, x0.first(), dt);
         return new Matrix(1, 1).fill(v);
     }
 
     @Override
     public final Array evolve(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt, final Array dw) {
-        assert x0.length==1 : ARRAY_1D_REQUIRED;
-        assert dw.length==1 : ARRAY_1D_REQUIRED;
+        assert x0.size()==1 : ARRAY_1D_REQUIRED;
+        assert dw.size()==1 : ARRAY_1D_REQUIRED;
         return new Array().fill( evolve(t0, x0.first(), dt, dw.first()) );
     }
 
     @Override
     public final /*@Price*/ Array apply(final /*@Price*/ Array x0, final Array dx) {
-        assert x0.length==1 : ARRAY_1D_REQUIRED;
-        assert dx.length==1 : ARRAY_1D_REQUIRED;
+        assert x0.size()==1 : ARRAY_1D_REQUIRED;
+        assert dx.size()==1 : ARRAY_1D_REQUIRED;
         return new Array().fill( apply(x0.first(), dx.first()) );
     }
 

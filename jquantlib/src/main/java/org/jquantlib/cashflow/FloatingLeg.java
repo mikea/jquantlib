@@ -41,11 +41,11 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
         //
 
         final int n = schedule.size() - 1;
-        assert nominals.length <= n : "too many nominals";
-        assert gearings.length <= n : "too many gearings";
-        assert spreads.length <= n  : "too many spreads";
-        assert caps.length <= n     : "too many caps";
-        assert floors.length <= n   : "too many floors";
+        assert nominals.size() <= n : "too many nominals";
+        assert gearings.size() <= n : "too many gearings";
+        assert spreads.size() <= n  : "too many spreads";
+        assert caps.size() <= n     : "too many caps";
+        assert floors.size() <= n   : "too many floors";
         assert !isZero || !isInArrears : "features in-arrears and zero are not compatible";
 
         // the following is not always correct (orignial c++ comment)

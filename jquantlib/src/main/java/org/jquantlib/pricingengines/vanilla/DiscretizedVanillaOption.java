@@ -30,7 +30,7 @@ import org.jquantlib.time.TimeGrid;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 public class DiscretizedVanillaOption extends DiscretizedAsset {
 
@@ -81,7 +81,7 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
 
     void applySpecificCondition() {
         final Array grid = method().grid(time());
-        for (int j=0; j<values.length; j++)
+        for (int j=0; j<values.size(); j++)
             values.set(j, Math.max(values.get(j), arguments.payoff.valueOf(grid.get(j))));
     }
 

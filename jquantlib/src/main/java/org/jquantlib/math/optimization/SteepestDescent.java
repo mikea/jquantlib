@@ -42,7 +42,7 @@ public class SteepestDescent extends LineSearchBasedMethod {
         Array x_ = P.currentValue();
         int iterationNumber = 0;
         final int stationaryStateIterationNumber_ = 0;
-        lineSearch_.setSearchDirection(new Array(x_.length));
+        lineSearch_.setSearchDirection(new Array(x_.size()));
         boolean end = false;
 
         // function and squared norm of gradient values
@@ -50,8 +50,8 @@ public class SteepestDescent extends LineSearchBasedMethod {
         // classical initial value for line-search step
         double t = 1.0;
         // set gold at the size of the optimization problem search direction
-        Array gold  = new Array(lineSearch_.searchDirection().length);
-        Array gdiff = new Array(lineSearch_.searchDirection().length);
+        Array gold  = new Array(lineSearch_.searchDirection().size());
+        Array gdiff = new Array(lineSearch_.searchDirection().size());
 
         P.setFunctionValue(P.valueAndGradient(gold, x_));
         lineSearch_.searchDirection_ = gold.mul(-1);

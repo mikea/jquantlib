@@ -52,12 +52,12 @@ import org.jquantlib.util.Date;
  * // instantiate an anonymous class :: notice '{ braces }' below
  * PricingEngine engine = new BinomialVanillaEngine<Trigeorgis>(timeSteps) {} ;
  * </pre>
- * 
+ *
  * @category vanillaengines
- * 
+ *
  * @test the correctness of the returned values is tested by
  *       checking it against analytic results.
- * 
+ *
  * @todo Greeks are not overly accurate. They could be improved
  *       by building a tree so that it has three points at the
  *       current time. The value would be fetched from the middle
@@ -151,7 +151,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         option.rollback(grid.at(2));
         // TODO: code review :: verifuy use of clone()
         final Array va2 = option.values().clone();
-        assert va2.length == 3 : "expect 3 nodes in grid at second step";
+        assert va2.size() == 3 : "expect 3 nodes in grid at second step";
         final double p2h = va2.get(2); // high-price
         final double s2 = lattice.underlying(2, 2); // high price
 
@@ -159,7 +159,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         option.rollback(grid.at(1));
         // TODO: code review :: verifuy use of clone()
         final Array va = option.values().clone();
-        assert va.length == 2 : "expect 2 nodes in grid at first step";
+        assert va.size() == 2 : "expect 2 nodes in grid at first step";
         final double p1 = va.get(1);
 
         // Finally, rollback to t=0

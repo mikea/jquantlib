@@ -67,70 +67,72 @@ public class OperatorTest {
 	public void testConsistency() {
 
     logger.info("Testing differential operators...");
-    
-    double average = 0.0, sigma = 1.0;
 
-    NormalDistribution normal = new NormalDistribution(average,sigma);
-    CumulativeNormalDistribution cum = new CumulativeNormalDistribution(average,sigma);
+    final double average = 0.0, sigma = 1.0;
 
-    double xMin = average - 4*sigma,
+    final NormalDistribution normal = new NormalDistribution(average,sigma);
+    final CumulativeNormalDistribution cum = new CumulativeNormalDistribution(average,sigma);
+
+    final double xMin = average - 4*sigma,
          xMax = average + 4*sigma;
-    int N = 10001;
-    double h = (xMax-xMin)/(N-1);
+    final int N = 10001;
+    final double h = (xMax-xMin)/(N-1);
 
-    Array x = new Array(N), y = new Array(N), yi = new Array(N), yd = new Array(N), temp = new Array(N), diff = new Array(N);
+    final Array x = new Array(N), y = new Array(N), yi = new Array(N), yd = new Array(N);
+    Array temp = new Array(N);
+    final Array diff = new Array(N);
 
     int i;
-    for(i=0; i < x.length; i++)
+    for(i=0; i < x.size(); i++)
         x.set(i, xMin+h*i);
-    
-    for(i = 0; i < x.length; i++)
+
+    for(i = 0; i < x.size(); i++)
     	y.set(i, normal.op(x.get(i)));
 
-    for(i = 0; i < x.length; i++)
+    for(i = 0; i < x.size(); i++)
     	yi.set(i, cum.op(x.get(i)));
-    
-    for (i=0; i < x.length; i++)
+
+    for (i=0; i < x.size(); i++)
         yd.set(i, normal.derivative(x.get(i)));
 
     // define the differential operators
-    DZero D = new DZero(N,h);
-    DPlusMinus D2 = new DPlusMinus(N,h);
+    final DZero D = new DZero(N,h);
+    final DPlusMinus D2 = new DPlusMinus(N,h);
 
     // check that the derivative of cum is Gaussian
     temp = D.applyTo(yi);
-    for (i=0; i < y.length; i++)
+    for (i=0; i < y.size(); i++)
     	diff.set(i, y.get(i) - temp.get(i));
 
     double e = norm(diff, h);
-    
+
 
     if (e > 1.0e-6) {
         fail("norm of 1st derivative of cum minus Gaussian: " + e + "\ntolerance exceeded");
     }
-    
+
     // check that the second derivative of cum is normal.derivative
     temp = D2.applyTo(yi);
-    for (i=0; i < yd.length; i++)
+    for (i=0; i < yd.size(); i++)
     	diff.set(i, yd.get(i) - temp.get(i));
     e = norm(diff, h);
     if (e > 1.0e-4) {
     	fail("norm of 2nd derivative of cum minus Gaussian derivative: " + e + "\ntolerance exceeded");
     }
-    
-      
+
+
 	}
-	public void dumpArray(Array arr) {
-        for(int i = 0; i < arr.length; i++) {
+	public void dumpArray(final Array arr) {
+        for(int i = 0; i < arr.size(); i++) {
             logger.info("**** arr[" + i + "] = " + arr.get(i) );
         }
 	}
-	
-	public void outputDiagonals(TridiagonalOperator op) {
+
+	public void outputDiagonals(final TridiagonalOperator op) {
 	    logger.info("\n");
         String str = "[";
         Array data = op.lowerDiagonal();
-        for(int i = 0; i < data.length; i++) {
+        for(int i = 0; i < data.size(); i++) {
             str += String.format(" %.4f ", data.get(i));
         }
         str += "]";
@@ -138,78 +140,78 @@ public class OperatorTest {
 
         str = "[";
         data = op.diagonal();
-        for(int i = 0; i < data.length; i++) {
+        for(int i = 0; i < data.size(); i++) {
             str += String.format(" %.4f ", data.get(i));
         }
         str += "]";
         logger.info(str);
-	    
+
         str = "[";
         data = op.upperDiagonal();
-        for(int i = 0; i < data.length; i++) {
+        for(int i = 0; i < data.size(); i++) {
             str += String.format(" %.4f ", data.get(i));
         }
         str += "]";
         logger.info(str);
-	    
+
 	}
-	
+
 	@Test
 	public void testBSMOperatorConsistency() throws Exception {
 	    logger.info("Testing consistency of BSM operators...");
 
-		Array grid = new Array(10);
+		final Array grid = new Array(10);
 		double price = 20.0;
-		double factor = 1.1;
+		final double factor = 1.1;
 		int i;
-		for (i = 0; i < grid.length; i++) {
+		for (i = 0; i < grid.size(); i++) {
 			grid.set(i, price);
 			price *= factor;
 		}
 
-		double dx = Math.log(factor);
-		double r = 0.05;
-		double q = 0.01;
-		double sigma = 0.5;
-		
-		BSMOperator ref = new BSMOperator(grid.length, dx, r, q, sigma);
+		final double dx = Math.log(factor);
+		final double r = 0.05;
+		final double q = 0.01;
+		final double sigma = 0.5;
+
+		final BSMOperator ref = new BSMOperator(grid.size(), dx, r, q, sigma);
         logger.info("BSMOperator reference diagonals: \n");
         outputDiagonals(ref);
-		
-		DayCounter dc = Actual360.getDayCounter();
-		
-		Date today = DateFactory.getFactory().getTodaysDate();
+
+		final DayCounter dc = Actual360.getDayCounter();
+
+		final Date today = DateFactory.getFactory().getTodaysDate();
 
 		Date exercise = DateFactory.getFactory().getDate(today.getDayOfMonth(),
 				today.getMonth(), today.getYear());
 		exercise = exercise.adjust(new Period(2,TimeUnit.YEARS));
 
 
-		double residualTime = dc.yearFraction(today, exercise);
+		final double residualTime = dc.yearFraction(today, exercise);
 
-		SimpleQuote spot = new SimpleQuote(0.0);
-		YieldTermStructure qTS = flatRate(today, q, dc);
-		YieldTermStructure rTS = flatRate(today, r, dc);
-		
-		BlackVolTermStructure volTS = flatVol(today, sigma, dc);
-		
-		GeneralizedBlackScholesProcess stochProcess = new GeneralizedBlackScholesProcess(
+		final SimpleQuote spot = new SimpleQuote(0.0);
+		final YieldTermStructure qTS = flatRate(today, q, dc);
+		final YieldTermStructure rTS = flatRate(today, r, dc);
+
+		final BlackVolTermStructure volTS = flatVol(today, sigma, dc);
+
+		final GeneralizedBlackScholesProcess stochProcess = new GeneralizedBlackScholesProcess(
 										   new Handle<Quote>(spot),
 										   new Handle<YieldTermStructure>(qTS),
 										   new Handle<YieldTermStructure>(rTS),
 										   new Handle<BlackVolTermStructure>(volTS));
-		
-		BSMOperator op1 = new BSMOperator(grid, stochProcess, residualTime);		
+
+		final BSMOperator op1 = new BSMOperator(grid, stochProcess, residualTime);
 		logger.info("BSMOperator diagonals: \n");
 		outputDiagonals(op1);
-		
-		BSMTermOperator op2 = new BSMTermOperator(grid, stochProcess, residualTime);
-	
+
+		final BSMTermOperator op2 = new BSMTermOperator(grid, stochProcess, residualTime);
+
 		logger.info("PdeOperator diagonals: \n");
 		outputDiagonals(op2);
-		
-		double tolerance = 1.0e-6;
-		
+
+		final double tolerance = 1.0e-6;
+
 		Array lderror = ref.lowerDiagonal().clone();
         lderror.subAssign(op1.lowerDiagonal());
         Array derror = ref.diagonal().clone();
@@ -217,36 +219,36 @@ public class OperatorTest {
         Array uderror = ref.upperDiagonal().clone();
         uderror.subAssign(op1.upperDiagonal());
 
-		
-		for (i=2; i<grid.length-2; i++) {
+
+		for (i=2; i<grid.size()-2; i++) {
 		    logger.info("lderror(" + i + ") = "+ Math.abs(lderror.get(i)) +  " tolerance " + tolerance + " \n");
 		    logger.info("derror(" + i + ") = "+ Math.abs(derror.get(i)) + " tolerance " + tolerance + " \n");
 		    logger.info("uderror(" + i + ") = "+ Math.abs(uderror.get(i)) + " tolerance " + tolerance + " \n");
-		    
+
 			if (Math.abs(lderror.get(i)) > tolerance ||
 				Math.abs(derror.get(i)) > tolerance ||
 				Math.abs(uderror.get(i)) > tolerance) {
-			    
-				fail("inconsistency between BSM operators:\n"  
-				           + Integer.toString(i) +  " row:\n" 
+
+				fail("inconsistency between BSM operators:\n"
+				           + Integer.toString(i) +  " row:\n"
 						   + "expected:   " + ref.lowerDiagonal().get(i) + ", " + ref.diagonal().get(i) + ", " + ref.upperDiagonal().get(i) + "\n"
 						   + "calculated: " + op1.lowerDiagonal().get(i) + ", " + op1.diagonal().get(i) + ", " + op1.upperDiagonal().get(i));
 			}
 		}
-		
+
 		lderror = ref.lowerDiagonal();
 		lderror.subAssign(op2.lowerDiagonal());
 		derror = ref.diagonal();
 		derror.subAssign(op2.diagonal());
 		uderror = ref.upperDiagonal();
 		uderror.subAssign(op2.upperDiagonal());
-		
 
-		for (i=2; i<grid.length-2; i++) {
+
+		for (i=2; i<grid.size()-2; i++) {
 			if (Math.abs(lderror.get(i)) > tolerance ||
 				Math.abs(derror.get(i)) > tolerance ||
 				Math.abs(uderror.get(i)) > tolerance) {
-			    
+
 				fail("inconsistency between BSM operators:\n"
 						   + Integer.toString(i) + " row:\n"
 						   + "expected:   " + ref.lowerDiagonal().get(i) + ", " + ref.diagonal().get(i) + ", " + ref.upperDiagonal().get(i) + "\n"
@@ -255,34 +257,34 @@ public class OperatorTest {
 		}
     }
 
-    
-    private double norm(Array arr, double h) {
+
+    private double norm(final Array arr, final double h) {
     	//copy arr into f2, and square each value
-    	Array f2 = new Array(arr.length); 
-    	for(int i = 0; i < arr.length; i++)
+    	final Array f2 = new Array(arr.size());
+    	for(int i = 0; i < arr.size(); i++)
     	{
-    		double d = arr.get(i);
+    		final double d = arr.get(i);
     		f2.set(i, d*d);
     	}
         // squared values
         //std::vector<Real> f2(end-begin);
         //std::transform(begin,end,begin,f2.begin(),
         //               std::multiplies<Real>());
-        
+
     	// numeric integral of f^2
         //double I = h * (std::accumulate(f2.begin(),f2.end(),0.0)
         //              - 0.5*f2.front() - 0.5*f2.back());
     	//I believe this code is adding together the values in f2 (initialized to 0.0)
     	//then subtracting 0.5 * front() and also subtracting 0.5 * back()
     	double I = 0;
-    	for(int i = 0; i < f2.length; i++)
+    	for(int i = 0; i < f2.size(); i++)
     		I += f2.get(i);
-    	
+
     	//not sure about this...
-    	I -= 0.5 * f2.first();	
+    	I -= 0.5 * f2.first();
     	I -= 0.5 * f2.last();
     	I *= h;
-    	
+
         return Math.sqrt(I);
     }
 
@@ -292,7 +294,7 @@ public class OperatorTest {
         return new FlatForward(today, new Handle<Quote>(forward), dc);
     }
 
-    private YieldTermStructure  flatRate(final Date today, double forward, final DayCounter dc) {
+    private YieldTermStructure  flatRate(final Date today, final double forward, final DayCounter dc) {
         return flatRate(today, new SimpleQuote(forward), dc);
     }
 
@@ -311,16 +313,16 @@ public class OperatorTest {
 
 
 	BlackVolTermStructure flatVol(final Date today,
-	        Quote vol,
+	        final Quote vol,
 	        final DayCounter dc) {
 	    return new BlackConstantVol(today, new Handle<Quote>(vol), dc);
 	}
-	
-	BlackVolTermStructure flatVol(final Date today, double /*Volatility*/ vol,
+
+	BlackVolTermStructure flatVol(final Date today, final double /*Volatility*/ vol,
 	        final DayCounter dc) {
         return flatVol(today, new SimpleQuote(vol), dc);
 	}
-	
+
 }
 
 /*test_suite* OperatorTest::suite() {

@@ -56,11 +56,11 @@ import org.jquantlib.util.Visitor;
 /**
  * This class calculates time/strike dependent Black volatilities using as input
  * a matrix of Black volatilities observed in the market.
- * 
+ *
  * The calculation is performed interpolating on the variance surface. Bilinear
  * interpolation is used as default; this can be changed by the
  * setInterpolation() method.
- * 
+ *
  * @author Richard Gomes
  */
 // TODO: check time extrapolation
@@ -108,8 +108,8 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
             final Extrapolation upperExtrapolation) {
 
         super(referenceDate);
-        assert dates.length == blackVolMatrix.cols : "mismatch between date vector and vol matrix colums";
-        assert strikes.length == blackVolMatrix.rows : "mismatch between money-strike vector and vol matrix rows";
+        assert dates.length == blackVolMatrix.columns() : "mismatch between date vector and vol matrix colums";
+        assert strikes.size() == blackVolMatrix.rows() : "mismatch between money-strike vector and vol matrix rows";
         assert dates[0].gt(referenceDate) : "cannot have dates[0] <= referenceDate";
 
         this.dayCounter = dayCounter;
@@ -121,16 +121,16 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
 
         this.times = new Array(dates.length+1); // TODO: verify if length is correct
-        this.variances = new Matrix(strikes.length, dates.length+1); // TODO: verify if length is correct
-        this.strikes = new Array(strikes.length+1); // TODO: verify if length is correct
+        this.variances = new Matrix(strikes.size(), dates.length+1); // TODO: verify if length is correct
+        this.strikes = new Array(strikes.size()+1); // TODO: verify if length is correct
 
-        for(int i = 1; i < strikes.length+1; i++)
+        for(int i = 1; i < strikes.size()+1; i++)
             this.strikes.set(i, strikes.get(i-1));
 
-        for (int j = 1; j <= blackVolMatrix.cols; j++) {
+        for (int j = 1; j <= blackVolMatrix.columns(); j++) {
             times.set(j, timeFromReference(dates[j-1]));
             assert times.get(j) > times.get(j-1) : "dates must be sorted unique!";
-            for (int i = 0; i < blackVolMatrix.rows; i++) {
+            for (int i = 0; i < blackVolMatrix.rows(); i++) {
                 final double elem = blackVolMatrix.get(i, j-1);
                 final double ijvar = times.get(j) * elem * elem;
                 variances.set(i, j, ijvar);

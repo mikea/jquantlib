@@ -64,7 +64,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     /**
      * This method intentionally throws UnsupportedOperationException in order to
      * oblige derived classes to reimplement it if needed.
-     * 
+     *
      * @throws UnsupportedOperationException
      */
     public void calculate() {
@@ -81,10 +81,10 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
      * This method verifies if
      * <li> extrapolation is enabled;</li>
      * <li> requested <i>x</i> is valid</li>
-     * 
+     *
      * @param x
      * @param extrapolate
-     * 
+     *
      * @throws IllegalStateException if extrapolation is not enabled.
      * @throws IllegalArgumentException if <i>x</i> is our of range
      */
@@ -111,7 +111,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @deprecated
      */
     @Deprecated
@@ -127,8 +127,8 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 
     @Override
     public void reload() {
-        assert vx.length >= 2 && vy.length >= 2 : "not enough points to interpolate"; // TODO: message
-        for (int i = 0; i < vx.length-1; i++) {
+        assert vx.size() >= 2 && vy.size() >= 2 : "not enough points to interpolate"; // TODO: message
+        for (int i = 0; i < vx.size()-1; i++) {
             assert vx.get(i) <= vx.get(i+1) : "unsorted values on array X";
             assert vy.get(i) <= vy.get(i+1) : "unsorted values on array Y";
         }
@@ -152,7 +152,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 
     /**
      * Implements multiple inheritance via delegate pattern to an inner class
-     * 
+     *
      * @see Extrapolator
      */
     private final DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();
@@ -219,7 +219,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         if (x <= vx.first())
             return 0;
         else if (x > vx.last())
-            return vx.length-2;
+            return vx.size()-2;
         else
             return vx.upperBound(x) - 1;
     }
@@ -230,7 +230,7 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         if (y <= vy.first())
             return 0;
         else if (y > vy.last())
-            return vy.length-2;
+            return vy.size()-2;
         else
             return vy.upperBound(y) - 1;
     }

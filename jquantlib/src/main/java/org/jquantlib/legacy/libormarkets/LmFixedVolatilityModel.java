@@ -31,15 +31,15 @@ public class LmFixedVolatilityModel extends LmVolatilityModel {
     private final Array startTimes_;
 
     public LmFixedVolatilityModel(final Array volatilities, final Array startTimes) {
-        super(startTimes.length, 0);
+        super(startTimes.size(), 0);
         // TODO: code review :: use of clone()
         this.volatilities_ = volatilities;
         this.startTimes_ = startTimes;
 
-        assert startTimes_.length>1 : "too few dates"; // TODO: message
-        assert volatilities_.length == startTimes_.length : "volatility array and fixing time array have to have the same size"; // TODO: message
+        assert startTimes_.size()>1 : "too few dates"; // TODO: message
+        assert volatilities_.size() == startTimes_.size() : "volatility array and fixing time array have to have the same size"; // TODO: message
 
-        for (int i = 1; i < startTimes_.length; i++)
+        for (int i = 1; i < startTimes_.size(); i++)
             if(startTimes_.get(i) <= startTimes_.get(i-1))
                 throw new IllegalArgumentException("invalid time (" + startTimes_.get(i) + ", vs " + startTimes_.get(i) + ")");
     }
@@ -59,7 +59,7 @@ public class LmFixedVolatilityModel extends LmVolatilityModel {
         for (int i = ti; i < size_; ++i)
             tmp.set(i, volatilities_.get(i - ti));
         final Array ret = new Array();
-        for (int i = 0; i < tmp.length; i++)
+        for (int i = 0; i < tmp.size(); i++)
             ret.set(i, tmp.get(i));
         return ret;
     }

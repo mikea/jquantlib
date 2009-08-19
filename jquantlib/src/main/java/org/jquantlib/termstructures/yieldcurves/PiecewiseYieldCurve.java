@@ -568,7 +568,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             super(dates[0], cal, dayCounter);
 
             assert dates.length > 1 : "too few dates"; // TODO: message
-            assert dates.length == discounts.length : "dates/discount factors count mismatch"; // TODO: message
+            assert dates.length == discounts.size() : "dates/discount factors count mismatch"; // TODO: message
             assert discounts.first() == 1.0 : "the first discount must be == 1.0 to flag the corrsponding date as settlement date"; // TODO: message
 
             isNegativeRates = settings.isNegativeRates();
@@ -684,7 +684,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             // FIXME: code review: calendar
             super(dates[0], Target.getCalendar(), dayCounter);
             assert dates.length > 1 : "too few dates"; // TODO: message
-            assert dates.length == forwards.length : "dates/yields count mismatch"; // TODO: message
+            assert dates.length == forwards.size() : "dates/yields count mismatch"; // TODO: message
 
             isNegativeRates = settings.isNegativeRates();
             container.times = new Array(dates.length);

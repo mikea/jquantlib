@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -42,7 +42,7 @@ public class TridiagonalOperator implements Operator {
 	protected Array diagonal;
 	protected Array upperDiagonal;
 
-	public TridiagonalOperator(int size) {
+	public TridiagonalOperator(final int size) {
 		if (size >= 3) {
 			this.lowerDiagonal = new Array(size - 1);
 			this.diagonal = new Array(size);
@@ -57,27 +57,27 @@ public class TridiagonalOperator implements Operator {
 
 	}
 
-	public TridiagonalOperator(Array ldiag, Array diag, Array udiag) {
-		if (ldiag.length != diag.length - 1) throw new IllegalStateException("wrong size for lower diagonal");
-		if (udiag.length != diag.length - 1) throw new IllegalStateException("wrong size for upper diagonal");
+	public TridiagonalOperator(final Array ldiag, final Array diag, final Array udiag) {
+		if (ldiag.size() != diag.size() - 1) throw new IllegalStateException("wrong size for lower diagonal");
+		if (udiag.size() != diag.size() - 1) throw new IllegalStateException("wrong size for upper diagonal");
 		this.lowerDiagonal = ldiag;
 		this.diagonal = diag;
 		this.upperDiagonal = udiag;
 	}
 
-	public TridiagonalOperator(TridiagonalOperator t) {
+	public TridiagonalOperator(final TridiagonalOperator t) {
 		this.diagonal = t.diagonal();
 		this.upperDiagonal = t.upperDiagonal();
 		this.lowerDiagonal = t.lowerDiagonal();
 		this.timeSetter = t.getTimeSetter();
 	}
 
-	public void setFirstRow(double b, double c) {
+	public void setFirstRow(final double b, final double c) {
 		diagonal.set(0, b);
 		upperDiagonal.set(0, c);
 	}
 
-	public void setMidRow(int size, double a, double b, double c) {
+	public void setMidRow(final int size, final double a, final double b, final double c) {
 
 		if (!(size >= 1 && size <= size() - 2))
 			throw new IllegalStateException("out of range in setMidRow");
@@ -88,7 +88,7 @@ public class TridiagonalOperator implements Operator {
 
 	}
 
-	public void setMidRows(double a, double b, double c) {
+	public void setMidRows(final double a, final double b, final double c) {
 		for (int i = 1; i <= size() - 2; i++) {
 			lowerDiagonal.set(i - 1, a);
 			diagonal.set(i, b);
@@ -96,7 +96,7 @@ public class TridiagonalOperator implements Operator {
 		}
 	}
 
-	public void setLastRow(double a, double b) {
+	public void setLastRow(final double a, final double b) {
 		lowerDiagonal.set(size() - 2, a);
 		diagonal.set(size() - 1, b);
 	}
@@ -121,10 +121,10 @@ public class TridiagonalOperator implements Operator {
 	//
 	// implements Operator
 	//
-	
+
     @Override
     public int size() {
-        return diagonal.length;
+        return diagonal.size();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class TridiagonalOperator implements Operator {
     }
 
 	@Override
-	public void setTime(double t) {
+	public void setTime(final double t) {
 		if (timeSetter != null) {
 			timeSetter.setTime(t, this);
 		}
@@ -158,7 +158,7 @@ public class TridiagonalOperator implements Operator {
 	}
 
     @Override
-    public Operator multiply(double a) {
+    public Operator multiply(final double a) {
         final Array low  = lowerDiagonal.mul(a);
         final Array mid  = diagonal.mul(a);
         final Array high = upperDiagonal.mul(a);
@@ -202,7 +202,7 @@ public class TridiagonalOperator implements Operator {
 //    public Operator multiply(final Operator D, double a) {
 //		return multiply(a, D);
 //	}
-//	
+//
 //    @Override
 //	public Operator divide(final Operator op, double a) {
 //		TridiagonalOperator D = (TridiagonalOperator) op;
@@ -265,8 +265,8 @@ public class TridiagonalOperator implements Operator {
 	 * Identity instance
 	 */
     @Override
-	public TridiagonalOperator identity(int size) {
-		TridiagonalOperator I = new TridiagonalOperator(
+	public TridiagonalOperator identity(final int size) {
+		final TridiagonalOperator I = new TridiagonalOperator(
 				new Array(size-1),         // lower diagonal
 				new Array(size).fill(1.0), // diagonal
 				new Array(size-1));        // upper diagonal
@@ -274,8 +274,8 @@ public class TridiagonalOperator implements Operator {
 	}
 
     @Override
-	public void swap(Operator from) {
-		TridiagonalOperator D = (TridiagonalOperator) from;
+	public void swap(final Operator from) {
+		final TridiagonalOperator D = (TridiagonalOperator) from;
 		this.diagonal.swap(D.diagonal);
 		this.lowerDiagonal.swap(D.lowerDiagonal);
 		this.upperDiagonal.swap(D.upperDiagonal);
@@ -295,8 +295,8 @@ public class TridiagonalOperator implements Operator {
 
     @Override
 	public Array applyTo(final Array v) /*@ReadOnly*/ {
-		if (v.length != size())
-			throw new IllegalStateException("vector of the wrong size (" + v.length + "instead of " + size() + ")");
+		if (v.size() != size())
+			throw new IllegalStateException("vector of the wrong size (" + v.size() + "instead of " + size() + ")");
 
 		// result = diagonal * v
 		final Array result = this.diagonal.mul(v);

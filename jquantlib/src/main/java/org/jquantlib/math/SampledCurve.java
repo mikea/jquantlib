@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * This class contains a sampled curve.
  * <p>
  * Initially the class will contain one indexed curve
- * 
+ *
  * @author Dominik Holenstein
  */
 public class SampledCurve {
@@ -77,12 +77,12 @@ public class SampledCurve {
     public SampledCurve(final Array grid) {
         // TODO: code review :: use of clone()
         this.grid   = grid;
-        this.values = new Array(this.grid.length);
+        this.values = new Array(this.grid.size());
     }
 
     /**
      * Copy constructor
-     * 
+     *
      * @param that
      */
     public SampledCurve(final SampledCurve that) {
@@ -103,7 +103,7 @@ public class SampledCurve {
     }
 
     public int size() {
-        return grid.length;
+        return grid.size();
     }
 
     public SampledCurve swap(final SampledCurve another) {
@@ -147,7 +147,7 @@ public class SampledCurve {
     }
 
     public <T extends Ops.DoubleOp> void sample(final T func) {
-        for (int i = 0; i < this.grid.length; i++) {
+        for (int i = 0; i < this.grid.size(); i++) {
             final double v = func.op(grid.get(i));
             this.values.set(i, v);
         }
@@ -201,7 +201,7 @@ public class SampledCurve {
 
     /**
      * @note This method modifies contents of parameter newGrid
-     * 
+     *
      * @param newGrid
      * @param f
      */
@@ -220,7 +220,7 @@ public class SampledCurve {
         final CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(transformed, this.values);
         priceSpline.update();
 
-        for (int i=0; i<newValues.length; i++)
+        for (int i=0; i<newValues.size(); i++)
             newValues.set(i, priceSpline.evaluate(newValues.get(i), true) );
 
         this.grid.swap(newGrid);

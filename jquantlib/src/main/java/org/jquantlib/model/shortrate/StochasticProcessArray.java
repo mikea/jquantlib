@@ -34,7 +34,7 @@ import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.util.Date;
 
 /**
- * 
+ *
  * @author Praneet Tiwari
  */
 // TODO: code review :: please verify against original QL/C++ code
@@ -54,7 +54,7 @@ public class StochasticProcessArray extends StochasticProcess {
             throw new UnsupportedOperationException("Work in progress");
 
         assert !processes.isEmpty() : no_process_given;
-        assert correlation.rows == processes.size() : mismatch_processnumber_sizecorrelationmatrix;
+        assert correlation.rows() == processes.size() : mismatch_processnumber_sizecorrelationmatrix;
 
         for (int i=0; i<processes_.size(); i++)
             processes_.get(i).addObserver(this);

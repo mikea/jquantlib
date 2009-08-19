@@ -32,7 +32,7 @@ import org.jquantlib.math.matrixutilities.Array;
  * Interpolations are not instantiated directly by applications, but via a factory class.
  *
  * @see BackwardFlat
- * 
+ *
  * @author Richard Gomes
  */
 public class BackwardFlatInterpolation extends AbstractInterpolation {
@@ -52,7 +52,7 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
      * Constructor for a backward-flat interpolation between discrete points
      * <p>
      * Interpolations are not instantiated directly by applications, but via a factory class.
-     * 
+     *
      * @see BackwardFlat
      */
     private BackwardFlatInterpolation() {
@@ -66,7 +66,7 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 
     /**
      * This is a factory method intended to create this interpolation.
-     * 
+     *
      * @see BackwardFlat
      */
     static public Interpolator getInterpolator() /* @ReadOnly */ {
@@ -81,16 +81,16 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
      */
     @Override
     public void update() {
         super.update();
 
-        vp = new Array(vx.length);
+        vp = new Array(vx.size());
         vp.set(0, 0.0);
-        for (int i=1; i<vx.length; i++) {
+        for (int i=1; i<vx.size(); i++) {
             final double dx = vx.get(i) - vx.get(i-1);
             vp.set(i, vp.get(i-1) + dx*vy.get(i));
         }
@@ -135,7 +135,7 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 
     /**
      * This class is a default implementation for {@link BackwardFlatInterpolation} instances.
-     * 
+     *
      * @author Richard Gomes
      */
 
@@ -148,13 +148,13 @@ public class BackwardFlatInterpolation extends AbstractInterpolation {
 
         @Override
         public final Interpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
-            return interpolate(x.length, x, y);
+            return interpolate(x.size(), x, y);
         }
 
         @Override
         public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
-            delegate.vx = x.copyOfRange(0, size);
-            delegate.vy = y.copyOfRange(0, size);
+            delegate.vx = x.range(0, size);
+            delegate.vy = y.range(0, size);
             delegate.update();
             return delegate;
         }

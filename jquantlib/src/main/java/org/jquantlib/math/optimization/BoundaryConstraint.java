@@ -14,7 +14,7 @@ public class BoundaryConstraint extends Constraint {
 
     @Override
     public boolean test(final Array array) /* @ReadOnly */ {
-        for (int i=0; i<array.length; i++)
+        for (int i=0; i<array.size(); i++)
             if ((array.get(i) < low) || (array.get(i) > high))
                 return false;
         return true;

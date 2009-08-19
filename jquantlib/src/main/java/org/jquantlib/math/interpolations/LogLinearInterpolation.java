@@ -30,9 +30,9 @@ import org.jquantlib.math.matrixutilities.Array;
  * This class provides log-linear interpolation between discrete points
  * <p>
  * Interpolations are not instantiated directly by applications, but via a factory class.
- * 
+ *
  * @see LogLinear
- * 
+ *
  * @author Dominik Holenstein
  * @author Richard Gomes
  */
@@ -54,7 +54,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
      * Constructor for a backward-flat interpolation between discrete points
      * <p>
      * Interpolations are not instantiated directly by applications, but via a factory class.
-     * 
+     *
      * @see LogLinear
      */
     private LogLinearInterpolation() {
@@ -68,7 +68,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 
     /**
      * This is a factory method intended to create this interpolation.
-     * 
+     *
      * @see LogLinear
      */
     static public Interpolator getInterpolator() {
@@ -84,7 +84,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
     /**
      * This method throws UnsupportedOperationException because the original
      * QuantLib/C++ code does not implement this functionality
-     * 
+     *
      * @throws UnsupportedOperationException
      */
     @Override
@@ -95,7 +95,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
     /**
      * This method throws UnsupportedOperationException because the original
      * QuantLib/C++ code does not implement this functionality
-     * 
+     *
      * @throws UnsupportedOperationException
      */
     @Override
@@ -106,7 +106,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
     /**
      * This method throws UnsupportedOperationException because the original
      * QuantLib/C++ code does not implement this functionality
-     * 
+     *
      * @throws UnsupportedOperationException
      */
     @Override
@@ -121,15 +121,15 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
      */
     @Override
     public void update() {
         super.update();
 
-        logY = new Array(vx.length);
-        for (int i=0; i<vx.length; i++){
+        logY = new Array(vx.size());
+        for (int i=0; i<vx.size(); i++){
             assert vx.get(i) > 0.0 : "negative or null value "; // TODO: message
             final double value = Math.log(vy.get(i));
             logY.set(i, value);
@@ -153,7 +153,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 
     /**
      * This static class is a default implementation for {@link LogLinearInterpolation} instances.
-     * 
+     *
      * @author Dominik Holenstein
      * @author Richard Gomes
      */
@@ -171,13 +171,13 @@ public class LogLinearInterpolation extends AbstractInterpolation {
 
         @Override
         public final Interpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
-            return interpolate(x.length, x, y);
+            return interpolate(x.size(), x, y);
         }
 
         @Override
         public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
-            delegate.vx = x.copyOfRange(0, size);
-            delegate.vy = y.copyOfRange(0, size);
+            delegate.vx = x.range(0, size);
+            delegate.vy = y.range(0, size);
             delegate.update();
             return delegate;
         }

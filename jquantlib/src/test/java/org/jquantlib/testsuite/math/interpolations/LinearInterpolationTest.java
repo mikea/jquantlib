@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Daniel Kong, Richard Gomes
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
  **/
 
 public class LinearInterpolationTest {
-	
+
 	private final static Logger logger = LoggerFactory.getLogger(LinearInterpolationTest.class);
-	
+
 	private static final Array x  = new Array( new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
 	private static final Array y  = new Array( new double[] { 5.0, 4.0, 3.0, 2.0, 1.0 });
 	private static final Array x2 = new Array( new double[] { -2.0, -1.0, 0.0, 1.0, 3.0, 4.0, 5.0, 6.0, 7.0 });
@@ -49,29 +49,29 @@ public class LinearInterpolationTest {
 	private static Interpolation interpolation;
 	private static int length;
 	private static double tolerance;
-	
+
 	public LinearInterpolationTest() {
 		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	@BeforeClass
 	public static void setUpLinearInterpolation(){
 		logger.info("\n\n::::: Testing use of interpolations as functors... :::::");
 
 		interpolation = new Linear().interpolate(x, y);
-		interpolation.update();		  
-	    length = x2.length;
+		interpolation.update();
+	    length = x2.size();
 	    y2 = new double[length];
 	    tolerance = 1.0e-12;
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWithoutEnableExtrapolation(){
 		for (int i=0; i<length; i++) {
 	    	y2[i] = interpolation.op(x2.get(i));
     	}
 	}
-	
+
 	@Test
 	public void testEnableExtrapolation(){
 		interpolation.enableExtrapolation();
@@ -79,18 +79,18 @@ public class LinearInterpolationTest {
     		y2[i] = interpolation.op(x2.get(i));
     	}
 	    for (int i=0; i<length; i++) {
-	        double expected = 5.0-x2.get(i);
+	        final double expected = 5.0-x2.get(i);
 	        if (abs(y2[i]-expected) > tolerance) {
-	            StringBuilder sb = new StringBuilder();
+	            final StringBuilder sb = new StringBuilder();
 	            sb.append("failed to reproduce ").append(i+1).append("o. expected datum");
 	            sb.append("\n    expected:   ").append(expected);
 	            sb.append("\n    calculated: ").append(y2[i]);
 	            sb.append("\n    error:      ").append(abs(y2[i]-expected));
-	            
+
 	            if (abs(y2[i]-expected) > tolerance)
 	            	fail(sb.toString());
 	        }
 	    }
 	}
-	
+
 }

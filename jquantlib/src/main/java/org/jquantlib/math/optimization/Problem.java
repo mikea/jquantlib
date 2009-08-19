@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -25,7 +25,7 @@ import org.jquantlib.math.matrixutilities.Array;
 
 
 public class Problem {
-    
+
     //! Unconstrained cost function
     protected CostFunction costFunction_;
     //! Constraint
@@ -37,113 +37,113 @@ public class Problem {
     //! number of evaluation of cost function and its gradient
     protected Integer functionEvaluation_, gradientEvaluation_;
 
-    public Problem(CostFunction lsf, Constraint constraint, Array initialValue_){
+    public Problem(final CostFunction lsf, final Constraint constraint, final Array initialValue_){
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
-        
+
         if(initialValue_ == null){
             // TODO: what size?
             //initialValue_ = Array();
         }
         /*this is crap*/
-        double [] temp = new double [initialValue_.length];
-        for(int i = 0; i<initialValue_.length; i++){
+        final double [] temp = new double [initialValue_.size()];
+        for(int i = 0; i<initialValue_.size(); i++){
             temp[i] = initialValue_.get(i);
         }
-        
+
         this.currentValue_ = new Array(temp);
         this.costFunction_ = lsf;
         this.constraint_ = constraint;
     }
-    
+
     /*! \warning it does not reset the current minumum to any initial value
      */
     public void reset(){
         functionEvaluation_ = gradientEvaluation_ = 0;
         functionValue_ = squaredNorm_ = 0;
     }
-    
+
     //! call cost function computation and increment evaluation counter
-    public double value(Array x){
+    public double value(final Array x){
         return 0;
     }
-    
+
     //FIXME: implementation of Disposable
     //! call cost values computation and increment evaluation counter
-    
+
     // ! call cost values computation and increment evaluation counter
     public/* Disposable<Array> */Array values(final Array x) {
         ++functionEvaluation_;
         return costFunction_.values(x);
     }
-    
-    
+
+
     //! call cost function gradient computation and increment
     //  evaluation counter
-    public void gradient(Array grad_f,  Array x){
+    public void gradient(final Array grad_f,  final Array x){
         ++gradientEvaluation_;
         costFunction_.gradient(grad_f, x);
     }
-    
+
     //! call cost function computation and it gradient
-    public double valueAndGradient(Array grad_f,  Array x){
+    public double valueAndGradient(final Array grad_f,  final Array x){
         ++functionEvaluation_;
         ++gradientEvaluation_;
         return costFunction_.valueAndGradient(grad_f, x);
     }
-    
+
     // ! Constraint
     public Constraint constraint() {
         return constraint_;
     }
-    
+
     //! Cost function
-    public CostFunction costFunction() { 
-        return costFunction_; 
+    public CostFunction costFunction() {
+        return costFunction_;
     }
-    
-    public void setCurrentValue(Array currentValue) {
+
+    public void setCurrentValue(final Array currentValue) {
         currentValue_ = currentValue;
     }
-    
+
     //! current value of the local minimum
-    public Array currentValue(){ 
-        return currentValue_; 
+    public Array currentValue(){
+        return currentValue_;
     }
-    
-    public void setFunctionValue(double functionValue) {
+
+    public void setFunctionValue(final double functionValue) {
         functionValue_ = functionValue;
     }
 
     //! value of cost function
     public double functionValue()  {
-        return functionValue_; 
+        return functionValue_;
     }
 
-    public void setGradientNormValue(double squaredNorm) {
+    public void setGradientNormValue(final double squaredNorm) {
         squaredNorm_=squaredNorm;
     }
-    
+
     //! value of cost function gradient norm
-    public double gradientNormValue() { 
-        return squaredNorm_; 
+    public double gradientNormValue() {
+        return squaredNorm_;
     }
 
     //! number of evaluation of cost function
-    public Integer functionEvaluation() { 
-        return functionEvaluation_; 
+    public Integer functionEvaluation() {
+        return functionEvaluation_;
     }
 
     //! number of evaluation of cost function gradient
-    public Integer gradientEvaluation() { 
-        return gradientEvaluation_; 
+    public Integer gradientEvaluation() {
+        return gradientEvaluation_;
     }
 }
 
 
 ///**
-// * 
+// *
 // * @author Praneet Tiwari
 // */
 //public class Problem {

@@ -555,7 +555,7 @@ public class SVD {
         final double eps = Math.pow(2.0, -52.0);
         final double tol = Math.max(m, n) * s.data[s.addr(0)] * eps;
         int r = 0;
-        for (int i = 0; i < s.length; i++) {
+        for (int i = 0; i < s.size; i++) {
             if (s.data[s.addr(i)] > tol) {
                 r++;
             }

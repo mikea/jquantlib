@@ -104,10 +104,10 @@ public abstract class AbstractInterpolation implements Interpolation {
      * This method verifies if
      * <li> extrapolation is enabled;</li>
      * <li> requested <i>x</i> is valid</li>
-     * 
+     *
      * @param x
      * @param extrapolate
-     * 
+     *
      * @throws IllegalStateException if extrapolation is not enabled.
      * @throws IllegalArgumentException if <i>x</i> is out of range
      */
@@ -128,7 +128,7 @@ public abstract class AbstractInterpolation implements Interpolation {
         if (x <= vx.first())
             return 0;
         else if (x > vx.last())
-            return vx.length-2;
+            return vx.size()-2;
         else
             return vx.upperBound(x) - 1;
     }
@@ -205,11 +205,11 @@ public abstract class AbstractInterpolation implements Interpolation {
 
     @Override
     public void update() {
-        assert vx.length >= 2 : "not enough points to interpolate"; // TODO: message
+        assert vx.size() >= 2 : "not enough points to interpolate"; // TODO: message
         if (extraSafetyChecks) {
             double x1 = vx.first();
             double x2;
-            for (int i = 1; i < vx.length; i++) {
+            for (int i = 1; i < vx.size(); i++) {
                 x2 = vx.get(i);
                 if (x1>x2) throw new AssertionError("unsorted values on array X");
                 x1=x2;
@@ -234,7 +234,7 @@ public abstract class AbstractInterpolation implements Interpolation {
 
     /**
      * Implements multiple inheritance via delegate pattern to an inner class
-     * 
+     *
      * @see Extrapolator
      */
     private final DefaultExtrapolator delegatedExtrapolator = new DefaultExtrapolator();

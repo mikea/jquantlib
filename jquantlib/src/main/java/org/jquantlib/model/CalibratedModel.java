@@ -36,7 +36,7 @@ import org.jquantlib.util.Observable;
 
 /**
  * Calibrated model class
- * 
+ *
  * @author Ueli Hofstetter
  */
 //TODO: comments, license, code review
@@ -69,7 +69,7 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
      * <p>
      * An additional constraint can be passed which must be
      * satisfied in addition to the constraints of the model.
-     * 
+     *
      * @param calibrationHelper
      * @param method
      * @param endCriteria
@@ -91,7 +91,7 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
      * <p>
      * An additional constraint can be passed which must be
      * satisfied in addition to the constraints of the model.
-     * 
+     *
      * @param calibrationHelper
      * @param method
      * @param endCriteria
@@ -127,10 +127,10 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
         int p = 0;
         for (int i=0; i<arguments_.size(); i++)
             for (int j=0; j<arguments_.get(i).getSize(); j++, p++) {
-                assert p>params.length : parameter_array_to_small;
+                assert p>params.size() : parameter_array_to_small;
                 arguments_.get(i).setParam(j, params.get(p));
             }
-        assert p == params.length : parameter_array_to_big;
+        assert p == params.size() : parameter_array_to_big;
         update();
     }
 

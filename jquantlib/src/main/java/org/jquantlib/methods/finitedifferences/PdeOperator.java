@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -27,11 +27,11 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 public abstract class PdeOperator<T extends PdeSecondOrderParabolic> extends TridiagonalOperator {
-   
-	public PdeOperator(Array grid, GeneralizedBlackScholesProcess process, double residualTime) {
-		super(grid.length);
-		Class<T> clazz = (Class<T>)TypeToken.getClazz(this.getClass());
-		PdeSecondOrderParabolic pde = PdeTypeTokenUtil.getPdeInstance(clazz, process);
+
+	public PdeOperator(final Array grid, final GeneralizedBlackScholesProcess process, final double residualTime) {
+		super(grid.size());
+		final Class<T> clazz = (Class<T>)TypeToken.getClazz(this.getClass());
+		final PdeSecondOrderParabolic pde = PdeTypeTokenUtil.getPdeInstance(clazz, process);
 		timeSetter = new GenericTimeSetter<PdeSecondOrderParabolic>(grid, pde){};
 		setTime(residualTime);
 	}

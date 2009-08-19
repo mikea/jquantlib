@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -61,14 +61,14 @@ public class ConjugateGradient extends LineSearchBasedMethod {
     public ConjugateGradient(){
         throw new UnsupportedOperationException("Work in progress");
     }
-    
-    
-    public ConjugateGradient(LineSearch lineSearch) {
+
+
+    public ConjugateGradient(final LineSearch lineSearch) {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
         if(lineSearch == null){
-            
+
         }
     }
 
@@ -77,25 +77,25 @@ public class ConjugateGradient extends LineSearchBasedMethod {
     adapted from Numerical Recipes in C, 2nd edition).
      */
     @Override
-    public CriteriaType minimize(Problem P, EndCriteria endCriteria) {
-        EndCriteria.CriteriaType ecType = EndCriteria.CriteriaType.None;
+    public CriteriaType minimize(final Problem P, final EndCriteria endCriteria) {
+        final EndCriteria.CriteriaType ecType = EndCriteria.CriteriaType.None;
         P.reset();
         Array x_ = P.currentValue();
         int iterationNumber_ = 0;
-        int stationaryStateIterationNumber_ = 0;
-        lineSearch_.setSearchDirection(new Array(x_.length));
-        
+        final int stationaryStateIterationNumber_ = 0;
+        lineSearch_.setSearchDirection(new Array(x_.size()));
+
         boolean done = false;
-        
+
         // function and squared norm of gradient values;
         double fold, gold2;
-        double c;
-        double normdiff;
+        final double c;
+        final double normdiff;
         // clssical inital value for line-search step
-        double t = 1.0;
+        final double t = 1.0;
         // Set gradient g at the size of the optimization problem search direction.
-        int sz = lineSearch_.searchDirection().length;
-        Array g = new Array(sz); Array d = new Array(sz); Array sddiff = new Array(sz);
+        final int sz = lineSearch_.searchDirection().size();
+        Array g = new Array(sz); Array d = new Array(sz); final Array sddiff = new Array(sz);
         // Initialize cost function and gradient g
         P.setFunctionValue(P.valueAndGradient(g, x_));
         lineSearch_.setSearchDirection(g.mul(-1));

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -25,88 +25,88 @@ import org.jquantlib.math.matrixutilities.Array;
 
 
 /**
- * 
+ *
  * @author Srinivas Hasti
  *
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class TransformedGrid {
 
-	protected Array grid_;
-	protected Array transformedGrid_;
-	protected Array dxm_;
-	protected Array dxp_;
-	protected Array dx_;
+	protected Array grid;
+	protected Array transformedGrid;
+	protected Array dxm;
+	protected Array dxp;
+	protected Array dx;
 
 	public TransformedGrid(final Array grid) {
 	    // TODO: code review :: use of clone()
-		this.grid_ = grid;
-		this.transformedGrid_ = grid.clone();
-		this.dxm_ = new Array(grid.length);
-		this.dxp_ = new Array(grid.length);
-		this.dx_ = new Array(grid.length);
-		for (int i = 1; i < transformedGrid_.length - 1; i++) {
-			dxm_.set(i, transformedGrid_.get(i) - transformedGrid_.get(i - 1));
-			dxp_.set(i, transformedGrid_.get(i + 1) - transformedGrid_.get(i));
-			dx_.set(i, dxm_.get(i) + dxp_.get(i));
+		this.grid = grid;
+		this.transformedGrid = grid.clone();
+		this.dxm = new Array(grid.size());
+		this.dxp = new Array(grid.size());
+		this.dx = new Array(grid.size());
+		for (int i = 1; i < transformedGrid.size() - 1; i++) {
+			dxm.set(i, transformedGrid.get(i) - transformedGrid.get(i - 1));
+			dxp.set(i, transformedGrid.get(i + 1) - transformedGrid.get(i));
+			dx.set(i, dxm.get(i) + dxp.get(i));
 		}
 	}
 
 	public TransformedGrid(final Array grid, final Ops.DoubleOp f) {
 	    // TODO: code review :: use of clone()
-	    this.grid_ = grid;
-		this.transformedGrid_ = grid.clone().transform(f);
-		this.dxm_ = new Array(grid.length);
-		this.dxp_ = new Array(grid.length);
-		this.dx_ = new Array(grid.length);
-		for (int i = 1; i < transformedGrid_.length - 1; i++) {
-			dxm_.set(i, transformedGrid_.get(i) - transformedGrid_.get(i - 1));
-			dxp_.set(i, transformedGrid_.get(i + 1) - transformedGrid_.get(i));
-			dx_.set(i, dxm_.get(i) + dxp_.get(i));
+	    this.grid = grid;
+		this.transformedGrid = grid.clone().transform(f);
+		this.dxm = new Array(grid.size());
+		this.dxp = new Array(grid.size());
+		this.dx = new Array(grid.size());
+		for (int i = 1; i < transformedGrid.size() - 1; i++) {
+			dxm.set(i, transformedGrid.get(i) - transformedGrid.get(i - 1));
+			dxp.set(i, transformedGrid.get(i + 1) - transformedGrid.get(i));
+			dx.set(i, dxm.get(i) + dxp.get(i));
 		}
 	}
 
 	public Array gridArray() {
-		return grid_;
+		return grid;
 	}
 
 	public Array transformedGridArray() {
-		return transformedGrid_;
+		return transformedGrid;
 	}
 
 	public Array dxmArray() {
-		return dxm_;
+		return dxm;
 	}
 
 	public Array dxpArray() {
-		return dxp_;
+		return dxp;
 	}
 
 	public Array dxArray() {
-		return dx_;
+		return dx;
 	}
 
-	public double grid(int i) {
-		return grid_.get(i);
+	public double grid(final int i) {
+		return grid.get(i);
 	}
 
-	public double transformedGrid(int i) {
-		return transformedGrid_.get(i);
+	public double transformedGrid(final int i) {
+		return transformedGrid.get(i);
 	}
 
-	public double dxm(int i) {
-		return dxm_.get(i);
+	public double dxm(final int i) {
+		return dxm.get(i);
 	}
 
-	public double dxp(int i) {
-		return dxp_.get(i);
+	public double dxp(final int i) {
+		return dxp.get(i);
 	}
 
-	public double dx(int i) {
-		return dx_.get(i);
+	public double dx(final int i) {
+		return dx.get(i);
 	}
 
 	public int size() {
-		return grid_.length;
+		return grid.size();
 	}
 }

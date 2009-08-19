@@ -159,12 +159,12 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
 	 * 
-	 * @param settlementDays_
+	 * @param settlementDays
 	 * @param cal
 	 * @param dc
 	 */
-	protected ForwardRateStructure(final int settlDays, final Calendar cal, final DayCounter dc) {
-		super(settlDays, cal, dc);
+	protected ForwardRateStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
+		super(settlementDays, cal, dc);
 		if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
 	}

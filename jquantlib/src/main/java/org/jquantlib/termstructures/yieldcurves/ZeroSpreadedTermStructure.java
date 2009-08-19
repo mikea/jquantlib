@@ -4,7 +4,6 @@ package org.jquantlib.termstructures.yieldcurves;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
-import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -46,9 +45,6 @@ public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
 	// public methods
 	//
 	
-
-
-
 	public double forwardImpl(final double t){
         return originalCurve.getLink().
         forwardRate(t, t, comp, freq, true).rate()

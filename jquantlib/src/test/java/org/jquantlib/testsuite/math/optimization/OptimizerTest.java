@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2009 Ueli Hofstetter
-  
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -42,42 +42,42 @@ public class OptimizerTest {
     enum OptimizationMethodType {
         simplex, levenbergMarquardt, conjugateGradient, steepestDescent
     };
-    
-    public static void main (String [] args){
-        OptimizerTest opt = new OptimizerTest();
+
+    public static void main (final String [] args){
+        final OptimizerTest opt = new OptimizerTest();
         opt.testOptimizers();
     }
 
     @Ignore
     @Test
     public void testOptimizers() {
-        
+
         //System.setProperty("EXPERIMENTAL", "true");
         System.out.println("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
         System.out.println("Testing optimizers... ");
 
         // following block moved inside this method body
-        List<CostFunction> costFunctions_ = new ArrayList<CostFunction>();
-        List<Constraint> constraints_ = new ArrayList<Constraint>();
-        List<List> initialValues_ = new ArrayList<List>();
-        List<Integer> maxIterations_ = new ArrayList<Integer>();
-        List<Integer> maxStationaryStateIterations_ = new ArrayList<Integer>();
-        List<Double> rootEpsilons_ = new ArrayList<Double>();
-        List<Double> functionEpsilons_ = new ArrayList<Double>();
-        List<Double> gradientNormEpsilons_ = new ArrayList<Double>();
-        List<EndCriteria> endCriterias_ = new ArrayList<EndCriteria>();
-        List<List<OptimizationMethod>> optimizationMethods_ = new ArrayList<List<OptimizationMethod>>();
-        double [] xMinExpected = new double[1];
-        double [] yMinExpected = new double[1];
-        
+        final List<CostFunction> costFunctions_ = new ArrayList<CostFunction>();
+        final List<Constraint> constraints_ = new ArrayList<Constraint>();
+        final List<List> initialValues_ = new ArrayList<List>();
+        final List<Integer> maxIterations_ = new ArrayList<Integer>();
+        final List<Integer> maxStationaryStateIterations_ = new ArrayList<Integer>();
+        final List<Double> rootEpsilons_ = new ArrayList<Double>();
+        final List<Double> functionEpsilons_ = new ArrayList<Double>();
+        final List<Double> gradientNormEpsilons_ = new ArrayList<Double>();
+        final List<EndCriteria> endCriterias_ = new ArrayList<EndCriteria>();
+        final List<List<OptimizationMethod>> optimizationMethods_ = new ArrayList<List<OptimizationMethod>>();
+        final double [] xMinExpected = new double[1];
+        final double [] yMinExpected = new double[1];
+
         // following block moved from setup() to here
         // keep stuff local... (move here from setup())
         // Cost function n. 1: 1D polynomial of degree 2 (parabolic function y=a*x^2+b*x+c)
-        double a = 1; // require a>0
-        double b = 1;
-        double c = 1;
+        final double a = 1; // require a>0
+        final double b = 1;
+        final double c = 1;
 
-        List coefficients = new ArrayDoubleList();
+        final List coefficients = new ArrayDoubleList();
         coefficients.add(c);
         coefficients.add(b);
         coefficients.add( a);
@@ -86,15 +86,15 @@ public class OptimizerTest {
 
 
         //List<Array> yMinExpected_ = new ArrayList<Array>();
-        List xMinExpected_ = new ArrayDoubleList();
-        List yMinExpected_ = new ArrayDoubleList();
+        final List xMinExpected_ = new ArrayDoubleList();
+        final List yMinExpected_ = new ArrayDoubleList();
         xMinExpected_.add(xMinExpected[xMinExpected.length-1]);
         yMinExpected_.add(xMinExpected[yMinExpected.length-1]);
         costFunctions_.add(new OneDimensionalPolynomDegreeN(coefficients));
         // Set Constraint for optimizers: unconstrained problem
         constraints_.add(new NoConstraint());
         // Set initial guess for optimizer
-        List initialValue = new ArrayDoubleList();
+        final List initialValue = new ArrayDoubleList();
         initialValue.add(-100.0);
         initialValues_.add(initialValue);
         // Set end criteria for optimizer
@@ -107,12 +107,12 @@ public class OptimizerTest {
                 .get(maxStationaryStateIterations_.size() - 1), rootEpsilons_.get(rootEpsilons_.size() - 1), functionEpsilons_
                 .get(functionEpsilons_.size() - 1), gradientNormEpsilons_.get(gradientNormEpsilons_.size() - 1)));
         // Set optimization methods for optimizer
-        OptimizationMethodType optimizationMethodTypes[] = { OptimizationMethodType.simplex };/* OptimizationMethodType.levenbergMarquardt};*/
-        double simplexLambda = 0.1;
-        double levenbergMarquardtEpsfcn = Math.pow(10, -0.8); //FIXME: how to write this as 1e-0.8???
-        double levenbergMarquardtXtol = Math.pow(10, -0.8); //FIXME: how to write this as 1e-0.8???
-        double levenbergMarquardtGtol = Math.pow(10, -0.8); //FIXME: how to write this as 1e-0.8???
-        
+        final OptimizationMethodType optimizationMethodTypes[] = { OptimizationMethodType.simplex };/* OptimizationMethodType.levenbergMarquardt};*/
+        final double simplexLambda = 0.1;
+        final double levenbergMarquardtEpsfcn = Math.pow(10, -0.8); //FIXME: how to write this as 1e-0.8???
+        final double levenbergMarquardtXtol = Math.pow(10, -0.8); //FIXME: how to write this as 1e-0.8???
+        final double levenbergMarquardtGtol = Math.pow(10, -0.8); //FIXME: how to write this as 1e-0.8???
+
         optimizationMethods_.add(makeOptimizationMethods(optimizationMethodTypes, simplexLambda, levenbergMarquardtEpsfcn, levenbergMarquardtXtol, levenbergMarquardtGtol));
         // Set expected results for optimizer
 
@@ -140,34 +140,34 @@ public class OptimizerTest {
                                   + "    functionEpsilon:   " +  functionEpsilons_.get(i) + "\n"
                                   + "    endCriteriaResult:  " + endCriteriaResult);/*
                     }
-                    
+
                 }
             }*/
         }
     }
-        
-    
-    private List<OptimizationMethod> makeOptimizationMethods(OptimizationMethodType optimizationMethodTypes [],
-            double simplexLambda,
-            double levenbergMarquardtEpsfcn,
-            double levenbergMarquardtXtol,
-            double levenbergMarquardtGtol){
-        List<OptimizationMethod> results = new ArrayList<OptimizationMethod>();
+
+
+    private List<OptimizationMethod> makeOptimizationMethods(final OptimizationMethodType optimizationMethodTypes [],
+            final double simplexLambda,
+            final double levenbergMarquardtEpsfcn,
+            final double levenbergMarquardtXtol,
+            final double levenbergMarquardtGtol){
+        final List<OptimizationMethod> results = new ArrayList<OptimizationMethod>();
         for(int i=0; i<optimizationMethodTypes.length; ++i){
-            results.add(makeOptimizationMethod(optimizationMethodTypes[i], 
-                    simplexLambda, 
-                    levenbergMarquardtEpsfcn, 
-                    levenbergMarquardtXtol, 
+            results.add(makeOptimizationMethod(optimizationMethodTypes[i],
+                    simplexLambda,
+                    levenbergMarquardtEpsfcn,
+                    levenbergMarquardtXtol,
                     levenbergMarquardtGtol));
         }
         return results;
     }
-    
-    private OptimizationMethod makeOptimizationMethod(OptimizationMethodType optimizationMethodType,
-            double simplexLambda,
-            double levenbergMarquardtEpsfcn,
-            double levenbergMarquardtXtol,
-            double levenbergMarquardtGtol)
+
+    private OptimizationMethod makeOptimizationMethod(final OptimizationMethodType optimizationMethodType,
+            final double simplexLambda,
+            final double levenbergMarquardtEpsfcn,
+            final double levenbergMarquardtXtol,
+            final double levenbergMarquardtGtol)
     {
         switch(optimizationMethodType){
         case simplex:
@@ -180,7 +180,7 @@ public class OptimizerTest {
             throw new IllegalArgumentException("unknown Optimization Method type");
         }
     }
-    
+
 
     // Set up, for each cost function, all the ingredients for optimization:
     // constraint, initial guess, end criteria, optimization methods.
@@ -190,17 +190,17 @@ public class OptimizerTest {
 
     class OneDimensionalPolynomDegreeN extends CostFunction {
 
-        private List<Double> coefficients_;
-        private int polynominalDegree_;
+        private final List<Double> coefficients_;
+        private final int polynominalDegree_;
 
-        public OneDimensionalPolynomDegreeN(List coefficients) {
+        public OneDimensionalPolynomDegreeN(final List coefficients) {
             this.coefficients_ = coefficients;
             this.polynominalDegree_ = coefficients.size() - 1;
         }
 
         @Override
-        public double value(Array x) {
-            if (x.length != 1) {
+        public double value(final Array x) {
+            if (x.size() != 1) {
                 throw new IllegalArgumentException("Independent variable must be 1 dimensional");
             }
             double y = 0;
@@ -211,11 +211,11 @@ public class OptimizerTest {
         }
 
         @Override
-        public Array values(Array x) {
-            if (x.length != 1) {
+        public Array values(final Array x) {
+            if (x.size() != 1) {
                 throw new IllegalArgumentException("Independent variable must be 1 dimensional");
             }
-            Array y = new Array(1);
+            final Array y = new Array(1);
             y.set(0, value(x));
             return y;
         }

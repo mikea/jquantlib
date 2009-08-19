@@ -41,101 +41,94 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.lang.iterators.DoubleListIterator;
 
 /**
  * Bidimensional matrix operations
  * <p>
- * Performance of multidimensional arrays is a big concern in Java. This is because multidimensional arrays
- * are stored as arrays to arrays, spanning this concept to as many depths as necessary. In C++, a multidimensional
- * array is stored internally as a unidimensional array where depths are stacked together one after another.
- * A very simple calculation is needed to map multiple dimensional indexes to an unidimensional index.
+ * Performance of multidimensional arrays is a big concern in Java. This is because multidimensional arrays are stored as arrays to
+ * arrays, spanning this concept to as many depths as necessary. In C++, a multidimensional array is stored internally as a
+ * unidimensional array where depths are stacked together one after another. A very simple calculation is needed to map multiple
+ * dimensional indexes to an unidimensional index.
  * <p>
- * This implementation provides the C/C++ approach of an internal unidimensional array. Everytime a bidimensional
- * index is involved (because this is a 2d matrix) it is converted to a unidimensional index. In case developers
- * are seriously concerned about performance, a unidimensional access method is provided, giving a chance for
- * application developers to 'cache' the starting of a row and reducing the number of multiplications needed for
- * offset calculations.
+ * This implementation provides the C/C++ approach of an internal unidimensional array. Everytime a bidimensional index is involved
+ * (because this is a 2d matrix) it is converted to a unidimensional index. In case developers are seriously concerned about
+ * performance, a unidimensional access method is provided, giving a chance for application developers to 'cache' the starting of a
+ * row and reducing the number of multiplications needed for offset calculations.
  * <p>
  * <p>
  * <b>Assignment operations</b>
  * <pre>
- * opr   method     this    right    result
- * ----- ---------- ------- -------- ------
- * =     assign     Matrix           Matrix (1)
- * =     assign     Array            Array  (1)
- * +=    addAssign  Matrix  Matrix   this
- * +=    addAssign  Array   scalar   this
- * +=    addAssign  Array   Array    this
- * -=    subAssign  Matrix  Matrix   this
- * -=    subAssign  Array   scalar   this
- * -=    mulAssign  Array   Array    this
- * *=    mulAssign  Matrix  scalar   this
- * *=    mulAssign  Array   scalar   this
- * *=    mulAssign  Array   Array    this
- * /=    divAssign  Matrix  scalar   this
- * /=    divAssign  Array   scalar   this
- * /=    divAssign  Array   Array    this
+ *   opr method     this    right    result
+ *   --- ---------- ------- -------- ------
+ *   =   assign     Matrix           Matrix (1)
+ *   +=  addAssign  Matrix  Matrix   this
+ *   -=  subAssign  Matrix  Matrix   this
+ *   *=  mulAssign  Matrix  scalar   this
+ *   /=  divAssign  Matrix  scalar   this
  * </pre>
  * <p>
  * <p>
  * <b>Algebraic products</b>
  * <pre>
- * opr   method     this    right    result
- * ----- ---------- ------- -------- ------
- * +     add        Matrix  Matrix    Matrix
- * +     positive   Array             Array  (2)
- * +     add        Array   scalar    Array
- * +     add        Array   Array     Array
- * -     sub        Matrix  Matrix    Matrix
- * -     negative   Array             Array  (3)
- * -     sub        Array   scalar    Array
- * -     sub        Array   Array     Array
- * *     mul        Matrix  scalar    Matrix
- * *     mul        Array   scalar    Array
- * *     mul        Array   Array     Array
- * /     div        Matrix  scalar    Matrix
- * /     div        Array   scalar    Array
- * /     div        Array   Array     Array
- *</pre>
+ *   opr method     this    right    result
+ *   --- ---------- ------- -------- ------
+ *   +   add        Matrix  Matrix   Matrix
+ *   -   sub        Matrix  Matrix   Matrix
+ *   -   negative   Matrix           this
+ *   *   mul        Matrix  scalar   Matrix
+ *   /   div        Matrix  scalar   Matrix
+ * </pre>
  * <p>
  * <p>
  * <b>Vetorial products</b>
  * <pre>
- * opr   method     this    right    result
- * ----- ---------- ------- -------- ------
- * *     mul        Array   Matrix   Array
- * *     mul        Matrix  Array    Array
- * *     mul        Matrix  Matrix   Matrix
- *</pre>
+ *   method         this    right    result
+ *   -------------- ------- -------- ------
+ *   mul            Matrix  Array    Array
+ *   mul            Matrix  Matrix   Matrix
+ * </pre>
  * <p>
  * <p>
- * <b>Math functions</b>
+ * <b>Decompositions</b>
  * <pre>
- * opr   method     this    right    result
- * ----- ---------- ------- -------- ------
- * abs   abs        Array            Array
- * sqrt  sqrt       Array            Array
- * log   log        Array            Array
- * exp   exp        Array            Array
- *</pre>
+ *   method         this    right    result
+ *   -------------- ------- -------- ------
+ *   lu             Matrix           LUDecomposition
+ *   qr             Matrix           QRDecomposition
+ *   cholensky      Matrix           CholeskyDecomposition
+ *   svd            Matrix           SingularValueDecomposition
+ *   eigenvalue     Matrix           EigenvalueDecomposition
+ * </pre>
+ * <p>
+ * <p>
+ * <b>Element iterators</b>
+ * <pre>
+ *   method         this    right    result
+ *   ------------   ------- -------- ------
+ *   rowIterator    Matrix           RowIterator
+ *   columnIterator Matrix           ColumnIterator
+ * </pre>
  * <p>
  * <p>
  * <b>Miscellaneous</b>
  * <pre>
- * method       this    right    result
- * ------------ ------- -------- ------
- * transpose    Matrix           Matrix
- * diagonal     Matrix           Array
- * inverse      Matrix           Matrix
- * swap         Matrix  Matrix   this
- * swap         Array   Array    this
- * outerProduct Array   Array    Matrix
- * dotProduct   Array   Array    double
+ *   method         this    right    result
+ *   -------------- ------- -------- ------
+ *   transpose      Matrix           Matrix
+ *   diagonal       Matrix           Array
+ *   determinant    Matrix           double
+ *   inverse        Matrix           Matrix
+ *   solve          Matrix           Matrix
+ *   swap           Matrix  Matrix   this
+ *   range          Matrix  Matrix   Matrix
  * </pre>
  * <p>
  * <p>
@@ -143,55 +136,25 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * (2): Unary + is equivalent to: array.clone()<br/>
  * (3): Unary ? is equivalent to: array.clone().mulAssign(-1)
  * <p>
- * @Note: This is a very naive implementation: there's opportunity for several improvements, like adoption of
- * paralellism for several kinds of operations and adoption of JSR-166y for matrix multiplication.
+ * @Note This class is not thread-safe
  *
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.V097, reviewers = { "Richard Gomes" })
-public class Matrix {
-
-    //
-    // error messages
-    //
-
-    protected final static String INVALID_ARGUMENTS = "invalid arguments";
-    protected final static String WRONG_BUFFER_LENGTH = "wrong buffer length";
-    protected final static String MATRIX_IS_INCOMPATIBLE = "matrix is incompatible";
-    protected final static String ARRAY_IS_INCOMPATIBLE = "array is incompatible";
-    protected final static String MATRIX_MUST_BE_SQUARE = "matrix must be square";
-
-
-    //
-    // public fields
-    //
-
-    public int cols, rows;
-    public int length;
-
-
-    //
-    // protected fields
-    //
-
-    protected double[] data;
-
+public class Matrix extends Cells {
 
     //
     // public constructors
     //
 
-    /**
-     * Default constructor
-     * <p>
-     * Builds an empty Matrix
-     */
-    public Matrix() {
-        this.rows = 0;
-        this.cols = 0;
-        this.length = 0;
-        this.data = new double[0];
-    }
+//    /**
+//     * Default constructor
+//     * <p>
+//     * Builds an empty Matrix
+//     */
+//    public Matrix() {
+//        super(0,0);
+//    }
 
     /**
      * Builds a Matrix of <code>rows</code> by <code>cols</code>
@@ -201,11 +164,7 @@ public class Matrix {
      * @throws IllegalArgumentException if parameters are less than zero
      */
     public Matrix(final int rows, final int cols) {
-        QL.require(rows>0 && cols>0 ,  INVALID_ARGUMENTS);
-        this.rows = rows;
-        this.cols = cols;
-        this.length = rows*cols;
-        this.data = new double[length];
+        super(rows, cols);
     }
 
 
@@ -215,10 +174,7 @@ public class Matrix {
      * @param data
      */
     public Matrix(final double[][] data) {
-        this.rows = data.length;
-        this.cols = data[0].length;
-        this.length = rows*cols;
-        this.data = new double[length];
+        super(data.length, data[0].length);
 
         for (int i=0; i<this.rows; i++) {
             final int base=addr(i,0);
@@ -233,11 +189,8 @@ public class Matrix {
      * @param data
      */
     public Matrix(final Matrix m) {
-        this.rows = m.rows;
-        this.cols = m.cols;
-        this.length = m.length;
-        this.data = new double[length];
-        System.arraycopy(m.data, 0, this.data, 0, this.length);
+        super(m.rows, m.cols);
+        System.arraycopy(m.data, 0, this.data, 0, this.size);
     }
 
 
@@ -298,7 +251,7 @@ public class Matrix {
     }
 
     public double[][] toArray(final double[][] buffer) {
-        QL.require(this.rows == buffer.length && this.cols == buffer[0].length ,  WRONG_BUFFER_LENGTH); //TODO: message
+        QL.require(this.rows == buffer.length && this.cols == buffer[0].length, WRONG_BUFFER_LENGTH); //TODO: message
         int addr = 0;
         for (int row=0; row<this.rows; row++) {
             System.arraycopy(this.data, addr, buffer[row], 0, this.cols);
@@ -332,9 +285,9 @@ public class Matrix {
      * @return <code>this</code>
      */
     public Matrix fill(final Matrix another) {
-        if (this.length != another.length)
+        if (this.size != another.size)
             throw new IllegalArgumentException(); // TODO: message
-        System.arraycopy(another.data, 0, this.data, 0, this.length);
+        System.arraycopy(another.data, 0, this.data, 0, this.size);
         return this;
     }
 
@@ -380,7 +333,7 @@ public class Matrix {
     public Array getCol(final int col) {
         final Array array = new Array(this.rows);
         if (this.cols == 1)
-            System.arraycopy(this.data, 0, array.data, 0, this.length);
+            System.arraycopy(this.data, 0, array.data, 0, this.size);
         else {
             int addr = addr(0, col);
             for (int row = 0; row < this.rows; row++) {
@@ -398,7 +351,7 @@ public class Matrix {
      * @param array contains the elements to be copied
      */
     public void setRow(final int row, final Array array) {
-        QL.require(this.cols == array.length ,  ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.cols == array.size ,  ARRAY_IS_INCOMPATIBLE);
         System.arraycopy(array.data, 0, this.data, this.addr(row,0), this.cols);
     }
 
@@ -409,9 +362,9 @@ public class Matrix {
      * @param array contains the elements to be copied
      */
     public void setCol(final int col, final Array array) {
-        QL.require(this.rows == array.length ,  ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.rows == array.size ,  ARRAY_IS_INCOMPATIBLE);
         if (this.cols == 1)
-            System.arraycopy(array.data, 0, this.data, 0, this.length);
+            System.arraycopy(array.data, 0, this.data, 0, this.size);
         else {
             int addr = addr(0, col);
             for (int row = 0; row < this.rows; row++) {
@@ -432,6 +385,7 @@ public class Matrix {
     //	-=    subAssign  Matrix  Matrix   this
     //	*=    mulAssign  Matrix  scalar   this
     //	/=    divAssign  Matrix  scalar   this
+    //
 
 
     /**
@@ -506,14 +460,17 @@ public class Matrix {
 
 
 
+    //
     //	Algebraic products
     //
     //	opr   method     this    right    result
     //	----- ---------- ------- -------- ------
     //	+     add        Matrix  Matrix    Matrix
     //	-     sub        Matrix  Matrix    Matrix
+    //  -     negative   Matrix            this
     //	*     mul        Matrix  scalar    Matrix
     //	/     div        Matrix  scalar    Matrix
+    //
 
     /**
      * Returns the result of addition of <code>this</code> Matrix and <code>another</code> Matrix
@@ -608,6 +565,7 @@ public class Matrix {
     //	----- ---------- ------- -------- ------
     //	*     mul        Matrix  Array    Array
     //	*     mul        Matrix  Matrix   Matrix
+    //
 
     /**
      * Returns an Array which represents the multiplication of <code>this</code> Matrix by an Array
@@ -616,7 +574,7 @@ public class Matrix {
      * @return a new Array which contains the result
      */
     public Array mul(final Array array) {
-        QL.require(this.cols == array.length ,  ARRAY_IS_INCOMPATIBLE);
+        QL.require(this.cols == array.size ,  ARRAY_IS_INCOMPATIBLE);
         final Array result = new Array(this.cols);
         for (int col=0; col<this.cols; col++) {
             int addr = addr(0, col);
@@ -659,11 +617,14 @@ public class Matrix {
     //
     // Decompositions
     //
+    //  method       this    right    result
+    //  ----------   ------- -------- ------
     //  lu           Matrix           LUDecomposition
     //  qr           Matrix           QRDecomposition
     //  cholensky    Matrix           CholeskyDecomposition
     //  svd          Matrix           SingularValueDecomposition
     //  eigenvalue   Matrix           EigenvalueDecomposition
+    //
 
     /**
      * LU Decomposition
@@ -683,6 +644,16 @@ public class Matrix {
      */
     public QRDecomposition qr() {
         return new QRDecomposition(this);
+    }
+
+    /**
+     * QR Decomposition
+     *
+     * @return QRDecomposition
+     * @see QRDecomposition
+     */
+    public QRDecomposition qr(final boolean pivot) {
+        return new QRDecomposition(this, pivot);
     }
 
     /**
@@ -727,6 +698,169 @@ public class Matrix {
 
 
     //
+    //  Element iterators
+    //
+    //  method              this    right    result
+    //  ------------------- ------- -------- ------
+    //  rowIterator         Matrix           RowIterator
+    //  constRowIterator    Matrix           ConstRowIterator
+    //  columnIterator      Matrix           ColumnIterator
+    //  constColumnIterator Matrix           ConstColumnIterator
+    //
+
+
+    /**
+     * Creates a RowIterator for an entire row <code>row</code>
+     *
+     * @param row is the desired row
+     * @return an Array obtained from row A( row , [:] )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public RowIterator rowIterator(final int row) {
+        return new RowIterator(row);
+    }
+
+    /**
+     * Creates a RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @return an Array obtained from row A( row , [col0:) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public RowIterator rowIterator(final int row, final int col0) {
+        return new RowIterator(row, col0);
+    }
+
+    /**
+     * Creates a RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @param col1 is the initial column, exclusive
+     * @return an Array obtained from row A( row , [col0:col1) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public RowIterator rowIterator(final int row, final int col0, final int col1) {
+        return new RowIterator(row, col0, col1);
+    }
+
+    /**
+     * Creates a constant, non-modifiable RowIterator for an entire row
+     *
+     * @param row is the desired row
+     * @return an Array obtained from row A( row , [;] )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstRowIterator constRowIterator(final int row) {
+        return new ConstRowIterator(row);
+    }
+
+    /**
+     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @return an Array obtained from row A( row , [col0:) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstRowIterator constRowIterator(final int row, final int offset) {
+        return new ConstRowIterator(row, offset);
+    }
+
+    /**
+     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @param col1 is the initial column, exclusive
+     * @return an Array obtained from row A( row , [col0:col1) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstRowIterator constRowIterator(final int row, final int col0, final int col1) {
+        return new ConstRowIterator(row, col0, col1);
+    }
+
+    /**
+     * Creates a ColumnIterator for an entire column <code>col</code>
+     *
+     * @param col is the desired column
+     * @return an Array obtained from row A( [;] , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ColumnIterator columnIterator(final int col) {
+        return new ColumnIterator(col);
+    }
+
+    /**
+     * Creates a ColumnIterator for column <code>col</code>
+     *
+     * @param col is the desired column
+     * @param row0 is the initial row, inclusive
+     * @return an Array obtained from row A( [row0:) , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ColumnIterator columnIterator(final int col, final int row0) {
+        return new ColumnIterator(col, row0);
+    }
+
+    /**
+     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
+     *
+     * @param col is the desired column
+     * @param row0 is the initial row, inclusive
+     * @param row1 is the final row, exclusive
+     * @return an Array obtained from row A( [row0:row1) , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ColumnIterator columnIterator(final int col, final int row0, final int row1) {
+        return new ColumnIterator(col, row0, row1);
+    }
+
+    /**
+     * Creates a constant, non-modifiable ColumnIterator for the entire column <code>col</code>
+     *
+     * @param col is the desired column
+     * @return an Array obtained from row A( [:] , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstColumnIterator constColumnIterator(final int col) {
+        return new ConstColumnIterator(col);
+    }
+
+    /**
+     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
+     *
+     * @param col is the desired column
+     * @param row0 is the initial row, inclusive
+     * @return an Array obtained from row A( [row0:) , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstColumnIterator constColumnIterator(final int col, final int row0) {
+        return new ConstColumnIterator(col, row0);
+    }
+
+
+    /**
+     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
+     *
+     * @param col is the desired column
+     * @param row0 is the initial row, inclusive
+     * @param row1 is the final row, exclusive
+     * @return an Array obtained from row A( [row0:row1) , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstColumnIterator constColumnIterator(final int col, final int row0, final int row1) {
+        return new ConstColumnIterator(col, row0, row1);
+    }
+
+
+
+
+
+
+
+    //
     //	Miscellaneous
     //
     //	method       this    right    result
@@ -737,8 +871,10 @@ public class Matrix {
     //	inverse      Matrix           Matrix
     //  solve        Matrix           Matrix
     //  swap         Matrix  Matrix   this
+    //  range        Matrix           Matrix
+    //  rangeRow     Matrix           Array
+    //  rangeCol     Matrix           Array
     //
-
 
     /**
      * Returns the transpose of <code>this</code> Matrix
@@ -804,6 +940,7 @@ public class Matrix {
        return (rows == cols ? (new LUDecomposition(this)).solve(m) : (new QRDecomposition(this)).solve(m));
     }
 
+
     /**
      * Swaps contents of <code>this</code> Matrix by <code>another</code> Matrix
      *
@@ -811,72 +948,33 @@ public class Matrix {
      * @return this
      */
     public Matrix swap(final Matrix another) {
-        int itmp;
-        double [] dtmp;
-
-        // swaps rows, cols and length
-        itmp = this.rows;   this.rows   = another.rows;   another.rows   = itmp;
-        itmp = this.cols;   this.cols   = another.cols;   another.cols   = itmp;
-        itmp = this.length; this.length = another.length; another.length = itmp;
-        // swaps data
-        dtmp = this.data;   this.data   = another.data;   another.data   = dtmp;
-        return this;
-    }
-
-    /**
-     * Swaps elements given their coordinates
-     *
-     * @param pos1row : element1 row
-     * @param pos1col : element1 col
-     * @param pos2row : element2 row
-     * @param pos2col : element2 col
-     * @return this
-     */
-    public Matrix swap(final int pos1row, final int pos1col, final int pos2row, final int pos2col) {
-        final int addr1 = addr(pos1row, pos1col);
-        final int addr2 = addr(pos2row, pos2col);
-        final double tmp = data[addr1];
-        data[addr1] = data[addr2];
-        data[addr2] = tmp;
+        super.swap(another);
         return this;
     }
 
 
-    //
-    // protected methods
-    //
-
     /**
-     * This method returns the address of a given cell identified by <i>(row, col)</i>
-     * <p>
-     * This method is used internally and is provided for performance reasons.
-     */
-    protected int addr(final int row, final int col) {
-        return row*this.cols + col;
-    }
-
-    /**
-     * Get a submatrix
+     * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
      *
-     * @param row0 Initial row index
-     * @param row1 Final row index
-     * @param col0 Initial column index
-     * @param col1 Final column index
-     * @return A(i0:i1,j0:j1)
-     * @exception IllegalArgumentException Submatrix indices
+     * @param row0 Initial row index, inclusive
+     * @param row1 Final row index, exclusive
+     * @param col0 Initial column index, inclusive
+     * @param col1 Final column index, exclusive
+     * @return A( [row0:row1) , [col0:col1) )
+     * @exception IllegalArgumentException when indices are out of range
      */
-    protected Matrix getMatrix(final int row0, final int row1, final int col0, final int col1) {
-        QL.require(row0 >= 0 && row1 > row0 && row1 < this.rows, INVALID_ARGUMENTS);
-        QL.require(col0 >= 0 && col1 > col0 && col1 < this.cols, INVALID_ARGUMENTS);
+    public Matrix range(final int row0, final int row1, final int col0, final int col1) {
+        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS);
+        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS);
 
-        final Matrix result = new Matrix(row1-row0+1, col1-col0+1);
-        if (col1-col0 == this.cols-1) {
-            if (row1-row0 == this.rows-1)
-                System.arraycopy(this.data, 0, result.data, 0, this.length);
+        final Matrix result = new Matrix(row1-row0, col1-col0);
+        if (col1-col0 == this.cols) {
+            if (row1-row0 == this.rows)
+                System.arraycopy(this.data, 0, result.data, 0, this.size);
             else
-                System.arraycopy(this.data, this.addr(row0, 0), result.data, 0, result.length);
+                System.arraycopy(this.data, this.addr(row0, 0), result.data, 0, result.size);
         } else {
-            final int ncols = col1-col0+1;
+            final int ncols = col1-col0;
             int addr = 0;
             for (int i = row0; i <= row1; i++) {
                 System.arraycopy(this.data, addr(i, col0), result.data, addr, ncols);
@@ -887,14 +985,39 @@ public class Matrix {
     }
 
     /**
-     * Get a submatrix
+     * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
+     *
+     * @param row0 Initial row index, inclusive
+     * @param row1 Final row index, exclusive
+     * @param c Array of column indices.
+     * @return A( [row0:row1) , c(:) )
+     * @exception IllegalArgumentException when indices are out of range
+     */
+
+    public Matrix range(final int row0, final int row1, final int[] c) {
+        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS);
+        for (final int col : c) {
+            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS);
+        }
+
+        final Matrix result = new Matrix(row1-row0, c.length);
+        for (int i = row0; i <= row1; i++) {
+            for (int j = 0; j < c.length; j++) {
+                result.set( i-row0, j, this.get(i, c[j]) );
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
      *
      * @param r Array of row indices.
      * @param c Array of column indices.
      * @return A(r(:),c(:))
-     * @exception IllegalArgumentException Submatrix indices
+     * @exception IllegalArgumentException when indices are out of range
      */
-    protected Matrix getMatrix(final int[] r, final int[] c) {
+    public Matrix range(final int[] r, final int[] c) {
         for (final int row : r) {
             QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS);
         }
@@ -914,47 +1037,22 @@ public class Matrix {
     }
 
     /**
-     * Get a submatrix
-     *
-     * @param i0 Initial row index
-     * @param i1 Final row index
-     * @param c Array of column indices.
-     * @return A(i0:i1,c(:))
-     * @exception IllegalArgumentException Submatrix indices
-     */
-
-    protected Matrix getMatrix(final int row0, final int row1, final int[] c) {
-        QL.require(row0 >= 0 && row1 > row0 && row1 < this.rows, INVALID_ARGUMENTS);
-        for (final int col : c) {
-            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS);
-        }
-
-        final Matrix result = new Matrix(row1-row0+1, c.length);
-        for (int i = row0; i <= row1; i++) {
-            for (int j = 0; j < c.length; j++) {
-                result.set( i-row0, j, this.get(i, c[j]) );
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Get a submatrix
+     * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
      *
      * @param r Array of row indices.
-     * @param i0 Initial column index
-     * @param i1 Final column index
-     * @return A(r(:),j0:j1)
-     * @exception IllegalArgumentException Submatrix indices
+     * @param col0 Initial column index, inclusive
+     * @param col1 Final column index, exclusive
+     * @return A(r(:), [col0:col1) )
+     * @exception IllegalArgumentException when indices are out of range
      */
-    protected Matrix getMatrix(final int[] r, final int col0, final int col1) {
+    public Matrix range(final int[] r, final int col0, final int col1) {
         for (final int row : r) {
             QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS);
         }
-        QL.require(col0 >= 0 && col1 > col0 && col1 < this.cols, INVALID_ARGUMENTS);
+        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS);
 
-        final Matrix result = new Matrix(r.length, col1-col0+1);
-        final int ncols = col1-col0+1;
+        final Matrix result = new Matrix(r.length, col1-col0);
+        final int ncols = col1-col0;
 
         int addr = 0;
         for (final int row : r) {
@@ -963,6 +1061,540 @@ public class Matrix {
         }
         return result;
     }
+
+    /**
+     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
+     *
+     * @param row is a row index
+     * @param offset0 Initial column index, inclusive
+     * @return A(row, [col0:] )
+     * @exception IllegalArgumentException when indices are out of range
+     */
+    public Array rangeRow(final int row, final int col0) {
+        return rangeRow(row, col0, cols);
+    }
+
+    /**
+     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
+     *
+     * @param row row index
+     * @param col0 Initial column index, inclusive
+     * @param col1 Final column index, exclusive
+     * @return A(row, [col0:col1) )
+     * @exception IllegalArgumentException when indices are out of range
+     */
+    public Array rangeRow(final int row, final int col0, final int col1) {
+        QL.require(row >= 0 && row < this.rows, INVALID_ARGUMENTS);
+        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS);
+
+        final Array result = new Array(col1-col0);
+        final int ncols = col1-col0;
+        System.arraycopy(this.data, addr(row, col0), result.data, 0, ncols);
+        return result;
+    }
+
+    /**
+     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
+     *
+     * @param row row index
+     * @param row0 Initial column index, inclusive
+     * @return A(row, [col0:] )
+     * @exception IllegalArgumentException when indices are out of range
+     */
+    public Array rangeCol(final int col, final int row0) {
+        return rangeCol(col, row0, rows);
+    }
+
+    /**
+     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
+     *
+     * @param row row index
+     * @param row0 Initial column index, inclusive
+     * @param row1 Final column index, exclusive
+     * @return A(row, col0:col1)
+     * @exception IllegalArgumentException when indices are out of range
+     */
+    public Array rangeCol(final int col, final int row0, final int row1) {
+        QL.require(col >= 0 && col < this.cols, INVALID_ARGUMENTS);
+        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS);
+
+        final Array result = new Array(row1-row0);
+        final int nrows = row1-row0;
+
+        int addr = addr(col,row0);
+        for (int row = 0; row < nrows; row++) {
+            result.data[row] = this.data[addr];
+            addr += cols;
+        }
+        return result;
+    }
+
+
+    //
+    // public inner classes
+    //
+
+    /**
+     * This class implements a {@link ListIterator} over elements of a row of a {@link Matrix}
+     * <p>
+     * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
+     *
+     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
+     *
+     * @author Richard Gomes
+     */
+    public class RowIterator implements ListIterator<Double>, DoubleListIterator {
+
+        private final int row;
+        private final int col0;
+        private final int col1;
+
+        private int cursor;
+
+        /**
+         * Creates a RowIterator for the entire row <code>row</code>
+         *
+         * @param row is the desired row
+         * @return an Array obtained from row A( row , [:] )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public RowIterator(final int row) {
+            this(row, 0, cols);
+        }
+
+        /**
+         * Creates a RowIterator for row <code>row</code>
+         *
+         * @param row is the desired row
+         * @param col0 is the initial column, inclusive
+         * @return an Array obtained from row A( row , [col0:] )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public RowIterator(final int row, final int col0) {
+            this(row, col0, cols);
+        }
+
+        /**
+         * Creates a RowIterator for row <code>row</code>
+         *
+         * @param row is the desired row
+         * @param col0 is the initial column, inclusive
+         * @param col1 is the initial column, exclusive
+         * @return an Array obtained from row A( row , [col0:col1) )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public RowIterator(final int row, final int col0, final int col1) {
+            QL.require(row>=0 && row<rows && col0 >=0 && col1>=col0 && col1 <= cols, INVALID_ARGUMENTS);
+            this.row = row;
+            this.col0 = col0;
+            this.col1 = col1;
+            this.cursor = col0;
+        }
+
+
+        //
+        // implements ListIterator
+        //
+
+        @Override
+        public void add(final Double e) {
+            add(e.doubleValue());
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cursor < col1;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return cursor > col0;
+        }
+
+        @Override
+        public int nextIndex() {
+            return cursor;
+        }
+
+        @Override
+        public int previousIndex() {
+            return cursor-1;
+        }
+
+        @Override
+        public Double next() {
+            return nextDouble();
+        }
+
+        @Override
+        public Double previous() {
+            return previousDouble();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void set(final Double e) {
+            set(e.doubleValue());
+        }
+
+
+        //
+        // implements DoubleListIterator
+        //
+
+        @Override
+        public void add(final double e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void forward() {
+            if (cursor < col1) {
+                cursor++;
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        @Override
+        public void backward() {
+            if (cursor >= col0) {
+                --cursor;
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        @Override
+        public double nextDouble() {
+            if (cursor < col1) {
+                return data[addr(row,cursor++)];
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        @Override
+        public double previousDouble() {
+            if (cursor > col0) {
+                return data[addr(row,--cursor)];
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        @Override
+        public void set(final double e) {
+            if (cursor >=col0 && cursor < col1) {
+                data[addr(row,cursor)] = e;
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+    }
+
+
+    /**
+     * This class implements a {@link ListIterator} over elements of a row of a {@link Matrix}
+     * <p>
+     * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
+     *
+     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
+     *
+     * @author Richard Gomes
+     */
+    public class ConstRowIterator extends RowIterator {
+
+        /**
+         * Creates a constant, non-modifiable RowIterator for row <code>row</code>
+         *
+         * @param row is the desired row
+         * @return an Array obtained from row A( row , [:] )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public ConstRowIterator(final int row) {
+            super(row);
+        }
+
+        /**
+         * Creates a constant, non-modifiable RowIterator for row <code>row</code>
+         *
+         * @param row is the desired row
+         * @param col0 is the initial column, inclusive
+         * @return an Array obtained from row A( row , [col0:) )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public ConstRowIterator(final int row, final int col0) {
+            super(row, col0);
+        }
+
+        /**
+         * Creates a constant, non-modifiable RowIterator for row <code>row</code>
+         *
+         * @param row is the desired row
+         * @param col0 is the initial column, inclusive
+         * @param col1 is the initial column, exclusive
+         * @return an Array obtained from row A( row , [col0:col1) )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public ConstRowIterator(final int row, final int col0, final int col1) {
+            super(row, col0, col1);
+        }
+
+
+        @Override
+        public void set(final double e) {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+
+    /**
+     * This class implements a {@link ListIterator} over elements of a column of a {@link Matrix}
+     * <p>
+     * This class implements {@link ListIterator} and {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
+     *
+     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
+     *
+     * @author Richard Gomes
+     */
+    public class ColumnIterator implements ListIterator<Double>, DoubleListIterator {
+
+        private final int row0;
+        private final int row1;
+        private final int col;
+
+        private int cursor;
+
+        /**
+         * Creates a ColumnIterator for the entire column <code>col</code>
+         *
+         * @param col is the desired column
+         * @return an Array obtained from row A( [:] , col )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public ColumnIterator(final int col) {
+            this(col, 0, cols);
+        }
+
+        /**
+         * Creates a ColumnIterator for column <code>col</code>
+         *
+         * @param col is the desired column
+         * @param row0 is the initial row, inclusive
+         * @return an Array obtained from row A( [row0:] , col )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public ColumnIterator(final int col, final int row0) {
+            this(col, row0, cols);
+        }
+
+        /**
+         * Creates a ColumnIterator for column <code>col</code>
+         *
+         * @param col is the desired column
+         * @param row0 is the initial row, inclusive
+         * @param row1 is the final row, exclusive
+         * @return an Array obtained from row A( [row0:row1) , col )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public ColumnIterator(final int col, final int row0, final int row1) {
+            QL.require(col>=0 && col<cols && row0 >=0 && row1>=row0 && row1 <= rows, INVALID_ARGUMENTS);
+            this.col = col;
+            this.row0 = row0;
+            this.row1 = row1;
+            this.cursor = row0;
+        }
+
+
+        //
+        // implements ListIterator
+        //
+
+        @Override
+        public void add(final Double e) {
+            add(e.doubleValue());
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cursor < row1;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return cursor > row0;
+        }
+
+        @Override
+        public int nextIndex() {
+            return cursor;
+        }
+
+        @Override
+        public int previousIndex() {
+            return cursor-1;
+        }
+
+        @Override
+        public Double next() {
+            return nextDouble();
+        }
+
+        @Override
+        public Double previous() {
+            return previousDouble();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void set(final Double e) {
+            set(e.doubleValue());
+        }
+
+
+        //
+        // implements DoubleListIterator
+        //
+
+        @Override
+        public void add(final double e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void forward() {
+            if (cursor < row1-1) {
+                cursor++;
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        @Override
+        public void backward() {
+            if (cursor > row0) {
+                --cursor;
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        @Override
+        public double nextDouble() {
+            if (cursor < row1) {
+                return data[addr(cursor++,col)];
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        @Override
+        public double previousDouble() {
+            if (cursor > row0) {
+                return data[addr(--cursor,col)];
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        @Override
+        public void set(final double e) {
+            if (cursor >=row0 && cursor < row1) {
+                data[addr(cursor, col)] = e;
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+    }
+
+
+    /**
+     * This class implements a {@link ListIterator} over elements of a row of a {@link Matrix}
+     * <p>
+     * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
+     *
+     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
+     *
+     * @author Richard Gomes
+     */
+    public class ConstColumnIterator extends ColumnIterator {
+
+        /**
+         * Creates a constant, non-modifiable RowIterator for an entire column <code>col</code>
+         *
+         * @param col is the desired col
+         */
+        public ConstColumnIterator(final int col) {
+            super(col);
+        }
+
+        /**
+         * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
+         *
+         * @param col is the desired column
+         * @param row0 is the initial row, inclusive
+         * @return an Array obtained from row A( [row0:row1) , col )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public ConstColumnIterator(final int col, final int row0) {
+            super(col, row0);
+        }
+
+        /**
+         * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
+         *
+         * @param col is the desired column
+         * @param row0 is the initial row, inclusive
+         * @param row1 is the final row, exclusive
+         * @return an Array obtained from row A( [row0:row1) , col )
+         * @throws IllegalArgumentException when indices are out of range
+         */
+        public ConstColumnIterator(final int col, final int row0, final int row1) {
+            super(col, row0, row1);
+        }
+
+
+        @Override
+        public void set(final double e) {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
+
+
+
+    //
+    // protected methods
+    //
+
+    /**
+     * This method returns the address of a given cell identified by <i>(row, col)</i>
+     * <p>
+     * This method is used internally and is provided for performance reasons.
+     */
+    protected int addr(final int row, final int col) {
+        return row*this.cols + col;
+    }
+
+
+    //
+    // static methods
+    //
+
+    // TODO: OSGi :: remove statics
 
 
     /**
@@ -980,6 +1612,14 @@ public class Matrix {
             r = 0.0;
         }
         return r;
+    }
+
+
+    public static void copy(final DoubleListIterator src, final DoubleListIterator dst) {
+        while (src.hasNext()) {
+            dst.set(src.nextDouble());
+            dst.forward();
+        }
     }
 
 }

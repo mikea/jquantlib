@@ -34,7 +34,7 @@ import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * TimeGrid class.
- * 
+ *
  * @author Dominik Holenstein
  * @author Richard Gomes
  */
@@ -57,7 +57,7 @@ public class TimeGrid {
 
     /**
      * Regularly spaced time-grid
-     * 
+     *
      * @param end
      * @param steps
      */
@@ -81,9 +81,9 @@ public class TimeGrid {
      * Time grid with mandatory time points.
      * <p>
      * Mandatory points are guaranteed to belong to the grid. No additional points are added.
-     * 
+     *
      * @note This constructor is not available yet
-     * 
+     *
      * @param list
      */
     //TODO: needs code review when integrated to callers. Fix adjacent_difference before using
@@ -101,10 +101,10 @@ public class TimeGrid {
         if (mandatoryTimes.first() < 0.0)
             throw new ArithmeticException("negative times not allowed");
 
-        final List<Double> e = new ArrayDoubleList(mandatoryTimes.length);
+        final List<Double> e = new ArrayDoubleList(mandatoryTimes.size());
         double prev = mandatoryTimes.get(0);
         e.add(prev);
-        for (int i=1; i<mandatoryTimes.length; i++) {
+        for (int i=1; i<mandatoryTimes.size(); i++) {
             final double curr = mandatoryTimes.get(i);
             if (! Closeness.isCloseEnough(prev, curr))
                 e.add(curr);
@@ -131,7 +131,7 @@ public class TimeGrid {
      * Mandatory points are guaranteed to belong to the grid.
      * Additional points are then added with regular spacing between pairs of mandatory times in order
      * to reach the desired number of steps.
-     * 
+     *
      * @note This constructor is not available yet - fix adjacent_difference before using
      */
     //TODO: needs code review when integrated to callers.
@@ -157,7 +157,7 @@ public class TimeGrid {
             final Array diff = mandatoryTimes.adjacentDifference(1);
 
             int idx_min = 0;
-            final int idx_max = diff.length-1;
+            final int idx_max = diff.size()-1;
 
             if (diff.first()==0.0)
                 idx_min++;
@@ -169,7 +169,7 @@ public class TimeGrid {
 
         final ArrayDoubleList tempTimes = new ArrayDoubleList();
         tempTimes.add(periodBegin);
-        final int m_length = mandatoryTimes.length;
+        final int m_length = mandatoryTimes.size();
         for(int i = 0; i<m_length; i++){
             final double periodEnd = mandatoryTimes.get(i);
             if(periodEnd != 0){
@@ -306,7 +306,7 @@ public class TimeGrid {
 
 
     public @NonNegative int closestIndex(@Time @NonNegative final double t) /* @ReadOnly */ {
-        final int size = times.length;
+        final int size = times.size();
         final int result = times.lowerBound(t);
 
         if (result == 0)
@@ -354,11 +354,11 @@ public class TimeGrid {
 
 
     public int size() /*@Readonly*/ {
-        return times.length;
+        return times.size();
     }
 
     public boolean empty() /*@Readonly*/ {
-        return times.length == 0;
+        return times.size() == 0;
     }
 
     public double begin() /*@Readonly*/ {

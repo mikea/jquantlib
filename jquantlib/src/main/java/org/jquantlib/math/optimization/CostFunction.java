@@ -44,7 +44,7 @@ public abstract class CostFunction {
 
     /**
      * Method to overload to compute the cost function values in x
-     * 
+     *
      * @param x
      * @return
      */
@@ -60,7 +60,7 @@ public abstract class CostFunction {
     /**
      * Method to overload to compute grad_f, the first derivative of
      * the cost function with respect to x
-     * 
+     *
      * @param grad
      * @param x
      */
@@ -69,7 +69,7 @@ public abstract class CostFunction {
         double /* @Real */ fp, fm;
         // TODO: code review :: use of clone()
         final Array xx = x.clone();
-        for (int /* @Size */i=0; i<x.length; i++) {
+        for (int /* @Size */i=0; i<x.size(); i++) {
             // xx[i] += eps;
             xx.set(i, eps + xx.get(i));
             fp = value(xx);
@@ -86,7 +86,7 @@ public abstract class CostFunction {
     /**
      * Method to overload to compute grad_f, the first derivative of
      * the cost function with respect to x and also the cost function
-     * 
+     *
      * @param grad
      * @param x
      * @return

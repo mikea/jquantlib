@@ -41,7 +41,7 @@ public class ProjectedCostFunction extends CostFunction {
         this.actualParameters = parameterValues.clone();
         this.parametersFreedoms_ = parametersFreedoms;
 
-        if (fixedParameters.length != parametersFreedoms_.length)
+        if (fixedParameters.size() != parametersFreedoms_.length)
             throw new IllegalArgumentException("fixedParameters_.size()!=parametersFreedoms_.size()");
         for(int i = 0; i<parametersFreedoms_.length; i++){
             if(!parametersFreedoms_[i])
@@ -52,10 +52,10 @@ public class ProjectedCostFunction extends CostFunction {
     }
 
     public void mapFreeParameters(final Array parametersValues){
-        if(!(parametersValues.length == numberOfFreeParameters))
+        if(!(parametersValues.size() == numberOfFreeParameters))
             throw new IllegalArgumentException("parametersValues.size()!=numberOfFreeParameters");
         int i = 0;
-        for(int j = 0; j<actualParameters.length; j++)
+        for(int j = 0; j<actualParameters.size(); j++)
             if(!parametersFreedoms_[j])
                 actualParameters.set(j, parametersValues.get(i++));
     }
@@ -75,7 +75,7 @@ public class ProjectedCostFunction extends CostFunction {
 
     //FIXME: check Disposable template
     public Array project(final Array parameters){
-        if(!(parameters.length == parametersFreedoms_.length))
+        if(!(parameters.size() == parametersFreedoms_.length))
             throw new ArithmeticException("parameters.size()!=parametersFreedoms_.size()");
         final Array projectedParameters = new Array(numberOfFreeParameters);
         int i = 0;
@@ -87,12 +87,12 @@ public class ProjectedCostFunction extends CostFunction {
 
     //FIXME: check Disposable template
     public Array include(final Array projectedParameters){
-        if(!(projectedParameters.length == numberOfFreeParameters))
+        if(!(projectedParameters.size() == numberOfFreeParameters))
             throw new IllegalArgumentException("projectedParameters.size()!=numberOfFreeParameters");
         // TODO: code review :: use of clone()
         final Array y = fixedParameters.clone();
         int i = 0;
-        for(int j = 0; j<y.length; j++)
+        for(int j = 0; j<y.size(); j++)
             if(!parametersFreedoms_[j])
                 y.set(j, projectedParameters.get(i++));
         return y;
