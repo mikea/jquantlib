@@ -3,7 +3,6 @@ package org.jquantlib.instruments;
 import java.util.Comparator;
 
 import org.jquantlib.cashflow.CashFlow;
-import org.jquantlib.util.Date;
 
 public class EarlierThanCashFlowComparator implements Comparator<CashFlow> {
 	

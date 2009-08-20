@@ -12,68 +12,68 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 
 public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
-	
+
 	//
     // private fields
     //
-    
-    private Handle<YieldTermStructure> originalCurve;
-	private Handle<Quote> spread;
-	private Compounding comp;
-	private Frequency freq;
 
-	
+    private final Handle<YieldTermStructure> originalCurve;
+	private final Handle<Quote> spread;
+	private final Compounding comp;
+	private final Frequency freq;
+
+
 	//
 	// public constructors
 	//
-	
+
 	public ZeroSpreadedTermStructure(
-	        final Handle<YieldTermStructure> h, 
-			final Handle<Quote> spread, Compounding comp , Frequency freq,
+	        final Handle<YieldTermStructure> h,
+			final Handle<Quote> spread, final Compounding comp , final Frequency freq,
 			final DayCounter dc){
 		this.originalCurve = h;
 		this.spread = spread;
 		this.comp = comp;
 		this.freq = freq;
-		
-		this.originalCurve.addObserver(this);
-		this.spread.addObserver(this);
+
+        registerWith(this.originalCurve);
+        registerWith(this.spread);
 	}
-	
+
 
 	//
 	// public methods
 	//
-	
+
 	public double forwardImpl(final double t){
         return originalCurve.getLink().
         forwardRate(t, t, comp, freq, true).rate()
         + spread.getLink().evaluate();
     }
-    
-	
+
+
 	//
 	// overrides ZeroYieldStructure
 	//
-	
+
 	@Override
-	protected double zeroYieldImpl(double t) {
+	protected double zeroYieldImpl(final double t) {
 		//org.comment: to be fixed: user-defined daycounter should be used
-		InterestRate zeroRate = originalCurve.getLink().
+		final InterestRate zeroRate = originalCurve.getLink().
 		zeroRate(t, comp, freq, true);
-		InterestRate spreadedRate = 
-			new InterestRate(zeroRate.rate() + spread.getLink().evaluate(), 
+		final InterestRate spreadedRate =
+			new InterestRate(zeroRate.rate() + spread.getLink().evaluate(),
 				zeroRate.dayCounter(),
 				zeroRate.compounding(),
 				zeroRate.frequency());
 		return spreadedRate.equivalentRate(t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
 	}
-	
-	
+
+
 	//
 	// overrides TermStructure
 	//
-	
+
     @Override
     public Calendar calendar() {
         return originalCurve.getLink().calendar();

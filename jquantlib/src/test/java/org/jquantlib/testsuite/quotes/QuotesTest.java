@@ -37,6 +37,7 @@ import org.junit.Test;
  *
  * @author Richard Gomes
  */
+// TODO: code review :: please verify against QL/C++ code
 public class QuotesTest {
 
 	public QuotesTest() {

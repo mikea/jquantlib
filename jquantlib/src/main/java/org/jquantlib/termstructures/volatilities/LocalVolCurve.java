@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -51,19 +51,19 @@ import org.jquantlib.util.Visitor;
 
 public class LocalVolCurve extends LocalVolTermStructure {
 
-	private BlackVarianceCurve blackVarianceCurve_;
+	private final BlackVarianceCurve blackVarianceCurve_;
 
 	public LocalVolCurve(final Handle<BlackVarianceCurve> curve) {
 		super(curve.getLink().dayCounter());
 		blackVarianceCurve_ = curve.getLink();
-		blackVarianceCurve_.addObserver(this);
+		registerWith(blackVarianceCurve_);
 	}
 
-    
+
 	//
 	// Overrides TermStructure
 	//
-	
+
 	@Override
 	public final Date referenceDate() {
 		return blackVarianceCurve_.referenceDate();
@@ -78,12 +78,12 @@ public class LocalVolCurve extends LocalVolTermStructure {
 	public final Date maxDate() {
 		return blackVarianceCurve_.maxDate();
 	}
-    
-    
+
+
     //
     // Overrides LocalVolTermStructure
     //
-    
+
 	@Override
 	public final /*@Price*/ double minStrike() {
 		return Double.NEGATIVE_INFINITY;
@@ -95,7 +95,7 @@ public class LocalVolCurve extends LocalVolTermStructure {
 	}
 
 	/**
-	 * The relation 
+	 * The relation
 	 * {@latex[ \int_0^T \sigma_L^2(t)dt = \sigma_B^2 T }
 	 * holds, where
 	 * {@latex$ \sigma_L(t) }
@@ -108,21 +108,21 @@ public class LocalVolCurve extends LocalVolTermStructure {
 	 */
 	@Override
 	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-		/*@Time*/ double m = maturity;
-		/*@Time*/ double dt = 1.0 / 365.0;
-		/*@Variance*/ double var1 = blackVarianceCurve_.blackVariance(/*@Time*/ maturity, strike, true);
-		/*@Variance*/ double var2 = blackVarianceCurve_.blackVariance(/*@Time*/ m + dt, strike, true);
-		double derivative = (var2 - var1) / dt;
+		/*@Time*/ final double m = maturity;
+		/*@Time*/ final double dt = 1.0 / 365.0;
+		/*@Variance*/ final double var1 = blackVarianceCurve_.blackVariance(/*@Time*/ maturity, strike, true);
+		/*@Variance*/ final double var2 = blackVarianceCurve_.blackVariance(/*@Time*/ m + dt, strike, true);
+		final double derivative = (var2 - var1) / dt;
 		return Math.sqrt(derivative);
 	}
 
 	//
 	// implements TypedVisitable
 	//
-	
+
 	@Override
 	public void accept(final TypedVisitor<TermStructure> v) {
-		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
 		if (v1 != null) {
 			v1.visit(this);
 		} else {

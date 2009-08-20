@@ -136,7 +136,7 @@ public abstract class NewInstrument extends Instrument {
             this.engine.deleteObserver(this);
         this.engine = engine;
         if (this.engine != null)
-            this.engine.addObserver(this);
+            registerWith(this.engine);
         update(this, null);
     }
 

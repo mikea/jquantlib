@@ -63,7 +63,7 @@ public class IborIndex extends InterestRateIndex {
         this.handle = handle;
         this.endOfMonth = endOfMonth;
         if (handle != null)
-            handle.getLink().addObserver(this);
+            registerWith(handle.getLink());
     }
 
     public IborIndex(

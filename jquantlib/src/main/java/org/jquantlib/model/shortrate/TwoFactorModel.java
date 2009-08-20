@@ -32,9 +32,10 @@ import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 
 /**
- * 
+ *
  * @author Praneet Tiwari
  */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class TwoFactorModel extends ShortRateModel {
 
     // ! Class describing the dynamics of the two state variables
@@ -46,11 +47,11 @@ public abstract class TwoFactorModel extends ShortRateModel {
      */
     public abstract class ShortRateDynamics {
 
-        private StochasticProcess1D xProcess_, yProcess_;
+        private final StochasticProcess1D xProcess_, yProcess_;
         double /* @Real */correlation_;
 
         public ShortRateDynamics(final StochasticProcess1D xProcess, final StochasticProcess1D yProcess,
-                double /* @Real */correlation) {
+                final double /* @Real */correlation) {
             xProcess_ = (xProcess);
             yProcess_ = (yProcess);
             correlation_ = (correlation);
@@ -76,12 +77,12 @@ public abstract class TwoFactorModel extends ShortRateModel {
         // ! Joint process of the two variables
 
         public StochasticProcess process() {
-            Matrix correlation = new Matrix(2, 2);
+            final Matrix correlation = new Matrix(2, 2);
             correlation.set(0, 0, 1.0);
             correlation.set(1, 1, 1.0);
             correlation.set(0, 1, correlation_);
             correlation.set(1, 0, correlation_);
-            ArrayList<StochasticProcess1D> processes = new ArrayList<StochasticProcess1D>();
+            final ArrayList<StochasticProcess1D> processes = new ArrayList<StochasticProcess1D>();
             processes.add(0, xProcess_);
             processes.add(1, xProcess_);
             return (new StochasticProcessArray(processes, correlation));
@@ -92,7 +93,7 @@ public abstract class TwoFactorModel extends ShortRateModel {
 
     public class ShortRateTree extends TreeLattice2D<TrinomialTree> {
 
-        private ShortRateDynamics dynamics_;
+        private final ShortRateDynamics dynamics_;
 
         // ! Plain tree build-up from short-rate dynamics
         public ShortRateTree(final TrinomialTree tree1, final TrinomialTree tree2, final ShortRateDynamics dynamics) {
@@ -102,20 +103,20 @@ public abstract class TwoFactorModel extends ShortRateModel {
         }
 
         @Override
-        public double /* @DiscountFactor */discount(int /* @Size */i, int /* @Size */index) {
-            int /* @Size */modulo = tree1.size(i);
-            int /* @Size */index1 = index % modulo;
-            int /* @Size */index2 = index / modulo;
+        public double /* @DiscountFactor */discount(final int /* @Size */i, final int /* @Size */index) {
+            final int /* @Size */modulo = tree1.size(i);
+            final int /* @Size */index1 = index % modulo;
+            final int /* @Size */index2 = index / modulo;
 
-            double /* @Real */x = tree1.underlying(i, index1);
-            double /* @Real */y = tree2.underlying(i, index2);
+            final double /* @Real */x = tree1.underlying(i, index1);
+            final double /* @Real */y = tree2.underlying(i, index2);
 
-            double /* @Real */r = dynamics_.shortRate(timeGrid().at(i), x, y);
+            final double /* @Real */r = dynamics_.shortRate(timeGrid().at(i), x, y);
             return Math.exp(-r * timeGrid().dt(i));
         }
     }
 
-    public TwoFactorModel(int /* @Size */nParams) {
+    public TwoFactorModel(final int /* @Size */nParams) {
         super(nParams);
     }
 
@@ -126,10 +127,10 @@ public abstract class TwoFactorModel extends ShortRateModel {
     @Override
     public Lattice tree(final TimeGrid grid) {
 
-        ShortRateDynamics dyn = dynamics();
+        final ShortRateDynamics dyn = dynamics();
 
-        TrinomialTree tree1 = new TrinomialTree(dyn.xProcess(), grid, true);
-        TrinomialTree tree2 = new TrinomialTree(dyn.yProcess(), grid, true);
+        final TrinomialTree tree1 = new TrinomialTree(dyn.xProcess(), grid, true);
+        final TrinomialTree tree2 = new TrinomialTree(dyn.yProcess(), grid, true);
 
         return new ShortRateTree(tree1, tree2, dyn);
 

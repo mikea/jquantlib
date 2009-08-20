@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -52,50 +52,50 @@ import org.jquantlib.util.Visitor;
  * Implied vol term structure at a given date in the future
  * <p>
  * The given date will be the implied reference date.
- * 
- * @note This term structure will remain linked to the original structure, 
+ *
+ * @note This term structure will remain linked to the original structure,
  *       i.e., any changes in the latter will be reflected in this structure as well.
- *       
- * @note It doesn't make financial sense to have an asset-dependent implied Volatility Term Structure. 
+ *
+ * @note It doesn't make financial sense to have an asset-dependent implied Volatility Term Structure.
  *       This class should be used with term structures that are time dependent only.
  */
 public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 
-	private Handle<BlackVolTermStructure> originalTS;
-	
+	private final Handle<BlackVolTermStructure> originalTS;
+
 	public ImpliedVolTermStructure(final Handle<BlackVolTermStructure> originalTS, final Date referenceDate) {
 		super(referenceDate);
 		this.originalTS = originalTS;
-		originalTS.addObserver(this);
+		registerWith(originalTS);
 	}
-	
-	
+
+
     //
     // Overrides TermStructure
     //
-    
+
     @Override
     public Date maxDate() {
         return originalTS.getLink().maxDate();
     }
 
-    
+
     @Override
     public DayCounter dayCounter() /* @ReadOnly */ {
         return originalTS.getLink().dayCounter();
     }
 
-    
+
 	//
 	// Override BlackVolTermStructure
 	//
-	
+
 	@Override
-	protected double blackVarianceImpl(/* @Time */double t, /* @Price */double strike) /* @ReadOnly */{
+	protected double blackVarianceImpl(/* @Time */final double t, /* @Price */final double strike) /* @ReadOnly */{
 		// timeShift (and/or variance) variance at evaluation date cannot be cached since the original curve could change between
 		// invocations of this method
-		/* @Time */ double timeShift = dayCounter().yearFraction(originalTS.getLink().referenceDate(), referenceDate());
-		
+		/* @Time */ final double timeShift = dayCounter().yearFraction(originalTS.getLink().referenceDate(), referenceDate());
+
 		// t is relative to the current reference date and needs to be converted to the time relative to the reference date of the
 		// original curve
 		return originalTS.getLink().blackForwardVariance(timeShift, timeShift + t, strike, true);
@@ -115,10 +115,10 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 	//
 	// implements TypedVisitable
 	//
-	
+
 	@Override
 	public void accept(final TypedVisitor<TermStructure> v) {
-		Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
 		if (v1 != null) {
 			v1.visit(this);
 		} else {

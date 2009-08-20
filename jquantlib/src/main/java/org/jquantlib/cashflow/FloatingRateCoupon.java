@@ -124,8 +124,10 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         else
             this.dayCounter = index_.dayCounter();
 
-        index.addObserver(this);
-        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
+        final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+
+        registerWith(this.index_);
+        registerWith(evaluationDate);
     }
 
 
@@ -133,11 +135,13 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     // public methods
     //
 
+// TODO: code review :: please verify against QL/C++ code
     public void setPricer(final FloatingRateCouponPricer pricer){
         QL.require(pricer != null , no_adequate_pricer_given);
-        if (this.pricer != null) this.pricer.deleteObserver(this);
+
+        if (this.pricer != null) unregisterWith(this.pricer);
         this.pricer = pricer;
-        this.pricer.addObserver(this);
+        registerWith(this.pricer);
         update();
     }
 
@@ -227,6 +231,16 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     //
     // implements Observer
     //
+
+    @Override
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
+    }
+
+    @Override
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
+    }
 
     @Override
     public void update(final Observable o, final Object arg) {

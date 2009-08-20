@@ -213,8 +213,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             final Date m2 = instruments[i].latestDate();
             QL.require(m1.eq(m2) , "two instruments have the same maturity");
         }
-        for (final RateHelper instrument : instruments)
-            instrument.addObserver(this);
+        for (final RateHelper instrument : instruments) {
+            registerWith(instrument);
+        }
     }
 
 

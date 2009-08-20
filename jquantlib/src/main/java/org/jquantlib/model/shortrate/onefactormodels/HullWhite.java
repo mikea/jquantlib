@@ -71,8 +71,9 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
             final Handle<YieldTermStructure>/* YieldTermStructure */termStructure,
             final double /* @Real */a /* = 0.1 */,
             final double /* @Real */sigma /* = 0.01 */) {
-        super(termStructure.getLink().forwardRate(
-                0.0, 0.0, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate(), a, 0.0, sigma, 0.0);
+
+        super(termStructure.getLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate(),
+                a, 0.0, sigma, 0.0);
 
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
@@ -81,7 +82,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         b_ = new NullParameter();
         lambda_ = new NullParameter();
         generateArguments();
-        termStructure.addObserver(this);
+        registerWith(termStructure);
     }
 
     @Override

@@ -213,6 +213,16 @@ public class Handle<T extends Observable> implements Observable {
         //
 
         @Override
+        public void registerWith(final Observable o) {
+            o.addObserver(this);
+        }
+
+        @Override
+        public void unregisterWith(final Observable o) {
+            o.deleteObserver(this);
+        }
+
+        @Override
         public final void update(final Observable o, final Object arg) {
             delegatedObservable.notifyObservers(arg);
         }

@@ -106,10 +106,11 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         this.blackVolatility = blackVolTS;
         this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(LocalVolTermStructure.class);
         this.updated = false;
-        this.x0.addObserver(this);
-        this.riskFreeRate.addObserver(this);
-        this.dividendYield.addObserver(this);
-        this.blackVolatility.addObserver(this);
+
+        registerWith(this.x0);
+        registerWith(this.riskFreeRate);
+        registerWith(this.dividendYield);
+        registerWith(this.blackVolatility);
     }
 
     @Override

@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2009 Daniel Kong
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,36 +36,36 @@ import org.jquantlib.util.Date;
 
 /**
  * Base class for convertible bonds
- * 
+ *
  * @author Daniel Kong
  */
 //TODO: Work in progress
 public class ConvertibleBond extends Bond {
-	
+
 	protected double conversionRatio;
 	protected List<Dividend> dividends;
 	protected List<Callability> callability;
-	protected Handle<Quote> creditSpread; 
-	protected Option option; 
+	protected Handle<Quote> creditSpread;
+	protected Option option;
 
 	public ConvertibleBond(final StochasticProcess process,
 				          final Exercise exercise,
 				          final PricingEngine engine,
-				          double conversionRatio,
+				          final double conversionRatio,
 				          final List<Dividend> dividends,
 				          final List<Callability> callability,
 				          final Handle<Quote> creditSpread,
 				          final Date issueDate,
-				          int settlementDays,
+				          final int settlementDays,
 				          final DayCounter dayCounter,
 				          final Schedule schedule,
-				          double redemption){
+				          final double redemption){
 		super(settlementDays, 100.0, schedule.getCalendar(), dayCounter, schedule.businessDayConvention());
 		this.conversionRatio = conversionRatio;
 		this.dividends = dividends;
 		this.callability = callability;
 		this.creditSpread = creditSpread;
-		
+
 		this.issueDate_ = issueDate;
         this.datedDate = schedule.date(0);
         this.maturityDate_ = schedule.date(schedule.size()-1);
@@ -73,31 +73,32 @@ public class ConvertibleBond extends Bond {
 
         setPricingEngine(engine);
 
-        process.addObserver(this);
-        creditSpread.addObserver(this);
-		
+        registerWith(process);
+        registerWith(creditSpread);
+
 	}
-	
+
 	public double getConversionRatio() {
-		return conversionRatio; 
+		return conversionRatio;
 	}
-	
+
 	public List<Dividend> getDividents(){
 		return dividends;
 	}
-	
+
 	public List<Callability> getCallability(){
 		return callability;
 	}
-	
+
 	public Handle<Quote> getCreditSpread(){
 		return creditSpread;
 	}
 
-	protected void performCalculations(){
+	@Override
+    protected void performCalculations(){
 		option.setPricingEngine(engine);
         NPV = option.getNPV();
         errorEstimate = 0.0;
 	}
-	
+
 }

@@ -9,15 +9,15 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
+// TODO: code review :: please verify against QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class DiscountingSwapEngine extends SwapEngine implements Observer {
 
     private final Handle<YieldTermStructure> discountCurve;
 
     public DiscountingSwapEngine(final Handle<YieldTermStructure> discountCurve) /* @ReadOnly */ {
         this.discountCurve = discountCurve;
-
-        // TODO: code review :: please verify against QL/C++ code
-        this.discountCurve.getLink().addObserver(this);
+        registerWith(this.discountCurve.getLink());
     }
 
     @Override
@@ -35,12 +35,26 @@ public class DiscountingSwapEngine extends SwapEngine implements Observer {
         }
      }
 
+
+    //
+    // implements Observer
+    //
+
+    @Override
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
+    }
+
+    @Override
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
+    }
+
     @Override
     // TODO: code review :: please verify against QL/C++ code
     public void update(final Observable o, final Object arg) {
         // TODO: Code review :: incomplete code
-        if (true)
-            throw new UnsupportedOperationException("Work in progress");
+        throw new UnsupportedOperationException("Work in progress");
     }
 
 }

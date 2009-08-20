@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -32,11 +32,11 @@ import org.jquantlib.util.Observable;
 
 /**
  * Rate helper with date schedule relative to the global evaluation date
- * 
+ *
  * <p>
  * This class takes care of rebuilding the date schedule when the global
  * evaluation date changes
- * 
+ *
  * @author Srinivas Hasti
  */
 // TODO: code review :: please verify against QL/C++ code
@@ -46,65 +46,63 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
     //
     // protected fields
     //
-    
+
     protected Date evaluationDate;
 
-    
+
     //
     // protected constructors
     //
-    
+
     protected RelativeDateRateHelper() {
         super();
-        
+
         // TODO: code review :: please verify against QL/C++ code
         this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        this.evaluationDate.addObserver(this);
+        registerWith(this.evaluationDate);
     }
 
-    
+
     //
     // public constructors
     //
-    
-    public RelativeDateRateHelper(/*@Price*/ double d) {
+
+    public RelativeDateRateHelper(/*@Price*/ final double d) {
         super(d);
-        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
         this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        this.evaluationDate.addObserver(this);
+        registerWith(this.evaluationDate);
     }
 
-    public RelativeDateRateHelper(Handle<Quote> quote) {
+    public RelativeDateRateHelper(final Handle<Quote> quote) {
         super(quote);
-        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
         this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        this.evaluationDate.addObserver(this);
+        registerWith(this.evaluationDate);
     }
 
-    
-    public RelativeDateRateHelper(Handle<Quote> quote, T termStructure, Date earliestDate, Date latestDate) {
+
+    public RelativeDateRateHelper(final Handle<Quote> quote, final T termStructure, final Date earliestDate, final Date latestDate) {
         super(quote, termStructure, earliestDate, latestDate);
-        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
         this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        this.evaluationDate.addObserver(this);
+        registerWith(this.evaluationDate);
     }
 
-    
+
     //
     // protected abstract methods
     //
-    
+
     protected abstract void initializeDates();
 
-    
+
     //
     // overrides RateHelper
     //
-    
+
     @Override
-    public void update(Observable o, Object arg) {
-        if (!evaluationDate.equals(Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate())) {
-            evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+    public void update(final Observable o, final Object arg) {
+        final Date newEvaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        if (!evaluationDate.equals(newEvaluationDate)) {
+            evaluationDate = newEvaluationDate;
             initializeDates();
         }
         super.update(o, arg);

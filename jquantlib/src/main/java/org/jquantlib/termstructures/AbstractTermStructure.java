@@ -245,7 +245,7 @@ public abstract class AbstractTermStructure implements TermStructure {
 
         // initialize reference date with this class as observer
         this.referenceDate = referenceDate;
-        this.referenceDate.addObserver(this);
+        registerWith(this.referenceDate);
     }
 
     /**
@@ -285,7 +285,7 @@ public abstract class AbstractTermStructure implements TermStructure {
         this.moving = true;
         this.updated = false;
         this.today = settings.getEvaluationDate();
-        today.addObserver(this);
+        registerWith(today);
 
         // initialize reference date without any observers
         this.referenceDate = null;
@@ -401,6 +401,16 @@ public abstract class AbstractTermStructure implements TermStructure {
     //
     // implements Observer
     //
+
+    @Override
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
+    }
+
+    @Override
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
+    }
 
     @Override
     public void update(final Observable o, final Object arg) {

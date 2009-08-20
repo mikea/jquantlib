@@ -56,20 +56,6 @@ public abstract class Option extends NewInstrument {
     protected final Payoff payoff;
 	protected final Exercise exercise;
 
-//XXX
-//	//
-//	// private fields
-//	//
-//
-//	/**
-//	 * This private field is automatically initialized by constructor which
-//	 * picks up it's value from {@link Settings} singleton. This procedure
-//	 * caches values from the singleton, intending to avoid contention in
-//	 * heavily multi-threaded environments.
-//	 */
-//	private final Date evaluationDate;
-
-
 	//
 	// public constructors
 	//
@@ -81,9 +67,6 @@ public abstract class Option extends NewInstrument {
 		super(engine);
 		this.payoff = payoff;
 		this.exercise = exercise;
-//XXX
-//		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-//		this.evaluationDate.addObserver(this);
 	}
 
 

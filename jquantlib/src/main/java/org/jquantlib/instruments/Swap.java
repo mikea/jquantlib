@@ -62,6 +62,10 @@ public class Swap extends NewInstrument {
     //
 
     public Swap(final Leg firstLeg, final Leg secondLeg) {
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.legs = new ArrayList<Leg>();
         this.payer = new double[2];
         this.legNPV = new double[2];
@@ -73,10 +77,14 @@ public class Swap extends NewInstrument {
 
         for (int i = 0; i < legs.size(); i++)
             for (final CashFlow item : legs.get(i))
-                item.addObserver(this);
+                registerWith(item);
     }
 
     public Swap(final List<Leg> legs, final boolean[] payer) {
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.legs = legs;
         this.payer = new double[legs.size()];
         Arrays.fill(this.payer, 1.0);
@@ -88,7 +96,7 @@ public class Swap extends NewInstrument {
                 this.payer[j] = -1.0;
             for (int i = 0; i < legs.size(); i++)
                 for (final CashFlow item : legs.get(i))
-                    item.addObserver(this);
+                    registerWith(item);
         }
     }
 
@@ -98,6 +106,9 @@ public class Swap extends NewInstrument {
     //
 
     protected Swap(final int legs) {
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.legs   = new ArrayList<Leg>();
         this.payer  = new double[legs];
         this.legNPV = new double[legs];

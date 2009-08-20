@@ -26,6 +26,7 @@ import org.jquantlib.QL;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.CapletVolatilityStructure;
 
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class IborCouponPricer extends FloatingRateCouponPricer {
 
     public static final String no_adequate_capletVol_given = "no adequate capletVol given";
@@ -34,7 +35,7 @@ public abstract class IborCouponPricer extends FloatingRateCouponPricer {
 
     public IborCouponPricer(final Handle<CapletVolatilityStructure> capletVol){
         this.capletVol_ = capletVol;
-        capletVol.addObserver(this);
+        registerWith(this.capletVol_);
     }
 
     public Handle<CapletVolatilityStructure> capletVolatility(){
@@ -42,10 +43,10 @@ public abstract class IborCouponPricer extends FloatingRateCouponPricer {
     }
 
     public void setCapletVolatility(final Handle<CapletVolatilityStructure> capletVol){
-        capletVol_.deleteObserver(this);
-        capletVol_ = capletVol;
-        QL.require(capletVol_ != null , no_adequate_capletVol_given); // QA:[RG]::verified
-        capletVol.addObserver(this);
+        unregisterWith(capletVol);
+        this.capletVol_ = capletVol;
+        QL.require(this.capletVol_ != null , no_adequate_capletVol_given); // QA:[RG]::verified
+        registerWith(this.capletVol_);
         update();
     }
 

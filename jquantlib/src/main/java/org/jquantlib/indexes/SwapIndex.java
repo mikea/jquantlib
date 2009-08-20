@@ -13,7 +13,7 @@ import org.jquantlib.util.Date;
 
 /**
  * Base class for swap-rate indexes
- * 
+ *
  * @author Richard Gomes
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
@@ -48,7 +48,7 @@ public class SwapIndex extends InterestRateIndex {
         this.iborIndex = iborIndex;
         this.fixedLegTenor = fixedLegTenor;
         this.fixedLegConvention = fixedLegConvention;
-        this.iborIndex.addObserver(this);
+        registerWith(this.iborIndex);
     }
 
 

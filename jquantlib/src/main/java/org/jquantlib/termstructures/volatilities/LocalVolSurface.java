@@ -79,10 +79,11 @@ public class LocalVolSurface extends LocalVolTermStructure {
         this.riskFreeTS_ = riskFreeTS;
         this.dividendTS_ = dividendTS;
         this.underlying_ = underlying;
-        this.blackTS_.addObserver(this);
-        this.riskFreeTS_.addObserver(this);
-        this.dividendTS_.addObserver(this);
-        this.underlying_.addObserver(this);
+
+        registerWith(this.blackTS_);
+        registerWith(this.riskFreeTS_);
+        registerWith(this.dividendTS_);
+        registerWith(this.underlying_);
     }
 
     public LocalVolSurface(
@@ -95,9 +96,10 @@ public class LocalVolSurface extends LocalVolTermStructure {
         this.riskFreeTS_ = riskFreeTS;
         this.dividendTS_ = dividendTS;
         this.underlying_ = new Handle<Quote>(new SimpleQuote(underlying));
-        this.blackTS_.addObserver(this);
-        this.riskFreeTS_.addObserver(this);
-        this.dividendTS_.addObserver(this);
+
+        registerWith(this.blackTS_);
+        registerWith(this.riskFreeTS_);
+        registerWith(this.dividendTS_);
     }
 
 

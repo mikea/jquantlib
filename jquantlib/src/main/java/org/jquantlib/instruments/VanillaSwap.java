@@ -94,7 +94,8 @@ public class VanillaSwap extends Swap {
             .withFixingDays(iborIndex.fixingDays())   // TODO: code review :: please verify against QL/C++ code
             .withSpreads(spread).Leg();
 
-        for (final CashFlow item : floatingLeg) item.addObserver(this);
+        for (final CashFlow item : floatingLeg)
+            registerWith(item);
 
         super.legs.add(fixedLeg);
         super.legs.add(floatingLeg);

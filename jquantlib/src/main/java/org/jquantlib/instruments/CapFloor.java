@@ -41,12 +41,16 @@ public class CapFloor extends NewInstrument {
     private List</*@Rate*/ Double> floorRates_;
     private final Handle<YieldTermStructure> termStructure_;
 
-    public CapFloor(final CapFloor.Type type,
+    public CapFloor(
+            final CapFloor.Type type,
             final Leg floatingLeg,
             final List</*@Rate*/ Double> capRates,
             final List</*@Rate*/ Double> floorRates,
             final Handle<YieldTermStructure> termStructure,
             final PricingEngine engine){
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 
         this.type_ = type;
         this.floatingLeg_ = floatingLeg;
@@ -73,19 +77,24 @@ public class CapFloor extends NewInstrument {
                 floorRates_.add(floorRates_.get(floorRates_.size() - 1));
         }
 
-        for (final CashFlow cashFlow : floatingLeg_)
-            // registerWith(i*);
-            cashFlow.addObserver(this);
-
-        termStructure_.addObserver(this);
-        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
+        final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        for (final CashFlow cashFlow : floatingLeg_) {
+            registerWith(cashFlow);
+        }
+        registerWith(termStructure_);
+        registerWith(evaluationDate);
     }
 
-    public CapFloor(final Type type,
+    public CapFloor(
+            final Type type,
             final Leg floatingLeg,
             final List</*@Rate*/ Double> strikes,
             final Handle<YieldTermStructure> termStructure,
             final PricingEngine engine){
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.type_ = type;
         this.floatingLeg_ = floatingLeg;
         this.termStructure_ = termStructure;
@@ -106,11 +115,12 @@ public class CapFloor extends NewInstrument {
         } else
             QL.assertion("only Cap/Floor types allowed in this constructor"); // QA:[RG]::verified // TODO: message
 
-        for (final CashFlow cashFlow : floatingLeg_)
-            cashFlow.addObserver(this);
-
-        termStructure_.addObserver(this);
-        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
+        final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        for (final CashFlow cashFlow : floatingLeg_) {
+            registerWith(cashFlow);
+        }
+        registerWith(termStructure_);
+        registerWith(evaluationDate);
     }
 
     public /*@Rate*/double atmRate(){

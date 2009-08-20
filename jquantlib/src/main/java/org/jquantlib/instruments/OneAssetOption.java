@@ -99,7 +99,7 @@ public class OneAssetOption extends Option {
     public OneAssetOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
     	super(payoff, exercise, engine);
         this.stochasticProcess = process;
-        this.stochasticProcess.addObserver(this);
+        registerWith(this.stochasticProcess);
     }
 
     //

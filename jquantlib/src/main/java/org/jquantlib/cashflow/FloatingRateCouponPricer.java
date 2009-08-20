@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -28,9 +28,9 @@ import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 public abstract class FloatingRateCouponPricer implements Observer, Observable {
-    
-    private DefaultObservable delegatedObservable = new DefaultObservable(this);
-    
+
+    private final DefaultObservable delegatedObservable = new DefaultObservable(this);
+
     public abstract double swapletPrice();
     public abstract double swapletRate();
     public abstract double capletPrice(double effectiveCap);
@@ -39,13 +39,33 @@ public abstract class FloatingRateCouponPricer implements Observer, Observable {
     public abstract double floorletRate(double effectiveFloor);
     public abstract void initialize(FloatingRateCoupon coupon);
 
+
+    //
+    // implements Observer
+    //
+
     @Override
-    public void update(Observable o, Object arg) {
-        notifyObservers(o);
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
     }
 
     @Override
-    public void addObserver(Observer observer) {
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
+    }
+
+    @Override
+    public void update(final Observable o, final Object arg) {
+        notifyObservers(o);
+    }
+
+
+    //
+    // implements Observable
+    //
+
+    @Override
+    public void addObserver(final Observer observer) {
         delegatedObservable.addObserver(observer);
     }
 
@@ -55,7 +75,7 @@ public abstract class FloatingRateCouponPricer implements Observer, Observable {
     }
 
     @Override
-    public void deleteObserver(Observer observer) {
+    public void deleteObserver(final Observer observer) {
         delegatedObservable.deleteObserver(observer);
     }
 
@@ -75,7 +95,7 @@ public abstract class FloatingRateCouponPricer implements Observer, Observable {
     }
 
     @Override
-    public void notifyObservers(Object arg) {
+    public void notifyObservers(final Object arg) {
         delegatedObservable.notifyObservers(arg);
     }
 

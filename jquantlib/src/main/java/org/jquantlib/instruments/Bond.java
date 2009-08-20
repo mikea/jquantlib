@@ -48,7 +48,6 @@ import java.util.List;
 
 import org.jquantlib.Configuration;
 import org.jquantlib.QL;
-import org.jquantlib.Settings;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.Coupon;
@@ -97,10 +96,8 @@ import org.jquantlib.util.DateFactory;
  * @author Ueli Hofstetter
  *
  */
-// TODO: Complete implementation
-// FIXME: code review
-
-//TODO:...
+// TODO: code review :: please verify against QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class Bond extends NewInstrument {
 
 	protected/* @Natural */int settlementDays_;
@@ -121,15 +118,6 @@ public abstract class Bond extends NewInstrument {
 	protected double settlementValue_;
 
 	/**
-	 * This private field is automatically initialized by constructor which
-	 * picks up it's value from {@link Settings} singleton. This procedure
-	 * caches values from the singleton, intending to avoid contention in
-	 * heavily multi-threaded environments.
-	 */
-	//FIXME: we probably don't use this since.. at least for now
-	private final Date evaluationDate;
-
-	/**
 	 * Constructor for amortizing or non-amortizing bonds. Redemptions and
 	 * maturity are calculated from the coupon data, if available. Therefore,
 	 * redemptions must not be included in the passed cash flows.
@@ -139,45 +127,48 @@ public abstract class Bond extends NewInstrument {
 	 * @param issueDate
 	 * @param coupons
 	 */
-	protected Bond(/* @Natural */final int settlementDays, final Calendar calendar,
-			final Date issueDate, final Leg coupons) {
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final Calendar calendar,
+			final Date issueDate,
+			final Leg coupons) {
+
+	    if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
 		this.settlementDays_ = (settlementDays);
 		this.calendar_ = (calendar);
 		this.cashFlows_ = (coupons);
 		this.issueDate_ = (issueDate);
 
 		if (!coupons.isEmpty()) {
-
 			Collections.sort(cashFlows_, new EarlierThanCashFlowComparator());
-
 			maturityDate_ = coupons.get(coupons.size() - 1).date();
-
 			addRedemptionsToCashflows();
 		}
 
-		//FIXME: is a reference to this field really needed?
-		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings()
-		.getEvaluationDate();
-
-		Configuration.getSystemConfiguration(null).getGlobalSettings()
-				.getEvaluationDate().addObserver(this);
-
+		final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+		registerWith(evaluationDate);
 	}
 
-	protected Bond(/* @Natural */final int settlementDays, final Calendar calendar) {
-		this(settlementDays, calendar,
-				Date.NULL_DATE, new Leg());
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final Calendar calendar) {
+		this(settlementDays, calendar, Date.NULL_DATE, new Leg());
 	}
 
-	protected Bond(/* @Natural */final int settlementDays, final Calendar calendar,
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final Calendar calendar,
 			final Date issueDate) {
 		this(settlementDays, calendar, issueDate, new Leg());
 	}
 
-	protected Bond(/* @Natural */final int settlementDays, final Calendar calendar,
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final Calendar calendar,
 			final Leg coupons) {
-		this(settlementDays, calendar,
-				Date.NULL_DATE, coupons);
+		this(settlementDays, calendar, Date.NULL_DATE, coupons);
 	}
 
 	/**
@@ -192,9 +183,17 @@ public abstract class Bond extends NewInstrument {
 	 * @param issueDate
 	 * @param cashflows
 	 */
-	protected Bond(/* @Natural */final int settlementDays, final Calendar calendar,
-	/* @Real */final double faceAmount, final Date maturityDate,
-			final Date issueDate, final Leg cashflows) {
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final Calendar calendar,
+	        final /* @Real */double faceAmount,
+	        final Date maturityDate,
+			final Date issueDate,
+			final Leg cashflows) {
+
+	    if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
 		this.settlementDays_ = (settlementDays);
 		this.calendar_ = (calendar);
 		this.cashFlows_ = (cashflows);
@@ -202,7 +201,6 @@ public abstract class Bond extends NewInstrument {
 		this.issueDate_ = (issueDate);
 
 		if (!cashflows.isEmpty()) {
-
             //notionals_ = new double[2];
 			notionalSchedule_.add(0, Date.NULL_DATE);
 
@@ -228,42 +226,55 @@ public abstract class Bond extends NewInstrument {
 
         }
 
-		this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings()
-		.getEvaluationDate();
-
-		Configuration.getSystemConfiguration(null).getGlobalSettings()
-				.getEvaluationDate().addObserver(this);
+		final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+		registerWith(evaluationDate);
 	}
 
-	protected Bond(/* @Natural */final int settlementDays, final Calendar calendar,
-	/* @Real */final double faceAmount, final Date maturityDate) {
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final Calendar calendar,
+	        final /* @Real */double faceAmount,
+	        final Date maturityDate) {
 		this(settlementDays, calendar, faceAmount, maturityDate, Date.NULL_DATE, new Leg());
 	}
 
-	protected Bond(/* @Natural */final int settlementDays, final Calendar calendar,
-	/* @Real */final double faceAmount, final Date maturityDate, final Date issueDate) {
-		this(settlementDays, calendar, faceAmount, maturityDate, issueDate,
-				new Leg());
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final Calendar calendar,
+	        final /* @Real */double faceAmount,
+	        final Date maturityDate,
+	        final Date issueDate) {
+		this(settlementDays, calendar, faceAmount, maturityDate, issueDate, new Leg());
 	}
 
-	protected Bond(/* @Natural */final int settlementDays, final Calendar calendar,
-	/* @Real */final double faceAmount, final Date maturityDate, final Leg cashflows) {
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final Calendar calendar,
+	        final /* @Real */double faceAmount,
+	        final Date maturityDate,
+	        final Leg cashflows) {
 		this(settlementDays, calendar, faceAmount, maturityDate, Date.NULL_DATE, cashflows);
 	}
 
 	@Deprecated
-	protected Bond(final int settlementDays, final double faceAmount,
-			final Calendar calendar, final DayCounter paymentDayCounter,
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final double faceAmount,
+			final Calendar calendar,
+			final DayCounter paymentDayCounter,
 			final BusinessDayConvention paymentConvention) {
-		this(settlementDays, faceAmount, calendar, paymentDayCounter,
-				paymentConvention,
-				// FIXME: code review
-				new Handle<YieldTermStructure>(YieldTermStructure.class));
+	    // TODO: code review :: please verify against QL/C++ code
+		this(settlementDays, faceAmount, calendar,
+		        paymentDayCounter, paymentConvention,
+		        new Handle<YieldTermStructure>(YieldTermStructure.class));
 	}
 
 	@Deprecated
-	protected Bond(final int settlementDays, final double faceAmount,
-			final Calendar calendar, final DayCounter paymentDayCounter,
+	protected Bond(
+	        final /* @Natural */int settlementDays,
+	        final double faceAmount,
+			final Calendar calendar,
+			final DayCounter paymentDayCounter,
 			final BusinessDayConvention paymentConvention,
 			final Handle<YieldTermStructure> discountCurve) {
 		this.settlementDays_ = settlementDays;
@@ -274,12 +285,16 @@ public abstract class Bond extends NewInstrument {
 		this.discountCurve = discountCurve;
 		this.frequency = Frequency.NO_FREQUENCY;
 
-		this.evaluationDate = Configuration.getSystemConfiguration(null)
-				.getGlobalSettings().getEvaluationDate();
-		this.evaluationDate.addObserver(this);
-
-		discountCurve.addObserver(this);
+		final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+		registerWith(evaluationDate);
+		registerWith(discountCurve);
 	}
+
+
+	//
+	// public methods
+	//
+
 
 	public int getSettlementDays() {
 		return settlementDays_;

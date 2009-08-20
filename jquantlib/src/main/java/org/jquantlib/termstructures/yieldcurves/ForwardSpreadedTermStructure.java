@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -51,41 +51,41 @@ import org.jquantlib.util.Date;
 
 /**
  * Term structure with added spread on the instantaneous forward rate
- * 
+ *
  * @note This term structure will remain linked to the original structure, i.e., any changes in the latter will be reflected in this
  *       structure as well.
- * 
+ *
  * @category yieldtermstructures
- * 
+ *
  * @author Ueli Hofstetter
  */
 public class ForwardSpreadedTermStructure extends ForwardRateStructure {
-	
+
 	//
     // private fields
     //
-    
-    private Handle<YieldTermStructure> originalCurve;
-	private Handle<Quote> spread;
-	
-	
+
+    private final Handle<YieldTermStructure> originalCurve;
+	private final Handle<Quote> spread;
+
+
 	//
 	// public constructors
 	//
-	
+
     public ForwardSpreadedTermStructure(final Handle<YieldTermStructure> h, final Handle<Quote> spread) {
         this.originalCurve = h;
         this.spread = spread;
 
-        this.originalCurve.addObserver(this);
-        this.spread.addObserver(this);
+        registerWith(this.originalCurve);
+        registerWith(this.spread);
     }
-	
-    
+
+
     //
     // overrides TermStructure
     //
-    
+
     @Override
     public DayCounter dayCounter() {
         return originalCurve.getLink().dayCounter();
@@ -111,13 +111,13 @@ public class ForwardSpreadedTermStructure extends ForwardRateStructure {
         return originalCurve.getLink().maxTime();
     }
 
-    
+
     //
     // overrides ForwardRateStructure
     //
-    
+
     @Override
-    protected double forwardImpl(double t) {
+    protected double forwardImpl(final double t) {
         return originalCurve.getLink().forwardRate(
                 t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.getLink().evaluate();
     }

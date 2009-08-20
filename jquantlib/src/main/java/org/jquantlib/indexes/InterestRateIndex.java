@@ -74,9 +74,12 @@ public abstract class InterestRateIndex extends Index implements Observer {
 
         QL.require(fixingDays <= 2 , "wrong number of fixing days");  // QA:[RG]::verified // TODO: message
 
-        // tenor.normalize(); //TODO :: code review
-        Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().addObserver(this);
-        IndexManager.getInstance().notifier(name()).addObserver(this);
+        // TODO: code review :: please verify against QL/C++ code
+        // tenor.normalize();
+
+        final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        registerWith(evaluationDate);
+        registerWith(IndexManager.getInstance().notifier(name()));
     }
 
 
@@ -112,7 +115,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
     //
 
     @Override
-    //FIXME: a detailed code review is needed here!
+    // TODO: code review :: please verify against QL/C++ code
     public double fixing(final Date fixingDate, final boolean forecastTodaysFixing) {
         // TODO: code review :: please verify against QL/C++ code
         QL.require(isValidFixingDate(fixingDate) , "Fixing date is not valid"); // QA:[RG]::verified // TODO: message
@@ -199,6 +202,21 @@ public abstract class InterestRateIndex extends Index implements Observer {
     public Date valueDate(final Date fixingDate) {
         QL.require(isValidFixingDate(fixingDate) , "Fixing date is not valid"); // QA:[RG]::verified // TODO: message
         return fixingCalendar().advance(fixingDate, fixingDays, TimeUnit.DAYS);
+    }
+
+
+    //
+    // implements Observer
+    //
+
+    @Override
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
+    }
+
+    @Override
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
     }
 
     @Override

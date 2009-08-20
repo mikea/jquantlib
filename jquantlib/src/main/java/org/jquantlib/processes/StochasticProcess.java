@@ -94,7 +94,7 @@ public abstract class StochasticProcess implements Observable, Observer {
     /**
      * Returns the number of dimensions of the stochastic process
      */
-    public abstract int getSize();
+    public abstract int size();
 
 
     //
@@ -105,7 +105,7 @@ public abstract class StochasticProcess implements Observable, Observer {
      * Returns the number of independent factors of the process
      */
     public int factors() {
-        return getSize();
+        return size();
     }
 
     /**
@@ -200,6 +200,16 @@ public abstract class StochasticProcess implements Observable, Observer {
     //
     // implements Observer
     //
+
+    @Override
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
+    }
+
+    @Override
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
+    }
 
     @Override
     public void update(final Observable o, final Object arg) {

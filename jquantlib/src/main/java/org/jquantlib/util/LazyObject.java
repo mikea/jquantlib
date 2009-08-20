@@ -44,11 +44,11 @@ import java.util.List;
 
 /**
  * Framework for calculation on demand and result caching.
- * 
+ *
  * @see <a href="http://c2.com/cgi/wiki?LazyObject">Lazy Object Design Pattern</a>
  * @see Observer
  * @see Observable
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class LazyObject implements Observer, Observable {
@@ -151,6 +151,16 @@ public abstract class LazyObject implements Observer, Observable {
     //
     // implements Observer
     //
+
+    @Override
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
+    }
+
+    @Override
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
+    }
 
     public void update(final Observable o, final Object arg) {
         // observers don't expect notifications from frozen objects

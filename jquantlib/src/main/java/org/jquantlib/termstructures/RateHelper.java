@@ -62,22 +62,34 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 
     public RateHelper(final Handle<Quote> quote, final T termStructure, final Date earliestDate, final Date latestDate) {
         super();
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.termStructure = termStructure; // FIXME: code review : do we need a dummy non-null TermStructure ???
         this.earliestDate = earliestDate;
         this.latestDate = latestDate;
         this.quote = quote;
-        this.quote.addObserver(this);
+
+        registerWith(this.quote);
     }
 
     public RateHelper(final Handle<Quote> quote) {
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.termStructure = null; // FIXME: code review : do we need a dummy non-null TermStructure ???
         this.earliestDate = null;
         this.latestDate = null;
         this.quote = quote;
-        this.quote.addObserver(this);
+
+        registerWith(this.quote);
     }
 
     public RateHelper(final double quote) {
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.termStructure = null; // FIXME: code review : do we need a dummy non-null TermStructure ???
         this.earliestDate = null;
         this.latestDate = null;
@@ -91,6 +103,8 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 
     protected RateHelper() {
         // default constructor only available to descendent classes
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
     }
 
 
@@ -166,6 +180,16 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
     //
     // implements Observer
     //
+
+    @Override
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
+    }
+
+    @Override
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
+    }
 
     @Override
     public void update(final Observable o, final Object arg) {

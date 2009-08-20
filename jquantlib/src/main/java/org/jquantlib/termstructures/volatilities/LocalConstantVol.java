@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -59,12 +59,12 @@ import org.jquantlib.util.DateFactory;
  */
 public class LocalConstantVol extends LocalVolTermStructure {
 
-	private Handle<Quote> volatility_;
-	private DayCounter dayCounter_;
+	private final Handle<Quote> volatility_;
+	private final DayCounter dayCounter_;
 
 	public LocalConstantVol(
-			final Date referenceDate, 
-			final /*@Volatility*/ double volatility, 
+			final Date referenceDate,
+			final /*@Volatility*/ double volatility,
 			final DayCounter dayCounter) {
 		super(referenceDate);
 		this.volatility_ = new Handle<Quote>(new SimpleQuote(volatility));
@@ -72,19 +72,19 @@ public class LocalConstantVol extends LocalVolTermStructure {
 	}
 
 	public LocalConstantVol(
-			final Date referenceDate, 
-			final Handle<Quote> volatility, 
+			final Date referenceDate,
+			final Handle<Quote> volatility,
 			final DayCounter dayCounter) {
 		super(referenceDate);
 		this.volatility_ = volatility;
 		this.dayCounter_ = dayCounter;
-		this.volatility_.addObserver(this);
+		registerWith(this.volatility_);
 	}
 
 	public LocalConstantVol(
-			int settlementDays, 
-			final Calendar cal, 
-			final /*@Volatility*/ double volatility, 
+			final int settlementDays,
+			final Calendar cal,
+			final /*@Volatility*/ double volatility,
 			final DayCounter dayCounter) {
 		super(settlementDays, new NullCalendar());
 		this.volatility_ = new Handle<Quote>(new SimpleQuote(volatility));
@@ -92,17 +92,18 @@ public class LocalConstantVol extends LocalVolTermStructure {
 	}
 
 	public LocalConstantVol(
-			int settlementDays, 
-			final Calendar cal, 
-			final Handle<Quote> volatility, 
+			final int settlementDays,
+			final Calendar cal,
+			final Handle<Quote> volatility,
 			final DayCounter dayCounter) {
 		super(settlementDays, new NullCalendar());
 		this.volatility_ = volatility;
 		this.dayCounter_ = dayCounter;
-		this.volatility_.addObserver(this);
+		registerWith(this.volatility_);
 	}
 
-	public final DayCounter dayCounter() {
+	@Override
+    public final DayCounter dayCounter() {
 		return dayCounter_;
 	}
 

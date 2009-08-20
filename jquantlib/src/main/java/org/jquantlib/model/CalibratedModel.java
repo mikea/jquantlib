@@ -146,12 +146,30 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
         notifyObservers();
     }
 
+    //
+    // implements Observer
+    //
+
+    @Override
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
+    }
+
+    @Override
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
+    }
+
     @Override
     public void update(final Observable o, final Object arg) {
         generateArguments();
         notifyObservers();
     }
 
+
+    //
+    // implements Observable
+    //
 
     @Override
     public void addObserver(final org.jquantlib.util.Observer observer) {
@@ -190,6 +208,11 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
         delegatedObservable.notifyObservers(arg);
 
     }
+
+
+    //
+    // private inner classes
+    //
 
     private class CalibrationFunction extends org.jquantlib.math.optimization.CostFunction{
 

@@ -79,10 +79,10 @@ public class Merton76Process extends StochasticProcess1D {
         this.logJumpVolatility = logJVol;
         this.logMeanJump = logJMean;
 
-        this.blackProcess.addObserver(this);
-        this.jumpIntensity.addObserver(this);
-        this.logJumpVolatility.addObserver(this);
-        this.logMeanJump.addObserver(this);
+        registerWith(this.blackProcess);
+        registerWith(this.jumpIntensity);
+        registerWith(this.logJumpVolatility);
+        registerWith(this.logMeanJump);
     }
 
 

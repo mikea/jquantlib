@@ -137,7 +137,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
     }
 
     @Override
-    public int getSize() {
+    public int size() {
         // TODO Auto-generated method stub
         return 0;
     }

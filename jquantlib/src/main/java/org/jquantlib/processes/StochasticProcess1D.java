@@ -146,7 +146,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     static private final String ARRAY_1D_REQUIRED = "1-D array required";
 
     @Override
-    public final int getSize() {
+    public final int size() {
         return 1;
     }
 

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -57,14 +57,14 @@ import org.jquantlib.util.Observer;
 
 public class FlatForward extends AbstractYieldTermStructure {
 
-	private Handle<? extends Quote> forward;
-	private Compounding compounding;
-	private Frequency frequency;
+	private final Handle<? extends Quote> forward;
+	private final Compounding compounding;
+	private final Frequency frequency;
 	private InterestRate rate;
 
 
 	// --------------------------------------------
-	
+
     public FlatForward(
     		final Date referenceDate,
             final Handle<? extends Quote> forward,
@@ -75,7 +75,8 @@ public class FlatForward extends AbstractYieldTermStructure {
 		this.forward = forward;
 		this.compounding = compounding;
 		this.frequency = frequency;
-		this.forward.addObserver(this);
+
+		registerWith(this.forward);
 		updateRate();
 	}
 
@@ -93,9 +94,9 @@ public class FlatForward extends AbstractYieldTermStructure {
 	            final DayCounter dayCounter) {
 		this(referenceDate, forward, dayCounter, Compounding.CONTINUOUS);
 	}
-	
+
 	// --------------------------------------------
-	
+
     public FlatForward(
 			final Date referenceDate,
 			final /*@Rate*/ double forward,
@@ -108,7 +109,7 @@ public class FlatForward extends AbstractYieldTermStructure {
 		this.frequency = frequency;
 		updateRate();
 	}
-    
+
     public FlatForward(
 			final Date referenceDate,
             final /*@Rate*/ double forward,
@@ -125,9 +126,9 @@ public class FlatForward extends AbstractYieldTermStructure {
 	}
 
 	// --------------------------------------------
-	
+
     public FlatForward(
-    		int settlementDays,
+    		final int settlementDays,
             final Calendar calendar,
             final Handle<? extends Quote> forward,
             final DayCounter dayCounter,
@@ -137,12 +138,13 @@ public class FlatForward extends AbstractYieldTermStructure {
 		this.forward = forward;
 		this.compounding = compounding;
 		this.frequency = frequency;
-		this.forward.addObserver(this);
+
+		registerWith(this.forward);
 		updateRate();
 	}
 
     public FlatForward(
-    			int settlementDays,
+    			final int settlementDays,
                 final Calendar calendar,
                 final Handle<? extends Quote> forward,
                 final DayCounter dayCounter) {
@@ -150,18 +152,18 @@ public class FlatForward extends AbstractYieldTermStructure {
     }
 
     public FlatForward(
-    			int settlementDays,
+    			final int settlementDays,
                 final Calendar calendar,
                 final Handle<? extends Quote> forward,
                 final DayCounter dayCounter,
                 final Compounding compounding) {
     	this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
     }
-    
+
 	// --------------------------------------------
-	
+
     public FlatForward(
-    		int settlementDays,
+    		final int settlementDays,
             final Calendar calendar,
             final /*@Rate*/ double forward,
             final DayCounter dayCounter,
@@ -175,15 +177,15 @@ public class FlatForward extends AbstractYieldTermStructure {
 	}
 
     public FlatForward(
-    			int settlementDays,
+    			final int settlementDays,
                 final Calendar calendar,
                 final /*@Rate*/ double forward,
                 final DayCounter dayCounter) {
     	this(settlementDays, calendar, forward, dayCounter, Compounding.CONTINUOUS);
     }
-    
+
     public FlatForward(
-    			int settlementDays,
+    			final int settlementDays,
                 final Calendar calendar,
                 final /*@Rate*/ double forward,
                 final DayCounter dayCounter,
@@ -192,7 +194,7 @@ public class FlatForward extends AbstractYieldTermStructure {
     }
 
 	// --------------------------------------------
-	
+
     private void updateRate() {
         rate = new InterestRate(forward.getLink().evaluate(), this.dayCounter(), this.compounding, this.frequency);
     }
@@ -205,20 +207,20 @@ public class FlatForward extends AbstractYieldTermStructure {
     	return frequency;
     }
 
-    
+
     //
     // overrides YieldTermStructure
     //
-    
+
     @Override
     protected final /*@DiscountFactor*/ double discountImpl(final /*@Time*/ double t) {
         return rate.discountFactor(t);
     }
-    
+
     //
     // overrides TermStructure
     //
-    
+
     @Override
     public final Date maxDate() {
         return DateFactory.getFactory().getMaxDate();
@@ -228,13 +230,14 @@ public class FlatForward extends AbstractYieldTermStructure {
     //
     // implements Observer interface
     //
-    
+
     /**
      * This method implements {@link Observer#update(Observable, Object)}
-     * 
+     *
      * @see Observer#update(Observable, Object)
      */
-    public void update(Observable o, Object arg) {
+    @Override
+    public void update(final Observable o, final Object arg) {
         updateRate();
         super.update(o, arg);
     }

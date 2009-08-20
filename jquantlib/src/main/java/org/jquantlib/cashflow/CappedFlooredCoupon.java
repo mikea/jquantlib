@@ -31,6 +31,7 @@ import org.jquantlib.util.Visitor;
  * @author Ueli Hofstetter
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: please verify against QL/C++ code
 public class CappedFlooredCoupon extends FloatingRateCoupon {
 
     protected FloatingRateCoupon underlying_;
@@ -74,16 +75,14 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
         if (isCapped_ && isFloored_)
             QL.require(cap >= floor , "cap level less than floor level"); // QA:[RG]::verified // TODO: message
 
-        // registerWith(underlying);
-        underlying.addObserver(this);
+        registerWith(underlying);
     }
 
 
-
+// TODO: code review :: please verify against QL/C++ code
     private void setPricer() {
-            //TODO: Code review :: incomplete code
-            if (true)
-                throw new UnsupportedOperationException("Work in progress");
+
+        throw new UnsupportedOperationException("Work in progress");
 
 //            const boost::shared_ptr<FloatingRateCouponPricer>& pricer) {
 //       if (pricer_)

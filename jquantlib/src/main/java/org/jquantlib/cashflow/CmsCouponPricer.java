@@ -26,7 +26,12 @@ import org.jquantlib.QL;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.SwaptionVolatilityStructure;
 
-//base pricer for vanilla CMS coupons
+/**
+ * Base pricer for vanilla CMS coupons
+ *
+ * @author Ueli Hofstetter
+ */
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
 
     private Handle<SwaptionVolatilityStructure> swaptionVol_;
@@ -34,7 +39,7 @@ public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
 
     public CmsCouponPricer(final Handle<SwaptionVolatilityStructure> swaptionVol) {
         this.swaptionVol_ = swaptionVol;
-        swaptionVol_.addObserver(this);
+        registerWith(this.swaptionVol_);
     }
 
     public Handle<SwaptionVolatilityStructure> swaptionVolatility() {
@@ -42,10 +47,10 @@ public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
     }
 
     public void setSwaptionVolatility(final Handle<SwaptionVolatilityStructure> swaptionVol) {
-        swaptionVol_.deleteObserver(this);
-        swaptionVol_ = swaptionVol;
+        unregisterWith(swaptionVol);
+        this.swaptionVol_ = swaptionVol;
         QL.require(swaptionVol_!=null && swaptionVol_.getLink() != null , no_adequate_swaptionVol_given); // QA:[RG]::verified // TODO: message
-        swaptionVol_.addObserver(this);
+        registerWith(swaptionVol_);
         update();
     }
 

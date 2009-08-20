@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -47,7 +47,7 @@ import org.jquantlib.util.Date;
 
 /**
  * Implied term structure at a given date in the future.
- * 
+ *
  * @note The given date will be the implied reference date.
  * @note This term structure will remain linked to the original structure, i.e., any changes in the latter will be reflected in this
  *       structure as well.
@@ -57,12 +57,12 @@ import org.jquantlib.util.Date;
 //FIXME: code review
 public class ImpliedTermStructure<T extends YieldTermStructure> extends AbstractYieldTermStructure {
 
-	private Handle<T>	originalCurve;
+	private final Handle<T>	originalCurve;
 
 	public ImpliedTermStructure(final Handle<T> h, final Date referenceDate) {
 		super(referenceDate);
 		this.originalCurve = h;
-		this.originalCurve.addObserver(this);
+		registerWith(this.originalCurve);
 	}
 
 	@Override
@@ -76,13 +76,13 @@ public class ImpliedTermStructure<T extends YieldTermStructure> extends Abstract
 	}
 
 	@Override
-	protected /*@DiscountFactor*/ double discountImpl(/*@Time*/double t) /* @ReadOnly */{
-		YieldTermStructure yts = originalCurve.getLink();
+	protected /*@DiscountFactor*/ double discountImpl(/*@Time*/final double t) /* @ReadOnly */{
+		final YieldTermStructure yts = originalCurve.getLink();
 		/* t is relative to the current reference date
 		   and needs to be converted to the time relative
 		   to the reference date of the original curve */
-		Date ref = referenceDate();
-		/*@Time*/double originalTime = 0.0; // FUXME: t + getDayCounter().getYearFraction(yts.getReferenceDate(), ref);
+		final Date ref = referenceDate();
+		/*@Time*/final double originalTime = 0.0; // FUXME: t + getDayCounter().getYearFraction(yts.getReferenceDate(), ref);
 		/* discount at evaluation date cannot be cached
 		   since the original curve could change between
 		   invocations of this method */

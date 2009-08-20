@@ -1,5 +1,5 @@
 /*
-Copyright (C) 
+Copyright (C)
 2008 Praneet Tiwari
 2009 Ueli Hofstetter
 
@@ -24,6 +24,7 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.math.Ops;
@@ -40,6 +41,7 @@ import org.jquantlib.util.Observer;
  * @author Praneet Tiwari
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+// TODO: code review :: please verify against QL/C++ code
 public abstract class CalibrationHelper implements Observer, Observable {
 
     protected double/* @Real */marketValue;
@@ -47,20 +49,21 @@ public abstract class CalibrationHelper implements Observer, Observable {
     protected Handle<YieldTermStructure> termStructure_;
     protected PricingEngine engine_;
     private boolean calibrateVolatility_ = false;
-    
+
     public CalibrationHelper(
-            final Handle<Quote> volatility, 
+            final Handle<Quote> volatility,
             final Handle<YieldTermStructure> termStructure,
             final boolean calibrateVolatility) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
+
         this.volatility_ = volatility;
         this.termStructure_ = termStructure;
         this.calibrateVolatility_ = calibrateVolatility;
-        
-        termStructure_.addObserver(this);
-        volatility_.addObserver(this);
+
+        registerWith(termStructure_);
+        registerWith(volatility_);
     }
 
     // abstract double blackPrice (double /*@Volatility*/ volatility);
@@ -81,10 +84,10 @@ public abstract class CalibrationHelper implements Observer, Observable {
     // ! returns the error resulting from the model valuation
     public double /* @Real */calibrationError(){
         if(calibrateVolatility_){
-            double lowerPrice = blackPrice(0.001);
-            double upperPrice = blackPrice(10);
-            double modelPrice = modelValue();
-            
+            final double lowerPrice = blackPrice(0.001);
+            final double upperPrice = blackPrice(10);
+            final double modelPrice = modelValue();
+
             double implied;
             if(modelPrice <= lowerPrice){
                 implied = 0.001;
@@ -102,39 +105,119 @@ public abstract class CalibrationHelper implements Observer, Observable {
         else{
             return Math.abs(marketValue() - modelValue())/marketValue();
         }
-        
+
     }
 
-    public abstract void addTimesTo(ArrayList<Time> times);
-
     // ! Black volatility implied by the model
-    public double /* @Volatility */impliedVolatility(double /* @Real */targetValue, double /* @Real */accuracy,
-            int /* @Size */maxEvaluations, double /* @Volatility */minVol, double /* @Volatility */maxVol){
-        ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(this, targetValue);
-        Brent solver = new Brent();
+    public double /* @Volatility */impliedVolatility(final double /* @Real */targetValue, final double /* @Real */accuracy,
+            final int /* @Size */maxEvaluations, final double /* @Volatility */minVol, final double /* @Volatility */maxVol){
+        final ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(this, targetValue);
+        final Brent solver = new Brent();
         solver.setMaxEvaluations(maxEvaluations);
         return solver.solve(f, accuracy, volatility_.getLink().evaluate(), minVol, maxVol);
     }
 
-    // ! Black price given a volatility
-    public abstract double /* @Real */blackPrice(double /* @Volatility */volatility);
-
     public void setPricingEngine(final PricingEngine engine) {
         this.engine_ = engine;
     }
-    
+
+
+    //
+    // public abstract methods
+    //
+
+    // TODO: code review :: please verify against QL/C++ code
+    public abstract void addTimesTo(ArrayList<Time> times);
+
+    // CalibrationHelper! Black price given a volatility
+    public abstract double /* @Real */blackPrice(double /* @Volatility */volatility);
+
+
+
+    //
+    // implements Observer
+    //
+
+    @Override
+    public void registerWith(final Observable o) {
+        o.addObserver(this);
+    }
+
+    @Override
+    public void unregisterWith(final Observable o) {
+        o.deleteObserver(this);
+    }
+
+    @Override
+    public void update(final Observable o, final Object arg) {
+        // TODO Auto-generated method stub
+
+    }
+
+
+    //
+    // implements Observable
+    //
+
+    @Override
+    public void addObserver(final Observer observer) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public int countObservers() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public void deleteObserver(final Observer observer) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void deleteObservers() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public List<Observer> getObservers() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void notifyObservers() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void notifyObservers(final Object arg) {
+        // TODO Auto-generated method stub
+
+    }
+
+
+    //
+    // private inner classes
+    //
+
     private class ImpliedVolatilityHelper implements Ops.DoubleOp {
-        public ImpliedVolatilityHelper(CalibrationHelper helper, double value){
+        public ImpliedVolatilityHelper(final CalibrationHelper helper, final double value){
             this.helper_ = helper;
             this.value_ = value;
         }
-        
+
         public double op(final double x) {
             return value_ - helper_.blackPrice(x);
         }
-        
-        private CalibrationHelper helper_;
-        private double value_;
-        
+
+        private final CalibrationHelper helper_;
+        private final double value_;
+
     }
 }

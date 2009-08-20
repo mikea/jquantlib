@@ -35,7 +35,8 @@ import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
 
-//TODO: code review: class comments
+// TODO: code review :: please verify against QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class HestonProcess extends StochasticProcess {
 
     private final Handle<YieldTermStructure> riskFreeRate_, dividendYield_;
@@ -50,14 +51,37 @@ public class HestonProcess extends StochasticProcess {
 
     private double s0v_, v0v_, kappav_, thetav_, sigmav_, rhov_, sqrhov_;
 
-    public HestonProcess(final Handle<YieldTermStructure> riskFreeRate, final Handle<YieldTermStructure> dividendYield,
-            final Handle<Quote> s0, final double v0, final double kappa, final double theta, final double sigma, final double rho) {
+    public HestonProcess(
+            final Handle<YieldTermStructure> riskFreeRate,
+            final Handle<YieldTermStructure> dividendYield,
+            final Handle<Quote> s0,
+            final double v0,
+            final double kappa,
+            final double theta,
+            final double sigma,
+            final double rho) {
         this(riskFreeRate, dividendYield, s0, v0, kappa, theta, sigma, rho, Discretization.FullTruncation);
     }
 
-    public HestonProcess(final Handle<YieldTermStructure> riskFreeRate, final Handle<YieldTermStructure> dividendYield,
-            final Handle<Quote> s0, final double v0, final double kappa, final double theta, final double sigma, final double rho, final Discretization d) {
+    public HestonProcess(
+            final Handle<YieldTermStructure> riskFreeRate,
+            final Handle<YieldTermStructure> dividendYield,
+            final Handle<Quote> s0,
+            final double v0,
+            final double kappa,
+            final double theta,
+            final double sigma,
+            final double rho,
+            final Discretization d) {
+
+        // TODO: code review :: please verify against QL/C++ code
         // TODO: code review :: super(new EulerDiscretization());
+        // Seems like constructor which takes a Discretization must belong to
+        // StochasticProcess and not StochasticProcess1D
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.riskFreeRate_ = (riskFreeRate);
         this.dividendYield_ = (dividendYield);
         this.s0_ = (s0); // TODO: code review
@@ -68,20 +92,13 @@ public class HestonProcess extends StochasticProcess {
         this.rho_ = new RelinkableHandle<Quote>(new SimpleQuote(rho));
         this.discretization_ = (d);
 
-        riskFreeRate_.addObserver(this);
-
-        riskFreeRate_.addObserver(this);
-        dividendYield_.addObserver(this);
-        s0_.addObserver(this);
-        v0_.addObserver(this);
-        kappa_.addObserver(this);
-        theta_.addObserver(this);
-        sigma_.addObserver(this);
-        rho_.addObserver(this);
-
-        // update();
+        // TODO: code review :: please verify against QL/C++ code
+        registerWith(riskFreeRate_);
+        registerWith(dividendYield_);
+        registerWith(s0_);
     }
 
+    // TODO: code review :: please verify against QL/C++ code
     public void update() {
         // helper variables to improve performance
         s0v_ = s0_.getLink().evaluate();
@@ -94,11 +111,6 @@ public class HestonProcess extends StochasticProcess {
 
         // this->StochasticProcess::update();
     }
-
-    //XXX
-    //    public double size() {
-    //        return 2;
-    //    }
 
     public final RelinkableHandle<Quote> v0() {
         return v0_;
@@ -147,7 +159,7 @@ public class HestonProcess extends StochasticProcess {
     }
 
     @Override
-    public int getSize() {
+    public int size() {
         return 2;
     }
 

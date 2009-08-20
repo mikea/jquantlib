@@ -92,7 +92,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         rho_ = (arguments_.get(4) /* []4] */);
 
         generateArguments();
-        termStructure.addObserver(this);
+        registerWith(termStructure);
     }
 
     public G2(final Handle<YieldTermStructure> termStructure) {

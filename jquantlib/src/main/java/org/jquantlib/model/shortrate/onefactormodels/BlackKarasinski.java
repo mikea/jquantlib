@@ -50,6 +50,8 @@ import org.jquantlib.time.TimeGrid;
  *
  * @author Praneet Tiwari
  */
+// TODO: code review :: please verify against QL/C++ code
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class BlackKarasinski extends OneFactorModel implements TermStructureConsistentModel {
     // need permanent solution for this one
 
@@ -74,7 +76,7 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
         //FIXME: bug?
         this.a_ = new ConstantParameter(a, new PositiveConstraint());
         this.sigma_ = new ConstantParameter(sigma, new PositiveConstraint());
-        termStructure.addObserver(this);
+        registerWith(termStructure);
     }
 
     public double /* @Real */a() {
@@ -153,13 +155,14 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
         return numericTree;
     }
 
-    // ! Short-rate dynamics in the Black-Karasinski model
-    /*
+    /**
+     * Short-rate dynamics in the Black-Karasinski model
+     * <p>
      * ! The short-rate is here \f[ r_t = e^{\varphi(t) + x_t} \f] where \f$ \varphi(t) \f$ is the deterministic time-dependent
      * parameter (which can not be determined analytically) used for term-structure fitting and \f$ x_t \f$ is the state variable
      * following an Ornstein-Uhlenbeck process.
      */
-    class Dynamics extends ShortRateDynamics {
+    private class Dynamics extends ShortRateDynamics {
 
         public Dynamics(final Parameter fitting, final Double /* @Real */alpha, final Double /* @Real */sigma) {
             super(new OrnsteinUhlenbeckProcess(alpha, sigma, /* default */0.0, /* default */0.0));
