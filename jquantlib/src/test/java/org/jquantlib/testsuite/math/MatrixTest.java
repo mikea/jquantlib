@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.math;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -38,8 +39,6 @@ import org.jquantlib.math.matrixutilities.SymmetricSchurDecomposition;
 import org.jquantlib.math.matrixutilities.Matrix.ColumnIterator;
 import org.jquantlib.math.matrixutilities.Matrix.RowIterator;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Richard Gomes
@@ -47,15 +46,13 @@ import org.slf4j.LoggerFactory;
 @QualityAssurance(quality = Quality.Q0_UNFINISHED, version = Version.V097, reviewers = { "" })
 public class MatrixTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(MatrixTest.class);
-
     //XXX private final int N;
     private final Matrix M1, M2, M3, M4, M5, M6, M7;
     private final Matrix I;
 
 
     public MatrixTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 
         M1 = new Matrix(new double[][] {
             { 1.0,  0.9,  0.7 },
@@ -842,7 +839,7 @@ public class MatrixTest {
     @Test
     public void testEigenvectors() {
 
-        logger.info("Testing eigenvalues and eigenvectors calculation...");
+        QL.info("Testing eigenvalues and eigenvectors calculation...");
 
         final Matrix testMatrices[] = { M1, M2 };
 
@@ -926,7 +923,7 @@ public class MatrixTest {
     @Test
     public void testSVD() {
 
-        logger.info("Testing singular value decomposition...");
+        QL.info("Testing singular value decomposition...");
 
         final double tol = 1.0e-12;
         final Matrix testMatrices[] = { M1, M2, M3, M4 };
@@ -970,7 +967,7 @@ public class MatrixTest {
     @Test
     public void testQRDecomposition() {
 
-        logger.info("Testing QR decomposition...");
+        QL.info("Testing QR decomposition...");
 
         final double tolerance = 1.0e-12;
 
@@ -1089,7 +1086,7 @@ public class MatrixTest {
     @Test
     public void testInverse() {
 
-        logger.info("Testing LU inverse calculation...");
+        QL.info("Testing LU inverse calculation...");
 
         final double tol = 1.0e-12;
         final Matrix testMatrices[] = { M1, M2, I, M5 };

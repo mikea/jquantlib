@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,19 +24,14 @@ package org.jquantlib.util;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Base implementation that can be shared by Date implementations.
- * 
+ *
  * @author Srinivas Hasti
- * 
+ *
  */
 public abstract class BaseDate implements Date, FunctionDate {
-	
-	private final static Logger logger = LoggerFactory.getLogger(BaseDate.class);
-    
+
     public final int compareTo(final Date o) {
 		if (this.equals(o)){
 			return 0;
@@ -49,7 +44,7 @@ public abstract class BaseDate implements Date, FunctionDate {
 
 	/**
      * Implements multiple inheritance via delegate pattern to an inner class
-     * 
+     *
      */
     private final Observable delegatedObservable = new DefaultObservable(this);
 

@@ -24,10 +24,9 @@ package org.jquantlib.testsuite.math;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -35,10 +34,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ArrayTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(ArrayTest.class);
-
     public ArrayTest() {
-        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Test

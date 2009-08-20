@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -41,10 +41,6 @@ package org.jquantlib.util;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 
 /**
  * Framework for calculation on demand and result caching.
@@ -56,11 +52,6 @@ import org.slf4j.LoggerFactory;
  * @author Richard Gomes
  */
 public abstract class LazyObject implements Observer, Observable {
-	
-	//
-	// logger
-	//
-	private final static Logger logger = LoggerFactory.getLogger(LazyObject.class);
 
     //
     // protected fields
@@ -75,9 +66,9 @@ public abstract class LazyObject implements Observer, Observable {
 
     /**
      * This method must implement any calculations which must be (re)done in order to calculate the desired results.
-     * 
+     *
      * @throws ArithmeticException
-     * 
+     *
      */
     protected abstract void performCalculations() throws ArithmeticException;
 
@@ -100,7 +91,7 @@ public abstract class LazyObject implements Observer, Observable {
 
     /**
      * This method force the recalculation of any results which would otherwise be cached.
-     * 
+     *
      * @note Explicit invocation of this method is <b>not</b> necessary if the object registered itself as observer with the
      *       structures on which such results depend. It is strongly advised to follow this policy when possible.
      */
@@ -132,14 +123,14 @@ public abstract class LazyObject implements Observer, Observable {
         notifyObservers();
     }
 
-    // 
+    //
     // protected methods
     //
 
     /**
      * This method performs all needed calculations by calling the <i><b>performCalculations</b></i> method.
      * <p>
-     * 
+     *
      * @note Objects cache the results of the previous calculation. Such results will be returned upon later invocations of <i><b>calculate</b></i>.
      *       When the results depend on arguments which could change between invocations, the lazy object must register itself as
      *       observer of such objects for the calculations to be performed again when they change.
@@ -176,7 +167,7 @@ public abstract class LazyObject implements Observer, Observable {
 
     /**
      * Implements multiple inheritance via delegate pattern to an inner class
-     * 
+     *
      * @see Observable
      * @see DefaultObservable
      */

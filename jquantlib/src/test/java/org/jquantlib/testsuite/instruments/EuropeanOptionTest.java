@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
@@ -88,24 +89,20 @@ import org.jquantlib.time.Period;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * European Options test suite
- * 
+ *
  * @author Richard Gomes
  */
 public class EuropeanOptionTest {
-
-    private final static Logger logger = LoggerFactory.getLogger(EuropeanOptionTest.class);
 
     private final Settings settings;
     private final Date today;
 
     public EuropeanOptionTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         this.today = settings.getEvaluationDate();
     }
@@ -273,7 +270,7 @@ public class EuropeanOptionTest {
     @Test
     public void testValues() {
 
-        logger.info("Testing European option values...");
+        QL.info("Testing European option values...");
 
         /**
          *  The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
@@ -345,7 +342,7 @@ public class EuropeanOptionTest {
 
         for (int i=0; i<values.length-1; i++) {
 
-            logger.debug(values[i].toString());
+            QL.debug(values[i].toString());
 
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(values[i].type, values[i].strike);
             final Date exDate = today.getDateAfter( timeToDays(values[i].t) );
@@ -378,7 +375,7 @@ public class EuropeanOptionTest {
             sb.append("    tol ").append(values[i].tol); // .append('\n');
 
             if (error<=tolerance)
-                logger.info(" error="+error);
+                QL.info(" error="+error);
             else
                 fail(exercise + " " + payoff.optionType() + " option with " + payoff + " payoff:\n"
                         + "    spot value:       " + values[i].s + "\n"
@@ -399,7 +396,7 @@ public class EuropeanOptionTest {
 
     @Test
     public void testGreekValues(){
-        logger.info("Testing European option greek values...");
+        QL.info("Testing European option greek values...");
 
         //
         // The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag 11-16
@@ -626,7 +623,7 @@ public class EuropeanOptionTest {
 
     @Test
     public void testGreeks() {
-        logger.info("Testing analytic European option greeks...");
+        QL.info("Testing analytic European option greeks...");
 
         final Map<String,Double> tolerance = new HashMap<String, Double>();
         tolerance.put("delta",  1.0e-5);
@@ -778,7 +775,7 @@ public class EuropeanOptionTest {
     @Test
     public void testImpliedVol() {
 
-        logger.info("Testing European option implied volatility...");
+        QL.info("Testing European option implied volatility...");
 
         final int maxEvaluations = 100;
         final double tolerance = 1.0e-6;
@@ -868,7 +865,7 @@ public class EuropeanOptionTest {
 
     @Test
     public void testImpliedVolContainment(){
-        logger.info("Testing self-containment of implied volatility calculation... running");
+        QL.info("Testing self-containment of implied volatility calculation... running");
 
         final int maxEvaluations = 100;
         final double tolerance = 1.0e-6;
@@ -1024,7 +1021,7 @@ public class EuropeanOptionTest {
     @Test
     public void testJRBinomialEngines() {
 
-        logger.info("Testing JR binomial European engines against analytic results...");
+        QL.info("Testing JR binomial European engines against analytic results...");
 
         final EngineType engine = EngineType.JR;
         final int timeSteps = 251;
@@ -1041,7 +1038,7 @@ public class EuropeanOptionTest {
     @Test
     public void testCRRBinomialEngines() {
 
-        logger.info("Testing CRR binomial European engines against analytic results...");
+        QL.info("Testing CRR binomial European engines against analytic results...");
 
         final EngineType engine = EngineType.CRR;
         final int timeSteps = 501;
@@ -1058,7 +1055,7 @@ public class EuropeanOptionTest {
     @Test
     public void testEQPBinomialEngines() {
 
-        logger.info("Testing EQP binomial European engines against analytic results...");
+        QL.info("Testing EQP binomial European engines against analytic results...");
 
         final EngineType engine = EngineType.EQP;
         final int timeSteps = 501;
@@ -1075,7 +1072,7 @@ public class EuropeanOptionTest {
     @Test
     public void testTGEOBinomialEngines() {
 
-        logger.info("Testing TGEO binomial European engines against analytic results...");
+        QL.info("Testing TGEO binomial European engines against analytic results...");
 
         final EngineType engine = EngineType.TGEO;
         final int timeSteps = 251;
@@ -1092,7 +1089,7 @@ public class EuropeanOptionTest {
     @Test
     public void testTIANBinomialEngines() {
 
-        logger.info("Testing TIAN binomial European engines against analytic results...");
+        QL.info("Testing TIAN binomial European engines against analytic results...");
 
         final EngineType engine = EngineType.TIAN;
         final int timeSteps = 251;
@@ -1109,7 +1106,7 @@ public class EuropeanOptionTest {
     @Test
     public void testLRBinomialEngines() {
 
-        logger.info("Testing LR binomial European engines against analytic results...");
+        QL.info("Testing LR binomial European engines against analytic results...");
 
         final EngineType engine = EngineType.LR;
         final int timeSteps = 251;
@@ -1126,7 +1123,7 @@ public class EuropeanOptionTest {
     @Test
     public void testJOSHIBinomialEngines() {
 
-        logger.info("Testing Joshi binomial European engines against analytic results...");
+        QL.info("Testing Joshi binomial European engines against analytic results...");
 
         final EngineType engine = EngineType.JOSHI;
         final int timeSteps = 251;
@@ -1143,7 +1140,7 @@ public class EuropeanOptionTest {
     @Test
     public void testFdEngines() {
 
-        logger.info("Testing finite-differences European engines against analytic results...");
+        QL.info("Testing finite-differences European engines against analytic results...");
 
         final EngineType engine = EngineType.FiniteDifferences;
         final @NonNegative int timeSteps = 300;
@@ -1160,7 +1157,7 @@ public class EuropeanOptionTest {
     @Test
     public void testIntegralEngines() {
 
-        logger.info("Testing integral engines against analytic results...");
+        QL.info("Testing integral engines against analytic results...");
 
 
         final EngineType engine = EngineType.Integral;

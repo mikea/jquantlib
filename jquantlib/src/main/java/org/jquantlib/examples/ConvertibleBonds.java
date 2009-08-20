@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2009 Daniel Kong
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.Callability;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.cashflow.FixedDividend;
@@ -60,94 +61,90 @@ import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This example evaluates convertible bond prices.
- * 
+ *
  * @see http://quantlib.org/reference/_convertible_bonds_8cpp-example.html
- * 
+ *
  * @author Daniel Kong
  */
 //TODO: Work in progress ---- PLEASE INDICATE WHEN WORKING ON THIS EXAMPLE - Ueli
 public class ConvertibleBonds {
 
-	private final static Logger logger = LoggerFactory.getLogger(ConvertibleBonds.class);
-	
 	public ConvertibleBonds(){
         if (System.getProperty("EXPERIMENTAL")==null) {
             throw new UnsupportedOperationException("Work in progress");
         }
-		logger.info("\n\n::::: "+ConvertibleBonds.class.getSimpleName()+" :::::");		
+		QL.info("\n\n::::: "+ConvertibleBonds.class.getSimpleName()+" :::::");
 	}
 
 	public void run(){
 	    // Debugging...
-	    
-		StopClock clock = new StopClock();
+
+		final StopClock clock = new StopClock();
 		clock.startClock();
-		logger.info("Started calculation at: " + clock.getElapsedTime());
-		
+		QL.info("Started calculation at: " + clock.getElapsedTime());
+
 		// actually never used.....
-		Option.Type type = Option.Type.PUT;
-		
-		double underlying = 36.0;
-        double spreadRate = 0.005;
+		final Option.Type type = Option.Type.PUT;
 
-        double dividendYield = 0.02;
-        double riskFreeRate = 0.06;
-        double volatility = 0.20;
+		final double underlying = 36.0;
+        final double spreadRate = 0.005;
 
-        int settlementDays = 3;
-        int length = 5;
-        double redemption = 100.0;
-        double conversionRatio = redemption/underlying; 
-        
-        Calendar calendar = Target.getCalendar();
+        final double dividendYield = 0.02;
+        final double riskFreeRate = 0.06;
+        final double volatility = 0.20;
+
+        final int settlementDays = 3;
+        final int length = 5;
+        final double redemption = 100.0;
+        final double conversionRatio = redemption/underlying;
+
+        final Calendar calendar = Target.getCalendar();
         //adjust today to the next business...
-        Date today = calendar.adjust(DateFactory.getFactory().getTodaysDate());
-        logger.info("Today's date is adjusted by the default business day convention is: " + today.getShortFormat());
+        final Date today = calendar.adjust(DateFactory.getFactory().getTodaysDate());
+        QL.info("Today's date is adjusted by the default business day convention is: " + today.getShortFormat());
         // set the evaluation date to the adjusted today's date
         Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
-        logger.info("Set the global evaluation date to the adjusted today's date: " + Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().getShortFormat());
-        
-        //Set up settlement, exercise and issue dates 
-        Date settlementDate = calendar.advance(today, settlementDays, TimeUnit.DAYS);
-        logger.info("SettlementDate is: " + settlementDate.getShortFormat());
-        logger.info("Check that we haven't messed up with references --> today's date is still: " + today.getShortFormat());
-        Date exerciseDate = calendar.advance(settlementDate, length, TimeUnit.YEARS);
-        logger.info("Excercise date is: " + exerciseDate.getShortFormat());
-        Date issueDate = calendar.advance(exerciseDate, -length, TimeUnit.YEARS);
-        logger.info("Issue date is: " + issueDate.getShortFormat());
-        
-        //Fix businessday convention and compounding?? frequency
-        BusinessDayConvention convention = BusinessDayConvention.MODIFIED_FOLLOWING;
-        Frequency frequency = Frequency.ANNUAL;
-        
-        Schedule schedule = new Schedule(issueDate,exerciseDate,new Period(frequency),calendar,convention, convention, true, false);
+        QL.info("Set the global evaluation date to the adjusted today's date: " + Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().getShortFormat());
 
-        
-        List<Dividend> dividends = new ArrayList<Dividend>();
-        List<Callability> callability = new ArrayList<Callability>();
-        
-        List<Double> coupons = new ArrayList<Double>();
+        //Set up settlement, exercise and issue dates
+        final Date settlementDate = calendar.advance(today, settlementDays, TimeUnit.DAYS);
+        QL.info("SettlementDate is: " + settlementDate.getShortFormat());
+        QL.info("Check that we haven't messed up with references --> today's date is still: " + today.getShortFormat());
+        final Date exerciseDate = calendar.advance(settlementDate, length, TimeUnit.YEARS);
+        QL.info("Excercise date is: " + exerciseDate.getShortFormat());
+        final Date issueDate = calendar.advance(exerciseDate, -length, TimeUnit.YEARS);
+        QL.info("Issue date is: " + issueDate.getShortFormat());
+
+        //Fix businessday convention and compounding?? frequency
+        final BusinessDayConvention convention = BusinessDayConvention.MODIFIED_FOLLOWING;
+        final Frequency frequency = Frequency.ANNUAL;
+
+        final Schedule schedule = new Schedule(issueDate,exerciseDate,new Period(frequency),calendar,convention, convention, true, false);
+
+
+        final List<Dividend> dividends = new ArrayList<Dividend>();
+        final List<Callability> callability = new ArrayList<Callability>();
+
+        final List<Double> coupons = new ArrayList<Double>();
         coupons.add(1.0);
         coupons.add(0.05);
 
-        DayCounter bondDayCount = Thirty360.getDayCounter();
-        
-        // Call dates, years 2, 4        
-        int[] callLength = { 2, 4 };
+        final DayCounter bondDayCount = Thirty360.getDayCounter();
+
+        // Call dates, years 2, 4
+        final int[] callLength = { 2, 4 };
         // Put dates year 3
-        int[] putLength = { 3 };
-        
-        double[] callPrices = {101.5, 100.85};
-        double[] putPrices = { 105.0 };
-        
+        final int[] putLength = { 3 };
+
+        final double[] callPrices = {101.5, 100.85};
+        final double[] putPrices = { 105.0 };
+
         for(int i=0; i<callLength.length; i++){
-        	callability.add(new SoftCallability(new Callability.Price(callPrices[i], Callability.Price.Type.CLEAN), 
-        										schedule.date(callLength[i]), 
+        	callability.add(new SoftCallability(new Callability.Price(callPrices[i], Callability.Price.Type.CLEAN),
+        										schedule.date(callLength[i]),
         										1.20));
         }
 
@@ -158,13 +155,13 @@ public class ConvertibleBonds {
         }
 
         // Assume dividends are paid every 6 months.
-        for (Date d = today.increment(new Period(6, TimeUnit.MONTHS)); d.lt(exerciseDate); d.increment(new Period(6, TimeUnit.MONTHS))) {
+        for (final Date d = today.increment(new Period(6, TimeUnit.MONTHS)); d.lt(exerciseDate); d.increment(new Period(6, TimeUnit.MONTHS))) {
             dividends.add(new FixedDividend(1.0, d));
         }
 
-        DayCounter dayCounter = Actual365Fixed.getDayCounter();
-        /*@Time*/ double maturity = dayCounter.yearFraction(settlementDate,exerciseDate);
-        
+        final DayCounter dayCounter = Actual365Fixed.getDayCounter();
+        /*@Time*/ final double maturity = dayCounter.yearFraction(settlementDate,exerciseDate);
+
         System.out.println("option type = "+type);
         System.out.println("Time to maturity = "+maturity);
         System.out.println("Underlying price = "+underlying);
@@ -175,15 +172,15 @@ public class ConvertibleBonds {
         System.out.println("");
 
         // write column headings
-        int widths[] = { 35, 14, 14 };
-        int totalWidth = widths[0] + widths[1] + widths[2];
-        StringBuilder ruleBuilder = new StringBuilder();
-        StringBuilder dblruleBuilder = new StringBuilder();
+        final int widths[] = { 35, 14, 14 };
+        final int totalWidth = widths[0] + widths[1] + widths[2];
+        final StringBuilder ruleBuilder = new StringBuilder();
+        final StringBuilder dblruleBuilder = new StringBuilder();
         for(int i=0; i<totalWidth; i++){
         	ruleBuilder.append('-');
         	dblruleBuilder.append('=');
         }
-        String rule = ruleBuilder.toString(), dblrule=dblruleBuilder.toString();
+        final String rule = ruleBuilder.toString(), dblrule=dblruleBuilder.toString();
 
         System.out.println(dblrule);
         System.out.println("Tsiveriotis-Fernandes method");
@@ -193,41 +190,41 @@ public class ConvertibleBonds {
 //                  << std::setw(widths[1]) << std::left << "American"
 //                  << std::endl;
         System.out.println(rule);
-        
-        Exercise exercise = new EuropeanExercise(exerciseDate);
-        Exercise amExercise = new AmericanExercise(settlementDate,exerciseDate);
 
-        Handle<Quote> underlyingH = new Handle (new SimpleQuote(underlying));
-        Handle<YieldTermStructure> flatTermStructure = new Handle( new FlatForward(settlementDate, riskFreeRate, dayCounter));
-        Handle<YieldTermStructure> flatDividendTS = new Handle(new FlatForward(settlementDate, dividendYield, dayCounter));
-        Handle<BlackVolTermStructure> flatVolTS = new Handle(new BlackConstantVol(settlementDate, volatility, dayCounter));
+        final Exercise exercise = new EuropeanExercise(exerciseDate);
+        final Exercise amExercise = new AmericanExercise(settlementDate,exerciseDate);
 
-        StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH,
+        final Handle<Quote> underlyingH = new Handle (new SimpleQuote(underlying));
+        final Handle<YieldTermStructure> flatTermStructure = new Handle( new FlatForward(settlementDate, riskFreeRate, dayCounter));
+        final Handle<YieldTermStructure> flatDividendTS = new Handle(new FlatForward(settlementDate, dividendYield, dayCounter));
+        final Handle<BlackVolTermStructure> flatVolTS = new Handle(new BlackConstantVol(settlementDate, volatility, dayCounter));
+
+        final StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH,
                                               								flatDividendTS,
                                               								flatTermStructure,
                                               								flatVolTS);
 
-        int timeSteps = 801;
+        final int timeSteps = 801;
 
-        Handle<Quote> creditSpread = new Handle(new SimpleQuote(spreadRate));
-        Quote rate = new SimpleQuote(riskFreeRate);
+        final Handle<Quote> creditSpread = new Handle(new SimpleQuote(spreadRate));
+        final Quote rate = new SimpleQuote(riskFreeRate);
 
-        Handle<YieldTermStructure> discountCurve = new Handle(new FlatForward(today, new Handle<Quote>(rate), dayCounter));
+        final Handle<YieldTermStructure> discountCurve = new Handle(new FlatForward(today, new Handle<Quote>(rate), dayCounter));
 
-        PricingEngine engine = new BinomialConvertibleEngine<JarrowRudd>(timeSteps);
+        final PricingEngine engine = new BinomialConvertibleEngine<JarrowRudd>(timeSteps);
 
-        ConvertibleFixedCouponBond europeanBond = new ConvertibleFixedCouponBond(
+        final ConvertibleFixedCouponBond europeanBond = new ConvertibleFixedCouponBond(
                                 stochasticProcess, exercise, engine,
                                 conversionRatio, dividends, callability,
                                 creditSpread, issueDate, settlementDays,
                                 coupons, bondDayCount, schedule, redemption);
 
-        ConvertibleFixedCouponBond americanBond = new ConvertibleFixedCouponBond(
+        final ConvertibleFixedCouponBond americanBond = new ConvertibleFixedCouponBond(
                                 stochasticProcess, amExercise, engine,
                                 conversionRatio, dividends, callability,
                                 creditSpread, issueDate, settlementDays,
                                 coupons, bondDayCount, schedule, redemption);
-        String method = "Jarrow-Rudd";
+        final String method = "Jarrow-Rudd";
         europeanBond.setPricingEngine(new BinomialConvertibleEngine<JarrowRudd>(timeSteps));
         americanBond.setPricingEngine(new BinomialConvertibleEngine<JarrowRudd>(timeSteps));
 //        std::cout << std::setw(widths[0]) << std::left << method
@@ -235,16 +232,16 @@ public class ConvertibleBonds {
 //                  << std::setw(widths[1]) << std::left << europeanBond.NPV()
 //                  << std::setw(widths[2]) << std::left << americanBond.NPV()
 //                  << std::endl;
-        
-        
-      //TODO: Work in progress 
-		
+
+
+      //TODO: Work in progress
+
 		clock.stopClock();
 		clock.log();
 	}
-	
-	public static void main (String [] args){
+
+	public static void main (final String [] args){
 		new ConvertibleBonds().run();
 	}
-	
+
 }

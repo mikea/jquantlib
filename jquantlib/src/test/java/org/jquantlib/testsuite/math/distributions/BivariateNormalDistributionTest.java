@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,22 +24,19 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.distributions.BivariateNormalDistribution;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author <Richard Gomes>
  */
 public class BivariateNormalDistributionTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(BivariateNormalDistributionTest.class);
-
 	public BivariateNormalDistributionTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	@Test
 	public void testBivariateAtZero() {
 
@@ -52,16 +49,16 @@ public class BivariateNormalDistributionTest {
 	    final double x = 0.0;
 	    final double y = 0.0;
 
-	    double tolerance = 1.0e-15;
-	    for (int i=0;i<rho.length;i++) {
+	    final double tolerance = 1.0e-15;
+	    for (final double element : rho) {
 	        for (Integer sgn=-1; sgn < 2; sgn+=2) {
-	            BivariateNormalDistribution bvn= new BivariateNormalDistribution(sgn*rho[i]);
-	            double expected = 0.25 + Math.asin(sgn*rho[i]) / (2*Math.PI) ;
-	            double realised = bvn.op(x,y);
+	            final BivariateNormalDistribution bvn= new BivariateNormalDistribution(sgn*element);
+	            final double expected = 0.25 + Math.asin(sgn*element) / (2*Math.PI) ;
+	            final double realised = bvn.op(x,y);
 
 	            if (Math.abs(realised-expected)>=tolerance)
 	            	fail(" bivariate cumulative distribution\n"
-                            + "    rho: " + sgn*rho[i] + "\n"
+                            + "    rho: " + sgn*element + "\n"
                             + "    expected:  " + expected + "\n"
                             + "    realised:  " + realised + "\n"
                             + "    tolerance: " + tolerance);
@@ -69,11 +66,11 @@ public class BivariateNormalDistributionTest {
 	    }
 	}
 
-	
+
 	@Test
 	public void testHaugValues() {
 
-	    double[][] values = {
+	    final double[][] values = {
 	        /* The data below are from
 	           "Option pricing formulas", E.G. Haug, McGraw-Hill 1998
 	           pag 193
@@ -134,15 +131,15 @@ public class BivariateNormalDistributionTest {
 	    };
 
 	    for (int i=0; i<values.length; i++) {
-	    	double a = values[i][0];
-	    	double b = values[i][1];
-	    	double rho = values[i][2];
-	    	double result = values[i][3];
-	    	
-	        BivariateNormalDistribution bcd = new BivariateNormalDistribution(rho);
-	        double value = bcd.op(a, b);
+	    	final double a = values[i][0];
+	    	final double b = values[i][1];
+	    	final double rho = values[i][2];
+	    	final double result = values[i][3];
 
-	        double tolerance = 1.0e-6;
+	        final BivariateNormalDistribution bcd = new BivariateNormalDistribution(rho);
+	        final double value = bcd.op(a, b);
+
+	        final double tolerance = 1.0e-6;
 	        if (Math.abs(value-result) >= tolerance)
 	        	fail(" bivariate cumulative distribution\n"
                       + "    case: " + i+1 + "\n"
@@ -152,5 +149,5 @@ public class BivariateNormalDistributionTest {
                       + "    tabulated value:  " + result + "\n"
                       + "    result:           " + value);
 	    }
-	}	
+	}
 }

@@ -25,14 +25,13 @@ package org.jquantlib.examples;
 import static org.jquantlib.util.Month.FEBRUARY;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This example prices a few bermudan swaptions using different short-rate models calibrated to market swaptions.
@@ -41,19 +40,17 @@ import org.slf4j.LoggerFactory;
  *
  * @author Daniel Kong
  */
-//TODO: Work in progress
+// TODO: Work in progress
 public class BermudanSwaption {
 
-	private final static Logger logger = LoggerFactory.getLogger(BermudanSwaption.class);
-
-	public BermudanSwaption(){
-        if (System.getProperty("EXPERIMENTAL")==null)
+    public BermudanSwaption() {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-		logger.info("\n\n::::: "+BermudanSwaption.class.getSimpleName()+" :::::");
-	}
+        QL.info("\n\n::::: " + BermudanSwaption.class.getSimpleName() + " :::::");
+    }
 
     public void run() throws Exception {
-        if (System.getProperty("EXPERIMENTAL")==null)
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
 
         final StopClock clock = new StopClock();
@@ -81,12 +78,12 @@ public class BermudanSwaption {
         clock.log();
     }
 
-	public static void main (final String [] args){
-		try{
-			new BermudanSwaption().run();
-		}catch(final Exception e){
-			logger.info(e.getMessage());
-		}
-	}
+    public static void main(final String[] args) {
+        try {
+            new BermudanSwaption().run();
+        } catch (final Exception e) {
+            QL.error(e.getMessage());
+        }
+    }
 
 }

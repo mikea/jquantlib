@@ -2,7 +2,7 @@
  Copyright (C) 2007 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,22 +15,21 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.testsuite.termstructures.yieldcurves;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeUnit;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 
 // FIXME: refactor package name to
@@ -38,14 +37,12 @@ import org.slf4j.LoggerFactory;
 
 public class PiecewiseYieldCurveTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(PiecewiseYieldCurveTest.class);
-
 	private static class Datum {
 		public int n;
 		public TimeUnit units;
 		public double rate;
 
-		public Datum(int n, TimeUnit units, double rate) {
+		public Datum(final int n, final TimeUnit units, final double rate) {
 			super();
 			this.n = n;
 			this.units = units;
@@ -61,8 +58,8 @@ public class PiecewiseYieldCurveTest {
 		public double coupon;
 		public double price;
 
-		public BondDatum(int n, TimeUnit units, int length,
-				Frequency frequency, double coupon, double price) {
+		public BondDatum(final int n, final TimeUnit units, final int length,
+				final Frequency frequency, final double coupon, final double price) {
 			super();
 			this.n = n;
 			this.units = units;
@@ -73,7 +70,7 @@ public class PiecewiseYieldCurveTest {
 		}
 	}
 
-	private Datum[] depositData = { 
+	private final Datum[] depositData = {
 			new Datum(1, TimeUnit.WEEKS, 4.559),
 			new Datum(1, TimeUnit.MONTHS, 4.581),
 			new Datum(2, TimeUnit.MONTHS, 4.573),
@@ -81,14 +78,14 @@ public class PiecewiseYieldCurveTest {
 			new Datum(6, TimeUnit.MONTHS, 4.496),
 			new Datum(9, TimeUnit.MONTHS, 4.490) };
 
-	private Datum[] fraData = { 
+	private final Datum[] fraData = {
 			new Datum(1, TimeUnit.MONTHS, 4.581),
 			new Datum(2, TimeUnit.MONTHS, 4.573),
 			new Datum(3, TimeUnit.MONTHS, 4.557),
 			new Datum(6, TimeUnit.MONTHS, 4.496),
 			new Datum(9, TimeUnit.MONTHS, 4.490) };
 
-	private Datum[] swapData = { 
+	private final Datum[] swapData = {
 			new Datum(1, TimeUnit.YEARS, 4.54),
 			new Datum(2, TimeUnit.YEARS, 4.63),
 			new Datum(3, TimeUnit.YEARS, 4.75),
@@ -105,7 +102,7 @@ public class PiecewiseYieldCurveTest {
 			new Datum(25, TimeUnit.YEARS, 5.95),
 			new Datum(30, TimeUnit.YEARS, 5.96) };
 
-	private BondDatum[] bondData = {
+	private final BondDatum[] bondData = {
 			new BondDatum(6, TimeUnit.MONTHS, 5, Frequency.SEMI_ANNUAL, 4.75,
 					101.320),
 			new BondDatum(1, TimeUnit.YEARS, 3, Frequency.SEMI_ANNUAL, 2.75,
@@ -117,7 +114,7 @@ public class PiecewiseYieldCurveTest {
 			new BondDatum(10, TimeUnit.YEARS, 11, Frequency.SEMI_ANNUAL, 3.75,
 					104.070) };
 
-	private Datum[] bmaData = { new Datum(1, TimeUnit.YEARS, 67.56),
+	private final Datum[] bmaData = { new Datum(1, TimeUnit.YEARS, 67.56),
 			new Datum(2, TimeUnit.YEARS, 68.00),
 			new Datum(3, TimeUnit.YEARS, 68.25),
 			new Datum(4, TimeUnit.YEARS, 68.50),
@@ -127,21 +124,21 @@ public class PiecewiseYieldCurveTest {
 			new Datum(15, TimeUnit.YEARS, 71.69),
 			new Datum(20, TimeUnit.YEARS, 72.69),
 			new Datum(30, TimeUnit.YEARS, 73.81) };
-	
+
 
 	public PiecewiseYieldCurveTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	@Test
 	public void fakeTestCase() {
 		// This is not a test case.
 		// Obtain real test cases from QuantLib-0.8.1 sources
-		logger.error("***** TEST FAILED *****");
+		QL.error("***** TEST FAILED *****");
 	}
-	
-	
-// TODO: remove comments	
+
+
+// TODO: remove comments
 //	private class CommonVars {
 //		// global variables
 //		public Calendar calendar;
@@ -174,8 +171,8 @@ public class PiecewiseYieldCurveTest {
 //		public List<RateHelper> bmaHelpers;
 //		public List<Schedule> schedules;
 //		public YieldTermStructure termStructure;
-//       
-//		
+//
+//
 //		//public SavedSettings backup;
 //		//public IndexHistoryCleaner cleaner;
 //
@@ -238,10 +235,10 @@ public class PiecewiseYieldCurveTest {
 //            bondHelpers = new ArrayList<RateHelper>();
 //            schedules = new ArrayList<Schedule>();
 //            bmaHelpers = new ArrayList<RateHelper>();
-//            
+//
 ////  Srinivas: please review usage of Handle
-////            
-////            IborIndex euribor6m = new Euribor(new Period(6, TimeUnit.MONTHS), new Handle<YieldTermStructure>());            
+////
+////            IborIndex euribor6m = new Euribor(new Period(6, TimeUnit.MONTHS), new Handle<YieldTermStructure>());
 ////            for (int i=0; i<deposits; i++) {
 ////                Handle<Quote> r = new Handle(rates.get(i));
 ////                instruments.add(i,new
@@ -251,7 +248,7 @@ public class PiecewiseYieldCurveTest {
 ////                                      euribor6m.isEndOfMonth(),
 ////                                      euribor6m.getDayCounter()));
 ////            }
-//            
+//
 //            /*for (int i=0; i<swaps; i++) {
 //                Handle<Quote> r = new Handle(rates.get(i+deposits));
 //                instruments.add((i+deposits), new
@@ -260,10 +257,10 @@ public class PiecewiseYieldCurveTest {
 //                                   fixedLegFrequency, fixedLegConvention,
 //                                   fixedLegDayCounter, euribor6m));
 //            }*/
-//            
+//
 ////  Srinivas: please review usage of Handle
-////          
-////            Euribor euribor3m = new Euribor(new Period(3, TimeUnit.MONTHS), new Handle<YieldTermStructure>());            
+////
+////            Euribor euribor3m = new Euribor(new Period(3, TimeUnit.MONTHS), new Handle<YieldTermStructure>());
 ////            for (int i=0; i<fras; i++) {
 ////                Handle<Quote> r = new Handle(fraRates.get(i));
 ////                fraHelpers.add(i, new
@@ -274,7 +271,7 @@ public class PiecewiseYieldCurveTest {
 ////                                  euribor3m.isEndOfMonth(),
 ////                                  euribor3m.getDayCounter()));
 ////            }
-//            
+//
 //            for (int i=0; i<bonds; i++) {
 //                Handle<Quote> p = new Handle(prices.get(i));
 //                Date maturity =
@@ -295,7 +292,7 @@ public class PiecewiseYieldCurveTest {
 //                                        bondConvention,
 //                                        bondRedemption, issue)); */
 //            }
-//            
+//
 //        }
 //	}
 

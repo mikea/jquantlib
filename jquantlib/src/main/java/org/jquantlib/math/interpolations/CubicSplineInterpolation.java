@@ -45,8 +45,6 @@ import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Cubic spline interpolation between discrete points.
@@ -70,9 +68,6 @@ import org.slf4j.LoggerFactory;
  */
 // TEST : needs code review and test classes
 public class CubicSplineInterpolation extends AbstractInterpolation {
-
-    private final static Logger logger = LoggerFactory.getLogger(CubicSplineInterpolation.class);
-
 
     //
     // private final fields

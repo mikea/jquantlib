@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -44,25 +44,23 @@ import org.jquantlib.pricingengines.PricingEngine;
 
 /**
  * Abstract base class for Options
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class Option extends NewInstrument {
 
-    // private final static Logger logger = LoggerFactory.getLogger(Option.class);
-
     //
     // protected final fields
     //
-    
+
     protected final Payoff payoff;
 	protected final Exercise exercise;
-	
+
 //XXX
 //	//
 //	// private fields
 //	//
-//	
+//
 //	/**
 //	 * This private field is automatically initialized by constructor which
 //	 * picks up it's value from {@link Settings} singleton. This procedure
@@ -70,12 +68,12 @@ public abstract class Option extends NewInstrument {
 //	 * heavily multi-threaded environments.
 //	 */
 //	private final Date evaluationDate;
-	
+
 
 	//
 	// public constructors
 	//
-	
+
 	/**
 	 * This constructor
 	 */
@@ -88,11 +86,11 @@ public abstract class Option extends NewInstrument {
 //		this.evaluationDate.addObserver(this);
 	}
 
-	
+
 	//
 	// public static inner enums
 	//
-	
+
 	/**
 	 * This enumeration represents options types: CALLs and PUTs.
 	 */
@@ -107,7 +105,7 @@ public abstract class Option extends NewInstrument {
 
 		/**
 		 * This method returns the <i>mathematical signal</i> associated to an option type.
-		 * 
+		 *
 		 * @return 1 for CALLs; -1 for PUTs
 		 */
 		public int toInteger() {

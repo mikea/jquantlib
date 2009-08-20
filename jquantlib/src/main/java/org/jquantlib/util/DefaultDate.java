@@ -51,8 +51,6 @@ import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Date and time related classes, typedefs and enumerations
@@ -75,8 +73,6 @@ import org.slf4j.LoggerFactory;
  */
 //TODO: OSGi
 public class DefaultDate extends BaseDate {
-
-    private final static Logger logger = LoggerFactory.getLogger(DefaultDate.class);
 
     private/* @NonNegative */int value;
 
@@ -624,7 +620,7 @@ public class DefaultDate extends BaseDate {
             if (d > length)
                 d = length;
             final int result = fromDMY(d, m, y);
-            //logger.debug("{}", result);
+            //QL.debug("{}", result);
             return result;
         }
         case YEARS: {
@@ -637,7 +633,7 @@ public class DefaultDate extends BaseDate {
                 d = 28;
 
             final int result = fromDMY(d, m, y);
-            //logger.debug("{}", result);
+            //QL.debug("{}", result);
             return result;
         }
         default:
@@ -831,7 +827,7 @@ public class DefaultDate extends BaseDate {
 
     @Override
     public final int dateValue() /* @ReadOnly */{
-        logger.debug("{}", value);
+        // QL.debug(value);
         return value;
     }
 

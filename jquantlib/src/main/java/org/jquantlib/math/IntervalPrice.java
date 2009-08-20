@@ -44,8 +44,6 @@ import java.util.Iterator;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TimeSeries;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Interval Price
@@ -53,8 +51,6 @@ import org.slf4j.LoggerFactory;
  * @author Anand Mani
  */
 public class IntervalPrice {
-
-    private final static Logger logger = LoggerFactory.getLogger(IntervalPrice.class);
 
     private final static String UNKNOWN_PRICE_TYPE = "unknown price type";
 

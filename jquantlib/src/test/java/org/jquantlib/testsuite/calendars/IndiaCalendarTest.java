@@ -2,7 +2,7 @@
  Copyright (C) 2008 Renjith Nair
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,6 +36,7 @@ import static org.jquantlib.util.Month.SEPTEMBER;
 import java.util.List;
 import java.util.Vector;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.India;
 import org.jquantlib.util.Date;
@@ -43,23 +44,19 @@ import org.jquantlib.util.DateFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Renjith Nair
  * @author Jia Jia
- * 
+ *
  */
 
 public class IndiaCalendarTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(IndiaCalendarTest.class);
-
     private Calendar c = null;
 
     public IndiaCalendarTest() {
-        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Before
@@ -70,9 +67,9 @@ public class IndiaCalendarTest {
     // 2005 - year in the past
     @Test
     public void testIndiaNseHolidaysYear2005() {
-        int year = 2005;
-        logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2005;
+        QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
 
         expectedHol.add(DateFactory.getFactory().getDate(21, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(26, JANUARY, year));
@@ -86,7 +83,7 @@ public class IndiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(15, NOVEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
@@ -95,9 +92,9 @@ public class IndiaCalendarTest {
     @Test
     public void testIndiaNseHolidaysYear2006() {
 
-        int year = 2006;
-        logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2006;
+        QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
 
         expectedHol.add(DateFactory.getFactory().getDate(11, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(26, JANUARY, year));
@@ -114,16 +111,16 @@ public class IndiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
     }
 
     // 2007 - regular year in the past
     @Test
     public void testIndiaNseHolidaysYear2007() {
-        int year = 2007;
-        logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2007;
+        QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(26, JANUARY, year));
@@ -140,7 +137,7 @@ public class IndiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
@@ -148,9 +145,9 @@ public class IndiaCalendarTest {
     // 2008 - Current Year
     @Test
     public void testIndiaNseHolidaysYear2008() {
-        int year = 2008;
-        logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2008;
+        QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
 
         expectedHol.add(DateFactory.getFactory().getDate(6, MARCH, year));
         expectedHol.add(DateFactory.getFactory().getDate(20, MARCH, year));
@@ -171,17 +168,17 @@ public class IndiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(27, NOVEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
-    
+
     // 2009 - Current Year
     @Test
     public void testIndiaNseHolidaysYear2009() {
-        int year = 2009;
-        logger.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2009;
+        QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
         expectedHol.add(DateFactory.getFactory().getDate(8, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(26, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(23, FEBRUARY, year));
@@ -201,11 +198,11 @@ public class IndiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(28, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
-    
+
 
     @After
     public void destroy() {

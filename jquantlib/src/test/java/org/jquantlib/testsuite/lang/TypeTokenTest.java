@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,36 +24,33 @@ package org.jquantlib.testsuite.lang;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Richard Gomes
  */
 public class TypeTokenTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(TypeTokenTest.class);
-
     public TypeTokenTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
-    
+
     @Test
     public void testTypeToken() {
-        C c = new C();
+        final C c = new C();
         if (c.getClazz() != Double.class) {
             fail("Object 'c' should be java.lang.Double");
         }
-        
-        D d = new D();
+
+        final D d = new D();
         if (d.getClazz() != Integer.class) {
             fail("Object 'd' should be java.lang.Integer");
         }
     }
-        
-    
+
+
     /**
      * It's very important to notice that we need to create anonymous classes in order to make these tests pass.
      * <p>
@@ -62,23 +59,23 @@ public class TypeTokenTest {
      */
     @Test
     public void testTypeToken2() {
-        K k1 = new K<java.lang.Double>() {}; // ANONYMOUS INSTANCE!
+        final K k1 = new K<java.lang.Double>() {}; // ANONYMOUS INSTANCE!
         if (k1.getClazz() != Double.class) {
             fail("Object 'k1' should be java.lang.Double");
         }
-        
-        K k2 = new K<java.lang.Integer>() {}; // ANONYMOUS INSTANCE!
+
+        final K k2 = new K<java.lang.Integer>() {}; // ANONYMOUS INSTANCE!
         if (k2.getClazz() != Integer.class) {
             fail("Object 'k2' should be java.lang.Integer");
         }
-        
+
     }
-    
+
     //
     // inner classes
     //
-    
-    private class B<T extends Number> { 
+
+    private class B<T extends Number> {
         public Class<?> getClazz() {
             return TypeToken.getClazz(this.getClass());
         }

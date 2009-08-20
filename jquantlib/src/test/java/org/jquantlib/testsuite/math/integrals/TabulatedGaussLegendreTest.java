@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.functions.Constant;
 import org.jquantlib.math.functions.Cube;
@@ -32,38 +33,34 @@ import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.functions.Sqr;
 import org.jquantlib.math.integrals.TabulatedGaussLegendre;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author <Richard Gomes>
  */
 public class TabulatedGaussLegendreTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(TabulatedGaussLegendreTest.class);
-
 	public TabulatedGaussLegendreTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	@Test
 	public void testPolynomials() {
 		checkSingleTabulated(new Constant(1.0), "f(x)=1", 2.0, 1.0e-13);
 		checkSingleTabulated(new Identity(), "f(x)=x", 0.0, 1.0e-13);
 		checkSingleTabulated(new Sqr(), "f(x)=x^2", 2.0/3.0, 1.0e-13);
 		checkSingleTabulated(new Cube(), "f(x)=x^3", 0.0, 1.0e-13);
-		checkSingleTabulated(new Fourth(), "f(x)=x^4", 2.0/5.0, 1.0e-13);		
+		checkSingleTabulated(new Fourth(), "f(x)=x^4", 2.0/5.0, 1.0e-13);
 	}
-	
-	public void checkSingleTabulated(final Ops.DoubleOp f, String tag, final double expected, final double tolerance) {
+
+	public void checkSingleTabulated(final Ops.DoubleOp f, final String tag, final double expected, final double tolerance) {
 	    final int order[] = { 6, 7, 12, 20 };
-	    TabulatedGaussLegendre quad = new TabulatedGaussLegendre();
-	    for (int i=0; i<order.length; i++) {
-	        quad.setOrder(order[i]);
-	        double realised = quad.evaluate(f);
+	    final TabulatedGaussLegendre quad = new TabulatedGaussLegendre();
+	    for (final int element : order) {
+	        quad.setOrder(element);
+	        final double realised = quad.evaluate(f);
 	        if (Math.abs(realised-expected) > tolerance)
             fail(" integrating " + tag + "\n"
-                        + "    order " + order[i] + "\n"
+                        + "    order " + element + "\n"
                         + "    realised: " + realised + "\n"
                         + "    expected: " + expected);
 	    }

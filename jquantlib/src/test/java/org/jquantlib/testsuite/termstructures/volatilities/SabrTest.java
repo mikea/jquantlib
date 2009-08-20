@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,10 +24,9 @@ package org.jquantlib.testsuite.termstructures.volatilities;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jquantlib.QL;
 import org.jquantlib.termstructures.volatilities.Sabr;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,34 +34,32 @@ import org.slf4j.LoggerFactory;
  */
 public class SabrTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(SabrTest.class);
-
 	public SabrTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	@Test
 	public void testAgainstKnownValues() {
-		
+
 		double strike = 0.0398;
-        double forward = 0.0398;
-        double expiryTime = 5.0;
-        double alpha = 0.0305473;
-        double beta = 0.5;
-        double nu = 0.34;
-        double rho = -0.11;
-        
-        Sabr sabr = new Sabr();
+        final double forward = 0.0398;
+        final double expiryTime = 5.0;
+        final double alpha = 0.0305473;
+        final double beta = 0.5;
+        final double nu = 0.34;
+        final double rho = -0.11;
+
+        final Sabr sabr = new Sabr();
         double sabrVol = sabr.sabrVolatility(strike, forward, expiryTime, alpha, beta, nu, rho);
         assertEquals(0.16,sabrVol, 1.0e-6);
-        
+
         strike = 0.0598;
         sabrVol = sabr.sabrVolatility(strike, forward, expiryTime, alpha, beta, nu, rho);
         assertEquals(0.15755519,sabrVol, 1.0e-6);
-        
+
         strike = 0.0198;
         sabrVol = sabr.sabrVolatility(strike, forward, expiryTime, alpha, beta, nu, rho);
         assertEquals(0.2373848,sabrVol, 1.0e-6);
-    
+
 	}
 }

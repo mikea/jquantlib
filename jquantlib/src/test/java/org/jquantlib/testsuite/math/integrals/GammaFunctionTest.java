@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,27 +24,24 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.distributions.GammaFunction;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author <Richard Gomes>
  */
 public class GammaFunctionTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(GammaFunctionTest.class);
-
 	public GammaFunctionTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	@Test
 	public void testGammaFunction() {
 
-	    GammaFunction gfn = new GammaFunction();
-	    
+	    final GammaFunction gfn = new GammaFunction();
+
 	    double expected = 0.0;
 	    double calculated = gfn.logValue(1);
 	    if (Math.abs(calculated) > 1.0e-15)
@@ -63,20 +60,20 @@ public class GammaFunctionTest {
 	    }
 	}
 
-	
+
 	@Test
 	public void testKnownValuesAbramStegun() {
-		double[][] values =	{	{1.075, -0.0388257395},
+		final double[][] values =	{	{1.075, -0.0388257395},
 								{1.225, -0.0922078291},
 								{1.5,   -0.1207822376},
 								{1.975, -0.0103670060} };
-		
-		GammaFunction gammaFunction = new GammaFunction();
-		for(int i=0;i<values.length;i++){
-			double x = values[i][0];
-			double expected = values[i][1];
-			double realised = gammaFunction.logValue(x);
-			double tolerance = 1.0e-10;
+
+		final GammaFunction gammaFunction = new GammaFunction();
+		for (final double[] value : values) {
+			final double x = value[0];
+			final double expected = value[1];
+			final double realised = gammaFunction.logValue(x);
+			final double tolerance = 1.0e-10;
 			if (Math.abs(expected-realised)>tolerance)
 			    fail("x: " + x + " expected: " + expected + " realised: " + realised);
 		}

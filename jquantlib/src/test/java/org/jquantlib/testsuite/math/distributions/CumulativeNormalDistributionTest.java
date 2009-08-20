@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,26 +24,23 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author <Richard Gomes>
  */
 public class CumulativeNormalDistributionTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(CumulativeNormalDistributionTest.class);
-
 	public CumulativeNormalDistributionTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	@Test
 	public void testKnownGoodValuesFromAbramStegun() {
-		
-		double[][] testvalues = {	{0.0, 0.5},
+
+		final double[][] testvalues = {	{0.0, 0.5},
 									{0.1, 0.539827837277029},
 									{0.2, 0.579259709439103},
 									{0.3, 0.617911422188953},
@@ -64,54 +61,54 @@ public class CumulativeNormalDistributionTest {
 									{3.5, 0.9997673709},
 									{4.0, 0.9999683288},
 									{5.0, 0.9999997133}};
-									
-		
-		CumulativeNormalDistribution cnd = new CumulativeNormalDistribution();
-		
-		for(int i=0;i<testvalues.length;i++){
-			double z = testvalues[i][0];
-			double expected = testvalues[i][1];
-			double computed = cnd.op(z);
-			double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
-			
-			
+
+
+		final CumulativeNormalDistribution cnd = new CumulativeNormalDistribution();
+
+		for (final double[] testvalue : testvalues) {
+			final double z = testvalue[0];
+			final double expected = testvalue[1];
+			final double computed = cnd.op(z);
+			final double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
+
+
 			// assertEquals(expected, computed,tolerance);
 			if(expected - computed > tolerance){
 				fail("expected:  + " + expected + " but was " + computed);
 			}
-			
+
 			// assertEquals(1.0, computed+ cnd.evaluate(-z),tolerance);
 			if (Math.abs(1.0-(computed+cnd.op(-z)))>tolerance) {
 				fail("expected: 1.0" + " but is: " + computed + cnd.op(-z));
 			}
 		}
 	}
-	
+
 	@Test
 	public void testExtremes(){
 		double z = -40;
 		// double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
-		double tolerance = 1.0e-15;
-		
-		CumulativeNormalDistribution cnd = new CumulativeNormalDistribution();
-		
+		final double tolerance = 1.0e-15;
+
+		final CumulativeNormalDistribution cnd = new CumulativeNormalDistribution();
+
 		// assertEquals(0, cnd.evaluate(z),1.0e-15);
 		if (Math.abs(0.0-(cnd.op(z)))>tolerance) {
 			fail("expected: 1.0" + " but is: " + cnd.op(z));
 		}
-		
+
 		z = -10;
 		// assertEquals(0, cnd.evaluate(z),1.0e-15);
 		if (Math.abs(0.0-cnd.op(z))>tolerance) {
 			fail("expected: 1.0" + " but is: " + cnd.op(z));
 		}
-	
+
 		z = 10;
 		// assertEquals(1.0, cnd.evaluate(z),1.0e-15);
 		if (Math.abs(1.0-(cnd.op(z)))>tolerance) {
 			fail("expected: 1.0" + " but is: " + cnd.op(z));
 		}
-		
+
 		z = 40;
 		// assertEquals(1.0, cnd.evaluate(z),1.0e-15);
 		if (Math.abs(1.0-(cnd.op(z)))>tolerance) {

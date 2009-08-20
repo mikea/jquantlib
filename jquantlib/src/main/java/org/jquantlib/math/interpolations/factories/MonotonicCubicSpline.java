@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -43,8 +43,6 @@ package org.jquantlib.math.interpolations.factories;
 
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Monotonic cubic spline interpolation factory and traits.
@@ -53,12 +51,10 @@ import org.slf4j.LoggerFactory;
  *
  * @see CubicSplineInterpolation
  * @see CubicSpline
- * 
+ *
  * @author Dominik Holenstein
  */
 public class MonotonicCubicSpline extends CubicSpline implements Interpolator {
-    
-    private final static Logger logger = LoggerFactory.getLogger(MonotonicCubicSpline.class);
 
     //
     // public constructors
@@ -68,7 +64,7 @@ public class MonotonicCubicSpline extends CubicSpline implements Interpolator {
      * Constructs a interpolation factory.
      * <p>
      * This is not the implementation of a interpolation class, but only its factory.
-     * 
+     *
      * @see CubicSplineInterpolation
      * @see CubicSpline
      */

@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Dominik Holenstein
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,10 +24,9 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.distributions.GammaDistribution;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Dominik Holenstein
@@ -35,19 +34,17 @@ import org.slf4j.LoggerFactory;
 
 
 public class GammaDistributionTest {
-	
-    private final static Logger logger = LoggerFactory.getLogger(GammaDistributionTest.class);
 
 	public GammaDistributionTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	//FIXME Compare the test values to QuantLib
 	@Test
 	public void testGammaDisribution() {
-		
+
 		// for a = 1.0
-		double[][] testvalues = {	{1.0, 0.6321205487807914},
+		final double[][] testvalues = {	{1.0, 0.6321205487807914},
 									{2.0, 0.1353352832366127},
 									{3.0, 0.04978706836786395},
 									{4.0, 0.018315638888734182},
@@ -62,9 +59,9 @@ public class GammaDistributionTest {
 									{13.0, 2.2603294069810534E-6},
 									{14.0, 8.315287191035681E-7},
 									{15.0, 3.0590232050182594E-7}};
-			
+
 		// for a = 0.1
-		double[][] testvalues2= {	{1.0, 0.9758726484126121},
+		final double[][] testvalues2= {	{1.0, 0.9758726484126121},
 									{2.0, 0.005673823979811235},
 									{3.0, 0.001565271747114275},
 									{4.0, 4.6461128723220273E-4},
@@ -79,30 +76,30 @@ public class GammaDistributionTest {
 									{13.0, 2.2182342798583913E-8},
 									{14.0, 7.665444025768806E-9},
 									{15.0, 2.659774281674882E-9}};
-		
+
 		// Test for a = 1.0 (alpha)
-		double a = 1.0; 
-		GammaDistribution gammDistribution = new GammaDistribution(a);
-		for (int i=0;i<testvalues.length;i++) {
-			double expected = testvalues[i][1];
-			double x = testvalues[i][0];
-			double computed = gammDistribution.op(x);
-			// logger.info(computed); // for testing
-			double tolerance = 1.0e-15;
+		double a = 1.0;
+		final GammaDistribution gammDistribution = new GammaDistribution(a);
+		for (final double[] testvalue : testvalues) {
+			final double expected = testvalue[1];
+			final double x = testvalue[0];
+			final double computed = gammDistribution.op(x);
+			// QL.info(computed); // for testing
+			final double tolerance = 1.0e-15;
 			if (Math.abs(expected-computed)>tolerance) {
 				fail("x: " + x + " expected: " + expected + " realised: " + computed);
 			}
 		}
-		
+
 		// Test for a = 0.1 (alpha)
 		a = 0.1;
-		GammaDistribution gammDist = new GammaDistribution(a);
-		for (int i=0;i<testvalues2.length;i++) {
-			double expected = testvalues2[i][1];
-			double x = testvalues2[i][0];
-			double computed = gammDist.op(x);
-			// logger.info(computed); // for testing
-			double tolerance = 1.0e-15;
+		final GammaDistribution gammDist = new GammaDistribution(a);
+		for (final double[] element : testvalues2) {
+			final double expected = element[1];
+			final double x = element[0];
+			final double computed = gammDist.op(x);
+			// QL.info(computed); // for testing
+			final double tolerance = 1.0e-15;
 			if (Math.abs(expected-computed)>tolerance) {
 				fail("x: " + x + " expected: " + expected + " realised: " + computed);
 			}

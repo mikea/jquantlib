@@ -1,8 +1,8 @@
 /*
- Copyright (C) 2008 
-  
+ Copyright (C) 2008
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -32,26 +32,23 @@ import static org.jquantlib.util.Month.MAY;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Norway;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Richard Gomes
  */
 public class NorwayCalendarTest {
-	
-    private final static Logger logger = LoggerFactory.getLogger(NorwayCalendarTest.class);
 
     //TODO: private final Calendar settlement;
     private final Calendar exchange;
-	
+
 	public NorwayCalendarTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	    //TODO: this.settlement = Norway.getCalendar(Poland.Market.Settlement);
 	    this.exchange   = Norway.getCalendar(Norway.Market.OsloBors);
 	}
@@ -65,24 +62,24 @@ public class NorwayCalendarTest {
 	//    Apr  5	Maundy Thursday
 	//    Apr  6	Good Friday
 	//    Apr  8	Easter Day
-	//    	 	 	
+	//
 	//    Apr  9	Easter Monday
 	//    May  1	Official holiday
 	//    May 17	Ascension Day
 	//    May 17	Constitution Day
 	//    May 27	Whit Sunday
-	//    	 	 	
+	//
 	//    May 28	Whit Monday
 	//    Dec 25	Christmas Day
 	//    Dec 26	Boxing Day
 
 	@Test
 	public void testNorwayYear2012() {
-       	int year = 2012;
-    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
+       	final int year = 2012;
+    	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-    	
+
 		// Sun: expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate( 1,APRIL,year));		// Palm Sunday
 		expectedHol.add(df.getDate( 5,APRIL,year));		// Maundy Thursday
@@ -98,11 +95,11 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
-    	CalendarUtil cbt = new CalendarUtil();
+    	final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
-    
+
 	// 2011 -- simply taken from rules
     // Comparing with http://www.timeanddate.com/calendar/custom.html?year=2011&country=18&lang=en&hol=9&moon=on
     //
@@ -111,25 +108,25 @@ public class NorwayCalendarTest {
 	//	Apr 21	Maundy Thursday
 	//	Apr 22	Good Friday
 	//	Apr 24	Easter Day
-	//		 	 	
+	//
 	//	Apr 25	Easter Monday
 	//	May  1	Official holiday
 	//	May 17	Constitution Day
 	//	Jun  2	Ascension Day
 	//	Jun 12	Whit Sunday
-	//		 	 	
+	//
 	//	Jun 13	Whit Monday
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
-	
+
 	@Test
 	public void testNorwayYear2011() {
         final int year = 2011;
-    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-    	
-    	
+
+
 		// Sat: expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate(17,APRIL,year));		// Palm Sunday
 		expectedHol.add(df.getDate(21,APRIL,year));		// Maundy Thursday
@@ -145,11 +142,11 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
-    	CalendarUtil cbt = new CalendarUtil();
+    	final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
-    
+
 	// 2010 -- simply taken from rules
     // Comparing with http://www.timeanddate.com/calendar/custom.html?year=2010&country=18&lang=en&hol=9&moon=on
     //
@@ -158,25 +155,25 @@ public class NorwayCalendarTest {
 	//	Apr  1	Maundy Thursday
 	//	Apr  2	Good Friday
 	//	Apr  4	Easter Day
-	//		 	 	
+	//
 	//	Apr  5	Easter Monday
 	//	May  1	Official holiday
 	//	May 13	Ascension Day
 	//	May 17	Constitution Day
 	//	May 23	Whit Sunday
-	//		 	 	
+	//
 	//	May 24	Whit Monday
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
-	
+
 	@Test
 	public void testNorwayYear2010() {
         final int year = 2010;
-    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-    	
-    	
+
+
 		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate(28,MARCH,year));		// Palm Sunday
 		expectedHol.add(df.getDate( 1,APRIL,year));		// Maundy Thursday
@@ -192,11 +189,11 @@ public class NorwayCalendarTest {
         // Sun: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
-    	CalendarUtil cbt = new CalendarUtil();
+    	final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
-    
+
     // 2009 -- taken from Exchange website http://www.oslobors.no/ob/aapningstider?languageID=1
 	//
 	//	Jan 1	New Year's Day
@@ -204,28 +201,28 @@ public class NorwayCalendarTest {
 	//	Apr 9	Maundy Thursday
 	//	Apr 10	Good Friday
 	//	Apr 12	Easter Day
-	//		 	 	
+	//
 	//	Apr 13	Easter Monday
 	//	May 1	Official holiday
 	//	May 17	Constitution Day
 	//	May 21	Ascension Day
 	//	May 31	Whit Sunday
-	//		 	 	
+	//
 	//	Jun 1	Whit Monday
 	//	Dec 24	Christmas Eve  :: see http://bugs.jquantlib.org/view.php?id=73
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
 	//	Dec 31	New Year Eve :: see http://bugs.jquantlib.org/view.php?id=73
-	
-	
+
+
 	@Test
 	public void testNorwayYear2009() {
       	final int year = 2009;
-    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-    	
-    	
+
+
 		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate( 5,APRIL,year));		// Palm Sunday
 		expectedHol.add(df.getDate( 9,APRIL,year));		// Maundy Thursday
@@ -241,11 +238,11 @@ public class NorwayCalendarTest {
         // Sat: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
-    	CalendarUtil cbt = new CalendarUtil();
+    	final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
-    
+
     // 2008 -- taken from Exchange website http://www.oslobors.no/ob/aapningstider?languageID=1
 	//
 	//	Jan  1	New Year's Day
@@ -253,27 +250,27 @@ public class NorwayCalendarTest {
 	//	Mar 20	Maundy Thursday
 	//	Mar 21	Good Friday
 	//	Mar 23	Easter Day
-	//		 	 	
+	//
 	//	Mar 24	Easter Monday
 	//	May  1	Official holiday
 	//	May  1	Ascension Day
 	//	May 11	Whit Sunday
 	//	May 12	Whit Monday
-	//		 	 	
+	//
 	//	May 17	Constitution Day
 	//	Dec 24	Christmas Eve  :: see http://bugs.jquantlib.org/view.php?id=73
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
 	//	Dec 31	New Year Eve :: see http://bugs.jquantlib.org/view.php?id=73
-	
+
 	@Test
 	public void testNorwayYear2008() {
       	final int year = 2008;
-    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-    	
-    	
+
+
 		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate(16,MARCH,year));		// Palm Sunday
 		expectedHol.add(df.getDate(20,MARCH,year));		// Maundy Thursday
@@ -289,11 +286,11 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
-    	CalendarUtil cbt = new CalendarUtil();
+    	final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
-	
+
 	// 2007 -- simply taken from rules
     // Comparing with http://www.timeanddate.com/calendar/custom.html?year=2007&country=18&lang=en&hol=9&moon=on
     //
@@ -302,24 +299,24 @@ public class NorwayCalendarTest {
 	//	Apr  5	Maundy Thursday
 	//	Apr  6	Good Friday
 	//	Apr  8	Easter Day
-	//		 	 	
+	//
 	//	Apr  9	Easter Monday
 	//	May  1	Official holiday
 	//	May 17	Ascension Day
 	//	May 17	Constitution Day
 	//	May 27	Whit Sunday
-	//		 	 	
+	//
 	//	May 28	Whit Monday
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
-	
+
 	@Test
 	public void testNorwayYear2007() {
         final int year = 2007;
-    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-    	
+
 		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate( 1,APRIL,year));		// Palm Sunday
 		expectedHol.add(df.getDate( 5,APRIL,year));		// Maundy Thursday
@@ -335,11 +332,11 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
-    	CalendarUtil cbt = new CalendarUtil();
+    	final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
-    
+
     // 2006 -- simply taken from rules
     // Comparing with http://www.timeanddate.com/calendar/custom.html?year=2006&country=18&lang=en&hol=9&moon=on
     //
@@ -360,14 +357,14 @@ public class NorwayCalendarTest {
 	//
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
-	
+
 	@Test
 	public void testNorwayYear2006() {
         final int year = 2006;
-    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-    	
+
 		// Sun: expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate( 9,APRIL,year));		// Palm Sunday
 		expectedHol.add(df.getDate(13,APRIL,year));		// Maundy Thursday
@@ -383,11 +380,11 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
-    	CalendarUtil cbt = new CalendarUtil();
+    	final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
-    
+
     // 2005 -- simply taken from rules
     // Comparing with http://www.timeanddate.com/calendar/custom.html?year=2005&country=18&lang=en&hol=9&moon=on
     //
@@ -396,24 +393,24 @@ public class NorwayCalendarTest {
 	//	Mar 24	Maundy Thursday
 	//	Mar 25	Good Friday
 	//	Mar 27	Easter Day
-	//		 	 	
+	//
 	//	Mar 28	Easter Monday
 	//	May  1	Official holiday
 	//	May  5	Ascension Day
 	//	May 15	Whit Sunday
 	//	May 16	Whit Monday
 	//	May 17	Constitution Day
-	//		 	 	
+	//
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
-    
+
     @Test
     public void testNorwayYear2005() {
         final int year = 2005;
-    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-    	
+
 		// Sat: expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate(20,APRIL,year));		// Palm Sunday
 		expectedHol.add(df.getDate(24,MARCH,year));		// Maundy Thursday
@@ -429,11 +426,11 @@ public class NorwayCalendarTest {
         expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
-    	CalendarUtil cbt = new CalendarUtil();
+    	final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
     }
 
-    
+
     // 2004 -- simply taken from rules
     // Comparing with http://www.timeanddate.com/calendar/custom.html?year=2004&country=18&lang=en&hol=9&moon=on
     //
@@ -442,24 +439,24 @@ public class NorwayCalendarTest {
 	//    Apr  8	Maundy Thursday
 	//    Apr  9	Good Friday
 	//    Apr 11	Easter Day
-	//    	 	 	
+	//
 	//    Apr 12	Easter Monday
 	//    May  1	Official holiday
 	//    May 17	Constitution Day
 	//    May 20	Ascension Day
 	//    May 30	Whit Sunday
-	//    	 	 	
+	//
 	//    May 31	Whit Monday
 	//    Dec 25	Christmas Day
 	//    Dec 26	Boxing Day
-    
+
     @Test
     public void testNorwayYear2004() {
         final int year = 2004;
-    	logger.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
         final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
-    	
+
 		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(df.getDate( 4,APRIL,year));		// Palm Sunday
 		expectedHol.add(df.getDate( 8,APRIL,year));		// Maundy Thursday
@@ -475,8 +472,8 @@ public class NorwayCalendarTest {
         // Sun: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
-    	CalendarUtil cbt = new CalendarUtil();
+    	final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
     }
-    
+
 }

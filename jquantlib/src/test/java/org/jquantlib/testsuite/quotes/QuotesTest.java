@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,28 +24,25 @@ package org.jquantlib.testsuite.quotes;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.testsuite.util.Flag;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * @note Class Handle is deprecated and MUST NEVER be used
- * 
+ *
  * @author Richard Gomes
  */
 public class QuotesTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(QuotesTest.class);
-
 	public QuotesTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 //	private double add10(final double x) { return x+10; }
 //	private double mul10(final double x) { return x*10; }
 //	private double sub10(final double x) { return x-10; }
@@ -57,10 +54,10 @@ public class QuotesTest {
 	@Test
 	public void testObservable() {
 
-	    logger.info("Testing observability of quotes...");
+	    QL.info("Testing observability of quotes...");
 
-	    SimpleQuote me = new SimpleQuote(0.0);
-	    Flag f = new Flag();
+	    final SimpleQuote me = new SimpleQuote(0.0);
+	    final Flag f = new Flag();
 	    me.addObserver(f);
 	    me.setValue(3.14);
 	    if (!f.isUp())
@@ -70,12 +67,12 @@ public class QuotesTest {
 	@Test
 	public void testObservableHandle() {
 
-		logger.info("Testing observability of quote handles...");
+		QL.info("Testing observability of quote handles...");
 
-	    SimpleQuote me1 = new SimpleQuote(0.0);
-	    RelinkableHandle<Quote> h = new RelinkableHandle(me1);
-	    
-	    Flag f = new Flag();
+	    final SimpleQuote me1 = new SimpleQuote(0.0);
+	    final RelinkableHandle<Quote> h = new RelinkableHandle(me1);
+
+	    final Flag f = new Flag();
 	    h.addObserver(f);
 
 	    me1.setValue(3.14);
@@ -83,8 +80,8 @@ public class QuotesTest {
 	    	fail("Observer was not notified of quote change");
 
 	    f.lower();
-	    SimpleQuote me2 = new SimpleQuote(0.0);
-	    
+	    final SimpleQuote me2 = new SimpleQuote(0.0);
+
 	    h.setLink(me2);
 	    if (!f.isUp())
 	    	fail("Observer was not notified of quote change");
@@ -93,7 +90,7 @@ public class QuotesTest {
 //	@Test
 //	public void testDerived() {
 //
-//		logger.info("Testing derived quotes...");
+//		QL.info("Testing derived quotes...");
 //
 //	    typedef Real (*unary_f)(Real);
 //	    unary_f funcs[3] = { add10, mul10, sub10 };
@@ -114,14 +111,14 @@ public class QuotesTest {
 //	@Test
 //	public void testComposite() {
 //
-//		logger.info("Testing composite quotes...");
+//		QL.info("Testing composite quotes...");
 //
 //	    typedef Real (*binary_f)(Real,Real);
 //	    binary_f funcs[3] = { add, mul, sub };
 //
 //	    Quote me1 = new SimpleQuote(12.0);
 //	    Quote me2 = new SimpleQuote(13.0);
-//	    
+//
 //	    Handle<Quote> h1 new Handle<Quote>(me1);
 //	    Handle<Quote> h2 new Handle<Quote>(me2);
 //
@@ -137,9 +134,9 @@ public class QuotesTest {
 
 //	@Test
 //	public void testForwardValueQuoteAndImpliedStdevQuote(){
-//		
-//		logger.info("Testing forward-value and implied-stdev quotes...");
-//		
+//
+//		QL.info("Testing forward-value and implied-stdev quotes...");
+//
 //	    double forwardRate = .05;
 //	    DayCounter dc = new ActualActual();
 //	    Calendar calendar = Target.getCalendar();
@@ -156,9 +153,9 @@ public class QuotesTest {
 //	    /*@Rate*/ double  expectedForwardValue = euribor.fixing(fixingDate, true);
 //	    // we test if the forward value given by the quote is consistent
 //	    // with the one directly given by the index
-//        fail("Forward Value Quote quote yields " 
-//        		+ forwardValue + "\n  expected result is " 
-//        		+ expectedForwardValue, 
+//        fail("Forward Value Quote quote yields "
+//        		+ forwardValue + "\n  expected result is "
+//        		+ expectedForwardValue,
 //        			Math.abs(forwardValue-expectedForwardValue) <= 1.0e-15);
 //	    // then we test the observer/observable chain
 //	    Flag f;
@@ -169,10 +166,10 @@ public class QuotesTest {
 //	    // and we re-test if the values are still matching
 //	    forwardValue =  forwardValueQuote.getValue();
 //	    expectedForwardValue = euribor.fixing(fixingDate, true);
-//        fail("Foward Value Quote quote yields " 
-//        		+ forwardValue 
-//        		+ "\n  expected result is " 
-//        		+ expectedForwardValue, 
+//        fail("Foward Value Quote quote yields "
+//        		+ forwardValue
+//        		+ "\n  expected result is "
+//        		+ expectedForwardValue,
 //        		Math.abs(forwardValue-expectedForwardValue) <= 1.0e-15);
 //	    // we test the ImpliedStdevQuote class
 //	    f.unregisterWith(forwardValueQuote);
@@ -187,9 +184,9 @@ public class QuotesTest {
 //	    ImpliedStdDevQuote impliedStdevQuote = new ImpliedStdDevQuote(optionType, forwardHandle, priceHandle, strike, guess, accuracy));
 //	    /*@StdDev*/ double impliedStdev = impliedStdevQuote.getValue();
 //	    /*@StdDev*/ double expectedImpliedStdev = blackFormulaImpliedStdDev(optionType, strike, forwardQuote.getValue(), price, 1.0, guess, 1.0e-6);
-//        fail("impliedStdevQuote yields " 
-//        		+ impliedStdev 
-//        		+ "\n  expected result is " 
+//        fail("impliedStdevQuote yields "
+//        		+ impliedStdev
+//        		+ "\n  expected result is "
 //        		+ expectedImpliedStdev,
 //        		Math.abs(impliedStdev-expectedImpliedStdev) <= 1.0e-15);
 //	    // then we test the observer/observable chain
@@ -202,6 +199,6 @@ public class QuotesTest {
 //	    priceQuote.setValue(0.11);
 //      fail("Observer was not notified of quote change", f.isUp());
 //	}
-	
+
 
 }

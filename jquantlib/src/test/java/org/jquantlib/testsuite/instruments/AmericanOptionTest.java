@@ -40,12 +40,12 @@
  */
 
 /**
- * 
+ *
  * Ported from
  * <ul>
  * <li>test-suite/americanoption.cpp</li>
  * </ul>
- * 
+ *
  * @author <Richard Gomes>
  *
  */
@@ -60,6 +60,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
@@ -89,19 +90,15 @@ import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AmericanOptionTest {
-
-    private final static Logger logger = LoggerFactory.getLogger(AmericanOptionTest.class);
 
     private final Settings settings;
     private final Date today;
 
 
     public AmericanOptionTest() {
-        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
     }
@@ -109,7 +106,7 @@ public class AmericanOptionTest {
     @Test
     public void testBjerksundStenslandValues() {
 
-        logger.info("Testing Bjerksund and Stensland approximation for American options...");
+        QL.info("Testing Bjerksund and Stensland approximation for American options...");
 
         // type, strike, spot, q, r, t, vol, value, tol
         final AmericanOptionData values[] = {
@@ -162,7 +159,7 @@ public class AmericanOptionTest {
 
     @Test
     public void testBaroneAdesiWhaley() {
-        logger.info("Testing Barone-Adesi and Whaley approximation for American options...");
+        QL.info("Testing Barone-Adesi and Whaley approximation for American options...");
 
         /**
          * The data below are from "Option pricing formulas", E.G. Haug, McGraw-Hill 1998 pag 24
@@ -323,7 +320,7 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
-        logger.info("Testing Ju approximation for American options...");
+        QL.info("Testing Ju approximation for American options...");
 
         //XXX final Date today = DateFactory.getFactory().getTodaysDate();
         //XXX Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
@@ -370,7 +367,7 @@ public class AmericanOptionTest {
 
     @Test
     public void testFdValues() {
-        logger.info("Testing finite-difference engine for American options...");
+        QL.info("Testing finite-difference engine for American options...");
 
         /**
          * The data below are from An Approximate Formula for Pricing American Options Journal of Derivatives Winter 1999 Ju, N.
@@ -490,13 +487,13 @@ public class AmericanOptionTest {
 
     @Test
     public void testFdAmericanGreeks() {
-        logger.info("Testing Greeks (delta, gamma, theta for American options using FDAmericanEngine");
+        QL.info("Testing Greeks (delta, gamma, theta for American options using FDAmericanEngine");
         testFdGreeks(FDAmericanEngine.class);
     }
 
     @Test
     public void testFdShoutGreeks() {
-        logger.info("Testing Greeks (delta, gamma, theta for American options using FDShoutEngine");
+        QL.info("Testing Greeks (delta, gamma, theta for American options using FDShoutEngine");
         testFdGreeks(FDShoutEngine.class);
     }
 

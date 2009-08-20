@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,17 +15,18 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 /**
- * 
+ *
  * @author Srinivas Hasti
  */
 package org.jquantlib.testsuite.pricers;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.Option;
@@ -34,19 +35,15 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 //TODO:  Import all the testcase when MC is available
 //FIXME: Rename to OldPricerTest
 public class OldPricer {
-	
-    private final static Logger logger = LoggerFactory.getLogger(OldPricer.class);
 
 	public OldPricer() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	private static class BatchData {
 	        Option.Type type;
 	        double underlying;
@@ -59,10 +56,10 @@ public class OldPricer {
 	        double volatility;
 	        boolean controlVariate;
 	        double result;
-			public BatchData(Type type, double underlying, double strike,
-					double dividendYield, double riskFreeRate, double first,
-					double length, int fixings, double volatility,
-					boolean controlVariate, double result) {
+			public BatchData(final Type type, final double underlying, final double strike,
+					final double dividendYield, final double riskFreeRate, final double first,
+					final double length, final int fixings, final double volatility,
+					final boolean controlVariate, final double result) {
 				super();
 				this.type = type;
 				this.underlying = underlying;
@@ -77,23 +74,23 @@ public class OldPricer {
 				this.result = result;
 			}
 	    };
-	    
-	    private StopClock clock = new StopClock();
-	    
+
+	    private final StopClock clock = new StopClock();
+
 	    /* @Test public*/ void testMcSingleFactorPricers() {
 
-	        logger.info("Testing old-style Monte Carlo single-factor pricers...");
+	        QL.info("Testing old-style Monte Carlo single-factor pricers...");
 
 	        clock.startClock();
 
-	        DayCounter dc = Actual360.getDayCounter();
+	        final DayCounter dc = Actual360.getDayCounter();
 
-	        long seed = 3456789;
-  
+	        final long seed = 3456789;
+
 	        // cannot be too low, or one cannot compare numbers when
 	        // switching to a new default generator
-	        long fixedSamples = 1023;
-	        double minimumTol = 1.0e-2;
+	        final long fixedSamples = 1023;
+	        final double minimumTol = 1.0e-2;
 
 	        // batch 5
 	        //
@@ -101,7 +98,7 @@ public class OldPricer {
 	        // in "Exotic Options: The State of the Art",
 	        // edited by Clewlow, Strickland
 
-	        BatchData cases5[] = {
+	        final BatchData cases5[] = {
 	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,    2, 0.13, true, 1.51917595129 ),
 	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,    4, 0.13, true, 1.67940165674 ),
 	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 0.0,      11.0/12.0,    8, 0.13, true, 1.75371215251 ),
@@ -134,24 +131,24 @@ public class OldPricer {
 	              new BatchData( Option.Type.CALL, 90.0, 87.0, 0.06, 0.025, 3.0/12.0, 11.0/12.0, 1000, 0.13, true, 1.81145760308 )
 	        };
 
-	        
-	        for (int l=0; l<cases5.length; l++) {
-	            int dt = (int) cases5[l].length/(cases5[l].fixings-1);
-	            double[] timeIncrements = new double[cases5[l].fixings];
-	            for (int i=0; i<cases5[l].fixings; i++) {
-	            	timeIncrements[i] = i*dt + cases5[l].first;
+
+	        for (final BatchData element : cases5) {
+	            final int dt = (int) element.length/(element.fixings-1);
+	            final double[] timeIncrements = new double[element.fixings];
+	            for (int i=0; i<element.fixings; i++) {
+	            	timeIncrements[i] = i*dt + element.first;
 	            }
-	           
-	            Date today = DateFactory.getFactory().getTodaysDate();
-	            YieldTermStructure yeildStructureRiskFree =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].riskFreeRate, dc);
-	            YieldTermStructure yeildStructureDividentYield =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].dividendYield, dc);
-	            YieldTermStructure yeildStructureVolatility =  org.jquantlib.testsuite.util.Utilities.flatRate(today,cases5[l].volatility, dc);
-	            
+
+	            final Date today = DateFactory.getFactory().getTodaysDate();
+	            final YieldTermStructure yeildStructureRiskFree =  org.jquantlib.testsuite.util.Utilities.flatRate(today,element.riskFreeRate, dc);
+	            final YieldTermStructure yeildStructureDividentYield =  org.jquantlib.testsuite.util.Utilities.flatRate(today,element.dividendYield, dc);
+	            final YieldTermStructure yeildStructureVolatility =  org.jquantlib.testsuite.util.Utilities.flatRate(today,element.volatility, dc);
+
 	           // TODO: Complete the test case when we have MonteCarlo
-	         
+
 	        }
 	        clock.stopClock();
 	        clock.log();
 	    }
-       
+
 }

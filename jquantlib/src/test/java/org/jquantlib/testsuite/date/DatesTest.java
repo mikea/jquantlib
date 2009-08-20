@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.date;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -34,18 +35,14 @@ import org.jquantlib.util.DateParser;
 import org.jquantlib.util.Month;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Test various Dates
- * 
+ *
  * @author Srinivas Hasti
- * 
+ *
  */
 public class DatesTest {
-
-    private final static Logger logger = LoggerFactory.getLogger(DatesTest.class);
 
     static private final String IMMcodes[] = { "F0", "G0", "H0", "J0", "K0", "M0", "N0", "Q0", "U0", "V0", "X0", "Z0",
             "F1", "G1", "H1", "J1", "K1", "M1", "N1", "Q1", "U1", "V1", "X1", "Z1", "F2", "G2", "H2", "J2", "K2", "M2",
@@ -56,27 +53,27 @@ public class DatesTest {
             "N8", "Q8", "U8", "V8", "X8", "Z8", "F9", "G9", "H9", "J9", "K9", "M9", "N9", "Q9", "U9", "V9", "X9", "Z9" };
 
     public DatesTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
-    
+
     @Test
     public void immDates() {
-        logger.info("Testing imm dates. It may take several minutes when Cobertura reports are generated!!!");
+        QL.info("Testing imm dates. It may take several minutes when Cobertura reports are generated!!!");
 
-        Date counter = DateFactory.getFactory().getMinDate();
+        final Date counter = DateFactory.getFactory().getMinDate();
 
         // 10 years of futures must not exceed Date::maxDate
-        Period period = new Period(-10, TimeUnit.YEARS);
-        Date last = DateFactory.getFactory().getMaxDate().adjust(period);
+        final Period period = new Period(-10, TimeUnit.YEARS);
+        final Date last = DateFactory.getFactory().getMaxDate().adjust(period);
 
-        IMM iMM = IMM.getDefaultIMM();
+        final IMM iMM = IMM.getDefaultIMM();
 
-        StopClock clock = new StopClock();
+        final StopClock clock = new StopClock();
         clock.startClock();
         while (counter.le(last)) {
 
-            Date immDate = iMM.nextDate(counter, false);
-            
+            final Date immDate = iMM.nextDate(counter, false);
+
             // check that imm is greater than counter
             if (immDate.le(counter))
             	fail("\n  " + immDate.getWeekday() + " " + immDate + " is not greater than " + counter.getWeekday() + " " + counter);
@@ -118,7 +115,7 @@ public class DatesTest {
     @Test
     public void consistencyCheck() {
 
-        logger.info("Testing dates...");
+        QL.info("Testing dates...");
 
         int dyold = DateFactory.getFactory().getMinDate().getDayOfYear();
         int dold = DateFactory.getFactory().getMinDate().getDayOfMonth();
@@ -126,33 +123,33 @@ public class DatesTest {
         int yold = DateFactory.getFactory().getMinDate().getYear();
         Weekday wdold = DateFactory.getFactory().getMinDate().getWeekday();
 
-        Date minDate = DateFactory.getFactory().getMinDate().increment(1);
-        Date maxDate = DateFactory.getFactory().getMaxDate().decrement(1);
+        final Date minDate = DateFactory.getFactory().getMinDate().increment(1);
+        final Date maxDate = DateFactory.getFactory().getMaxDate().decrement(1);
 
-        StopClock clock = new StopClock();
+        final StopClock clock = new StopClock();
         clock.startClock();
-        for (Date t = minDate; t.le(maxDate); t.increment()) {
-            int dy = t.getDayOfYear();
-            int d = t.getDayOfMonth();
-            int m = t.getMonth();
-            int y = t.getYear();
-            Weekday wd = t.getWeekday();
+        for (final Date t = minDate; t.le(maxDate); t.increment()) {
+            final int dy = t.getDayOfYear();
+            final int d = t.getDayOfMonth();
+            final int m = t.getMonth();
+            final int y = t.getYear();
+            final Weekday wd = t.getWeekday();
 
             // check if skipping any date
-            if (!((dy == dyold + 1) 
-            		|| (dy == 1 && dyold == 365 && !DateFactory.getFactory().isLeap(yold)) 
+            if (!((dy == dyold + 1)
+            		|| (dy == 1 && dyold == 365 && !DateFactory.getFactory().isLeap(yold))
             		|| (dy == 1 && dyold == 366 && DateFactory.getFactory().isLeap(yold))))
-            	fail("wrong day of year increment: \n" 
-            			+ "    date: " + t + "\n" 
+            	fail("wrong day of year increment: \n"
+            			+ "    date: " + t + "\n"
             			+ "    day of year: " + dy + "\n"
                         + "    previous:    " + dyold);
 
             dyold = dy;
 
             if (!((d == dold + 1 && m == mold && y == yold) || (d == 1 && m == mold + 1 && y == yold) || (d == 1 && m == 1 && y == yold + 1)) )
-            	fail("wrong day,month,year increment: \n" 
-            			+ "    date: " + t + "\n" 
-            			+ "    day,month,year: " + d + "," + m + "," + y + "\n" 
+            	fail("wrong day,month,year increment: \n"
+            			+ "    date: " + t + "\n"
+            			+ "    day,month,year: " + d + "," + m + "," + y + "\n"
             			+ "    previous:       " + dold + "," + mold + "," + yold);
 
             dold = d;
@@ -176,8 +173,8 @@ public class DatesTest {
 
             // check weekday definition
             if (!((wd.toInteger() == wdold.toInteger() + 1) || (wd.toInteger() == 1 && wdold.toInteger() == 7)))
-            	fail("invalid weekday: \n" 
-            			+ "    date:  " + t + "\n" 
+            	fail("invalid weekday: \n"
+            			+ "    date:  " + t + "\n"
             			+ "    weekday:  " + wd + "\n"
             			+ "    previous: " + wdold);
             wdold = wd;
@@ -189,16 +186,16 @@ public class DatesTest {
 
     @Test
     public void isoDates() {
-        logger.info("Testing ISO dates...");
-        StopClock clock = new StopClock();
+        QL.info("Testing ISO dates...");
+        final StopClock clock = new StopClock();
         clock.startClock();
-        String input_date = "2006-01-15";
-        Date d = DateParser.parseISO(input_date);
+        final String input_date = "2006-01-15";
+        final Date d = DateParser.parseISO(input_date);
         if ((d.getDayOfMonth() != 15) || (d.getMonth() != Month.JANUARY.toInteger()) || (d.getYear() != 2006))
-        	fail("Iso date failed\n" 
-        			+ " input date:    " + input_date + "\n" 
-        			+ " day of month:  " + d.getDayOfMonth() + "\n" 
-        			+ " month:         " + d.getMonth() + "\n" 
+        	fail("Iso date failed\n"
+        			+ " input date:    " + input_date + "\n"
+        			+ " day of month:  " + d.getDayOfMonth() + "\n"
+        			+ " month:         " + d.getMonth() + "\n"
         			+ " year:          " + d.getYear());
         clock.stopClock();
         clock.log();

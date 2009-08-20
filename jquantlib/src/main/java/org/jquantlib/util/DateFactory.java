@@ -24,8 +24,6 @@ package org.jquantlib.util;
 
 import org.jquantlib.QL;
 import org.jquantlib.time.Weekday;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,11 +36,6 @@ import org.slf4j.LoggerFactory;
  */
 //TODO: OSGi
 public abstract class DateFactory {
-
-    //
-    // logger
-    //
-    private final static Logger logger = LoggerFactory.getLogger(DateFactory.class);
 
     private static DateFactory dateFactory;
     private static final DateFactory DEFAULT_DATE_UTIL = new DefaultDate.JQLibDateUtil();

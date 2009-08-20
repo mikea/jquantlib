@@ -18,7 +18,7 @@
 
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
- 
+
  */
 package org.jquantlib.testsuite.currency;
 
@@ -26,30 +26,27 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.jquantlib.QL;
 import org.jquantlib.currencies.Currency;
 import org.jquantlib.currencies.Europe.CHFCurrency;
 import org.jquantlib.currencies.Europe.EURCurrency;
 import org.jquantlib.math.Rounding;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class CurrencyTest {
-    
-    private final static Logger logger = LoggerFactory.getLogger(CurrencyTest.class);
-    
+
     public CurrencyTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
-    
+
     @Test
     public void testCurrencies(){
-        logger.info("testing currencies...");
+        QL.info("testing currencies...");
         //Sample Currency - CHF
-        CHFCurrency chf = new CHFCurrency();
-        
-        logger.info("testing correct initialization...");
+        final CHFCurrency chf = new CHFCurrency();
+
+        QL.info("testing correct initialization...");
         assertTrue(chf.name().equalsIgnoreCase("Swiss franc"));
         assertTrue(chf.code().equalsIgnoreCase("CHF"));
         assertEquals(chf.numericCode(),756);
@@ -58,25 +55,25 @@ public class CurrencyTest {
         assertEquals(chf.fractionsPerUnit(),100);
         assertEquals(chf.rounding().type(), Rounding.Type.None);
         //Note: the initialization of the triangulated currency is a little bit suspicious...
-        assertTrue(chf.triangulationCurrency().getClass() == Currency.class);    
+        assertTrue(chf.triangulationCurrency().getClass() == Currency.class);
         assertTrue(chf.triangulationCurrency().empty());
-        logger.info("testing overloaded operators....(only class based)");
-        EURCurrency euro = new EURCurrency();
-        CHFCurrency chf2 = new CHFCurrency();
+        QL.info("testing overloaded operators....(only class based)");
+        final EURCurrency euro = new EURCurrency();
+        final CHFCurrency chf2 = new CHFCurrency();
         assertFalse(euro.equals(chf));
         assertTrue(euro.notEquals(chf));
         assertFalse(chf2.notEquals(chf));
         assertTrue(chf2.equals(chf));
-        
+
     }
-    
+
     //Note: the initialization of the triangulated currency is a little bit suspicious...data_ not initialized!!
     @Test(expected = NullPointerException.class)
     public void testLeakyCurrencyInitialization(){
-        CHFCurrency chf = new CHFCurrency();
+        final CHFCurrency chf = new CHFCurrency();
         chf.triangulationCurrency().code();
     }
-    
-    
+
+
 
 }

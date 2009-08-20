@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -44,6 +44,7 @@ import static java.lang.Math.abs;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.Business252;
 import org.jquantlib.daycounters.DayCounter;
@@ -55,31 +56,27 @@ import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Test Day Counters
- * 
+ *
  * @author Richard Gomes
  * @author Daniel Kong
- * 
+ *
  */
 public class DayCountersTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(DayCountersTest.class);
-
 	public DayCountersTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	private static class SingleCase {
-	    private ActualActual.Convention convention;
-	    private Date start;
-	    private Date end;
-	    private Date refStart;
-	    private Date refEnd;
-	    private /*@Time*/ double  result;
+	    private final ActualActual.Convention convention;
+	    private final Date start;
+	    private final Date end;
+	    private final Date refStart;
+	    private final Date refEnd;
+	    private final /*@Time*/ double  result;
 
 	    public SingleCase(
     			final ActualActual.Convention convention,
@@ -103,7 +100,7 @@ public class DayCountersTest {
 	    	this.refEnd = refEnd;
 	    	this.result = result;
 	    }
-	    
+
 	    private String dumpDate(final Date date) {
 	    	if (date == null) {
 	    		return "null";
@@ -111,11 +108,11 @@ public class DayCountersTest {
 	    		return date.getISOFormat();
 	    	}
 	    }
-	    
-	    
+
+
 	    @Override
 	    public String toString() {
-	    	StringBuilder sb = new StringBuilder();
+	    	final StringBuilder sb = new StringBuilder();
 	    	sb.append("[ ");
 	    	sb.append(convention).append(", ");
 	    	sb.append(dumpDate(start)).append(", ");
@@ -126,17 +123,17 @@ public class DayCountersTest {
 	    	return sb.toString();
 	    }
 	}
-	
-	
+
+
 	@Test
 	public void testActualActual() {
 
-	    logger.info("Testing actual/actual day counters...");
+	    QL.info("Testing actual/actual day counters...");
 
-	    SingleCase testCases[] = new SingleCase[] {
+	    final SingleCase testCases[] = new SingleCase[] {
 	        // first example
 	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004), 
+	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004),
 	                   0.497724380567),
 	        new SingleCase(ActualActual.Convention.ISMA,
 	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004),
@@ -215,24 +212,24 @@ public class DayCountersTest {
 	    };
 
 	    for (int i=0; i<testCases.length-1; i++) {
-	        ActualActual dayCounter =  ActualActual.getDayCounter(testCases[i].convention);
-	        Date d1 = testCases[i].start;
-	        Date d2 = testCases[i].end;
-	        Date rd1 = testCases[i].refStart;
-	        Date rd2 = testCases[i].refEnd;
-	        
-	        logger.info(testCases[i].toString());
-	        
-	        /*@Time*/ double  calculated = dayCounter.yearFraction(d1, d2, rd1, rd2);
+	        final ActualActual dayCounter =  ActualActual.getDayCounter(testCases[i].convention);
+	        final Date d1 = testCases[i].start;
+	        final Date d2 = testCases[i].end;
+	        final Date rd1 = testCases[i].refStart;
+	        final Date rd2 = testCases[i].refEnd;
+
+	        QL.info(testCases[i].toString());
+
+	        /*@Time*/ final double  calculated = dayCounter.yearFraction(d1, d2, rd1, rd2);
 
 	        if (abs(calculated-testCases[i].result) > 1.0e-10) {
-	        	String period = "period: " + d1 + " to " + d2;
+	        	final String period = "period: " + d1 + " to " + d2;
 	        	String refPeriod = "";
 	            if (testCases[i].convention == ActualActual.Convention.ISMA) {
 	                refPeriod = "referencePeriod: " + rd1 + " to " + rd2;
 	            }
 	            fail(dayCounter.name() + ":\n"
-	                       + period + "\n" 
+	                       + period + "\n"
 	                       + refPeriod + "\n"
 	                       + "    calculated: " + calculated + "\n"
 	                       + "    expected:   " + testCases[i].result);
@@ -244,20 +241,20 @@ public class DayCountersTest {
 	@Test
 	public void testSimple() {
 
-	    logger.info("Testing simple day counter...");
+	    QL.info("Testing simple day counter...");
 
-	    Period p[] = new Period[] { new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
-	    /*@Time*/ double expected[] = { 0.25, 0.5, 1.0 };
-	    
+	    final Period p[] = new Period[] { new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
+	    /*@Time*/ final double expected[] = { 0.25, 0.5, 1.0 };
+
 	    // 4 years should be enough
-	    Date first = DateFactory.getFactory().getDate(1,Month.JANUARY,2002);
-	    Date last  = DateFactory.getFactory().getDate(31,Month.DECEMBER,2005);
-	    DayCounter dayCounter = new SimpleDayCounter();
+	    final Date first = DateFactory.getFactory().getDate(1,Month.JANUARY,2002);
+	    final Date last  = DateFactory.getFactory().getDate(31,Month.DECEMBER,2005);
+	    final DayCounter dayCounter = new SimpleDayCounter();
 
-	    for (Date start = first; start.le(last); start.increment()) {
+	    for (final Date start = first; start.le(last); start.increment()) {
 	        for (int i=0; i<expected.length-1; i++) {
-	            Date end = start.getDateAfter(p[i]);
-	            /*@Time*/ double  calculated = dayCounter.yearFraction(start, end);
+	            final Date end = start.getDateAfter(p[i]);
+	            /*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
 
 	        	if (abs(calculated-expected[i]) > 1.0e-12)
 	                fail("from " + start + " to " + end + ":\n"
@@ -270,20 +267,20 @@ public class DayCountersTest {
 	@Test
 	public void testOne() {
 
-	    logger.info("Testing 1/1 day counter...");
+	    QL.info("Testing 1/1 day counter...");
 
-	    Period p[] = new Period[]{ new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
-	    /*@Time*/ double expected[] = new double[] { 1.0, 1.0, 1.0 };
+	    final Period p[] = new Period[]{ new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
+	    /*@Time*/ final double expected[] = new double[] { 1.0, 1.0, 1.0 };
 
 	    // 1 years should be enough
-	    Date first = DateFactory.getFactory().getDate(1,Month.JANUARY,2004);
-	    Date last  = DateFactory.getFactory().getDate(31,Month.DECEMBER,2004);
-	    DayCounter dayCounter = new SimpleDayCounter();
+	    final Date first = DateFactory.getFactory().getDate(1,Month.JANUARY,2004);
+	    final Date last  = DateFactory.getFactory().getDate(31,Month.DECEMBER,2004);
+	    final DayCounter dayCounter = new SimpleDayCounter();
 
-	    for (Date start = first; start.le(last); start.increment()) {
+	    for (final Date start = first; start.le(last); start.increment()) {
 	        for (int i=0; i<expected.length-1; i++) {
-	            Date end = start.getDateAfter(p[i]);
-	            /*@Time*/ double  calculated = dayCounter.yearFraction(start, end);
+	            final Date end = start.getDateAfter(p[i]);
+	            /*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
 
 	            if (abs(calculated-expected[i]) <= 1.0e-12) {
 	                fail("from " + start + " to " + end + ":\n"
@@ -294,14 +291,14 @@ public class DayCountersTest {
 	    }
 	}
 
-	//TODO: Sounds like this test method from the C++ codes actually test nothing! 
-	//abs(calculated - expected[i]) <= 1.0e-12? making sense? could always pass. Daniel 
+	//TODO: Sounds like this test method from the C++ codes actually test nothing!
+	//abs(calculated - expected[i]) <= 1.0e-12? making sense? could always pass. Daniel
 	@Test
 	public void testBusiness252() {
 
-	    logger.info("Testing business/252 day counter...");
+	    QL.info("Testing business/252 day counter...");
 
-	    Date testDates[] = {
+	    final Date testDates[] = {
 	    DateFactory.getFactory().getDate(1,Month.FEBRUARY,2002),
 	    DateFactory.getFactory().getDate(4,Month.FEBRUARY,2002),
 	    DateFactory.getFactory().getDate(16,Month.MAY,2003),
@@ -315,7 +312,7 @@ public class DayCountersTest {
 	    DateFactory.getFactory().getDate(15,Month.MAY,2006),
 	    DateFactory.getFactory().getDate(26,Month.JULY,2006) };
 
-	    /*@Time*/ double expected[] = {
+	    /*@Time*/ final double expected[] = {
 	        0.0039682539683,
 	        1.2738095238095,
 	        0.6031746031746,
@@ -329,12 +326,12 @@ public class DayCountersTest {
 	        0.2023809523810
 	        };
 
-	    DayCounter dayCounter = new Business252(Brazil.getCalendar(Brazil.Market.SETTLEMENT));
+	    final DayCounter dayCounter = new Business252(Brazil.getCalendar(Brazil.Market.SETTLEMENT));
 
 	    for (int i=1; i<testDates.length-1; i++) {
-	    	Date start = testDates[i-1];
-	    	Date end = testDates[i];
-	    	/*@Time*/ double  calculated = dayCounter.yearFraction(start, end);
+	    	final Date start = testDates[i-1];
+	    	final Date end = testDates[i];
+	    	/*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
 	        System.out.println(calculated);
 	    	assertFalse(dayCounter.getClass().getName()
 					+"\n from "+start
@@ -344,6 +341,6 @@ public class DayCountersTest {
 					abs(calculated - expected[i]) <= 1.0e-12);
 	    }
 	}
-	
+
 
 }

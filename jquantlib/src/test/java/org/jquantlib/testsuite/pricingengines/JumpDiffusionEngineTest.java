@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
@@ -32,18 +33,14 @@ import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class JumpDiffusionEngineTest {
-
-    private final static Logger logger = LoggerFactory.getLogger(JumpDiffusionEngineTest.class);
 
     private final Settings settings;
     private final Date today;
 
     public JumpDiffusionEngineTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 
         // TODO: code review
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
@@ -55,7 +52,7 @@ public class JumpDiffusionEngineTest {
 
     @Test
     public void testMerton76() {
-        logger.info("Testing Merton 76 jump-diffusion model for European options...");
+        QL.info("Testing Merton 76 jump-diffusion model for European options...");
 
         // The data below are from
         //"Option pricing formulas", E.G. Haug, McGraw-Hill 1998, pag 9
@@ -296,7 +293,7 @@ public class JumpDiffusionEngineTest {
 
     @Test
     public void testGreeks() {
-        logger.info("Testing jump-diffusion option greeks...");
+        QL.info("Testing jump-diffusion option greeks...");
 
         final Map<String, Double> calculated = new HashMap<String, Double>();
         final Map<String, Double> expected = new HashMap<String, Double>();

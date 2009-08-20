@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -45,8 +45,6 @@ import org.jquantlib.math.interpolations.Interpolation2D;
 import org.jquantlib.math.interpolations.Interpolator2D;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class provides bilinear interpolation factory and traits
@@ -54,40 +52,38 @@ import org.slf4j.LoggerFactory;
  * This is not the implementation of a interpolation class, but only its factory.
  *
  * @see BicubicSplineInterpolation
- * 
+ *
  * @author Richard Gomes
  */
 public class BicubicSpline implements Interpolator2D {
 
-    private final static Logger logger = LoggerFactory.getLogger(BicubicSpline.class);
-
     //
     // private final fields
     //
-    
+
     private final Interpolator2D delegate;
-    
-    
+
+
     //
     // public constructors
     //
-    
+
     /**
      * Constructs a interpolation factory.
      * <p>
      * This is not the implementation of a interpolation class, but only its factory.
-     * 
+     *
      * @see BicubicSplineInterpolation
      */
     public BicubicSpline() {
         delegate = BicubicSplineInterpolation.getInterpolator();
     }
-    
-    
+
+
     //
     // implements Interpolator2D
     //
-    
+
     @Override
     public Interpolation2D interpolate(final Array x, final Array y, final Matrix z) {
         return delegate.interpolate(x, y, z);

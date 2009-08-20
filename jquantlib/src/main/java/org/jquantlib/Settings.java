@@ -51,8 +51,6 @@ import org.jquantlib.util.DateFactory;
 
 public class Settings {
 
-    // private final static Logger logger = LoggerFactory.getLogger(Settings.class);
-
     private static boolean defaultTodaysPayments = false;
     private static boolean defaultRefineHighPrecision = false;
 
@@ -172,8 +170,7 @@ public class Settings {
      */
     public void setEvaluationDate(final Date evaluationDate) {
         this.evaluationDate.getUpdatable().update(evaluationDate);
-        //        Exception e = new Exception();
-        //        logger.debug(evaluationDate.toString(), e);
+        //        QL.debug(evaluationDate);
     }
 
     /**

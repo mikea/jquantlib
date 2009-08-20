@@ -2,7 +2,7 @@
  Copyright (C) 2007 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,33 +15,25 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // FIXME: Move StopClock out from main library
 // This class is mainly intended to performance tests. So, it must be located in src/test tree.
 // Also, examples which depend on this class must be moved out of main library
 
 public class StopClock {
-	
-	//
-	// logger
-	//
-	
-	private final static Logger logger = LoggerFactory.getLogger(StopClock.class);
 
     public static enum Unit {
         ms, ns;
     }
 
-    private Unit units;
+    private final Unit units;
     private long startTime;
     private long stopTime;
 
@@ -49,7 +41,7 @@ public class StopClock {
         this(Unit.ms);
     }
 
-    public StopClock(Unit unit) {
+    public StopClock(final Unit unit) {
         this.units = unit;
     }
 
@@ -85,6 +77,7 @@ public class StopClock {
         stopTime = 0;
     }
 
+    @Override
     public String toString() {
         return ("Time taken: " + getElapsedTime() + units);
     }

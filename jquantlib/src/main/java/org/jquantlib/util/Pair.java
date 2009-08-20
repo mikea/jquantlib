@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,28 +15,24 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Pair<T1, T2> {
-	
-	private final static Logger logger = LoggerFactory.getLogger(Pair.class);
-	
-	private T1 first;
-	private T2 second;
-	
+
+	private final T1 first;
+	private final T2 second;
+
 	public Pair(final T1 first, final T2 second) {
 		this.first = first;
 		this.second = second;
 	}
-	
+
 	public T1 getFirst() {
 		return first;
 	}

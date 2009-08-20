@@ -25,6 +25,7 @@ package org.jquantlib.testsuite.instruments;
 import junit.framework.TestCase;
 
 import org.jquantlib.Configuration;
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.DayCounter;
@@ -48,19 +49,15 @@ import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BarrierOptionTest {
-
-    private final static Logger logger = LoggerFactory.getLogger(BarrierOptionTest.class);
 
     private final Settings settings;
     private final Date today;
 
 
     public BarrierOptionTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
         this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         this.today = settings.getEvaluationDate();
     }
@@ -69,7 +66,7 @@ public class BarrierOptionTest {
     @Test
     public void testHaugValues() {
 
-        logger.info("Testing barrier options against Haug's values...");
+        QL.info("Testing barrier options against Haug's values...");
 
         final NewBarrierOptionData values[] = {
                 //
@@ -219,7 +216,7 @@ public class BarrierOptionTest {
 
     @Test
     public void testBabsiriValues() {
-        logger.info("Testing barrier options against Babsiri's values...");
+        QL.info("Testing barrier options against Babsiri's values...");
         /*
         Data from
         "Simulating Path-Dependent Options: A New Approach"
@@ -290,7 +287,7 @@ public class BarrierOptionTest {
     @Test
     public void testBeagleholeValues() {
 
-        logger.info("Testing barrier options against Beaglehole's values...");
+        QL.info("Testing barrier options against Beaglehole's values...");
         /*
             Data from
             "Going to Extreme: Correcting Simulation Bias in Exotic

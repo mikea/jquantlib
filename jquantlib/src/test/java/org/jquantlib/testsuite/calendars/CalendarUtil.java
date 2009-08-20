@@ -2,7 +2,7 @@
  Copyright (C) 2008 Dominik Holenstein
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,52 +24,49 @@ package org.jquantlib.testsuite.calendars;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the general test base class for Calendars including generic methods.
- * 
+ *
  * @author Dominik Holenstein
  */
 
 public class CalendarUtil {
 
-    private final static Logger logger = LoggerFactory.getLogger(CalendarUtil.class);
-
     protected void checkHolidayList(final List<Date> expected, final Calendar c, final int year) {
 
         final List<Date> calculated = c.getHolidayList(
-                DateFactory.getFactory().getDate(1, Month.JANUARY, year), 
-                DateFactory.getFactory().getDate(31, Month.DECEMBER, year), 
+                DateFactory.getFactory().getDate(1, Month.JANUARY, year),
+                DateFactory.getFactory().getDate(31, Month.DECEMBER, year),
                 false);
 
         int error = 0;
-        
+
         final StringBuilder sb = new StringBuilder();
         sb.append("Holidays do not match\n");
-        
-        for (Date date : expected) {
+
+        for (final Date date : expected) {
             if (!calculated.contains(date)) {
                 sb.append("  >> Holiday expected but not calculated: ").append(date.getWeekday()).append(", ").append(date).append('\n');
                 error++;
             }
         }
 
-        for (Date date : calculated) {
+        for (final Date date : calculated) {
             if (!expected.contains(date)) {
                 sb.append("  >> Holiday calculated but not expected: ").append(date.getWeekday()).append(", ").append(date).append('\n');
                 error++;
             }
         }
-        
+
         if (error>0) {
-            logger.error(sb.toString(), new Exception());
+            QL.error(sb.toString(), new Exception());
             Assert.fail(sb.toString());
         }
 

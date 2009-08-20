@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -43,8 +43,6 @@ package org.jquantlib.math.interpolations.factories;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Cubic spline interpolation factory and traits.
@@ -52,22 +50,20 @@ import org.slf4j.LoggerFactory;
  * This is not the implementation of a interpolation class, but only its factory.
  *
  * @see CubicSplineInterpolation
- * 
+ *
  * @author Richard Gomes
  * @author Daniel Kong
  */
 //TEST : needs code review and test classes
 public class CubicSpline implements Interpolator {
-    
-    private final static Logger logger = LoggerFactory.getLogger(CubicSpline.class);
 
     //
     // private final fields
     //
-    
+
     private final Interpolator delegate;
-    
-    
+
+
     //
     // public constructors
     //
@@ -76,14 +72,14 @@ public class CubicSpline implements Interpolator {
      * Constructs a interpolation factory.
      * <p>
      * This is not the implementation of a interpolation class, but only its factory.
-     * 
+     *
      * @see CubicSplineInterpolation
      */
     public CubicSpline() {
         this(CubicSplineInterpolation.BoundaryCondition.SecondDerivative, 0.0, CubicSplineInterpolation.BoundaryCondition.SecondDerivative, 0.0, false);
     }
 
-    
+
     public CubicSpline(
             final CubicSplineInterpolation.BoundaryCondition leftCondition,
             final double leftConditionValue,
@@ -93,12 +89,12 @@ public class CubicSpline implements Interpolator {
         delegate = CubicSplineInterpolation.getInterpolator(
                 leftCondition, leftConditionValue, rightCondition, rightConditionValue, monotonicityConstraint);
     }
-    
-    
+
+
     //
     // implements Interpolator
     //
-    
+
     @Override
     public final CubicSplineInterpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
         return interpolate(x, y);
@@ -113,6 +109,6 @@ public class CubicSpline implements Interpolator {
     public final boolean global() /* @ReadOnly */ {
         return delegate.global();
     }
-    
+
 }
 

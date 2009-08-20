@@ -25,8 +25,6 @@ package org.jquantlib.util;
 import org.jquantlib.QL;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * To convert short and long format string representations
@@ -37,11 +35,6 @@ import org.slf4j.LoggerFactory;
  */
 // TODO: code review :: please verify against QL/C++ code
 public final class PeriodParser {
-
-    //
-    // logger
-    //
-    private final static Logger logger = LoggerFactory.getLogger(PeriodParser.class);
 
     /**
      * To convert the string to Period.

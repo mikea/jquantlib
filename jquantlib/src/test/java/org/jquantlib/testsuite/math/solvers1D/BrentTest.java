@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,36 +24,33 @@ package org.jquantlib.testsuite.math.solvers1D;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.solvers1D.Brent;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Richard Gomes
  */
 public class BrentTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(BrentTest.class);
-
     public BrentTest() {
-        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Test
     public void testInvertSquare() {
 
-        Ops.DoubleOp square = new Ops.DoubleOp() {
+        final Ops.DoubleOp square = new Ops.DoubleOp() {
 
-            public double op(double x) {
+            public double op(final double x) {
                 return x * x - 1;
             }
 
         };
 
-        double accuracy = 1.0e-15;
-        Brent brent = new Brent();
+        final double accuracy = 1.0e-15;
+        final Brent brent = new Brent();
 
         double soln = brent.solve(square, accuracy, 0.01, 0, 2);
 

@@ -24,23 +24,20 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.distributions.PoissonDistribution;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
- * 
+ *
  * @author Dominik Holenstein
  *
  */
 public class PoissonNormalTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(PoissonNormalTest.class);
-
     public PoissonNormalTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
     @Test

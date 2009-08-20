@@ -2,7 +2,7 @@
  Copyright (C) 2008 Jia Jia
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,6 +36,7 @@ import static org.jquantlib.util.Month.SEPTEMBER;
 import java.util.List;
 import java.util.Vector;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.SouthKorea;
 import org.jquantlib.util.Date;
@@ -43,23 +44,19 @@ import org.jquantlib.util.DateFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Jia Jia
  * @author Renjith Nair
- * 
+ *
  */
 public class SouthKoreaCalendarTest {
-    
-    private final static Logger logger = LoggerFactory.getLogger(SouthKoreaCalendarTest.class);
 
     private Calendar c = null;
     private List<Date> expectedHol = null;
 
     public SouthKoreaCalendarTest() {
-        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Before
@@ -71,8 +68,8 @@ public class SouthKoreaCalendarTest {
     // 2004 - year in the past
     @Test
     public void testSouthKoreaKRXHolidaysYear2004() {
-        int year = 2004;
-        logger.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+        final int year = 2004;
+        QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(21, JANUARY, year));
@@ -89,7 +86,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(29, SEPTEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
@@ -97,8 +94,8 @@ public class SouthKoreaCalendarTest {
     // 2005 - year in the past
     @Test
     public void testSouthKoreaKRXHolidaysYear2005() {
-        int year = 2005;
-        logger.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+        final int year = 2005;
+        QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(8, FEBRUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(9, FEBRUARY, year));
@@ -107,12 +104,12 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
         expectedHol.add(DateFactory.getFactory().getDate(6, JUNE, year));
-        expectedHol.add(DateFactory.getFactory().getDate(15, AUGUST, year));        
+        expectedHol.add(DateFactory.getFactory().getDate(15, AUGUST, year));
         expectedHol.add(DateFactory.getFactory().getDate(19, SEPTEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(3, OCTOBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
@@ -120,8 +117,8 @@ public class SouthKoreaCalendarTest {
     // 2006 - year in the past
     @Test
     public void testSouthKoreaKRXHolidaysYear2006() {
-        int year = 2006;
-        logger.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+        final int year = 2006;
+        QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(30, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(31, JANUARY, year));
@@ -138,7 +135,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
@@ -146,8 +143,8 @@ public class SouthKoreaCalendarTest {
     // 2007 - year in the past
     @Test
     public void testSouthKoreaKRXHolidaysYear2007() {
-        int year = 2007;
-        logger.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+        final int year = 2007;
+        QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(19, FEBRUARY, year));
@@ -165,7 +162,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
@@ -173,8 +170,8 @@ public class SouthKoreaCalendarTest {
     // 2008 - Current Year
     @Test
     public void testSouthKoreaKRXHolidaysYear2008() {
-        int year = 2008;
-        logger.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+        final int year = 2008;
+        QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(6, FEBRUARY, year));
@@ -192,16 +189,16 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
-    
+
     // 2009 - Future Year
     @Test
     public void testSouthKoreaKRXHolidaysYear2009() {
-        int year = 2009;
-        logger.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+        final int year = 2009;
+        QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
@@ -210,16 +207,16 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
-    
+
     // 2010 - Future Year
     @Test
     public void testSouthKoreaKRXHolidaysYear2010() {
-        int year = 2010;
-        logger.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+        final int year = 2010;
+        QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(1, MARCH, year));
@@ -227,16 +224,16 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
-    
+
     // 2011 - Future Year
     @Test
     public void testSouthKoreaKRXHolidaysYear2011() {
-        int year = 2011;
-        logger.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+        final int year = 2011;
+        QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, MARCH, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
@@ -246,16 +243,16 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(3, OCTOBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }
-    
+
     // 2012 - Future Year
     @Test
     public void testSouthKoreaKRXHolidaysYear2012() {
-        int year = 2012;
-        logger.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
+        final int year = 2012;
+        QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(DateFactory.getFactory().getDate(1, MARCH, year));
         expectedHol.add(DateFactory.getFactory().getDate(5, APRIL, year));
@@ -267,7 +264,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
 
     }

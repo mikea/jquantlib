@@ -22,8 +22,6 @@ package org.jquantlib.math.optimization;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Criteria to end optimization process
@@ -40,9 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 // FIXME: needs code review and better documentation
 public class EndCriteria {
-
-    private final static Logger logger = LoggerFactory.getLogger(EndCriteria.class);
-
 
     public enum CriteriaType {
         None,

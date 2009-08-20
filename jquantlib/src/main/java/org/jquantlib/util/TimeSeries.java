@@ -33,8 +33,6 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.IntervalPrice;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Container for historical data
@@ -49,9 +47,6 @@ import org.slf4j.LoggerFactory;
  * @author Richard Gomes
  */
 public class TimeSeries<T> {
-
-    private final static Logger logger = LoggerFactory.getLogger(TimeSeries.class);
-
 
     //
     // private fields

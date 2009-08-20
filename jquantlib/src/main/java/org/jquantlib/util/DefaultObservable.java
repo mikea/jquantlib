@@ -29,8 +29,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import net.jcip.annotations.NotThreadSafe;
 
 import org.jquantlib.QL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 // --------------------------------------------------------
@@ -59,11 +57,6 @@ import org.slf4j.LoggerFactory;
  */
 @NotThreadSafe
 public class DefaultObservable implements Observable {
-
-    //
-    // logger
-    //
-    private final static Logger logger = LoggerFactory.getLogger(DefaultObservable.class);
 
     //
     // private final fields

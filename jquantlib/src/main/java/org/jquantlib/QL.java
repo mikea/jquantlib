@@ -94,6 +94,9 @@ public class QL {
     //=========================================================
 
 
+
+
+
     /**
      * This method unconditionally emits a message to the logging system but does not throw any exception.
      *
@@ -119,6 +122,126 @@ public class QL {
      */
     public static void error(final Throwable t) {
         logger.error(t.getMessage(), t);
+    }
+
+
+
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void warn(final String message) {
+        logger.warn(message);
+    }
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void warn(final String message, final Throwable t) {
+        logger.warn(message, t);
+    }
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void warn(final Throwable t) {
+        logger.warn(t.getMessage(), t);
+    }
+
+
+
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void info(final String message) {
+        logger.info(message);
+    }
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void info(final String message, final Throwable t) {
+        logger.info(message, t);
+    }
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void info(final Throwable t) {
+        logger.info(t.getMessage(), t);
+    }
+
+
+
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void debug(final String message) {
+        logger.debug(message);
+    }
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void debug(final String message, final Throwable t) {
+        logger.debug(message, t);
+    }
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void debug(final Throwable t) {
+        logger.debug(t.getMessage(), t);
+    }
+
+
+
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void trace(final String message) {
+        logger.trace(message);
+    }
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void trace(final String message, final Throwable t) {
+        logger.trace(message, t);
+    }
+
+    /**
+     * This method unconditionally emits a message to the logging system but does not throw any exception.
+     *
+     * @param message is a message to be emitted
+     */
+    public static void trace(final Throwable t) {
+        logger.trace(t.getMessage(), t);
     }
 
 }

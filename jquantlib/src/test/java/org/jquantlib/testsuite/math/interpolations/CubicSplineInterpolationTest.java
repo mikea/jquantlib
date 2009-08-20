@@ -25,6 +25,7 @@ package org.jquantlib.testsuite.math.interpolations;
 import static java.lang.Math.abs;
 import static org.junit.Assert.assertFalse;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.integrals.SimpsonIntegral;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
@@ -32,8 +33,6 @@ import org.jquantlib.math.interpolations.factories.MonotonicCubicSpline;
 import org.jquantlib.math.matrixutilities.Array;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,16 +41,14 @@ import org.slf4j.LoggerFactory;
 
 public class CubicSplineInterpolationTest extends InterpolationTestBase{
 
-	private final static Logger logger = LoggerFactory.getLogger(CubicSplineInterpolationTest.class);
-
 	private static final Array generic_x = new Array(new double[] { 0.0, 1.0, 3.0, 4.0 });
 	private static final Array generic_y = new Array(new double[] { 0.0, 0.0, 2.0, 2.0 });
 	private static final Array generic_natural_y2 = new Array(new double[] { 0.0, 1.5, -1.5, 0.0 });
 	private static double x35[]= new double[3];
 
 	public CubicSplineInterpolationTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-		logger.info("\n\n::::: Testing cubic spline interpolation on: "
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: Testing cubic spline interpolation on: "
 					+"Error On Gaussian Values, Gaussian Values, RPN15A Values, Generic Values, "
 					+"Simmetric End Conditions, Derivative End Conditions, Non Restrictive HymanFilter, "
 					+"MultiSpline ... :::::");
@@ -61,7 +58,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	@Test
 	public void testSplineErrorOnGaussianValues(){
 	    //System.setProperty("EXPERIMENTAL", "true");
-		logger.info("Testing spline approximation on Gaussian data sets...");
+		QL.info("Testing spline approximation on Gaussian data sets...");
 
 		final int[] points = {5, 9, 17, 33};
 
@@ -128,7 +125,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	@Test
 	public void testNotAKnotSplineOnGaussianValues(){
 
-		logger.info("Testing spline interpolation on a Gaussian data set...");
+		QL.info("Testing spline interpolation on a Gaussian data set...");
 
 	    double interpolated, interpolated2;
 	    final int n = 5;
@@ -169,7 +166,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	@Test
 	public void testClampedSplineOnRPN15AValues(){
 
-		logger.info("Testing Clamped spline interpolation on RPN15A data set...");
+		QL.info("Testing Clamped spline interpolation on RPN15A data set...");
 
 		final Array RPN15A_x = new Array(new double[] {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0});
 		final Array RPN15A_y = new Array(new double[] {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994});
@@ -203,7 +200,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	@Test
 	public void testNotAKnotSplineOnRPN15AValues(){
 
-		logger.info("Testing Not-a-knot spline interpolation on RPN15A data set...");
+		QL.info("Testing Not-a-knot spline interpolation on RPN15A data set...");
 
 		final Array RPN15A_x = new Array(new double[] {7.99, 8.09, 8.19, 8.7, 9.2, 10.0, 12.0, 15.0, 20.0});
 		final Array RPN15A_y = new Array(new double[] {0.0, 2.76429e-5, 4.37498e-5, 0.169183, 0.469428, 0.943740, 0.998636, 0.999919, 0.999994});

@@ -2,57 +2,48 @@ package org.jquantlib.util;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class ObservableValue<T> implements Observable {
-	
-	//
-	// logger
-	//
-	
-	private final static Logger logger = LoggerFactory.getLogger(ObservableValue.class);
 
     //
     // private fields
     //
-    
+
     private T value;
-    
-    
+
+
     //
     // public constructors
     //
-    
+
     public ObservableValue(final T value) {
         this.value = value;
     }
-    
+
     public ObservableValue(final ObservableValue<T> observable) {
         this.value = observable.value;
     }
-    
-    
+
+
     //
     // public methods
     //
-    
+
     public void assign(final T value) {
         this.value = value;
         delegatedObservable.notifyObservers();
     }
-    
+
     public void assign(final ObservableValue<T> observable) {
         this.value = observable.value;
         delegatedObservable.notifyObservers();
     }
-    
+
     public T getValue() {
         return value;
     }
-    
-    
+
+
     //
     // implements Observable
     //

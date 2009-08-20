@@ -24,10 +24,9 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.distributions.BinomialDistribution;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Dominik Holenstein
@@ -35,10 +34,8 @@ import org.slf4j.LoggerFactory;
 
 public class BinomialDistributionTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(BinomialDistributionTest.class);
-
     public BinomialDistributionTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
     @Test

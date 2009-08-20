@@ -23,8 +23,6 @@
 package org.jquantlib.util;
 
 import org.jquantlib.QL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,8 +33,6 @@ import org.slf4j.LoggerFactory;
  */
 // TODO: OSGi :: remove statics
 public class DateParser {
-
-    private final static Logger logger = LoggerFactory.getLogger(DateParser.class);
 
     /**
      * Convert ISO format strings to Date. Ex: 2008-03-31
@@ -51,7 +47,7 @@ public class DateParser {
         final int month = Integer.parseInt(str.substring(5, 7));
         final int day = Integer.parseInt(str.substring(8, 10));
 
-        logger.debug(DateFactory.getFactory().getDate(day, Month.valueOf(month), year).toString());
+        QL.debug(DateFactory.getFactory().getDate(day, Month.valueOf(month), year).toString());
         return DateFactory.getFactory().getDate(day, Month.valueOf(month), year);
     }
 
@@ -88,7 +84,7 @@ public class DateParser {
             }
         }
 
-        logger.debug(DateFactory.getFactory().getDate(d, Month.valueOf(m), y).toString());
+        QL.debug(DateFactory.getFactory().getDate(d, Month.valueOf(m), y).toString());
         return DateFactory.getFactory().getDate(d, Month.valueOf(m), y);
     }
 

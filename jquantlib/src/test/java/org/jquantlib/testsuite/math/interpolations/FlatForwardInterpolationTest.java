@@ -25,20 +25,17 @@ package org.jquantlib.testsuite.math.interpolations;
 import static java.lang.Math.abs;
 import static org.junit.Assert.assertFalse;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.factories.ForwardFlat;
 import org.jquantlib.math.matrixutilities.Array;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Daniel Kong
  **/
 
 public class FlatForwardInterpolationTest  {
-
-	private final static Logger logger = LoggerFactory.getLogger(FlatForwardInterpolationTest.class);
 
 	private final Array x = new Array( new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
 	private final Array y = new Array( new double[] { 5.0, 4.0, 3.0, 2.0, 1.0 });
@@ -47,7 +44,7 @@ public class FlatForwardInterpolationTest  {
 	private final double tolerance;
 
 	public FlatForwardInterpolationTest () {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 		interpolation = new ForwardFlat().interpolate(x, y);
 	    length = x.size();
 	    tolerance = 1.0e-12;

@@ -51,8 +51,6 @@ import org.jquantlib.pricingengines.BlackCalculator;
 import org.jquantlib.pricingengines.BlackFormula;
 import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An Approximate Formula for Pricing American Options, Journal of Derivatives Winter 1999,  Ju, N.
@@ -62,8 +60,6 @@ import org.slf4j.LoggerFactory;
  * @author <Richard Gomes>
  */
 public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
-
-    final static Logger logger = LoggerFactory.getLogger(JuQuadraticApproximationEngine.class);
 
     // TODO: refactor messages
     private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";

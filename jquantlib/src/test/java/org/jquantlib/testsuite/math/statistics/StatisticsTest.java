@@ -2,22 +2,19 @@ package org.jquantlib.testsuite.math.statistics;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.statistics.IStatistics;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 public class StatisticsTest {
-
-    private final static Logger logger = LoggerFactory.getLogger(StatisticsTest.class);
 
     private static final Array data    = new Array(new double[] { 3.0, 4.0, 5.0, 2.0, 3.0, 4.0, 5.0, 6.0, 4.0, 7.0 });
     private static final Array weights = new Array(new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 });
 
 
     public StatisticsTest() {
-        logger.info("Testing volatility model construction...");
+        QL.info("Testing volatility model construction...");
     }
 
     public void check(final IStatistics s, final String name) {
@@ -103,7 +100,7 @@ public class StatisticsTest {
     @Ignore
     @Test
     public void testStatistics(){
-        logger.info("Testing statistics ...");
+        QL.info("Testing statistics ...");
         //check(new IncrementalStatistics(), "IncrementalStatistics");
         //check(new Statistics(), "Statistics");
     }

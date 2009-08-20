@@ -45,8 +45,6 @@ import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.NaturalCubicSpline;
 import org.jquantlib.math.matrixutilities.Array;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class contains a sampled curve.
@@ -56,8 +54,6 @@ import org.slf4j.LoggerFactory;
  * @author Dominik Holenstein
  */
 public class SampledCurve {
-
-    private final static Logger logger = LoggerFactory.getLogger(SampledCurve.class);
 
     //
     // private fields

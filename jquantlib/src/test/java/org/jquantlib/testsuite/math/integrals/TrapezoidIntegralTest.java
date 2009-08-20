@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -25,33 +25,30 @@ package org.jquantlib.testsuite.math.integrals;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.functions.Exp;
 import org.jquantlib.math.integrals.Integrator;
 import org.jquantlib.math.integrals.TrapezoidIntegral;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class TrapezoidIntegralTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(TrapezoidIntegralTest.class);
-
 	public TrapezoidIntegralTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	@Test
 	public void testExp() {
 		// Integral[e^x, 0, 6] = e^6 - e^0
-		double expected = Math.exp(6) - 1;
+		final double expected = Math.exp(6) - 1;
 		double realised = 0;
-		double tolerance = 1.0e-4;
-		
+		final double tolerance = 1.0e-4;
+
 		try {
-			Integrator trapint = new TrapezoidIntegral(tolerance, TrapezoidIntegral.Method.MidPoint, 1000);
+			final Integrator trapint = new TrapezoidIntegral(tolerance, TrapezoidIntegral.Method.MidPoint, 1000);
 			realised = trapint.evaluate(new Exp(), 0, 6);
-		} catch (ArithmeticException e) {
+		} catch (final ArithmeticException e) {
 			fail("Desired tolerance not achieved while integrating f(x)=e^x within [0,6] using trapezoid-midpoint approximation.\n");
 		}
 	}

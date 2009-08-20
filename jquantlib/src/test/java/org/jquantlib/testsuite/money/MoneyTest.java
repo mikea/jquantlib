@@ -21,8 +21,10 @@
  */
 package org.jquantlib.testsuite.money;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.currencies.Currency;
 import org.jquantlib.currencies.ExchangeRate;
 import org.jquantlib.currencies.ExchangeRateManager;
@@ -33,101 +35,98 @@ import org.jquantlib.currencies.Europe.GBPCurrency;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Rounding;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MoneyTest {
-    private final static Logger logger = LoggerFactory.getLogger(MoneyTest.class);
-   
-    public static void main(String [] args){
-        MoneyTest m = new MoneyTest();
+
+    public static void main(final String [] args){
+        final MoneyTest m = new MoneyTest();
         m.testBaseCurrency();
         m.testNone();
     }
-    
+
     public MoneyTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-        logger.info("see testsuite.money.cpp/hpp");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("see testsuite.money.cpp/hpp");
     }
-    
+
     @Test
     public void testBaseCurrency(){
-        logger.info("Testing money arithmetic with conversion to base currency...");
+        QL.info("Testing money arithmetic with conversion to base currency...");
 
-        Currency EUR = new EURCurrency();
-        Currency GBP = new GBPCurrency();
-        Currency USD = new USDCurrency();
+        final Currency EUR = new EURCurrency();
+        final Currency GBP = new GBPCurrency();
+        final Currency USD = new USDCurrency();
 
-        Money m1 = Money.multiple(50000.0,GBP);
-        Money m2 = Money.multiple(100000.0 , EUR);
-        Money m3 = Money.multiple(500000.0 , USD);
-        
-        
+        final Money m1 = Money.multiple(50000.0,GBP);
+        final Money m2 = Money.multiple(100000.0 , EUR);
+        final Money m3 = Money.multiple(500000.0 , USD);
+
+
         ExchangeRateManager.getInstance().clear();
-        ExchangeRate eur_usd = new  ExchangeRate(EUR, USD, 1.2042);
-        ExchangeRate eur_gbp = new ExchangeRate(EUR, GBP, 0.6612);
+        final ExchangeRate eur_usd = new  ExchangeRate(EUR, USD, 1.2042);
+        final ExchangeRate eur_gbp = new ExchangeRate(EUR, GBP, 0.6612);
         ExchangeRateManager.getInstance().add(eur_usd);
         ExchangeRateManager.getInstance().add(eur_gbp);
-        
-        
+
+
         Money.conversionType = Money.ConversionType.BaseCurrencyConversion;
         Money.baseCurrency = EUR;
-      
+
         //divided the steps for tracing...
-        Money calculated0 = m1.mul(3.0);
-        Money calculated1 = (m2.mul(2.5));
-        Money calculated2 = m3.div(5.0);
-       
-        Money calculated3 = calculated0.add(calculated1).sub(calculated2);
-        
-        logger.info("Calculated value: " + calculated3.value());
-        
-      
-        Rounding round = Money.baseCurrency.rounding();
-        /*Decimal*/double x = round.operator(m1.value()*3.0/eur_gbp.rate()) + 2.5*m2.value() - 
+        final Money calculated0 = m1.mul(3.0);
+        final Money calculated1 = (m2.mul(2.5));
+        final Money calculated2 = m3.div(5.0);
+
+        final Money calculated3 = calculated0.add(calculated1).sub(calculated2);
+
+        QL.info("Calculated value: " + calculated3.value());
+
+
+        final Rounding round = Money.baseCurrency.rounding();
+        /*Decimal*/final double x = round.operator(m1.value()*3.0/eur_gbp.rate()) + 2.5*m2.value() -
         round.operator(m3.value()/(5.0*eur_usd.rate()));
-        logger.info("Expected value: " + x);
-        
-        Money expected = new Money(x, EUR);
-        
+        QL.info("Expected value: " + x);
+
+        final Money expected = new Money(x, EUR);
+
         assertTrue(Closeness.isClose(calculated3.value(),expected.value()));
         if(!calculated3.equals(expected)){
             fail("Wrong result: \n"
                     + "    expected:   " + expected + "\n"
                     + "    calculated: " + calculated3);
         }
-        logger.info("testBaseCurrency done!");
+        QL.info("testBaseCurrency done!");
     }
 
     @Test
     public void testNone() {
-        logger.info("Testing money arithmetic without conversions...");
-        Currency EUR = new EURCurrency();
-        Money m1 = Money.multiple(50000.0, EUR);
-        Money m2 = Money.multiple(100000.0, EUR);
-        Money m3 = Money.multiple(500000.0, EUR);
+        QL.info("Testing money arithmetic without conversions...");
+        final Currency EUR = new EURCurrency();
+        final Money m1 = Money.multiple(50000.0, EUR);
+        final Money m2 = Money.multiple(100000.0, EUR);
+        final Money m3 = Money.multiple(500000.0, EUR);
 
         Money.conversionType = Money.ConversionType.NoConversion;
 
         //divided the steps for tracing...
-        Money calculated0 = m1.mul(3.0);
-        Money calculated1 = (m2.mul(2.5));
-        Money calculated2 = m3.div(5.0);
-       
-        Money calculated3 = calculated0.add(calculated1).sub(calculated2);
-        
-        logger.info("Calculated value: " + calculated3.value());
-        
-        /*Decimal*/double x =  m1.value()*3.0 + 2.5*m2.value() - m3.value()/5.0;
-        logger.info("Expected value: " + x);
-        
-        Money expected = new Money(x, EUR);
+        final Money calculated0 = m1.mul(3.0);
+        final Money calculated1 = (m2.mul(2.5));
+        final Money calculated2 = m3.div(5.0);
+
+        final Money calculated3 = calculated0.add(calculated1).sub(calculated2);
+
+        QL.info("Calculated value: " + calculated3.value());
+
+        /*Decimal*/final double x =  m1.value()*3.0 + 2.5*m2.value() - m3.value()/5.0;
+        QL.info("Expected value: " + x);
+
+        final Money expected = new Money(x, EUR);
 
         if(!calculated3.equals(expected)){
             fail("Wrong result: \n"
                     + "    expected:   " + expected + "\n"
                     + "    calculated: " + calculated3);
         }
-        logger.info("testNone done!");
+        QL.info("testNone done!");
     }
 }

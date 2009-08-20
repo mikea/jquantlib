@@ -26,16 +26,14 @@ package org.jquantlib.testsuite.math.interpolations;
 import static java.lang.Math.abs;
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.interpolations.Interpolation2D;
 import org.jquantlib.math.interpolations.factories.Bilinear;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class BilinearInterpolationTest {
-private final static Logger logger = LoggerFactory.getLogger(BilinearInterpolationTest.class);
 
 	private final Array x = new Array(new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
 	private final Array y = new Array(new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
@@ -48,8 +46,8 @@ private final static Logger logger = LoggerFactory.getLogger(BilinearInterpolati
 	private final double tolerance;
 
     public BilinearInterpolationTest() {
-        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-        logger.info("\n\n::::: Testing use of interpolations as functors... :::::");
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("\n\n::::: Testing use of interpolations as functors... :::::");
 
         // fill zz using f(x,y) = x + y;
         zz = new Matrix(x.size(), y.size());

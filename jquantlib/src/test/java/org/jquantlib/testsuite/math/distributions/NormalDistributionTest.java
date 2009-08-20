@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,47 +24,44 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Richard Gomes
  */
 public class NormalDistributionTest {
-	
-    private final static Logger logger = LoggerFactory.getLogger(NormalDistributionTest.class);
 
 	public NormalDistributionTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
-	
+
 	@Test
 	public void testNormalDistribution() {
-		
+
 		// good values from Abram, Stegun
-		double[][] testvalues = {	{0.0, 0.398942280401433},
+		final double[][] testvalues = {	{0.0, 0.398942280401433},
 									{1.0, 0.241970724519143},
 									{2.0, 0.053990966513188},
 									{3.0, 0.004431848411938},
 									{4.0, 1.338302258e-4},
 									{5.0, 1.486719515e-6}};
-									
-		
-		NormalDistribution normal = new NormalDistribution();
-		
-		for(int i=0;i<testvalues.length;i++){
-			double z = testvalues[i][0];
-			double expected = testvalues[i][1];
-			double computed = normal.op(z);
-			double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
-			
+
+
+		final NormalDistribution normal = new NormalDistribution();
+
+		for (final double[] testvalue : testvalues) {
+			final double z = testvalue[0];
+			final double expected = testvalue[1];
+			final double computed = normal.op(z);
+			final double tolerance = (Math.abs(z)<3.01) ? 1.0e-15: 1.0e-10;
+
 			//assertEquals(expected, computed,tolerance);
 			if(expected-computed>tolerance){
 				fail("expected : " + expected + " but was "+ computed);
 			}
-			
+
 			//assertEquals(expected, normal.evaluate(-z),tolerance);
 			if(Math.abs(expected-normal.op(-z))>tolerance){
 				fail("expected: " + expected + " but was " + normal.op(-z));

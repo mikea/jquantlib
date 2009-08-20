@@ -41,6 +41,7 @@ package org.jquantlib.testsuite.instruments;
 
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.instruments.Instrument;
 import org.jquantlib.instruments.Stock;
 import org.jquantlib.quotes.Quote;
@@ -48,21 +49,17 @@ import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.testsuite.util.Flag;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class IntrumentsTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(IntrumentsTest.class);
-
     public IntrumentsTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
     @Test
     public void testObservable() {
 
-        logger.info("Testing observability of instruments...");
+        QL.info("Testing observability of instruments...");
 
 
         final SimpleQuote me1 = new SimpleQuote(0.0);

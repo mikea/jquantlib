@@ -1,8 +1,8 @@
 /*
- Copyright (C) 2008 
+ Copyright (C) 2008
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -38,6 +38,7 @@ import static org.jquantlib.util.Month.SEPTEMBER;
 import java.util.List;
 import java.util.Vector;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Indonesia;
 import org.jquantlib.util.Date;
@@ -45,8 +46,6 @@ import org.jquantlib.util.DateFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Jia Jia
@@ -54,11 +53,10 @@ import org.slf4j.LoggerFactory;
 
 public class IndonesiaCalendarTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(IndonesiaCalendarTest.class);
     private Calendar c = null;
 
     public IndonesiaCalendarTest() {
-        logger.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Before
@@ -69,13 +67,13 @@ public class IndonesiaCalendarTest {
     // Holiday figures taken from http://www.idx.co.id/MainMenu/Trading/TradingHoliday/tabid/85/language/en-US/Default.aspx
     @Test
     public void testIndonesiaYear2009() {
-        int year = 2009;
-        logger.info("Testing Indonesia's holiday list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2009;
+        QL.info("Testing Indonesia's holiday list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
         // New Year
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(2, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(26, JANUARY, year));     
+        expectedHol.add(DateFactory.getFactory().getDate(26, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(9, MARCH, year));
         expectedHol.add(DateFactory.getFactory().getDate(26, MARCH, year));
         expectedHol.add(DateFactory.getFactory().getDate(10, APRIL, year));
@@ -90,7 +88,7 @@ public class IndonesiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(18, SEPTEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(21, SEPTEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(22, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(23, SEPTEMBER, year));       
+        expectedHol.add(DateFactory.getFactory().getDate(23, SEPTEMBER, year));
 
         // Ied Adha
         expectedHol.add(DateFactory.getFactory().getDate(27, NOVEMBER, year));
@@ -98,24 +96,24 @@ public class IndonesiaCalendarTest {
         // Christmas
         expectedHol.add(DateFactory.getFactory().getDate(18, DECEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));       
+        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
     }
 
     @Test
     public void testIndonesiaYear2008() {
-        int year = 2008;
-        logger.info("Testing Indonesia's holiday list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2008;
+        QL.info("Testing Indonesia's holiday list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
         // New Year
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(10, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(11, JANUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(7, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(8, FEBRUARY, year));       
+        expectedHol.add(DateFactory.getFactory().getDate(8, FEBRUARY, year));
         expectedHol.add(DateFactory.getFactory().getDate(7, MARCH, year));
         expectedHol.add(DateFactory.getFactory().getDate(20, MARCH, year));
         expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
@@ -136,7 +134,7 @@ public class IndonesiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(1, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(2, OCTOBER, year));
         expectedHol.add(DateFactory.getFactory().getDate(3, OCTOBER, year));
-       
+
 
         // Ied Adha
         expectedHol.add(DateFactory.getFactory().getDate(8, DECEMBER, year));
@@ -148,16 +146,16 @@ public class IndonesiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
     }
 
     // 2007
     @Test
     public void testIndonesiaYear2007() {
-        int year = 2007;
-        logger.info("Testing Indonesia's holiday list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2007;
+        QL.info("Testing Indonesia's holiday list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
         // New Year
         expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
 
@@ -192,16 +190,16 @@ public class IndonesiaCalendarTest {
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
     }
 
     // 2006
     @Test
     public void testIndonesiaYear2006() {
-        int year = 2006;
-        logger.info("Testing Indonesia's holiday list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2006;
+        QL.info("Testing Indonesia's holiday list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
         // New Year -- weekend in yr 2006
         // expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
 
@@ -243,16 +241,16 @@ public class IndonesiaCalendarTest {
         // Christmas
         expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
     }
 
     // 2005
     @Test
     public void testIndonesiaYear2005() {
-        int year = 2005;
-        logger.info("Testing Indonesia's holiday list for the year " + year + "...");
-        List<Date> expectedHol = new Vector<Date>();
+        final int year = 2005;
+        QL.info("Testing Indonesia's holiday list for the year " + year + "...");
+        final List<Date> expectedHol = new Vector<Date>();
         // New Year -- weekend in yr 2005
         // expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
 
@@ -303,7 +301,7 @@ public class IndonesiaCalendarTest {
         // National Leaves
         expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
         // Call the Holiday Check
-        CalendarUtil cbt = new CalendarUtil();
+        final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
     }
 

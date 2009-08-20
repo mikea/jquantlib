@@ -25,13 +25,12 @@ package org.jquantlib.testsuite.math.interpolations;
 import static java.lang.Math.abs;
 import static org.junit.Assert.fail;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.factories.Linear;
 import org.jquantlib.math.matrixutilities.Array;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Daniel Kong
@@ -39,8 +38,6 @@ import org.slf4j.LoggerFactory;
  **/
 
 public class LinearInterpolationTest {
-
-	private final static Logger logger = LoggerFactory.getLogger(LinearInterpolationTest.class);
 
 	private static final Array x  = new Array( new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
 	private static final Array y  = new Array( new double[] { 5.0, 4.0, 3.0, 2.0, 1.0 });
@@ -51,12 +48,12 @@ public class LinearInterpolationTest {
 	private static double tolerance;
 
 	public LinearInterpolationTest() {
-		logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@BeforeClass
 	public static void setUpLinearInterpolation(){
-		logger.info("\n\n::::: Testing use of interpolations as functors... :::::");
+		QL.info("\n\n::::: Testing use of interpolations as functors... :::::");
 
 		interpolation = new Linear().interpolate(x, y);
 		interpolation.update();

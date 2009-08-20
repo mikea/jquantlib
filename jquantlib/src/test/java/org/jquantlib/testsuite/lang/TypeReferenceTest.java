@@ -32,21 +32,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeReference;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Richard Gomes
  */
 public class TypeReferenceTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(TypeReferenceTest.class);
-
     public TypeReferenceTest() {
-        logger.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
     @Test

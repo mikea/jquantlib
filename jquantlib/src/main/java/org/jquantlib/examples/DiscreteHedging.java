@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2009 Q.Boiler, Ueli Hofstetter
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -55,37 +55,33 @@ package org.jquantlib.examples;
 import org.jquantlib.examples.utils.ReplicationError;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.util.StopClock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // FIXME :: This class needs code review ::
 // http://bugs.jquantlib.org/view.php?id=221
 public class DiscreteHedging {
-	
-	private final static Logger logger = LoggerFactory.getLogger(DiscreteHedging.class);
 
-	public static void main(String args[]) {
-		
+	public static void main(final String args[]) {
+
 		//System.setProperty("EXPERIMENTAL", "false");
 		if (System.getProperty("EXPERIMENTAL") == null) {
 			throw new UnsupportedOperationException("Work in progress");
 		}
 		try {
 
-		    StopClock clock = new StopClock();
+		    final StopClock clock = new StopClock();
             clock.startClock();
-            
-			/* @Time */			Number maturity = new Double(1.0 / 12.0); // 1 month
-			/* @Price */	 	Number strike = new Double(100);
-			/* @Price */	 	Number underlying = new Double(100);
-			/* @Volatility */	Number volatility = new Double(0.20); // 20%
-			/* @Rate */    		Number riskFreeRate = new Double(0.05); // 5%
-			Option.Type Call = Option.Type.CALL;
 
-			ReplicationError rp = new ReplicationError(Call, maturity, strike,
+			/* @Time */			final Number maturity = new Double(1.0 / 12.0); // 1 month
+			/* @Price */	 	final Number strike = new Double(100);
+			/* @Price */	 	final Number underlying = new Double(100);
+			/* @Volatility */	final Number volatility = new Double(0.20); // 20%
+			/* @Rate */    		final Number riskFreeRate = new Double(0.05); // 5%
+			final Option.Type Call = Option.Type.CALL;
+
+			final ReplicationError rp = new ReplicationError(Call, maturity, strike,
 					underlying, volatility, riskFreeRate);
 
-			int scenarios = 50000;
+			final int scenarios = 50000;
 			int hedgesNum;
 
 			hedgesNum = 21;
@@ -97,10 +93,10 @@ public class DiscreteHedging {
 			clock.stopClock();
 			clock.log();
 		}
-		
-		catch(Exception ex){
+
+		catch(final Exception ex){
 			ex.printStackTrace();
-			//logger.info(ex.getMessage());
+			//QL.info(ex.getMessage());
 		}
 	}
 

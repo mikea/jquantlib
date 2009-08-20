@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -46,8 +46,6 @@ import java.util.List;
 import org.jquantlib.math.interpolations.factories.BicubicSpline;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Bicubic spline interpolation between discrete points
@@ -55,31 +53,28 @@ import org.slf4j.LoggerFactory;
  * Interpolations are not instantiated directly by applications, but via a factory class.
  *
  * @see BicubicSpline
- * 
+ *
  * @author Richard Gomes
  */
 public class BicubicSplineInterpolation extends AbstractInterpolation2D {
 
-    private final static Logger logger = LoggerFactory.getLogger(BicubicSplineInterpolation.class);
-
-    
     //
     // private fields
     //
-    
+
     private final List<Interpolation> splines;
-    
-    
-    
+
+
+
     //
     // private constructors
     //
-    
+
     /**
      * Constructor for a bicubic spline interpolation between discrete points
      * <p>
      * Interpolations are not instantiated directly by applications, but via a factory class.
-     * 
+     *
      * @see BicubicSpline
      */
     private BicubicSplineInterpolation() {
@@ -90,30 +85,30 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
     //
     // static methods
     //
-    
+
     /**
      * This is a factory method intended to create this interpolation.
      * <p>
      * Interpolations are not instantiated directly by applications, but via a factory class.
-     * 
+     *
      * @see BicubicSpline
      */
     static public Interpolator2D getInterpolator() {
-        BicubicSplineInterpolation bicubicSplineInterpolation = new BicubicSplineInterpolation();
+        final BicubicSplineInterpolation bicubicSplineInterpolation = new BicubicSplineInterpolation();
         return new BicubicSplineInterpolationImpl(bicubicSplineInterpolation);
     }
 
-    
+
     //
     // overrides AbstractInterpolation2D
     //
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void calculate() {
-// TODO : [Richard needs to complete implementation]        
+// TODO : [Richard needs to complete implementation]
 //        // splines.reserve(this.mz.length); // TODO: verify what .length returns
 //        for (int i=0; i<(this.mz.length); i++) {
 //            splines.add(NaturalCubicSpline(this.vx, this.vy, this.mz.row_begin(i))); // TODO: row_begin ???
@@ -122,32 +117,32 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
 
 
     @Override
-    public double evaluateImpl(double x, double y) /* @ReadOnly */{
+    public double evaluateImpl(final double x, final double y) /* @ReadOnly */{
         final double[] section = new double[splines.size()];
         for (int i=0; i<splines.size(); i++) {
             section[i]=splines.get(i).evaluate(x, true);
         }
 
-// TODO : [Richard needs to complete implementation]        
+// TODO : [Richard needs to complete implementation]
 //        NaturalCubicSpline spline = new Spline(this->yBegin_, this->yEnd_, section.begin());
 //        return spline.evaluate(y,true);
-        
+
         return 1.0; // fake!!
     }
 
-    
+
     //
     // inner classes
     //
-    
+
     /**
      * This class is a default implementation for {@link BicubicSplineInterpolation} instances.
-     * 
+     *
      * @author Richard Gomes
      */
     private static class BicubicSplineInterpolationImpl implements Interpolator2D {
-        private BicubicSplineInterpolation delegate;
-        
+        private final BicubicSplineInterpolation delegate;
+
         public BicubicSplineInterpolationImpl(final BicubicSplineInterpolation delegate) {
             this.delegate = delegate;
         }
