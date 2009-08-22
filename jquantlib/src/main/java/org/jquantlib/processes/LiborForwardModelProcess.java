@@ -149,7 +149,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
         final int m = 0;//NextA
         for (int k = m; k < size_; ++k) {
             m1.set(k, accrualPeriod_.get(k) * x.get(k) / (1 + accrualPeriod_.get(k) * x.get(k)));
-            final double value = m1.innerProduct(covariance.getCol(k), m, k+1-m) - 0.5 * covariance.get(k, k);
+            final double value = m1.innerProduct(covariance.rangeCol(k), m, k+1-m) - 0.5 * covariance.get(k, k);
             f.set(k, value);
         }
         return f;
@@ -201,12 +201,12 @@ public class LiborForwardModelProcess extends StochasticProcess {
         for (int k=m; k<size_; ++k) {
             final double y = accrualPeriod_.get(k)*x0.get(k);
             m1.set(k,y/(1+y));
-            final double d = (m1.innerProduct(covariance.getCol(k), m, k+1-m)-0.5*covariance.get(k, k)) * dt;
-            final double r = diff.getRow(k).innerProduct(dw)*sdt;
+            final double d = (m1.innerProduct(covariance.rangeCol(k), m, k+1-m)-0.5*covariance.get(k, k)) * dt;
+            final double r = diff.rangeRow(k).innerProduct(dw)*sdt;
             final double x = y*Math.exp(d + r);
             m2.set(k, x/(1+x));
             final double value = x0.get(k)
-                         * Math.exp(0.5*(d+m2.innerProduct(covariance.getCol(k), m, k+1-m)-0.5*covariance.get(k,k))*dt)
+                         * Math.exp(0.5*(d+m2.innerProduct(covariance.rangeCol(k), m, k+1-m)-0.5*covariance.get(k,k))*dt)
                          + r;
             f.set(k, value);
         }

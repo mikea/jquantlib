@@ -18,11 +18,22 @@ public class Identity extends Matrix {
      * @return An m-by-n matrix with ones on the diagonal and zeros elsewhere.
      */
     public Identity(final int dim) {
-        super(dim, dim);
-        int addr = 0;
+        this(dim, Style.JAVA);
+    }
+
+
+    /**
+     * Creates an identity matrix
+     *
+     * @param style allows transparent access to elements by FORTRAN based algorithms.
+     * @return An m-by-n matrix with ones on the diagonal and zeros elsewhere.
+     */
+    public Identity(final int dim, final Cells.Style style) {
+        super(dim, dim, style);
+        int addrJ = 0;
         for (int i = 0; i < dim; i++) {
-            data[addr] = 1.0;
-            addr += dim+1;
+            data[addrJ] = 1.0;
+            addrJ += dim+1;
         }
     }
 

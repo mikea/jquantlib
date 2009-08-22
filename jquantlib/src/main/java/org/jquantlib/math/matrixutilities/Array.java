@@ -64,18 +64,40 @@ public class Array extends Cells {
      * Builds an empty Array
      */
     public Array() {
-        super(1, 1);
+        this(Style.JAVA);
+    }
+
+    /**
+     * Builds an empty Array
+     *
+     * @param style allows transparent access to elements by FORTRAN based algorithms.
+     */
+    public Array(final Style style) {
+        super(1, 1, style);
     }
 
     /**
      * Builds an Array of <code>cols</code>
      *
-     * @param cols is the number of columns
+     * @param size is the size of <code>this</code> Array
+     * @throws IllegalArgumentException if size are less than zero
      */
-    public Array(final int length) {
-        super(1, length);
+    public Array(final int size) {
+        this(size, Style.JAVA);
     }
 
+    /**
+     * Builds an Array of <code>cols</code>
+     *
+     * @param size is the size of <code>this</code> Array
+     * @param style allows transparent access to elements by FORTRAN based algorithms.
+     * @throws IllegalArgumentException if size are less than zero
+     *
+     * @see Style
+     */
+    public Array(final int size, final Style style) {
+        super(1, size, style);
+    }
 
     /**
      * Creates an Array given a double[] array
@@ -83,8 +105,20 @@ public class Array extends Cells {
      * @param data
      */
     public Array(final double[] array) {
-        super(1, array.length);
-        System.arraycopy(array, 0, this.data, 0, this.size);
+        this(array, Style.JAVA);
+    }
+
+    /**
+     * Creates an Array given a double[] array
+     *
+     * @param data is a uni-dimensional array, always organized as a Java index access style, zero-based double[].
+     * @param style allows transparent access to elements by FORTRAN based algorithms.
+     *
+     * @see Style
+     */
+    public Array(final double[] array, final Style style) {
+        super(1, array.length, style);
+        System.arraycopy(array, 0, data, 0, this.size);
     }
 
 
@@ -94,8 +128,8 @@ public class Array extends Cells {
      * @param data
      */
     public Array(final Array a) {
-        super(1, a.cols);
-        System.arraycopy(a.data, 0, this.data, 0, this.size);
+        super(1, a.cols, a.style);
+        System.arraycopy(a.data, 0, data, 0, this.size);
     }
 
 
@@ -106,7 +140,7 @@ public class Array extends Cells {
 
     @Override
     public Array clone() {
-        return this.range(0, this.size);
+        return new Array(this);
     }
 
 
@@ -115,18 +149,18 @@ public class Array extends Cells {
         if (o == null || !(o instanceof Array)) return false;
         final Array another = (Array) o;
         if (this.rows != another.rows || this.cols != another.cols) return false;
-        return Arrays.equals(this.data, another.data);
+        return Arrays.equals(data, another.data);
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer();
 
-        sb.append("[");
-        sb.append(this.data[0]);
+        sb.append("[rows=").append(rows).append(" cols=").append(cols).append(" style=").append(style.toString()).append('\n');
+        sb.append(' ').append(data[0]);
         for (int col = 1; col < this.cols; col++)
-            sb.append(", ").append(this.data[col]);
-        sb.append(']').append('\n');
+            sb.append(", ").append(data[col]);
+        sb.append(" ]").append('\n');
         return sb.toString();
     }
 
@@ -134,17 +168,6 @@ public class Array extends Cells {
     //
     // public methods
     //
-
-    // some convenience methods
-
-    public int size() {
-        return this.size;
-    }
-
-    public boolean empty() {
-        return this.size <= 0;
-    }
-
 
     /**
      * Retrieves an element of <code>this</code> Matrix
@@ -160,7 +183,7 @@ public class Array extends Cells {
      * @see #getAddress(int, int)
      */
     public double get(final int pos) {
-        return data[pos];
+        return data[addr(pos)];
     }
 
     /**
@@ -176,7 +199,7 @@ public class Array extends Cells {
      * @see #getAddress(int, int)
      */
     public void set(final int pos, final double value) {
-        data[pos] = value;
+        data[addr(pos)] = value;
     }
 
     /**
@@ -190,13 +213,21 @@ public class Array extends Cells {
     }
 
     public Object toArray() {
-        final double buffer[] = new double[this.size];
-        return toArray(buffer);
+        return toArray(Style.JAVA);
+    }
+
+    public Object toArray(final Style style) {
+        final double buffer[] = new double[this.size+style.base];
+        return toArray(buffer, style);
     }
 
     public double[] toArray(final double[] buffer) {
-        if (this.size != buffer.length) throw new IllegalArgumentException(); //TODO:message
-        System.arraycopy(this.data, 0, buffer, 0, this.size);
+        return toArray(buffer, Style.JAVA);
+    }
+
+    public double[] toArray(final double[] buffer, final Style style) {
+        QL.require(this.size+style.base == buffer.length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
+        System.arraycopy(data, 0, buffer, style.base, this.size);
         return buffer;
     }
 
@@ -205,33 +236,33 @@ public class Array extends Cells {
     }
 
     public double last() {
-        return data[data.length-1];
+        return data[size-1];
     }
 
     /**
-     * Returns an Array containing a copy of region [pos0,)
+     * Returns an Array containing a copy of region [pos0:)
      *
-     * @param pos0 is the initial position, inclusive
-     *
-     * @return a new Array containing a copy of region
+     * @param pos0 initial index, inclusive
+     * @return A( [pos0:pos1) )
+     * @exception IllegalArgumentException when indices are out of range
      */
     public Array range(final int pos) {
-        return range(pos, this.size);
+        return range(pos, size+style.base);
     }
 
     /**
-     * Returns an Array containing a copy of region [pos0, pos1)
+     * Returns an Array containing a copy of region [pos0:pos1)
      *
-     * @param pos0 is the initial position, inclusive
-     * @param pos1 is the final position, exclusive
-     *
-     * @return a new Array containing a copy of region
+     * @param pos0 initial index, inclusive
+     * @param pos1 final index, exclusive
+     * @return A( [pos0:pos1) )
+     * @exception IllegalArgumentException when indices are out of range
      */
     public Array range(final int pos0, final int pos1) {
-        QL.require(pos0 >= 0 && pos1 > pos0 && pos1 <= this.size,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(pos0 >= style.base && pos1 > pos0 && pos1 <= size+style.base,  INVALID_ARGUMENTS); // QA:[RG]::verified
         final int ncols = pos1-pos0;
-        final Array result = new Array(ncols);
-        System.arraycopy(this.data, pos0, result.data, 0, ncols);
+        final Array result = new Array(ncols, this.style);
+        System.arraycopy(data, addr(pos0), result.data, 0, ncols);
         return result;
     }
 
@@ -243,7 +274,7 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
     public double accumulate() {
-        return accumulate(0, this.size, 0.0);
+        return accumulate(style.base, this.size+style.base, 0.0);
     }
 
     /**
@@ -257,15 +288,15 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
     public double accumulate(final int from, final int to, final double init) {
-        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(from >= style.base && to >= from && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
         double sum = init;
         for (int i=from; i<to; i++)
-            sum += this.data[i];
+            sum += data[addr(i)];
         return sum;
     }
 
     public double min() {
-        return min(0, this.size);
+        return min(style.base, this.size+style.base);
     }
 
     /**
@@ -276,17 +307,17 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
      */
     public double min(final int from, final int to) {
-        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        double result = this.data[from];
-        for (int i=from+1; i<to; i++) {
-            final double tmp = this.data[i];
+        QL.require(from >= style.base && to > from && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        double result = data[addr(from)];
+        for (int i=0; i<(to-from); i++) {
+            final double tmp = data[addr(from+i)];
             if (tmp < result) result = tmp;
         }
         return result;
     }
 
     public double max() {
-        return max(0, this.size);
+        return max(style.base, this.size+style.base);
     }
 
     /**
@@ -297,10 +328,10 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a>
      */
     public double max(final int from, final int to) {
-        QL.require(from >=0 && from <=to && to <=this.size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        double result = this.data[from];
-        for (int i=from+1; i<to; i++) {
-            final double tmp = data[i];
+        QL.require(from >= style.base && to > from && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        double result = data[addr(from)];
+        for (int i=0; i<(to-from); i++) {
+            final double tmp = data[addr(from+i)];
             if (tmp > result) result = tmp;
         }
         return result;
@@ -319,7 +350,7 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
     public final Array adjacentDifference() {
-        return adjacentDifference(0);
+        return adjacentDifference(style.base);
     }
 
     /**
@@ -330,15 +361,26 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
     public final Array adjacentDifference(final int from) {
-        QL.require(from>=0 && from <= this.size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        final Array diff = new Array(this.size-from);
-        for (int i = from; i < this.size; i++) {
-            final double curr = this.data[i];
+        return adjacentDifference(from, size+style.base);
+    }
+
+    /**
+     * Return differences between adjacent values.
+     *
+     * @note Mimics std::adjacent_difference
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
+     */
+    public final Array adjacentDifference(final int from, final int to) {
+        QL.require(from >= style.base && from <= to && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        final Array diff = new Array(to-from+style.base);
+        for (int i = from; i < to; i++) {
+            final double curr = data[addr(i)];
             if (i == from)
-                diff.data[i-from] = curr;
+                diff.data[diff.addr(i-from)] = curr;
             else {
-                final double prev = this.data[i-1];
-                diff.data[i-from] = curr - prev;
+                final double prev = data[addr(i-1)];
+                diff.data[diff.addr(i-from)] = curr - prev;
             }
         }
         return diff;
@@ -352,7 +394,7 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
      */
     public int lowerBound(final double val) {
-        return lowerBound(0, this.size-1, val);
+        return lowerBound(style.base, this.size+style.base, val);
     }
 
     /**
@@ -369,15 +411,15 @@ public class Array extends Cells {
 
         while (len > 0) {
             half = len >> 1;
-        middle = from;
-        middle = middle + half;
+            middle = from;
+            middle = middle + half;
 
-        if (data[middle] < val) {
-            from = middle;
-            from++;
-            len = len - half -1;
-        } else
-            len = half;
+            if (data[addr(middle)] < val) {
+                from = middle;
+                from++;
+                len = len - half - 1;
+            } else
+                len = half;
         }
         return from;
     }
@@ -390,7 +432,7 @@ public class Array extends Cells {
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
      */
     public int upperBound(final double val) {
-        return upperBound(0, this.size-1, val);
+        return upperBound(style.base, this.size+style.base, val);
     }
 
     /**
@@ -407,16 +449,16 @@ public class Array extends Cells {
 
         while (len > 0) {
             half = len >> 1;
-        middle = from;
-        middle = middle + half;
+            middle = from;
+            middle = middle + half;
 
-        if (val < data[middle])
-            len = half;
-        else {
-            from = middle;
-            from++;
-            len = len - half -1;
-        }
+            if (val < data[addr(middle)])
+                len = half;
+            else {
+                from = middle;
+                from++;
+                len = len - half - 1;
+            }
         }
         return from;
     }
@@ -428,7 +470,7 @@ public class Array extends Cells {
      * @return this
      */
     public Array transform(final DoubleOp func) {
-        return transform(0, this.size, func);
+        return transform(style.base, this.size+style.base, func);
     }
 
     /**
@@ -437,10 +479,10 @@ public class Array extends Cells {
      * @return this
      */
     public Array transform(final int from, final int to, final Ops.DoubleOp f) {
-        QL.require(from>=0 && from<=to && to<=this.size && f!=null,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(from>=style.base && from<=to && to<=this.size+style.base && f!=null, INVALID_ARGUMENTS); // QA:[RG]::verified
         if (f instanceof Identity) return this;
         for (int i = from; i < to; i++)
-            data[i] = f.op(data[i]);
+            data[addr(i)] = f.op(data[addr(i)]);
         return this;
     }
 
@@ -464,13 +506,13 @@ public class Array extends Cells {
 
     public Array addAssign(final double scalar) {
         for (int i=0; i<size; i++)
-            data[i] += scalar;
+            data[addrJ(i)] += scalar;
         return this;
     }
 
     public Array subAssign(final double scalar) {
         for (int i=0; i<size; i++)
-            data[i] -= scalar;
+            data[addrJ(i)] -= scalar;
         return this;
     }
 
@@ -483,7 +525,7 @@ public class Array extends Cells {
     public Array subAssign(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++) {
-            this.data[i] -= another.data[i];
+            data[addrJ(i)] -= another.data[another.addrJ(i)];
         }
         return this;
     }
@@ -491,20 +533,20 @@ public class Array extends Cells {
 
     public Array mulAssign(final double scalar) {
         for (int i=0; i<size; i++)
-            data[i] *= scalar;
+            data[addrJ(i)] *= scalar;
         return this;
     }
 
     public Array divAssign(final double scalar) {
         for (int i=0; i<size; i++)
-            data[i] /= scalar;
+            data[addrJ(i)] /= scalar;
         return this;
     }
 
     public Array addAssign(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
-            data[i] += another.data[i];
+            data[addrJ(i)] += another.data[another.addrJ(i)];
         return this;
     }
 
@@ -518,7 +560,7 @@ public class Array extends Cells {
     public Array mulAssign(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
-            data[i] *= another.data[i];
+            data[addrJ(i)] *= another.data[another.addrJ(i)];
         return this;
     }
 
@@ -549,63 +591,63 @@ public class Array extends Cells {
     //
 
     public Array add(final double scalar) {
-        final Array result = new Array(this.size);
+        final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
-            result.data[i] = this.data[i] + scalar;
+            result.data[result.addrJ(i)] = data[addrJ(i)] + scalar;
         return result;
     }
 
     public Array sub(final double scalar) {
-        final Array result = new Array(this.size);
+        final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
-            result.data[i] = this.data[i] - scalar;
+            result.data[result.addrJ(i)] = data[addrJ(i)] - scalar;
         return result;
     }
 
     public Array mul(final double scalar) {
-        final Array result = new Array(this.size);
+        final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
-            result.data[i] = this.data[i] * scalar;
+            result.data[result.addrJ(i)] = data[addrJ(i)] * scalar;
         return result;
     }
 
     public Array div(final double scalar) {
-        final Array result = new Array(this.size);
+        final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
-            result.data[i] = this.data[i] / scalar;
+            result.data[result.addrJ(i)] = data[addrJ(i)] / scalar;
         return result;
     }
 
     public Array add(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(this.size);
+        final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
-            result.data[i] = this.data[i] + another.data[i];
+            result.data[result.addrJ(i)] = data[addrJ(i)] + another.data[another.addrJ(i)];
         return result;
     }
 
     public Array sub(final Array another) {
         QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(this.size);
+        final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
-            result.data[i] = this.data[i] - another.data[i];
+            result.data[result.addrJ(i)] = data[addrJ(i)] - another.data[another.addrJ(i)];
         return result;
     }
 
     public Array mul(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(this.size);
+        final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
-            result.data[i] = this.data[i] * another.data[i];
+            result.data[result.addrJ(i)] = data[addrJ(i)] * another.data[another.addrJ(i)];
         return result;
     }
 
 
-    public Array div(final Matrix another) {
+    public Array div(final Array another) {
         QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(this.size);
+        final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
-            result.data[i] = this.data[i] / another.data[i];
+            result.data[result.addrJ(i)] = data[addrJ(i)] / another.data[another.addrJ(i)];
         return result;
     }
 
@@ -621,11 +663,11 @@ public class Array extends Cells {
         QL.require(this.size == matrix.rows, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.cols);
         for (int i=0; i<this.size; i++) {
-            int addr = matrix.addr(i,0);
+            int addrJ = matrix.addrJ(i, 0);
             double sum = 0.0;
             for (int col=0; col<matrix.cols; col++) {
-                sum += this.data[i] * matrix.data[addr];
-                addr++;
+                sum += data[addrJ(i)] * matrix.data[addrJ];
+                addrJ++;
             }
             result.data[i] = sum;
         }
@@ -646,28 +688,28 @@ public class Array extends Cells {
     public Array abs() {
         final Array result = new Array(this.size);
         for (int i=0; i<this.size; i++)
-            result.data[i] = Math.abs(data[i]);
+            result.data[result.addrJ(i)] = Math.abs(data[addrJ(i)]);
         return result;
     }
 
     public Array sqrt() {
         final Array result = new Array(this.size);
         for (int i=0; i<this.size; i++)
-            result.data[i] = Math.sqrt(data[i]);
+            result.data[result.addrJ(i)] = Math.sqrt(data[addrJ(i)]);
         return result;
     }
 
     public Array log() {
         final Array result = new Array(this.size);
         for (int i=0; i<this.size; i++)
-            result.data[i] = Math.log(data[i]);
+            result.data[result.addrJ(i)] = Math.log(data[addrJ(i)]);
         return result;
     }
 
     public Array exp() {
         final Array result = new Array(this.size);
         for (int i=0; i<this.size; i++)
-            result.data[i] = Math.exp(data[i]);
+            result.data[result.addrJ(i)] = Math.exp(data[addrJ(i)]);
         return result;
     }
 
@@ -693,14 +735,6 @@ public class Array extends Cells {
         return this;
     }
 
-//XXX
-//    public Array swap(final int pos1, final int pos2) {
-//        final double tmp = data[pos1];
-//        data[pos1] = data[pos2];
-//        data[pos2] = tmp;
-//        return this;
-//    }
-
     /**
      * Returns the <b>dot product</b> (also known as <b>scalar product</b>) of
      * <code>this</code> Array and <code>another</code> Array.
@@ -715,7 +749,7 @@ public class Array extends Cells {
      */
     public double dotProduct(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        return innerProduct(another, 0, size);
+        return innerProduct(another, style.base, size+style.base);
     }
 
     /**
@@ -731,7 +765,7 @@ public class Array extends Cells {
      */
     public double innerProduct(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        return innerProduct(another, 0, size);
+        return innerProduct(another, style.base, size+style.base);
     }
 
 
@@ -749,9 +783,10 @@ public class Array extends Cells {
      * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
      */
     public double innerProduct(final Array another, final int from, final int to) {
+        QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
         double sum = 0.0;
         for (int i=from; i<to; i++)
-            sum += this.data[i] * another.data[i];
+            sum += data[addr(i)] * another.data[another.addr(i)];
         return sum;
     }
 
@@ -778,12 +813,13 @@ public class Array extends Cells {
     public Matrix outerProduct(final Array another) {
         final Matrix result = new Matrix(this.size, another.size);
         for (int row=0; row<this.size; row++) {
-            final int addr = result.addr(row, 0);
+            final int raddrJ = result.addrJ(row, 0);
             for (int col=0; col<another.size; col++)
-                result.data[addr+col] = this.data[row] * another.data[col];
+                result.data[raddrJ+col] = data[addrJ(row)] * another.data[another.addrJ(col)];
         }
         return result;
     }
+
 
 
     //
@@ -792,12 +828,24 @@ public class Array extends Cells {
 
 
     /**
-     * This method returns the address of the first column in a given row
+     * This method returns the address of the first element of a given row or column
      * <p>
      * This method is used internally and is provided for performance reasons.
      */
-    protected int addr(final int row) {
-        return row;
+    protected int addr(final int pos) {
+        return pos - style.base;
+    }
+
+
+    //
+    // private methods
+    //
+
+    /**
+     * Calculates the Java index style address (zero-based) of a given cell identified by <i>(row, col)</i>
+     */
+    private int addrJ(final int pos) {
+        return pos;
     }
 
 }

@@ -30,7 +30,6 @@ import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
 
 /**
- *
  * Depending on the chosen rule, this calendar has a set of business days given
  * by either the union or the intersection of the sets of business days of the
  * given calendars.

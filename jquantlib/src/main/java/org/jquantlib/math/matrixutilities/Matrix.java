@@ -147,14 +147,23 @@ public class Matrix extends Cells {
     // public constructors
     //
 
-//    /**
-//     * Default constructor
-//     * <p>
-//     * Builds an empty Matrix
-//     */
-//    public Matrix() {
-//        super(0,0);
-//    }
+    /**
+     * Default constructor
+     * <p>
+     * Builds an empty Matrix
+     */
+    public Matrix() {
+        this(Style.JAVA);
+    }
+
+    /**
+     * Builds an empty Matrix
+     *
+     * @param style allows transparent access to elements by FORTRAN based algorithms.
+     */
+    public Matrix(final Style style) {
+        super(1, 1, style);
+    }
 
     /**
      * Builds a Matrix of <code>rows</code> by <code>cols</code>
@@ -164,7 +173,21 @@ public class Matrix extends Cells {
      * @throws IllegalArgumentException if parameters are less than zero
      */
     public Matrix(final int rows, final int cols) {
-        super(rows, cols);
+        this(rows, cols, Style.JAVA);
+    }
+
+    /**
+     * Builds a Matrix of <code>rows</code> by <code>cols</code>
+     *
+     * @param rows is the number of rows
+     * @param cols is the number of columns
+     * @param style allows transparent access to elements by FORTRAN based algorithms.
+     * @throws IllegalArgumentException if parameters are less than zero
+     *
+     * @see Style
+     */
+    public Matrix(final int rows, final int cols, final Style style) {
+        super(rows, cols, style);
     }
 
 
@@ -174,14 +197,24 @@ public class Matrix extends Cells {
      * @param data
      */
     public Matrix(final double[][] data) {
-        super(data.length, data[0].length);
-
-        for (int i=0; i<this.rows; i++) {
-            final int base=addr(i,0);
-            System.arraycopy(data[i], 0, this.data, base, this.cols);
-        }
+        this(data, Style.JAVA);
     }
 
+    /**
+     * Creates a Matrix given a double[][] array
+     *
+     * @param data is a bi-dimensional array, always organized as a Java index access style, zero-based double[][].
+     * @param style allows transparent access to elements by FORTRAN based algorithms.
+     *
+     * @see Style
+     */
+    public Matrix(final double[][] data, final Style style) {
+        super(data.length, data[0].length, style);
+
+        for (int i=0; i<rows; i++) {
+            System.arraycopy(data[i], 0, this.data, addrJ(i, 0), cols);
+        }
+    }
 
     /**
      * Creates a Matrix given a double[][] array
@@ -189,8 +222,19 @@ public class Matrix extends Cells {
      * @param data
      */
     public Matrix(final Matrix m) {
-        super(m.rows, m.cols);
-        System.arraycopy(m.data, 0, this.data, 0, this.size);
+        super(m.rows, m.cols, m.style);
+        System.arraycopy(m.data, 0, this.data, 0, size);
+    }
+
+    /**
+     * Creates a Matrix given a double[][] array
+     *
+     * @param m is an existing matrix
+     * @param style allows transparent access to elements by FORTRAN based algorithms.
+     */
+    public Matrix(final Matrix m, final Style style) {
+        super(m.rows, m.cols, style);
+        System.arraycopy(m.data, 0, this.data, 0, size);
     }
 
 
@@ -210,24 +254,24 @@ public class Matrix extends Cells {
     public boolean equals(final Object o) {
         if (o == null || !(o instanceof Matrix)) return false;
         final Matrix another = (Matrix) o;
-        if (this.rows != another.rows || this.cols != another.cols) return false;
-        return Arrays.equals(this.data, another.data);
+        if (rows != another.rows || cols != another.cols) return false;
+        return Arrays.equals(data, another.data);
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer();
-        sb.append('[').append('\n');
-        for (int row = 0; row < this.rows; row++) {
-            int addr = addr(row,0);
-            sb.append(" [");
-            sb.append(this.data[addr]);
-            for (int col = 1; col < this.cols; col++) {
-                addr++;
+        sb.append("[rows=").append(rows).append(" cols=").append(cols).append(" style=").append(style.toString()).append('\n');
+        for (int row = 0; row < rows; row++) {
+            int addrJ = addrJ(row, 0);
+            sb.append(" [ ");
+            sb.append(data[addrJ]);
+            for (int col = 1; col < cols; col++) {
+                addrJ++;
                 sb.append(", ");
-                sb.append(this.data[addr]);
+                sb.append(data[addrJ]);
             }
-            sb.append("]\n");
+            sb.append(" ]\n");
         }
         sb.append("]\n");
         return sb.toString();
@@ -239,32 +283,27 @@ public class Matrix extends Cells {
     //
 
 
-    // some convenience methods
-
-    public final int rows()    { return rows; }
-    public final int columns() { return cols; }
-
-
     public Object toArray() {
-        final double buffer[][] = new double[this.rows][this.cols];
-        return toArray(buffer);
+        return toArray(Style.JAVA);
+    }
+
+    public Object toArray(final Style style) {
+        final double buffer[][] = new double[rows+style.base][cols+style.base];
+        return toArray(buffer, style);
     }
 
     public double[][] toArray(final double[][] buffer) {
-        QL.require(this.rows == buffer.length && this.cols == buffer[0].length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
-        int addr = 0;
-        for (int row=0; row<this.rows; row++) {
-            System.arraycopy(this.data, addr, buffer[row], 0, this.cols);
-            addr += this.cols;
-        }
-        return buffer;
+        return toArray(buffer, Style.JAVA);
     }
 
-    /**
-     * @return true if the number of rows or number of columns of this {@link Matrix} is zero
-     */
-    public boolean empty() {
-        return (rows == 0 || cols == 0);
+    public double[][] toArray(final double[][] buffer, final Style style) {
+        QL.require(rows+style.base == buffer.length && cols+style.base == buffer[0].length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
+        int addr = 0;
+        for (int row=0; row<rows; row++) {
+            System.arraycopy(data, addr, buffer[row+style.base], style.base, cols);
+            addr += cols;
+        }
+        return buffer;
     }
 
     /**
@@ -285,14 +324,43 @@ public class Matrix extends Cells {
      * @return <code>this</code>
      */
     public Matrix fill(final Matrix another) {
-        if (this.size != another.size)
-            throw new IllegalArgumentException(); // TODO: message
-        System.arraycopy(another.data, 0, this.data, 0, this.size);
+        QL.require(size == another.size, MATRIX_IS_INCOMPATIBLE);
+        System.arraycopy(another.data, 0, data, 0, size);
         return this;
     }
 
     /**
-     * Retrieves an elementof <code>this</code> Matrix which identified by <i>(row, col)</i>
+     * Overwrites contents of a certain row
+     *
+     * @param row is the requested row to be overwritten
+     * @param array contains the elements to be copied
+     */
+    public void fillRow(final int row, final Array array) {
+        QL.require(cols == array.size ,  ARRAY_IS_INCOMPATIBLE);
+        System.arraycopy(array.data, 0, data, addr(row, style.base), cols);
+    }
+
+    /**
+     * Overwrites contents of a certain column
+     *
+     * @param col is the requested column to be overwritten
+     * @param array contains the elements to be copied
+     */
+    public void fillCol(final int col, final Array array) {
+        QL.require(rows == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        if (cols == 1)
+            System.arraycopy(array.data, 0, data, 0, size);
+        else {
+            int addr = addr(style.base, col);
+            for (int row = style.base; row < rows+style.base; row++) {
+                data[addr] = array.data[array.addr(row)];
+                addr += cols;
+            }
+        }
+    }
+
+    /**
+     * Retrieves an element of <code>this</code> Matrix which identified by <i>(row, col)</i>
      *
      * @param row coordinate
      * @param col coordinate
@@ -309,70 +377,9 @@ public class Matrix extends Cells {
      * @param col coordinate
      */
     public void set(final int row, final int col, final double value) {
-        this.data[addr(row, col)] = value;
+        data[addr(row, col)] = value;
     }
 
-    /**
-     * Returns an Array which contains elements of a requested row
-     *
-     * @param row is the requested row
-     * @return a new Array instance
-     */
-    public Array getRow(final int row) {
-        final Array vector = new Array(this.cols);
-        System.arraycopy(this.data, this.addr(row,0), vector.data, 0, this.cols);
-        return vector;
-    }
-
-    /**
-     * Returns an Array which contains elements of a requested column
-     *
-     * @param col is the requested column
-     * @return a new Array instance
-     */
-    public Array getCol(final int col) {
-        final Array array = new Array(this.rows);
-        if (this.cols == 1)
-            System.arraycopy(this.data, 0, array.data, 0, this.size);
-        else {
-            int addr = addr(0, col);
-            for (int row = 0; row < this.rows; row++) {
-                array.data[row] = this.data[addr];
-                addr += this.cols;
-            }
-        }
-        return array;
-    }
-
-    /**
-     * Overwrites contents of a certain row
-     *
-     * @param row is the requested row to be overwritten
-     * @param array contains the elements to be copied
-     */
-    public void setRow(final int row, final Array array) {
-        QL.require(this.cols == array.size ,  ARRAY_IS_INCOMPATIBLE);
-        System.arraycopy(array.data, 0, this.data, this.addr(row,0), this.cols);
-    }
-
-    /**
-     * Overwrites contents of a certain column
-     *
-     * @param col is the requested column to be overwritten
-     * @param array contains the elements to be copied
-     */
-    public void setCol(final int col, final Array array) {
-        QL.require(this.rows == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        if (this.cols == 1)
-            System.arraycopy(array.data, 0, this.data, 0, this.size);
-        else {
-            int addr = addr(0, col);
-            for (int row = 0; row < this.rows; row++) {
-                this.data[addr] = array.data[row];
-                addr += this.cols;
-            }
-        }
-    }
 
 
     //
@@ -395,12 +402,12 @@ public class Matrix extends Cells {
      * @return this
      */
     public Matrix addAssign(final Matrix another) {
-        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int row=0; row<rows; row++) {
-            int addr = addr(row,0);
+            int addrJ = addrJ(row, 0);
             for (int col=0; col<cols; col++) {
-                this.data[addr] += another.data[addr];
-                addr++;
+                data[addrJ] += another.data[addrJ];
+                addrJ++;
             }
         }
         return this;
@@ -413,12 +420,12 @@ public class Matrix extends Cells {
      * @return this
      */
     public Matrix subAssign(final Matrix another) {
-        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int row=0; row<rows; row++) {
-            int addr = addr(row,0);
+            int addrJ = addrJ(row, 0);
             for (int col=0; col<cols; col++) {
-                this.data[addr] -= another.data[addr];
-                addr++;
+                data[addrJ] -= another.data[addrJ];
+                addrJ++;
             }
         }
         return this;
@@ -432,10 +439,10 @@ public class Matrix extends Cells {
      */
     public Matrix mulAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
-            final int rowAddress = addr(row,0);
+            final int raddrJ = addrJ(row, 0);
             for (int col = 0; col < cols; col++) {
-                final int cellAddress = rowAddress + col;
-                data[cellAddress] *= scalar;
+                final int addrJ = raddrJ + col;
+                data[addrJ] *= scalar;
             }
         }
         return this;
@@ -449,10 +456,10 @@ public class Matrix extends Cells {
      */
     public Matrix divAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
-            final int rowAddress = addr(row,0);
+            final int raddrJ = addrJ(row, 0);
             for (int col = 0; col < cols; col++) {
-                final int cellAddress = rowAddress + col;
-                data[cellAddress] /= scalar;
+                final int addrJ = raddrJ + col;
+                data[addrJ] /= scalar;
             }
         }
         return this;
@@ -479,13 +486,13 @@ public class Matrix extends Cells {
      * @return a new instance
      */
     public Matrix add(final Matrix another) {
-        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Matrix result = new Matrix(this.rows, this.cols);
+        QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Matrix result = new Matrix(rows, cols, style);
         for (int row=0; row<rows; row++) {
-            int addr = addr(row,0);
+            int addrJ = addrJ(row, 0);
             for (int col=0; col<cols; col++) {
-                result.data[addr] = this.data[addr] + another.data[addr];
-                addr++;
+                result.data[addrJ] = data[addrJ] + another.data[addrJ];
+                addrJ++;
             }
         }
         return result;
@@ -498,13 +505,13 @@ public class Matrix extends Cells {
      * @return a new instance
      */
     public Matrix sub(final Matrix another) {
-        QL.require(this.rows == another.rows && this.cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Matrix result = new Matrix(this.rows, this.cols);
+        QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Matrix result = new Matrix(rows, cols, style);
         for (int row=0; row<rows; row++) {
-            int addr = addr(row,0);
+            int addrJ = addrJ(row, 0);
             for (int col=0; col<cols; col++) {
-                result.data[addr] = this.data[addr] - another.data[addr];
-                addr++;
+                result.data[addrJ] = data[addrJ] - another.data[addrJ];
+                addrJ++;
             }
         }
         return result;
@@ -517,7 +524,7 @@ public class Matrix extends Cells {
      * @return this
      */
     public Matrix negative() {
-        return this.mulAssign(-1);
+        return mulAssign(-1);
     }
 
 
@@ -528,12 +535,12 @@ public class Matrix extends Cells {
      * @return a new instance
      */
     public Matrix mul(final double scalar) {
-        final Matrix result = new Matrix(this.rows, this.cols);
+        final Matrix result = new Matrix(rows, cols, style);
         for (int row=0; row<rows; row++) {
-            int addr = addr(row,0);
+            int addrJ = addrJ(row, 0);
             for (int col=0; col<cols; col++) {
-                result.data[addr] = data[addr] * scalar;
-                addr++;
+                result.data[addrJ] = data[addrJ] * scalar;
+                addrJ++;
             }
         }
         return result;
@@ -546,12 +553,12 @@ public class Matrix extends Cells {
      * @return a new instance
      */
     public Matrix div(final double scalar) {
-        final Matrix result = new Matrix(this.rows, this.cols);
+        final Matrix result = new Matrix(rows, cols, style);
         for (int row=0; row<rows; row++) {
-            int addr = addr(row,0);
+            int addrJ = addrJ(row, 0);
             for (int col=0; col<cols; col++) {
-                result.data[addr] = data[addr] / scalar;
-                addr++;
+                result.data[addrJ] = data[addrJ] / scalar;
+                addrJ++;
             }
         }
         return result;
@@ -574,14 +581,14 @@ public class Matrix extends Cells {
      * @return a new Array which contains the result
      */
     public Array mul(final Array array) {
-        QL.require(this.cols == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(this.cols);
-        for (int col=0; col<this.cols; col++) {
-            int addr = addr(0, col);
+        QL.require(cols == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Array result = new Array(cols, style);
+        for (int col=0; col<cols; col++) {
+            int addrJ = addrJ(0, col);
             double sum = 0.0;
-            for (int row=0; row<this.rows; row++) {
-                sum  += this.data[addr] * array.data[col];
-                addr += this.cols;
+            for (int row=0; row<rows; row++) {
+                sum  += data[addrJ] * array.data[col];
+                addrJ += cols;
             }
             result.data[col] = sum;
         }
@@ -595,19 +602,19 @@ public class Matrix extends Cells {
      * @return a new Matrix which contains the result
      */
     public Matrix mul(final Matrix another) {
-        QL.require(this.cols == another.rows ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Matrix result = new Matrix(this.rows, another.cols);
+        QL.require(cols == another.rows ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Matrix result = new Matrix(rows, another.cols, style);
         for (int col = 0; col < another.cols; col++) {
-            final int caddr = another.addr(0, col);
-            for (int row = 0; row < this.rows; row++) {
-                final int raddr = addr(row, 0);
-                int addr = caddr;
+            final int caddrJ = another.addrJ(0, col);
+            for (int row = 0; row < rows; row++) {
+                final int raddrJ = addrJ(row, 0);
+                int addrJ = caddrJ;
                 double sum = 0.0;
-                for (int i = 0; i < this.cols; i++) {
-                    sum += this.data[raddr + i] * another.data[addr];
-                    addr += another.cols;
+                for (int i = 0; i < cols; i++) {
+                    sum += data[raddrJ + i] * another.data[addrJ];
+                    addrJ += another.cols;
                 }
-                result.set(row, col, sum);
+                result.data[result.addrJ(row, col)] = sum;
             }
         }
         return result;
@@ -882,14 +889,14 @@ public class Matrix extends Cells {
      * @return a new instance which contains the result of this operation
      */
     public Matrix transpose() {
-        final Matrix result = new Matrix(this.cols, this.rows);
-        for (int row=0; row<this.rows; row++) {
-            int raddr = this.addr(row, 0);
-            int caddr = result.addr(0, row);
-            for (int col=0; col<this.cols; col++) {
-                result.data[caddr] = this.data[raddr];
-                caddr += result.cols;
-                raddr++;
+        final Matrix result = new Matrix(cols, rows, style);
+        for (int row=0; row<rows; row++) {
+            int raddrJ = addrJ(row, 0);
+            int caddrJ = result.addrJ(0, row);
+            for (int col=0; col<cols; col++) {
+                result.data[caddrJ] = data[raddrJ];
+                caddrJ += result.cols;
+                raddrJ++;
             }
         }
         return result;
@@ -901,12 +908,12 @@ public class Matrix extends Cells {
      * @return a new instance which contains the result of this operation
      */
     public Array diagonal() {
-        QL.require(this.rows == this.cols ,  MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
-        final Array result = new Array(this.cols);
-        int addr = 0;
-        for (int i = 0; i < this.cols; i++) {
-            result.data[i] = this.data[addr];
-            addr += this.cols + 1;
+        QL.require(rows == cols ,  MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
+        final Array result = new Array(cols, style);
+        int addrJ = 0;
+        for (int i = 0; i < cols; i++) {
+            result.data[i] = data[addrJ];
+            addrJ += cols + 1;
         }
         return result;
     }
@@ -964,20 +971,20 @@ public class Matrix extends Cells {
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int row0, final int row1, final int col0, final int col1) {
-        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
-        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(row0 >= style.base && row1 > row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(col0 >= style.base && col1 > col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
 
-        final Matrix result = new Matrix(row1-row0, col1-col0);
-        if (col1-col0 == this.cols) {
-            if (row1-row0 == this.rows)
-                System.arraycopy(this.data, 0, result.data, 0, this.size);
+        final Matrix result = new Matrix(row1-row0, col1-col0, style);
+        if (col1-col0 == cols) {
+            if (row1-row0 == rows)
+                System.arraycopy(data, style.base, result.data, style.base, size);
             else
-                System.arraycopy(this.data, this.addr(row0, 0), result.data, 0, result.size);
+                System.arraycopy(data, addr(row0, style.base), result.data, style.base, result.size);
         } else {
             final int ncols = col1-col0;
-            int addr = 0;
+            int addr = style.base;
             for (int i = row0; i <= row1; i++) {
-                System.arraycopy(this.data, addr(i, col0), result.data, addr, ncols);
+                System.arraycopy(data, addr(i, col0), result.data, addr, ncols);
                 addr += ncols;
             }
         }
@@ -990,20 +997,29 @@ public class Matrix extends Cells {
      * @param row0 Initial row index, inclusive
      * @param row1 Final row index, exclusive
      * @param c Array of column indices.
-     * @return A( [row0:row1) , c(:) )
+     * This parameter can a regular int[] array as usual or it can be a one-based int[] array composed by one-based indexes
+     * if <code>this</code> Matrix has a FORTRAN style indexing.
+     * For example, suppose we wish to pass an array made of indexes [1, 2, 0]. We can do it using the usual Java style as:
+     * <pre>
+     *     int [] c = new int[] { 1, 2, 0 };; // Java style, as usual. No surprises
+     * </pre>
+     * whilst using FORTRAN style we need to add one leading cell (which is discarded) and we need to adjust array elements:
+     * <pre>
+     *     int [] c = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
+     * <pre>
+     * @return A( [row0:row1) , c(:) ), preserving the {@link Style} of <code>this</code> Matrix
      * @exception IllegalArgumentException when indices are out of range
      */
-
     public Matrix range(final int row0, final int row1, final int[] c) {
-        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(row0 >= style.base && row1 > row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
         for (final int col : c) {
-            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(col>=style.base && col<cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
 
-        final Matrix result = new Matrix(row1-row0, c.length);
+        final Matrix result = new Matrix(row1-row0, c.length, style);
         for (int i = row0; i <= row1; i++) {
-            for (int j = 0; j < c.length; j++) {
-                result.set( i-row0, j, this.get(i, c[j]) );
+            for (int j = style.base; j < c.length+style.base; j++) {
+                result.set(i-row0, j, get(i, c[j]));
             }
         }
         return result;
@@ -1013,24 +1029,44 @@ public class Matrix extends Cells {
      * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
      *
      * @param r Array of row indices.
+     * This parameter can a regular int[] array as usual or it can be a one-based int[] array composed by one-based indexes
+     * if <code>this</code> Matrix has a FORTRAN style indexing.
+     * For example, suppose we wish to pass an array made of indexes [1, 2, 0]. We can do it using the usual Java style as:
+     * <pre>
+     *     int [] r = new int[] { 1, 2, 0 };; // Java style, as usual. No surprises
+     * </pre>
+     * whilst using FORTRAN style we need to add one leading cell (which is discarded) and we need to adjust array elements:
+     * <pre>
+     *     int [] r = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
+     * <pre>
      * @param c Array of column indices.
-     * @return A(r(:),c(:))
+     * This parameter can a regular int[] array as usual or it can be a one-based int[] array composed by one-based indexes
+     * if <code>this</code> Matrix has a FORTRAN style indexing.
+     * For example, suppose we wish to pass an array made of indexes [1, 2, 0]. We can do it using the usual Java style as:
+     * <pre>
+     *     int [] c = new int[] { 1, 2, 0 };; // Java style, as usual. No surprises
+     * </pre>
+     * whilst using FORTRAN style we need to add one leading cell (which is discarded) and we need to adjust array elements:
+     * <pre>
+     *     int [] c = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
+     * <pre>
+     * @return A(r(:),c(:)), preserving the {@link Style} of <code>this</code> Matrix
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int[] r, final int[] c) {
         for (final int row : r) {
-            QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(row>=style.base && row<rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
         for (final int col : c) {
-            QL.require(col>=0 && col<this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(col>=style.base && col<cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
 
-        final Matrix result = new Matrix(r.length, c.length);
-        for (int i=0; i<r.length; i++) {
+        final Matrix result = new Matrix(r.length-style.base, c.length-style.base, style);
+        for (int i=style.base; i<r.length+style.base; i++) {
             final int row = r[i];
-            for (int j=0; j<c.length; j++) {
+            for (int j=style.base; j<c.length+style.base; j++) {
                 final int col = c[j];
-                result.set(i, j, this.get(row, col));
+                result.set(i, j, get(row, col));
             }
         }
         return result;
@@ -1040,26 +1076,47 @@ public class Matrix extends Cells {
      * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
      *
      * @param r Array of row indices.
+     * This parameter can a regular int[] array as usual or it can be a one-based int[] array composed by one-based indexes
+     * if <code>this</code> Matrix has a FORTRAN style indexing.
+     * For example, suppose we wish to pass an array made of indexes [1, 2, 0]. We can do it using the usual Java style as:
+     * <pre>
+     *     int [] r = new int[] { 1, 2, 0 };; // Java style, as usual. No surprises
+     * </pre>
+     * whilst using FORTRAN style we need to add one leading cell (which is discarded) and we need to adjust array elements:
+     * <pre>
+     *     int [] r = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
+     * <pre>
      * @param col0 Initial column index, inclusive
      * @param col1 Final column index, exclusive
-     * @return A(r(:), [col0:col1) )
+     * @return A(r(:), [col0:col1) ), preserving the {@link Style} of <code>this</code> Matrix
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int[] r, final int col0, final int col1) {
         for (final int row : r) {
-            QL.require(row>=0 && row<this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(row>=style.base && row<rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
-        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(col0 >= style.base && col1 > col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
 
-        final Matrix result = new Matrix(r.length, col1-col0);
+        final Matrix result = new Matrix(r.length, col1-col0, style);
         final int ncols = col1-col0;
 
-        int addr = 0;
+        int addr = style.base;
         for (final int row : r) {
-            System.arraycopy(this.data, addr(row, col0), result.data, addr, ncols);
+            System.arraycopy(data, addr(row, col0), result.data, addr, ncols);
             addr += ncols;
         }
         return result;
+    }
+
+    /**
+     * Creates an Array made of elements of a row of <code>this</code> Matrix.
+     *
+     * @param row is a row index
+     * @return A(row, [:] )
+     * @exception IllegalArgumentException when indices are out of range
+     */
+    public Array rangeRow(final int row) {
+        return rangeRow(row, style.base);
     }
 
     /**
@@ -1071,7 +1128,7 @@ public class Matrix extends Cells {
      * @exception IllegalArgumentException when indices are out of range
      */
     public Array rangeRow(final int row, final int col0) {
-        return rangeRow(row, col0, cols);
+        return rangeRow(row, col0, cols+style.base);
     }
 
     /**
@@ -1080,17 +1137,28 @@ public class Matrix extends Cells {
      * @param row row index
      * @param col0 Initial column index, inclusive
      * @param col1 Final column index, exclusive
-     * @return A(row, [col0:col1) )
+     * @return A(row, [col0:col1) ), preserving the {@link Style} of <code>this</code> Matrix
      * @exception IllegalArgumentException when indices are out of range
      */
     public Array rangeRow(final int row, final int col0, final int col1) {
-        QL.require(row >= 0 && row < this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
-        QL.require(col0 >= 0 && col1 > col0 && col1 <= this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(row  >= style.base && row < rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(col0 >= style.base && col1 > col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
 
-        final Array result = new Array(col1-col0);
         final int ncols = col1-col0;
-        System.arraycopy(this.data, addr(row, col0), result.data, 0, ncols);
+        final Array result = new Array(ncols, style);
+        System.arraycopy(data, addr(row, col0), result.data, 0, ncols);
         return result;
+    }
+
+    /**
+     * Creates an Array made of elements of a column of <code>this</code> Matrix.
+     *
+     * @param col column index
+     * @return A([:], col)
+     * @exception IllegalArgumentException when indices are out of range
+     */
+    public Array rangeCol(final int col) {
+        return rangeCol(col, style.base);
     }
 
     /**
@@ -1098,11 +1166,11 @@ public class Matrix extends Cells {
      *
      * @param row row index
      * @param row0 Initial column index, inclusive
-     * @return A(row, [col0:] )
+     * @return A([row0:), col)
      * @exception IllegalArgumentException when indices are out of range
      */
     public Array rangeCol(final int col, final int row0) {
-        return rangeCol(col, row0, rows);
+        return rangeCol(col, row0, rows+style.base);
     }
 
     /**
@@ -1111,19 +1179,19 @@ public class Matrix extends Cells {
      * @param row row index
      * @param row0 Initial column index, inclusive
      * @param row1 Final column index, exclusive
-     * @return A(row, col0:col1)
+     * @return A([row0:row1), col)
      * @exception IllegalArgumentException when indices are out of range
      */
     public Array rangeCol(final int col, final int row0, final int row1) {
-        QL.require(col >= 0 && col < this.cols, INVALID_ARGUMENTS); // QA:[RG]::verified
-        QL.require(row0 >= 0 && row1 > row0 && row1 <= this.rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(col  >= style.base && col  < cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(row0 >= style.base && row1 > row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
 
-        final Array result = new Array(row1-row0);
         final int nrows = row1-row0;
+        final Array result = new Array(nrows, style);
 
-        int addr = addr(col,row0);
-        for (int row = 0; row < nrows; row++) {
-            result.data[row] = this.data[addr];
+        int addr = addr(row0, col);
+        for (int i = 0; i < nrows; i++) {
+            result.data[i] = data[addr];
             addr += cols;
         }
         return result;
@@ -1159,7 +1227,7 @@ public class Matrix extends Cells {
          * @throws IllegalArgumentException when indices are out of range
          */
         public RowIterator(final int row) {
-            this(row, 0, cols);
+            this(row, style.base, cols+style.base);
         }
 
         /**
@@ -1171,7 +1239,7 @@ public class Matrix extends Cells {
          * @throws IllegalArgumentException when indices are out of range
          */
         public RowIterator(final int row, final int col0) {
-            this(row, col0, cols);
+            this(row, col0, cols+style.base);
         }
 
         /**
@@ -1184,7 +1252,7 @@ public class Matrix extends Cells {
          * @throws IllegalArgumentException when indices are out of range
          */
         public RowIterator(final int row, final int col0, final int col1) {
-            QL.require(row>=0 && row<rows && col0 >=0 && col1>=col0 && col1 <= cols, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(row>=style.base && row<rows+style.base && col0 >=style.base && col1>=col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
             this.row = row;
             this.col0 = col0;
             this.col1 = col1;
@@ -1272,7 +1340,7 @@ public class Matrix extends Cells {
         @Override
         public double nextDouble() {
             if (cursor < col1) {
-                return data[addr(row,cursor++)];
+                return data[addr(row, cursor++)];
             } else {
                 throw new NoSuchElementException();
             }
@@ -1281,7 +1349,7 @@ public class Matrix extends Cells {
         @Override
         public double previousDouble() {
             if (cursor > col0) {
-                return data[addr(row,--cursor)];
+                return data[addr(row, --cursor)];
             } else {
                 throw new NoSuchElementException();
             }
@@ -1290,7 +1358,7 @@ public class Matrix extends Cells {
         @Override
         public void set(final double e) {
             if (cursor >=col0 && cursor < col1) {
-                data[addr(row,cursor)] = e;
+                data[addr(row, cursor)] = e;
             } else {
                 throw new NoSuchElementException();
             }
@@ -1380,7 +1448,7 @@ public class Matrix extends Cells {
          * @throws IllegalArgumentException when indices are out of range
          */
         public ColumnIterator(final int col) {
-            this(col, 0, cols);
+            this(col, style.base, cols+style.base);
         }
 
         /**
@@ -1392,7 +1460,7 @@ public class Matrix extends Cells {
          * @throws IllegalArgumentException when indices are out of range
          */
         public ColumnIterator(final int col, final int row0) {
-            this(col, row0, cols);
+            this(col, row0, cols+style.base);
         }
 
         /**
@@ -1405,7 +1473,7 @@ public class Matrix extends Cells {
          * @throws IllegalArgumentException when indices are out of range
          */
         public ColumnIterator(final int col, final int row0, final int row1) {
-            QL.require(col>=0 && col<cols && row0 >=0 && row1>=row0 && row1 <= rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(col>=style.base && col<cols+style.base && row0 >=style.base && row1>=row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
             this.col = col;
             this.row0 = row0;
             this.row1 = row1;
@@ -1493,7 +1561,7 @@ public class Matrix extends Cells {
         @Override
         public double nextDouble() {
             if (cursor < row1) {
-                return data[addr(cursor++,col)];
+                return data[addr(cursor++, col)];
             } else {
                 throw new NoSuchElementException();
             }
@@ -1502,7 +1570,7 @@ public class Matrix extends Cells {
         @Override
         public double previousDouble() {
             if (cursor > row0) {
-                return data[addr(--cursor,col)];
+                return data[addr(--cursor, col)];
             } else {
                 throw new NoSuchElementException();
             }
@@ -1581,12 +1649,17 @@ public class Matrix extends Cells {
     //
 
     /**
-     * This method returns the address of a given cell identified by <i>(row, col)</i>
-     * <p>
-     * This method is used internally and is provided for performance reasons.
+     * Calculates the address of a given cell identified by <i>(row, col)</i>
      */
     protected int addr(final int row, final int col) {
-        return row*this.cols + col;
+        return (row-style.base)*cols + (col-style.base);
+    }
+
+    /**
+     * Calculates the Java index style address (zero-based) of a given cell identified by <i>(row, col)</i>
+     */
+    protected int addrJ(final int row, final int col) {
+        return row*cols+col;
     }
 
 
@@ -1595,7 +1668,6 @@ public class Matrix extends Cells {
     //
 
     // TODO: OSGi :: remove statics
-
 
     /**
      * sqrt(a^2 + b^2) without under/overflow.

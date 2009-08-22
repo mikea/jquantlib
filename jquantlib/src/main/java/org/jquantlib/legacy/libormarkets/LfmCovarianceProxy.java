@@ -33,7 +33,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
         // TODO: code review :: use of clone()
         final Array  vol = volaModel_.volatility(t, x);
         for (int i=0; i<size_; ++i)
-            pca.getRow(i).mul(vol.get(i));
+            pca.rangeRow(i).mul(vol.get(i));
         return pca;
     }
 

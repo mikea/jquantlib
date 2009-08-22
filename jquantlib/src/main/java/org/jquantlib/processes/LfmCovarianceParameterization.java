@@ -97,8 +97,8 @@ public abstract class LfmCovarianceParameterization {
 
         public double op(final double t) {
             final Matrix m = param_.diffusion(t);
-            final Array iRow = m.getRow(i_);
-            final Array jRow = m.getRow(i_);
+            final Array iRow = m.rangeRow(i_);
+            final Array jRow = m.rangeRow(i_);
             return iRow.innerProduct(jRow);
         }
     }

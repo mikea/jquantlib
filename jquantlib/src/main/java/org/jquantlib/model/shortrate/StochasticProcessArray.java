@@ -93,7 +93,7 @@ public class StochasticProcessArray extends StochasticProcess {
         final Matrix tmp = sqrtCorrelation_;
         for (int i=0; i<size(); i++) {
             final double sigma = processes_.get(i).diffusion(t, x.get(i));
-            tmp.getRow(i).mul(sigma);
+            tmp.rangeRow(i).mul(sigma);
         }
         return tmp;
     }
@@ -111,7 +111,7 @@ public class StochasticProcessArray extends StochasticProcess {
         final Matrix tmp = sqrtCorrelation_;
         for (int i=0; i<size(); i++) {
             final double sigma = processes_.get(i).stdDeviation(t0, x0.get(i), dt);
-            tmp.getRow(i).mul(sigma);
+            tmp.rangeRow(i).mul(sigma);
         }
         return tmp;
     }

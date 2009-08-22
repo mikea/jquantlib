@@ -70,7 +70,7 @@ public class LUDecomposition {
      * @return Structure to access L, U and piv.
      */
     public LUDecomposition(final Matrix A) {
-        this.LU = A.clone();
+        this.LU = new Matrix(A, Cells.Style.JAVA); // clone and force Java indexing style
         this.m = LU.rows;
         this.n = LU.cols;
 

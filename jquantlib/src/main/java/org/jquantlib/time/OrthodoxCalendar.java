@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,12 +15,14 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.time;
+
+import org.jquantlib.util.Date;
 
 
 /**
@@ -52,16 +54,31 @@ public abstract class OrthodoxCalendar extends AbstractCalendar {
 		106, 125, 110, 102, 122, 106,  98, 118, 110, 122,   // 2080-2089
 		114,  99, 119, 110, 102, 115, 107, 126, 118, 103    // 2090-2099
 	};
-	
-	public final boolean isWeekend(Weekday weekday) {
+
+	public final boolean isWeekend(final Weekday weekday) {
         return weekday == Weekday.SATURDAY || weekday == Weekday.SUNDAY;
     }
-	
+
     /**
      * @return the offset of the Easter Monday relative to the
      * first day of the year
-     */ 
-    protected final int easterMonday(int year) {
+     */
+    protected final int easterMonday(final int year) {
     	return ortodoxEasterMonday[year-1901];
     }
+
+    //
+    // overrides AbstractCalendar
+    //
+
+    @Override
+    public final void addHoliday(final Date d) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void removeHoliday(final Date d) {
+        throw new UnsupportedOperationException();
+    }
+
 }

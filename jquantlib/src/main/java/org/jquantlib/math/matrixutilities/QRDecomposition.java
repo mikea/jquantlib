@@ -85,6 +85,7 @@ public class QRDecomposition {
     private final int m;
     private final int n;
     private final Matrix AT;
+    private final int base; // intended to store AT.base()
 
     /**
      * rdiag is an output array of length n which contains the diagonal elements of R.
@@ -131,106 +132,26 @@ public class QRDecomposition {
      */
     public QRDecomposition(final Matrix A, final boolean pivot) {
 
-        this.m = A.rows;
-        this.n = A.cols;
-        this.AT = A.transpose();
+        this.AT = new Matrix(A, Cells.Style.FORTRAN); // A.transpose()
+        this.m = AT.rows;
+        this.n = AT.cols;
+        this.base = AT.base();
+        this.rdiag = new double[this.n+base];
+        this.acnorm = new double[n+base];
 
-        this.rdiag = new double[this.n];
-        this.ipvt = new int[n];
-        this.acnorm = new double[n];
+        final int[] lipvt = new int[n+base];
+        final double[] wa = new double[n+base];
 
-        final double wa[] = new double[n];
+        qrfac_f77(m, n, AT, pivot, lipvt, rdiag, rdiag, wa);
 
-        int i, j, jp1, k, kmax, minmn;
-        double ajnorm, sum, temp;
-        double fac;
-
-        final double tempvec[] = new double[m];
-
-        // Compute the initial column norms and initialize several arrays.
-        for (j = 0; j < n; j++) {
-            for (i = 0; i < m; i++) {
-                tempvec[i] = AT.data[AT.addr(i, j)];
-            }
-            acnorm[j] = norm(m, tempvec);
-            rdiag[j] = acnorm[j];
-            wa[j] = rdiag[j];
-            if (pivot)
-                ipvt[j] = j;
+        this.ipvt = new int[n+base];
+        if (pivot) {
+            for (int i=base; i < n+base; ++i)
+                ipvt[i] = lipvt[i];
+        } else {
+            for (int i=base; i < n+base; ++i)
+                ipvt[i] = i;
         }
-
-        // Reduce A to R with Householder transformations.
-        minmn = Math.min(m, n);
-        for (j = 0; j < minmn; j++) {
-            if (pivot) {
-                // Bring the column of largest norm into the pivot position.
-                kmax = j;
-                for (k = j; k < n; k++) {
-                    if (rdiag[k] > rdiag[kmax])
-                        kmax = k;
-                }
-                if (kmax != j) {
-                    for (i = 0; i < m; i++) {
-                        temp = AT.data[AT.addr(i, j)];
-                        AT.data[AT.addr(i, j)] = AT.data[AT.addr(i, kmax)];
-                        AT.data[AT.addr(i, kmax)] = temp;
-                    }
-                    rdiag[kmax] = rdiag[j];
-                    wa[kmax] = wa[j];
-                    k = ipvt[j];
-                    ipvt[j] = ipvt[kmax];
-                    ipvt[kmax] = k;
-                }
-            }
-
-            // Compute the Householder transformation to reduce the j-th column of A to a multiple of the j-th unit vector.
-            for (i = j; i < m; i++) {
-                tempvec[i-j] = AT.data[AT.addr(i, j)];
-            }
-            ajnorm = norm(m-j, tempvec);
-            if (ajnorm != 0.0) {
-                if (AT.data[AT.addr(j, j)] < 0.0)
-                    ajnorm = -ajnorm;
-                for (i = j; i < m; i++) {
-                    AT.data[AT.addr(i, j)] /= ajnorm;
-                }
-                AT.data[AT.addr(j, j)] += 1.0;
-
-                // Apply the transformation to the remaining columns and update the norms.
-                jp1 = j + 1;
-                if (n >= jp1) {
-                    for (k = jp1; k < n; k++) {
-                        sum = 0.0;
-                        for (i = j; i < m; i++) {
-                            sum += AT.data[AT.addr(i, j)] * AT.data[AT.addr(i, k)];
-                        }
-                        temp = sum / AT.data[AT.addr(j, j)];
-                        for (i = j; i < m; i++) {
-                            AT.data[AT.addr(i, k)] -= temp * AT.data[AT.addr(i, j)];
-                        }
-
-                        if (pivot && rdiag[k] != 0.0) {
-                            temp = AT.data[AT.addr(j, k)] / rdiag[k];
-                            rdiag[k] *= Math.sqrt(Math.max(0.0, 1.0 - temp * temp));
-
-                            fac = rdiag[k] / wa[k];
-                            if (0.05 * fac * fac <= epsmch) {
-                                for (i = jp1; i < m; i++) {
-                                    tempvec[i-j] = AT.data[AT.addr(i, k)];
-                                }
-
-                                rdiag[k] = norm(m-j, tempvec);
-                                wa[k] = rdiag[k];
-                            }
-                        }
-                    }
-                }
-            }
-
-            rdiag[j] = -ajnorm;
-        }
-
-        return;
     }
 
 
@@ -281,13 +202,14 @@ public class QRDecomposition {
      * @return R
      */
     public Matrix R() {
-        final Matrix R = new Matrix(this.n, this.n);
+        final Matrix R = new Matrix(this.n, this.n, AT.style);
 
-        for (int i=0; i<n; i++) {
-            R.data[R.addr(i, i)] = rdiag[i];
+        for (int i=base; i<n+base; i++) {
+            R.data[R.addr(i, i)] = rdiag[i-base];
         }
-        for (int i=0; i<n; i++) {
-            if (i<m) {
+
+        for (int i=base; i<n+base; i++) {
+            if (i<m+base) {
                 Matrix.copy(AT.columnIterator(i, i+1), R.rowIterator(i, i+1));
             }
         }
@@ -301,18 +223,30 @@ public class QRDecomposition {
      * @return Q
      */
     public Matrix Q() {
-        final Matrix Q = new Matrix(this.m, this.n);
+        final Matrix Q = new Matrix(this.m, this.n, Cells.Style.FORTRAN);
 
-        for (int k=0; k<m; k++) {
-            final Array w = new Array(m);
-            w.data[k] = 1.0;
+        for (int k=1; k<=m; k++) {
+            final Array w = new Array(m, Cells.Style.FORTRAN);
+            w.data[w.addr(k)] = 1.0;
 
-            for (int j=0; j<Math.min(n, m); j++) {
+            for (int j=1; j<=Math.min(n, m); j++) {
                 final double t3 = AT.data[AT.addr(j, j)];
                 if (t3!=0.0) {
-                    final double t = AT.rangeRow(j, j).innerProduct(w.range(j)) / t3;
+                    // final double t = AT.rangeRow(j, j).innerProduct(w.range(j)) / t3;
+
+//                    final Array rowj = AT.rangeRow(j, j);
+//                    final Array wrangej = w.range(j);
+//                    final double t = rowj.innerProduct(wrangej) / t3;
+
+                    final Array colj = AT.rangeCol(j, j);
+                    final Array wrangej = w.range(j);
+                    final double t = colj.innerProduct(wrangej) / t3;
+
+
+
                     for (int i=j; i<m; i++) {
-                        w.data[i] -= AT.data[AT.addr(j, i)] * t;
+                        // w.data[i] -= AT.data[AT.addr(j, i)] * t;
+                        w.data[w.addr(i)] -= AT.data[AT.addr(j, i)] * t;
                     }
                 }
                 Q.data[Q.addr(k, j)] = w.data[j];
@@ -377,38 +311,195 @@ public class QRDecomposition {
     }
 
     /**
+     *
+     *<p>
+     * The qrfac_f77 method uses Householder transformations with column pivoting (optional) to compute a QR factorization of the m
+     * by n matrix A. That is, qrfac_f77 determines an orthogonal matrix Q, a permutation matrix P, and an upper trapezoidal matrix
+     * R with diagonal elements of nonincreasing magnitude, such that AP = QR.
+     *<p>
+     * Translated by Steve Verrill on November 17, 2000 from the FORTRAN MINPACK source produced by Garbow, Hillstrom, and More.
+     * <p>
+     * <b>IMPORTANT:</b> The "_f77" suffixes indicate that these routines use FORTRAN style indexing. For example, you will see
+     * <pre>
+     *     for (i = 1; i &lt;= n; i++)
+     * </pre>
+     * rather than
+     * <pre>
+     *     for (i = 0; i &lt; n; i++)
+     * </pre>
+     * To use the "_f77" routines you will have to employ {@link Matrix#faddr(int, int)} and {@link Array#faddr(int)} address
+     * calculation routines.
+     *
+     * @param m The number of rows of A.
+     * @param n The number of columns of A.
+     * @param a A is an m by n array.
+     *          On input A contains the matrix for which the QR factorization is to be computed.
+     *          On output the strict upper trapezoidal part of A contains the strict upper trapezoidal part of R, and
+     *          the lower trapezoidal part of A contains a factored form of Q.
+     * @param pivot pivot is a logical input variable.
+     *          If pivot is set true, then column pivoting is enforced. If pivot is set false, then no column pivoting is done.
+     * @param ipvt ipvt is an integer output array.
+     *          ipvt defines the permutation matrix P such that A*P = Q*R.
+     *          Column j of P is column ipvt[j] of the identity matrix.
+     *          If pivot is false, ipvt is not referenced.
+     * @param rdiag rdiag is an output array of length n which contains the diagonal elements of R.
+     * @param acnorm acnorm is an output array of length n which contains the norms of the corresponding columns
+     *          of the input matrix A.
+     * @param wa wa is a work array of length n.
+     *
+     * @see Matrix#faddr(int, int)
+     * @see Array#faddr(int)
+     */
+    public void qrfac_f77(
+            final int m,
+            final int n,
+            final Matrix a,
+            final boolean pivot,
+            final int ipvt[],
+            final double rdiag[],
+            final double acnorm[],
+            final double wa[]) {
+
+        final double one = 1.0;
+        final double p05 = .05;
+        final double zero = 0.0;
+
+        int i, j, jp1, k, kmax, minmn;
+        double ajnorm, sum, temp;
+        double fac;
+
+        // Compute the initial column norms and initialize several arrays.
+        for (j = 1; j <= n; j++) {
+            //minpack :: acnorm[j] = Minpack_f77.enorm_f77(m,a[1][j]);
+            acnorm[j] = enorm_f77(m, a.rangeCol(1,j));
+            rdiag[j] = acnorm[j];
+            wa[j] = rdiag[j];
+            if (pivot)
+                ipvt[j] = j;
+        }
+
+        // Reduce A to R with Householder transformations.
+        minmn = Math.min(m, n);
+        for (j = 1; j <= minmn; j++) {
+            if (pivot) {
+                // Bring the column of largest norm into the pivot position.
+                kmax = j;
+                for (k = j; k <= n; k++) {
+                    if (rdiag[k] > rdiag[kmax])
+                        kmax = k;
+                }
+                if (kmax != j) {
+                    for (i = 1; i <= m; i++) {
+                        temp = a.data[a.addr(i,j)];
+                        a.data[a.addr(i,j)] = a.data[a.addr(i,kmax)];
+                        a.data[a.addr(i,kmax)] = temp;
+                    }
+                    rdiag[kmax] = rdiag[j];
+                    wa[kmax] = wa[j];
+                    k = ipvt[j];
+                    ipvt[j] = ipvt[kmax];
+                    ipvt[kmax] = k;
+                }
+            }
+
+            // Compute the Householder transformation to reduce the j-th column of A to a multiple of the j-th unit vector.
+
+            //minpack :: ajnorm = Minpack_f77.enorm_f77(m-j+1,a[j][j]);
+            ajnorm = enorm_f77(m-j+1, a.rangeCol(j, j));
+
+            if (ajnorm != zero) {
+                if (a.data[a.addr(j,j)] < zero)
+                    ajnorm = -ajnorm;
+
+                for (i = j; i <= m; i++) {
+                    a.data[a.addr(i,j)] /= ajnorm;
+                }
+                a.data[a.addr(j,j)] += one;
+
+                // Apply the transformation to the remaining columns
+                // and update the norms.
+                jp1 = j + 1;
+                if (n >= jp1) {
+                    for (k = jp1; k <= n; k++) {
+                        sum = zero;
+                        for (i = j; i <= m; i++) {
+                            sum += a.data[a.addr(i,j)] * a.data[a.addr(i,k)];
+                        }
+                        temp = sum / a.data[a.addr(j,j)];
+                        for (i = j; i <= m; i++) {
+                            a.data[a.addr(i,k)] -= temp * a.data[a.addr(i,j)];
+                        }
+                        if (pivot && rdiag[k] != zero) {
+                            temp = a.data[a.addr(j,k)] / rdiag[k];
+                            rdiag[k] *= Math.sqrt(Math.max(zero, one - temp * temp));
+                            fac = rdiag[k] / wa[k];
+                            if (p05 * fac * fac <= epsmch) {
+                                //minpack :: rdiag[k] = Minpack_f77.enorm_f77(m-j,a[jp1][k]);
+                                rdiag[k] = enorm_f77(m-j, a.rangeCol(jp1, k));
+                                wa[k] = rdiag[k];
+                            }
+                        }
+                    }
+                }
+            }
+            rdiag[j] = -ajnorm;
+        }
+        return;
+    }
+
+    /**
      * This method calculates the Euclidean norm of a vector.
      * <p>
      * Translated by Steve Verrill on November 14, 2000 from the FORTRAN MINPACK source produced by Garbow, Hillstrom, and More.
      * <p>
+     * <b>IMPORTANT:</b> The "_f77" suffixes indicate that these routines use FORTRAN style indexing. For example, you will see
+     * <pre>
+     *     for (i = 1; i &lt;= n; i++)
+     * </pre>
      *
-     *@param n The length of the vector, x.
-     *@param x The vector whose Euclidean norm is to be calculated.
+     * rather than
      *
+     * <pre>
+     *     for (i = 0; i &lt; n; i++)
+     * </pre>
+     * To use the "_f77" routines you will have to employ {@link Matrix#faddr(int, int)} and {@link Array#faddr(int)} address
+     * calculation routines.
+     *
+     * @param n The length of the vector, x.
+     * @param x The vector whose Euclidean norm is to be calculated.
+     *
+     * @see Matrix#faddr(int, int)
+     * @see Array#faddr(int)
      */
-    private double norm(final int n, final double x[]) {
+    private double enorm_f77(final int n, final Array x) {
+        final double agiant, floatn;
+        final double enorm;
+
+        double rdwarf, rgiant;
+        double s1, s2, s3, xabs, x1max, x3max;
         int i;
-        double agiant, floatn, rdwarf, rgiant, s1, s2, s3, xabs, x1max, x3max;
-        double enorm;
+
+        final double one = 1.0;
+        final double zero = 0.0;
 
         rdwarf = 3.834e-20;
         rgiant = 1.304e+19;
 
-        s1 = 0.0;
-        s2 = 0.0;
-        s3 = 0.0;
-        x1max = 0.0;
-        x3max = 0.0;
+        s1 = zero;
+        s2 = zero;
+        s3 = zero;
+        x1max = zero;
+        x3max = zero;
         floatn = n;
         agiant = rgiant / floatn;
 
-        for (i = 0; i < n; i++) {
-            xabs = Math.abs(x[i]);
+        for (i = 1; i <= n; i++) {
+            xabs = Math.abs(x.data[x.addr(i)]);
             if (xabs <= rdwarf || xabs >= agiant) {
                 if (xabs > rdwarf) {
                     // Sum for large components.
                     if (xabs > x1max) {
-                        s1 = 1.0 + s1 * (x1max / xabs) * (x1max / xabs);
+                        s1 = one + s1 * (x1max / xabs) * (x1max / xabs);
                         x1max = xabs;
                     } else {
                         s1 += (xabs / x1max) * (xabs / x1max);
@@ -416,10 +507,10 @@ public class QRDecomposition {
                 } else {
                     // Sum for small components.
                     if (xabs > x3max) {
-                        s3 = 1.0 + s3 * (x3max / xabs) * (x3max / xabs);
+                        s3 = one + s3 * (x3max / xabs) * (x3max / xabs);
                         x3max = xabs;
                     } else {
-                        if (xabs != 0.0)
+                        if (xabs != zero)
                             s3 += (xabs / x3max) * (xabs / x3max);
                     }
                 }
@@ -430,12 +521,12 @@ public class QRDecomposition {
         }
 
         // Calculation of norm.
-        if (s1 != 0.0) {
+        if (s1 != zero) {
             enorm = x1max * Math.sqrt(s1 + (s2 / x1max) / x1max);
         } else {
-            if (s2 != 0.0) {
+            if (s2 != zero) {
                 if (s2 >= x3max) {
-                    enorm = Math.sqrt(s2 * (1.0 + (x3max / s2) * (x3max * s3)));
+                    enorm = Math.sqrt(s2 * (one + (x3max / s2) * (x3max * s3)));
                 } else {
                     enorm = Math.sqrt(x3max * ((s2 / x3max) + (x3max * s3)));
                 }

@@ -162,7 +162,7 @@ public class SymmetricSchurDecomposition {
         // sort (eigenvalues, eigenvectors)
         final SortedMap<Double, Array> map = new TreeMap<Double, Array>();
         for (int col = 0; col < size; col++) {
-            final Array eigenVector = A.getCol(col);
+            final Array eigenVector = A.rangeCol(col);
             map.put(diag.data[diag.addr(col)], eigenVector);
         }
 
