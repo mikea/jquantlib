@@ -55,7 +55,7 @@ public class LinearInterpolationTest {
 	public static void setUpLinearInterpolation(){
 		QL.info("\n\n::::: Testing use of interpolations as functors... :::::");
 
-		interpolation = new Linear().interpolate(x, y);
+		interpolation = new Linear().interpolate(x.constIterator(), y.constIterator());
 		interpolation.update();
 	    length = x2.size();
 	    y2 = new double[length];

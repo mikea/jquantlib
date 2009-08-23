@@ -44,7 +44,7 @@ package org.jquantlib.math.interpolations;
 import static org.jquantlib.math.Closeness.isClose;
 
 import org.jquantlib.QL;
-import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.lang.iterators.ConstIterator;
 
 
 
@@ -73,12 +73,12 @@ public abstract class AbstractInterpolation implements Interpolation {
     /**
      * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i>
      */
-    protected Array vx;
+    protected ConstIterator vx;
 
     /**
      * @note Derived classes are responsible for initializing <i>vx</i> and <i>vy</i>
      */
-    protected Array vy;
+    protected ConstIterator vy;
 
 
     //
@@ -134,13 +134,13 @@ public abstract class AbstractInterpolation implements Interpolation {
     }
 
     @Override
-    public final Array xValues() {
-        return vx.clone();
+    public final ConstIterator xValues() {
+        return vx.iterator();
     }
 
     @Override
-    public final Array yValues() {
-        return vy.clone();
+    public final ConstIterator yValues() {
+        return vy.iterator();
     }
 
     @Override

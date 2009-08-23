@@ -25,7 +25,8 @@ public class NaturalMonotonicCubicSplineInterpolationTest extends InterpolationT
 	    double interpolated;
 
 	    // Natural spline
-	    final CubicSplineInterpolation interpolation = new NaturalMonotonicCubicSpline().interpolate(RPN15A_x, RPN15A_y);
+	    final CubicSplineInterpolation interpolation = new NaturalMonotonicCubicSpline().interpolate(
+	            RPN15A_x.constIterator(), RPN15A_y.constIterator());
 
 	    checkValues("MC Natural spline", interpolation, RPN15A_x, RPN15A_y);
 

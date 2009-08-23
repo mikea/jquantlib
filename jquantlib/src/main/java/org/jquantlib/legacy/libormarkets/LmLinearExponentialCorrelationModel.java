@@ -29,6 +29,10 @@ public class LmLinearExponentialCorrelationModel extends LmCorrelationModel {
 
     public LmLinearExponentialCorrelationModel(final int size, final double rho, final double beta, int factors) {
         super(size, 2);
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         corrMatrix_ = new Matrix(size, size);
         factors = factors != 0 ? 0 : size;
         arguments_.set(0, new ConstantParameter(rho, new BoundaryConstraint(-1.0, 1.0)));

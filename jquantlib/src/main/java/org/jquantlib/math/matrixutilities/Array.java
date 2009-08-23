@@ -152,17 +152,18 @@ public class Array extends Cells {
         return Arrays.equals(data, another.data);
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer();
-
-        sb.append("[rows=").append(rows).append(" cols=").append(cols).append(" style=").append(style.toString()).append('\n');
-        sb.append(' ').append(data[0]);
-        for (int col = 1; col < this.cols; col++)
-            sb.append(", ").append(data[col]);
-        sb.append(" ]").append('\n');
-        return sb.toString();
-    }
+//XXX
+//    @Override
+//    public String toString() {
+//        final StringBuffer sb = new StringBuffer();
+//
+//        sb.append("[rows=").append(rows).append(" cols=").append(cols).append(" style=").append(style.toString()).append('\n');
+//        sb.append(' ').append(data[0]);
+//        for (int col = 1; col < this.cols; col++)
+//            sb.append(", ").append(data[col]);
+//        sb.append(" ]").append('\n');
+//        return sb.toString();
+//    }
 
 
     //
@@ -237,33 +238,6 @@ public class Array extends Cells {
 
     public double last() {
         return data[size-1];
-    }
-
-    /**
-     * Returns an Array containing a copy of region [pos0:)
-     *
-     * @param pos0 initial index, inclusive
-     * @return A( [pos0:pos1) )
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Array range(final int pos) {
-        return range(pos, size+style.base);
-    }
-
-    /**
-     * Returns an Array containing a copy of region [pos0:pos1)
-     *
-     * @param pos0 initial index, inclusive
-     * @param pos1 final index, exclusive
-     * @return A( [pos0:pos1) )
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Array range(final int pos0, final int pos1) {
-        QL.require(pos0 >= style.base && pos1 > pos0 && pos1 <= size+style.base,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        final int ncols = pos1-pos0;
-        final Array result = new Array(ncols, this.style);
-        System.arraycopy(data, addr(pos0), result.data, 0, ncols);
-        return result;
     }
 
     /**
@@ -565,7 +539,7 @@ public class Array extends Cells {
     }
 
 
-    public Array divAssign(final Matrix another) {
+    public Array divAssign(final Array another) {
         QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
             data[i] /= another.data[i];
@@ -822,30 +796,91 @@ public class Array extends Cells {
 
 
 
+
+
+
+
+
     //
-    // protected methods
+    //  Element iterators
+    //
+    //  method              this    right    result
+    //  ------------------- ------- -------- ------
+    //  iterator            Array            RowIterator
+    //  constIterator       Array            ConstRowIterator
     //
 
 
     /**
-     * This method returns the address of the first element of a given row or column
-     * <p>
-     * This method is used internally and is provided for performance reasons.
+     * Creates a RowIterator for an entire row <code>row</code>
+     *
+     * @param row is the desired row
+     * @return an Array obtained from row A( row , [:] )
+     * @throws IllegalArgumentException when indices are out of range
      */
-    protected int addr(final int pos) {
-        return pos - style.base;
+    public RowIterator iterator() {
+        return new RowIterator(style.base);
     }
 
-
-    //
-    // private methods
-    //
+    /**
+     * Creates a RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @return an Array obtained from row A( row , [col0:) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public RowIterator iterator(final int col0) {
+        return new RowIterator(style.base, col0);
+    }
 
     /**
-     * Calculates the Java index style address (zero-based) of a given cell identified by <i>(row, col)</i>
+     * Creates a RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @param col1 is the initial column, exclusive
+     * @return an Array obtained from row A( row , [col0:col1) )
+     * @throws IllegalArgumentException when indices are out of range
      */
-    private int addrJ(final int pos) {
-        return pos;
+    public RowIterator iterator(final int col0, final int col1) {
+        return new RowIterator(style.base, col0, col1);
+    }
+
+    /**
+     * Creates a constant, non-modifiable RowIterator for an entire row
+     *
+     * @param row is the desired row
+     * @return an Array obtained from row A( row , [;] )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstRowIterator constIterator() {
+        return new ConstRowIterator(style.base);
+    }
+
+    /**
+     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @return an Array obtained from row A( row , [col0:) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstRowIterator constIterator(final int col0) {
+        return new ConstRowIterator(style.base, col0);
+    }
+
+    /**
+     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @param col1 is the initial column, exclusive
+     * @return an Array obtained from row A( row , [col0:col1) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstRowIterator constIterator(final int col0, final int col1) {
+        return new ConstRowIterator(style.base, col0, col1);
     }
 
 }

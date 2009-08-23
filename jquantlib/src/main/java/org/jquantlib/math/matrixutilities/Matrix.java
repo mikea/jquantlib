@@ -41,8 +41,6 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
@@ -256,25 +254,6 @@ public class Matrix extends Cells {
         final Matrix another = (Matrix) o;
         if (rows != another.rows || cols != another.cols) return false;
         return Arrays.equals(data, another.data);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer();
-        sb.append("[rows=").append(rows).append(" cols=").append(cols).append(" style=").append(style.toString()).append('\n');
-        for (int row = 0; row < rows; row++) {
-            int addrJ = addrJ(row, 0);
-            sb.append(" [ ");
-            sb.append(data[addrJ]);
-            for (int col = 1; col < cols; col++) {
-                addrJ++;
-                sb.append(", ");
-                sb.append(data[addrJ]);
-            }
-            sb.append(" ]\n");
-        }
-        sb.append("]\n");
-        return sb.toString();
     }
 
 
@@ -705,169 +684,6 @@ public class Matrix extends Cells {
 
 
     //
-    //  Element iterators
-    //
-    //  method              this    right    result
-    //  ------------------- ------- -------- ------
-    //  rowIterator         Matrix           RowIterator
-    //  constRowIterator    Matrix           ConstRowIterator
-    //  columnIterator      Matrix           ColumnIterator
-    //  constColumnIterator Matrix           ConstColumnIterator
-    //
-
-
-    /**
-     * Creates a RowIterator for an entire row <code>row</code>
-     *
-     * @param row is the desired row
-     * @return an Array obtained from row A( row , [:] )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public RowIterator rowIterator(final int row) {
-        return new RowIterator(row);
-    }
-
-    /**
-     * Creates a RowIterator for row <code>row</code>
-     *
-     * @param row is the desired row
-     * @param col0 is the initial column, inclusive
-     * @return an Array obtained from row A( row , [col0:) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public RowIterator rowIterator(final int row, final int col0) {
-        return new RowIterator(row, col0);
-    }
-
-    /**
-     * Creates a RowIterator for row <code>row</code>
-     *
-     * @param row is the desired row
-     * @param col0 is the initial column, inclusive
-     * @param col1 is the initial column, exclusive
-     * @return an Array obtained from row A( row , [col0:col1) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public RowIterator rowIterator(final int row, final int col0, final int col1) {
-        return new RowIterator(row, col0, col1);
-    }
-
-    /**
-     * Creates a constant, non-modifiable RowIterator for an entire row
-     *
-     * @param row is the desired row
-     * @return an Array obtained from row A( row , [;] )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstRowIterator constRowIterator(final int row) {
-        return new ConstRowIterator(row);
-    }
-
-    /**
-     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
-     *
-     * @param row is the desired row
-     * @param col0 is the initial column, inclusive
-     * @return an Array obtained from row A( row , [col0:) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstRowIterator constRowIterator(final int row, final int offset) {
-        return new ConstRowIterator(row, offset);
-    }
-
-    /**
-     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
-     *
-     * @param row is the desired row
-     * @param col0 is the initial column, inclusive
-     * @param col1 is the initial column, exclusive
-     * @return an Array obtained from row A( row , [col0:col1) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstRowIterator constRowIterator(final int row, final int col0, final int col1) {
-        return new ConstRowIterator(row, col0, col1);
-    }
-
-    /**
-     * Creates a ColumnIterator for an entire column <code>col</code>
-     *
-     * @param col is the desired column
-     * @return an Array obtained from row A( [;] , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ColumnIterator columnIterator(final int col) {
-        return new ColumnIterator(col);
-    }
-
-    /**
-     * Creates a ColumnIterator for column <code>col</code>
-     *
-     * @param col is the desired column
-     * @param row0 is the initial row, inclusive
-     * @return an Array obtained from row A( [row0:) , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ColumnIterator columnIterator(final int col, final int row0) {
-        return new ColumnIterator(col, row0);
-    }
-
-    /**
-     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
-     *
-     * @param col is the desired column
-     * @param row0 is the initial row, inclusive
-     * @param row1 is the final row, exclusive
-     * @return an Array obtained from row A( [row0:row1) , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ColumnIterator columnIterator(final int col, final int row0, final int row1) {
-        return new ColumnIterator(col, row0, row1);
-    }
-
-    /**
-     * Creates a constant, non-modifiable ColumnIterator for the entire column <code>col</code>
-     *
-     * @param col is the desired column
-     * @return an Array obtained from row A( [:] , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstColumnIterator constColumnIterator(final int col) {
-        return new ConstColumnIterator(col);
-    }
-
-    /**
-     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
-     *
-     * @param col is the desired column
-     * @param row0 is the initial row, inclusive
-     * @return an Array obtained from row A( [row0:) , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstColumnIterator constColumnIterator(final int col, final int row0) {
-        return new ConstColumnIterator(col, row0);
-    }
-
-
-    /**
-     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
-     *
-     * @param col is the desired column
-     * @param row0 is the initial row, inclusive
-     * @param row1 is the final row, exclusive
-     * @return an Array obtained from row A( [row0:row1) , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstColumnIterator constColumnIterator(final int col, final int row0, final int row1) {
-        return new ConstColumnIterator(col, row0, row1);
-    }
-
-
-
-
-
-
-
-    //
     //	Miscellaneous
     //
     //	method       this    right    result
@@ -1108,559 +924,266 @@ public class Matrix extends Cells {
         return result;
     }
 
-    /**
-     * Creates an Array made of elements of a row of <code>this</code> Matrix.
-     *
-     * @param row is a row index
-     * @return A(row, [:] )
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Array rangeRow(final int row) {
-        return rangeRow(row, style.base);
-    }
+//XXX
+//    /**
+//     * Creates an Array made of elements of a row of <code>this</code> Matrix.
+//     *
+//     * @param row is a row index
+//     * @return A(row, [:] )
+//     * @exception IllegalArgumentException when indices are out of range
+//     */
+//    public Array rangeRow(final int row) {
+//        return rangeRow(row, style.base);
+//    }
+//
+//    /**
+//     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
+//     *
+//     * @param row is a row index
+//     * @param offset0 Initial column index, inclusive
+//     * @return A(row, [col0:] )
+//     * @exception IllegalArgumentException when indices are out of range
+//     */
+//    public Array rangeRow(final int row, final int col0) {
+//        return rangeRow(row, col0, cols+style.base);
+//    }
+//
+//    /**
+//     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
+//     *
+//     * @param row row index
+//     * @param col0 Initial column index, inclusive
+//     * @param col1 Final column index, exclusive
+//     * @return A(row, [col0:col1) ), preserving the {@link Style} of <code>this</code> Matrix
+//     * @exception IllegalArgumentException when indices are out of range
+//     */
+//    public Array rangeRow(final int row, final int col0, final int col1) {
+//        QL.require(row  >= style.base && row < rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+//        QL.require(col0 >= style.base && col1 > col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+//
+//        final int ncols = col1-col0;
+//        final Array result = new Array(ncols, style);
+//        System.arraycopy(data, addr(row, col0), result.data, 0, ncols);
+//        return result;
+//    }
+//
+//    /**
+//     * Creates an Array made of elements of a column of <code>this</code> Matrix.
+//     *
+//     * @param col column index
+//     * @return A([:], col)
+//     * @exception IllegalArgumentException when indices are out of range
+//     */
+//    public Array rangeCol(final int col) {
+//        return rangeCol(col, style.base);
+//    }
+//
+//    /**
+//     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
+//     *
+//     * @param row row index
+//     * @param row0 Initial column index, inclusive
+//     * @return A([row0:), col)
+//     * @exception IllegalArgumentException when indices are out of range
+//     */
+//    public Array rangeCol(final int col, final int row0) {
+//        return rangeCol(col, row0, rows+style.base);
+//    }
+//
+//    /**
+//     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
+//     *
+//     * @param row row index
+//     * @param row0 Initial column index, inclusive
+//     * @param row1 Final column index, exclusive
+//     * @return A([row0:row1), col)
+//     * @exception IllegalArgumentException when indices are out of range
+//     */
+//    public Array rangeCol(final int col, final int row0, final int row1) {
+//        QL.require(col  >= style.base && col  < cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+//        QL.require(row0 >= style.base && row1 > row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+//
+//        final int nrows = row1-row0;
+//        final Array result = new Array(nrows, style);
+//
+//        int addr = addr(row0, col);
+//        for (int i = 0; i < nrows; i++) {
+//            result.data[i] = data[addr];
+//            addr += cols;
+//        }
+//        return result;
+//    }
 
-    /**
-     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
-     *
-     * @param row is a row index
-     * @param offset0 Initial column index, inclusive
-     * @return A(row, [col0:] )
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Array rangeRow(final int row, final int col0) {
-        return rangeRow(row, col0, cols+style.base);
-    }
 
-    /**
-     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
-     *
-     * @param row row index
-     * @param col0 Initial column index, inclusive
-     * @param col1 Final column index, exclusive
-     * @return A(row, [col0:col1) ), preserving the {@link Style} of <code>this</code> Matrix
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Array rangeRow(final int row, final int col0, final int col1) {
-        QL.require(row  >= style.base && row < rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        QL.require(col0 >= style.base && col1 > col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
 
-        final int ncols = col1-col0;
-        final Array result = new Array(ncols, style);
-        System.arraycopy(data, addr(row, col0), result.data, 0, ncols);
-        return result;
-    }
 
-    /**
-     * Creates an Array made of elements of a column of <code>this</code> Matrix.
-     *
-     * @param col column index
-     * @return A([:], col)
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Array rangeCol(final int col) {
-        return rangeCol(col, style.base);
-    }
 
-    /**
-     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
-     *
-     * @param row row index
-     * @param row0 Initial column index, inclusive
-     * @return A([row0:), col)
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Array rangeCol(final int col, final int row0) {
-        return rangeCol(col, row0, rows+style.base);
-    }
 
-    /**
-     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
-     *
-     * @param row row index
-     * @param row0 Initial column index, inclusive
-     * @param row1 Final column index, exclusive
-     * @return A([row0:row1), col)
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Array rangeCol(final int col, final int row0, final int row1) {
-        QL.require(col  >= style.base && col  < cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        QL.require(row0 >= style.base && row1 > row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-
-        final int nrows = row1-row0;
-        final Array result = new Array(nrows, style);
-
-        int addr = addr(row0, col);
-        for (int i = 0; i < nrows; i++) {
-            result.data[i] = data[addr];
-            addr += cols;
-        }
-        return result;
-    }
-
-
-    //
-    // public inner classes
-    //
-
-    /**
-     * This class implements a {@link ListIterator} over elements of a row of a {@link Matrix}
-     * <p>
-     * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
-     *
-     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
-     *
-     * @author Richard Gomes
-     */
-    public class RowIterator implements ListIterator<Double>, DoubleListIterator {
-
-        private final int row;
-        private final int col0;
-        private final int col1;
-
-        private int cursor;
-
-        /**
-         * Creates a RowIterator for the entire row <code>row</code>
-         *
-         * @param row is the desired row
-         * @return an Array obtained from row A( row , [:] )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public RowIterator(final int row) {
-            this(row, style.base, cols+style.base);
-        }
-
-        /**
-         * Creates a RowIterator for row <code>row</code>
-         *
-         * @param row is the desired row
-         * @param col0 is the initial column, inclusive
-         * @return an Array obtained from row A( row , [col0:] )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public RowIterator(final int row, final int col0) {
-            this(row, col0, cols+style.base);
-        }
-
-        /**
-         * Creates a RowIterator for row <code>row</code>
-         *
-         * @param row is the desired row
-         * @param col0 is the initial column, inclusive
-         * @param col1 is the initial column, exclusive
-         * @return an Array obtained from row A( row , [col0:col1) )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public RowIterator(final int row, final int col0, final int col1) {
-            QL.require(row>=style.base && row<rows+style.base && col0 >=style.base && col1>=col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-            this.row = row;
-            this.col0 = col0;
-            this.col1 = col1;
-            this.cursor = col0;
-        }
-
-
-        //
-        // implements ListIterator
-        //
-
-        @Override
-        public void add(final Double e) {
-            add(e.doubleValue());
-        }
-
-        @Override
-        public boolean hasNext() {
-            return cursor < col1;
-        }
-
-        @Override
-        public boolean hasPrevious() {
-            return cursor > col0;
-        }
-
-        @Override
-        public int nextIndex() {
-            return cursor;
-        }
-
-        @Override
-        public int previousIndex() {
-            return cursor-1;
-        }
-
-        @Override
-        public Double next() {
-            return nextDouble();
-        }
-
-        @Override
-        public Double previous() {
-            return previousDouble();
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void set(final Double e) {
-            set(e.doubleValue());
-        }
-
-
-        //
-        // implements DoubleListIterator
-        //
-
-        @Override
-        public void add(final double e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void forward() {
-            if (cursor < col1) {
-                cursor++;
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-        @Override
-        public void backward() {
-            if (cursor >= col0) {
-                --cursor;
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-        @Override
-        public double nextDouble() {
-            if (cursor < col1) {
-                return data[addr(row, cursor++)];
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-        @Override
-        public double previousDouble() {
-            if (cursor > col0) {
-                return data[addr(row, --cursor)];
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-        @Override
-        public void set(final double e) {
-            if (cursor >=col0 && cursor < col1) {
-                data[addr(row, cursor)] = e;
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-    }
-
-
-    /**
-     * This class implements a {@link ListIterator} over elements of a row of a {@link Matrix}
-     * <p>
-     * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
-     *
-     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
-     *
-     * @author Richard Gomes
-     */
-    public class ConstRowIterator extends RowIterator {
-
-        /**
-         * Creates a constant, non-modifiable RowIterator for row <code>row</code>
-         *
-         * @param row is the desired row
-         * @return an Array obtained from row A( row , [:] )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public ConstRowIterator(final int row) {
-            super(row);
-        }
-
-        /**
-         * Creates a constant, non-modifiable RowIterator for row <code>row</code>
-         *
-         * @param row is the desired row
-         * @param col0 is the initial column, inclusive
-         * @return an Array obtained from row A( row , [col0:) )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public ConstRowIterator(final int row, final int col0) {
-            super(row, col0);
-        }
-
-        /**
-         * Creates a constant, non-modifiable RowIterator for row <code>row</code>
-         *
-         * @param row is the desired row
-         * @param col0 is the initial column, inclusive
-         * @param col1 is the initial column, exclusive
-         * @return an Array obtained from row A( row , [col0:col1) )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public ConstRowIterator(final int row, final int col0, final int col1) {
-            super(row, col0, col1);
-        }
-
-
-        @Override
-        public void set(final double e) {
-            throw new UnsupportedOperationException();
-        }
-
-    }
-
-
-    /**
-     * This class implements a {@link ListIterator} over elements of a column of a {@link Matrix}
-     * <p>
-     * This class implements {@link ListIterator} and {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
-     *
-     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
-     *
-     * @author Richard Gomes
-     */
-    public class ColumnIterator implements ListIterator<Double>, DoubleListIterator {
-
-        private final int row0;
-        private final int row1;
-        private final int col;
-
-        private int cursor;
-
-        /**
-         * Creates a ColumnIterator for the entire column <code>col</code>
-         *
-         * @param col is the desired column
-         * @return an Array obtained from row A( [:] , col )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public ColumnIterator(final int col) {
-            this(col, style.base, cols+style.base);
-        }
-
-        /**
-         * Creates a ColumnIterator for column <code>col</code>
-         *
-         * @param col is the desired column
-         * @param row0 is the initial row, inclusive
-         * @return an Array obtained from row A( [row0:] , col )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public ColumnIterator(final int col, final int row0) {
-            this(col, row0, cols+style.base);
-        }
-
-        /**
-         * Creates a ColumnIterator for column <code>col</code>
-         *
-         * @param col is the desired column
-         * @param row0 is the initial row, inclusive
-         * @param row1 is the final row, exclusive
-         * @return an Array obtained from row A( [row0:row1) , col )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public ColumnIterator(final int col, final int row0, final int row1) {
-            QL.require(col>=style.base && col<cols+style.base && row0 >=style.base && row1>=row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-            this.col = col;
-            this.row0 = row0;
-            this.row1 = row1;
-            this.cursor = row0;
-        }
-
-
-        //
-        // implements ListIterator
-        //
-
-        @Override
-        public void add(final Double e) {
-            add(e.doubleValue());
-        }
-
-        @Override
-        public boolean hasNext() {
-            return cursor < row1;
-        }
-
-        @Override
-        public boolean hasPrevious() {
-            return cursor > row0;
-        }
-
-        @Override
-        public int nextIndex() {
-            return cursor;
-        }
-
-        @Override
-        public int previousIndex() {
-            return cursor-1;
-        }
-
-        @Override
-        public Double next() {
-            return nextDouble();
-        }
-
-        @Override
-        public Double previous() {
-            return previousDouble();
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void set(final Double e) {
-            set(e.doubleValue());
-        }
-
-
-        //
-        // implements DoubleListIterator
-        //
-
-        @Override
-        public void add(final double e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void forward() {
-            if (cursor < row1-1) {
-                cursor++;
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-        @Override
-        public void backward() {
-            if (cursor > row0) {
-                --cursor;
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-        @Override
-        public double nextDouble() {
-            if (cursor < row1) {
-                return data[addr(cursor++, col)];
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-        @Override
-        public double previousDouble() {
-            if (cursor > row0) {
-                return data[addr(--cursor, col)];
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-        @Override
-        public void set(final double e) {
-            if (cursor >=row0 && cursor < row1) {
-                data[addr(cursor, col)] = e;
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-    }
-
-
-    /**
-     * This class implements a {@link ListIterator} over elements of a row of a {@link Matrix}
-     * <p>
-     * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
-     *
-     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
-     *
-     * @author Richard Gomes
-     */
-    public class ConstColumnIterator extends ColumnIterator {
-
-        /**
-         * Creates a constant, non-modifiable RowIterator for an entire column <code>col</code>
-         *
-         * @param col is the desired col
-         */
-        public ConstColumnIterator(final int col) {
-            super(col);
-        }
-
-        /**
-         * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
-         *
-         * @param col is the desired column
-         * @param row0 is the initial row, inclusive
-         * @return an Array obtained from row A( [row0:row1) , col )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public ConstColumnIterator(final int col, final int row0) {
-            super(col, row0);
-        }
-
-        /**
-         * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
-         *
-         * @param col is the desired column
-         * @param row0 is the initial row, inclusive
-         * @param row1 is the final row, exclusive
-         * @return an Array obtained from row A( [row0:row1) , col )
-         * @throws IllegalArgumentException when indices are out of range
-         */
-        public ConstColumnIterator(final int col, final int row0, final int row1) {
-            super(col, row0, row1);
-        }
-
-
-        @Override
-        public void set(final double e) {
-            throw new UnsupportedOperationException();
-        }
-
-    }
 
 
 
 
     //
-    // protected methods
+    //  Element iterators
+    //
+    //  method              this    right    result
+    //  ------------------- ------- -------- ------
+    //  rowIterator         Matrix           RowIterator
+    //  constRowIterator    Matrix           ConstRowIterator
+    //  columnIterator      Matrix           ColumnIterator
+    //  constColumnIterator Matrix           ConstColumnIterator
     //
 
+
     /**
-     * Calculates the address of a given cell identified by <i>(row, col)</i>
+     * Creates a RowIterator for an entire row <code>row</code>
+     *
+     * @param row is the desired row
+     * @return an Array obtained from row A( row , [:] )
+     * @throws IllegalArgumentException when indices are out of range
      */
-    protected int addr(final int row, final int col) {
-        return (row-style.base)*cols + (col-style.base);
+    public RowIterator rowIterator(final int row) {
+        return new RowIterator(row);
     }
 
     /**
-     * Calculates the Java index style address (zero-based) of a given cell identified by <i>(row, col)</i>
+     * Creates a RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @return an Array obtained from row A( row , [col0:) )
+     * @throws IllegalArgumentException when indices are out of range
      */
-    protected int addrJ(final int row, final int col) {
-        return row*cols+col;
+    public RowIterator rowIterator(final int row, final int col0) {
+        return new RowIterator(row, col0);
     }
+
+    /**
+     * Creates a RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @param col1 is the initial column, exclusive
+     * @return an Array obtained from row A( row , [col0:col1) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public RowIterator rowIterator(final int row, final int col0, final int col1) {
+        return new RowIterator(row, col0, col1);
+    }
+
+    /**
+     * Creates a constant, non-modifiable RowIterator for an entire row
+     *
+     * @param row is the desired row
+     * @return an Array obtained from row A( row , [;] )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstRowIterator constRowIterator(final int row) {
+        return new ConstRowIterator(row);
+    }
+
+    /**
+     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @return an Array obtained from row A( row , [col0:) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstRowIterator constRowIterator(final int row, final int col0) {
+        return new ConstRowIterator(row, col0);
+    }
+
+    /**
+     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
+     *
+     * @param row is the desired row
+     * @param col0 is the initial column, inclusive
+     * @param col1 is the initial column, exclusive
+     * @return an Array obtained from row A( row , [col0:col1) )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstRowIterator constRowIterator(final int row, final int col0, final int col1) {
+        return new ConstRowIterator(row, col0, col1);
+    }
+
+    /**
+     * Creates a ColumnIterator for an entire column <code>col</code>
+     *
+     * @param col is the desired column
+     * @return an Array obtained from row A( [;] , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ColumnIterator columnIterator(final int col) {
+        return new ColumnIterator(col);
+    }
+
+    /**
+     * Creates a ColumnIterator for column <code>col</code>
+     *
+     * @param col is the desired column
+     * @param row0 is the initial row, inclusive
+     * @return an Array obtained from row A( [row0:) , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ColumnIterator columnIterator(final int col, final int row0) {
+        return new ColumnIterator(col, row0);
+    }
+
+    /**
+     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
+     *
+     * @param col is the desired column
+     * @param row0 is the initial row, inclusive
+     * @param row1 is the final row, exclusive
+     * @return an Array obtained from row A( [row0:row1) , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ColumnIterator columnIterator(final int col, final int row0, final int row1) {
+        return new ColumnIterator(col, row0, row1);
+    }
+
+    /**
+     * Creates a constant, non-modifiable ColumnIterator for the entire column <code>col</code>
+     *
+     * @param col is the desired column
+     * @return an Array obtained from row A( [:] , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstColumnIterator constColumnIterator(final int col) {
+        return new ConstColumnIterator(col);
+    }
+
+    /**
+     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
+     *
+     * @param col is the desired column
+     * @param row0 is the initial row, inclusive
+     * @return an Array obtained from row A( [row0:) , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstColumnIterator constColumnIterator(final int col, final int row0) {
+        return new ConstColumnIterator(col, row0);
+    }
+
+
+    /**
+     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
+     *
+     * @param col is the desired column
+     * @param row0 is the initial row, inclusive
+     * @param row1 is the final row, exclusive
+     * @return an Array obtained from row A( [row0:row1) , col )
+     * @throws IllegalArgumentException when indices are out of range
+     */
+    public ConstColumnIterator constColumnIterator(final int col, final int row0, final int row1) {
+        return new ConstColumnIterator(col, row0, row1);
+    }
+
+
+
+
+
 
 
     //

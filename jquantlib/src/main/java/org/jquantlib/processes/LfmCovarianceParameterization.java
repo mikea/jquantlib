@@ -33,6 +33,9 @@ public abstract class LfmCovarianceParameterization {
     private final int factors_;
 
     public LfmCovarianceParameterization(final int size, final int factors) {
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.size_ = size;
         this.factors_ = factors;
     }
@@ -95,11 +98,14 @@ public abstract class LfmCovarianceParameterization {
             this.param_ = param;
         }
 
+        // TODO: review iterators
         public double op(final double t) {
             final Matrix m = param_.diffusion(t);
-            final Array iRow = m.rangeRow(i_);
-            final Array jRow = m.rangeRow(i_);
-            return iRow.innerProduct(jRow);
+//XXX
+//            final Array iRow = m.constRowIterator(i_);
+//            final Array jRow = m.constRowIterator(j_);
+//            return iRow.innerProduct(jRow);
+            return m.constRowIterator(i_).innerProduct(m.constRowIterator(j_));
         }
     }
 

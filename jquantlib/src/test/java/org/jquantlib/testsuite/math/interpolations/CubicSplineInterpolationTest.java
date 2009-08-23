@@ -93,7 +93,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		    		CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 		    		0.0,
 		    		false)
-		    		.interpolate(x, y);
+		    		.interpolate(x.constIterator(), y.constIterator());
 
 	        interpolation.update();
 	        //TODO: how to use the integral.integrate method which is the protected method?
@@ -110,7 +110,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
                     0.0,
                     CubicSplineInterpolation.BoundaryCondition.NotAKnot,
                     0.0)
-                    .interpolate(x, y);
+                    .interpolate(x.constIterator(), y.constIterator());
 	        interpolation.update();
 	        result = Math.sqrt(integral.evaluate(interpolation, -1.7, 1.9));
 	        result /= scaleFactor;
@@ -145,7 +145,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		    		CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 		    		0.0,
 		    		false)
-		    		.interpolate(x, y);
+		    		.interpolate(x.constIterator(), y.constIterator());
 
 	        checkValues("Not-a-knot spline", interpolation, x, y);
 	        checkNotAKnotCondition("Not-a-knot spline", interpolation);
@@ -180,7 +180,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 				CubicSplineInterpolation.BoundaryCondition.FirstDerivative,
 				0.0,
 				false)
-		.interpolate(RPN15A_x, RPN15A_y);
+		.interpolate(RPN15A_x.constIterator(), RPN15A_y.constIterator());
 
 		checkValues("Clamped spline", interpolation, RPN15A_x, RPN15A_y);
 		check1stDerivativeValue("Clamped spline", interpolation, RPN15A_x.first(), 0.0);
@@ -214,7 +214,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 				CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 				0.0,
 				false)
-		.interpolate(RPN15A_x, RPN15A_y);
+		.interpolate(RPN15A_x.constIterator(), RPN15A_y.constIterator());
 
 		checkValues("Not-a-knot spline", interpolation, RPN15A_x, RPN15A_y);
 		checkNotAKnotCondition("Not-a-knot spline", interpolation);
@@ -238,7 +238,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
 				generic_natural_y2.last(),
 				false)
-				.interpolate(generic_x, generic_y);
+				.interpolate(generic_x.constIterator(), generic_y.constIterator());
 
 		checkValues("Natural spline", interpolation, generic_x, generic_y);
 		final int n=generic_x.size();
@@ -265,7 +265,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 				CubicSplineInterpolation.BoundaryCondition.FirstDerivative,
 				y1b,
 				false)
-				.interpolate(generic_x, generic_y);
+				.interpolate(generic_x.constIterator(), generic_y.constIterator());
 
 		checkValues("Clamped spline", interpolation, generic_x, generic_y);
 		check1stDerivativeValue("Clamped spline", interpolation, generic_x.first(),0.0);
@@ -282,7 +282,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 				CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 				0.0,
 				false)
-				.interpolate(generic_x, generic_y);
+				.interpolate(generic_x.constIterator(), generic_y.constIterator());
 
 		checkValues("Not-a-knot spline", interpolation, generic_x, generic_y);
 		checkNotAKnotCondition("Not-a-knot spline", interpolation);
@@ -312,7 +312,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	    		CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 	    		0.0,
 	    		false)
-	    		.interpolate(x, y);
+	    		.interpolate(x.constIterator(), y.constIterator());
 
 	    checkValues("Not-a-knot spline", interpolation,x,y);
 	    checkNotAKnotCondition("Not-a-knot spline", interpolation);
@@ -335,7 +335,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	    		CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 	    		0.0,
 	    		false)
-	    		.interpolate(x, y);
+	    		.interpolate(x.constIterator(), y.constIterator());
 
 	    checkValues("Not-a-knot spline", interpolation, x, y);
 	    check1stDerivativeValue("Not-a-knot spline", interpolation, x.first(), 4.0);
@@ -362,7 +362,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 				CubicSplineInterpolation.BoundaryCondition.FirstDerivative,
 				-4.0,
 				false)
-		.interpolate(x, y);
+		.interpolate(x.constIterator(), y.constIterator());
 
 		checkValues("Clamped spline", interpolation, x, y);
 		check1stDerivativeValue("Clamped spline", interpolation, x.first(), 4.0);
@@ -387,7 +387,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
 				-2.0,
 				false)
-		.interpolate(x, y);
+		.interpolate(x.constIterator(), y.constIterator());
 
 		checkValues("SecondDerivative spline", interpolation, x, y);
 		check1stDerivativeValue("SecondDerivative spline", interpolation, x.first(), 4.0);

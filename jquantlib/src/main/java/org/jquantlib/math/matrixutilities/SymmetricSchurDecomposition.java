@@ -45,6 +45,7 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.math.matrixutilities.Cells.ConstColumnIterator;
 
 /**
  * Symmetric threshold Jacobi algorithm
@@ -160,16 +161,16 @@ public class SymmetricSchurDecomposition {
         QL.ensure(ite <= maxIterations, "Too many iterations reached");
 
         // sort (eigenvalues, eigenvectors)
-        final SortedMap<Double, Array> map = new TreeMap<Double, Array>();
+        final SortedMap<Double, ConstColumnIterator> map = new TreeMap<Double, ConstColumnIterator>();
         for (int col = 0; col < size; col++) {
-            final Array eigenVector = A.rangeCol(col);
+            final ConstColumnIterator eigenVector = A.constColumnIterator(col);
             map.put(diag.data[diag.addr(col)], eigenVector);
         }
 
         final int col = 0;
         final double maxEv = map.firstKey();
         for (final Double key : map.keySet()) {
-            final Array eigenVector = map.get(key);
+            final ConstColumnIterator eigenVector = map.get(key);
             diag.data[diag.addr(col)] = Math.abs(key / maxEv) < 1e-16 ? 0.0 : key;
             double sign = 1.0;
             if (eigenVector.get(0) < 0.0)

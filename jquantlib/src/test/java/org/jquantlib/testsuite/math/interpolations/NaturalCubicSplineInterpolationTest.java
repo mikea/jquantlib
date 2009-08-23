@@ -52,7 +52,8 @@ public class NaturalCubicSplineInterpolationTest extends InterpolationTestBase {
 	    double interpolated;
 
 	    // Natural spline
-	    final CubicSplineInterpolation interpolation = new NaturalCubicSpline().interpolate(RPN15A_x, RPN15A_y);
+	    final CubicSplineInterpolation interpolation = new NaturalCubicSpline().interpolate(
+	            RPN15A_x.constIterator(), RPN15A_y.constIterator());
 
 	    checkValues("Natural spline", interpolation, RPN15A_x, RPN15A_y);
 	    check2ndDerivativeValue("Natural spline", interpolation, RPN15A_x.first(), 0.0);

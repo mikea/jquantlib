@@ -260,9 +260,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                     // extend interpolation a point at a time
                     if (this.interpolator.global() && i < 2)
                         // not enough points for splines
-                        this.interpolation = new Linear().interpolate(this.times, this.data);
+                        this.interpolation = new Linear().interpolate(times.constIterator(), data.constIterator());
                     else
-                        this.interpolation = this.interpolator.interpolate(this.times, this.data);
+                        this.interpolation = this.interpolator.interpolate(times.constIterator(), data.constIterator());
                 this.interpolation.update();
                 final RateHelper instrument = instruments[i - 1];
                 /* @Price */double guess;
@@ -587,7 +587,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             container.dates = dates.clone();
             container.data = discounts.clone();
             container.interpolator = (interpolator!=null) ? interpolator : (I) new LogLinear();
-            container.interpolation = container.interpolator.interpolate(container.times, container.data);
+            container.interpolation = container.interpolator.interpolate(
+                    container.times.constIterator(), container.data.constIterator());
+
             container.interpolation.update();
         }
 
@@ -701,7 +703,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             container.dates = dates.clone();
             container.data = forwards.clone();
             container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
-            container.interpolation = container.interpolator.interpolate(container.times, container.data);
+            container.interpolation = container.interpolator.interpolate(
+                    container.times.constIterator(), container.data.constIterator());
+
             container.interpolation.update();
         }
 

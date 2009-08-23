@@ -40,9 +40,9 @@
 
 package org.jquantlib.math.interpolations.factories;
 
+import org.jquantlib.lang.iterators.ConstIterator;
 import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolator;
-import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * Cubic spline interpolation factory and traits.
@@ -96,12 +96,12 @@ public class CubicSpline implements Interpolator {
     //
 
     @Override
-    public final CubicSplineInterpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
+    public final CubicSplineInterpolation interpolate(final int size, final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
         return interpolate(x, y);
     }
 
     @Override
-    public final CubicSplineInterpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
+    public final CubicSplineInterpolation interpolate(final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
         return (CubicSplineInterpolation)delegate.interpolate(x, y);
     }
 

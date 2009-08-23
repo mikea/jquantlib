@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,17 +15,17 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.math.interpolations.factories;
 
+import org.jquantlib.lang.iterators.ConstIterator;
 import org.jquantlib.math.interpolations.BackwardFlatInterpolation;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolator;
-import org.jquantlib.math.matrixutilities.Array;
 
 
 /**
@@ -34,7 +34,7 @@ import org.jquantlib.math.matrixutilities.Array;
  * This is not the implementation of a interpolation class, but only its factory.
  *
  * @see BackwardFlatInterpolation
- * 
+ *
  * @author Richard Gomes
  */
 public class BackwardFlat implements Interpolator {
@@ -42,10 +42,10 @@ public class BackwardFlat implements Interpolator {
     //
     // private final fields
     //
-    
+
 	private final Interpolator delegate;
 
-	
+
 	//
     // public constructors
     //
@@ -54,24 +54,24 @@ public class BackwardFlat implements Interpolator {
 	 * Constructs a interpolation factory.
      * <p>
      * This is not the implementation of a interpolation class, but only its factory.
-     * 
+     *
      * @see BackwardFlatInterpolation
 	 */
 	public BackwardFlat() {
 		delegate = BackwardFlatInterpolation.getInterpolator();
 	}
-	
+
 	//
 	// implements Interpolator
 	//
-	
+
     @Override
-	public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
+	public final Interpolation interpolate(final int size, final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 
     @Override
-	public final Interpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
+	public final Interpolation interpolate(final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
 		return delegate.interpolate(x, y);
 	}
 

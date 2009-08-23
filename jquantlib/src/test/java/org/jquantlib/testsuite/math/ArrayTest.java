@@ -104,20 +104,214 @@ public class ArrayTest {
     private void accumulate(final Cells.Style style) {
         final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 }, style);
 
-        if (aA.accumulate() != 45.0)
-            fail("'accumulate' failed");
-        if (aA.accumulate(2+aA.base(), 5+aA.base(), -2.0) != 10.0)
-            fail("'accumulate' failed");
+        if (aA.accumulate() != 45.0) fail("'accumulate' failed");
+        if (aA.accumulate(2+aA.base(), 5+aA.base(), -2.0) != 10.0) fail("'accumulate' failed");
     }
 
     @Test
     public void add() {
-        fail("add failed");
+        add(Cells.Style.JAVA,    Cells.Style.JAVA);
+        add(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        add(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        add(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void add(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
+
+        final Array a = aA.add(aB);
+        if (a == aA) fail("'add' must return a new instance");
+        if (a.size() != aA.size()) fail("'add' failed");
+
+        for (int i=a.base(); i<a.size()+a.base(); i++)
+            if (a.get(i) != 5) fail("'add' failed");
     }
 
     @Test
     public void addAssign() {
-        fail("addAssign failed");
+        addAssign(Cells.Style.JAVA,    Cells.Style.JAVA);
+        addAssign(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        addAssign(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        addAssign(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void addAssign(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
+
+        final Array a = aA.addAssign(aB);
+        if (a != aA) fail("addAssign must return <this>");
+
+        for (int i=a.base(); i<a.size()+a.base(); i++)
+            if (a.get(i) != 5) fail("'addAssign' failed");
+    }
+
+
+    @Test
+    public void sub() {
+        sub(Cells.Style.JAVA,    Cells.Style.JAVA);
+        sub(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        sub(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        sub(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void sub(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 }, styleA);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
+
+        final Array a = aA.sub(aB);
+        if (a == aA) fail("'sub' must return a new instance");
+        if (a.size() != aA.size()) fail("'sub' failed");
+
+        for (int i=a.base(); i<a.size()+a.base(); i++)
+            if (a.get(i) != 5) fail("'sub' failed");
+    }
+
+    @Test
+    public void subAssign() {
+        subAssign(Cells.Style.JAVA,    Cells.Style.JAVA);
+        subAssign(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        subAssign(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        subAssign(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void subAssign(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 }, styleA);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
+
+        final Array a = aA.subAssign(aB);
+        if (a != aA) fail("subAssign must return <this>");
+
+        for (int i=a.base(); i<a.size()+a.base(); i++)
+            if (a.get(i) != 5) fail("'subAssign' failed");
+    }
+
+
+    @Test
+    public void mul() {
+        mul(Cells.Style.JAVA,    Cells.Style.JAVA);
+        mul(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        mul(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        mul(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void mul(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 }, styleA);
+        final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 }, styleB);
+
+        final Array a = aA.mul(aB);
+        if (a == aA) fail("'mul' must return a new instance");
+        if (a.size() != aA.size()) fail("'mul' failed");
+
+        for (int i=a.base(); i<a.size()+a.base(); i++)
+            if (a.get(i) != 1000) fail("'mul' failed");
+    }
+
+    @Test
+    public void mulAssign() {
+        mulAssign(Cells.Style.JAVA,    Cells.Style.JAVA);
+        mulAssign(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        mulAssign(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        mulAssign(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void mulAssign(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 }, styleA);
+        final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 }, styleB);
+
+        final Array a = aA.mulAssign(aB);
+        if (a != aA) fail("mulAssign must return <this>");
+
+        for (int i=a.base(); i<a.size()+a.base(); i++)
+            if (a.get(i) != 1000) fail("'mulAssign' failed");
+    }
+
+
+    @Test
+    public void div() {
+        div(Cells.Style.JAVA,    Cells.Style.JAVA);
+        div(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        div(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        div(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void div(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 }, styleA);
+        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 }, styleB);
+
+        final Array a = aA.div(aB);
+        if (a == aA) fail("'div' must return a new instance");
+        if (a.size() != aA.size()) fail("'div' failed");
+
+        for (int i=a.base(); i<a.size()+a.base(); i++)
+            if (a.get(i) != 2) fail("'div' failed");
+    }
+
+
+    @Test
+    public void divAssign() {
+        divAssign(Cells.Style.JAVA,    Cells.Style.JAVA);
+        divAssign(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        divAssign(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        divAssign(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void divAssign(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 }, styleA);
+        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 }, styleB);
+
+        final Array a = aA.divAssign(aB);
+        if (a != aA) fail("divAssign must return <this>");
+
+        for (int i=a.base(); i<a.size()+a.base(); i++)
+            if (a.get(i) != 2) fail("'divAssign' failed");
+    }
+
+
+    @Test
+    public void dotProduct() {
+        dotProduct(Cells.Style.JAVA,    Cells.Style.JAVA);
+        dotProduct(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        dotProduct(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        dotProduct(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void dotProduct(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, 3.0 }, styleA);
+        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 }, styleB);
+
+        final double d = aA.dotProduct(aB);
+        if (d != 3) fail("'dotProduct' failed");
+    }
+
+
+    @Test
+    public void innerProduct() {
+        fail("innerProduct failed");
+    }
+
+
+    @Test
+    public void outerProduct() {
+        fail("outerProduct failed");
+    }
+
+
+    @Test
+    public void transform() {
+        fail("transform failed");
+    }
+
+    @Test
+    public void lowerBound() {
+        fail("lowerBound failed");
+    }
+
+
+    @Test
+    public void upperBound() {
+        fail("upperBound failed");
     }
 
 
@@ -148,36 +342,23 @@ public class ArrayTest {
     }
 
 
-    @Test
-    public void range() {
-        range(Cells.Style.JAVA,    Cells.Style.JAVA);
-        range(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        range(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        range(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void range(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 9.0, 8.0, 1.0, 2.0, 3.0, 4.0, 8.0, 9.0 }, styleA);
-        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleB);
-
-        final Array result = aA.range(2, 6);
-        if (result == aA) fail("'copyOfRange' must return a new instance");
-        if (result == aB) fail("'copyOfRange' must return a new instance");
-        if (!result.equals(aB)) fail("'copyOfRange' failed");
-    }
-
 //    @Test
-//    public void div() {
+//    public void range() {
+//        range(Cells.Style.JAVA,    Cells.Style.JAVA);
+//        range(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+//        range(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+//        range(Cells.Style.FORTRAN, Cells.Style.JAVA);
 //    }
 //
-//    @Test
-//    public void divAssign() {
-//    }
+//    private void range(final Cells.Style styleA, final Cells.Style styleB) {
+//        final Array aA = new Array(new double[] { 9.0, 8.0, 1.0, 2.0, 3.0, 4.0, 8.0, 9.0 }, styleA);
+//        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleB);
 //
-//    @Test
-//    public void dotProduct() {
+//        final Array result = aA.range(2, 6);
+//        if (result == aA) fail("'copyOfRange' must return a new instance");
+//        if (result == aB) fail("'copyOfRange' must return a new instance");
+//        if (!result.equals(aB)) fail("'copyOfRange' failed");
 //    }
-
 
     @Test
     public void exp() {
@@ -220,15 +401,8 @@ public class ArrayTest {
     private void first(final Cells.Style style) {
         final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, style);
 
-        if (aA.first() != 1.0)
-            fail("'first' failed");
+        if (aA.first() != 1.0) fail("'first' failed");
     }
-
-    @Test
-    public void innerProduct() {
-        fail("innerProduct failed");
-    }
-
 
     @Test
     public void last() {
@@ -263,12 +437,6 @@ public class ArrayTest {
     }
 
     @Test
-    public void lowerBound() {
-        fail("lowerBound failed");
-    }
-
-
-    @Test
     public void min() {
         min(Cells.Style.JAVA);
         min(Cells.Style.FORTRAN);
@@ -295,22 +463,6 @@ public class ArrayTest {
             fail("'max' failed");
         if (aA.max(2+aA.base(), 6+aA.base()) != 4.0)
             fail("'max' failed");
-    }
-
-
-    @Test
-    public void mul() {
-        fail("mul failed");
-    }
-
-    @Test
-    public void mulAssign() {
-        fail("mulAssign failed");
-    }
-
-    @Test
-    public void outerProduct() {
-        fail("outerProduct failed");
     }
 
 
@@ -351,17 +503,6 @@ public class ArrayTest {
         if (result == aB) fail("'sqrt' must return a new instance");
         if (!result.equals(aB)) fail("'sqrt' failed");
     }
-
-    @Test
-    public void sub() {
-        fail("sub failed");
-    }
-
-    @Test
-    public void subAssign() {
-        fail("subAssign failed");
-    }
-
 
     @Test
     public void swap() {
@@ -405,16 +546,6 @@ public class ArrayTest {
         for (int i=0; i<aA.size(); i++)
             if (result[i] != doubles[i])
                 fail("toArray failed");
-    }
-
-    @Test
-    public void transform() {
-        fail("transform failed");
-    }
-
-    @Test
-    public void upperBound() {
-        fail("upperBound failed");
     }
 
 }

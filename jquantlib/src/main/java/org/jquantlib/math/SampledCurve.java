@@ -214,9 +214,10 @@ public class SampledCurve {
             newValues = newGrid.clone().transform(f);
         }
 
-        final CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(transformed, this.values);
-        priceSpline.update();
+        final CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(
+                transformed.constIterator(), values.constIterator());
 
+        priceSpline.update();
         for (int i=0; i<newValues.size(); i++)
             newValues.set(i, priceSpline.evaluate(newValues.get(i), true) );
 

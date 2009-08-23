@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -41,15 +41,15 @@
 
 package org.jquantlib.math.interpolations;
 
+import org.jquantlib.lang.iterators.ConstIterator;
 import org.jquantlib.math.Ops;
-import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * Interface for 1-D interpolations.
  * <p>
  * Classes which implement this interface will provide interpolated values from two sequences of equal length, representing
  * discretized values of a variable and a function of the former, respectively.
- * 
+ *
  * @author Richard Gomes
  */
 public interface Interpolation extends Extrapolator, Ops.DoubleOp {
@@ -57,15 +57,15 @@ public interface Interpolation extends Extrapolator, Ops.DoubleOp {
 	/**
      * This method performs the interpolation itself and should be called
      * just after the construction of a interpolation class.
-	 * 
+	 *
 	 * @note Do not confuse this method with Observer.update.
 	 */
 	public void update();
-	
+
     public double xMin();
     public double xMax();
-    public Array xValues();
-    public Array yValues();
+    public ConstIterator xValues();
+    public ConstIterator yValues();
     public boolean isInRange(double x);
     public double primitive(double x);
     public double derivative(double x);
@@ -75,5 +75,5 @@ public interface Interpolation extends Extrapolator, Ops.DoubleOp {
     public double primitive(double x, boolean b);
     public double derivative(double x, boolean b);
     public double secondDerivative(double x, boolean b);
-    
+
 }

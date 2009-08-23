@@ -1,9 +1,9 @@
 /*
- Copyright 
+ Copyright
  (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,7 +16,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -47,10 +47,14 @@ import org.jquantlib.model.ConstantParameter;
 
 public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityModel {
 
-    private List<Double> fixingTimes_;
+    private final List<Double> fixingTimes_;
 
-    public LmLinearExponentialVolatilityModel(final List<Double> fixingTimes, double a, double b, double c, double d) {
+    public LmLinearExponentialVolatilityModel(final List<Double> fixingTimes, final double a, final double b, final double c, final double d) {
         super(fixingTimes.size(), 4);
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.fixingTimes_ = fixingTimes;
         arguments_.set(0, new ConstantParameter(a, new PositiveConstraint()));
         arguments_.set(1, new ConstantParameter(b, new PositiveConstraint()));
@@ -58,13 +62,13 @@ public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityMod
         arguments_.set(3, new ConstantParameter(d, new PositiveConstraint()));
     }
 
-    public List<Double> volatility(double t, List list) {
+    public List<Double> volatility(final double t, final List list) {
         final double a = arguments_.get(0).getOperatorEq(0.0);
         final double b = arguments_.get(1).getOperatorEq(0.0);
         final double c = arguments_.get(2).getOperatorEq(0.0);
         final double d = arguments_.get(3).getOperatorEq(0.0);
 
-        List<Double> tmp = new ArrayList<Double>(size_);
+        final List<Double> tmp = new ArrayList<Double>(size_);
         Collections.fill(tmp, 0.0);
 
         for (int i = 0; i < size_; ++i) {
@@ -76,7 +80,7 @@ public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityMod
         return tmp;
     }
 
-    public double volatility(int i, double t, final List list) {
+    public double volatility(final int i, final double t, final List list) {
         final double a = arguments_.get(0).getOperatorEq(0.0);
         final double b = arguments_.get(1).getOperatorEq(0.0);
         final double c = arguments_.get(2).getOperatorEq(0.0);
@@ -87,7 +91,7 @@ public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityMod
         return (T > t) ? (a * (T - t) + d) * Math.exp(-b * (T - t)) + c : 0.0;
     }
 
-    public double integratedVariance(int i, int j, double u, final List list) {
+    public double integratedVariance(final int i, final int j, final double u, final List list) {
         final double a = arguments_.get(0).getOperatorEq(0.0);
         final double b = arguments_.get(1).getOperatorEq(0.0);
         final double c = arguments_.get(2).getOperatorEq(0.0);
@@ -110,6 +114,7 @@ public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityMod
                 / (4 * b * b * b * k2 * k3);
     }
 
+    @Override
     public void generateArguments() {
     }
 

@@ -89,13 +89,13 @@ public class StochasticProcessArray extends StochasticProcess {
     }
 
     @Override
+    // TODO: review iterators
     public Matrix diffusion(final /*Time*/ double t, final Array x)  {
-        final Matrix tmp = sqrtCorrelation_;
         for (int i=0; i<size(); i++) {
             final double sigma = processes_.get(i).diffusion(t, x.get(i));
-            tmp.rangeRow(i).mul(sigma);
+            sqrtCorrelation_.rowIterator(i).mulAssign(sigma);
         }
-        return tmp;
+        return sqrtCorrelation_;
     }
 
     @Override
@@ -107,13 +107,13 @@ public class StochasticProcessArray extends StochasticProcess {
     }
 
     @Override
+    // TODO: review iterators
     public Matrix stdDeviation(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt)  {
-        final Matrix tmp = sqrtCorrelation_;
         for (int i=0; i<size(); i++) {
             final double sigma = processes_.get(i).stdDeviation(t0, x0.get(i), dt);
-            tmp.rangeRow(i).mul(sigma);
+            sqrtCorrelation_.rowIterator(i).mulAssign(sigma);
         }
-        return tmp;
+        return sqrtCorrelation_;
     }
 
     @Override

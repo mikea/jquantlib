@@ -25,7 +25,8 @@ import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.math.matrixutilities.Matrix.RowIterator;
+import org.jquantlib.math.matrixutilities.Cells.ConstColumnIterator;
+import org.jquantlib.math.matrixutilities.Cells.RowIterator;
 
 /**
  * QR Decomposition.
@@ -232,17 +233,8 @@ public class QRDecomposition {
             for (int j=1; j<=Math.min(n, m); j++) {
                 final double t3 = AT.data[AT.addr(j, j)];
                 if (t3!=0.0) {
-                    // final double t = AT.rangeRow(j, j).innerProduct(w.range(j)) / t3;
-
-//                    final Array rowj = AT.rangeRow(j, j);
-//                    final Array wrangej = w.range(j);
-//                    final double t = rowj.innerProduct(wrangej) / t3;
-
-                    final Array colj = AT.rangeCol(j, j);
-                    final Array wrangej = w.range(j);
-                    final double t = colj.innerProduct(wrangej) / t3;
-
-
+                    //XXX final double t = AT.rangeRow(j, j).innerProduct(w.range(j)) / t3;
+                    final double t = AT.constRowIterator(j, j).innerProduct(w.constIterator()) / t3;
 
                     for (int i=j; i<m; i++) {
                         // w.data[i] -= AT.data[AT.addr(j, i)] * t;
@@ -371,7 +363,8 @@ public class QRDecomposition {
         // Compute the initial column norms and initialize several arrays.
         for (j = 1; j <= n; j++) {
             //minpack :: acnorm[j] = Minpack_f77.enorm_f77(m,a[1][j]);
-            acnorm[j] = enorm_f77(m, a.rangeCol(1,j));
+            //XXX acnorm[j] = enorm_f77(m, a.rangeCol(1,j));
+            acnorm[j] = enorm_f77(m, a.constColumnIterator(j));
             rdiag[j] = acnorm[j];
             wa[j] = rdiag[j];
             if (pivot)
@@ -405,7 +398,8 @@ public class QRDecomposition {
             // Compute the Householder transformation to reduce the j-th column of A to a multiple of the j-th unit vector.
 
             //minpack :: ajnorm = Minpack_f77.enorm_f77(m-j+1,a[j][j]);
-            ajnorm = enorm_f77(m-j+1, a.rangeCol(j, j));
+            //XXX ajnorm = enorm_f77(m-j+1, a.rangeCol(j, j));
+            ajnorm = enorm_f77(m-j+1, a.constColumnIterator(j, j));
 
             if (ajnorm != zero) {
                 if (a.data[a.addr(j,j)] < zero)
@@ -435,7 +429,8 @@ public class QRDecomposition {
                             fac = rdiag[k] / wa[k];
                             if (p05 * fac * fac <= epsmch) {
                                 //minpack :: rdiag[k] = Minpack_f77.enorm_f77(m-j,a[jp1][k]);
-                                rdiag[k] = enorm_f77(m-j, a.rangeCol(jp1, k));
+                                //XXX rdiag[k] = enorm_f77(m-j, a.rangeCol(jp1, k));
+                                rdiag[k] = enorm_f77(m-j, a.constColumnIterator(k, jp1));
                                 wa[k] = rdiag[k];
                             }
                         }
@@ -471,7 +466,7 @@ public class QRDecomposition {
      * @see Matrix#faddr(int, int)
      * @see Array#faddr(int)
      */
-    private double enorm_f77(final int n, final Array x) {
+    private double enorm_f77(final int n, final ConstColumnIterator it) {
         final double agiant, floatn;
         final double enorm;
 
@@ -494,7 +489,8 @@ public class QRDecomposition {
         agiant = rgiant / floatn;
 
         for (i = 1; i <= n; i++) {
-            xabs = Math.abs(x.data[x.addr(i)]);
+            //XXX xabs = Math.abs(x.data[x.addr(i)]);
+            xabs = Math.abs(it.nextDouble());
             if (xabs <= rdwarf || xabs >= agiant) {
                 if (xabs > rdwarf) {
                     // Sum for large components.

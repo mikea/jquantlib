@@ -76,7 +76,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 		    		0.0,
 		    		CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 		    		0.0)
-		    		.interpolate(x, y);
+		    		.interpolate(x.constIterator(), y.constIterator());
 	        //TODO: how to use the integral.integrate method which is the protected method?
 //	        double result = sqrt(integral.integrate (interpolation, -1.7, 1.9));
 //	        result /= scaleFactor;
@@ -114,7 +114,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 		    		0.0,
 		    		CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 		    		0.0)
-		    		.interpolate(x, y);
+		    		.interpolate(x.constIterator(), y.constIterator());
 
 	        checkValues("MC not-a-knot spline", interpolation, x, y);
 
@@ -153,7 +153,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    		0.0,
 	    		CubicSplineInterpolation.BoundaryCondition.FirstDerivative,
 	    		0.0)
-	    		.interpolate(RPN15A_x, RPN15A_y);
+	    		.interpolate(RPN15A_x.constIterator(), RPN15A_y.constIterator());
 
 	    checkValues("MC clamped spline", interpolation, RPN15A_x, RPN15A_y);
 	    check1stDerivativeValue("MC clamped spline", interpolation, RPN15A_x.first(), 0.0);
@@ -185,7 +185,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 				0.0,
 				CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 				0.0)
-		.interpolate(RPN15A_x, RPN15A_y);
+		.interpolate(RPN15A_x.constIterator(), RPN15A_y.constIterator());
 
 		checkValues("MC not-a-knot spline", interpolation, RPN15A_x, RPN15A_y);
 		// good performance
@@ -212,7 +212,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    		0.0,
 	    		CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 	    		0.0)
-	    		.interpolate(x, y);
+	    		.interpolate(x.constIterator(), y.constIterator());
 	    checkValues("Not-a-knot spline", interpolation,x,y);
 	    checkSymmetry("Not-a-knot spline", interpolation, x.first());
 	}
@@ -231,7 +231,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    		0.0,
 	    		CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 	    		0.0)
-	    		.interpolate(x, y);
+	    		.interpolate(x.constIterator(), y.constIterator());
 
 	    checkValues("MC Not-a-knot spline", interpolation, x, y);
 	    check1stDerivativeValue("MC Not-a-knot spline", interpolation, x.first(), 4.0);
@@ -257,7 +257,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 				4.0,
 				CubicSplineInterpolation.BoundaryCondition.FirstDerivative,
 				-4.0)
-		.interpolate(x, y);
+		.interpolate(x.constIterator(), y.constIterator());
 
 		checkValues("MC Clamped spline", interpolation, x, y);
 		check1stDerivativeValue("MC Clamped spline", interpolation, x.first(), 4.0);
@@ -281,7 +281,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 				-2.0,
 				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
 				-2.0)
-		.interpolate(x, y);
+		.interpolate(x.constIterator(), y.constIterator());
 
 		checkValues("MC SecondDerivative spline", interpolation, x, y);
 		check1stDerivativeValue("MC SecondDerivative spline", interpolation, x.first(), 4.0);
@@ -308,7 +308,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 	    		0.0,
 	    		CubicSplineInterpolation.BoundaryCondition.NotAKnot,
 	    		0.0)
-	    		.interpolate(x, y);
+	    		.interpolate(x.constIterator(), y.constIterator());
 
 	    interpolated = interpolation.op(zero);
 	    assertFalse("MC not-a-knot spline interpolation failed at x = "+zero
@@ -336,7 +336,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 				4.0,
 				CubicSplineInterpolation.BoundaryCondition.FirstDerivative,
 				-4.0)
-		.interpolate(x, y);
+		.interpolate(x.constIterator(), y.constIterator());
 
 		interpolated =  interpolation.op(zero);
 		assertFalse("MC clamped spline interpolation failed at x = "+zero
@@ -363,7 +363,7 @@ public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase
 				-2.0,
 				CubicSplineInterpolation.BoundaryCondition.SecondDerivative,
 				-2.0)
-		.interpolate(x, y);
+		.interpolate(x.constIterator(), y.constIterator());
 
 		interpolated =  interpolation.op(zero);
 		assertFalse("MC SecondDerivative spline interpolation failed at x = "+zero

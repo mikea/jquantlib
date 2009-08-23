@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,27 +15,27 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.lang.iterators.ConstIterator;
 
 
 
 /**
  * @see Interpolator2D
- * 
+ *
  * @author Richard Gomes
  */
 public interface Interpolator {
 
-	public Interpolation interpolate(final Array x, final Array y);
-	public Interpolation interpolate(final int size, final Array x, final Array y);
-	
+	public Interpolation interpolate(final ConstIterator x, final ConstIterator y);
+	public Interpolation interpolate(final int size, final ConstIterator x, final ConstIterator y);
+
 	public boolean global();
 
 }

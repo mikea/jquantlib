@@ -37,8 +37,8 @@ import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.math.matrixutilities.QRDecomposition;
 import org.jquantlib.math.matrixutilities.SVD;
 import org.jquantlib.math.matrixutilities.SymmetricSchurDecomposition;
-import org.jquantlib.math.matrixutilities.Matrix.ColumnIterator;
-import org.jquantlib.math.matrixutilities.Matrix.RowIterator;
+import org.jquantlib.math.matrixutilities.Cells.ColumnIterator;
+import org.jquantlib.math.matrixutilities.Cells.RowIterator;
 import org.junit.Test;
 
 /**
@@ -229,88 +229,88 @@ public class MatrixTest {
 
 
 
-    @Test
-    public void rangeRow() { // final Cells.Style style
-        rangeRow(Cells.Style.JAVA,    Cells.Style.JAVA);
-        rangeRow(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        rangeRow(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        rangeRow(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void rangeRow(final Cells.Style styleA, final Cells.Style styleB) {
-        final Matrix mA = new Matrix(new double[][] {
-                { 1.0, 0.0, 0.0, 0.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 7.0, 7.0, 7.0 },
-                { 1.0, 8.0, 8.0, 8.0 },
-                { 1.0, 9.0, 9.0, 9.0 },
-        }, styleA);
-
-        final Matrix mB = new Matrix(new double[][] {
-                { 1.0, 0.0, -1.0, -2.0 },
-        }, styleA);
-
-        final Matrix mC = new Matrix(new double[][] {
-                { 1.0 },
-                { 2.0 },
-                { 3.0 },
-                { 4.0 },
-                { 5.0 },
-        }, styleA);
-
-        final Array aA = new Array(new double[] { 1.0, 7.0, 7.0, 7.0 }, styleB);
-        final Array aB = new Array(new double[] { 1.0, 0.0, -1.0, -2.0 }, styleB);
-        final Array aC = new Array(new double[] { 3.0 }, styleB);
-
-        if (!mA.rangeRow(2+mA.base()).equals(aA)) fail("'rangeRow' failed");
-        if (!mB.rangeRow(0+mB.base()).equals(aB)) fail("'rangeRow' failed");
-        if (!mC.rangeRow(2+mC.base()).equals(aC)) fail("'rangeRow' failed");
-    }
-
-
-    @Test
-    public void rangeCol() { // final Cells.Style style
-        rangeCol(Cells.Style.JAVA,    Cells.Style.JAVA);
-        rangeCol(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        rangeCol(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        rangeCol(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void rangeCol(final Cells.Style styleA, final Cells.Style styleB) {
-        final Matrix mA = new Matrix(new double[][] {
-                { 1.0, 0.0, 0.0, 0.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 7.0, 7.0, 7.0 },
-                { 1.0, 8.0, 8.0, 8.0 },
-                { 1.0, 9.0, 9.0, 9.0 },
-        }, styleA);
-
-        final Matrix mB = new Matrix(new double[][] {
-                { 1.0, 0.0, -1.0, -2.0 },
-        }, styleA);
-
-        final Matrix mC = new Matrix(new double[][] {
-                { 1.0 },
-                { 2.0 },
-                { 3.0 },
-                { 4.0 },
-                { 5.0 },
-        }, styleA);
-
-        final Array aA = new Array(new double[] {  0.0, 3.0, 7.0, 8.0, 9.0 }, styleB);
-        final Array aB = new Array(new double[] { -1.0 },                     styleB);
-        final Array aC = new Array(new double[] {  1.0, 2.0, 3.0, 4.0, 5.0 }, styleB);
-
-        //if (!mA.rangeCol(2+mA.base()).equals(aA)) fail("'rangeCol' failed");
-        //if (!mB.rangeCol(2+mB.base()).equals(aB)) fail("'rangeCol' failed");
-        //if (!mC.rangeCol(0+mC.base()).equals(aC)) fail("'rangeCol' failed");
-
-        if (!mA.rangeCol(2+mA.base(), 1+mA.base()).equals(aA.range(1+aA.base()))) fail("'rangeCol' failed");
-        if (!mC.rangeCol(0+mC.base(), 2+mC.base()).equals(aC.range(2+aC.base()))) fail("'rangeCol' failed");
-
-        if (!mA.rangeCol(2+mA.base(), 1+mA.base(), 3+mA.base()).equals(aA.range(1+aA.base(), 3+aA.base()))) fail("'rangeCol' failed");
-        if (!mC.rangeCol(0+mC.base(), 2+mC.base(), 3+mC.base()).equals(aC.range(2+aC.base(), 3+aC.base()))) fail("'rangeCol' failed");
-    }
+//    @Test
+//    public void rangeRow() { // final Cells.Style style
+//        rangeRow(Cells.Style.JAVA,    Cells.Style.JAVA);
+//        rangeRow(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+//        rangeRow(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+//        rangeRow(Cells.Style.FORTRAN, Cells.Style.JAVA);
+//    }
+//
+//    private void rangeRow(final Cells.Style styleA, final Cells.Style styleB) {
+//        final Matrix mA = new Matrix(new double[][] {
+//                { 1.0, 0.0, 0.0, 0.0 },
+//                { 1.0, 2.0, 3.0, 4.0 },
+//                { 1.0, 7.0, 7.0, 7.0 },
+//                { 1.0, 8.0, 8.0, 8.0 },
+//                { 1.0, 9.0, 9.0, 9.0 },
+//        }, styleA);
+//
+//        final Matrix mB = new Matrix(new double[][] {
+//                { 1.0, 0.0, -1.0, -2.0 },
+//        }, styleA);
+//
+//        final Matrix mC = new Matrix(new double[][] {
+//                { 1.0 },
+//                { 2.0 },
+//                { 3.0 },
+//                { 4.0 },
+//                { 5.0 },
+//        }, styleA);
+//
+//        final Array aA = new Array(new double[] { 1.0, 7.0, 7.0, 7.0 }, styleB);
+//        final Array aB = new Array(new double[] { 1.0, 0.0, -1.0, -2.0 }, styleB);
+//        final Array aC = new Array(new double[] { 3.0 }, styleB);
+//
+//        if (!mA.rangeRow(2+mA.base()).equals(aA)) fail("'rangeRow' failed");
+//        if (!mB.rangeRow(0+mB.base()).equals(aB)) fail("'rangeRow' failed");
+//        if (!mC.rangeRow(2+mC.base()).equals(aC)) fail("'rangeRow' failed");
+//    }
+//
+//
+//    @Test
+//    public void rangeCol() { // final Cells.Style style
+//        rangeCol(Cells.Style.JAVA,    Cells.Style.JAVA);
+//        rangeCol(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+//        rangeCol(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+//        rangeCol(Cells.Style.FORTRAN, Cells.Style.JAVA);
+//    }
+//
+//    private void rangeCol(final Cells.Style styleA, final Cells.Style styleB) {
+//        final Matrix mA = new Matrix(new double[][] {
+//                { 1.0, 0.0, 0.0, 0.0 },
+//                { 1.0, 2.0, 3.0, 4.0 },
+//                { 1.0, 7.0, 7.0, 7.0 },
+//                { 1.0, 8.0, 8.0, 8.0 },
+//                { 1.0, 9.0, 9.0, 9.0 },
+//        }, styleA);
+//
+//        final Matrix mB = new Matrix(new double[][] {
+//                { 1.0, 0.0, -1.0, -2.0 },
+//        }, styleA);
+//
+//        final Matrix mC = new Matrix(new double[][] {
+//                { 1.0 },
+//                { 2.0 },
+//                { 3.0 },
+//                { 4.0 },
+//                { 5.0 },
+//        }, styleA);
+//
+//        final Array aA = new Array(new double[] {  0.0, 3.0, 7.0, 8.0, 9.0 }, styleB);
+//        final Array aB = new Array(new double[] { -1.0 },                     styleB);
+//        final Array aC = new Array(new double[] {  1.0, 2.0, 3.0, 4.0, 5.0 }, styleB);
+//
+//        //if (!mA.rangeCol(2+mA.base()).equals(aA)) fail("'rangeCol' failed");
+//        //if (!mB.rangeCol(2+mB.base()).equals(aB)) fail("'rangeCol' failed");
+//        //if (!mC.rangeCol(0+mC.base()).equals(aC)) fail("'rangeCol' failed");
+//
+//        if (!mA.rangeCol(2+mA.base(), 1+mA.base()).equals(aA.range(1+aA.base()))) fail("'rangeCol' failed");
+//        if (!mC.rangeCol(0+mC.base(), 2+mC.base()).equals(aC.range(2+aC.base()))) fail("'rangeCol' failed");
+//
+//        if (!mA.rangeCol(2+mA.base(), 1+mA.base(), 3+mA.base()).equals(aA.range(1+aA.base(), 3+aA.base()))) fail("'rangeCol' failed");
+//        if (!mC.rangeCol(0+mC.base(), 2+mC.base(), 3+mC.base()).equals(aC.range(2+aC.base(), 3+aC.base()))) fail("'rangeCol' failed");
+//    }
 
 
     @Test

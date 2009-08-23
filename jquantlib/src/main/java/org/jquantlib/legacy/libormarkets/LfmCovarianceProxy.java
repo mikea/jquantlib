@@ -15,6 +15,10 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
 
     public LfmCovarianceProxy(final LmVolatilityModel volaModel, final LmCorrelationModel corrModel){
         super(corrModel.size(), corrModel.factors());
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         this.volaModel_ = volaModel;
         this.corrModel_ = corrModel;
     }
@@ -28,12 +32,13 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
     }
 
     @Override
+    // TODO: review iterators
     public Matrix diffusion(/*@Time*/ final double t, final Array x){
         final Matrix pca = corrModel_.pseudoSqrt(t, x);
         // TODO: code review :: use of clone()
         final Array  vol = volaModel_.volatility(t, x);
         for (int i=0; i<size_; ++i)
-            pca.rangeRow(i).mul(vol.get(i));
+            pca.rowIterator(i).mulAssign(vol.get(i));
         return pca;
     }
 

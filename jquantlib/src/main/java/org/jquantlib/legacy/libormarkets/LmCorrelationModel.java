@@ -40,6 +40,10 @@ public abstract class LmCorrelationModel {
     public LmCorrelationModel(final int size, final int nArguments) {
         this.size_ = size;
         this.arguments_ = new ArrayList<Parameter>(nArguments);
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
     }
 
     public int size() {

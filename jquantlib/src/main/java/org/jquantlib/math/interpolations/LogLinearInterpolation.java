@@ -23,6 +23,7 @@
 package org.jquantlib.math.interpolations;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.iterators.ConstIterator;
 import org.jquantlib.math.interpolations.factories.LogLinear;
 import org.jquantlib.math.matrixutilities.Array;
 
@@ -135,7 +136,7 @@ public class LogLinearInterpolation extends AbstractInterpolation {
             final double value = Math.log(vy.get(i));
             logY.set(i, value);
         }
-        linearInterpolation = LinearInterpolation.getInterpolator().interpolate(vx, logY);
+        linearInterpolation = LinearInterpolation.getInterpolator().interpolate(vx, logY.constIterator());
     }
 
 
@@ -171,14 +172,14 @@ public class LogLinearInterpolation extends AbstractInterpolation {
         //
 
         @Override
-        public final Interpolation interpolate(final Array x, final Array y) /* @ReadOnly */ {
+        public final Interpolation interpolate(final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
             return interpolate(x.size(), x, y);
         }
 
         @Override
-        public final Interpolation interpolate(final int size, final Array x, final Array y) /* @ReadOnly */ {
-            delegate.vx = x.range(0, size);
-            delegate.vy = y.range(0, size);
+        public final Interpolation interpolate(final int size, final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
+            delegate.vx = x.iterator(0, size);
+            delegate.vy = y.iterator(0, size);
             delegate.update();
             return delegate;
         }
