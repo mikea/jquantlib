@@ -228,91 +228,6 @@ public class MatrixTest {
     }
 
 
-
-//    @Test
-//    public void rangeRow() { // final Cells.Style style
-//        rangeRow(Cells.Style.JAVA,    Cells.Style.JAVA);
-//        rangeRow(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-//        rangeRow(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-//        rangeRow(Cells.Style.FORTRAN, Cells.Style.JAVA);
-//    }
-//
-//    private void rangeRow(final Cells.Style styleA, final Cells.Style styleB) {
-//        final Matrix mA = new Matrix(new double[][] {
-//                { 1.0, 0.0, 0.0, 0.0 },
-//                { 1.0, 2.0, 3.0, 4.0 },
-//                { 1.0, 7.0, 7.0, 7.0 },
-//                { 1.0, 8.0, 8.0, 8.0 },
-//                { 1.0, 9.0, 9.0, 9.0 },
-//        }, styleA);
-//
-//        final Matrix mB = new Matrix(new double[][] {
-//                { 1.0, 0.0, -1.0, -2.0 },
-//        }, styleA);
-//
-//        final Matrix mC = new Matrix(new double[][] {
-//                { 1.0 },
-//                { 2.0 },
-//                { 3.0 },
-//                { 4.0 },
-//                { 5.0 },
-//        }, styleA);
-//
-//        final Array aA = new Array(new double[] { 1.0, 7.0, 7.0, 7.0 }, styleB);
-//        final Array aB = new Array(new double[] { 1.0, 0.0, -1.0, -2.0 }, styleB);
-//        final Array aC = new Array(new double[] { 3.0 }, styleB);
-//
-//        if (!mA.rangeRow(2+mA.base()).equals(aA)) fail("'rangeRow' failed");
-//        if (!mB.rangeRow(0+mB.base()).equals(aB)) fail("'rangeRow' failed");
-//        if (!mC.rangeRow(2+mC.base()).equals(aC)) fail("'rangeRow' failed");
-//    }
-//
-//
-//    @Test
-//    public void rangeCol() { // final Cells.Style style
-//        rangeCol(Cells.Style.JAVA,    Cells.Style.JAVA);
-//        rangeCol(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-//        rangeCol(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-//        rangeCol(Cells.Style.FORTRAN, Cells.Style.JAVA);
-//    }
-//
-//    private void rangeCol(final Cells.Style styleA, final Cells.Style styleB) {
-//        final Matrix mA = new Matrix(new double[][] {
-//                { 1.0, 0.0, 0.0, 0.0 },
-//                { 1.0, 2.0, 3.0, 4.0 },
-//                { 1.0, 7.0, 7.0, 7.0 },
-//                { 1.0, 8.0, 8.0, 8.0 },
-//                { 1.0, 9.0, 9.0, 9.0 },
-//        }, styleA);
-//
-//        final Matrix mB = new Matrix(new double[][] {
-//                { 1.0, 0.0, -1.0, -2.0 },
-//        }, styleA);
-//
-//        final Matrix mC = new Matrix(new double[][] {
-//                { 1.0 },
-//                { 2.0 },
-//                { 3.0 },
-//                { 4.0 },
-//                { 5.0 },
-//        }, styleA);
-//
-//        final Array aA = new Array(new double[] {  0.0, 3.0, 7.0, 8.0, 9.0 }, styleB);
-//        final Array aB = new Array(new double[] { -1.0 },                     styleB);
-//        final Array aC = new Array(new double[] {  1.0, 2.0, 3.0, 4.0, 5.0 }, styleB);
-//
-//        //if (!mA.rangeCol(2+mA.base()).equals(aA)) fail("'rangeCol' failed");
-//        //if (!mB.rangeCol(2+mB.base()).equals(aB)) fail("'rangeCol' failed");
-//        //if (!mC.rangeCol(0+mC.base()).equals(aC)) fail("'rangeCol' failed");
-//
-//        if (!mA.rangeCol(2+mA.base(), 1+mA.base()).equals(aA.range(1+aA.base()))) fail("'rangeCol' failed");
-//        if (!mC.rangeCol(0+mC.base(), 2+mC.base()).equals(aC.range(2+aC.base()))) fail("'rangeCol' failed");
-//
-//        if (!mA.rangeCol(2+mA.base(), 1+mA.base(), 3+mA.base()).equals(aA.range(1+aA.base(), 3+aA.base()))) fail("'rangeCol' failed");
-//        if (!mC.rangeCol(0+mC.base(), 2+mC.base(), 3+mC.base()).equals(aC.range(2+aC.base(), 3+aC.base()))) fail("'rangeCol' failed");
-//    }
-
-
     @Test
     public void addAssign() { // final Cells.Style style
         addAssign(Cells.Style.JAVA,    Cells.Style.JAVA);
@@ -1080,9 +995,11 @@ public class MatrixTest {
     }
 
 
+    @Test
+    public void testSqrt() {
 
-//    void MatricesTest::testSqrt() {
-//
+        fail("not implemented yet");
+
 //        BOOST_MESSAGE("Testing matricial square root...");
 //
 //        setup();
@@ -1099,9 +1016,14 @@ public class MatrixTest {
 //                       << "\nerror:     " << error
 //                       << "\ntolerance: " << tolerance);
 //        }
-//    }
-//
-//    void MatricesTest::testHighamSqrt() {
+    }
+
+
+    @Test
+    public void testHighamSqrt() {
+
+        fail("not implemented yet");
+
 //        BOOST_MESSAGE("Testing Higham matricial square root...");
 //
 //        setup();
@@ -1118,7 +1040,7 @@ public class MatrixTest {
 //                       << "\nerror:     " << error
 //                       << "\ntolerance: " << tolerance);
 //        }
-//    }
+    }
 
 
     @Test
@@ -1194,156 +1116,45 @@ public class MatrixTest {
                 {  1/2,  -1/2, -1/2,  1/2 },
             });
 
-
-
-
         final Matrix testMatrices[] = { T1 };
 
-        final MinPack minpack = new MinPack();
 
         for (final Matrix A : testMatrices) {
-
-//            final double[][] b = (double[][]) A.toArray(Cells.Style.FORTRAN);
-//
-//            final double[][] mT = new double[A.columns()][A.rows()];
-//            for (int i=0; i<A.rows(); i++) {
-//                for (int j=0; j<A.columns(); j++) {
-//                    mT[j][i] = A.get(i, j);
-//                }
-//            }
-//
-////            final double[][] B = new double[mT.length+1][mT[0].length+1];
-////            for (int i=0; i<mT.length; i++) {
-////                for (int j=0; j<mT[0].length; j++) {
-////                    // B[i+1][j+1] = A.get(i, j);
-////                    B[i+1][j+1] = mT[i][j];
-////                }
-////            }
-//
-//            final int m = mT.length;
-//            final int n = mT[0].length;
-//            final double rdiag[] = new double[n+1];
-//            final double acnorm[] = new double[n+1];
-//            final double wa[] = new double[m+1];
-//            final int lipvt[] = new int[m+1];
-//            final boolean pivot = true;
-//
-//            final int OFFSET = 1;
-//
-//
-//            minpack.qrfac_f77(m, n, b, pivot, lipvt, rdiag, rdiag, wa);
-//
-//            // obtain R
-//
-//            final double[][] r = new double[n][n];
-//
-//            for (int i=0; i < n; ++i) {
-//                r[i][i] = rdiag[i+OFFSET];
-//                if (i < m) {
-//                    // std::copy(mT.column_begin(i)+i+1, mT.column_end(i), r.row_begin(i)+i+1);
-//                    for (int k=i+1; k < n; k++) {
-//                        r[i][k] = mT[k][i];
-//                    }
-//                }
-//            }
-//
-//            // obtain Q
-//
-//            final double[][] q = new double[m][n];
-//
-//            final double w[] = new double[m];
-//            for (int k=0; k < m; k++) {
-//                //XXX std::fill(w.begin(), w.end(), 0.0);
-//                Arrays.fill(w, 0.0);
-//                w[k] = 1.0;
-//
-//                for (int j=0; j < Math.min(n, m); j++) {
-//                    final double t3 = mT[j][j];
-//                    if (t3 != 0.0) {
-//
-//                        // final double t = std::inner_product(mT.row_begin(j)+j, mT.row_end(j), w.begin()+j, 0.0)/t3;
-//                        double t = 0.0;
-//                        for (int kk=j; kk<Math.min(n, m); kk++) {
-//                            t += mT[j][kk] * w[j];
-//                        }
-//                        t /= t3;
-//
-//                        for (int i=j; i<m; ++i) {
-//                            w[i] -= mT[j][i]*t;
-//                        }
-//                    }
-//                    q[k][j] = w[j];
-//                }
-//
-//                //XXX std::fill(q.row_begin(k) + std::min(n, m), q.row_end(k), 0.0);
-//            }
-//
-//            // obtain ipvt
-//
-//            final int ipvt_[] = new int[n];
-//            if (pivot) {
-//                // std::copy(lipvt.get(), lipvt.get()+n, ipvt.begin());
-//                for (int i=0; i<n; i++) {
-//                    ipvt_[i] = lipvt[i+OFFSET] - OFFSET;
-//                }
-//            } else {
-//                for (int i=0; i < n; ++i)
-//                    ipvt_[i] = i;
-//            }
-
 
             QRDecomposition qr;
             Matrix Q;
             Matrix R;
+            Matrix P;
             Matrix mul1;
             Matrix mul2;
             double tol;
-
-
-            // QR decomposition with column pivoting
-            qr = new Matrix(A, Cells.Style.FORTRAN).qr(true);
-            R = qr.R();
-            Q = qr.Q();
-            final int[] ipvt = qr.pivot();
-
-//            Q = new Matrix(q);
-//            R = new Matrix(r);
-//            final int[] ipvt = ipvt_.clone();
-
-            final Matrix P = new Matrix(A.columns(), A.columns());
-
-            // reverse column pivoting
-            for (int i=0; i < P.columns(); ++i) {
-                P.set(ipvt[i], i, 1.0);
-            }
-
-            mul1 = Q.mul(R);
-            mul2 = A.mul(P);
-            tol = norm( mul1.sub(mul2) ); // norm(Q*R - A*P)
-            if (tol > tolerance)
-                System.out.println("Q*R (pivot=true) does not match matrix A*P");
-            else
-                System.out.println("OK");
-
 
             // QR decomposition without column pivoting
             qr = new Matrix(A, Cells.Style.FORTRAN).qr();
             R = qr.R();
             Q = qr.Q();
-
             mul1 = Q.mul(R);
             tol = norm(mul1.sub(A)); // norm(Q*R - A)
-            if (tol > tolerance)
-                System.out.println("Q*R (pivot=false) does not match matrix A*P");
-            else
-                System.out.println("OK");
+            if (tol > tolerance) fail("Q*R (pivot=false) does not match matrix A*P");
 
+            // QR decomposition with column pivoting
+            qr = new Matrix(A, Cells.Style.FORTRAN).qr(true);
+            R = qr.R();
+            Q = qr.Q();
+            P = qr.P();
+            mul1 = Q.mul(R);
+            mul2 = A.mul(P);
+            tol = norm( mul1.sub(mul2) ); // norm(Q*R - A*P)
+            if (tol > tolerance) fail("Q*R (pivot=true) does not match matrix A*P");
 
         }
     }
 
-//    void MatricesTest::testQRSolve() {
-//
+    @Test
+    public void testQRSolve() {
+
+        fail("not implemented yet");
+
 //        BOOST_MESSAGE("Testing QR solve...");
 //
 //        setup();
@@ -1403,10 +1214,14 @@ public class MatrixTest {
 //                }
 //            }
 //        }
-//    }
+    }
 
-//    void MatricesTest::testDeterminant() {
-//
+
+    @Test
+    public void testDeterminant() {
+
+        fail("not implemented yet");
+
 //        BOOST_MESSAGE("Testing LU determinant calculation...");
 //
 //        setup();
@@ -1456,9 +1271,14 @@ public class MatrixTest {
 //                           << "\n calculated : " << calculated
 //                           << "\n expected   : " << expected);
 //        }
-//    }
+    }
 
-//    void MatricesTest::testOrthogonalProjection() {
+
+    @Test
+    public void testOrthogonalProjection() {
+
+        fail("not implemented yet");
+
 //        BOOST_MESSAGE("Testing orthogonal projections...");
 //
 //        Size dimension = 1000;
@@ -1522,7 +1342,7 @@ public class MatrixTest {
 //            BOOST_FAIL("OrthogonalProjections test failed with " << numberFailures << " failures  of orthogonality and "
 //                        << failuresTwo << " failures of projection size.");
 //
-//    }
+    }
 
 
 

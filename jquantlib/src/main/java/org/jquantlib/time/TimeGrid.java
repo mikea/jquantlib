@@ -160,7 +160,7 @@ public class TimeGrid {
         // regularly spaced.
 
         if (steps == 0){
-            final Array diff = mandatoryTimes.adjacentDifference(1);
+            final Array diff = mandatoryTimes.adjacentDifference(1, mandatoryTimes.size());
 
             int idx_min = 0;
             final int idx_max = diff.size()-1;

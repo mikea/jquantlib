@@ -409,8 +409,8 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
 
         @Override
         public final Interpolation interpolate(final int size, final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
-            delegate.vx = x.iterator(0, size);
-            delegate.vy = y.iterator(0, size);
+            delegate.vx = x.constIterator(0, size);
+            delegate.vy = y.constIterator(0, size);
             n = vx.size();
             vp = new Array(n-1);
             va = new Array(n-1);

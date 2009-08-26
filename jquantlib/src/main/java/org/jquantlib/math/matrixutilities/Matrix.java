@@ -46,7 +46,6 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
-import org.jquantlib.lang.iterators.DoubleListIterator;
 
 /**
  * Bidimensional matrix operations
@@ -1207,14 +1206,6 @@ public class Matrix extends Cells {
             r = 0.0;
         }
         return r;
-    }
-
-
-    public static void copy(final DoubleListIterator src, final DoubleListIterator dst) {
-        while (src.hasNext()) {
-            dst.set(src.nextDouble());
-            dst.forward();
-        }
     }
 
 }

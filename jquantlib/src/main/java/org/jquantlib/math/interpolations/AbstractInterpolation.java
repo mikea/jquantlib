@@ -135,12 +135,12 @@ public abstract class AbstractInterpolation implements Interpolation {
 
     @Override
     public final ConstIterator xValues() {
-        return vx.iterator();
+        return vx.constIterator();
     }
 
     @Override
     public final ConstIterator yValues() {
-        return vy.iterator();
+        return vy.constIterator();
     }
 
     @Override

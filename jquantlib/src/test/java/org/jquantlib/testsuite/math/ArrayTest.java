@@ -25,8 +25,10 @@ package org.jquantlib.testsuite.math;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.QL;
+import org.jquantlib.math.functions.Sqr;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Cells;
+import org.jquantlib.math.matrixutilities.Matrix;
 import org.junit.Test;
 
 /**
@@ -288,30 +290,152 @@ public class ArrayTest {
 
     @Test
     public void innerProduct() {
-        fail("innerProduct failed");
+        // when working with real numbers, both dotProduct and innerProduct give the same results
+        dotProduct();
     }
 
 
     @Test
     public void outerProduct() {
-        fail("outerProduct failed");
+        outerProduct(Cells.Style.JAVA,    Cells.Style.JAVA);
+        outerProduct(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        outerProduct(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        outerProduct(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void outerProduct(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, }, styleA);
+        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 }, styleB);
+
+        final Matrix m = new Matrix( new double[][] {
+                {  6.0,  8.0,  10.0,  2.0 },
+                {  3.0,  4.0,   5.0,  1.0 },
+                { -6.0, -8.0, -10.0, -2.0 }
+        });
+
+        final Matrix result = aA.outerProduct(aB);
+        if (!result.equals(m)) fail("'outerProduct' failed");
     }
 
 
     @Test
     public void transform() {
-        fail("transform failed");
+        transform1(Cells.Style.JAVA,    Cells.Style.JAVA);
+        transform1(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        transform1(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        transform1(Cells.Style.FORTRAN, Cells.Style.JAVA);
+        transform2(Cells.Style.JAVA,    Cells.Style.JAVA);
+        transform2(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        transform2(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        transform2(Cells.Style.FORTRAN, Cells.Style.JAVA);
     }
+
+    private void transform1(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] {  5.0, 2.0, 3.0,  4.0 }, styleA);
+        final Array aB = new Array(new double[] { 25.0, 4.0, 9.0, 16.0 }, styleB);
+
+        final Array result = aA.transform(new Sqr());
+        if (result != aA) fail("'transform' must return this");
+        if (!result.equals(aB)) fail("'transform' failed");
+    }
+
+    private void transform2(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 5.0, 2.0, 3.0,  4.0 }, styleA);
+        final Array aB = new Array(new double[] { 5.0, 4.0, 9.0,  4.0 }, styleB);
+
+        final Array result = aA.transform(aA.base()+1, aA.base()+3, new Sqr());
+        if (result != aA) fail("'transform' must return this");
+        if (!result.equals(aB)) fail("'transform' failed");
+    }
+
 
     @Test
     public void lowerBound() {
-        fail("lowerBound failed");
+        lowerBound(Cells.Style.JAVA);
+        lowerBound(Cells.Style.FORTRAN);
+    }
+
+    private void lowerBound(final Cells.Style style) {
+        final Array aA = new Array(new double[] { -10.0, -5.0, -2.0, -1.0, 0.0, 2.0, 5.0, 10.0 }, style);
+        final int base = aA.base();
+
+        int pos;
+        pos = aA.lowerBound(-12.0); if (pos != 0+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(-10.0); if (pos != 0+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound( -9.0); if (pos != 1+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound( -8.0); if (pos != 1+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound( -6.0); if (pos != 1+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound( -5.0); if (pos != 1+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound( -4.0); if (pos != 2+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(  1.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(  2.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(  3.0); if (pos != 6+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(  8.0); if (pos != 7+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(  9.0); if (pos != 7+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound( 10.0); if (pos != 7+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound( 11.0); if (pos != 8+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound( 12.0); if (pos != 8+base) fail("'lowerBound' failed");
+
+        pos = aA.lowerBound(2+base, 5+base, -12.0); if (pos != 2+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base, -10.0); if (pos != 2+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,  -9.0); if (pos != 2+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,  -8.0); if (pos != 2+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,  -6.0); if (pos != 2+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,  -5.0); if (pos != 2+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,  -4.0); if (pos != 2+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,   1.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,   2.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,   3.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,   8.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,   9.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,  10.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,  11.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = aA.lowerBound(2+base, 5+base,  12.0); if (pos != 5+base) fail("'lowerBound' failed");
     }
 
 
     @Test
     public void upperBound() {
-        fail("upperBound failed");
+        upperBound(Cells.Style.JAVA);
+        upperBound(Cells.Style.FORTRAN);
+    }
+
+    private void upperBound(final Cells.Style style) {
+        final Array aA = new Array(new double[] { -10.0, -5.0, -2.0, -1.0, 0.0, 2.0, 5.0, 10.0 }, style);
+        final int base = aA.base();
+
+        int pos;
+        pos = aA.upperBound(-12.0); if (pos != 0+base) fail("'upperBound' failed");
+        pos = aA.upperBound(-10.0); if (pos != 1+base) fail("'upperBound' failed");
+        pos = aA.upperBound( -9.0); if (pos != 1+base) fail("'upperBound' failed");
+        pos = aA.upperBound( -8.0); if (pos != 1+base) fail("'upperBound' failed");
+        pos = aA.upperBound( -6.0); if (pos != 1+base) fail("'upperBound' failed");
+        pos = aA.upperBound( -5.0); if (pos != 2+base) fail("'upperBound' failed");
+        pos = aA.upperBound( -4.0); if (pos != 2+base) fail("'upperBound' failed");
+        pos = aA.upperBound(  1.0); if (pos != 5+base) fail("'upperBound' failed");
+        pos = aA.upperBound(  2.0); if (pos != 6+base) fail("'upperBound' failed");
+        pos = aA.upperBound(  3.0); if (pos != 6+base) fail("'upperBound' failed");
+        pos = aA.upperBound(  8.0); if (pos != 7+base) fail("'upperBound' failed");
+        pos = aA.upperBound(  9.0); if (pos != 7+base) fail("'upperBound' failed");
+        pos = aA.upperBound( 10.0); if (pos != 8+base) fail("'upperBound' failed");
+        pos = aA.upperBound( 11.0); if (pos != 8+base) fail("'upperBound' failed");
+        pos = aA.upperBound( 12.0); if (pos != 8+base) fail("'upperBound' failed");
+
+        pos = aA.upperBound(1+base, 6+base, -12.0); if (pos != 1+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base, -10.0); if (pos != 1+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,  -9.0); if (pos != 1+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,  -8.0); if (pos != 1+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,  -6.0); if (pos != 1+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,  -5.0); if (pos != 2+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,  -4.0); if (pos != 2+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,   1.0); if (pos != 5+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,   2.0); if (pos != 6+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,   3.0); if (pos != 6+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,   8.0); if (pos != 6+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,   9.0); if (pos != 6+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,  10.0); if (pos != 6+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,  11.0); if (pos != 6+base) fail("'upperBound' failed");
+        pos = aA.upperBound(1+base, 6+base,  12.0); if (pos != 6+base) fail("'upperBound' failed");
     }
 
 
@@ -336,29 +460,6 @@ public class ArrayTest {
             fail("'adjacentDifferences' failed");
     }
 
-    @Test
-    public void apply() {
-        fail("apply failed");
-    }
-
-
-//    @Test
-//    public void range() {
-//        range(Cells.Style.JAVA,    Cells.Style.JAVA);
-//        range(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-//        range(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-//        range(Cells.Style.FORTRAN, Cells.Style.JAVA);
-//    }
-//
-//    private void range(final Cells.Style styleA, final Cells.Style styleB) {
-//        final Array aA = new Array(new double[] { 9.0, 8.0, 1.0, 2.0, 3.0, 4.0, 8.0, 9.0 }, styleA);
-//        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleB);
-//
-//        final Array result = aA.range(2, 6);
-//        if (result == aA) fail("'copyOfRange' must return a new instance");
-//        if (result == aB) fail("'copyOfRange' must return a new instance");
-//        if (!result.equals(aB)) fail("'copyOfRange' failed");
-//    }
 
     @Test
     public void exp() {

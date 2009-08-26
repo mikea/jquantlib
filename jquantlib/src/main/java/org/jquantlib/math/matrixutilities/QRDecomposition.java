@@ -25,6 +25,7 @@ import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.iterators.ConstIterator;
 import org.jquantlib.math.matrixutilities.Cells.ConstColumnIterator;
 import org.jquantlib.math.matrixutilities.Cells.RowIterator;
 
@@ -71,7 +72,7 @@ import org.jquantlib.math.matrixutilities.Cells.RowIterator;
  *
  * @author Richard Gomes
  */
-@QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.OTHER, reviewers = { "Richard Gomes" })
+@QualityAssurance(quality = Quality.Q0_UNFINISHED, version = Version.OTHER, reviewers = { "Richard Gomes" })
 public class QRDecomposition {
 
     private final static String MATRIX_IS_RANK_DEFICIENT = "Matrix is rank deficient";
@@ -131,11 +132,13 @@ public class QRDecomposition {
      *@param pivot pivot is a logical input variable. If pivot is set true, then column pivoting is enforced. If pivot is set
      *            false, then no column pivoting is done.
      */
+
+
     public QRDecomposition(final Matrix A, final boolean pivot) {
 
-        this.AT = new Matrix(A, Cells.Style.FORTRAN); // A.transpose()
-        this.m = AT.rows;
-        this.n = AT.cols;
+        this.m = A.rows;
+        this.n = A.cols;
+        this.AT = new Matrix(A, A.style); // A.transpose()
         this.base = AT.base();
         this.rdiag = new double[this.n+base];
         this.acnorm = new double[n+base];
@@ -206,12 +209,11 @@ public class QRDecomposition {
         final Matrix R = new Matrix(this.n, this.n, AT.style);
 
         for (int i=base; i<n+base; i++) {
-            R.data[R.addr(i, i)] = rdiag[i-base];
-        }
-
-        for (int i=base; i<n+base; i++) {
+            R.data[R.addr(i, i)] = rdiag[i];
             if (i<m+base) {
-                Matrix.copy(AT.columnIterator(i, i+1), R.rowIterator(i, i+1));
+                final ConstColumnIterator itcol = AT.constColumnIterator(i, i+1);
+                final RowIterator itrow = R.rowIterator(i, i+1);
+                itrow.copy(itcol);
             }
         }
 
@@ -226,25 +228,27 @@ public class QRDecomposition {
     public Matrix Q() {
         final Matrix Q = new Matrix(this.m, this.n, Cells.Style.FORTRAN);
 
-        for (int k=1; k<=m; k++) {
+        for (int k=base; k<m+base; k++) {
             final Array w = new Array(m, Cells.Style.FORTRAN);
             w.data[w.addr(k)] = 1.0;
 
-            for (int j=1; j<=Math.min(n, m); j++) {
+            for (int j=base; j<Math.min(n, m)+base; j++) {
                 final double t3 = AT.data[AT.addr(j, j)];
                 if (t3!=0.0) {
-                    //XXX final double t = AT.rangeRow(j, j).innerProduct(w.range(j)) / t3;
-                    final double t = AT.constRowIterator(j, j).innerProduct(w.constIterator()) / t3;
+                    // final double t = AT.constRowIterator(j, j).innerProduct(w.constIterator()) / t3;
 
-                    for (int i=j; i<m; i++) {
-                        // w.data[i] -= AT.data[AT.addr(j, i)] * t;
+                    final ConstIterator itrow = AT.constRowIterator(j, j);
+                    final ConstIterator itcol = w.constIterator(j, Math.min(m, n)+base);
+                    final double t = itrow.innerProduct(itcol) / t3;
+
+                    for (int i=j; i<m+base; i++) {
                         w.data[w.addr(i)] -= AT.data[AT.addr(j, i)] * t;
                     }
                 }
                 Q.data[Q.addr(k, j)] = w.data[j];
             }
 
-            final RowIterator it = Q.rowIterator(k, Math.min(n, m));
+            final RowIterator it = Q.rowIterator(k, Math.min(n, m)+base);
             while (it.hasNext()) {
                 it.set(0.0);
                 it.forward();
@@ -253,6 +257,21 @@ public class QRDecomposition {
 
         return Q;
     }
+
+
+
+    //TODO: comment this method
+    public Matrix P() {
+        final Matrix P = new Matrix(this.n, this.n, AT.style);
+
+        // reverse column pivoting
+        for (int i=base; i < this.n+base; i++) {
+            P.set(ipvt[i], i, 1.0);
+        }
+
+        return P;
+    }
+
 
     /**
      * Least squares solution of A*X = B
@@ -363,7 +382,6 @@ public class QRDecomposition {
         // Compute the initial column norms and initialize several arrays.
         for (j = 1; j <= n; j++) {
             //minpack :: acnorm[j] = Minpack_f77.enorm_f77(m,a[1][j]);
-            //XXX acnorm[j] = enorm_f77(m, a.rangeCol(1,j));
             acnorm[j] = enorm_f77(m, a.constColumnIterator(j));
             rdiag[j] = acnorm[j];
             wa[j] = rdiag[j];
@@ -398,7 +416,6 @@ public class QRDecomposition {
             // Compute the Householder transformation to reduce the j-th column of A to a multiple of the j-th unit vector.
 
             //minpack :: ajnorm = Minpack_f77.enorm_f77(m-j+1,a[j][j]);
-            //XXX ajnorm = enorm_f77(m-j+1, a.rangeCol(j, j));
             ajnorm = enorm_f77(m-j+1, a.constColumnIterator(j, j));
 
             if (ajnorm != zero) {
@@ -429,7 +446,6 @@ public class QRDecomposition {
                             fac = rdiag[k] / wa[k];
                             if (p05 * fac * fac <= epsmch) {
                                 //minpack :: rdiag[k] = Minpack_f77.enorm_f77(m-j,a[jp1][k]);
-                                //XXX rdiag[k] = enorm_f77(m-j, a.rangeCol(jp1, k));
                                 rdiag[k] = enorm_f77(m-j, a.constColumnIterator(k, jp1));
                                 wa[k] = rdiag[k];
                             }

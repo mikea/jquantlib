@@ -45,9 +45,10 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.lang.iterators.Algebra;
 import org.jquantlib.math.Ops;
+import org.jquantlib.math.Ops.BinaryDoubleOp;
 import org.jquantlib.math.Ops.DoubleOp;
-import org.jquantlib.math.functions.Identity;
 
 
 /**
@@ -56,7 +57,7 @@ import org.jquantlib.math.functions.Identity;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q2_RESEMBLANCE, version = Version.V097, reviewers = { "Richard Gomes" })
-public class Array extends Cells {
+public class Array extends Cells implements Algebra<Array>, Cloneable {
 
     /**
      * Default constructor
@@ -121,7 +122,6 @@ public class Array extends Cells {
         System.arraycopy(array, 0, data, 0, this.size);
     }
 
-
     /**
      * Creates a Matrix given a double[][] array
      *
@@ -131,7 +131,6 @@ public class Array extends Cells {
         super(1, a.cols, a.style);
         System.arraycopy(a.data, 0, data, 0, this.size);
     }
-
 
 
     //
@@ -152,66 +151,10 @@ public class Array extends Cells {
         return Arrays.equals(data, another.data);
     }
 
-//XXX
-//    @Override
-//    public String toString() {
-//        final StringBuffer sb = new StringBuffer();
-//
-//        sb.append("[rows=").append(rows).append(" cols=").append(cols).append(" style=").append(style.toString()).append('\n');
-//        sb.append(' ').append(data[0]);
-//        for (int col = 1; col < this.cols; col++)
-//            sb.append(", ").append(data[col]);
-//        sb.append(" ]").append('\n');
-//        return sb.toString();
-//    }
-
 
     //
     // public methods
     //
-
-    /**
-     * Retrieves an element of <code>this</code> Matrix
-     * <p>
-     * This method is provided for performance reasons. See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for
-     * more details
-     *
-     * @param row coordinate
-     * @param col coordinate
-     * @return the contents of a given cell
-     *
-     * @see #getAddress(int)
-     * @see #getAddress(int, int)
-     */
-    public double get(final int pos) {
-        return data[addr(pos)];
-    }
-
-    /**
-     * Stores a value into an element of <code>this</code> Matrix
-     * <p>
-     * This method is provided for performance reasons. See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for
-     * more details
-     *
-     * @param row coordinate
-     * @param col coordinate
-     *
-     * @see #getAddress(int)
-     * @see #getAddress(int, int)
-     */
-    public void set(final int pos, final double value) {
-        data[addr(pos)] = value;
-    }
-
-    /**
-     * Fills all elements of this {@link Array} with a given scalar
-     *
-     * @param scalar is the value to be used to fill in
-     */
-    public Array fill(final double scalar) {
-        Arrays.fill(data, scalar);
-        return this;
-    }
 
     public Object toArray() {
         return toArray(Style.JAVA);
@@ -241,226 +184,44 @@ public class Array extends Cells {
     }
 
     /**
-     * Accumulate values in a range.
+     * Retrieves an element of <code>this</code> Matrix
+     * <p>
+     * This method is provided for performance reasons. See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for
+     * more details
      *
-     * @note Mimics std::accumulate
+     * @param dim coordinate
+     * @param col coordinate
+     * @return the contents of a given cell
      *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
+     * @see #getAddress(int)
+     * @see #getAddress(int, int)
      */
-    public double accumulate() {
-        return accumulate(style.base, this.size+style.base, 0.0);
+    public double get(final int pos) {
+        return data[addr(pos)];
     }
 
     /**
-     * Accumulate values in a range.
+     * Stores a value into an element of <code>this</code> Matrix
+     * <p>
+     * This method is provided for performance reasons. See methods {@link #getAddress(int)} and {@link #getAddress(int, int)} for
+     * more details
      *
-     * @note Mimics std::accumulate
+     * @param dim coordinate
+     * @param col coordinate
      *
-     * @param from is the initial inclusive index
-     * @param to   is the final exclusive index
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
+     * @see #getAddress(int)
+     * @see #getAddress(int, int)
      */
-    public double accumulate(final int from, final int to, final double init) {
-        QL.require(from >= style.base && to >= from && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        double sum = init;
-        for (int i=from; i<to; i++)
-            sum += data[addr(i)];
-        return sum;
-    }
-
-    public double min() {
-        return min(style.base, this.size+style.base);
-    }
-
-    /**
-     * Return the minimum element in a range using comparison functor.
-     *
-     * @note Mimics std::min_element
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g09af772609c56f01dd33891d51340baf">std::min_element</a>
-     */
-    public double min(final int from, final int to) {
-        QL.require(from >= style.base && to > from && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        double result = data[addr(from)];
-        for (int i=0; i<(to-from); i++) {
-            final double tmp = data[addr(from+i)];
-            if (tmp < result) result = tmp;
-        }
-        return result;
-    }
-
-    public double max() {
-        return max(style.base, this.size+style.base);
-    }
-
-    /**
-     * Return the maximum element in a range using comparison functor.
-     *
-     * @note Mimics std::max_element
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01014.html#g595f12feaa16ea8aac6e5bd51782e123">std::max_element</a>
-     */
-    public double max(final int from, final int to) {
-        QL.require(from >= style.base && to > from && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        double result = data[addr(from)];
-        for (int i=0; i<(to-from); i++) {
-            final double tmp = data[addr(from+i)];
-            if (tmp > result) result = tmp;
-        }
-        return result;
-    }
-
-    public Array sort() {
-        Arrays.sort(data);
-        return this;
-    }
-
-    /**
-     * Return differences between adjacent values.
-     *
-     * @note Mimics std::adjacent_difference
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
-     */
-    public final Array adjacentDifference() {
-        return adjacentDifference(style.base);
-    }
-
-    /**
-     * Return differences between adjacent values.
-     *
-     * @note Mimics std::adjacent_difference
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
-     */
-    public final Array adjacentDifference(final int from) {
-        return adjacentDifference(from, size+style.base);
-    }
-
-    /**
-     * Return differences between adjacent values.
-     *
-     * @note Mimics std::adjacent_difference
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
-     */
-    public final Array adjacentDifference(final int from, final int to) {
-        QL.require(from >= style.base && from <= to && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        final Array diff = new Array(to-from+style.base);
-        for (int i = from; i < to; i++) {
-            final double curr = data[addr(i)];
-            if (i == from)
-                diff.data[diff.addr(i-from)] = curr;
-            else {
-                final double prev = data[addr(i-1)];
-                diff.data[diff.addr(i-from)] = curr - prev;
-            }
-        }
-        return diff;
-    }
-
-    /**
-     * Finds the first position in which val could be inserted without changing the ordering.
-     *
-     * @note Mimics std::lower_bound
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
-     */
-    public int lowerBound(final double val) {
-        return lowerBound(style.base, this.size+style.base, val);
-    }
-
-    /**
-     * Finds the first position in which val could be inserted without changing the ordering.
-     *
-     * @note Mimics std::lower_bound
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
-     */
-    private int lowerBound(int from, final int to, final double val) {
-        int len = to - from;
-        int half;
-        int middle;
-
-        while (len > 0) {
-            half = len >> 1;
-            middle = from;
-            middle = middle + half;
-
-            if (data[addr(middle)] < val) {
-                from = middle;
-                from++;
-                len = len - half - 1;
-            } else
-                len = half;
-        }
-        return from;
-    }
-
-    /**
-     * Finds the last position in which val could be inserted without changing the ordering.
-     *
-     * @note Mimics std::upper_bound
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
-     */
-    public int upperBound(final double val) {
-        return upperBound(style.base, this.size+style.base, val);
-    }
-
-    /**
-     * Finds the last position in which val could be inserted without changing the ordering.
-     *
-     * @note Mimics std::upper_bound
-     *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
-     */
-    private int upperBound(int from, final int to, final double val) {
-        int len = to - from;
-        int half;
-        int middle;
-
-        while (len > 0) {
-            half = len >> 1;
-            middle = from;
-            middle = middle + half;
-
-            if (val < data[addr(middle)])
-                len = half;
-            else {
-                from = middle;
-                from++;
-                len = len - half - 1;
-            }
-        }
-        return from;
+    public void set(final int pos, final double value) {
+        data[addr(pos)] = value;
     }
 
 
-    /**
-     * Applies a transformation function to all elements of <code>this</code> Array
-     *
-     * @return this
-     */
-    public Array transform(final DoubleOp func) {
-        return transform(style.base, this.size+style.base, func);
-    }
-
-    /**
-     * Applies a transformation function to a range of elements of <code>this</code> Array
-     *
-     * @return this
-     */
-    public Array transform(final int from, final int to, final Ops.DoubleOp f) {
-        QL.require(from>=style.base && from<=to && to<=this.size+style.base && f!=null, INVALID_ARGUMENTS); // QA:[RG]::verified
-        if (f instanceof Identity) return this;
-        for (int i = from; i < to; i++)
-            data[addr(i)] = f.op(data[addr(i)]);
-        return this;
-    }
-
-
+    ////////////////////////////////////////////////////////////
+    //
+    // implements Algebra<Array>
+    //
+    ////////////////////////////////////////////////////////////
 
 
     //
@@ -478,12 +239,14 @@ public class Array extends Cells {
     //    /=    divAssign  Array   Array    this
     //
 
+    @Override
     public Array addAssign(final double scalar) {
         for (int i=0; i<size; i++)
             data[addrJ(i)] += scalar;
         return this;
     }
 
+    @Override
     public Array subAssign(final double scalar) {
         for (int i=0; i<size; i++)
             data[addrJ(i)] -= scalar;
@@ -496,6 +259,7 @@ public class Array extends Cells {
      * @param another
      * @return this
      */
+    @Override
     public Array subAssign(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++) {
@@ -504,19 +268,21 @@ public class Array extends Cells {
         return this;
     }
 
-
+    @Override
     public Array mulAssign(final double scalar) {
         for (int i=0; i<size; i++)
             data[addrJ(i)] *= scalar;
         return this;
     }
 
+    @Override
     public Array divAssign(final double scalar) {
         for (int i=0; i<size; i++)
             data[addrJ(i)] /= scalar;
         return this;
     }
 
+    @Override
     public Array addAssign(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
@@ -524,13 +290,7 @@ public class Array extends Cells {
         return this;
     }
 
-    public Array subAssign(final Matrix another) {
-        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        for (int i=0; i<size; i++)
-            data[i] -= another.data[i];
-        return this;
-    }
-
+    @Override
     public Array mulAssign(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
@@ -538,7 +298,7 @@ public class Array extends Cells {
         return this;
     }
 
-
+    @Override
     public Array divAssign(final Array another) {
         QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int i=0; i<size; i++)
@@ -560,10 +320,12 @@ public class Array extends Cells {
     //    -     sub        Array   Array     Array
     //    *     mul        Array   scalar    Array
     //    *     mul        Array   Array     Array
+    //    *     mul        Array   Matrix    Array
     //    /     div        Array   scalar    Array
     //    /     div        Array   Array     Array
     //
 
+    @Override
     public Array add(final double scalar) {
         final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
@@ -571,6 +333,7 @@ public class Array extends Cells {
         return result;
     }
 
+    @Override
     public Array sub(final double scalar) {
         final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
@@ -578,6 +341,7 @@ public class Array extends Cells {
         return result;
     }
 
+    @Override
     public Array mul(final double scalar) {
         final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
@@ -585,6 +349,12 @@ public class Array extends Cells {
         return result;
     }
 
+    @Override
+    public Array negative() {
+        return mul(-1);
+    }
+
+    @Override
     public Array div(final double scalar) {
         final Array result = new Array(this.size, style);
         for (int i=0; i<size; i++)
@@ -592,6 +362,7 @@ public class Array extends Cells {
         return result;
     }
 
+    @Override
     public Array add(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.size, style);
@@ -600,6 +371,7 @@ public class Array extends Cells {
         return result;
     }
 
+    @Override
     public Array sub(final Array another) {
         QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.size, style);
@@ -608,6 +380,7 @@ public class Array extends Cells {
         return result;
     }
 
+    @Override
     public Array mul(final Array another) {
         QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.size, style);
@@ -616,7 +389,7 @@ public class Array extends Cells {
         return result;
     }
 
-
+    @Override
     public Array div(final Array another) {
         QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.size, style);
@@ -625,14 +398,7 @@ public class Array extends Cells {
         return result;
     }
 
-
-    //
-    //    Vetorial products
-    //
-    //    opr   method     this    right    result
-    //    ----- ---------- ------- -------- ------
-    //    *     mul        Array   Matrix   Array
-
+    @Override
     public Array mul(final Matrix matrix) {
         QL.require(this.size == matrix.rows, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(this.cols);
@@ -654,11 +420,46 @@ public class Array extends Cells {
     //
     //    opr   method     this    right    result
     //    ----- ---------- ------- -------- ------
+    //    min   min        Array            scalar
+    //    max   max        Array            scalar
     //    abs   abs        Array            Array
     //    sqrt  sqrt       Array            Array
     //    log   log        Array            Array
     //    exp   exp        Array            Array
 
+    @Override
+    public double min() {
+        return min(style.base, this.size+style.base);
+    }
+
+    @Override
+    public double min(final int from, final int to) {
+        QL.require(from >= style.base && to > from && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        double result = data[addr(from)];
+        for (int i=0; i<(to-from); i++) {
+            final double tmp = data[addr(from+i)];
+            if (tmp < result) result = tmp;
+        }
+        return result;
+    }
+
+    @Override
+    public double max() {
+        return max(style.base, this.size+style.base);
+    }
+
+    @Override
+    public double max(final int from, final int to) {
+        QL.require(from >= style.base && to > from && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        double result = data[addr(from)];
+        for (int i=0; i<(to-from); i++) {
+            final double tmp = data[addr(from+i)];
+            if (tmp > result) result = tmp;
+        }
+        return result;
+    }
+
+    @Override
     public Array abs() {
         final Array result = new Array(this.size);
         for (int i=0; i<this.size; i++)
@@ -666,6 +467,17 @@ public class Array extends Cells {
         return result;
     }
 
+    @Override
+    public Array sqr() {
+        final Array result = new Array(this.size);
+        for (int i=0; i<this.size; i++) {
+            final double a = data[addrJ(i)];
+            result.data[result.addrJ(i)] = a*a;
+        }
+        return result;
+    }
+
+    @Override
     public Array sqrt() {
         final Array result = new Array(this.size);
         for (int i=0; i<this.size; i++)
@@ -673,6 +485,7 @@ public class Array extends Cells {
         return result;
     }
 
+    @Override
     public Array log() {
         final Array result = new Array(this.size);
         for (int i=0; i<this.size; i++)
@@ -680,6 +493,7 @@ public class Array extends Cells {
         return result;
     }
 
+    @Override
     public Array exp() {
         final Array result = new Array(this.size);
         for (int i=0; i<this.size; i++)
@@ -694,9 +508,32 @@ public class Array extends Cells {
     //
     //    method       this    right    result
     //    ------------ ------- -------- ------
+    //    fill         Aray    scalar   this
+    //    sort         Array            this
     //    swap         Array   Array    this
     //    outerProduct Array   Array    Matrix
     //    dotProduct   Array   Array    double
+
+    /**
+     * Fills all elements of this {@link Array} with a given scalar
+     *
+     * @param scalar is the value to be used to fill in
+     */
+    @Override
+    public Array fill(final double scalar) {
+        Arrays.fill(data, scalar);
+        return this;
+    }
+
+    /**
+     * Sorts this
+     * @return
+     */
+    @Override
+    public Array sort() {
+        Arrays.sort(data);
+        return this;
+    }
 
     /**
      * Swaps contents of <code>this</code> Matrix by <code>another</code> Matrix
@@ -704,95 +541,177 @@ public class Array extends Cells {
      * @param another
      * @return this
      */
+    @Override
     public Array swap(final Array another) {
         super.swap(another);
         return this;
     }
 
-    /**
-     * Returns the <b>dot product</b> (also known as <b>scalar product</b>) of
-     * <code>this</code> Array and <code>another</code> Array.
-     * <p>
-     * The definition of dot product is
-     * {@latex[ \mathbf{a}\cdot \mathbf{b} = \sum_{i=1}^n a_ib_i = a_1b_1 + a_2b_2 + \cdots + a_nb_n }
-     *
-     * @param another Matrix
-     * @return the dot product between this Matrix and another Matrix
-     *
-     * @see <a href="http://en.wikipedia.org/wiki/Dot_product">Dot Product</a>
-     */
-    public double dotProduct(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        return innerProduct(another, style.base, size+style.base);
+    @Override
+    public double accumulate() {
+        return accumulate(style.base, this.size+style.base, 0.0);
     }
 
-    /**
-     * The inner product generalizes the dot product to abstract vector spaces and is normally denoted by {@latex$ <a , b>}.
-     * <p>
-     * As we are working in space {@latex$ \Re} (real numbers), it's sufficient to understand that both <b>inner product</b> and
-     * <b>dot operator</b> give equivalent results.
-     *
-     * @param another Matrix
-     * @return the inner product between this Matrix and another Matrix
-     *
-     * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
-     */
-    public double innerProduct(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        return innerProduct(another, style.base, size+style.base);
+    @Override
+    public double accumulate(final double init) {
+        return accumulate(style.base, this.size+style.base, init);
     }
 
-
-    /**
-     * The inner product generalizes the dot product to abstract vector spaces and is normally denoted by {@latex$ <a , b>}.
-     * <p>
-     * As we are working in space {@latex$ \Re} (real numbers), it's sufficient to understand that both <b>inner product</b> and
-     * <b>dot operator</b> give equivalent results.
-     *
-     * @param another Matrix
-     * @param from is the start element
-     * @param to is the end element
-     * @return the inner product between this Matrix and another Matrix
-     *
-     * @see <a href="http://en.wikipedia.org/wiki/Inner_product">Inner Product</a>
-     */
-    public double innerProduct(final Array another, final int from, final int to) {
-        QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        double sum = 0.0;
+    @Override
+    public double accumulate(final int from, final int to, final double init) {
+        QL.require(from >= style.base && to >= from && to <= size+style.base ,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        double sum = init;
         for (int i=from; i<to; i++)
-            sum += data[addr(i)] * another.data[another.addr(i)];
+            sum += data[addr(i)];
         return sum;
     }
 
-
-    /**
-     * Performs the <b>outer product</b> of <code>this</code> Array and <code>another</code> Array
-     * <p>
-     * The definition of outer product is:<br/>
-     * Given a vector $\mathbf{u} = (u_1, u_2, \dots, u_m)$ with <i>m</i> elements and
-     *       a vector $\mathbf{v} = (v_1, v_2, \dots, v_n)$ with <i>n</i> elements,
-     * their outer product $\mathbf{u} \otimes \mathbf{v}$ is defined as
-     * {@latex[ $\mathbf{u} \otimes \mathbf{v} = \left[\begin{array}{c c c c}
-     *    u_1v_1 & u_1v_2 & \dots  & u_1v_n \\
-     *    u_2v_1 & u_2v_2 & \dots  & u_2v_n \\
-     *    \vdots & \vdots & \ddots & \vdots \\
-     *    u_mv_1 & u_mv_2 & \dots  & u_mv_n
-     *  \end{array}\right] }
-     *
-     * @param another Array
-     * @return the outer product of <code>this</code> Array and <code>another</code> Array
-     *
-     * @see <a href="http://en.wikipedia.org/wiki/Outer_product">Outer product</a>
-     */
-    public Matrix outerProduct(final Array another) {
-        final Matrix result = new Matrix(this.size, another.size);
-        for (int row=0; row<this.size; row++) {
-            final int raddrJ = result.addrJ(row, 0);
-            for (int col=0; col<another.size; col++)
-                result.data[raddrJ+col] = data[addrJ(row)] * another.data[another.addrJ(col)];
-        }
-        return result;
+    @Override
+    public double dotProduct(final Array another) {
+        return dotProduct(another, another.style.base, another.size+another.style.base);
     }
+
+    @Override
+    public double dotProduct(final Array another, final int from, final int to) {
+        QL.require(this.size() == to-from, ITERATOR_IS_INCOMPATIBLE);
+        QL.require(from >= another.style.base && to >= from && to <= another.size+another.style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        double sum = 0.0;
+        final int offset = from - another.base();
+        for (int i=0; i<this.size; i++) {
+            sum += this.data[i] * another.data[offset + i];
+        }
+        return sum;
+    }
+
+    @Override
+    public double innerProduct(final Array another) {
+        // when working with real numbers, both dotProduct and innerProduct give the same results
+        return dotProduct(another);
+    }
+
+    @Override
+    public double innerProduct(final Array another, final int from, final int to) {
+        // when working with real numbers, both dotProduct and innerProduct give the same results
+        return dotProduct(another, from, to);
+    }
+
+    @Override
+    public Matrix outerProduct(final Array another) {
+        return outerProduct(another, another.style.base, another.size+another.style.base);
+    }
+
+    @Override
+    public Matrix outerProduct(final Array another, final int from, final int to) {
+        QL.require(from >= another.style.base && to >= from && to <= another.size+another.style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        final Matrix m = new Matrix(this.size, to-from, style());
+        for (int i=0; i<this.size(); i++) {
+            for (int j=from-another.base(); j < to-another.base(); j++) {
+                m.data[m.addrJ(i, j)] = this.data[i] * another.data[j];
+            }
+        }
+        return m;
+    }
+
+    @Override
+    public final Array adjacentDifference() {
+        return adjacentDifference(style.base, size+style.base);
+    }
+
+    @Override
+    public final Array adjacentDifference(final int from, final int to) {
+        QL.require(from >= style.base && from <= to && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        final Array diff = new Array(to-from);
+        diff.data[0] = data[from-style.base];
+        for (int i = 1; i < to-style.base; i++) {
+            diff.data[i] = data[i] - data[i-1];
+        }
+        return diff;
+    }
+
+    @Override
+    public Array adjacentDifference(final BinaryDoubleOp f) {
+        return adjacentDifference(style.base, size+style.base, f);
+    }
+
+    @Override
+    public Array adjacentDifference(final int from, final int to, final BinaryDoubleOp f) {
+        QL.require(from >= style.base && from <= to && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        final Array diff = new Array(to-from);
+        diff.data[0] = data[from-style.base];
+        for (int i = 1; i < to-style.base; i++) {
+            diff.data[i] = f.op(data[i], data[i-1]);
+        }
+        return diff;
+    }
+
+    @Override
+    public Array transform(final DoubleOp func) {
+        return transform(style.base, this.size+style.base, func);
+    }
+
+    @Override
+    public Array transform(final int from, final int to, final Ops.DoubleOp f) {
+        QL.require(from>=style.base && from<=to && to<=this.size+style.base && f!=null, INVALID_ARGUMENTS); // QA:[RG]::verified
+        for (int i = from; i < to; i++)
+            data[addr(i)] = f.op(data[addr(i)]);
+        return this;
+    }
+
+    @Override
+    public int lowerBound(final double val) {
+        return lowerBound(style.base, this.size+style.base, val);
+    }
+
+    @Override
+    public int lowerBound(int from, final int to, final double val) {
+        int len = to - from;
+        int half;
+        int middle;
+
+        while (len > 0) {
+            half = len >> 1;
+            middle = from;
+            middle = middle + half;
+
+            if (data[addr(middle)] < val) {
+                from = middle;
+                from++;
+                len = len - half - 1;
+            } else
+                len = half;
+        }
+        return from;
+    }
+
+    @Override
+    public int upperBound(final double val) {
+        return upperBound(style.base, this.size+style.base, val);
+    }
+
+    @Override
+    public int upperBound(int from, final int to, final double val) {
+        int len = to - from;
+        int half;
+        int middle;
+
+        while (len > 0) {
+            half = len >> 1;
+            middle = from;
+            middle = middle + half;
+
+            if (val < data[addr(middle)])
+                len = half;
+            else {
+                from = middle;
+                from++;
+                len = len - half - 1;
+            }
+        }
+        return from;
+    }
+
+
+
 
 
 
@@ -814,7 +733,7 @@ public class Array extends Cells {
     /**
      * Creates a RowIterator for an entire row <code>row</code>
      *
-     * @param row is the desired row
+     * @param dim is the desired row
      * @return an Array obtained from row A( row , [:] )
      * @throws IllegalArgumentException when indices are out of range
      */
@@ -825,7 +744,7 @@ public class Array extends Cells {
     /**
      * Creates a RowIterator for row <code>row</code>
      *
-     * @param row is the desired row
+     * @param dim is the desired row
      * @param col0 is the initial column, inclusive
      * @return an Array obtained from row A( row , [col0:) )
      * @throws IllegalArgumentException when indices are out of range
@@ -837,7 +756,7 @@ public class Array extends Cells {
     /**
      * Creates a RowIterator for row <code>row</code>
      *
-     * @param row is the desired row
+     * @param dim is the desired row
      * @param col0 is the initial column, inclusive
      * @param col1 is the initial column, exclusive
      * @return an Array obtained from row A( row , [col0:col1) )
@@ -850,7 +769,7 @@ public class Array extends Cells {
     /**
      * Creates a constant, non-modifiable RowIterator for an entire row
      *
-     * @param row is the desired row
+     * @param dim is the desired row
      * @return an Array obtained from row A( row , [;] )
      * @throws IllegalArgumentException when indices are out of range
      */
@@ -861,7 +780,7 @@ public class Array extends Cells {
     /**
      * Creates a constant, non-modifiable RowIterator for row <code>row</code>
      *
-     * @param row is the desired row
+     * @param dim is the desired row
      * @param col0 is the initial column, inclusive
      * @return an Array obtained from row A( row , [col0:) )
      * @throws IllegalArgumentException when indices are out of range
@@ -873,7 +792,7 @@ public class Array extends Cells {
     /**
      * Creates a constant, non-modifiable RowIterator for row <code>row</code>
      *
-     * @param row is the desired row
+     * @param dim is the desired row
      * @param col0 is the initial column, inclusive
      * @param col1 is the initial column, exclusive
      * @return an Array obtained from row A( row , [col0:col1) )

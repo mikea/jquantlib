@@ -1,11 +1,22 @@
 /**
- * 
+ *
  */
 package org.jquantlib.lang.iterators;
 
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
 
-public interface ConstIterator extends DoubleListIterator, IteratorAlgebra {
-    public ConstIterator iterator();
-    public ConstIterator iterator(int offset);
-    public ConstIterator iterator(int offset, int size);
+
+/**
+ * An iterator intended to provide read-only access to underlying data kept by classes Matrix and Array
+ * <p>
+ * Operations add and remove are not implemented
+ *
+ * @see Matrix
+ * @see Array
+ *
+ * @author Richard Gomes
+ */
+public interface ConstIterator extends Iterator {
+    // this is a tagging interface
 }
