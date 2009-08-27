@@ -46,6 +46,7 @@ import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.iterators.Algebra;
+import org.jquantlib.lang.iterators.BulkStorage;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.Ops.BinaryDoubleOp;
 import org.jquantlib.math.Ops.DoubleOp;
@@ -57,7 +58,7 @@ import org.jquantlib.math.Ops.DoubleOp;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q2_RESEMBLANCE, version = Version.V097, reviewers = { "Richard Gomes" })
-public class Array extends Cells implements Algebra<Array>, Cloneable {
+public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, Cloneable {
 
     /**
      * Default constructor
@@ -215,6 +216,7 @@ public class Array extends Cells implements Algebra<Array>, Cloneable {
     public void set(final int pos, final double value) {
         data[addr(pos)] = value;
     }
+
 
 
     ////////////////////////////////////////////////////////////
@@ -508,44 +510,9 @@ public class Array extends Cells implements Algebra<Array>, Cloneable {
     //
     //    method       this    right    result
     //    ------------ ------- -------- ------
-    //    fill         Aray    scalar   this
-    //    sort         Array            this
-    //    swap         Array   Array    this
     //    outerProduct Array   Array    Matrix
     //    dotProduct   Array   Array    double
-
-    /**
-     * Fills all elements of this {@link Array} with a given scalar
-     *
-     * @param scalar is the value to be used to fill in
-     */
-    @Override
-    public Array fill(final double scalar) {
-        Arrays.fill(data, scalar);
-        return this;
-    }
-
-    /**
-     * Sorts this
-     * @return
-     */
-    @Override
-    public Array sort() {
-        Arrays.sort(data);
-        return this;
-    }
-
-    /**
-     * Swaps contents of <code>this</code> Matrix by <code>another</code> Matrix
-     *
-     * @param another
-     * @return this
-     */
-    @Override
-    public Array swap(final Array another) {
-        super.swap(another);
-        return this;
-    }
+    //
 
     @Override
     public double accumulate() {
@@ -711,15 +678,6 @@ public class Array extends Cells implements Algebra<Array>, Cloneable {
     }
 
 
-
-
-
-
-
-
-
-
-
     //
     //  Element iterators
     //
@@ -800,6 +758,31 @@ public class Array extends Cells implements Algebra<Array>, Cloneable {
      */
     public ConstRowIterator constIterator(final int col0, final int col1) {
         return new ConstRowIterator(style.base, col0, col1);
+    }
+
+
+    //
+    // implements BulkStorage
+    //
+
+    @Override
+    public Array fill(final double scalar) {
+        return (Array) super.bulkStorage.fill(scalar);
+    }
+
+    @Override
+    public Array fill(final Array another) {
+        return (Array) super.bulkStorage.fill(another);
+    }
+
+    @Override
+    public Array sort() {
+        return (Array) super.bulkStorage.sort();
+    }
+
+    @Override
+    public Array swap(final Array another) {
+        return (Array) super.bulkStorage.swap(another);
     }
 
 }

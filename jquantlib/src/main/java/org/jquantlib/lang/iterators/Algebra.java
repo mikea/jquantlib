@@ -504,9 +504,11 @@ public interface Algebra<T> {
      *
      * @param from is the start element, inclusive
      * @param to is the end element, exclusive
+     * @paran func is a function to be applied to every element
+     *
      * @return this
      */
-    public T transform(final int from, final int to, final Ops.DoubleOp f);
+    public T transform(final int from, final int to, final Ops.DoubleOp func);
 
 
     //
@@ -514,33 +516,8 @@ public interface Algebra<T> {
     //
     //    method          right    result
     //    ------------    -------- ------
-    //    fill            scalar   this
-    //    sort                     this
-    //    swap            <T>      this
     //    lowerBound               int
     //    upperBound               int
-
-    /**
-     * Fills all elements of <code>this</code> instance with a given scalar
-     *
-     * @return this
-     */
-    public T fill(final double scalar);
-
-    /**
-     * Sorts elements of <code>this</code> instance.
-     *
-     * @return this
-     */
-    public T sort();
-
-    /**
-     * Swaps contents of <code>this</code> instance by contents of <code>another</code> instance.
-     *
-     * @param another
-     * @return this
-     */
-    public T swap(final T another);
 
     /**
      * Finds the first position in which val could be inserted without changing the ordering.

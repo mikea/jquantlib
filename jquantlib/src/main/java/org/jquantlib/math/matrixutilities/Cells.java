@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import org.joda.primitives.listiterator.DoubleListIterator;
 import org.jquantlib.QL;
+import org.jquantlib.lang.iterators.BulkStorage;
 import org.jquantlib.lang.iterators.ConstIterator;
 import org.jquantlib.lang.iterators.Iterator;
 import org.jquantlib.math.Ops.BinaryDoubleOp;
@@ -70,6 +71,10 @@ public class Cells {
     /**
      * This enumeration describes how an algorithm can employ different styles of accessing data.
      * <p>
+     * <p>
+     * <b>IMPORTANT:</b> This class is intended only for internal use only.<br/>
+     * This class may disappear without notice. You were warned!!!<br/>
+     * <p>
      * Whilst in C, C++ and Java we employ zero-based indexing, in FORTRAN we employ one-based indexing.
      * Certain algorithms make use of FORTRAN style indexing. In these you will tend to see
      * <pre>
@@ -110,6 +115,7 @@ public class Cells {
      * <p>
      * This method is used internally and is provided for performance reasons.
      *
+     * @deprecated
      *
      * @author Richard Gomes
      */
@@ -190,34 +196,16 @@ public class Cells {
     }
 
 
-    /**
-     * Swaps contents of <code>this</code> Storage by <code>another</code> Storage
-     *
-     * @param another
-     * @return this
-     */
-    protected Cells swap(final Cells another) {
-        QL.require(this.rows==another.rows && this.cols==another.cols && this.size==another.size,  WRONG_BUFFER_LENGTH); // QA:[RG]::verified
-
-        // swaps data
-        double [] dtmp;
-        dtmp = this.data; this.data = another.data; another.data = dtmp;
-        return this;
-    }
-
     //
     // public methods
     //
 
-    public final int rows()    { return rows; }
-    public final int columns() { return cols; }
-
-    public final Style style() { return style; }
-    public final int base()    { return style.base; }
-
+    public final int rows()      { return rows; }
+    public final int columns()   { return cols; }
+    public final Style style()   { return style; }
+    public final int base()      { return style.base; }
     public final int size()      { return size; }
     public final boolean empty() { return size <= 0; }
-
 
 
     //
@@ -241,8 +229,6 @@ public class Cells {
         sb.append("]\n");
         return sb.toString();
     }
-
-
 
 
     //
@@ -287,10 +273,70 @@ public class Cells {
 
 
     //
-    // private abstract inner classes
+    // protected inner classes
     //
 
-    // private abstract class AbstractIterator implements Iterator<AbstractIterator>, RandomAccessDouble {
+    // Composite pattern ::
+    // This composite BulkStorage object is intended to provide the functionality to descendent classes
+    // without exposing directly methods from BulkStorage interface. This class is needed in order to hide these
+    // methods when these operations are undesirable to be exposed by certain implementations.
+    protected BulkStorage<Cells> bulkStorage = new BulkStorageOperations(this);
+
+    /**
+     * This class provides a BulkStorage without exposing its methods directly to descendent classes.
+     * <p>
+     * This composite BulkStorage object is intended to provide the functionality to descendent classes
+     * without exposing directly methods from BulkStorage interface. This class is needed in order to hide these
+     * methods when these operations are undesirable to be exposed by certain implementations.
+     *
+     * @author Richard Gomes
+     */
+    private class BulkStorageOperations implements BulkStorage<Cells> {
+
+        private final Cells caller;
+
+        public BulkStorageOperations(final Cells caller) {
+            this.caller = caller;
+        }
+
+        @Override
+        public Cells fill(final double scalar) {
+            Arrays.fill(data, scalar);
+            return caller;
+        }
+
+        @Override
+        public Cells fill(final Cells another) {
+            QL.require(caller.rows==another.rows && caller.cols==another.cols && caller.size==another.size,  WRONG_BUFFER_LENGTH); // QA:[RG]::verified
+            // copies data
+            System.arraycopy(another.data, 0, caller.data, 0, size);
+            return caller;
+        }
+
+        @Override
+        public Cells swap(final Cells another) {
+            QL.require(caller.rows==another.rows && caller.cols==another.cols && caller.size==another.size,  WRONG_BUFFER_LENGTH); // QA:[RG]::verified
+            // swaps data
+            double [] dtmp;
+            dtmp = caller.data; caller.data = another.data; another.data = dtmp;
+            return caller;
+        }
+
+        @Override
+        public Cells sort() {
+            Arrays.sort(data);
+            return caller;
+        }
+
+    }
+
+
+
+
+    //
+    // private inner classes
+    //
+
     private abstract class AbstractIterator implements Iterator {
 
         protected final int dim;
@@ -298,7 +344,22 @@ public class Cells {
         protected final int pos1;
         protected final int size;
 
+        /**
+         * Index of element to be returned by subsequent call to next.
+         */
         protected int cursor;
+
+        /**
+         * Index of element returned by most recent call to next or
+         * previous.  Reset to -1 if this element is deleted by a call
+         * to remove.
+         */
+        protected int lastRet;
+
+
+        //
+        // protected constructors
+        //
 
         protected AbstractIterator(final int dim, final int pos0, final int pos1, final int cursor) {
             this.dim = dim;
@@ -306,6 +367,7 @@ public class Cells {
             this.pos1 = pos1;
             this.size = pos1-pos0;
             this.cursor = cursor;
+            this.lastRet = -1;
         }
 
         //
@@ -315,6 +377,78 @@ public class Cells {
         @Override
         protected abstract Object clone();
 
+
+        //
+        // override Object
+        //
+
+
+        @Override
+        public String toString() {
+            final StringBuffer sb = new StringBuffer();
+            sb.append(this.getClass().getSimpleName()).append('\n');;
+            sb.append(" dimensions=").append('{').append(dim).append(",[").append(pos0).append(':').append(pos1).append(")}");
+            sb.append(" size=").append(size);
+            sb.append(" style=").append(style).append('\n');
+            final int addr = addr(dim, cursor);
+            double curr;
+            if (addr>=0 && addr < size) {
+                curr = data[addr];
+            } else {
+                curr = Double.NaN;
+            }
+            sb.append(" cursor position=").append(cursor-pos0+style.base).append(" value=").append(curr).append('\n');
+            return sb.toString();
+        }
+
+        /**
+         * An Iterator is considered equal to another if their sizes and contents similar equal.
+         * <p>
+         * Notice that:
+         * <li>Does not matter which kind of Iterators are being compared;</li>
+         * <li>Does not matter which kind of data structures are backing Iterators being compared;</li>
+         * <li>This operation is O(n)</li>
+         * <li>This operation keeps cursor positions intact at end</li>
+         * <p>
+         * <p>
+         * This is the formal description of <code>equals</code>:
+         * <p>
+         * <p>
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean equals(final Object obj) {
+            if (obj instanceof Iterator) {
+                final Iterator another = (Iterator) obj;
+                if (this.size() == another.size()) {
+                    // save current cursor positions
+                    final int tcursor = this.cursor();
+                    final int acursor = another.cursor();
+                    // compare
+                    this.begin(); another.begin();
+                    boolean result = true;
+                    while (this.hasNext() && result) {
+                        result = this.nextDouble() == another.nextDouble();
+                    }
+                    // double check if both Iterators have been completely compared
+                    result &= !(this.hasNext() || another.hasNext());
+                    // restore cursor positions
+                    this.seek(tcursor);
+                    another.seek(acursor);
+                    // finally we have an answer!
+                    return result;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * The hash code is calculated based on the <code>size</code>.
+         */
+        @Override
+        public int hashCode() {
+            return size % 31;
+        }
 
         //
         // implements ListIterator
@@ -362,19 +496,7 @@ public class Cells {
 
         @Override
         public void set(final Double e) {
-            set(e.doubleValue());
-        }
-
-        @Override
-        public Iterator copy(final Iterator another) {
-            QL.require(this.size() == another.size(), ITERATOR_IS_INCOMPATIBLE);
-            this.begin(); another.begin();
-            while (another.hasNext()) {
-                final double d = another.nextDouble();
-                this.set(d);
-                this.forward();
-            }
-            return this;
+            setDouble(e.doubleValue());
         }
 
 
@@ -389,7 +511,7 @@ public class Cells {
 
         @Override
         public int cursor() {
-            return cursor;
+            return cursor-pos0+style.base;
         }
 
         @Override
@@ -404,18 +526,20 @@ public class Cells {
         @Override
         public void begin() {
             cursor = pos0;
+            lastRet = -1;
         }
 
         @Override
         public void end() {
             cursor = pos1;
+            lastRet = -1;
         }
 
 
         @Override
         public void forward() {
             if (cursor < pos1) {
-                cursor++;
+                lastRet = cursor++;
             } else {
                 throw new NoSuchElementException();
             }
@@ -424,7 +548,7 @@ public class Cells {
         @Override
         public void backward() {
             if (cursor >= pos0) {
-                --cursor;
+                lastRet = --cursor;
             } else {
                 throw new NoSuchElementException();
             }
@@ -441,6 +565,62 @@ public class Cells {
         }
 
 
+        //
+        // implements BulkStorage
+        //
+
+        /**
+         * {@inheritDoc}
+         *
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
+        @Override
+        public Iterator fill(final double scalar) {
+            begin();
+            while (hasNext()) {
+                forward();
+                setDouble(scalar);
+            }
+            begin();
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
+        @Override
+        public Iterator fill(final Iterator another) {
+            QL.require(this.size() == another.size(), ITERATOR_IS_INCOMPATIBLE);
+            this.begin(); another.begin();
+            while (another.hasNext()) {
+                final double d = another.nextDouble();
+                this.setDouble(d);
+                this.forward();
+            }
+            this.begin(); another.begin();
+            return this;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
+        @Override
+        public Iterator swap(final Iterator another) {
+            QL.require(this.size()==another.size(),  WRONG_BUFFER_LENGTH); // QA:[RG]::verified
+            this.begin(); another.begin();
+            while (hasNext()) {
+                final double tmp = this.nextDouble();
+                this.setDouble(another.nextDouble());
+                another.setDouble(tmp);
+            }
+            this.begin(); another.begin();
+            return this;
+        }
+
 
         //
         // implements Algebra<Iterator>
@@ -449,81 +629,84 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator addAssign(final double scalar) {
             begin();
             while (hasNext()) {
-                set(nextDouble() + scalar);
+                setDouble(nextDouble() + scalar);
             }
+            begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator addAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
-            begin();
-            another.begin();
+            this.begin(); another.begin();
             while (hasNext()) {
-                set(nextDouble() + another.nextDouble());
+                setDouble(nextDouble() + another.nextDouble());
             }
+            this.begin(); another.begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator subAssign(final double scalar) {
             begin();
             while (hasNext()) {
-                set(nextDouble() - scalar);
+                setDouble(nextDouble() - scalar);
             }
+            begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator subAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
-            begin();
-            another.begin();
+            this.begin(); another.begin();
             while (hasNext()) {
-                set(nextDouble() - another.nextDouble());
+                setDouble(nextDouble() - another.nextDouble());
             }
+            this.begin(); another.begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mulAssign(final double scalar) {
             begin();
             while (hasNext()) {
-                set(nextDouble() * scalar);
+                setDouble(nextDouble() * scalar);
             }
+            begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mulAssign(final Iterator another) {
@@ -531,48 +714,47 @@ public class Cells {
             begin();
             another.begin();
             while (hasNext()) {
-                set(nextDouble() * another.nextDouble());
+                setDouble(nextDouble() * another.nextDouble());
             }
+            begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator divAssign(final double scalar) {
             begin();
             while (hasNext()) {
-                set(nextDouble() / scalar);
+                setDouble(nextDouble() / scalar);
             }
+            begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator divAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
-            begin();
-            another.begin();
+            this.begin(); another.begin();
             while (hasNext()) {
-                set(nextDouble() / another.nextDouble());
+                setDouble(nextDouble() / another.nextDouble());
             }
+            this.begin(); another.begin();
             return this;
         }
-
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator add(final double scalar) {
@@ -583,9 +765,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator add(final Iterator another) {
@@ -596,9 +776,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator sub(final double scalar) {
@@ -609,9 +787,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator sub(final Iterator another) {
@@ -622,9 +798,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mul(final double scalar) {
@@ -635,9 +809,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mul(final Iterator another) {
@@ -648,34 +820,31 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mul(final Matrix matrix) {
-            QL.require(this.size == matrix.rows, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+            QL.require(this.size == matrix.rows(), MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
             begin();
             final Array result = new Array(size());
             for (int i=0; hasNext(); i++) {
                 double sum = 0.0;
                 final double value = next();
                 int addrJ = matrix.addrJ(i, 0);
-                for (int col=0; col<matrix.cols; col++) {
+                for (int col=0; col<matrix.columns(); col++) {
                     sum += value * matrix.data[addrJ];
                     addrJ++;
                 }
                 result.data[i] = sum;
             }
+            begin();
             return result.constIterator();
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator div(final double scalar) {
@@ -686,9 +855,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator div(final Iterator another) {
@@ -699,9 +866,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator negative() {
@@ -712,9 +877,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double dotProduct(final Iterator another) {
@@ -724,28 +887,24 @@ public class Cells {
             while (this.hasNext()) {
                 sum += this.nextDouble() * another.nextDouble();
             }
+            this.begin(); another.begin();
             return sum;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double dotProduct(final Iterator another, final int from, final int to) {
             return dotProduct(another.iterator(from, to));
         }
 
-
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double innerProduct(final Iterator another) {
@@ -756,9 +915,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double innerProduct(final Iterator another, final int from, final int to) {
@@ -769,13 +926,11 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Matrix outerProduct(final Iterator another) {
-            final Matrix m = new Matrix(this.size, another.size(), style());
+            final Matrix result = new Matrix(this.size, another.size(), style());
             // perform calculations
             this.begin(); another.begin();
             int row = style.base; int col = style.base;
@@ -783,20 +938,19 @@ public class Cells {
                 final double v = nextDouble();
                 another.begin();
                 while (hasNext()) {
-                    m.set(row, col, v*another.nextDouble());
+                    result.set(row, col, v*another.nextDouble());
                     col++;
                 }
                 row++;
             }
-            return m;
+            this.begin(); another.begin();
+            return result;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Matrix outerProduct(final Iterator another, final int from, final int to) {
@@ -807,9 +961,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator adjacentDifference() {
@@ -819,9 +971,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator adjacentDifference(final int from, final int to) {
@@ -831,9 +981,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator adjacentDifference(final BinaryDoubleOp f) {
@@ -850,28 +998,24 @@ public class Cells {
                     prev = curr;
                 }
             }
+            begin();
             return diff.constIterator();
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator adjacentDifference(final int from, final int to, final BinaryDoubleOp f) {
             return this.iterator(from, to).adjacentDifference(f);
         }
 
-
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double min() {
@@ -881,15 +1025,14 @@ public class Cells {
                 final double d = nextDouble();
                 if (d < result) result = d;
             }
+            begin();
             return result;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double min(final int from, final int to) {
@@ -899,9 +1042,7 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double max() {
@@ -911,181 +1052,142 @@ public class Cells {
                 final double d = nextDouble();
                 if (d > result) result = d;
             }
+            begin();
             return result;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double max(final int from, final int to) {
             return this.iterator(from, to).max();
         }
 
-
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator abs() {
-            return transform(new Abs());
+            return this.iterator().transform(new Abs());
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator exp() {
-            return transform(new Exp());
+            return this.iterator().transform(new Exp());
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator log() {
-            return transform(new Log());
+            return this.iterator().transform(new Log());
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator sqr() {
-            return transform(new Sqr());
+            return this.iterator().transform(new Sqr());
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator sqrt() {
-            return transform(new Sqrt());
+            return this.iterator().transform(new Sqrt());
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double accumulate() {
-            return accumulate(0);
+            return accumulate(style.base, size+style.base, 0);
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double accumulate(final double init) {
-            begin();
+            return accumulate(style.base, size+style.base, init);
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
+        @Override
+        public double accumulate(final int from, final int to, final double init) {
+            QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            seek(from);
+            int size = to - from;
             double sum = init;
-            while (hasNext()) {
+            while (hasNext() && size > 0) {
                 sum += nextDouble();
+                size--;
             }
+            begin();
             return sum;
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
-         */
-        @Override
-        public double accumulate(final int from, final int to, final double init) {
-            return this.iterator(from, to).accumulate(init);
-        }
-
-        /**
-         * {@inheritDoc}
-         *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator transform(final DoubleOp func) {
-            begin();
-            while (hasNext()) {
-                set(func.op(nextDouble()));
-            }
-            return this;
+            return transform(style.base, size+style.base, func);
         }
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
-        public Iterator transform(final int from, final int to, final DoubleOp f) {
-            return this.iterator(from, to).transform(f);
-        }
-
-        @Override
-        public Iterator fill(final double scalar) {
-            Arrays.fill(data, pos0-style.base, pos1-style.base, scalar);
-            return this;
-        }
-
-        @Override
-        public Iterator sort() {
-            Arrays.sort(data, pos0-style.base, pos1-style.base);
-            return this;
-        }
-
-        @Override
-        public Iterator swap(final Iterator another) {
-            QL.require(this.size()==another.size(),  WRONG_BUFFER_LENGTH); // QA:[RG]::verified
-            while (hasNext()) {
-                final double tmp = nextDouble();
-                this.set(another.nextDouble());
-                another.set(tmp);
+        public Iterator transform(final int from, final int to, final DoubleOp func) {
+            QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            seek(from);
+            int size = to - from;
+            while (hasNext() && size > 0) {
+                final double d = func.op(nextDouble());
+                setDouble(d);
+                size--;
             }
+            begin();
             return this;
         }
-
 
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public int lowerBound(final double val) {
@@ -1095,13 +1197,11 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method affects cursor position of {@link Iterator}(s) in unpredictable ways
-         *
-         * @return a new {@link Iterator} instance, positioned in the beginning
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public int lowerBound(int from, final int to, final double val) {
-            QL.require(from >= style.base && to >= from && to < size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
             int len = to - from;
             int half;
             int middle;
@@ -1111,7 +1211,7 @@ public class Cells {
                 middle = from;
                 middle = middle + half;
 
-                if (this.get(middle) < val) {
+                if (this.get(middle+pos0) < val) {
                     from = middle;
                     from++;
                     len = len - half - 1;
@@ -1121,14 +1221,24 @@ public class Cells {
             return from;
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
         @Override
         public int upperBound(final double val) {
             return upperBound(style.base, size+style.base-1, val);
         }
 
+        /**
+         * {@inheritDoc}
+         *
+         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
         @Override
         public int upperBound(int from, final int to, final double val) {
-            QL.require(from >= style.base && to >= from && to < size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
             int len = to - from;
             int half;
             int middle;
@@ -1138,7 +1248,7 @@ public class Cells {
                 middle = from;
                 middle = middle + half;
 
-                if (val < this.get(middle))
+                if (val < this.get(middle+pos0))
                     len = half;
                 else {
                     from = middle;
@@ -1146,7 +1256,7 @@ public class Cells {
                     len = len - half - 1;
                 }
             }
-            return from;
+            return from/*+style.base*/;
         }
 
     }
@@ -1175,11 +1285,7 @@ public class Cells {
         @Override
         public String toString() {
             final StringBuffer sb = new StringBuffer();
-            sb.append(this.getClass().getSimpleName()).append('\n');;
-            sb.append(" dimensions=").append('{').append(dim).append(",[").append(pos0).append(':').append(pos1).append(")}");
-            sb.append(" size=").append(size);
-            sb.append(" style=").append(style).append('\n');
-            sb.append(" cursor position=").append(cursor-pos0).append(" value=").append(data[addr(dim, cursor)]).append('\n');
+            sb.append(super.toString());
             int addr = addr(dim, pos0);
             sb.append(' ').append(data[addr]);
             for (int i = 1; i < size; i++) {
@@ -1209,7 +1315,9 @@ public class Cells {
         @Override
         public double nextDouble() {
             if (cursor < pos1) {
-                return data[addr(dim, cursor++)];
+                final double next = data[addr(dim, cursor)];
+                lastRet = cursor++;
+                return next;
             } else {
                 throw new NoSuchElementException();
             }
@@ -1218,16 +1326,17 @@ public class Cells {
         @Override
         public double previousDouble() {
             if (cursor > pos0) {
-                return data[addr(dim, --cursor)];
+                lastRet = --cursor;
+                return data[addr(dim, cursor)];
             } else {
                 throw new NoSuchElementException();
             }
         }
 
         @Override
-        public void set(final double e) {
-            if (cursor >=pos0 && cursor < pos1) {
-                data[addr(dim, cursor)] = e;
+        public void setDouble(final double e) {
+            if (lastRet!=-1) {
+                data[addr(dim, lastRet)] = e;
             } else {
                 throw new NoSuchElementException();
             }
@@ -1242,6 +1351,18 @@ public class Cells {
         public void set(final int offset, final double value) {
             data[addr(dim, offset-pos0)] = value;
         }
+
+
+        // --
+
+
+        @Override
+        public Iterator sort() {
+            Arrays.sort(data, pos0-style.base, pos1-style.base);
+            return this;
+        }
+
+
 
 
         //
@@ -1346,11 +1467,7 @@ public class Cells {
         @Override
         public String toString() {
             final StringBuffer sb = new StringBuffer();
-            sb.append(this.getClass().getSimpleName()).append('\n');
-            sb.append(" dimensions=").append("{[").append(pos0).append(":").append(pos1).append("),").append(dim).append('}');
-            sb.append(" size=").append(size);
-            sb.append(" style=").append(style).append('\n');
-            sb.append(" cursor position=").append(cursor-pos0).append(" value=").append(data[addr(cursor, dim)]).append('\n');
+            sb.append(super.toString());
             int addr = addr(pos0, dim);
             sb.append(' ').append(data[addr]);
             for (int i = 1; i < size; i++) {
@@ -1370,7 +1487,9 @@ public class Cells {
         @Override
         public double nextDouble() {
             if (cursor < pos1) {
-                return data[addr(cursor++, dim)];
+                final double next = data[addr(cursor, dim)];
+                lastRet = cursor++;
+                return next;
             } else {
                 throw new NoSuchElementException();
             }
@@ -1379,16 +1498,17 @@ public class Cells {
         @Override
         public double previousDouble() {
             if (cursor > pos0) {
-                return data[addr(--cursor, dim)];
+                lastRet = --cursor;
+                return data[addr(cursor, dim)];
             } else {
                 throw new NoSuchElementException();
             }
         }
 
         @Override
-        public void set(final double e) {
-            if (cursor >=pos0 && cursor < pos1) {
-                data[addr(cursor, dim)] = e;
+        public void setDouble(final double e) {
+            if (lastRet!=-1) {
+                data[addr(lastRet, dim)] = e;
             } else {
                 throw new NoSuchElementException();
             }
@@ -1504,8 +1624,6 @@ public class Cells {
      * <p>
      * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
      *
-     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
-     *
      * @author Richard Gomes
      */
     public class RowIterator extends AbstractRowIterator implements Cloneable {
@@ -1569,7 +1687,7 @@ public class Cells {
      * <p>
      * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
      *
-     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
+     * @note Operations {@link #setDouble(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
      *
      * @author Richard Gomes
      */
@@ -1621,7 +1739,7 @@ public class Cells {
          */
         @Override
         public Object clone() {
-            final RowIterator clone = new RowIterator(dim, pos0, pos1);
+            final ConstRowIterator clone = new ConstRowIterator(dim, pos0, pos1);
             clone.cursor = this.cursor;
             return clone;
         }
@@ -1631,14 +1749,9 @@ public class Cells {
         // implement RandomListIterator
         //
 
-        /**
-         * Copy elements over <code>this</code> Iterator
-         *
-         * @param another is another iterator
-         */
         @Override
-        public Iterator copy(final Iterator another) {
-            throw new UnsupportedOperationException();
+        public Iterator sort() {
+            throw new UnsupportedOperationException("Work in progress");
         }
 
 
@@ -1647,7 +1760,7 @@ public class Cells {
         //
 
         @Override
-        public void set(final double e) {
+        public void setDouble(final double e) {
             throw new UnsupportedOperationException();
         }
 
@@ -1663,8 +1776,6 @@ public class Cells {
      * This class implements a {@link ListIterator} over elements of a column of a {@link Matrix}
      * <p>
      * This class implements {@link ListIterator} and {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
-     *
-     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
      *
      * @author Richard Gomes
      */
@@ -1708,6 +1819,16 @@ public class Cells {
 
 
         //
+        // implements RandomListIterator
+        //
+
+        @Override
+        public Iterator sort() {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+
+
+        //
         // implements Cloneable
         //
 
@@ -1729,7 +1850,7 @@ public class Cells {
      * <p>
      * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
      *
-     * @note Operations {@link #set(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
+     * @note Operations {@link #setDouble(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
      *
      * @author Richard Gomes
      */
@@ -1774,7 +1895,7 @@ public class Cells {
          */
         @Override
         public Object clone() {
-            final ColumnIterator clone = new ColumnIterator(dim, pos0, pos1);
+            final ConstColumnIterator clone = new ConstColumnIterator(dim, pos0, pos1);
             clone.cursor = this.cursor;
             return clone;
         }
@@ -1784,14 +1905,9 @@ public class Cells {
         // implement RandomListIterator
         //
 
-        /**
-         * Copy elements over <code>this</code> Iterator
-         *
-         * @param another is another iterator
-         */
         @Override
-        public Iterator copy(final Iterator another) {
-            throw new UnsupportedOperationException();
+        public Iterator sort() {
+            throw new UnsupportedOperationException("Work in progress");
         }
 
 
@@ -1800,7 +1916,7 @@ public class Cells {
         //
 
         @Override
-        public void set(final double e) {
+        public void setDouble(final double e) {
             throw new UnsupportedOperationException();
         }
 

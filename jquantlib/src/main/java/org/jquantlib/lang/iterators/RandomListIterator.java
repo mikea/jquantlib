@@ -9,12 +9,14 @@ import java.util.ListIterator;
  *
  * @author Richard Gomes
  */
-public interface RandomListIterator extends ListIterator<Double> {
+public interface RandomListIterator<T> extends ListIterator<Double>, BulkStorage<T> {
 
     /**
      * Inserts the specified element into <code>this</code> {@link RandomListIterator} (optional operation).
      *
      * @param e is a double, avoiding un/boxing.
+     *
+     * @see ListIterator#add(Object)
      */
     public abstract void addDouble(final double e);
 
@@ -22,6 +24,8 @@ public interface RandomListIterator extends ListIterator<Double> {
      * Returns the next element in <code>this</code> {@link RandomListIterator}.
      *
      * @return a primitive double, avoid un/boxing
+     *
+     * @see ListIterator#next()
      */
     public abstract double nextDouble();
 
@@ -29,6 +33,8 @@ public interface RandomListIterator extends ListIterator<Double> {
      * Returns the previous element in <code>this</code> {@link RandomListIterator}.
      *
      * @return a primitive double, avoid un/boxing
+     *
+     * @see ListIterator#previous()
      */
     public abstract double previousDouble();
 
@@ -36,32 +42,28 @@ public interface RandomListIterator extends ListIterator<Double> {
      * Replaces the current element with the specified value (optional operation).
      *
      * @param e is a double, avoiding un/boxing.
+     *
+     * @see ListIterator#set(Object)
      */
-    public abstract void set(final double e);
+    public abstract void setDouble(final double e);
 
 
     // --
 
-
     /**
-     * @return the current cursor position.
-     */
-    public abstract int cursor();
-
-    /**
-     * Moves the cursor to a determined position.
+     * Returns the number of elements.
      *
-     * @param pos is the desired position
+     * @return scalar
      */
-    public abstract void seek(int pos);
+    public abstract int size();
 
     /**
-     * Positions the cursor at the beginning of <code>this</code> {@link RandomListIterator}.
+     * Positions the cursor at the beginning.
      */
     public abstract void begin();
 
     /**
-     * Positions the cursor at the ending of <code>this</code> {@link RandomListIterator}.
+     * Positions the cursor at the end.
      */
     public abstract void end();
 
@@ -75,22 +77,31 @@ public interface RandomListIterator extends ListIterator<Double> {
      */
     public abstract void backward();
 
+    /**
+     * Return the current cursor position.
+     *
+     * @return a scalar
+     */
+    public abstract int cursor();
+
+    /**
+     * Moves the cursor to a determined position.
+     *
+     * @param pos is the desired position
+     */
+    public abstract void seek(int pos);
+
 
     // --
 
 
     /**
-     * @return the number of elements.
-     */
-    public abstract int size();
-
-    /**
-     * @return the first element in <code>this</code> RandomListIterator.
+     * @return the first element without touching the cursor pointer.
      */
     public abstract double first();
 
     /**
-     * @return the last element in <code>this</code> RandomListIterator.
+     * @return the last element without touching the cursor pointer.
      */
     public abstract double last();
 

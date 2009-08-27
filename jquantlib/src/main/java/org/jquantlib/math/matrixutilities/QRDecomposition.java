@@ -213,7 +213,7 @@ public class QRDecomposition {
             if (i<m+base) {
                 final ConstColumnIterator itcol = AT.constColumnIterator(i, i+1);
                 final RowIterator itrow = R.rowIterator(i, i+1);
-                itrow.copy(itcol);
+                itrow.fill(itcol);
             }
         }
 
@@ -250,7 +250,7 @@ public class QRDecomposition {
 
             final RowIterator it = Q.rowIterator(k, Math.min(n, m)+base);
             while (it.hasNext()) {
-                it.set(0.0);
+                it.setDouble(0.0);
                 it.forward();
             }
         }

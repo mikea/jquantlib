@@ -25,6 +25,7 @@ package org.jquantlib.testsuite.math;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.iterators.Iterator;
 import org.jquantlib.math.functions.Sqr;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Cells;
@@ -54,8 +55,12 @@ public class ArrayTest {
         final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
         final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleB);
 
-        if (!aA.equals(aB))
-            fail("'equals' failed");
+        if (!aA.equals(aB)) fail("'equals' failed");
+
+        final Iterator itA = aA.constIterator();
+        final Iterator itB = aB.constIterator();
+
+        if (! itA.equals(itB) ) fail("'equals' failed");
     }
 
 
@@ -68,13 +73,16 @@ public class ArrayTest {
     }
 
     private void testClone(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array mA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
-        final Array mB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleB);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
+        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleB);
 
-        final Array result = mA.clone();
-        if (result == mA) fail("'clone' must return a new instance");
-        if (result == mB) fail("'clone' must return a new instance");
-        if (!result.equals(mB)) fail("'clone' failed");
+        final Array array = aA.clone();
+        if (array == aA) fail("'clone' must return a new instance");
+        if (array == aB) fail("'clone' must return a new instance");
+        if (!array.equals(aB)) fail("'clone' failed");
+
+        final Iterator it = (Iterator) aA.constIterator().clone();
+        if (! it.equals(aB.constIterator()) ) fail("'clone' failed");
     }
 
 
@@ -94,6 +102,10 @@ public class ArrayTest {
         if (result == aA) fail("'abs' must return a new instance");
         if (result == aB) fail("'abs' must return a new instance");
         if (!result.equals(aB)) fail("'abs' failed");
+
+        final Iterator itA = aA.constIterator().abs();
+        final Iterator itB = aB.constIterator();
+        if (! itA.equals(itB) ) fail("'abs' failed");
     }
 
 
@@ -108,6 +120,9 @@ public class ArrayTest {
 
         if (aA.accumulate() != 45.0) fail("'accumulate' failed");
         if (aA.accumulate(2+aA.base(), 5+aA.base(), -2.0) != 10.0) fail("'accumulate' failed");
+
+        if (aA.constIterator().accumulate() != 45.0) fail("'accumulate' failed");
+        if (aA.constIterator().accumulate(2+aA.base(), 5+aA.base(), -2.0) != 10.0) fail("'accumulate' failed");
     }
 
     @Test
@@ -123,11 +138,25 @@ public class ArrayTest {
         final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
 
         final Array a = aA.add(aB);
-        if (a == aA) fail("'add' must return a new instance");
-        if (a.size() != aA.size()) fail("'add' failed");
+        if (a == aA)
+            fail("'add' must return a new instance");
+        if (a.size() != aA.size())
+            fail("'add' failed");
 
-        for (int i=a.base(); i<a.size()+a.base(); i++)
-            if (a.get(i) != 5) fail("'add' failed");
+        for (int i = a.base(); i < a.size() + a.base(); i++)
+            if (a.get(i) != 5)
+                fail("'add' failed");
+
+        final Iterator it = aA.iterator().add(aB.constIterator());
+        int count = 0;
+        it.begin();
+        while (it.hasNext()) {
+            if (it.nextDouble() != 5)
+                fail("'add' failed");
+            count++;
+        }
+        if (count != 4)
+            fail("'add' failed");
     }
 
     @Test
@@ -163,11 +192,24 @@ public class ArrayTest {
         final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
 
         final Array a = aA.sub(aB);
-        if (a == aA) fail("'sub' must return a new instance");
-        if (a.size() != aA.size()) fail("'sub' failed");
+        if (a == aA)
+            fail("'sub' must return a new instance");
+        if (a.size() != aA.size())
+            fail("'sub' failed");
 
-        for (int i=a.base(); i<a.size()+a.base(); i++)
-            if (a.get(i) != 5) fail("'sub' failed");
+        for (int i = a.base(); i < a.size() + a.base(); i++)
+            if (a.get(i) != 5)
+                fail("'sub' failed");
+
+        final Iterator it = aA.iterator().sub(aB.constIterator());
+        int count = 0;
+        while (it.hasNext()) {
+            if (it.nextDouble() != 5)
+                fail("'sub' failed");
+            count++;
+        }
+        if (count != 4)
+            fail("'sub' failed");
     }
 
     @Test
@@ -334,18 +376,34 @@ public class ArrayTest {
         final Array aA = new Array(new double[] {  5.0, 2.0, 3.0,  4.0 }, styleA);
         final Array aB = new Array(new double[] { 25.0, 4.0, 9.0, 16.0 }, styleB);
 
-        final Array result = aA.transform(new Sqr());
-        if (result != aA) fail("'transform' must return this");
+        Array tmp;
+
+        tmp = aA.clone();
+        final Array result = tmp.transform(new Sqr());
+        if (result != tmp) fail("'transform' must return this");
         if (!result.equals(aB)) fail("'transform' failed");
+
+        tmp = aA.clone();
+        final Iterator itA = tmp.iterator().transform(new Sqr());
+        final Iterator itB = aB.constIterator();
+        if (! itA.equals(itB) ) fail("'transform' failed");
     }
 
     private void transform2(final Cells.Style styleA, final Cells.Style styleB) {
         final Array aA = new Array(new double[] { 5.0, 2.0, 3.0,  4.0 }, styleA);
         final Array aB = new Array(new double[] { 5.0, 4.0, 9.0,  4.0 }, styleB);
 
-        final Array result = aA.transform(aA.base()+1, aA.base()+3, new Sqr());
-        if (result != aA) fail("'transform' must return this");
+        Array tmp;
+
+        tmp = aA.clone();
+        final Array result = tmp.transform(aA.base()+1, aA.base()+3, new Sqr());
+        if (result != tmp) fail("'transform' must return this");
         if (!result.equals(aB)) fail("'transform' failed");
+
+        tmp = aA.clone();
+        final Iterator itA = tmp.iterator().transform(aA.base()+1, aA.base()+3, new Sqr());
+        final Iterator itB = aB.constIterator();
+        if (! itA.equals(itB) ) fail("'transform' failed");
     }
 
 
@@ -358,39 +416,46 @@ public class ArrayTest {
     private void lowerBound(final Cells.Style style) {
         final Array aA = new Array(new double[] { -10.0, -5.0, -2.0, -1.0, 0.0, 2.0, 5.0, 10.0 }, style);
         final int base = aA.base();
+        final int size = aA.size();
 
+        lowerBound(aA, 0+base, size+base,  -12.0, 0+base);
+        lowerBound(aA, 0+base, size+base,  -10.0, 0+base);
+        lowerBound(aA, 0+base, size+base,   -9.0, 1+base);
+        lowerBound(aA, 0+base, size+base,   -8.0, 1+base);
+        lowerBound(aA, 0+base, size+base,   -6.0, 1+base);
+        lowerBound(aA, 0+base, size+base,   -5.0, 1+base);
+        lowerBound(aA, 0+base, size+base,   -4.0, 2+base);
+        lowerBound(aA, 0+base, size+base,    1.0, 5+base);
+        lowerBound(aA, 0+base, size+base,    2.0, 5+base);
+        lowerBound(aA, 0+base, size+base,    3.0, 6+base);
+        lowerBound(aA, 0+base, size+base,    8.0, 7+base);
+        lowerBound(aA, 0+base, size+base,    9.0, 7+base);
+        lowerBound(aA, 0+base, size+base,   10.0, 7+base);
+        lowerBound(aA, 0+base, size+base,   11.0, 8+base);
+        lowerBound(aA, 0+base, size+base,   12.0, 8+base);
+
+        lowerBound(aA, 2+base, 5+base,  -12.0, 2+base);
+        lowerBound(aA, 2+base, 5+base,  -10.0, 2+base);
+        lowerBound(aA, 2+base, 5+base,   -9.0, 2+base);
+        lowerBound(aA, 2+base, 5+base,   -8.0, 2+base);
+        lowerBound(aA, 2+base, 5+base,   -6.0, 2+base);
+        lowerBound(aA, 2+base, 5+base,   -5.0, 2+base);
+        lowerBound(aA, 2+base, 5+base,   -4.0, 2+base);
+        lowerBound(aA, 2+base, 5+base,    1.0, 5+base);
+        lowerBound(aA, 2+base, 5+base,    2.0, 5+base);
+        lowerBound(aA, 2+base, 5+base,    3.0, 5+base);
+        lowerBound(aA, 2+base, 5+base,    8.0, 5+base);
+        lowerBound(aA, 2+base, 5+base,    9.0, 5+base);
+        lowerBound(aA, 2+base, 5+base,   10.0, 5+base);
+        lowerBound(aA, 2+base, 5+base,   11.0, 5+base);
+        lowerBound(aA, 2+base, 5+base,   12.0, 5+base);
+
+    }
+
+    private void lowerBound(final Array a, final int pos0, final int pos1, final double value, final int expected) {
         int pos;
-        pos = aA.lowerBound(-12.0); if (pos != 0+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(-10.0); if (pos != 0+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound( -9.0); if (pos != 1+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound( -8.0); if (pos != 1+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound( -6.0); if (pos != 1+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound( -5.0); if (pos != 1+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound( -4.0); if (pos != 2+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(  1.0); if (pos != 5+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(  2.0); if (pos != 5+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(  3.0); if (pos != 6+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(  8.0); if (pos != 7+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(  9.0); if (pos != 7+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound( 10.0); if (pos != 7+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound( 11.0); if (pos != 8+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound( 12.0); if (pos != 8+base) fail("'lowerBound' failed");
-
-        pos = aA.lowerBound(2+base, 5+base, -12.0); if (pos != 2+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base, -10.0); if (pos != 2+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,  -9.0); if (pos != 2+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,  -8.0); if (pos != 2+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,  -6.0); if (pos != 2+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,  -5.0); if (pos != 2+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,  -4.0); if (pos != 2+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,   1.0); if (pos != 5+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,   2.0); if (pos != 5+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,   3.0); if (pos != 5+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,   8.0); if (pos != 5+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,   9.0); if (pos != 5+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,  10.0); if (pos != 5+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,  11.0); if (pos != 5+base) fail("'lowerBound' failed");
-        pos = aA.lowerBound(2+base, 5+base,  12.0); if (pos != 5+base) fail("'lowerBound' failed");
+        pos = a.lowerBound(pos0, pos1, value);                 if (pos != expected) fail("'lowerBound' failed");
+        pos = a.constIterator().lowerBound(pos0, pos1, value); if (pos != expected) fail("'lowerBound' failed");
     }
 
 
@@ -403,39 +468,45 @@ public class ArrayTest {
     private void upperBound(final Cells.Style style) {
         final Array aA = new Array(new double[] { -10.0, -5.0, -2.0, -1.0, 0.0, 2.0, 5.0, 10.0 }, style);
         final int base = aA.base();
+        final int size = aA.size();
 
+        upperBound(aA, 0+base, size+base,  -12.0, 0+base);
+        upperBound(aA, 0+base, size+base,  -10.0, 1+base);
+        upperBound(aA, 0+base, size+base,   -9.0, 1+base);
+        upperBound(aA, 0+base, size+base,   -8.0, 1+base);
+        upperBound(aA, 0+base, size+base,   -6.0, 1+base);
+        upperBound(aA, 0+base, size+base,   -5.0, 2+base);
+        upperBound(aA, 0+base, size+base,   -4.0, 2+base);
+        upperBound(aA, 0+base, size+base,    1.0, 5+base);
+        upperBound(aA, 0+base, size+base,    2.0, 6+base);
+        upperBound(aA, 0+base, size+base,    3.0, 6+base);
+        upperBound(aA, 0+base, size+base,    8.0, 7+base);
+        upperBound(aA, 0+base, size+base,    9.0, 7+base);
+        upperBound(aA, 0+base, size+base,   10.0, 8+base);
+        upperBound(aA, 0+base, size+base,   11.0, 8+base);
+        upperBound(aA, 0+base, size+base,   12.0, 8+base);
+
+        upperBound(aA, 1+base, 6+base,  -12.0, 1+base);
+        upperBound(aA, 1+base, 6+base,  -10.0, 1+base);
+        upperBound(aA, 1+base, 6+base,   -9.0, 1+base);
+        upperBound(aA, 1+base, 6+base,   -8.0, 1+base);
+        upperBound(aA, 1+base, 6+base,   -6.0, 1+base);
+        upperBound(aA, 1+base, 6+base,   -5.0, 2+base);
+        upperBound(aA, 1+base, 6+base,   -4.0, 2+base);
+        upperBound(aA, 1+base, 6+base,    1.0, 5+base);
+        upperBound(aA, 1+base, 6+base,    2.0, 6+base);
+        upperBound(aA, 1+base, 6+base,    3.0, 6+base);
+        upperBound(aA, 1+base, 6+base,    8.0, 6+base);
+        upperBound(aA, 1+base, 6+base,    9.0, 6+base);
+        upperBound(aA, 1+base, 6+base,   10.0, 6+base);
+        upperBound(aA, 1+base, 6+base,   11.0, 6+base);
+        upperBound(aA, 1+base, 6+base,   12.0, 6+base);
+    }
+
+    private void upperBound(final Array a, final int pos0, final int pos1, final double value, final int expected) {
         int pos;
-        pos = aA.upperBound(-12.0); if (pos != 0+base) fail("'upperBound' failed");
-        pos = aA.upperBound(-10.0); if (pos != 1+base) fail("'upperBound' failed");
-        pos = aA.upperBound( -9.0); if (pos != 1+base) fail("'upperBound' failed");
-        pos = aA.upperBound( -8.0); if (pos != 1+base) fail("'upperBound' failed");
-        pos = aA.upperBound( -6.0); if (pos != 1+base) fail("'upperBound' failed");
-        pos = aA.upperBound( -5.0); if (pos != 2+base) fail("'upperBound' failed");
-        pos = aA.upperBound( -4.0); if (pos != 2+base) fail("'upperBound' failed");
-        pos = aA.upperBound(  1.0); if (pos != 5+base) fail("'upperBound' failed");
-        pos = aA.upperBound(  2.0); if (pos != 6+base) fail("'upperBound' failed");
-        pos = aA.upperBound(  3.0); if (pos != 6+base) fail("'upperBound' failed");
-        pos = aA.upperBound(  8.0); if (pos != 7+base) fail("'upperBound' failed");
-        pos = aA.upperBound(  9.0); if (pos != 7+base) fail("'upperBound' failed");
-        pos = aA.upperBound( 10.0); if (pos != 8+base) fail("'upperBound' failed");
-        pos = aA.upperBound( 11.0); if (pos != 8+base) fail("'upperBound' failed");
-        pos = aA.upperBound( 12.0); if (pos != 8+base) fail("'upperBound' failed");
-
-        pos = aA.upperBound(1+base, 6+base, -12.0); if (pos != 1+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base, -10.0); if (pos != 1+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,  -9.0); if (pos != 1+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,  -8.0); if (pos != 1+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,  -6.0); if (pos != 1+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,  -5.0); if (pos != 2+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,  -4.0); if (pos != 2+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,   1.0); if (pos != 5+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,   2.0); if (pos != 6+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,   3.0); if (pos != 6+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,   8.0); if (pos != 6+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,   9.0); if (pos != 6+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,  10.0); if (pos != 6+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,  11.0); if (pos != 6+base) fail("'upperBound' failed");
-        pos = aA.upperBound(1+base, 6+base,  12.0); if (pos != 6+base) fail("'upperBound' failed");
+        pos = a.upperBound(pos0, pos1, value);                 if (pos != expected) fail("'upperBound' failed");
+        pos = a.constIterator().upperBound(pos0, pos1, value); if (pos != expected) fail("'upperBound' failed");
     }
 
 
@@ -452,12 +523,13 @@ public class ArrayTest {
         final Array aB = new Array(new double[] { 1.0, 1.0, 1.0, 2.0, 4.0,  2.0,  1.0 }, styleB);
 
         final Array result = aA.adjacentDifference();
-        if (result == aA)
-            fail("'adjacentDifferences' must return a new instance");
-        if (result == aB)
-            fail("'adjacentDifferences' must return a new instance");
-        if (!result.equals(aB))
-            fail("'adjacentDifferences' failed");
+        if (result == aA) fail("'adjacentDifferences' must return a new instance");
+        if (result == aB) fail("'adjacentDifferences' must return a new instance");
+        if (!result.equals(aB)) fail("'adjacentDifferences' failed");
+
+        final Iterator itA = aA.constIterator().adjacentDifference();
+        final Iterator itB = aB.constIterator();
+        if (! itA.equals(itB) ) fail("'adjacentDifferences' failed");
     }
 
 
@@ -474,9 +546,13 @@ public class ArrayTest {
         final Array aB = new Array(new double[] { Math.exp(1), Math.exp(2), Math.exp(3), Math.exp(4) }, styleB);
 
         final Array result = aA.exp();
-        if (result == aA) fail("'log' must return a new instance");
-        if (result == aB) fail("'log' must return a new instance");
-        if (!result.equals(aB)) fail("'log' failed");
+        if (result == aA) fail("'exp' must return a new instance");
+        if (result == aB) fail("'exp' must return a new instance");
+        if (!result.equals(aB)) fail("'exp' failed");
+
+        final Iterator itA = aA.constIterator().exp();
+        final Iterator itB = aB.constIterator();
+        if (! itA.equals(itB) ) fail("'exp' failed");
     }
 
 
@@ -535,6 +611,10 @@ public class ArrayTest {
         if (result == aA) fail("'log' must return a new instance");
         if (result == aB) fail("'log' must return a new instance");
         if (!result.equals(aB)) fail("'log' failed");
+
+        final Iterator itA = aA.constIterator().log();
+        final Iterator itB = aB.constIterator();
+        if (! itA.equals(itB) ) fail("'log' failed");
     }
 
     @Test
@@ -603,7 +683,35 @@ public class ArrayTest {
         if (result == aA) fail("'sqrt' must return a new instance");
         if (result == aB) fail("'sqrt' must return a new instance");
         if (!result.equals(aB)) fail("'sqrt' failed");
+
+        final Iterator itA = aA.constIterator().sqrt();
+        final Iterator itB = aB.constIterator();
+        if (! itA.equals(itB) ) fail("'sqrt' failed");
     }
+
+
+    @Test
+    public void sqr() {
+        sqr(Cells.Style.JAVA,    Cells.Style.JAVA);
+        sqr(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
+        sqr(Cells.Style.JAVA,    Cells.Style.FORTRAN);
+        sqr(Cells.Style.FORTRAN, Cells.Style.JAVA);
+    }
+
+    private void sqr(final Cells.Style styleA, final Cells.Style styleB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0,  4.0 }, styleA);
+        final Array aB = new Array(new double[] { 1.0, 4.0, 9.0, 16.0 }, styleB);
+
+        final Array result = aA.sqr();
+        if (result == aA) fail("'sqr' must return a new instance");
+        if (result == aB) fail("'sqr' must return a new instance");
+        if (!result.equals(aB)) fail("'sqr' failed");
+
+        final Iterator itA = aA.constIterator().sqr();
+        final Iterator itB = aB.constIterator();
+        if (! itA.equals(itB) ) fail("'sqr' failed");
+    }
+
 
     @Test
     public void swap() {

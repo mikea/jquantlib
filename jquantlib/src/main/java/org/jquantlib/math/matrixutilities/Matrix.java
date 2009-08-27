@@ -46,6 +46,7 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.lang.iterators.BulkStorage;
 
 /**
  * Bidimensional matrix operations
@@ -138,7 +139,7 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.V097, reviewers = { "Richard Gomes" })
-public class Matrix extends Cells {
+public class Matrix extends Cells implements BulkStorage<Matrix> {
 
     //
     // public constructors
@@ -282,29 +283,6 @@ public class Matrix extends Cells {
             addr += cols;
         }
         return buffer;
-    }
-
-    /**
-     * Fills all elements of this Matrix with a given scalar
-     *
-     * @param scalar is the value to be used to fill in
-     * @return this
-     */
-    public Matrix fill(final double scalar) {
-        Arrays.fill(data, scalar);
-        return this;
-    }
-
-    /**
-     * Fills <code>this</code> Matrix with contents from <code>another</code> Matrix
-     *
-     * @param another is the source Matrix where data is being copied from
-     * @return <code>this</code>
-     */
-    public Matrix fill(final Matrix another) {
-        QL.require(size == another.size, MATRIX_IS_INCOMPATIBLE);
-        System.arraycopy(another.data, 0, data, 0, size);
-        return this;
     }
 
     /**
@@ -764,18 +742,6 @@ public class Matrix extends Cells {
 
 
     /**
-     * Swaps contents of <code>this</code> Matrix by <code>another</code> Matrix
-     *
-     * @param another
-     * @return this
-     */
-    public Matrix swap(final Matrix another) {
-        super.swap(another);
-        return this;
-    }
-
-
-    /**
      * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
      *
      * @param row0 Initial row index, inclusive
@@ -922,104 +888,6 @@ public class Matrix extends Cells {
         }
         return result;
     }
-
-//XXX
-//    /**
-//     * Creates an Array made of elements of a row of <code>this</code> Matrix.
-//     *
-//     * @param row is a row index
-//     * @return A(row, [:] )
-//     * @exception IllegalArgumentException when indices are out of range
-//     */
-//    public Array rangeRow(final int row) {
-//        return rangeRow(row, style.base);
-//    }
-//
-//    /**
-//     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
-//     *
-//     * @param row is a row index
-//     * @param offset0 Initial column index, inclusive
-//     * @return A(row, [col0:] )
-//     * @exception IllegalArgumentException when indices are out of range
-//     */
-//    public Array rangeRow(final int row, final int col0) {
-//        return rangeRow(row, col0, cols+style.base);
-//    }
-//
-//    /**
-//     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
-//     *
-//     * @param row row index
-//     * @param col0 Initial column index, inclusive
-//     * @param col1 Final column index, exclusive
-//     * @return A(row, [col0:col1) ), preserving the {@link Style} of <code>this</code> Matrix
-//     * @exception IllegalArgumentException when indices are out of range
-//     */
-//    public Array rangeRow(final int row, final int col0, final int col1) {
-//        QL.require(row  >= style.base && row < rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-//        QL.require(col0 >= style.base && col1 > col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-//
-//        final int ncols = col1-col0;
-//        final Array result = new Array(ncols, style);
-//        System.arraycopy(data, addr(row, col0), result.data, 0, ncols);
-//        return result;
-//    }
-//
-//    /**
-//     * Creates an Array made of elements of a column of <code>this</code> Matrix.
-//     *
-//     * @param col column index
-//     * @return A([:], col)
-//     * @exception IllegalArgumentException when indices are out of range
-//     */
-//    public Array rangeCol(final int col) {
-//        return rangeCol(col, style.base);
-//    }
-//
-//    /**
-//     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
-//     *
-//     * @param row row index
-//     * @param row0 Initial column index, inclusive
-//     * @return A([row0:), col)
-//     * @exception IllegalArgumentException when indices are out of range
-//     */
-//    public Array rangeCol(final int col, final int row0) {
-//        return rangeCol(col, row0, rows+style.base);
-//    }
-//
-//    /**
-//     * Creates an Array made of elements of <code>this</code> Matrix, specified by a certain range of elements in a row.
-//     *
-//     * @param row row index
-//     * @param row0 Initial column index, inclusive
-//     * @param row1 Final column index, exclusive
-//     * @return A([row0:row1), col)
-//     * @exception IllegalArgumentException when indices are out of range
-//     */
-//    public Array rangeCol(final int col, final int row0, final int row1) {
-//        QL.require(col  >= style.base && col  < cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-//        QL.require(row0 >= style.base && row1 > row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-//
-//        final int nrows = row1-row0;
-//        final Array result = new Array(nrows, style);
-//
-//        int addr = addr(row0, col);
-//        for (int i = 0; i < nrows; i++) {
-//            result.data[i] = data[addr];
-//            addr += cols;
-//        }
-//        return result;
-//    }
-
-
-
-
-
-
-
-
 
 
     //
@@ -1177,6 +1045,31 @@ public class Matrix extends Cells {
      */
     public ConstColumnIterator constColumnIterator(final int col, final int row0, final int row1) {
         return new ConstColumnIterator(col, row0, row1);
+    }
+
+
+    //
+    // implements BulkStorage
+    //
+
+    @Override
+    public Matrix fill(final double scalar) {
+        return (Matrix) super.bulkStorage.fill(scalar);
+    }
+
+    @Override
+    public Matrix fill(final Matrix another) {
+        return (Matrix) super.bulkStorage.fill(another);
+    }
+
+    @Override
+    public Matrix sort() {
+        return (Matrix) super.bulkStorage.sort();
+    }
+
+    @Override
+    public Matrix swap(final Matrix another) {
+        return (Matrix) super.bulkStorage.swap(another);
     }
 
 
