@@ -934,11 +934,12 @@ public class Cells {
             // perform calculations
             this.begin(); another.begin();
             int row = style.base; int col = style.base;
-            while (hasNext()) {
-                final double v = nextDouble();
-                another.begin();
-                while (hasNext()) {
-                    result.set(row, col, v*another.nextDouble());
+            while (this.hasNext()) {
+                final double vt = this.nextDouble();
+                another.begin(); col=style.base;
+                while (another.hasNext()) {
+                    final double va = another.nextDouble();
+                    result.set(row, col, vt*va);
                     col++;
                 }
                 row++;

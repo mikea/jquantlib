@@ -171,11 +171,23 @@ public class ArrayTest {
         final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
         final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
 
-        final Array a = aA.addAssign(aB);
-        if (a != aA) fail("addAssign must return <this>");
+        final Array clone = aA.clone();
+        final Array a = clone.addAssign(aB);
+        if (a != clone) fail("addAssign must return <this>");
 
         for (int i=a.base(); i<a.size()+a.base(); i++)
             if (a.get(i) != 5) fail("'addAssign' failed");
+
+        final Iterator it = aA.clone().iterator().addAssign(aB.constIterator());
+        int count = 0;
+        it.begin();
+        while (it.hasNext()) {
+            if (it.nextDouble() != 5)
+                fail("'addAssign' failed");
+            count++;
+        }
+        if (count != 4)
+            fail("'addAssign' failed");
     }
 
 
@@ -224,12 +236,24 @@ public class ArrayTest {
         final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 }, styleA);
         final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
 
-        final Array a = aA.subAssign(aB);
-        if (a != aA) fail("subAssign must return <this>");
+        final Array clone = aA.clone();
+        final Array a = clone.subAssign(aB);
+        if (a != clone) fail("subAssign must return <this>");
+        if (a.size() != aA.size()) fail("'subAssign' failed");
 
         for (int i=a.base(); i<a.size()+a.base(); i++)
             if (a.get(i) != 5) fail("'subAssign' failed");
-    }
+
+        final Iterator it = aA.iterator().subAssign(aB.constIterator());
+        int count = 0;
+        while (it.hasNext()) {
+            if (it.nextDouble() != 5)
+                fail("'subAssign' failed");
+            count++;
+        }
+        if (count != 4)
+            fail("'subAssing' failed");
+}
 
 
     @Test
@@ -244,12 +268,24 @@ public class ArrayTest {
         final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 }, styleA);
         final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 }, styleB);
 
-        final Array a = aA.mul(aB);
-        if (a == aA) fail("'mul' must return a new instance");
+        final Array clone = aA.clone();
+        final Array a = clone.mul(aB);
+        if (a == clone) fail("'mul' must return a new instance");
         if (a.size() != aA.size()) fail("'mul' failed");
 
         for (int i=a.base(); i<a.size()+a.base(); i++)
             if (a.get(i) != 1000) fail("'mul' failed");
+
+        final Iterator it = aA.iterator().mul(aB.constIterator());
+        int count = 0;
+        it.begin();
+        while (it.hasNext()) {
+            if (it.nextDouble() != 1000)
+                fail("'mul' failed");
+            count++;
+        }
+        if (count != 4)
+            fail("'mul' failed");
     }
 
     @Test
@@ -264,11 +300,23 @@ public class ArrayTest {
         final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 }, styleA);
         final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 }, styleB);
 
-        final Array a = aA.mulAssign(aB);
-        if (a != aA) fail("mulAssign must return <this>");
+        final Array clone = aA.clone();
+        final Array a = clone.mulAssign(aB);
+        if (a != clone) fail("mulAssign must return <this>");
+        if (a.size() != aA.size()) fail("'mulAssign' failed");
 
         for (int i=a.base(); i<a.size()+a.base(); i++)
             if (a.get(i) != 1000) fail("'mulAssign' failed");
+
+        final Iterator it = aA.iterator().mulAssign(aB.constIterator());
+        int count = 0;
+        while (it.hasNext()) {
+            if (it.nextDouble() != 1000)
+                fail("'mullAssign' failed");
+            count++;
+        }
+        if (count != 4)
+            fail("'mulAssign' failed");
     }
 
 
@@ -284,12 +332,24 @@ public class ArrayTest {
         final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 }, styleA);
         final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 }, styleB);
 
-        final Array a = aA.div(aB);
-        if (a == aA) fail("'div' must return a new instance");
+        final Array clone = aA.clone();
+        final Array a = clone.div(aB);
+        if (a == clone) fail("'div' must return a new instance");
         if (a.size() != aA.size()) fail("'div' failed");
 
         for (int i=a.base(); i<a.size()+a.base(); i++)
             if (a.get(i) != 2) fail("'div' failed");
+
+        final Iterator it = aA.iterator().div(aB.constIterator());
+        int count = 0;
+        it.begin();
+        while (it.hasNext()) {
+            if (it.nextDouble() != 2)
+                fail("'div' failed");
+            count++;
+        }
+        if (count != 4)
+            fail("'div' failed");
     }
 
 
@@ -305,11 +365,23 @@ public class ArrayTest {
         final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 }, styleA);
         final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 }, styleB);
 
-        final Array a = aA.divAssign(aB);
-        if (a != aA) fail("divAssign must return <this>");
+        final Array clone = aA.clone();
+        final Array a = clone.divAssign(aB);
+        if (a != clone) fail("divAssign must return <this>");
+        if (a.size() != aA.size()) fail("'divAssign' failed");
 
         for (int i=a.base(); i<a.size()+a.base(); i++)
             if (a.get(i) != 2) fail("'divAssign' failed");
+
+        final Iterator it = aA.iterator().divAssign(aB.constIterator());
+        int count = 0;
+        while (it.hasNext()) {
+            if (it.nextDouble() != 2)
+                fail("'divAssign' failed");
+            count++;
+        }
+        if (count != 4)
+            fail("'divAssing' failed");
     }
 
 
@@ -325,8 +397,8 @@ public class ArrayTest {
         final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, 3.0 }, styleA);
         final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 }, styleB);
 
-        final double d = aA.dotProduct(aB);
-        if (d != 3) fail("'dotProduct' failed");
+        if (aA.dotProduct(aB) != 3) fail("'dotProduct' failed");
+        if (aA.constIterator().dotProduct(aB.constIterator()) != 3) fail("'dotProduct' failed");
     }
 
 
@@ -355,8 +427,8 @@ public class ArrayTest {
                 { -6.0, -8.0, -10.0, -2.0 }
         });
 
-        final Matrix result = aA.outerProduct(aB);
-        if (!result.equals(m)) fail("'outerProduct' failed");
+        if (! aA.outerProduct(aB).equals(m)) fail("'outerProduct' failed");
+        if (! aA.constIterator().outerProduct(aB.constIterator()).equals(m)) fail("'outerProduct' failed");
     }
 
 
