@@ -73,11 +73,11 @@ public final class Sample<T> {
     // public getters
     //
     
-    public T getValue() {
+    public T value() {
         return value;
     }
 
-    public double getWeight() {
+    public double weight() {
         return weight;
     }
 

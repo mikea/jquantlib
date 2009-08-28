@@ -122,8 +122,8 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
         double weight = 1.0;
         for (int i = 0; i < this.dimension; i++) {
             final Sample<Double> sample = this.rng.next();
-            this.sequence[i] = sample.getValue();
-            weight *= sample.getWeight();
+            this.sequence[i] = sample.value();
+            weight *= sample.weight();
         }
         return new Sample<double[]>(sequence, weight);
     }

@@ -74,6 +74,6 @@ public class InverseCumulativeRng<RNG extends RandomNumberGenerator, IC extends 
         }
         Sample<Double> sample = uniformGenerator_.next(); // FIXME: usage of sample_type :: typedef Sample<Real> sample_type;
         
-        return new Sample<Double>(ICND_.op(sample.getValue()), sample.getWeight());
+        return new Sample<Double>(ICND_.op(sample.value()), sample.weight());
     }
 }

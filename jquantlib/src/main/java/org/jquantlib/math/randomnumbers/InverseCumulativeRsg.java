@@ -105,8 +105,8 @@ public class InverseCumulativeRsg<USG extends UniformRandomSequenceGenerator, IC
         if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
         
         Sample<double[]> sample = this.ursg.nextSequence();
-        double[] v = sample.getValue();
-        this.weight = sample.getWeight();
+        double[] v = sample.value();
+        this.weight = sample.weight();
         
         double[] d = new double[this.dimension];
         for (int i = 0; i < this.dimension; i++) {

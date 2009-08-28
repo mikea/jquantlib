@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,7 +24,6 @@
 
 package org.jquantlib.math.randomnumbers;
 
-import java.util.Date;
 
 
 
@@ -32,79 +31,78 @@ import java.util.Date;
  * Random seed generator
  * <p>
  * Random number generator used for automatic generation of initialization seeds.
- * 
+ *
  * @author Dominik Holenstein
- * 
+ *
  **/
 //TEST: write test cases
 public class SeedGenerator {
-	
+
 	//
 	// private static fields
 	//
-	
+
     /**
      * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
      */
 	private static volatile SeedGenerator instance;
-	
-	
+
+
 	//
 	// private fields
 	//
-	
-	private MersenneTwisterUniformRng rng_;
-	
-	
+
+	private MersenneTwisterUniformRng rng;
+
+
 	//
 	// private constructor
 	//
-		
+
 	private SeedGenerator() {
         if (System.getProperty("EXPERIMENTAL")==null) {
             throw new UnsupportedOperationException("Work in progress");
         }
-		this.rng_ = new MersenneTwisterUniformRng(42);
+		this.rng = new MersenneTwisterUniformRng(42);
 		initialize();
 	}
 
-	
+
 	//
 	// private methods
 	//
-	
+
 	private void initialize() {
-		
-		// firstSeed is chosen based on Date and used for the first rng 
-		final Date now = new Date();
-		final long firstSeed = now.getTime();
+
+		// firstSeed is chosen based on Date and used for the first rng
+		final long firstSeed = System.currentTimeMillis();
 		final MersenneTwisterUniformRng first = new MersenneTwisterUniformRng(firstSeed);
-		
+
 		// secondSeed is as random as it could be
 		// feel free to suggest improvements
 	 	final long secondSeed = first.nextInt32();
 		final MersenneTwisterUniformRng second = new MersenneTwisterUniformRng(secondSeed);
-		
+
 		// use the second rng to initialize the final one
 		final long skip = second.nextInt32() % 1000;
-		final long init[] = new long[4];
-		init[0] = second.nextInt32();
-		init[1] = second.nextInt32();
-		init[2] = second.nextInt32();
-		init[3] = second.nextInt32();
-		
-		this.rng_ = new MersenneTwisterUniformRng(init);
-		
+		final int init[] = new int[4];
+		init[0] = (int) second.nextInt32();
+		init[1] = (int) second.nextInt32();
+		init[2] = (int) second.nextInt32();
+		init[3] = (int) second.nextInt32();
+
+		this.rng = new MersenneTwisterUniformRng(init);
+
 		for (long i=0; i<skip; i++ ){
-			rng_.nextInt32();
+			rng.nextInt32();
 		}
 	}
-	
+
 	//
 	// Singleton pattern.
 	// Create new instance only if it does not exist yet
 	//
-	
+
 	public static SeedGenerator getInstance() {
 		if (instance == null) {
 			synchronized (SeedGenerator.class) {
@@ -113,14 +111,14 @@ public class SeedGenerator {
 				}
 			}
 		}
-		return instance; 
+		return instance;
 	}
 
-	
+
 	public long get() {
-		return  rng_.nextInt32();
+		return  rng.nextInt32();
 	}
-	
+
 }
 
 

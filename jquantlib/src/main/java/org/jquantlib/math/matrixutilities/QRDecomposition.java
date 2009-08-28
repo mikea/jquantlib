@@ -21,7 +21,7 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.matrixutilities;
 
-
+import org.jquantlib.QL;
 
 /**
  * Calculates the QR-decomposition of a matrix.
@@ -72,8 +72,8 @@ public class QRDecomposition {
      * Calculates the QR-decomposition of the given matrix.
      * @param matrix The matrix to decompose.
      */
-    public QRDecomposition(final Matrix matrix, final boolean pivoting) {
-        throw new UnsupportedOperationException("Work in progress");
+    public QRDecomposition(final Matrix matrix) {
+        this(matrix, false);
     }
 
 
@@ -81,7 +81,10 @@ public class QRDecomposition {
      * Calculates the QR-decomposition of the given matrix.
      * @param matrix The matrix to decompose.
      */
-    public QRDecomposition(final Matrix matrix) {
+    public QRDecomposition(final Matrix matrix, final boolean pivoting) {
+
+        if (pivoting)
+            QL.warn("Column pivoting not implemented yet. Going ahead without column pivoting");
 
         final int m = matrix.rows();
         final int n = matrix.columns();
@@ -142,16 +145,19 @@ public class QRDecomposition {
                  * alpha = -<x,v>/(a*qr[minor][minor])
                  */
                 for (int col = minor+1; col < n; col++) {
-                    final int caddr = mT.addr(col, 0); // "col" means row, in fact, because mT is a transpose matrix
                     //-- final double[] qrtCol = qrt[col];
+                    final int caddr = mT.addr(col, 0); // "col" means row, in fact, because mT is a transpose matrix
                     double alpha = 0;
                     for (int row = minor; row < m; row++) {
+                        //-- alpha -= qrtCol[row] * qrtMinor[row];
                         alpha -= mT.data[caddr+row] * mT.data[mbase+row];
                     }
+                    //-- alpha /= a * qrtMinor[minor];
                     alpha /= a * mT.data[mbase+minor];
 
                     // Subtract the column vector alpha*v from x.
                     for (int row = minor; row < m; row++) {
+                        //-- qrtCol[row] -= alpha * qrtMinor[row];
                         mT.data[caddr+row] -= alpha * mT.data[mbase+row];
                     }
                 }
@@ -196,9 +202,7 @@ public class QRDecomposition {
 
     /** {@inheritDoc} */
     public Matrix QT() {
-
         if (cachedQT == null) {
-
             // QT is supposed to be m x m
             //-- final int n = qrt.length;
             //-- final int m = qrt[0].length;
@@ -239,14 +243,11 @@ public class QRDecomposition {
 
         // return the cached matrix
         return cachedQT;
-
     }
 
     /** {@inheritDoc} */
     public Matrix H() {
-
         if (cachedH == null) {
-
             //-- final int n = qrt.length;
             //-- final int m = qrt[0].length;
             final int n = mT.rows();
@@ -257,226 +258,166 @@ public class QRDecomposition {
                     cachedH.set(i, j, mT.data[mT.addr(j,i)] / -rDiag[j]);
                 }
             }
-
         }
-
         // return the cached matrix
         return cachedH;
-
     }
 
 
-
-    public Matrix solve(final Matrix B) {
-            throw new UnsupportedOperationException("Work in progress");
+    /**
+     * @Note At the moment column pivoting is not implemented so this method returns an {@link Identity} matrix instead
+     *
+     * @return the permutation Matrix
+     */
+    public Matrix P() {
+        return new Identity(mT.rows);
     }
 
 
+    /** {@inheritDoc} */
+    public boolean isNonSingular() {
+        for (final double diag : rDiag) {
+            if (diag == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-//    /** {@inheritDoc} */
-//    public DecompositionSolver getSolver() {
-//        return new Solver(qrt, rDiag);
-//    }
+
+    /** {@inheritDoc} */
+    public Array solve(final Array B) {
+
+        //-- final int n = qrt.length;
+        //-- final int m = qrt[0].length;
+        final Matrix qrt = mT;
+        final int n = qrt.rows();
+        final int m = qrt.columns();
+
+        QL.require(B.cols == m, Cells.MATRIX_IS_INCOMPATIBLE);
+        QL.require(isNonSingular(), Cells.MATRIX_IS_SINGULAR);
+
+        final double[] x = new double[n];
+        final double[] y = B.data;
+
+        // apply Householder transforms to solve Q.y = b
+        for (int minor = 0; minor < Math.min(m, n); minor++) {
+
+            //final double[] qrtMinor = qrt[minor];
+            final int maddr = qrt.addr(minor,0);
+
+            double dotProduct = 0;
+            for (int row = minor; row < m; row++) {
+                //-- dotProduct += y[row] * qrtMinor[row];
+                dotProduct += y[row] * qrt.data[maddr+row];
+            }
+            //-- dotProduct /= rDiag[minor] * qrtMinor[minor];
+            dotProduct /= rDiag[minor] * qrt.data[maddr+minor];
+
+            for (int row = minor; row < m; row++) {
+                y[row] += dotProduct * qrt.data[maddr+row];
+            }
+        }
+
+        // solve triangular system R.x = y
+        for (int row = rDiag.length - 1; row >= 0; --row) {
+            y[row] /= rDiag[row];
+            final double yRow   = y[row];
+            //-- final double[] qrtRow = qrt[row];
+            final int raddr = qrt.addr(row,0);
+            x[row] = yRow;
+            for (int i = 0; i < row; i++) {
+                y[i] -= yRow * qrt.data[raddr+i];
+            }
+        }
+
+        return new Array(x);
+    }
+
+
+    /** {@inheritDoc} */
+    public Matrix solve (final Matrix b) {
+//        //-- final int n = qrt.length;
+//        //-- final int m = qrt[0].length;
+//        final Matrix qrt = mT;
+//        final int n = qrt.rows();
+//        final int m = qrt.columns();
 //
-//    /** Specialized solver. */
-//    private static class Solver implements DecompositionSolver {
+//        QL.require(b.rows == m, Cells.MATRIX_IS_INCOMPATIBLE);
+//        QL.require(isNonSingular(), Cells.MATRIX_IS_SINGULAR);
 //
-//        /**
-//         * A packed TRANSPOSED representation of the QR decomposition.
-//         * <p>The elements BELOW the diagonal are the elements of the UPPER triangular
-//         * matrix R, and the rows ABOVE the diagonal are the Householder reflector vectors
-//         * from which an explicit form of Q can be recomputed if desired.</p>
-//         */
-//        private final double[][] qrt;
+//        final int columns        = b.cols;
+//        final int blockSize      = BlockRealMatrix.BLOCK_SIZE;
+//        final int cBlocks        = (columns + blockSize - 1) / blockSize;
+//        final double[][] xBlocks = BlockRealMatrix.createBlocksLayout(n, columns);
+//        //-- final double[][] y       = new double[b.rows][blockSize];
+//        final Matrix y;
 //
-//        /** The diagonal elements of R. */
-//        private final double[] rDiag;
+//        final double[]   alpha   = new double[blockSize];
 //
-//        /**
-//         * Build a solver from decomposed matrix.
-//         * @param qrt packed TRANSPOSED representation of the QR decomposition
-//         * @param rDiag diagonal elements of R
-//         */
-//        private Solver(final double[][] qrt, final double[] rDiag) {
-//            this.qrt   = qrt;
-//            this.rDiag = rDiag;
-//        }
+//        for (int kBlock = 0; kBlock < cBlocks; ++kBlock) {
+//            final int kStart = kBlock * blockSize;
+//            final int kEnd   = Math.min(kStart + blockSize, columns);
+//            final int kWidth = kEnd - kStart;
 //
-//        /** {@inheritDoc} */
-//        public boolean isNonSingular() {
-//
-//            for (double diag : rDiag) {
-//                if (diag == 0) {
-//                    return false;
-//                }
-//            }
-//            return true;
-//
-//        }
-//
-//        /** {@inheritDoc} */
-//        public double[] solve(double[] b)
-//        throws IllegalArgumentException, InvalidMatrixException {
-//
-//            final int n = qrt.length;
-//            final int m = qrt[0].length;
-//            if (b.length != m) {
-//                throw MathRuntimeException.createIllegalArgumentException(
-//                        "vector length mismatch: got {0} but expected {1}",
-//                        b.length, m);
-//            }
-//            if (!isNonSingular()) {
-//                throw new SingularMatrixException();
-//            }
-//
-//            final double[] x = new double[n];
-//            final double[] y = b.clone();
+//            // get the right hand side vector
+//            y = b.range(0, m-1, kStart, kEnd-1);
 //
 //            // apply Householder transforms to solve Q.y = b
 //            for (int minor = 0; minor < Math.min(m, n); minor++) {
-//
 //                final double[] qrtMinor = qrt[minor];
-//                double dotProduct = 0;
-//                for (int row = minor; row < m; row++) {
-//                    dotProduct += y[row] * qrtMinor[row];
-//                }
-//                dotProduct /= rDiag[minor] * qrtMinor[minor];
+//                final double factor     = 1.0 / (rDiag[minor] * qrtMinor[minor]);
 //
-//                for (int row = minor; row < m; row++) {
-//                    y[row] += dotProduct * qrtMinor[row];
+//                Arrays.fill(alpha, 0, kWidth, 0.0);
+//                for (int row = minor; row < m; ++row) {
+//                    final double   d    = qrtMinor[row];
+//                    final double[] yRow = y[row];
+//                    for (int k = 0; k < kWidth; ++k) {
+//                        alpha[k] += d * yRow[k];
+//                    }
+//                }
+//                for (int k = 0; k < kWidth; ++k) {
+//                    alpha[k] *= factor;
+//                }
+//
+//                for (int row = minor; row < m; ++row) {
+//                    final double   d    = qrtMinor[row];
+//                    final double[] yRow = y[row];
+//                    for (int k = 0; k < kWidth; ++k) {
+//                        yRow[k] += alpha[k] * d;
+//                    }
 //                }
 //
 //            }
 //
 //            // solve triangular system R.x = y
-//            for (int row = rDiag.length - 1; row >= 0; --row) {
-//                y[row] /= rDiag[row];
-//                final double yRow   = y[row];
-//                final double[] qrtRow = qrt[row];
-//                x[row] = yRow;
-//                for (int i = 0; i < row; i++) {
-//                    y[i] -= yRow * qrtRow[i];
+//            for (int j = rDiag.length - 1; j >= 0; --j) {
+//                final int      jBlock = j / blockSize;
+//                final int      jStart = jBlock * blockSize;
+//                final double   factor = 1.0 / rDiag[j];
+//                final double[] yJ     = y[j];
+//                final double[] xBlock = xBlocks[jBlock * cBlocks + kBlock];
+//                for (int k = 0, index = (j - jStart) * kWidth; k < kWidth; ++k, ++index) {
+//                    yJ[k]        *= factor;
+//                    xBlock[index] = yJ[k];
 //                }
-//            }
 //
-//            return x;
-//
-//        }
-//
-//        /** {@inheritDoc} */
-//        public RealVector solve(RealVector b)
-//        throws IllegalArgumentException, InvalidMatrixException {
-//            try {
-//                return solve((ArrayRealVector) b);
-//            } catch (ClassCastException cce) {
-//                return new ArrayRealVector(solve(b.getData()), false);
-//            }
-//        }
-//
-//        /** Solve the linear equation A &times; X = B.
-//         * <p>The A matrix is implicit here. It is </p>
-//         * @param b right-hand side of the equation A &times; X = B
-//         * @return a vector X that minimizes the two norm of A &times; X - B
-//         * @throws IllegalArgumentException if matrices dimensions don't match
-//         * @throws InvalidMatrixException if decomposed matrix is singular
-//         */
-//        public ArrayRealVector solve(ArrayRealVector b)
-//        throws IllegalArgumentException, InvalidMatrixException {
-//            return new ArrayRealVector(solve(b.getDataRef()), false);
-//        }
-//
-//        /** {@inheritDoc} */
-//        public RealMatrix solve(RealMatrix b)
-//        throws IllegalArgumentException, InvalidMatrixException {
-//
-//            final int n = qrt.length;
-//            final int m = qrt[0].length;
-//            if (b.getRowDimension() != m) {
-//                throw MathRuntimeException.createIllegalArgumentException(
-//                        "dimensions mismatch: got {0}x{1} but expected {2}x{3}",
-//                        b.getRowDimension(), b.getColumnDimension(), m, "n");
-//            }
-//            if (!isNonSingular()) {
-//                throw new SingularMatrixException();
-//            }
-//
-//            final int columns        = b.getColumnDimension();
-//            final int blockSize      = BlockRealMatrix.BLOCK_SIZE;
-//            final int cBlocks        = (columns + blockSize - 1) / blockSize;
-//            final double[][] xBlocks = BlockRealMatrix.createBlocksLayout(n, columns);
-//            final double[][] y       = new double[b.getRowDimension()][blockSize];
-//            final double[]   alpha   = new double[blockSize];
-//
-//            for (int kBlock = 0; kBlock < cBlocks; ++kBlock) {
-//                final int kStart = kBlock * blockSize;
-//                final int kEnd   = Math.min(kStart + blockSize, columns);
-//                final int kWidth = kEnd - kStart;
-//
-//                // get the right hand side vector
-//                b.copySubMatrix(0, m - 1, kStart, kEnd - 1, y);
-//
-//                // apply Householder transforms to solve Q.y = b
-//                for (int minor = 0; minor < Math.min(m, n); minor++) {
-//                    final double[] qrtMinor = qrt[minor];
-//                    final double factor     = 1.0 / (rDiag[minor] * qrtMinor[minor]);
-//
-//                    Arrays.fill(alpha, 0, kWidth, 0.0);
-//                    for (int row = minor; row < m; ++row) {
-//                        final double   d    = qrtMinor[row];
-//                        final double[] yRow = y[row];
-//                        for (int k = 0; k < kWidth; ++k) {
-//                            alpha[k] += d * yRow[k];
-//                        }
-//                    }
+//                final double[] qrtJ = qrt[j];
+//                for (int i = 0; i < j; ++i) {
+//                    final double rIJ  = qrtJ[i];
+//                    final double[] yI = y[i];
 //                    for (int k = 0; k < kWidth; ++k) {
-//                        alpha[k] *= factor;
+//                        yI[k] -= yJ[k] * rIJ;
 //                    }
-//
-//                    for (int row = minor; row < m; ++row) {
-//                        final double   d    = qrtMinor[row];
-//                        final double[] yRow = y[row];
-//                        for (int k = 0; k < kWidth; ++k) {
-//                            yRow[k] += alpha[k] * d;
-//                        }
-//                    }
-//
-//                }
-//
-//                // solve triangular system R.x = y
-//                for (int j = rDiag.length - 1; j >= 0; --j) {
-//                    final int      jBlock = j / blockSize;
-//                    final int      jStart = jBlock * blockSize;
-//                    final double   factor = 1.0 / rDiag[j];
-//                    final double[] yJ     = y[j];
-//                    final double[] xBlock = xBlocks[jBlock * cBlocks + kBlock];
-//                    for (int k = 0, index = (j - jStart) * kWidth; k < kWidth; ++k, ++index) {
-//                        yJ[k]        *= factor;
-//                        xBlock[index] = yJ[k];
-//                    }
-//
-//                    final double[] qrtJ = qrt[j];
-//                    for (int i = 0; i < j; ++i) {
-//                        final double rIJ  = qrtJ[i];
-//                        final double[] yI = y[i];
-//                        for (int k = 0; k < kWidth; ++k) {
-//                            yI[k] -= yJ[k] * rIJ;
-//                        }
-//                    }
-//
 //                }
 //
 //            }
 //
-//            return new BlockRealMatrix(n, columns, xBlocks, false);
-//
 //        }
 //
-//        /** {@inheritDoc} */
-//        public RealMatrix getInverse()
-//        throws InvalidMatrixException {
-//            return solve(MatrixUtils.createRealIdentityMatrix(rDiag.length));
-//        }
-//
-//    }
+//        return new BlockRealMatrix(n, columns, xBlocks, false);
+
+    return null;
+    }
 
 }

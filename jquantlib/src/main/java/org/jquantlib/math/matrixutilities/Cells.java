@@ -31,6 +31,7 @@ public class Cells {
     protected final static String ITERATOR_IS_INCOMPATIBLE = "iterator is incompatible";
     protected final static String MATRIX_MUST_BE_SQUARE = "matrix must be square";
     protected final static String MATRIX_MUST_BE_SYMMETRIC = "matrix must be symmetric";
+    protected final static String MATRIX_IS_SINGULAR = "matrix is singular";
 
 
     //

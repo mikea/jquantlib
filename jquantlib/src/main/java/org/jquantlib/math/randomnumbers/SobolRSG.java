@@ -1522,7 +1522,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 
                     do {
                         // u is in (0,1)
-                        final double u = uniformRng.next().getValue().doubleValue();
+                        final double u = uniformRng.next().value().doubleValue();
                         // the direction integer has at most the
                         // rightmost l bits non-zero
 
