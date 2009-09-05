@@ -39,7 +39,6 @@ import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Slovakia;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 /**
@@ -48,7 +47,7 @@ import org.junit.Test;
  *
  */
 
-public class SlovakiaCalendarTest {
+public class SlovakiaCalendarTest extends BaseCalendarTest{
 
 	public SlovakiaCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
@@ -61,34 +60,33 @@ public class SlovakiaCalendarTest {
       	final int year = 2004;
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
-        final DateFactory df = DateFactory.getFactory();
       	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate(1,JANUARY,year));
-		expectedHol.add(df.getDate(2,JANUARY,year));
-		//expectedHol.add(df.getDate(3,JANUARY,year));
-		//expectedHol.add(df.getDate(4,JANUARY,year));
-		expectedHol.add(df.getDate(5,JANUARY,year));
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(9,APRIL,year));
-		expectedHol.add(df.getDate(12,APRIL,year));
-		//expectedHol.add(df.getDate(1,MAY,year));
-		//expectedHol.add(df.getDate(8,MAY,year));
-		expectedHol.add(df.getDate(5,JULY,year));
-		//expectedHol.add(df.getDate(29,AUGUST,year));
-    	expectedHol.add(df.getDate(1,SEPTEMBER,year));
-		expectedHol.add(df.getDate(15,SEPTEMBER,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(17,NOVEMBER,year));
-		expectedHol.add(df.getDate(24,DECEMBER,year));
-		//expectedHol.add(df.getDate(25,DECEMBER,year));
-		//expectedHol.add(df.getDate(26,DECEMBER,year));
-		expectedHol.add(df.getDate(27,DECEMBER,year));
-		expectedHol.add(df.getDate(28,DECEMBER,year));
-		expectedHol.add(df.getDate(29,DECEMBER,year));
-		expectedHol.add(df.getDate(30,DECEMBER,year));
-		expectedHol.add(df.getDate(31,DECEMBER,year));
+		expectedHol.add(getDate(1,JANUARY,year));
+		expectedHol.add(getDate(2,JANUARY,year));
+		//expectedHol.add(getDate(3,JANUARY,year));
+		//expectedHol.add(getDate(4,JANUARY,year));
+		expectedHol.add(getDate(5,JANUARY,year));
+		expectedHol.add(getDate(6,JANUARY,year));
+		expectedHol.add(getDate(9,APRIL,year));
+		expectedHol.add(getDate(12,APRIL,year));
+		//expectedHol.add(getDate(1,MAY,year));
+		//expectedHol.add(getDate(8,MAY,year));
+		expectedHol.add(getDate(5,JULY,year));
+		//expectedHol.add(getDate(29,AUGUST,year));
+    	expectedHol.add(getDate(1,SEPTEMBER,year));
+		expectedHol.add(getDate(15,SEPTEMBER,year));
+		expectedHol.add(getDate(1,NOVEMBER,year));
+		expectedHol.add(getDate(17,NOVEMBER,year));
+		expectedHol.add(getDate(24,DECEMBER,year));
+		//expectedHol.add(getDate(25,DECEMBER,year));
+		//expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(getDate(27,DECEMBER,year));
+		expectedHol.add(getDate(28,DECEMBER,year));
+		expectedHol.add(getDate(29,DECEMBER,year));
+		expectedHol.add(getDate(30,DECEMBER,year));
+		expectedHol.add(getDate(31,DECEMBER,year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, c, year);
@@ -127,34 +125,33 @@ public class SlovakiaCalendarTest {
       	final int year = 2005;
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
-        final DateFactory df = DateFactory.getFactory();
       	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		//expectedHol.add(df.getDate(1,JANUARY,year));
-		//expectedHol.add(df.getDate(2,JANUARY,year));
-		expectedHol.add(df.getDate(3,JANUARY,year));
-		expectedHol.add(df.getDate(4,JANUARY,year));
-		expectedHol.add(df.getDate(5,JANUARY,year));
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(25,MARCH,year));
-		expectedHol.add(df.getDate(28,MARCH,year));
-		//expectedHol.add(df.getDate(1,MAY,year));
-		//expectedHol.add(df.getDate(8,MAY,year));
-		expectedHol.add(df.getDate(5,JULY,year));
-		expectedHol.add(df.getDate(29,AUGUST,year));
-    	expectedHol.add(df.getDate(1,SEPTEMBER,year));
-		expectedHol.add(df.getDate(15,SEPTEMBER,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(17,NOVEMBER,year));
-		//expectedHol.add(df.getDate(24,DECEMBER,year));
-		//expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
-		expectedHol.add(df.getDate(27,DECEMBER,year));
-		expectedHol.add(df.getDate(28,DECEMBER,year));
-		expectedHol.add(df.getDate(29,DECEMBER,year));
-		expectedHol.add(df.getDate(30,DECEMBER,year));
-		//expectedHol.add(df.getDate(31,DECEMBER,year));
+		//expectedHol.add(getDate(1,JANUARY,year));
+		//expectedHol.add(getDate(2,JANUARY,year));
+		expectedHol.add(getDate(3,JANUARY,year));
+		expectedHol.add(getDate(4,JANUARY,year));
+		expectedHol.add(getDate(5,JANUARY,year));
+		expectedHol.add(getDate(6,JANUARY,year));
+		expectedHol.add(getDate(25,MARCH,year));
+		expectedHol.add(getDate(28,MARCH,year));
+		//expectedHol.add(getDate(1,MAY,year));
+		//expectedHol.add(getDate(8,MAY,year));
+		expectedHol.add(getDate(5,JULY,year));
+		expectedHol.add(getDate(29,AUGUST,year));
+    	expectedHol.add(getDate(1,SEPTEMBER,year));
+		expectedHol.add(getDate(15,SEPTEMBER,year));
+		expectedHol.add(getDate(1,NOVEMBER,year));
+		expectedHol.add(getDate(17,NOVEMBER,year));
+		//expectedHol.add(getDate(24,DECEMBER,year));
+		//expectedHol.add(getDate(25,DECEMBER,year));
+		expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(getDate(27,DECEMBER,year));
+		expectedHol.add(getDate(28,DECEMBER,year));
+		expectedHol.add(getDate(29,DECEMBER,year));
+		expectedHol.add(getDate(30,DECEMBER,year));
+		//expectedHol.add(getDate(31,DECEMBER,year));
 
         final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, c, year);
@@ -168,34 +165,33 @@ public class SlovakiaCalendarTest {
 		final int year = 2006;
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
-        final DateFactory df = DateFactory.getFactory();
       	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		//expectedHol.add(df.getDate(1,JANUARY,year));
-		expectedHol.add(df.getDate(2,JANUARY,year));
-		expectedHol.add(df.getDate(3,JANUARY,year));
-		expectedHol.add(df.getDate(4,JANUARY,year));
-		expectedHol.add(df.getDate(5,JANUARY,year));
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(14,APRIL,year));
-		expectedHol.add(df.getDate(17,APRIL,year));
-		expectedHol.add(df.getDate(1,MAY,year));
-		expectedHol.add(df.getDate(8,MAY,year));
-		expectedHol.add(df.getDate(5,JULY,year));
-		expectedHol.add(df.getDate(29,AUGUST,year));
-    	expectedHol.add(df.getDate(1,SEPTEMBER,year));
-		expectedHol.add(df.getDate(15,SEPTEMBER,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(17,NOVEMBER,year));
-		//expectedHol.add(df.getDate(24,DECEMBER,year));
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
-		expectedHol.add(df.getDate(27,DECEMBER,year));
-		expectedHol.add(df.getDate(28,DECEMBER,year));
-		expectedHol.add(df.getDate(29,DECEMBER,year));
-		//expectedHol.add(df.getDate(30,DECEMBER,year));
-		//expectedHol.add(df.getDate(31,DECEMBER,year));
+		//expectedHol.add(getDate(1,JANUARY,year));
+		expectedHol.add(getDate(2,JANUARY,year));
+		expectedHol.add(getDate(3,JANUARY,year));
+		expectedHol.add(getDate(4,JANUARY,year));
+		expectedHol.add(getDate(5,JANUARY,year));
+		expectedHol.add(getDate(6,JANUARY,year));
+		expectedHol.add(getDate(14,APRIL,year));
+		expectedHol.add(getDate(17,APRIL,year));
+		expectedHol.add(getDate(1,MAY,year));
+		expectedHol.add(getDate(8,MAY,year));
+		expectedHol.add(getDate(5,JULY,year));
+		expectedHol.add(getDate(29,AUGUST,year));
+    	expectedHol.add(getDate(1,SEPTEMBER,year));
+		expectedHol.add(getDate(15,SEPTEMBER,year));
+		expectedHol.add(getDate(1,NOVEMBER,year));
+		expectedHol.add(getDate(17,NOVEMBER,year));
+		//expectedHol.add(getDate(24,DECEMBER,year));
+		expectedHol.add(getDate(25,DECEMBER,year));
+		expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(getDate(27,DECEMBER,year));
+		expectedHol.add(getDate(28,DECEMBER,year));
+		expectedHol.add(getDate(29,DECEMBER,year));
+		//expectedHol.add(getDate(30,DECEMBER,year));
+		//expectedHol.add(getDate(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -235,34 +231,33 @@ public class SlovakiaCalendarTest {
 		final int year = 2007;
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
-        final DateFactory df = DateFactory.getFactory();
       	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-    	expectedHol.add(df.getDate(1,JANUARY,year));
-    	expectedHol.add(df.getDate(2,JANUARY,year));
-    	expectedHol.add(df.getDate(3,JANUARY,year));
-    	expectedHol.add(df.getDate(4,JANUARY,year));
-    	expectedHol.add(df.getDate(5,JANUARY,year));
-    	// expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(6,APRIL,year));
-		expectedHol.add(df.getDate(9,APRIL,year));
-		expectedHol.add(df.getDate(1,MAY,year));
-		expectedHol.add(df.getDate(8,MAY,year));
-		expectedHol.add(df.getDate(5,JULY,year));
-		expectedHol.add(df.getDate(29,AUGUST,year));
-		// expectedHol.add(df.getDate(1,SEPTEMBER,year));
-		// expectedHol.add(df.getDate(15,SEPTEMBER,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		// expectedHol.add(df.getDate(17,NOVEMBER,year));
-		expectedHol.add(df.getDate(24,DECEMBER,year));
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
-		expectedHol.add(df.getDate(27,DECEMBER,year));
-		expectedHol.add(df.getDate(28,DECEMBER,year));
-		// expectedHol.add(df.getDate(29,DECEMBER,year));
-		// expectedHol.add(df.getDate(30,DECEMBER,year));
-		expectedHol.add(df.getDate(31,DECEMBER,year));
+    	expectedHol.add(getDate(1,JANUARY,year));
+    	expectedHol.add(getDate(2,JANUARY,year));
+    	expectedHol.add(getDate(3,JANUARY,year));
+    	expectedHol.add(getDate(4,JANUARY,year));
+    	expectedHol.add(getDate(5,JANUARY,year));
+    	// expectedHol.add(getDate(6,JANUARY,year));
+		expectedHol.add(getDate(6,APRIL,year));
+		expectedHol.add(getDate(9,APRIL,year));
+		expectedHol.add(getDate(1,MAY,year));
+		expectedHol.add(getDate(8,MAY,year));
+		expectedHol.add(getDate(5,JULY,year));
+		expectedHol.add(getDate(29,AUGUST,year));
+		// expectedHol.add(getDate(1,SEPTEMBER,year));
+		// expectedHol.add(getDate(15,SEPTEMBER,year));
+		expectedHol.add(getDate(1,NOVEMBER,year));
+		// expectedHol.add(getDate(17,NOVEMBER,year));
+		expectedHol.add(getDate(24,DECEMBER,year));
+		expectedHol.add(getDate(25,DECEMBER,year));
+		expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(getDate(27,DECEMBER,year));
+		expectedHol.add(getDate(28,DECEMBER,year));
+		// expectedHol.add(getDate(29,DECEMBER,year));
+		// expectedHol.add(getDate(30,DECEMBER,year));
+		expectedHol.add(getDate(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -301,33 +296,32 @@ public class SlovakiaCalendarTest {
 		final int year = 2008;
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
-        final DateFactory df = DateFactory.getFactory();
       	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-    	expectedHol.add(df.getDate(1,JANUARY,year));
-    	expectedHol.add(df.getDate(2,JANUARY,year));
-    	expectedHol.add(df.getDate(3,JANUARY,year));
-    	expectedHol.add(df.getDate(4,JANUARY,year));
-    	// expectedHol.add(df.getDate(5,JANUARY,year));
-    	// expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(21,MARCH,year));
-		expectedHol.add(df.getDate(24,MARCH,year));
-		expectedHol.add(df.getDate(1,MAY,year));
-		expectedHol.add(df.getDate(8,MAY,year));
-		expectedHol.add(df.getDate(29,AUGUST,year));
-    	expectedHol.add(df.getDate(1,SEPTEMBER,year));
-		expectedHol.add(df.getDate(15,SEPTEMBER,year));
-		// expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(17,NOVEMBER,year));
-		expectedHol.add(df.getDate(24,DECEMBER,year));
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
-		// expectedHol.add(df.getDate(27,DECEMBER,year));
-		// expectedHol.add(df.getDate(28,DECEMBER,year));
-		expectedHol.add(df.getDate(29,DECEMBER,year));
-		expectedHol.add(df.getDate(30,DECEMBER,year));
-		expectedHol.add(df.getDate(31,DECEMBER,year));
+    	expectedHol.add(getDate(1,JANUARY,year));
+    	expectedHol.add(getDate(2,JANUARY,year));
+    	expectedHol.add(getDate(3,JANUARY,year));
+    	expectedHol.add(getDate(4,JANUARY,year));
+    	// expectedHol.add(getDate(5,JANUARY,year));
+    	// expectedHol.add(getDate(6,JANUARY,year));
+		expectedHol.add(getDate(21,MARCH,year));
+		expectedHol.add(getDate(24,MARCH,year));
+		expectedHol.add(getDate(1,MAY,year));
+		expectedHol.add(getDate(8,MAY,year));
+		expectedHol.add(getDate(29,AUGUST,year));
+    	expectedHol.add(getDate(1,SEPTEMBER,year));
+		expectedHol.add(getDate(15,SEPTEMBER,year));
+		// expectedHol.add(getDate(1,NOVEMBER,year));
+		expectedHol.add(getDate(17,NOVEMBER,year));
+		expectedHol.add(getDate(24,DECEMBER,year));
+		expectedHol.add(getDate(25,DECEMBER,year));
+		expectedHol.add(getDate(26,DECEMBER,year));
+		// expectedHol.add(getDate(27,DECEMBER,year));
+		// expectedHol.add(getDate(28,DECEMBER,year));
+		expectedHol.add(getDate(29,DECEMBER,year));
+		expectedHol.add(getDate(30,DECEMBER,year));
+		expectedHol.add(getDate(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -341,31 +335,30 @@ public class SlovakiaCalendarTest {
 		final int year = 2009;
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
-        final DateFactory df = DateFactory.getFactory();
       	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-    	expectedHol.add(df.getDate(1,JANUARY,year));
-    	expectedHol.add(df.getDate(2,JANUARY,year));
-    	//expectedHol.add(df.getDate(3,JANUARY,year));
-    	//expectedHol.add(df.getDate(4,JANUARY,year));
-    	expectedHol.add(df.getDate(5,JANUARY,year));
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(10,APRIL,year));
-		expectedHol.add(df.getDate(13,APRIL,year));
-		expectedHol.add(df.getDate(1,MAY,year));
-		expectedHol.add(df.getDate(8,MAY,year));
-    	expectedHol.add(df.getDate(1,SEPTEMBER,year));
-		expectedHol.add(df.getDate(15,SEPTEMBER,year));
-		expectedHol.add(df.getDate(17,NOVEMBER,year));
-		expectedHol.add(df.getDate(24,DECEMBER,year));
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		//expectedHol.add(df.getDate(26,DECEMBER,year));
-		//expectedHol.add(df.getDate(27,DECEMBER,year));
-		expectedHol.add(df.getDate(28,DECEMBER,year));
-		expectedHol.add(df.getDate(29,DECEMBER,year));
-		expectedHol.add(df.getDate(30,DECEMBER,year));
-		expectedHol.add(df.getDate(31,DECEMBER,year));
+    	expectedHol.add(getDate(1,JANUARY,year));
+    	expectedHol.add(getDate(2,JANUARY,year));
+    	//expectedHol.add(getDate(3,JANUARY,year));
+    	//expectedHol.add(getDate(4,JANUARY,year));
+    	expectedHol.add(getDate(5,JANUARY,year));
+		expectedHol.add(getDate(6,JANUARY,year));
+		expectedHol.add(getDate(10,APRIL,year));
+		expectedHol.add(getDate(13,APRIL,year));
+		expectedHol.add(getDate(1,MAY,year));
+		expectedHol.add(getDate(8,MAY,year));
+    	expectedHol.add(getDate(1,SEPTEMBER,year));
+		expectedHol.add(getDate(15,SEPTEMBER,year));
+		expectedHol.add(getDate(17,NOVEMBER,year));
+		expectedHol.add(getDate(24,DECEMBER,year));
+		expectedHol.add(getDate(25,DECEMBER,year));
+		//expectedHol.add(getDate(26,DECEMBER,year));
+		//expectedHol.add(getDate(27,DECEMBER,year));
+		expectedHol.add(getDate(28,DECEMBER,year));
+		expectedHol.add(getDate(29,DECEMBER,year));
+		expectedHol.add(getDate(30,DECEMBER,year));
+		expectedHol.add(getDate(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -379,31 +372,30 @@ public class SlovakiaCalendarTest {
 		final int year = 2010;
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
-        final DateFactory df = DateFactory.getFactory();
       	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-    	expectedHol.add(df.getDate(1,JANUARY,year));
-    	//expectedHol.add(df.getDate(2,JANUARY,year));
-    	//expectedHol.add(df.getDate(3,JANUARY,year));
-    	expectedHol.add(df.getDate(4,JANUARY,year));
-    	expectedHol.add(df.getDate(5,JANUARY,year));
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(2,APRIL,year));
-		expectedHol.add(df.getDate(5,APRIL,year));
-		expectedHol.add(df.getDate(5,JULY,year));
-    	expectedHol.add(df.getDate(1,SEPTEMBER,year));
-		expectedHol.add(df.getDate(15,SEPTEMBER,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(17,NOVEMBER,year));
-		expectedHol.add(df.getDate(24,DECEMBER,year));
-		//expectedHol.add(df.getDate(25,DECEMBER,year));
-		//expectedHol.add(df.getDate(26,DECEMBER,year));
-		expectedHol.add(df.getDate(27,DECEMBER,year));
-		expectedHol.add(df.getDate(28,DECEMBER,year));
-		expectedHol.add(df.getDate(29,DECEMBER,year));
-		expectedHol.add(df.getDate(30,DECEMBER,year));
-		expectedHol.add(df.getDate(31,DECEMBER,year));
+    	expectedHol.add(getDate(1,JANUARY,year));
+    	//expectedHol.add(getDate(2,JANUARY,year));
+    	//expectedHol.add(getDate(3,JANUARY,year));
+    	expectedHol.add(getDate(4,JANUARY,year));
+    	expectedHol.add(getDate(5,JANUARY,year));
+		expectedHol.add(getDate(6,JANUARY,year));
+		expectedHol.add(getDate(2,APRIL,year));
+		expectedHol.add(getDate(5,APRIL,year));
+		expectedHol.add(getDate(5,JULY,year));
+    	expectedHol.add(getDate(1,SEPTEMBER,year));
+		expectedHol.add(getDate(15,SEPTEMBER,year));
+		expectedHol.add(getDate(1,NOVEMBER,year));
+		expectedHol.add(getDate(17,NOVEMBER,year));
+		expectedHol.add(getDate(24,DECEMBER,year));
+		//expectedHol.add(getDate(25,DECEMBER,year));
+		//expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(getDate(27,DECEMBER,year));
+		expectedHol.add(getDate(28,DECEMBER,year));
+		expectedHol.add(getDate(29,DECEMBER,year));
+		expectedHol.add(getDate(30,DECEMBER,year));
+		expectedHol.add(getDate(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -417,32 +409,31 @@ public class SlovakiaCalendarTest {
 		final int year = 2011;
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
-        final DateFactory df = DateFactory.getFactory();
       	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		//expectedHol.add(df.getDate(1,JANUARY,year));
-		//expectedHol.add(df.getDate(2,JANUARY,year));
-		expectedHol.add(df.getDate(3,JANUARY,year));
-		expectedHol.add(df.getDate(4,JANUARY,year));
-		expectedHol.add(df.getDate(5,JANUARY,year));
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(22,APRIL,year));
-		expectedHol.add(df.getDate(25,APRIL,year));
-		expectedHol.add(df.getDate(5,JULY,year));
-		expectedHol.add(df.getDate(29,AUGUST,year));
-    	expectedHol.add(df.getDate(1,SEPTEMBER,year));
-		expectedHol.add(df.getDate(15,SEPTEMBER,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(17,NOVEMBER,year));
-		//expectedHol.add(df.getDate(24,DECEMBER,year));
-		//expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
-		expectedHol.add(df.getDate(27,DECEMBER,year));
-		expectedHol.add(df.getDate(28,DECEMBER,year));
-		expectedHol.add(df.getDate(29,DECEMBER,year));
-		expectedHol.add(df.getDate(30,DECEMBER,year));
-		//expectedHol.add(df.getDate(31,DECEMBER,year));
+		//expectedHol.add(getDate(1,JANUARY,year));
+		//expectedHol.add(getDate(2,JANUARY,year));
+		expectedHol.add(getDate(3,JANUARY,year));
+		expectedHol.add(getDate(4,JANUARY,year));
+		expectedHol.add(getDate(5,JANUARY,year));
+		expectedHol.add(getDate(6,JANUARY,year));
+		expectedHol.add(getDate(22,APRIL,year));
+		expectedHol.add(getDate(25,APRIL,year));
+		expectedHol.add(getDate(5,JULY,year));
+		expectedHol.add(getDate(29,AUGUST,year));
+    	expectedHol.add(getDate(1,SEPTEMBER,year));
+		expectedHol.add(getDate(15,SEPTEMBER,year));
+		expectedHol.add(getDate(1,NOVEMBER,year));
+		expectedHol.add(getDate(17,NOVEMBER,year));
+		//expectedHol.add(getDate(24,DECEMBER,year));
+		//expectedHol.add(getDate(25,DECEMBER,year));
+		expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(getDate(27,DECEMBER,year));
+		expectedHol.add(getDate(28,DECEMBER,year));
+		expectedHol.add(getDate(29,DECEMBER,year));
+		expectedHol.add(getDate(30,DECEMBER,year));
+		//expectedHol.add(getDate(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -456,31 +447,30 @@ public class SlovakiaCalendarTest {
 		final int year = 2012;
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
-        final DateFactory df = DateFactory.getFactory();
       	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		//expectedHol.add(df.getDate(1,JANUARY,year));
-		expectedHol.add(df.getDate(2,JANUARY,year));
-		expectedHol.add(df.getDate(3,JANUARY,year));
-		expectedHol.add(df.getDate(4,JANUARY,year));
-		expectedHol.add(df.getDate(5,JANUARY,year));
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(6,APRIL,year));
-		expectedHol.add(df.getDate(9,APRIL,year));
-		expectedHol.add(df.getDate(1,MAY,year));
-		expectedHol.add(df.getDate(8,MAY,year));
-		expectedHol.add(df.getDate(5,JULY,year));
-		expectedHol.add(df.getDate(29,AUGUST,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(24,DECEMBER,year));
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
-		expectedHol.add(df.getDate(27,DECEMBER,year));
-		expectedHol.add(df.getDate(28,DECEMBER,year));
-		//expectedHol.add(df.getDate(29,DECEMBER,year));
-		//expectedHol.add(df.getDate(30,DECEMBER,year));
-		expectedHol.add(df.getDate(31,DECEMBER,year));
+		//expectedHol.add(getDate(1,JANUARY,year));
+		expectedHol.add(getDate(2,JANUARY,year));
+		expectedHol.add(getDate(3,JANUARY,year));
+		expectedHol.add(getDate(4,JANUARY,year));
+		expectedHol.add(getDate(5,JANUARY,year));
+		expectedHol.add(getDate(6,JANUARY,year));
+		expectedHol.add(getDate(6,APRIL,year));
+		expectedHol.add(getDate(9,APRIL,year));
+		expectedHol.add(getDate(1,MAY,year));
+		expectedHol.add(getDate(8,MAY,year));
+		expectedHol.add(getDate(5,JULY,year));
+		expectedHol.add(getDate(29,AUGUST,year));
+		expectedHol.add(getDate(1,NOVEMBER,year));
+		expectedHol.add(getDate(24,DECEMBER,year));
+		expectedHol.add(getDate(25,DECEMBER,year));
+		expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(getDate(27,DECEMBER,year));
+		expectedHol.add(getDate(28,DECEMBER,year));
+		//expectedHol.add(getDate(29,DECEMBER,year));
+		//expectedHol.add(getDate(30,DECEMBER,year));
+		expectedHol.add(getDate(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();

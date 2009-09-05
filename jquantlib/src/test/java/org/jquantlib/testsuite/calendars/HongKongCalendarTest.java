@@ -46,7 +46,7 @@ import org.junit.Test;
 /**
  * @author Richard Gomes
  */
-public class HongKongCalendarTest {
+public class HongKongCalendarTest extends BaseCalendarTest{
 
     public HongKongCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
@@ -72,21 +72,20 @@ public class HongKongCalendarTest {
         QL.info("Testing Hong Kong's holiday list for the year " + year + "...");
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
-        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January
-        expectedHol.add(df.getDate(26,JANUARY,year));   // Lunar New Year's Day
-        expectedHol.add(df.getDate(27,JANUARY,year));   // The second day of Lunar New Year
-        expectedHol.add(df.getDate(28,JANUARY,year));   // The third day of Lunar New Year
-        expectedHol.add(df.getDate(10,APRIL,year));     // Good Friday
-        expectedHol.add(df.getDate(13,APRIL,year));     // Easter Monday
-        expectedHol.add(df.getDate(1,MAY,year));        // Labour Day
-        expectedHol.add(df.getDate(28,MAY,year));       // Tuen Ng Festival
-        expectedHol.add(df.getDate(1,JULY,year));       // Hong Kong Special Administrative Region Establishment Day
-        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
-        expectedHol.add(df.getDate(26,OCTOBER,year));   // Chung Yeung festival
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(getDate(1,JANUARY,year));    // The first day of January
+        expectedHol.add(getDate(26,JANUARY,year));   // Lunar New Year's Day
+        expectedHol.add(getDate(27,JANUARY,year));   // The second day of Lunar New Year
+        expectedHol.add(getDate(28,JANUARY,year));   // The third day of Lunar New Year
+        expectedHol.add(getDate(10,APRIL,year));     // Good Friday
+        expectedHol.add(getDate(13,APRIL,year));     // Easter Monday
+        expectedHol.add(getDate(1,MAY,year));        // Labour Day
+        expectedHol.add(getDate(28,MAY,year));       // Tuen Ng Festival
+        expectedHol.add(getDate(1,JULY,year));       // Hong Kong Special Administrative Region Establishment Day
+        expectedHol.add(getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(getDate(26,OCTOBER,year));   // Chung Yeung festival
+        expectedHol.add(getDate(25,DECEMBER,year));  // Christmas Day
 
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }
@@ -115,24 +114,23 @@ public class HongKongCalendarTest {
         QL.info("Testing Hong Kong's holiday list for the year " + year + "...");
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
-        final DateFactory df = DateFactory.getFactory();
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January
-    	expectedHol.add(df.getDate(7,FEBRUARY,year));   // Lunar New Year's Day
-		expectedHol.add(df.getDate(8,FEBRUARY,year));   // The second day of Lunar New Year
-		expectedHol.add(df.getDate(21,MARCH,year));     // Good Friday
-		expectedHol.add(df.getDate(24,MARCH,year));     // Easter Monday
-		expectedHol.add(df.getDate(4,APRIL,year));      // Ching Ming Festival
-		expectedHol.add(df.getDate(1,MAY,year));        // Labour Day
-        expectedHol.add(df.getDate(12,MAY,year));       // The Buddha's Birthday
-		expectedHol.add(df.getDate(9,JUNE,year));       // The day following Tuen Ng Festival
-        expectedHol.add(df.getDate(1,JULY,year));       // Hong Kong Special Administrative Region Establishment Day
-    	expectedHol.add(df.getDate(15,SEPTEMBER,year)); // The day following Chinese Mid-Autumn Festival
-        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
-        expectedHol.add(df.getDate(7,OCTOBER,year));    // Chung Yeung festival
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
+		expectedHol.add(getDate(1,JANUARY,year));    // The first day of January
+    	expectedHol.add(getDate(7,FEBRUARY,year));   // Lunar New Year's Day
+		expectedHol.add(getDate(8,FEBRUARY,year));   // The second day of Lunar New Year
+		expectedHol.add(getDate(21,MARCH,year));     // Good Friday
+		expectedHol.add(getDate(24,MARCH,year));     // Easter Monday
+		expectedHol.add(getDate(4,APRIL,year));      // Ching Ming Festival
+		expectedHol.add(getDate(1,MAY,year));        // Labour Day
+        expectedHol.add(getDate(12,MAY,year));       // The Buddha's Birthday
+		expectedHol.add(getDate(9,JUNE,year));       // The day following Tuen Ng Festival
+        expectedHol.add(getDate(1,JULY,year));       // Hong Kong Special Administrative Region Establishment Day
+    	expectedHol.add(getDate(15,SEPTEMBER,year)); // The day following Chinese Mid-Autumn Festival
+        expectedHol.add(getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(getDate(7,OCTOBER,year));    // Chung Yeung festival
+        expectedHol.add(getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
 
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }
@@ -161,25 +159,24 @@ public class HongKongCalendarTest {
         QL.info("Testing Hong Kong's holiday list for the year " + year + "...");
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
-        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January
-        expectedHol.add(df.getDate(1,MAY,year));        // Labour Day
-        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
+        expectedHol.add(getDate(1,JANUARY,year));    // The first day of January
+        expectedHol.add(getDate(1,MAY,year));        // Labour Day
+        expectedHol.add(getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
 
-    	expectedHol.add(df.getDate(19,FEBRUARY,year));   // 2 Lunar New Year's Day
-		expectedHol.add(df.getDate(20,FEBRUARY,year));   // The 3 day of Lunar New Year
-		expectedHol.add(df.getDate(5,APRIL,year));      // Ching Ming Festival
-		expectedHol.add(df.getDate(6,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate(9,APRIL,year));     // Easter Monday
-        expectedHol.add(df.getDate(24,MAY,year));       // The Buddha's Birthday
-		expectedHol.add(df.getDate(19,JUNE,year));       // The day following Tuen Ng Festival
-        expectedHol.add(df.getDate(2,JULY,year));       // day after Hong Kong Special Administrative Region Establishment Day
-    	expectedHol.add(df.getDate(26,SEPTEMBER,year)); // The day following Chinese Mid-Autumn Festival
-        expectedHol.add(df.getDate(19,OCTOBER,year));    // Chung Yeung festival
+    	expectedHol.add(getDate(19,FEBRUARY,year));   // 2 Lunar New Year's Day
+		expectedHol.add(getDate(20,FEBRUARY,year));   // The 3 day of Lunar New Year
+		expectedHol.add(getDate(5,APRIL,year));      // Ching Ming Festival
+		expectedHol.add(getDate(6,APRIL,year));     // Good Friday
+		expectedHol.add(getDate(9,APRIL,year));     // Easter Monday
+        expectedHol.add(getDate(24,MAY,year));       // The Buddha's Birthday
+		expectedHol.add(getDate(19,JUNE,year));       // The day following Tuen Ng Festival
+        expectedHol.add(getDate(2,JULY,year));       // day after Hong Kong Special Administrative Region Establishment Day
+    	expectedHol.add(getDate(26,SEPTEMBER,year)); // The day following Chinese Mid-Autumn Festival
+        expectedHol.add(getDate(19,OCTOBER,year));    // Chung Yeung festival
 
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
 
@@ -209,30 +206,29 @@ public class HongKongCalendarTest {
         QL.info("Testing Hong Kong's holiday list for the year " + year + "...");
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
-        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January
-        expectedHol.add(df.getDate(1,MAY,year));        // Labour Day
-        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
+        expectedHol.add(getDate(1,JANUARY,year));    // The first day of January
+        expectedHol.add(getDate(1,MAY,year));        // Labour Day
+        expectedHol.add(getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
 
-        expectedHol.remove(df.getDate(1,JANUARY,year));
-        expectedHol.remove(df.getDate(1,OCTOBER,year));
+        expectedHol.remove(getDate(1,JANUARY,year));
+        expectedHol.remove(getDate(1,OCTOBER,year));
 
-    	expectedHol.add(df.getDate(2,JANUARY,year));   // 2 of the New Year's Day
-    	expectedHol.add(df.getDate(30,JANUARY,year));   // 2 Lunar New Year's Day
-		expectedHol.add(df.getDate(31,JANUARY,year));   // The 3 day of Lunar New Year
-		expectedHol.add(df.getDate(5,APRIL,year));      // Ching Ming Festival
-		expectedHol.add(df.getDate(14,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate(17,APRIL,year));     // Easter Monday
-        expectedHol.add(df.getDate(5,MAY,year));       // The Buddha's Birthday
-		expectedHol.add(df.getDate(31,MAY,year));       // The Tuen Ng Festival
-        expectedHol.add(df.getDate(3,JULY,year));  //Monday     // day after Hong Kong Special Administrative Region Establishment Day
-        expectedHol.add(df.getDate(2,OCTOBER,year));    // National Day
-    	//expectedHol.add(df.getDate(7,OCTOBER,year)); saturday // The day following Chinese Mid-Autumn Festival
-        expectedHol.add(df.getDate(30,OCTOBER,year));    // Chung Yeung festival
+    	expectedHol.add(getDate(2,JANUARY,year));   // 2 of the New Year's Day
+    	expectedHol.add(getDate(30,JANUARY,year));   // 2 Lunar New Year's Day
+		expectedHol.add(getDate(31,JANUARY,year));   // The 3 day of Lunar New Year
+		expectedHol.add(getDate(5,APRIL,year));      // Ching Ming Festival
+		expectedHol.add(getDate(14,APRIL,year));     // Good Friday
+		expectedHol.add(getDate(17,APRIL,year));     // Easter Monday
+        expectedHol.add(getDate(5,MAY,year));       // The Buddha's Birthday
+		expectedHol.add(getDate(31,MAY,year));       // The Tuen Ng Festival
+        expectedHol.add(getDate(3,JULY,year));  //Monday     // day after Hong Kong Special Administrative Region Establishment Day
+        expectedHol.add(getDate(2,OCTOBER,year));    // National Day
+    	//expectedHol.add(getDate(7,OCTOBER,year)); saturday // The day following Chinese Mid-Autumn Festival
+        expectedHol.add(getDate(30,OCTOBER,year));    // Chung Yeung festival
 
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }
@@ -262,35 +258,34 @@ public class HongKongCalendarTest {
         QL.info("Testing Hong Kong's holiday list for the year " + year + "...");
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
-        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January
-        expectedHol.add(df.getDate(1,MAY,year));        // Labour Day
-        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
+        expectedHol.add(getDate(1,JANUARY,year));    // The first day of January
+        expectedHol.add(getDate(1,MAY,year));        // Labour Day
+        expectedHol.add(getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
 
-        expectedHol.remove(df.getDate(1,JANUARY,year));
-        expectedHol.remove(df.getDate(1,MAY,year));
-        expectedHol.remove(df.getDate(1,OCTOBER,year));
-        expectedHol.remove(df.getDate(25,DECEMBER,year));
+        expectedHol.remove(getDate(1,JANUARY,year));
+        expectedHol.remove(getDate(1,MAY,year));
+        expectedHol.remove(getDate(1,OCTOBER,year));
+        expectedHol.remove(getDate(25,DECEMBER,year));
 
-    	expectedHol.add(df.getDate(3,JANUARY,year));   // 3 of the New Year's Day
-    	expectedHol.add(df.getDate(9,FEBRUARY,year));   // Lunar New Year's Day
-    	expectedHol.add(df.getDate(10,FEBRUARY,year));   // 2 Lunar New Year's Day
-		expectedHol.add(df.getDate(11,FEBRUARY,year));   // The 3 day of Lunar New Year
-		expectedHol.add(df.getDate(25,MARCH,year));     // Good Friday
-		expectedHol.add(df.getDate(28,MARCH,year));     // Easter Monday
-		expectedHol.add(df.getDate(5,APRIL,year));      // Ching Ming Festival
-        expectedHol.remove(df.getDate(2,MAY,year));     // Day after labor day
-        expectedHol.add(df.getDate(16,MAY,year));       // The day after  Buddha's Birthday
-		//expectedHol.add(df.getDate(11,JUNE,year));       // The Tuen Ng Festival
-        expectedHol.add(df.getDate(1,JULY,year));       // Hong Kong Special Administrative Region Establishment Day
-    	expectedHol.add(df.getDate(19,SEPTEMBER,year));   // The day following Chinese Mid-Autumn Festival
-        expectedHol.add(df.getDate(3,OCTOBER,year));
-        expectedHol.add(df.getDate(11,OCTOBER,year));    // Chung Yeung festival
-        expectedHol.remove(df.getDate(27,DECEMBER,year));
+    	expectedHol.add(getDate(3,JANUARY,year));   // 3 of the New Year's Day
+    	expectedHol.add(getDate(9,FEBRUARY,year));   // Lunar New Year's Day
+    	expectedHol.add(getDate(10,FEBRUARY,year));   // 2 Lunar New Year's Day
+		expectedHol.add(getDate(11,FEBRUARY,year));   // The 3 day of Lunar New Year
+		expectedHol.add(getDate(25,MARCH,year));     // Good Friday
+		expectedHol.add(getDate(28,MARCH,year));     // Easter Monday
+		expectedHol.add(getDate(5,APRIL,year));      // Ching Ming Festival
+        expectedHol.remove(getDate(2,MAY,year));     // Day after labor day
+        expectedHol.add(getDate(16,MAY,year));       // The day after  Buddha's Birthday
+		//expectedHol.add(getDate(11,JUNE,year));       // The Tuen Ng Festival
+        expectedHol.add(getDate(1,JULY,year));       // Hong Kong Special Administrative Region Establishment Day
+    	expectedHol.add(getDate(19,SEPTEMBER,year));   // The day following Chinese Mid-Autumn Festival
+        expectedHol.add(getDate(3,OCTOBER,year));
+        expectedHol.add(getDate(11,OCTOBER,year));    // Chung Yeung festival
+        expectedHol.remove(getDate(27,DECEMBER,year));
 
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }
@@ -320,31 +315,30 @@ public class HongKongCalendarTest {
         QL.info("Testing Hong Kong's holiday list for the year " + year + "...");
 
         final Calendar c = HongKong.getCalendar(HongKong.Market.HKEx);
-        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(df.getDate(1,JANUARY,year));    // The first day of January
-        expectedHol.add(df.getDate(1,MAY,year));        // Labour Day
-        expectedHol.add(df.getDate(1,OCTOBER,year));    // National Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
+        expectedHol.add(getDate(1,JANUARY,year));    // The first day of January
+        expectedHol.add(getDate(1,MAY,year));        // Labour Day
+        expectedHol.add(getDate(1,OCTOBER,year));    // National Day
+        expectedHol.add(getDate(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(getDate(26,DECEMBER,year));  // The first weekday after Christmas Day
 
-        expectedHol.remove(df.getDate(1,MAY,year));        // Labour Day
+        expectedHol.remove(getDate(1,MAY,year));        // Labour Day
 
-    	expectedHol.add(df.getDate(22,JANUARY,year));   // Lunar New Year's Day
-    	expectedHol.add(df.getDate(23,JANUARY,year));   // 2 Lunar New Year's Day
-//		expectedHol.add(df.getDate(24,JANUARY,year));   // The 3 day of Lunar New Year
-		expectedHol.add(df.getDate(5,APRIL,year));      // Ching Ming Festival
-		expectedHol.add(df.getDate(9,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate(12,APRIL,year));     // Easter Monday
-        expectedHol.add(df.getDate(26,MAY,year));       // The Buddha's Birthday
-		expectedHol.add(df.getDate(22,JUNE,year));       // The Tuen Ng Festival
-        expectedHol.add(df.getDate(1,JULY,year));       // Hong Kong Special Administrative Region Establishment Day
-    	expectedHol.add(df.getDate(29,SEPTEMBER,year));   // The day after Chinese Mid-Autumn Festival
-        //expectedHol.add(df.getDate(22,OCTOBER,year));    // Chung Yeung festival
-        expectedHol.remove(df.getDate(25,DECEMBER,year));
-        expectedHol.remove(df.getDate(26,DECEMBER,year));
-        expectedHol.add(df.getDate(27,DECEMBER,year));
+    	expectedHol.add(getDate(22,JANUARY,year));   // Lunar New Year's Day
+    	expectedHol.add(getDate(23,JANUARY,year));   // 2 Lunar New Year's Day
+//		expectedHol.add(getDate(24,JANUARY,year));   // The 3 day of Lunar New Year
+		expectedHol.add(getDate(5,APRIL,year));      // Ching Ming Festival
+		expectedHol.add(getDate(9,APRIL,year));     // Good Friday
+		expectedHol.add(getDate(12,APRIL,year));     // Easter Monday
+        expectedHol.add(getDate(26,MAY,year));       // The Buddha's Birthday
+		expectedHol.add(getDate(22,JUNE,year));       // The Tuen Ng Festival
+        expectedHol.add(getDate(1,JULY,year));       // Hong Kong Special Administrative Region Establishment Day
+    	expectedHol.add(getDate(29,SEPTEMBER,year));   // The day after Chinese Mid-Autumn Festival
+        //expectedHol.add(getDate(22,OCTOBER,year));    // Chung Yeung festival
+        expectedHol.remove(getDate(25,DECEMBER,year));
+        expectedHol.remove(getDate(26,DECEMBER,year));
+        expectedHol.add(getDate(27,DECEMBER,year));
 
         new CalendarUtil().checkHolidayList(expectedHol, c, year);
     }

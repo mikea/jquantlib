@@ -21,7 +21,7 @@ import org.jquantlib.util.DateFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MexicoCalendarTest {
+public class MexicoCalendarTest extends BaseCalendarTest{
 
     private Calendar settlementCalendar;
     private Calendar bmvCalendar;
@@ -39,13 +39,13 @@ public class MexicoCalendarTest {
         final int year = 2004;
         QL.info("Testing Mexican Settlement holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 8, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 9, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(15, NOVEMBER, year));
+        expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 2, FEBRUARY, year));
+        expectedHol.add(getDate( 8, APRIL, year));
+        expectedHol.add(getDate( 9, APRIL, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(15, NOVEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -58,14 +58,14 @@ public class MexicoCalendarTest {
         final int year = 2005;
         QL.info("Testing Mexican Settlement holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 7, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(24, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(14, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
+        expectedHol.add(getDate( 7, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate(24, MARCH, year));
+        expectedHol.add(getDate(25, MARCH, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(14, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
 
 
         // Call the Holiday Check
@@ -79,15 +79,15 @@ public class MexicoCalendarTest {
         final int year = 2006;
         QL.info("Testing Mexican Settlement holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 6, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(13, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(14, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(20, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 6, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate(13, APRIL, year));
+        expectedHol.add(getDate(14, APRIL, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(20, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -100,16 +100,16 @@ public class MexicoCalendarTest {
         final int year = 2007;
         QL.info("Testing Mexican Settlement holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 5, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 5, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 6, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(19, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 5, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate( 5, APRIL, year));
+        expectedHol.add(getDate( 6, APRIL, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(19, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -123,15 +123,15 @@ public class MexicoCalendarTest {
         final int year = 2008;
         QL.info("Testing Mexican Settlement holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 4, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(20, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(17, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 4, FEBRUARY, year));
+        expectedHol.add(getDate(20, MARCH, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate(17, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
 
         // Call the Holiday Check
@@ -144,15 +144,15 @@ public class MexicoCalendarTest {
         final int year = 2009;
         QL.info("Testing Mexican Settlement holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 9, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(10, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 2, FEBRUARY, year));
+        expectedHol.add(getDate( 9, APRIL, year));
+        expectedHol.add(getDate(10, APRIL, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(16, NOVEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -165,13 +165,13 @@ public class MexicoCalendarTest {
         final int year = 2010;
         QL.info("Testing Mexican Settlement holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(15, NOVEMBER, year));
+        expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 1, FEBRUARY, year));
+        expectedHol.add(getDate( 1, APRIL, year));
+        expectedHol.add(getDate( 2, APRIL, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(15, NOVEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -184,14 +184,14 @@ public class MexicoCalendarTest {
         final int year = 2011;
         QL.info("Testing Mexican Settlement holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 7, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(22, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(14, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
+        expectedHol.add(getDate( 7, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate(21, APRIL, year));
+        expectedHol.add(getDate(22, APRIL, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(14, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -204,15 +204,15 @@ public class MexicoCalendarTest {
         final int year = 2012;
         QL.info("Testing Mexican Settlement holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 6, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 5, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 6, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(19, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 6, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate( 5, APRIL, year));
+        expectedHol.add(getDate( 6, APRIL, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(19, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -226,13 +226,13 @@ public class MexicoCalendarTest {
         final int year = 2004;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-		expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 8, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 9, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(15, NOVEMBER, year));
+		expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 2, FEBRUARY, year));
+        expectedHol.add(getDate( 8, APRIL, year));
+        expectedHol.add(getDate( 9, APRIL, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(15, NOVEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -245,14 +245,14 @@ public class MexicoCalendarTest {
         final int year = 2005;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 7, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(24, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(14, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
+        expectedHol.add(getDate( 7, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate(24, MARCH, year));
+        expectedHol.add(getDate(25, MARCH, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(14, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
 
 
         // Call the Holiday Check
@@ -266,15 +266,15 @@ public class MexicoCalendarTest {
         final int year = 2006;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 6, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(13, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(14, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(20, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 6, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate(13, APRIL, year));
+        expectedHol.add(getDate(14, APRIL, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(20, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -303,16 +303,16 @@ public class MexicoCalendarTest {
         final int year = 2007;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 5, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 5, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 6, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(19, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 5, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate( 5, APRIL, year));
+        expectedHol.add(getDate( 6, APRIL, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(19, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -326,15 +326,15 @@ public class MexicoCalendarTest {
         final int year = 2008;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 4, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(20, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(17, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 4, FEBRUARY, year));
+        expectedHol.add(getDate(20, MARCH, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate(17, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -346,15 +346,15 @@ public class MexicoCalendarTest {
         final int year = 2009;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 9, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(10, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 2, FEBRUARY, year));
+        expectedHol.add(getDate( 9, APRIL, year));
+        expectedHol.add(getDate(10, APRIL, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(16, NOVEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -367,13 +367,13 @@ public class MexicoCalendarTest {
         final int year = 2010;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(15, NOVEMBER, year));
+        expectedHol.add(getDate( 1, JANUARY, year));
+        expectedHol.add(getDate( 1, FEBRUARY, year));
+        expectedHol.add(getDate( 1, APRIL, year));
+        expectedHol.add(getDate( 2, APRIL, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(15, NOVEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -386,14 +386,14 @@ public class MexicoCalendarTest {
         final int year = 2011;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 7, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(22, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(14, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
+        expectedHol.add(getDate( 7, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate(21, APRIL, year));
+        expectedHol.add(getDate(22, APRIL, year));
+        expectedHol.add(getDate(16, SEPTEMBER, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(14, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -406,15 +406,15 @@ public class MexicoCalendarTest {
         final int year = 2012;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(DateFactory.getFactory().getDate( 6, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 5, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 6, APRIL, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 1, MAY, year));
-        expectedHol.add(DateFactory.getFactory().getDate( 2, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(19, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(12, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(getDate( 6, FEBRUARY, year));
+        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(getDate( 5, APRIL, year));
+        expectedHol.add(getDate( 6, APRIL, year));
+        expectedHol.add(getDate( 1, MAY, year));
+        expectedHol.add(getDate( 2, NOVEMBER, year));
+        expectedHol.add(getDate(19, NOVEMBER, year));
+        expectedHol.add(getDate(12, DECEMBER, year));
+        expectedHol.add(getDate(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
