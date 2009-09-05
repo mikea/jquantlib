@@ -22,6 +22,9 @@
 
 package org.jquantlib.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.jquantlib.QL;
 
 
@@ -29,6 +32,9 @@ import org.jquantlib.QL;
  * Helper class to parse Strings to Date
  *
  * @author Srinivas Hasti
+ * @author Zahid Hussain
+ * 
+ * @Changes: Sep 2009: Used correct method to parse date and format strings in parse method.
  *
  */
 // TODO: OSGi :: remove statics
@@ -65,8 +71,8 @@ public class DateParser {
         String[] flist = null;
         int d = 0, m = 0, y = 0;
 
-        slist = str.split(str, '/');
-        flist = str.split(fmt, '/');
+        slist = str.split("/");
+        flist = fmt.split("/");
 
         if (slist.length != flist.length)
             return Date.NULL_DATE;
