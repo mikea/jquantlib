@@ -51,7 +51,7 @@ import org.junit.Test;
  * Switzerland Calendar Test.
  */
 
-public class SwitzerlandCalendarTest extends BaseCalendarTest{
+public class SwitzerlandCalendarTest {
 
 	public SwitzerlandCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
@@ -118,18 +118,18 @@ public class SwitzerlandCalendarTest extends BaseCalendarTest{
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(getDate(1,JANUARY,year));
-		expectedHol.add(getDate(2,JANUARY,year));
-    	expectedHol.add(getDate(9,APRIL,year));
-    	expectedHol.add(getDate(12,APRIL,year));
+		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(12,APRIL,year));
     	// expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,year)); --> Saturday
-    	expectedHol.add(getDate(20,MAY,year));
-    	expectedHol.add(getDate(31,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(20,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(31,MAY,year));
 
     	if(market == Switzerland.Market.Settlement)
     	{
-	    	expectedHol.add(getDate(24,DECEMBER,year));
-	    	expectedHol.add(getDate(31,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
     	}
     	// expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,year)); --> Sunday
 
@@ -145,12 +145,12 @@ public class SwitzerlandCalendarTest extends BaseCalendarTest{
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-    	expectedHol.add(getDate(25,MARCH,year));
-    	expectedHol.add(getDate(28,MARCH,year));
-    	expectedHol.add(getDate(5,MAY,year));
-    	expectedHol.add(getDate(16,MAY,year));
-    	expectedHol.add(getDate(1,AUGUST,year));
-    	expectedHol.add(getDate(26,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(5,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(16,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -164,15 +164,15 @@ public class SwitzerlandCalendarTest extends BaseCalendarTest{
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(getDate(2,JANUARY,year));
-    	expectedHol.add(getDate(14,APRIL,year));
-    	expectedHol.add(getDate(17,APRIL,year));
-    	expectedHol.add(getDate(1,MAY,year));
-    	expectedHol.add(getDate(25,MAY,year));
-    	expectedHol.add(getDate(5,JUNE,year));
-    	expectedHol.add(getDate(1,AUGUST,year));
-    	expectedHol.add(getDate(25,DECEMBER,year));
-    	expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(14,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(17,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(5,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -186,21 +186,21 @@ public class SwitzerlandCalendarTest extends BaseCalendarTest{
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(getDate(1,JANUARY,year));
-		expectedHol.add(getDate(2,JANUARY,year));
-    	expectedHol.add(getDate(6,APRIL,year));
-    	expectedHol.add(getDate(9,APRIL,year));
-    	expectedHol.add(getDate(1,MAY,year));
-    	expectedHol.add(getDate(17,MAY,year));
-    	expectedHol.add(getDate(28,MAY,year));
-    	expectedHol.add(getDate(1,AUGUST,year));
-    	expectedHol.add(getDate(25,DECEMBER,year));
-    	expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(17,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
 
     	if(market == Switzerland.Market.Settlement)
     	{
-	    	expectedHol.add(getDate(24,DECEMBER,year));
-	    	expectedHol.add(getDate(31,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
     	}
 
     	// Call the Holiday Check
@@ -215,20 +215,20 @@ public class SwitzerlandCalendarTest extends BaseCalendarTest{
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(getDate(1,JANUARY,year));
-		expectedHol.add(getDate(2,JANUARY,year));
-    	expectedHol.add(getDate(21,MARCH,year));
-    	expectedHol.add(getDate(24,MARCH,year));
-    	expectedHol.add(getDate(1,MAY,year));
-    	expectedHol.add(getDate(12,MAY,year));
-    	expectedHol.add(getDate(1,AUGUST,year));
-    	expectedHol.add(getDate(25,DECEMBER,year));
-    	expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(21,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,MARCH,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(12,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
 
     	if(market == Switzerland.Market.Settlement)
     	{
-	    	expectedHol.add(getDate(24,DECEMBER,year));
-	    	expectedHol.add(getDate(31,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
     	}
 
     	// Call the Holiday Check
@@ -243,21 +243,21 @@ public class SwitzerlandCalendarTest extends BaseCalendarTest{
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(getDate(1,JANUARY,year));
-		expectedHol.add(getDate(2,JANUARY,year));
-    	expectedHol.add(getDate(10,APRIL,year));
-    	expectedHol.add(getDate(13,APRIL,year));
-    	expectedHol.add(getDate(1,MAY,year));
-    	expectedHol.add(getDate(21,MAY,year));
-    	expectedHol.add(getDate(01,JUNE,year));
+		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(10,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(13,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(21,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(01,JUNE,year));
     	// expectedHol.add(DateFactory.getDateUtil().getDate(1,AUGUST,year)); --> Saturday
-    	expectedHol.add(getDate(25,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
     	// expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,year)); --> Saturday
 
     	if(market == Switzerland.Market.Settlement)
     	{
-	    	expectedHol.add(getDate(24,DECEMBER,year));
-	    	expectedHol.add(getDate(31,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
     	}
 
     	// Call the Holiday Check
@@ -272,16 +272,16 @@ public class SwitzerlandCalendarTest extends BaseCalendarTest{
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(getDate(1,JANUARY,year));
-    	expectedHol.add(getDate(2,APRIL,year));
-    	expectedHol.add(getDate(5,APRIL,year));
-    	expectedHol.add(getDate(13,MAY,year));
-    	expectedHol.add(getDate(24,MAY,year));
+		expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(2,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(5,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(13,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(24,MAY,year));
 
     	if(market == Switzerland.Market.Settlement)
     	{
-	    	expectedHol.add(getDate(24,DECEMBER,year));
-	    	expectedHol.add(getDate(31,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
     	}
 
     	// Call the Holiday Check
@@ -296,12 +296,12 @@ public class SwitzerlandCalendarTest extends BaseCalendarTest{
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-    	expectedHol.add(getDate(22,APRIL,year));
-    	expectedHol.add(getDate(25,APRIL,year));
-    	expectedHol.add(getDate(2,JUNE,year));
-    	expectedHol.add(getDate(13,JUNE,year));
-    	expectedHol.add(getDate(1,AUGUST,year));
-    	expectedHol.add(getDate(26,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(22,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(2,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(13,JUNE,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -315,20 +315,20 @@ public class SwitzerlandCalendarTest extends BaseCalendarTest{
 		final List<Date> expectedHol = new Vector<Date>();
 
 		// expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,year)); --> Sunday
-		expectedHol.add(getDate(2,JANUARY,year));
-    	expectedHol.add(getDate(6,APRIL,year));
-    	expectedHol.add(getDate(9,APRIL,year));
-    	expectedHol.add(getDate(1,MAY,year));
-    	expectedHol.add(getDate(17,MAY,year));
-    	expectedHol.add(getDate(28,MAY,year));
-    	expectedHol.add(getDate(1,AUGUST,year));
-    	expectedHol.add(getDate(25,DECEMBER,year));
-    	expectedHol.add(getDate(26,DECEMBER,year));
+		expectedHol.add(DateFactory.getFactory().getDate(2,JANUARY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(6,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(9,APRIL,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(17,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(28,MAY,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(1,AUGUST,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+    	expectedHol.add(DateFactory.getFactory().getDate(26,DECEMBER,year));
 
     	if(market == Switzerland.Market.Settlement)
     	{
-	    	expectedHol.add(getDate(24,DECEMBER,year));
-	    	expectedHol.add(getDate(31,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(24,DECEMBER,year));
+	    	expectedHol.add(DateFactory.getFactory().getDate(31,DECEMBER,year));
     	}
 
     	// Call the Holiday Check

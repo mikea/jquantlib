@@ -35,13 +35,14 @@ import java.util.List;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.UnitedKingdom;
 import org.jquantlib.util.Date;
+import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 /**
  * @author Praneet Tiwari
  *
  */
-public class UnitedKingdomCalendarTest extends BaseCalendarTest{
+public class UnitedKingdomCalendarTest {
 
     private final Calendar metals;
     private final Calendar settlement;
@@ -61,23 +62,24 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomMetalsYear2004() {
         int year = 2004;
         System.out.println("Testing " + UnitedKingdom.Market.METALS + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Thursday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(9, APRIL, year));
+        expectedHol.add(df.getDate(9, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(12, APRIL, year));
+        expectedHol.add(df.getDate(12, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(3, MAY, year));
+        expectedHol.add(df.getDate(3, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(31, MAY, year));
+        expectedHol.add(df.getDate(31, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(30, AUGUST, year));
+        expectedHol.add(df.getDate(30, AUGUST, year));
         // Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(27, DECEMBER, year));
-        expectedHol.add(getDate(28, DECEMBER, year));
+        expectedHol.add(df.getDate(27, DECEMBER, year));
+        expectedHol.add(df.getDate(28, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -91,23 +93,24 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomMetalsYear2005() {
         int year = 2005;
         System.out.println("Testing " + UnitedKingdom.Market.METALS + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Saturday
-        expectedHol.add(getDate(3, JANUARY, year));
+        expectedHol.add(df.getDate(3, JANUARY, year));
         // Good Friday
-        expectedHol.add(getDate(25, MARCH, year));
+        expectedHol.add(df.getDate(25, MARCH, year));
         // Easter Monday
-        expectedHol.add(getDate(28, MARCH, year));
+        expectedHol.add(df.getDate(28, MARCH, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(2, MAY, year));
+        expectedHol.add(df.getDate(2, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(30, MAY, year));
+        expectedHol.add(df.getDate(30, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(29, AUGUST, year));
+        expectedHol.add(df.getDate(29, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
-        expectedHol.add(getDate(27, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(27, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -121,24 +124,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomMetalsYear2006() {
         int year = 2006;
         System.out.println("Testing " + UnitedKingdom.Market.METALS + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Sunday
-        expectedHol.add(getDate(2, JANUARY, year));
+        expectedHol.add(df.getDate(2, JANUARY, year));
         // Good Friday
-        expectedHol.add(getDate(14, APRIL, year));
+        expectedHol.add(df.getDate(14, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(17, APRIL, year));
+        expectedHol.add(df.getDate(17, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(1, MAY, year));
+        expectedHol.add(df.getDate(1, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(29, MAY, year));
+        expectedHol.add(df.getDate(29, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(28, AUGUST, year));
+        expectedHol.add(df.getDate(28, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -152,24 +156,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomMetalsYear2007() {
         int year = 2007;
         System.out.println("Testing " + UnitedKingdom.Market.METALS + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Monday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         // Good Friday
-        expectedHol.add(getDate(6, APRIL, year));
+        expectedHol.add(df.getDate(6, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(9, APRIL, year));
+        expectedHol.add(df.getDate(9, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(7, MAY, year));
+        expectedHol.add(df.getDate(7, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(28, MAY, year));
+        expectedHol.add(df.getDate(28, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(27, AUGUST, year));
+        expectedHol.add(df.getDate(27, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -183,24 +188,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomMetalsYear2008() {
         int year = 2008;
         System.out.println("Testing " + UnitedKingdom.Market.METALS + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Tuesday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(df.getDate(21, MARCH, year));
         // Easter Monday
-        expectedHol.add(getDate(24, MARCH, year));
+        expectedHol.add(df.getDate(24, MARCH, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(5, MAY, year));
+        expectedHol.add(df.getDate(5, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(26, MAY, year));
+        expectedHol.add(df.getDate(26, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(25, AUGUST, year));
+        expectedHol.add(df.getDate(25, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -214,24 +220,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomMetalsYear2009() {
         int year = 2009;
         System.out.println("Testing " + UnitedKingdom.Market.METALS + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January will be a Thursday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(10, APRIL, year));
+        expectedHol.add(df.getDate(10, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(13, APRIL, year));
+        expectedHol.add(df.getDate(13, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(4, MAY, year));
+        expectedHol.add(df.getDate(4, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(25, MAY, year));
+        expectedHol.add(df.getDate(25, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(31, AUGUST, year));
+        expectedHol.add(df.getDate(31, AUGUST, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // 28 th, a Monday should also be a holiday
-        expectedHol.add(getDate(28, DECEMBER, year));
+        expectedHol.add(df.getDate(28, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -245,24 +252,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomMetalsYear2010() {
         int year = 2010;
         System.out.println("Testing " + UnitedKingdom.Market.METALS + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January will be a Friday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(2, APRIL, year));
+        expectedHol.add(df.getDate(2, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(5, APRIL, year));
+        expectedHol.add(df.getDate(5, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(3, MAY, year));
+        expectedHol.add(df.getDate(3, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(31, MAY, year));
+        expectedHol.add(df.getDate(31, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(30, AUGUST, year));
+        expectedHol.add(df.getDate(30, AUGUST, year));
         // 27 th DEC., a Monday should also be a holiday
-        expectedHol.add(getDate(27, DECEMBER, year));
+        expectedHol.add(df.getDate(27, DECEMBER, year));
         // 28 th DEC., a Tuesday should also be a holiday
-        expectedHol.add(getDate(28, DECEMBER, year));
+        expectedHol.add(df.getDate(28, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -275,28 +283,29 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomSettlementYear2004() {
         int year = 2004;
         System.out.println("Testing " + UnitedKingdom.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         // Let's check the first weekend
-        expectedHol.add(getDate(2, JANUARY, year));
-        expectedHol.add(getDate(3, JANUARY, year));
+        expectedHol.add(df.getDate(2, JANUARY, year));
+        expectedHol.add(df.getDate(3, JANUARY, year));
         // Check another weekend, incidentally V Day ;-)
-        expectedHol.add(getDate(14, FEBRUARY, year));
+        expectedHol.add(df.getDate(14, FEBRUARY, year));
         //Good Friday
-        expectedHol.add(getDate(9, APRIL, year));
+        expectedHol.add(df.getDate(9, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(12, APRIL, year));
+        expectedHol.add(df.getDate(12, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(3, MAY, year));
+        expectedHol.add(df.getDate(3, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(31, MAY, year));
+        expectedHol.add(df.getDate(31, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(30, AUGUST, year));
+        expectedHol.add(df.getDate(30, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
-        expectedHol.add(getDate(26, DECEMBER, year));
-        expectedHol.add(getDate(27, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(27, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -310,22 +319,23 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomSettlementYear2005() {
         int year = 2005;
         System.out.println("Testing " + UnitedKingdom.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Saturday
-        expectedHol.add(getDate(3, JANUARY, year));
+        expectedHol.add(df.getDate(3, JANUARY, year));
         // Good Friday
-        expectedHol.add(getDate(25, MARCH, year));
+        expectedHol.add(df.getDate(25, MARCH, year));
         // Easter Monday
-        expectedHol.add(getDate(28, MARCH, year));
+        expectedHol.add(df.getDate(28, MARCH, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(2, MAY, year));
+        expectedHol.add(df.getDate(2, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(30, MAY, year));
+        expectedHol.add(df.getDate(30, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(29, AUGUST, year));
-        expectedHol.add(getDate(26, DECEMBER, year));
-        expectedHol.add(getDate(27, DECEMBER, year));
+        expectedHol.add(df.getDate(29, AUGUST, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(27, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -339,24 +349,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomSettlementYear2006() {
         int year = 2006;
         System.out.println("Testing " + UnitedKingdom.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Sunday
-        expectedHol.add(getDate(2, JANUARY, year));
+        expectedHol.add(df.getDate(2, JANUARY, year));
         // Good Friday
-        expectedHol.add(getDate(14, APRIL, year));
+        expectedHol.add(df.getDate(14, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(17, APRIL, year));
+        expectedHol.add(df.getDate(17, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(1, MAY, year));
+        expectedHol.add(df.getDate(1, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(29, MAY, year));
+        expectedHol.add(df.getDate(29, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(28, AUGUST, year));
+        expectedHol.add(df.getDate(28, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -370,24 +381,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomSettlementYear2007() {
         int year = 2007;
         System.out.println("Testing " + UnitedKingdom.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Monday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         // Good Friday
-        expectedHol.add(getDate(6, APRIL, year));
+        expectedHol.add(df.getDate(6, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(9, APRIL, year));
+        expectedHol.add(df.getDate(9, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(7, MAY, year));
+        expectedHol.add(df.getDate(7, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(28, MAY, year));
+        expectedHol.add(df.getDate(28, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(27, AUGUST, year));
+        expectedHol.add(df.getDate(27, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
 
 
         // Call the Holiday Check
@@ -402,24 +414,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomSettlementYear2008() {
         int year = 2008;
         System.out.println("Testing " + UnitedKingdom.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Tuesday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(df.getDate(21, MARCH, year));
         // Easter Monday
-        expectedHol.add(getDate(24, MARCH, year));
+        expectedHol.add(df.getDate(24, MARCH, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(5, MAY, year));
+        expectedHol.add(df.getDate(5, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(26, MAY, year));
+        expectedHol.add(df.getDate(26, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(25, AUGUST, year));
+        expectedHol.add(df.getDate(25, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -433,24 +446,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomSettlementYear2009() {
         int year = 2009;
         System.out.println("Testing " + UnitedKingdom.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January will be a Thursday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(10, APRIL, year));
+        expectedHol.add(df.getDate(10, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(13, APRIL, year));
+        expectedHol.add(df.getDate(13, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(4, MAY, year));
+        expectedHol.add(df.getDate(4, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(25, MAY, year));
+        expectedHol.add(df.getDate(25, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(31, AUGUST, year));
+        expectedHol.add(df.getDate(31, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // 28 th, a Monday should also be a holiday
-        expectedHol.add(getDate(28, DECEMBER, year));
+        expectedHol.add(df.getDate(28, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -464,23 +478,24 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomSettlementYear2010() {
         int year = 2010;
         System.out.println("Testing " + UnitedKingdom.Market.SETTLEMENT + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January will be a Friday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(2, APRIL, year));
+        expectedHol.add(df.getDate(2, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(5, APRIL, year));
+        expectedHol.add(df.getDate(5, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(3, MAY, year));
+        expectedHol.add(df.getDate(3, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(31, MAY, year));
+        expectedHol.add(df.getDate(31, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(30, AUGUST, year));
-        expectedHol.add(getDate(27, DECEMBER, year));
+        expectedHol.add(df.getDate(30, AUGUST, year));
+        expectedHol.add(df.getDate(27, DECEMBER, year));
         // 28 th, a Tuesday should also be a holiday
-        expectedHol.add(getDate(28, DECEMBER, year));
+        expectedHol.add(df.getDate(28, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -493,29 +508,30 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomExchangeYear2004() {
         int year = 2004;
         System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Thursday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         // Let's check the first weekend
-        expectedHol.add(getDate(2, JANUARY, year));
-        expectedHol.add(getDate(3, JANUARY, year));
+        expectedHol.add(df.getDate(2, JANUARY, year));
+        expectedHol.add(df.getDate(3, JANUARY, year));
         // Check another weekend, incidentally V Day ;-)
-        expectedHol.add(getDate(14, FEBRUARY, year));
+        expectedHol.add(df.getDate(14, FEBRUARY, year));
         //Good Friday
-        expectedHol.add(getDate(9, APRIL, year));
+        expectedHol.add(df.getDate(9, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(12, APRIL, year));
+        expectedHol.add(df.getDate(12, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(3, MAY, year));
+        expectedHol.add(df.getDate(3, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(31, MAY, year));
+        expectedHol.add(df.getDate(31, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(30, AUGUST, year));
+        expectedHol.add(df.getDate(30, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
-        expectedHol.add(getDate(26, DECEMBER, year));
-        expectedHol.add(getDate(27, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(27, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -529,24 +545,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomExchangeYear2005() {
         int year = 2005;
         System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Saturday
-        expectedHol.add(getDate(3, JANUARY, year));
+        expectedHol.add(df.getDate(3, JANUARY, year));
         // Good Friday
-        expectedHol.add(getDate(25, MARCH, year));
+        expectedHol.add(df.getDate(25, MARCH, year));
         // Easter Monday
-        expectedHol.add(getDate(28, MARCH, year));
+        expectedHol.add(df.getDate(28, MARCH, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(2, MAY, year));
+        expectedHol.add(df.getDate(2, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(30, MAY, year));
+        expectedHol.add(df.getDate(30, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(29, AUGUST, year));
+        expectedHol.add(df.getDate(29, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        //	expectedHol.add(getDate(25,DECEMBER,year));
-        expectedHol.add(getDate(26, DECEMBER, year));
-        expectedHol.add(getDate(27, DECEMBER, year));
+        //	expectedHol.add(df.getDate(25,DECEMBER,year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(27, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -560,24 +577,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomExchangeYear2006() {
         int year = 2006;
         System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Sunday
-        expectedHol.add(getDate(2, JANUARY, year));
+        expectedHol.add(df.getDate(2, JANUARY, year));
         // Good Friday
-        expectedHol.add(getDate(14, APRIL, year));
+        expectedHol.add(df.getDate(14, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(17, APRIL, year));
+        expectedHol.add(df.getDate(17, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(1, MAY, year));
+        expectedHol.add(df.getDate(1, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(29, MAY, year));
+        expectedHol.add(df.getDate(29, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(28, AUGUST, year));
+        expectedHol.add(df.getDate(28, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -591,24 +609,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomExchangeYear2007() {
         int year = 2007;
         System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Monday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         // Good Friday
-        expectedHol.add(getDate(6, APRIL, year));
+        expectedHol.add(df.getDate(6, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(9, APRIL, year));
+        expectedHol.add(df.getDate(9, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(7, MAY, year));
+        expectedHol.add(df.getDate(7, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(28, MAY, year));
+        expectedHol.add(df.getDate(28, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(27, AUGUST, year));
+        expectedHol.add(df.getDate(27, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -622,24 +641,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomExchangeYear2008() {
         int year = 2008;
         System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January was a Tuesday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(21, MARCH, year));
+        expectedHol.add(df.getDate(21, MARCH, year));
         // Easter Monday
-        expectedHol.add(getDate(24, MARCH, year));
+        expectedHol.add(df.getDate(24, MARCH, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(5, MAY, year));
+        expectedHol.add(df.getDate(5, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(26, MAY, year));
+        expectedHol.add(df.getDate(26, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(25, AUGUST, year));
+        expectedHol.add(df.getDate(25, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // Boxing Day, December 26th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(26, DECEMBER, year));
+        expectedHol.add(df.getDate(26, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -653,24 +673,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomExchangeYear2009() {
         int year = 2009;
         System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January will be a Thursday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(10, APRIL, year));
+        expectedHol.add(df.getDate(10, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(13, APRIL, year));
+        expectedHol.add(df.getDate(13, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(4, MAY, year));
+        expectedHol.add(df.getDate(4, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(25, MAY, year));
+        expectedHol.add(df.getDate(25, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(31, AUGUST, year));
+        expectedHol.add(df.getDate(31, AUGUST, year));
         //Christmas Day, December 25th (possibly moved to Monday or Tuesday)
-        expectedHol.add(getDate(25, DECEMBER, year));
+        expectedHol.add(df.getDate(25, DECEMBER, year));
         // 28 th, a Monday should also be a holiday
-        expectedHol.add(getDate(28, DECEMBER, year));
+        expectedHol.add(df.getDate(28, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -684,24 +705,25 @@ public class UnitedKingdomCalendarTest extends BaseCalendarTest{
     public void testUnitedKingdomExchangeYear2010() {
         int year = 2010;
         System.out.println("Testing " + UnitedKingdom.Market.LSE + " holiday list for the year " + year + "...");
+        final DateFactory df = DateFactory.getFactory();
         final List<Date> expectedHol = new ArrayList<Date>();
 
         // First January will be a Friday
-        expectedHol.add(getDate(1, JANUARY, year));
+        expectedHol.add(df.getDate(1, JANUARY, year));
         //Good Friday
-        expectedHol.add(getDate(2, APRIL, year));
+        expectedHol.add(df.getDate(2, APRIL, year));
         // Easter Monday
-        expectedHol.add(getDate(5, APRIL, year));
+        expectedHol.add(df.getDate(5, APRIL, year));
         // May Bank holiday, first Monday of May
-        expectedHol.add(getDate(3, MAY, year));
+        expectedHol.add(df.getDate(3, MAY, year));
         // Spring Bank Holiday, last Monday of May
-        expectedHol.add(getDate(31, MAY, year));
+        expectedHol.add(df.getDate(31, MAY, year));
         // Summer Bank Holiday, last Monday of August
-        expectedHol.add(getDate(30, AUGUST, year));
+        expectedHol.add(df.getDate(30, AUGUST, year));
         // 27 th, a Monday should also be a holiday
-        expectedHol.add(getDate(27, DECEMBER, year));
+        expectedHol.add(df.getDate(27, DECEMBER, year));
         // 28 th, a Tuesday should also be a holiday
-        expectedHol.add(getDate(28, DECEMBER, year));
+        expectedHol.add(df.getDate(28, DECEMBER, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();

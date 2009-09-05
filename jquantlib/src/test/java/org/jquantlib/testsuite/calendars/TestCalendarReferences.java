@@ -39,7 +39,7 @@ import org.junit.Test;
  * @author Srinivas Hasti
  * 
  */
-public class TestCalendarReferences extends BaseCalendarTest{
+public class TestCalendarReferences {
 
     @Test
     public void testCalendarAdvance() {
