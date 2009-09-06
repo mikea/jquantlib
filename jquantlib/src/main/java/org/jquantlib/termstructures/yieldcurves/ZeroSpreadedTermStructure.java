@@ -48,7 +48,7 @@ public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
 	public double forwardImpl(final double t){
         return originalCurve.getLink().
         forwardRate(t, t, comp, freq, true).rate()
-        + spread.getLink().evaluate();
+        + spread.getLink().op();
     }
 
 
@@ -62,7 +62,7 @@ public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
 		final InterestRate zeroRate = originalCurve.getLink().
 		zeroRate(t, comp, freq, true);
 		final InterestRate spreadedRate =
-			new InterestRate(zeroRate.rate() + spread.getLink().evaluate(),
+			new InterestRate(zeroRate.rate() + spread.getLink().op(),
 				zeroRate.dayCounter(),
 				zeroRate.compounding(),
 				zeroRate.frequency());

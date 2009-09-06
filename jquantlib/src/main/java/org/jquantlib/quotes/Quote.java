@@ -41,7 +41,7 @@ package org.jquantlib.quotes;
 
 import java.util.List;
 
-import org.jquantlib.math.FunctionDouble;
+import org.jquantlib.math.Ops;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
@@ -51,7 +51,7 @@ import org.jquantlib.util.Observer;
  * 
  * @author Richard Gomes
  */
-public abstract class Quote implements FunctionDouble, Observable {
+public abstract class Quote implements Ops.DoubleGenerator, Observable {
 
 	//
 	// implements Observable

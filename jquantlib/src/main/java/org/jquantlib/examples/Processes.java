@@ -94,23 +94,23 @@ public class Processes {
 		
 		//Calculating the drift of the stochastic process after time = 18th day from today with value of the stock as specified from the quote
 		//The drift = (riskFreeForwardRate - dividendForwardRate) - (Variance/2)
-		System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.drift(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().evaluate()));
+		System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.drift(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op()));
 		
 		//Calculating the diffusion of the process after time = 18th day from today with value of the stock as specified from the quote
 		//The diffusion = volatiltiy of the stochastic process
-		System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.diffusion(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().evaluate()));
+		System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.diffusion(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op()));
 		
 		//Calulating the standard deviation of the process after time = 18th day from today with value of the stock as specified from the quote
 		//The standard deviation = volatility*sqrt(dt)
-		System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.stdDeviation(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().evaluate(), 0.01));
+		System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.stdDeviation(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op(), 0.01));
 		
 		//Calulating the variance of the process after time = 18th day from today with value of the stock as specified from the quote
 		//The variance = volatility*volatility*dt
-		System.out.println("The variance of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.variance(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().evaluate(), 0.01));
+		System.out.println("The variance of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.variance(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op(), 0.01));
 		
 		//Calulating the expected value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
 		//The expectedValue = intialValue*exp(drift*dt)-----can be obtained by integrating----->dx/x= drift*dt  
-		System.out.println("Expected value = "+process.expectation(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().evaluate(), 0.01));
+		System.out.println("Expected value = "+process.expectation(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op(), 0.01));
 		
 		//Calulating the exact value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
 		//The exact value = intialValue*exp(drift*dt)*exp(volatility*sqrt(dt))-----can be obtained by integrating----->dx/x= drift*dt+volatility*sqrt(dt)

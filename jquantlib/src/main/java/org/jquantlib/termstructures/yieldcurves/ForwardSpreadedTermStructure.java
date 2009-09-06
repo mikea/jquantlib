@@ -119,13 +119,13 @@ public class ForwardSpreadedTermStructure extends ForwardRateStructure {
     @Override
     protected double forwardImpl(final double t) {
         return originalCurve.getLink().forwardRate(
-                t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.getLink().evaluate();
+                t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.getLink().op();
     }
 
     @Override
     public double zeroYieldImpl(final double t) {
         return originalCurve.getLink().zeroRate(
-                t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.getLink().evaluate();
+                t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.getLink().op();
     }
 
 }

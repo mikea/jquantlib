@@ -77,7 +77,7 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
             if (arguments.cashFlow.get(i).date().ge(settlementDate))
                 riskless += arguments.cashFlow.get(i).amount() *
                 process.riskFreeRate().getLink().discount(arguments.cashFlow.get(i).date());
-        final double /*@Real*/ spot = process.stateVariable().getLink().evaluate() - riskless;
+        final double /*@Real*/ spot = process.stateVariable().getLink().op() - riskless;
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
 
         final double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());

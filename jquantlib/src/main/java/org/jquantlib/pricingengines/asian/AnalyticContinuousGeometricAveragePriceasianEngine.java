@@ -97,7 +97,7 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
         /*@Time*/ final double t_q = divdc.yearFraction(
                 process.dividendYield().getLink().referenceDate(), exercise);
         /*@DiscountFactor*/ final double dividendDiscount = Math.exp(-dividendYield*t_q);
-        /*@Real*/ final double spot = process.stateVariable().getLink().evaluate();
+        /*@Real*/ final double spot = process.stateVariable().getLink().op();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         /*@Real*/ final double forward = spot * dividendDiscount / riskFreeDiscount;
 

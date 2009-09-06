@@ -123,7 +123,7 @@ public class LocalConstantVol extends LocalVolTermStructure {
 
 	@Override
 	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-		return this.volatility_.getLink().evaluate();
+		return this.volatility_.getLink().op();
 	}
 
 }

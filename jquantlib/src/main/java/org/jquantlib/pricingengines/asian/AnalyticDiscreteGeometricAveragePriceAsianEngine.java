@@ -163,7 +163,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         zeroRate(exDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
         /*@Rate*/ final double nu = riskFreeRate - dividendRate - 0.5*vola*vola;
 
-        /*@Real*/ final double  s = process.stateVariable().getLink().evaluate();
+        /*@Real*/ final double  s = process.stateVariable().getLink().op();
 
         /*@Real*/ final double muG = pastWeight * runningLog +
         futureWeight * Math.log(s) + nu*timeSum/N;

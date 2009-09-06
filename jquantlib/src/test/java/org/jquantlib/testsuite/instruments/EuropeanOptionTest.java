@@ -336,7 +336,7 @@ public class EuropeanOptionTest {
         final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(today, vol, dc));
         final PricingEngine engine = new AnalyticEuropeanEngine();
 
-        final StopClock clock = new StopClock();
+		final StopClock clock = new StopClock();
         clock.reset();
         clock.startClock();
 
@@ -699,7 +699,7 @@ public class EuropeanOptionTest {
                                         calculated.put("divRho", option.dividendRho());
                                         calculated.put("vega", option.vega());
 
-                                        if (value > spot.getLink().evaluate()*1.0e-5) {
+                                        if (value > spot.getLink().op()*1.0e-5) {
                                             // perturb spot and get delta and gamma
                                             final double du = u*1.0e-4;
                                             spot.getLink().setValue(u+du);
@@ -917,7 +917,7 @@ public class EuropeanOptionTest {
                     + "previous value: " + refValue + "\n"
                     + "current value:  " + option2.getNPV());
 
-        vol.getLink().setValue(vol.getLink().evaluate()*1.5);
+        vol.getLink().setValue(vol.getLink().op()*1.5);
 
         if (!f.isUp())
             fail("volatility change not notified");
@@ -997,7 +997,7 @@ public class EuropeanOptionTest {
                                     expected.put("value", refNPV);
                                     calculated.put("value", optNPV);
 
-                                    if (testGreeks && option.getNPV() > spot.getLink().evaluate() * 1.0e-5) {
+                                    if (testGreeks && option.getNPV() > spot.getLink().op() * 1.0e-5) {
                                         expected.put("delta", refOption.delta());
                                         expected.put("gamma", refOption.gamma());
                                         expected.put("theta", refOption.theta());

@@ -98,7 +98,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
         final double /* @Real */variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
         final double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
         final double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(ex.lastDate());
-        final double /* @Real */spot = process.stateVariable().getLink().evaluate();
+        final double /* @Real */spot = process.stateVariable().getLink().op();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         final double /* @Real */forwardPrice = spot * dividendDiscount / riskFreeDiscount;
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);

@@ -564,7 +564,7 @@ public class AmericanOptionTest {
                                     calculated.put("gamma", option.gamma());
                                     calculated.put("theta", option.theta());
 
-                                    if (value > spot.evaluate() * 1.0e-5) {
+                                    if (value > spot.op() * 1.0e-5) {
                                         // perturb spot and get delta and gamma
                                         final double du = u * 1.0e-4;
                                         spot.setValue(u + du);

@@ -157,7 +157,7 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
         final double /* @Real */variance = process.blackVolatility().getLink().blackVariance(ex.lastDate(), payoff.strike());
         double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(ex.lastDate());
         double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(ex.lastDate());
-        double /* @Real */spot = process.stateVariable().getLink().evaluate();
+        double /* @Real */spot = process.stateVariable().getLink().op();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         double /* @Real */strike = payoff.strike();
 

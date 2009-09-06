@@ -85,4 +85,7 @@ public interface Ops {
         public boolean op(double a, double b);
     }
 
+    public static interface DoubleGenerator {
+    	public double op();
+    }
 }

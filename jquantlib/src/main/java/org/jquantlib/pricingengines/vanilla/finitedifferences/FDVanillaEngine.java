@@ -88,7 +88,7 @@ public class FDVanillaEngine {
     //
 
     protected void setGridLimits() {
-        setGridLimits(process.stateVariable().getLink().evaluate(), getResidualTime());
+        setGridLimits(process.stateVariable().getLink().op(), getResidualTime());
         ensureStrikeInGrid();
     }
 

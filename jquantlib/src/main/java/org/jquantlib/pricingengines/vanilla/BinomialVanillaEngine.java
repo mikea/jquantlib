@@ -123,7 +123,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
         final Calendar volcal = process.blackVolatility().getLink().calendar();
 
-        final double s0 = process.stateVariable().getLink().evaluate();
+        final double s0 = process.stateVariable().getLink().op();
         QL.require(s0 > 0.0 , "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         final double v = process.blackVolatility().getLink().blackVol(arguments.exercise.lastDate(), s0);
         final Date maturityDate = arguments.exercise.lastDate();

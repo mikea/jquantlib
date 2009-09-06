@@ -101,12 +101,12 @@ public class HestonProcess extends StochasticProcess {
     // TODO: code review :: please verify against QL/C++ code
     public void update() {
         // helper variables to improve performance
-        s0v_ = s0_.getLink().evaluate();
-        v0v_ = v0_.getLink().evaluate();
-        kappav_ = kappa_.getLink().evaluate();
-        thetav_ = theta_.getLink().evaluate();
-        sigmav_ = sigma_.getLink().evaluate();
-        rhov_ = rho_.getLink().evaluate();
+        s0v_ = s0_.getLink().op();
+        v0v_ = v0_.getLink().op();
+        kappav_ = kappa_.getLink().op();
+        thetav_ = theta_.getLink().op();
+        sigmav_ = sigma_.getLink().op();
+        rhov_ = rho_.getLink().op();
         sqrhov_ = Math.sqrt(1.0 - rhov_ * rhov_);
 
         // this->StochasticProcess::update();

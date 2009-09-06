@@ -108,11 +108,11 @@ public class AsianOptionTest {
 
         final SimpleQuote spot = new SimpleQuote(100.0);
         final SimpleQuote qRate = new SimpleQuote(0.03);
-        final YieldTermStructure qTS = Utilities.flatRate(today, qRate.evaluate(), dc);
+        final YieldTermStructure qTS = Utilities.flatRate(today, qRate.op(), dc);
         final SimpleQuote rRate = new SimpleQuote(0.06);
-        final YieldTermStructure rTS = Utilities.flatRate(today, rRate.evaluate(), dc);
+        final YieldTermStructure rTS = Utilities.flatRate(today, rRate.op(), dc);
         final SimpleQuote vol = new SimpleQuote(0.20);
-        final BlackVolTermStructure volTS = Utilities.flatVol(today, vol.evaluate(), dc);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, vol.op(), dc);
 
         final StochasticProcess stochProcess = new org.jquantlib.processes.BlackScholesMertonProcess(new Handle<Quote>(spot),
                 new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
@@ -158,8 +158,8 @@ public class AsianOptionTest {
 
         /* @Real */final double tolerance = 1e-10;
         if (Math.abs(calculated - expected) > tolerance) {
-            reportFailure("value", averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise, spot.evaluate(),
-                    qRate.evaluate(), rRate.evaluate(), today, vol.evaluate(), expected, calculated, tolerance);
+            reportFailure("value", averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise, spot.op(),
+                    qRate.op(), rRate.op(), today, vol.op(), expected, calculated, tolerance);
         }
     }
 
@@ -246,7 +246,7 @@ public class AsianOptionTest {
                                     calculated.put("vega", option.vega());
 
                                     final Map<String, Double> expected = new HashMap<String, Double>();
-                                    if (value > spot.evaluate() * 1.0e-5) {
+                                    if (value > spot.op() * 1.0e-5) {
                                         // perturb spot and get delta and gamma
                                         final double du = u * 1.0e-4;
                                         spot.setValue(u + du);
@@ -374,7 +374,7 @@ public class AsianOptionTest {
 
         if (Math.abs(calculated - expected) > tolerance) {
             reportFailure("value", averageType, runningAccumulator, pastFixings, new ArrayList<Date>(), payoff, exercise, spot
-                    .evaluate(), qRate.evaluate(), rRate.evaluate(), today, vol.evaluate(), expected, calculated, tolerance);
+                    .op(), qRate.op(), rRate.op(), today, vol.op(), expected, calculated, tolerance);
 
         }
         // trying to approximate the continuous version with the discrete version
@@ -393,8 +393,8 @@ public class AsianOptionTest {
         calculated = option2.getNPV();
         tolerance = 3.0e-3;
         if (Math.abs(calculated - expected) > tolerance) {
-            reportFailure("value", averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise, spot.evaluate(),
-                    qRate.evaluate(), rRate.evaluate(), today, vol.evaluate(), expected, calculated, tolerance);
+            reportFailure("value", averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise, spot.op(),
+                    qRate.op(), rRate.op(), today, vol.op(), expected, calculated, tolerance);
         }
     }
 
@@ -470,7 +470,7 @@ public class AsianOptionTest {
                                     calculated.put("vega", option.vega());
 
                                     final Map<String, Double> expected = new HashMap<String, Double>();
-                                    if (value > spot.evaluate() * 1.0e-5) {
+                                    if (value > spot.op() * 1.0e-5) {
                                         // perturb spot and get delta and gamma
                                         /* @Real */final double du = u * 1.0e-4;
                                         spot.setValue(u + du);

@@ -61,11 +61,11 @@ public class HestonModel extends CalibratedModel {
         this.theta_ = process.theta();
         this.sigma_ = process.sigma();
         this.rho_ = process.rho();
-        arguments_.set(0, new ConstantParameter(process.theta().getLink().evaluate(), new PositiveConstraint()));
-        arguments_.set(1, new ConstantParameter(process.kappa().getLink().evaluate(), new PositiveConstraint()));
-        arguments_.set(2, new ConstantParameter(process.sigma().getLink().evaluate(), new PositiveConstraint()));
-        arguments_.set(3, new ConstantParameter(process.rho().getLink().evaluate(), new PositiveConstraint()));
-        arguments_.set(4, new ConstantParameter(process.v0().getLink().evaluate(), new PositiveConstraint()));
+        arguments_.set(0, new ConstantParameter(process.theta().getLink().op(), new PositiveConstraint()));
+        arguments_.set(1, new ConstantParameter(process.kappa().getLink().op(), new PositiveConstraint()));
+        arguments_.set(2, new ConstantParameter(process.sigma().getLink().op(), new PositiveConstraint()));
+        arguments_.set(3, new ConstantParameter(process.rho().getLink().op(), new PositiveConstraint()));
+        arguments_.set(4, new ConstantParameter(process.v0().getLink().op(), new PositiveConstraint()));
 
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");

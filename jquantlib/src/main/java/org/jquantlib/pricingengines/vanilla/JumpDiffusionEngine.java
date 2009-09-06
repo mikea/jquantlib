@@ -114,12 +114,12 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
 
         final Merton76Process jdProcess = (Merton76Process) arguments.stochasticProcess;
         final double /* @Real */jumpSquareVol =
-            jdProcess.logJumpVolatility().getLink().evaluate() * jdProcess.logJumpVolatility().getLink().evaluate();
-        final double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().getLink().evaluate() + 0.5 * jumpSquareVol;
+            jdProcess.logJumpVolatility().getLink().op() * jdProcess.logJumpVolatility().getLink().op();
+        final double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().getLink().op() + 0.5 * jumpSquareVol;
 
         // mean jump size
         final double /* @Real */k = Math.exp(muPlusHalfSquareVol) - 1.0;
-        final double /* @Real */lambda = (k + 1.0) * jdProcess.jumpIntensity().getLink().evaluate();
+        final double /* @Real */lambda = (k + 1.0) * jdProcess.jumpIntensity().getLink().op();
 
         // dummy strike
         final double /* @Real */variance = jdProcess.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), 1.0);
@@ -171,7 +171,7 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
 
             // constant vol/rate assumption. It should be relaxed
             v = Math.sqrt((variance + i * jumpSquareVol) / t);
-            r = riskFreeRate - jdProcess.jumpIntensity().getLink().evaluate() * k + i * muPlusHalfSquareVol / t;
+            r = riskFreeRate - jdProcess.jumpIntensity().getLink().op() * k + i * muPlusHalfSquareVol / t;
             riskFreeTS.setLink(new FlatForward(rateRefDate, r, voldc));
             volTS.setLink(new BlackConstantVol(rateRefDate, v, voldc));
 

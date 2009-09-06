@@ -103,7 +103,7 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
         final double variance = process.blackVolatility().getLink().blackVariance(exerciseDate, striked_payoff.strike());
         final double dividendDiscount = process.dividendYield().getLink().discount(exerciseDate);
         final double riskFreeDiscount = process.riskFreeRate().getLink().discount(exerciseDate);
-        final double spot = process.stateVariable().getLink().evaluate();
+        final double spot = process.stateVariable().getLink().op();
         final double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
 
         final BlackCalculator black = new BlackCalculator(striked_payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);

@@ -110,14 +110,14 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
     public double impliedQuote() {
         QL.require(termStructure!=null , "term structure not set"); // QA:[RG]::verified // TODO: message
         final double forwardRate = termStructure.discount(earliestDate) / (termStructure.discount(latestDate) - 1.0) / yearFraction;
-        final double convA = convAdj.empty() ? 0.0 : convAdj.getLink().evaluate();
+        final double convA = convAdj.empty() ? 0.0 : convAdj.getLink().op();
         QL.ensure(convA >= 0.0 , "negative futures convexity adjustment"); // QA:[RG]::verified // TODO: message
         final double futureRate = forwardRate + convA;
         return 100.0 * (1.0 - futureRate);
     }
 
     public double getConvexityAdjustment() {
-        return convAdj.empty() ? 0.0 : convAdj.getLink().evaluate();
+        return convAdj.empty() ? 0.0 : convAdj.getLink().op();
     }
 
     /*
