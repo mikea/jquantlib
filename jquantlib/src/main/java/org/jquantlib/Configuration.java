@@ -209,6 +209,10 @@ public class Configuration {
     public boolean isEnforcesTodaysHistoricFixings() {
         return enforcesTodaysHistoricFixings;
     }
+
+    public void setEnforcesTodaysHistoricFixings(boolean enforcesTodaysHistoricFixings) {
+       	this.enforcesTodaysHistoricFixings = enforcesTodaysHistoricFixings;
+    }
 }
 
 // ====================================================================================
