@@ -85,6 +85,12 @@ public interface Ops {
         public boolean op(double a, double b);
     }
 
+    /**
+     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     * This interface replaced FunctionDouble.
+     * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.DoubleGenerator.html">DoubleGenerator</a>
+     * @author Zahid Hussain.
+     */
     public static interface DoubleGenerator {
     	public double op();
     }
