@@ -11,7 +11,7 @@ import org.jquantlib.util.Date;
 
 // TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public class FixedRateLeg {
+public class FixedRateLeg extends Leg {
 
     private final Schedule schedule_;
     private double[] notionals_;
