@@ -29,8 +29,8 @@ public class Euribor365 extends IborIndex {
     public Euribor365(final Period tenor, final Handle<YieldTermStructure> h) {
         super("Euribor365", tenor,
                 2, // settlement days
-                Target.getCalendar(),
                 new EURCurrency(),
+                Target.getCalendar(),
                 euriborConvention(tenor),
                 euriborEOM(tenor),
                 Actual365Fixed.getDayCounter(),
