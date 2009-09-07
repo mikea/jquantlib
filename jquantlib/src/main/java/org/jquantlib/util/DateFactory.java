@@ -112,6 +112,18 @@ public abstract class DateFactory {
     public Date getDate(final int day, final int month, final int year){
         return dateFactory.getDate(day, month, year);
     }
+    
+    /**
+     * Returns a Date represented by parameters specified
+     *
+     * @param day
+     * @param month
+     * @param year
+     * @return
+     */
+    public Date getDate(final Date date){
+        return dateFactory.getDate(date);
+    }
 
     /**
      * Returns a new Date which is the n-th week day of a certain month/year

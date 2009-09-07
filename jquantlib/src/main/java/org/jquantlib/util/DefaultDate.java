@@ -787,6 +787,17 @@ public class DefaultDate extends BaseDate {
         public final Date getDate(final int day, final int month, final int year){
             return new DefaultDate(day, month, year);
         }
+        
+        /**
+         * Returns a copy of the specified date
+         *
+         * @param date the date to be copied
+         * @return
+         */
+        @Override
+        public final Date getDate(final Date date){
+            return new DefaultDate(date.getDayOfMonth(), date.getMonth(), date.getYear());
+        }
 
         @Override
         public final Date getNthWeekday(final int nth, final Weekday dayOfWeek, final Month month, final int year){
