@@ -43,8 +43,10 @@ public enum DateGenerationRule {
 	 * All dates but effective date and termination date are taken to be on the
 	 * third wednesday of their month (with forward calculation
 	 */
-	THIRD_WEDNESDAY;
-
+	THIRD_WEDNESDAY,
+	TWENTIEHT,
+	TWENTIEHTIMM;
+	
 	@Override
 	public String toString() {
 		String val = null;
@@ -60,6 +62,12 @@ public enum DateGenerationRule {
 			break;
 		case THIRD_WEDNESDAY:
 			val = "ThirdWednesday";
+			break;
+		case TWENTIEHT:
+			val = "Twentieth";
+			break;
+		case TWENTIEHTIMM:
+			val = "TwentiethIMM";
 			break;
 		default:
 			val = super.toString();
