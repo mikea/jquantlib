@@ -51,24 +51,272 @@
 	should never be used inside Eclipse environment.
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>jquantlib-samples</groupId>
-	<artifactId>jquantlib-samples</artifactId>
-	<version>0.1.3-SNAPSHOT</version>
-	<url>http://www.jquantlib.org/</url>
-	<dependencies>
-		<dependency>
-			<groupId>org.jquantlib</groupId>
-			<artifactId>jquantlib</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>jfree</groupId>
-			<artifactId>jfreechart</artifactId>
-			<version>1.0.9</version>
-		</dependency>
-	</dependencies>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.jquantlib</groupId>
+    <artifactId>jquantlib-samples</artifactId>
+    <name>JQuantLibSamples</name>
+    <version>0.1.3-SNAPSHOT</version>
+    <url>http://www.jquantlib.org/</url>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jquantlib</groupId>
+            <artifactId>jquantlib</artifactId>
+            <version>0.1.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>jfreechart</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>	
+  
+    <description>
+		JQuantLib is a free, open-source and comprehensive framework for quantitative finance, offering
+		several mathematical and statistical tools needed for financial instrument valuation, calculation
+		of VaR, portfolio valuation, etc.
+		
+		JQuantLib is written in Java and is based on QuantLib, which is written in C++. QuantLib is a de-facto
+		reference implementation for C++ world. Following the steps of its predecessor, JQuantLib aims to
+		become a reference implementation for Java world.
+		
+		JQuantLib does its best efforts to mimic as close as possible the API exposed by QuantLib,
+		offering a smooth transition path for developers and organizations aiming to adopt Java for
+		high performance, low latency applications.
+		
+		For more information, please visit http://www.jquantlib.org
+    </description>
+
+
+     <prerequisites>
+	<maven>${maven.required.version}</maven>
+     </prerequisites>
+
+     <ciManagement>
+	<system>Continuum</system>
+	<url>http://www.jquantlib.org:8080/continuum/</url>
+	<notifiers>
+		<notifier>
+			<configuration>
+				<address>rgomes1997@yahoo.co.uk</address>
+			</configuration>
+		</notifier>
+		<notifier>
+			<configuration>
+				<address>srinivas_h@yahoo.com</address>
+			</configuration>
+		</notifier>
+		<notifier>
+			<configuration>
+				<address>dholenstein@gmail.com</address>
+			</configuration>
+		</notifier>
+		<notifier>
+			<configuration>
+				<address>q.boiler@yahoo.com</address>
+			</configuration>
+		</notifier>
+		<notifier>
+			<configuration>
+				<address>j.jia169@googlemail.com</address>
+			</configuration>
+		</notifier>
+	</notifiers>
+     </ciManagement>
+
+     <issueManagement>
+	<system>Mantis</system>
+	<url>http://bugs.jquantlib.org/</url>
+     </issueManagement>
+
+     <mailingLists>
+		<mailingList>
+			<name>jquant-devel</name>
+			<subscribe>https://lists.sourceforge.net/lists/listinfo/jquant-devel</subscribe>
+			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/jquant-devel</unsubscribe>
+			<post>jquant-devel@lists.sourceforge.net</post>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jquant-devel</archive>
+		</mailingList>
+		<mailingList>
+			<name>jquant-users</name>
+			<subscribe>https://lists.sourceforge.net/lists/listinfo/jquant-users</subscribe>
+			<unsubscribe>https://lists.sourceforge.net/lists/listinfo/jquant-users</unsubscribe>
+			<post>jquant-users@lists.sourceforge.net</post>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jquant-users</archive>
+		</mailingList>
+	</mailingLists>
+
+	<developers>
+		<developer>
+			<id>fgomes</id>
+			<name>Richard Gomes</name>
+			<email>rgomes1997@yahoo.co.uk</email>
+			<url>http://www.jquantlib.org/index.php/User:RichardGomes</url>
+			<organization>JQuantLib.org</organization>
+			<organizationUrl>http://www.jquantlib.org/</organizationUrl>
+			<roles>
+				<role>administrator</role>
+				<role>developer</role>
+				<role>tester</role>
+			</roles>
+			<timezone>0</timezone>
+		</developer>
+		<developer>
+			<id>shasti</id>
+			<name>Srinivas Hasti</name>
+			<email>srinivas_h@yahoo.com</email>
+			<url />
+			<organization>JQuantLib.org</organization>
+			<organizationUrl>http://www.jquantlib.org/</organizationUrl>
+			<roles>
+				<role>developer</role>
+				<role>tester</role>
+			</roles>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>homdol</id>
+			<name>Dominik Holenstein</name>
+			<email>dholenstein@gmail.com</email>
+			<url />
+			<organization>JQuantLib.org</organization>
+			<organizationUrl>http://www.jquantlib.org/</organizationUrl>
+			<roles>
+				<role>developer</role>
+				<role>tester</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>ueli</id>
+			<name>Ueli Hofstetter</name>
+			<email>uelihofstetter@gmail.com</email>
+			<url />
+			<organization>JQuantLib.org</organization>
+			<organizationUrl>http://www.jquantlib.org/</organizationUrl>
+			<roles>
+				<role>developer</role>
+				<role>tester</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>zahidh</id>
+			<name>Zahid Hussain</name>
+			<email>zahid14@gmail.com</email>
+			<url />
+			<organization>JQuantLib.org</organization>
+			<organizationUrl>http://www.jquantlib.org/</organizationUrl>
+			<roles>
+				<role>developer</role>
+				<role>tester</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>BSD License</name>
+			<url>http://www.opensource.org/licenses/bsd-license.php</url>
+			<distribution>manual</distribution>
+			<comments>Open Source Initiative OSI - The BSD License</comments>
+		</license>
+	</licenses>
+	<scm>
+		<connection>${maven.scm.connection}</connection>
+		<developerConnection>${maven.scm.developerConnection}</developerConnection>
+		<url>${maven.scm.url}</url>
+	</scm>
+	<organization>
+		<name>JQuantLib</name>
+		<url>http://www.jquantlib.org/</url>
+	</organization>
+	
+     <repositories>
+		<repository>
+			<id>jquantlib-external_free</id>
+			<name>JQuantLib External Free Repository</name>
+			<url>http://www.jquantlib.org/maven2/repos/external_free</url>
+			<releases>  <enabled>true</enabled> </releases>
+			<snapshots> <enabled>true</enabled> </snapshots>
+		</repository>
+		<repository>
+			<id>central</id>
+			<name>Central Maven2 repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<releases>  <enabled>true</enabled>  </releases>
+			<snapshots> <enabled>false</enabled> </snapshots>
+		</repository>
+		<repository>
+			<id>maven2-snapshots</id>
+			<name>Maven2 Snapshots</name>
+			<url>http://people.apache.org/repo/m2-snapshot-repository/</url>
+			<releases>  <enabled>false</enabled> </releases>
+			<snapshots> <enabled>true</enabled> </snapshots>
+		</repository>	
+		<repository>
+		    <id>mojo</id>
+		    <name>Mojo</name>
+		    <url>http://repository.codehaus.org/</url>
+		    <releases>  <enabled>true</enabled> </releases>
+		    <snapshots> <enabled>true</enabled>  </snapshots>
+		</repository>		
+    </repositories>
+     
+  <properties>
+  
+  <!--
+      <properties>
+        <scm.base.url>scm:svn:http://subversion.ny.jpmorgan.com/svn/repos/CERiskShift/branches/5.4</scm.base.url>
+        <riskshift.version>5.4</riskshift.version>
+    </properties>
+-->
+    <!-- profile defaults -->
+    <profile.manifest.app.realm>default</profile.manifest.app.realm>
+    <profile.manifest.app.mode>debug</profile.manifest.app.mode>
+
+    <!-- These settings are only needed by Continuum and release managers      -->
+    <!-- Defaults used here are intended to avoid problems with maven2.0.9 but -->
+    <!-- are not values Continuum and release managers need.                   -->
+    <!--  role>default</role>
+    <protocol>ssh</protocol -->
+    <maven.required.version>2.0.9</maven.required.version>
+    <extension.wagon-ssh.version>1.0-beta-1</extension.wagon-ssh.version>
+    <extension.wagon-ftp.version>1.0-beta-1</extension.wagon-ftp.version>
+    <extension.wagon-file.version>1.0-beta-1</extension.wagon-file.version>
+    <extension.wagon-ftp.urlbase>ftp://ftp.jquantlib.org</extension.wagon-ftp.urlbase>
+    <extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/www-data/maven2/jquantlib.org</extension.wagon-ssh.urlbase>
+    <extension.wagon-file.urlbase>file://target</extension.wagon-file.urlbase>
+    <extension.protocol.urlbase>${extension.wagon-file.urlbase}</extension.protocol.urlbase>
+
+
+    <!-- SCM parameters -->
+    <maven.scm.project>jquant-samples</maven.scm.project>
+    <maven.scm.branch>trunk</maven.scm.branch>
+
+    <!-- plugin defaults -->
+    <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
+    <maven.compile.jdk.source>1.6</maven.compile.jdk.source>
+    <maven.compile.jdk.target>1.6</maven.compile.jdk.target>
+    <maven.compile.encoding>UTF8</maven.compile.encoding>
+    <maven.compile.meminitial>128m</maven.compile.meminitial>
+    <maven.compile.maxmem>512m</maven.compile.maxmem>
+    <maven.compile.fork>false</maven.compile.fork> <!-- Be cautious: may fork a different JVM -->
+    <maven.jar.index>false</maven.jar.index>
+    <maven.jar.manifest.dummy.class>org.jquantlib.examples.Dummy</maven.jar.manifest.dummy.class>
+    <maven.jar.manifest.samples.class>org.jquantlib.examples.EquityOptions</maven.jar.manifest.samples.class>
+
+    <!-- application independent properties :: Source Code Management -->
+    <maven.scm.root>jquant.svn.sourceforge.net/svnroot</maven.scm.root>
+    <maven.scm.connection>scm:svn:http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.connection>
+    <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
+    <maven.scm.url>http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.url>
+    
+  </properties>
 </project>
