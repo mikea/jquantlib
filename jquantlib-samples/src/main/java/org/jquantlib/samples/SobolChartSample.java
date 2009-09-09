@@ -16,6 +16,11 @@ import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.RefineryUtilities;
 import org.jquantlib.math.randomnumbers.SobolRSG;
 
+/**
+ *  
+ * @author Zahid Hussain
+ * @Changes: Fixed compilation error 
+ */
 
 public class SobolChartSample extends ApplicationFrame {
 
@@ -54,8 +59,8 @@ public class SobolChartSample extends ApplicationFrame {
         XYSeries series = new XYSeries("Series");
         for (int count=0; count<samples; count++) {
             for (int i=0; i<dimension; i++) {
-                double[] sequence1 = sobol.nextSequence().getValue();
-                double[] sequence2 = sobol.nextSequence().getValue();
+                double[] sequence1 = sobol.nextSequence().value();
+                double[] sequence2 = sobol.nextSequence().value();
                 series.add(sequence1[i], sequence2[i]);            
             }
         }
