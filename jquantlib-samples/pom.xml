@@ -151,6 +151,236 @@
 			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=jquant-users</archive>
 		</mailingList>
 	</mailingLists>
+	<build>
+	
+		<extensions>
+
+			<!-- Requires maven2.0.9 -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-http</artifactId>
+				<version>1.0-beta-2</version>
+			</extension>
+
+			<!-- Requires maven2.1.0 -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>${extension.wagon-ftp.version}</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>${extension.wagon-ssh.version}</version>
+			</extension>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-file</artifactId>
+				<version>${extension.wagon-file.version}</version>
+			</extension>
+		</extensions>
+		
+		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.0-beta-1</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>${maven.buildNumber.doCheck}</doCheck>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.0-beta-3</version>
+				<configuration>
+					<goals>install</goals>
+					<startDate>YYYY-MM-DD</startDate>
+					<endDate>YYYY-MM-DD</endDate>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>ant</groupId>
+						<artifactId>ant-antlr</artifactId>
+						<version>1.6.5</version>
+					</dependency>
+					<dependency>
+						<groupId>antlr</groupId>
+						<artifactId>antlrall</artifactId>
+						<version>2.7.4</version>
+					</dependency>
+				</dependencies>
+				<version>1.1</version>
+
+				<executions>
+					<execution>
+						<id>info</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>user.home=${user.home}</echo>
+								<echo>basedir=${basedir}</echo>
+								<echo>java.version=${java.version}</echo>
+								<echo>java.vm.version=${java.vm.version}</echo>
+								<echo>java.home=${java.home}</echo>
+								<echo>java.endorsed.dirs=${java.endorsed.dirs}</echo>
+								<echo>java.ext.dirs=${java.ext.dirs}</echo>
+								<echo>java.library.path=${java.library.path}</echo>
+								<echo>java.runtime.version=${java.runtime.version}</echo>
+								<echo>java.specification.version=${java.specification.version}</echo>
+								<echo>maven.required.version=${maven.required.version}</echo>
+								<echo>extension.wagon-ftp.version=${extension.wagon-ftp.version}</echo>
+								<echo>extension.wagon-ssh.version=${extension.wagon-ssh.version}</echo>
+								<echo>extension.wagon-file.version=${extension.wagon-file.version}</echo>
+								<echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo>
+								<echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>
+								<echo>extension.protocol.urlbase=${extension.protocol.urlbase}</echo>
+							</tasks>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>${maven.compile.jdk.source}</source>
+					<target>${maven.compile.jdk.target}</target>
+					<encoding>${maven.compile.encoding}</encoding>
+					<meminitial>${maven.compile.meminitial}</meminitial>
+					<maxmem>${maven.compile.maxmem}</maxmem>
+					<fork>${maven.compile.fork}</fork>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<archive>
+						<index>${maven.jar.index}</index>
+						<manifest>
+							<mainClass>${maven.jar.manifest.dummy.class}</mainClass>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addExtensions>true</addExtensions>
+						</manifest>
+						<manifestEntries>
+							<Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes -->
+							<Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
+							<Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
+							<Implementation-Title>${project.name}</Implementation-Title>
+							<Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
+
+							<App-Realm>${profile.manifest.app.realm}</App-Realm> <!-- reserved for the future -->
+							<App-Mode>${profile.manifest.app.mode}</App-Mode>    <!-- reserved for the future -->
+							<App-URL>${project.url}</App-URL>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>failsafe-maven-plugin</artifactId>
+				<version>2.4.3-alpha-1</version>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>verify</id>
+						<goals>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorSourceDirectory>src/main/assembly</descriptorSourceDirectory>
+					<archive>
+						<index>${maven.jar.index}</index>
+						<manifest>
+							<mainClass>${maven.jar.manifest.samples.class}</mainClass>
+						</manifest>
+						<manifestEntries>
+
+							<Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes -->
+							<Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
+							<Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
+							<Implementation-Title>${project.name}</Implementation-Title>
+							<Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
+
+							<App-Realm>${profile.manifest.app.realm}</App-Realm> <!-- reserved for the future -->
+							<App-Mode>${profile.manifest.app.mode}</App-Mode>    <!-- reserved for the future -->
+							<App-URL>${project.url}</App-URL>
+						</manifestEntries>
+					</archive>
+				</configuration>
+				<version>2.2-beta-2</version>
+				<executions>
+					<execution>
+						<id>ubber</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>1.1.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+				<version>2.0-beta-1</version>
+			</plugin>
+
+		</plugins>
+
+	</build>
 
 	<developers>
 		<developer>
@@ -271,12 +501,6 @@
      
   <properties>
   
-  <!--
-      <properties>
-        <scm.base.url>scm:svn:http://subversion.ny.jpmorgan.com/svn/repos/CERiskShift/branches/5.4</scm.base.url>
-        <riskshift.version>5.4</riskshift.version>
-    </properties>
--->
     <!-- profile defaults -->
     <profile.manifest.app.realm>default</profile.manifest.app.realm>
     <profile.manifest.app.mode>debug</profile.manifest.app.mode>
@@ -309,8 +533,6 @@
     <maven.compile.maxmem>512m</maven.compile.maxmem>
     <maven.compile.fork>false</maven.compile.fork> <!-- Be cautious: may fork a different JVM -->
     <maven.jar.index>false</maven.jar.index>
-    <maven.jar.manifest.dummy.class>org.jquantlib.examples.Dummy</maven.jar.manifest.dummy.class>
-    <maven.jar.manifest.samples.class>org.jquantlib.examples.EquityOptions</maven.jar.manifest.samples.class>
 
     <!-- application independent properties :: Source Code Management -->
     <maven.scm.root>jquant.svn.sourceforge.net/svnroot</maven.scm.root>
