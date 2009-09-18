@@ -42,7 +42,6 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.stdlibc.Std;
 
 /**
  * Rate helper for bootstrapping over swap rates
@@ -205,11 +204,13 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.latestDate = swap.maturityDate();
 
         // ...but due to adjustments, the last floating coupon might need a later date for fixing
+        // TODO: code review :: please verify against QL/C++ code
+        // Now we
         // #ifdef QL_USE_INDEXED_COUPON
         final FloatingRateCoupon lastFloating = (FloatingRateCoupon) swap.floatingLeg().last();
         final Date fixingValueDate = iborIndex.valueDate(lastFloating.fixingDate());
         final Date endValueDate = iborIndex.maturityDate(fixingValueDate);
-        latestDate = Std.getInstance().max(latestDate, endValueDate);
+        latestDate = latestDate.statics().max(latestDate, endValueDate);
         // #endif
     }
 

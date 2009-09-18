@@ -657,8 +657,12 @@ public class EuropeanOptionTest {
         final double vols[] = { 0.11, 0.50, 1.20 };
 
         final DayCounter dc = Actual360.getDayCounter();
-        final Date today = new Date().statics().todaysDate();
-        new Settings().setEvaluationDate(today);
+        final Date today = new Settings().getEvaluationDate();
+
+        //TODO: investigate a less error prone way to deal with evaluate date
+        //
+        //        final Date today = new Date().statics().todaysDate();
+        //        new Settings().setEvaluationDate(today);
 
         final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
         final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));

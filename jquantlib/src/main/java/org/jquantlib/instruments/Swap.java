@@ -36,7 +36,6 @@ import org.jquantlib.pricingengines.arguments.SwapArguments;
 import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.pricingengines.results.SwapResults;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.stdlibc.Std;
 
 /**
  * Interest rate swap
@@ -136,7 +135,7 @@ public class Swap extends NewInstrument {
         QL.require(legs.size() > 0 , "no legs given"); // QA:[RG]::verified // TODO: message
         Date d = CashFlows.getInstance().startDate(this.legs.get(0));
         for (int j = 1; j < this.legs.size(); j++) {
-            d = Std.getInstance().min(d, CashFlows.getInstance().startDate(this.legs.get(j)));
+            d = d.statics().min(d, CashFlows.getInstance().startDate(this.legs.get(j)));
         }
         return d;
     }
@@ -145,7 +144,7 @@ public class Swap extends NewInstrument {
         QL.require(legs.size() > 0 , "no legs given"); // QA:[RG]::verified // TODO: message
         Date d = CashFlows.getInstance().maturityDate(this.legs.get(0));
         for (int j = 1; j < this.legs.size(); j++) {
-            d = Std.getInstance().max(d, CashFlows.getInstance().maturityDate(this.legs.get(j)));
+            d = d.statics().max(d, CashFlows.getInstance().maturityDate(this.legs.get(j)));
         }
         return d;
     }

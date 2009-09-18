@@ -162,7 +162,7 @@ public class Settings {
      * @see #evaluationDate
      */
     public Date getEvaluationDate() {
-        return (DateProxy) attrs.get().get(EVALUATION_DATE);
+        return ((DateProxy) attrs.get().get(EVALUATION_DATE)).value();
     }
 
     /**
@@ -174,9 +174,10 @@ public class Settings {
      *
      * @see #evaluationDate
      */
-    public void setEvaluationDate(final Date evaluationDate) {
+    public Date setEvaluationDate(final Date evaluationDate) {
         final DateProxy proxy = (DateProxy) attrs.get().get(EVALUATION_DATE);
         proxy.assign(evaluationDate);
+        return proxy;
     }
 
 
@@ -214,12 +215,11 @@ public class Settings {
             super();
         }
 
-        private Date date() /* @ReadOnly */ {
+        private DateProxy value() /* @ReadOnly */ {
             if (isNull()) {
-                return this.todaysDate();
-            } else {
-                return this;
+                super.assign(todaysSerialNumber());
             }
+            return this;
         }
 
         private Date assign(final Date date) {

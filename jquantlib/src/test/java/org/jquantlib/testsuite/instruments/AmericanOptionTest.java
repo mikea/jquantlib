@@ -508,8 +508,8 @@ public class AmericanOptionTest {
         final int years[] = { 1, 2 };
         final double vols[] = { 0.11, 0.50, 1.20 };
 
-        final Date today = new Settings().getEvaluationDate();
         final DayCounter dc = Actual360.getDayCounter();
+        final Date today = new Settings().getEvaluationDate();
 
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -553,9 +553,13 @@ public class AmericanOptionTest {
                                     vol.setValue(v);
                                     // FLOATING_POINT_EXCEPTION
                                     final double value = option.getNPV();
-                                    calculated.put("delta", option.delta());
-                                    calculated.put("gamma", option.gamma());
-                                    calculated.put("theta", option.theta());
+                                    final double delta = option.delta();
+                                    final double gamma = option.gamma();
+                                    final double theta = option.theta();
+
+                                    calculated.put("delta", delta);
+                                    calculated.put("gamma", gamma);
+                                    calculated.put("theta", theta);
 
                                     if (value > spot.op() * 1.0e-5) {
                                         // perturb spot and get delta and gamma

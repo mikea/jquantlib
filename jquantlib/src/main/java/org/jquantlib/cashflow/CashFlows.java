@@ -39,7 +39,6 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
-import org.jquantlib.util.stdlibc.Std;
 
 /**
  * Cashflow-analysis functions
@@ -112,7 +111,7 @@ public class CashFlows {
         for (int i = 0; i < cashflows.size(); ++i) {
             final Coupon c = (Coupon) cashflows.get(i);
             if (c != null) {
-                d = Std.getInstance().min(c.accrualStartDate(), d);
+                d = d.statics().min(c.accrualStartDate(), d);
             }
         }
         // TODO: code review :: please verify against QL/C++ code
@@ -123,7 +122,7 @@ public class CashFlows {
     public Date maturityDate(final Leg cashflows) {
         Date d = new Date().statics().minDate();
         for (int i = 0; i < cashflows.size(); i++) {
-            d = Std.getInstance().max(d, cashflows.get(i).date());
+            d = d.statics().max(d, cashflows.get(i).date());
         }
         // TODO: code review :: please verify against QL/C++ code
         QL.require(d.le(new Date().statics().minDate()) , no_cashflows);

@@ -633,6 +633,164 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     }
 
 
+    //
+    // protected methods
+    //
+    // These methods were not declared in QuantLib/C++
+    //
+
+
+    /**
+     * Assigns the today's date to this instance
+     * 
+     * @note Does not trigger notifications
+     * 
+     * @return this instance
+     * 
+     * @see DateProxy
+     */
+    //TODO: consider @PackagePrivate
+    protected final int todaysSerialNumber() {
+        final java.util.Calendar cal = java.util.Calendar.getInstance();
+        final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
+        final int m = cal.get(java.util.Calendar.MONTH);
+        final int y = cal.get(java.util.Calendar.YEAR);
+        return fromDMY(d, m+1, y);
+    }
+
+
+    /**
+     * Assigns a new serialNumber to this instance.
+     * 
+     * @note Does not trigger notifications
+     * 
+     * @return this instance
+     * 
+     * @see DateProxy
+     */
+    //TODO: consider @PackagePrivate
+    protected final Date assign(final int serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
+
+
+
+    //
+    // private methods
+    //
+
+    private void checkSerialNumber() {
+        QL.ensure(serialNumber >= MinimumSerialNumber && serialNumber <= MaximumSerialNumber ,
+        "Date's serial number is outside allowed range"); // QA:[RG]::verified // TODO: message
+    }
+
+
+    private int advance(final Date date, final int n, final TimeUnit units) {
+        switch (units) {
+        case DAYS:
+            return (n+date.serialNumber);
+        case WEEKS:
+            return (7 * n + date.serialNumber);
+        case MONTHS: {
+            int d = date.dayOfMonth();
+            int m = date.month().value() + n;
+            int y = date.year();
+            while (m > 12) {
+                m -= 12;
+                y += 1;
+            }
+            while (m < 1) {
+                m += 12;
+                y -= 1;
+            }
+
+            QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
+            final int length = monthLength(m, statics.isLeap(y));
+            if (d > length) {
+                d = length;
+            }
+            final int result = fromDMY(d, m, y);
+            //QL.debug("{}", result);
+            return result;
+        }
+        case YEARS: {
+            int d = date.dayOfMonth();
+            final int m = date.month().value();
+            final int y = date.year() + n;
+
+            QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
+            if (d == 29 && m == Month.FEBRUARY.value() && !statics.isLeap(y)) {
+                d = 28;
+            }
+
+            final int result = fromDMY(d, m, y);
+            //QL.debug("{}", result);
+            return result;
+        }
+        default:
+            throw new LibraryException("undefined time units"); // QA:[RG]::verified // TODO: message
+        }
+    }
+
+
+    //
+    // private static methods
+    //
+
+    /**
+     * This method is intended to calculate the integer value of a (day, month, year)
+     * 
+     * @param d is the day as a number
+     * @param m is the month as a number
+     * @param y is the year as a number
+     * @return
+     */
+    private static final int fromDMY(final int d, final int m, final int y) {
+        QL.require(y > 1900 && y < 2100 , "year out of bound. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
+        QL.require(m > 0 && m < 13 , "month outside January-December range [1,12]"); // QA:[RG]::verified // TODO: message
+        final boolean leap = statics.isLeap(y);
+        final int len = monthLength(m, leap);
+        final int offset = monthOffset(m, leap);
+        QL.ensure(d > 0 && d <= len , "day outside month day-range"); // QA:[RG]::verified // TODO: message
+        final int result = d + offset + yearOffset(y);
+        return result;
+    }
+
+    /**
+     * Returns the length of a certain month
+     * 
+     * @param m is the desired month, as a number
+     * @param leapYear if <code>true</code> means a leap year
+     * @return the length of a certain month
+     */
+    private static final int monthLength(final int m, final boolean leapYear) {
+        return (leapYear ? monthLeapLength[m - 1] : monthLength[m - 1]);
+    }
+
+    /**
+     * Returns the offset of a certain month
+     * 
+     * @param m is the desired month, as a number. If you specify 13, you will get the number of days of a year
+     * @param leapYear if <code>true</code> means a leap year
+     * @return the offset of a certain month or the length of an year
+     * @see DefaultDate#yearOffset
+     */
+    private static final int monthOffset(final int m, final boolean leapYear) {
+        return (leapYear ? monthLeapOffset[m - 1] : monthOffset[m - 1]);
+    }
+
+    /**
+     * Returns the offset of a certain year
+     *
+     * @param y
+     *            is the desired year
+     * @return the offset of a certain year
+     */
+    private static final int yearOffset(final int y) {
+        return yearOffset[y - 1900];
+    }
+
 
     //
     // public inner classes
@@ -766,9 +924,49 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             return new Date(1 + dow - first + skip * 7, m, y);
         }
 
+        /**
+         * Return the minimum Date in a range.
+         */
+        public Date min(final Date... t) {
+            QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
+            if (t.length == 0) {
+                return new Date();
+            } else {
+                Date min = t[0];
+                for (int i=1; i<t.length; i++) {
+                    final Date curr = t[i];
+                    if (curr.lt(min)) {
+                        min = curr;
+                    }
+                }
+                return min;
+            }
+        }
+
+        /**
+         * Return the maximum Date in a range.
+         */
+        public Date max(final Date... t) {
+            QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
+            if (t.length == 0) {
+                return new Date();
+            } else {
+                Date max = t[0];
+                for (int i=1; i<t.length; i++) {
+                    final Date curr = t[i];
+                    if (curr.gt(max)) {
+                        max = curr;
+                    }
+                }
+                return max;
+            }
+        }
     }
 
 
+    /**
+     * This class provides a long output formatter, e.g: September 18, 2009
+     */
     private final class LongDate {
         @Override
         public final String toString() {
@@ -783,6 +981,10 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
         }
     }
 
+
+    /**
+     * This class provides a short output formatter, e.g: 09/18/2009
+     */
     private final class ShortDate {
         @Override
         public final String toString() {
@@ -797,6 +999,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
         }
     }
 
+    /**
+     * This class provides an ISO date output formatter, e.g: 2009-09-18
+     */
     private final class ISODate {
         @Override
         public final String toString() {
@@ -809,167 +1014,6 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
                 return sb.toString();
             }
         }
-    }
-
-
-
-    //
-    // private methods
-    //
-
-    private void checkSerialNumber() {
-        QL.ensure(serialNumber >= MinimumSerialNumber && serialNumber <= MaximumSerialNumber ,
-        "Date's serial number is outside allowed range"); // QA:[RG]::verified // TODO: message
-    }
-
-
-    private int advance(final Date date, final int n, final TimeUnit units) {
-        switch (units) {
-        case DAYS:
-            return (n+date.serialNumber);
-        case WEEKS:
-            return (7 * n + date.serialNumber);
-        case MONTHS: {
-            int d = date.dayOfMonth();
-            int m = date.month().value() + n;
-            int y = date.year();
-            while (m > 12) {
-                m -= 12;
-                y += 1;
-            }
-            while (m < 1) {
-                m += 12;
-                y -= 1;
-            }
-
-            QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
-            final int length = monthLength(m, statics.isLeap(y));
-            if (d > length) {
-                d = length;
-            }
-            final int result = fromDMY(d, m, y);
-            //QL.debug("{}", result);
-            return result;
-        }
-        case YEARS: {
-            int d = date.dayOfMonth();
-            final int m = date.month().value();
-            final int y = date.year() + n;
-
-            QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
-            if (d == 29 && m == Month.FEBRUARY.value() && !statics.isLeap(y)) {
-                d = 28;
-            }
-
-            final int result = fromDMY(d, m, y);
-            //QL.debug("{}", result);
-            return result;
-        }
-        default:
-            throw new LibraryException("undefined time units"); // QA:[RG]::verified // TODO: message
-        }
-    }
-
-
-    //
-    // protected methods
-    //
-    // These methods were not declared in QuantLib/C++
-    //
-
-
-    /**
-     * Assigns the today's date to this instance
-     * 
-     * @note Does not trigger notifications
-     * 
-     * @return this instance
-     * 
-     * @see DateProxy
-     */
-    //TODO: consider @PackagePrivate
-    protected final Date todaysDate() {
-        final java.util.Calendar cal = java.util.Calendar.getInstance();
-        final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
-        final int m = cal.get(java.util.Calendar.MONTH);
-        final int y = cal.get(java.util.Calendar.YEAR);
-        this.serialNumber = fromDMY(d, m, y);
-        return this;
-    }
-
-
-    /**
-     * Assigns a new serialNumber to this instance.
-     * 
-     * @note Does not trigger notifications
-     * 
-     * @return this instance
-     * 
-     * @see DateProxy
-     */
-    //TODO: consider @PackagePrivate
-    protected final Date assign(final int serialNumber) {
-        this.serialNumber = serialNumber;
-        return this;
-    }
-
-
-
-    //
-    // private static methods
-    //
-
-    /**
-     * This method is intended to calculate the integer value of a (day, month, year)
-     * 
-     * @param d is the day as a number
-     * @param m is the month as a number
-     * @param y is the year as a number
-     * @return
-     */
-    private static final int fromDMY(final int d, final int m, final int y) {
-        QL.require(y > 1900 && y < 2100 , "year out of bound. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
-        QL.require(m > 0 && m < 13 , "month outside January-December range [1,12]"); // QA:[RG]::verified // TODO: message
-        final boolean leap = statics.isLeap(y);
-        final int len = monthLength(m, leap);
-        final int offset = monthOffset(m, leap);
-        QL.ensure(d > 0 && d <= len , "day outside month day-range"); // QA:[RG]::verified // TODO: message
-        final int result = d + offset + yearOffset(y);
-        return result;
-    }
-
-    /**
-     * Returns the length of a certain month
-     * 
-     * @param m is the desired month, as a number
-     * @param leapYear if <code>true</code> means a leap year
-     * @return the length of a certain month
-     */
-    private static final int monthLength(final int m, final boolean leapYear) {
-        return (leapYear ? monthLeapLength[m - 1] : monthLength[m - 1]);
-    }
-
-    /**
-     * Returns the offset of a certain month
-     * 
-     * @param m is the desired month, as a number. If you specify 13, you will get the number of days of a year
-     * @param leapYear if <code>true</code> means a leap year
-     * @return the offset of a certain month or the length of an year
-     * @see DefaultDate#yearOffset
-     */
-    private static final int monthOffset(final int m, final boolean leapYear) {
-        return (leapYear ? monthLeapOffset[m - 1] : monthOffset[m - 1]);
-    }
-
-    /**
-     * Returns the offset of a certain year
-     *
-     * @param y
-     *            is the desired year
-     * @return the offset of a certain year
-     */
-    private static final int yearOffset(final int y) {
-        return yearOffset[y - 1900];
     }
 
 }
